@@ -1,0 +1,10 @@
+/dist/
+/.DS_STORE
+/.vscode/
+/node_modules/
+/yarn.lock
+*.log*
+/projectit/open-source.adoc
+/zlocal
+.idea/workspace.xml
+.idea/atlassian-ide-plugin.xml
