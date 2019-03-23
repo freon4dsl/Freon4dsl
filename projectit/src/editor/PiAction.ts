@@ -16,7 +16,6 @@ export function triggerToString(t: PiTriggerType): string {
     }
 }
 
-// LangDev: ProjectIt Actions
 export interface PiActions {
     expressionCreators: PiExpressionCreator[];
 

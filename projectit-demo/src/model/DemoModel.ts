@@ -38,7 +38,6 @@ export abstract class DemoModelElement extends MobxModelElementImpl {
     abstract asString(): string ;
 }
 
-// LangDev: utils -> decorators
 @model
 export class DemoModel extends DemoModelElement {
     $type: string = "DemoModel";

@@ -43,7 +43,6 @@ import { DemoEntity } from "../model/domain/DemoEntity";
 
 const LOGGER = new PiLogger("DemoActions");
 
-// LangDev: Actions: ExpressionCreators
 const EXPRESSION_CREATORS: PiExpressionCreator[] = [
     {
         trigger: "\"",
@@ -56,7 +55,6 @@ const EXPRESSION_CREATORS: PiExpressionCreator[] = [
     {
         trigger: /[0-9]/,
         activeInBoxRoles: [EXPRESSION_PLACEHOLDER],
-        // LangDev: Actions using trigger value
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
             PiUtils.CHECK(typeof trigger === "string", "Trigger for numeric literal should be a string");
             return DemoNumberLiteralExpression.create(trigger as string);
@@ -227,6 +225,13 @@ const TOOLBAR: PiToolbarItem[] = [
         label: "Text",
         onClick: (editor: PiEditor): void => {
             (editor.projection as DemoProjection).projectionType = "text";
+        }
+    },
+    {
+        id: "tree",
+        label: "Tree",
+        onClick: (editor: PiEditor): void => {
+            (editor.projection as DemoProjection).projectionType = "tree";
         }
     },
     {

@@ -84,7 +84,6 @@ export function firstVerticalBoxParent(box: Box): Box[] {
     return resultL;
 }
 
-// LangDev: utils -> createVerticalListBox
 export function createVerticalListBox<E extends PiElement>(
     element: PiElement,
     role: string,

@@ -17,4 +17,5 @@ export const demoStyles: {
     binary: string;
     mygrid: string;
     mycell: string;
+    tree: string;
 } = require("./style.scss");

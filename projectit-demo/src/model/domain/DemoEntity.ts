@@ -6,7 +6,6 @@ import { DemoModelElement } from "../DemoModel";
 @model
 export class DemoEntity extends DemoModelElement {
     $type: string = "DemoEntity";
-    // LangDev 2: Mobx @observable
     @observable name: string;
 
     @observablelistpart attributes: DemoAttribute[];

@@ -20,7 +20,6 @@ export type TextComponentProps = {
     editor: PiEditor;
 };
 
-// LangDev 3: mobx @observer
 @observer
 export class TextComponent extends React.Component<TextComponentProps, {}> {
     originalValue: string = "";

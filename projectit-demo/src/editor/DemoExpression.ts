@@ -11,7 +11,6 @@ import { DemoBinaryExpression, DemoExpression, DemoPlaceholderExpression } from 
 import { DemoModelElement } from "../model/DemoModel";
 import { DemoBinaryExpressionPlaceholder } from "../model/expressions/DemoBinaryExpressionPlaceHolder";
 
-// LangDev: Implement ProjectIt model element interface
 declare module "../model/DemoModel" {
     interface DemoModelElement extends PiElement {
     }
@@ -105,8 +104,4 @@ DemoBinaryExpression.prototype.piPriority = function(): number {
 
 DemoBinaryExpression.prototype.piIsBinaryExpression = function(): boolean {
     return true;
-};
-
-DemoBinaryExpression.prototype.piIsOperatorPlaceHolder = function(): boolean {
-    return this instanceof DemoBinaryExpressionPlaceholder;
 };

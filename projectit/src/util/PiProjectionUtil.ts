@@ -4,7 +4,6 @@ import { PiElement } from "../language/PiModel";
 import { PiUtils } from "./PiUtils";
 
 export class PiProjectionUtil {
-    // LangDev: utils -> textbox
     static textBox(element: PiElement, property: string): TextBox {
         let result: TextBox = null;
         const value = element[property];
@@ -19,7 +18,6 @@ export class PiProjectionUtil {
         return result;
     }
 
-    // LangDev: utils -> booleanBox
     static booleanBox(elem: PiElement, role: string, propertyName: string, labels: { yes: string, no: string } = {
         yes: "yes",
         no: "no"

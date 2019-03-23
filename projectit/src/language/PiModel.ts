@@ -1,9 +1,8 @@
 /**
- * You have to either directly implement these interfaces, or use `Module Augmentation`,
+ * You can either directly implement these interfaces, or use `Module Augmentation`,
  * as described in `https://www.typescriptlang.org/docs/handbook/declaration-merging.html`.
  */
 
-// LangDev 1: ModelElements in ProjectIt
 export interface PiElement {
     piId(): string;
 
@@ -14,7 +13,6 @@ export interface PiElement {
     piIsBinaryExpression(): boolean;
 }
 
-// LangDev: Expression Interfaces
 export interface PiExpression extends PiElement {
     piIsExpressionPlaceHolder(): boolean;
 }
@@ -24,25 +22,13 @@ export interface PiBinaryExpression extends PiExpression {
 
     piLeft(): PiExpression;
 
-    /**
-     */
     piSetLeft(left: PiExpression): void;
 
-    /**
-     */
     piRight(): PiExpression;
 
-    /**
-     */
     piSetRight(right: PiExpression): void;
 
-    /**
-     */
     piPriority(): number;
-
-    /**
-     */
-    piIsOperatorPlaceHolder(): boolean;
 }
 
 export interface PiContainerDescriptor {

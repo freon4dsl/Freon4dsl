@@ -22,21 +22,6 @@ import { NBSP, PiUtils } from "./PiUtils";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
-// LangDev: utils -> createDefaultBinaryBox
-export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, style?: string): HorizontalListBox {
-    const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
-
-    result.addChildren([
-        projection.getBox(exp.piLeft()),
-        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {style: STYLES.aliasExpression}),
-        createOperatorBox(projection["editor"], exp),
-        new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {style: STYLES.aliasExpression}),
-        projection.getBox(exp.piRight())
-    ]);
-    return result;
-}
-
-// LangDev: utils -> createDefaultExpressionBox
 export function createDefaultExpressionBox(
     exp: PiExpression,
     role: string,
@@ -66,6 +51,19 @@ export function createDefaultExpressionBox(
             return new HorizontalListBox(exp, EXPRESSION, children);
         }
     }
+}
+
+export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, style?: string): HorizontalListBox {
+    const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
+
+    result.addChildren([
+        projection.getBox(exp.piLeft()),
+        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {style: STYLES.aliasExpression}),
+        createOperatorBox(projection["editor"], exp),
+        new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {style: STYLES.aliasExpression}),
+        projection.getBox(exp.piRight())
+    ]);
+    return result;
 }
 
 /**

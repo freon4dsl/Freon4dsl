@@ -13,7 +13,6 @@ export class GridUtil {
     /**
      * Create grid for collection a la VerticalModelElementListBox
      */
-    // LangDev: utils -> createCollectionRowGrid
     public static createCollectionRowGrid<ELEMENT_TYPE extends PiElement>(
         element: PiElement,
         role: string,

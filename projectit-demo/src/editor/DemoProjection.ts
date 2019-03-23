@@ -29,14 +29,14 @@ import * as expressionExtensions from "./DemoExpression";
 const LOGGER = new PiLogger("DemoProjection").mute();
 const OPERATOR_COLUMN = 1;
 const OPERAND_COLUM = 2;
-export type MetaProjectionType = "text" | "orboxed";
+export type MetaProjectionType = "text" | "orboxed" | "tree";
 
 var TMP: Object = {};
 
 export class DemoProjection implements PiProjection {
     private editor: PiEditor;
     @observable projectionType: MetaProjectionType = "text";
-    @observable showBrackets: boolean = true;
+    @observable showBrackets: boolean = false;
 
     constructor() {
     }
@@ -82,17 +82,35 @@ export class DemoProjection implements PiProjection {
     }
 
     private createBinaryBox(projection: DemoProjection, exp: PiBinaryExpression): Box {
-        let binBox = createDefaultBinaryBox(this, exp);
-        if (this.showBrackets) {
-            return new HorizontalListBox(exp, "brackets", [
-                new LabelBox(exp, "open-bracket", "("),
-                binBox,
-                new LabelBox(exp, "close-bracket", ")")
-            ]);
+        if( this.projectionType === "tree"){
+            return this.createBinaryBoxTree(projection, exp);
         } else {
-            return binBox;
+            let binBox = createDefaultBinaryBox(this, exp);
+            if (this.showBrackets && (!!exp.piContainer().container) && isPiBinaryExpression(exp.piContainer().container)) {
+                return new HorizontalListBox(exp, "brackets", [
+                    new LabelBox(exp, "open-bracket", "("),
+                    binBox,
+                    new LabelBox(exp, "close-bracket", ")")
+                ]);
+            } else {
+                return binBox;
+            }
         }
     }
+
+    private createBinaryBoxTree(projection: DemoProjection, exp: PiBinaryExpression): Box {
+        let result = new HorizontalListBox(exp, "binary1", [
+            new LabelBox(exp, "symbol", exp.piSymbol()),
+            new VerticalListBox(exp, "args", [
+                projection.getBox(exp.piLeft()),
+                projection.getBox(exp.piRight())
+            ])
+        ], {
+            style: demoStyles.tree
+        });
+        return result;
+    }
+
 
     private createEntityBox(entity: DemoEntity): Box {
         LOGGER.info(this, "createEntityBox: ");
@@ -115,20 +133,6 @@ export class DemoProjection implements PiProjection {
             box: this.createAttributeGrid(entity)
         });
         return new GridBox(entity, "entity-all", cells);
-        // return new HorizontalListBox(entity, "entity", [
-        //     new LabelBox(entity, "entity-label", "entity"),
-        //     new TextBox(entity, "entity-name",
-        //         () => entity.name,
-        //         (s: string) => entity.name = s,
-        //         {
-        //             deleteWhenEmpty: true,
-        //             keyPressAction: (currentText: string, key: string, index: number) => {
-        //                 return isName(currentText, key, index);
-        //             }
-        //         })
-        //     // ,  new LabelBox(entity, "entity-end", ";"),
-        //     , this.createAttributeGrid(entity)
-        // ]);
     }
 
     private createEntityBoxGrid(entity: DemoEntity): Box {
@@ -254,29 +258,30 @@ export class DemoProjection implements PiProjection {
                     // SHORTHAND: this.textbox(model, "name"),
                 ]),
             // this.textbox(model, "name"),
-            new SelectBox(model, "test-selest", "<select>",
-                () => [
-                    {
-                        label: "option1-label1",
-                        description: "description",
-                        id: "1"
-                    },
-                    {
-                        label: "option2-label2",
-                        description: "description",
-                        id: "2"
-                    }
-                ],
-                () => null,
-                (option: SelectOption) => {
-                    model.name = "new: " + option.label;
-                },
-            ),
-            new LabelBox(model, "entity-list", "entities", {
-                style: demoStyles.keyword
-            }),
-            new VerticalModelElementListBox(model, "entities", model.entities,"entities", () => new DemoEntity(), this.editor,
-                { roleToSelectAfterCreation: "entity-name" }),
+            // new SelectBox(model, "test-selest", "<select>",
+            //     () => [
+            //         {
+            //             label: "option1-label1",
+            //             description: "description",
+            //             id: "1"
+            //         },
+            //         {
+            //             label: "option2-label2",
+            //             description: "description",
+            //             id: "2"
+            //         }
+            //     ],
+            //     () => null,
+            //     (option: SelectOption) => {
+            //         model.name = "new: " + option.label;
+            //     },
+            // ),
+
+            // new LabelBox(model, "entity-list", "entities", {
+            //     style: demoStyles.keyword
+            // }),
+            // new VerticalModelElementListBox(model, "entities", model.entities,"entities", () => new DemoEntity(), this.editor,
+            //     { roleToSelectAfterCreation: "entity-name" }),
             new LabelBox(model, "entityexpression", "expression", {
                 style: demoStyles.keyword
             }),
@@ -291,7 +296,6 @@ export class DemoProjection implements PiProjection {
         ]);
     }
 
-    // LangDev Projection for StringLiteral
     private createStringLiteralBox(literal: DemoStringLiteralExpression): Box {
         LOGGER.info(this, "createStringLiteralBox: " + literal.value);
         return createDefaultExpressionBox(literal, "string-literal-exp", [
@@ -313,7 +317,6 @@ export class DemoProjection implements PiProjection {
         ]);
     }
 
-    // LangDev Projection for StringLiteral simple
     private createStringLiteralBox1(literal: DemoStringLiteralExpression): Box {
         return createDefaultExpressionBox(literal, "string-literal-exp", [
             new HorizontalListBox(literal, "string-literal", [
@@ -508,7 +511,6 @@ export class DemoProjection implements PiProjection {
         return new GridBox(exp, "grid-or", gridCells, { style: STYLES.grid });
     }
 
-    // LangDev: Projection for Placeholder
     private createPlaceholderBox(exp: DemoPlaceholderExpression): Box {
         LOGGER.info(this, "createPlaceholderBox: ");
         return new AliasBox(exp, EXPRESSION_PLACEHOLDER, "<exp>");
