@@ -3,7 +3,7 @@ Projectional Editor for the Web.
 
 ProjectIt will be presented at the LangDev workshop in Amsterdam on March 21-22.
 
-![logo](/images/projectit-logo-3d.png)
+![logo](/public/images/projectit-logo-3d.png)
 
 **Note**. This project is Work in Progress, no dirstribution has been made yet. No version numer is attached yet, the first 0.? release will be later this year.
 
