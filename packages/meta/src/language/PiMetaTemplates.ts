@@ -1,6 +1,7 @@
 import { MobxModelElementImpl } from "@projectit/model";
 import { MetaConcept, MetaElementProperty, MetaModel, MetaPrimitiveProperty } from "./MetaModel";
 
+const prettier = require("prettier/standalone");
 
 export class PiMetaTemplates {
 
@@ -58,7 +59,7 @@ export class PiMetaTemplates {
             }
         `;
         // return result;
-        return result;
+        return prettier.format(result, {parser: "typescript", printWidth: 120, tabWidth: 4});
     }
 
     generatePrimitiveProperty(property: MetaPrimitiveProperty): string {
