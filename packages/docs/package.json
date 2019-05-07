@@ -1,0 +1,19 @@
+{
+  "name": "@projectit/docs",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joswarmer/ProjectIt.git"
+  },
+  "scripts": {
+    "start": "docz dev",
+    "build": "docz build"
+  },
+  "devDependencies": {
+    "docz": "^1.0.4",
+    "docz-theme-default": "^1.0.4"
+  }
+}
