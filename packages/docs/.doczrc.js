@@ -4,7 +4,6 @@ export default {
     src: 'src',
     dest: 'dist',
     typescript: true,
-    base: '/pages/joswarmer/ProjectIt/',
     menu: [
         'Introduction',
         'Defining Projections'
