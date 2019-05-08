@@ -9,8 +9,8 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "start": "docz dev --config ./.doczrc.js",
-    "build": "docz build --config ./.doczrc.js"
+    "start:docs": "docz dev --config ./.doczrc.js",
+    "build:docs": "docz build --config ./.doczrc.js"
   },
   "devDependencies": {
     "docz": "^1.1.0",

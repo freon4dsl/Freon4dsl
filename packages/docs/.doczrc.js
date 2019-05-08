@@ -1,9 +1,12 @@
 export default {
     title: 'InspectIt',
     description: 'InspectIt',
-    src: './src',
+    src: 'src',
+    dest: 'dist',
+    typescript: true,
     base: '/pages/joswarmer/ProjectIt/',
     menu: [
-        'Introduction'
+        'Introduction',
+        'Defining Projections'
     ]
 }

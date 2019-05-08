@@ -2,8 +2,10 @@
   "private": true,
   "scripts": {
     "version": "lerna exec npm version",
-    "start": "lerna run start --stream",
+    "start": "lerna run start --stream --parallel",
+    "start:docs": "lerna run start:docs --stream --parallel",
     "build": "lerna run build --stream",
+    "build:docs": "lerna run build:docs --stream",
     "publish": "lerna publish from-package --contents pkg",
     "nuke": "lerna exec \"rm -f package-lock.json npm-shrinkwrap.json\" && lerna clean --yes && lerna bootstrap && lerna exec --stream -- \"test -f package-lock.json || npm install --package-lock-only\""
   },
@@ -46,7 +48,7 @@
     "postcss-loader": "^2.0.8",
     "postcss-reporter": "^5.0.0",
     "postcss-url": "^7.1.2",
-    "react-hot-loader": "^3.1.1",
+    "react-hot-loader": "^4.8.4",
     "react-tabs": "^2.2.2",
     "reflect-metadata": "^0.1.12",
     "sass-loader": "^6.0.6",

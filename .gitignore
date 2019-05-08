@@ -19,6 +19,7 @@ build
 dist
 target
 bin
+.docz
 
 # misc
 .DS_Store
