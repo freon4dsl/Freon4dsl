@@ -37,6 +37,10 @@ To build and run the demo locally:
 
     yarn start
 
+To build and run the docs locally:
+
+    yarn start:docs
+    
 This will open a browser with the demo app on `http://localhost:3000/`.
 The demo app is work in progress.
 
