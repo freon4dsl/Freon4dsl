@@ -2,7 +2,7 @@ export default {
     title: 'InspectIt',
     description: 'InspectIt',
     src: 'src',
-    dest: 'dist',
+    dest: '../../docs',
     typescript: true,
     menu: [
         'Introduction',
