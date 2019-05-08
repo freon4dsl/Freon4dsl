@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "version": "lerna exec npm version",
-    "start": "lerna run start --stream --parallel",
+    "start": "lerna run start --stream",
     "build": "lerna run build --stream",
     "publish": "lerna publish from-package --contents pkg",
     "nuke": "lerna exec \"rm -f package-lock.json npm-shrinkwrap.json\" && lerna clean --yes && lerna bootstrap && lerna exec --stream -- \"test -f package-lock.json || npm install --package-lock-only\""
