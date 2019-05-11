@@ -1,10 +1,10 @@
-import * as Koa from 'koa';
-import * as bodyParser from 'koa-bodyparser';
-import * as cors from 'koa2-cors';
+import * as Koa from "koa";
+import * as bodyParser from "koa-bodyparser";
+import * as cors from "koa2-cors";
 
-import { config } from './config';
-import { logger } from './logging';
-import { routes } from './routes';
+import { config } from "./config";
+import { logger } from "./logging";
+import { routes } from "./routes";
 
 const app = new Koa();
 
@@ -12,9 +12,11 @@ const app = new Koa();
 // ERROR Access to XMLHttpRequest from origin has been blocked by CORS policy:
 // Response to preflight request doesn't pass access control check:
 // No 'Access-Control-Allow-Origin' header is present on the requ
-app.use(cors({
-    origin: '*',
-}));
+app.use(
+  cors({
+    origin: "*"
+  })
+);
 // Ensure access to the body of the request.
 app.use(bodyParser());
 

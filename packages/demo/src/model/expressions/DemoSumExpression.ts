@@ -5,30 +5,30 @@ import { DemoPlaceholderExpression } from "./DemoPlaceholderExpression";
 
 @model
 export class DemoSumExpression extends DemoExpression {
-    $type: string = "DemoSumExpression";
-    @observablepart from: DemoExpression;
-    @observablepart to: DemoExpression;
-    @observablepart body: DemoExpression;
+  $type: string = "DemoSumExpression";
+  @observablepart from: DemoExpression;
+  @observablepart to: DemoExpression;
+  @observablepart body: DemoExpression;
 
-    constructor() {
-        super();
-        this.from = new DemoPlaceholderExpression();
-        this.to= new DemoPlaceholderExpression();
-        this.body = new DemoPlaceholderExpression();
-    }
+  constructor() {
+    super();
+    this.from = new DemoPlaceholderExpression();
+    this.to = new DemoPlaceholderExpression();
+    this.body = new DemoPlaceholderExpression();
+  }
 
-    toString(): string {
-        return (
-            "SUM from " +
-            this.from.toString() +
-            " to " +
-            this.to.toString() +
-            " body " +
-            this.body.toString()
-        );
-    }
+  toString(): string {
+    return (
+      "SUM from " +
+      this.from.toString() +
+      " to " +
+      this.to.toString() +
+      " body " +
+      this.body.toString()
+    );
+  }
 
-    children(): DemoExpression[] {
-        return [this.from, this.to, this.body];
-    }
+  children(): DemoExpression[] {
+    return [this.from, this.to, this.body];
+  }
 }

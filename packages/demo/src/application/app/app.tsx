@@ -17,14 +17,14 @@ const rootStores = {
 
 // render react DOM
 ReactDOM.render(
-  <Provider {...rootStores} >
+  <Provider {...rootStores}>
     <Root>
-      <Router history={history} >
+      <Router history={history}>
         <Switch>
           <Route path="/" component={MainProjectionalEditor} />
         </Switch>
       </Router>
     </Root>
-  </Provider >,
+  </Provider>,
   document.getElementById("root")
 );

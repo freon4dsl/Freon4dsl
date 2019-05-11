@@ -10,7 +10,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "tsc -w"
+    "start": "tsc -w",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "dependencies": {
     "classnames": "^2.2.5",

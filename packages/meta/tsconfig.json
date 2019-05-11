@@ -7,5 +7,13 @@
   "include": [
     "src"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    "coverage",
+    "config",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.story.tsx"
+  ]
 }

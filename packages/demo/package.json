@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
-    "build": "webpack -p --progress --colors"
+    "build": "webpack -p --progress --colors",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "dependencies": {
     "@projectit/core": "0.0.1",

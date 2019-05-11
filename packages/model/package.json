@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joswarmer/ProjectIt.git"
+    "url": "https://github.com/joswarmer/ProjectIt.git",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "scripts": {
     "start": "tsc -w",

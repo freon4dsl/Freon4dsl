@@ -5,27 +5,26 @@ import { DemoModelElement } from "../DemoModel";
 
 @model
 export class DemoEntity extends DemoModelElement {
-    $type: string = "DemoEntity";
-    @observable name: string;
+  $type: string = "DemoEntity";
+  @observable name: string;
 
-    @observablelistpart attributes: DemoAttribute[];
+  @observablelistpart attributes: DemoAttribute[];
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    toString(): string {
-        return "entity " + this.name;
-    }
+  toString(): string {
+    return "entity " + this.name;
+  }
 
-    asString(): string {
-        return this.toString();
-    }
+  asString(): string {
+    return this.toString();
+  }
 
-    static create(name: string): DemoEntity {
-        const result = new DemoEntity();
-        result.name = name;
-        return result;
-    }
-
+  static create(name: string): DemoEntity {
+    const result = new DemoEntity();
+    result.name = name;
+    return result;
+  }
 }

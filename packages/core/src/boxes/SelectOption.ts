@@ -3,7 +3,7 @@
  */
 
 export type SelectOption = {
-    id: string;
-    label: string;
-    description?: string;
+  id: string;
+  label: string;
+  description?: string;
 };

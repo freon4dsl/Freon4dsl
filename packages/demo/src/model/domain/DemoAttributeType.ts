@@ -1,1 +1,1 @@
-export type DemoAttributeType = "String" | "Integer"| "Boolean";
+export type DemoAttributeType = "String" | "Integer" | "Boolean";

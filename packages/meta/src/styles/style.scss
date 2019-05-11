@@ -3,39 +3,36 @@ $dark-blue: #1d53f9;
 $dark-green: #4e8402;
 
 .numeric {
-    color: $dark-green;
+  color: $dark-green;
 }
 
 .stringLiteral {
-    color: $dark-green;
+  color: $dark-green;
 }
 
 .keyword {
-    font-weight: bold;
-    color: $dark-blue;
+  font-weight: bold;
+  color: $dark-blue;
 }
 
 .indent {
-    margin-left: 40px;
+  margin-left: 40px;
 }
 
 .indent2 {
-    margin-left: 80px;
+  margin-left: 80px;
 }
 
 .indentkeyword {
-    font-weight: bold;
-    color: $dark-blue;
-    margin-left: 40px;
+  font-weight: bold;
+  color: $dark-blue;
+  margin-left: 40px;
 }
 
 .mygrid {
-    border-style: hidden;
+  border-style: hidden;
 }
 
 .mycell {
-    border-style: hidden;
+  border-style: hidden;
 }
-
-
-

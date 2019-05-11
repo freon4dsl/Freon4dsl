@@ -13,41 +13,45 @@ import { DemoAttribute } from "../domain/DemoAttribute";
 
 @model
 export class DemoFunctionDeclaration {
-    $type: string = "DemoAbsExpression";
-    constructor(public name: string) {}
+  $type: string = "DemoAbsExpression";
+  constructor(public name: string) {}
 }
 
 @model
 export class DemoVariableRefExpression extends DemoExpression {
-    $type: string = "DemoVariableRefExpression";
-    referredName: string;
-    attribute: string;
+  $type: string = "DemoVariableRefExpression";
+  referredName: string;
+  attribute: string;
 
-    @observablereference
-    get refVariable(): DemoVariable {
-        return this.model.functions[0].parameters.find(v => v.name === this.referredName);
-    }
+  @observablereference
+  get refVariable(): DemoVariable {
+    return this.model.functions[0].parameters.find(
+      v => v.name === this.referredName
+    );
+  }
 
-    @observablereference
-    get refAttribute(): DemoAttribute {
-        const refVar = this.refVariable;
-        return (refVar ? refVar.type.attributes.find(a => a.name === this.attribute) : null );
-    }
+  @observablereference
+  get refAttribute(): DemoAttribute {
+    const refVar = this.refVariable;
+    return refVar
+      ? refVar.type.attributes.find(a => a.name === this.attribute)
+      : null;
+  }
 
-    constructor() {
-        super();
-        this.getName = this.getName.bind(this);
-    }
+  constructor() {
+    super();
+    this.getName = this.getName.bind(this);
+  }
 
-    getName() {
-        return this.referredName;
-    }
+  getName() {
+    return this.referredName;
+  }
 
-    toString(): string {
-        return "$" + this.referredName;
-    }
+  toString(): string {
+    return "$" + this.referredName;
+  }
 
-    children(): DemoExpression[] {
-        return [];
-    }
+  children(): DemoExpression[] {
+    return [];
+  }
 }

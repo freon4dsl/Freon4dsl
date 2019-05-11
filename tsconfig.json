@@ -12,16 +12,6 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
-    "paths": {
-      "@projectit/core": ["pacakges/core/src"],
-      "@projectit/core/*": ["pacakges/core/src/*"],
-      "@projectit/demo": ["pacakges/demo/src"],
-      "@projectit/demo/*": ["pacakges/demo/src/*"],
-      "@projectit/meta": ["pacakges/meta/src"],
-      "@projectit/meta/*": ["pacakges/meta/src/*"],
-      "@projectit/model": ["pacakges/model/src"],
-      "@projectit/model/*": ["pacakges/model/src/*"]
-    },
     "removeComments": true,
     "skipLibCheck": true,
     "sourceMap": true,

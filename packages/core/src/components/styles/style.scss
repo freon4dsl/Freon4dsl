@@ -10,9 +10,10 @@ $selected-backgound-color: #d5eed3;
 @font-face {
   font-family: "Source Code Pro";
   src: url("./fonts/source-code-pro/EOT/SourceCodePro-Regular.eot");
-  src:
-       url("./fonts/source-code-pro/WOFF/OTF/SourceCodePro-Regular.otf.woff") format("woff"),
-       url("./fonts/source-code-pro/TTF/SourceCodePro-Regular.ttf") format("truetype");
+  src: url("./fonts/source-code-pro/WOFF/OTF/SourceCodePro-Regular.otf.woff")
+      format("woff"),
+    url("./fonts/source-code-pro/TTF/SourceCodePro-Regular.ttf")
+      format("truetype");
 }
 
 $font-family-base: "Source Code Pro", "Courier New";
@@ -27,7 +28,6 @@ $font-family-base: "Source Code Pro", "Courier New";
   align-self: stretch;
   justify-self: stretch;
   display: flex;
-
 }
 .headerText {
   font-weight: bold;
@@ -69,7 +69,8 @@ $font-family-base: "Source Code Pro", "Courier New";
 
 .selectedTextComponent {
   background-color: $selected-backgound-color;
-  border: 1px solid transparent;display: inline-block;
+  border: 1px solid transparent;
+  display: inline-block;
   color: darkgreen;
   vertical-align: middle;
 }
@@ -171,14 +172,14 @@ $font-family-base: "Source Code Pro", "Courier New";
 }
 
 .gridcell {
-    padding: 4px;
-    border-left: lightgrey;
-    border-left-style: solid;
-    border-left-width: 1px;
-    border-right: lightgrey;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-bottom: lightgrey;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
+  padding: 4px;
+  border-left: lightgrey;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-right: lightgrey;
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-bottom: lightgrey;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
 }

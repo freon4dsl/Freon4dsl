@@ -3,14 +3,14 @@ import { DemoExpression } from "./DemoExpression";
 
 @model
 export class DemoAbsExpression extends DemoExpression {
-    $type: string = "DemoAbsExpression";
-    @observablepart expr: DemoExpression;
+  $type: string = "DemoAbsExpression";
+  @observablepart expr: DemoExpression;
 
-    toString(): string {
-        return "abs(" + this.expr.toString() + ")";
-    }
+  toString(): string {
+    return "abs(" + this.expr.toString() + ")";
+  }
 
-    children(): DemoExpression[] {
-        return [this.expr];
-    }
+  children(): DemoExpression[] {
+    return [this.expr];
+  }
 }

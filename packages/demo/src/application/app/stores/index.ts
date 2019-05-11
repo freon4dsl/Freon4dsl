@@ -1,1 +1,1 @@
-export { RouterStore } from './RouterStore';
+export { RouterStore } from "./RouterStore";

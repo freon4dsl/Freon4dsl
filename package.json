@@ -6,6 +6,7 @@
     "start:docs": "lerna run start:docs --stream --parallel",
     "build": "lerna run build --stream",
     "build:docs": "lerna run build:docs --stream",
+    "lint": "lerna run lint --stream",
     "publish": "lerna publish from-package --contents pkg",
     "nuke": "lerna exec \"rm -f package-lock.json npm-shrinkwrap.json\" && lerna clean --yes && lerna bootstrap && lerna exec --stream -- \"test -f package-lock.json || npm install --package-lock-only\""
   },
@@ -56,6 +57,7 @@
     "ts-jest": "^21.0.1",
     "ts-node": "^7.0.1",
     "tslint": "^4.5.1",
+    "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^3.5.1",
     "tslint-microsoft-contrib": "5.0.3",
     "tslint-react": "^2.6.0",
