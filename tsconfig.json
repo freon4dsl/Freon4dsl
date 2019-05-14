@@ -18,6 +18,7 @@
     "strictNullChecks": false,
     "target": "es5",
     "types": ["node", "jest", "jest-enzyme"],
+    "baseUrl": ".",
     "paths": {
       "~/*": ["packages/*"]
     }

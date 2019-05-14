@@ -46,15 +46,15 @@ export class MainProjectionalEditor extends React.Component<any, {}> {
   private demoEditor: PiEditor;
 
   initEditors() {
-    let ctx = new MetaContext();
-    let actions = new MetaActions();
-    let projection = new MetaProjection();
+    const ctx = new MetaContext();
+    const actions = new MetaActions();
+    const projection = new MetaProjection();
     this.metaEditor = new PiEditor(ctx, projection, actions);
     projection.setEditor(this.metaEditor);
 
-    let demoCtx = new DemoContext();
-    let demoActions = new DemoActions();
-    let demoProjection = new DemoProjection();
+    const demoCtx = new DemoContext();
+    const demoActions = new DemoActions();
+    const demoProjection = new DemoProjection();
     this.demoEditor = new PiEditor(demoCtx, demoProjection, demoActions);
     demoProjection.setEditor(this.demoEditor);
   }

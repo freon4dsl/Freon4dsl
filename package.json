@@ -3,7 +3,7 @@
   "scripts": {
     "version": "lerna exec npm version",
     "start": "lerna run start --stream --parallel",
-    "start:docs": "lerna run start:docs --stream --parallel",
+    "start:docs": "lerna run start:docs --stream",
     "build": "lerna run build --stream",
     "build:docs": "lerna run build:docs --stream",
     "test": "lerna run test --stream",

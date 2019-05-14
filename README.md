@@ -35,6 +35,7 @@ To install all dependencies:
 
 To build and run the demo locally:
 
+    yarn build
     yarn start
 
 To build and run the docs locally:
