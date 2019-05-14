@@ -24,7 +24,8 @@ module.exports = {
     "tsx",
     "js",
     "jsx",
-    "json"
+    "json",
+    "scss"
   ],
   moduleDirectories: [
     "node_modules"

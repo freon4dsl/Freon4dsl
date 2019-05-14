@@ -40,6 +40,7 @@
     "jest-enzyme": "^7.0.2",
     "jest-css-modules-transform": "^2.1.1",
     "js-yaml": "3.7.0",
+    "identity-obj-proxy": "^3.0.0",
     "lerna": "3.13.4",
     "mobx-react-devtools": "^4.2.15",
     "node-sass": "^4.5.3",
@@ -83,7 +84,8 @@
       "tsx",
       "js",
       "jsx",
-      "json"
+      "json",
+      "scss"
     ]
   }
 }
