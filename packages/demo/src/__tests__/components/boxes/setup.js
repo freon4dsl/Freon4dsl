@@ -1,8 +1,9 @@
 /* setup.js */
 
-const { jsdom } = require('jsdom');
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 
-global.document = jsdom('');
+global.document = new JSDOM('');
 global.window = document.defaultView;
 global.navigator = {
     userAgent: 'node.js',
