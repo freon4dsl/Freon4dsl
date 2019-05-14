@@ -17,6 +17,9 @@
     "sourceMap": true,
     "strictNullChecks": false,
     "target": "es5",
-    "types": ["node", "jest", "jest-enzyme"]
+    "types": ["node", "jest", "jest-enzyme"],
+    "paths": {
+      "~/*": ["packages/*"]
+    }
   }
 }

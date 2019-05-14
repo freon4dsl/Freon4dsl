@@ -48,7 +48,7 @@ export const ELEMENT_LIST_ROLE = "element-list";
 
 export type MetaProjectionType = "text" | "table" | "fulltext";
 
-var TMP: Object = {};
+const TMP: Object = {};
 
 export class MetaProjection implements PiProjection {
   private editor: PiEditor;
@@ -93,7 +93,7 @@ export class MetaProjection implements PiProjection {
   // TODO Refactor row and column based collections into one generic function.
   private createAttributeGrid(entity: MetaConcept): Box {
     const cells: GridCell[] = [];
-    let styleClasses: string = classNames(styles.keyword);
+    const styleClasses: string = classNames(styles.keyword);
     cells.push({
       row: 1,
       column: 1,
