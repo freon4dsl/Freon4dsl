@@ -1,5 +1,5 @@
 {
-  "extends": ["tslint-eslint-rules", "tslint-react", "tslint-config-prettier"],
+  "extends": ["tslint-eslint-rules", "tslint-react"],
   "rulesDirectory": [
     "node_modules/tslint-eslint-rules/dist/rules",
     "node_modules/tslint-microsoft-contrib",
