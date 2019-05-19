@@ -4,49 +4,43 @@
  */
 
 export interface PiElement {
-  piId(): string;
+    piId(): string;
 
-  piContainer(): PiContainerDescriptor;
+    piContainer(): PiContainerDescriptor;
 
-  piIsExpression(): boolean;
+    piIsExpression(): boolean;
 
-  piIsBinaryExpression(): boolean;
+    piIsBinaryExpression(): boolean;
 }
 
 export interface PiExpression extends PiElement {
-  piIsExpressionPlaceHolder(): boolean;
+    piIsExpressionPlaceHolder(): boolean;
 }
 
 export interface PiBinaryExpression extends PiExpression {
-  piSymbol(): string;
+    piSymbol(): string;
 
-  piLeft(): PiExpression;
+    piLeft(): PiExpression;
 
-  piSetLeft(left: PiExpression): void;
+    piSetLeft(left: PiExpression): void;
 
-  piRight(): PiExpression;
+    piRight(): PiExpression;
 
-  piSetRight(right: PiExpression): void;
+    piSetRight(right: PiExpression): void;
 
-  piPriority(): number;
+    piPriority(): number;
 }
 
 export interface PiContainerDescriptor {
-  container: PiElement;
-  propertyName: string;
-  propertyIndex?: number;
+    container: PiElement;
+    propertyName: string;
+    propertyIndex?: number;
 }
 
 export function isPiExpression(element: PiElement): element is PiExpression {
-  return element.piIsExpression && element.piIsExpression();
+    return element.piIsExpression && element.piIsExpression();
 }
 
-export function isPiBinaryExpression(
-  element: PiElement
-): element is PiBinaryExpression {
-  return (
-    element.piIsExpression &&
-    element.piIsExpression() &&
-    element.piIsBinaryExpression()
-  );
+export function isPiBinaryExpression(element: PiElement): element is PiBinaryExpression {
+    return element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression();
 }

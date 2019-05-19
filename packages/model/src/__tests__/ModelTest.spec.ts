@@ -9,7 +9,7 @@ describe("Model", () => {
         let exp1: Expression;
         let exp2: Expression;
 
-        beforeEach(function (done) {
+        beforeEach(function(done) {
             root = new BinExpression("root");
             left = new Expression("left1");
             right = new Expression("right1");

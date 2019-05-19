@@ -12,9 +12,11 @@ const app = new Koa();
 // ERROR Access to XMLHttpRequest from origin has been blocked by CORS policy:
 // Response to preflight request doesn't pass access control check:
 // No 'Access-Control-Allow-Origin' header is present on the requ
-app.use(cors({
-  origin: "*"
-}));
+app.use(
+    cors({
+        origin: "*"
+    })
+);
 // Ensure access to the body of the request.
 app.use(bodyParser());
 

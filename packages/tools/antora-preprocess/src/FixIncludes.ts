@@ -16,8 +16,8 @@ const dir: string[] = fs.readdirSync(dirName);
 
 console.log("Dir " + dir);
 
-for(let file of dir){
-    console.log("================================== file " +file);
+for (let file of dir) {
+    console.log("================================== file " + file);
 
     const adf = new AsciidocFile(file);
     adf.directory = dirName;
@@ -25,4 +25,3 @@ for(let file of dir){
     adf.parse();
     adf.copyFiles();
 }
-

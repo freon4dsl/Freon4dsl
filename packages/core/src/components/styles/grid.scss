@@ -1,16 +1,16 @@
 .maingrid {
-  display: inline-grid;
-  grid-gap: 0px;
-  align-items: center;
-  align-content: center;
-  justify-items: stretch;
-  border: darkgreen;
-  border-width: 1pt;
-  border-style: solid;
+    display: inline-grid;
+    grid-gap: 0px;
+    align-items: center;
+    align-content: center;
+    justify-items: stretch;
+    border: darkgreen;
+    border-width: 1pt;
+    border-style: solid;
 }
 
 .gridcell {
-  align-items: center;
-  box-sizing: border-box;
-  align-self: stretch;
+    align-items: center;
+    box-sizing: border-box;
+    align-self: stretch;
 }

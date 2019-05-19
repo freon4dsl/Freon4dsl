@@ -12,19 +12,19 @@ import { STORE_ROUTER } from "./constants/stores";
 const history = createBrowserHistory();
 const routerStore = new RouterStore(history);
 const rootStores = {
-  [STORE_ROUTER]: routerStore
+    [STORE_ROUTER]: routerStore
 };
 
 // render react DOM
 ReactDOM.render(
-  <Provider {...rootStores}>
-    <Root>
-      <Router history={history}>
-        <Switch>
-          <Route path="/" component={MainProjectionalEditor} />
-        </Switch>
-      </Router>
-    </Root>
-  </Provider>,
-  document.getElementById("root")
+    <Provider {...rootStores}>
+        <Root>
+            <Router history={history}>
+                <Switch>
+                    <Route path="/" component={MainProjectionalEditor} />
+                </Switch>
+            </Router>
+        </Root>
+    </Provider>,
+    document.getElementById("root")
 );

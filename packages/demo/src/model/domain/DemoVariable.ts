@@ -4,28 +4,28 @@ import { DemoEntity } from "./DemoEntity";
 
 @model
 export class DemoVariable extends DemoModelElement {
-  $type: string = "DemoVariable";
-  name: string = "";
+    $type: string = "DemoVariable";
+    name: string = "";
 
-  @observablereference
-  type: DemoEntity;
+    @observablereference
+    type: DemoEntity;
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  toString(): string {
-    return "variable " + this.name;
-  }
+    toString(): string {
+        return "variable " + this.name;
+    }
 
-  asString(): string {
-    return this.toString();
-  }
+    asString(): string {
+        return this.toString();
+    }
 
-  static create(name: string, type: DemoEntity): DemoVariable {
-    const result = new DemoVariable();
-    result.name = name;
-    result.type = type;
-    return result;
-  }
+    static create(name: string, type: DemoEntity): DemoVariable {
+        const result = new DemoVariable();
+        result.name = name;
+        result.type = type;
+        return result;
+    }
 }

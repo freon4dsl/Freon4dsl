@@ -29,6 +29,5 @@ describe("Demo Model", () => {
             expect((f.expression as any).container).toBeTruthy();
             expect(f.expression.piContainer().container).toBe(f);
         });
-
     });
 });

@@ -4,24 +4,24 @@ import { DemoLiteralExpression } from "./DemoLiteralExpression";
 
 @model
 export class DemoStringLiteralExpression extends DemoLiteralExpression {
-  $type: string = "DemoStringLiteralExpression";
-  @observable public value: string = "";
+    $type: string = "DemoStringLiteralExpression";
+    @observable public value: string = "";
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  toString(): string {
-    return this.asString();
-  }
+    toString(): string {
+        return this.asString();
+    }
 
-  asString(): string {
-    return '"' + this.value + '"';
-  }
+    asString(): string {
+        return '"' + this.value + '"';
+    }
 
-  static create(value: string): DemoStringLiteralExpression {
-    const result = new DemoStringLiteralExpression();
-    result.value = value;
-    return result;
-  }
+    static create(value: string): DemoStringLiteralExpression {
+        const result = new DemoStringLiteralExpression();
+        result.value = value;
+        return result;
+    }
 }

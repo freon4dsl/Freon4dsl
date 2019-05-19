@@ -6,30 +6,30 @@ import { DemoFunction } from "../domain/DemoFunction";
 
 @model
 export class DemoFunctionCallExpression extends DemoExpression {
-  $type: string = "DemoFunctionCallExpression";
-  @observablelistpart args: DemoExpression[];
-  get functionName(): string {
-    return this.functionDefinition ? this.functionDefinition.name : null;
-  }
-  @observable functionDefinition: DemoFunction | null;
+    $type: string = "DemoFunctionCallExpression";
+    @observablelistpart args: DemoExpression[];
+    get functionName(): string {
+        return this.functionDefinition ? this.functionDefinition.name : null;
+    }
+    @observable functionDefinition: DemoFunction | null;
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  getName = (): string => {
-    return this.functionName;
-  };
+    getName = (): string => {
+        return this.functionName;
+    };
 
-  pushArg(exp: DemoExpression) {
-    this.args.push(exp);
-  }
+    pushArg(exp: DemoExpression) {
+        this.args.push(exp);
+    }
 
-  toString(): string {
-    return this.functionName + "()";
-  }
+    toString(): string {
+        return this.functionName + "()";
+    }
 
-  children(): DemoExpression[] {
-    return this.args;
-  }
+    children(): DemoExpression[] {
+        return this.args;
+    }
 }

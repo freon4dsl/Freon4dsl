@@ -3,30 +3,30 @@ import * as uuid from "uuid";
 import { DemoModelElement } from "../DemoModel";
 
 export abstract class DemoExpression extends DemoModelElement {
-  $type: string;
+    $type: string;
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  toString(): string {
-    return "DemoExpression";
-  }
+    toString(): string {
+        return "DemoExpression";
+    }
 
-  children(): DemoExpression[] | null {
-    return [];
-  }
+    children(): DemoExpression[] | null {
+        return [];
+    }
 
-  get name(): string {
-    return this.toString();
-  }
+    get name(): string {
+        return this.toString();
+    }
 
-  identity(): string {
-    console.log("Id is " + this.$id);
-    return this.$id;
-  }
+    identity(): string {
+        console.log("Id is " + this.$id);
+        return this.$id;
+    }
 
-  asString(): string {
-    return this.toString();
-  }
+    asString(): string {
+        return this.toString();
+    }
 }

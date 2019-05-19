@@ -12,50 +12,46 @@ type Editor = "Demo" | "Meta";
 
 @observer
 export class MainProjectionalEditor extends React.Component<any, {}> {
-  toolbarItems: MainToolbarItem[] = [
-    { id: "1", label: "Demo", onClick: () => (this.editorType = "Demo") },
-    { id: "2", label: "Meta", onClick: () => (this.editorType = "Meta") }
-  ];
+    toolbarItems: MainToolbarItem[] = [
+        { id: "1", label: "Demo", onClick: () => (this.editorType = "Demo") },
+        { id: "2", label: "Meta", onClick: () => (this.editorType = "Meta") }
+    ];
 
-  @observable editorType: Editor = "Demo";
+    @observable editorType: Editor = "Demo";
 
-  constructor(props: any) {
-    super(props);
-    this.initEditors();
-  }
+    constructor(props: any) {
+        super(props);
+        this.initEditors();
+    }
 
-  render() {
-    return (
-      <div>
-        {this.toolbarItems && this.toolbarItems.length > 0 && (
-          <MainToolbarComponent toolbarItems={this.toolbarItems} />
-        )}
-        <div>
-          {this.editorType === "Demo" && (
-            <ProjectionalEditor editor={this.demoEditor} />
-          )}
-          {this.editorType === "Meta" && (
-            <ProjectionalEditor editor={this.metaEditor} />
-          )}
-        </div>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                {this.toolbarItems && this.toolbarItems.length > 0 && (
+                    <MainToolbarComponent toolbarItems={this.toolbarItems} />
+                )}
+                <div>
+                    {this.editorType === "Demo" && <ProjectionalEditor editor={this.demoEditor} />}
+                    {this.editorType === "Meta" && <ProjectionalEditor editor={this.metaEditor} />}
+                </div>
+            </div>
+        );
+    }
 
-  private metaEditor: PiEditor;
-  private demoEditor: PiEditor;
+    private metaEditor: PiEditor;
+    private demoEditor: PiEditor;
 
-  initEditors() {
-    const ctx = new MetaContext();
-    const actions = new MetaActions();
-    const projection = new MetaProjection();
-    this.metaEditor = new PiEditor(ctx, projection, actions);
-    projection.setEditor(this.metaEditor);
+    initEditors() {
+        const ctx = new MetaContext();
+        const actions = new MetaActions();
+        const projection = new MetaProjection();
+        this.metaEditor = new PiEditor(ctx, projection, actions);
+        projection.setEditor(this.metaEditor);
 
-    const demoCtx = new DemoContext();
-    const demoActions = new DemoActions();
-    const demoProjection = new DemoProjection();
-    this.demoEditor = new PiEditor(demoCtx, demoProjection, demoActions);
-    demoProjection.setEditor(this.demoEditor);
-  }
+        const demoCtx = new DemoContext();
+        const demoActions = new DemoActions();
+        const demoProjection = new DemoProjection();
+        this.demoEditor = new PiEditor(demoCtx, demoProjection, demoActions);
+        demoProjection.setEditor(this.demoEditor);
+    }
 }

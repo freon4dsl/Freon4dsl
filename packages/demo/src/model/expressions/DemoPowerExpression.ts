@@ -3,9 +3,9 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 
 @model
 export class DemoPowerExpression extends DemoBinaryExpression {
-  $type: string = "DemoPowerExpression";
+    $type: string = "DemoPowerExpression";
 
-  get symbol(): string {
-    return "^";
-  }
+    get symbol(): string {
+        return "^";
+    }
 }

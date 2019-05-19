@@ -3,13 +3,13 @@ import { DemoExpression } from "./DemoExpression";
 
 @model
 export class DemoPlaceholderExpression extends DemoExpression {
-  $type: string = "DemoPlaceholderExpression";
+    $type: string = "DemoPlaceholderExpression";
 
-  toString(): string {
-    return "...";
-  }
+    toString(): string {
+        return "...";
+    }
 
-  children(): DemoExpression[] {
-    return [];
-  }
+    children(): DemoExpression[] {
+        return [];
+    }
 }

@@ -1,31 +1,31 @@
 .numeric {
-  color: green;
+    color: green;
 }
 .stringLiteral {
-  color: green;
+    color: green;
 }
 
 .keyword {
-  font-weight: bold;
-  color: blue;
+    font-weight: bold;
+    color: blue;
 }
 
 .mygrid {
-  padding: 0px;
-  grid-gap: 0px;
-  border: 0px;
-  border-style: hidden;
+    padding: 0px;
+    grid-gap: 0px;
+    border: 0px;
+    border-style: hidden;
 }
 .mycell {
-  display: flex;
-  justify-self: stretch;
-  padding: 0px;
-  grid-gap: -1px;
-  border: 0px;
-  border-style: hidden;
+    display: flex;
+    justify-self: stretch;
+    padding: 0px;
+    grid-gap: -1px;
+    border: 0px;
+    border-style: hidden;
 }
 .tree {
-  border: 1px;
-  border-style: dotted;
-  border-color: darkorange;
+    border: 1px;
+    border-style: dotted;
+    border-color: darkorange;
 }

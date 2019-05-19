@@ -6,26 +6,26 @@ import { DemoModelElement } from "../DemoModel";
 
 @model
 export class DemoAttribute extends DemoModelElement {
-  $type: string = "DemoAttribute";
+    $type: string = "DemoAttribute";
 
-  @observable name: string = "";
-  @observable type: DemoAttributeType = "String";
+    @observable name: string = "";
+    @observable type: DemoAttributeType = "String";
 
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  toString(): string {
-    return "attribute " + this.name + " : " + this.type;
-  }
+    toString(): string {
+        return "attribute " + this.name + " : " + this.type;
+    }
 
-  asString(): string {
-    return this.toString();
-  }
+    asString(): string {
+        return this.toString();
+    }
 
-  static create(name: string): DemoAttribute {
-    const result = new DemoAttribute();
-    result.name = name;
-    return result;
-  }
+    static create(name: string): DemoAttribute {
+        const result = new DemoAttribute();
+        result.name = name;
+        return result;
+    }
 }

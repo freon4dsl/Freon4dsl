@@ -4,16 +4,23 @@ import {
     AFTER_BINARY_OPERATOR,
     BEFORE_BINARY_OPERATOR,
     LEFT_MOST,
-    RIGHT_MOST, BTREE, PiEditor, PiLogger, PiUtils
+    RIGHT_MOST,
+    BTREE,
+    PiEditor,
+    PiLogger,
+    PiUtils
 } from "@projectit/core";
 import { DemoContext, DemoProjection, DemoActions } from "../editor/index";
 import {
     DemoBinaryExpression,
-    DemoComparisonExpression, DemoIfExpression,
-    DemoMultiplyExpression, DemoNumberLiteralExpression,
+    DemoComparisonExpression,
+    DemoIfExpression,
+    DemoMultiplyExpression,
+    DemoNumberLiteralExpression,
     DemoPlusExpression,
     DemoPowerExpression,
-    DemoStringLiteralExpression, DemoVariableRefExpression
+    DemoStringLiteralExpression,
+    DemoVariableRefExpression
 } from "../model/index";
 
 describe("BalanceTree", () => {
@@ -212,14 +219,18 @@ describe("BalanceTree", () => {
                 const newExp = new DemoPlusExpression();
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
-                expect(context.rootElement.asString()).toBe('("rootLeft" < (... + ("multiplyLeft" * "multiplyRight")))');
+                expect(context.rootElement.asString()).toBe(
+                    '("rootLeft" < (... + ("multiplyLeft" * "multiplyRight")))'
+                );
             });
             it("should insert 'right' of * correctly", () => {
                 const box = rootBox.findBox(multiply.piId(), AFTER_BINARY_OPERATOR);
                 const newExp = new DemoPlusExpression();
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
-                expect(context.rootElement.asString()).toBe('("rootLeft" < (("multiplyLeft" * ...) + "multiplyRight"))');
+                expect(context.rootElement.asString()).toBe(
+                    '("rootLeft" < (("multiplyLeft" * ...) + "multiplyRight"))'
+                );
             });
         });
 
@@ -233,7 +244,9 @@ describe("BalanceTree", () => {
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
                 expect(context.rootElement).toBe(root);
-                expect(context.rootElement.asString()).toBe('("rootLeft" < ((... * "multiplyLeft") * "multiplyRight"))');
+                expect(context.rootElement.asString()).toBe(
+                    '("rootLeft" < ((... * "multiplyLeft") * "multiplyRight"))'
+                );
             });
             it("should insert 'right' of * correctly", () => {
                 const box = rootBox.findBox(multiply.piId(), AFTER_BINARY_OPERATOR);
@@ -242,7 +255,9 @@ describe("BalanceTree", () => {
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
                 expect(context.rootElement).toBe(root);
-                expect(context.rootElement.asString()).toBe('("rootLeft" < (("multiplyLeft" * ...) * "multiplyRight"))');
+                expect(context.rootElement.asString()).toBe(
+                    '("rootLeft" < (("multiplyLeft" * ...) * "multiplyRight"))'
+                );
             });
         });
         describe("with higher priority", () => {
@@ -253,7 +268,9 @@ describe("BalanceTree", () => {
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
                 expect(context.rootElement).toBe(root);
-                expect(context.rootElement.asString()).toBe('("rootLeft" < ((... ^ "multiplyLeft") * "multiplyRight"))');
+                expect(context.rootElement.asString()).toBe(
+                    '("rootLeft" < ((... ^ "multiplyLeft") * "multiplyRight"))'
+                );
             });
             it("should insert 'right' of * correctly", () => {
                 const box = rootBox.findBox(multiply.piId(), AFTER_BINARY_OPERATOR);
@@ -261,9 +278,10 @@ describe("BalanceTree", () => {
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
                 expect(context.rootElement).toBe(root);
-                expect(context.rootElement.asString()).toBe('("rootLeft" < ("multiplyLeft" * (... ^ "multiplyRight")))');
+                expect(context.rootElement.asString()).toBe(
+                    '("rootLeft" < ("multiplyLeft" * (... ^ "multiplyRight")))'
+                );
             });
         });
     });
-
 });

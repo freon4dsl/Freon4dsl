@@ -1,11 +1,11 @@
 import { MetaGenerator } from "./MetaGenerator";
 import {
-  MetaConcept,
-  MetaElementProperty,
-  MetaElementType,
-  MetaModel,
-  MetaPrimitiveProperty,
-  MetaPrimitiveType
+    MetaConcept,
+    MetaElementProperty,
+    MetaElementType,
+    MetaModel,
+    MetaPrimitiveProperty,
+    MetaPrimitiveType
 } from "./MetaModel";
 
 const model = MetaModel.create("ModelName");

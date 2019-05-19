@@ -31,7 +31,6 @@ describe("ProjectionalEditor", () => {
         // TODO  TS2339: Property 'toMatchSnapshot' does not exist on type 'Matchers<Json>'.
         // expect(toJson(component)).toMatchSnapshot();
     });
-
 });
 
 export function toJson(component: ReactWrapper<any, any>): Json {
