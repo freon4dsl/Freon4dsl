@@ -20,7 +20,11 @@
     "types": ["node", "jest", "jest-enzyme"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["packages/*"]
+      "@projectit/core/*": ["packages/core/src/*"],
+      "@projectit/model/*": ["packages/model/src/*"],
+      "@projectit/meta/*": ["packages/meta/src/*"],
+      "@projectit/demo/*": ["packages/demo/src/*"],
+      "@projectit/demo/*": ["packages/server/src/*"]
     }
   }
 }
