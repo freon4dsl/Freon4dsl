@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -8,26 +7,20 @@
     "lib": ["dom", "es6", "es2016.array.include"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "noEmit": true,
+    "noEmit": false,
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "noImplicitReturns": false,
-    "outDir": "dist",
-    "paths": {
-      "projectit": ["projectit/src"],
-      "projectit/*": ["projectit/src/*"],
-      "projectit-model": ["projectit-model/src"],
-      "projectit-model/*": ["projectit-model/src/*"],
-      "projectit-demo": ["projectit-demo/src"],
-      "projectit-demo/*": ["projectit-demo/src/*"]
-    },
     "removeComments": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": false,
     "target": "es5",
-    "types": ["node", "jest", "jest-enzyme"]
-  },
-  "exclude": ["node_modules"]
+    "types": ["node", "jest", "jest-enzyme"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["packages/*"]
+    }
+  }
 }

@@ -1,0 +1,38 @@
+$black: #000000;
+$dark-blue: #1d53f9;
+$dark-green: #4e8402;
+
+.numeric {
+  color: $dark-green;
+}
+
+.stringLiteral {
+  color: $dark-green;
+}
+
+.keyword {
+  font-weight: bold;
+  color: $dark-blue;
+}
+
+.indent {
+  margin-left: 40px;
+}
+
+.indent2 {
+  margin-left: 80px;
+}
+
+.indentkeyword {
+  font-weight: bold;
+  color: $dark-blue;
+  margin-left: 40px;
+}
+
+.mygrid {
+  border-style: hidden;
+}
+
+.mycell {
+  border-style: hidden;
+}

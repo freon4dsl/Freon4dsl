@@ -1,0 +1,20 @@
+{
+  "name": "@projectit/model",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joswarmer/ProjectIt.git",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
+  },
+  "scripts": {
+    "start": "tsc -w",
+    "test": "NODE_ENV=test jest --config ./jest.config.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@projectit/core": "0.0.1"
+  }
+}

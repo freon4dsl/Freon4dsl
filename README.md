@@ -3,7 +3,7 @@ Projectional Editor for the Web.
 
 ProjectIt will be presented at the LangDev workshop in Amsterdam on March 21-22.
 
-![logo](/images/projectit-logo-3d.png)
+![logo](/public/images/projectit-logo-3d.png)
 
 **Note**. This project is Work in Progress, no dirstribution has been made yet. No version numer is attached yet, the first 0.? release will be later this year.
 
@@ -35,8 +35,13 @@ To install all dependencies:
 
 To build and run the demo locally:
 
+    yarn build
     yarn start
 
+To build and run the docs locally:
+
+    yarn start:docs
+    
 This will open a browser with the demo app on `http://localhost:3000/`.
 The demo app is work in progress.
 
