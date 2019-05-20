@@ -1,0 +1,81 @@
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  text-size-adjust: 100%;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: var(--color-text);
+  font-family: "Gotham", sans-serif;
+  line-height: 1.5;
+  margin: 0;
+}
+
+a {
+  color: var(--color-link);
+  outline: none;
+  text-decoration: none;
+}
+
+a:focus,
+a:hover {
+  text-decoration: underline;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+code,
+kbd,
+pre {
+  font-family: "Roboto Mono", monospace;
+}
+
+code {
+  color: var(--color-brand-black);
+  font-size: 0.9375em;
+  word-spacing: -0.125em;
+}
+
+html code {
+  hyphens: none;
+}
+
+b,
+strong {
+  font-weight: var(--weight-medium);
+}
+
+small {
+  font-size: 0.8em;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: var(--width-container);
+  padding: 0 var(--width-container-gutter);
+}

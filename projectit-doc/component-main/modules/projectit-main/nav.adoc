@@ -1,0 +1,10 @@
+* Introduction
+** xref:Projectional-Overview.adoc[What is Projectional Editing]
+* ProjectIt
+** xref:Defining_Projections.adoc[Defining Projections]
+** xref:Defining_Actions.adoc[Defining Actions]
+//  * xref:features.adoc[How Antora Can Help]
+//* xref:how-antora-works.adoc[How Antora Works]
+//* Get Antora
+//** xref:install:linux-requirements.adoc[Linux Requirements]
+//** xref:install:macos-requirements.adoc[macOS Requirements]

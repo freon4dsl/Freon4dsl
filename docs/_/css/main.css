@@ -1,0 +1,119 @@
+main {
+  padding-bottom: 4rem;
+}
+
+/* IMPORTANT for this to work, the element cannot be display: flex and cannot have padding top or border top */
+main [id]::before {
+  content: "";
+  display: inherit;
+  height: var(--height-to-body);
+  margin-top: calc(-1 * var(--height-to-body));
+  visibility: hidden;
+  width: 0;
+}
+
+main table[id]::before {
+  display: block;
+}
+
+main a[id]::before,
+main code[id]::before,
+main em[id]::before,
+main span[id]::before,
+main strong[id]::before {
+  display: inline-block;
+  position: relative;
+  top: -0.75em;
+}
+
+@supports (-moz-appearance: none) {
+  main a[id],
+  main code[id],
+  main em[id],
+  main span[id],
+  main strong[id] {
+    border-top: var(--height-to-body) solid transparent;
+    pointer-events: none; /* NOTE don't allow border to cover preceding lines */
+  }
+}
+
+main blockquote,
+main p {
+  hyphens: auto; /* NOTE in Chrome, hyphens: auto is only supported on macOS and Android */
+}
+
+.article-banner {
+  align-items: center;
+  background: linear-gradient(to right, var(--color-brand-purple) 0%, var(--color-brand-light-blue) 100%);
+  color: #fff;
+  display: flex;
+  line-height: 1.2;
+  margin: calc(-1 * var(--height-spacer)) calc(-1 * var(--width-container-gutter)) var(--height-spacer);
+  padding: 1rem 1.25rem;
+}
+
+.article-banner p {
+  font-size: 1.125rem;
+  margin: 0 1rem 0 0;
+}
+
+.article-banner a.btn {
+  color: #fff;
+  border: 1px solid #fff;
+  display: block;
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin-left: auto;
+  padding: 0.875rem 1.5rem;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap;
+}
+
+.article-banner a.btn:focus,
+.article-banner a.btn:hover {
+  background-color: #fff;
+  color: var(--color-brand-purple);
+}
+
+.article-header {
+  display: flex;
+  font-size: 0.875rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.article-header ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.article-header .crumbs {
+  flex: 1;
+  min-width: 0;
+}
+
+@media screen and (min-width: 769px) {
+  main.article {
+    padding-right: var(--width-main-gutter);
+    padding-left: var(--width-main-gutter);
+  }
+
+  main.home {
+    padding-right: var(--width-container-gutter);
+    padding-left: var(--width-container-gutter);
+  }
+
+  .article-banner {
+    margin: 0 calc(-1 * var(--width-main-gutter)) 1rem;
+  }
+
+  .article-header {
+    margin-bottom: 0;
+    align-items: flex-start;
+  }
+}

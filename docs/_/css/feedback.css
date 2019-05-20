@@ -1,0 +1,28 @@
+#atlwdg-trigger.atlwdg-trigger {
+  display: none;
+  background: linear-gradient(to right, var(--color-brand-pink) 0%, var(--color-brand-orange) 100%);
+  border: 0;
+  border-radius: 3px 3px 0 0;
+  box-shadow: -2px -4px 30px rgba(0, 0, 0, 0.25);
+  color: #fff !important;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.6875rem 1.5rem 0.5625rem;
+  right: var(--width-container-gutter);
+  z-index: var(--z-index-feedback);
+}
+
+.atlwdg-trigger::after {
+  content: "?";
+}
+
+@media screen and (min-width: 769px) {
+  #atlwdg-trigger.atlwdg-trigger {
+    display: block;
+  }
+}
+
+#atlwdg-container.atlwdg-popup {
+  width: 769px;
+}

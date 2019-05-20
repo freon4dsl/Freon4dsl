@@ -1,0 +1,6 @@
+.optanon-alert-box-wrapper,
+#optanon-popup-wrapper {
+  position: fixed;
+  overflow: hidden;
+  width: 0;
+}

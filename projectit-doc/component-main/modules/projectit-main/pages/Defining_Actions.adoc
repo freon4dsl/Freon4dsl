@@ -1,0 +1,14 @@
+:imagesdir: ../assets/
+:demodir: ../../../../../projectit-demo/src
+:projectitdir: ../../../../../projectit/src
+:source-language: javascript
+
+= Defining Actions
+
+== Aliases
+
+== Custom Actions
+
+== Expressions
+
+== Keyboard Shortcuts
