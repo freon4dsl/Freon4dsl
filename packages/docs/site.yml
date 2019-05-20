@@ -10,11 +10,11 @@ content:
     start_path: packages/docs/component-main
 ui:
   bundle:
-    url: https://github.com/couchbase/docs-ui/releases/download/v205/ui-bundle.zip
-#    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+#    url: https://github.com/couchbase/docs-ui/releases/download/v205/ui-bundle.zip
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
 #  supplemental_files: ./projectit-templates/projectit
-#  supplemental_files: ./projectit-templates/antora-default
+  supplemental_files: ./projectit-templates/antora-default
 output:
   dir: ../../docs
 

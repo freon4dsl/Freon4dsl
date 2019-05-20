@@ -1,0 +1,17 @@
+.tools .edit {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.tools .edit a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background: url(../img/edit.svg) no-repeat center;
+  background-size: 75%;
+  vertical-align: top;
+  color: transparent;
+}

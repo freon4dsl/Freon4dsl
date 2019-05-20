@@ -1,0 +1,35 @@
+.crumbs {
+  color: var(--color-muted);
+  font-weight: var(--weight-light);
+  /* effectively a single-line height of 1.5 */
+  line-height: 1.35;
+  padding: 0.075em 0;
+}
+
+.crumbs ul {
+  flex-wrap: wrap;
+}
+
+.crumbs li {
+  max-width: 100%;
+}
+
+.crumbs li::after {
+  content: "/";
+  padding: 0 0.25rem;
+  color: var(--color-muted);
+}
+
+.crumbs li:last-of-type::after {
+  content: none;
+}
+
+.crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.crumbs a:hover,
+.crumbs a:focus {
+  color: var(--color-link);
+}
