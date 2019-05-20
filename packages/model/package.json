@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "tsc -w",
-    "test": "NODE_ENV=test jest --config ./jest.config.js",
+    "test": "NODE_ENV=test jest --config ./jest.config.js --passWithNoTests",
     "build": "tsc"
   },
   "dependencies": {
