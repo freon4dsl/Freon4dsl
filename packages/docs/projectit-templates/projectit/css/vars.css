@@ -1,0 +1,60 @@
+:root {
+  /* NOTE tint colors are 15% transparent */
+  /* primary */
+  --color-brand-black: #000;
+  --color-brand-red: #ea2328;
+  --color-brand-red-tint: #fcdedf;
+  --color-brand-white: #fff;
+  /* secondary */
+  --color-projectit-lightblue: rgba(211, 227, 253, 255);
+  --color-projectit-darkblue: rgba(0, 0, 139, 255);
+  --color-brand-light-blue: #00ace0;
+  --color-brand-light-blue-tint: #d9f3fb;
+  --color-brand-pink: #eb4971;
+  --color-brand-green: #00b9be;
+  --color-brand-purple: #b36cdb;
+  --color-brand-purple-tint: #f4e9fa;
+  /* tertiary */
+  --color-brand-gray: #666;
+  /* --color-brand-silver: #ccc; */
+  --color-brand-silver: #c1c1c1;
+  --color-brand-blue: #0074e0;
+  --color-brand-blue-tint: #d9eafb;
+  --color-brand-orange: #fc9c0c;
+  --color-brand-orange-tint: #fff0da;
+  --color-muted: var(--color-brand-gray);
+  --color-text: #333;
+  --color-link: var(--color-brand-light-blue);
+  --color-code: var(--color-brand-pink);
+  --color-border: var(--color-brand-silver);
+  /* --color-border-table: #666; */
+  --color-border-table: #dadada;
+  --color-shade: #f3f3f3;
+  --color-navbar-bg: var(--color-projectit-lightblue);
+  --color-navbar-text: var(--color-projectit-darkblue);
+  --color-footer-bg: var(--color-brand-black);
+  --color-footer-text: var(--color-brand-white);
+  --height-spacer: 1.5rem;
+  /* --height-navbar: 4rem; */
+  --height-navbar: 4.875rem;
+  --height-to-body: calc(var(--height-navbar) + var(--height-spacer));
+  --height-min-body: calc(100vh - var(--height-to-body));
+  --height-nav: calc(var(--height-min-body) - var(--height-spacer));
+  /* --width-main-gutter: 1.5rem; */
+  --width-main-gutter: 2.5rem;
+  --width-container: 80rem;
+  --width-container-gutter: 1.25rem;
+  --width-nav: 16rem;
+  --width-toc: 12rem;
+  --weight-light: 300;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --z-index-feedback: 7;
+  --z-index-nav-mobile: 6;
+  --z-index-navbar-dropdown-link: 5;
+  --z-index-navbar-dropdown: 4;
+  --z-index-navbar: 3;
+  --z-index-footer: 2;
+  --z-index-nav: 1;
+}
