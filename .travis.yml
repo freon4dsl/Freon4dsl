@@ -1,23 +1,13 @@
 language: node_js
-
-os:
-  - linux
-  - osx
-  - windows
-
 node_js:
-  - 11 # current
-  - 10 # lts
+  - "8.12.0"
 
-cache:
-  yarn: true
+cache: yarn
 
-# needed for windows travis, which gets stuck after running tests
-# https://travis-ci.community/t/build-doesnt-finish-after-completing-tests/288/9
-env:
-  - YARN_GPG=no
+install:
+  - yarn global add lerna jest
+  - lerna bootstrap
 
-# Travis uses yarn@1.3.2 on linux, and yarn@latest on other platforms.
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s
-  - export PATH=$HOME/.yarn/bin:$PATH
+script:
+  - yarn test
+  - yarn build
