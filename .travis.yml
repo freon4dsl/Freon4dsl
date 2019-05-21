@@ -5,9 +5,9 @@ node_js:
 cache: yarn
 
 install:
-  - yarn global add lerna jest
-  - lerna bootstrap
+  - npm install --global yarn@1.15.2
+  - yarn --version
+  - yarn install
 
 script:
-  - yarn test
   - yarn build
