@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "8.12.0"
+
+cache: yarn
+
+install:
+  - npm install --global yarn@1.15.2
+  - yarn --version
+  - yarn install
+
+script:
+  - yarn build
+  - yarn test

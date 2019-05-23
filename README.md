@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/jbadeau/ProjectIt.svg?branch=master)](https://travis-ci.com/jbadeau/ProjectIt)
+
 # ProjectIt
 Projectional Editor for the Web.
 
