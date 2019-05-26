@@ -8,8 +8,8 @@ module.exports = {
     "\\.tsx?$": "ts-jest",
     "\\.jsx?$": "babel-jest"
   },
-  // testMatch: null,
-  // testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+  testMatch: null,
+  testRegex: "(/__tests__/.*spec)\\.(jsx?|tsx?)$",
   snapshotSerializers: [
     "enzyme-to-json/serializer"
   ],
