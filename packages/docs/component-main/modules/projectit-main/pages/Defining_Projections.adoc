@@ -1,9 +1,13 @@
 :imagesdir: ../assets/images/
-:demodir: ../../../../../demo/src
+:src-dir: ../../../../..
 :projectitdir: ../../../../../core
 :source-language: javascript
 
-= Defining Projections
+= Defining the Editor
+
+To define the editor the main parts are defining the projection
+
+== Defining Projections
 
 The layout for everything in ProjectIt is defined using boxes.
 A box is a rectangular area in the editor.
@@ -46,7 +50,7 @@ Given  that `literal` is the `StringLiteral` object:
 
 [source]
 ----
-include::{demodir}/editor/DemoProjection.ts[tag=StringLiteral]
+include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
 ----
 <1> The overall horizontal list box to group everything
 <2> The first label box for the start quote
@@ -56,6 +60,32 @@ include::{demodir}/editor/DemoProjection.ts[tag=StringLiteral]
 All box roles within the projection for a specific element should have a unique role.
 This way we can identify every box buy its model element + its role.
 
+[[actions,ActionTitle]]
+== Actions
+User actions in ProjectIt are attached to boxes.
+This is done by attaching one or more *box roles* to an action.
+
+Let's take a look at the definition of a behavior:
+````
+export interface PiBehavior {
+    /**
+     * The trigger to activate this behavior
+     */
+    trigger: PiTriggerType;
+
+    /**
+     * The box roles in which this trigger is active
+     */
+    activeInBoxRoles: string[];
+
+    /**
+     * Optional callback function that returns whether the trigger is applicable for the specific box.
+     */
+    isApplicable?: (box: Box) => boolean;
+    boxRoleToSelect?: string;
+    caretPosition?: PiCaret;
+}
+````
 
 == Box
 A Box is an abstract class describing the features that are common for all boxes.

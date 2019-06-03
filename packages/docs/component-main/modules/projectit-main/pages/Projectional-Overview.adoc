@@ -1,12 +1,63 @@
-:imagesdir: ../assets/images
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
 
-= Projectional Editor Overview
+= ProjectIt Editor Overview
 
-The overall flow in a projectional editor is as follows:
+The overall flow in the ProjectIt projectional editor is as follows:
 
-1. The model/AST is mapped to a visual presentation (the projection)
-2. The Projection is shown to the user
-3. The user performs an action on the projection
+1. The model/AST is mapped to a visual presentation (the projection).
+2. The Projection is shown to the user.
+3. The user performs an action on the projection.
 4. The action on the projection is mapped to an action on the model/AST.
+5. The changed model/AST is (re)mapped to a visual representation.
 
 image::projection-overview.png[]
+
+== Projection
+The projection from your model/AST is defined by implementing the
+_PiProjection_ interface:
+
+[source]
+----
+include::{src-dir}/core/src/language/PiProjection.ts[tag=PiProjection]
+----
+
+Implementing this interface should return a _Box_ for each `element` in the AST.
+The box model is further described in xref:Defining_Projections.adoc#Defining Projections[Defining Projections].
+
+== Behavior
+The behavior of the editor is tightly coupled to the boxes in the projection.
+Each behavior has one or more _box roles_, specifying that the behavior is only active
+in boxes with that specific role.
+Furthermore a behavior has a _trigger_, describing the key(s) that will trigger the behavior,
+and an _action_,  which is a typescript/javascript function the will be executed when the
+behavior is being triggered.
+
+Actions are further described in xref:Defining_Projections.adoc#actions[Actions].
+
+== AST Access
+As ProjectIt uses the AST for projections and behavior, it needs to know about the type of elements in the AST.
+To allow ProjectIt to work, each type that occurrs in the AST needs to implement the `PiElement` interface.
+This interface is kept as small as possible, to allow ProjectIt to be used for any AST.
+
+[source]
+----
+include::{src-dir}/core/src/language/PiModel.ts[tag=PiElement]
+----
+
+The main two elements in this inhterface are:
+
+* `piId()`, which should return en unique id for each elment in the AST.
+* `piContainer()` which should return a descriptor for the container (parent) of an element in the AST.
+
+The two functions `piIsExpression()` and `piIsBinaryExpression()` are only needed when your language
+contains expressions, as ProjectIt includes special handling of expressions.
+To start with, these functions can be defined top simply return `false`.
+
+
+
+
+
+
