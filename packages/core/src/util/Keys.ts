@@ -58,6 +58,7 @@ export function meta(e: React.KeyboardEvent<any>): MetaKey {
 export const BACKSPACE = 8;
 export const TAB = 9;
 export const ENTER = 13;
+export const CHARACTER_A = 65;
 export const SHIFT = 16;
 export const CONTROL = 17;
 export const ALT = 18;

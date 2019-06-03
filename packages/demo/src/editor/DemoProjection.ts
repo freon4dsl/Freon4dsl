@@ -325,16 +325,14 @@ export class DemoProjection implements PiProjection {
     private createStringLiteralBox(literal: DemoStringLiteralExpression): Box {
         LOGGER.info(this, "createStringLiteralBox: " + literal.value);
         return createDefaultExpressionBox(literal, "string-literal-exp", [
-            // xtag::StringLiteral[]
             new HorizontalListBox(literal, "string-literal", [
-                new LabelBox(literal, "start-quote", '"', { selectable: false }),
+                new LabelBox(literal, "start-quote", '"', { selectable: false}),
                 new TextBox(literal, "string-value", () => literal.value, (v: string) => (literal.value = v), {
                     style: demoStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
                 new LabelBox(literal, "end-quote", '"', { selectable: false })
             ])
-            // xend::StringLiteral[]
         ]);
     }
 
