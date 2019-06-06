@@ -2,7 +2,7 @@ site:
   title: ProjectItSite
   # the 404 page and sitemap files only get generated when the url property is set
   url: https://joswarmer.github.io/ProjectIt
-  start_page: projectit-component::README.adoc
+  start_page: projectit-component::index.adoc
 content:
   sources:
   - url: ./../..
@@ -11,10 +11,11 @@ content:
 ui:
   bundle:
 #    url: https://github.com/couchbase/docs-ui/releases/download/v205/ui-bundle.zip
-    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+#    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    url: file:../../../antora/antora-ui-default/build/ui-bundle.zip
     snapshot: true
 #  supplemental_files: ./projectit-templates/projectit
-  supplemental_files: ./projectit-templates/antora-default
+#  supplemental_files: ./projectit-templates/antora-default
 output:
   dir: ../../docs
 

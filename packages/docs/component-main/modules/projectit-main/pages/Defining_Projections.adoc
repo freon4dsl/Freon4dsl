@@ -60,33 +60,6 @@ include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
 All box roles within the projection for a specific element should have a unique role.
 This way we can identify every box buy its model element + its role.
 
-[[actions,ActionTitle]]
-== Actions
-User actions in ProjectIt are attached to boxes.
-This is done by attaching one or more *box roles* to an action.
-
-Let's take a look at the definition of a behavior:
-````
-export interface PiBehavior {
-    /**
-     * The trigger to activate this behavior
-     */
-    trigger: PiTriggerType;
-
-    /**
-     * The box roles in which this trigger is active
-     */
-    activeInBoxRoles: string[];
-
-    /**
-     * Optional callback function that returns whether the trigger is applicable for the specific box.
-     */
-    isApplicable?: (box: Box) => boolean;
-    boxRoleToSelect?: string;
-    caretPosition?: PiCaret;
-}
-````
-
 == Box
 A Box is an abstract class describing the features that are common for all boxes.
 As explained earlier, each box has a mandatory model element and role.
@@ -133,10 +106,7 @@ new TextBox(
 )
 ----
 
-Theer are two options you can set for a `TextBox`:
-
-----
-----
+There are two options you can set for a `TextBox`:
 
 These options control what happens when a textbox becomes empty, i.e. contains no characters.
 
@@ -144,18 +114,34 @@ These options control what happens when a textbox becomes empty, i.e. contains n
 An `SvgBox` shows a single SVG image.
 
 == ListBox
-A `ListBox` is a list of boxes, either horizontally or vertically.
+A `ListBox` is a list of child boxes, either horizontally or vertically.
 The ListBox itself is abstract.
 
 === HorizontalListBox
 A `HorizontalListBox` show a list of child boxes next to each other horizontally.
 
+An example of using a `HorizontalListBox` is the following that represents the
+projection of a StringLiteral.
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
+----
+
 === VerticalListBox
 A `VerticalListBox` show a list of child boxes next to each other vertically.
 
-=== VerticalPiElementListBox
-A `VerticalPiElementListBox` show a list of PiElement objects,
-where each PiElement will be shown according to the defined projection.
+It's usage is similar to that of the `HorizontalListBox`.
+
+=== VerticalModelElementListBox
+A `VerticalModelElementListBox` show a list of PiElement objects,
+where each ModelElement will be shown according to its defined projection.
+
+This box is a special case of a VerticalListBox, to show a list
+of child elements.
+A special property of this typem of box is teh ` elementCreator()`.
+This is a function thet should create a new element that fits in the collection.
+Given this, the VerticalModelElementListBox generates the editor
+for the element list, including the neccesary behavior to add and remove elements from the list.
 
 == GridBox
 A `GridBox` is used to show boxes in a tabular fashion.

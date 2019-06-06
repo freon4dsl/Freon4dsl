@@ -1,1 +1,1 @@
-* xref:README.adoc[Projectit Readme]
+* xref:index.adoc[Projectit Readme]

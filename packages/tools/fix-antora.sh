@@ -6,5 +6,5 @@ ts-node FixIncludes -d ../../../docs/component-main/modules/projectit-main/pages
 echo LOG cd docs
 cd ../../../../packages/docs
 echo LOG run antora
-antora --attribute demodir=example\$ site.yml
+antora --attribute src-dir=example\$ site.yml --ui-bundle-url ../../../antora/antora-ui-default/build/ui-bundle.zip
 
