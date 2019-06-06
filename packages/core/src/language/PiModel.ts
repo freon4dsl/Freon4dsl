@@ -2,7 +2,7 @@
  * You can either directly implement these interfaces, or use `Module Augmentation`,
  * as described in `https://www.typescriptlang.org/docs/handbook/declaration-merging.html`.
  */
-
+// tag::PiElement[]
 export interface PiElement {
     piId(): string;
 
@@ -12,6 +12,7 @@ export interface PiElement {
 
     piIsBinaryExpression(): boolean;
 }
+// end::PiElement[]
 
 export interface PiExpression extends PiElement {
     piIsExpressionPlaceHolder(): boolean;

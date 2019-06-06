@@ -224,6 +224,14 @@ const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
             LOGGER.log("Action done");
             return null;
         }
+    },
+    {
+        trigger: "a",
+        activeInBoxRoles: ["string-value"],
+        action: (box: Box, trigger: PiTriggerType, editor: PiEditor): PiElement | null => {
+            LOGGER.log("========================== Action done");
+            return null;
+        }
     }
 ];
 
@@ -252,6 +260,22 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
                 parent.entities.splice(proc.propertyIndex + 1, 0, e);
                 await editor.selectElement(e, "entity-name");
             }
+            return null;
+        }
+    },
+    {
+        trigger: { meta: MetaKey.Ctrl, keyCode: Keys.CHARACTER_A },
+        activeInBoxRoles: ["start-quote"],
+        action: (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
+            LOGGER.log("========================== Action Ctrl-a done");
+            return null;
+        }
+    },
+    {
+        trigger: { meta: MetaKey.None, keyCode: Keys.CHARACTER_A },
+        activeInBoxRoles: ["end-quote"],
+        action: (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
+            LOGGER.log("========================== Action 'a' done");
             return null;
         }
     }

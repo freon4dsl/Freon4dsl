@@ -1,0 +1,7 @@
+name: projectit-component
+version: '0.0.1'
+title: ProjectIt Developer Documentation
+nav:
+  - modules/ROOT/nav.adoc
+  - modules/projectit-main/nav.adoc
+  - modules/projectit-meta/nav.adoc
