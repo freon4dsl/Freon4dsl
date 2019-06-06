@@ -21,34 +21,10 @@
     </div>
     <div id="topbar-nav" class="navbar-menu">
       <div class="navbar-end">
-        <a class="navbar-item" href="#">Home</a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Products</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Product A</a>
-            <a class="navbar-item" href="#">Product B</a>
-            <a class="navbar-item" href="#">Product C</a>
-          </div>
-        </div>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Services</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Service A</a>
-            <a class="navbar-item" href="#">Service B</a>
-            <a class="navbar-item" href="#">Service C</a>
-          </div>
-        </div>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Resources</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Resource A</a>
-            <a class="navbar-item" href="#">Resource B</a>
-            <a class="navbar-item" href="#">Resource C</a>
-          </div>
-        </div>
+        <a class="navbar-item" href="https://joswarmer.github.io/ProjectIt">Home</a>
         <div class="navbar-item">
           <span class="control">
-            <a class="button is-primary" href="#">Download</a>
+            <a class="button is-primary" href="https://github.com/joswarmer/ProjectIt/">GitHub</a>
           </span>
         </div>
       </div>
@@ -66,7 +42,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../README.html">Projectit Readme</a>
+    <a class="nav-link" href="../index.html">Projectit Readme</a>
   </li>
 </ul>
   </li>
@@ -74,16 +50,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
-    <span class="nav-text">Introduction</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Projectional-Overview.html">What is Projectional Editing</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <span class="nav-text">ProjectIt</span>
+    <a class="nav-link" href="Projectional-Overview.html">ProjectIt Editor Overview</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="Defining_Projections.html">Defining Projections</a>
@@ -91,6 +58,9 @@
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="Defining_Actions.html">Defining Actions</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Editing_Expressions.html">Expressions</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -98,13 +68,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <span class="nav-text">ProjectIt Meta helpers</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../projectit-meta/project-meta.html">Meta model helper</a>
-  </li>
-</ul>
   </li>
 </ul>
   </li>
@@ -133,11 +97,11 @@
   <main class="main">
 <div class="toolbar" role="navigation">
   <button class="navigation-toggle"></button>
-  <a href="../README.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
     <li class="crumb"><a href="../index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb">ProjectIt</li>
+    <li class="crumb"><a href="Projectional-Overview.html">ProjectIt Editor Overview</a></li>
     <li class="crumb"><a href="Defining_Actions.html">Defining Actions</a></li>
   </ul>
 </nav>
@@ -145,10 +109,70 @@
 </div>
 <article class="doc">
 <h1>Defining Actions</h1>
-<div class="sect1">
-<h2 id="_aliases"><a class="anchor" href="#_aliases"></a>Aliases</h2>
+<div id="preamble">
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>In ProjectIt all behavior is defined using actions.
+Although ProjectIt is implemented using React, actions abstract away from this implementation.</p>
+</div>
+<div class="paragraph">
+<p>Each action defines</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The trigger</p>
+</li>
+<li>
+<p>The action itself</p>
+</li>
+<li>
+<p>The boxes in which the action can be triggered</p>
+</li>
+<li>
+<p>An id for inyternal use</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s take a look at the definition of a behavior:
+<code>``</code>
+export interface PiBehavior {
+    /**
+     * The trigger to activate this behavior
+     */
+    trigger: PiTriggerType;</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>/**
+ * The box roles in which this trigger is active
+ */
+activeInBoxRoles: string[];</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    /**
+     * Optional callback function that returns whether the trigger is applicable for the specific box.
+     */
+    isApplicable?: (box: Box) =&gt; boolean;
+    boxRoleToSelect?: string;
+    caretPosition?: PiCaret;
+}
+````</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>User actions in ProjectIt are attached to boxes.
+This is done by adding these box roles to the <code>activeInBoxRoles</code> property of an action.</p>
+</div>
+<div class="paragraph">
+<p>The <code>trigger</code>  defines the keys that will trigger execution of the action.</p>
+</div>
+<div class="paragraph">
+<p>TODO: describe the optional properties</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -158,23 +182,26 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<h2 id="_expressions_and_binary_expressions"><a class="anchor" href="#_expressions_and_binary_expressions"></a>Expressions and Binary Expressions</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Advanced expression editing is described in <a href="Editing_Expressions.html" class="page">Expressions</a>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_keyboard_shortcuts"><a class="anchor" href="#_keyboard_shortcuts"></a>Keyboard Shortcuts</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>A keyboard shortcut specifies an action that is triggered by special keys, like e.g. Ctrl-A.</p>
+</div>
 </div>
 </div>
 </article>
   </main>
 </div>
 <footer class="footer">
-  <p>This page was built using the Antora default UI.</p>
-  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+  <p>This page was built using Antora.</p>
 </footer>
 <script src="../../../_/js/site.js"></script>
 <script src="../../../_/js/vendor/highlight.js"></script>

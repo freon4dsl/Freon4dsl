@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Defining Projections :: ProjectItSite</title>
+    <title>Defining the Editor :: ProjectItSite</title>
     <link rel="canonical" href="https://joswarmer.github.io/ProjectIt/projectit-component/0.0.1/projectit-main/Defining_Projections.html">
     <meta name="generator" content="Antora 2.0.0">
     <link rel="stylesheet" href="../../../_/css/site.css">
@@ -21,34 +21,10 @@
     </div>
     <div id="topbar-nav" class="navbar-menu">
       <div class="navbar-end">
-        <a class="navbar-item" href="#">Home</a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Products</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Product A</a>
-            <a class="navbar-item" href="#">Product B</a>
-            <a class="navbar-item" href="#">Product C</a>
-          </div>
-        </div>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Services</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Service A</a>
-            <a class="navbar-item" href="#">Service B</a>
-            <a class="navbar-item" href="#">Service C</a>
-          </div>
-        </div>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Resources</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Resource A</a>
-            <a class="navbar-item" href="#">Resource B</a>
-            <a class="navbar-item" href="#">Resource C</a>
-          </div>
-        </div>
+        <a class="navbar-item" href="https://joswarmer.github.io/ProjectIt">Home</a>
         <div class="navbar-item">
           <span class="control">
-            <a class="button is-primary" href="#">Download</a>
+            <a class="button is-primary" href="https://github.com/joswarmer/ProjectIt/">GitHub</a>
           </span>
         </div>
       </div>
@@ -66,7 +42,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../README.html">Projectit Readme</a>
+    <a class="nav-link" href="../index.html">Projectit Readme</a>
   </li>
 </ul>
   </li>
@@ -74,16 +50,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
-    <span class="nav-text">Introduction</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Projectional-Overview.html">What is Projectional Editing</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <span class="nav-text">ProjectIt</span>
+    <a class="nav-link" href="Projectional-Overview.html">ProjectIt Editor Overview</a>
 <ul class="nav-list">
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="Defining_Projections.html">Defining Projections</a>
@@ -91,6 +58,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="Defining_Actions.html">Defining Actions</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Editing_Expressions.html">Expressions</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -98,13 +68,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <span class="nav-text">ProjectIt Meta helpers</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../projectit-meta/project-meta.html">Meta model helper</a>
-  </li>
-</ul>
   </li>
 </ul>
   </li>
@@ -133,19 +97,27 @@
   <main class="main">
 <div class="toolbar" role="navigation">
   <button class="navigation-toggle"></button>
-  <a href="../README.html" class="home-link"></a>
+  <a href="../index.html" class="home-link"></a>
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
     <li class="crumb"><a href="../index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb">ProjectIt</li>
+    <li class="crumb"><a href="Projectional-Overview.html">ProjectIt Editor Overview</a></li>
     <li class="crumb"><a href="Defining_Projections.html">Defining Projections</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="file:///C:/data/projectit-local/ProjectIt/packages/docs/component-main/modules/projectit-main/pages/Defining_Projections.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
-<h1>Defining Projections</h1>
+<h1>Defining the Editor</h1>
 <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>To define the editor the main parts are defining the projection</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_defining_projections"><a class="anchor" href="#_defining_projections"></a>Defining Projections</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The layout for everything in ProjectIt is defined using boxes.
@@ -324,12 +296,7 @@ the second function to set the value of the text.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Theer are two options you can set for a <code>TextBox</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre></pre>
-</div>
+<p>There are two options you can set for a <code>TextBox</code>:</p>
 </div>
 <div class="paragraph">
 <p>These options control what happens when a textbox becomes empty, i.e. contains no characters.</p>
@@ -348,7 +315,7 @@ the second function to set the value of the text.</p>
 <h2 id="_listbox"><a class="anchor" href="#_listbox"></a>ListBox</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A <code>ListBox</code> is a list of boxes, either horizontally or vertically.
+<p>A <code>ListBox</code> is a list of child boxes, either horizontally or vertically.
 The ListBox itself is abstract.</p>
 </div>
 <div class="sect2">
@@ -356,18 +323,48 @@ The ListBox itself is abstract.</p>
 <div class="paragraph">
 <p>A <code>HorizontalListBox</code> show a list of child boxes next to each other horizontally.</p>
 </div>
+<div class="paragraph">
+<p>An example of using a <code>HorizontalListBox</code> is the following that represents the
+projection of a StringLiteral.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">            new HorizontalListBox(literal, "string-literal", [
+                <i class="conum" data-value="1"></i><b>(1)</b>
+                new LabelBox(literal, "start-quote", '"'), <i class="conum" data-value="2"></i><b>(2)</b>
+                new TextBox(
+                    literal,
+                    "string-value", <i class="conum" data-value="3"></i><b>(3)</b>
+                    () =&gt; literal.value,
+                    (v: string) =&gt; (literal.value = v)
+                ),
+                new LabelBox(literal, "end-quote", '"') <i class="conum" data-value="4"></i><b>(4)</b>
+            ])</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_verticallistbox"><a class="anchor" href="#_verticallistbox"></a>VerticalListBox</h3>
 <div class="paragraph">
 <p>A <code>VerticalListBox</code> show a list of child boxes next to each other vertically.</p>
 </div>
+<div class="paragraph">
+<p>It&#8217;s usage is similar to that of the <code>HorizontalListBox</code>.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_verticalpielementlistbox"><a class="anchor" href="#_verticalpielementlistbox"></a>VerticalPiElementListBox</h3>
+<h3 id="_verticalmodelelementlistbox"><a class="anchor" href="#_verticalmodelelementlistbox"></a>VerticalModelElementListBox</h3>
 <div class="paragraph">
-<p>A <code>VerticalPiElementListBox</code> show a list of PiElement objects,
-where each PiElement will be shown according to the defined projection.</p>
+<p>A <code>VerticalModelElementListBox</code> show a list of PiElement objects,
+where each ModelElement will be shown according to its defined projection.</p>
+</div>
+<div class="paragraph">
+<p>This box is a special case of a VerticalListBox, to show a list
+of child elements.
+A special property of this typem of box is teh ` elementCreator()`.
+This is a function thet should create a new element that fits in the collection.
+Given this, the VerticalModelElementListBox generates the editor
+for the element list, including the neccesary behavior to add and remove elements from the list.</p>
 </div>
 </div>
 </div>
@@ -401,8 +398,7 @@ which is used as an alias for some action.</p>
   </main>
 </div>
 <footer class="footer">
-  <p>This page was built using the Antora default UI.</p>
-  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+  <p>This page was built using Antora.</p>
 </footer>
 <script src="../../../_/js/site.js"></script>
 <script src="../../../_/js/vendor/highlight.js"></script>

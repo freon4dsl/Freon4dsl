@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProjectIt :: ProjectItSite</title>
-    <link rel="canonical" href="https://joswarmer.github.io/ProjectIt/projectit-component/0.0.1/README.html">
+    <link rel="canonical" href="https://joswarmer.github.io/ProjectIt/projectit-component/0.0.1/index.html">
     <meta name="generator" content="Antora 2.0.0">
     <link rel="stylesheet" href="../../_/css/site.css">
   </head>
@@ -21,34 +21,10 @@
     </div>
     <div id="topbar-nav" class="navbar-menu">
       <div class="navbar-end">
-        <a class="navbar-item" href="#">Home</a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Products</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Product A</a>
-            <a class="navbar-item" href="#">Product B</a>
-            <a class="navbar-item" href="#">Product C</a>
-          </div>
-        </div>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Services</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Service A</a>
-            <a class="navbar-item" href="#">Service B</a>
-            <a class="navbar-item" href="#">Service C</a>
-          </div>
-        </div>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Resources</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="#">Resource A</a>
-            <a class="navbar-item" href="#">Resource B</a>
-            <a class="navbar-item" href="#">Resource C</a>
-          </div>
-        </div>
+        <a class="navbar-item" href="https://joswarmer.github.io/ProjectIt">Home</a>
         <div class="navbar-item">
           <span class="control">
-            <a class="button is-primary" href="#">Download</a>
+            <a class="button is-primary" href="https://github.com/joswarmer/ProjectIt/">GitHub</a>
           </span>
         </div>
       </div>
@@ -66,7 +42,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item is-current-page" data-depth="1">
-    <a class="nav-link" href="README.html">Projectit Readme</a>
+    <a class="nav-link" href="index.html">Projectit Readme</a>
   </li>
 </ul>
   </li>
@@ -74,16 +50,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
-    <span class="nav-text">Introduction</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/Projectional-Overview.html">What is Projectional Editing</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <span class="nav-text">ProjectIt</span>
+    <a class="nav-link" href="projectit-main/Projectional-Overview.html">ProjectIt Editor Overview</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="projectit-main/Defining_Projections.html">Defining Projections</a>
@@ -91,6 +58,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="projectit-main/Defining_Actions.html">Defining Actions</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="projectit-main/Editing_Expressions.html">Expressions</a>
+  </li>
 </ul>
   </li>
 </ul>
@@ -98,13 +68,7 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <span class="nav-text">ProjectIt Meta helpers</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="projectit-meta/project-meta.html">Meta model helper</a>
-  </li>
-</ul>
   </li>
 </ul>
   </li>
@@ -133,14 +97,14 @@
   <main class="main">
 <div class="toolbar" role="navigation">
   <button class="navigation-toggle"></button>
-  <a href="README.html" class="home-link is-current"></a>
+  <a href="index.html" class="home-link is-current"></a>
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
     <li class="crumb"><a href="index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb"><a href="README.html">Projectit Readme</a></li>
+    <li class="crumb"><a href="index.html">Projectit Readme</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="file:///C:/data/projectit-local/ProjectIt/packages/docs/component-main/modules/ROOT/pages/README.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="file:///C:/data/projectit-local/ProjectIt/packages/docs/component-main/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>ProjectIt</h1>
@@ -182,7 +146,7 @@ provide callbacks for manipulating the state of the model based on actions in th
 <h2 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The main prerequisites are: [Node.js](<a href="https://nodejs.org/" class="bare">https://nodejs.org/</a>) and [yarn](<a href="https://yarnpkg.com/" class="bare">https://yarnpkg.com/</a>).
+<p>The main prerequisites are: <a href="https://nodejs.org/">Node.js</a> and <a href="https://yarnpkg.com/">yarn</a>.
 We are typically using the latest versions of both, although older versions likely work just as well.
 You could also try and use NPM instead of yarn.</p>
 </div>
@@ -206,25 +170,6 @@ You could also try and use NPM instead of yarn.</p>
 <p>This will open a browser with the demo app on <code><a href="http://localhost:3000/" class="bare">http://localhost:3000/</a></code>.
 The demo app is work in progress.</p>
 </div>
-<div class="paragraph">
-<p>At the moment, the following are non-existent:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>a distributable NPM package,</p>
-</li>
-<li>
-<p>tests,</p>
-</li>
-<li>
-<p>documentation,</p>
-</li>
-<li>
-<p>CI.</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -242,20 +187,23 @@ The demo app is work in progress.</p>
 <p><code>dist</code>: target directory for WebPack.</p>
 </li>
 <li>
-<p><code>projectit/src</code>: framework source code.</p>
+<p><code>docs</code>: The documentation, generated by antora from <code>packages/docs</code>.</p>
 </li>
 <li>
-<p><code>projectit/doc</code>: documentation</p>
+<p><code>packages/core</code>: framework source code.</p>
 </li>
 <li>
-<p><code>projectit-demo</code>: source code using the framework to implement a projectional editor for the demo language.
-The main entry point is <code>projectit-demo/src/run.ts</code>.</p>
+<p><code>packages/docs</code>: documentation</p>
 </li>
 <li>
-<p><code>projectit-meta</code>: source code using the framework to implement a projectional editor for an experimental meta language..</p>
+<p><code>packages/demo</code>: source code using the framework to implement a projectional editor for the demo language.
+The main entry point is <code>packages/demo/src/run.ts</code>.</p>
 </li>
 <li>
-<p><code>projectit-model</code>: source codefor decorators that can be used to easily implement a language that can be directly used by ProjectIt.</p>
+<p><code>packages/meta</code>: source code using the framework to implement a projectional editor for an experimental meta language..</p>
+</li>
+<li>
+<p><code>packages/model</code>: source codefor decorators that can be used to easily implement a language that can be directly used by ProjectIt.</p>
 </li>
 <li>
 <p><code>/*</code>: the usual suspects.</p>
@@ -268,8 +216,7 @@ The main entry point is <code>projectit-demo/src/run.ts</code>.</p>
   </main>
 </div>
 <footer class="footer">
-  <p>This page was built using the Antora default UI.</p>
-  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+  <p>This page was built using Antora.</p>
 </footer>
 <script src="../../_/js/site.js"></script>
 <script src="../../_/js/vendor/highlight.js"></script>
