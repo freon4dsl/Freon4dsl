@@ -11,7 +11,6 @@ export class LabelBox extends Box {
 
     constructor(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
         super(element, role);
-        this.selectable = false;
         PiUtils.initializeObject(this, initializer);
         if (typeof getLabel === "function") {
             this.getLabel = getLabel;

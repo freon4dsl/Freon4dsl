@@ -1,0 +1,12 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
+
+= Expressions
+
+TODO:
+
+* Describe the problems with 1-to-1 projectional editing of expressions.
+* Explain the solution in general.
+* Explain how ProjectIt implements this solution.

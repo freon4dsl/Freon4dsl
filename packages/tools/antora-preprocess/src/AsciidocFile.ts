@@ -38,13 +38,13 @@ export class AsciidocFile {
         lines.forEach(line => {
             if (line.startsWith("include::")) {
                 const match = line.match(
-                    /^(include::{)(?<attribute>[A-Za-z0-9_]+)(})(?<path>[^[]+)(\[tag=[A-Za-z0-9_]+\])?$/
+                    /^(include::{)(?<attribute>[A-Za-z0-9_\-]+)(})(?<path>[^[]+)(\[tag=[A-Za-z0-9_]+\])?$/
                 );
                 const attribute = match["groups"]["attribute"];
                 const path = match["groups"]["path"];
                 this.includes.push({ attribute: attribute, path: path });
             } else {
-                const match: string[] = line.match(/^(:)(?<attribute>[A-Za-z0-9_\.]+)(:)( *)(?<value>.+)/);
+                const match: string[] = line.match(/^(:)(?<attribute>[A-Za-z0-9_\-\.]+)(:)( *)(?<value>.+)/);
                 if (match !== null) {
                     const attribute = match["groups"]["attribute"];
                     const attributeValue = match["groups"]["value"];
