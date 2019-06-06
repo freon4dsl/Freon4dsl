@@ -1,0 +1,22 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
+:icons: font
+
+= ProjectIt Decorators
+To use ProjectIt,  your model has to fulfill certain requirements
+
+* All properties that are are used while creating a projection need to be mobx observable.
+* Each element in the AST must know its parent.
+  This means that the parenty-child releationship has to be maintained in both directions at all times.
+  Sopunds easy eniugh,  but the code that needs to be written for this is actually quite complex.
+  See for example http://www.devx.com/enterprise/Article/28528/[Wed Yourself to UML with the Power of Associations]
+  for an explanation of some of this complexity.
+
+The `model` package defines several TypeScript decorators that provide the above functionality without'
+the need to write code for this yourself.
+
+TODO: Explain decorators in detail.
+
+For now: look at the `demo` application in the `src/model` folder to see how these decorators are being used.
