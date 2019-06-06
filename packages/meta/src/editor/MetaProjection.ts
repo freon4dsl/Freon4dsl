@@ -18,7 +18,7 @@ import {
     SelectOption,
     TextBox,
     VerticalListBox,
-    VerticalModelElementListBox
+    VerticalPiElementListBox
 } from "@projectit/core";
 import {
     MetaConcept,
@@ -241,7 +241,7 @@ export class MetaProjection implements PiProjection {
                 style: styles.indentkeyword,
                 selectable: false
             }),
-            new VerticalModelElementListBox(
+            new VerticalPiElementListBox(
                 element,
                 "parts",
                 element.parts,
@@ -257,7 +257,7 @@ export class MetaProjection implements PiProjection {
                 style: styles.indentkeyword,
                 selectable: false
             }),
-            new VerticalModelElementListBox(
+            new VerticalPiElementListBox(
                 element,
                 "references",
                 element.references,
@@ -295,7 +295,7 @@ export class MetaProjection implements PiProjection {
                 PiProjectionUtil.textBox(model, "name")
             ]),
             new AliasBox(model, "any-list", "<add element>"),
-            new VerticalModelElementListBox(
+            new VerticalPiElementListBox(
                 model,
                 "elements",
                 model.elements,
@@ -329,7 +329,7 @@ export class MetaProjection implements PiProjection {
                 style: styles.keyword,
                 selectable: false
             }),
-            new VerticalModelElementListBox(
+            new VerticalPiElementListBox(
                 model,
                 "elements",
                 model.elements,
@@ -354,7 +354,7 @@ export class MetaProjection implements PiProjection {
             case "table":
                 return this.createAttributeGrid(element);
             case "text":
-                return new VerticalModelElementListBox(
+                return new VerticalPiElementListBox(
                     element,
                     "properties",
                     element.properties,
@@ -377,7 +377,7 @@ export class MetaProjection implements PiProjection {
                 style: styles.stringLiteral,
                 selectable: false
             }),
-            new VerticalModelElementListBox(
+            new VerticalPiElementListBox(
                 enumeration,
                 "literals",
                 enumeration.literals,

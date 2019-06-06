@@ -98,8 +98,8 @@ export class VerticalListBox extends ListBox {
 /**
  * A listbox containing PiElement list
  */
-export class VerticalModelElementListBox extends VerticalListBox {
-    kind = "VerticalModelElementListBox";
+export class VerticalPiElementListBox extends VerticalListBox {
+    kind = "VerticalPiElementListBox";
     insertElement: () => PiElement;
     listPropertyName: string;
     list: PiElement[];
@@ -113,7 +113,7 @@ export class VerticalModelElementListBox extends VerticalListBox {
         listPropertyName: string,
         builder: () => PiElement,
         editor: PiEditor,
-        initializer?: Partial<VerticalModelElementListBox>
+        initializer?: Partial<VerticalPiElementListBox>
     ) {
         super(element, role, [], initializer);
         this.list = list;
