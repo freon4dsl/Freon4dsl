@@ -10,7 +10,7 @@ To use ProjectIt,  your model has to fulfill certain requirements
 * All properties that are are used while creating a projection need to be mobx observable.
 * Each element in the AST must know its parent.
   This means that the parenty-child releationship has to be maintained in both directions at all times.
-  Sopunds easy eniugh,  but the code that needs to be written for this is actually quite complex.
+  Sounds easy enough,  but the code that needs to be written for this is actually quite complex.
   See for example http://www.devx.com/enterprise/Article/28528/[Wed Yourself to UML with the Power of Associations]
   for an explanation of some of this complexity.
 
