@@ -29,24 +29,27 @@ export abstract class ListBox extends Box {
         return this._children as ReadonlyArray<Box>;
     }
 
-    addChild(child: Box | null) {
+    addChild(child: Box | null): ListBox {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
         }
+        return this;
     }
 
-    insertChild(child: Box | null) {
+    insertChild(child: Box | null): ListBox {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
         }
+        return this;
     }
 
-    addChildren(children?: Box[]) {
+    addChildren(children?: Box[]): ListBox {
         if (children) {
             children.forEach(child => this.addChild(child));
         }
+        return this
     }
 
     nextSibling(box: Box): Box | null {
