@@ -1,3 +1,4 @@
+import { AliasComponent } from "@projectit/core/components/boxes/AliasComponent";
 import { isAliasBox, isMetaKey, isSelectBox } from "../../";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -169,7 +170,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
 
     protected abstract getOptions: () => SelectOption[];
 
-    protected onClick = () => {
+    protected onClick = async () => {
         EVENT_LOG.info(this, "onClick");
         this.dropdownIsOpen = true;
         this.startEditing();
@@ -199,8 +200,8 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
         }
     };
 
-    protected onKeyDown = (e: React.KeyboardEvent<any>) => {
-        EVENT_LOG.info(this, "onKeyDown: " + e.key);
+    protected onKeyDown =async (e: React.KeyboardEvent<any>) => {
+        EVENT_LOG.info(this, "onKeyDown: " + e.key + " for role " + this.props.box.role);
         if (Keys.isPrintable(e) && !e.ctrlKey) {
             LOGGER.info(this, "is printable");
             e.stopPropagation();
@@ -234,14 +235,23 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
             switch (e.keyCode) {
                 case Keys.ENTER:
                     e.preventDefault();
+                    let handled = false;
+                    if (isAliasBox(this.props.box)) {
+                        PiUtils.handleKeyboardShortcut(Keys.reactToKey(e), this.props.box, this.props.editor);
+                        // if (handled) {
+                            e.stopPropagation();
+                        // }
+                    }
                     // TODO Copied from TExtComponent for special case, should solve generically
                     // Try the key on next box, if at the end of this box.
-                    const box = this.props.box;
-                    this.props.editor.selectNextLeaf();
-                    EVENT_LOG.info(this, "KeyDownAction NEXT LEAF IS " + this.props.editor.selectedBox.role);
-                    if (isAliasBox(this.props.editor.selectedBox)) {
-                        this.props.editor.selectedBox.triggerKeyDownEvent(Keys.reactToKey(e));
-                    }
+                    // if( !handled) {
+                    //     const box = this.props.box;
+                    //     this.props.editor.selectNextLeaf();
+                    //     EVENT_LOG.info(this, "KeyDownAction NEXT LEAF IS " + this.props.editor.selectedBox.role);
+                    //     if (isAliasBox(this.props.editor.selectedBox)) {
+                    //         this.props.editor.selectedBox.triggerKeyDownEvent(Keys.reactToKey(e));
+                    //     }
+                    // }
                     break;
                 case Keys.SPACEBAR:
                     LOGGER.info(this, "onKeyDown Keys.SPACEBAR");
@@ -292,7 +302,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
      */
     triggerKeyDownEvent = async (key: PiKey) => {
         LOGGER.info(this, "triggerKeyDownEvent: " + key.keyCode);
-        const result: boolean = PiUtils.handleKeyboardShortcut(key, this.props.box, this.props.editor);
+        const result: boolean = await PiUtils.handleKeyboardShortcut(key, this.props.box, this.props.editor);
     };
 
     @action
