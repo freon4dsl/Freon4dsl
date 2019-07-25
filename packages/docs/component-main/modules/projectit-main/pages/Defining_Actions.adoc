@@ -16,7 +16,9 @@ Each action defines
 * An id for inyternal use
 
 Let's take a look at the definition of a behavior:
-````
+
+[source]
+----
 export interface PiBehavior {
     /**
      * The trigger to activate this behavior
@@ -35,7 +37,7 @@ export interface PiBehavior {
     boxRoleToSelect?: string;
     caretPosition?: PiCaret;
 }
-````
+----
 
 User actions in ProjectIt are attached to boxes.
 This is done by adding these box roles to the `activeInBoxRoles` property of an action.

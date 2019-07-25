@@ -1,0 +1,64 @@
+:imagesdir: ../../assets/images/
+:src-dir: ../../../../../..
+:projectitdir: ../../../../../../core
+:source-language: javascript
+
+= Actions Tutorial88
+
+We started out first by creating a projection of the DemoModel.
+In this tutorial we will add actions to the editor,
+to enable the user to change the model and add elements to it.
+
+First of all take a look at the built-in default behavior of the editor:
+
+- Inside a TextBox the text can be edited.
+- Using the arrow keys the user can navigate the projection
+- Using Ctrl-Arrow the user can navigate up and down the model/AST
+- When an element is selected, it can be deleted with the DEL key
+
+== Step 1: Create new Model Elements
+We want the user to be able to add a new entity to the model.
+For this we define an action.
+
+First of all we add an `AliasBox`  at the end of the vertical list of entities.
+Note the role of the box: "end-of-entity-list"
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox4]
+----
+<1> The `AliasBox`.
+
+Secondly we define an action.
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateEntityAction]
+----
+<1> the action is attached to each box with the role "end-of-entity-list".
+This means that the action can be triggered in the `AliasBox` we defined in the projection.
+
+<2> we define that the action will be triggered when the user types `"entity"` inside the.alias box.
+
+At <3> we define the executable c ode for the action. It creates a new `DemoEntity` and attaches is to tghe `DemoModel`
+
+At <4> we define the focus of the editor. The `Box`  with the role `"entity-name"`
+within the entity as terurned from the `action` code will get the ditor focus.
+This ensures that the user can immediately start typing the name of the entity after it has been created.
+
+== Step 2 Create new Attributes
+Enable the creation of a new `DemoAttribute` is done similar to the creation of a new `DemoEntity`.
+
+First we add an `AliasBox` to the projection of the attribute list:
+
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=CreateAttributeAction]
+----
+
+Then we create the actual action and attach it to the role of the `AliasBox`.
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateAttributeAction]
+----
+
+As you can see, there can be many boxes with the same role in the editor, as long as their model element is different.
+This way,  the above action is available for each attribute list in each entity.
