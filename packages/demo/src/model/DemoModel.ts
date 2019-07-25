@@ -38,12 +38,17 @@ export abstract class DemoModelElement extends MobxModelElementImpl {
 }
 
 @model
+// tag::DemoModel[]
 export class DemoModel extends DemoModelElement {
+// end::DemoModel[]
     $type: string = "DemoModel";
 
+    // tag::DemoModel[]
     @observablelistpart entities: DemoEntity[];
-    @observablelistpart functions: DemoFunction[];
     @observable name: string;
+    // end::DemoModel[]
+
+    @observablelistpart functions: DemoFunction[];
 
     constructor() {
         super();
@@ -62,4 +67,6 @@ export class DemoModel extends DemoModelElement {
         result.name = name;
         return result;
     }
+// tag::DemoModel[]
 }
+// end::DemoModel[]
