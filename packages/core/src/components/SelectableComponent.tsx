@@ -68,15 +68,16 @@ export class SelectableComponent extends React.Component<SelectableComponentProp
         );
     }
 
-    onKeyDown = (e: React.KeyboardEvent<any>) => {
+    onKeyDown = async (e: React.KeyboardEvent<any>) => {
         EVENT_LOG.info(this, "onKeyDown");
-        if (PiUtils.handleKeyboardShortcut(reactToKey(e), this.props.box, this.props.editor)) {
+        const handled = await PiUtils.handleKeyboardShortcut(reactToKey(e), this.props.box, this.props.editor);
+        if (handled) {
             e.preventDefault();
             e.stopPropagation();
         }
     };
 
-    private onClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    private onClick = async (event: React.MouseEvent<HTMLDivElement>) => {
         EVENT_LOG.info(
             this,
             "===> onClick (" +

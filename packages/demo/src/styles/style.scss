@@ -4,11 +4,12 @@
 .stringLiteral {
     color: green;
 }
-
+// tag::StyleKeyword[]
 .keyword {
     font-weight: bold;
     color: blue;
 }
+// end::StyleKeyword[]
 
 .mygrid {
     padding: 0px;
@@ -29,3 +30,12 @@
     border-style: dotted;
     border-color: darkorange;
 }
+
+.indent {
+    margin-left: 40px;
+}
+
+.indent2 {
+    margin-left: 80px;
+}
+

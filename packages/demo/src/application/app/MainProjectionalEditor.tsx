@@ -1,3 +1,4 @@
+import { TutorialProjection } from "../../editor/TutorialProjection";
 import { observable } from "mobx";
 
 import { PiEditor, ProjectionalEditor, STYLES } from "@projectit/core";
@@ -50,7 +51,7 @@ export class MainProjectionalEditor extends React.Component<any, {}> {
 
         const demoCtx = new DemoContext();
         const demoActions = new DemoActions();
-        const demoProjection = new DemoProjection();
+        const demoProjection = new TutorialProjection();
         this.demoEditor = new PiEditor(demoCtx, demoProjection, demoActions);
         demoProjection.setEditor(this.demoEditor);
     }

@@ -17,7 +17,7 @@ describe("Demo Model", () => {
         });
 
         it(" children should be set at start", () => {
-            expect(root.name).toBe("Demo model");
+            expect(root.name).toBe("DemoModel");
             expect(root.model instanceof DemoModel).toBe(true);
 
             const model = root as DemoModel;

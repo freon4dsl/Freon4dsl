@@ -26,7 +26,7 @@ require("./DemoExpression");
 export class DemoContext implements PiContext {
     @observable private _rootElement: DemoModelElement;
 
-    model: DemoModel = DemoModel.create("Demo model");
+    model: DemoModel = DemoModel.create("DemoModel");
 
     constructor(initialExpression?: DemoModelElement) {
         this.initialize();

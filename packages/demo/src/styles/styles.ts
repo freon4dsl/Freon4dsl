@@ -17,4 +17,6 @@ export const demoStyles: {
     mygrid: string;
     mycell: string;
     tree: string;
+    indent: string;
+    indent2: string;
 } = require("./style.scss");

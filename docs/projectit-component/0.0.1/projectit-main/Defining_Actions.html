@@ -63,6 +63,18 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/Projection-Tutorial.html">Projection Tutorial</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/Actions-Tutorial.html">Actions Tutorial1</a>
+  </li>
+</ul>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
@@ -137,37 +149,33 @@ Although ProjectIt is implemented using React, actions abstract away from this i
 <p>The boxes in which the action can be triggered</p>
 </li>
 <li>
-<p>An id for inyternal use</p>
+<p>An id for internal use</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s take a look at the definition of a behavior:
-<code>``</code>
-export interface PiBehavior {
+<p>Let&#8217;s take a look at the definition of a behavior:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export interface PiBehavior {
     /**
      * The trigger to activate this behavior
      */
-    trigger: PiTriggerType;</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>/**
- * The box roles in which this trigger is active
- */
-activeInBoxRoles: string[];</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>    /**
+    trigger: PiTriggerType;
+
+    /**
+     * The box roles in which this trigger is active
+     */
+    activeInBoxRoles: string[];
+
+    /**
      * Optional callback function that returns whether the trigger is applicable for the specific box.
      */
     isApplicable?: (box: Box) =&gt; boolean;
     boxRoleToSelect?: string;
     caretPosition?: PiCaret;
-}
-````</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
