@@ -5,3 +5,4 @@ nav:
   - modules/ROOT/nav.adoc
   - modules/projectit-main/nav.adoc
   - modules/projectit-meta/nav.adoc
+  - modules/projectit-decorators/nav.adoc

@@ -1,4 +1,3 @@
-import axios from "axios";
 import * as Keys from "@projectit/core";
 import {
     AFTER_BINARY_OPERATOR,
@@ -22,9 +21,8 @@ import {
     PiUtils,
     RIGHT_MOST
 } from "@projectit/core";
-import { DemoProjection } from "../";
-import { saveComponent } from "./SaveComponent";
-import { DemoSumExpression } from "../model/expressions/DemoSumExpression";
+import axios from "axios";
+import { DemoAttribute, DemoProjection } from "../";
 
 import {
     DemoAndExpression,
@@ -36,10 +34,12 @@ import {
     DemoPlusExpression,
     DemoStringLiteralExpression
 } from "../model";
-import { loadComponent } from "./LoadComponent";
 
 import { DemoModel } from "../model/DemoModel";
 import { DemoEntity } from "../model/domain/DemoEntity";
+import { DemoSumExpression } from "../model/expressions/DemoSumExpression";
+import { loadComponent } from "./LoadComponent";
+import { saveComponent } from "./SaveComponent";
 
 const LOGGER = new PiLogger("DemoActions");
 
@@ -217,6 +217,32 @@ const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
 ];
 
 const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+    // tag::CreateEntityAction[]
+    {
+        activeInBoxRoles: ["end-of-entity-list"],                                       // <1>
+        trigger: "entity",                                                              // <2>
+        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => { // <3>
+            var model: DemoModel = box.element as DemoModel;
+            const entity: DemoEntity = new DemoEntity();
+            model.entities.push(entity);
+            return entity;
+        },
+        boxRoleToSelect: "entity-name"                                                  // <4>
+    },
+    // end::CreateEntityAction[]
+    // tag::CreateAttributeAction[]
+    {
+        trigger: "attribute",
+        activeInBoxRoles: ["end-of-attribute-list"],
+        action: (box: Box, trigger: PiTriggerType, editor: PiEditor): PiElement | null => {
+            var entity: DemoEntity = box.element as DemoEntity;
+            const attribute: DemoAttribute = new DemoAttribute();
+            entity.attributes.push(attribute);
+            return attribute;
+        },
+        boxRoleToSelect: "attribute-name"
+    },
+    // end::CreateAttributeAction[]
     {
         trigger: "!!",
         activeInBoxRoles: [EXPRESSION_PLACEHOLDER],
@@ -278,7 +304,21 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
             LOGGER.log("========================== Action 'a' done");
             return null;
         }
-    }
+    },
+    // tag::createEntityByEnter[]
+    {
+        trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
+        activeInBoxRoles: ["end-of-entity-list"],
+        action: (box: Box,key: PiKey, editor: PiEditor): Promise<PiElement> => {
+            var model: DemoModel = box.element as DemoModel;
+            const entity: DemoEntity = DemoEntity.create("");
+            model.entities.push(entity);
+            return Promise.resolve(entity);
+        },
+        boxRoleToSelect: "entity-name"
+    },
+    // end::createEntityByEnter[]
+
 ];
 
 const TOOLBAR: PiToolbarItem[] = [

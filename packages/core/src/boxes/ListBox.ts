@@ -29,24 +29,27 @@ export abstract class ListBox extends Box {
         return this._children as ReadonlyArray<Box>;
     }
 
-    addChild(child: Box | null) {
+    addChild(child: Box | null): ListBox {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
         }
+        return this;
     }
 
-    insertChild(child: Box | null) {
+    insertChild(child: Box | null): ListBox {
         if (!!child) {
             this._children.splice(0, 0, child);
             child.parent = this;
         }
+        return this;
     }
 
-    addChildren(children?: Box[]) {
+    addChildren(children?: Box[]): ListBox {
         if (children) {
             children.forEach(child => this.addChild(child));
         }
+        return this
     }
 
     nextSibling(box: Box): Box | null {
@@ -98,8 +101,8 @@ export class VerticalListBox extends ListBox {
 /**
  * A listbox containing PiElement list
  */
-export class VerticalModelElementListBox extends VerticalListBox {
-    kind = "VerticalModelElementListBox";
+export class VerticalPiElementListBox extends VerticalListBox {
+    kind = "VerticalPiElementListBox";
     insertElement: () => PiElement;
     listPropertyName: string;
     list: PiElement[];
@@ -113,7 +116,7 @@ export class VerticalModelElementListBox extends VerticalListBox {
         listPropertyName: string,
         builder: () => PiElement,
         editor: PiEditor,
-        initializer?: Partial<VerticalModelElementListBox>
+        initializer?: Partial<VerticalPiElementListBox>
     ) {
         super(element, role, [], initializer);
         this.list = list;

@@ -133,7 +133,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
         await this.props.editor.selectElement(box.element, box.role, this.props.editor.selectedPosition);
     };
 
-    private onKeyDown = (e: React.KeyboardEvent<any>) => {
+    private onKeyDown = async (e: React.KeyboardEvent<any>) => {
         EVENT_LOG.info(
             this,
             "onKeyDown: key " +
@@ -150,7 +150,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
         if (e.keyCode === Keys.DELETE) {
             if (this.element.innerText === "") {
                 if (this.props.box.deleteWhenEmptyAndErase) {
-                    this.props.editor.deleteBox(this.props.editor.selectedBox);
+                    await this.props.editor.deleteBox(this.props.editor.selectedBox);
                     e.stopPropagation();
                     return;
                 }
@@ -161,7 +161,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
         if (e.keyCode === Keys.BACKSPACE) {
             if (this.element.innerText === "") {
                 if (this.props.box.deleteWhenEmptyAndErase) {
-                    this.props.editor.deleteBox(this.props.editor.selectedBox);
+                    await this.props.editor.deleteBox(this.props.editor.selectedBox);
                     e.stopPropagation();
                     return;
                 }
@@ -177,24 +177,27 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
             handled = true;
         }
         const proKey = reactToKey(e);
-        if (!handled && !isMetaKey(e) && !PiUtils.handleKeyboardShortcut(proKey, this.props.box, this.props.editor)) {
-            EVENT_LOG.info(this, "Key not handled for element " + this.props.box.element);
-            // Try the key on next box, if at the end of this box.
-            const box = this.props.box;
-            const insertionIndex = this.getCaretPosition();
-            if (insertionIndex >= box.getText().length) {
-                this.props.editor.selectNextLeaf();
-                EVENT_LOG.info(this, "KeyDownAction NEXT LEAF IS " + this.props.editor.selectedBox.role);
-                if (isAliasBox(this.props.editor.selectedBox)) {
-                    this.props.editor.selectedBox.triggerKeyDownEvent(proKey);
+        if (!handled && !isMetaKey(e)) {
+            const isKeyboardShortcutForThis = await PiUtils.handleKeyboardShortcut(proKey, this.props.box, this.props.editor);
+            if (!isKeyboardShortcutForThis) {
+                EVENT_LOG.info(this, "Key not handled for element " + this.props.box.element);
+                // Try the key on next box, if at the end of this box.
+                const box = this.props.box;
+                const insertionIndex = this.getCaretPosition();
+                if (insertionIndex >= box.getText().length) {
+                    this.props.editor.selectNextLeaf();
+                    EVENT_LOG.info(this, "KeyDownAction NEXT LEAF IS " + this.props.editor.selectedBox.role);
+                    if (isAliasBox(this.props.editor.selectedBox)) {
+                        this.props.editor.selectedBox.triggerKeyDownEvent(proKey);
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
-                e.preventDefault();
-                e.stopPropagation();
             }
         }
     };
 
-    private onKeyPress = (e: React.KeyboardEvent<any>) => {
+    private onKeyPress = async (e: React.KeyboardEvent<any>) => {
         EVENT_LOG.info(this, "onKeyPress: " + e.key + "  " + this.props.box.actualWidth);
         const box = this.props.box;
         const insertionIndex = this.getCaretPosition();

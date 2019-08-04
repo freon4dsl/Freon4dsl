@@ -60,6 +60,7 @@ export class PiUtils {
         PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
     }
 
+    // TODO refactor this into an InternalBehavior class, like other behaviors.
     /**
      * Check whether `piKey` is a defined keyboard-shortcut for `box`.
      * If so execute the corresponding keyboard-shortcut action and return true.
@@ -68,13 +69,16 @@ export class PiUtils {
      * @param box
      * @param editor
      */
-    static handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): boolean {
+    static async handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): Promise<boolean> {
         for (const act of editor.keyboardActions) {
             LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
             if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
                 if (act.activeInBoxRoles.includes(box.role)) {
                     LOGGER.log("handleKeyboardShortcut: executing keyboard action");
-                    act.action(box, piKey, editor);
+                    const selected = await act.action(box, piKey, editor);
+                    if (selected) {
+                        editor.selectElement(selected, act.boxRoleToSelect);
+                    }
                     return true;
                 } else {
                     LOGGER.log("handleKeyboardShortcut: Keyboard action does not include role " + box.role);

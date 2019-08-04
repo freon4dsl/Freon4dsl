@@ -11,7 +11,7 @@ import { STYLES } from "../components/styles/Styles";
 
 export class GridUtil {
     /**
-     * Create grid for collection a la VerticalModelElementListBox
+     * Create grid for collection a la VerticalPiElementListBox
      */
     public static createCollectionRowGrid<ELEMENT_TYPE extends PiElement>(
         element: PiElement,
