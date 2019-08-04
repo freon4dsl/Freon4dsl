@@ -88,4 +88,4 @@ include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=AttributeBox]
 
 == Step 4 - Allow Creation of new Elements in the Editor
 
-
+This step is explained in the xref:Defining_Actions.adoc[Actions] tutorial.

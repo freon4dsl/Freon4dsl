@@ -13,7 +13,7 @@ Each action defines
 * The trigger
 * The action itself
 * The boxes in which the action can be triggered
-* An id for inyternal use
+* An id for internal use
 
 Let's take a look at the definition of a behavior:
 

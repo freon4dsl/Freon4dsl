@@ -3,18 +3,18 @@
 :projectitdir: ../../../../../../core
 :source-language: javascript
 
-= Actions Tutorial88
+= Actions Tutorial
 
-We started out first by creating a projection of the DemoModel.
+In the xref:Defining_Projections.adoc[Projection] tutorial we started out by creating a projection of the DemoModel.
 In this tutorial we will add actions to the editor,
 to enable the user to change the model and add elements to it.
 
 First of all take a look at the built-in default behavior of the editor:
 
 - Inside a TextBox the text can be edited.
-- Using the arrow keys the user can navigate the projection
-- Using Ctrl-Arrow the user can navigate up and down the model/AST
-- When an element is selected, it can be deleted with the DEL key
+- Using the arrow keys the user can navigate the projection.
+- Using Ctrl-Arrow the user can navigate up and down the model/AST.
+- When an element is selected, it can be deleted with the DEL key.
 
 == Step 1: Create new Model Elements
 We want the user to be able to add a new entity to the model.

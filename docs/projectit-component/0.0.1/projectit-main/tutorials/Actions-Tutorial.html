@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actions Tutorial88 :: ProjectItSite</title>
+    <title>Actions Tutorial :: ProjectItSite</title>
     <link rel="canonical" href="https://joswarmer.github.io/ProjectIt/projectit-component/0.0.1/projectit-main/tutorials/Actions-Tutorial.html">
     <meta name="generator" content="Antora 2.0.0">
     <link rel="stylesheet" href="../../../../_/css/site.css">
@@ -127,11 +127,11 @@
   <div class="edit-this-page"><a href="file:///C:/data/projectit-local/ProjectIt/packages/docs/component-main/modules/projectit-main/pages/tutorials/Actions-Tutorial.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
-<h1>Actions Tutorial88</h1>
+<h1>Actions Tutorial</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>We started out first by creating a projection of the DemoModel.
+<p>In the <a href="../Defining_Projections.html" class="page">Projection</a> tutorial we started out by creating a projection of the DemoModel.
 In this tutorial we will add actions to the editor,
 to enable the user to change the model and add elements to it.</p>
 </div>
@@ -144,13 +144,13 @@ to enable the user to change the model and add elements to it.</p>
 <p>Inside a TextBox the text can be edited.</p>
 </li>
 <li>
-<p>Using the arrow keys the user can navigate the projection</p>
+<p>Using the arrow keys the user can navigate the projection.</p>
 </li>
 <li>
-<p>Using Ctrl-Arrow the user can navigate up and down the model/AST</p>
+<p>Using Ctrl-Arrow the user can navigate up and down the model/AST.</p>
 </li>
 <li>
-<p>When an element is selected, it can be deleted with the DEL key</p>
+<p>When an element is selected, it can be deleted with the DEL key.</p>
 </li>
 </ul>
 </div>
@@ -277,6 +277,10 @@ This ensures that the user can immediately start typing the name of the entity a
         boxRoleToSelect: "attribute-name"
     },</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>As you can see, there can be many boxes with the same role in the editor, as long as their model element is different.
+This way,  the above action is available for each attribute list in each entity.</p>
 </div>
 </div>
 </div>
