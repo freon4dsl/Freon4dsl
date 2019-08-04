@@ -16,7 +16,7 @@ import {
     PiProjection,
     TextBox,
     VerticalListBox,
-    VerticalModelElementListBox,
+    VerticalPiElementListBox,
     PiUtils,
     EXPRESSION_PLACEHOLDER,
     createDefaultBinaryBox,
@@ -306,7 +306,7 @@ export class DemoProjection implements PiProjection {
             // new LabelBox(model, "entity-list", "entities", {
             //     style: demoStyles.keyword
             // }),
-            // new VerticalModelElementListBox(model, "entities", model.entities,"entities", () => new DemoEntity(), this.editor,
+            // new VerticalPiElementListBox(model, "entities", model.entities,"entities", () => new DemoEntity(), this.editor,
             //     { roleToSelectAfterCreation: "entity-name" }),
             new LabelBox(model, "entityexpression", "expression", {
                 style: demoStyles.keyword

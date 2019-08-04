@@ -11,7 +11,7 @@ import { GridComponent } from "../components/boxes/GridComponent";
 import { AliasBox } from "../boxes/AliasBox";
 import { TextBox } from "../boxes/TextBox";
 import { Box } from "../boxes/Box";
-import { HorizontalListBox, VerticalListBox, VerticalModelElementListBox } from "../boxes/ListBox";
+import { HorizontalListBox, VerticalListBox, VerticalPiElementListBox } from "../boxes/ListBox";
 import { LabelBox } from "../boxes/LabelBox";
 import { PiEditor } from "../editor/PiEditor";
 import { AliasComponent } from "./boxes/AliasComponent";
@@ -33,8 +33,8 @@ export function renderComponent(box: Box, editor: PiEditor): React.ReactElement<
             return <LabelComponent box={box as LabelBox} editor={editor} />;
         case "HorizontalListBox":
             return <ListComponent box={box as HorizontalListBox} editor={editor} />;
-        case "VerticalModelElementListBox":
-            return <ListComponent box={box as VerticalModelElementListBox} editor={editor} />;
+        case "VerticalPiElementListBox":
+            return <ListComponent box={box as VerticalPiElementListBox} editor={editor} />;
         case "VerticalListBox":
             return <ListComponent box={box as VerticalListBox} editor={editor} />;
         case "TextBox":
