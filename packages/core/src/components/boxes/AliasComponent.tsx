@@ -84,7 +84,7 @@ export class AliasComponent extends AbstractChoiceComponent {
         return aliasResult;
     };
 
-    protected onClick = () => {
+    protected onClick = async () => {
         EVENT_LOG.info(this, "onClick");
         // this.dropdownIsOpen = true;
         this.startEditing();

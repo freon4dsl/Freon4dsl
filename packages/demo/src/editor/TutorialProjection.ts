@@ -6,9 +6,7 @@ import {
     GridCell,
     GridUtil,
     HorizontalListBox,
-    SelectOption,
     SvgBox,
-    SelectBox,
     KeyPressAction,
     LabelBox,
     PiEditor,
@@ -29,6 +27,7 @@ import {
 import { sumIcon } from "../editor/Icons";
 import { DemoSumExpression } from "../model/expressions/DemoSumExpression";
 import { demoStyles } from "../styles/styles";
+
 require("flatted");
 
 import { DemoModel } from "../model/DemoModel";
@@ -37,6 +36,7 @@ import { DemoEntity } from "../model/domain/DemoEntity";
 import { DemoFunction } from "../model/domain/DemoFunction";
 import {
     DemoAndExpression,
+    DemoAttributeType,
     DemoComparisonExpression,
     DemoDivideExpression,
     DemoMultiplyExpression,
@@ -52,16 +52,17 @@ import * as expressionExtensions from "./DemoExpression";
 const LOGGER = new PiLogger("DemoProjection").mute();
 const OPERATOR_COLUMN = 1;
 const OPERAND_COLUM = 2;
-export type MetaProjectionType = "text" | "orboxed" | "tree";
+export type MetaProjectionType1 = "text" | "orboxed" | "tree";
 
 var TMP: Object = {};
 
-export class DemoProjection implements PiProjection {
+export class TutorialProjection implements PiProjection {
     private editor: PiEditor;
-    @observable projectionType: MetaProjectionType = "text";
+    @observable projectionType: MetaProjectionType1 = "text";
     @observable showBrackets: boolean = false;
 
-    constructor() {}
+    constructor() {
+    }
 
     setEditor(e: PiEditor) {
         this.editor = e;
@@ -91,21 +92,105 @@ export class DemoProjection implements PiProjection {
         } else if (exp instanceof DemoEntity) {
             return this.createEntityBox(exp);
         } else if (exp instanceof DemoModel) {
-            return this.createModelBox(exp);
+            // return this.createModelBox1(exp);
+            // return this.createModelBox2(exp);
+            // return this.createModelBox3(exp);
+            return this.createModelBox4(exp);
         } else if (exp instanceof DemoEntity) {
             return this.createEntityBox(exp);
+        } else if (exp instanceof DemoAttribute) {
+            return this.createAttributeBox(exp);
         } else if (exp instanceof DemoSumExpression) {
             return this.createSumBox(exp);
         } else if (isPiBinaryExpression(exp)) {
-            return this.createBinaryBox(this, exp);
+            return this.createBinaryBox(exp);
         }
 
         throw new Error("No box defined for this expression:" + exp.piId());
     }
 
-    private createBinaryBox(projection: DemoProjection, exp: PiBinaryExpression): Box {
+    // Most simple model box
+    // tag::ModelBox1[]
+    private createModelBox(model: DemoModel): Box {
+        return new HorizontalListBox(model, "model", [
+            new LabelBox(model, "model-label", "Model"),
+            new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c))
+        ]);
+    }
+
+    // end::ModelBox1[]
+
+    // Modelbox with style added
+    private createModelBox2(model: DemoModel): Box {
+        // tag::ModelBox2[]
+        return new HorizontalListBox(model, "model", [
+            new LabelBox(model, "model-label", "Model", {
+                style: demoStyles.keyword
+            }),
+            new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
+                placeHolder: "<name>"
+            })
+        ]);
+        // end::ModelBox2[]
+    }
+
+
+    // ModelBox with placeholder for the name and a list of entities
+    private createModelBox3(model: DemoModel): Box {
+        // tag::ModelBox3[]
+        return new VerticalListBox(model, "model", [
+            new HorizontalListBox(model, "model-info", [
+                new LabelBox(model, "model-keyword", "Model", {
+                    style: demoStyles.keyword
+                }),
+                new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
+                    placeHolder: "<name>"
+                })
+            ]),
+            new LabelBox(model, "entity-keyword", "Entities", {
+                style: demoStyles.keyword
+            }),
+            new VerticalListBox(
+                model,
+                "entity-list",
+                model.entities.map(ent => {
+                    return this.createEntityBox(ent);
+                })
+            )
+        ]);
+        // end::ModelBox3[]
+    }
+
+    // ModelBox with placeholder for the name and a list of entities
+    private createModelBox4(model: DemoModel): Box {
+        // tag::ModelBox4[]
+        return new VerticalListBox(model, "model", [
+            new HorizontalListBox(model, "model-info", [
+                new LabelBox(model, "model-keyword", "model-3", {
+                    style: demoStyles.keyword
+                }),
+                new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
+                    placeHolder: "<name>"
+                })
+            ]),
+            new LabelBox(model, "entity-list", "Entities", {
+                style: demoStyles.keyword
+            }),
+            new VerticalListBox(
+                model,
+                "entities",
+                model.entities.map(ent => {
+                    return this.createEntityBox3(ent);
+                })
+            ).addChild(new AliasBox(model, "end-of-entity-list",
+                "add entity", { style: demoStyles.indent }))        // <1>
+        ]);
+        // end::ModelBox4[]
+    }
+
+    private createBinaryBox(exp: PiBinaryExpression): Box {
         if (this.projectionType === "tree") {
-            return this.createBinaryBoxTree(projection, exp);
+            return this.createBinaryBoxTree(exp);
         } else {
             let binBox = createDefaultBinaryBox(this, exp);
             if (
@@ -124,13 +209,13 @@ export class DemoProjection implements PiProjection {
         }
     }
 
-    private createBinaryBoxTree(projection: DemoProjection, exp: PiBinaryExpression): Box {
+    private createBinaryBoxTree(exp: PiBinaryExpression): Box {
         let result = new HorizontalListBox(
             exp,
             "binary1",
             [
                 new LabelBox(exp, "symbol", exp.piSymbol()),
-                new VerticalListBox(exp, "args", [projection.getBox(exp.piLeft()), projection.getBox(exp.piRight())])
+                new VerticalListBox(exp, "args", [this.getBox(exp.piLeft()), this.getBox(exp.piRight())])
             ],
             {
                 style: demoStyles.tree
@@ -139,81 +224,95 @@ export class DemoProjection implements PiProjection {
         return result;
     }
 
-    private createEntityBox(entity: DemoEntity): Box {
-        LOGGER.info(this, "createEntityBox: ");
-        let cells: GridCell[] = [];
-        cells.push({
-            row: 1,
-            column: 1,
-            box: new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
-                deleteWhenEmpty: true,
-                placeHolder: "<enter entity name>",
-                keyPressAction: (currentText: string, key: string, index: number) => {
-                    return isName(currentText, key, index);
-                }
-            })
-        });
-        cells.push({
-            row: 2,
-            column: 1,
-            box: this.createAttributeGrid(entity)
-        });
-        return new GridBox(entity, "entity-all", cells);
-    }
-
-    private createEntityBoxGrid(entity: DemoEntity): Box {
-        LOGGER.info(this, "createEntityBox: ");
-        let cells: GridCell[] = [
-            {
-                row: 1,
-                column: 1,
-                columnSpan: 2,
-                box: new TextBox(entity, "entity-name", () => entity.name, (v: string) => (entity.name = v))
-            }
-        ];
-        let row = 2;
-        entity.attributes.forEach(a => {
-            cells.push({
-                row: row,
-                column: 1,
-                box: new TextBox(a, "attr-name-" + row, () => a.name, (v: string) => (a.name = v))
-            });
-            cells.push({
-                row: row,
-                column: 2,
-                box: new TextBox(a, "attr-type-" + row, () => a.type, (v: string) => {})
-            });
-            row++;
-        });
-        return new GridBox(entity, "entity", cells);
-    }
-
-    // TODO Refactor roww and column based collections into one generic function.
-    private createAttributeGrid(entity: DemoEntity): Box {
-        return GridUtil.createCollectionRowGrid<DemoAttribute>(
-            entity,
-            "attr-grid",
-            "attributes",
-            entity.attributes,
-            ["name", "type"],
+    // tag::AttributeBox[]
+    private createAttributeBox(att: DemoAttribute): Box {
+        return new HorizontalListBox(
+            att,
+            "attribute",
             [
-                (att: DemoAttribute): Box => {
-                    return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
-                        deleteWhenEmpty: true,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
-                            return isName(currentText, key, index);
-                        },
-                        placeHolder: "<name>"
-                    });
-                },
-                (attr: DemoAttribute): Box => {
-                    return new TextBox(attr, "attr-type", () => attr.type, (v: string) => {});
-                }
+                new TextBox(att,"attribute-name",
+                    () => { return att.name; },
+                    (v: string) => { att.name = v; }
+                ),
+                new LabelBox(att, "colon", ":"),
+                new TextBox(att,"attribute-type",
+                    () => { return att.type; },
+                    (v: string) => { att.type = v as DemoAttributeType; }
+                )
             ],
-            (box: Box, editor: PiEditor) => {
-                return new DemoAttribute();
-            },
-            this.editor
+            { style: demoStyles.indent }
+        );
+    }
+    // end::AttributeBox[]
+
+    private createEntityBox1(entity: DemoEntity): Box {
+        // tag::EntityBox1[]
+        return new VerticalListBox(entity, "entity", [
+            new HorizontalListBox(entity, "entity-keyword", [
+                new LabelBox(entity, "entity-label", "entity", {
+                    style: demoStyles.keyword
+                }),
+                new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
+            ]),
+            new VerticalListBox(
+                entity,
+                "attributes",
+                entity.attributes.map(att => {
+                    return this.createAttributeBox(att);
+                })
+            )
+        ]);
+        // end::EntityBox1[]
+    }
+
+    // EntityBox with attributes, but no AliasBox
+    // tag::EntityBox[]
+    private createEntityBox(entity: DemoEntity): Box {
+        return new VerticalListBox(entity,"entity",
+            [
+                new HorizontalListBox(entity, "entity-info", [
+                    new LabelBox(entity, "entity-keyword", "Entity", {
+                        style: demoStyles.keyword
+                    }),
+                    new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c), {
+                        placeHolder: "<name>"
+                    })
+                ]),
+                new VerticalListBox( entity, "attribute-list",
+                    entity.attributes.map(att => {
+                        return this.createAttributeBox(att);
+                    })
+                )
+            ],
+            { style: demoStyles.indent }
+        );
+    }
+    // end::EntityBox[]
+
+    // EntityBox with AliasBox added for adding new attributes
+    private createEntityBox3(entity: DemoEntity): Box {
+        return new VerticalListBox(
+            entity,
+            "entity",
+            [
+                new HorizontalListBox(entity, "entity-keyword", [
+                    new LabelBox(entity, "entity-label", "entity", {
+                        style: demoStyles.keyword
+                    }),
+                    new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
+                ]),
+                // tag::CreateAttributeAction[]
+                new VerticalListBox(entity,"attributes",
+                    entity.attributes.map(att => {
+                        return this.createAttributeBox(att);
+                    })
+                ).addChild(new AliasBox(entity, "end-of-attribute-list",
+                    "add attribute", { style: demoStyles.indent }))
+                // end::CreateAttributeAction[]
+            ],
+            {
+                style: demoStyles.indent
+            }
         );
     }
 
@@ -272,66 +371,16 @@ export class DemoProjection implements PiProjection {
         return result;
     }
 
-    private createModelBox(model: DemoModel): Box {
-        LOGGER.info(this, "createModelBox");
-
-        return new VerticalListBox(model, "model", [
-            new HorizontalListBox(model, "model-keyword", [
-                new LabelBox(model, "model-label", "model", {
-                    style: demoStyles.keyword
-                }),
-                new TextBox(model, "textC", () => model.name, (c: string) => (model.name = c))
-                // SHORTHAND: this.textbox(model, "name"),
-            ]),
-            // this.textbox(model, "name"),
-            // new SelectBox(model, "test-selest", "<select>",
-            //     () => [
-            //         {
-            //             label: "option1-label1",
-            //             description: "description",
-            //             id: "1"
-            //         },
-            //         {
-            //             label: "option2-label2",
-            //             description: "description",
-            //             id: "2"
-            //         }
-            //     ],
-            //     () => null,
-            //     (option: SelectOption) => {
-            //         model.name = "new: " + option.label;
-            //     },
-            // ),
-
-            // new LabelBox(model, "entity-list", "entities", {
-            //     style: demoStyles.keyword
-            // }),
-            // new VerticalPiElementListBox(model, "entities", model.entities,"entities", () => new DemoEntity(), this.editor,
-            //     { roleToSelectAfterCreation: "entity-name" }),
-            new LabelBox(model, "entityexpression", "expression", {
-                style: demoStyles.keyword
-            }),
-            this.getBox(model.functions[0].expression)
-            //     ,
-            // new LineBox(model, "line", {
-            //     start: modelLabel,
-            //     end: expressionLabel
-            // } )
-            //     ,
-            // this.createFunctionBox(model.functions[0])
-        ]);
-    }
-
     private createStringLiteralBox(literal: DemoStringLiteralExpression): Box {
         LOGGER.info(this, "createStringLiteralBox: " + literal.value);
         return createDefaultExpressionBox(literal, "string-literal-exp", [
             new HorizontalListBox(literal, "string-literal", [
-                new LabelBox(literal, "start-quote", '"', { selectable: false}),
+                new LabelBox(literal, "start-quote", "\"", { selectable: false }),
                 new TextBox(literal, "string-value", () => literal.value, (v: string) => (literal.value = v), {
                     style: demoStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
-                new LabelBox(literal, "end-quote", '"', { selectable: false })
+                new LabelBox(literal, "end-quote", "\"", { selectable: false })
             ])
         ]);
     }
@@ -339,12 +388,13 @@ export class DemoProjection implements PiProjection {
     private createStringLiteralBox1(literal: DemoStringLiteralExpression): Box {
         return createDefaultExpressionBox(literal, "string-literal-exp", [
             new HorizontalListBox(literal, "string-literal", [
-                new LabelBox(literal, "start-quote", '"'),
+                new LabelBox(literal, "start-quote", "\""),
                 new TextBox(literal, "string-value", () => literal.value, (v: string) => (literal.value = v)),
-                new LabelBox(literal, "end-quote", '"')
+                new LabelBox(literal, "end-quote", "\"")
             ])
         ]);
     }
+
     // PiProjectionUtil.textbox(literal, "value")
 
     private createStringLiteralBoxSimple(literal: DemoStringLiteralExpression): Box {
@@ -352,14 +402,14 @@ export class DemoProjection implements PiProjection {
             // tag::StringLiteral[]
             new HorizontalListBox(literal, "string-literal", [
                 //<1>
-                new LabelBox(literal, "start-quote", '"'), //<2>
+                new LabelBox(literal, "start-quote", "\""), //<2>
                 new TextBox(
                     literal,
                     "string-value", //<3>
                     () => literal.value,
                     (v: string) => (literal.value = v)
                 ),
-                new LabelBox(literal, "end-quote", '"') //<4>
+                new LabelBox(literal, "end-quote", "\"") //<4>
             ])
             // end::StringLiteral[]
         ]);
@@ -367,38 +417,38 @@ export class DemoProjection implements PiProjection {
 
     private createPlusBox(exp: DemoPlusExpression): Box {
         LOGGER.info(this, "createPlusBox: ");
-        return this.createBinaryBox(this, exp);
+        return this.createBinaryBox(exp);
     }
 
     private createComparisonBox(exp: DemoComparisonExpression): Box {
         LOGGER.info(this, "createComparisonBox: ");
-        return this.createBinaryBox(this, exp);
+        return this.createBinaryBox(exp);
     }
 
     private createMultiplyBox(exp: DemoMultiplyExpression): Box {
         LOGGER.info(this, "createMultiplyBox: ");
-        return this.createBinaryBox(this, exp);
+        return this.createBinaryBox(exp);
     }
 
     private createDivideBox(exp: DemoDivideExpression): Box {
         LOGGER.info(this, "createDivideBox: ");
-        return this.createBinaryBox(this, exp);
+        return this.createBinaryBox(exp);
     }
 
     private createAndBox(exp: DemoAndExpression): Box {
         LOGGER.info(this, "createAndBox: ");
-        return this.createBinaryBox(this, exp);
+        return this.createBinaryBox(exp);
     }
 
     private createOrBox(exp: DemoOrExpression): Box {
         LOGGER.info(this, "createOrBox: ");
         switch (this.projectionType) {
             case "text":
-                return this.createBinaryBox(this, exp);
+                return this.createBinaryBox(exp);
             case "orboxed":
                 return this.createOrBoxGrid(exp);
             default:
-                return this.createBinaryBox(this, exp);
+                return this.createBinaryBox(exp);
         }
     }
 
@@ -414,22 +464,6 @@ export class DemoProjection implements PiProjection {
             })
         ]);
     }
-
-    // private createNumberLiteralBox1(exp: DemoNumberLiteralExpression): Box {
-    //     return createDefaultExpressionBox(exp, "number-literal", [
-    //         new HorizontalListBox(exp, "sw", [
-    //             new LabelBox(exp, "hdhd", "@"),
-    //             new TextBox(exp, "num-literal-value", () => exp.value, (v: string) => exp.value = v,
-    //                 {
-    //                     style: demoStyles.stringLiteral,
-    //                     keyPressAction: (currentText: string, key: string, index: number) => {
-    //                         return isNumber(currentText, key, index);
-    //                     }
-    //                 })
-    //
-    //         ])
-    //     ]);
-    // }
 
     private createFunctionBox(fun: DemoFunction): Box {
         LOGGER.info(this, "createFunctionBox: ");
@@ -566,4 +600,8 @@ function isName(currentText: string, key: string, index: number): KeyPressAction
     } else {
         return KeyPressAction.OK;
     }
+}
+
+export function createEntity(box: Box, editor: PiEditor) {
+    return new DemoEntity();
 }

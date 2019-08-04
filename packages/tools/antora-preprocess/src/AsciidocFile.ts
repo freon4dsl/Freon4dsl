@@ -57,13 +57,14 @@ export class AsciidocFile {
     /**
      * Copy all included files to the Antora example folder.
      */
-    public copyFiles() {
+    public copyFiles(exampleDirectory: string) {
         for (let [key, value] of this.attributes) {
-            console.log("Attribute [" + key + "] = [" + value + "]");
+            // console.log("Attribute [" + key + "] = [" + value + "]");
         }
         this.includes.forEach(inc => {
             const source = this.directory + this.attributes.get(inc.attribute) + inc.path;
-            const target = this.directory + "../examples" + inc.path;
+            // const target = this.directory + "../examples" + inc.path;
+            const target = exampleDirectory + inc.path;
             console.log("Copy from [" + source + "] to [" + target + "]");
             this.createDirIfNotExisting(target);
             fs.copyFileSync(source, target);

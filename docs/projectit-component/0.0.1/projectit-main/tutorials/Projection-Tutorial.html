@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projection Tutorial :: ProjectItSite</title>
+    <link rel="canonical" href="https://joswarmer.github.io/ProjectIt/projectit-component/0.0.1/projectit-main/tutorials/Projection-Tutorial.html">
+    <meta name="generator" content="Antora 2.0.0">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://joswarmer.github.io/ProjectIt">ProjectItSite</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://joswarmer.github.io/ProjectIt">Home</a>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="https://github.com/joswarmer/ProjectIt/">GitHub</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="main-wrapper">
+<div class="navigation-container" data-component="projectit-component" data-version="0.0.1">
+  <aside class="navigation">
+    <div class="panels">
+<div class="navigation-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">ProjectIt Developer Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Projectit Readme</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="../Projectional-Overview.html">ProjectIt Editor Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Defining_Projections.html">Defining Projections</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Defining_Actions.html">Defining Actions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Editing_Expressions.html">Expressions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="Projection-Tutorial.html">Projection Tutorial</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Actions-Tutorial.html">Actions Tutorial1</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../projectit-meta/project-meta.html">Meta model helper</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../projectit-decorators/projectit-decorators.html">Supporting Decorators</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="navigation-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ProjectIt Developer Documentation</span>
+    <span class="version">0.0.1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ProjectIt Developer Documentation</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">0.0.1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+  <main class="main">
+<div class="toolbar" role="navigation">
+  <button class="navigation-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="crumbs" aria-label="breadcrumbs">
+  <ul>
+    <li class="crumb"><a href="../../index.html">ProjectIt Developer Documentation</a></li>
+    <li class="crumb">Tutorials</li>
+    <li class="crumb"><a href="Projection-Tutorial.html">Projection Tutorial</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="file:///C:/data/projectit-local/ProjectIt/packages/docs/component-main/modules/projectit-main/pages/tutorials/Projection-Tutorial.adoc">Edit this Page</a></div>
+</div>
+<article class="doc">
+<h1>Projection Tutorial</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>For an overview of ProjectIt see <a href="../Projectional-Overview.html" class="page">Overview</a>.</p>
+</div>
+<div class="paragraph">
+<p>The first step in creating a projectional editor is to define the projection for language.
+To do this, you need to define a mapping from the constructs in your language to <em>boxes</em>.</p>
+</div>
+<div class="paragraph">
+<p>As a starting point we will take a simple language where a model has entities, and entities have attributes.
+This model is defined in TypeScript in the folder XXX.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_1_project_the_model_name"><a class="anchor" href="#_step_1_project_the_model_name"></a>Step 1: Project the Model Name</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We start with projecting the DemoModel:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class DemoModel extends DemoModelElement {
+    @observablelistpart entities: DemoEntity[];
+    @observable name: string;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s project the model object itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox(model: DemoModel): Box {
+        return new HorizontalListBox(model, "model", [
+            new LabelBox(model, "model-label", "Model"),
+            new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c))
+        ]);
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The projection is a <em>HorizontalList</em> of a label "Model", followed by the name of the model: DemoModel.
+When we start the editor based on this projection, we see the following:</p>
+</div>
+<div class="paragraph">
+<p>The first <em>Model</em> is the label,  when it is selected, you cabnnot edit it.
+The text <em>Demo Model</em> can be edited, changing the name of the model.</p>
+</div>
+<div class="paragraph">
+<p>It doesn&#8217;t look very nice currently:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The label is not distinguishable from the name of the model.</p>
+</li>
+<li>
+<p>When making the name of the model empty, there is no visual clue that you can
+add a name.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_2_adding_style"><a class="anchor" href="#_step_2_adding_style"></a>Step 2 - Adding Style</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">        return new HorizontalListBox(model, "model", [
+            new LabelBox(model, "model-label", "Model", {
+                style: demoStyles.keyword
+            }),
+            new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
+                placeHolder: "&lt;name&gt;"
+            })
+        ]);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see the <em>LabelBox</em> now has the style <em>demoStyles.keyword associated with it, so
+in a different color.
+Also, the _TextBox</em> has a <em>placeHolder</em> property.  This placeholder
+will show whenever the contents of the <em>TextBox</em> is empty, giving the user a visual clue
+that he can type in a name.</p>
+</div>
+<div class="paragraph">
+<p>The style is defined in a css (or actually scss) as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-css hljs" data-lang="css">.keyword {
+    font-weight: bold;
+    color: blue;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The projection now shown the label according to this style.
+In principle all CSS style can be used here.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_3_showing_contained_entities"><a class="anchor" href="#_step_3_showing_contained_entities"></a>Step 3 - Showing Contained Entities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We will add the entities owned by the <em>DemoModel</em> to the projection.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">        return new VerticalListBox(model, "model", [
+            new HorizontalListBox(model, "model-info", [
+                new LabelBox(model, "model-keyword", "Model", {
+                    style: demoStyles.keyword
+                }),
+                new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
+                    placeHolder: "&lt;name&gt;"
+                })
+            ]),
+            new LabelBox(model, "entity-keyword", "Entities", {
+                style: demoStyles.keyword
+            }),
+            new VerticalListBox(
+                model,
+                "entity-list",
+                model.entities.map(ent =&gt; {
+                    return this.createEntityBox(ent);
+                })
+            )
+        ]);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The entities will be below the model name and for this we use a <code>VerticalListBox</code>.
+First we show the model keyword plus its name,
+the we show the keyword <em>Entities</em>,
+followed by another <code>VerticalListBox</code> of all entities.
+The projection of an entity is defined in a separate function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createEntityBox(entity: DemoEntity): Box {
+        return new VerticalListBox(entity,"entity",
+            [
+                new HorizontalListBox(entity, "entity-info", [
+                    new LabelBox(entity, "entity-keyword", "Entity", {
+                        style: demoStyles.keyword
+                    }),
+                    new TextBox(entity, "entity-name", () =&gt; entity.name, (c: string) =&gt; (entity.name = c), {
+                        placeHolder: "&lt;name&gt;"
+                    })
+                ]),
+                new VerticalListBox( entity, "attribute-list",
+                    entity.attributes.map(att =&gt; {
+                        return this.createAttributeBox(att);
+                    })
+                )
+            ],
+            { style: demoStyles.indent }
+        );
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This function is very similar to the projection of the model box,
+showing the keyword <em>Entity</em> followed by its name and below all attributes of the
+entity in a <code>VerticalListBox</code>.</p>
+</div>
+<div class="paragraph">
+<p>Once again, the projection of an attribute is defined in its own function.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createAttributeBox(att: DemoAttribute): Box {
+        return new HorizontalListBox(
+            att,
+            "attribute",
+            [
+                new TextBox(att,"attribute-name",
+                    () =&gt; { return att.name; },
+                    (v: string) =&gt; { att.name = v; }
+                ),
+                new LabelBox(att, "colon", ":"),
+                new TextBox(att,"attribute-type",
+                    () =&gt; { return att.type; },
+                    (v: string) =&gt; { att.type = v as DemoAttributeType; }
+                )
+            ],
+            { style: demoStyles.indent }
+        );
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_4_allow_creation_of_new_elements_in_the_editor"><a class="anchor" href="#_step_4_allow_creation_of_new_elements_in_the_editor"></a>Step 4 - Allow Creation of new Elements in the Editor</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This step is explained in the <a href="../Defining_Actions.html" class="page">Actions</a> tutorial.</p>
+</div>
+</div>
+</div>
+</article>
+  </main>
+</div>
+<footer class="footer">
+  <p>This page was built using Antora.</p>
+</footer>
+<script src="../../../../_/js/site.js"></script>
+<script src="../../../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+  </body>
+</html>
