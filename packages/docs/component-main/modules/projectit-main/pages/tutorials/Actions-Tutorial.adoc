@@ -2,10 +2,11 @@
 :src-dir: ../../../../../..
 :projectitdir: ../../../../../../core
 :source-language: javascript
+:listing-caption: Code Sample
 
 = Actions Tutorial
 
-In the xref:Defining_Projections.adoc[Projection] tutorial we started out by creating a projection of the DemoModel.
+In the xref:tutorials/Projection-Tutorial.adoc[Projection Tutorial] we started out by creating a projection of the DemoModel.
 In this tutorial we will add actions to the editor,
 to enable the user to change the model and add elements to it.
 
@@ -22,6 +23,8 @@ For this we define an action.
 
 First of all we add an `AliasBox`  at the end of the vertical list of entities.
 Note the role of the box: "end-of-entity-list"
+
+.AliasBox
 [source]
 ----
 include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox4]
@@ -29,6 +32,8 @@ include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox4]
 <1> The `AliasBox`.
 
 Secondly we define an action.
+
+.Attach Action to AliasBox
 [source]
 ----
 include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateEntityAction]
@@ -49,12 +54,15 @@ Enable the creation of a new `DemoAttribute` is done similar to the creation of 
 
 First we add an `AliasBox` to the projection of the attribute list:
 
+.Add AliasBox to Attribute List
 [source]
 ----
 include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=CreateAttributeAction]
 ----
 
 Then we create the actual action and attach it to the role of the `AliasBox`.
+
+.Attach Create Attribute Action to AliasBox
 [source]
 ----
 include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateAttributeAction]

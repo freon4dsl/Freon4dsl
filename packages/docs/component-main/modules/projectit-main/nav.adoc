@@ -4,4 +4,4 @@
 ** xref:Editing_Expressions.adoc[Expressions]
 * Tutorials
 ** xref:tutorials/Projection-Tutorial.adoc[Projection Tutorial]
-** xref:tutorials/Actions-Tutorial.adoc[Actions Tutorial1]
+** xref:tutorials/Actions-Tutorial.adoc[Actions Tutorial]

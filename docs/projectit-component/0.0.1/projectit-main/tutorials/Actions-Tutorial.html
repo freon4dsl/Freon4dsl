@@ -71,7 +71,7 @@
     <a class="nav-link" href="Projection-Tutorial.html">Projection Tutorial</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="Actions-Tutorial.html">Actions Tutorial1</a>
+    <a class="nav-link" href="Actions-Tutorial.html">Actions Tutorial</a>
   </li>
 </ul>
   </li>
@@ -121,7 +121,7 @@
   <ul>
     <li class="crumb"><a href="../../index.html">ProjectIt Developer Documentation</a></li>
     <li class="crumb">Tutorials</li>
-    <li class="crumb"><a href="Actions-Tutorial.html">Actions Tutorial1</a></li>
+    <li class="crumb"><a href="Actions-Tutorial.html">Actions Tutorial</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="file:///C:/data/projectit-local/ProjectIt/packages/docs/component-main/modules/projectit-main/pages/tutorials/Actions-Tutorial.adoc">Edit this Page</a></div>
@@ -131,7 +131,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the <a href="../Defining_Projections.html" class="page">Projection</a> tutorial we started out by creating a projection of the DemoModel.
+<p>In the <a href="Projection-Tutorial.html" class="page">Projection Tutorial</a> we started out by creating a projection of the DemoModel.
 In this tutorial we will add actions to the editor,
 to enable the user to change the model and add elements to it.</p>
 </div>
@@ -168,8 +168,10 @@ For this we define an action.</p>
 Note the role of the box: "end-of-entity-list"</p>
 </div>
 <div class="listingblock">
+<div class="title">Code Sample 1. AliasBox</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">        return new VerticalListBox(model, "model", [
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: DemoModel): Box {
+        return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "model-3", {
                     style: demoStyles.keyword
@@ -189,7 +191,8 @@ Note the role of the box: "end-of-entity-list"</p>
                 })
             ).addChild(new AliasBox(model, "end-of-entity-list",
                 "add entity", { style: demoStyles.indent }))        <i class="conum" data-value="1"></i><b>(1)</b>
-        ]);</code></pre>
+        ]);
+    }</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -204,6 +207,7 @@ Note the role of the box: "end-of-entity-list"</p>
 <p>Secondly we define an action.</p>
 </div>
 <div class="listingblock">
+<div class="title">Code Sample 2. Attach Action to AliasBox</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    {
         activeInBoxRoles: ["end-of-entity-list"],                                       <i class="conum" data-value="1"></i><b>(1)</b>
@@ -251,6 +255,7 @@ This ensures that the user can immediately start typing the name of the entity a
 <p>First we add an <code>AliasBox</code> to the projection of the attribute list:</p>
 </div>
 <div class="listingblock">
+<div class="title">Code Sample 3. Add AliasBox to Attribute List</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">                new VerticalListBox(entity,"attributes",
                     entity.attributes.map(att =&gt; {
@@ -264,6 +269,7 @@ This ensures that the user can immediately start typing the name of the entity a
 <p>Then we create the actual action and attach it to the role of the <code>AliasBox</code>.</p>
 </div>
 <div class="listingblock">
+<div class="title">Code Sample 4. Attach Create Attribute Action to AliasBox</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    {
         trigger: "attribute",
