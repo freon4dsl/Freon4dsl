@@ -13,7 +13,6 @@ import {
     PiExpressionCreator,
     PiKey,
     PiLogger,
-    PiToolbarItem,
     PiTriggerType
 } from "@projectit/core";
 import {
@@ -24,9 +23,6 @@ import {
     MetaModel,
     MetaPrimitiveProperty
 } from "../language/MetaModel";
-import { MetaProjection } from "./MetaProjection";
-import { saveComponent } from "./SaveComponent";
-import { loadComponent } from "./LoadComponent";
 const LOGGER = new PiLogger("MetaActions");
 
 const EXPRESSION_CREATORS: PiExpressionCreator[] = [];
@@ -107,48 +103,11 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
     }
 ];
 
-const TOOLBAR: PiToolbarItem[] = [
-    {
-        id: "save",
-        label: "Save",
-        onClick: (editor: PiEditor): void => {},
-        component: async (editor: PiEditor): Promise<JSX.Element> => {
-            return saveComponent({ editor: editor });
-        }
-    },
-    {
-        id: "load",
-        label: "Load",
-        onClick: (editor: PiEditor): void => {
-            console.log("On Click");
-        },
-        component: async (editor: PiEditor): Promise<JSX.Element> => {
-            const models = await getModelList();
-            return loadComponent({ editor: editor, models: models as string[] });
-        }
-    },
-    {
-        id: "text",
-        label: "Text",
-        onClick: (editor: PiEditor): void => {
-            (editor.projection as MetaProjection).projectionType = "text";
-        }
-    },
-    {
-        id: "table",
-        label: "table",
-        onClick: (editor: PiEditor): void => {
-            (editor.projection as MetaProjection).projectionType = "table";
-        }
-    }
-];
-
 export class MetaActions implements PiActions {
     expressionCreators: PiExpressionCreator[] = EXPRESSION_CREATORS;
     binaryExpressionCreators: PiBinaryExpressionCreator[] = BINARY_EXPRESSION_CREATORS;
     customBehaviors: PiCustomBehavior[] = CUSTOM_BEHAVIORS;
     keyboardActions: KeyboardShortcutBehavior[] = KEYBOARD;
-    toolbarActions: PiToolbarItem[] = TOOLBAR;
 
     constructor() {
         // LOGGER.log("creating DemoActions");

@@ -1,3 +1,5 @@
+import { PiEditor } from "@projectit/core";
+import { MyToolbarItem } from "./toolbars/MyToolbarItem";
 import { observer } from "mobx-react";
 import * as React from "react";
 import { STYLES } from "@projectit/core";
@@ -7,11 +9,11 @@ import { MainToolbarItemComponent } from "./MainToolbarItemComponent";
 export interface MainToolbarItem {
     id: string;
     label: string;
-    onClick: () => void;
+    onClick: (ed:PiEditor) => void;
 }
 
 export type MainProps = {
-    toolbarItems: MainToolbarItem[];
+    toolbarItems: MyToolbarItem[];
 };
 
 @observer

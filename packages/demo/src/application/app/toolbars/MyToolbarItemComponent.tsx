@@ -1,18 +1,19 @@
 import { observer } from "mobx-react";
+
 import * as React from "react";
+import { PiEditor } from "@projectit/core";
 
-import { PiEditor } from "../editor/PiEditor";
-import { PiToolbarItem } from "../editor/PiAction";
-import { STYLES } from "./styles/Styles";
+import { STYLES } from "./ToolbarStyles";
+import { MyToolbarItem } from "./MyToolbarItem";
 
-export type ToolbarItemProps = {
+export type MyToolbarItemProps = {
     editor: PiEditor;
-    toolbarItem: PiToolbarItem;
-    onComponent: (toolbarItem: PiToolbarItem) => void;
+    toolbarItem: MyToolbarItem;
+    onComponent: (toolbarItem: MyToolbarItem) => void;
 };
 
 @observer
-export class ToolbarItemComponent extends React.Component<ToolbarItemProps, {}> {
+export class MyToolbarItemComponent extends React.Component<MyToolbarItemProps, {}> {
     render() {
         let innerElement = this.props.toolbarItem.label;
         return (

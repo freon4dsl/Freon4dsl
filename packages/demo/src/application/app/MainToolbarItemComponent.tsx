@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import { MainToolbarItem } from "./MainToolbarComponent";
 import * as React from "react";
 
-import { PiEditor, PiToolbarItem, STYLES } from "@projectit/core";
+import { STYLES } from "@projectit/core";
 
 export type MainItemProps = {
     toolbarItem: MainToolbarItem;
@@ -20,6 +20,6 @@ export class MainToolbarItemComponent extends React.Component<MainItemProps, {}>
     }
 
     private onClick = () => {
-        this.props.toolbarItem.onClick();
+        this.props.toolbarItem.onClick(null);
     };
 }
