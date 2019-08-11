@@ -1,19 +1,17 @@
-// import { MyToolbarItem } from "@projectit/demo/application/app/toolbars/MyToolbarItem";
-import { MyToolbarComponent } from "./toolbars/MyToolbarComponent";
-import { EditorWithToolBar, PiEditorWithToolbar } from "./toolbars/EditorWithToolbar";
-
-import { MyToolbarItem } from "./toolbars/MyToolbarItem";
 import { observable } from "mobx";
+import { observer } from "mobx-react";
 import * as React from "react";
 
-import { observer } from "mobx-react";
-import { PiEditor, ProjectionalEditor } from "@projectit/core";
+import { MyToolbarComponent } from "./toolbars/MyToolbarComponent";
+import { PiEditorWithToolbar } from "./toolbars/ToolBarDefinition";
+import { MyToolbarItem } from "./toolbars/MyToolbarItem";
 
+import { PiEditor, ProjectionalEditor } from "@projectit/core";
 import { MetaActions, MetaContext, MetaProjection } from "@projectit/meta";
+
 import { DemoEditor } from "./DemoEditor";
 import { MetaEditor } from "./MetaEditor";
 import { TutorialProjection } from "../../editor/TutorialProjection";
-import { MainToolbarComponent, MainToolbarItem } from "./MainToolbarComponent";
 import { DemoActions } from "../../editor/DemoActions";
 import { DemoContext } from "../../editor/DemoContext";
 
@@ -21,14 +19,12 @@ type Editor = "Demo" | "Meta";
 
 @observer
 export class MainProjectionalEditor extends React.Component<any, {}> {
-    // toolbarItems: MainToolbarItem[] = [
-    //     { id: "1", label: "Demo", onClick: () => (this.editorType = "Demo") },
-    //     { id: "2", label: "Meta", onClick: () => (this.editorType = "Meta") }
-    // ];
-    toolbarItems: MyToolbarItem[] = [
-        { id: "1", label: "Demo", onClick: (ed: PiEditor) => (this.editorType = "Demo") },
-        { id: "2", label: "Meta", onClick: (ed: PiEditor) => (this.editorType = "Meta") }
-    ];
+    toolbar = {
+        mytoolbarItems: [
+            { id: "1", label: "DemoT", onClick: (ed: PiEditor) => (this.editorType = "Demo") },
+            { id: "2", label: "MetaT", onClick: (ed: PiEditor) => (this.editorType = "Meta") }
+        ]
+    };
 
     @observable editorType: Editor = "Demo";
 
@@ -46,12 +42,12 @@ export class MainProjectionalEditor extends React.Component<any, {}> {
         }
         return (
             <div>
-                {this.toolbarItems && this.toolbarItems.length > 0 && (
-                    <MainToolbarComponent toolbarItems={this.toolbarItems}/>
+                {this.toolbar.mytoolbarItems && this.toolbar.mytoolbarItems.length > 0 && (
+                    <MyToolbarComponent editor={editor} toolbar={this.toolbar}/>
                 )}
                 {editor.mytoolbarItems &&
                 (editor.mytoolbarItems.length > 0 && (
-                    <MyToolbarComponent editor={editor}/>
+                    <MyToolbarComponent editor={editor} toolbar={editor}/>
                 ))}
                 <div>
                     <ProjectionalEditor editor={editor}/>

@@ -1,5 +1,5 @@
 import { PiActions, PiContext, PiEditor } from "@projectit/core";
-import { EditorWithToolBar, PiEditorWithToolbar } from "./toolbars/EditorWithToolbar";
+import { PiEditorWithToolbar } from "../../application/app/toolbars/ToolBarDefinition";
 import { MetaProjection } from "@projectit/meta";
 
 import { loadComponent } from "../../editor/LoadComponent";

@@ -29,15 +29,12 @@ export class PiEditor {
     keyboardActions: KeyboardShortcutBehavior[] = [];
 
     // @observable private $rootBox: Box | null;
-    @observable  $selectedBox: Box | null;
-    // private
-    $projectedElement: HTMLDivElement | null;
+    @observable private $selectedBox: Box | null;
+    private $projectedElement: HTMLDivElement | null;
 
-    // private
-    selectedElement: PiElement = null;
+    private selectedElement: PiElement = null;
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
-    // private
-    selectedRole: string = null;
+    private selectedRole: string = null;
 
     constructor(context: PiContext, projection: PiProjection, actions?: PiActions) {
         this.actions = actions;

@@ -2,7 +2,8 @@ import axios from "axios";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
-import { PiEditor, PiElement, STYLES } from "@projectit/core";
+import { STYLES } from "../application/app/toolbars/ToolbarStyles";
+import { PiEditor, } from "@projectit/core";
 import { ModelSerializer, ModelInfo } from "@projectit/model";
 import * as React from "react";
 

@@ -1,14 +1,17 @@
-import { MyToolbarItem } from "./MyToolbarItem";
-import { PiEditorWithToolbar } from "./EditorWithToolbar";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
-import { STYLES} from "@projectit/core";
+import { PiEditor } from "@projectit/core";
+
+import { STYLES } from "./ToolbarStyles";
+import { MyToolbarItem } from "./MyToolbarItem";
+import { ToolBarDefinition } from "./ToolBarDefinition";
 import { MyToolbarItemComponent } from "./MyToolbarItemComponent";
 
 export type ToolbarProps = {
-    editor: PiEditorWithToolbar;
+    toolbar: ToolBarDefinition;
+    editor: PiEditor;
 };
 
 @observer
@@ -19,7 +22,7 @@ export class MyToolbarComponent extends React.Component<ToolbarProps, {}> {
         return (
             <div>
                 <div className={STYLES.toolbar}>
-                    {this.props.editor.mytoolbarItems.map(item => {
+                    {this.props.toolbar.mytoolbarItems.map(item => {
                         return (
                             <MyToolbarItemComponent
                                 key={item.id}

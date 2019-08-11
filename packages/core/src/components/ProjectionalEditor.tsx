@@ -1,5 +1,4 @@
 import { observer } from "mobx-react";
-// import { ToolbarComponent } from "./ToolbarComponent";
 import * as React from "react";
 
 import { EVENT_LOG } from "../util/PiLogging";
@@ -26,11 +25,6 @@ export class ProjectionalEditor extends React.Component<ProjectionalEditorProps,
         // this.props.editor.rootBox = root;
         return (
             <div>
-                {/*{this.props.editor.actions &&*/}
-                {/*    this.props.editor.actions.toolbarActions &&*/}
-                {/*    this.props.editor.actions.toolbarActions.length > 0 && (*/}
-                {/*        <ToolbarComponent editor={this.props.editor} />*/}
-                {/*    )}*/}
                 <div className={STYLES.projectionalEditor} onBlur={this.onBlur} onFocus={this.onFocus}>
                     <PiComponent editor={this.props.editor} />
                 </div>
