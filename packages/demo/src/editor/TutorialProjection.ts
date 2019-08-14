@@ -121,8 +121,8 @@ export class TutorialProjection implements PiProjection {
     // end::ModelBox1[]
 
     // Modelbox with style added
+    // tag::ModelBox2[]
     private createModelBox2(model: DemoModel): Box {
-        // tag::ModelBox2[]
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "Model", {
                 style: demoStyles.keyword
@@ -131,13 +131,13 @@ export class TutorialProjection implements PiProjection {
                 placeHolder: "<name>"
             })
         ]);
-        // end::ModelBox2[]
     }
+    // end::ModelBox2[]
 
 
     // ModelBox with placeholder for the name and a list of entities
+    // tag::ModelBox3[]
     private createModelBox3(model: DemoModel): Box {
-        // tag::ModelBox3[]
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "Model", {
@@ -158,12 +158,12 @@ export class TutorialProjection implements PiProjection {
                 })
             )
         ]);
-        // end::ModelBox3[]
     }
+    // end::ModelBox3[]
 
     // ModelBox with placeholder for the name and a list of entities
+    // tag::ModelBox4[]
     private createModelBox4(model: DemoModel): Box {
-        // tag::ModelBox4[]
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "model-3", {
@@ -185,8 +185,8 @@ export class TutorialProjection implements PiProjection {
             ).addChild(new AliasBox(model, "end-of-entity-list",
                 "add entity", { style: demoStyles.indent }))        // <1>
         ]);
-        // end::ModelBox4[]
     }
+    // end::ModelBox4[]
 
     private createBinaryBox(exp: PiBinaryExpression): Box {
         if (this.projectionType === "tree") {

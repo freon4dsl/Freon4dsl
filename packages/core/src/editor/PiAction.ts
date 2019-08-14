@@ -24,8 +24,6 @@ export interface PiActions {
     customBehaviors: PiCustomBehavior[];
 
     keyboardActions: KeyboardShortcutBehavior[];
-
-    toolbarActions: PiToolbarItem[];
 }
 
 export interface PiBehavior {
@@ -72,13 +70,6 @@ export interface PiCustomBehavior extends PiBehavior {
 export interface KeyboardShortcutBehavior extends PiBehavior {
     trigger: PiKey;
     action: (box: Box, trigger: PiKey, editor: PiEditor) => Promise<PiElement>;
-}
-
-export interface PiToolbarItem {
-    id: string;
-    label: string;
-    onClick: (editor: PiEditor) => void;
-    component?: (editor: PiEditor) => Promise<JSX.Element>;
 }
 
 export function isRegExp(a: PiTriggerType): a is RegExp {

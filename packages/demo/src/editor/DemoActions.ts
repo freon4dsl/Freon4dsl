@@ -16,13 +16,12 @@ import {
     PiExpressionCreator,
     PiKey,
     PiLogger,
-    PiToolbarItem,
     PiTriggerType,
     PiUtils,
     RIGHT_MOST
 } from "@projectit/core";
 import axios from "axios";
-import { DemoAttribute, DemoProjection } from "../";
+import { DemoAttribute } from "../";
 
 import {
     DemoAndExpression,
@@ -38,8 +37,6 @@ import {
 import { DemoModel } from "../model/DemoModel";
 import { DemoEntity } from "../model/domain/DemoEntity";
 import { DemoSumExpression } from "../model/expressions/DemoSumExpression";
-import { loadComponent } from "./LoadComponent";
-import { saveComponent } from "./SaveComponent";
 
 const LOGGER = new PiLogger("DemoActions");
 
@@ -321,68 +318,17 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
 
 ];
 
-const TOOLBAR: PiToolbarItem[] = [
-    {
-        id: "save",
-        label: "Save",
-        onClick: (editor: PiEditor): void => {},
-        component: async (editor: PiEditor): Promise<JSX.Element> => {
-            return saveComponent({ editor: editor });
-        }
-    },
-    {
-        id: "load",
-        label: "Load",
-        onClick: (editor: PiEditor): void => {
-            console.log("On Click");
-        },
-        component: async (editor: PiEditor): Promise<JSX.Element> => {
-            const models = await getModelList();
-            return loadComponent({ editor: editor, models: models as string[] });
-        }
-    },
-    {
-        id: "text",
-        label: "Text",
-        onClick: (editor: PiEditor): void => {
-            (editor.projection as DemoProjection).projectionType = "text";
-        }
-    },
-    {
-        id: "tree",
-        label: "Tree",
-        onClick: (editor: PiEditor): void => {
-            (editor.projection as DemoProjection).projectionType = "tree";
-        }
-    },
-    {
-        id: "orboxed",
-        label: "or boxed",
-        onClick: (editor: PiEditor): void => {
-            (editor.projection as DemoProjection).projectionType = "orboxed";
-        }
-    },
-    {
-        id: "brackets",
-        label: "toggle brackets",
-        onClick: (editor: PiEditor): void => {
-            (editor.projection as DemoProjection).showBrackets = !(editor.projection as DemoProjection).showBrackets;
-        }
-    }
-];
-
 export class DemoActions implements PiActions {
     expressionCreators: PiExpressionCreator[] = EXPRESSION_CREATORS;
     binaryExpressionCreators: PiBinaryExpressionCreator[] = BINARY_EXPRESSION_CREATORS;
     customBehaviors: PiCustomBehavior[] = CUSTOM_BEHAVIORS;
     keyboardActions: KeyboardShortcutBehavior[] = KEYBOARD;
-    toolbarActions: PiToolbarItem[] = TOOLBAR;
     constructor() {
         // LOGGER.log("creating DemoActions");
     }
 }
 
-async function getModelList(): Promise<Object> {
+export async function getModelList(): Promise<Object> {
     console.log("getModelList");
     try {
         const res = await axios.get(`http://127.0.0.1:3001/getModelList`);

@@ -14,8 +14,6 @@ export const STYLES: {
     text: string;
     alias: string;
     incorrect: string;
-    toolbar: string;
-    toolbarItem: string;
     aliasExpression: string;
     bracket: string;
     gridcellFirst: string;
