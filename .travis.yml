@@ -5,8 +5,7 @@ node_js:
 cache: yarn
 
 install:
-  - npm install --global yarn@1.15.2
-  - yarn --version
+  - npm install --global yarn@1.17.3
   - yarn install
 
 script:
