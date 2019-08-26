@@ -1,7 +1,6 @@
 {
   "private": true,
   "scripts": {
-    "version": "lerna exec npm version",
     "start": "lerna run start --stream --parallel",
     "start:docs": "lerna run start:docs --stream",
     "build": "lerna run build --stream",
@@ -9,16 +8,8 @@
     "gendoc": "bash ./packages/tools/fix-antora.sh",
     "test": "lerna run test --stream",
     "lint": "lerna run lint --stream",
-    "publish": "lerna publish from-package --contents pkg",
     "nuke": "lerna exec \"rm -f package-lock.json npm-shrinkwrap.json\" && lerna clean --yes && lerna bootstrap && lerna exec --stream -- \"test -f package-lock.json || npm install --package-lock-only\"",
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
-  },
-  "dependencies": {
-    "@projectit/core": "0.0.1",
-    "@projectit/model": "0.0.1",
-    "@projectit/meta": "0.0.1",
-    "@projectit/demo": "0.0.1",
-    "@projectit/server": "0.0.1"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.3",
@@ -55,7 +46,7 @@
     "jest-css-modules-transform": "^2.1.1",
     "js-yaml": "3.7.0",
     "identity-obj-proxy": "^3.0.0",
-    "lerna": "3.13.4",
+    "lerna": "3.16.4",
     "mobx-react-devtools": "^4.2.15",
     "node-sass": "^4.5.3",
     "nodemon": "^1.19.0",
