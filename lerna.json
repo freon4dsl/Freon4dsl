@@ -1,6 +1,10 @@
 {
   "packages": [
-    "packages/core"
+    "packages/core",
+    "packages/model",
+    "packages/meta",
+    "packages/demo",
+    "packages/server"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
