@@ -1,6 +1,7 @@
 {
+  "private": false,
   "name": "@projectit/meta",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,5 +19,6 @@
     "@projectit/model": "^0.0.2",
     "axios": "0.18.0",
     "prettier": "^1.15.3"
-  }
+  },
+  "gitHead": "d0b2d8060befe7cb20cdead7e892f1b228c8ceb7"
 }
