@@ -1,0 +1,5 @@
+57 error Error: Command failed: git tag v0.0.2 -m v0.0.2
+57 error fatal: tag 'v0.0.2' already exists
+57 error
+57 error     at makeError (C:\data\projectit-local\ProjectIt\node_modules\execa\index.js:174:9)
+57 error     at Promise.all.then.arr (C:\data\projectit-local\ProjectIt\node_modules\execa\index.js:278:16)
