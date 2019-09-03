@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/server",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "license": "MIT",
   "source": "pkg/dist-src/index.js",
   "types": "pkg/dist-types/index.d.ts",
