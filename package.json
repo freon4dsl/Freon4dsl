@@ -1,5 +1,5 @@
 {
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "lerna run start --stream --parallel",
     "start:docs": "lerna run start:docs --stream",
