@@ -1,6 +1,6 @@
 {
   "name": "@projectit/meta",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,8 +14,8 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.2",
-    "@projectit/model": "^0.0.2",
+    "@projectit/core": "0.0.1",
+    "@projectit/model": "0.0.1",
     "axios": "0.18.0",
     "prettier": "^1.15.3"
   }
