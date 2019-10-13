@@ -1,5 +1,6 @@
 import { MobxModelElementImpl } from "@projectit/model";
 import { MetaConcept, MetaElementProperty, MetaModel, MetaPrimitiveProperty } from "./MetaModel";
+import parserTypeScript =require("prettier/parser-typescript");
 
 const prettier = require("prettier/standalone");
 
@@ -43,7 +44,7 @@ export class PiMetaTemplates {
         
             ${element.properties.length > 0 ? `import { observable } from "mobx";` : ""}
 
-            import { ${mobxImports.join(",")} } from "projectit-model";
+            import { ${mobxImports.join(",")} } from "@projectit/model";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
             @model
@@ -65,7 +66,8 @@ export class PiMetaTemplates {
         return prettier.format(result, {
             parser: "typescript",
             printWidth: 120,
-            tabWidth: 4
+            tabWidth: 4,
+            plugins: [parserTypeScript]
         });
     }
 
