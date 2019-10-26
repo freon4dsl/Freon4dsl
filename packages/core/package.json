@@ -9,9 +9,10 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && yarn run cp-scss",
     "start": "tsc -w",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "cp-scss": "copyfiles -u 1 **/**/*.scss **/**/fonts/** dist/"
   },
   "dependencies": {
     "classnames": "^2.2.5",

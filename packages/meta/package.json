@@ -10,8 +10,10 @@
   },
   "scripts": {
     "start": "tsc -w",
-    "build": "tsc",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
+    "build": "tsc && yarn run cp-scss",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "cp-scss": "copyfiles -u 1 **/**/*.scss dist/"
+
   },
   "dependencies": {
     "@projectit/core": "0.0.1",
