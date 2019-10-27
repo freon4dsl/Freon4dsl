@@ -15,7 +15,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@projectit/core": "0.0.1",
+    "@projectit/core": "0.0.3",
     "reflect-metadata": "^0.1.12"
   }
 }

@@ -15,9 +15,9 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "dependencies": {
-    "@projectit/core": "0.0.1",
-    "@projectit/meta": "0.0.1",
-    "@projectit/model": "0.0.1",
+    "@projectit/core": "0.0.3",
+    "@projectit/meta": "0.0.3",
+    "@projectit/model": "0.0.3",
     "axios": "0.18.0",
     "classnames": "^2.2.5",
     "mobx": "^3.3.1",

@@ -16,8 +16,8 @@
 
   },
   "dependencies": {
-    "@projectit/core": "0.0.1",
-    "@projectit/model": "0.0.1",
+    "@projectit/core": "0.0.3",
+    "@projectit/model": "0.0.3",
     "axios": "0.18.0",
     "prettier": "^1.15.3"
   }
