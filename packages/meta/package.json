@@ -1,6 +1,6 @@
 {
   "name": "@projectit/meta",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,12 +10,14 @@
   },
   "scripts": {
     "start": "tsc -w",
-    "build": "tsc",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
+    "build": "tsc && yarn run cp-scss",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "cp-scss": "copyfiles -u 1 **/**/*.scss dist/"
+
   },
   "dependencies": {
-    "@projectit/core": "0.0.1",
-    "@projectit/model": "0.0.1",
+    "@projectit/core": "0.0.3",
+    "@projectit/model": "0.0.3",
     "axios": "0.18.0",
     "prettier": "^1.15.3"
   }
