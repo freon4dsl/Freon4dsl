@@ -1,6 +1,6 @@
 {
   "name": "@projectit/demo",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

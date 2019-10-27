@@ -1,6 +1,6 @@
 {
   "name": "@projectit/core",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "click-outside": "1.0.4",
     "mobx": "^3.3.1",
     "mobx-react": "^4.3.3",
     "react": "^16.8.6",
