@@ -9,11 +9,11 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "start": "tsc -w",
+    "start": "tsc -w && yarn run copy-scss1 && yarn run copy-scss2",
     "build": "tsc && yarn run cp-scss",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "cp-scss": "copyfiles -u 1 **/**/*.scss dist/"
-
+    "copy-scss1": "cp ./src/styles/*.scss ./dist/styles",
+    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor"
   },
   "dependencies": {
     "@projectit/core": "0.0.3",
