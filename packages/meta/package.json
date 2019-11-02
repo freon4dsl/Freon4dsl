@@ -11,8 +11,10 @@
   },
   "scripts": {
     "start": "tsc -w",
-    "build": "tsc",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
+    "build": "tsc && yarn run copy-scss1 && yarn run copy-scss2",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "copy-scss1": "cp ./src/styles/*.scss ./dist/styles",
+    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor"
   },
   "dependencies": {
     "@projectit/core": "^0.0.3",
