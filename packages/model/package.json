@@ -1,4 +1,5 @@
 {
+  "private": false,
   "name": "@projectit/model",
   "version": "0.0.3",
   "license": "MIT",
@@ -15,7 +16,10 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@projectit/core": "0.0.3",
+    "@projectit/core": "^0.0.3",
     "reflect-metadata": "^0.1.12"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
