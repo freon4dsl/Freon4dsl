@@ -1,0 +1,102 @@
+language DemoLanguage
+
+root concept DemoModel {
+    name: string
+    @part entitites: DemoEntity[]
+    @part functions: DemoFunction[]
+}
+
+concept DemoEntity {
+    name: string
+    @part attributes: DemoAttribute[]
+}
+
+concept DemoAttribute {
+    name: string
+    type: DemoAttributeType
+}
+
+concept DemoFunction {
+    name: string
+    @part expression: DemoExpression
+    @reference parameters: DemoVariable[]
+}
+
+concept DemoVariable {
+    name: string
+    type: DemoAttributeType
+}
+
+abstract expression concept DemoExpression {}
+
+expression placeholder concept DemoExpressionPlaceholder {}
+
+abstract expression concept DemoLiteralExpression base DemoExpression {}
+
+concept DemoStringLiteralExpression base DemoLiteralExpression {
+    value: string
+    @editor symbol: string = "'"
+}
+
+concept DemoNumberLiteralExpression base DemoLiteralExpression {
+    value: string
+    @editor symbol: string = "/[0-9]/"
+}
+
+concept DemoAbsExpression base DemoExpression {
+    @part expr: DemoExpression
+    @editor symbol: string = "abs"
+}
+
+abstract binary expression concept DemoBinaryExpression base DemoExpression {
+    @part left: DemoExpression
+    @part right: DemoExpression
+    @editor symbol: string = "unknown"
+}
+
+concept DemoMultiplyExpression base DemoBinaryExpression {
+    @editor symbol: string = "*"
+    @editor priority: number = "2"
+}
+
+concept DemoPlusExpression base DemoBinaryExpression {
+    @editor symbol: string = "+"
+    @editor priority: number = "4"
+}
+
+concept DemoDivideExpression base DemoBinaryExpression {
+    @editor symbol: string = "/"
+    @editor priority: number = "2"
+}
+
+concept DemoAndExpression base DemoBinaryExpression {
+    @editor symbol: string = "and"
+    @editor priority: number = "12"
+}
+
+concept DemoOrExpression base DemoBinaryExpression {
+    @editor symbol: string = "or"
+    @editor priority: number = "12"
+}
+
+concept DemoFunctionCallExpression base DemoExpression {
+    @reference functionDefinition: DemoFunction
+}
+
+concept DemoIfExpression base DemoExpression {
+    @part condition: DemoExpression
+    @part whenTrue: DemoExpression
+    @part whenFalse: DemoExpression
+}
+
+enumeration DemoAttributeType {
+    String
+    Boolean
+    Integer
+}
+enumeration Color {
+    Red
+    Yellow
+    Blue
+}
+
