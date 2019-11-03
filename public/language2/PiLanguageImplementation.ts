@@ -1,8 +1,8 @@
 import {
-    PiConcept, PiEnumeration, PiEnumerationLiteral,
+    PiLangConcept, PiLangEnumeration,
     PiLanguage,
-    PiLanguageElementProperty,
-    PiLanguageProperty
+    PiLangElementProperty,
+    PiLangPrimitiveProperty
 } from "./PiLanguage";
 import { observable } from "mobx";
 import { MobxModelElementImpl, model, observablelistpart, observablepart, observablereference } from "@projectit/model";
@@ -22,7 +22,7 @@ export class PiLanguageImpl implements PiLanguage {
 }
 
 @model
-export class PiConceptImpl implements PiConcept {
+export class PiConceptImpl implements PiLangConcept {
     $type = "MetaConcept";
 
     @observable name: string = "";
@@ -41,7 +41,7 @@ export class PiConceptImpl implements PiConcept {
 }
 
 @model
-export class PiLanguagePropertyImpl implements PiLanguageProperty {
+export class PiLanguagePropertyImpl implements PiLangProperty {
     @observable name: string = "";
     @observable type: string;
     @observable isList: boolean = false;
