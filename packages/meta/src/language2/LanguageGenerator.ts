@@ -67,18 +67,17 @@ export class LanguageGenerator {
         fs.writeFileSync(`${EDITOR_FOLDER}/${Names.context(language)}.ts`, contextFile);
 
         var projectionalEditorFile = this.pretty(projctionalEditorTemplate.generateEditor(language), "MainProjectionalEditor");
-        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.mainProjectionalEditor(language)}.ts`, contextFile);
+        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.mainProjectionalEditor(language)}.tsx`, projectionalEditorFile);
     }
 
     pretty(typescriptFile: string, message: string): string {
         try {
-            const prettyresult = prettier.format(typescriptFile, {
+            return prettier.format(typescriptFile, {
                 parser: "typescript",
                 printWidth: 140,
                 tabWidth: 4,
                 plugins: [parserTypeScript]
             });
-            return prettyresult;
         } catch (e) {
             console.log("Syntax error: " + message);
             console.log(e.message);
