@@ -29,7 +29,7 @@ concept DemoVariable {
 
 abstract expression concept DemoExpression {}
 
-expression placeholder concept DemoExpressionPlaceholder {}
+expression placeholder concept DemoPlaceholderExpression {}
 
 abstract expression concept DemoLiteralExpression base DemoExpression {}
 
@@ -87,6 +87,11 @@ concept DemoIfExpression base DemoExpression {
     @part condition: DemoExpression
     @part whenTrue: DemoExpression
     @part whenFalse: DemoExpression
+}
+
+concept DemoVariableRef base DemoExpression {
+    referredName: string
+    attribute: string
 }
 
 enumeration DemoAttributeType {

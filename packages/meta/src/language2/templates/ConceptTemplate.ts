@@ -1,4 +1,5 @@
-import { PiLangConcept, PiLanguage, PiLangElementProperty, PiLangPrimitiveProperty } from "../PiLanguage";
+import { Names } from "./Names";
+import { PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty } from "../PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
@@ -14,12 +15,12 @@ export class ConceptTemplate {
 
         const imports = Array.from(
             new Set(
-                concept.parts.map(p => p.type.name)
-                    .concat(concept.references.map(r => r.type.name))
+                concept.parts.map(p => Names.concept(p.type.concept()))
+                    .concat(concept.references.map(r => Names.concept(r.type.concept())))
                     .concat(language.enumerations.map(e => e.name))
                     .filter(name => !(name === concept.name))
                     // .concat(element.properties.map(p => p.type).filter(t => language.enumerations.some(e => e.name === t)))
-                    .concat((concept.base ? concept.base.name : null))
+                    .concat((concept.base ? Names.concept(concept.base.concept()) : null))
                     .filter(r => r !== null)
             )
         );
@@ -54,7 +55,7 @@ export class ConceptTemplate {
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
             @model
-            export class ${concept.name} extends ${extendsClass} implements WithType {
+            export class ${Names.concept(concept)} extends ${extendsClass} implements WithType {
                 readonly $type: ${language.name}ConceptType = "${concept.name}";
                 ${!hasSuper ? "$id: string;" : ""}
                     
@@ -146,7 +147,7 @@ export class ConceptTemplate {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : ${property.type.name}${arrayType};
+            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType};
         `;
     }
 
@@ -154,7 +155,7 @@ export class ConceptTemplate {
         const decorator = property.isList ? "@observablelistreference" : "@observablereference";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : ${property.type.name}${arrayType};
+            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType};
         `;
     }
 

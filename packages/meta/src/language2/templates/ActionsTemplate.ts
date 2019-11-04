@@ -1,4 +1,5 @@
-import { PiLanguage } from "packages/meta/src/language2/PiLanguage";
+import { Names } from "./Names";
+import { PiLanguage } from "../PiLanguage";
 
 export class ActionsTemplate {
     constructor() {
@@ -29,7 +30,7 @@ export class ActionsTemplate {
                 RIGHT_MOST
             } from "@projectit/core";
             
-            ${language.concepts.map(c => `import { ${c.name} } from "./${c.name}";`).join("")}
+            ${language.concepts.map(c => `import { ${c.name} } from "../language/${Names.concept(c)}";`).join("")}
 
             const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.symbol).map(c =>
