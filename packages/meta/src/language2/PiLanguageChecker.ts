@@ -1,4 +1,4 @@
-import { PiLangConcept, PiLangConceptReference, PiLangElementProperty, PiLanguage } from "@projectit/meta/language2/PiLanguage";
+import { PiLangConcept, PiLangConceptReference, PiLangElementProperty, PiLanguage } from "./PiLanguage";
 
 export type CheckB = { check: boolean, error: string, whenOk?: () => void };
 

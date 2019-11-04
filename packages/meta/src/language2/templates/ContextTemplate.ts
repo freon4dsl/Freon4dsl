@@ -1,3 +1,4 @@
+import { Names } from "./Names";
 import { PiLangEnumeration, PiLanguage } from "../PiLanguage";
 
 export class ContextTemplate {
@@ -8,7 +9,7 @@ export class ContextTemplate {
         return `
             import { action, observable } from "mobx";
             import { PiContext, PiExpression } from "@projectit/core";
-            import { ${language.rootConcept().name} } from "./${language.rootConcept().name}";
+            import { ${language.rootConcept().name} } from "../language/${Names.concept(language.rootConcept())}";
             
             export class ${language.name}Context implements PiContext {
                 @observable private _rootElement: ${language.rootConcept().name};

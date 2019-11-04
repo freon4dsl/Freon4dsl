@@ -43,6 +43,10 @@ export class PiLanguage {
     rootConcept():PiLangConcept{
         return this.concepts.find(c => c.isRoot);
     }
+
+    contextClass(): string {
+        return this.name + "Context";
+    }
 }
 
 export class PiLangConcept {

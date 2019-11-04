@@ -1,14 +1,14 @@
 /**
  * Parser for PiLanguage syntax.
- * Implemented using `parjs`, a parser combinator written in TypeScript.
+ * Implemented using parjs, a parser combinator written in TypeScript.
  */
+import { anyCharOf, anyStringOf, digit, float, letter, noCharOf, Parjser, string, whitespace } from "parjs";
 import {
     PiLanguageDef,
     PiLanguageConceptDef, PiLanguageConceptReferenceDef,
     PiLanguageElementPropertyDef, PiLanguageEnumerationDef,
     PiLanguagePrimitivePropertyDef, PiLanguageEditorPropertyDef
-} from "@projectit/meta/language2/PiLanguageDef";
-import { anyCharOf, anyStringOf, digit, float, letter, noCharOf, Parjser, string, whitespace } from "parjs";
+} from "./PiLanguageDef";
 import {
     between,
     many,

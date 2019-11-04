@@ -1,4 +1,5 @@
-import { PiLanguage } from "packages/meta/src/language2/PiLanguage";
+import { Names } from "./Names";
+import { PiLanguage } from "../PiLanguage";
 
 export class ProjectionTemplate {
     constructor() {
@@ -35,10 +36,11 @@ export class ProjectionTemplate {
                 PiBinaryExpression
             } from "@projectit/core";
             require("flatted");
-            import { WithType } from "./WithType";
-            ${language.concepts.map(c => `import { ${c.name} } from "./${c.name}";`).join("")}
+            import { WithType } from "../language/WithType";
+            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
+            ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../language/${Names.enumeration(e)}";`).join("")}
 
-            export class ${language.name}Projection implements PiProjection {
+            export class ${Names.projection(language)} implements PiProjection {
                 private editor: PiEditor;
                 @observable showBrackets: boolean = false;
             
@@ -51,7 +53,7 @@ export class ProjectionTemplate {
                 getBox(exp: WithType): Box {
                     switch( exp.get$Type() ) {
                         ${language.concepts.map(c => `
-                        case "${c.name}" : return this.get${c.name}Box(exp as ${c.name});`
+                        case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
                         ).join("  ")}
                     }
                     // nothing fits
@@ -59,22 +61,23 @@ export class ProjectionTemplate {
                 }
 
                 ${language.concepts.filter(c => c.binaryExpression()).map(c => `
-                private get${c.name}Box(element: ${c.name}) {
+                private get${c.name}Box(element: ${Names.concept(c)}) {
                      return this.createBinaryBox(this, element);
                 }                
                 `).join("\n")}          
 
                 ${language.concepts.filter(c => !c.binaryExpression()).map(c => `
-                private get${c.name}Box(element: ${c.name}) {
+                private get${c.name}Box(element: ${Names.concept(c)}) {
                     return new VerticalListBox(element, "element", [
                         ${c.properties.map(p => `
                         new HorizontalListBox(element, "element-${p.name}-list", [
                             new LabelBox(element, "element-${p.name}-label", "${p.name}", {
                             }),
-                            new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c))
+                            new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type}))
                         ])`
                         ).concat(c.allParts().map(part => `
                         ${ part.isList ? `
+                            new LabelBox(element, "element-${part.name}-label", "${part.name}", {}),
                             new VerticalListBox(
                                 element,
                                 "${part.name}-list",
@@ -90,7 +93,7 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}          
                   
-                private createBinaryBox(projection: ${language.name}Projection, exp: PiBinaryExpression): Box {
+                private createBinaryBox(projection: ${Names.projection(language)}, exp: PiBinaryExpression): Box {
                     let binBox = createDefaultBinaryBox(this, exp);
                     if (
                         this.showBrackets &&
@@ -110,5 +113,4 @@ export class ProjectionTemplate {
         `;
         return result;
     }
-
 }

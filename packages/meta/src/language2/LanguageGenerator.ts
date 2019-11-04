@@ -1,3 +1,5 @@
+import { Names } from "./templates/Names";
+import { MainProjectionalEditorTemplate } from "./templates/MainProjectionalEditorTemplate";
 import { ContextTemplate } from "./templates/ContextTemplate";
 import { EnumerationTemplate } from "./templates/EnumerationTemplate";
 import { LanguageTemplates } from "./templates/LanguageTemplate";
@@ -12,6 +14,9 @@ import * as fs from "fs";
 import parserTypeScript = require("prettier/parser-typescript");
 
 const prettier = require("prettier/standalone");
+
+const LANGUAGE_FOLDER = "language";
+const EDITOR_FOLDER = "editor";
 
 export class LanguageGenerator {
     outputfolder: string;
@@ -34,31 +39,35 @@ export class LanguageGenerator {
         const languageTemplate: LanguageTemplates  = new LanguageTemplates();
         const enumerationTemplate: EnumerationTemplate  = new EnumerationTemplate();
         const contextTemplate: ContextTemplate  = new ContextTemplate();
+        const projctionalEditorTemplate: MainProjectionalEditorTemplate  = new MainProjectionalEditorTemplate();
 
         language.concepts.forEach(concept => {
             var generated = this.pretty(templates.generateConcept(concept), "concept "+ concept.name);
-            fs.writeFileSync(`gen/${concept.name}.ts`, generated);
+            fs.writeFileSync(`${LANGUAGE_FOLDER}/${Names.concept(concept)}.ts`, generated);
         });
 
         language.enumerations.forEach(enumeration => {
             var generated = this.pretty(enumerationTemplate.generateEnumeration(enumeration), "Enumeration "+ enumeration.name);
-            fs.writeFileSync(`gen/${enumeration.name}.ts`, generated);
+            fs.writeFileSync(`${LANGUAGE_FOLDER}/${Names.enumeration(enumeration)}.ts`, generated);
         });
 
         var languageFile = this.pretty(languageTemplate.generateLanguage(model, language), "Model info");
-        fs.writeFileSync(`gen/${model.name}.ts`, languageFile);
+        fs.writeFileSync(`${LANGUAGE_FOLDER}/${language.name}.ts`, languageFile);
 
         var withTypeFile = this.pretty(withTypeTemplate.generateTypeInterface(language), "Id Interface");
-        fs.writeFileSync(`gen/WithType.ts`, withTypeFile);
+        fs.writeFileSync(`${LANGUAGE_FOLDER}/WithType.ts`, withTypeFile);
 
         var projectionfile = this.pretty(projection.generateProjection(language), "Projection");
-        fs.writeFileSync(`gen/${model.name}Projection.ts`, projectionfile);
+        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.projection(language)}.ts`, projectionfile);
 
         var actionsFile = this.pretty(actions.generateActions(language), "Actions");
-        fs.writeFileSync(`gen/${model.name}Actions.ts`, actionsFile);
+        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.actions(language)}.ts`, actionsFile);
 
         var contextFile = this.pretty(contextTemplate.generateContext(language), "Context");
-        fs.writeFileSync(`gen/${model.name}Context.ts`, contextFile);
+        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.context(language)}.ts`, contextFile);
+
+        var projectionalEditorFile = this.pretty(projctionalEditorTemplate.generateEditor(language), "MainProjectionalEditor");
+        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.mainProjectionalEditor(language)}.ts`, contextFile);
     }
 
     pretty(typescriptFile: string, message: string): string {

@@ -1,3 +1,4 @@
+import { Names } from "./Names";
 import { PiLangEnumeration } from "../PiLanguage";
 
 export class EnumerationTemplate {
@@ -6,7 +7,7 @@ export class EnumerationTemplate {
 
     generateEnumeration(enumeration: PiLangEnumeration): string {
         return `
-        export type ${enumeration.name} = ${enumeration.literals.map(lit => "\"" + lit + "\"").join(" | ")} 
+        export type ${Names.enumeration(enumeration)} = ${enumeration.literals.map(lit => "\"" + lit + "\"").join(" | ")} 
         `;
     }
 }

@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "start": "lerna run start --stream --parallel",
     "start:docs": "lerna run start:docs --stream",
     "build": "lerna run build --stream",
@@ -46,10 +47,10 @@
     "jest-css-modules-transform": "^2.1.1",
     "jest-enzyme": "^7.0.2",
     "js-yaml": "3.7.0",
-    "lerna": "3.16.4",
     "mobx-react-devtools": "^4.2.15",
     "node-sass": "^4.5.3",
     "nodemon": "^1.19.0",
+    "parjs": "0.12.0",
     "postcss": "^6.0.13",
     "postcss-browser-reporter": "^0.5.0",
     "postcss-cssnext": "^3.0.2",
@@ -69,7 +70,7 @@
     "tslint-eslint-rules": "^3.5.1",
     "tslint-microsoft-contrib": "5.0.3",
     "tslint-react": "^2.6.0",
-    "typescript": "^3.4.5",
+    "typescript": "^3.6.4",
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3",
@@ -95,6 +96,7 @@
     ]
   },
   "dependencies": {
-    "parjs": "^0.12.3"
+    "lerna": "^3.18.3",
+    "parjs": "0.12.0"
   }
 }
