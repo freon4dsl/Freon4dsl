@@ -1,3 +1,5 @@
+import { EditorIndexTemplate } from "./templates/EditorIndexTemplate";
+import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";
 import { Names } from "./templates/Names";
 import { MainProjectionalEditorTemplate } from "./templates/MainProjectionalEditorTemplate";
 import { ContextTemplate } from "./templates/ContextTemplate";
@@ -22,7 +24,7 @@ export class LanguageGenerator {
     outputfolder: string;
 
     constructor(output: string) {
-        this.outputfolder == output;
+        this.outputfolder = output;
     }
 
     generate(model: PiLanguageDef): void {
@@ -32,22 +34,24 @@ export class LanguageGenerator {
         checker.checkLanguage(language);
         checker.errors.forEach(error => console.log("ERROR: " + error));
 
-        const templates: ConceptTemplate = new ConceptTemplate();
-        const actions: ActionsTemplate = new ActionsTemplate();
-        const projection: ProjectionTemplate  = new ProjectionTemplate();
-        const withTypeTemplate: WithTypeTemplate  = new WithTypeTemplate();
-        const languageTemplate: LanguageTemplates  = new LanguageTemplates();
-        const enumerationTemplate: EnumerationTemplate  = new EnumerationTemplate();
-        const contextTemplate: ContextTemplate  = new ContextTemplate();
-        const projctionalEditorTemplate: MainProjectionalEditorTemplate  = new MainProjectionalEditorTemplate();
+        const templates = new ConceptTemplate();
+        const actions = new ActionsTemplate();
+        const projection = new ProjectionTemplate();
+        const withTypeTemplate = new WithTypeTemplate();
+        const languageTemplate = new LanguageTemplates();
+        const enumerationTemplate = new EnumerationTemplate();
+        const contextTemplate = new ContextTemplate();
+        const projectionalEditorTemplate = new MainProjectionalEditorTemplate();
+        const languageIndexTemplate = new LanguageIndexTemplate();
+        const editorIndexTemplate = new EditorIndexTemplate();
 
         language.concepts.forEach(concept => {
-            var generated = this.pretty(templates.generateConcept(concept), "concept "+ concept.name);
+            var generated = this.pretty(templates.generateConcept(concept), "concept " + concept.name);
             fs.writeFileSync(`${LANGUAGE_FOLDER}/${Names.concept(concept)}.ts`, generated);
         });
 
         language.enumerations.forEach(enumeration => {
-            var generated = this.pretty(enumerationTemplate.generateEnumeration(enumeration), "Enumeration "+ enumeration.name);
+            var generated = this.pretty(enumerationTemplate.generateEnumeration(enumeration), "Enumeration " + enumeration.name);
             fs.writeFileSync(`${LANGUAGE_FOLDER}/${Names.enumeration(enumeration)}.ts`, generated);
         });
 
@@ -66,8 +70,13 @@ export class LanguageGenerator {
         var contextFile = this.pretty(contextTemplate.generateContext(language), "Context");
         fs.writeFileSync(`${EDITOR_FOLDER}/${Names.context(language)}.ts`, contextFile);
 
-        var projectionalEditorFile = this.pretty(projctionalEditorTemplate.generateEditor(language), "MainProjectionalEditor");
+        var projectionalEditorFile = this.pretty(projectionalEditorTemplate.generateEditor(language), "MainProjectionalEditor");
         fs.writeFileSync(`${EDITOR_FOLDER}/${Names.mainProjectionalEditor(language)}.tsx`, projectionalEditorFile);
+
+        var languageIndexFile = this.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
+        fs.writeFileSync(`${LANGUAGE_FOLDER}/index.ts`, languageIndexFile);
+        var editorIndexFile = this.pretty(editorIndexTemplate.generateIndex(language), "Editor Index");
+        fs.writeFileSync(`${EDITOR_FOLDER}/index.ts`, editorIndexFile);
     }
 
     pretty(typescriptFile: string, message: string): string {
