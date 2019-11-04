@@ -1,27 +1,28 @@
 import { Names } from "./Names";
-import { PiLangEnumeration, PiLanguage } from "../PiLanguage";
+import { PiLangConcept, PiLanguage } from "../PiLanguage";
 
 export class ContextTemplate {
     constructor() {
     }
 
     generateContext(language: PiLanguage): string {
+        const rootConcept: PiLangConcept = language.rootConcept();
         return `
             import { action, observable } from "mobx";
             import { PiContext, PiExpression } from "@projectit/core";
-            import { ${language.rootConcept().name} } from "../language/${Names.concept(language.rootConcept())}";
+            import { ${Names.concept(rootConcept)} } from "../language/${Names.concept(rootConcept)}";
             
-            export class ${language.name}Context implements PiContext {
-                @observable private _rootElement: ${language.rootConcept().name};
+            export class ${Names.context(language)} implements PiContext {
+                @observable private _rootElement: ${Names.concept(language.rootConcept())};
             
-                model: ${language.rootConcept().name} = new ${language.rootConcept().name}();
+                model: ${Names.concept(rootConcept)} = new ${Names.concept(rootConcept)}();
             
-                constructor(initialExpression?: ${language.rootConcept().name}) {
+                constructor(initialExpression?: ${Names.concept(rootConcept)}) {
                     this.initialize();
                     this.rootElement = initialExpression ? initialExpression : this.model;
                 }
             
-                set rootElement(exp: ${language.rootConcept().name}) {
+                set rootElement(exp: ${Names.concept(rootConcept)}) {
                     this._rootElement = exp;
                     this._rootElement.container = null;
                     exp.container = this;
@@ -29,12 +30,12 @@ export class ContextTemplate {
                     exp.propertyName = "rootElement";
                 }
             
-                get rootElement(): ${language.rootConcept().name} {
+                get rootElement(): ${Names.concept(rootConcept)} {
                     return this._rootElement;
                 }
             
                 toString(): string {
-                    return "${language.name}Context";
+                    return "${Names.context(language)}";
                 }
             
                 getPlaceHolderExpression(): PiExpression {

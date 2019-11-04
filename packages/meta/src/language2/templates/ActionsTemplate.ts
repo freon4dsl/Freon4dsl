@@ -6,7 +6,7 @@ export class ActionsTemplate {
     }
 
     generateActions(language: PiLanguage): string {
-        const result = `
+        return `
             import * as Keys from "@projectit/core";
             import {
                 AFTER_BINARY_OPERATOR,
@@ -30,7 +30,7 @@ export class ActionsTemplate {
                 RIGHT_MOST
             } from "@projectit/core";
             
-            ${language.concepts.map(c => `import { ${c.name} } from "../language/${Names.concept(c)}";`).join("")}
+            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
 
             const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.symbol).map(c =>
@@ -40,7 +40,7 @@ export class ActionsTemplate {
                         EXPRESSION_PLACEHOLDER
                     ],
                     expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
-                        return new ${c.name}();
+                        return new ${Names.concept(c)}();
                     }
             }`
         )}
@@ -58,7 +58,7 @@ export class ActionsTemplate {
                         AFTER_BINARY_OPERATOR
                     ],
                     expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
-                        return new ${c.name}();
+                        return new ${Names.concept(c)}();
                     },
                     boxRoleToSelect: EXPRESSION_PLACEHOLDER
                 }`
@@ -69,7 +69,7 @@ export class ActionsTemplate {
             
             const KEYBOARD: KeyboardShortcutBehavior[] = [];
 
-            export class ${language.name}Actions implements PiActions {
+            export class ${Names.actions(language)} implements PiActions {
                 expressionCreators: PiExpressionCreator[] = EXPRESSION_CREATORS;
                 binaryExpressionCreators: PiBinaryExpressionCreator[] = BINARY_EXPRESSION_CREATORS;
                 customBehaviors: PiCustomBehavior[] = CUSTOM_BEHAVIORS;
@@ -77,7 +77,6 @@ export class ActionsTemplate {
                 constructor() {
                 }
             }`;
-        return result;
     }
 
 }

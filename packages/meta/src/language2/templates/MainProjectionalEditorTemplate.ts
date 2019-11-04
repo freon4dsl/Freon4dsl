@@ -13,14 +13,13 @@ export class MainProjectionalEditorTemplate {
             
             import { PiEditor, ProjectionalEditor } from "@projectit/core";
             
-            import { DemoEditor } from "./DemoEditor";
-            import { ${Names.projection(language)} } from "../../editor/${Names.projection(language)}";
-            import { ${Names.actions(language)} } from "../../editor/${Names.actions(language)}";
-            import { ${Names.context(language)} } from "../../editor/${Names.context(language)}";
+            import { ${Names.projection(language)} } from "./${Names.projection(language)}";
+            import { ${Names.actions(language)} } from "./${Names.actions(language)}";
+            import { ${Names.context(language)} } from "./${Names.context(language)}";
 
             @observer
             export class MainProjectionalEditor extends React.Component< any, {}> {
-                private demoEditor: DemoEditor;
+                private privateEditor: PiEditor;
             
                 constructor(props: any) {
                     super(props);
@@ -28,7 +27,7 @@ export class MainProjectionalEditorTemplate {
                 }
             
                 render() {
-                    var editor: PiEditor = this.demoEditor;
+                    var editor: PiEditor = this.privateEditor;
                     return (
                         <div>
                             <ProjectionalEditor editor={editor}/>
@@ -40,8 +39,8 @@ export class MainProjectionalEditorTemplate {
                     const demoCtx = new ${Names.context(language)}();
                     const demoActions = new ${Names.actions(language)}();
                     const demoProjection = new ${Names.projection(language)}();
-                    this.demoEditor = new DemoEditor(demoCtx, demoProjection, demoActions);
-                    demoProjection.setEditor(this.demoEditor);
+                    this.privateEditor = new PiEditor(demoCtx, demoProjection, demoActions);
+                    demoProjection.setEditor(this.privateEditor);
                 }
             }
 
