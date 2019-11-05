@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
+  "bin": {
+    "projectit-generate-editor": "dist/bin/projectit-generate-editor.js"
+  },
   "scripts": {
     "start": "tsc -w",
     "build": "tsc && yarn run copy-scss1 && yarn run copy-scss2",
