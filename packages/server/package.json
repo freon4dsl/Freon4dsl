@@ -3,8 +3,11 @@
   "name": "@projectit/server",
   "version": "0.0.4",
   "license": "MIT",
-  "source": "pkg/dist-src/index.js",
-  "types": "pkg/dist-types/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "model-server": "./dist/server/server.js"
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server.ts",
     "build": "tsc",
