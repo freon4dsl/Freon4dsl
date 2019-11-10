@@ -1,3 +1,4 @@
+import { EditorTemplate } from "./templates/EditorTemplate";
 import { EditorIndexTemplate } from "./templates/EditorIndexTemplate";
 import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";
 import { Names } from "./templates/Names";
@@ -43,6 +44,7 @@ export class LanguageGenerator {
         const contextTemplate = new ContextTemplate();
         const projectionalEditorTemplate = new MainProjectionalEditorTemplate();
         const languageIndexTemplate = new LanguageIndexTemplate();
+        const editorTemplate = new EditorTemplate();
         const editorIndexTemplate = new EditorIndexTemplate();
 
         language.concepts.forEach(concept => {
@@ -70,11 +72,15 @@ export class LanguageGenerator {
         var contextFile = this.pretty(contextTemplate.generateContext(language), "Context");
         fs.writeFileSync(`${EDITOR_FOLDER}/${Names.context(language)}.ts`, contextFile);
 
-        var projectionalEditorFile = this.pretty(projectionalEditorTemplate.generateEditor(language), "MainProjectionalEditor");
+        var projectionalEditorFile = this.pretty(projectionalEditorTemplate.generateEditor(language, true), "MainProjectionalEditor");
         fs.writeFileSync(`${EDITOR_FOLDER}/${Names.mainProjectionalEditor(language)}.tsx`, projectionalEditorFile);
+
+        var editorFile = this.pretty(editorTemplate.generateEditor(language, true), "Editor");
+        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.editor(language)}.ts`, editorFile);
 
         var languageIndexFile = this.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${LANGUAGE_FOLDER}/index.ts`, languageIndexFile);
+
         var editorIndexFile = this.pretty(editorIndexTemplate.generateIndex(language), "Editor Index");
         fs.writeFileSync(`${EDITOR_FOLDER}/index.ts`, editorIndexFile);
     }

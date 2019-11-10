@@ -6,7 +6,7 @@ export class ProjectionTemplate {
     }
 
     generateProjection(language: PiLanguage): string {
-        const result = `
+        return `
             import { observable } from "mobx";
             import {
                 AliasBox,
@@ -35,7 +35,6 @@ export class ProjectionTemplate {
                 isPiBinaryExpression,
                 PiBinaryExpression
             } from "@projectit/core";
-            require("flatted");
             import { WithType } from "../language/WithType";
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
             ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../language/${Names.enumeration(e)}";`).join("")}
@@ -111,6 +110,5 @@ export class ProjectionTemplate {
                 }
             }
         `;
-        return result;
     }
 }
