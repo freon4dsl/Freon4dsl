@@ -93,14 +93,12 @@ export class PiLangConcept {
     }
 
     getSymbol(): string {
-        // const p: PiPrimitiveProperty = this.properties.find(p => p.name === "symbol" && p.isStatic);
         const p = this.symbol;
         return (!!p ? p : "undefined");
     }
 
     getPriority(): number {
-        // const p: PiPrimitiveProperty = this.properties.find(p => p.name === "priority" && p.isStatic);
-        const p = this.priority
+        const p = this.priority;
         return (!!p ? p : -1);
     }
 
@@ -156,7 +154,7 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
 }
 
 export class PiLangPrimitiveProperty {
-    private concept: PiLangConcept;
+    concept: PiLangConcept;
 
     constructor(parent: PiLangConcept, def: PiLanguagePrimitivePropertyDef) {
         this.concept = parent;
@@ -175,7 +173,7 @@ export class PiLangPrimitiveProperty {
 }
 
 export class PiLangElementProperty {
-    private concept: PiLangConcept;
+    concept: PiLangConcept;
 
     constructor(parent: PiLangConcept, def: PiLanguageElementPropertyDef) {
         this.concept = parent;
