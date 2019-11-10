@@ -65,7 +65,24 @@ export class ActionsTemplate {
         )}
             ];
             
-            const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [];
+            const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+                ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
+                    const parentConcept = part.concept;
+                    const partConcept = part.type.concept();
+                return `
+                {
+                    activeInBoxRoles: ["new-${part.name}"],
+                    trigger: "${part.name}",
+                    action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                        var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                        const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                        parent.${part.name}.push(new${part.name});
+                        return new${part.name};
+                    },
+                    boxRoleToSelect: "${part.name}-name"
+                }
+                `}).join(",")}
+            ];
             
             const KEYBOARD: KeyboardShortcutBehavior[] = [];
 

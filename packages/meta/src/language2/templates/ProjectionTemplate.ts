@@ -8,6 +8,8 @@ export class ProjectionTemplate {
     generateProjection(language: PiLanguage): string {
         return `
             import { observable } from "mobx";
+
+            import { demoStyles } from "../styles/styles"
             import {
                 AliasBox,
                 Box,
@@ -71,19 +73,34 @@ export class ProjectionTemplate {
                         ${c.properties.map(p => `
                         new HorizontalListBox(element, "element-${p.name}-list", [
                             new LabelBox(element, "element-${p.name}-label", "${p.name}", {
+                                style: demoStyles.propertykeyword
                             }),
-                            new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type}))
+                            new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type}),
+                            {
+                                placeHolder: "text",
+                                style: demoStyles.placeholdertext
+                            })
                         ])`
                         ).concat(c.allParts().map(part => `
                         ${ part.isList ? `
-                            new LabelBox(element, "element-${part.name}-label", "${part.name}", {}),
-                            new VerticalListBox(
-                                element,
-                                "${part.name}-list",
-                                element.${part.name}.map(ent => {
-                                    return this.get${part.type.concept().name}Box(ent);
-                                })
-                            )
+                            new LabelBox(element, "element-${part.name}-label", "${part.name}", { 
+                                style: demoStyles.keyword
+                            }),
+                            ( element.${part.name}.length === 0 ? null : 
+                                new VerticalListBox(
+                                    element,
+                                    "${part.name}-list",
+                                    element.${part.name}.map(ent => {
+                                        return this.get${part.type.concept().name}Box(ent);
+                                    }),
+                                    {
+                                        style: demoStyles.indent
+                                    }
+                                )
+                            ),
+                            new AliasBox(element, "new-${part.name}", "add ${part.name}", {
+                                style: demoStyles.indentedplaceholdertext
+                            })
                         ` :
                             `new LabelBox(element, "element-${part.name}-label", "${part.name}", {}),
                             this.getBox(element.${part.name})
