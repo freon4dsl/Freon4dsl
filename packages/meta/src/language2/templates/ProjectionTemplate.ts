@@ -7,6 +7,16 @@ export class ProjectionTemplate {
 
     generateProjection(language: PiLanguage): string {
         return `
+            import { ${Names.projectionDefault(language)} } from "./${Names.projectionDefault(language)}";
+        
+            export class ${Names.projection(language)} extends ${Names.projectionDefault(language)} {
+            
+            }
+        `
+    }
+
+    generateProjectionDefault(language: PiLanguage): string {
+        return `
             import { observable } from "mobx";
 
             import { demoStyles } from "../styles/styles"
@@ -41,7 +51,7 @@ export class ProjectionTemplate {
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
             ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../language/${Names.enumeration(e)}";`).join("")}
 
-            export class ${Names.projection(language)} implements PiProjection {
+            export class ${Names.projectionDefault(language)} implements PiProjection {
                 private editor: PiEditor;
                 @observable showBrackets: boolean = false;
             
@@ -65,10 +75,17 @@ export class ProjectionTemplate {
                 private get${c.name}Box(element: ${Names.concept(c)}) {
                      return this.createBinaryBox(this, element);
                 }                
-                `).join("\n")}          
+                `).join("\n")}    
+                
+                ${ language.expressionPlaceholder() !== null ? `
+                private get${language.expressionPlaceholder().name}Box(element: ${Names.concept(language.expressionPlaceholder())}) {
+                    return new AliasBox(element, EXPRESSION_PLACEHOLDER, "[exp]");
+                }`
+                :"" }
+      
 
-                ${language.concepts.filter(c => !c.binaryExpression()).map(c => `
-                private get${c.name}Box(element: ${Names.concept(c)}) {
+                ${language.concepts.filter(c => !c.binaryExpression() && !c.isExpressionPlaceHolder).map(c => `
+                public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     return new VerticalListBox(element, "element", [
                         ${c.properties.map(p => `
                         new HorizontalListBox(element, "element-${p.name}-list", [
@@ -109,7 +126,7 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}          
                   
-                private createBinaryBox(projection: ${Names.projection(language)}, exp: PiBinaryExpression): Box {
+                private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression): Box {
                     let binBox = createDefaultBinaryBox(this, exp);
                     if (
                         this.showBrackets &&

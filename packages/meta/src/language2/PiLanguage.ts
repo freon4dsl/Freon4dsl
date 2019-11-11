@@ -40,6 +40,10 @@ export class PiLanguage {
         return this.concepts.find(c => c.isExpression && (c.base ? !(c.base.concept().isExpression) : true));
     }
 
+    expressionPlaceholder(): PiLangConcept {
+        return this.concepts.find(c => c.isExpression && c.isExpressionPlaceHolder);
+    }
+
     rootConcept():PiLangConcept{
         return this.concepts.find(c => c.isRoot);
     }
@@ -154,10 +158,10 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
 }
 
 export class PiLangPrimitiveProperty {
-    concept: PiLangConcept;
+    owningConcept: PiLangConcept;
 
     constructor(parent: PiLangConcept, def: PiLanguagePrimitivePropertyDef) {
-        this.concept = parent;
+        this.owningConcept = parent;
         this.name = def.name;
         this.isList = !!(def.isList);
         this.isStatic = !!(def.isStatic);
@@ -173,10 +177,10 @@ export class PiLangPrimitiveProperty {
 }
 
 export class PiLangElementProperty {
-    concept: PiLangConcept;
+    owningConcept: PiLangConcept;
 
     constructor(parent: PiLangConcept, def: PiLanguageElementPropertyDef) {
-        this.concept = parent;
+        this.owningConcept = parent;
         this.name = def.name;
         this.isList = !!(def.isList);
         this.type = new PiLangConceptReference(parent.language, def.type);
