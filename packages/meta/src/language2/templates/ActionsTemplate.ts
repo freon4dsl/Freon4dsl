@@ -67,7 +67,7 @@ export class ActionsTemplate {
             
             const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
                 ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
-                    const parentConcept = part.concept;
+                    const parentConcept = part.owningConcept;
                     const partConcept = part.type.concept();
                 return `
                 {

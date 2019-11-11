@@ -8,16 +8,18 @@ export class ConceptTemplate {
     generateConcept(concept: PiLangConcept): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? concept.base.name : "MobxModelElementImpl";
+        const extendsClass = hasSuper ? Names.concept(concept.base.concept()) : "MobxModelElementImpl";
         const hasName = concept.properties.some(p => p.name === "name");
         const hasSymbol = !!concept.symbol;
-        const baseExpressionName = concept.language.findExpressionBase().name;
+        const baseExpressionName = Names.concept(concept.language.findExpressionBase());
 
         const imports = Array.from(
             new Set(
                 concept.parts.map(p => Names.concept(p.type.concept()))
                     .concat(concept.references.map(r => Names.concept(r.type.concept())))
-                    .concat(language.enumerations.map(e => e.name))
+                    .concat(language.enumerations.map(e => Names.enumeration(e)))
+                    .concat(Names.concept(language.expressionPlaceholder()))
+                    .concat([baseExpressionName])
                     .filter(name => !(name === concept.name))
                     // .concat(element.properties.map(p => p.type).filter(t => language.enumerations.some(e => e.name === t)))
                     .concat((concept.base ? Names.concept(concept.base.concept()) : null))
@@ -67,7 +69,12 @@ export class ConceptTemplate {
                         } else {
                             this.$id = uuid.v4();
                         }` : ""
-        }
+                    }
+                    ${concept.binaryExpression() ? `
+                    this.left = new ${Names.concept(language.expressionPlaceholder())};
+                    this.right = new ${Names.concept(language.expressionPlaceholder())};
+                    `: ""
+                    }
                 }
                 
                 ${concept.properties.map(p => this.generatePrimitiveProperty(p)).join("")}
@@ -85,11 +92,11 @@ export class ConceptTemplate {
             : ""}
                 
                 piIsExpression(): boolean {
-                    return ${concept.isExpression};
+                    return ${concept.expression()};
                 }
                 
                 piIsBinaryExpression(): boolean {
-                    return ${concept.isBinaryExpression};
+                    return ${concept.binaryExpression()};
                 }
                 
                 piIsExpressionPlaceHolder(): boolean {
@@ -114,7 +121,7 @@ export class ConceptTemplate {
                 }`
             : ""}
                 
-                ${concept.isBinaryExpression ? `
+                ${concept.binaryExpression() ? `
                 public piLeft(): ${baseExpressionName} {
                     return this.left;
                 }
@@ -146,8 +153,9 @@ export class ConceptTemplate {
     generatePartProperty(property: PiLangElementProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
+        const initializer = (property.type.concept().expression() ? `= new ${Names.concept(property.owningConcept.language.expressionPlaceholder())}` : "");
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType};
+            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType} ${initializer};
         `;
     }
 
