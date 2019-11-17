@@ -11,12 +11,12 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "scripts": {
-    "start": "tsc -w",
+    "start": "echo Starting model",
     "test": "NODE_ENV=test jest --config ./jest.config.js",
     "build": "tsc"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.3",
+    "@projectit/core": "^0.0.4",
     "reflect-metadata": "^0.1.12"
   },
   "publishConfig": {
