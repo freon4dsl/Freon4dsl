@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/demo",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,9 +16,9 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.3",
-    "@projectit/meta": "^0.0.3",
-    "@projectit/model": "^0.0.3",
+    "@projectit/core": "^0.0.4",
+    "@projectit/meta": "^0.0.4",
+    "@projectit/model": "^0.0.4",
     "axios": "0.18.0",
     "classnames": "^2.2.5",
     "mobx": "^3.3.1",

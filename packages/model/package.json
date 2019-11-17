@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/model",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.3",
+    "@projectit/core": "^0.0.4",
     "reflect-metadata": "^0.1.12"
   },
   "publishConfig": {

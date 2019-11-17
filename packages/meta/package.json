@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/meta",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,8 +17,8 @@
     "copy-scss2": "cp ./src/editor/*.scss ./dist/editor"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.3",
-    "@projectit/model": "^0.0.3",
+    "@projectit/core": "^0.0.4",
+    "@projectit/model": "^0.0.4",
     "axios": "0.18.0",
     "prettier": "^1.15.3"
   },
