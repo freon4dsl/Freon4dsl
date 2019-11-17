@@ -17,8 +17,8 @@
     "copy-scss2": "cp ./src/editor/*.scss ./dist/editor"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.4",
-    "@projectit/model": "^0.0.4",
+    "@projectit/core": "^0.0.3",
+    "@projectit/model": "^0.0.3",
     "axios": "0.18.0",
     "prettier": "^1.15.3"
   },
