@@ -21,6 +21,7 @@ const prettier = require("prettier/standalone");
 
 const LANGUAGE_FOLDER = "language";
 const EDITOR_FOLDER = "editor";
+const EDITOR_FOLDER_GENERATED = "editor/generated";
 
 export class LanguageGenerator {
     outputfolder: string;
@@ -94,7 +95,7 @@ export class LanguageGenerator {
             var file = this.pretty(this.userTemplate.generateUserClass(userClassName, defaultClassName), "User class "+ userClassName);
             fs.writeFileSync(`${folderName}/${userClassName}.ts`, file);
         } else {
-            console.log("Projectit-generate-editor: user file "+ userClassName + " already exists, skipping it.");
+            console.log("projectit-generate-editor: user file "+ userClassName + " already exists, skipping it.");
         }
     }
 

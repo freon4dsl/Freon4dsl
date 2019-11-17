@@ -1,100 +1,118 @@
-language DemoLanguage
+language Language
 
-root concept DemoModel {
+root concept Model {
     name: string
-    @part entitites: DemoEntity[]
-    @part functions: DemoFunction[]
+    @part entitites: Entity[]
+    @part functions: Function[]
 }
 
-concept DemoEntity {
+concept Entity {
     name: string
-    @part attributes: DemoAttribute[]
+    @part attributes: Attribute[]
 }
 
-concept DemoAttribute {
+concept Attribute {
     name: string
-    type: DemoAttributeType
+    type: AttributeType
 }
 
-concept DemoFunction {
+concept Function {
     name: string
-    @part expression: DemoExpression
-    @reference parameters: DemoVariable[]
+    @part expression: Expression
+    @reference parameters: Variable[]
 }
 
-concept DemoVariable {
+concept Variable {
     name: string
-    type: DemoAttributeType
+    type: AttributeType
 }
 
-abstract expression concept DemoExpression {}
+abstract expression concept Expression {}
 
-expression placeholder concept DemoPlaceholderExpression {}
+expression placeholder concept PlaceholderExpression {}
 
-abstract expression concept DemoLiteralExpression base DemoExpression {}
+abstract expression concept LiteralExpression base Expression {}
 
-concept DemoStringLiteralExpression base DemoLiteralExpression {
+concept StringLiteralExpression base LiteralExpression {
     value: string
     @editor symbol: string = "'"
 }
 
-concept DemoNumberLiteralExpression base DemoLiteralExpression {
+concept NumberLiteralExpression base LiteralExpression {
     value: string
     @editor symbol: string = "/[0-9]/"
 }
 
-concept DemoAbsExpression base DemoExpression {
-    @part expr: DemoExpression
+concept AbsExpression base Expression {
+    @part expr: Expression
     @editor symbol: string = "abs"
 }
 
-abstract binary expression concept DemoBinaryExpression base DemoExpression {
-    @part left: DemoExpression
-    @part right: DemoExpression
+abstract binary expression concept BinaryExpression base Expression {
+    @part left: Expression
+    @part right: Expression
     @editor symbol: string = "unknown"
 }
 
-concept DemoMultiplyExpression base DemoBinaryExpression {
+concept MultiplyExpression base BinaryExpression {
     @editor symbol: string = "*"
     @editor priority: number = "2"
 }
 
-concept DemoPlusExpression base DemoBinaryExpression {
+concept PlusExpression base BinaryExpression {
     @editor symbol: string = "+"
     @editor priority: number = "4"
 }
 
-concept DemoDivideExpression base DemoBinaryExpression {
+concept DivideExpression base BinaryExpression {
     @editor symbol: string = "/"
     @editor priority: number = "2"
 }
 
-concept DemoAndExpression base DemoBinaryExpression {
+concept AndExpression base BinaryExpression {
     @editor symbol: string = "and"
     @editor priority: number = "12"
 }
 
-concept DemoOrExpression base DemoBinaryExpression {
+concept OrExpression base BinaryExpression {
     @editor symbol: string = "or"
     @editor priority: number = "12"
 }
 
-concept DemoFunctionCallExpression base DemoExpression {
-    @reference functionDefinition: DemoFunction
+abstract concept ComparisonExpression base BinaryExpression {
 }
 
-concept DemoIfExpression base DemoExpression {
-    @part condition: DemoExpression
-    @part whenTrue: DemoExpression
-    @part whenFalse: DemoExpression
+concept LessThenExpression base ComparisonExpression {
+    @editor symbol: string = "<"
+    @editor priority: number = "10"
 }
 
-concept DemoVariableRef base DemoExpression {
+concept GreaterThenExpression base ComparisonExpression {
+    @editor symbol: string = ">"
+    @editor priority: number = "10"
+}
+
+concept EqualsExpression base ComparisonExpression {
+    @editor symbol: string = "="
+    @editor priority: number = "10"
+}
+
+concept FunctionCallExpression base Expression {
+    @reference functionDefinition: Function
+}
+
+concept IfExpression base Expression {
+    @part condition: Expression
+    @part whenTrue: Expression
+    @part whenFalse: Expression
+}
+
+concept VariableRef base Expression {
     referredName: string
     attribute: string
 }
 
-enumeration DemoAttributeType {
+enumeration AttributeType {
     String
     Boolean
     Integer
