@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectIt Decorators :: ProjectIt - A Projectional Editor Framework for the Web</title>
+    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.4/projectit-decorators/projectit-decorators.html">
+    <meta name="generator" content="Antora 2.2.0">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://projectit-org.github.io/ProjectIt">ProjectIt - A Projectional Editor Framework for the Web</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://projectit-org.github.io/ProjectIt">Home</a>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="https://github.com/joswarmer/ProjectIt/">GitHub</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="main-wrapper">
+<div class="navigation-container" data-component="projectit-component" data-version="0.0.4">
+  <aside class="navigation">
+    <div class="panels">
+<div class="navigation-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">ProjectIt Developer Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Projectit Readme</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="../projectit-main/Projectional-Overview.html">ProjectIt Editor Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-main/Defining_Projections.html">Defining Projections</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-main/Defining_Actions.html">Defining Actions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-main/Editing_Expressions.html">Expressions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-main/tutorials/Projection-Tutorial.html">Projection Tutorial</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-main/tutorials/Actions-Tutorial.html">Actions Tutorial</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../projectit-meta/project-meta.html">Meta model helper</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="projectit-decorators.html">Supporting Decorators</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="navigation-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ProjectIt Developer Documentation</span>
+    <span class="version">0.0.4</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ProjectIt Developer Documentation</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">0.0.4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+  <main class="main">
+<div class="toolbar" role="navigation">
+  <button class="navigation-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="crumbs" aria-label="breadcrumbs">
+  <ul>
+    <li class="crumb"><a href="../index.html">ProjectIt Developer Documentation</a></li>
+    <li class="crumb"><a href="projectit-decorators.html">Supporting Decorators</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/master/packages/docs/component-main/modules/projectit-decorators/pages/projectit-decorators.adoc">Edit this Page</a></div>
+</div>
+<article class="doc">
+<h1>ProjectIt Decorators</h1>
+<div class="ulist">
+<ul>
+<li>
+<p>All properties that are are used while creating a projection need to be mobx observable.</p>
+</li>
+<li>
+<p>Each element in the AST must know its parent.
+This means that the parenty-child releationship has to be maintained in both directions at all times.
+Sounds easy enough,  but the code that needs to be written for this is actually quite complex.
+See for example <a href="http://www.devx.com/enterprise/Article/28528/">Wed Yourself to UML with the Power of Associations</a>
+for an explanation of some of this complexity.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>model</code> package defines several TypeScript decorators that provide the above functionality without'
+the need to write code for this yourself.</p>
+</div>
+<div class="paragraph">
+<p>TODO: Explain decorators in detail.</p>
+</div>
+<div class="paragraph">
+<p>For now: look at the <code>demo</code> application in the <code>src/model</code> folder to see how these decorators are being used.</p>
+</div>
+</article>
+  </main>
+</div>
+<footer class="footer">
+  <p>This page was built using Antora.</p>
+</footer>
+<script src="../../../_/js/site.js"></script>
+<script src="../../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+  </body>
+</html>
