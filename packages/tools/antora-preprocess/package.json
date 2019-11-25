@@ -1,6 +1,6 @@
 {
   "name": "@projectit/antora-preprocess",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Antropa preprocessor to copy included source files",
   "license": "MIT",
   "private": true,
