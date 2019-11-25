@@ -2,7 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   modulePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/coverage/'],
-  setupTestFrameworkScriptFile: "<rootDir>/../../jestSetupReact.js",
+  setupFilesAfterEnv: ["<rootDir>/jestSetupReact.js"],
   testURL: "http://localhost/",
   transform: {
     "\\.tsx?$": "ts-jest",
