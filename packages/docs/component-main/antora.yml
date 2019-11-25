@@ -1,5 +1,5 @@
 name: projectit-component
-version: '0.0.1'
+version: '0.0.4'
 title: ProjectIt Developer Documentation
 nav:
   - modules/ROOT/nav.adoc

@@ -4,10 +4,10 @@
 :source-language: javascript
 
 = ProjectIt MetaModel
+
 ProjectIt is designed to be an editor only, not a complete language workbench.
 Defining the structure of your language is done outside ProjectIt.
 
 This Meta module is a helper module that supports users to specify the language
 structure for a TypeScript implementation.
 
-As of now, this is unfinished work.
