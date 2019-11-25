@@ -11,8 +11,8 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "scripts": {
-    "start": "echo Starting model",
-    "test": "NODE_ENV=test jest --config ./jest.config.js",
+    "start": "tsc -w",
+    "test": "jest --config ./jest.config.js",
     "build": "tsc"
   },
   "dependencies": {
