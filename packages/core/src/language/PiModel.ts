@@ -43,5 +43,5 @@ export function isPiExpression(element: PiElement): element is PiExpression {
 }
 
 export function isPiBinaryExpression(element: PiElement): element is PiBinaryExpression {
-    return element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression();
+    return element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression && element.piIsBinaryExpression();
 }

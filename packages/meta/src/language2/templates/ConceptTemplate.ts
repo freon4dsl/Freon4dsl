@@ -12,6 +12,9 @@ export class ConceptTemplate {
         const hasName = concept.properties.some(p => p.name === "name");
         const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
+        const isBinaryExpression = concept.binaryExpression();
+        const isExpression = (!isBinaryExpression) && concept.expression() ;
+        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement"));
 
         const imports = Array.from(
             new Set(
@@ -52,12 +55,14 @@ export class ConceptTemplate {
             ${concept.properties.length > 0 ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
             import { WithType } from "./WithType";
+            import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/model";
             import { ${language.name}ConceptType } from "./${language.name}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
             @model
-            export class ${Names.concept(concept)} extends ${extendsClass} implements WithType {
+            export class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}, WithType 
+            {
                 readonly $type: ${language.name}ConceptType = "${concept.name}";
                 ${!hasSuper ? "$id: string;" : ""}
                     
@@ -89,39 +94,31 @@ export class ConceptTemplate {
                 piId(): string {
                     return this.$id;
                 }`
-            : ""}
+                : ""}
                 
                 piIsExpression(): boolean {
-                    return ${concept.expression()};
+                    return ${isExpression || isBinaryExpression};
                 }
                 
                 piIsBinaryExpression(): boolean {
-                    return ${concept.binaryExpression()};
+                    return ${isBinaryExpression};
                 }
                 
+                ${ isExpression || isBinaryExpression ? `
                 piIsExpressionPlaceHolder(): boolean {
                     return ${concept.isExpressionPlaceHolder};
+                }`
+                : ""}
+                
+                ${ isBinaryExpression ? `
+                public piSymbol(): string {
+                    return "${concept.symbol}";
                 }
                 
                 piPriority(): number {
                     return ${concept.getPriority() ? concept.getPriority() : "-1"};
                 }
-               
-                ${hasName ? `
-                static create(name: string): ${concept.name} {
-                    const result = new ${concept.name}();
-                    result.name = name;
-                    return result;
-                }`
-            : ""}
                 
-                ${hasSymbol ? `
-                public piSymbol(): string {
-                    return "${concept.symbol}";
-                }`
-            : ""}
-                
-                ${concept.binaryExpression() ? `
                 public piLeft(): ${baseExpressionName} {
                     return this.left;
                 }
@@ -138,8 +135,16 @@ export class ConceptTemplate {
                     this.right = value;
                 }
                 `
-            : ""}
+                : ""}
 
+                ${hasName ? `
+                static create(name: string): ${concept.name} {
+                    const result = new ${concept.name}();
+                    result.name = name;
+                    return result;
+                }`
+            : ""}
+                
             }`;
         return result;
     }

@@ -25,16 +25,18 @@ import {
 } from "parjs/combinators";
 import { ParjsFailure, ParjsSuccess } from "parjs/internal/result";
 
+export type EditorPropertyType = "priority" | "trigger" | "symbol";
+
 // Marker property keys
 const IS_PROPERTY = "isProperty";
 const IS_PART = "isPart";
 const IS_REFERENCE = "isReference";
-const IS_EDITOR = "isEditor"
+const IS_EDITOR = "isEditor";
 
 /****************************************************************
  * Keywords
  ****************************************************************/
-const parjsKeywordLanguage = string("language").pipe(between(whitespace()));
+const parjsKeywordLanguage: Parjser<string> = string("language").pipe(between(whitespace()));
 const parjsKeywordConcept = string("concept").pipe(between(whitespace()));
 const parjsKeywordEnumeration = string("enumeration").pipe(between(whitespace()));
 const parjsKeywordPart = string("@part").pipe(between(whitespace()));
@@ -47,7 +49,10 @@ const parjsKeywordRootOptional = string("root").pipe(maybe()).pipe(between(white
 const parjsKeywordPlaceholder = string("placeholder").pipe(maybe()).pipe(between(whitespace()));
 const parjsKeywordBinaryOptional = string("binary").pipe(maybe()).pipe(between(whitespace()));
 const parjsKeywordSymbol = string("symbol").pipe(between(whitespace()));
-const parjsKeywordEditor = string("@editor").pipe(between(whitespace()));
+const parjsKeywordRegexp: Parjser<string> = string("regexp").pipe(between(whitespace()));
+const parjsKeywordTrigger: Parjser<string> = string("trigger").pipe(between(whitespace()));
+const parjsKeywordPriority: Parjser<string> = string("priority").pipe(between(whitespace()));
+const parjsKeywordEditor: Parjser<string> = string("@editor").pipe(between(whitespace()));
 const parjsKeywordBracketOpen = string("{").pipe(between(whitespace()));
 const parjsKeywordBracketClose = string("}").pipe(between(whitespace()));
 const parjsKeywordEquals = string("=").pipe(between(whitespace()));
@@ -145,10 +150,22 @@ const parjsPrimitiveProperty: Parjser<PiLanguagePrimitivePropertyDef> =
             return r;
         }));
 
+const parjsEditorPropertyType: Parjser<EditorPropertyType> =
+    parjsKeywordPriority.pipe(
+        or(
+            parjsKeywordSymbol,
+            parjsKeywordTrigger
+        )
+    ).pipe(map(result => {
+        if (result === "priority") { return "priority"; }
+        if (result === "symbol") { return "symbol"; }
+        if (result === "trigger") { return "trigger"; }
+    }));
+
 const parjsEditorProperty: Parjser<PiLanguageEditorPropertyDef> =
     parjsKeywordEditor.pipe(
         then(
-            parjsIdentifier,
+            parjsEditorPropertyType,
             string(":"),
             parjsIdentifier,
             parjsInitialValue,
