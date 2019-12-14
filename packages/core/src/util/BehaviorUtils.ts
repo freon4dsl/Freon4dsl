@@ -14,20 +14,20 @@ export enum PiCaretPosition {
 }
 
 export class PiCaret {
-    position: PiCaretPosition;
-    index: number;
-
-    constructor(p: PiCaretPosition, i: number) {
-        this.position = p;
-        this.index = i;
-    }
-
     static RIGHT_MOST = new PiCaret(PiCaretPosition.RIGHT_MOST, 0);
     static LEFT_MOST = new PiCaret(PiCaretPosition.LEFT_MOST, 0);
     static UNSPECIFIED = new PiCaret(PiCaretPosition.UNSPECIFIED, 0);
 
     static IndexPosition(i: number): PiCaret {
         return new PiCaret(PiCaretPosition.INDEX, i);
+    }
+
+    position: PiCaretPosition;
+    index: number;
+
+    constructor(p: PiCaretPosition, i: number) {
+        this.position = p;
+        this.index = i;
     }
 }
 

@@ -6,12 +6,12 @@ export function findOption(options: SelectOption[], matching: string): number {
 }
 
 export function findExactOption(options: SelectOption[], matching: string | null): number {
-    let index = options.findIndex(o => o.label === matching);
+    const index = options.findIndex(o => o.label === matching);
     return index;
 }
 
 export function findExactOptionId(options: SelectOption[], matching: string | null): number {
-    let index = options.findIndex(o => o.id === matching);
+    const index = options.findIndex(o => o.id === matching);
     return index;
 }
 

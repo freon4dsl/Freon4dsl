@@ -46,7 +46,7 @@ export function renderComponent(box: Box, editor: PiEditor): React.ReactElement<
         case "SvgBox":
             return <SvgComponent box={box as SvgBox} editor={editor} />;
         case "GridBox": {
-            const callback = (box: Box, editor1: PiEditor): any => <RenderBox box={box} editor={editor1} />;
+            const callback = (box1: Box, editor1: PiEditor): any => <RenderBox box={box1} editor={editor1} />;
             return <GridComponent box={box as GridBox} editor={editor} renderBoxCallback={callback} />;
         }
         default:

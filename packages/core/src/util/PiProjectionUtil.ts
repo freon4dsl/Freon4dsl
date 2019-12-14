@@ -7,7 +7,7 @@ export class PiProjectionUtil {
     static textBox(element: PiElement, property: string): TextBox {
         let result: TextBox = null;
         const value = element[property];
-        if (value !== undefined && value != null && typeof value === "string") {
+        if (value !== undefined && value !== null && typeof value === "string") {
             result = new TextBox(
                 element,
                 "textbox-" + property,

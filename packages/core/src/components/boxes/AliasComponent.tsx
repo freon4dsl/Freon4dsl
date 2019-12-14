@@ -33,7 +33,7 @@ export class AliasComponent extends AbstractChoiceComponent {
     };
 
     protected getOptions = (): SelectOption[] => {
-        let result = this.props.editor.behaviors
+        const result = this.props.editor.behaviors
             .filter(
                 a =>
                     a.activeInBoxRoles.includes(this.props.box.role) &&
@@ -54,7 +54,7 @@ export class AliasComponent extends AbstractChoiceComponent {
             this,
             "handleStringInput for box " + this.props.box.role + " isOpen " + this.OPEN + " text is [" + this.text + "]"
         );
-        let options = this.getOptions();
+        const options = this.getOptions();
         if (options.length > 1) {
             LOGGER.info(this, " > 1 option");
             this.hasError = false;

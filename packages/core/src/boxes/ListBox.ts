@@ -49,7 +49,7 @@ export abstract class ListBox extends Box {
         if (children) {
             children.forEach(child => this.addChild(child));
         }
-        return this
+        return this;
     }
 
     nextSibling(box: Box): Box | null {

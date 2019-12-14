@@ -28,7 +28,7 @@ export class GridUtil {
             element[listPropertyName] === list,
             "createCollectionRowGrid: listPropertyname should result in the list"
         );
-        let cells: GridCell[] = [];
+        const cells: GridCell[] = [];
         columnNames.forEach((item: string, index: number) => {
             cells.push({
                 row: 1,
@@ -89,8 +89,7 @@ export class GridUtil {
         editor: PiEditor,
         initializer?: Partial<GridBox>
     ): Box {
-        let result: GridBox;
-        let cells: GridCell[] = [];
+        const cells: GridCell[] = [];
         columnNames.forEach((item: string, index: number) => {
             cells.push({
                 row: index + 1,
