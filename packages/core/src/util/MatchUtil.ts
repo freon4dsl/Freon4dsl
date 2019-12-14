@@ -6,7 +6,7 @@ export class MatchUtil {
         if (isRegExp(trigger)) {
             return trigger.test(text);
         } else if (isString(trigger)) {
-            trigger === text;
+            return trigger === text;
         } else if (isProKey(trigger)) {
             return false;
         }
@@ -15,9 +15,9 @@ export class MatchUtil {
 
     public static partialMatch(text: string, trigger: PiTriggerType): boolean {
         if (isRegExp(trigger)) {
-            let r: RegExp = toPartialMatchRegex(trigger);
-            let x = text.match(r);
-            let b = exactlyOne(x, text);
+            const r: RegExp = toPartialMatchRegex(trigger);
+            const x = text.match(r);
+            const b = exactlyOne(x, text);
             return b;
         } else if (isString(trigger)) {
             return trigger.startsWith(text);
@@ -33,7 +33,7 @@ function exactlyOne(ra: RegExpMatchArray, text: string): boolean {
     if (ra === null) {
         result = false;
     } else {
-        let arr = ra as RegExpMatchArray;
+        const arr = ra as RegExpMatchArray;
         if (arr.length === 1) {
             return arr[0] === text;
         } else if (arr.length > 1) {
@@ -47,12 +47,13 @@ function exactlyOne(ra: RegExpMatchArray, text: string): boolean {
 function toPartialMatchRegex(re: RegExp) {
     "use strict";
 
-    let source = re.source,
-        i = 0;
+    const source = re.source;
+    let i = 0;
 
+    // tslint:disable-next-line:cyclomatic-complexity
     function process() {
-        var result = "",
-            tmp;
+        let result = "";
+        let tmp;
 
         function appendRaw(nbChars) {
             result += source.substr(i, nbChars);
@@ -122,7 +123,7 @@ function toPartialMatchRegex(re: RegExp) {
                     break;
 
                 case "(":
-                    if (source[i + 1] == "?") {
+                    if (source[i + 1] === "?") {
                         switch (source[i + 2]) {
                             case ":":
                                 result += "(?:";

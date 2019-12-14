@@ -59,7 +59,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
 
     protected checkSelected() {
         const selectedBox = this.props.editor.selectedBox;
-        let isSelected = !!this.props.box && !!selectedBox ? this.props.box.id === selectedBox.id : false;
+        const isSelected = !!this.props.box && !!selectedBox ? this.props.box.id === selectedBox.id : false;
         if (isSelected) {
             LOGGER.info(this, "!!!!!!!!!!!!!!!!!!!!!!!!!! SELECTED position " + this.caretPosition);
             this.element.focus();
@@ -120,7 +120,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
         const innerTextNotNull: string = this.element.innerText !== null ? this.element.innerText : "";
 
         EVENT_LOG.info(this, "onInput innerText [" + innerTextNotNull + "]");
-        let box = this.props.box;
+        const box = this.props.box;
         box.caretPosition = this.getCaretPosition();
         this.caretPosition = box.caretPosition;
         this.props.editor.selectedPosition = PiCaret.IndexPosition(box.caretPosition);

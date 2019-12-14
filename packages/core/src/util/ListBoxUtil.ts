@@ -13,8 +13,8 @@ const LOGGER = new PiLogger("ListBoxUtil");
 
 export function boxAbove(box: Box): Box {
     wait(0);
-    let x = box.actualX;
-    let y = box.actualY;
+    const x = box.actualX;
+    const y = box.actualY;
     let result: Box = box.nextLeafLeft;
     let tmpResult = result;
     LOGGER.log("boxAbove: " + x + ", " + y);
@@ -28,7 +28,7 @@ export function boxAbove(box: Box): Box {
                 return result;
             }
         }
-        let next = result.nextLeafLeft;
+        const next = result.nextLeafLeft;
         tmpResult = result;
         result = next;
     }
@@ -36,8 +36,8 @@ export function boxAbove(box: Box): Box {
 }
 
 export function boxBelow(box: Box): Box {
-    let x = box.actualX;
-    let y = box.actualY;
+    const x = box.actualX;
+    const y = box.actualY;
     let result: Box = box.nextLeafRight;
     let tmpResult = result;
     LOGGER.log("boxBelow " + box.role + ": " + x + ", " + y);
@@ -53,7 +53,7 @@ export function boxBelow(box: Box): Box {
                 return result;
             }
         }
-        let next = result.nextLeafRight;
+        const next = result.nextLeafRight;
         tmpResult = result;
         result = next;
     }
@@ -71,7 +71,7 @@ function isOnNextLine(ref: Box, other: Box): boolean {
 }
 
 export function firstVerticalBoxParent(box: Box): Box[] {
-    let resultL: Box[] = [];
+    const resultL: Box[] = [];
     resultL.push(box);
     let result: Box = box;
     while (result.parent) {
@@ -95,7 +95,7 @@ export function createVerticalListBox<E extends PiElement>(
     LOGGER.info(this, "createVerticalListBox");
     const result = new VerticalListBox(element, role, []);
 
-    for (var index = 0; index < list.length; index++) {
+    for (let index = 0; index < list.length; index++) {
         const ent = list[index];
         const line = new HorizontalListBox(element, role + "-hor-" + index, [
             editor.projection.getBox(ent),

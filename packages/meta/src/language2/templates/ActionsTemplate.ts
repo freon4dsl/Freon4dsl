@@ -35,7 +35,7 @@ export class ActionsTemplate {
             const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.trigger).map(c =>
             `{
-                    trigger: ${c.triggerIsRegExp  ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
+                    trigger: ${c.triggerIsRegExp ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
                     activeInBoxRoles: [
                         EXPRESSION_PLACEHOLDER
                     ],
@@ -86,9 +86,9 @@ export class ActionsTemplate {
             
             const KEYBOARD: KeyboardShortcutBehavior[] = [
                 ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
-                const parentConcept = part.owningConcept;
-                const partConcept = part.type.concept();
-                return `
+                    const parentConcept = part.owningConcept;
+                    const partConcept = part.type.concept();
+                    return `
                     {
                         activeInBoxRoles: ["new-${part.name}"],
                         trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
@@ -99,8 +99,8 @@ export class ActionsTemplate {
                             return Promise.resolve(new${part.name});
                         },
                         boxRoleToSelect: "${part.name}-name"
-                    }
-                `}).join(",")}
+                    }`;
+                 }).join(",")}
             ];
 
             export class ${Names.actions(language)} implements PiActions {
@@ -111,6 +111,5 @@ export class ActionsTemplate {
                 constructor() {
                 }
             }`;
-    }
-
+        }
 }
