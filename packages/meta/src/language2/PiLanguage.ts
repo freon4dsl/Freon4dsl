@@ -68,6 +68,8 @@ export class PiLangConcept {
     left?: PiLanguageConceptReferenceDef;
     right?: PiLanguageConceptReferenceDef;
     symbol?: string;
+    trigger?: string;
+    triggerIsRegExp?: boolean;
     priority?: number;
 
     constructor(lang: PiLanguage, conceptDef: PiLanguageConceptDef) {
@@ -94,10 +96,22 @@ export class PiLangConcept {
         if (!!priority) {
             this.priority = Number.parseInt(priority.initialValue);
         }
+        const trigger = conceptDef.editor.find(e => e.name === "trigger");
+        if (!!trigger) {
+            this.trigger = trigger.initialValue;
+        }
+        if (!!trigger) {
+            this.triggerIsRegExp = trigger.type == "regexp";
+        }
     }
 
     getSymbol(): string {
         const p = this.symbol;
+        return (!!p ? p : "undefined");
+    }
+
+    getTrigger(): string {
+        const p = this.trigger;
         return (!!p ? p : "undefined");
     }
 

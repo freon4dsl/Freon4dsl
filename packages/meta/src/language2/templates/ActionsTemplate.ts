@@ -33,9 +33,9 @@ export class ActionsTemplate {
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
 
             const EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.symbol).map(c =>
+                ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.trigger).map(c =>
             `{
-                    trigger: "${c.getSymbol()}",
+                    trigger: ${c.triggerIsRegExp  ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
                     activeInBoxRoles: [
                         EXPRESSION_PLACEHOLDER
                     ],
@@ -72,7 +72,7 @@ export class ActionsTemplate {
                 return `
                 {
                     activeInBoxRoles: ["new-${part.name}"],
-                    trigger: "${part.name}",
+                    trigger: "${!!part.type.concept().trigger ? part.type.concept().getTrigger() : part.name}",
                     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                         var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
                         const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
@@ -84,7 +84,24 @@ export class ActionsTemplate {
                 `}).join(",")}
             ];
             
-            const KEYBOARD: KeyboardShortcutBehavior[] = [];
+            const KEYBOARD: KeyboardShortcutBehavior[] = [
+                ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
+                const parentConcept = part.owningConcept;
+                const partConcept = part.type.concept();
+                return `
+                    {
+                        activeInBoxRoles: ["new-${part.name}"],
+                        trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
+                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
+                            var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                            const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                            parent.${part.name}.push(new${part.name});
+                            return Promise.resolve(new${part.name});
+                        },
+                        boxRoleToSelect: "${part.name}-name"
+                    }
+                `}).join(",")}
+            ];
 
             export class ${Names.actions(language)} implements PiActions {
                 expressionCreators: PiExpressionCreator[] = EXPRESSION_CREATORS;
