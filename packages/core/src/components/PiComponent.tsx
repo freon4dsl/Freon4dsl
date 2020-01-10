@@ -14,6 +14,7 @@ export type PiComponentProps = {
     editor: PiEditor;
 };
 
+// Generic baseclass
 @observer
 export class PiComponent extends React.Component<PiComponentProps, {}> {
     private setElement = (element: HTMLDivElement | null) => {

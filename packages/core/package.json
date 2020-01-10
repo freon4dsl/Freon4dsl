@@ -14,7 +14,8 @@
     "start": "echo Start core",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss": "cp ./src/components/styles/*.scss ./dist/components/styles",
-    "copy-fonts": "cp -r ./src/components/styles/fonts ./dist/components/styles"
+    "copy-fonts": "cp -r ./src/components/styles/fonts ./dist/components/styles",
+    "dummy": "echo DUMMY"
   },
   "dependencies": {
     "classnames": "^2.2.5",
