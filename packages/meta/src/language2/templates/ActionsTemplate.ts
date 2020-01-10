@@ -5,7 +5,7 @@ export class ActionsTemplate {
     constructor() {
     }
 
-    generateActions(language: PiLanguage): string {
+    generateDefaultActions(language: PiLanguage): string {
         return `
             import * as Keys from "@projectit/core";
             import {
@@ -32,7 +32,7 @@ export class ActionsTemplate {
             
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
 
-            const EXPRESSION_CREATORS: PiExpressionCreator[] = [
+            export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.trigger).map(c =>
             `{
                     trigger: ${c.triggerIsRegExp ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
@@ -46,7 +46,7 @@ export class ActionsTemplate {
         )}
             ];
 
-            const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
+            export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
                 ${language.concepts.filter(c => c.binaryExpression() && !c.isAbstract).map(c =>
             `{
                     trigger: "${c.getSymbol()}",
@@ -65,7 +65,7 @@ export class ActionsTemplate {
         )}
             ];
             
-            const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+            export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
                 ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.concept();
@@ -84,7 +84,7 @@ export class ActionsTemplate {
                 `}).join(",")}
             ];
             
-            const KEYBOARD: KeyboardShortcutBehavior[] = [
+            export const KEYBOARD: KeyboardShortcutBehavior[] = [
                 ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.concept();
@@ -102,12 +102,43 @@ export class ActionsTemplate {
                     }`;
                  }).join(",")}
             ];
+            `;
+        }
 
+        generateActions(language: PiLanguage): string {
+            return `
+            import {
+                KeyboardShortcutBehavior,
+                PiActions,
+                PiBinaryExpressionCreator,
+                PiCustomBehavior,
+                PiExpressionCreator
+            } from "@projectit/core";
+            
+            import { EXPRESSION_CREATORS, BINARY_EXPRESSION_CREATORS, CUSTOM_BEHAVIORS, KEYBOARD } from "./${Names.defaultActions(language)}";
+
+            const MY_EXPRESSION_CREATORS: PiExpressionCreator[] = [
+                // Add your own custom expression creators here
+            ];
+
+            const MY_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
+                // Add your own custom binary expression creators here
+            ];
+            
+            const MY_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+                // Add your own custom behavior here
+            ];
+            
+            const MY_KEYBOARD: KeyboardShortcutBehavior[] = [
+                // Add your own custom keyboard shortcuts here
+            ];
+            
             export class ${Names.actions(language)} implements PiActions {
-                expressionCreators: PiExpressionCreator[] = EXPRESSION_CREATORS;
-                binaryExpressionCreators: PiBinaryExpressionCreator[] = BINARY_EXPRESSION_CREATORS;
-                customBehaviors: PiCustomBehavior[] = CUSTOM_BEHAVIORS;
-                keyboardActions: KeyboardShortcutBehavior[] = KEYBOARD;
+                expressionCreators: PiExpressionCreator[] = EXPRESSION_CREATORS.concat(MY_EXPRESSION_CREATORS);
+                binaryExpressionCreators: PiBinaryExpressionCreator[] = BINARY_EXPRESSION_CREATORS.concat(MY_BINARY_EXPRESSION_CREATORS);
+                customBehaviors: PiCustomBehavior[] = CUSTOM_BEHAVIORS.concat(MY_CUSTOM_BEHAVIORS);
+                keyboardActions: KeyboardShortcutBehavior[] = KEYBOARD.concat(MY_KEYBOARD);
+                
                 constructor() {
                 }
             }`;
