@@ -13,6 +13,10 @@ export class Names {
         return language.name + "Actions";
     }
 
+    public static defaultActions(language: PiLanguage){
+        return language.name + "DefaultActions";
+    }
+
     public static projectionDefault(language: PiLanguage){
         return language.name + "ProjectionDefault";
     }
