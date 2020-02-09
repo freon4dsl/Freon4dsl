@@ -32,7 +32,7 @@ Let's project the model object itself:
 ----
 include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox1]
 ----
-The projection is a `HorizontalListBox` of a label "Model", followed by the name of the model: DemoModel.
+The projection is a `HorizontalListBox` of a label "Model", followed by the name of the model which is stored in the variable model.name. In the tutorial example the name is "DemoModel".
 When we start the editor based on this projection, we see the following:
 
 

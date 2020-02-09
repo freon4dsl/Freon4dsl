@@ -58,7 +58,7 @@ include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
 <4> The second label box for the end quote
 
 All box roles within the projection for a specific element should have a unique role.
-This way we can identify every box buy its model element + its role.
+This way we can identify every box by its model element + its role.
 
 == Box
 A Box is an abstract class describing the features that are common for all boxes.
@@ -80,7 +80,7 @@ There is a number of boxes available
 
 == LabelBox
 A `LabelBox` shows a non-editable text.
-The text itself can either be a fixed string (1),or it can be defined as a function (2).
+The text itself can either be a fixed string (1), or it can be defined as a function (2).
 Being a function allows the label text to change dynamically,
 depending on the result value of the function.
 
