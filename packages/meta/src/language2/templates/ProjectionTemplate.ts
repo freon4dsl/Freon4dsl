@@ -7,7 +7,7 @@ export class ProjectionTemplate {
 
     generateProjection(language: PiLanguage): string {
         return `
-            import { ${Names.projectionDefault(language)} } from "./${Names.projectionDefault(language)}";
+            import { ${Names.projectionDefault(language)} } from "./gen/${Names.projectionDefault(language)}";
         
             export class ${Names.projection(language)} extends ${Names.projectionDefault(language)} {
             
@@ -19,7 +19,7 @@ export class ProjectionTemplate {
         return `
             import { observable } from "mobx";
 
-            import { demoStyles } from "../styles/styles"
+            import { demoStyles } from "../../styles/styles"
             import {
                 AliasBox,
                 Box,
@@ -47,9 +47,10 @@ export class ProjectionTemplate {
                 isPiBinaryExpression,
                 PiBinaryExpression
             } from "@projectit/core";
-            import { WithType } from "../language/WithType";
-            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
-            ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../language/${Names.enumeration(e)}";`).join("")}
+            import { WithType } from "../../language/WithType";
+            
+            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
+            ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../../language/${Names.enumeration(e)}";`).join("")}
 
             export class ${Names.projectionDefault(language)} implements PiProjection {
                 private editor: PiEditor;

@@ -15,7 +15,9 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss": "cp ./src/components/styles/*.scss ./dist/components/styles",
     "copy-fonts": "cp -r ./src/components/styles/fonts ./dist/components/styles",
-    "dummy": "echo DUMMY"
+    "dummy": "echo DUMMY",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
   "dependencies": {
     "classnames": "^2.2.5",

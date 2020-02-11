@@ -21,7 +21,7 @@ const prettier = require("prettier/standalone");
 
 const LANGUAGE_FOLDER = "language";
 const EDITOR_FOLDER = "editor";
-const EDITOR_FOLDER_GENERATED = "editor/generated";
+const EDITOR_GEN_FOLDER = "editor/gen";
 
 export class LanguageGenerator {
     outputfolder: string;
@@ -67,38 +67,44 @@ export class LanguageGenerator {
         fs.writeFileSync(`${LANGUAGE_FOLDER}/WithType.ts`, withTypeFile);
 
         var projectionfileDefault = this.pretty(projection.generateProjectionDefault(language), "Projection Default");
-        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.projectionDefault(language)}.ts`, projectionfileDefault);
-
-        this.generateUserFile(EDITOR_FOLDER, Names.projection(language), Names.projectionDefault(language));
+        fs.writeFileSync(`${EDITOR_GEN_FOLDER}/${Names.projectionDefault(language)}.ts`, projectionfileDefault);
 
         var defaultActionsFile = this.pretty(actions.generateDefaultActions(language), "DefaultActions");
-        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.defaultActions(language)}.ts`, defaultActionsFile);
+        fs.writeFileSync(`${EDITOR_GEN_FOLDER}/${Names.defaultActions(language)}.ts`, defaultActionsFile);
+
+        var manualActionsFile = this.pretty(actions.generateManualActions(language), "ManualActions");
+        this.generateManualFile(`${EDITOR_FOLDER}/${Names.manualActions(language)}.ts`, manualActionsFile, "ManualActions");
 
         var actionsFile = this.pretty(actions.generateActions(language), "Actions");
-        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.actions(language)}.ts`, actionsFile);
+        fs.writeFileSync(`${EDITOR_GEN_FOLDER}/${Names.actions(language)}.ts`, actionsFile);
 
         var contextFile = this.pretty(contextTemplate.generateContext(language), "Context");
-        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.context(language)}.ts`, contextFile);
+        fs.writeFileSync(`${EDITOR_GEN_FOLDER}/${Names.context(language)}.ts`, contextFile);
 
         var projectionalEditorFile = this.pretty(projectionalEditorTemplate.generateEditor(language, true), "MainProjectionalEditor");
-        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.mainProjectionalEditor(language)}.tsx`, projectionalEditorFile);
+        fs.writeFileSync(`${EDITOR_GEN_FOLDER}/${Names.mainProjectionalEditor(language)}.tsx`, projectionalEditorFile);
+
+        var projectionalEditorManualFile = this.pretty(projection.generateProjection(language), "ProjectionalEditorManual");
+        this.generateManualFile(`${EDITOR_FOLDER}/${Names.projection(language)}.ts`, projectionalEditorManualFile, "ManualProjections");
 
         var editorFile = this.pretty(editorTemplate.generateEditor(language, true), "Editor");
-        fs.writeFileSync(`${EDITOR_FOLDER}/${Names.editor(language)}.ts`, editorFile);
+        fs.writeFileSync(`${EDITOR_GEN_FOLDER}/${Names.editor(language)}.ts`, editorFile);
 
         var languageIndexFile = this.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${LANGUAGE_FOLDER}/index.ts`, languageIndexFile);
+
+        var editorIndexGenFile = this.pretty(editorIndexTemplate.generateGenIndex(language), "Editor Gen Index");
+        fs.writeFileSync(`${EDITOR_GEN_FOLDER}/index.ts`, editorIndexGenFile);
 
         var editorIndexFile = this.pretty(editorIndexTemplate.generateIndex(language), "Editor Index");
         fs.writeFileSync(`${EDITOR_FOLDER}/index.ts`, editorIndexFile);
     }
 
-    generateUserFile(folderName: string, userClassName: string, defaultClassName: string) {
-        if (!fs.existsSync(`${folderName}/${userClassName}.ts`)) {
-            var file = this.pretty(this.userTemplate.generateUserClass(userClassName, defaultClassName), "User class " + userClassName);
-            fs.writeFileSync(`${folderName}/${userClassName}.ts`, file);
+    generateManualFile(path: string, contents: string, message: string) {
+        if (!fs.existsSync(path)) {
+            fs.writeFileSync(path, contents);
         } else {
-            console.log("projectit-generate-editor: user file " + userClassName + " already exists, skipping it.");
+            console.log("projectit-generate-editor: user file " + message + " already exists, skipping it.");
         }
     }
 

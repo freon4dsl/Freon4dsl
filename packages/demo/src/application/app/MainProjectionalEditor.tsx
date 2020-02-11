@@ -1,3 +1,4 @@
+import { PiEditor } from "@projectit/core/editor";
 import { observer } from "mobx-react";
 import * as React from "react";
 
@@ -9,8 +10,12 @@ import { ProjectionalEditor } from "@projectit/core";
 import { DemoEditor } from "./DemoEditor";
 import { TutorialProjection, DemoActions, DemoContext } from "../../editor";
 
+export type MainProjectionalEditorProps = {
+    editor: PiEditor;
+};
+
 @observer
-export class MainProjectionalEditor extends React.Component<any, {}> {
+export class MainProjectionalEditor extends React.Component<MainProjectionalEditorProps, {}> {
 
     constructor(props: any) {
         super(props);
