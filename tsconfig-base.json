@@ -4,7 +4,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "jsx": "react",
-    "lib": ["dom", "es6", "es2016.array.include"],
+    "lib": ["dom", "es6", "es2016.array.include", "esnext.array"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": false,
@@ -24,7 +24,7 @@
       "@projectit/model/*": ["packages/model/src/*"],
       "@projectit/meta/*": ["packages/meta/src/*"],
       "@projectit/demo/*": ["packages/demo/src/*"],
-      "@projectit/demo/*": ["packages/server/src/*"]
+      "@projectit/server/*": ["packages/server/src/*"]
     }
   }
 }

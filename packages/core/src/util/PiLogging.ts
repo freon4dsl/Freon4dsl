@@ -6,6 +6,15 @@ type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
 export class PiLogger {
+    private static muteAll: boolean = false;
+    static muteAllLogs() {
+        PiLogger.muteAll = true;
+    }
+    static filter: string = null;
+    static showString(s: string | null) {
+        PiLogger.filter = s;
+    }
+
     category: string;
     active: boolean = true;
 
@@ -53,15 +62,6 @@ export class PiLogger {
                 console.log(message);
             }
         }
-    }
-
-    private static muteAll: boolean = false;
-    static muteAllLogs() {
-        PiLogger.muteAll = true;
-    }
-    static filter: string = null;
-    static showString(s: string | null) {
-        PiLogger.filter = s;
     }
 }
 

@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/meta",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,17 +9,29 @@
     "type": "git",
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
+  "bin": {
+    "projectit-generate-editor": "dist/bin/projectit-generate-editor.js"
+  },
   "scripts": {
-    "start": "tsc -w",
-    "build": "tsc && yarn run copy-scss1 && yarn run copy-scss2",
+    "build-wait": "tsc -w",
+    "build": "tsc && yarn run copy-scss1",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss1": "cp ./src/styles/*.scss ./dist/styles",
-    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor"
+    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
+  },
+  "devDependencies": {
+    "@types/pegjs": "^0.10.1",
+    "parjs": "0.12.0",
+    "pegjs": "^0.10.0",
+    "ts-pegjs": "^0.2.6"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.4",
-    "@projectit/model": "^0.0.4",
+    "@projectit/core": "^0.0.5",
+    "@projectit/model": "^0.0.5",
     "axios": "0.18.0",
+    "parjs": "0.12.0",
     "prettier": "^1.15.3"
   },
   "publishConfig": {

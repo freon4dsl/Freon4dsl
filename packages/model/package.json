@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/model",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,12 +11,14 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
   },
   "scripts": {
-    "start": "tsc -w",
-    "test": "NODE_ENV=test jest --config ./jest.config.js",
-    "build": "tsc"
+    "build-wait": "tsc -w",
+    "test": "jest --config ./jest.config.js",
+    "build": "tsc",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
   "dependencies": {
-    "@projectit/core": "^0.0.4",
+    "@projectit/core": "^0.0.5",
     "reflect-metadata": "^0.1.12"
   },
   "publishConfig": {

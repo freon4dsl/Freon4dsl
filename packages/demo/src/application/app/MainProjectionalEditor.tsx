@@ -1,32 +1,21 @@
-import { observable } from "mobx";
+import { PiEditor } from "@projectit/core/editor";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 import { MyToolbarComponent } from "./toolbars/MyToolbarComponent";
 import { PiEditorWithToolbar } from "./toolbars/ToolBarDefinition";
-import { MyToolbarItem } from "./toolbars/MyToolbarItem";
 
-import { PiEditor, ProjectionalEditor } from "@projectit/core";
-import { MetaActions, MetaContext, MetaProjection } from "@projectit/meta";
+import { ProjectionalEditor } from "@projectit/core";
 
 import { DemoEditor } from "./DemoEditor";
-import { MetaEditor } from "./MetaEditor";
-import { TutorialProjection } from "../../editor/TutorialProjection";
-import { DemoActions } from "../../editor/DemoActions";
-import { DemoContext } from "../../editor/DemoContext";
+import { TutorialProjection, DemoActions, DemoContext } from "../../editor";
 
-type Editor = "Demo" | "Meta";
+export type MainProjectionalEditorProps = {
+    editor: PiEditor;
+};
 
 @observer
-export class MainProjectionalEditor extends React.Component<any, {}> {
-    toolbar = {
-        mytoolbarItems: [
-            { id: "1", label: "DemoT", onClick: (ed: PiEditor) => (this.editorType = "Demo") },
-            { id: "2", label: "MetaT", onClick: (ed: PiEditor) => (this.editorType = "Meta") }
-        ]
-    };
-
-    @observable editorType: Editor = "Demo";
+export class MainProjectionalEditor extends React.Component<MainProjectionalEditorProps, {}> {
 
     constructor(props: any) {
         super(props);
@@ -35,16 +24,9 @@ export class MainProjectionalEditor extends React.Component<any, {}> {
 
     render() {
         var editor: PiEditorWithToolbar;
-        if (this.editorType === "Demo") {
-            editor = this.demoEditor;
-        } else {
-            editor = this.metaEditor;
-        }
+        editor = this.demoEditor;
         return (
             <div>
-                {this.toolbar.mytoolbarItems && this.toolbar.mytoolbarItems.length > 0 && (
-                    <MyToolbarComponent editor={editor} toolbar={this.toolbar}/>
-                )}
                 {editor.mytoolbarItems &&
                 (editor.mytoolbarItems.length > 0 && (
                     <MyToolbarComponent editor={editor} toolbar={editor}/>
@@ -56,16 +38,9 @@ export class MainProjectionalEditor extends React.Component<any, {}> {
         );
     }
 
-    private metaEditor: MetaEditor;
     private demoEditor: DemoEditor;
 
     initEditors() {
-        const ctx = new MetaContext();
-        const actions = new MetaActions();
-        const projection = new MetaProjection();
-        this.metaEditor = new MetaEditor(ctx, projection, actions);
-        projection.setEditor(this.metaEditor);
-
         const demoCtx = new DemoContext();
         const demoActions = new DemoActions();
         const demoProjection = new TutorialProjection();
