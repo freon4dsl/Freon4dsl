@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Defining Actions :: ProjectIt - A Projectional Editor Framework for the Web</title>
-    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.4/projectit-main/Defining_Actions.html">
+    <title>How to Set Up a Language Definition in ProjectIt :: ProjectIt - A Projectional Editor Framework for the Web</title>
+    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.4/projectit-main/tutorials/Metamodels-Tutorial.html">
     <meta name="generator" content="Antora 2.2.0">
-    <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
   <body class="article">
 <header class="header">
@@ -37,12 +37,12 @@
     <div class="panels">
 <div class="navigation-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="../index.html">ProjectIt Developer Documentation</a></h3>
+    <h3 class="title"><a href="../../index.html">ProjectIt Developer Documentation</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../index.html">Projectit Readme</a>
+    <a class="nav-link" href="../../index.html">Projectit Readme</a>
   </li>
 </ul>
   </li>
@@ -50,17 +50,17 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
-    <a class="nav-link" href="Projectional-Overview.html">ProjectIt Overview</a>
+    <a class="nav-link" href="../Projectional-Overview.html">ProjectIt Overview</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Installation.html">Installing ProjectIt</a>
+    <a class="nav-link" href="../Installation.html">Installing ProjectIt</a>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-toggle"></button>
-    <a class="nav-link" href="Framework_Description.html">The ProjectIt Framework</a>
+    <a class="nav-link" href="../Framework_Description.html">The ProjectIt Framework</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Different_Boxes.html">Types of Boxes</a>
+    <a class="nav-link" href="../Different_Boxes.html">Types of Boxes</a>
   </li>
 </ul>
   </li>
@@ -68,7 +68,7 @@
     <a class="nav-link" href="#Editor_Boilerplate.adoc">The Editor Boilerplate</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Editing_Expressions.html">Support for Expressions</a>
+    <a class="nav-link" href="../Editing_Expressions.html">Support for Expressions</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#Sourcecode_Documentation.adoc">The ProjectIt Source Code</a>
@@ -95,14 +95,14 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../projectit-meta/project-meta.html">Meta model helper</a>
+    <a class="nav-link" href="../../projectit-meta/project-meta.html">Meta model helper</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../projectit-decorators/projectit-decorators.html">Supporting Decorators</a>
+    <a class="nav-link" href="../../projectit-decorators/projectit-decorators.html">Supporting Decorators</a>
   </li>
 </ul>
   </li>
@@ -119,7 +119,7 @@
       <span class="title">ProjectIt Developer Documentation</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">0.0.4</a>
+          <a href="../../index.html">0.0.4</a>
         </li>
       </ul>
     </li>
@@ -131,98 +131,81 @@
   <main class="main">
 <div class="toolbar" role="navigation">
   <button class="navigation-toggle"></button>
-  <a href="../index.html" class="home-link"></a>
+  <a href="../../index.html" class="home-link"></a>
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
-    <li class="crumb"><a href="../index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb"><a href="Defining_Actions.html">Defining Actions</a></li>
+    <li class="crumb"><a href="../../index.html">ProjectIt Developer Documentation</a></li>
+    <li class="crumb"><a href="Metamodels-Tutorial.html">How to Set Up a Language Definition in ProjectIt</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Defining_Actions.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/tutorials/Metamodels-Tutorial.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
-<h1>Defining Actions</h1>
+<h1>How to Set Up a Language Definition in ProjectIt</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In ProjectIt all behavior is defined using actions.
-Although ProjectIt is implemented using React, actions abstract away from this implementation.</p>
-</div>
-<div class="paragraph">
-<p>Each action defines</p>
+<p>A language definiton or metamodel in ProjectIt consists simply of a set of elements and enumerations. Every element can have:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The trigger</p>
+<p>Properties, which  always have a Primitive type.</p>
 </li>
 <li>
-<p>The action itself</p>
+<p>Parts, each of which have a (two-way) containment relationship with its parent.</p>
 </li>
 <li>
-<p>The boxes in which the action can be triggered</p>
-</li>
-<li>
-<p>An id for internal use</p>
+<p>References, which simply refer to another element in the metamodel.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s take a look at the definition of a behavior:</p>
+<p>Note that each metamodel must have a unique name.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_example_language_definition"><a class="anchor" href="#_an_example_language_definition"></a>An example language definition</h2>
+<div class="sectionbody">
 <div class="listingblock">
+<div class="title">Language Defintion for the Demo project</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export interface PiBehavior {
-    /**
-     * The trigger to activate this behavior
-     */
-    trigger: PiTriggerType;
-
-    /**
-     * The box roles in which this trigger is active
-     */
-    activeInBoxRoles: string[];
-
-    /**
-     * Optional callback function that returns whether the trigger is applicable for the specific box.
-     */
-    isApplicable?: (box: Box) =&gt; boolean;
-    boxRoleToSelect?: string;
-    caretPosition?: PiCaret;
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: DemoModel): Box {
+        return new VerticalListBox(model, "model", [
+            new HorizontalListBox(model, "model-info", [
+                new LabelBox(model, "model-keyword", "model-3", {
+                    style: demoStyles.keyword
+                }),
+                new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
+                    placeHolder: "&lt;name&gt;"
+                })
+            ]),
+            new LabelBox(model, "entity-list", "Entities", {
+                style: demoStyles.keyword
+            }),
+            new VerticalListBox(
+                model,
+                "entities",
+                model.entities.map(ent =&gt; {
+                    return this.createEntityBox3(ent);
+                })
+            ).addChild(new AliasBox(model, "end-of-entity-list",
+                "add entity", { style: demoStyles.indent }))        <i class="conum" data-value="1"></i><b>(1)</b>
+        ]);
+    }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>User actions in ProjectIt are attached to boxes.
-This is done by adding these box roles to the <code>activeInBoxRoles</code> property of an action.</p>
-</div>
-<div class="paragraph">
-<p>The <code>trigger</code>  defines the keys that will trigger execution of the action.</p>
-</div>
-<div class="paragraph">
-<p>TODO: describe the optional properties</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_custom_actions"><a class="anchor" href="#_custom_actions"></a>Custom Actions</h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
-<h2 id="_expressions_and_binary_expressions"><a class="anchor" href="#_expressions_and_binary_expressions"></a>Expressions and Binary Expressions</h2>
+<h2 id="_the_metametamodel"><a class="anchor" href="#_the_metametamodel"></a>The Metametamodel</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Advanced expression editing is described in <a href="Editing_Expressions.html" class="page">Expressions</a>.</p>
+<p>For the true language engineer we include the metametamodel in the language definition syntax used in ProjectIt.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_keyboard_shortcuts"><a class="anchor" href="#_keyboard_shortcuts"></a>Keyboard Shortcuts</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>A keyboard shortcut specifies an action that is triggered by special keys, like e.g. Ctrl-A.</p>
+<p>Note that as of yet there is no projectional editor for language definitions. Currently, parser technology is used on plain text. Therefore a Concrete Syntax Model was created (ref source code folder).</p>
 </div>
 </div>
 </div>
@@ -232,8 +215,8 @@ This is done by adding these box roles to the <code>activeInBoxRoles</code> prop
 <footer class="footer">
   <p>This page was built using Antora.</p>
 </footer>
-<script src="../../../_/js/site.js"></script>
-<script src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/site.js"></script>
+<script src="../../../../_/js/vendor/highlight.js"></script>
 <script>hljs.initHighlighting()</script>
   </body>
 </html>

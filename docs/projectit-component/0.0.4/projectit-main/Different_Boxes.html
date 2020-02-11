@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Defining the Editor :: ProjectIt - A Projectional Editor Framework for the Web</title>
-    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.1/projectit-main/Defining_Projections.html">
+    <title>Box :: ProjectIt - A Projectional Editor Framework for the Web</title>
+    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.4/projectit-main/Different_Boxes.html">
     <meta name="generator" content="Antora 2.2.0">
     <link rel="stylesheet" href="../../../_/css/site.css">
   </head>
@@ -32,7 +32,7 @@
   </nav>
 </header>
 <div class="main-wrapper">
-<div class="navigation-container" data-component="projectit-component" data-version="0.0.1">
+<div class="navigation-container" data-component="projectit-component" data-version="0.0.4">
   <aside class="navigation">
     <div class="panels">
 <div class="navigation-menu is-active" data-panel="menu">
@@ -50,16 +50,28 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
-    <a class="nav-link" href="Projectional-Overview.html">ProjectIt Editor Overview</a>
+    <a class="nav-link" href="Projectional-Overview.html">ProjectIt Overview</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="Defining_Projections.html">Defining Projections</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Installation.html">Installing ProjectIt</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Defining_Actions.html">Defining Actions</a>
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="Framework_Description.html">The ProjectIt Framework</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="Different_Boxes.html">Types of Boxes</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Editing_Expressions.html">Expressions</a>
+    <a class="nav-link" href="#Editor_Boilerplate.adoc">The Editor Boilerplate</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Editing_Expressions.html">Support for Expressions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#Sourcecode_Documentation.adoc">The ProjectIt Source Code</a>
   </li>
 </ul>
   </li>
@@ -68,10 +80,13 @@
     <span class="nav-text">Tutorials</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tutorials/Projection-Tutorial.html">Projection Tutorial</a>
+    <a class="nav-link" href="#tutorials/Metamodel-Tutorial.adoc">Tutorial 0: Creating a Metamodel</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tutorials/Actions-Tutorial.html">Actions Tutorial</a>
+    <a class="nav-link" href="#tutorials/Generation-Tutorial.adoc">Tutorial 1: Generating an Editor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#tutorials/Framework-Tutorial.adoc">Tutorial 2: Tweaking an Editor</a>
   </li>
 </ul>
   </li>
@@ -97,14 +112,14 @@
 <div class="navigation-explore" data-panel="explore">
   <div class="context">
     <span class="title">ProjectIt Developer Documentation</span>
-    <span class="version">0.0.1</span>
+    <span class="version">0.0.4</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">ProjectIt Developer Documentation</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">0.0.1</a>
+          <a href="../index.html">0.0.4</a>
         </li>
       </ul>
     </li>
@@ -120,125 +135,17 @@
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
     <li class="crumb"><a href="../index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb"><a href="Projectional-Overview.html">ProjectIt Editor Overview</a></li>
-    <li class="crumb"><a href="Defining_Projections.html">Defining Projections</a></li>
+    <li class="crumb"><a href="Projectional-Overview.html">ProjectIt Overview</a></li>
+    <li class="crumb"><a href="Framework_Description.html">The ProjectIt Framework</a></li>
+    <li class="crumb"><a href="Different_Boxes.html">Types of Boxes</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/master/packages/docs/component-main/modules/projectit-main/pages/Defining_Projections.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Different_Boxes.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
-<h1>Defining the Editor</h1>
+<h1>Box</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>To define the editor the main parts are defining the projection</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_defining_projections"><a class="anchor" href="#_defining_projections"></a>Defining Projections</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The layout for everything in ProjectIt is defined using boxes.
-A box is a rectangular area in the editor.
-The are many different types of boxes in ProjectIt, e.g. a LabelBox for static text, a TextBox for editable text,
-and SVG box for SVG graphics, etc. etc.
-The first step in creating a projectional editor is to define the projection for language.
-To do this, you need to define a mapping from the constructs in your language to <em>boxes</em>.</p>
-</div>
-<div class="paragraph">
-<p>A small example to start with:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/mapping-example-stringliteral.svg" alt="mapping example stringliteral">
-</div>
-</div>
-<div class="paragraph">
-<p>In the language we are using we have the concept of a <em>StringLiteral</em>.
-The projection maps this to a horizontal list of a quote <code>"</code>,
-an editable text with the <code>value</code> of the <code>StringLiteral</code> and then another quote <code>"</code>.</p>
-</div>
-<div class="paragraph">
-<p>In TypeScript this projection might look something like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">new HorizontalListBox( [
-        new LabelBox("\""),
-        new TextBox(stringLiteral.value),
-        new LabelBox("\"")
-    ]);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The user needs to be able to interacts with the projection.
-To be able to define such user interaction, we need to be able to know
-which part of the projection the user is working with.</p>
-</div>
-<div class="paragraph">
-<p>Therefore we need to know of which element in the model/AST a box is a projection
-and also be able to distinguish the different boxes for one element.
-For this purpose we give each <code>Box</code> in the projection a <em>role</em>.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/mapping-example-stringliteral-with-roles.svg" alt="mapping example stringliteral with roles">
-</div>
-</div>
-<div class="paragraph">
-<p>In this picture the roles are shown above the boxes in green.
-We can now show the full typescript code for creating this projection.
-Given  that <code>literal</code> is the <code>StringLiteral</code> object:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">            new HorizontalListBox(literal, "string-literal", [
-                <i class="conum" data-value="1"></i><b>(1)</b>
-                new LabelBox(literal, "start-quote", '"'), <i class="conum" data-value="2"></i><b>(2)</b>
-                new TextBox(
-                    literal,
-                    "string-value", <i class="conum" data-value="3"></i><b>(3)</b>
-                    () =&gt; literal.value,
-                    (v: string) =&gt; (literal.value = v)
-                ),
-                new LabelBox(literal, "end-quote", '"') <i class="conum" data-value="4"></i><b>(4)</b>
-            ])</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The overall horizontal list box to group everything</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The first label box for the start quote</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The text box for the value of the string literal</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>The second label box for the end quote</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>All box roles within the projection for a specific element should have a unique role.
-This way we can identify every box buy its model element + its role.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_box"><a class="anchor" href="#_box"></a>Box</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A Box is an abstract class describing the features that are common for all boxes.
-As explained earlier, each box has a mandatory model element and role.</p>
-</div>
 <div class="paragraph">
 <p>There is a number of boxes available</p>
 </div>
@@ -283,7 +190,7 @@ As explained earlier, each box has a mandatory model element and role.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A <code>LabelBox</code> shows a non-editable text.
-The text itself can either be a fixed string (1),or it can be defined as a function (2).
+The text itself can either be a fixed string (1), or it can be defined as a function (2).
 Being a function allows the label text to change dynamically,
 depending on the result value of the function.</p>
 </div>

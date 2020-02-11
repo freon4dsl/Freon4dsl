@@ -50,16 +50,28 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
-    <a class="nav-link" href="projectit-main/Projectional-Overview.html">ProjectIt Editor Overview</a>
+    <a class="nav-link" href="projectit-main/Projectional-Overview.html">ProjectIt Overview</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/Defining_Projections.html">Defining Projections</a>
+    <a class="nav-link" href="projectit-main/Installation.html">Installing ProjectIt</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/Defining_Actions.html">Defining Actions</a>
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="projectit-main/Framework_Description.html">The ProjectIt Framework</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="projectit-main/Different_Boxes.html">Types of Boxes</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/Editing_Expressions.html">Expressions</a>
+    <a class="nav-link" href="#Editor_Boilerplate.adoc">The Editor Boilerplate</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="projectit-main/Editing_Expressions.html">Support for Expressions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#Sourcecode_Documentation.adoc">The ProjectIt Source Code</a>
   </li>
 </ul>
   </li>
@@ -68,10 +80,13 @@
     <span class="nav-text">Tutorials</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/tutorials/Projection-Tutorial.html">Projection Tutorial</a>
+    <a class="nav-link" href="#tutorials/Metamodel-Tutorial.adoc">Tutorial 0: Creating a Metamodel</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/tutorials/Actions-Tutorial.html">Actions Tutorial</a>
+    <a class="nav-link" href="#tutorials/Generation-Tutorial.adoc">Tutorial 1: Generating an Editor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#tutorials/Framework-Tutorial.adoc">Tutorial 2: Tweaking an Editor</a>
   </li>
 </ul>
   </li>
@@ -123,7 +138,7 @@
     <li class="crumb"><a href="index.html">Projectit Readme</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/master/packages/docs/component-main/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>ProjectIt</h1>
@@ -131,106 +146,123 @@
 <h2 id="_what_is_projectit"><a class="anchor" href="#_what_is_projectit"></a>What is ProjectIt</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ProjectIt is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs).</p>
-</div>
-<div class="paragraph">
-<p>It is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](<a href="https://mobx.js.org/" class="bare">https://mobx.js.org/</a>).
-The framework provides an internal projection DSL to specify layouts and typical editor behaviour.
-It&#8217;s the job of the developer of the projectional editor to map models to that projection DSL.
-The framework provides standard functionality mostly for navigating in the editor, but also for deleting model elements.</p>
-</div>
-<div class="paragraph">
-<p>ProjectIt provides full support for editing expressions with associativity and precedences, functionally equivalent to e.g. the MPS grammarcells.</p>
-</div>
-<div class="paragraph">
-<p>For creating elements  the DSL implementor needs to
-provide callbacks for manipulating the state of the model based on actions in the editor.</p>
+<p>ProjectIt is a tool for creating web-based projectional editors, based on a TypeScript/JavaScript framework. Projectional editors are often used when developing a Domain Specific Language (DSL) and its working environment. A tool like ProjectIt is therefore usually part of a Language Workbench, next to tools for creating e.g. debuggers, transformers, generators, etc.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_developing_projectit"><a class="anchor" href="#_developing_projectit"></a>Developing ProjectIt</h2>
+<h2 id="_talking_about_language_workbenches"><a class="anchor" href="#_talking_about_language_workbenches"></a>Talking About Language Workbenches</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The main prerequisites are: [Node.js](<a href="https://nodejs.org/" class="bare">https://nodejs.org/</a>) and [yarn](<a href="https://yarnpkg.com/" class="bare">https://yarnpkg.com/</a>) and lerna.
-We are typically using the latest versions of both, although older versions likely work just as well.
-You could also try and use NPM instead of yarn.</p>
+<p>Sorry, but with a tool like ProjectIt, we have to talk about  the Workbench that provides all the other tooling  for a language developer.</p>
 </div>
 <div class="paragraph">
-<p>To install lerna:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>yarn global add lerna</pre>
-</div>
+<p>The core of a Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](<a href="https://mobx.js.org/" class="bare">https://mobx.js.org/</a>). ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We hope that in the future ProjectIt will be incorporated in an open Language Workbench as proposed in <a href="#some paper.adoc" class="page unresolved">ref stuk Markus or something</a>. / as discussed in the community/forum.</p>
 </div>
 <div class="paragraph">
-<p>To setup the lerna structure:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>lerna bootstrap</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now you can build projectit with:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>lerna run build</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To start the demo projectional editor:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>lerna run start</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This will open a browser with the demo app on <code><a href="http://localhost:3000/" class="bare">http://localhost:3000/</a></code>.
-The demo app is work in progress.</p>
+<p>The choice not to tie up ProjectIt to any existing Language Workbench, has a downside: to create an editor the user must first provide a metamodel of the language that can be projected and edited. However, there is an easy way to create a metamodel in ProjectIt. For this see <a href="#Tutorial 0.adoc" class="page unresolved">Tutorial 0: Creating a Metamodel</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_source_organisation"><a class="anchor" href="#_source_organisation"></a>Source organisation</h2>
+<h2 id="_what_kind_of_editor_is_generated"><a class="anchor" href="#_what_kind_of_editor_is_generated"></a>What Kind of Editor is Generated?</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The created editor is basically a web page that can be used in different contexts. A boilerplate context is generated to be able to preview the generated editor. More about the <a href="#boilerplate adoc">boilerplate</a> here.</p>
+</div>
+<div class="paragraph">
+<p>The projectional editors that can be made using ProjectIt are all based on the ProjectIt Framework, written in TypeScript. You can learn more about the ProjectIt framework <a href="#ProjectIT Framework adoc">here</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_generate_an_editor"><a class="anchor" href="#_how_to_generate_an_editor"></a>How to Generate an Editor</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The typical workflow for creating an editor is:</p>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create the metamodel (a metamodel import is envisioned, but not available yet).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Generated an editor.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Improve the look and feel of the editor by giving directions in an editor definition file.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Generate an improved editor.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Repeat steps 3 and 4.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the editor definition is not enough to create the required look and feel, the generated code can be changed by hand. Any changes to the generated code will remain during regeneration.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>.idea</code>: workspace files for the JetBrains' WebStorm that we use.</p>
+<p><a href="#Tutorial1 adoc">Tutorial 1: Generating an Editor</a> shows how to generate an editor using an editor definition file.</p>
 </li>
 <li>
-<p><code>.vscode</code>: workspace files for the Visual Studio Code IDEs that we use (to be done).</p>
-</li>
-<li>
-<p><code>dist</code>: target directory for WebPack.</p>
-</li>
-<li>
-<p><code>docs</code>: documentation</p>
-</li>
-<li>
-<p><code>packages/core</code>: framework source code.</p>
-</li>
-<li>
-<p><code>packages/demo</code>: source code using the framework to implement a projectional editor for the demo language.
-The main entry point is <code>packages/demo/src/run.ts</code>.</p>
-</li>
-<li>
-<p><code>packages/meta</code>: experimental source code using the framework to implement a projectional editor for a meta language..</p>
-</li>
-<li>
-<p><code>packages/model</code>: source code for decorators that can be used to easily implement a language that can be directly used by ProjectIt.</p>
-</li>
-<li>
-<p><code>packages/server</code>: source code for a minimalistic model-server used for demo purposes.</p>
-</li>
-<li>
-<p><code>/*</code>: the usual suspects.</p>
+<p><a href="#Tutorial2 adoc">Tutorial 2: Editor Look and Feel</a> gives more information on improving the generated editor by hand.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_strong_point_expressions"><a class="anchor" href="#_strong_point_expressions"></a>Strong Point: Expressions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many DSLs cater for some sort of expressions. Most language engineers known that it is a tedious task to provide editor support especially for binary expressions. ProjectIt helps by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In <a href="#Expressions adoc">Handling Expressions</a> you can read more about this.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_peek_inside_projectit"><a class="anchor" href="#_a_peek_inside_projectit"></a>A Peek Inside ProjectIt</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our <a href="#SourceCodeDoc adoc">Source Code Documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_future_work"><a class="anchor" href="#_future_work"></a>Future Work</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The current version is a proof-of-concept. We are working towards a more mature version. Development paths that we envision are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Investigate whether ProjectIt can be implemented as Visual Studio Code Extension.</p>
+</li>
+<li>
+<p>Separating the metamodel and editor definition specifications.</p>
+</li>
+<li>
+<p>Using bootstrapping to provide dedicated editors for the metamodel (.lang file) and the editor definition (.ed file).</p>
+</li>
+<li>
+<p>Making many more examples, amongst which a generated editor in a Visual Studio Code Extension.</p>
+</li>
+<li>
+<p>Creating other tools that have their use within a language workbench, like a scope provider generator (ScopeIt) and a type checker generator (TypeCheckIt).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Want to join us: email jos.warmer at openmodeling.nl.</p>
 </div>
 </div>
 </div>

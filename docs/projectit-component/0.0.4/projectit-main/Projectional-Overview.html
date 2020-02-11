@@ -50,16 +50,28 @@
 <ul class="nav-list">
   <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-toggle"></button>
-    <a class="nav-link" href="Projectional-Overview.html">ProjectIt Editor Overview</a>
+    <a class="nav-link" href="Projectional-Overview.html">ProjectIt Overview</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Defining_Projections.html">Defining Projections</a>
+    <a class="nav-link" href="Installation.html">Installing ProjectIt</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Defining_Actions.html">Defining Actions</a>
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="Framework_Description.html">The ProjectIt Framework</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="Different_Boxes.html">Types of Boxes</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Editing_Expressions.html">Expressions</a>
+    <a class="nav-link" href="#Editor_Boilerplate.adoc">The Editor Boilerplate</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Editing_Expressions.html">Support for Expressions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#Sourcecode_Documentation.adoc">The ProjectIt Source Code</a>
   </li>
 </ul>
   </li>
@@ -68,10 +80,13 @@
     <span class="nav-text">Tutorials</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tutorials/Projection-Tutorial.html">Projection Tutorial</a>
+    <a class="nav-link" href="#tutorials/Metamodel-Tutorial.adoc">Tutorial 0: Creating a Metamodel</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tutorials/Actions-Tutorial.html">Actions Tutorial</a>
+    <a class="nav-link" href="#tutorials/Generation-Tutorial.adoc">Tutorial 1: Generating an Editor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#tutorials/Framework-Tutorial.adoc">Tutorial 2: Tweaking an Editor</a>
   </li>
 </ul>
   </li>
@@ -120,10 +135,10 @@
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
     <li class="crumb"><a href="../index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb"><a href="Projectional-Overview.html">ProjectIt Editor Overview</a></li>
+    <li class="crumb"><a href="Projectional-Overview.html">ProjectIt Overview</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/master/packages/docs/component-main/modules/projectit-main/pages/Projectional-Overview.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Projectional-Overview.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>ProjectIt Editor Overview</h1>
@@ -191,8 +206,8 @@ The box model is further described in <a href="Defining_Projections.html#Definin
 the focus in the editor is always on a <em>Box</em>.</p>
 </div>
 <div class="paragraph">
-<p>To be able to couple bahavior to boxes, it is important to understand the following.
-Each box in a projection keeps a reference to the elem,ent in the AST which it represents.
+<p>To be able to couple behavior to boxes, it is important to understand the following.
+Each box in a projection keeps a reference to the element in the AST which it represents.
 In addition each <em>Box</em> has a <em>role</em>, which must be unique within all boxes for a specific
 AST element.
 This allows boxes to be uniquely identified by the combination of the AST element and the box role.</p>
@@ -249,7 +264,7 @@ contains expressions, as ProjectIt includes special handling of expressions.
 To start with, these functions can be defined to simply return <code>false</code>.</p>
 </div>
 <div class="paragraph">
-<p>Note that ProjectIt k=does not need to know anything about the structure of your language.
+<p>Note that ProjectIt does not need to know anything about the structure of your language.
 No need to know the availale element type, nor the properties of en element type, nor anything else.
 This is by design, as ProjectIt is not meant to be a full Language Workbench,
 but instead meant to be used with multiple language workbenches , or none.</p>
