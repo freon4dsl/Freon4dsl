@@ -11,8 +11,8 @@ export class ContextTemplate {
         return `
             import { action, observable } from "mobx";
             import { PiContext, PiExpression } from "@projectit/core";
-            import { ${Names.concept(rootConcept)} } from "../language/${Names.concept(rootConcept)}";
-            import { ${Names.concept(placeholderConcept)} } from "../language/${Names.concept(placeholderConcept)}";
+            import { ${Names.concept(rootConcept)} } from "../../language/${Names.concept(rootConcept)}";
+            import { ${Names.concept(placeholderConcept)} } from "../../language/${Names.concept(placeholderConcept)}";
             
             export class ${Names.context(language)} implements PiContext {
                 @observable private _rootElement: ${Names.concept(language.rootConcept())};

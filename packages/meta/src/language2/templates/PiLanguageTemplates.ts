@@ -4,7 +4,7 @@ import {
     PiLanguageConceptDef,
     PiLanguageElementPropertyDef,
     PiLanguagePrimitivePropertyDef
-} from "packages/meta/src/language2/PiLanguageDef";
+} from "../PiLanguageDef";
 import { MobxModelElementImpl } from "@projectit/model";
 import parserTypeScript = require("prettier/parser-typescript");
 

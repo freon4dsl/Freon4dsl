@@ -13,11 +13,11 @@ export class MainProjectionalEditorTemplate {
             
             import { PiEditor, ProjectionalEditor } from "@projectit/core";
             
-            import { ${Names.projection(language)} } from "./${Names.projection(language)}";
+            import { ${Names.projection(language)} } from "../${Names.projection(language)}";
             import { ${Names.actions(language)} } from "./${Names.actions(language)}";
             import { ${Names.context(language)} } from "./${Names.context(language)}";
             import { ${Names.editor(language)} } from "./${Names.editor(language)}";
-            import { MyToolbarComponent } from "../toolbars/MyToolbarComponent";
+            import { MyToolbarComponent } from "../../toolbars/MyToolbarComponent";
 
             @observer
             export class MainProjectionalEditor extends React.Component< any, {}> {

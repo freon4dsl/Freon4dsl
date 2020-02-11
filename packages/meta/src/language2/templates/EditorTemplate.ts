@@ -9,8 +9,8 @@ export class EditorTemplate {
         return `
             import { PiActions, PiContext, PiEditor, PiProjection } from "@projectit/core";
             ${withToolbar ? `
-            import { PiEditorWithToolbar } from "../toolbars/ToolBarDefinition";
-            import { MyToolbarItem } from "../toolbars/MyToolbarItem";
+            import { PiEditorWithToolbar } from "../../toolbars/ToolBarDefinition";
+            import { MyToolbarItem } from "../../toolbars/MyToolbarItem";
             `: ""}
             
             export class ${Names.editor(language)} extends ${ withToolbar? `PiEditorWithToolbar` : `PiEditor`} {

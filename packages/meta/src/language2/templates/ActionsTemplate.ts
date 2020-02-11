@@ -30,7 +30,7 @@ export class ActionsTemplate {
                 RIGHT_MOST
             } from "@projectit/core";
             
-            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../language/${Names.concept(c)}";`).join("")}
+            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.trigger).map(c =>
@@ -105,42 +105,56 @@ export class ActionsTemplate {
             `;
         }
 
-        generateActions(language: PiLanguage): string {
-            return `
+    generateManualActions(language: PiLanguage): string {
+        return `
+            import {
+                KeyboardShortcutBehavior,
+                PiBinaryExpressionCreator,
+                PiCustomBehavior,
+                PiExpressionCreator
+            } from "@projectit/core";
+            
+            export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
+                // Add your own custom expression creators here
+            ];
+
+            export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
+                // Add your own custom binary expression creators here
+            ];
+            
+            export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+                // Add your own custom behavior here
+            ];
+            
+            export const MANUAL_KEYBOARD: KeyboardShortcutBehavior[] = [
+                // Add your own custom keyboard shortcuts here
+            ];
+        `;
+    }
+
+    generateActions(language: PiLanguage): string {
+        return `
             import {
                 KeyboardShortcutBehavior,
                 PiActions,
+                PiActionsUtil,
                 PiBinaryExpressionCreator,
                 PiCustomBehavior,
                 PiExpressionCreator
             } from "@projectit/core";
             
             import { EXPRESSION_CREATORS, BINARY_EXPRESSION_CREATORS, CUSTOM_BEHAVIORS, KEYBOARD } from "./${Names.defaultActions(language)}";
+            import { MANUAL_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS, MANUAL_CUSTOM_BEHAVIORS, MANUAL_KEYBOARD } from "../${Names.manualActions(language)}";
 
-            const MY_EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                // Add your own custom expression creators here
-            ];
-
-            const MY_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
-                // Add your own custom binary expression creators here
-            ];
-            
-            const MY_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
-                // Add your own custom behavior here
-            ];
-            
-            const MY_KEYBOARD: KeyboardShortcutBehavior[] = [
-                // Add your own custom keyboard shortcuts here
-            ];
-            
             export class ${Names.actions(language)} implements PiActions {
-                expressionCreators: PiExpressionCreator[] = EXPRESSION_CREATORS.concat(MY_EXPRESSION_CREATORS);
-                binaryExpressionCreators: PiBinaryExpressionCreator[] = BINARY_EXPRESSION_CREATORS.concat(MY_BINARY_EXPRESSION_CREATORS);
-                customBehaviors: PiCustomBehavior[] = CUSTOM_BEHAVIORS.concat(MY_CUSTOM_BEHAVIORS);
-                keyboardActions: KeyboardShortcutBehavior[] = KEYBOARD.concat(MY_KEYBOARD);
+                // Combine generated and manually written actions, where manual actions may override the generated ones
+                expressionCreators: PiExpressionCreator[] = PiActionsUtil.join(EXPRESSION_CREATORS, MANUAL_EXPRESSION_CREATORS) as PiExpressionCreator[];
+                binaryExpressionCreators: PiBinaryExpressionCreator[] = PiActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS) as PiBinaryExpressionCreator[];
+                customBehaviors: PiCustomBehavior[] = PiActionsUtil.join(CUSTOM_BEHAVIORS, MANUAL_CUSTOM_BEHAVIORS) as PiCustomBehavior[];
+                keyboardActions: KeyboardShortcutBehavior[] = PiActionsUtil.join(KEYBOARD, MANUAL_KEYBOARD) as KeyboardShortcutBehavior[];
                 
                 constructor() {
                 }
             }`;
-        }
+    }
 }
