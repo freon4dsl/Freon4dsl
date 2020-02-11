@@ -1,0 +1,27 @@
+:imagesdir: ../../assets/images/
+:src-dir: ../../../../../..
+:projectitdir: ../../../../../../core
+:source-language: javascript
+
+= How to Set Up a Language Definition in ProjectIt
+
+A language definiton or metamodel in ProjectIt consists simply of a set of elements and enumerations. Every element can have:  
+
+* Properties, which  always have a Primitive type. 
+* Parts, each of which have a (two-way) containment relationship with its parent. 
+* References, which simply refer to another element in the metamodel.
+
+Note that each metamodel must have a unique name.
+
+== An example language definition
+
+.Language Defintion for the Demo project
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox4]
+----
+
+== The Metametamodel
+For the true language engineer we include the metametamodel in the language definition syntax used in ProjectIt.
+
+Note that as of yet there is no projectional editor for language definitions. Currently, parser technology is used on plain text. Therefore a Concrete Syntax Model was created (ref source code folder).

@@ -1,0 +1,108 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+
+= The ProjectIt Framework
+
+The ProjectIt Editor Framework is written in TypeScript and based on the React Framework. This page provides an overview of the Framework.If you want to get deeper into this you can also read xref:Sourcecode_Documentation.adoc[The ProjectIt Source Code]. 
+
+== Projection Layout based on Boxes
+The layout of everything that is visible in the editor is based on _boxes_. A box is a rectangular area in the editor. A box can contain any number of child boxes. Every AST node is projected in a box.
+
+A small example to start with:
+
+image::mapping-example-stringliteral.svg[]
+
+The figure shows the projection of the concept `StringLiteral`. This is mapped to a horizontal list of a quote ("), an editable text with the value of the StringLiteral, and a closing quote ("). Note that the quotes are not part of the AST. They are part of the concrete syntax used in this projection of the AST.
+
+In TypeScript this projection might look something like:
+[source]
+----
+new HorizontalListBox( [
+        new LabelBox("\""),
+        new TextBox(stringLiteral.value),
+        new LabelBox("\"")
+    ]);
+----
+The user needs to be able to interact with the projected AST. Thus we need to know which part of the projection represents the AST node that the user is working with. For this purpose we give each `Box` in the projection a _role_, which is unique within its parent box. This way we can identify every box by its model element plus its role.
+(By the way, interaction with the AST is controlled by Actions. For more see xref:Action_Tutorial.adoc[Actions].)
+
+image::mapping-example-stringliteral-with-roles.svg[]
+
+In this figure the roles are shown above the boxes in green.
+We can now show the full typescript code for creating this projection.
+Given  that `literal` is the `StringLiteral` object:
+
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
+----
+<1> The overall horizontal list box to group everything
+<2> The first label box for the start quote
+<3> The text box for the value of the string literal
+<4> The second label box for the end quote
+
+For an overview of the different types of Boxes xref:Different_Boxes.adoc[Different Types of Boxes].
+
+== Editor Actions
+The interaction of the user with the projected AST is done through actions, to enable the user to change the model and add elements to it.
+
+First of all take a look at the built-in default behavior of the editor:
+
+- Inside a TextBox the text can be _edited_.
+- Using the _arrow keys_ the user can navigate the projection.
+- Using _Ctrl-Arrow_ the user can navigate up and down the model/AST.
+- When an element is selected, it can be deleted with the _DEL_ key.
+
+=== Actions for Creating new Model Elements
+Certainly the user must be able to add a new entity to the model, for instance to add an element to the end of a list. For this, first of all, we add an `AliasBox` at the end of the vertical list of entities. An `AliasBox` is a predefined box where the user can type text (printable characters), which is used as an alias for some action.
+Note the role of the box: [green]#end-of-entity-list#
+
+.Add AliasBox
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox4]
+----
+
+Secondly, we define an action.
+
+.Define the Action
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateEntityAction]
+----
+<1> The action is attached to each box with the role "end-of-entity-list".
+This means that the action can be triggered in the `AliasBox` we defined in the projection.
+
+<2> The action will be triggered when the user types `"entity"` inside the.alias box.
+
+<3> We define the executable code for the action. It creates a new `DemoEntity` and attaches is to the `DemoModel`
+
+<4> We define the focus of the editor. The `Box`  with the role `"entity-name"`
+within the entity as returned from the `action` code will get the editor focus.
+This ensures that the user can immediately start typing the name of the entity after it has been created.
+
+=== Actions for Creating new Attributes
+Building the action to enable the creation of a new `DemoAttribute`, a model element with _PrimitiveType_ is done similar to the creation of a new `DemoEntity`.
+
+First we add an `AliasBox` to the projection of the attribute list:
+
+.Add AliasBox to Attribute List
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=CreateAttributeAction]
+----
+
+Then we create the actual action and attach it to the role of the `AliasBox`.
+
+.Attach Create Attribute Action to AliasBox
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateAttributeAction]
+----
+
+As you can see, there can be many boxes with the same role in the editor, as long as their model element is different.
+This way, the above action is available for each attribute list in each entity.
+

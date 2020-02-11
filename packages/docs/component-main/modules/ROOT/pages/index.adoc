@@ -2,55 +2,47 @@
 Projectional Editor for the Web.
 
 == What is ProjectIt
+ProjectIt is a tool for creating web-based projectional editors, based on a TypeScript/JavaScript framework. Projectional editors are often used when developing a Domain Specific Language (DSL) and its working environment. A tool like ProjectIt is therefore usually part of a Language Workbench, next to tools for creating e.g. debuggers, transformers, generators, etc. 
 
-ProjectIt is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs).
+== Talking About Language Workbenches
+Sorry, but with a tool like ProjectIt, we have to talk about  the Workbench that provides all the other tooling  for a language developer. 
 
-It is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](https://mobx.js.org/).
-The framework provides an internal projection DSL to specify layouts and typical editor behaviour.
-It's the job of the developer of the projectional editor to map models to that projection DSL.
-The framework provides standard functionality mostly for navigating in the editor, but also for deleting model elements.
+The core of a Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](https://mobx.js.org/). ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We hope that in the future ProjectIt will be incorporated in an open Language Workbench as proposed in xref:some paper.adoc[ref stuk Markus or something]. / as discussed in the community/forum.
 
-ProjectIt provides full support for editing expressions with associativity and precedences, functionally equivalent to e.g. the MPS grammarcells.
+The choice not to tie up ProjectIt to any existing Language Workbench, has a downside: to create an editor the user must first provide a metamodel of the language that can be projected and edited. However, there is an easy way to create a metamodel in ProjectIt. For this see xref:Tutorial 0.adoc[Tutorial 0: Creating a Metamodel].
 
-For creating elements  the DSL implementor needs to
-provide callbacks for manipulating the state of the model based on actions in the editor.
+== What Kind of Editor is Generated?
+The created editor is basically a web page that can be used in different contexts. A boilerplate context is generated to be able to preview the generated editor. More about the xref:boilerplate adoc[boilerplate] here.
 
-== Developing ProjectIt
+The projectional editors that can be made using ProjectIt are all based on the ProjectIt Framework, written in TypeScript. You can learn more about the ProjectIt framework xref:ProjectIT Framework adoc[here]. 
 
-The main prerequisites are: [Node.js](https://nodejs.org/) and [yarn](https://yarnpkg.com/) and lerna.
-We are typically using the latest versions of both, although older versions likely work just as well.
-You could also try and use NPM instead of yarn.
+== How to Generate an Editor
+The typical workflow for creating an editor is:
 
-To install lerna:
+<1>	Create the metamodel (a metamodel import is envisioned, but not available yet).
+<2>	Generated an editor.
+<3>	Improve the look and feel of the editor by giving directions in an editor definition file.
+<4>	Generate an improved editor.
+<5>	Repeat steps 3 and 4.
 
-    yarn global add lerna
+When the editor definition is not enough to create the required look and feel, the generated code can be changed by hand. Any changes to the generated code will remain during regeneration.
 
-To setup the lerna structure:
+* xref:Tutorial1 adoc[Tutorial 1: Generating an Editor] shows how to generate an editor using an editor definition file.
+* xref:Tutorial2 adoc[Tutorial 2: Editor Look and Feel] gives more information on improving the generated editor by hand.
 
-    lerna bootstrap
+== Strong Point: Expressions
+Many DSLs cater for some sort of expressions. Most language engineers known that it is a tedious task to provide editor support especially for binary expressions. ProjectIt helps by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In xref:Expressions adoc[Handling Expressions] you can read more about this. 
 
-Now you can build projectit with:
+== A Peek Inside ProjectIt
+Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our xref:SourceCodeDoc adoc[Source Code Documentation].
 
-    lerna run build
+== Future Work
+The current version is a proof-of-concept. We are working towards a more mature version. Development paths that we envision are:
 
-To start the demo projectional editor:
+* Investigate whether ProjectIt can be implemented as Visual Studio Code Extension.
+* Separating the metamodel and editor definition specifications.
+* Using bootstrapping to provide dedicated editors for the metamodel (.lang file) and the editor definition (.ed file).
+* Making many more examples, amongst which a generated editor in a Visual Studio Code Extension.
+* Creating other tools that have their use within a language workbench, like a scope provider generator (ScopeIt) and a type checker generator (TypeCheckIt).
 
-    lerna run start
-
-This will open a browser with the demo app on `http://localhost:3000/`.
-The demo app is work in progress.
-
-== Source organisation
-
-* `.idea`: workspace files for the JetBrains' WebStorm that we use.
-* `.vscode`: workspace files for the Visual Studio Code IDEs that we use (to be done).
-* `dist`: target directory for WebPack.
-* `docs`: documentation
-* `packages/core`: framework source code.
-* `packages/demo`: source code using the framework to implement a projectional editor for the demo language.
-    The main entry point is `packages/demo/src/run.ts`.
-* `packages/meta`: experimental source code using the framework to implement a projectional editor for a meta language..
-* `packages/model`: source code for decorators that can be used to easily implement a language that can be directly used by ProjectIt.
-* `packages/server`: source code for a minimalistic model-server used for demo purposes.
-* `/*`: the usual suspects.
-
+Want to join us: email jos.warmer at openmodeling.nl.
