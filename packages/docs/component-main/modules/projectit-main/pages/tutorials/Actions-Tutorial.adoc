@@ -1,6 +1,6 @@
-:imagesdir: ../../assets/images/
-:src-dir: ../../../../../..
-:projectitdir: ../../../../../../core
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
 :source-language: javascript
 :listing-caption: Code Sample
 

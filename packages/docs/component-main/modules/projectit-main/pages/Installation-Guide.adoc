@@ -1,0 +1,22 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+
+= Installing ProjectIt
+
+The main prerequisites are: https://nodejs.org/[Node.js] and https://yarnpkg.com/[yarn].
+We are typically using the latest versions of both, although older versions likely work just as well.
+You could also try and use NPM instead of yarn.
+
+To install all dependencies:
+
+    yarn install
+
+To build and run the demo locally:
+
+    yarn start
+
+This will open a browser with the demo app on `http://localhost:3000/`.
+The demo app is work in progress.

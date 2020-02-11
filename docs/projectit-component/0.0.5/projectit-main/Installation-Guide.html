@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developing with ProjectIt :: ProjectIt - A Projectional Editor Framework for the Web</title>
-    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.4/projectit-main/Developing_ProjectIt.html">
+    <title>Installing ProjectIt :: ProjectIt - A Projectional Editor Framework for the Web</title>
+    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.5/projectit-main/Installation-Guide.html">
     <meta name="generator" content="Antora 2.2.0">
     <link rel="stylesheet" href="../../../_/css/site.css">
   </head>
@@ -32,7 +32,7 @@
   </nav>
 </header>
 <div class="main-wrapper">
-<div class="navigation-container" data-component="projectit-component" data-version="0.0.4">
+<div class="navigation-container" data-component="projectit-component" data-version="0.0.5">
   <aside class="navigation">
     <div class="panels">
 <div class="navigation-menu is-active" data-panel="menu">
@@ -42,36 +42,26 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../index.html">Projectit Readme</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
     <a class="nav-link" href="Projectional-Overview.html">ProjectIt Overview</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Installation.html">Installing ProjectIt</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="Installation-Guide.html">Installing ProjectIt</a>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-toggle"></button>
-    <a class="nav-link" href="Framework_Description.html">The ProjectIt Framework</a>
+    <a class="nav-link" href="Framework-Description.html">The ProjectIt Framework</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="Different_Boxes.html">Types of Boxes</a>
+    <a class="nav-link" href="Different-Boxes.html">Types of Boxes</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#Editor_Boilerplate.adoc">The Editor Boilerplate</a>
+    <a class="nav-link" href="Editor-Boilerplate.html">The Editor Boilerplate</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="Editing_Expressions.html">Support for Expressions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#Sourcecode_Documentation.adoc">The ProjectIt Source Code</a>
+    <a class="nav-link" href="Editing-Expressions.html">Support for Expressions</a>
   </li>
 </ul>
   </li>
@@ -95,14 +85,16 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../projectit-meta/project-meta.html">Meta model helper</a>
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="../projectit-meta/Sourcecode-Documentation.html">The ProjectIt Source Code</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-meta/Implementing-PiProjection.html">Implementing PiProjection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-meta/projectit-decorators.html">Supporting Decorators</a>
   </li>
 </ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../projectit-decorators/projectit-decorators.html">Supporting Decorators</a>
   </li>
 </ul>
   </li>
@@ -112,14 +104,14 @@
 <div class="navigation-explore" data-panel="explore">
   <div class="context">
     <span class="title">ProjectIt Developer Documentation</span>
-    <span class="version">0.0.4</span>
+    <span class="version">0.0.5</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">ProjectIt Developer Documentation</span>
       <ul class="versions">
         <li class="version is-current is-latest">
-          <a href="../index.html">0.0.4</a>
+          <a href="../index.html">0.0.5</a>
         </li>
       </ul>
     </li>
@@ -135,97 +127,38 @@
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
     <li class="crumb"><a href="../index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb"><a href="Developing_ProjectIt.html">Developing with ProjectIt</a></li>
+    <li class="crumb"><a href="Projectional-Overview.html">ProjectIt Overview</a></li>
+    <li class="crumb"><a href="Installation-Guide.html">Installing ProjectIt</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Developing_ProjectIt.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Installation-Guide.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
-<h1>Developing with ProjectIt</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1>Installing ProjectIt</h1>
 <div class="paragraph">
-<p>The main prerequisites are: [Node.js](<a href="https://nodejs.org/" class="bare">https://nodejs.org/</a>) and [yarn](<a href="https://yarnpkg.com/" class="bare">https://yarnpkg.com/</a>) and lerna.
+<p>The main prerequisites are: <a href="https://nodejs.org/">Node.js</a> and <a href="https://yarnpkg.com/">yarn</a>.
 We are typically using the latest versions of both, although older versions likely work just as well.
 You could also try and use NPM instead of yarn.</p>
 </div>
 <div class="paragraph">
-<p>To install lerna:</p>
+<p>To install all dependencies:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>yarn global add lerna</pre>
+<pre>yarn install</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To setup the lerna structure:</p>
+<p>To build and run the demo locally:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>lerna bootstrap</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now you can build projectit with:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>lerna run build</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To start the demo projectional editor:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>lerna run start</pre>
+<pre>yarn start</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This will open a browser with the demo app on <code><a href="http://localhost:3000/" class="bare">http://localhost:3000/</a></code>.
 The demo app is work in progress.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_source_organisation"><a class="anchor" href="#_source_organisation"></a>Source organisation</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><code>.idea</code>: workspace files for the JetBrains' WebStorm that we use.</p>
-</li>
-<li>
-<p><code>.vscode</code>: workspace files for the Visual Studio Code IDEs that we use (to be done).</p>
-</li>
-<li>
-<p><code>dist</code>: target directory for WebPack.</p>
-</li>
-<li>
-<p><code>docs</code>: documentation</p>
-</li>
-<li>
-<p><code>packages/core</code>: framework source code.</p>
-</li>
-<li>
-<p><code>packages/demo</code>: source code using the framework to implement a projectional editor for the demo language.
-The main entry point is <code>packages/demo/src/run.ts</code>.</p>
-</li>
-<li>
-<p><code>packages/meta</code>: experimental source code using the framework to implement a projectional editor for a meta language..</p>
-</li>
-<li>
-<p><code>packages/model</code>: source code for decorators that can be used to easily implement a language that can be directly used by ProjectIt.</p>
-</li>
-<li>
-<p><code>packages/server</code>: source code for a minimalistic model-server used for demo purposes.</p>
-</li>
-<li>
-<p><code>/*</code>: the usual suspects.</p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 </article>
   </main>

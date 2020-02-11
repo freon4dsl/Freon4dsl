@@ -1,0 +1,71 @@
+language PiMetaLanguage
+
+root concept PiLanguageDef {
+    name: string
+    @part concepts: PiLanguageConceptDef[]
+    @part enumerations: PiLanguageEnumerationDef[]
+}
+
+:TBD modelunits
+
+concept PiLanguageConceptDef {
+    name: string
+    isRoot: boolean
+	@optional isAbstract: boolean
+    
+	@part properties: PiLanguagePrimitivePropertyDef[]
+    @part parts: PiLanguageElementPropertyDef[]
+    @part references: PiLanguageElementPropertyDef[]
+    
+	// A: deze moet eruit? editor: PiLanguageEditorPropertyDef[]
+    @optional base: PiLanguageConceptReferenceDef
+
+    // The properties below are only needed when you use the built-in expression editor support in ProjectIt
+    @optional isExpression: boolean
+    @optional isExpressionPlaceHolder: boolean
+    @optional isBinaryExpression: boolean
+    @optional left: PiLanguageConceptReferenceDef
+    @optional right: PiLanguageConceptReferenceDef
+    @optional symbol: string
+    @optional priority: string
+}
+
+concept PiLanguagePrimitivePropertyDef {
+    name: string
+    type: string 
+    @optional isList: boolean
+    @optional isStatic: boolean
+    @optional initialValue: string
+}
+
+concept PiLanguageElementPropertyDef {
+    name: string
+    type: PiLanguageConceptReferenceDef
+    @optional isList: boolean
+}
+
+concept PiLanguageConceptReferenceDef {
+    concept: string // PiLanguageConceptDef
+}
+
+concept PiEnumerationReference {
+    enum: string // PiLanguageEnumerationDef 
+}
+
+concept PiLanguageEnumerationDef {
+    name: string
+    literals: string[]
+}
+
+enumeration PiLanguagePrimitiveType {
+	"string" 
+	"boolean" 
+	"number"
+}
+
+concept PiLanguageEditorPropertyDef {
+    name: string
+    type: string //  | PiEnumerationReference
+    @optional isList: boolean
+    @optional initialValue: string
+}
