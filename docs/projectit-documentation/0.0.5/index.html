@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProjectIt :: ProjectIt - A Projectional Editor Framework for the Web</title>
-    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.5/index.html">
+    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-documentation/0.0.5/index.html">
     <meta name="generator" content="Antora 2.2.0">
     <link rel="stylesheet" href="../../_/css/site.css">
   </head>
@@ -32,7 +32,7 @@
   </nav>
 </header>
 <div class="main-wrapper">
-<div class="navigation-container" data-component="projectit-component" data-version="0.0.5">
+<div class="navigation-container" data-component="projectit-documentation" data-version="0.0.5">
   <aside class="navigation">
     <div class="panels">
 <div class="navigation-menu is-active" data-panel="menu">
@@ -70,13 +70,13 @@
     <span class="nav-text">Tutorials</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#tutorials/Metamodel-Tutorial.adoc">Tutorial 0: Creating a Metamodel</a>
+    <a class="nav-link" href="projectit-main/tutorials/Metamodels-Tutorial.html">Tutorial 1: Creating a Metamodel</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#tutorials/Generation-Tutorial.adoc">Tutorial 1: Generating an Editor</a>
+    <a class="nav-link" href="projectit-main/tutorials/Generation-Tutorial.html">Tutorial 2: Generating an Editor</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#tutorials/Framework-Tutorial.adoc">Tutorial 2: Tweaking an Editor</a>
+    <a class="nav-link" href="projectit-main/tutorials/Framework-Tutorial.html">Tutorial 3: Tweaking an Editor</a>
   </li>
 </ul>
   </li>
@@ -141,7 +141,7 @@
 <p>ProjectIt is a tool for creating web-based projectional editors, based on a TypeScript/JavaScript framework. Projectional editors are often used when developing a Domain Specific Language (DSL) and its working environment. A tool like ProjectIt is therefore usually part of a Language Workbench, next to tools for creating e.g. debuggers, transformers, generators, etc.</p>
 </div>
 <div class="paragraph">
-<p>If you want to install ProjectIt see <a href="#project-main/Installation-Guide.adoc" class="page unresolved">Installing ProjectIt</a>.</p>
+<p>If you want to install ProjectIt see  <a href="#0.0.5@project-main/Installation-Guide.adoc" class="page unresolved">Installing ProjectIt</a>.</p>
 </div>
 </div>
 </div>
@@ -152,10 +152,10 @@
 <p>With a tool like ProjectIt, we have to talk about the Workbench that provides all the other tooling for a language developer.</p>
 </div>
 <div class="paragraph">
-<p>The core of any Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository/Language Workbench. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](<a href="https://mobx.js.org/" class="bare">https://mobx.js.org/</a>). ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We hope that in the future ProjectIt will be incorporated in an open Language Workbench as proposed in <a href="#some paper.adoc" class="page unresolved">ref stuk Markus or something</a>. / as discussed in the community/forum.</p>
+<p>The core of any Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository/Language Workbench. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](<a href="https://mobx.js.org/" class="bare">https://mobx.js.org/</a>). ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We hope that in the future ProjectIt will be incorporated in an open Language Workbench as proposed in  <a href="#0.0.5@some paper.adoc" class="page unresolved">ref stuk Markus or something</a>. / as discussed in the community/forum.</p>
 </div>
 <div class="paragraph">
-<p>The choice not to tie up ProjectIt to any existing Language Workbench, has a downside: to create an editor the user must first provide a metamodel of the language that can be projected and edited. However, there is an easy way to create a metamodel in ProjectIt. For this see <a href="#project-main/Metamodel-Tutorial.adoc" class="page unresolved">Tutorial 1: Creating a Metamodel</a>.</p>
+<p>The choice not to tie up ProjectIt to any existing Language Workbench, has a downside: to create an editor the user must first provide a metamodel of the language to be projected and edited. However, there is an easy way to create a metamodel in ProjectIt. For this see  <a href="#0.0.5@project-main/tutorials/Metamodel-Tutorial.adoc" class="page unresolved">Tutorial 1: Creating a Metamodel</a>.</p>
 </div>
 </div>
 </div>
@@ -163,10 +163,10 @@
 <h2 id="_what_kind_of_editor_is_generated"><a class="anchor" href="#_what_kind_of_editor_is_generated"></a>What Kind of Editor is Generated?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The created editor is basically a web page that can be used in different contexts. A boilerplate context is generated to be able to preview the generated editor. More about the <a href="#project-main/Boilerplate.adoc" class="page unresolved">boilerplate</a> here.</p>
+<p>The created editor is basically a web page that can be used in different contexts. A boilerplate context is generated to be able to preview the generated editor. More about the  <a href="#0.0.5@project-main/Boilerplate.adoc" class="page unresolved">boilerplate</a> here.</p>
 </div>
 <div class="paragraph">
-<p>The projectional editors that can be made using ProjectIt are all based on the ProjectIt Framework, written in TypeScript. You can learn more about the ProjectIt framework <a href="#project-main/Framework-Tutorial.adoc" class="page unresolved">here</a>.</p>
+<p>The projectional editors that can be made using ProjectIt are all based on the ProjectIt Framework, written in TypeScript. You can learn more about the ProjectIt framework  <a href="#0.0.5@project-main/Framework-Description.adoc" class="page unresolved">here</a>.</p>
 </div>
 </div>
 </div>
@@ -206,10 +206,10 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#project-main/Tutorial1 adoc">Tutorial 1: Generating an Editor</a> shows how to generate an editor using an editor definition file.</p>
+<p><a href="#0.0.5@project-main/tutorials/Generation-Tutorial.adoc" class="page unresolved">Tutorial 2: Generating an Editor</a> shows how to generate an editor using an editor definition file.</p>
 </li>
 <li>
-<p><a href="#project-main/Tutorial2 adoc">Tutorial 2: Editor Look and Feel</a> gives more information on improving the generated editor by hand.</p>
+<p><a href="#0.0.5@project-main/tutorials/Framework-Tutorial.adoc" class="page unresolved">Tutorial 3: Editor Look and Feel</a> gives more information on improving the generated editor by hand.</p>
 </li>
 </ul>
 </div>
@@ -219,7 +219,7 @@
 <h2 id="_strong_point_expressions"><a class="anchor" href="#_strong_point_expressions"></a>Strong Point: Expressions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Many DSLs cater for some sort of expressions. Most language engineers known that it is a tedious task to provide editor support especially for binary expressions. ProjectIt helps by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In <a href="#project-main/Editing-Expressions.adoc" class="page unresolved">Handling Expressions</a> you can read more about this.</p>
+<p>Many DSLs cater for some sort of expressions. Most language engineers known that it is a tedious task to provide editor support especially for binary expressions. ProjectIt helps by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In  <a href="#0.0.5@project-main/Editing-Expressions.adoc" class="page unresolved">Handling Expressions</a> you can read more about this.</p>
 </div>
 </div>
 </div>
@@ -227,7 +227,7 @@
 <h2 id="_a_peek_inside_projectit"><a class="anchor" href="#_a_peek_inside_projectit"></a>A Peek Inside ProjectIt</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our <a href="#project-meta/Sourcecode-Documentation.adoc" class="page unresolved">Source Code Documentation</a>.</p>
+<p>Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our  <a href="#0.0.5@project-meta/Sourcecode-Documentation.adoc" class="page unresolved">Source Code Documentation</a>.</p>
 </div>
 </div>
 </div>

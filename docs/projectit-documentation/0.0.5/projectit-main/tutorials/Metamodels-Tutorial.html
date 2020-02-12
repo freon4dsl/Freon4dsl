@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Set Up a Metamodel in ProjectIt :: ProjectIt - A Projectional Editor Framework for the Web</title>
+    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-documentation/0.0.5/projectit-main/tutorials/Metamodels-Tutorial.html">
+    <meta name="generator" content="Antora 2.2.0">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://projectit-org.github.io/ProjectIt">ProjectIt - A Projectional Editor Framework for the Web</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://projectit-org.github.io/ProjectIt">Home</a>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="https://github.com/joswarmer/ProjectIt/">GitHub</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="main-wrapper">
+<div class="navigation-container" data-component="projectit-documentation" data-version="0.0.5">
+  <aside class="navigation">
+    <div class="panels">
+<div class="navigation-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">ProjectIt Developer Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="../Projectional-Overview.html">ProjectIt Overview</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Installation-Guide.html">Installing ProjectIt</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="../Framework-Description.html">The ProjectIt Framework</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../Different-Boxes.html">Types of Boxes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Editor-Boilerplate.html">The Editor Boilerplate</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Editing-Expressions.html">Support for Expressions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="Metamodels-Tutorial.html">Tutorial 1: Creating a Metamodel</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Generation-Tutorial.html">Tutorial 2: Generating an Editor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Framework-Tutorial.html">Tutorial 3: Tweaking an Editor</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-toggle"></button>
+    <a class="nav-link" href="../../projectit-meta/Sourcecode-Documentation.html">The ProjectIt Source Code</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../projectit-meta/Implementing-PiProjection.html">Implementing PiProjection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../projectit-meta/projectit-decorators.html">Supporting Decorators</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="navigation-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">ProjectIt Developer Documentation</span>
+    <span class="version">0.0.5</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">ProjectIt Developer Documentation</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">0.0.5</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+  <main class="main">
+<div class="toolbar" role="navigation">
+  <button class="navigation-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="crumbs" aria-label="breadcrumbs">
+  <ul>
+    <li class="crumb"><a href="../../index.html">ProjectIt Developer Documentation</a></li>
+    <li class="crumb">Tutorials</li>
+    <li class="crumb"><a href="Metamodels-Tutorial.html">Tutorial 1: Creating a Metamodel</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/tutorials/Metamodels-Tutorial.adoc">Edit this Page</a></div>
+</div>
+<article class="doc">
+<h1>How to Set Up a Metamodel in ProjectIt</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A metamodel or language definiton in ProjectIt consists simply of a set of elements and enumerations. Every element can have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Properties, which always have a Primitive type.</p>
+</li>
+<li>
+<p>Parts, each of which have a (two-way) containment relationship with its parent.</p>
+</li>
+<li>
+<p>References, which refer to another element in the metamodel.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that each metamodel must have a unique name.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_example_language_definition"><a class="anchor" href="#_an_example_language_definition"></a>An example language definition</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Below you will find a part of the Language definition for the Demo Project. In this example you see that decorators are used to indicate parts and references. For now, some hints on generating the editor (<em>@editor</em> decorator) are included in this file. In future, these generator hints will be gathered in a separte file. The complete language definition for the Demo project can be found in <em>example$/meta/src/language2/LanguageDefinition.lang</em>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Language Definition for the Demo project</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">language Language
+
+root concept Model {
+    name: string
+    @part entitites: Entity[]
+    @part functions: Function[]
+}
+
+concept Entity {
+    name: string
+    @part attributes: Attribute[]
+}
+
+concept Attribute {
+    name: string
+    type: AttributeType
+}
+
+concept Function {
+    name: string
+    @part expression: Expression
+    @reference parameters: Variable[]
+}
+
+concept Variable {
+    name: string
+    type: AttributeType
+}
+
+abstract expression concept Expression {}
+
+expression placeholder concept PlaceholderExpression {}
+
+abstract expression concept LiteralExpression base Expression {}
+
+concept StringLiteralExpression base LiteralExpression {
+    value: string
+    @editor symbol: string = "'"
+}
+
+concept NumberLiteralExpression base LiteralExpression {
+    value: string
+    @editor symbol: string = "/[0-9]/"
+}
+
+concept AbsExpression base Expression {
+    @part expr: Expression
+    @editor symbol: string = "abs"
+}
+
+abstract binary expression concept BinaryExpression base Expression {
+    @part left: Expression
+    @part right: Expression
+    @editor symbol: string = "unknown"
+}
+
+concept MultiplyExpression base BinaryExpression {
+    @editor symbol: string = "*"
+    @editor priority: number = "2"
+}
+
+concept PlusExpression base BinaryExpression {
+    @editor symbol: string = "+"
+    @editor priority: number = "4"
+}
+
+enumeration AttributeType {
+    String
+    Boolean
+    Integer
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_by_step"><a class="anchor" href="#_step_by_step"></a>Step by Step</h2>
+<div class="sectionbody">
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>create a file with extension '.lang' in folder XXXX</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>edit this file and add your language concepts</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>execute 'yarn run start'</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>have a look at your browser where the editor is shown</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_metametamodel"><a class="anchor" href="#_the_metametamodel"></a>The Metametamodel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the true language engineer we include the metametamodel in the concrete syntax used in ProjectIt.</p>
+</div>
+<div class="paragraph">
+<p>Note that as of yet there is no projectional editor for language definitions. Currently, parser technology is used on plain text. Therefore a Concrete Syntax Model was created in <em>example$/meta/src/language2</em>.</p>
+</div>
+<div class="listingblock">
+<div class="title">ProjectIt Metalanguage Definition</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">language PiMetaLanguage
+
+concept PiLanguage {
+    name: string;
+    @part concepts: PiLangConcept[];
+    @part enumerations: PiLangEnumeration[];
+}
+
+concept PiLangConcept {
+    //readonly language: PiLanguage;
+    name: string;
+    isAbstract: boolean;
+    isRoot:boolean;
+    //base: PiLangConceptReference; //A: optional???
+    @part properties: PiLangPrimitiveProperty[];
+    @part parts: PiLangElementProperty[];
+    @part references: PiLangElementProperty[];
+
+    isExpression: boolean;
+    isBinaryExpression: boolean;
+    isExpressionPlaceHolder: boolean;
+    left?: PiLangConceptReference;
+    right?: PiLangConceptReference;
+    symbol?: string;
+    trigger?: string;
+    triggerIsRegExp?: boolean;
+    priority?: number;
+}
+
+concept PiLangConceptReference {
+    language: PiLanguage;
+    name: string;
+
+    @reference concept: PiLangConcept;
+}
+
+concept PiLangExpressionConcept base PiLangConcept {
+}
+
+concept PiLangBinaryExpressionConcept base PiLangExpressionConcept {
+}
+
+concept PiLangPrimitiveProperty {
+    @part owningConcept: PiLangConcept;
+
+    name: string;
+    isList: boolean;
+    isStatic: boolean;
+    initialValue: string;
+    type: string;
+}
+
+concept PiLangElementProperty {
+    @part owningConcept: PiLangConcept;
+
+    name: string;
+    isList: boolean;
+    @part type: PiLangConceptReference;
+}
+
+concept PiLangEnumeration {
+    language: PiLanguage;
+    name: string;
+    @part literals: string[];
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </main>
+</div>
+<footer class="footer">
+  <p>This page was built using Antora.</p>
+</footer>
+<script src="../../../../_/js/site.js"></script>
+<script src="../../../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+  </body>
+</html>

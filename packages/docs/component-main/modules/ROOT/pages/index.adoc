@@ -1,22 +1,27 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
+
 = ProjectIt
 Projectional Editor for the Web.
 
 == What is ProjectIt
 ProjectIt is a tool for creating web-based projectional editors, based on a TypeScript/JavaScript framework. Projectional editors are often used when developing a Domain Specific Language (DSL) and its working environment. A tool like ProjectIt is therefore usually part of a Language Workbench, next to tools for creating e.g. debuggers, transformers, generators, etc. 
 
-If you want to install ProjectIt see xref:project-main/Installation-Guide.adoc[Installing ProjectIt].
+If you want to install ProjectIt see  xref:0.0.5@project-main/Installation-Guide.adoc[Installing ProjectIt].
 
 == Talking About Language Workbenches
 With a tool like ProjectIt, we have to talk about the Workbench that provides all the other tooling for a language developer. 
 
-The core of any Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository/Language Workbench. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](https://mobx.js.org/). ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We hope that in the future ProjectIt will be incorporated in an open Language Workbench as proposed in xref:some paper.adoc[ref stuk Markus or something]. / as discussed in the community/forum.
+The core of any Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository/Language Workbench. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](https://mobx.js.org/). ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We hope that in the future ProjectIt will be incorporated in an open Language Workbench as proposed in  xref:0.0.5@some paper.adoc[ref stuk Markus or something]. / as discussed in the community/forum.
 
-The choice not to tie up ProjectIt to any existing Language Workbench, has a downside: to create an editor the user must first provide a metamodel of the language that can be projected and edited. However, there is an easy way to create a metamodel in ProjectIt. For this see xref:project-main/Metamodel-Tutorial.adoc[Tutorial 1: Creating a Metamodel].
+The choice not to tie up ProjectIt to any existing Language Workbench, has a downside: to create an editor the user must first provide a metamodel of the language to be projected and edited. However, there is an easy way to create a metamodel in ProjectIt. For this see  xref:0.0.5@project-main/tutorials/Metamodel-Tutorial.adoc[Tutorial 1: Creating a Metamodel].
 
 == What Kind of Editor is Generated?
-The created editor is basically a web page that can be used in different contexts. A boilerplate context is generated to be able to preview the generated editor. More about the xref:project-main/Boilerplate.adoc[boilerplate] here.
+The created editor is basically a web page that can be used in different contexts. A boilerplate context is generated to be able to preview the generated editor. More about the  xref:0.0.5@project-main/Boilerplate.adoc[boilerplate] here.
 
-The projectional editors that can be made using ProjectIt are all based on the ProjectIt Framework, written in TypeScript. You can learn more about the ProjectIt framework xref:project-main/Framework-Tutorial.adoc[here]. 
+The projectional editors that can be made using ProjectIt are all based on the ProjectIt Framework, written in TypeScript. You can learn more about the ProjectIt framework  xref:0.0.5@project-main/Framework-Description.adoc[here]. 
 
 == How to Generate an Editor
 The typical workflow for creating an editor is:
@@ -29,14 +34,14 @@ The typical workflow for creating an editor is:
 
 When the editor definition is not enough to create the required look and feel, the generated code can be changed by hand. Any changes to the generated code will remain during regeneration.
 
-* xref:project-main/Tutorial1 adoc[Tutorial 1: Generating an Editor] shows how to generate an editor using an editor definition file.
-* xref:project-main/Tutorial2 adoc[Tutorial 2: Editor Look and Feel] gives more information on improving the generated editor by hand.
+*  xref:0.0.5@project-main/tutorials/Generation-Tutorial.adoc[Tutorial 2: Generating an Editor] shows how to generate an editor using an editor definition file.
+*  xref:0.0.5@project-main/tutorials/Framework-Tutorial.adoc[Tutorial 3: Editor Look and Feel] gives more information on improving the generated editor by hand.
 
 == Strong Point: Expressions
-Many DSLs cater for some sort of expressions. Most language engineers known that it is a tedious task to provide editor support especially for binary expressions. ProjectIt helps by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In xref:project-main/Editing-Expressions.adoc[Handling Expressions] you can read more about this. 
+Many DSLs cater for some sort of expressions. Most language engineers known that it is a tedious task to provide editor support especially for binary expressions. ProjectIt helps by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In  xref:0.0.5@project-main/Editing-Expressions.adoc[Handling Expressions] you can read more about this. 
 
 == A Peek Inside ProjectIt
-Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our xref:project-meta/Sourcecode-Documentation.adoc[Source Code Documentation].
+Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our  xref:0.0.5@project-meta/Sourcecode-Documentation.adoc[Source Code Documentation].
 
 == Future Work
 The current version is a proof-of-concept. We are working towards a more mature version. Development paths that we envision are:

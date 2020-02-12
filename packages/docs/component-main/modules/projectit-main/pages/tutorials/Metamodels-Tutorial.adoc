@@ -3,25 +3,38 @@
 :projectitdir: ../../../../../core
 :source-language: javascript
 
-= How to Set Up a Language Definition in ProjectIt
+= How to Set Up a Metamodel in ProjectIt
 
-A language definiton or metamodel in ProjectIt consists simply of a set of elements and enumerations. Every element can have:  
+A metamodel or language definiton in ProjectIt consists simply of a set of elements and enumerations. Every element can have:  
 
-* Properties, which  always have a Primitive type. 
+* Properties, which always have a Primitive type. 
 * Parts, each of which have a (two-way) containment relationship with its parent. 
-* References, which simply refer to another element in the metamodel.
+* References, which refer to another element in the metamodel.
 
 Note that each metamodel must have a unique name.
 
 == An example language definition
+Below you will find a part of the Language definition for the Demo Project. In this example you see that decorators are used to indicate parts and references. For now, some hints on generating the editor (_@editor_ decorator) are included in this file. In future, these generator hints will be gathered in a separte file. The complete language definition for the Demo project can be found in _{src-dir}/meta/src/language2/LanguageDefinition.lang_.
 
-.Language Defintion for the Demo project
+.Language Definition for the Demo project
 [source]
 ----
-include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox4]
+include::{src-dir}/meta/src/language2/LanguageDefinition.lang[tag=MetaModel]
 ----
 
-== The Metametamodel
-For the true language engineer we include the metametamodel in the language definition syntax used in ProjectIt.
+== Step by Step
+<1> create a file with extension '.lang' in folder XXXX
+<2> edit this file and add your language concepts 
+<3> execute 'yarn run start'
+<4> have a look at your browser where the editor is shown
 
-Note that as of yet there is no projectional editor for language definitions. Currently, parser technology is used on plain text. Therefore a Concrete Syntax Model was created (ref source code folder).
+== The Metametamodel
+For the true language engineer we include the metametamodel in the concrete syntax used in ProjectIt.
+
+Note that as of yet there is no projectional editor for language definitions. Currently, parser technology is used on plain text. Therefore a Concrete Syntax Model was created in _{src-dir}/meta/src/language2_.
+
+.ProjectIt Metalanguage Definition 
+[source]
+----
+include::{src-dir}/meta/src/language2/MetaLanguageDefinition.lang[tag=MetametaModel]
+----

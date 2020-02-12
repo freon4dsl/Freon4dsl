@@ -2,7 +2,7 @@ site:
   title: ProjectIt - A Projectional Editor Framework for the Web
   # the 404 page and sitemap files only get generated when the url property is set
   url: https://projectit-org.github.io/ProjectIt
-  start_page: projectit-component::index.adoc
+  start_page: projectit-documentation::index.adoc
 content:
   sources:
   - url: ./../..

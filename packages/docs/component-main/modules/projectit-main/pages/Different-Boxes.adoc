@@ -81,7 +81,7 @@ where each ModelElement will be shown according to its defined projection.
 
 This box is a special case of a VerticalListBox, to show a list
 of child elements.
-A special property of this typem of box is teh ` elementCreator()`.
+A special property of this type of box is the `elementCreator()`.
 This is a function thet should create a new element that fits in the collection.
 Given this, the VerticalModelElementListBox generates the editor
 for the element list, including the neccesary behavior to add and remove elements from the list.

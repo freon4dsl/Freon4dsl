@@ -5,6 +5,6 @@
 ** xref:Editor-Boilerplate.adoc[The Editor Boilerplate]
 ** xref:Editing-Expressions.adoc[Support for Expressions]
 * Tutorials
-** xref:tutorials/Metamodel-Tutorial.adoc[Tutorial 0: Creating a Metamodel]
-** xref:tutorials/Generation-Tutorial.adoc[Tutorial 1: Generating an Editor]
-** xref:tutorials/Framework-Tutorial.adoc[Tutorial 2: Tweaking an Editor]
+** xref:tutorials/Metamodels-Tutorial.adoc[Tutorial 1: Creating a Metamodel]
+** xref:tutorials/Generation-Tutorial.adoc[Tutorial 2: Generating an Editor]
+** xref:tutorials/Framework-Tutorial.adoc[Tutorial 3: Tweaking an Editor]

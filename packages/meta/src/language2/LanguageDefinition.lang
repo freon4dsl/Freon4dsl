@@ -1,3 +1,4 @@
+// tag::MetaModel[]
 language Language
 
 root concept Model {
@@ -64,6 +65,13 @@ concept PlusExpression base BinaryExpression {
     @editor priority: number = "4"
 }
 
+enumeration AttributeType {
+    String
+    Boolean
+    Integer
+}
+// end::MetaModel[]
+
 concept DivideExpression base BinaryExpression {
     @editor symbol: string = "/"
     @editor priority: number = "2"
@@ -112,11 +120,6 @@ concept VariableRef base Expression {
     attribute: string
 }
 
-enumeration AttributeType {
-    String
-    Boolean
-    Integer
-}
 enumeration Color {
     Red
     Yellow

@@ -3,7 +3,7 @@
 :projectitdir: ../../../../../../core
 :source-language: javascript
 
-= Tweaking the Generator Editor
+= Tweaking the Generator Editor or What Does the Framework Do
 If the generated editor does not completely fullfill your whishes with regard to its look and feel, you can tweak the generated code.
 improving the generated editor by hand.
 

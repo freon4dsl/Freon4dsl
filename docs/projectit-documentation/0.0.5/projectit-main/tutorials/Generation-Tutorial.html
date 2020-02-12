@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How to Set Up a Language Definition in ProjectIt :: ProjectIt - A Projectional Editor Framework for the Web</title>
-    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-component/0.0.5/projectit-main/tutorials/Metamodels-Tutorial.html">
+    <title>Untitled :: ProjectIt - A Projectional Editor Framework for the Web</title>
+    <link rel="canonical" href="https://projectit-org.github.io/ProjectIt/projectit-documentation/0.0.5/projectit-main/tutorials/Generation-Tutorial.html">
     <meta name="generator" content="Antora 2.2.0">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -32,7 +32,7 @@
   </nav>
 </header>
 <div class="main-wrapper">
-<div class="navigation-container" data-component="projectit-component" data-version="0.0.5">
+<div class="navigation-container" data-component="projectit-documentation" data-version="0.0.5">
   <aside class="navigation">
     <div class="panels">
 <div class="navigation-menu is-active" data-panel="menu">
@@ -70,13 +70,13 @@
     <span class="nav-text">Tutorials</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#tutorials/Metamodel-Tutorial.adoc">Tutorial 0: Creating a Metamodel</a>
+    <a class="nav-link" href="Metamodels-Tutorial.html">Tutorial 1: Creating a Metamodel</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="Generation-Tutorial.html">Tutorial 2: Generating an Editor</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#tutorials/Generation-Tutorial.adoc">Tutorial 1: Generating an Editor</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#tutorials/Framework-Tutorial.adoc">Tutorial 2: Tweaking an Editor</a>
+    <a class="nav-link" href="Framework-Tutorial.html">Tutorial 3: Tweaking an Editor</a>
   </li>
 </ul>
   </li>
@@ -127,80 +127,14 @@
 <nav class="crumbs" aria-label="breadcrumbs">
   <ul>
     <li class="crumb"><a href="../../index.html">ProjectIt Developer Documentation</a></li>
-    <li class="crumb"><a href="Metamodels-Tutorial.html">How to Set Up a Language Definition in ProjectIt</a></li>
+    <li class="crumb">Tutorials</li>
+    <li class="crumb"><a href="Generation-Tutorial.html">Tutorial 2: Generating an Editor</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/tutorials/Metamodels-Tutorial.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/tutorials/Generation-Tutorial.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
-<h1>How to Set Up a Language Definition in ProjectIt</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>A language definiton or metamodel in ProjectIt consists simply of a set of elements and enumerations. Every element can have:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Properties, which  always have a Primitive type.</p>
-</li>
-<li>
-<p>Parts, each of which have a (two-way) containment relationship with its parent.</p>
-</li>
-<li>
-<p>References, which simply refer to another element in the metamodel.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Note that each metamodel must have a unique name.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_an_example_language_definition"><a class="anchor" href="#_an_example_language_definition"></a>An example language definition</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="title">Language Defintion for the Demo project</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: DemoModel): Box {
-        return new VerticalListBox(model, "model", [
-            new HorizontalListBox(model, "model-info", [
-                new LabelBox(model, "model-keyword", "model-3", {
-                    style: demoStyles.keyword
-                }),
-                new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
-                    placeHolder: "&lt;name&gt;"
-                })
-            ]),
-            new LabelBox(model, "entity-list", "Entities", {
-                style: demoStyles.keyword
-            }),
-            new VerticalListBox(
-                model,
-                "entities",
-                model.entities.map(ent =&gt; {
-                    return this.createEntityBox3(ent);
-                })
-            ).addChild(new AliasBox(model, "end-of-entity-list",
-                "add entity", { style: demoStyles.indent }))        <i class="conum" data-value="1"></i><b>(1)</b>
-        ]);
-    }</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_the_metametamodel"><a class="anchor" href="#_the_metametamodel"></a>The Metametamodel</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>For the true language engineer we include the metametamodel in the language definition syntax used in ProjectIt.</p>
-</div>
-<div class="paragraph">
-<p>Note that as of yet there is no projectional editor for language definitions. Currently, parser technology is used on plain text. Therefore a Concrete Syntax Model was created (ref source code folder).</p>
-</div>
-</div>
-</div>
+
 </article>
   </main>
 </div>
