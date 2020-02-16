@@ -211,7 +211,7 @@ the attribute <em>name</em> of class <em>DemoModel</em></p>
 <p>To make the label look different form the value of the attribute, let&#8217;s have a look at the code that implements the projection:</p>
 </div>
 <div class="listingblock">
-<div class="title">Default Projection</div>
+<div class="title">Simple Projection</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox(model: DemoModel): Box {
         return new HorizontalListBox(model, "model", [
@@ -307,13 +307,13 @@ is empty, giving the user a visual clue that a name could be entered.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>entities</code> attribute is to be shown as a vertical list, therefore we use a <em>VerticalListBox</em>. The first element of this list is a label, like the <code>LabelBox</code> in the previous step styled as a keyword. The entities themselves are projected in another <code>VerticalListBox</code>.</p>
+<p>The <code>entities</code> attribute is to be shown as a vertical list, therefore we use a <em>VerticalListBox</em>. The first element of this list is a label, like the <code>LabelBox</code> in the previous step, styled as a keyword. The entities themselves are projected in another <code>VerticalListBox</code>.</p>
 </div>
 <div class="paragraph">
-<p>The projection of a single <code>DemoEntity</code> is defined in a separate function, thus building a hierarchy of boxes.
-.DemoEntity Element</p>
+<p>The projection of a single <code>DemoEntity</code> is defined in a separate function, thus building a hierarchy of boxes.</p>
 </div>
 <div class="listingblock">
+<div class="title">DemoEntity Element</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">Unresolved include directive in modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc - include::example$/demo/src/model/DemoEntity.ts[]</code></pre>
 </div>
@@ -344,15 +344,15 @@ is empty, giving the user a visual clue that a name could be entered.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This function is very similar to the projection of the <code>DemoModel</code>,
+<p>The projection function is very similar to the projection of the <code>DemoModel</code>,
 showing the keyword <em>Entity</em> followed by its name and below all attributes of the
 entity in a <code>VerticalListBox</code>.</p>
 </div>
 <div class="paragraph">
-<p>Once again, the projection of an attribute is defined in its own function.
-.DemoAttribute Element</p>
+<p>Once again, the projection of an attribute is defined in its own function.</p>
 </div>
 <div class="listingblock">
+<div class="title">DemoAttribute Element</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">Unresolved include directive in modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc - include::example$/demo/src/model/DemoAttribute.ts[]</code></pre>
 </div>
@@ -408,7 +408,7 @@ entity in a <code>VerticalListBox</code>.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The default behavior takes care of changing and deleting simple elements. But what about adding an element, e.g. adding a new <code>attribute</code> to an <code>Entity</code>. For this, we need to define an action coupled to an <code>AliasBox</code>. From <a href="../Defining-Actions.html" class="page">Actions</a> you will have learned that an <code>AliasBox</code> is a predefined box where the user can type text (printable characters), which is used as an alias for some action.</p>
+<p>The default behavior takes care of changing simple AST nodes and deleting both simple and complex AST nodes. But what about adding an element, e.g. adding a new <code>attribute</code> to an <code>Entity</code>. For this, we need to define an action coupled to an <code>AliasBox</code>. (From <a href="../Defining-Actions.html" class="page">Actions</a> you will have learned that an <code>AliasBox</code> is a predefined box where the user can type text to trigger some action.)</p>
 </div>
 <div class="paragraph">
 <p>First we add an <code>AliasBox</code> to the projection of the attribute list. Note the role of the box: <em>end-of-attribute-list</em>.</p>
