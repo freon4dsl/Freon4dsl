@@ -54,6 +54,9 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="Different-Boxes.html">Types of Boxes</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="Defining-Actions.html">Defining Actions</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
@@ -67,13 +70,16 @@
     <span class="nav-text">Tutorials</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tutorials/Metamodels-Tutorial.html">Tutorial 1: Creating a Metamodel</a>
+    <a class="nav-link" href="tutorials/Framework-Tutorial.html">How to Use the Framework</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tutorials/Generation-Tutorial.html">Tutorial 2: Generating an Editor</a>
+    <a class="nav-link" href="tutorials/Metamodels-Tutorial.html">How to Set Up a Metamodel</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="tutorials/Framework-Tutorial.html">Tutorial 3: Adjusting an Editor</a>
+    <a class="nav-link" href="tutorials/Generation-Tutorial.html">How to Generate an Editor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/Tweaking-Tutorial.html">How to Adjust a Generated Editor</a>
   </li>
 </ul>
   </li>
@@ -134,7 +140,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The ProjectIt Editor Framework is written in TypeScript and based on the React Framework. This page provides an overview of the Framework.If you want to get deeper into this you can also read <a href="../projectit-meta/Sourcecode-Documentation.html" class="page">The ProjectIt Source Code</a>.</p>
+<p>The ProjectIt Editor Framework is written in TypeScript and based on the React Framework. This page provides an overview of the Framework. If you want to get deeper into this, see the <a href="#projectit-main/tutorials:Framework-Tutorial.adoc" class="page unresolved">Tutorial: How to Use the ProjectIt Framework</a>.</p>
 </div>
 </div>
 </div>
@@ -224,21 +230,29 @@ Given  that <code>literal</code> is the <code>StringLiteral</code> object:</p>
 <h1 id="_editor_behavior_based_on_actions" class="sect0"><a class="anchor" href="#_editor_behavior_based_on_actions"></a>Editor Behavior Based on Actions</h1>
 <div class="paragraph">
 <p>The behavior of the editor is tightly coupled to the boxes in the projection because
-the focus in the editor is always on a <em>Box</em>.</p>
-</div>
-<div class="paragraph">
-<p>To be able to couple behavior to boxes, it is important to understand the following.
+the focus in the editor is always on a <em>Box</em>. To be able to couple behavior to boxes,
+it is important to understand the following.
 Each box in a projection keeps a reference to the element in the AST which it represents.
-In addition each <em>Box</em> has a <em>role</em>, which must be unique within all boxes for a specific
-AST element.
-This allows boxes to be uniquely identified by the combination of the AST element and the box role.</p>
+This allows boxes to be uniquely identified by the combination of the AST element and the <em>box role</em>
+(as explained above in <a href="#_projection_layout_based_on_boxes">Projection Layout Based on Boxes</a>).</p>
 </div>
 <div class="paragraph">
-<p>Each behavior has one or more <em>box roles</em>, specifying that the behavior is only active
-in boxes with that specific role.
-Furthermore a behavior has a <em>trigger</em>, describing the key(s) that will trigger the behavior,
-and an <em>action</em>,  which is a typescript/javascript function the will be executed when the
+<p>Each behavior has</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>one or more <em>box roles</em>, specifying that the behavior is only active
+in boxes with that specific role.</p>
+</li>
+<li>
+<p>a <em>trigger</em>, describing the key(s) that will trigger the behavior, and</p>
+</li>
+<li>
+<p>an <em>action</em>,  which is a typescript/javascript function the will be executed when the
 behavior is being triggered.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Actions are further described in <a href="Defining-Actions.html" class="page">Actions</a>.</p>
@@ -277,14 +291,36 @@ This interface is kept as small as possible, to allow ProjectIt to be used for a
 </div>
 <div class="paragraph">
 <p>The two functions <code>piIsExpression()</code> and <code>piIsBinaryExpression()</code> are only needed when your language
-contains expressions, as ProjectIt includes special handling of expressions.
-To start with, these functions can be defined to simply return <code>false</code>.</p>
+contains expressions, as ProjectIt includes special <a href="#projectit-main:Supporting-expression.adoc" class="page unresolved">handling of expressions</a>.
+As a default, these functions can be defined to simply return <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that ProjectIt does not need to know anything about the structure of your language.
 No need to know the availale element type, nor the properties of en element type, nor anything else.
 This is by design, as ProjectIt is not meant to be a full Language Workbench,
-but instead meant to be used with multiple language workbenches , or none.</p>
+but instead meant to be used with multiple language workbenches, or none.</p>
+</div>
+<div class="sect1">
+<h2 id="_projection"><a class="anchor" href="#_projection"></a>Projection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The projection from your model/AST is defined by implementing the
+<em>PiProjection</em> interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export interface PiProjection {
+    /**
+     * returns the box for `element`.
+     */
+    getBox(element: PiElement): Box;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Implementing this interface should return a <em>Box</em> for each <code>element</code> in the AST.</p>
+</div>
+</div>
 </div>
 </article>
   </main>

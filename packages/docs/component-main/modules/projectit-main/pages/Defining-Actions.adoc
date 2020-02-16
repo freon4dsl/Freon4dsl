@@ -5,7 +5,7 @@
 :listing-caption: Code Sample
 
 = Editor Actions
-The interaction of the user with the projected AST is done through actions, to enable the user to change the model and add elements to it. (All actions described here can be found in [green]#/demo/src/editor/TutorialProjection.ts#.)
+The interaction of the user with the projected AST is done through actions, to enable the user to change the model and add elements to it. (All actions described here can be found in `packages/demo/src/editor/TutorialProjection.ts`.)
 
 First of all take a look at the built-in default behavior of the editor:
 

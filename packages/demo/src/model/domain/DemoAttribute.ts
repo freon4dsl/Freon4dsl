@@ -5,11 +5,12 @@ import { DemoAttributeType } from "./DemoAttributeType";
 import { DemoModelElement } from "../DemoModel";
 
 @model
+// tag::DemoAttribute[]
 export class DemoAttribute extends DemoModelElement {
-    $type: string = "DemoAttribute";
-
     @observable name: string = "";
     @observable type: DemoAttributeType = "String";
+// tag::DemoAttribute[]
+    $type: string = "DemoAttribute";
 
     constructor() {
         super();

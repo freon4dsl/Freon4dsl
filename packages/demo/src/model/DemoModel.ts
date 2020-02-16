@@ -40,15 +40,12 @@ export abstract class DemoModelElement extends MobxModelElementImpl {
 @model
 // tag::DemoModel[]
 export class DemoModel extends DemoModelElement {
-// end::DemoModel[]
-$type: string = "DemoModel";
-
-    @observablelistpart entities: DemoEntity[];
-    // tag::DemoModel[]
     @observable name: string;
+    @observablelistpart entities: DemoEntity[];
     // end::DemoModel[]
 
     @observablelistpart functions: DemoFunction[];
+    $type: string = "DemoModel";
 
     constructor() {
         super();
