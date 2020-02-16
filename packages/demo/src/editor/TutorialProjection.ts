@@ -113,11 +113,10 @@ export class TutorialProjection implements PiProjection {
     // tag::ModelBox1[]
     private createModelBox(model: DemoModel): Box {
         return new HorizontalListBox(model, "model", [
-            new LabelBox(model, "model-label", "Model"),
+            new LabelBox(model, "model-label", "DemoModel"),
             new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c))
         ]);
     }
-
     // end::ModelBox1[]
 
     // Modelbox with style added
@@ -166,7 +165,7 @@ export class TutorialProjection implements PiProjection {
     private createModelBox4(model: DemoModel): Box {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
-                new LabelBox(model, "model-keyword", "model-3", {
+                new LabelBox(model, "model-keyword", "DemoModel", {
                     style: demoStyles.keyword
                 }),
                 new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {

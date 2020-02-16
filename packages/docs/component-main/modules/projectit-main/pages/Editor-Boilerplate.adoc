@@ -1,8 +1,0 @@
-:imagesdir: ../assets/images/
-:src-dir: ../../../../..
-:projectitdir: ../../../../../core
-:source-language: javascript
-
-= Editor Boilerplate Code
-
-TODO:

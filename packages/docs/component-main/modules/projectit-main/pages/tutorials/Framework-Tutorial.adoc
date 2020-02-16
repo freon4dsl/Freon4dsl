@@ -3,62 +3,170 @@
 :projectitdir: ../../../../../../core
 :source-language: javascript
 
-= Tweaking the Generator Editor or What Does the Framework Do
-If the generated editor does not completely fullfill your whishes with regard to its look and feel, you can tweak the generated code.
-improving the generated editor by hand.
+= Tutorial: How to Use the ProjectIt Framework
 
-== Projection
-The projection from your model/AST is defined by implementing the
-_PiProjection_ interface:
+The ProjectIt Framework offers two axes along which you can specify your editor: (1) <<Define your Projection>> and (2) <<Define your Own Actions>>.
 
+= Define your Projection
+
+In this tutorial we will use the xref:projectit-main:../DemoLanguage-Example.adoc[DemoLanguage], a simple language where a model has entities, and entities have attributes, as example.
+
+The projections in this tutorial are all available in `packages/demo/src/editor/TutorialProjection.ts`.
+
+== Default Projection of the Model Name
+The name of the model in our DemoLanguage is the value of the attribute _name_ of class _DemoModel_
+
+.Model Element
 [source]
 ----
-include::{src-dir}/core/src/language/PiProjection.ts[tag=PiProjection]
+include::{src-dir}/demo/src/model/DemoModel.ts[tag=DemoModel]
 ----
 
-Implementing this interface should return a _Box_ for each `element` in the AST.
-ProjectIt includes boxes of various types (textual, tabular, horizontal or vertical collections, etc.)
-to define this projection.
-The box model is further described in xref:Defining_Projections.adoc#Defining Projections[Defining Projections].
+The default projection for this is a `HorizontalListBox` which holds a 'LabelBox' with the name of the class, followed by the value stored in the variable model.name. In the tutorial example this value is "DemoModel". When we start the editor based on this projection, we see the following:
 
-== Behavior
-The behavior of the editor is tightly coupled to the boxes in the projection because
-the focus in the editor is always on a _Box_.
+image::demomodel-name.png[align="left"]
 
-To be able to couple behavior to boxes, it is important to understand the following.
-Each box in a projection keeps a reference to the element in the AST which it represents.
-In addition each _Box_ has a _role_, which must be unique within all boxes for a specific
-AST element.
-This allows boxes to be uniquely identified by the combination of the AST element and the box role.
+It doesn't look very nice currently:
 
-Each behavior has one or more _box roles_, specifying that the behavior is only active
-in boxes with that specific role.
-Furthermore a behavior has a _trigger_, describing the key(s) that will trigger the behavior,
-and an _action_,  which is a typescript/javascript function the will be executed when the
-behavior is being triggered.
+- The label is not distinguishable from the name of the model.
+- When the name of the model becomes empty, there is no visual clue that you can add a name.
 
-Actions are further described in xref:Defining_Actions.adoc[Actions].
+== Step 1 - Adding Style
+Let's have a look at the code that implements the projection:
 
-== AST Access
-As ProjectIt uses the AST for projections and behavior, it needs to know about the type of elements in the AST.
-To allow ProjectIt to work, each element type that occurrs in the AST needs to implement the `PiElement` interface.
-This interface is kept as small as possible, to allow ProjectIt to be used for any AST.
-
+.Default Projection
 [source]
 ----
-include::{src-dir}/core/src/language/PiModel.ts[tag=PiElement]
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox1]
+----
+Next we add a style to the LabelBox:
+
+.Projection with Style and Placeholder
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox2]
 ----
 
-The main two elements in this interface are:
+The `LabelBox` now has the style `demoStyles.keyword` associated with it, so it will show in a different color.
+Also, the `TextBox` has a `placeHolder` property.  This placeholder will show whenever the contents of the `TextBox` 
+is empty, giving the user a visual clue that a name could be entered. 
 
-* `piId()`, which should return en unique id for each element in the AST.
-* `piContainer()` which should return a descriptor for the container (parent) of an element in the AST.
+The result is:
 
-The two functions `piIsExpression()` and `piIsBinaryExpression()` are only needed when your language
-contains expressions, as ProjectIt includes special handling of expressions.
-To start with, these functions can be defined to simply return `false`.
+image::demomodel-name-with-style.png[align="left"]
 
-Note that ProjectIt does not need to know anything about the structure of your language.
-No need to know the availale element type, nor the properties of en element type, nor anything else.
-This is by design, as ProjectIt is not meant to be a full Language Workbench,
-but instead meant to be used with multiple language workbenches , or none.
+The style is defined in a css (or actually scss) as follows. In principle all CSS styles can be used here.
+
+.CSS for Styled Projection
+[source, language=css]
+----
+include::{src-dir}/demo/src/styles/style.scss[tag=StyleKeyword]
+----
+
+== Step 3 - Showing Contained Elements
+
+We will add the entities owned by the `DemoModel` to the projection.
+
+.Projection of Child Elements
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox3]
+----
+The entities will be below the model name and for this we use a `VerticalListBox`.
+First we show the model keyword plus its name,
+the we show the keyword _Entities_,
+followed by another `VerticalListBox` of all entities.
+The projection of an entity is defined in a separate function:
+
+.Projection of Entity
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=EntityBox]
+----
+This function is very similar to the projection of the model box,
+showing the keyword _Entity_ followed by its name and below all attributes of the
+entity in a `VerticalListBox`.
+
+Once again, the projection of an attribute is defined in its own function.
+
+.Projection of Attribute
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=AttributeBox]
+----
+
+== Step 4 - Allow Creation of new Elements in the Editor
+
+The projection sofar is exactly that: a projection.
+There are no actions defined yet, which we need to make a functioning editor.
+
+This step is explained in the xref:tutorials/Actions-Tutorial.adoc[Actions] tutorial.
+
+
+== Define your Own Actions 
+
+In the xref:tutorials/Projection-Tutorial.adoc[Projection Tutorial] we started out by creating a projection of the DemoModel.
+In this tutorial we will add actions to the editor,
+to enable the user to change the model and add elements to it.
+
+First of all take a look at the built-in default behavior of the editor:
+
+- Inside a TextBox the text can be edited.
+- Using the arrow keys the user can navigate the projection.
+- Using Ctrl-Arrow the user can navigate up and down the model/AST.
+- When an element is selected, it can be deleted with the DEL key.
+
+== Step 1: Create new Model Elements
+We want the user to be able to add a new entity to the model.
+For this we define an action.
+
+First of all we add an `AliasBox`  at the end of the vertical list of entities.
+Note the role of the box: "end-of-entity-list"
+
+.AliasBox
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox4]
+----
+<1> The `AliasBox`.
+
+Secondly we define an action.
+
+.Attach Action to AliasBox
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateEntityAction]
+----
+<1> the action is attached to each box with the role "end-of-entity-list".
+This means that the action can be triggered in the `AliasBox` we defined in the projection.
+
+<2> we define that the action will be triggered when the user types `"entity"` inside the.alias box.
+
+At <3> we define the executable code for the action. It creates a new `DemoEntity` and attaches is to the `DemoModel`
+
+At <4> we define the focus of the editor. The `Box`  with the role `"entity-name"`
+within the entity as returned from the `action` code will get the editor focus.
+This ensures that the user can immediately start typing the name of the entity after it has been created.
+
+== Step 2 Create new Attributes
+Enable the creation of a new `DemoAttribute` is done similar to the creation of a new `DemoEntity`.
+
+First we add an `AliasBox` to the projection of the attribute list:
+
+.Add AliasBox to Attribute List
+[source]
+----
+include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=CreateAttributeAction]
+----
+
+Then we create the actual action and attach it to the role of the `AliasBox`.
+
+.Attach Create Attribute Action to AliasBox
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateAttributeAction]
+----
+
+As you can see, there can be many boxes with the same role in the editor, as long as their model element is different.
+This way,  the above action is available for each attribute list in each entity.
+

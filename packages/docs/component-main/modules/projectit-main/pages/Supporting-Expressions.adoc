@@ -3,10 +3,12 @@
 :projectitdir: ../../../../../core
 :source-language: javascript
 
-= Expressions
+= Support for Adding Expressions to your Language
 
 TODO:
 
 * Describe the problems with 1-to-1 projectional editing of expressions.
 * Explain the solution in general.
 * Explain how ProjectIt implements this solution.
+
+xref: [grammarcells in MPS]

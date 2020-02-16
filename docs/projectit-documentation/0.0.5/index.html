@@ -42,28 +42,25 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <a class="nav-link" href="projectit-main/Projectional-Overview.html">ProjectIt Overview</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="projectit-main/Projectional-Overview.html">What is Projectional Editing?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="projectit-main/Installation-Guide.html">Installing ProjectIt</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
     <a class="nav-link" href="projectit-main/Framework-Description.html">The ProjectIt Framework</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="projectit-main/Different-Boxes.html">Types of Boxes</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/Editor-Boilerplate.html">The Editor Boilerplate</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="projectit-main/Supporting-Expressions.html">Support for Expressions</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/Editing-Expressions.html">Support for Expressions</a>
-  </li>
-</ul>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="projectit-main/DemoLanguage-Example.html">DemoLanguage Example</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
@@ -76,7 +73,7 @@
     <a class="nav-link" href="projectit-main/tutorials/Generation-Tutorial.html">Tutorial 2: Generating an Editor</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="projectit-main/tutorials/Framework-Tutorial.html">Tutorial 3: Tweaking an Editor</a>
+    <a class="nav-link" href="projectit-main/tutorials/Framework-Tutorial.html">Tutorial 3: Adjusting an Editor</a>
   </li>
 </ul>
   </li>
@@ -135,13 +132,13 @@
 <article class="doc">
 <h1>ProjectIt</h1>
 <div class="sect1">
-<h2 id="_what_is_projectit"><a class="anchor" href="#_what_is_projectit"></a>What is ProjectIt</h2>
+<h2 id="_what_is_projectit"><a class="anchor" href="#_what_is_projectit"></a>What is ProjectIt?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ProjectIt is a tool for creating web-based projectional editors, based on a TypeScript/JavaScript framework. Projectional editors are often used when developing a Domain Specific Language (DSL) and its working environment. A tool like ProjectIt is therefore usually part of a Language Workbench, next to tools for creating e.g. debuggers, transformers, generators, etc.</p>
+<p>ProjectIt is a tool for creating web-based projectional editors, based on a TypeScript/JavaScript framework. <a href="projectit-main/Projectional-Overview.html" class="page">Projectional editors</a> are often used when developing a <a href="https://en.wikipedia.org/wiki/Domain-specific_language">Domain Specific Language</a> (DSL) and its working environment. A tool like ProjectIt is therefore usually part of a <a href="https://en.wikipedia.org/wiki/Language_workbench">Language Workbench</a>, next to tools for creating e.g. debuggers, transformers, generators, etc.</p>
 </div>
 <div class="paragraph">
-<p>If you want to install ProjectIt see  <a href="#0.0.5@project-main/Installation-Guide.adoc" class="page unresolved">Installing ProjectIt</a>.</p>
+<p>If you want to install ProjectIt see <a href="projectit-main/Installation-Guide.html" class="page">Installing ProjectIt</a>.</p>
 </div>
 </div>
 </div>
@@ -152,21 +149,21 @@
 <p>With a tool like ProjectIt, we have to talk about the Workbench that provides all the other tooling for a language developer.</p>
 </div>
 <div class="paragraph">
-<p>The core of any Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository/Language Workbench. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using [MobX](<a href="https://mobx.js.org/" class="bare">https://mobx.js.org/</a>). ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We hope that in the future ProjectIt will be incorporated in an open Language Workbench as proposed in  <a href="#0.0.5@some paper.adoc" class="page unresolved">ref stuk Markus or something</a>. / as discussed in the community/forum.</p>
+<p>The core of any Language Workbench is the model repository, which stores the metamodels that are the language definitions.  ProjectIt does not provide such a model repository, nor does it link to a specific repository/Language Workbench. The tool is mostly unopinionated with regards to the models that can be projected, as long as you can make it observed using <a href="https://mobx.js.org/">MobX</a>. ProjectIt can therefore be part of any Language Workbench that upholds this requirement. We expect that in the future ProjectIt will be incorporated in an open Language Workbench as currently being discussed in the community of Language Engineers.</p>
 </div>
 <div class="paragraph">
-<p>The choice not to tie up ProjectIt to any existing Language Workbench, has a downside: to create an editor the user must first provide a metamodel of the language to be projected and edited. However, there is an easy way to create a metamodel in ProjectIt. For this see  <a href="#0.0.5@project-main/tutorials/Metamodel-Tutorial.adoc" class="page unresolved">Tutorial 1: Creating a Metamodel</a>.</p>
+<p>The choice not to tie up ProjectIt to any existing Language Workbench, has a downside. Obviosuly, to create a projectional editor the user must first provide a metamodel of the language to be projected and edited. Without a link to an existing model repository, ProjectIt needs to support its own manner of creating a metamodel. For this see <a href="projectit-main/tutorials/Metamodels-Tutorial.html" class="page">Tutorial 1: Creating a Metamodel</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_what_kind_of_editor_is_generated"><a class="anchor" href="#_what_kind_of_editor_is_generated"></a>What Kind of Editor is Generated?</h2>
+<h2 id="_an_example_of_the_kind_of_editor_can_you_make"><a class="anchor" href="#_an_example_of_the_kind_of_editor_can_you_make"></a>An Example of the Kind of Editor Can You Make</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The created editor is basically a web page that can be used in different contexts. A boilerplate context is generated to be able to preview the generated editor. More about the  <a href="#0.0.5@project-main/Boilerplate.adoc" class="page unresolved">boilerplate</a> here.</p>
+<p>The projectional editors that can be created using ProjectIt are all based on the <a href="projectit-main/Framework-Description.html" class="page">ProjectIt Framework</a>, written in TypeScript/Javascript.</p>
 </div>
 <div class="paragraph">
-<p>The projectional editors that can be made using ProjectIt are all based on the ProjectIt Framework, written in TypeScript. You can learn more about the ProjectIt framework  <a href="#0.0.5@project-main/Framework-Description.adoc" class="page unresolved">here</a>.</p>
+<p>Using the ProjectIt Framework you can build your editor by hand. An example of this can be found in <a href="https://github.com/projectit-org/ProjectIt-example">DemoLanguage</a>. In version 0.0.5 we have added a generator that can do this task for you. We simply needed a point to start. Actually, we have used this example to decide what our generator should produce.</p>
 </div>
 </div>
 </div>
@@ -176,50 +173,48 @@
 <div class="paragraph">
 <p>The typical workflow for creating an editor is:</p>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Create the metamodel (a metamodel import is envisioned, but not available yet).</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Generated an editor.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Improve the look and feel of the editor by giving directions in an editor definition file.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Generate an improved editor.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Repeat steps 3 and 4.</td>
-</tr>
-</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the metamodel (a metamodel import is envisioned, but not available yet).</p>
+</li>
+<li>
+<p>Generated an editor.</p>
+</li>
+<li>
+<p>Improve the look and feel of the editor by giving annotations to the metamodel.</p>
+</li>
+<li>
+<p>Generate an improved editor.</p>
+</li>
+<li>
+<p>Repeat steps 3 and 4.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>When the editor definition is not enough to create the required look and feel, the generated code can be changed by hand. Any changes to the generated code will remain during regeneration.</p>
+<p>When the editor annotations are not enough to create the required look and feel, the generated code can be changed by hand. Any changes to the generated code will remain during regeneration.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#0.0.5@project-main/tutorials/Generation-Tutorial.adoc" class="page unresolved">Tutorial 2: Generating an Editor</a> shows how to generate an editor using an editor definition file.</p>
+<p><a href="projectit-main/tutorials/Metamodels-Tutorial.html" class="page">Tutorial 1: Creating a Metamodel</a> tells you about the syntax used for defining metamodels/language definitions.</p>
 </li>
 <li>
-<p><a href="#0.0.5@project-main/tutorials/Framework-Tutorial.adoc" class="page unresolved">Tutorial 3: Editor Look and Feel</a> gives more information on improving the generated editor by hand.</p>
+<p><a href="projectit-main/tutorials/Generation-Tutorial.html" class="page">Tutorial 2: Generating an Editor</a> shows how to generate an editor using the editor annotations in the metamodel file.</p>
+</li>
+<li>
+<p><a href="projectit-main/tutorials/Framework-Tutorial.html" class="page">Tutorial 3: Editor Look and Feel</a> gives more information on improving the generated editor by hand.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_strong_point_expressions"><a class="anchor" href="#_strong_point_expressions"></a>Strong Point: Expressions</h2>
+<h2 id="_strong_point_support_for_expressions"><a class="anchor" href="#_strong_point_support_for_expressions"></a>Strong Point: Support for Expressions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Many DSLs cater for some sort of expressions. Most language engineers known that it is a tedious task to provide editor support especially for binary expressions. ProjectIt helps by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In  <a href="#0.0.5@project-main/Editing-Expressions.adoc" class="page unresolved">Handling Expressions</a> you can read more about this.</p>
+<p>Many DSLs cater for some sort of expressions. Most language engineers known that it is a complex task to provide editor support especially for binary expressions, and especially in a projectional editor. ProjectIt fully support this task by generating code that recognizes expressions and balances the underlying AST based on the priorities of the operators. In  <a href="projectit-main/Supporting-Expressions.html" class="page">Support for Expressions</a> you can read more about this.</p>
 </div>
 </div>
 </div>
@@ -227,7 +222,7 @@
 <h2 id="_a_peek_inside_projectit"><a class="anchor" href="#_a_peek_inside_projectit"></a>A Peek Inside ProjectIt</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our  <a href="#0.0.5@project-meta/Sourcecode-Documentation.adoc" class="page unresolved">Source Code Documentation</a>.</p>
+<p>Language Engineers and Language Workbench engineers will most likely want to know more about the internal workings of the ProjectIt tool. An introduction to and documentation on the source code can be found in our  <a href="projectit-meta/Sourcecode-Documentation.html" class="page">Source Code Documentation</a>.</p>
 </div>
 </div>
 </div>
@@ -243,19 +238,19 @@
 <p>Investigate whether ProjectIt can be implemented as Visual Studio Code Extension.</p>
 </li>
 <li>
-<p>Separating the metamodel and editor definition specifications.</p>
+<p>Separate the metamodel and editor definition annotations and extend the annotations into an full editor definition language.</p>
 </li>
 <li>
-<p>Using bootstrapping to provide dedicated editors for the metamodel (.lang file) and the editor definition (.ed file).</p>
+<p>Use bootstrapping to provide dedicated editors for the metamodel (.lang file) and the editor definition (.ed file).</p>
 </li>
 <li>
-<p>Making many more examples, amongst which a generated editor in a Visual Studio Code Extension.</p>
+<p>Make many more examples, amongst which a generated editor in a Visual Studio Code Extension.</p>
 </li>
 <li>
-<p>Making use of Github as model server.</p>
+<p>Make use of Github as model server.</p>
 </li>
 <li>
-<p>Creating other tools that have their use within a language workbench, like a scope provider generator (ScopeIt) and a type checker generator (TypeCheckIt).</p>
+<p>Create other tools that have their use within a language workbench, like a scope provider generator (ScopeIt) and a type checker generator (TypeIt).</p>
 </li>
 </ul>
 </div>
@@ -265,8 +260,7 @@
 <h2 id="_the_team"><a class="anchor" href="#_the_team"></a>The Team</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Link to openmodeling website.
-Want to join us: email jos.warmer at openmodeling.nl.</p>
+<p>This project is supported by <a href="https://openmodeling.nl/">Openmodeling</a>.</p>
 </div>
 </div>
 </div>

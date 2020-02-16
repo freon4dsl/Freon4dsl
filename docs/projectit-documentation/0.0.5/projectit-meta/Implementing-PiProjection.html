@@ -42,28 +42,25 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <button class="nav-toggle"></button>
-    <a class="nav-link" href="../projectit-main/Projectional-Overview.html">ProjectIt Overview</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../projectit-main/Projectional-Overview.html">What is Projectional Editing?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="../projectit-main/Installation-Guide.html">Installing ProjectIt</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
     <a class="nav-link" href="../projectit-main/Framework-Description.html">The ProjectIt Framework</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../projectit-main/Different-Boxes.html">Types of Boxes</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../projectit-main/Editor-Boilerplate.html">The Editor Boilerplate</a>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../projectit-main/Supporting-Expressions.html">Support for Expressions</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../projectit-main/Editing-Expressions.html">Support for Expressions</a>
-  </li>
-</ul>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../projectit-main/DemoLanguage-Example.html">DemoLanguage Example</a>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-toggle"></button>
@@ -76,7 +73,7 @@
     <a class="nav-link" href="../projectit-main/tutorials/Generation-Tutorial.html">Tutorial 2: Generating an Editor</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../projectit-main/tutorials/Framework-Tutorial.html">Tutorial 3: Tweaking an Editor</a>
+    <a class="nav-link" href="../projectit-main/tutorials/Framework-Tutorial.html">Tutorial 3: Adjusting an Editor</a>
   </li>
 </ul>
   </li>
@@ -143,7 +140,12 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">Unresolved include directive in modules/projectit-meta/pages/Implementing-PiProjection.adoc - include::example$/core/src/language/PiProjection.ts[]</code></pre>
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export interface PiProjection {
+    /**
+     * returns the box for `element`.
+     */
+    getBox(element: PiElement): Box;
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -190,7 +192,15 @@ This interface is kept as small as possible, to allow ProjectIt to be used for a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">Unresolved include directive in modules/projectit-meta/pages/Implementing-PiProjection.adoc - include::example$/core/src/language/PiModel.ts[]</code></pre>
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export interface PiElement {
+    piId(): string;
+
+    piContainer(): PiContainerDescriptor;
+
+    piIsExpression(): boolean;
+
+    piIsBinaryExpression(): boolean;
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
