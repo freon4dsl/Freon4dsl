@@ -49,7 +49,7 @@ import {
 // tslint:disable-next-line:no-unused-import
 import * as expressionExtensions from "./DemoExpression";
 
-const LOGGER = new PiLogger("DemoProjection").mute();
+const LOGGER = new PiLogger("DemoProjection");//.mute();
 const OPERATOR_COLUMN = 1;
 const OPERAND_COLUM = 2;
 export type MetaProjectionType1 = "text" | "orboxed" | "tree";
@@ -69,6 +69,10 @@ export class TutorialProjection implements PiProjection {
     }
 
     getBox(exp: PiElement): Box {
+        if(!!exp){
+            console.log("BOX OF NULL/UNDEFINED element");
+            return null;
+        }
         if (exp instanceof DemoStringLiteralExpression) {
             return this.createStringLiteralBox(exp);
         } else if (exp instanceof DemoNumberLiteralExpression) {
@@ -96,9 +100,7 @@ export class TutorialProjection implements PiProjection {
             // return this.createModelBox2(exp);
             // return this.createModelBox3(exp);
             return this.createModelBox4(exp);
-        } else if (exp instanceof DemoEntity) {
-            return this.createEntityBox(exp);
-        } else if (exp instanceof DemoAttribute) {
+         } else if (exp instanceof DemoAttribute) {
             return this.createAttributeBox(exp);
         } else if (exp instanceof DemoSumExpression) {
             return this.createSumBox(exp);
@@ -183,7 +185,17 @@ export class TutorialProjection implements PiProjection {
                     return this.createEntityBox3(ent);
                 })
             ).addChild(new AliasBox(model, "end-of-entity-list",
-                "add entity", { style: demoStyles.indent }))        // <1>
+                "add entity", { style: demoStyles.indent })),        // <1>
+            // tag::CreateFunctionAction[]
+            new VerticalListBox(
+                model,
+                "functions",
+                model.functions.map(fun => {
+                    return this.createFunctionBox(fun);
+                })
+            ).addChild(new AliasBox(model, "end-of-function-list",
+                "add function", { style: demoStyles.indent }))
+            // end::CreateFunctionAction[]
         ]);
     }
      // end::ModelBox4[]
@@ -307,9 +319,9 @@ export class TutorialProjection implements PiProjection {
                         return this.createAttributeBox(att);
                     })
                 ).addChild(new AliasBox(entity, "end-of-attribute-list",
-                    "add attribute", { style: demoStyles.indent }))
+                    "add attribute", { style: demoStyles.indent })),
                 // end::CreateAttributeAction[]
-            ],
+             ],
             {
                 style: demoStyles.indent
             }
