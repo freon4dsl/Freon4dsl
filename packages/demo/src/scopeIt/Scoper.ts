@@ -86,6 +86,7 @@ export class DemoScoper implements Scoper {
 
     getVisibleTypes(modelelement: DemoModelElement) : DemoEntity[] {
         let result : DemoEntity[] = [];
+        // TODO
         result.push(new DemoEntity());
         return result;
     }
@@ -103,32 +104,42 @@ export class NameSpace {
         let result : DemoModelElement[] = [];
         // from modelelement get its surrounding namespace
         let ns = this.getSurroundingNamespace(this._myElem);
-        if ( ns !== null ) { 
+        if (ns !== null) {
             result = ns.internalVis(); 
-            // now add elements from surrounding Namespaces
-            if ( this._myElem.piContainer() !== null ) {
-                if (this._myElem.piContainer().container !== null) {
-                    if (this._myElem.piContainer().container instanceof DemoModelElement) {
-                        let sns = this.getSurroundingNamespace((this._myElem.piContainer().container as DemoModelElement));
-                            if ( sns !== null) {
-                                // merge the results
-                                for (let key of sns.internalVis()) { 
-                                    result.push(key);
-                                }    
-                                // end merge
-                        }
-                    }
+        }
+        // now add elements from surrounding Namespaces
+        let parent: DemoModelElement = this.getParent(this._myElem);
+        while (parent !== null) { 
+            ns = this.getSurroundingNamespace(parent);
+            if (ns !== null) {
+                // merge the results
+                for (let key of ns.internalVis()) { 
+                    result.push(key);
                 }
             }
+            // skip modelelements between parent and the modelelement that is its surrounding namespace
+            parent = this.getParent(ns._myElem);
         } 
         return result;
     }
 
+    private getParent(modelelement : DemoModelElement) : DemoModelElement {
+        let parent: DemoModelElement = null;
+        if (modelelement.piContainer() !== null) {
+            if (modelelement.piContainer().container !== null) {
+                if (modelelement.piContainer().container instanceof DemoModelElement) {
+                    parent = (modelelement.piContainer().container as DemoModelElement);
+                }
+            }
+        }
+        return parent;
+    }
+
     private internalVis(): DemoModelElement[] {
         let result : DemoModelElement[] = [];
-        
+
+        // for now we push all parts, later public/private annotaiosn need to be taken into account        
         if (this._myElem instanceof DemoModel ) {
-            // for now
             for (let z of this._myElem.entities) {
                 result.push(z);
             }
@@ -136,43 +147,38 @@ export class NameSpace {
                 result.push(z);
             }
         } else if (this._myElem instanceof DemoEntity ) {
-            // for now
             for (let z of this._myElem.attributes) {
                 result.push(z);
             }
             for (let z of this._myElem.functions) {
                 result.push(z);
             }
-        } else if ( this._myElem instanceof DemoFunction ) {
-            // for now
+        } else if (this._myElem instanceof DemoFunction ) {
             for (let z of this._myElem.parameters) {
                 result.push(z);
             }
         }
-        // walk up the tree and add the visible elements of every surrounding namespace
         return result;
     }
 
     private getSurroundingNamespace(modelelement: DemoModelElement) : NameSpace {
         if(modelelement === null){
-            LOGGER.log("getSurroundingNamespace: modelelement is null");
             return null;
         }
         if (this.isNameSpace(modelelement)) {
             return new NameSpace(modelelement);
         } else {
-            LOGGER.log("call getSurroundingNamespace recursive for " + modelelement.$id);
-            return this.getSurroundingNamespace(modelelement.piContainer().container as DemoModelElement);
+             return this.getSurroundingNamespace(this.getParent(modelelement));
         }
     }
 
     private isNameSpace(modelelement : DemoModelElement) : boolean {
         // generate if-statement for each @namespace annotation!
-        if (modelelement instanceof DemoModel ) {
+        if (modelelement instanceof DemoModel) {
             return true;
-        } else if (modelelement instanceof DemoEntity ) {
+        } else if (modelelement instanceof DemoEntity) {
             return true;
-        } else if ( modelelement instanceof DemoFunction ) {
+        } else if ( modelelement instanceof DemoFunction) {
             return true;
         }
        return false;
