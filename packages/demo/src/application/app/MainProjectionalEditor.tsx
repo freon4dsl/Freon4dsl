@@ -62,10 +62,10 @@ export class MainProjectionalEditor extends React.Component<MainProjectionalEdit
         let model : DemoModel = (demoCtx.rootElement as DemoModel);
         
         // TEST for isInScope!!!
-        //this.TEST_SCOPER_GetVisibleElements(scoper, model); //TODO
+        //this.TEST_SCOPER_isInScope(scoper, model); //TODO
 
         // TEST for getVisibleElements!!!
-        //this.TEST_SCOPER_GetVisibleElements(scoper, model);
+        this.TEST_SCOPER_GetVisibleElements(scoper, model);
 
         // TEST for getFromVisibleElements!!!
         this.TEST_SCOPER_GetFromVisibleElements(scoper, model);

@@ -10,7 +10,7 @@ const LOGGER = new PiLogger("DemoScoper"); //.mute();
 export interface Scoper {
     isInScope(modelElement: DemoModelElement, name: string, type?: DemoEntity) : boolean;
     getVisibleElements(modelelement: DemoModelElement) : DemoModelElement[] ;
-    getFromVisibleElements<T>(modelelement: DemoModelElement, name : string, metatype?: T) : DemoModelElement;
+    getFromVisibleElements(modelelement: DemoModelElement, name : string, metatype?: DemoModelElement) : DemoModelElement;
     getVisibleNames(modelelement: DemoModelElement) : String[] ;
     getVisibleTypes(modelelement: DemoModelElement) : DemoModelElement[] ;
 }
@@ -36,7 +36,7 @@ export class DemoScoper implements Scoper {
         return result;
     }
 
-    getFromVisibleElements<T>(modelelement: DemoModelElement, name : string, metatype?: T) : DemoModelElement {
+    getFromVisibleElements(modelelement: DemoModelElement, name : string, metatype?: DemoModelElement) : DemoModelElement {
         let vis = this.getVisibleElements(modelelement);
         if (vis !== null) {
             for (let e of vis) {
@@ -44,7 +44,7 @@ export class DemoScoper implements Scoper {
                 if (name === n) {
                     if (metatype !== null) { // TODO check type
                         //if (e instanceof T) {   
-                        //    return e; 
+                            return e; 
                         //}
                     } else {
                         return e;
@@ -104,7 +104,6 @@ export class DemoScoper implements Scoper {
 
 }
 
-// probably no need to implement Scoper
 export class NameSpace {
     _myElem : DemoModelElement;
 

@@ -79,9 +79,12 @@ export class DemoContext implements PiContext {
 
         this.model.entities.push(entity1);
         this.model.entities.push(entity2);
-        this.model.functions.push(f1);
-        this.model.functions.push(f2);
-        this.model.functions.push(f3);
+        //this.model.functions.push(f1);
+        //this.model.functions.push(f2);
+        //this.model.functions.push(f3);
+        entity1.functions.push(f1);
+        entity1.functions.push(f2);
+        entity2.functions.push(f3);
         f1.parameters.push(var1);
         f1.parameters.push(var2);
         f2.parameters.push(var3);
