@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "downlevelIteration": true,
+    "declarationMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "jsx": "react",
@@ -16,7 +18,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": false,
-    "target": "es5",
+    "target": "es6",
     "types": ["node", "jest", "jest-enzyme"],
     "baseUrl": ".",
     "paths": {
