@@ -10,7 +10,7 @@ const LOGGER = new PiLogger("DemoScoper"); //.mute();
 export interface Scoper {
     isInScope(modelElement: DemoModelElement, name: string, type?: DemoEntity) : boolean;
     getVisibleElements(modelelement: DemoModelElement) : DemoModelElement[] ;
-    getFromVisibleElements(modelelement: DemoModelElement, name : string, metatype?: DemoModelElement) : DemoModelElement;
+    getFromVisibleElements<T>(modelelement: DemoModelElement, name : string, metatype?: T) : DemoModelElement;
     getVisibleNames(modelelement: DemoModelElement) : String[] ;
     getVisibleTypes(modelelement: DemoModelElement) : DemoModelElement[] ;
 }
@@ -18,55 +18,41 @@ export interface Scoper {
 export class DemoScoper implements Scoper {
 
     isInScope(modelElement: DemoModelElement, name: string, type?: DemoEntity) : boolean {
-        return true;
+        if (this.getFromVisibleElements(modelElement, name, type) !== null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     getVisibleElements(modelelement: DemoModelElement) : DemoModelElement[] {
-       let result : DemoModelElement[] = [];
-       if(modelelement == null){
+        let result : DemoModelElement[] = [];
+        if(modelelement == null){
             LOGGER.log("getVisibleElements: modelelement is null");
             return null;
-        } else {
-            LOGGER.log("getVisibleElements: working on modelelement " + modelelement.$id);
         }
         let ns = new NameSpace(modelelement);
         result = ns.getVisibleElements();                   
         return result;
     }
 
-    getFromVisibleElements(modelelement: DemoModelElement, name : string, type?: DemoModelElement) : DemoModelElement {
+    getFromVisibleElements<T>(modelelement: DemoModelElement, name : string, metatype?: T) : DemoModelElement {
         let vis = this.getVisibleElements(modelelement);
         if (vis !== null) {
-            for (let v of vis) {
-                if (v instanceof DemoAttribute) {  
-                    if (v.name == name)  {
-                        if (type !== null) {
-    //                        if ( (v.type as DemoAttributeType) == type) { return v; }
-                        } else { 
-                            return v;
-                        }
-                    }
-                }
-                else if (v instanceof DemoEntity) {
-                    if (v.name == name) return v;
-                }
-                else if (v instanceof DemoFunction) {
-                    if (v.name == name) return v;
-                }
-                else if (v instanceof DemoVariable) {
-                    if (v.name == name) return v;
-                }
-                else if (v instanceof DemoModel) {
-                    if (v.name == name) return v;
-                }
-                else {
-                    LOGGER.log(v.$id);
-                    return null;
-                }
+            for (let e of vis) {
+                let n: string = this.getNameOfDemoModelElement(e);
+                if (name === n) {
+                    if (metatype !== null) { // TODO check type
+                        //if (e instanceof T) {   
+                        //    return e; 
+                        //}
+                    } else {
+                        return e;
+                    }                                     
+                }  
             }
-        }
-     
-        return new DemoEntity();
+        }    
+        return null;
     }
 
     getVisibleNames(modelelement: DemoModelElement) : String[] {
@@ -79,10 +65,12 @@ export class DemoScoper implements Scoper {
          }
         // from modelelement get its surrounding namespace
         let ns = new NameSpace(modelelement);
-        //TODO
-        //result = Array.from(ns.getVisibleElements().keys());            
+        for (let e of ns.getVisibleElements()) {
+            let name: string = this.getNameOfDemoModelElement(e);
+            result.push(name);  
+        }          
         return result;
-     }
+    }
 
     getVisibleTypes(modelelement: DemoModelElement) : DemoEntity[] {
         let result : DemoEntity[] = [];
@@ -90,6 +78,30 @@ export class DemoScoper implements Scoper {
         result.push(new DemoEntity());
         return result;
     }
+
+    private getNameOfDemoModelElement(modelelement: DemoModelElement) {
+        let name: string = "";
+        if (modelelement instanceof DemoAttribute) {
+            name = modelelement.name;
+        }
+        else if (modelelement instanceof DemoEntity) {
+            name = modelelement.name;
+        }
+        else if (modelelement instanceof DemoFunction) {
+            name = modelelement.name;
+        }
+        else if (modelelement instanceof DemoVariable) {
+            name = modelelement.name;
+        }
+        else if (modelelement instanceof DemoModel) {
+            name = modelelement.name;
+        }
+        else {
+            name = modelelement.$id;
+        }
+        return name;
+    }
+
 }
 
 // probably no need to implement Scoper
