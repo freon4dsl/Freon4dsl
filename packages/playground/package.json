@@ -12,10 +12,8 @@
   "scripts": {
     "generate-language": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-language",
     "build-wait": "tsc -w",
-    "build": "tsc && yarn run copy-scss1",
+    "build": "tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-scss1": "cp ./src/styles/*.scss ./dist/styles",
-    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
@@ -24,6 +22,7 @@
   "dependencies": {
     "@projectit/core": "^0.0.5",
     "@projectit/model": "^0.0.5",
+    "@projectit/meta": "^0.0.5",
     "global": "^4.4.0",
     "prettier": "^1.15.3",
     "typescript": "^3.7.5"

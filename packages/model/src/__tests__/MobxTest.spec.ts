@@ -1,6 +1,6 @@
 import { BinExpression, Expression, FunctionCallExpression, ModelContext } from "./MobxModel";
 import { observe, reaction } from "mobx";
-import {} from "jasmine";
+import { } from "jasmine";
 
 describe("Mobx Model", () => {
     describe("container settings", () => {
