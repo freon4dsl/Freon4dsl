@@ -4,6 +4,7 @@
     "packages/model",
     "packages/meta",
     "packages/demo",
+    "packages/playground",
     "packages/server"
   ],
   "npmClient": "yarn",
