@@ -22,11 +22,10 @@
     "types": ["node", "jest", "jest-enzyme"],
     "baseUrl": ".",
     "paths": {
-      "@projectit/core/*": ["packages/core/src/*"],
       "@projectit/model/*": ["packages/model/src/*"],
       "@projectit/meta/*": ["packages/meta/src/*"],
       "@projectit/demo/*": ["packages/demo/src/*"],
-      "@projectit/demo/*": ["packages/playground/src/*"],
+      "@projectit/playground/*": ["packages/playground/src/*"],
       "@projectit/server/*": ["packages/server/src/*"]
     }
   }
