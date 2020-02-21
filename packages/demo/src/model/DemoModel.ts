@@ -35,6 +35,13 @@ export abstract class DemoModelElement extends MobxModelElementImpl {
     }
 
     abstract asString(): string;
+
+    equals(other : DemoModelElement) : boolean {
+        if (this.$id === other.$id ) {
+            return true;
+        }
+        return false;
+    }
 }
 
 @model

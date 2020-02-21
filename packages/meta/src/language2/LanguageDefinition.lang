@@ -1,4 +1,3 @@
-// tag::MetaModel[]
 language Language
 
 root concept Model {
@@ -70,7 +69,6 @@ enumeration AttributeType {
     Boolean
     Integer
 }
-// end::MetaModel[]
 
 concept DivideExpression base BinaryExpression {
     @editor symbol: string = "/"
@@ -107,6 +105,7 @@ concept EqualsExpression base ComparisonExpression {
 
 concept FunctionCallExpression base Expression {
     @reference functionDefinition: Function
+    @inferType functionDefinition.type
 }
 
 concept IfExpression base Expression {
@@ -117,7 +116,8 @@ concept IfExpression base Expression {
 
 concept VariableRef base Expression {
     referredName: string
-    attribute: string
+    @reference variable: Variable
+    @inferType variable.type
 }
 
 enumeration Color {

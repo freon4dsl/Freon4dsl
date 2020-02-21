@@ -248,8 +248,8 @@ export class TutorialProjection implements PiProjection {
                 ),
                 new LabelBox(att, "colon", ":"),
                 new TextBox(att,"attribute-type",
-                    () => { return att.type; },
-                    (v: string) => { att.type = v as DemoAttributeType; }
+                    () => { return att.type.asString(); },
+                    (v: string) => { att.type = DemoAttributeType.fromString(v); }
                 )
             ],
             { style: demoStyles.indent }

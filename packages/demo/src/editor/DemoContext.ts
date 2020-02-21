@@ -12,7 +12,8 @@ import {
     DemoPlaceholderExpression,
     DemoPlusExpression,
     DemoStringLiteralExpression,
-    DemoVariableRefExpression
+    DemoVariableRefExpression,
+    DemoAttributeType
 } from "../model/index";
 import { DemoModel, DemoModelElement } from "../model/DemoModel";
 import { DemoEntity } from "../model/domain/DemoEntity";
@@ -69,9 +70,9 @@ export class DemoContext implements PiContext {
         entity2.attributes.push(attribute21);
         entity2.attributes.push(attribute22);
 
-        const f1 = DemoFunction.create("length");
-        const f2 = DemoFunction.create("first");
-        const f3 = DemoFunction.create("last");
+        const f1 = DemoFunction.create("length", DemoAttributeType.Integer);
+        const f2 = DemoFunction.create("first", DemoAttributeType.Boolean);
+        const f3 = DemoFunction.create("last", entity1);
 
         const var1 = DemoVariable.create("Variable1", entity1);
         const var2 = DemoVariable.create("VariableNumber2", entity2);
@@ -123,7 +124,7 @@ export class DemoContext implements PiContext {
         rightOr.right = rightAnd;
         rightOr.left = leftAnd;
 
-        // ifExpression.thenExpression = thenExpression;
+        ifExpression.thenExpression = thenExpression;
 
         const divideExpression = new DemoPlusExpression();
         divideExpression.left = DemoNumberLiteralExpression.create("1");
@@ -146,12 +147,13 @@ export class DemoContext implements PiContext {
         ifExpression.elseExpression = plusExpression;
         // return ifExpression;
         // return thenExpression;
+        return rightAnd;
         const s1 = DemoStringLiteralExpression.create("Hello Demo");
         const s2 = DemoStringLiteralExpression.create("Goodbye");
         const plus = new DemoPlusExpression();
         plus.left = s1;
         plus.right = s2;
-        return plus;
+        // return plus;
         // return new DemoPlaceholderExpression();
     }
 }

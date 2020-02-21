@@ -8,7 +8,7 @@ import { DemoModelElement } from "../DemoModel";
 // tag::DemoAttribute[]
 export class DemoAttribute extends DemoModelElement {
     @observable name: string = "";
-    @observable type: DemoAttributeType = "String";
+    @observable type: DemoAttributeType = DemoAttributeType.String;
 // tag::DemoAttribute[]
     $type: string = "DemoAttribute";
 
