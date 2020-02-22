@@ -1,6 +1,19 @@
-// import { BinExpression, Expression, ModelContext } from "./Model";
-//
-// describe.("Model", () => {
+import { BinExpression, Expression, ModelContext } from "./Model";
+import { observe, reaction } from "mobx";
+import { } from "jasmine";
+
+describe("Model", () => {
+    describe("dummy", () => {
+        console.log("Dummy")
+
+        it("dummy", () => {
+            expect(1+1).toBe(2);
+        });
+
+    });
+});
+
+// describe.skip("Model", () => {
 //     describe("container settings", () => {
 //         const ctx: ModelContext = new ModelContext();
 //         let root: BinExpression;

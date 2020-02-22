@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { listpart, ModelElement, part } from "../../src/ModelDecorators";
 import { observable } from "mobx";
+import { DecoratedModelElement } from "../../src/DecoratedModelElement";
 
 export class ModelContext {
     @observable root: Expression;
