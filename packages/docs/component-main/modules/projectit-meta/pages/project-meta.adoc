@@ -3,7 +3,7 @@
 :projectitdir: ../../../../../core
 :source-language: javascript
 
-= ProjectIt Editor Generator
+= ProjectIt MetaModel
 
 ProjectIt is designed to be an editor only, not a complete language workbench.
 Defining the structure of your language is assumed to be done outside ProjectIt.
@@ -45,4 +45,6 @@ The flow of developing is now changed to
 ** Tune the actions (one-by-one)
 
 The tuning is typically done iteratively.
+
+
 

@@ -1,0 +1,67 @@
+// tag::MetametaModel[]
+language PiMetaLanguage
+
+concept PiLanguage {
+    name: string;
+    @part concepts: PiLangConcept[];
+    @part enumerations: PiLangEnumeration[];
+}
+
+concept PiLangConcept {
+    //readonly language: PiLanguage;
+    name: string;
+    isAbstract: boolean;
+    isRoot:boolean;
+    //base: PiLangConceptReference; //A: optional???
+    @part properties: PiLangPrimitiveProperty[];
+    @part parts: PiLangElementProperty[];
+    @part references: PiLangElementProperty[];
+
+    isExpression: boolean;
+    isBinaryExpression: boolean;
+    isExpressionPlaceHolder: boolean;
+    left?: PiLangConceptReference;
+    right?: PiLangConceptReference;
+    symbol?: string;
+    trigger?: string;
+    triggerIsRegExp?: boolean;
+    priority?: number;
+}
+
+concept PiLangConceptReference {
+    language: PiLanguage;
+    name: string;
+
+    @reference concept: PiLangConcept;
+}
+
+concept PiLangExpressionConcept base PiLangConcept {
+}
+
+concept PiLangBinaryExpressionConcept base PiLangExpressionConcept {
+}
+
+concept PiLangPrimitiveProperty {
+    @part owningConcept: PiLangConcept;
+
+    name: string;
+    isList: boolean;
+    isStatic: boolean;
+    initialValue: string;
+    type: string;
+}
+
+concept PiLangElementProperty {
+    @part owningConcept: PiLangConcept;
+
+    name: string;
+    isList: boolean;
+    @part type: PiLangConceptReference;
+}
+
+concept PiLangEnumeration {
+    language: PiLanguage;
+    name: string;
+    @part literals: string[];
+}
+// end::MetametaModel[]

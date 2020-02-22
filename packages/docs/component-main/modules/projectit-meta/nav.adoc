@@ -1,2 +1,4 @@
 //* ProjectIt Meta helpers
-** xref:project-meta.adoc[ProjectIt Generator]
+* xref:Sourcecode-Documentation.adoc[The ProjectIt Source Code]
+** xref:Implementing-PiProjection.adoc[Implementing PiProjection]
+** xref:projectit-decorators.adoc[Supporting Decorators]

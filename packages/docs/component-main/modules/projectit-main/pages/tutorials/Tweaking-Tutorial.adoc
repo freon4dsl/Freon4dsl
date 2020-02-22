@@ -1,0 +1,8 @@
+:imagesdir: ../../assets/images/
+:src-dir: ../../../../../..
+:projectitdir: ../../../../../../core
+:source-language: javascript
+
+= Tutorial: How to Adjust the Generated Editor
+
+If the generated editor does not completely fullfill your whishes with regard to its look and feel, you can improve the generated editor by hand. For now, we refer you to the information and tutorial on the xref:projectit-main/tutorials/Framework-Tutorial.adoc[ProjectIt Framework].

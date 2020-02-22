@@ -49,7 +49,7 @@ import {
 // tslint:disable-next-line:no-unused-import
 import * as expressionExtensions from "./DemoExpression";
 
-const LOGGER = new PiLogger("DemoProjection").mute();
+const LOGGER = new PiLogger("DemoProjection");//.mute();
 const OPERATOR_COLUMN = 1;
 const OPERAND_COLUM = 2;
 export type MetaProjectionType1 = "text" | "orboxed" | "tree";
@@ -69,6 +69,10 @@ export class TutorialProjection implements PiProjection {
     }
 
     getBox(exp: PiElement): Box {
+        if(!!exp){
+            console.log("BOX OF NULL/UNDEFINED element");
+            return null;
+        }
         if (exp instanceof DemoStringLiteralExpression) {
             return this.createStringLiteralBox(exp);
         } else if (exp instanceof DemoNumberLiteralExpression) {
@@ -96,9 +100,7 @@ export class TutorialProjection implements PiProjection {
             // return this.createModelBox2(exp);
             // return this.createModelBox3(exp);
             return this.createModelBox4(exp);
-        } else if (exp instanceof DemoEntity) {
-            return this.createEntityBox(exp);
-        } else if (exp instanceof DemoAttribute) {
+         } else if (exp instanceof DemoAttribute) {
             return this.createAttributeBox(exp);
         } else if (exp instanceof DemoSumExpression) {
             return this.createSumBox(exp);
@@ -113,14 +115,13 @@ export class TutorialProjection implements PiProjection {
     // tag::ModelBox1[]
     private createModelBox(model: DemoModel): Box {
         return new HorizontalListBox(model, "model", [
-            new LabelBox(model, "model-label", "Model"),
+            new LabelBox(model, "model-label", "DemoModel"),
             new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c))
         ]);
     }
-
     // end::ModelBox1[]
 
-    // Modelbox with style added
+    // Modelbox with style and placeholder added
     // tag::ModelBox2[]
     private createModelBox2(model: DemoModel): Box {
         return new HorizontalListBox(model, "model", [
@@ -134,12 +135,12 @@ export class TutorialProjection implements PiProjection {
     }
     // end::ModelBox2[]
 
-
     // ModelBox with placeholder for the name and a list of entities
     // tag::ModelBox3[]
     private createModelBox3(model: DemoModel): Box {
         return new VerticalListBox(model, "model", [
-            new HorizontalListBox(model, "model-info", [
+    // end::ModelBox3[]
+                new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "Model", {
                     style: demoStyles.keyword
                 }),
@@ -147,6 +148,7 @@ export class TutorialProjection implements PiProjection {
                     placeHolder: "<name>"
                 })
             ]),
+    // tag::ModelBox3[]
             new LabelBox(model, "entity-keyword", "Entities", {
                 style: demoStyles.keyword
             }),
@@ -166,7 +168,7 @@ export class TutorialProjection implements PiProjection {
     private createModelBox4(model: DemoModel): Box {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
-                new LabelBox(model, "model-keyword", "model-3", {
+                new LabelBox(model, "model-keyword", "DemoModel", {
                     style: demoStyles.keyword
                 }),
                 new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
@@ -183,10 +185,20 @@ export class TutorialProjection implements PiProjection {
                     return this.createEntityBox3(ent);
                 })
             ).addChild(new AliasBox(model, "end-of-entity-list",
-                "add entity", { style: demoStyles.indent }))        // <1>
+                "add entity", { style: demoStyles.indent })),        // <1>
+            // tag::CreateFunctionAction[]
+            new VerticalListBox(
+                model,
+                "functions",
+                model.functions.map(fun => {
+                    return this.createFunctionBox(fun);
+                })
+            ).addChild(new AliasBox(model, "end-of-function-list",
+                "add function", { style: demoStyles.indent }))
+            // end::CreateFunctionAction[]
         ]);
     }
-    // end::ModelBox4[]
+     // end::ModelBox4[]
 
     private createBinaryBox(exp: PiBinaryExpression): Box {
         if (this.projectionType === "tree") {
@@ -236,8 +248,8 @@ export class TutorialProjection implements PiProjection {
                 ),
                 new LabelBox(att, "colon", ":"),
                 new TextBox(att,"attribute-type",
-                    () => { return att.type; },
-                    (v: string) => { att.type = v as DemoAttributeType; }
+                    () => { return att.type.asString(); },
+                    (v: string) => { att.type = DemoAttributeType.fromString(v); }
                 )
             ],
             { style: demoStyles.indent }
@@ -307,9 +319,9 @@ export class TutorialProjection implements PiProjection {
                         return this.createAttributeBox(att);
                     })
                 ).addChild(new AliasBox(entity, "end-of-attribute-list",
-                    "add attribute", { style: demoStyles.indent }))
+                    "add attribute", { style: demoStyles.indent })),
                 // end::CreateAttributeAction[]
-            ],
+             ],
             {
                 style: demoStyles.indent
             }

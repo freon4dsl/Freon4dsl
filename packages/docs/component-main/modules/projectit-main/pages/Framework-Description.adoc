@@ -1,0 +1,100 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+
+= The ProjectIt Framework
+
+The ProjectIt Editor Framework is written in TypeScript and based on the React Framework. This page provides an overview of the Framework. If you want to get deeper into this, see the xref:projectit-main/tutorials:Framework-Tutorial.adoc[Tutorial: How to Use the ProjectIt Framework]. 
+
+== Projection Layout Based on Boxes
+The layout of everything that is visible in the editor is based on _boxes_. A box is a rectangular area in the editor. A box can contain any number of child boxes. Every AST node is projected in a box.
+
+A small example to start with:
+
+image::mapping-example-stringliteral.svg[]
+
+The figure shows the projection of the concept `StringLiteral`. This is mapped to a horizontal list of a quote ("), an editable text with the value of the StringLiteral, and a closing quote ("). Note that the quotes are not part of the AST. They are part of the concrete syntax used in this projection of the AST.
+
+In TypeScript this projection might look something like:
+[source]
+----
+new HorizontalListBox( [
+        new LabelBox("\""),
+        new TextBox(stringLiteral.value),
+        new LabelBox("\"")
+    ]);
+----
+The user needs to be able to interact with the projected AST. Thus we need to know which part of the projection represents the AST node that the user is working with. For this purpose we give each `Box` in the projection a _role_, which is unique within its parent box. This way we can identify every box by its model element plus its role.
+(By the way, interaction with the AST is controlled by Actions. For more see xref:0.0.5@projectit-main:tutorials/Action_Tutorial.adoc[Actions].)
+
+image::mapping-example-stringliteral-with-roles.svg[]
+
+In this figure the roles are shown above the boxes in green.
+We can now show the full typescript code for creating this projection.
+Given  that `literal` is the `StringLiteral` object:
+
+[source]
+----
+include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
+----
+<1> The overall horizontal list box to group everything
+<2> The first label box for the start quote
+<3> The text box for the value of the string literal
+<4> The second label box for the end quote
+
+There are a large number of different types of xref:projectit-main:Different_Boxes.adoc[Boxes].
+
+= Editor Behavior Based on Actions
+The behavior of the editor is tightly coupled to the boxes in the projection because
+the focus in the editor is always on a _Box_. To be able to couple behavior to boxes, 
+it is important to understand the following.
+Each box in a projection keeps a reference to the element in the AST which it represents.
+This allows boxes to be uniquely identified by the combination of the AST element and the _box role_ 
+(as explained above in <<Projection Layout Based on Boxes>>).
+
+Each behavior has 
+
+* one or more _box roles_, specifying that the behavior is only active
+in boxes with that specific role.
+* a _trigger_, describing the key(s) that will trigger the behavior, and
+* an _action_,  which is a typescript/javascript function the will be executed when the
+behavior is being triggered.
+
+Actions are further described in xref:Defining-Actions.adoc[Actions].
+
+= AST Access
+As ProjectIt uses the AST for projections and behavior, it needs to know about the type of elements in the AST.
+To allow ProjectIt to work, each element type that occurrs in the AST needs to implement the `PiElement` interface.
+This interface is kept as small as possible, to allow ProjectIt to be used for any AST.
+
+[source]
+----
+include::{src-dir}/core/src/language/PiModel.ts[tag=PiElement]
+----
+
+The main two elements in this interface are:
+
+* `piId()`, which should return en unique id for each element in the AST.
+* `piContainer()` which should return a descriptor for the container (parent) of an element in the AST.
+
+The two functions `piIsExpression()` and `piIsBinaryExpression()` are only needed when your language
+contains expressions, as ProjectIt includes special xref:projectit-main:Supporting-expression.adoc[handling of expressions].
+As a default, these functions can be defined to simply return `false`.
+
+Note that ProjectIt does not need to know anything about the structure of your language.
+No need to know the availale element type, nor the properties of en element type, nor anything else.
+This is by design, as ProjectIt is not meant to be a full Language Workbench,
+but instead meant to be used with multiple language workbenches, or none.
+
+== Projection
+The projection from your model/AST is defined by implementing the
+_PiProjection_ interface:
+
+[source]
+----
+include::{src-dir}/core/src/language/PiProjection.ts[tag=PiProjection]
+----
+
+Implementing this interface should return a _Box_ for each `element` in the AST.

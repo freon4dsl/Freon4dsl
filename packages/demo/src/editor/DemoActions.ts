@@ -31,7 +31,8 @@ import {
     DemoNumberLiteralExpression,
     DemoOrExpression,
     DemoPlusExpression,
-    DemoStringLiteralExpression
+    DemoStringLiteralExpression,
+    DemoFunction
 } from "../model";
 
 import { DemoModel } from "../model/DemoModel";
@@ -214,6 +215,19 @@ const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
 ];
 
 const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
+    // tag::CreateFunctionAction[]
+    {
+        trigger: "function",
+        activeInBoxRoles: ["end-of-function-list"],
+        action: (box: Box, trigger: PiTriggerType, editor: PiEditor): PiElement | null => {
+            var model: DemoModel = box.element as DemoModel;
+            const fun: DemoFunction = new DemoFunction();
+            model.functions.push(fun);
+            return fun;
+        },
+        boxRoleToSelect: "fun-name"
+    },
+    // end::CreateFunctionAction[]
     // tag::CreateEntityAction[]
     {
         activeInBoxRoles: ["end-of-entity-list"],                                       // <1>

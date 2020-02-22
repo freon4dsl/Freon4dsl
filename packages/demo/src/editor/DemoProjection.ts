@@ -181,7 +181,7 @@ export class DemoProjection implements PiProjection {
             cells.push({
                 row: row,
                 column: 2,
-                box: new TextBox(a, "attr-type-" + row, () => a.type, (v: string) => {})
+                box: new TextBox(a, "attr-type-" + row, () => a.type.asString(), (v: string) => {})
             });
             row++;
         });
@@ -207,7 +207,7 @@ export class DemoProjection implements PiProjection {
                     });
                 },
                 (attr: DemoAttribute): Box => {
-                    return new TextBox(attr, "attr-type", () => attr.type, (v: string) => {});
+                    return new TextBox(attr, "attr-type", () => attr.type.asString(), (v: string) => {});
                 }
             ],
             (box: Box, editor: PiEditor) => {

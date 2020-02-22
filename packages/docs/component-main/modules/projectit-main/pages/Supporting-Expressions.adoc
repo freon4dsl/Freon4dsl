@@ -1,0 +1,28 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../..
+:projectitdir: ../../../../../core
+:source-language: javascript
+
+= Support for Adding Expressions to your Language
+
+TODO:
+
+* Describe the problems with 1-to-1 projectional editing of expressions.
+* Explain the solution in general.
+* Explain how ProjectIt implements this solution.
+
+xref: [grammarcells in MPS]
+
+
+
+.As written in https://www.voelter.de/data/pub/fse2016-projEditing.pdf[Efficiency of Projectional Editing: A Controlled Experiment]:
+[quote] 
+____
+*Improving Expression Editing.*
+Editing expressions with their fine-grained tree structure is one of the major challenges in a projectional editor. The inability to insert and remove parentheses in arbitrary places (and then refactor the treestructure according to the precedence expressed by the parentheses) is an example.  We suggest that future research should focus on making expression editing more efficient.  
+
+...
+
+*References.*
+References are based on pointers to the targetnode’s ID. Despite some advantages (e.g., robust refactorings) of this approach, we observe problems with the tradeoff that the reference target has to exist at the time the reference is created.  A more robust and intuitive handling of references is desirable.  While some problems can be solved by language developers (e.g., quick fixes to create reference targets), there should be a better way to support references by the IDE itself. 
+____

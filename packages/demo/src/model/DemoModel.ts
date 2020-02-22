@@ -35,20 +35,24 @@ export abstract class DemoModelElement extends MobxModelElementImpl {
     }
 
     abstract asString(): string;
+
+    equals(other : DemoModelElement) : boolean {
+        if (this.$id === other.$id ) {
+            return true;
+        }
+        return false;
+    }
 }
 
 @model
 // tag::DemoModel[]
 export class DemoModel extends DemoModelElement {
-// end::DemoModel[]
-    $type: string = "DemoModel";
-
-    // tag::DemoModel[]
-    @observablelistpart entities: DemoEntity[];
     @observable name: string;
+    @observablelistpart entities: DemoEntity[];
     // end::DemoModel[]
 
     @observablelistpart functions: DemoFunction[];
+    $type: string = "DemoModel";
 
     constructor() {
         super();

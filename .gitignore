@@ -5,6 +5,7 @@
 .project
 .settings
 .classpath
+.vscode
 
 # dependencies
 node_modules

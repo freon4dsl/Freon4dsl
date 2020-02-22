@@ -4,6 +4,8 @@ import { model, observablelistpart, observablepart } from "@projectit/model";
 import { DemoModelElement } from "../DemoModel";
 import { DemoExpression } from "../expressions/DemoExpression";
 import { DemoVariable } from "./DemoVariable";
+import { DemoType } from "@projectit/demo/typeIt/DemoTypeChecker";
+import { DemoAttributeType } from "./DemoAttributeType";
 
 @model
 export class DemoFunction extends DemoModelElement {
@@ -11,6 +13,7 @@ export class DemoFunction extends DemoModelElement {
     @observable name: string;
     @observablepart expression: DemoExpression;
     @observablelistpart parameters: DemoVariable[];
+    @observable type: DemoType = DemoAttributeType.Any;
 
     constructor() {
         super();
@@ -24,9 +27,10 @@ export class DemoFunction extends DemoModelElement {
         return this.toString();
     }
 
-    static create(name: string): DemoFunction {
+    static create(name: string, type: DemoType): DemoFunction {
         const result = new DemoFunction();
         result.name = name;
+        result.type = type;
         return result;
     }
 }

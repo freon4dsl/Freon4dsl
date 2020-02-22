@@ -68,6 +68,12 @@ concept PlusExpression base BinaryExpression {
     @editor priority: number = "4"
 }
 
+enumeration AttributeType {
+    String
+    Boolean
+    Integer
+}
+
 concept DivideExpression base BinaryExpression {
     @editor symbol: string = "/"
     @editor priority: number = "8"
@@ -103,6 +109,7 @@ concept EqualsExpression base ComparisonExpression {
 
 concept FunctionCallExpression base Expression {
     @reference functionDefinition: Function
+    @inferType functionDefinition.type
 }
 
 concept IfExpression base Expression {
@@ -114,14 +121,10 @@ concept IfExpression base Expression {
 
 concept VariableRef base Expression {
     referredName: string
-    attribute: string
+    @reference variable: Variable
+    @inferType variable.type
 }
 
-enumeration AttributeType {
-    String
-    Boolean
-    Integer
-}
 enumeration Color {
     Red
     Yellow
