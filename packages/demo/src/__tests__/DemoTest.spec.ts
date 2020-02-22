@@ -4,7 +4,7 @@ import { DemoContext } from "../editor/DemoContext";
 import { DemoModel } from "../model/DemoModel";
 import { DemoFunction } from "../model/domain/DemoFunction";
 
-describe("Demo Model", () => {
+describe.skip("Demo Model", () => {
     describe("container settings", () => {
         let context: DemoContext;
         let root: DemoModel;

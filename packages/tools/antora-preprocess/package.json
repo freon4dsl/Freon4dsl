@@ -10,7 +10,7 @@
     "build": "tsc",
     "test": "jest --runInBand --no-cache",
     "prelint": "tsc --noEmit -p tsconfig.json",
-    "lint": "tslint -c tslint.json -p tsconfig.json projectit/**/*.ts*"
+    "lint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts*"
   },
   "license": "MIT",
   "devDependencies": {

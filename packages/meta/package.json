@@ -10,11 +10,11 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "bin": {
-    "projectit-generate-editor": "dist/bin/projectit-generate-editor.js"
+    "projectit": "dist/bin/projectit-generate-editor.js"
   },
   "scripts": {
-    "build-wait": "tsc -w",
-    "build": "tsc && yarn run copy-scss1",
+    "start": "echo Starting meta",
+    "build": "tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss1": "cp ./src/styles/*.scss ./dist/styles",
     "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
@@ -28,11 +28,14 @@
     "ts-pegjs": "^0.2.6"
   },
   "dependencies": {
+    "@microsoft/ts-command-line": "4.3.10",
     "@projectit/core": "^0.0.5",
     "@projectit/model": "^0.0.5",
     "axios": "0.18.0",
+    "global": "^4.4.0",
     "parjs": "0.12.0",
-    "prettier": "^1.15.3"
+    "prettier": "^1.15.3",
+    "typescript": "^3.7.5"
   },
   "publishConfig": {
     "access": "public"

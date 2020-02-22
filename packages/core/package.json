@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "tsc && yarn run copy-scss && yarn run copy-fonts",
-    "build-wait": "tsc -w",
+    "start": "echo Start core",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss": "cp ./src/components/styles/*.scss ./dist/components/styles",
     "copy-fonts": "cp -r ./src/components/styles/fonts ./dist/components/styles",

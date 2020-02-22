@@ -1,4 +1,4 @@
-import { PiEditor } from "@projectit/core/editor";
+import { PiEditor } from "@projectit/core";
 import { observer } from "mobx-react";
 import * as React from "react";
 

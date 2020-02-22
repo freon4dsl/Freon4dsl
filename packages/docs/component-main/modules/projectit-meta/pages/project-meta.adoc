@@ -6,10 +6,45 @@
 = ProjectIt MetaModel
 
 ProjectIt is designed to be an editor only, not a complete language workbench.
-Defining the structure of your language is done outside ProjectIt.
+Defining the structure of your language is assumed to be done outside ProjectIt.
 
-This Meta module is a helper module that supports users to specify the language
-structure for a TypeScript implementation.
+Although this ensure that ProjectIt can be use almost everywhere,  it also means that setting up a first
+version of an editor can be very time consuming.
+The main steps when starting with ProjectIt are:
+
+- Create a React-typescript project.
+- Create a TypeScript implementation of your language structure.
+- Create a projection for your language.
+- Create actions for your language.
+
+However, even creating a typescript implementation of your language can be time consuming.
+And then creating a first ProjectIt editor in TypeScript is also a serious amount of work.
+
+To speedup the development of a ProjectIt editor, there now is an *editor generator*.
+This generator automates all of the above workflow.
+All you need to do is to provide the meta-model of your language and both the
+language implementation and a ProjectIt editor is generated.
+
+Then generated editor used default projections and actions, and these can be overridden
+afterwards to get an optimal editor.
+Of course you can always regenerate while keeping your tuned code.
+This way,  you can immediately start with a default editor and improve it incrementally.
+
+To further support development, the language definition can be annotated with _@editor_
+annotations to tune the generated editor.
+
+The flow of developing is now changed to
+
+* Clone the default ProjectIt template project.
+* Provide the meta-model of you language and *generate*
+** The language implementation in TypeScript
+** The default projection for the language
+** The default actions for the editor
+* Try out the generated editor and
+** Tune the projections (one-buy-one)
+** Tune the actions (one-by-one)
+
+The tuning is typically done iteratively.
 
 
 

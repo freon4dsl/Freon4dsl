@@ -1,0 +1,133 @@
+language Language
+
+root concept Model {
+    name: string
+    @part entities: Entity[]
+    @part functions: Function[]
+}
+
+concept Entity {
+    name: string
+    @part attributes: Attribute[]
+    @editor trigger: string = "entity"
+}
+
+concept Attribute {
+    name: string
+    type: AttributeType
+    @editor trigger: string = "attribute"
+}
+
+concept Function {
+    name: string
+    @part expression: Expression
+    @reference parameters: Variable[]
+    @editor trigger: string = "function"
+}
+
+concept Variable {
+    name: string
+    type: AttributeType
+    @editor trigger: string = "var"
+}
+
+abstract expression concept Expression {}
+
+expression placeholder concept PlaceholderExpression {}
+
+abstract expression concept LiteralExpression base Expression {}
+
+concept StringLiteralExpression base LiteralExpression {
+    value: string
+    @editor trigger: string = "'"
+}
+
+concept NumberLiteralExpression base LiteralExpression {
+    value: string
+    @editor trigger: regexp = "[0-9]"
+}
+
+concept AbsExpression base Expression {
+    @part expr: Expression
+    @editor trigger: string = "abs"
+}
+
+abstract binary expression concept BinaryExpression base Expression {
+    @part left: Expression
+    @part right: Expression
+    @editor symbol: string = "unknown"
+}
+
+concept MultiplyExpression base BinaryExpression {
+    @editor symbol: string = "*"
+    @editor priority: number = "8"
+}
+
+concept PlusExpression base BinaryExpression {
+    @editor symbol: string = "+"
+    @editor priority: number = "4"
+}
+
+enumeration AttributeType {
+    String
+    Boolean
+    Integer
+}
+
+concept DivideExpression base BinaryExpression {
+    @editor symbol: string = "/"
+    @editor priority: number = "8"
+}
+
+concept AndExpression base BinaryExpression {
+    @editor symbol: string = "and"
+    @editor priority: number = "1"
+}
+
+concept OrExpression base BinaryExpression {
+    @editor symbol: string = "or"
+    @editor priority: number = "1"
+}
+
+abstract concept ComparisonExpression base BinaryExpression {
+}
+
+concept LessThenExpression base ComparisonExpression {
+    @editor symbol: string = "<"
+    @editor priority: number = "10"
+}
+
+concept GreaterThenExpression base ComparisonExpression {
+    @editor symbol: string = ">"
+    @editor priority: number = "10"
+}
+
+concept EqualsExpression base ComparisonExpression {
+    @editor symbol: string = "="
+    @editor priority: number = "10"
+}
+
+concept FunctionCallExpression base Expression {
+    @reference functionDefinition: Function
+    @inferType functionDefinition.type
+}
+
+concept IfExpression base Expression {
+    @part condition: Expression
+    @part whenTrue: Expression
+    @part whenFalse: Expression
+    @editor trigger : string = "if"
+}
+
+concept VariableRef base Expression {
+    referredName: string
+    @reference variable: Variable
+    @inferType variable.type
+}
+
+enumeration Color {
+    Red
+    Yellow
+    Blue
+}
+

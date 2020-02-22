@@ -1,4 +1,3 @@
-import { AliasComponent } from "@projectit/core/components/boxes/AliasComponent";
 import { isAliasBox, isMetaKey, isSelectBox } from "../../";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
