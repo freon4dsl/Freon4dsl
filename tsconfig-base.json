@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": false,
-    "target": "es6",
+    "target": "es2016",
     "types": ["node", "jest", "jest-enzyme"],
     "baseUrl": ".",
     "paths": {

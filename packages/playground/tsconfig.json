@@ -3,11 +3,7 @@
 
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": "./src",
-    "experimentalDecorators": true,
-    "downlevelIteration": true,
-    "lib": ["dom", "esnext.array"],
-    "target": "es6"
+    "baseUrl": "./src"
   },
   "include": [
     "src"
@@ -21,7 +17,7 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.story.tsx"
-  ],
+  ]
 
 
 }
