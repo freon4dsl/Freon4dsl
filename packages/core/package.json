@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,10 @@
     "start": "echo Start core",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss": "cp ./src/components/styles/*.scss ./dist/components/styles",
-    "copy-fonts": "cp -r ./src/components/styles/fonts ./dist/components/styles"
+    "copy-fonts": "cp -r ./src/components/styles/fonts ./dist/components/styles",
+    "dummy": "echo DUMMY",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
   "dependencies": {
     "classnames": "^2.2.5",

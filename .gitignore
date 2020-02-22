@@ -18,7 +18,6 @@ coverage
 build
 dist
 target
-bin
 .docz
 
 # misc

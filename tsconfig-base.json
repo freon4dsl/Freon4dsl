@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "downlevelIteration": true,
+    "declarationMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "jsx": "react",
-    "lib": ["dom", "es6", "es2016.array.include"],
+    "lib": ["dom", "es6", "es2016.array.include", "esnext.array"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": false,
@@ -20,11 +22,11 @@
     "types": ["node", "jest", "jest-enzyme"],
     "baseUrl": ".",
     "paths": {
-      "@projectit/core/*": ["packages/core/src/*"],
       "@projectit/model/*": ["packages/model/src/*"],
       "@projectit/meta/*": ["packages/meta/src/*"],
       "@projectit/demo/*": ["packages/demo/src/*"],
-      "@projectit/demo/*": ["packages/server/src/*"]
+      "@projectit/playground/*": ["packages/playground/src/*"],
+      "@projectit/server/*": ["packages/server/src/*"]
     }
   }
 }

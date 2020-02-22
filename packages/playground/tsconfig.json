@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig-base.json",
+
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": "./src",
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "lib": ["dom", "esnext.array"],
+    "target": "es6"
+  },
+  "include": [
+    "src"
+  ],
+
+  "exclude": [
+    "dist",
+    "node_modules",
+    "coverage",
+    "config",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.story.tsx"
+  ],
+
+
+}

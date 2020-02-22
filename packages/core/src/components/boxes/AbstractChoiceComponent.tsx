@@ -1,4 +1,3 @@
-import { AliasComponent } from "@projectit/core/components/boxes/AliasComponent";
 import { isAliasBox, isMetaKey, isSelectBox } from "../../";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -82,7 +81,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
 
     protected checkSelected() {
         const selectedBox = this.props.editor.selectedBox;
-        let isSelected = !!this.props.box && !!selectedBox ? this.props.box.id === selectedBox.id : false;
+        const isSelected = !!this.props.box && !!selectedBox ? this.props.box.id === selectedBox.id : false;
         if (isSelected) {
             LOGGER.info(this, "checkSelected SELECTED position " + this.caretPosition);
             // let caret = this.props.box.caretPosition;
@@ -200,7 +199,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
         }
     };
 
-    protected onKeyDown =async (e: React.KeyboardEvent<any>) => {
+    protected onKeyDown = async (e: React.KeyboardEvent<any>) => {
         EVENT_LOG.info(this, "onKeyDown: " + e.key + " for role " + this.props.box.role);
         if (Keys.isPrintable(e) && !e.ctrlKey) {
             LOGGER.info(this, "is printable");
@@ -235,7 +234,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
             switch (e.keyCode) {
                 case Keys.ENTER:
                     e.preventDefault();
-                    let handled = false;
+                    const handled = false;
                     if (isAliasBox(this.props.box)) {
                         PiUtils.handleKeyboardShortcut(Keys.reactToKey(e), this.props.box, this.props.editor);
                         // if (handled) {
@@ -404,9 +403,9 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
     };
 
     private setCaret3(position: number) {
-        var el = this.element;
-        var range = document.createRange();
-        var sel = window.getSelection();
+        const el = this.element;
+        const range = document.createRange();
+        const sel = window.getSelection();
         range.setStart(el.childNodes[0], position);
         range.collapse(true);
         sel.removeAllRanges();

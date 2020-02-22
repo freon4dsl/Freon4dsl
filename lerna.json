@@ -4,11 +4,12 @@
     "packages/model",
     "packages/meta",
     "packages/demo",
+    "packages/playground",
     "packages/server"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publishConfig": {
     "access": "public"
   }

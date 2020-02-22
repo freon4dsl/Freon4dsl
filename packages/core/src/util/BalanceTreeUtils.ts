@@ -22,7 +22,7 @@ const LOGGER = new PiLogger("BalanceTree");
 class BTree {
     isRightMostChild(exp: PiExpression): boolean {
         PiUtils.CHECK(!exp.piIsBinaryExpression(), "isRightMostChild expects a non-binary expression");
-        var currentExp = exp;
+        let currentExp = exp;
         let expContainer = currentExp.piContainer();
         while (expContainer && isPiBinaryExpression(expContainer.container)) {
             if (expContainer.container.piRight() === currentExp) {
@@ -37,7 +37,7 @@ class BTree {
 
     isLeftMostChild(exp: PiExpression): boolean {
         PiUtils.CHECK(!exp.piIsBinaryExpression(), "isLeftMostChild expects a non-binary expression");
-        var currentExp = exp;
+        let currentExp = exp;
         let expContainer = currentExp.piContainer();
         while (expContainer && isPiBinaryExpression(expContainer.container)) {
             if (expContainer.container.piLeft() === currentExp) {
