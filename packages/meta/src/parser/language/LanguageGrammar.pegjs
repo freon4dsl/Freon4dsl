@@ -86,7 +86,7 @@ curly_begin    = ws "{" ws
 curly_end      = ws "}" ws
 name_separator  = ws ":" ws
 
-ws "whitespace" = [ \t\n\r]*
+ws "whitespace" = (([ \t\n\r]) / (SingleLineComment))*
 
 var "var"
   = first:varLetter rest:varLetterOrDigit* ws { return first + rest.join(""); }
@@ -96,6 +96,16 @@ string           = chars:anyChar* { return chars.join(""); }
 varLetter           = [a-zA-Z]
 varLetterOrDigit    = [a-zA-Z0-9]
 anyChar             = [*a-zA-Z0-9'/\-[\]+<>=]
+
+// van javascript example
+SingleLineComment
+  = "//" (!LineTerminator SourceCharacter)*
+
+LineTerminator
+  = [\n\r\u2028\u2029]
+
+SourceCharacter
+  = .
 
 // from JSOM example
 char
