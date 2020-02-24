@@ -1,0 +1,1 @@
+// This file is placed here because a src folder may not be empty
