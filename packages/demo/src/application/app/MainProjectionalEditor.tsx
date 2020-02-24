@@ -52,6 +52,6 @@ export class MainProjectionalEditor extends React.Component<MainProjectionalEdit
         // connect the editor to the Typer and let the editor use the Typer API to get scoping info
         // this.demoEditor.addScoper(new DemoScoper());
         // connect the editor to the typer and let the editor use the Typer API to get type info
-        // this.demoeditor.addTyper(New DemoTyper());
+        // this.demoEditor.addTyper(New DemoTyper());
     }
 }
