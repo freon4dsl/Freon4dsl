@@ -4,7 +4,7 @@ import { DemoContext } from "../editor/DemoContext";
 import { DemoModel } from "../model/DemoModel";
 import { DemoFunction } from "../model/domain/DemoFunction";
 
-describe.skip("Demo Model", () => {
+describe("Demo Model", () => {
     describe("container settings", () => {
         let context: DemoContext;
         let root: DemoModel;
@@ -21,11 +21,11 @@ describe.skip("Demo Model", () => {
             expect(root.model instanceof DemoModel).toBe(true);
 
             const model = root as DemoModel;
-            expect(model.functions.length).toBe(3);
+            expect(model.entities.length).toBe(2);
 
-            const f: DemoFunction = model.functions[0];
+            const f: DemoFunction = model.entities[0].functions[0];
             expect(f.expression.container).toBe(f);
-            expect(f.container).toBe(model);
+            expect(f.container).toBe(model.entities[0]);
             expect((f.expression as any).container).toBeTruthy();
             expect(f.expression.piContainer().container).toBe(f);
         });

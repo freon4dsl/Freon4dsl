@@ -44,7 +44,7 @@ import {
     DemoOrExpression,
     DemoPlaceholderExpression,
     DemoPlusExpression,
-    DemoStringLiteralExpression
+    DemoStringLiteralExpression, DemoVariable
 } from "../model/index";
 // tslint:disable-next-line:no-unused-import
 import * as expressionExtensions from "./DemoExpression";
@@ -69,8 +69,9 @@ export class TutorialProjection implements PiProjection {
     }
 
     getBox(exp: PiElement): Box {
-        if(!!exp){
-            console.log("BOX OF NULL/UNDEFINED element");
+        LOGGER.log("TutorialProjection.getBox [" + exp + "]");
+        if (exp === null || exp === undefined) {
+            console.log("BOX OF NULL/UNDEFINED element [" + exp + "]");
             return null;
         }
         if (exp instanceof DemoStringLiteralExpression) {
@@ -99,8 +100,9 @@ export class TutorialProjection implements PiProjection {
             // return this.createModelBox1(exp);
             // return this.createModelBox2(exp);
             // return this.createModelBox3(exp);
+            LOGGER.log("Calling projection for DemoModel");
             return this.createModelBox4(exp);
-         } else if (exp instanceof DemoAttribute) {
+        } else if (exp instanceof DemoAttribute) {
             return this.createAttributeBox(exp);
         } else if (exp instanceof DemoSumExpression) {
             return this.createSumBox(exp);
@@ -119,6 +121,7 @@ export class TutorialProjection implements PiProjection {
             new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c))
         ]);
     }
+
     // end::ModelBox1[]
 
     // Modelbox with style and placeholder added
@@ -133,14 +136,15 @@ export class TutorialProjection implements PiProjection {
             })
         ]);
     }
+
     // end::ModelBox2[]
 
     // ModelBox with placeholder for the name and a list of entities
     // tag::ModelBox3[]
     private createModelBox3(model: DemoModel): Box {
         return new VerticalListBox(model, "model", [
-    // end::ModelBox3[]
-                new HorizontalListBox(model, "model-info", [
+            // end::ModelBox3[]
+            new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "Model", {
                     style: demoStyles.keyword
                 }),
@@ -148,7 +152,7 @@ export class TutorialProjection implements PiProjection {
                     placeHolder: "<name>"
                 })
             ]),
-    // tag::ModelBox3[]
+            // tag::ModelBox3[]
             new LabelBox(model, "entity-keyword", "Entities", {
                 style: demoStyles.keyword
             }),
@@ -161,11 +165,13 @@ export class TutorialProjection implements PiProjection {
             )
         ]);
     }
+
     // end::ModelBox3[]
 
     // ModelBox with placeholder for the name and a list of entities
     // tag::ModelBox4[]
     private createModelBox4(model: DemoModel): Box {
+        LOGGER.log("createModelBox4 [" + model + "]");
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "DemoModel", {
@@ -184,8 +190,12 @@ export class TutorialProjection implements PiProjection {
                 model.entities.map(ent => {
                     return this.createEntityBox3(ent);
                 })
+
             ).addChild(new AliasBox(model, "end-of-entity-list",
                 "add entity", { style: demoStyles.indent })),        // <1>
+            new LabelBox(model, "functions-list", "Functions", {
+                style: demoStyles.keyword
+            }),
             // tag::CreateFunctionAction[]
             new VerticalListBox(
                 model,
@@ -193,12 +203,15 @@ export class TutorialProjection implements PiProjection {
                 model.functions.map(fun => {
                     return this.createFunctionBox(fun);
                 })
-            ).addChild(new AliasBox(model, "end-of-function-list",
-                "add function", { style: demoStyles.indent }))
+
+            )
+                // .addChild(new AliasBox(model, "end-of-function-list",
+                // "add function", { style: demoStyles.indent }))
             // end::CreateFunctionAction[]
         ]);
     }
-     // end::ModelBox4[]
+
+    // end::ModelBox4[]
 
     private createBinaryBox(exp: PiBinaryExpression): Box {
         if (this.projectionType === "tree") {
@@ -242,20 +255,55 @@ export class TutorialProjection implements PiProjection {
             att,
             "attribute",
             [
-                new TextBox(att,"attribute-name",
-                    () => { return att.name; },
-                    (v: string) => { att.name = v; }
+                new TextBox(att, "attribute-name",
+                    () => {
+                        return att.name;
+                    },
+                    (v: string) => {
+                        att.name = v;
+                    }
                 ),
                 new LabelBox(att, "colon", ":"),
-                new TextBox(att,"attribute-type",
-                    () => { return att.type.asString(); },
-                    (v: string) => { att.type = DemoAttributeType.fromString(v); }
+                new TextBox(att, "attribute-type",
+                    () => {
+                        return att.type.asString();
+                    },
+                    (v: string) => {
+                        att.type = DemoAttributeType.fromString(v);
+                    }
                 )
             ],
             { style: demoStyles.indent }
         );
     }
     // end::AttributeBox[]
+
+    private createParameterBox(parameter: DemoVariable): Box {
+        return new HorizontalListBox(
+            parameter,
+            "parameter",
+            [
+                new TextBox(parameter, "parameter-name",
+                    () => {
+                        return parameter.name;
+                    },
+                    (v: string) => {
+                        parameter.name = v;
+                    }
+                ),
+                new LabelBox(parameter, "colon", ":"),
+                new TextBox(parameter, "parameter-type",
+                    () => {
+                        return parameter.type.asString();
+                    },
+                    (v: string) => {
+                        // parameter.type = DemoAttributeType.fromString(v);
+                    }
+                )
+            ],
+            { style: demoStyles.indent }
+        );
+    }
 
     private createEntityBox1(entity: DemoEntity): Box {
         // tag::EntityBox1[]
@@ -280,7 +328,7 @@ export class TutorialProjection implements PiProjection {
     // EntityBox with attributes, but no AliasBox
     // tag::EntityBox[]
     private createEntityBox(entity: DemoEntity): Box {
-        return new VerticalListBox(entity,"entity",
+        return new VerticalListBox(entity, "entity",
             [
                 new HorizontalListBox(entity, "entity-info", [
                     new LabelBox(entity, "entity-keyword", "Entity", {
@@ -290,7 +338,7 @@ export class TutorialProjection implements PiProjection {
                         placeHolder: "<name>"
                     })
                 ]),
-                new VerticalListBox( entity, "attribute-list",
+                new VerticalListBox(entity, "attribute-list",
                     entity.attributes.map(att => {
                         return this.createAttributeBox(att);
                     })
@@ -299,6 +347,7 @@ export class TutorialProjection implements PiProjection {
             { style: demoStyles.indent }
         );
     }
+
     // end::EntityBox[]
 
     // EntityBox with AliasBox added for adding new attributes
@@ -314,14 +363,14 @@ export class TutorialProjection implements PiProjection {
                     new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
                 ]),
                 // tag::CreateAttributeAction[]
-                new VerticalListBox(entity,"attributes",
+                new VerticalListBox(entity, "attributes",
                     entity.attributes.map(att => {
                         return this.createAttributeBox(att);
                     })
                 ).addChild(new AliasBox(entity, "end-of-attribute-list",
-                    "add attribute", { style: demoStyles.indent })),
+                    "add attribute", { style: demoStyles.indent }))
                 // end::CreateAttributeAction[]
-             ],
+            ],
             {
                 style: demoStyles.indent
             }
@@ -478,33 +527,59 @@ export class TutorialProjection implements PiProjection {
     }
 
     private createFunctionBox(fun: DemoFunction): Box {
+        return new VerticalListBox(
+            fun,
+            "function",
+            [
+                new HorizontalListBox(fun, "fun-keyword", [
+                    new LabelBox(fun, "fun-label", "function", {
+                        style: demoStyles.keyword
+                    }),
+                    new TextBox(fun, "fun-name", () => fun.name, (c: string) => (fun.name = c))
+                ]),
+                // tag::CreateAttributeAction[]
+                new VerticalListBox(fun, "parameters",
+                    fun.parameters.map(att => {
+                        return this.createParameterBox(att);
+                    })
+                ).addChild(new AliasBox(fun, "end-of-parameter-list",
+                    "add parameter", { style: demoStyles.indent }))
+                // end::CreateAttributeAction[]
+            ],
+            {
+                style: demoStyles.indent
+            }
+        );
+    }
+    private createFunctionBoxGrid(fun: DemoFunction): Box {
+        // TODO Is stuk.
         LOGGER.info(this, "createFunctionBox: ");
         let cells: GridCell[] = [
-            {
-                row: 1,
-                column: 1,
-                box: new LabelBox(fun, "fun-keyword", "function")
-            },
-            {
-                row: 1,
-                column: 2,
-                box: new TextBox(fun, "fun-name", () => fun.name, (v: string) => (fun.name = v))
-            },
-            {
-                row: 1,
-                column: 3,
-                box: new TextBox(
-                    fun,
-                    "fun-par1",
-                    () => fun.parameters[0].name,
-                    (v: string) => (fun.parameters[0].name = v)
-                )
-            },
-            {
-                row: 2,
-                column: 2,
-                box: this.getBox(fun.expression)
-            }
+            // {
+            //     row: 1,
+            //     column: 1,
+            //     box: new LabelBox(fun, "fun-keyword", "function")
+            // },
+            // {
+            //     row: 1,
+            //     column: 2,
+            //     box: new TextBox(fun, "fun-name", () => fun.name, (v: string) => (fun.name = v))
+            // },
+            // {
+            //     row: 1,
+            //     column: 3,
+            //     box: new TextBox(
+            //         fun,
+            //         "fun-par1",
+            //         () => ("NONE"),
+            //         (v: string) => (v)
+            //     )
+            // },
+            // {
+            //     row: 2,
+            //     column: 2,
+            //     box: this.getBox(fun.expression)
+            // }
         ];
         let result = new GridBox(fun, "function", cells);
         return result;

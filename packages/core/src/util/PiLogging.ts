@@ -7,10 +7,14 @@ type LogMessage = string | MessageFunction;
 
 export class PiLogger {
     private static muteAll: boolean = false;
+
     static muteAllLogs() {
         PiLogger.muteAll = true;
     }
+
+
     static filter: string = null;
+
     static showString(s: string | null) {
         PiLogger.filter = s;
     }
@@ -36,7 +40,7 @@ export class PiLogger {
     }
 
     error(o: any, msg: LogMessage) {
-        const type = Object.getPrototypeOf(o).constructor.name;
+        const type = "NO_TYPE"; // Object.getPrototypeOf(o).constructor.name;
         console.log("ERROR: " + this.category + " " + type + ": " + this.message(msg));
     }
 
@@ -66,4 +70,4 @@ export class PiLogger {
 }
 
 export const EVENT_LOG = new PiLogger("EVENT");
-export const RENDER_LOG = new PiLogger("RENDER").mute();
+export const RENDER_LOG = new PiLogger("RENDER");//.mute();

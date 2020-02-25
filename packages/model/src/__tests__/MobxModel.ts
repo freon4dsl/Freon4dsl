@@ -3,10 +3,6 @@ import { observablelistpart, observablepart } from "../../src/MobxModelDecorator
 import { DecoratedModelElement } from "../../src/DecoratedModelElement";
 import { observable } from "mobx";
 
-export class ModelContext {
-    @observable root: Expression;
-}
-
 export class Expression implements DecoratedModelElement {
     container: DecoratedModelElement;
     propertyName: string;
@@ -24,6 +20,10 @@ export class Expression implements DecoratedModelElement {
     text(): string {
         return this.name;
     }
+}
+
+export class ModelContext {
+    @observable root: Expression;
 }
 
 export class BinExpression extends Expression {
