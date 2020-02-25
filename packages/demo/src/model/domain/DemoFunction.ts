@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { model, observablelistpart, observablepart } from "@projectit/model";
+import { model, observablelistpart, observablepart, observablereference } from "@projectit/model";
 
 import { DemoModelElement } from "../DemoModel";
 import { DemoExpression } from "../expressions/DemoExpression";
@@ -13,7 +13,7 @@ export class DemoFunction extends DemoModelElement {
     @observable name: string;
     @observablepart expression: DemoExpression;
     @observablelistpart parameters: DemoVariable[];
-    @observable type: DemoType = DemoAttributeType.Any;
+    @observablereference type: DemoType = DemoAttributeType.Any;
 
     constructor() {
         super();
