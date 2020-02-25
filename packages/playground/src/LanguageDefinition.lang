@@ -46,6 +46,11 @@ concept DemoNumberLiteralExpression base DemoLiteralExpression {
     @editor trigger: regexp = "[0-9]"
 }
 
+concept DemoBooleanLiteralExpression base DemoLiteralExpression {
+    value: string
+    @editor trigger: regexp = "[True|False]"
+}
+
 concept DemoAbsExpression base DemoExpression {
     @part expr: DemoExpression
     @editor trigger: string = "abs"
