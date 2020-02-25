@@ -4,7 +4,7 @@ import { PiLogger } from "./PiLogging";
 import { Box } from "../boxes/Box";
 import { PiEditor } from "../editor/PiEditor";
 
-const LOGGER = new PiLogger("BehaviorUtils").mute();
+const LOGGER = new PiLogger("BehaviorUtils");//.mute();
 
 export enum PiCaretPosition {
     UNSPECIFIED,

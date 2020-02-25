@@ -1,3 +1,4 @@
+import { flatten, flatMap, difference , xor } from "lodash";
 import { Names } from "../../Names";
 import { PiLanguage } from "../../../metalanguage/PiLanguage";
 
@@ -66,7 +67,7 @@ export class ActionsTemplate {
             ];
             
             export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
-                ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
+                ${flatten(language.concepts.map(c => c.parts)).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.concept();
                 return `
@@ -85,7 +86,7 @@ export class ActionsTemplate {
             ];
             
             export const KEYBOARD: KeyboardShortcutBehavior[] = [
-                ${language.concepts.flatMap(c => c.parts).filter(p => p.isList).map(part => {
+                ${flatten(language.concepts.map(c => c.parts)).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.concept();
                     return `

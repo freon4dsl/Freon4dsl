@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "jsx": "react",
-    "lib": ["dom", "es6", "es2016.array.include", "esnext.array"],
+    "lib": ["dom", "es6", "es2016.array.include"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": false,
@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": false,
-    "target": "es2016",
+    "target": "es5",
     "types": ["node", "jest", "jest-enzyme"],
     "baseUrl": ".",
     "paths": {
