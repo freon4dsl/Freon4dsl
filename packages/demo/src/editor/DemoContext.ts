@@ -70,9 +70,9 @@ export class DemoContext implements PiContext {
         entity2.attributes.push(attribute21);
         entity2.attributes.push(attribute22);
 
-        const f1 = DemoFunction.create("length", DemoAttributeType.Integer);
-        const f2 = DemoFunction.create("first", DemoAttributeType.Boolean);
-        const f3 = DemoFunction.create("last", entity1);
+        const f1 = DemoFunction.create("length");
+        const f2 = DemoFunction.create("first");
+        const f3 = DemoFunction.create("last");
 
         const var1 = DemoVariable.create("Variable1", entity1);
         const var2 = DemoVariable.create("VariableNumber2", entity2);

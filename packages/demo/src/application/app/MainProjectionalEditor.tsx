@@ -9,9 +9,6 @@ import { ProjectionalEditor, PiLogger } from "@projectit/core";
 
 import { DemoEditor } from "./DemoEditor";
 import { TutorialProjection, DemoActions, DemoContext } from "../../editor";
-import { DemoScoper } from "@projectit/demo/scopeIt/Scoper";
-import { DemoTyper, DemoType, Typer } from "@projectit/demo/typeIt/DemoTypeChecker";
-import { DemoModel, DemoAttribute, DemoAttributeType, DemoEntity, DemoFunction, DemoVariable, DemoModelElement } from "@projectit/demo/model";
 
 const LOGGER = new PiLogger("MainProjectionalEditor"); //.mute();
 
