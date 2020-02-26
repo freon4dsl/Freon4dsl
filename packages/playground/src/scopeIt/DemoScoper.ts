@@ -1,9 +1,5 @@
 import { DemoAttribute, DemoEntity, DemoFunction, DemoVariable, DemoModel, WithType, DemoExpression, DemoPlaceholderExpression, DemoLiteralExpression, DemoStringLiteralExpression, DemoNumberLiteralExpression, DemoAbsExpression, DemoBinaryExpression, DemoMultiplyExpression, DemoPlusExpression, DemoDivideExpression, DemoAndExpression, DemoOrExpression, DemoComparisonExpression, DemoLessThenExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoFunctionCallExpression, DemoIfExpression, DemoVariableRef, DemoAttributeType} from "../language/index"
-import { PiLogger } from "@projectit/core"
 import { DemoModelElement } from "./DemoModelElement";
-
-
-const LOGGER = new PiLogger("DemoScoper"); //.mute();
 
 export interface Scoper {
     isInScope(modelElement: DemoModelElement, name: string, type?: DemoEntity) : boolean;
@@ -26,7 +22,7 @@ export class DemoScoper implements Scoper {
     getVisibleElements(modelelement: DemoModelElement) : DemoModelElement[] {
         let result : DemoModelElement[] = [];
         if(modelelement == null){
-            LOGGER.log("getVisibleElements: modelelement is null");
+            // TODO error mess console.log("getVisibleElements: modelelement is null");
             return null;
         }
         let ns = new NameSpace(modelelement);
@@ -56,11 +52,9 @@ export class DemoScoper implements Scoper {
     getVisibleNames(modelelement: DemoModelElement) : String[] {
         let result: String[] = [];
         if(modelelement == null){
-             LOGGER.log("getVisibleNames: modelelement is null");
+            // TODO: error mess console.log("getVisibleNames: modelelement is null");
              return null;
-         } else {
-             LOGGER.log("getVisibleNames: working on modelelement " + modelelement.$id);
-         }
+        }
         // from modelelement get its surrounding namespace
         let ns = new NameSpace(modelelement);
         for (let e of ns.getVisibleElements()) {
