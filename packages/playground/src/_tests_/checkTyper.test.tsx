@@ -1,102 +1,90 @@
-import { DemoTyper, Typer, DemoType } from "../typeIt/DemoTyper";
-import { DemoModel, DemoFunction, DemoAttributeType } from "../language";
-import { DemoModelElement } from "../scopeIt/DemoModelElement";
+import { DemoModel, DemoAttributeType } from "../language";
+import { DemoTyper } from "../typeIt/DemoTyper";
 import { DemoModelCreator } from "./DemoModelCreator";
 
-describe('Typer.... from DemoModel Instance', () => {
-    let model: DemoModel = new DemoModelCreator().model;
+describe('Testing Typer', () => {
+    describe('Typer.isType on DemoModel Instance', () => {
+        let model : DemoModel = new DemoModelCreator().model;
+        let typer = new DemoTyper();
+     
+        beforeEach(done => {
+          done();
+        });
 
-    it("model name should be set", () => {
-        expect(model.name).not.toBeNull;
-    });
-
-	// TEST_TYPER_inferType(typer : DemoTyper, model : DemoModel) {
-    //     model.functions.forEach(fun => {
-    //         this.testFunResultAndExpTypes(fun, typer);
-    //     });
-    //     model.entities.forEach(ent => {
-    //         ent.functions.forEach(fun => {
-    //             this.testFunResultAndExpTypes(fun, typer);
-    //         });
-    //     });
-    // }
-
-    // private testFunResultAndExpTypes(fun: DemoFunction, typer: DemoTyper) {
-    //     if (fun.expression !== null) {
-    //         let expType = typer.inferType(fun.expression);
-    //         console.log("Found type " + expType.toString() + " for expression " + fun.expression.toString());
-    //         // this.test_base_to_testType(typer, expType, fun.type);
-    //     }
-    // }
-
-    // public TEST_TYPER_conform(typer : DemoTyper, model : DemoModel) {
-    //     this.test_base_to_testType(typer, DemoAttributeType.String, DemoAttributeType.String);
-    //     this.test_base_to_testType(typer, DemoAttributeType.String, DemoAttributeType.Integer);
-    //     this.test_base_to_testType(typer, DemoAttributeType.String, DemoAttributeType.Boolean);
-    //     this.testPrimTypes(typer, model); 
-    //     model.functions.forEach(fun => {
-    //         this.testPrimTypes(typer, fun); 
-    //     });
-    //     model.entities.forEach(ent => {
-    //         this.testPrimTypes(typer, ent); 
-    //         model.entities.forEach(second => {
-    //             this.testEntityTypes(typer, ent, second);
-    //         });
-    //         ent.functions.forEach(fun => {
-    //             this.testPrimTypes(typer, fun); 
-    //         });
-    //         ent.attributes.forEach(fun => {
-    //             this.testPrimTypes(typer, fun); 
-    //             // this.testPrimTypes(typer, fun.type); 
-    //         });
-    //     });
-    // }
+        it("all entities should be types", () => {
+            expect(typer.isType(model)).toBe(false);
+            model.functions.forEach(fun => {
+                expect(typer.isType(fun)).toBe(false);
+            });
+            model.entities.forEach(ent => {
+                expect(typer.isType(ent)).toBe(true);
+                ent.functions.forEach(fun => {
+                    expect(typer.isType(fun)).toBe(false);
+                });
+                ent.attributes.forEach(fun => {
+                    expect(typer.isType(fun)).toBe(false);
+                });
+            });
+        });
     
-    // private testEntityTypes(typer: Typer, first: DemoModelElement, second: DemoModelElement) {
-    //     if (typer.isType(first) && typer.isType(second)) {
-    //         this.test_base_to_testType(typer, (first as DemoType), (second as DemoType));
-    //     }
-    // }
+        it("all attributes should have a valid type", () => {
+            model.entities.forEach(ent => {
+                ent.attributes.forEach(att => {
+                    expect(att.type).not.toBeNull;
+                    expect(typer.isType(att.type)).toBe(true);
+                });
+            });
+        });
+    
+        // it("all functions should have a return type", () => {
+        //     model.entities.forEach(ent => {
+        //         ent.functions.forEach(fun => {
+        //             expect(typer.isType(fun.type)).toBe(false);
+        //         });
+        //     });
+        // });
+    
+        it("the type of every expresion can be inferred", () => {
+            model.functions.forEach(fun => {
+                if (fun.expression !== null) {
+                    expect(typer.inferType(fun.expression)).not.toBeNull;
+                }
+            });
+            model.entities.forEach(ent => {
+                ent.functions.forEach(fun => {
+                    if (fun.expression !== null) {
+                        expect(typer.inferType(fun.expression)).not.toBeNull;
+                    }
+                });
+            });
+        });
+  
+        it("type conformance of the primitive types is not correct", () => {
+            expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.String)).toBe(false);
+            expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Integer)).toBe(true);
+            expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Boolean)).toBe(false);
 
-    // private testPrimTypes(typer: Typer, elem: DemoModelElement) {
-    //     if (typer.isType(elem)) {
-    //         this.test_base_to_testType(typer, (elem as DemoType), DemoAttributeType.Boolean);
-    //         this.test_base_to_testType(typer, (elem as DemoType), DemoAttributeType.String);
-    //         this.test_base_to_testType(typer, (elem as DemoType), DemoAttributeType.Integer);
-    //     } else {
-    //         console.log(elem.$id + " is not a DemoType");
-    //     }
-    // }
+            expect(typer.conform(DemoAttributeType.String, DemoAttributeType.String)).toBe(true);
+            expect(typer.conform(DemoAttributeType.String, DemoAttributeType.Integer)).toBe(false);
+            expect(typer.conform(DemoAttributeType.String, DemoAttributeType.Boolean)).toBe(false);
 
-    // private test_base_to_testType(typer: Typer, basetype: DemoType, testType: DemoType) {
-    //     let result = typer.conform(basetype, testType);
-    //     if (result)
-    //         console.log(basetype.toString() + " conforms to " + testType.toString());
-    //     if (!result)
-    //         console.log(basetype.toString() + " does NOT conform to " + testType.toString());
-    // }
-
-    // public TEST_TYPER_isType(typer: DemoTyper, model: DemoModel) {
-    //     let x : boolean = typer.isType(model);
-    //     if (x) console.log("Typer found " + model.$id + "(" + model.name + ") is a type.");
-    //     model.functions.forEach(fun => {
-    //         let x = typer.isType(fun);
-    //         if (x) console.log("Typer found " + fun.$id + "(" + fun.name + ") is a type.");
-    //     });
-    //     model.entities.forEach(ent => {
-    //         let x = typer.isType(ent);
-    //         if (x) console.log("Typer found " + ent.$id + "(" + ent.name + ") is a type.");
-    //         ent.functions.forEach(fun => {
-    //             x = typer.isType(fun);
-    //             if (x) console.log("Typer found " + fun.$id + "(" + fun.name + ") is a type.");
-    //         });
-    //         ent.attributes.forEach(fun => {
-    //             x = typer.isType(fun);
-    //             if (x) console.log("Typer found " + fun.$id + "(" + fun.name + ") is a type.");
-    //             // x = typer.isType(fun.type);
-    //             //     if (x) console.log("Typer found " + fun.type.$id + "(" + fun.type.toString() + ") is a type.");
-    //         });
-    //     });
-    // }
-
+            expect(typer.conform(DemoAttributeType.Boolean, DemoAttributeType.String)).toBe(false);
+            expect(typer.conform(DemoAttributeType.Boolean, DemoAttributeType.Integer)).toBe(false);
+            expect(typer.conform(DemoAttributeType.Boolean, DemoAttributeType.Boolean)).toBe(true);
+  
+        });
+  
+        it("type conformance of model entity types is not correct", () => {
+            model.entities.forEach(ent => {
+                expect(typer.conform(ent, DemoAttributeType.String)).toBe(false);
+                expect(typer.conform(ent, DemoAttributeType.Integer)).toBe(false);
+                expect(typer.conform(ent, DemoAttributeType.Boolean)).toBe(false);  
+                model.entities.forEach(ent2 => {
+                    if (ent !== ent2) {
+                        expect(typer.conform(ent, ent2)).toBe(false);
+                    }
+                });  
+            });  
+        });
+    });
 });
