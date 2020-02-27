@@ -1,5 +1,7 @@
-import { DemoEntity, DemoAttributeType, DemoStringLiteralExpression, DemoNumberLiteralExpression, DemoComparisonExpression, DemoBinaryExpression, DemoAbsExpression, DemoIfExpression, DemoVariableRef, DemoFunctionCallExpression } from "language";
-import { DemoModelElement } from "scopeIt/DemoModelElement";
+import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, 
+    DemoComparisonExpression, DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression } from "../language";
+import { DemoModelElement } from "../scopeIt/DemoModelElement";
+
 
 export type DemoType = DemoEntity | DemoAttributeType; // alle namen gemerkt met @isType
 
@@ -17,6 +19,7 @@ export class DemoTyper implements Typer {
 
     inferType(modelelement: DemoModelElement): DemoType {
         // generate if statement for all lang elements that have @hasType annotation
+        // the result should be according to the @inferType rules
         if (this.isType(modelelement)) {
             return modelelement as DemoType;
         } else if (modelelement instanceof DemoStringLiteralExpression) {
@@ -29,6 +32,7 @@ export class DemoTyper implements Typer {
             return DemoAttributeType.Boolean;
         } else if (modelelement instanceof DemoBinaryExpression) {
             return this.inferType(modelelement.left);
+            // @inferType = commonSuperType(this.left.type, this.right.type)
         } else if (modelelement instanceof DemoAbsExpression) {
             return this.inferType(modelelement.expr);
     //    } else if (modelelement instanceof DemoVariableRef) {
@@ -42,6 +46,7 @@ export class DemoTyper implements Typer {
     }    
 
     // for now: simply implemented on basis of equal identity of the types
+    // should be implemented based on the conformance rules in Typer Description file
     conform(type1: DemoType, type2: DemoType): boolean {
         if( type1.$id === type2.$id) return true;
         return false;
@@ -66,8 +71,8 @@ export class DemoTyper implements Typer {
         return false;
     }
 
-    typeName(elem: DemoType): string { // gebruik hier de var gemerkt met @typename
+    typeName(elem: DemoType): string { 
         if (elem instanceof DemoEntity) return elem.name;
-        if (elem instanceof DemoAttributeType) return elem.toString();
+        if (elem instanceof DemoAttributeType) return elem.name;
     }
 }
