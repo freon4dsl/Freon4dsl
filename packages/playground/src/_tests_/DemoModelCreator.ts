@@ -14,13 +14,17 @@ export class DemoModelCreator  {
 	private initializeModel() {
         const entity1 = DemoEntity.create("Person");
         const attribute1 = DemoAttribute.create("name");
+        attribute1.type = DemoAttributeType.Boolean;
         const attribute2 = DemoAttribute.create("age");
+        attribute2.type = DemoAttributeType.Boolean;
         entity1.attributes.push(attribute1);
         entity1.attributes.push(attribute2);
 
         const entity2 = DemoEntity.create("Company");
         const attribute21 = DemoAttribute.create("name");
+        attribute21.type = DemoAttributeType.String;
         const attribute22 = DemoAttribute.create("VAT_Number");
+        attribute22.type = DemoAttributeType.Integer;
         entity2.attributes.push(attribute21);
         entity2.attributes.push(attribute22);
 
