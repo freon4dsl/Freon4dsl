@@ -24,6 +24,7 @@
     "@projectit/core": "^0.0.5",
     "@projectit/model": "^0.0.5",
     "@projectit/meta": "^0.0.5",
+    "@types/lodash": "4.14.73",
     "global": "^4.4.0",
     "prettier": "^1.15.3",
     "typescript": "^3.7.5"

@@ -70,25 +70,24 @@ export class DemoContext implements PiContext {
         entity2.attributes.push(attribute21);
         entity2.attributes.push(attribute22);
 
-        const f1 = DemoFunction.create("length", DemoAttributeType.Integer);
-        const f2 = DemoFunction.create("first", DemoAttributeType.Boolean);
-        const f3 = DemoFunction.create("last", entity1);
+        const f1 = DemoFunction.create("length");
+        const f2 = DemoFunction.create("first");
+        const f3 = DemoFunction.create("last");
 
         const var1 = DemoVariable.create("Variable1", entity1);
         const var2 = DemoVariable.create("VariableNumber2", entity2);
         const var3 = DemoVariable.create("Resultvar", entity1);
+        const var4 = DemoVariable.create("Param", entity1);
 
         this.model.entities.push(entity1);
         this.model.entities.push(entity2);
-        //this.model.functions.push(f1);
-        //this.model.functions.push(f2);
-        //this.model.functions.push(f3);
         entity1.functions.push(f1);
         entity1.functions.push(f2);
         entity2.functions.push(f3);
         f1.parameters.push(var1);
         f1.parameters.push(var2);
         f2.parameters.push(var3);
+        f3.parameters.push(var4);
         f1.expression = this.getSampleExpression();
     }
 

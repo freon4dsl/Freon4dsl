@@ -121,7 +121,7 @@ export class PiEditor {
 
     @computed
     get rootBox(): Box {
-        LOGGER.info(this, "RECALCULATING ROOT");
+        LOGGER.info(this, "RECALCULATING ROOT [" + this.context.rootElement + "]");
         return this.projection.getBox(this.context.rootElement);
         // return this.$rootBox;
     }

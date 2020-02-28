@@ -23,7 +23,7 @@ import {
     DemoVariableRefExpression
 } from "../model/index";
 
-describe.skip("BalanceTree", () => {
+describe("BalanceTree", () => {
     describe("insertBinaryExpression without binary child", () => {
         let context: DemoContext;
         let root: DemoBinaryExpression;

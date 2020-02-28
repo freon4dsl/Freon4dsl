@@ -14,6 +14,7 @@ export class ConceptTemplate {
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
         const isBinaryExpression = concept.binaryExpression();
         const isExpression = (!isBinaryExpression) && concept.expression() ;
+        const abstract = (concept.isAbstract ? "abstract" : "");
         const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement"));
 
         const imports = Array.from(
@@ -61,7 +62,7 @@ export class ConceptTemplate {
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
             @model
-            export class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}, WithType 
+            export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}, WithType 
             {
                 readonly $type: ${language.name}ConceptType = "${concept.name}";
                 ${!hasSuper ? "$id: string;" : ""}
@@ -158,7 +159,7 @@ export class ConceptTemplate {
     generatePartProperty(property: PiLangElementProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
-        const initializer = (property.type.concept().expression() ? `= new ${Names.concept(property.owningConcept.language.expressionPlaceholder())}` : "");
+        const initializer = (property.type.concept().expression() ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
         return `
             ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType} ${initializer};
         `;

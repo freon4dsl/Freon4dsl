@@ -12,7 +12,7 @@ export type DynamicBoolean = BooleanCallback | boolean;
 export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
-const LOGGER = new PiLogger("PiUtils").mute();
+const LOGGER = new PiLogger("PiUtils");//.mute();
 
 export class PiUtils {
     /** Iniyialize an object with a JSON object
