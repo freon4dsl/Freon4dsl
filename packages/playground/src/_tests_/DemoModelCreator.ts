@@ -2,7 +2,7 @@ import { DemoEntity, DemoAttribute, DemoFunction, DemoVariable,
         DemoVariableRef, DemoIfExpression, DemoComparisonExpression, 
         DemoNumberLiteralExpression, DemoOrExpression, DemoStringLiteralExpression, 
         DemoAndExpression, DemoPlusExpression, DemoPlaceholderExpression, DemoModel, 
-        DemoAttributeType, DemoExpression, DemoBinaryExpression } from "../language";
+        DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression } from "../language";
 
 export class DemoModelCreator  {
     model: DemoModel = DemoModel.create("DemoModel_1");
@@ -14,41 +14,41 @@ export class DemoModelCreator  {
 	private initializeModel() {
         const entity1 = DemoEntity.create("Person");
         const attribute1 = DemoAttribute.create("name");
-        attribute1.type = DemoAttributeType.Boolean;
+        attribute1.declaredType = DemoAttributeType.Boolean;
         const attribute2 = DemoAttribute.create("age");
-        attribute2.type = DemoAttributeType.Boolean;
+        attribute2.declaredType = DemoAttributeType.Boolean;
         entity1.attributes.push(attribute1);
         entity1.attributes.push(attribute2);
 
         const entity2 = DemoEntity.create("Company");
         const attribute21 = DemoAttribute.create("name");
-        attribute21.type = DemoAttributeType.String;
+        attribute21.declaredType = DemoAttributeType.String;
         const attribute22 = DemoAttribute.create("VAT_Number");
-        attribute22.type = DemoAttributeType.Integer;
+        attribute22.declaredType = DemoAttributeType.Integer;
         entity2.attributes.push(attribute21);
         entity2.attributes.push(attribute22);
 
         const f1 = DemoFunction.create("length");
-        // f1.type = DemoAttributeType.Integer;
+        f1.declaredType = DemoAttributeType.Integer;
         const f2 = DemoFunction.create("first");
-        // f2.type = DemoAttributeType.Boolean;
+        f2.declaredType = DemoAttributeType.Boolean;
         const f3 = DemoFunction.create("last");
-        // f3.type = entity1;
+        f3.declaredType = entity1;
         const f4 = DemoFunction.create("determine");
-        // f4.type = entity1;
+        f4.declaredType = entity1;
         const f5 = DemoFunction.create("another");
-        // f5.type = entity1;
+        f5.declaredType = entity1;
 
         const var1 = DemoVariable.create("Variable1")
-        // var1.type = entity1;
+        var1.declaredType = entity1;
         const var2 = DemoVariable.create("VariableNumber2")
-        // var2.type = entity2;
+        var2.declaredType = entity2;
         const var3 = DemoVariable.create("Resultvar")
-        // var3.type = entity1;
+        var3.declaredType = entity1;
         const var4 = DemoVariable.create("AAP")
-        // var4.type = entity1;
+        var4.declaredType = entity1;
         const var5 = DemoVariable.create("NOOT")
-        // var5.type = entity1;
+        var5.declaredType = entity1;
 
         this.model.entities.push(entity1);
         this.model.entities.push(entity2);
@@ -124,7 +124,7 @@ export class DemoModelCreator  {
 
 
     private MakeComparisonExp(left: any, right: any) : DemoComparisonExpression {
-        const condition: DemoBinaryExpression = new DemoComparisonExpression(); // ("<");
+        const condition: DemoBinaryExpression = new DemoLessThenExpression(); // ("<");
         condition.left = new DemoNumberLiteralExpression();
         (condition.left as DemoNumberLiteralExpression).value = left;
         condition.right = new DemoNumberLiteralExpression();

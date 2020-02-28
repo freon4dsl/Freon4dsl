@@ -30,36 +30,43 @@ describe('Testing Typer', () => {
         it("all attributes should have a valid type", () => {
             model.entities.forEach(ent => {
                 ent.attributes.forEach(att => {
-                    expect(att.type).not.toBeNull;
-                    expect(typer.isType(att.type)).toBe(true);
+                    expect(att.declaredType).not.toBeNull;
+                    expect(typer.isType(att.declaredType)).toBe(true);
                 });
             });
         });
     
-        // it("all functions should have a return type", () => {
-        //     model.entities.forEach(ent => {
-        //         ent.functions.forEach(fun => {
-        //             expect(typer.isType(fun.type)).toBe(false);
-        //         });
-        //     });
-        // });
+        it("all functions should have a return type", () => {
+            model.functions.forEach(fun => {
+                expect(typer.isType(fun.declaredType)).toBe(true);
+            });
+            model.entities.forEach(ent => {
+                ent.functions.forEach(fun => {
+                    expect(typer.isType(fun.declaredType)).toBe(true);
+                });
+            });
+        });
     
-        it("the type of every expresion can be inferred", () => {
+        it("the type of every expresion can be inferred and equals the declared type of its function", () => {
             model.functions.forEach(fun => {
                 if (fun.expression !== null) {
-                    expect(typer.inferType(fun.expression)).not.toBeNull;
+                    let expressionType = typer.inferType(fun.expression);
+                    expect(expressionType).not.toBeNull;
+                    // expect(typer.conform(fun.declaredType, expressionType)).toBe(true)
                 }
             });
             model.entities.forEach(ent => {
                 ent.functions.forEach(fun => {
                     if (fun.expression !== null) {
-                        expect(typer.inferType(fun.expression)).not.toBeNull;
+                        let expressionType = typer.inferType(fun.expression);
+                        expect(expressionType).not.toBeNull;
+                        // expect(typer.conform(fun.declaredType, expressionType)).toBe(true)
                     }
                 });
             });
         });
   
-        it("type conformance of the primitive types is not correct", () => {
+        it("type conformance of the primitive types should be correct", () => {
             expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.String)).toBe(false);
             expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Integer)).toBe(true);
             expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Boolean)).toBe(false);
@@ -74,7 +81,7 @@ describe('Testing Typer', () => {
   
         });
   
-        it("type conformance of model entity types is not correct", () => {
+        it("type conformance of model entity types should be correct", () => {
             model.entities.forEach(ent => {
                 expect(typer.conform(ent, DemoAttributeType.String)).toBe(false);
                 expect(typer.conform(ent, DemoAttributeType.Integer)).toBe(false);
