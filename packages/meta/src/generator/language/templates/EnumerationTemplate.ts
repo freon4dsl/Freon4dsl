@@ -51,8 +51,19 @@ export class EnumerationTemplate {
         
             static fromString(v: string): ${Names.enumeration(enumeration)} {
                 switch(v) {
-                    ${enumeration.literals.map(lit => `case "${lit}": return ${Names.enumeration(enumeration)}.${lit};`).join(";")}
-                    default: return ${Names.enumeration(enumeration)}.ANY;
+                    ${enumeration.literals.map(lit => `case "${lit}": 
+                    if (this.${lit} !== null) {
+                        return new ${Names.enumeration(enumeration)}("${lit}");
+                    } else {
+                        return ${Names.enumeration(enumeration)}.${lit};
+                    }`                   
+                    ).join(";")}
+                    default: 
+                    if (this.ANY !== null) {
+                        return new ${Names.enumeration(enumeration)}("ANY");
+                    } else {
+                        return ${Names.enumeration(enumeration)}.ANY;
+                    }
                 }
             }
 

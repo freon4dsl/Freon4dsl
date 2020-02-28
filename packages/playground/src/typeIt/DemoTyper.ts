@@ -78,8 +78,10 @@ export class DemoTyper implements Typer {
 
     isType(elem: DemoModelElement): boolean { // ook hier alle namen gemerkt met @isType
         if (elem instanceof DemoEntity) {
+            console.log("isType: checking " + elem.name + " of metatype " + elem.get$Type());
             return true;
         } else if (elem instanceof DemoAttributeType) {
+            console.log("isType: checking " + elem.asString() + " of metatype " + elem.get$Type());
             return true;
         }
         return false;

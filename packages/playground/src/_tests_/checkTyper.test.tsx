@@ -31,6 +31,8 @@ describe('Testing Typer', () => {
             model.entities.forEach(ent => {
                 ent.attributes.forEach(att => {
                     expect(att.declaredType).not.toBeNull;
+                    expect(att.declaredType).not.toBeUndefined;
+                    console.log("Checking attribute " + att.name); // + ", metatype is " + att.declaredType.get$Type());
                     expect(typer.isType(att.declaredType)).toBe(true);
                 });
             });
