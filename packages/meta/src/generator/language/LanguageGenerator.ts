@@ -2,6 +2,7 @@ import { Helpers } from "../Helpers";
 import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";
 import { Names } from "../Names";
 import { EnumerationTemplate } from "./templates/EnumerationTemplate";
+import { TypeTemplate } from "./templates/TypeTemplate";
 import { LanguageTemplates } from "./templates/LanguageTemplate";
 import { WithTypeTemplate } from "./templates/WithTypeTemplate";
 import { PiLanguage } from "../../metalanguage/PiLanguage";
@@ -21,6 +22,7 @@ export class LanguageGenerator {
         const withTypeTemplate = new WithTypeTemplate();
         const languageTemplate = new LanguageTemplates();
         const enumerationTemplate = new EnumerationTemplate();
+        const typeTemplate = new TypeTemplate();
         const languageIndexTemplate = new LanguageIndexTemplate();
 
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
@@ -37,6 +39,12 @@ export class LanguageGenerator {
             console.log("Generating enumeration: " + enumeration.name);
             var generated = Helpers.pretty(enumerationTemplate.generateEnumeration(enumeration), "Enumeration " + enumeration.name);
             fs.writeFileSync(`${this.languageFolder}/${Names.enumeration(enumeration)}.ts`, generated);
+        });
+
+        language.types.forEach(type => {
+            console.log("Generating type: " + type.name);
+            var generated = Helpers.pretty(typeTemplate.generateType(type), "type " + type.name);
+            fs.writeFileSync(`${this.languageFolder}/${Names.type(type)}.ts`, generated);
         });
 
         var languageFile = Helpers.pretty(languageTemplate.generateLanguage(language), "Model info");
