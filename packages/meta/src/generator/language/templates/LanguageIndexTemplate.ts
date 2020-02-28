@@ -14,6 +14,9 @@ export class LanguageIndexTemplate {
         ${language.enumerations.map(c => 
             `export * from "./${Names.enumeration(c)}";`
         ).join("\n")}
+        ${language.types.map(c => 
+            `export * from "./${Names.type(c)}";`
+        ).join("\n")}
         `;
     }
 
