@@ -34,6 +34,7 @@ export class LanguageGenerator {
         });
 
         language.enumerations.forEach(enumeration => {
+            console.log("Generating enumeration: " + enumeration.name);
             var generated = Helpers.pretty(enumerationTemplate.generateEnumeration(enumeration), "Enumeration " + enumeration.name);
             fs.writeFileSync(`${this.languageFolder}/${Names.enumeration(enumeration)}.ts`, generated);
         });
