@@ -27,7 +27,7 @@ export class AllConceptsTemplate {
             ).join(", ")}
         } from "./index";
 
-        export type All${language.name}Concepts =
+        export type ${Names.allConcepts(language)} =
         ${tmp.map(c => 
             `${c}`
         ).join(" | ")}

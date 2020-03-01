@@ -1,17 +1,9 @@
 import { DemoAttribute, DemoEntity, DemoFunction, DemoVariable, DemoModel, WithType, DemoExpression, DemoPlaceholderExpression, DemoLiteralExpression, DemoStringLiteralExpression, DemoNumberLiteralExpression, DemoAbsExpression, DemoBinaryExpression, DemoMultiplyExpression, DemoPlusExpression, DemoDivideExpression, DemoAndExpression, DemoOrExpression, DemoComparisonExpression, DemoLessThenExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoFunctionCallExpression, DemoIfExpression, DemoVariableRef, DemoAttributeType} from "../language/index"
 import { AllDemoConcepts } from "language/AllDemoConcepts";
+import { IDemoScoper } from "language/IDemoScoper";
 
-export interface Scoper {
-    isInScope(modelElement: AllDemoConcepts, name: string, type?: DemoEntity) : boolean;
-    getVisibleElements(modelelement: AllDemoConcepts) : AllDemoConcepts[] ;
-    getFromVisibleElements(modelelement: AllDemoConcepts, name : string, metatype?: AllDemoConcepts) : AllDemoConcepts;
-    getVisibleNames(modelelement: AllDemoConcepts) : String[] ;
-    getVisibleTypes(modelelement: AllDemoConcepts) : AllDemoConcepts[] ;
-}
-
-export class DemoScoper implements Scoper {
-
-    isInScope(modelElement: AllDemoConcepts, name: string, type?: DemoEntity) : boolean {
+export class DemoScoper implements IDemoScoper {
+    isInScope(modelElement: AllDemoConcepts, name: string, type?: AllDemoConcepts) : boolean {
         if (this.getFromVisibleElements(modelElement, name, type) !== null) {
             return true;
         } else {
@@ -34,10 +26,10 @@ export class DemoScoper implements Scoper {
         let vis = this.getVisibleElements(modelelement);
         if (vis !== null) {
             for (let e of vis) {
-                let n: string = this.getNameOfDemoModelElement(e);
+                let n: string = this.getNameOfConcept(e);
                 if (name === n) {
                     if (metatype !== null) { // TODO check type
-                        //if (e instanceof T) {   
+                        //if (e instanceof metatype) {   
                             return e; 
                         //}
                     } else {
@@ -58,20 +50,19 @@ export class DemoScoper implements Scoper {
         // from modelelement get its surrounding namespace
         let ns = new NameSpace(modelelement);
         for (let e of ns.getVisibleElements()) {
-            let name: string = this.getNameOfDemoModelElement(e);
+            let name: string = this.getNameOfConcept(e);
             result.push(name);  
         }          
         return result;
     }
 
-    getVisibleTypes(modelelement: AllDemoConcepts) : DemoEntity[] {
-        let result : DemoEntity[] = [];
+    getVisibleTypes(modelelement: AllDemoConcepts): AllDemoConcepts[] {
+        let result : AllDemoConcepts[] = [];
         // TODO
-        result.push(new DemoEntity());
         return result;
     }
 
-    private getNameOfDemoModelElement(modelelement: AllDemoConcepts) {
+    private getNameOfConcept(modelelement: AllDemoConcepts) {
         let name: string = ""
         if (modelelement instanceof DemoAttribute) {
             name = modelelement.name;
@@ -130,7 +121,7 @@ export class NameSpace {
         let parent: AllDemoConcepts = null;
         if (modelelement.piContainer() !== null) {
             if (modelelement.piContainer().container !== null) {
-                // if (modelelement.piContainer().container instanceof DemoModelElement) {
+                // if (modelelement.piContainer().container instanceof AllDemoConcepts) {
                     parent = (modelelement.piContainer().container as AllDemoConcepts);
                 // }
             }
@@ -141,7 +132,7 @@ export class NameSpace {
     private internalVis(): AllDemoConcepts[] {
         let result : AllDemoConcepts[] = [];
 
-        // for now we push all parts, later public/private annotaiosn need to be taken into account        
+        // for now we push all parts, later public/private annotations need to be taken into account        
         if (this._myElem instanceof DemoModel ) {
             for (let z of this._myElem.entities) {
                 result.push(z);

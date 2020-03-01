@@ -2,27 +2,30 @@
 language PlayGroundLanguage
 
 PG_Module {
-    @default this.name
-    @verticalList entities
-    @verticalList functions
+    @projection =
+    "Module" {this.name}
+        {this.entities} as verticalList
+        {this.functions} as verticalList 
+    "EndModule"
 }
 
 PG_Entity {
     @horizontalList attributes
     @verticalList functions
-    @trigger: string = "entity"
+    @trigger = "entity"
 }
 
 PG_Variable {
-    @trigger: string = "attribute"
+    @trigger = "attribute"
 }
 
 PG_Function {
-    @trigger: string = "function"
+    @trigger = "function"
 }
 
 PG_StringLiteralExpression base PG_LiteralExpression {
-    @trigger: string = "'"
+    @projection = ' {this.value} '
+    @trigger = "'"
 }
 
 PG_NumberLiteralExpression base PG_LiteralExpression {
@@ -30,8 +33,8 @@ PG_NumberLiteralExpression base PG_LiteralExpression {
 }
 
 PG_MultiplyExpression base PG_BinaryExpression {
-    @symbol: string = "*"
-    @priority: number = "8"
+    @priority = "8"
+    @projection = {this.left} "*" {this.right}
 }
 
 // extras for 

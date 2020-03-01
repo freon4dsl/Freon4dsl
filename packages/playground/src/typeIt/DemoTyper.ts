@@ -3,18 +3,9 @@ import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoCompari
 import { DemoType } from "../language/DemoType";
 import { type } from "os";
 import { AllDemoConcepts } from "language/AllDemoConcepts";
+import { IDemoTyper } from "language/IDemoTyper";
 
-export interface Typer {
-    inferType(modelelement: AllDemoConcepts) : DemoType;
-
-    conform(type1: DemoType, type2: DemoType) : boolean; // type 1 <= type 2 conformance direction
-    conformList(typelist1: DemoType[], typelist2: DemoType[]) : boolean;  
-
-    isType(elem : AllDemoConcepts) : boolean;
-    typeName(elem : DemoType): string; 
-}
-
-export class DemoTyper implements Typer {
+export class DemoTyper implements IDemoTyper {
 
     inferType(modelelement: AllDemoConcepts): DemoType {
         // generate if statement for all lang elements that have @hasType annotation

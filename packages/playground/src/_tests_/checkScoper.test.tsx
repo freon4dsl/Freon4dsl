@@ -1,7 +1,6 @@
 import { DemoScoper } from "../scopeIt/DemoScoper";
 import { DemoModel } from "../language/index";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoModelElement } from "../scopeIt/DemoModelElement";
 
 describe("Testing Scoper", () => {
   describe('Scoper.getVisibleElements from DemoModel Instance', () => {

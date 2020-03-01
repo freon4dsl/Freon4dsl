@@ -17,7 +17,11 @@ export class LanguageIndexTemplate {
         language.types.map(c =>
             tmp.push(Names.type(c))
         );
-        tmp.push("WithType");
+        tmp.push(Names.allConcepts(language));
+        tmp.push(Names.withTypeInterface(language));
+        tmp.push(Names.scoperInterface(language));
+        tmp.push(Names.typerInterface(language));
+        
         tmp = tmp.sort();
 
         // the template starts here

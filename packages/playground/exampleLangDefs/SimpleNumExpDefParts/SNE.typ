@@ -12,9 +12,21 @@
 language SimpleNumericExpressions
 
 if (ROOTMODULE.Expression.hasType) [
-    REQUIRE SNE_LiteralExpression.definesType
+    REQUIRE SNE_LiteralExpression.hasType
 
-    SNE_BinaryExpression {
+    SNE_MultiplyExpression {
+        @inferType = commonSuperType(this.left.type, this.right.type)
+    }
+
+    SNE_PlusExpression {
+        @inferType = commonSuperType(this.left.type, this.right.type)
+    }
+
+    SNE_MinusExpression {
+        @inferType = commonSuperType(this.left.type, this.right.type)
+    }
+
+    SNE_DivideExpression {
         @inferType = commonSuperType(this.left.type, this.right.type)
     }
 

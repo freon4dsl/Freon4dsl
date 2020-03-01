@@ -10,7 +10,7 @@ concept TaxPayer {
 
 concept IncomePart {
     @reference source: IncomeSource
-    @obeservablepart deduction: Money;
+    @observablepart deduction: Money;
     amount: Money
 }
 
@@ -35,8 +35,14 @@ concept TaxID {
 
 concept TaxRule {
     name: string
-    applicableTo: SourceType
+    parameters: RuleParameter
     expression: Expression
+    result : Money
+}
+
+concept RuleParameter {
+    name : string
+    type : TYPE
 }
 
 Enumeration SourceType {
@@ -49,11 +55,21 @@ Enumeration SourceType {
 // import Expression lib
 
 concept PercentageExpression base BinaryExpression {
-    @part left : Percentage
-    @part right : Expression @require right.type = number
-    @editor symbol: string = "*"
+    @part inner : Expression @require inner.type = number
+    @editor symbol: string = "%"
     @editor priority: number = "2"
 }
+
+concept MoneyLiteralExp base LiteralExpression {
+    value : string
+    @editor symbol: string = "Euro"
+    @inferType = Money
+}
+
+// include or define concept "call to TaxRule"-expression ??? rename FunctionCall???
+
+// in Scope Def: @langscope generalDeduction : Money = 3000,-
+// in Scope Def: @langscope toBePaid : Money // holds result for every TaxRule
 
 // examples
 // Rule NGO_income_tax_free(incomePart: IncomePart) = if (incomePart.sourceType == SourceType.NGO) toBePaid = 0;
@@ -61,4 +77,5 @@ concept PercentageExpression base BinaryExpression {
 // Rule Royalties_tax_low(incomePart: IncomePart) = if (incomePart.sourceType == SourceType.Royalties) toBePaid = 10% * incomePart.amount;
 // Rule Gift_tax_high(incomePart: IncomePart) = if (incomePart.sourceType == SourceType.Company) toBePaid = 20% * incomePart.amount - incomePart.deduction;
 
-// Rule total_taxes(tp: TaxPayer) = tp.incomeParts->sum( allRules(incomePart) ) - generalDeduction;
+// Rule total_taxes(tp: TaxPayer) = tp.total_taxes = sum( allRules over tp.incomeParts ) - generalDeduction;
+// Rule total_revenues() = sum( total_taxes over allTaxPayers );
