@@ -1,9 +1,11 @@
 import { DemoAttribute, DemoEntity, DemoFunction, DemoVariable, DemoModel, WithType, DemoExpression, DemoPlaceholderExpression, DemoLiteralExpression, DemoStringLiteralExpression, DemoNumberLiteralExpression, DemoAbsExpression, DemoBinaryExpression, DemoMultiplyExpression, DemoPlusExpression, DemoDivideExpression, DemoAndExpression, DemoOrExpression, DemoComparisonExpression, DemoLessThenExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoFunctionCallExpression, DemoIfExpression, DemoVariableRef, DemoAttributeType} from "../language/index"
 import { AllDemoConcepts } from "language/AllDemoConcepts";
 import { IDemoScoper } from "language/IDemoScoper";
+import { DemoNameSpace } from "./DemoNamespace";
+import { DemoConceptType } from "language/Demo";
 
 export class DemoScoper implements IDemoScoper {
-    isInScope(modelElement: AllDemoConcepts, name: string, type?: AllDemoConcepts) : boolean {
+    isInScope(modelElement: AllDemoConcepts, name: string, type?: DemoConceptType) : boolean {
         if (this.getFromVisibleElements(modelElement, name, type) !== null) {
             return true;
         } else {
@@ -17,21 +19,21 @@ export class DemoScoper implements IDemoScoper {
             // TODO error mess console.log("getVisibleElements: modelelement is null");
             return null;
         }
-        let ns = new NameSpace(modelelement);
-        result = ns.getVisibleElements();                   
+        let ns = new DemoNameSpace(modelelement);
+        result = ns.getVisibleElements(true); // true means that we are including names from parent namespaces                   
         return result;
     }
 
-    getFromVisibleElements(modelelement: AllDemoConcepts, name : string, metatype?: AllDemoConcepts) : AllDemoConcepts {
+    getFromVisibleElements(modelelement: AllDemoConcepts, name : string, metatype?: DemoConceptType) : AllDemoConcepts {
         let vis = this.getVisibleElements(modelelement);
         if (vis !== null) {
             for (let e of vis) {
                 let n: string = this.getNameOfConcept(e);
                 if (name === n) {
-                    if (metatype !== null) { // TODO check type
-                        //if (e instanceof metatype) {   
+                    if (metatype) { 
+                        if (e.$type === metatype) {   
                             return e; 
-                        //}
+                        }
                     } else {
                         return e;
                     }                                     
@@ -43,16 +45,11 @@ export class DemoScoper implements IDemoScoper {
 
     getVisibleNames(modelelement: AllDemoConcepts) : String[] {
         let result: String[] = [];
-        if(modelelement == null){
-            // TODO: error mess console.log("getVisibleNames: modelelement is null");
-             return null;
+        let vis = this.getVisibleElements(modelelement);
+        for (let e of vis) {
+            let n: string = this.getNameOfConcept(e);
+            result.push(n);
         }
-        // from modelelement get its surrounding namespace
-        let ns = new NameSpace(modelelement);
-        for (let e of ns.getVisibleElements()) {
-            let name: string = this.getNameOfConcept(e);
-            result.push(name);  
-        }          
         return result;
     }
 
@@ -85,96 +82,4 @@ export class DemoScoper implements IDemoScoper {
         return name;
     }
 
-}
-
-export class NameSpace {
-    _myElem : AllDemoConcepts;
-
-    constructor(elem : AllDemoConcepts) {
-        this._myElem = elem;
-    }
-
-    getVisibleElements() : AllDemoConcepts[] {
-        let result : AllDemoConcepts[] = [];
-        // from modelelement get its surrounding namespace
-        let ns = this.getSurroundingNamespace(this._myElem);
-        if (ns !== null) {
-            result = ns.internalVis(); 
-        }
-        // now add elements from surrounding Namespaces
-        let parent: AllDemoConcepts = this.getParent(this._myElem);
-        while (parent !== null) { 
-            ns = this.getSurroundingNamespace(parent);
-            if (ns !== null) {
-                // merge the results
-                for (let key of ns.internalVis()) { 
-                    result.push(key);
-                }
-            }
-            // skip modelelements between parent and the modelelement that is its surrounding namespace
-            parent = this.getParent(ns._myElem);
-        } 
-        return result;
-    }
-
-    private getParent(modelelement : AllDemoConcepts) : AllDemoConcepts {
-        let parent: AllDemoConcepts = null;
-        if (modelelement.piContainer() !== null) {
-            if (modelelement.piContainer().container !== null) {
-                // if (modelelement.piContainer().container instanceof AllDemoConcepts) {
-                    parent = (modelelement.piContainer().container as AllDemoConcepts);
-                // }
-            }
-        }
-        return parent;
-    }
-
-    private internalVis(): AllDemoConcepts[] {
-        let result : AllDemoConcepts[] = [];
-
-        // for now we push all parts, later public/private annotations need to be taken into account        
-        if (this._myElem instanceof DemoModel ) {
-            for (let z of this._myElem.entities) {
-                result.push(z);
-            }
-            for (let z of this._myElem.functions) {
-                result.push(z);
-            }
-        } else if (this._myElem instanceof DemoEntity ) {
-            for (let z of this._myElem.attributes) {
-                result.push(z);
-            }
-            for (let z of this._myElem.functions) {
-                result.push(z);
-            }
-        } else if (this._myElem instanceof DemoFunction ) {
-            for (let z of this._myElem.parameters) {
-                result.push(z);
-            }
-        }
-        return result;
-    }
-
-    private getSurroundingNamespace(modelelement: AllDemoConcepts) : NameSpace {
-        if(modelelement === null){
-            return null;
-        }
-        if (this.isNameSpace(modelelement)) {
-            return new NameSpace(modelelement);
-        } else {
-             return this.getSurroundingNamespace(this.getParent(modelelement));
-        }
-    }
-
-    private isNameSpace(modelelement : AllDemoConcepts) : boolean {
-        // generate if-statement for each @namespace annotation!
-        if (modelelement instanceof DemoModel) {
-            return true;
-        } else if (modelelement instanceof DemoEntity) {
-            return true;
-        } else if ( modelelement instanceof DemoFunction) {
-            return true;
-        }
-       return false;
-    }
 }

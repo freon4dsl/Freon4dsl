@@ -3,24 +3,24 @@ import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Demo Model", () => {
   describe("Checking DemoModel instance", () => {
-      let model: DemoModel = new DemoModelCreator().model;
+    let model: DemoModel = new DemoModelCreator().model;
 
-      beforeEach(done => {
-          done();
-      });
+    beforeEach(done => {
+      done();
+    });
 
-      it("model name should be set", () => {
-        expect(model.name).not.toBeNull;
-      });
+    test.skip("model name should be set", () => {
+      expect(model.name).not.toBeNull;
+    });
 
-    it("model functions should be set correctly", () => {
+    test.skip("model functions should be set correctly", () => {
         expect(model.functions.length).toBe(3);
         checkFunctionDef(model.functions[0], model);
         checkFunctionDef(model.functions[1], model);
         checkFunctionDef(model.functions[2], model);
     });
 
-    it("model entities should be set correctly", () => {
+    test.skip("model entities should be set correctly", () => {
         expect(model.entities.length).toBe(2);
 
         const f1: DemoEntity = model.entities[0];
@@ -28,7 +28,7 @@ describe("Demo Model", () => {
         expect(f1.name).not.toBeNull;
     });
 
-    it("entity functions should be set correctly", () => {
+    test.skip("entity functions should be set correctly", () => {
       for (let i of model.entities) {
         for (let f of i.functions) {
           expect(f.container).toBe(i);
@@ -37,7 +37,7 @@ describe("Demo Model", () => {
       }
     });
 
-    test("entity attributes should be set correctly", () => {
+    test.skip("entity attributes should be set correctly", () => {
       for (let i of model.entities) {
         for (let a of i.attributes) {
           expect(a.name).not.toBeNull;

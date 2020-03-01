@@ -49,6 +49,10 @@ export class Names {
         return type.name;
     }
 
+    public static languageConceptType(language: PiLanguage){
+        return language.name + "ConceptType";
+    }
+
     public static allConcepts(language: PiLanguage){
         return "All" + language.name + "Concepts";
     }
