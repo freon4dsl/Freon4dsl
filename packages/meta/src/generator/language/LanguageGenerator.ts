@@ -1,5 +1,6 @@
 import { Helpers } from "../Helpers";
 import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";
+import { AllConceptsTemplate } from "./templates/AllConceptsTemplate";
 import { Names } from "../Names";
 import { EnumerationTemplate } from "./templates/EnumerationTemplate";
 import { TypeTemplate } from "./templates/TypeTemplate";
@@ -24,6 +25,7 @@ export class LanguageGenerator {
         const enumerationTemplate = new EnumerationTemplate();
         const typeTemplate = new TypeTemplate();
         const languageIndexTemplate = new LanguageIndexTemplate();
+        const allConceptsTemplate = new AllConceptsTemplate();
 
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         Helpers.createDirIfNotExisting(this.languageFolder);
@@ -47,13 +49,20 @@ export class LanguageGenerator {
             fs.writeFileSync(`${this.languageFolder}/${Names.type(type)}.ts`, generated);
         });
 
+        console.log("Generating metatype info: " + language.name + ".ts");
         var languageFile = Helpers.pretty(languageTemplate.generateLanguage(language), "Model info");
         fs.writeFileSync(`${this.languageFolder}/${language.name}.ts`, languageFile);
 
+        console.log("Generating Pi interface: WithType.ts");
         var withTypeFile = Helpers.pretty(withTypeTemplate.generateTypeInterface(language), "Id Interface");
         fs.writeFileSync(`${this.languageFolder}/WithType.ts`, withTypeFile);
 
+        console.log("Generating language index: index.ts");
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${this.languageFolder}/index.ts`, languageIndexFile);
+    
+        console.log("Generating All" + language.name + "Concepts class: All" + language.name + "Concepts.ts");
+        var allConceptsFile = Helpers.pretty(allConceptsTemplate.generateAllConceptsClass(language), "All" + language.name + "Concepts Class");
+        fs.writeFileSync(`${this.languageFolder}/All${language.name}Concepts.ts`, allConceptsFile);
     }
 }

@@ -1,4 +1,4 @@
-language Language
+language Demo
 
 root concept DemoModel {
     name: string

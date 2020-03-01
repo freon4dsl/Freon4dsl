@@ -1,17 +1,17 @@
 import { DemoAttribute, DemoEntity, DemoFunction, DemoVariable, DemoModel, WithType, DemoExpression, DemoPlaceholderExpression, DemoLiteralExpression, DemoStringLiteralExpression, DemoNumberLiteralExpression, DemoAbsExpression, DemoBinaryExpression, DemoMultiplyExpression, DemoPlusExpression, DemoDivideExpression, DemoAndExpression, DemoOrExpression, DemoComparisonExpression, DemoLessThenExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoFunctionCallExpression, DemoIfExpression, DemoVariableRef, DemoAttributeType} from "../language/index"
-import { DemoModelElement } from "./DemoModelElement";
+import { AllDemoConcepts } from "language/AllDemoConcepts";
 
 export interface Scoper {
-    isInScope(modelElement: DemoModelElement, name: string, type?: DemoEntity) : boolean;
-    getVisibleElements(modelelement: DemoModelElement) : DemoModelElement[] ;
-    getFromVisibleElements(modelelement: DemoModelElement, name : string, metatype?: DemoModelElement) : DemoModelElement;
-    getVisibleNames(modelelement: DemoModelElement) : String[] ;
-    getVisibleTypes(modelelement: DemoModelElement) : DemoModelElement[] ;
+    isInScope(modelElement: AllDemoConcepts, name: string, type?: DemoEntity) : boolean;
+    getVisibleElements(modelelement: AllDemoConcepts) : AllDemoConcepts[] ;
+    getFromVisibleElements(modelelement: AllDemoConcepts, name : string, metatype?: AllDemoConcepts) : AllDemoConcepts;
+    getVisibleNames(modelelement: AllDemoConcepts) : String[] ;
+    getVisibleTypes(modelelement: AllDemoConcepts) : AllDemoConcepts[] ;
 }
 
 export class DemoScoper implements Scoper {
 
-    isInScope(modelElement: DemoModelElement, name: string, type?: DemoEntity) : boolean {
+    isInScope(modelElement: AllDemoConcepts, name: string, type?: DemoEntity) : boolean {
         if (this.getFromVisibleElements(modelElement, name, type) !== null) {
             return true;
         } else {
@@ -19,8 +19,8 @@ export class DemoScoper implements Scoper {
         }
     }
 
-    getVisibleElements(modelelement: DemoModelElement) : DemoModelElement[] {
-        let result : DemoModelElement[] = [];
+    getVisibleElements(modelelement: AllDemoConcepts) : AllDemoConcepts[] {
+        let result : AllDemoConcepts[] = [];
         if(modelelement == null){
             // TODO error mess console.log("getVisibleElements: modelelement is null");
             return null;
@@ -30,7 +30,7 @@ export class DemoScoper implements Scoper {
         return result;
     }
 
-    getFromVisibleElements(modelelement: DemoModelElement, name : string, metatype?: DemoModelElement) : DemoModelElement {
+    getFromVisibleElements(modelelement: AllDemoConcepts, name : string, metatype?: AllDemoConcepts) : AllDemoConcepts {
         let vis = this.getVisibleElements(modelelement);
         if (vis !== null) {
             for (let e of vis) {
@@ -49,7 +49,7 @@ export class DemoScoper implements Scoper {
         return null;
     }
 
-    getVisibleNames(modelelement: DemoModelElement) : String[] {
+    getVisibleNames(modelelement: AllDemoConcepts) : String[] {
         let result: String[] = [];
         if(modelelement == null){
             // TODO: error mess console.log("getVisibleNames: modelelement is null");
@@ -64,14 +64,14 @@ export class DemoScoper implements Scoper {
         return result;
     }
 
-    getVisibleTypes(modelelement: DemoModelElement) : DemoEntity[] {
+    getVisibleTypes(modelelement: AllDemoConcepts) : DemoEntity[] {
         let result : DemoEntity[] = [];
         // TODO
         result.push(new DemoEntity());
         return result;
     }
 
-    private getNameOfDemoModelElement(modelelement: DemoModelElement) {
+    private getNameOfDemoModelElement(modelelement: AllDemoConcepts) {
         let name: string = ""
         if (modelelement instanceof DemoAttribute) {
             name = modelelement.name;
@@ -97,21 +97,21 @@ export class DemoScoper implements Scoper {
 }
 
 export class NameSpace {
-    _myElem : DemoModelElement;
+    _myElem : AllDemoConcepts;
 
-    constructor(elem : DemoModelElement) {
+    constructor(elem : AllDemoConcepts) {
         this._myElem = elem;
     }
 
-    getVisibleElements() : DemoModelElement[] {
-        let result : DemoModelElement[] = [];
+    getVisibleElements() : AllDemoConcepts[] {
+        let result : AllDemoConcepts[] = [];
         // from modelelement get its surrounding namespace
         let ns = this.getSurroundingNamespace(this._myElem);
         if (ns !== null) {
             result = ns.internalVis(); 
         }
         // now add elements from surrounding Namespaces
-        let parent: DemoModelElement = this.getParent(this._myElem);
+        let parent: AllDemoConcepts = this.getParent(this._myElem);
         while (parent !== null) { 
             ns = this.getSurroundingNamespace(parent);
             if (ns !== null) {
@@ -126,20 +126,20 @@ export class NameSpace {
         return result;
     }
 
-    private getParent(modelelement : DemoModelElement) : DemoModelElement {
-        let parent: DemoModelElement = null;
+    private getParent(modelelement : AllDemoConcepts) : AllDemoConcepts {
+        let parent: AllDemoConcepts = null;
         if (modelelement.piContainer() !== null) {
             if (modelelement.piContainer().container !== null) {
                 // if (modelelement.piContainer().container instanceof DemoModelElement) {
-                    parent = (modelelement.piContainer().container as DemoModelElement);
+                    parent = (modelelement.piContainer().container as AllDemoConcepts);
                 // }
             }
         }
         return parent;
     }
 
-    private internalVis(): DemoModelElement[] {
-        let result : DemoModelElement[] = [];
+    private internalVis(): AllDemoConcepts[] {
+        let result : AllDemoConcepts[] = [];
 
         // for now we push all parts, later public/private annotaiosn need to be taken into account        
         if (this._myElem instanceof DemoModel ) {
@@ -164,7 +164,7 @@ export class NameSpace {
         return result;
     }
 
-    private getSurroundingNamespace(modelelement: DemoModelElement) : NameSpace {
+    private getSurroundingNamespace(modelelement: AllDemoConcepts) : NameSpace {
         if(modelelement === null){
             return null;
         }
@@ -175,7 +175,7 @@ export class NameSpace {
         }
     }
 
-    private isNameSpace(modelelement : DemoModelElement) : boolean {
+    private isNameSpace(modelelement : AllDemoConcepts) : boolean {
         // generate if-statement for each @namespace annotation!
         if (modelelement instanceof DemoModel) {
             return true;
