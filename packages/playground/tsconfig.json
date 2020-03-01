@@ -3,8 +3,8 @@
 
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": "./src",
-    "target": "es6"
+    "target": "es6",
+    "baseUrl": "./src"
   },
   "include": [
     "src"
