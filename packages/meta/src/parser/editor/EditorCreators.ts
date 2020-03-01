@@ -1,3 +1,12 @@
+import { PiConceptEditor } from "../../metalanguage/editor/PiConceptEditor";
+import { PiEnumerationEditor } from "../../metalanguage/editor/PiEnumerationEditor";
+import { PiLanguageEditor } from "../../metalanguage/editor/PiLanguageEditor";
+import {
+    PiProjectionIndent,
+    PiProjectionPropertyReference,
+    PiProjectionTemplate,
+    PiProjectionText
+} from "../../metalanguage/editor/PiProjectionTemplate";
 import { PiLangPrimitiveProperty, PiLangConcept, PiLangElementProperty, PiLangConceptReference, PiLanguage, PiLangEnumeration } from "../../metalanguage/PiLanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
@@ -8,73 +17,25 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     return result;
 }
 
-export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>): PiLangPrimitiveProperty {
-    const result = new PiLangPrimitiveProperty();
-    if(!!data.type) { result.type = data.type; }
-    if(!!data.name) { result.name = data.name; }
-    result.isList = data.isList;
-
-    // console.log("created property with name "+ result.name);
-    return result;
-}
-
-export function createPart(data: Partial<PiLangElementProperty>): PiLangElementProperty {
-    const result = new PiLangElementProperty();
-    if(!!data.type) { result.type = data.type; }
-    if(!!data.name) { result.name = data.name; }
-    result.isList = !!data.isList;
-    return result;
-}
-
-export function createReference(data: Partial<PiLangElementProperty>): PiLangElementProperty {
-    const result = new PiLangElementProperty();
-    if(!!data.type) { result.type = data.type; }
-    if(!!data.name) { result.name = data.name; }
-    result.isList = !!data.isList;
-    return result;
-}
-
-export function createConcept(data: Partial<PiLangConcept>): PiLangConcept {
+export function createConceptEditor(data: Partial<PiConceptEditor>): PiConceptEditor {
     // console.log("creating concept " + data.name);
-    const result = new PiLangConcept();
+    const result = new PiConceptEditor();
 
-    result.isRoot = !!data.isRoot;
-    result.isAbstract = !!data.isAbstract;
-    result.isExpression = !!data.isExpression; 
+    result.isExpression = !!data.isExpression;
     result.isBinaryExpression = !!data.isBinaryExpression;
     result.isExpressionPlaceHolder = !!data.isExpressionPlaceHolder; 
 
-    if(!!data.name) { result.name = data.name; }
     if(!!data.priority) { result.priority = data.priority; }
-    if(!!data.base) { result.base = data.base; }
-
-    if(!!data.properties) { 
-        result.properties = data.properties;
-        result.properties.forEach(p => p.owningConcept = result );
-    }
-    if(!!data.parts) { 
-        result.parts = data.parts;
-        result.parts.forEach(p => p.owningConcept = result );
-    }
-    if(!!data.references) { 
-        result.references = data.references;
-        result.references.forEach(p => p.owningConcept = result );
-    }
     if( !!data.trigger ){ result.trigger = data.trigger; }
     if( !!data.symbol ){ result.symbol = data.symbol; }
     if( !!data.priority ){ result.priority = data.priority; }
+    if( !!data.projection  ){ result.projection = data.projection; }
 
-    result.parts.forEach(part => part.owningConcept = result);
-    result.properties.forEach(prop => prop.owningConcept = result);
-    result.references.forEach(ref => ref.owningConcept = result);
-    // console.log("created  concept " + result.name);
     return result;
 }
 
-export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
-    const result = new PiLanguage();
-    // console.log("Creating language with concepts: ");
-    // data.concepts.forEach(c => console.log("    concept "+ c.name));
+export function createLanguageEditor(data: Partial<PiLanguageEditor>): PiLanguageEditor {
+    const result = new PiLanguageEditor();
     if( !!data.name) {
         result.name = data.name
     }
@@ -87,21 +48,41 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
 
     // Ensure all references to the language are set.
     result.concepts.forEach(concept => {
-        concept.language = result;
-        concept.references.forEach(ref => ref.type.language = result);
-        concept.parts.forEach(part => part.type.language = result);
-        if( !!concept.base ){
-            concept.base.language = result;
-        }
+        concept.languageEditor = result;
+    } );
+    result.enumerations.forEach(enumeration => {
+        enumeration.languageEditor = result;
     } );
     return result;
 
 }
 
-export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnumeration {
-    const result = new PiLangEnumeration();
-    if( !!data.name) { result.name = data.name; }
-    if( !!data.literals) { result.literals = data.literals; }
+export function createProjection(data: Partial<PiProjectionTemplate>): PiProjectionTemplate {
+    const result = new PiProjectionTemplate();
+    if( !!data.lines ){ result.lines = data.lines; }
+    return result;
+}
+
+export function createIndent(data: Partial<PiProjectionIndent>): PiProjectionIndent {
+    const result = new PiProjectionIndent();
+    if( !!data.indent ){ result.indent = data.indent; }
+    return result;
+}
+
+export function createText(data: Partial<PiProjectionText>): PiProjectionText {
+    const result = new PiProjectionText();
+    if( !!data.text ){ result.text = data.text; }
+    return result;
+}
+
+export function createIPropertyRef(data: Partial<PiProjectionPropertyReference>): PiProjectionPropertyReference {
+    const result = new PiProjectionPropertyReference();
+    if( !!data.propertyName ){ result.propertyName = data.propertyName; }
+    return result;
+}
+
+export function createEnumeration(data: Partial<PiEnumerationEditor>): PiEnumerationEditor {
+    const result = new PiEnumerationEditor();
     return result;
 }
 

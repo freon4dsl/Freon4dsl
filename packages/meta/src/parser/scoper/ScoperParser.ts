@@ -24,7 +24,7 @@ export class ScoperParser {
         }
         if (model instanceof PiLanguage) {
             const checker = new PiLanguageChecker();
-            checker.checkLanguage(model);
+            checker.check(model);
             checker.errors.forEach(error => console.log("ERROR: " + error));
             if (checker.hasErrors()) {
                 console.log("Stopping because of errors.");

@@ -1,88 +1,75 @@
 {
-    let create = require("./EditorCreators");
+    let creator = require("./EditorCreators");
 }
 
 Editor_Definition
-  = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws c:(concept)* ws e:(enumeration)*
+  = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws c:(concept)*
     {
-        return create.createLanguage({
+        return creator.createLanguageEditor({
             "name": name,
             "concepts": c,
             "enumerations": e
         });
     } 
 
-abstractKey     = "abstract" ws { return true; }
-rootKey         = "root" ws { return true; }
+conceptKey      = "concept" ws
 binaryKey       = "binary" ws { return true; }
 expressionKey   = "expression" ws { return true; }
-baseKey         = "base" ws { return true; }
 placeholderKey  = "placeholder" ws { return true; }
 
-base = baseKey name:var { return create.createConceptReference( { "name": name}); }
+conceptRef = conceptKey name:var { return create.createConceptReference( { "name": name}); }
 
-concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
-         "concept" ws name:var ws base:base? curly_begin 
-            att:attribute*
-            parts:part* 
-            references:reference*
-            editorProps:editorProperty*
-          curly_end 
+concept = concept:conceptRef ws binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
+         trigger:trigger?
+         symbol:symbol?
+         priority: priority?
+         "projection" ws name:var curly_begin
+          (l: line)*
+          curly_end
     { 
-        return create.createConcept({
-            "properties": att,
-            "parts": parts,
-            "references": references,
-            "name": name,
-            "base": base,
-            "isAbstract": (!!abs),
-            "isRoot": (!!isRoot),
+        return create.createConceptEditor({
             "isBinaryExpression": !!binary,
             "isExpression": (!!expression),
             "isExpressionPlaceHolder": !!isExpressionPlaceHolder,
             "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
             "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
-            "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
+            "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined),
+            "projection": l
         }); 
     }
 
-attribute = name:var ws name_separator ws type:var isList:"[]"? ws
-    { 
-        return create.createPrimitiveProperty({"name": name, "type": type, "isList": (isList?true:false) }) 
-    }
+spaces      = s:[ ]+                { return creator.createIndent( { "indent": s.join() }); }
 
-part = "@part" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
-    { 
-        return create.createPart({"name": name, "type": type, "isList": (isList?true:false) }) 
-    }
+expression  = "${" t:text "}"       { return creator.createPropertyRef( { "propertyReference": t }); }
 
-reference = "@reference" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
-    { 
-        return create.createReference({"name": name, "type": type, "isList": (isList?true:false) }) 
-    }
+text        = t:[^$]+               { return creator.createText      ( { "text": t.join() }); }
+
+newline     = "\r"? "\n"            { return "\n"; }
+
+line        = l:(s:spaces / t:text / e:expression)* newline
+                {
+                    return creator.createProjection( {"lines": l} ); }
+                }
 
 conceptReference = referredName:var {
     return create.createConceptReference({"name": referredName})
 }
 
-editorProperty = "@editor" ws name:var ws name_separator ws type:var ws "=" ws "\"" value:string "\"" ws
+trigger = "trigger" ws ":" ws "\"" value:string "\"" ws
     {
-        switch(name) {
-            case "trigger": return { "trigger": value }
-            case "priority": return { "priority": Number.parseInt(value) };
-            case "symbol": return { "symbol": value };
-        };
-        return {"name": name, "type": type, "value": value, "isEditor": true }
-    }  
+        return { "trigger": value }
+    }
+symbol = "symbol" ws ":" ws "\"" value:string "\"" ws
+    {
+        return { "symbol": value }
+    }
+priority = "priority" ws ":" ws "\"" value:string "\"" ws
+    {
+        return { "priority": value }
+    }
 
-enumeration = "enumeration" ws name:var curly_begin
-                    literals:var+
-                curly_end
-                {
-                    return create.createEnumeration({ "name": name, "literals": literals});
-                }
 
-curly_begin    = ws "{" ws 
+curly_begin    = ws "{" ws
 curly_end      = ws "}" ws
 name_separator  = ws ":" ws
 

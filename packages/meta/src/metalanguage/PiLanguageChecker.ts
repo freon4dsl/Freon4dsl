@@ -1,36 +1,11 @@
+import { Checker } from "./Checker";
 import { PiLangConcept, PiLangConceptReference, PiLangElementProperty, PiLanguage } from "./PiLanguage";
 
-export type CheckB = { check: boolean, error: string, whenOk?: () => void };
+// export type CheckB = { check: boolean, error: string, whenOk?: () => void };
 
-export class PiLanguageChecker {
+export class PiLanguageChecker extends Checker<PiLanguage> {
 
-    errors: string[] = [];
-
-    public hasErrors(): boolean {
-        return this.errors.length > 0;
-    }
-
-    private simpleCheck(check: boolean, error: string): boolean {
-        if (!check) {
-            this.errors.push(error);
-            return false;
-        }
-        return true;
-    }
-
-    private nestedCheck(check: CheckB | CheckB[]): void {
-        if (Array.isArray(check)) {
-            check.forEach(chk => this.simpleCheck(chk.check, chk.error));
-        } else {
-            if (this.simpleCheck(check.check, check.error) ){
-                if( !!check.whenOk) {
-                    check.whenOk();
-                }                
-            }
-        }
-    }
-
-    public checkLanguage(language: PiLanguage): void {
+    public check(language: PiLanguage): void {
         this.nestedCheck(
             {
                 check: !!language.name,
