@@ -12,10 +12,11 @@
   "scripts": {
     "generate-language": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-language",
     "build-wait": "tsc -w",
-    "build": "tsc",
+    "build": "yarn run generate-language && tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "test": "jest"
   },
   "devDependencies": {
   },

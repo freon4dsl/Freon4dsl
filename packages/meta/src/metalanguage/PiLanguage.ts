@@ -14,6 +14,7 @@ export class PiLanguage {
     name: string;
     concepts: PiLangConcept[] = [];
     enumerations: PiLangEnumeration[] = [];
+    types: PiLangType[] = [];
 
     constructor() {
     }
@@ -156,6 +157,15 @@ export class PiLangElementProperty {
 }
 
 export class PiLangEnumeration {
+    language: PiLanguage;
+    name: string;
+    literals: string[] = [];
+
+    constructor() {
+    }
+}
+
+export class PiLangType {
     language: PiLanguage;
     name: string;
     literals: string[] = [];

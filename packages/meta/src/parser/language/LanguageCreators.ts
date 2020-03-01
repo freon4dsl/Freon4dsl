@@ -1,4 +1,4 @@
-import { PiLangPrimitiveProperty, PiLangConcept, PiLangElementProperty, PiLangConceptReference, PiLanguage, PiLangEnumeration } from "../../metalanguage/PiLanguage";
+import { PiLangPrimitiveProperty, PiLangConcept, PiLangElementProperty, PiLangConceptReference, PiLanguage, PiLangEnumeration, PiLangType } from "../../metalanguage/PiLanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
@@ -84,6 +84,10 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     if( !!data.enumerations) {
         result.enumerations = data.enumerations
     }
+    if( !!data.types) {
+        console.log("NEW adding type to language");
+        result.types = data.types
+    }
 
     // Ensure all references to the language are set.
     result.concepts.forEach(concept => {
@@ -94,8 +98,16 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
             concept.base.language = result;
         }
     } );
-    return result;
 
+    result.enumerations.forEach(enumeration => {
+        enumeration.language = result;
+    } );
+
+    result.types.forEach(type => {
+        type.language = result;
+    } );
+
+    return result;
 }
 
 export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnumeration {
@@ -105,4 +117,10 @@ export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnume
     return result;
 }
 
-
+export function createType(data: Partial<PiLangType>): PiLangType {
+    console.log("NEW creating type");
+    const result = new PiLangType();
+    if( !!data.name) { result.name = data.name; }
+    if( !!data.literals) { result.literals = data.literals; }
+    return result;
+}

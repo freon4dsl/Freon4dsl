@@ -24,7 +24,7 @@ export class LanguageParser {
         }
         if (model instanceof PiLanguage) {
             const checker = new PiLanguageChecker();
-            console.log("cecking language");
+            console.log("checking language");
             checker.checkLanguage(model);
             checker.errors.forEach(error => console.log("ERROR: " + error));
             if (checker.hasErrors()) {

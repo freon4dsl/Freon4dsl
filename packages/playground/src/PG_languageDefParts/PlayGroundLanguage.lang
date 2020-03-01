@@ -1,0 +1,59 @@
+// This is the definition of the core of the language
+language PlayGroundLanguage
+
+root concept PG_Module {
+    name: string
+    @part entities: PG_Entity[]
+    @part functions: PG_Function[]
+}
+
+concept PG_Entity {
+    name: string
+    @part attributes: PG_Variable[]
+    @part functions: PG_Function[]
+}
+
+concept PG_Variable {
+    name: string
+    declaredtype: @isTypeRef  // further defined in .typ file, 
+                              // if not present editor can be created without this field
+    visibility: @isScopeRef   // further defined in .scop file, 
+                              // if not present editor can be created without this field
+}
+
+concept PG_Function {
+    name: string
+    declaredtype: @isTypeRef
+    @part expression: PG_Expression
+    @part parameters: PG_Variable[]
+}
+
+abstract expression concept PG_Expression {}
+
+abstract expression concept PG_LiteralExpression base PG_Expression {}
+
+concept PG_StringLiteralExpression base PG_LiteralExpression {
+    value: string
+}
+
+concept PG_NumberLiteralExpression base PG_LiteralExpression {
+    value: string
+}
+
+abstract binary expression concept PG_BinaryExpression base PG_Expression {
+    @part left: PG_Expression
+    @part right: PG_Expression
+}
+
+concept PG_MultiplyExpression base PG_BinaryExpression {
+}
+
+enumeration PG_PrimitiveType {
+    String
+    Integer
+    Boolean
+}
+
+enumeration PG_AnyType {
+    Any
+}

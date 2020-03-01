@@ -5,10 +5,11 @@ export class LanguageTemplates {
     }
 
     generateLanguage(language: PiLanguage): string {
+
         return `
-      
-        export type ${language.name}ConceptType = ${language.concepts.map(c => `"${c.name}"`).join(" | ")};            
-    
+        export type ${language.name}ConceptType = 
+        ${language.enumerations.length > 0 ? `${language.enumerations.map(c => `"${c.name}"`).join(" | ")} |` : ""}
+        ${language.concepts.map(c => `"${c.name}"`).join(" | ")}
         `;
     }
 

@@ -6,10 +6,24 @@ export class LanguageIndexTemplate {
     }
 
     generateIndex(language: PiLanguage): string {
+        // sort all names alphabetically
+        let tmp : string[] = [];
+        language.concepts.map(c => 
+            tmp.push(Names.concept(c))
+        );
+        language.enumerations.map(c =>
+            tmp.push(Names.enumeration(c))
+        );
+        language.types.map(c =>
+            tmp.push(Names.type(c))
+        );
+        tmp.push("WithType");
+        tmp = tmp.sort();
+
+        // the template starts here
         return `
-        export * from "./WithType";
-        ${language.concepts.map(c => 
-            `export * from "./${Names.concept(c)}";`
+        ${tmp.map(c => 
+            `export * from "./${c}";`
         ).join("\n")}
         `;
     }

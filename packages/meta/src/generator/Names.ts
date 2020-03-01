@@ -1,4 +1,4 @@
-import { PiLangConcept, PiLangEnumeration, PiLanguage } from "../metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangType } from "../metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -45,4 +45,7 @@ export class Names {
         return enumeration.name;
     }
 
+    public static type(type: PiLangType){
+        return type.name;
+    }
 }

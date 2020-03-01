@@ -22,6 +22,7 @@ export class ConceptTemplate {
                 concept.parts.map(p => Names.concept(p.type.concept()))
                     .concat(concept.references.map(r => Names.concept(r.type.concept())))
                     .concat(language.enumerations.map(e => Names.enumeration(e)))
+                    .concat(language.types.map(e => Names.type(e)))
                     .concat(Names.concept(language.expressionPlaceholder()))
                     .concat([baseExpressionName])
                     .filter(name => !(name === concept.name))
