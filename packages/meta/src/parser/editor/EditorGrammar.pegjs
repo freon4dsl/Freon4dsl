@@ -7,8 +7,7 @@ Editor_Definition
     {
         return creator.createLanguageEditor({
             "name": name,
-            "concepts": c,
-            "enumerations": e
+            "concepts": c
         });
     } 
 
@@ -48,7 +47,7 @@ newline     = "\r"? "\n"            { return "\n"; }
 
 line        = l:(s:spaces / t:text / e:expression)* newline
                 {
-                    return creator.createProjection( {"lines": l} ); }
+                    return creator.createProjection( {"lines": l} );
                 }
 
 conceptReference = referredName:var {

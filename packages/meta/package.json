@@ -33,6 +33,7 @@
     "@projectit/core": "^0.0.5",
     "@projectit/model": "^0.0.5",
     "@types/lodash": "4.14.73",
+    "@types/pegjs": "^0.10.1",
     "axios": "0.18.0",
     "global": "^4.4.0",
     "parjs": "0.12.0",
