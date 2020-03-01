@@ -1,11 +1,14 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
 import { EditorGenerator } from "../generator/editor/EditorGenerator";
+import { LanguageGenerator } from "../generator/language/LanguageGenerator";
 import { EditorParser } from "../parser/editor/EditorParser";
+import { LanguageParser } from "../parser/language/LanguageParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
 
 export class ProjectItGenerateEditor extends ProjectItGenerateAction {
     private editorFile: CommandLineStringParameter;
-    protected generator: EditorGenerator = new EditorGenerator();
+    protected languageGenerator: LanguageGenerator = new LanguageGenerator();
+    protected editorGenerator: EditorGenerator = new EditorGenerator();
 
     public constructor() {
         super({
@@ -16,9 +19,14 @@ export class ProjectItGenerateEditor extends ProjectItGenerateAction {
     }
 
     generate(): void {
-        const language = new EditorParser().parse(this.languageFile);
-        this.generator.outputfolder = this.outputFolder;
-        this.generator.generate(language);
+        const language = new LanguageParser().parse(this.languageFile);
+        this.languageGenerator.outputfolder = this.outputFolder;
+        this.languageGenerator.generate(language);
+
+        const editor = new EditorParser().parse(this.editorFile.value);
+        this.editorGenerator.outputfolder = this.outputFolder;
+        this.editorGenerator.language = language;
+        this.editorGenerator.generate(editor);
     }
 
     protected onDefineParameters(): void {

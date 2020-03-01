@@ -1,26 +1,21 @@
 import {
     Box,
-    PiContext,
     AFTER_BINARY_OPERATOR,
     BEFORE_BINARY_OPERATOR,
     LEFT_MOST,
     RIGHT_MOST,
     BTREE,
     PiEditor,
-    PiLogger,
-    PiUtils
+    PiLogger
 } from "@projectit/core";
 import { DemoContext, DemoProjection, DemoActions } from "../editor/index";
 import {
     DemoBinaryExpression,
     DemoComparisonExpression,
-    DemoIfExpression,
     DemoMultiplyExpression,
-    DemoNumberLiteralExpression,
     DemoPlusExpression,
     DemoPowerExpression,
-    DemoStringLiteralExpression,
-    DemoVariableRefExpression
+    DemoStringLiteralExpression
 } from "../model/index";
 
 describe("BalanceTree", () => {
