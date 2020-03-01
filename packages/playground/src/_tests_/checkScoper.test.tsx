@@ -135,7 +135,7 @@ describe("Testing Scoper", () => {
         if( ent.name === "Person" || ent.name === "Company") {
           expected = true;
         }
-        expect(scoper.isInScope(ent, nameToTest, "DemoFunction")).toBe(expected);     
+        expect(scoper.isInScope(ent, nameToTest, "DemoAttribute")).toBe(expected);     
         ent.functions.forEach(fun => {
           expect(scoper.isInScope(fun, nameToTest)).toBe(expected);
         });
