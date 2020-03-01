@@ -3,51 +3,37 @@ import { observable } from "mobx";
 import * as uuid from "uuid";
 import { WithType } from "./WithType";
 import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
-import { model, MobxModelElementImpl } from "@projectit/model";
+import { model } from "@projectit/model";
 import { LanguageConceptType } from "./Language";
 import { DemoAttributeType } from "./DemoAttributeType";
 import { DemoType } from "./DemoType";
 import { DemoPlaceholderExpression } from "./DemoPlaceholderExpression";
 import { DemoExpression } from "./DemoExpression";
+import { DemoLiteralExpression } from "./DemoLiteralExpression";
 
 @model
-export class DemoVariable extends MobxModelElementImpl implements PiElement, WithType {
-    readonly $type: LanguageConceptType = "DemoVariable";
-    $id: string;
+export class DemoBooleanLiteralExpression extends DemoLiteralExpression implements PiExpression, WithType {
+    readonly $type: LanguageConceptType = "DemoBooleanLiteralExpression";
 
     constructor(id?: string) {
-        super();
-
-        if (!!id) {
-            this.$id = id;
-        } else {
-            this.$id = uuid.v4();
-        }
+        super(id);
     }
 
-    @observable name: string;
-
-    @observable declaredType: DemoType;
+    @observable value: string;
 
     get$Type(): LanguageConceptType {
         return this.$type;
     }
 
-    piId(): string {
-        return this.$id;
-    }
-
     piIsExpression(): boolean {
-        return false;
+        return true;
     }
 
     piIsBinaryExpression(): boolean {
         return false;
     }
 
-    static create(name: string): DemoVariable {
-        const result = new DemoVariable();
-        result.name = name;
-        return result;
+    piIsExpressionPlaceHolder(): boolean {
+        return false;
     }
 }

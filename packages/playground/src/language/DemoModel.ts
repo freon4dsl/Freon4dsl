@@ -2,11 +2,15 @@
 import { observable } from "mobx";
 import * as uuid from "uuid";
 import { WithType } from "./WithType";
-import { PiElement } from "@projectit/core";
+import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
 import { model, MobxModelElementImpl, observablelistpart } from "@projectit/model";
 import { LanguageConceptType } from "./Language";
 import { DemoEntity } from "./DemoEntity";
 import { DemoFunction } from "./DemoFunction";
+import { DemoAttributeType } from "./DemoAttributeType";
+import { DemoType } from "./DemoType";
+import { DemoPlaceholderExpression } from "./DemoPlaceholderExpression";
+import { DemoExpression } from "./DemoExpression";
 
 @model
 export class DemoModel extends MobxModelElementImpl implements PiElement, WithType {
