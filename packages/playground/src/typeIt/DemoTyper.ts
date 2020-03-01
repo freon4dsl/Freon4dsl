@@ -1,9 +1,6 @@
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression, 
-    DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression } from "../language";
-import { DemoType } from "../language/DemoType";
-import { type } from "os";
-import { AllDemoConcepts } from "language/AllDemoConcepts";
-import { IDemoTyper } from "language/IDemoTyper";
+    IDemoTyper, DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType } from "../language";
+import { AllDemoConcepts } from "../language/AllDemoConcepts";
 
 export class DemoTyper implements IDemoTyper {
 
