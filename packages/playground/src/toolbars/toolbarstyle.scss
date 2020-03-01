@@ -1,0 +1,22 @@
+$projectit-color: black;
+
+$toolbar-border-color: blue;
+$toolbar-item-color: blue;
+$toolbar-background: whitesmoke;
+$toolbar-item-background: #dcfaff;
+
+$selected-backgound-color: #d5eed3;
+
+
+.toolbar {
+    background: $toolbar-background;
+    margin: -1px;
+    border: 1px solid $toolbar-border-color;
+}
+
+.toolbarItem {
+    border: 1px solid $toolbar-border-color;
+    background: $toolbar-item-background;
+    color: $toolbar-item-color;
+    border-radius: 2px;
+}
