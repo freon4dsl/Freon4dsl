@@ -11,35 +11,27 @@
 
 language SimpleNumericExpressions
 
-SNE_BinaryExpression {
-    @editor symbol: string = "unknown"
-}
-
 SNE_MultiplyExpression {
-    @editor symbol: string = "*"
-    @editor priority: number = "8"
+    @priority = "8"
+    @projection = {this.left} "*" {this.right}
 }
 
 SNE_PlusExpression {
-    @editor symbol: string = "+"
-    @editor priority: number = "4"
+    @priority = "4"
+    @projection = {this.left} "+" {this.right}
 }
 
 SNE_MinusExpression {
-    @editor symbol: string = "-"
-    @editor priority: number = "4"
+    @priority = 4
+    @projection = {this.left} "-" {this.right}
 }
 
 SNE_DivideExpression {
-    @editor symbol: string = "/"
-    @editor priority: number = "8"
-}
-
-SNE_UnaryExpression {
-    @editor symbol: string = "unknown"
+    @priority = 8
+    @projection = {this.left} "/" {this.right}
 }
 
 SNE_NegateExpression base SNE_UnaryExpression {
-    @editor symbol: string = "--"
-    @editor priority: number = "1"
+    @priority = 1
+    @projection = "-"[action12] [action34]{this.inner}
 }

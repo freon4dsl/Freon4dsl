@@ -21,12 +21,12 @@ export class EnumerationTemplate {
         // Template starts here
         return `
         import * as uuid from "uuid";
-        import { WithType } from "./WithType";
+        import { ${Names.withTypeInterface(language)} } from "./${Names.withTypeInterface(language)}";
         import { ${language.name}ConceptType } from "./${language.name}";
         import { ${mobxImports.join(",")} } from "@projectit/model";
         import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
     
-        export class ${Names.enumeration(enumeration)} extends ${extendsClass} implements ${implementsPi}, WithType {
+        export class ${Names.enumeration(enumeration)} extends ${extendsClass} implements ${implementsPi}, ${Names.withTypeInterface(language)} {
             readonly $type: ${language.name}ConceptType = "${Names.enumeration(enumeration)}";
             $id: string;
                 

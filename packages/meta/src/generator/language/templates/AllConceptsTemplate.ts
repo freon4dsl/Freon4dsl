@@ -1,11 +1,11 @@
 import { Names } from "../../Names";
 import { PiLanguage } from "../../../metalanguage/PiLanguage";
 
-export class LanguageIndexTemplate {
+export class AllConceptsTemplate {
     constructor() {
     }
 
-    generateIndex(language: PiLanguage): string {
+    generateAllConceptsClass(language: PiLanguage): string {
         // sort all names alphabetically
         let tmp : string[] = [];
         language.concepts.map(c => 
@@ -17,19 +17,21 @@ export class LanguageIndexTemplate {
         language.types.map(c =>
             tmp.push(Names.type(c))
         );
-        tmp.push(Names.allConcepts(language));
-        tmp.push(Names.withTypeInterface(language));
-        tmp.push(Names.scoperInterface(language));
-        tmp.push(Names.typerInterface(language));
-        
         tmp = tmp.sort();
 
         // the template starts here
         return `
+        import {
+            ${tmp.map(c => 
+                `${c}`
+            ).join(", ")}
+        } from "./index";
+
+        export type ${Names.allConcepts(language)} =
         ${tmp.map(c => 
-            `export * from "./${c}";`
-        ).join("\n")}
-        `;
+            `${c}`
+        ).join(" | ")}
+        ;`;
     }
 
 }

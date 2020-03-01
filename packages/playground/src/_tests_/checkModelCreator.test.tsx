@@ -1,6 +1,5 @@
-import { DemoModel, DemoFunction, DemoEntity } from "../language";
+import { DemoModel, DemoFunction, DemoEntity, AllDemoConcepts } from "../language";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoModelElement } from "../scopeIt/DemoModelElement";
 
 describe("Demo Model", () => {
   describe("Checking DemoModel instance", () => {
@@ -38,7 +37,7 @@ describe("Demo Model", () => {
       }
     });
 
-    it("entity attributes should be set correctly", () => {
+    test("entity attributes should be set correctly", () => {
       for (let i of model.entities) {
         for (let a of i.attributes) {
           expect(a.name).not.toBeNull;
@@ -49,12 +48,10 @@ describe("Demo Model", () => {
   });
 });
 
-function checkFunctionDef(f1: DemoFunction, owner: DemoModelElement) {
+function checkFunctionDef(f1: DemoFunction, owner: AllDemoConcepts) {
   expect(f1.name).not.toBeNull;
   expect(f1.expression.container).toBe(f1);
   expect(f1.container).toBe(owner);
   expect((f1.expression as any).container).toBeTruthy();
   expect(f1.expression.piContainer().container).toBe(f1);
 }
-
-

@@ -48,4 +48,21 @@ export class Names {
     public static type(type: PiLangType){
         return type.name;
     }
+
+    public static allConcepts(language: PiLanguage){
+        return "All" + language.name + "Concepts";
+    }
+
+    public static withTypeInterface(language: PiLanguage){
+        return "WithType";
+    }
+
+    public static scoperInterface(language: PiLanguage){
+        return "I" + language.name + "Scoper";
+    }
+
+    public static typerInterface(language: PiLanguage){
+        return "I" + language.name + "Typer";
+    }
+
 }

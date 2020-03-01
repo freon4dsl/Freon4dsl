@@ -56,14 +56,14 @@ export class ConceptTemplate {
         const result = `
             ${concept.properties.length > 0 ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { WithType } from "./WithType";
+            import { ${Names.withTypeInterface(language)} } from "./${Names.withTypeInterface(language)}";
             import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/model";
             import { ${language.name}ConceptType } from "./${language.name}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
             @model
-            export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}, WithType 
+            export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}, ${Names.withTypeInterface(language)} 
             {
                 readonly $type: ${language.name}ConceptType = "${concept.name}";
                 ${!hasSuper ? "$id: string;" : ""}

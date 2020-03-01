@@ -1,4 +1,5 @@
 import { PiLanguage } from "../../../metalanguage/PiLanguage";
+import { Names } from "../../Names";
 
 export class WithTypeTemplate {
     constructor() {
@@ -9,7 +10,7 @@ export class WithTypeTemplate {
             import { ${language.name}ConceptType } from "./${language.name}";
             import { PiElement } from "@projectit/core";
             
-            export interface WithType extends PiElement {
+            export interface ${Names.withTypeInterface(language)} extends PiElement {
                 get$Type(): ${language.name}ConceptType;
             }
         `;

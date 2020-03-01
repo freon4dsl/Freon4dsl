@@ -85,7 +85,6 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
         result.enumerations = data.enumerations
     }
     if( !!data.types) {
-        console.log("NEW adding type to language");
         result.types = data.types
     }
 
@@ -118,7 +117,6 @@ export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnume
 }
 
 export function createType(data: Partial<PiLangType>): PiLangType {
-    console.log("NEW creating type");
     const result = new PiLangType();
     if( !!data.name) { result.name = data.name; }
     if( !!data.literals) { result.literals = data.literals; }

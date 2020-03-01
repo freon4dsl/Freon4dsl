@@ -1,22 +1,10 @@
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression, 
-    DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression } from "../language";
-import { DemoModelElement } from "../scopeIt/DemoModelElement";
-import { DemoType } from "../language/DemoType";
-import { type } from "os";
+    IDemoTyper, DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType } from "../language";
+import { AllDemoConcepts } from "../language/AllDemoConcepts";
 
-export interface Typer {
-    inferType(modelelement: DemoModelElement) : DemoType;
+export class DemoTyper implements IDemoTyper {
 
-    conform(type1: DemoType, type2: DemoType) : boolean; // type 1 <= type 2 conformance direction
-    conformList(typelist1: DemoType[], typelist2: DemoType[]) : boolean;  
-
-    isType(elem : DemoModelElement) : boolean;
-    typeName(elem : DemoType): string; 
-}
-
-export class DemoTyper implements Typer {
-
-    inferType(modelelement: DemoModelElement): DemoType {
+    inferType(modelelement: AllDemoConcepts): DemoType {
         // generate if statement for all lang elements that have @hasType annotation
         // the result should be according to the @inferType rules
         // i.e. every @hasType annotated elem should have an @inferType rule
@@ -76,12 +64,10 @@ export class DemoTyper implements Typer {
         return result;
     }
 
-    isType(elem: DemoModelElement): boolean { // ook hier alle namen gemerkt met @isType
+    isType(elem: AllDemoConcepts): boolean { // ook hier alle namen gemerkt met @isType
         if (elem instanceof DemoEntity) {
-            console.log("isType: checking " + elem.name + " of metatype " + elem.get$Type());
             return true;
         } else if (elem instanceof DemoAttributeType) {
-            console.log("isType: checking " + elem.asString() + " of metatype " + elem.get$Type());
             return true;
         }
         return false;
