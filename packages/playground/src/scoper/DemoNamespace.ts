@@ -7,27 +7,30 @@ export class DemoNameSpace {
         this._myElem = elem;
     }
 
-    public getVisibleElements(includeParent : boolean) : AllDemoConcepts[] {
+    public getVisibleElements(excludeSurrounding : boolean) : AllDemoConcepts[] {
         let result : AllDemoConcepts[] = [];
         // from modelelement get its surrounding namespace
         let ns = this.getSurroundingNamespace(this._myElem);
         if (ns !== null) {
             result = ns.internalVis(); 
         }
-        if (includeParent) {
+        
+        if(!(!(excludeSurrounding === undefined) && excludeSurrounding)) { 
             // add elements from surrounding Namespaces
             let parent: AllDemoConcepts = this.getParent(this._myElem);
             while (parent !== null) { 
                 ns = this.getSurroundingNamespace(parent);
                 if (ns !== null) {
-                    // merge the results
-                    ns.internalVis().map( key => { 
+                    // join the results
+                    ns.internalVis().forEach( key => { 
                         result.push(key);
                     });
                 }
                 // skip modelelements between parent and the modelelement that is its surrounding namespace
                 parent = this.getParent(ns._myElem);
-            } 
+            }
+        } else {
+            // TODO remove: console.log("skipping SurroundingNamespaces " + " [" + excludeSurrounding +"]");
         }
         return result;
     }
@@ -37,7 +40,9 @@ export class DemoNameSpace {
 
         // for now we push all parts, later public/private annotations need to be taken into account        
         if (this._myElem instanceof DemoModel ) {
+
             for (let z of this._myElem.entities) {
+                // console.log (this._myElem.propertyName);
                 result.push(z);
             }
             for (let z of this._myElem.functions) {
@@ -84,6 +89,7 @@ export class DemoNameSpace {
     private getParent(modelelement : AllDemoConcepts) : AllDemoConcepts {
 		// should be moved to PiElement
         let parent: AllDemoConcepts = null;
+        
         if (modelelement.piContainer() !== null) {
             if (modelelement.piContainer().container !== null) {
                 // if (modelelement.piContainer().container instanceof AllDemoConcepts) {
