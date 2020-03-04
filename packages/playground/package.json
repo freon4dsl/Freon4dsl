@@ -13,7 +13,7 @@
     "generate-language": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-language",
     "generate-scoper": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-scoper -s src/LanguageDefinition.scop",
     "build-wait": "tsc -w",
-    "build": "yarn run generate-language && tsc",
+    "build": "yarn run generate-language && yarn run generate-scoper && tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
