@@ -1,4 +1,4 @@
-import { DemoScoper } from "../scopeIt/DemoScoper";
+import { DemoScoper } from "../scoper/DemoScoper";
 import { DemoModel, DemoFunction } from "../language/index";
 import { DemoModelCreator } from "./DemoModelCreator";
 
@@ -137,7 +137,8 @@ describe("Testing Scoper", () => {
         }
         expect(scoper.isInScope(ent, nameToTest, "DemoAttribute")).toBe(expected);     
         ent.functions.forEach(fun => {
-          expect(scoper.isInScope(fun, nameToTest)).toBe(expected);
+          expect(scoper.isInScope(fun, nameToTest, "DemoAttribute", true)).toBe(false);
+          expect(scoper.isInScope(fun, nameToTest, "DemoAttribute", false)).toBe(expected);
         });
       });     
      }); 
