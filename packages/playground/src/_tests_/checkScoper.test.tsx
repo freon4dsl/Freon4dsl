@@ -1,4 +1,4 @@
-import { DemoScoper } from "../scoper/DemoScoper";
+import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, DemoFunction } from "../language/index";
 import { DemoModelCreator } from "./DemoModelCreator";
 
@@ -11,7 +11,7 @@ describe("Testing Scoper", () => {
       done();
     });
   
-    test.skip("visible elements in model", () => {
+    test("visible elements in model", () => {
       let vi = scoper.getVisibleNames(model);
       expect(vi.length).toBe(5);
         
@@ -24,7 +24,7 @@ describe("Testing Scoper", () => {
       }
     });
     
-    test.skip("visible elements in entities", () => {
+    test("visible elements in entities", () => {
       for(let ent of model.entities) {
         let vis = scoper.getVisibleNames(ent);
           
@@ -43,7 +43,7 @@ describe("Testing Scoper", () => {
     });
 
     for(let f1 of model.functions) {
-      test.skip("visible elements in model functions", () => {
+      test("visible elements in model functions", () => {
         let vis = scoper.getVisibleNames(f1);
         expect(vis).toContain(f1.name);
         for (let e of model.entities) {
@@ -63,7 +63,7 @@ describe("Testing Scoper", () => {
     }
 
     for(let ent of model.entities) {
-      test.skip("visible elements in entity functions", () => {
+      test("visible elements in entity functions", () => {
         for (let f1 of ent.functions) {
           let vis = scoper.getVisibleNames(f1);
           expect(vis).toContain(f1.name);
@@ -93,7 +93,7 @@ describe("Testing Scoper", () => {
       done();
     });
 
-    test.skip("isInscope 'DemoModel_1'", () => {
+    test("isInscope 'DemoModel_1'", () => {
       let nameToTest : string = "DemoModel_1";
       expect(scoper.isInScope(model, nameToTest)).toBe(false);
       // test if nameToTest is known in model functions
@@ -109,13 +109,13 @@ describe("Testing Scoper", () => {
       });     
     });  
 
-    test.skip("isInscope 'Person'", () => {
+    test("isInscope 'Person'", () => {
       // Person is Entity in DemoModel_1
       let nameToTest : string = "Person";
       testEntity(scoper, model, nameToTest);     
     }); 
 
-    test.skip("isInscope 'Company'", () => {
+    test("isInscope 'Company'", () => {
       // Company is Entity in DemoModel_1
       let nameToTest : string = "Company";
       testEntity(scoper, model, nameToTest);     
@@ -143,7 +143,7 @@ describe("Testing Scoper", () => {
       });     
      }); 
 
-     test.skip("isInscope 'age'", () => {
+     test("isInscope 'age'", () => {
       // name is Attribute of Person and of Company in DemoModel_1
       let nameToTest : string = "age";
       expect(scoper.isInScope(model, nameToTest)).toBe(false);
@@ -164,7 +164,7 @@ describe("Testing Scoper", () => {
       });     
      }); 
 
-     test.skip("isInscope 'VAT_Number'", () => {
+     test("isInscope 'VAT_Number'", () => {
       // VAT_Number is Attribute of Company in DemoModel_1
       let nameToTest : string = "VAT_Number";
       expect(scoper.isInScope(model, nameToTest)).toBe(false);
@@ -185,7 +185,7 @@ describe("Testing Scoper", () => {
       });     
      }); 
 
-     test.skip("isInscope 'length'", () => {
+     test("isInscope 'length'", () => {
       // length is Function of DemoModel_1
       let nameToTest : string = "length";
       expect(scoper.isInScope(model, nameToTest)).toBe(true);
@@ -202,7 +202,7 @@ describe("Testing Scoper", () => {
       });     
      }); 
 
-     test.skip("isInscope 'first'", () => {
+     test("isInscope 'first'", () => {
       // first is Function of Person in DemoModel_1
       let nameToTest : string = "first";
       expect(scoper.isInScope(model, nameToTest)).toBe(false);
@@ -223,7 +223,7 @@ describe("Testing Scoper", () => {
       });     
      }); 
 
-     test.skip("isInscope 'last'", () => {
+     test("isInscope 'last'", () => {
       // last is Function of Company in DemoModel_1
       let nameToTest : string = "last";
       expect(scoper.isInScope(model, nameToTest)).toBe(false);
@@ -244,7 +244,7 @@ describe("Testing Scoper", () => {
       });     
      }); 
 
-     test.skip("isInscope 'Variable1'", () => {
+     test("isInscope 'Variable1'", () => {
       // Variable1 is VarDecl of length of DemoModel_1
       let nameToTest : string = "Variable1";
       expect(scoper.isInScope(model, nameToTest)).toBe(false);
@@ -265,7 +265,7 @@ describe("Testing Scoper", () => {
       });     
      }); 
 
-     test.skip("isInscope 'Resultvar'", () => {
+     test("isInscope 'Resultvar'", () => {
       // Resultvar is VarDecl of first of Person of DemoModel_1
       let nameToTest : string = "Resultvar";
       expect(scoper.isInScope(model, nameToTest)).toBe(false);
@@ -296,10 +296,11 @@ describe("Testing Scoper", () => {
 });
 
 function testEntity(scoper: DemoScoper, model: DemoModel, nameToTest: string) {
-  expect(scoper.isInScope(model, nameToTest)).toBe(true);
+  expect(scoper.isInScope(model, nameToTest, "DemoEntity")).toBe(true);
   // test if nameToTest is known in model functions
   model.functions.forEach(fun => {
-    expect(scoper.isInScope(fun, nameToTest)).toBe(true);
+    expect(scoper.isInScope(fun, nameToTest, "DemoEntity")).toBe(true);
+    expect(scoper.isInScope(fun, nameToTest, "DemoFunction")).toBe(false);
   });
   // test the same on entities and entity functions
   model.entities.forEach(ent => {

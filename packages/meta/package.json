@@ -13,7 +13,9 @@
     "projectit": "dist/bin/projectit-generate-editor.js"
   },
   "scripts": {
-    "parser": "pegjs ./src/parser/language/LanguageGrammar.pegjs",
+    "lang-parser": "pegjs ./src/parser/language/LanguageGrammar.pegjs",
+    "scop-parser": "pegjs ./src/parser/scoper/ScoperGrammar.pegjs",
+    "edit-parser": "pegjs ./src/parser/editor/EditorGrammar.pegjs",
     "start": "echo Starting meta",
     "build": "tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",

@@ -11,7 +11,7 @@ describe('Testing Typer', () => {
           done();
         });
 
-        test.skip("all entities should be types", () => {
+        test("all entities should be types", () => {
             expect(typer.isType(model)).toBe(false);
             model.functions.forEach(fun => {
                 expect(typer.isType(fun)).toBe(false);
@@ -27,7 +27,7 @@ describe('Testing Typer', () => {
             });
         });
     
-        test.skip("all attributes should have a valid type", () => {
+        test("all attributes should have a valid type", () => {
             model.entities.forEach(ent => {
                 ent.attributes.forEach(att => {
                     expect(att.declaredType).not.toBeNull;
@@ -37,7 +37,7 @@ describe('Testing Typer', () => {
             });
         });
     
-        test.skip("all functions should have a return type", () => {
+        test("all functions should have a return type", () => {
             model.functions.forEach(fun => {
                 expect(typer.isType(fun.declaredType)).toBe(true);
             });
@@ -48,7 +48,7 @@ describe('Testing Typer', () => {
             });
         });
     
-        test.skip("the type of every expresion can be inferred and equals the declared type of its function", () => {
+        test("the type of every expresion can be inferred and equals the declared type of its function", () => {
             model.functions.forEach(fun => {
                 if (fun.expression !== null) {
                     let expressionType = typer.inferType(fun.expression);
@@ -67,7 +67,7 @@ describe('Testing Typer', () => {
             });
         });
   
-        test.skip("type conformance of the primitive types should be correct", () => {
+        test("type conformance of the primitive types should be correct", () => {
             expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.String)).toBe(false);
             expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Integer)).toBe(true);
             expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Boolean)).toBe(false);
@@ -82,7 +82,7 @@ describe('Testing Typer', () => {
   
         });
   
-        test.skip("type conformance of model entity types should be correct", () => {
+        test("type conformance of model entity types should be correct", () => {
             model.entities.forEach(ent => {
                 expect(typer.conform(ent, DemoAttributeType.String)).toBe(false);
                 expect(typer.conform(ent, DemoAttributeType.Integer)).toBe(false);

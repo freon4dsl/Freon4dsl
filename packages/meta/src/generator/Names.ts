@@ -1,4 +1,5 @@
 import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangType } from "../metalanguage/PiLanguage";
+import { PiScopeDef } from "../metalanguage/scoper/PiScopeDefLang";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -67,6 +68,14 @@ export class Names {
 
     public static typerInterface(language: PiLanguage){
         return "I" + language.name + "Typer";
+    }
+    
+    public static namespace(language: PiLanguage, scopedef: PiScopeDef){
+        return scopedef.scoperName + "Namespace";
+    }
+
+    public static scoper(language: PiLanguage, scopedef: PiScopeDef){
+        return scopedef.scoperName + "Scoper";
     }
 
 }

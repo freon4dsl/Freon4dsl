@@ -35,6 +35,7 @@ yarn-error.log
 # generated files
 packages/docs/*/modules/*/examples/*
 packages/playground/src/language/*
+packages/playground/src/scoper/gen/*
 packages/meta/LanguageGrammar.js
 packages/playground/src/language/Color.ts
 packages/playground/src/language/DemoAbsExpression.ts
