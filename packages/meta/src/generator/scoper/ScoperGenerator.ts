@@ -6,7 +6,7 @@ import { SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../GeneratorConstants";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { Names } from "../Names";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { ScoperIndexTemplate } from "./templates/ScoperIndexTemplate";
+//import { ScoperIndexTemplate } from "./templates/ScoperIndexTemplate";
 import { PiScopeDef } from "../../metalanguage/scoper/PiScopeDefLang";
 
 export class ScoperGenerator {
