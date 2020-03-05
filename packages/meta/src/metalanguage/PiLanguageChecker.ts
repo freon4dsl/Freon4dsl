@@ -15,7 +15,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
     }
 
     checkConcept(concept: PiLangConcept): void {
-        this.simpleCheck(!!concept.name, "Language should have a name, it is empty");
+        this.simpleCheck(!!concept.name, "Concept should have a name, it is empty");
         if(!!concept.base) {
             this.checkConceptReference(concept.base);
         }

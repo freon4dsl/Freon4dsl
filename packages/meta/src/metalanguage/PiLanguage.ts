@@ -6,7 +6,7 @@ export class PiLangConceptReference {
     }
 
     concept(): PiLangConcept {
-        return this.language.findConcept(this.name);
+        if(!!this.language) return this.language.findConcept(this.name);
     }
 }
 
@@ -39,6 +39,7 @@ export class PiLanguage {
         return this.concepts.find(c => c.isRoot);
     }
 
+    // TODO should this one be moved to Names???
     contextClass(): string {
         return this.name + "Context";
     }

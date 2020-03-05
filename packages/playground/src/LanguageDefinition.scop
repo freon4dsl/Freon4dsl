@@ -1,0 +1,7 @@
+scoper Demo for language Demo
+
+@namespace DemoModel 
+
+@namespace DemoEntity 
+
+@namespace DemoFunction

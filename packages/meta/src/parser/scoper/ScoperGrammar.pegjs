@@ -2,91 +2,32 @@
     let create = require("./ScoperCreators");
 }
 
-Editor_Definition
-  = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)*
+Scoper_Definition
+  = ws "scoper" ws scoperName:var ws "for" ws "language" ws languageName:var ws ns:(namespace)*
     {
-        return create.createLanguage({
-            "name": name,
-            "concepts": c,
-            "enumerations": e
+        return create.createScopeDef({
+            "scoperName": scoperName,
+            "languageName": languageName,
+            "namespaces": ns,
         });
     } 
 
-abstractKey     = "abstract" ws { return true; }
-rootKey         = "root" ws { return true; }
-binaryKey       = "binary" ws { return true; }
-expressionKey   = "expression" ws { return true; }
-baseKey         = "base" ws { return true; }
-placeholderKey  = "placeholder" ws { return true; }
+namespaceKey = "@namespace" ws
 
-base = baseKey name:var { return create.createConceptReference( { "name": name}); }
-
-concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
-         "concept" ws name:var ws base:base? curly_begin 
-            att:attribute*
-            parts:part* 
-            references:reference*
-            editorProps:editorProperty*
-          curly_end 
+namespace = namespaceKey conceptRef:conceptRef ws 
     { 
-        return create.createConcept({
-            "properties": att,
-            "parts": parts,
-            "references": references,
-            "name": name,
-            "base": base,
-            "isAbstract": (!!abs),
-            "isRoot": (!!isRoot),
-            "isBinaryExpression": !!binary,
-            "isExpression": (!!expression),
-            "isExpressionPlaceHolder": !!isExpressionPlaceHolder,
-            "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
-            "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
-            "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
-        }); 
+        return create.createNamespace({ "conceptRef": conceptRef }); 
     }
 
-attribute = name:var ws name_separator ws type:var isList:"[]"? ws
-    { 
-        return create.createPrimitiveProperty({"name": name, "type": type, "isList": (isList?true:false) }) 
-    }
+conceptRef = name:var { return create.createConceptReference( { "name": name}); }
 
-part = "@part" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
-    { 
-        return create.createPart({"name": name, "type": type, "isList": (isList?true:false) }) 
-    }
-
-reference = "@reference" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
-    { 
-        return create.createReference({"name": name, "type": type, "isList": (isList?true:false) }) 
-    }
-
-conceptReference = referredName:var {
-    return create.createConceptReference({"name": referredName})
-}
-
-editorProperty = "@editor" ws name:var ws name_separator ws type:var ws "=" ws "\"" value:string "\"" ws
-    {
-        switch(name) {
-            case "trigger": return { "trigger": value }
-            case "priority": return { "priority": Number.parseInt(value) };
-            case "symbol": return { "symbol": value };
-        };
-        return {"name": name, "type": type, "value": value, "isEditor": true }
-    }  
-
-enumeration = "enumeration" ws name:var curly_begin
-                    literals:var+
-                curly_end
-                {
-                    return create.createEnumeration({ "name": name, "literals": literals});
-                }
+// the following is basic stuff 
 
 curly_begin    = ws "{" ws 
 curly_end      = ws "}" ws
 name_separator  = ws ":" ws
 
-ws "whitespace" = [ \t\n\r]*
+ws "whitespace" = (([ \t\n\r]) / (SingleLineComment))*
 
 var "var"
   = first:varLetter rest:varLetterOrDigit* ws { return first + rest.join(""); }
@@ -97,6 +38,16 @@ varLetter           = [a-zA-Z]
 varLetterOrDigit    = [a-zA-Z0-9]
 anyChar             = [*a-zA-Z0-9'/\-[\]+<>=]
 
+// van javascript example
+SingleLineComment
+  = "//" (!LineTerminator SourceCharacter)*
+
+LineTerminator
+  = [\n\r\u2028\u2029]
+
+SourceCharacter
+  = .
+  
 // from JSOM example
 char
   = unescaped
