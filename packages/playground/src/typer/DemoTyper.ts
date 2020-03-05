@@ -1,5 +1,5 @@
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression, 
-    IDemoTyper, DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType } from "../language";
+    IDemoTyper, DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression } from "../language";
 import { AllDemoConcepts } from "../language/AllDemoConcepts";
 
 export class DemoTyper implements IDemoTyper {
@@ -14,19 +14,22 @@ export class DemoTyper implements IDemoTyper {
             return DemoAttributeType.String;
         } else if (modelelement instanceof DemoNumberLiteralExpression) {
             return DemoAttributeType.Integer;
-//        } else if (modelelement instanceof DemoBooleanLiteralExpression) {
-//            return DemoAttributeType.Boolean;
-        } else if (modelelement instanceof DemoComparisonExpression) { // moet voor zijn parent staan om deze te overriden!
+        // } else if (modelelement instanceof DemoBooleanLiteralExpression) {
+        //    return DemoAttributeType.Boolean;
+        // moet voor zijn parent staan om deze te overriden!
+        } else if (modelelement instanceof DemoComparisonExpression) { 
             return DemoAttributeType.Boolean;
         } else if (modelelement instanceof DemoBinaryExpression) {
             return this.inferType(modelelement.left);
             // @inferType = commonSuperType(this.left.type, this.right.type)
         } else if (modelelement instanceof DemoAbsExpression) {
             return this.inferType(modelelement.expr);
-    //    } else if (modelelement instanceof DemoVariableRef) {
-    //        return modelelement.referredName.type;
-    //    } else if (modelelement instanceof DemoFunctionCallExpression) {
-    //        return modelelement.functionDefinition.name;
+       } else if (modelelement instanceof DemoVariableRef) {
+            return null;
+        //    return modelelement.referredName.type;
+       } else if (modelelement instanceof DemoFunctionCallExpression) {
+           return null;
+        //    return modelelement.functionDefinition.name;
         } else if (modelelement instanceof DemoIfExpression) {
             return this.inferType(modelelement.whenTrue);
         }
