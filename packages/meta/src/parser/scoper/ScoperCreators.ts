@@ -22,7 +22,7 @@ export function createScopeDef(data: Partial<PiScopeDef>): PiScopeDef {
 
 export function createNamespace(data: Partial<PiNamespace>): PiNamespace {
     const result = new PiNamespace();
-    if( !!data.conceptRef) { result.conceptRef = data.conceptRef; }
+    if( !!data.conceptRefs) { result.conceptRefs = data.conceptRefs; }
     return result;
 }
 

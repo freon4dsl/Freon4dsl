@@ -12,6 +12,7 @@ import * as fs from "fs";
 import { LANGUAGE_FOLDER } from "../GeneratorConstants";
 import { ScoperInterfaceTemplate } from "./templates/ScoperInterfaceTemplate";
 import { TyperInterfaceTemplate } from "./templates/TyperInterfaceTemplate";
+import { ValidatorInterfaceTemplate } from "./templates/ValidatorInterfaceTemplate";
 
 export class LanguageGenerator {
     public outputfolder: string = ".";
@@ -30,6 +31,7 @@ export class LanguageGenerator {
         const allConceptsTemplate = new AllConceptsTemplate();
         const scoperTemplate = new ScoperInterfaceTemplate();
         const typerTemplate = new TyperInterfaceTemplate();
+        const validatorTemplate = new ValidatorInterfaceTemplate();
 
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         Helpers.createDirIfNotExisting(this.languageFolder);
@@ -76,5 +78,9 @@ export class LanguageGenerator {
         console.log("Generating Typer interface: " + Names.typerInterface(language) + ".ts");
         var typerFile = Helpers.pretty(typerTemplate.generateTyperInterface(language), "Typer Interface");
         fs.writeFileSync(`${this.languageFolder}/${Names.typerInterface(language)}.ts`, typerFile);
+
+        console.log("Generating Validator interface: " + Names.validatorInterface(language) + ".ts");
+        var typerFile = Helpers.pretty(validatorTemplate.generateValidatorInterface(language), "Validator Interface");
+        fs.writeFileSync(`${this.languageFolder}/${Names.validatorInterface(language)}.ts`, typerFile);
     }
 }

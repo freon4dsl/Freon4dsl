@@ -17,7 +17,7 @@ export class NamespaceTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => `
-        ${ns.conceptRef.name}`).join(", ")} } from "../../language";
+        ${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "../../language";
         import { ${langConceptType} } from "../../language/Demo";
 
         export class ${generatedClassName} {
@@ -78,9 +78,9 @@ export class NamespaceTemplate {
         
             private isNameSpace(modelelement : ${allLangConcepts}) : boolean {
                 // if-statement generated for each concept marked with @namespace annotation!
-                ${scopedef.namespaces.map(ns =>
-                    `if(modelelement instanceof ${ns.conceptRef.name}) return true`
-                ).join("; ")}
+                ${scopedef.namespaces.map(ns => `
+                    ${ns.conceptRefs.map(ref => `if(modelelement instanceof ${ref.name}) return true`).join("; ")}
+                `)}
                 return false;
             }
         
@@ -113,23 +113,25 @@ export class NamespaceTemplate {
     private createIfStatement(scopedef: PiScopeDef) : string {
         let result : string = "";
         scopedef.namespaces.forEach( ns => {
-            result = result.concat("if (this._myElem instanceof " + ns.conceptRef.name + ") {")
-            ns.conceptRef.concept().parts.forEach( part => {
-                part.type.concept().allProperties().forEach( kk  => {          
-                    if (kk.name === "name") {
-                        if (part.isList) { 
-                            result = result.concat(
-                                "for (let z of this._myElem." + part.name + ") { this.addIfTypeOK(z, result, metatype);  }"
-                            );
+            ns.conceptRefs.forEach(ref => {
+                result = result.concat("if (this._myElem instanceof " + ref.name + ") {")
+                ref.concept().parts.forEach( part => {
+                    part.type.concept().allProperties().forEach( kk  => {          
+                        if (kk.name === "name") {
+                            if (part.isList) { 
+                                result = result.concat(
+                                    "for (let z of this._myElem." + part.name + ") { this.addIfTypeOK(z, result, metatype);  }"
+                                );
+                            } else {
+                                result = result.concat("this.addIfTypeOK(this._myElem." + part.name + ", result, metatype);")
+                            }
                         } else {
-                            result = result.concat("this.addIfTypeOK(this._myElem." + part.name + ", result, metatype);")
+                            result = result.concat("");
                         }
-                    } else {
-                        result = result.concat("");
-                    }
+                    })
                 })
+                result = result.concat("}\n");
             })
-            result = result.concat("}\n");
         })
         return result;
     }

@@ -16,7 +16,11 @@ export class PiScoperChecker extends Checker<PiScopeDef> {
                 check: true,
                 error: "This error never happens"
             });
-            definition.namespaces.forEach(ns => this.checkConceptReference(ns.conceptRef));
+            definition.namespaces.forEach(ns => {
+                ns.conceptRefs.forEach(ref => 
+                    this.checkConceptReference(ref)
+                )
+            });
         }
 
     checkConceptReference(reference: PiLangConceptReference) {

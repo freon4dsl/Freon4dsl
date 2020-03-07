@@ -1,5 +1,0 @@
-language Demo
-
-@isNamespace DemoModel 
-@isNamespace DemoEntity 
-@isNamespace DemoFunction

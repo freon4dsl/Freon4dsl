@@ -156,8 +156,8 @@ function peg$parse(input, options) {
           },
       peg$c7 = "@namespace",
       peg$c8 = peg$literalExpectation("@namespace", false),
-      peg$c9 = function(conceptRef) { 
-              return create.createNamespace({ "conceptRef": conceptRef }); 
+      peg$c9 = function(conceptRefs) { 
+              return create.createNamespace({ "conceptRefs": conceptRefs }); 
           },
       peg$c10 = function(name) { return create.createConceptReference( { "name": name}); },
       peg$c11 = "{",
@@ -488,18 +488,35 @@ function peg$parse(input, options) {
   }
 
   function peg$parsenamespace() {
-    var s0, s1, s2, s3;
+    var s0, s1, s2, s3, s4, s5;
 
     s0 = peg$currPos;
     s1 = peg$parsenamespaceKey();
     if (s1 !== peg$FAILED) {
-      s2 = peg$parseconceptRef();
+      s2 = peg$parsecurly_begin();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parsews();
+        s3 = [];
+        s4 = peg$parseconceptRef();
+        while (s4 !== peg$FAILED) {
+          s3.push(s4);
+          s4 = peg$parseconceptRef();
+        }
         if (s3 !== peg$FAILED) {
-          peg$savedPos = s0;
-          s1 = peg$c9(s2);
-          s0 = s1;
+          s4 = peg$parsews();
+          if (s4 !== peg$FAILED) {
+            s5 = peg$parsecurly_end();
+            if (s5 !== peg$FAILED) {
+              peg$savedPos = s0;
+              s1 = peg$c9(s3);
+              s0 = s1;
+            } else {
+              peg$currPos = s0;
+              s0 = peg$FAILED;
+            }
+          } else {
+            peg$currPos = s0;
+            s0 = peg$FAILED;
+          }
         } else {
           peg$currPos = s0;
           s0 = peg$FAILED;

@@ -10,7 +10,7 @@ export class PiScopeDef {
 }
 
 export class PiNamespace {
-    conceptRef: PiLangConceptReference;
+    conceptRefs: PiLangConceptReference[];
 
     constructor() {
     }
