@@ -4,3 +4,5 @@ export const EDITOR_FOLDER = "editor";
 export const EDITOR_GEN_FOLDER = "editor/gen";
 export const SCOPER_FOLDER = "scoper";
 export const SCOPER_GEN_FOLDER = "scoper/gen";
+export const VALIDATOR_FOLDER = "validator";
+export const VALIDATOR_GEN_FOLDER = "validator/gen";

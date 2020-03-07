@@ -2,6 +2,7 @@ import { CommandLineAction, CommandLineParser, CommandLineFlagParameter, Command
 import { ProjectItGenerateLanguage } from "./ProjectItGenerateLanguage";
 import { ProjectItGenerateEditor } from "./ProjectItGenerateEditor";
 import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
+import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 
 export class ProjectItParser extends CommandLineParser {
     private verbose: CommandLineFlagParameter;
@@ -11,6 +12,7 @@ export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
     private editorGenerator: ProjectItGenerateEditor;
     private scoperGenerator: ProjectItGenerateScoper;
+    private validatorGenerator: ProjectItGenerateValidator;
 
     public constructor() {
         super({
@@ -21,9 +23,11 @@ export class ProjectItParser extends CommandLineParser {
         this.languageGenerator = new ProjectItGenerateLanguage();
         this.editorGenerator = new ProjectItGenerateEditor();
         this.scoperGenerator = new ProjectItGenerateScoper();
+        this.validatorGenerator = new ProjectItGenerateValidator();
         this.addAction(this.languageGenerator);
         this.addAction(this.editorGenerator);
         this.addAction(this.scoperGenerator);
+        this.addAction(this.validatorGenerator);
     }
 
     protected onDefineParameters(): void { // abstract
@@ -57,6 +61,8 @@ export class ProjectItParser extends CommandLineParser {
         this.editorGenerator.setLanguageFile(this.languageFile.value);
         this.scoperGenerator.setOutputFolder(this.outputDir.value);
         this.scoperGenerator.setLanguageFile(this.languageFile.value);
+        this.validatorGenerator.setOutputFolder(this.outputDir.value);
+        this.validatorGenerator.setLanguageFile(this.languageFile.value);
 
         return super.onExecute();
     }

@@ -18,7 +18,7 @@ export class ScoperTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts}, ${scoperInterfaceName}, ${scopedef.namespaces.map(ns => `
-        ${ns.conceptRef.name}`).join(", ")}, DemoVariable, DemoAttribute } from "../../language";
+        ${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")}, DemoVariable, DemoAttribute } from "../../language";
         import { ${langConceptType} } from "../../language/${language.name}";        
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         

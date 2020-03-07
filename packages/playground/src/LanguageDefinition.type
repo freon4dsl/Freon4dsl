@@ -1,0 +1,62 @@
+typer Demo for language Demo
+
+@isType { DemoEntity, DemoAttributeType, DemoType } 
+
+DemoAttribute {
+    @inferType declaredType
+}
+
+DemoFunction {
+    @inferType declaredType
+}
+
+DemoVariable { 
+    @inferType declaredType
+}
+
+DemoExpression {
+    abstract @inferType  // for now
+}
+
+DemoStringLiteralExpression {
+    @inferType DemoAttributeType.String
+}
+
+DemoNumberLiteralExpression
+    @inferType DemoAttributeType.Integer
+}
+
+DemoBooleanLiteralExpression
+    @inferType DemoAttributeType.Boolean
+}
+
+DemoAbsExpression {
+    @inferType expr.type
+}
+
+DemoMultiplyExpression {
+    @inferType left.type
+}
+
+DemoPlusExpression {
+    @inferType left.type
+}
+
+DemoDivideExpression {
+    @inferType left.type
+}
+
+DemoComparisonExpression {
+    @inferType DemoAttributeType.Boolean
+}
+
+DemoFunctionCallExpression {
+    @inferType typeOf(function)
+
+DemoIfExpression {   
+    @inferType commonSuperType(whenTrue, whenFalse)
+}
+
+DemoVariableRef {
+//    @inferType typeOf(attribute)  //not correct in .lang file
+}

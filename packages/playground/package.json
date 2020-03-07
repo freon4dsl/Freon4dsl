@@ -12,6 +12,7 @@
   "scripts": {
     "generate-language": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-language",
     "generate-scoper": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-scoper -s src/LanguageDefinition.scop",
+    "validateIt": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-validator -v src/LanguageDefinition.valid",
     "build-wait": "tsc -w",
     "build": "yarn run generate-language && yarn run generate-scoper && tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",

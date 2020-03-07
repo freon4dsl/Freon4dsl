@@ -1,5 +1,6 @@
 import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangType } from "../metalanguage/PiLanguage";
 import { PiScopeDef } from "../metalanguage/scoper/PiScopeDefLang";
+import { PiValidatorDef } from "../metalanguage/validator/PiValidatorDefLang";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -70,12 +71,24 @@ export class Names {
         return "I" + language.name + "Typer";
     }
     
+    public static validatorInterface(language: PiLanguage){
+        return "I" + language.name + "Validator";
+    }
+
     public static namespace(language: PiLanguage, scopedef: PiScopeDef){
         return scopedef.scoperName + "Namespace";
     }
 
     public static scoper(language: PiLanguage, scopedef: PiScopeDef){
         return scopedef.scoperName + "Scoper";
+    }
+
+    public static validator(language: PiLanguage, validdef: PiValidatorDef){
+        return "DemoValidator"; // TODO
+    }
+
+    public static errorClassName(language: PiLanguage, ){
+        return "ViError"; // TODO
     }
 
 }

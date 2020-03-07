@@ -14,9 +14,9 @@ Scoper_Definition
 
 namespaceKey = "@namespace" ws
 
-namespace = namespaceKey conceptRef:conceptRef ws 
+namespace = namespaceKey curly_begin conceptRefs:(conceptRef)* ws curly_end 
     { 
-        return create.createNamespace({ "conceptRef": conceptRef }); 
+        return create.createNamespace({ "conceptRefs": conceptRefs }); 
     }
 
 conceptRef = name:var { return create.createConceptReference( { "name": name}); }
