@@ -63,7 +63,7 @@ export class ProjectionTemplate {
                 }
             
                 getBox(exp: WithType): Box {
-                    switch( exp.get$Type() ) {
+                    switch( exp.piLanguageConcept() ) {
                         ${language.concepts.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
                         ).join("  ")}

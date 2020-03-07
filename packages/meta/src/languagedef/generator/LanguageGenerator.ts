@@ -5,7 +5,6 @@ import { Names } from "../../utils/Names";
 import { EnumerationTemplate } from "./templates/EnumerationTemplate";
 import { TypeTemplate } from "./templates/TypeTemplate";
 import { LanguageTemplates } from "./templates/LanguageTemplate";
-import { WithTypeTemplate } from "./templates/WithTypeTemplate";
 import { PiLanguage } from "../metalanguage/PiLanguage";
 import { ConceptTemplate } from "./templates/ConceptTemplate";
 import * as fs from "fs";
@@ -23,7 +22,6 @@ export class LanguageGenerator {
     generate(language: PiLanguage): void {
         console.log("start generator")
         const templates = new ConceptTemplate();
-        const withTypeTemplate = new WithTypeTemplate();
         const languageTemplate = new LanguageTemplates();
         const enumerationTemplate = new EnumerationTemplate();
         const typeTemplate = new TypeTemplate();
@@ -67,10 +65,6 @@ export class LanguageGenerator {
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${this.languageFolder}/index.ts`, languageIndexFile);
     
-        console.log("Generating (Filer) Pi interface: " + Names.withTypeInterface(language) + ".ts");
-        var withTypeFile = Helpers.pretty(withTypeTemplate.generateTypeInterface(language), "Id Interface");
-        fs.writeFileSync(`${this.languageFolder}/${Names.withTypeInterface(language)}.ts`, withTypeFile);
-
         console.log("Generating Scoper interface: " + Names.scoperInterface(language) + ".ts");
         var scoperFile = Helpers.pretty(scoperTemplate.generateScoperInterface(language), "Scoper Interface");
         fs.writeFileSync(`${this.languageFolder}/${Names.scoperInterface(language)}.ts`, scoperFile);

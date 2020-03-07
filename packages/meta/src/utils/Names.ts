@@ -59,10 +59,6 @@ export class Names {
         return "All" + language.name + "Concepts";
     }
 
-    public static withTypeInterface(language: PiLanguage){
-        return "WithType";
-    }
-
     public static scoperInterface(language: PiLanguage){
         return "I" + language.name + "Scoper";
     }

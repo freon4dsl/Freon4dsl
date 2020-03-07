@@ -6,6 +6,8 @@
 export interface PiElement {
     piId(): string;
 
+    piLanguageConcept(): string;
+
     piContainer(): PiContainerDescriptor;
 
     piIsExpression(): boolean;
@@ -14,11 +16,16 @@ export interface PiElement {
 }
 // end::PiElement[]
 
+export interface PiNamedElement extends PiElement {
+    piName(): string;
+}
+
 export interface PiExpression extends PiElement {
     piIsExpressionPlaceHolder(): boolean;
 }
 
 export interface PiBinaryExpression extends PiExpression {
+    // TODO Should be moved to editor
     piSymbol(): string;
 
     piLeft(): PiExpression;
