@@ -1,6 +1,6 @@
 import { action } from "mobx";
 import { PiLogger } from "./PiLogging";
-import { Box } from "../boxes/Box";
+import { Box } from "../editor/boxes/Box";
 import { isPiExpression } from "../language/PiModel";
 import { PiKey } from "../util/Keys";
 import { PiContainerDescriptor, PiElement, PiExpression } from "../language/PiModel";

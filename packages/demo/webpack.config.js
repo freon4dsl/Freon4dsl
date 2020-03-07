@@ -34,7 +34,7 @@ module.exports = {
      "@projectit/core": path.join(__dirname, '../core/src'),
      "@projectit/demo": path.join(__dirname, './src'),
      "@projectit/meta": path.join(__dirname, '../meta/src'),
-     "@projectit/model": path.join(__dirname, '../model/src')
+     "@projectit/core": path.join(__dirname, '../model/src')
     },
     // Fix webpack's default behavior to not load packages with jsnext:main module
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)

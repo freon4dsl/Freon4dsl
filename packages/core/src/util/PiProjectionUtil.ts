@@ -1,5 +1,5 @@
 import { Box, SelectBox } from "../";
-import { TextBox } from "../boxes/TextBox";
+import { TextBox } from "../editor/boxes/TextBox";
 import { PiElement } from "../language/PiModel";
 import { PiUtils } from "./PiUtils";
 

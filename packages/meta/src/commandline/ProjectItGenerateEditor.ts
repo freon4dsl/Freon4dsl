@@ -1,8 +1,8 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { EditorGenerator } from "../generator/editor/EditorGenerator";
-import { LanguageGenerator } from "../generator/language/LanguageGenerator";
-import { EditorParser } from "../parser/editor/EditorParser";
-import { LanguageParser } from "../parser/language/LanguageParser";
+import { EditorGenerator } from "../editordef/generator/EditorGenerator";
+import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
+import { EditorParser } from "../editordef/parser/EditorParser";
+import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
 
 export class ProjectItGenerateEditor extends ProjectItGenerateAction {

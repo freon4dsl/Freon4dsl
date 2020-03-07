@@ -1,11 +1,10 @@
-import { PiEditor } from "@projectit/core";
 import { observer } from "mobx-react";
 import * as React from "react";
 
 import { MyToolbarComponent } from "./toolbars/MyToolbarComponent";
 import { PiEditorWithToolbar } from "./toolbars/ToolBarDefinition";
 
-import { ProjectionalEditor, PiLogger } from "@projectit/core";
+import { ProjectionalEditor, PiLogger, PiEditor } from "@projectit/core";
 
 import { DemoEditor } from "./DemoEditor";
 import { TutorialProjection, DemoActions, DemoContext } from "../../editor";

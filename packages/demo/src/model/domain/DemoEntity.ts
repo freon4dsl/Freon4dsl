@@ -1,4 +1,4 @@
-import { model, observablelistpart } from "@projectit/model";
+import { model, observablelistpart } from "@projectit/core";
 import { observable } from "mobx";
 import { DemoAttribute } from "./DemoAttribute";
 import { DemoModelElement } from "../DemoModel";

@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { MobxModelElementImpl, model, observablelistpart } from "@projectit/model";
+import { MobxModelElementImpl, model, observablelistpart } from "@projectit/core";
 import * as uuid from "uuid";
 
 import { DemoEntity } from "./domain/DemoEntity";

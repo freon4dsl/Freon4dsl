@@ -1,4 +1,4 @@
-import { observablepart } from "@projectit/model";
+import { observablepart } from "@projectit/core";
 
 import { DemoExpression } from "./DemoExpression";
 import { DemoPlaceholderExpression } from "./DemoPlaceholderExpression";

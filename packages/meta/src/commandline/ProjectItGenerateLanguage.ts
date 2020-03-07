@@ -1,5 +1,5 @@
-import { LanguageGenerator } from "../generator/language/LanguageGenerator";
-import { LanguageParser } from "../parser/language/LanguageParser";
+import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
+import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
 
 export class ProjectItGenerateLanguage extends ProjectItGenerateAction {

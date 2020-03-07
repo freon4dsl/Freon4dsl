@@ -1,4 +1,4 @@
-import { Box } from "../boxes/Box";
+import { Box } from "./boxes/Box";
 import { PiBinaryExpression, PiElement, PiExpression } from "../language/PiModel";
 import { PiCaret } from "../util/BehaviorUtils";
 import { PiKey } from "../util/Keys";

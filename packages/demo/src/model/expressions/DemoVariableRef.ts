@@ -1,4 +1,4 @@
-import { model, observablereference } from "@projectit/model";
+import { model, observablereference } from "@projectit/core";
 import { DemoExpression } from "./DemoExpression";
 import { DemoVariable } from "../domain/DemoVariable";
 import { DemoAttribute } from "../domain/DemoAttribute";

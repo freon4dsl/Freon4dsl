@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { model } from "@projectit/model";
+import { model } from "@projectit/core";
 
 import { DemoAttributeType } from "./DemoAttributeType";
 import { DemoModelElement } from "../DemoModel";

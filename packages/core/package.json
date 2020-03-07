@@ -13,8 +13,8 @@
     "build": "tsc && yarn run copy-scss && yarn run copy-fonts",
     "start": "echo Start core",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-scss": "cp ./src/components/styles/*.scss ./dist/components/styles",
-    "copy-fonts": "cp -r ./src/components/styles/fonts ./dist/components/styles",
+    "copy-scss": "cp src/editor/components/styles/*.scss ./dist/editor/components/styles",
+    "copy-fonts": "cp -r src/editor/components/styles/fonts ./dist/editor/components/styles",
     "dummy": "echo DUMMY",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"

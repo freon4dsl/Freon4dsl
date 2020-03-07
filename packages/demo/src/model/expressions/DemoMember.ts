@@ -1,6 +1,6 @@
 import { observable } from "mobx";
 import { DemoModelElement } from "../";
-import { model } from "@projectit/model";
+import { model } from "@projectit/core";
 
 export abstract class DemoMember {}
 

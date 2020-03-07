@@ -9,11 +9,11 @@ import {
 } from "./InternalBehavior";
 import { PiCaret } from "../util/BehaviorUtils";
 import { PiElement, isPiExpression } from "../language/PiModel";
-import { PiProjection } from "../language/PiProjection";
-import { isAliasBox } from "../boxes/AliasBox";
-import { isSelectBox } from "../boxes/SelectBox";
-import { isTextBox } from "../boxes/TextBox";
-import { Box } from "../boxes/Box";
+import { PiProjection } from "./PiProjection";
+import { isAliasBox } from "./boxes/AliasBox";
+import { isSelectBox } from "./boxes/SelectBox";
+import { isTextBox } from "./boxes/TextBox";
+import { Box } from "./boxes/Box";
 import { KeyboardShortcutBehavior, PiActions } from "./PiAction";
 import { PiContext } from "./PiContext";
 import { PiLogger } from "../util/PiLogging";

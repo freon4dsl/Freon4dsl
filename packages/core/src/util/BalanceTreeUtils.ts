@@ -1,7 +1,7 @@
 import { action } from "mobx";
 import { isPiExpression } from "../language/PiModel";
 import { PiLogger } from "./PiLogging";
-import { Box } from "../boxes/Box";
+import { Box } from "../editor/boxes/Box";
 import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression } from "../language/PiModel";
 import { PiEditor } from "../editor/PiEditor";
 import { PiUtils } from "./PiUtils";

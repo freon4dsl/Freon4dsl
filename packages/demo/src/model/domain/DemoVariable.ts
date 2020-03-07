@@ -1,4 +1,4 @@
-import { model, observablereference } from "@projectit/model";
+import { model, observablereference } from "@projectit/core";
 import { DemoModelElement } from "../DemoModel";
 import { DemoEntity } from "./DemoEntity";
 

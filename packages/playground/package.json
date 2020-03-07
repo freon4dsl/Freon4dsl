@@ -10,11 +10,11 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "generate-language": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-language",
-    "generate-scoper": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-scoper -s src/LanguageDefinition.scop",
-    "validateIt": "ts-node ../meta/src/commandline/projectit -l src/LanguageDefinition.lang -o \"src\" generate-validator -v src/LanguageDefinition.valid",
+    "metaIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-language",
+    "scopeIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-scoper -s src/demo/defs/LanguageDefinition.scop",
+    "validateIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-validator -v src/demo/defs/LanguageDefinition.valid",
     "build-wait": "tsc -w",
-    "build": "yarn run generate-language && yarn run generate-scoper && tsc",
+    "build": "yarn run metaIt && yarn run scopeIt && tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@projectit/core": "^0.0.5",
-    "@projectit/model": "^0.0.5",
     "@projectit/meta": "^0.0.5",
     "@types/lodash": "4.14.73",
     "@types/pegjs": "^0.10.1",

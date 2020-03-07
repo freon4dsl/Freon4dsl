@@ -1,7 +1,7 @@
 import { LEFT_MOST } from "../";
 import { isRegExp, isString } from "../editor/PiAction";
 import { PiLogger } from "./PiLogging";
-import { Box } from "../boxes/Box";
+import { Box } from "../editor/boxes/Box";
 import { PiEditor } from "../editor/PiEditor";
 
 const LOGGER = new PiLogger("BehaviorUtils");//.mute();

@@ -1,7 +1,7 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { ValidatorGenerator } from "../generator/validator/ValidatorGenerator";
-import { LanguageParser } from "../parser/language/LanguageParser";
-import { ScoperParser } from "../parser/scoper/ScoperParser";
+import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
+import { LanguageParser } from "../languagedef/parser/LanguageParser";
+import { ScoperParser } from "../scoperdef/parser/ScoperParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
 
 export class ProjectItGenerateValidator extends ProjectItGenerateAction {

@@ -1,5 +1,5 @@
 import { AliasBox, Box, HorizontalListBox, LabelBox, NBSP } from "../";
-import { GridBox, GridCell } from "../boxes/GridBox";
+import { GridBox, GridCell } from "../editor/boxes/GridBox";
 import { KeyboardShortcutBehavior } from "../editor/PiAction";
 import { PiEditor } from "../editor/PiEditor";
 import { PiElement } from "../language/PiModel";
@@ -7,7 +7,7 @@ import { PiKey } from "../util/Keys";
 import * as Keys from "../util/Keys";
 import { MetaKey } from "../util/Keys";
 import { PiUtils, wait } from "./PiUtils";
-import { STYLES } from "../components/styles/Styles";
+import { STYLES } from "../editor/components/styles/Styles";
 
 export class GridUtil {
     /**

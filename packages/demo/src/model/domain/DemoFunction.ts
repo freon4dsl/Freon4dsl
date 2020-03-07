@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { model, observablelistpart, observablepart, observablereference } from "@projectit/model";
+import { model, observablelistpart, observablepart, observablereference } from "@projectit/core";
 
 import { DemoModelElement } from "../DemoModel";
 import { DemoExpression } from "../expressions/DemoExpression";

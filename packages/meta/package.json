@@ -13,13 +13,13 @@
     "projectit": "dist/bin/projectit-generate-editor.js"
   },
   "scripts": {
-    "lang-parser": "pegjs ./src/parser/language/LanguageGrammar.pegjs",
-    "scop-parser": "pegjs ./src/parser/scoper/ScoperGrammar.pegjs",
-    "edit-parser": "pegjs ./src/parser/editor/EditorGrammar.pegjs",
+    "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
+    "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
+    "edit-parser": "pegjs src/editordef/parser/EditorGrammar.pegjs",
     "start": "echo Starting meta",
     "build": "tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-scss1": "cp ./src/styles/*.scss ./dist/styles",
+    "copy-scss1": "cp src/editordef/styles/*.scss ./dist/styles",
     "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
@@ -33,7 +33,7 @@
   "dependencies": {
     "@microsoft/ts-command-line": "4.3.10",
     "@projectit/core": "^0.0.5",
-    "@projectit/model": "^0.0.5",
+    "@projectit/core": "^0.0.5",
     "@types/lodash": "4.14.73",
     "@types/pegjs": "^0.10.1",
     "axios": "0.18.0",

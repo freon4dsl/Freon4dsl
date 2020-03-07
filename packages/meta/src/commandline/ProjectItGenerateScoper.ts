@@ -1,10 +1,10 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { EditorGenerator } from "../generator/editor/EditorGenerator";
-import { LanguageGenerator } from "../generator/language/LanguageGenerator";
-import { ScoperGenerator } from "../generator/scoper/ScoperGenerator";
-import { EditorParser } from "../parser/editor/EditorParser";
-import { LanguageParser } from "../parser/language/LanguageParser";
-import { ScoperParser } from "../parser/scoper/ScoperParser";
+import { EditorGenerator } from "../editordef/generator/EditorGenerator";
+import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
+import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
+import { EditorParser } from "../editordef/parser/EditorParser";
+import { LanguageParser } from "../languagedef/parser/LanguageParser";
+import { ScoperParser } from "../scoperdef/parser/ScoperParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
 
 export class ProjectItGenerateScoper extends ProjectItGenerateAction {

@@ -1,4 +1,4 @@
-import { model } from "@projectit/model";
+import { model } from "@projectit/core";
 import { DemoBinaryExpression } from "./DemoBinaryExpression";
 
 @model

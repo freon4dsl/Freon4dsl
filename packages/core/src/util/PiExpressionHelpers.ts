@@ -1,13 +1,13 @@
 import { PiCaret } from "./BehaviorUtils";
-import { STYLES } from "../components/styles/Styles";
-import { AliasBox } from "../boxes/AliasBox";
-import { Box } from "../boxes/Box";
-import { HorizontalListBox, isHorizontalBox } from "../boxes/ListBox";
-import { SelectBox } from "../boxes/SelectBox";
-import { SelectOption } from "../boxes/SelectOption";
+import { STYLES } from "../editor/components/styles/Styles";
+import { AliasBox } from "../editor/boxes/AliasBox";
+import { Box } from "../editor/boxes/Box";
+import { HorizontalListBox, isHorizontalBox } from "../editor/boxes/ListBox";
+import { SelectBox } from "../editor/boxes/SelectBox";
+import { SelectOption } from "../editor/boxes/SelectOption";
 import { PiEditor } from "../editor/PiEditor";
 import { PiBinaryExpression, PiExpression } from "../language/PiModel";
-import { PiProjection } from "../language/PiProjection";
+import { PiProjection } from "../editor/PiProjection";
 import {
     AFTER_BINARY_OPERATOR,
     BTREE,

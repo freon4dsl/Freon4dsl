@@ -1,9 +1,9 @@
 import { PiUtils, wait } from "./PiUtils";
 import { MetaKey, PiKey } from "./Keys";
 import { KeyboardShortcutBehavior } from "../editor/PiAction";
-import { AliasBox } from "../boxes/AliasBox";
-import { Box } from "../boxes/Box";
-import { HorizontalListBox, VerticalListBox } from "../boxes/ListBox";
+import { AliasBox } from "../editor/boxes/AliasBox";
+import { Box } from "../editor/boxes/Box";
+import { HorizontalListBox, VerticalListBox } from "../editor/boxes/ListBox";
 import { PiEditor } from "../editor/PiEditor";
 import { PiElement } from "../language/PiModel";
 import { PiLogger } from "./PiLogging";

@@ -8,7 +8,7 @@ import {
     PiExpressionCreator
 } from "./PiAction";
 import { isPiExpression, PiElement, PiExpression, PiBinaryExpression } from "../language/PiModel";
-import { Box } from "../boxes/Box";
+import { Box } from "./boxes/Box";
 import { PiEditor } from "../editor/PiEditor";
 import { PiCaret } from "../util/BehaviorUtils";
 import { BTREE } from "../util/BalanceTreeUtils";

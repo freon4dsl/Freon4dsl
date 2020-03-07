@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import { STYLES } from "../application/app/toolbars/ToolbarStyles";
 import { PiEditor, } from "@projectit/core";
-import { ModelSerializer, ModelInfo } from "@projectit/model";
+import { ModelSerializer, ModelInfo } from "@projectit/core";
 import * as React from "react";
 
 export type SaveProps = {
