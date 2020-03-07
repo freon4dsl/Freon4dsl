@@ -5,7 +5,7 @@ import { DemoPlaceholderExpression } from "./DemoPlaceholderExpression";
 
 @model
 export class DemoIfExpression extends DemoExpression {
-    $type: string = "DemoIfExpression";
+    $typename: string = "DemoIfExpression";
     @observablepart condition: DemoExpression;
     @observablepart thenExpression: DemoExpression;
     @observablepart elseExpression: DemoExpression;

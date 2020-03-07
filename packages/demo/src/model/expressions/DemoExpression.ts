@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 import { DemoModelElement } from "../DemoModel";
 
 export abstract class DemoExpression extends DemoModelElement {
-    $type: string;
+    $typename: string;
 
     constructor() {
         super();

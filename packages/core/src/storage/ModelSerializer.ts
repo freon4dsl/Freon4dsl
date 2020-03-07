@@ -6,7 +6,7 @@ import { ModelInfo } from "../language/decorators/ModelInfo";
 type Constructors = { [name: string]: Function };
 
 const MODEL_ID = MODEL_PREFIX + "_SERIAL_ID";
-const MODEL_TYPE = "$type";
+const MODEL_TYPE = "$typename";
 
 /**
  * Helper class to serialize a model using MobXModelElementImpl.

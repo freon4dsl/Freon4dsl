@@ -6,7 +6,7 @@ import { DemoFunction } from "../domain/DemoFunction";
 
 @model
 export class DemoFunctionCallExpression extends DemoExpression {
-    $type: string = "DemoFunctionCallExpression";
+    $typename: string = "DemoFunctionCallExpression";
     @observablelistpart args: DemoExpression[];
     get functionName(): string {
         return this.functionDefinition ? this.functionDefinition.name : null;

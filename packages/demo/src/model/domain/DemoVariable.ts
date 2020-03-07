@@ -4,7 +4,7 @@ import { DemoEntity } from "./DemoEntity";
 
 @model
 export class DemoVariable extends DemoModelElement {
-    $type: string = "DemoVariable";
+    $typename: string = "DemoVariable";
     name: string = "";
 
     @observablereference

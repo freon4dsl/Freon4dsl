@@ -3,7 +3,7 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 
 @model
 export class DemoComparisonExpression extends DemoBinaryExpression {
-    $type: string = "DemoComparisonExpression";
+    $typename: string = "DemoComparisonExpression";
     symbol: string = ">";
 
     constructor() {

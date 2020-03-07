@@ -4,7 +4,7 @@ import { DemoLiteralExpression } from "./DemoLiteralExpression";
 
 @model
 export class DemoNumberLiteralExpression extends DemoLiteralExpression {
-    $type: string = "DemoNumberLiteralExpression";
+    $typename: string = "DemoNumberLiteralExpression";
     @observable value: string = "0";
 
     constructor() {

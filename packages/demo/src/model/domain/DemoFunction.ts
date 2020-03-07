@@ -8,7 +8,7 @@ import { DemoAttributeType } from "./DemoAttributeType";
 
 @model
 export class DemoFunction extends DemoModelElement {
-    $type: string = "DemoFunction";
+    $typename: string = "DemoFunction";
     @observable name: string;
     @observablepart expression: DemoExpression;
     @observablelistpart parameters: DemoVariable[];

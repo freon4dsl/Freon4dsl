@@ -1,26 +1,26 @@
 {
    "_PI__SERIAL_ID": 1,
    "$id": "projectit-demo-1",
-   "$type": "DemoModel",
+   "$typename": "DemoModel",
    "name": "Demo model",
    "entities": [
       {
          "_PI__SERIAL_ID": 2,
          "$id": "projectit-demo-2",
-         "$type": "DemoEntity",
+         "$typename": "DemoEntity",
          "name": "Person",
          "attributes": [
             {
                "_PI__SERIAL_ID": 3,
                "$id": "projectit-demo-3",
-               "$type": "DemoAttribute",
+               "$typename": "DemoAttribute",
                "name": "name",
                "type": "String"
             },
             {
                "_PI__SERIAL_ID": 4,
                "$id": "projectit-demo-4",
-               "$type": "DemoAttribute",
+               "$typename": "DemoAttribute",
                "name": "age",
                "type": "String"
             }
@@ -29,20 +29,20 @@
       {
          "_PI__SERIAL_ID": 5,
          "$id": "projectit-demo-5",
-         "$type": "DemoEntity",
+         "$typename": "DemoEntity",
          "name": "Company",
          "attributes": [
             {
                "_PI__SERIAL_ID": 6,
                "$id": "projectit-demo-6",
-               "$type": "DemoAttribute",
+               "$typename": "DemoAttribute",
                "name": "name",
                "type": "String"
             },
             {
                "_PI__SERIAL_ID": 7,
                "$id": "projectit-demo-7",
-               "$type": "DemoAttribute",
+               "$typename": "DemoAttribute",
                "name": "VAT_Number",
                "type": "String"
             }
@@ -53,7 +53,7 @@
       {
          "_PI__SERIAL_ID": 8,
          "$id": "projectit-demo-8",
-         "$type": "DemoFunction",
+         "$typename": "DemoFunction",
          "name": "length",
          "expression": {
             "_PI__SERIAL_ID": 9,
@@ -61,28 +61,28 @@
             "left": {
                "_PI__SERIAL_ID": 10,
                "$id": "projectit-demo-58",
-               "$type": "DemoStringLiteralExpression",
+               "$typename": "DemoStringLiteralExpression",
                "value": "Hello Demo"
             },
             "right": {
                "_PI__SERIAL_ID": 11,
                "$id": "projectit-demo-59",
-               "$type": "DemoStringLiteralExpression",
+               "$typename": "DemoStringLiteralExpression",
                "value": "Goodbye"
             },
-            "$type": "DemoPlusExpression"
+            "$typename": "DemoPlusExpression"
          }
       },
       {
          "_PI__SERIAL_ID": 12,
          "$id": "projectit-demo-9",
-         "$type": "DemoFunction",
+         "$typename": "DemoFunction",
          "name": "first"
       },
       {
          "_PI__SERIAL_ID": 13,
          "$id": "projectit-demo-10",
-         "$type": "DemoFunction",
+         "$typename": "DemoFunction",
          "name": "last"
       }
    ]

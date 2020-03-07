@@ -6,7 +6,7 @@ export abstract class DemoMember {}
 
 @model
 export class DemoAttributeRef extends DemoMember {
-    $type: string = "DemoAttributeRef";
+    $typename: string = "DemoAttributeRef";
     @observable attributeName = " ";
 
     constructor() {
@@ -25,7 +25,7 @@ export class DemoAttributeRef extends DemoMember {
 
 @model
 export class DemoAssociationRef extends DemoMember {
-    $type: string = "DemoAssociationRef";
+    $typename: string = "DemoAssociationRef";
     @observable associationName = " ";
     asString(): string {
         return "//" + this.associationName;

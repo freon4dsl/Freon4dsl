@@ -27,7 +27,7 @@ export class EnumerationTemplate {
         import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
     
         export class ${Names.enumeration(enumeration)} extends ${extendsClass} implements ${implementsPi}, ${Names.withTypeInterface(language)} {
-            readonly $type: ${language.name}ConceptType = "${Names.enumeration(enumeration)}";
+            readonly $typename: ${language.name}ConceptType = "${Names.enumeration(enumeration)}";
             $id: string;
                 
             constructor(id?: string) {
@@ -68,7 +68,7 @@ export class EnumerationTemplate {
             }
 
             get$Type(): ${language.name}ConceptType {
-                return this.$type;
+                return this.$typename;
             }
 
             piId(): string {

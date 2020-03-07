@@ -8,7 +8,7 @@ import { DemoFunction } from "./domain/DemoFunction";
 @model
 export abstract class DemoModelElement extends MobxModelElementImpl {
     readonly $id: string;
-    $type: string;
+    $typename: string;
 
     static currentElementId: number = 1;
 
@@ -52,7 +52,7 @@ export class DemoModel extends DemoModelElement {
     // end::DemoModel[]
 
     @observablelistpart functions: DemoFunction[];
-    $type: string = "DemoModel";
+    $typename: string = "DemoModel";
 
     constructor() {
         super();

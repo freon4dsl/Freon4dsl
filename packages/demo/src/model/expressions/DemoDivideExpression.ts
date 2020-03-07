@@ -3,7 +3,7 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 
 @model
 export class DemoDivideExpression extends DemoBinaryExpression {
-    $type: string = "DemoDivideExpression";
+    $typename: string = "DemoDivideExpression";
 
     get symbol(): string {
         return "/";

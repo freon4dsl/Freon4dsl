@@ -99,7 +99,7 @@ export class NamespaceTemplate {
 
             private addIfTypeOK(z: ${allLangConcepts}, result: ${allLangConcepts}[], metatype?: ${langConceptType}) {
                 if (metatype) {
-                    if (z.$type === metatype) {
+                    if (z.$typename === metatype) {
                         result.push(z);
                     }
                 } else {

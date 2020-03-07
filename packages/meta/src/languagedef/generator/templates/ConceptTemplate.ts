@@ -65,7 +65,7 @@ export class ConceptTemplate {
             @model
             export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}, ${Names.withTypeInterface(language)} 
             {
-                readonly $type: ${language.name}ConceptType = "${concept.name}";
+                readonly $typename: ${language.name}ConceptType = "${concept.name}";
                 ${!hasSuper ? "$id: string;" : ""}
                     
                 constructor(id?: string) {
@@ -89,7 +89,7 @@ export class ConceptTemplate {
                 ${concept.references.map(p => this.generateReferenceProperty(p)).join("")}
 
                 get$Type(): ${language.name}ConceptType {
-                    return this.$type;
+                    return this.$typename;
                 }
 
                 ${!concept.base ? `

@@ -3,7 +3,7 @@ import { DemoExpression } from "./DemoExpression";
 
 @model
 export class DemoPlaceholderExpression extends DemoExpression {
-    $type: string = "DemoPlaceholderExpression";
+    $typename: string = "DemoPlaceholderExpression";
 
     toString(): string {
         return "...";

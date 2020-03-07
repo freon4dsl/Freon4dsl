@@ -3,7 +3,7 @@ import { DemoExpression } from "./DemoExpression";
 
 @model
 export class DemoAbsExpression extends DemoExpression {
-    $type: string = "DemoAbsExpression";
+    $typename: string = "DemoAbsExpression";
     @observablepart expr: DemoExpression;
 
     toString(): string {

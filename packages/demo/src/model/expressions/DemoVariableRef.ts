@@ -13,13 +13,13 @@ import { DemoAttribute } from "../domain/DemoAttribute";
 
 @model
 export class DemoFunctionDeclaration {
-    $type: string = "DemoAbsExpression";
+    $typename: string = "DemoAbsExpression";
     constructor(public name: string) {}
 }
 
 @model
 export class DemoVariableRefExpression extends DemoExpression {
-    $type: string = "DemoVariableRefExpression";
+    $typename: string = "DemoVariableRefExpression";
     referredName: string;
     attribute: string;
 

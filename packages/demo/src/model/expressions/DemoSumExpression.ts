@@ -5,7 +5,7 @@ import { DemoPlaceholderExpression } from "./DemoPlaceholderExpression";
 
 @model
 export class DemoSumExpression extends DemoExpression {
-    $type: string = "DemoSumExpression";
+    $typename: string = "DemoSumExpression";
     @observablepart from: DemoExpression;
     @observablepart to: DemoExpression;
     @observablepart body: DemoExpression;

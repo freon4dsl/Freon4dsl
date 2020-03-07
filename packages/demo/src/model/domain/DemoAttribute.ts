@@ -10,7 +10,7 @@ export class DemoAttribute extends DemoModelElement {
     @observable name: string = "";
     @observable type: DemoAttributeType = DemoAttributeType.String;
 // tag::DemoAttribute[]
-    $type: string = "DemoAttribute";
+    $typename: string = "DemoAttribute";
 
     constructor() {
         super();

@@ -3,7 +3,7 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 
 @model
 export class DemoOrExpression extends DemoBinaryExpression {
-    $type: string = "DemoOrExpression";
+    $typename: string = "DemoOrExpression";
 
     get symbol(): string {
         return "or";

@@ -12,7 +12,7 @@ export class DemoEntity extends DemoModelElement {
 // end::DemoEntity[]
     @observablelistpart functions: DemoFunction[];
 
-    $type: string = "DemoEntity";
+    $typename: string = "DemoEntity";
 
     constructor() {
         super();
