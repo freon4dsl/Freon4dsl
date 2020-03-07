@@ -17,7 +17,7 @@ export interface PiElement {
 // end::PiElement[]
 
 export interface PiNamedElement extends PiElement {
-    piName(): string;
+    name: string;
 }
 
 export interface PiExpression extends PiElement {
