@@ -15,7 +15,7 @@ export class ConceptTemplate {
         const isBinaryExpression = concept.binaryExpression();
         const isExpression = (!isBinaryExpression) && concept.expression() ;
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement"));
+        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
 
         const imports = Array.from(
             new Set(
@@ -56,7 +56,7 @@ export class ConceptTemplate {
         const result = `
             ${concept.properties.length > 0 ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
+            import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/core";
             import { ${language.name}ConceptType } from "./${language.name}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}

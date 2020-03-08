@@ -13,7 +13,7 @@ describe('Testing Validator', () => {
           done();
         });
 
-        test("multiplication 3 * 10", () => {
+        test.skip("multiplication 3 * 10", () => {
             let errors : ViError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = new DemoNumberLiteralExpression("3");
@@ -22,7 +22,7 @@ describe('Testing Validator', () => {
             expect(errors.length).toBe(0);
         });
 
-        test("multiplication 3 * 'temp'", () => {
+        test.skip("multiplication 3 * 'temp'", () => {
             let errors : ViError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = new DemoNumberLiteralExpression("3");
@@ -35,7 +35,7 @@ describe('Testing Validator', () => {
             );
         });
 
-        test("multiplication (3/4) * 'temp'", () => {
+        test.skip("multiplication (3/4) * 'temp'", () => {
             let errors : ViError[] = [];
             let div : DemoDivideExpression = new DemoDivideExpression();
             div.left = new DemoNumberLiteralExpression("3");
