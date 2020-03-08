@@ -1,8 +1,9 @@
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression, 
     IDemoTyper, DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression } from "../language";
 import { AllDemoConcepts } from "../language/AllDemoConcepts";
+import { PiTyper } from "@projectit/core"
 
-export class DemoTyper implements IDemoTyper {
+export class DemoTyper implements PiTyper {
 
     inferType(modelelement: AllDemoConcepts): DemoType {
         // generate if statement for all lang elements that have @hasType annotation
@@ -76,9 +77,4 @@ export class DemoTyper implements IDemoTyper {
         return false;
     }
 
-    typeName(elem: DemoType): string { 
-        if (elem instanceof DemoEntity) return elem.name;
-        if (elem instanceof DemoAttributeType) return elem.asString();
-        return "";
-    }
 }

@@ -13,7 +13,7 @@ describe('Testing Validator', () => {
           done();
         });
 
-        test.skip("multiplication 3 * 10", () => {
+        test("multiplication 3 * 10", () => {
             let errors : ViError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = new DemoNumberLiteralExpression("3");
@@ -22,20 +22,19 @@ describe('Testing Validator', () => {
             expect(errors.length).toBe(0);
         });
 
-        test.skip("multiplication 3 * 'temp'", () => {
+        test("multiplication 3 * 'temp'", () => {
             let errors : ViError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = new DemoNumberLiteralExpression("3");
             mult.right = new DemoStringLiteralExpression("temp");
             errors = validator.validateDemoMultiplyExpression(mult);
             expect(errors.length).toBe(1);
-            // TODO use expect for under
             errors.forEach(e =>
-                console.dir("'" + e.message + "' reported on [" + e.reportedOn + "]")
+                expect(e.reportedOn).toBe(mult.right)
             );
         });
 
-        test.skip("multiplication (3/4) * 'temp'", () => {
+        test("multiplication (3/4) * 'temp'", () => {
             let errors : ViError[] = [];
             let div : DemoDivideExpression = new DemoDivideExpression();
             div.left = new DemoNumberLiteralExpression("3");
@@ -46,7 +45,7 @@ describe('Testing Validator', () => {
             errors = validator.validateDemoMultiplyExpression(mult);
             expect(errors.length).toBe(1);
             errors.forEach(e =>
-                console.log("'" + e.message + "' reported on [" + e.reportedOn + "]")
+                expect(e.reportedOn).toBe(mult.right)
             );
         });
 

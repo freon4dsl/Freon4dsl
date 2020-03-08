@@ -11,8 +11,6 @@ export class ValidatorTemplate {
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
         const generatedClassName : String = Names.validator(language, validdef);
-        const validatorInterfaceName : String = Names.validatorInterface(language);
-        const errorClassName : String = Names.errorClassName(language);
 
         // language.concepts.map(concept => 
         //     concept.parts.forEach(p => {
@@ -29,16 +27,15 @@ export class ValidatorTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts} } from "../../language";
-        import { ${validatorInterfaceName} } from "../../language/${validatorInterfaceName}";
-        import { ${errorClassName} } from "../../language/${validatorInterfaceName}";
+        import { PiValidator, PiError } from "@projectit/core";
         import { ${langConceptType} } from "../../language/${language.name}";   
         import { ${language.concepts.map(concept => `
                 ${concept.name}`).join(", ")} } from "../../language";     
         
-        export class ${generatedClassName} implements ${validatorInterfaceName} {
+        export class ${generatedClassName} implements PiValidator {
 
-            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${errorClassName}[]{
-                let result : ${errorClassName}[] = [];
+            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : PiError[]{
+                let result : PiError[] = [];
 
                 ${language.concepts.map(concept => `
                 if(modelelement instanceof ${concept.name}) {
@@ -49,8 +46,8 @@ export class ValidatorTemplate {
             }
 
             ${language.concepts.map(concept => `
-                private validate${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) : ${errorClassName}[]{
-                    let result : ${errorClassName}[] = [];
+                private validate${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) : PiError[]{
+                    let result : PiError[] = [];
                     // include validations here
 
                     ${((concept.parts.length > 0)?
