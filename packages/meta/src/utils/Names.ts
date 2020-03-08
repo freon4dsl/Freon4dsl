@@ -1,6 +1,6 @@
-import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangType } from "../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
-import { PiValidatorDef } from "../validatordef/metalanguage/PiValidatorDefLang";
+import { ValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -47,7 +47,7 @@ export class Names {
         return enumeration.name;
     }
 
-    public static type(type: PiLangType){
+    public static type(type: PiLangUnion){
         return type.name;
     }
 
@@ -79,7 +79,7 @@ export class Names {
         return scopedef.scoperName + "Scoper";
     }
 
-    public static validator(language: PiLanguage, validdef: PiValidatorDef){
+    public static validator(language: PiLanguage, validdef: ValidatorDef){
         return "DemoValidator"; // TODO
     }
 

@@ -1,12 +1,12 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguage, PiLangElementProperty } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiValidatorDef } from "../../metalanguage/PiValidatorDefLang";
+import { ValidatorDef } from "../../metalanguage/ValidatorDefLang";
 
 export class ValidatorTemplate {
     constructor() {
     }
 
-    generateValidator(language: PiLanguage, validdef: PiValidatorDef): string {
+    generateValidator(language: PiLanguage, validdef: ValidatorDef): string {
         console.log("Creating Validator");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     

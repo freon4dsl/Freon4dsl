@@ -3,13 +3,13 @@
 }
 
 Editor_Definition
-  = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)* ws t:(type)*
+  = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)* ws t:(union)*
     {
         return create.createLanguage({
             "name": name,
             "concepts": c,
             "enumerations": e,
-            "types": t
+            "union": t
         });
     } 
 
@@ -83,11 +83,11 @@ enumeration = "enumeration" ws name:var curly_begin
                     return create.createEnumeration({ "name": name, "literals": literals});
                 }
 
-type = "type" ws name:var curly_begin
+union = "union" ws name:var curly_begin
                     literals:var+
                 curly_end
                 {
-                    return create.createType({ "name": name, "literals": literals});
+                    return create.createUnion({ "name": name, "literals": literals});
                 }
                 
 curly_begin    = ws "{" ws 

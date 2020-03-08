@@ -1,24 +1,18 @@
 import { Names } from "../../../utils/Names";
-import { PiLangEnumeration, PiLangType } from "../../metalanguage/PiLanguage";
+import { PiLangUnion } from "../../metalanguage/PiLanguage";
 
-export class TypeTemplate {
+export class UnionTemplate {
     constructor() {
     }
 
-    generateType(type: PiLangType): string {
-        // Dit moet het worden:
-        // import { DemoEntity } from "./DemoEntity";
-        // import { DemoAttributeType } from "./DemoAttributeType";
-        // export type DemoType = DemoEntity | DemoAttributeType;
-
-        const language = type.language;
+    generateUnion(union: PiLangUnion): string {
 
         // Template starts here
         return `
-        ${type.literals.map(lit => 
+        ${union.literals.map(lit => 
             `import { ${lit} } from "./${lit}"` ).join(";")}
     
-        export type ${Names.type(type)} = ${type.literals.map(lit => 
+        export type ${Names.type(union)} = ${union.literals.map(lit => 
                 `${lit}` ).join(" | ")}
         `;
     }

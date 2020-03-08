@@ -14,7 +14,7 @@ export class AllConceptsTemplate {
         language.enumerations.map(c =>
             tmp.push(Names.enumeration(c))
         );
-        language.types.map(c =>
+        language.unions.map(c =>
             tmp.push(Names.type(c))
         );
         tmp = tmp.sort();

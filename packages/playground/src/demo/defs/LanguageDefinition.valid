@@ -1,65 +1,66 @@
 validator Demo for language Demo
 
 DemoModel {
-    @validName name // default Identifier
+    @validName // default Identifier
     @notEmpty entities
     @notEmpty functions
 }
 
 DemoEntity {
-    @validName: name
+    @validName 
     @notEmpty attributes
     @notEmpty functions
 }
 
 DemoAttribute {
-    @validName: name 
+    @validName  
 }
 
 DemoFunction {
-    @validName name
-    @typecheck conforms(expression, AttributeType.String) 
+    @validName 
+    @typecheck conformsTo (expression, AttributeType.String) 
     @notEmpty expression
 }
 
 DemoVariable {
-    @validName name
+    @validName 
 }
 
-DemoAbsExpression base DemoExpression {
-    @typecheck equalsType(expr, DemoAttributeType.Integer)
+DemoAbsExpression {
+    @typecheck equalsType( expr, DemoAttributeType.Integer ) 
 }
 
 DemoMultiplyExpression {
-    @typecheck left = DemoAttributeType.Integer
-    @typecheck right = DemoAttributeType.Integer
+    @typecheck equalsType( left, DemoAttributeType.Integer )
+    @typecheck equalsType( right, DemoAttributeType.Integer )
 }
 
 DemoPlusExpression {
-    @typecheck left = DemoAttributeType.Integer
-    @typecheck right = DemoAttributeType.Integer
+    @typecheck equalsType( left, DemoAttributeType.Integer )
+    @typecheck equalsType( right, DemoAttributeType.Integer )
 }
 
 DemoDivideExpression {
-    @typecheck left = DemoAttributeType.Integer
-    @typecheck right = DemoAttributeType.Integer
+    @typecheck equalsType( left, DemoAttributeType.Integer )
+    @typecheck equalsType( right, DemoAttributeType.Integer )
 }
 
 DemoAndExpression {
-    @typecheck left = DemoAttributeType.Boolean
-    @typecheck right = DemoAttributeType.Boolean
+    @typecheck equalsType( left, DemoAttributeType.Boolean )
+    @typecheck equalsType( right, DemoAttributeType.Boolean )
 }
 
 DemoOrExpression {
-    @typecheck left = DemoAttributeType.Boolean
-    @typecheck right = DemoAttributeType.Boolean
+    @typecheck equalsType( left , DemoAttributeType.Boolean )
+    @typecheck equalsType( left, DemoAttributeType.Boolean )
+    @typecheck equalsType( right, DemoAttributeType.Boolean )
 }
 
 DemoComparisonExpression {
-	@typecheck left conformsTo right
+    @typecheck equalsType( left, right )
 }
 
 DemoIfExpression {
-    @typecheck condition = DemoAttributeType.Boolean
-    @typecheck conformsTo(whenTrue, whenFalse)
+    @typecheck equalsType( condition, DemoAttributeType.Boolean )
+    @typecheck conformsTo( whenTrue, whenFalse )
 }

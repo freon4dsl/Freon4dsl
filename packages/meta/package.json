@@ -16,6 +16,7 @@
     "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
     "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
     "edit-parser": "pegjs src/editordef/parser/EditorGrammar.pegjs",
+    "valid-parser": "pegjs src/validatordef/parser/ValidatorGrammar.pegjs",
     "start": "echo Starting meta",
     "build": "tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
@@ -32,7 +33,6 @@
   },
   "dependencies": {
     "@microsoft/ts-command-line": "4.3.10",
-    "@projectit/core": "^0.0.5",
     "@projectit/core": "^0.0.5",
     "@types/lodash": "4.14.73",
     "@types/pegjs": "^0.10.1",

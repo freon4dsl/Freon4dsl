@@ -14,7 +14,7 @@ export class PiLanguage {
     name: string;
     concepts: PiLangConcept[] = [];
     enumerations: PiLangEnumeration[] = [];
-    types: PiLangType[] = [];
+    unions: PiLangUnion[] = [];
 
     constructor() {
     }
@@ -166,7 +166,7 @@ export class PiLangEnumeration {
     }
 }
 
-export class PiLangType {
+export class PiLangUnion {
     language: PiLanguage;
     name: string;
     literals: string[] = [];

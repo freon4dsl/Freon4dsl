@@ -130,7 +130,7 @@ enumeration DemoAttributeType {
     Boolean
 }
 
-type DemoType {
+union DemoType {
     DemoEntity
     DemoAttributeType
 }
