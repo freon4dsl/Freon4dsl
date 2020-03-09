@@ -1,4 +1,4 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangConceptReference, PiLangPropertyReference } from "../../languagedef/metalanguage/PiLanguage";
 
 export class ValidatorDef {
     validatorName: string;
@@ -30,11 +30,10 @@ export class ConformsTypeRule extends TypeRule {
 }
 
 export class NotEmptyRule {
-    // property: PiLangPropertyReference
-    property: string;
+    property: PiLangPropertyReference
 }
 
 export class TypeReference {
     sourceName: PiLangConceptReference; // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
-    partName: PiLangConceptReference;   // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    partName: PiLangPropertyReference;   // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
 }

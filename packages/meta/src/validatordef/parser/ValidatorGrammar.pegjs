@@ -29,11 +29,13 @@ conceptRule = conceptRef:conceptRef ws curly_begin ws validname:validnameKey? ws
 
 conceptRef = name:var { return create.createConceptReference( { "name": name}); }
 
-notEmptyRule = notEmptyKey ws partRef:var ws {
+notEmptyRule = notEmptyKey ws propertyRef:propertyRef ws {
   return create.createNotEmpty( {
-    "property": partRef
+    "property": propertyRef
   })
 }
+
+propertyRef = name:var { return create.createPropertyReference( { "name": name}); }
 
 typeRule = rule1:typeEqualsRule { return rule1; }
           / rule2: typeConformsRule { return rule2; }
@@ -52,7 +54,7 @@ typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:typeRef ws 
   });
 }
 
-optionalPartName = SourceCharacter partName:conceptRef  {
+optionalPartName = SourceCharacter partName:propertyRef  {
   return partName;
 } 
 
