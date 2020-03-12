@@ -7,7 +7,7 @@ import {
     PiProjectionTemplate,
     PiProjectionText
 } from "../metalanguage/PiProjectionTemplate";
-import { PiLangPrimitiveProperty, PiLangConcept, PiLangElementProperty, PiLangConceptReference, PiLanguage, PiLangEnumeration } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 

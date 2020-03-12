@@ -1,13 +1,59 @@
 export class PiLangConceptReference {
     language: PiLanguage;
     name: string;
-
+ 
     constructor() {
     }
 
     concept(): PiLangConcept {
         if(!!this.language) return this.language.findConcept(this.name);
     }
+    
+    element() {
+        return this.concept();
+    }
+}
+export class PiLangElementReference {
+    language: PiLanguage;
+    name: string;
+ 
+    constructor() {
+    }
+
+    element(): PiLangElement {
+        let result : PiLangElement;
+        if(!!this.language) {
+            result = this.language.findConcept(this.name);
+            if(result === undefined) result = this.language.findEnumeration(this.name);
+            if(result === undefined) result = this.language.findUnion(this.name);
+        }
+        return result;
+    }
+}
+
+export class PiLangPropertyReference {
+    language: PiLanguage;
+    owningelement: PiLangElementReference;
+    name: string;
+
+    property(): PiLangProperty {
+        let result : PiLangProperty;
+        if(!!this.language) {
+            let concept = this.owningelement.element();
+            if(!!concept) { 
+                result = concept.findProperty(this.name);
+            }
+        }
+        return result; 
+    }
+}
+abstract class PiLangElement {
+    findProperty(name: string): PiLangProperty {
+        let result : PiLangProperty;
+        // should be implemented by subclasses!!!
+        return result;
+    }
+    name: string
 }
 
 export class PiLanguage {
@@ -22,6 +68,14 @@ export class PiLanguage {
 
     findConcept(name: string): PiLangConcept {
         return this.concepts.find(con => con.name === name);
+    }
+
+    findEnumeration(name: string): PiLangEnumeration {
+        return this.enumerations.find(con => con.name === name);
+    }
+
+    findUnion(name: string): PiLangUnion {
+        return this.unions.find(con => con.name === name);
     }
 
     findExpressionBase(): PiLangConcept {
@@ -45,7 +99,7 @@ export class PiLanguage {
     }
 }
 
-export class PiLangConcept {
+export class PiLangConcept extends PiLangElement {
     language: PiLanguage;
     name: string;
     isAbstract: boolean;
@@ -65,6 +119,7 @@ export class PiLangConcept {
     priority?: number;
 
     constructor() {
+        super();
     }
 
     getSymbol(): string {
@@ -125,6 +180,13 @@ export class PiLangConcept {
         return result;
     }
 
+    findProperty(name: string): PiLangProperty {
+        let result: PiLangProperty;
+        result = this.properties.find( elem => elem.name === name);
+        if(result === undefined) result = this.parts.find( elem => elem.name === name);
+        if(result === undefined) result = this.references.find( elem => elem.name === name);
+        return result;
+    }
 }
 
 export class PiLangExpressionConcept extends PiLangConcept {
@@ -133,10 +195,13 @@ export class PiLangExpressionConcept extends PiLangConcept {
 export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
 }
 
-export class PiLangPrimitiveProperty {
+export abstract class PiLangProperty {
     owningConcept: PiLangConcept;
+}
+export class PiLangPrimitiveProperty extends PiLangProperty {
 
     constructor() {
+        super();
     }
 
     name: string;
@@ -146,31 +211,50 @@ export class PiLangPrimitiveProperty {
     type: string;
 }
 
-export class PiLangElementProperty {
-    owningConcept: PiLangConcept;
+export class PiLangElementProperty extends PiLangProperty {
 
     constructor() {
+        super();
     }
 
     name: string;
     isList: boolean;
     type: PiLangConceptReference;
 }
-
-export class PiLangEnumeration {
+export class PiLangEnumeration extends PiLangElement {
     language: PiLanguage;
     name: string;
     literals: string[] = [];
 
     constructor() {
+        super();
+    }
+
+    findProperty(name:string) : PiLangProperty {
+        let result: PiLangEnumProperty = new PiLangEnumProperty();
+        let literal  = this.literals.find( elem => elem === name);
+        if(!(!!literal)) result.name = literal; 
+        return result;
     }
 }
 
-export class PiLangUnion {
-    language: PiLanguage;
-    name: string;
-    literals: string[] = [];
+export class PiLangEnumProperty extends PiLangProperty {
 
     constructor() {
+        super();
     }
+
+    name: string;
+}
+
+export class PiLangUnion extends PiLangElement {
+    language: PiLanguage;
+    name: string;
+    members: PiLangConceptReference[];
+    //literals: string[] = [];
+
+    constructor() {
+        super();
+    }
+    
 }

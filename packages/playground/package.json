@@ -10,9 +10,9 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "metaIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-language",
-    "scopeIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-scoper -s src/demo/defs/LanguageDefinition.scop",
-    "validateIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-validator -v src/demo/defs/LanguageDefinition.valid",
+    "metaIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/DemoDefinition.lang -o src/demo generate-language",
+    "scopeIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/DemoDefinition.lang -o src/demo generate-scoper -s src/demo/defs/DemoDefinition.scop",
+    "validateIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/DemoDefinition.lang -o src/demo generate-validator -v src/demo/defs/DemoDefinition.valid",
     "build-wait": "tsc -w",
     "build": "yarn run metaIt && yarn run scopeIt && tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",

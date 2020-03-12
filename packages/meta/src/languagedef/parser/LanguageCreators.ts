@@ -1,4 +1,4 @@
-import { PiLangPrimitiveProperty, PiLangConcept, PiLangElementProperty, PiLangConceptReference, PiLanguage, PiLangEnumeration, PiLangUnion } from "../metalanguage/PiLanguage";
+import { PiLangPrimitiveProperty, PiLangConceptReference, PiLangElementProperty, PiLanguage, PiLangEnumeration, PiLangUnion, PiLangConcept, PiLangElementReference } from "../metalanguage/PiLanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
@@ -8,13 +8,19 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     return result;
 }
 
+export function createElementReference(data: Partial<PiLangElementReference>): PiLangElementReference {
+    const result = new PiLangElementReference();
+    if(!!data.name) { result.name = data.name; } 
+    // console.log("creating elementReference ");
+    // console.dir(result);
+    return result;
+}
+
 export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>): PiLangPrimitiveProperty {
     const result = new PiLangPrimitiveProperty();
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
-
-    // console.log("created property with name "+ result.name);
     return result;
 }
 
@@ -119,6 +125,6 @@ export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnume
 export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
     const result = new PiLangUnion();
     if( !!data.name) { result.name = data.name; }
-    if( !!data.literals) { result.literals = data.literals; }
+    if( !!data.members) { result.members = data.members; }
     return result;
 }

@@ -1,4 +1,4 @@
-import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangUnion, PiLangConceptReference } from "../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
 import { ValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
 
@@ -84,7 +84,7 @@ export class Names {
     }
 
     public static errorClassName(language: PiLanguage, ){
-        return "ViError"; // TODO
+        return "PiError"; // TODO
     }
 
 }

@@ -15,21 +15,21 @@ concept DemoEntity {
 
 concept DemoAttribute {
     name: string
-    declaredType: DemoAttributeType
+    @reference declaredType: DemoAttributeType
     @editor trigger: string = "attribute"
 }
 
 concept DemoFunction {
     name: string
-    declaredType : DemoType
     @part expression: DemoExpression
     @part parameters: DemoVariable[]
+    @reference declaredType : DemoEntity
     @editor trigger: string = "function"
 }
 
 concept DemoVariable {
     name: string
-    declaredType: DemoType
+    @reference declaredType: DemoEntity
     @editor trigger: string = "var"
 }
 

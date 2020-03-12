@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguage, PiLangConceptProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { ValidatorDef } from "../../metalanguage/ValidatorDefLang";
 
 export class ValidatorTemplate {

@@ -18,7 +18,7 @@ DemoAttribute {
 
 DemoFunction {
     @validName 
-    @typecheck conformsTo (expression, AttributeType.String) 
+    @typecheck conformsTo (expression, DemoAttributeType.String) 
     @notEmpty expression
 }
 

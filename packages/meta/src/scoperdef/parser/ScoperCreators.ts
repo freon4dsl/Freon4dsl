@@ -1,4 +1,4 @@
-import { PiLangPrimitiveProperty, PiLangConcept, PiLangConceptProperty, PiLangConceptReference, PiLanguage, PiLangEnumeration } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangPrimitiveProperty, PiLangConcept, PiLangElementProperty, PiLanguage, PiLangEnumeration, PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef, PiNamespace } from "../metalanguage/PiScopeDefLang";
 
 // Functions used to create instances of the language classes from the parsed data objects.

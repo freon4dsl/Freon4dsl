@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguage, PiLangConcept, PiLangConceptReference } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 import { notStrictEqual } from "assert";
 

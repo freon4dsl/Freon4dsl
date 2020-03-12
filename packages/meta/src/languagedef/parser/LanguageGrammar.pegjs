@@ -22,6 +22,7 @@ placeholderKey  = "placeholder" ws { return true; }
 
 base = baseKey name:var { return create.createConceptReference( { "name": name}); }
 
+// TODO one should be able to mingle parts, references and attributes
 concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
          "concept" ws name:var ws base:base? curly_begin 
             att:attribute*
@@ -57,7 +58,7 @@ part = "@part" ws name:var ws name_separator ws type:conceptReference isList:"[]
         return create.createPart({"name": name, "type": type, "isList": (isList?true:false) }) 
     }
 
-reference = "@reference" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
+reference = "@reference" ws name:var ws name_separator ws type:elementReference isList:"[]"? ws
     { 
         return create.createReference({"name": name, "type": type, "isList": (isList?true:false) }) 
     }
@@ -65,6 +66,11 @@ reference = "@reference" ws name:var ws name_separator ws type:conceptReference 
 conceptReference = referredName:var {
     return create.createConceptReference({"name": referredName})
 }
+
+elementReference = referredName:var {
+    return create.createElementReference({"name": referredName})
+}
+
 
 editorProperty = "@editor" ws name:var ws name_separator ws type:var ws "=" ws "\"" value:string "\"" ws
     {
