@@ -1,6 +1,6 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguage, PiLangConceptReference, PiLangPropertyReference, PiLangElementReference } from "../../languagedef/metalanguage/PiLanguage";
-import { ConceptRule, ValidatorDef, EqualsTypeRule, TypeRule, ConformsTypeRule, NotEmptyRule, TypeReference } from "./ValidatorDefLang";
+import { PiLanguage, PiLangConceptReference, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { ConceptRule, ValidatorDef, EqualsTypeRule, Rule, ConformsTypeRule, NotEmptyRule, LangRefExpression, EnumRefExpression, ThisExpression, PropertyRefExpression, ValidNameRule } from "./ValidatorDefLang";
 
 export class ValidatorChecker extends Checker<ValidatorDef> {
     
@@ -25,20 +25,20 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     private checkConceptRule(rule: ConceptRule) {
         this.checkConceptReference(rule.conceptRef);
 
-        rule.typeRules.forEach(tr => {
-            this.checkTypeRule(tr, rule.conceptRef);
-        });
-
-        rule.notEmptyRules.forEach(nr => {
-            this.checkNotEmptyRule(nr, rule.conceptRef);
-        });
+        let enclosingConcept = rule.conceptRef.concept(); 
+        if (enclosingConcept) {
+            rule.rules.forEach(tr => {
+                this.checkRule(tr, enclosingConcept);
+            });
+        }
     }
 
-    checkConceptReference(reference: PiLangConceptReference) {
+    private checkConceptReference(reference: PiLangConceptReference) {
         // Note that the following statement is crucial, because the model we are testing is separate
         // from the model of the language.
         // If it is not set, the conceptReference will not find the refered language concept.
         reference.language = this.language;
+
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
@@ -50,102 +50,138 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     })
             })
     }
-    
-    checkElementReference(reference: PiLangElementReference) {
-        // Note that the following statement is crucial, because the model we are testing is separate
-        // from the model of the language.
-        // If it is not set, the elementReference will not find the refered language element.
-        reference.language = this.language;
-        this.nestedCheck(
-        {
-            check: !!reference.name,
-            error: `Element reference should have a name, but doesn't`,
-            whenOk: () => this.nestedCheck(
-                {
-                    check: reference.element() !== undefined,
-                    error: `Element reference to ${reference.name} cannot be resolved`
-                })
-        })
+
+    checkRule(tr: Rule, enclosingConcept: PiLangConcept) {
+        // if( tr instanceof EqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
+        // if( tr instanceof ConformsTypeRule) this.checkConformsTypeRule(tr, enclosingConcept);
+        // if( tr instanceof NotEmptyRule) this.checkNotEmptyRule(tr, enclosingConcept);
+        if( tr instanceof ValidNameRule) this.checkValidNameRule(tr, enclosingConcept);
     }
 
-    checkTypeRule(tr: TypeRule, enclosingConcept: PiLangConceptReference) {
-        if (tr instanceof EqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
-        if (tr instanceof ConformsTypeRule) this.checkConformsTypeRule(tr, enclosingConcept);
-    }
-    
-    checkEqualsTypeRule(tr: EqualsTypeRule, enclosingConcept: PiLangConceptReference) {
-        // TODO change type1 and type2 in parser and then test this check
-        // console.log("Checking EqualsTo " + tr.type1.sourceName.name + " " + tr.type2.sourceName.name);
-        // // check references to types
-        // this.nestedCheck(
-        //     {
-        //         check: tr.type1 !== undefined || tr.type2 !== undefined,
-        //         error: `Typecheck "equalsType" should have two types to compare`,
-        //         whenOk: () => {
-        //             this.checkTypeReference(tr.type1, enclosingConcept),
-        //             this.checkTypeReference(tr.type2, enclosingConcept)  
-        //         }
-        //     })
+    checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiLangConcept){
+        // console.dir(enclosingConcept);
+        // check whether tr.property (if set) is a property of enclosingConcept
+        // if so, set myProperty to this property,
+        // otherwise set myProperty to the 'name' property of the EnclosingConcept
+        let myProp : PiLangPrimitiveProperty;
+        if( tr.property != null ) {
+            let propRef = tr.property;
+            if (propRef.sourceName === "this" && tr.property.appliedFeature != null ) {
+                propRef = tr.property.appliedFeature;
+            }
+            for( let e of enclosingConcept.allProperties() ) {
+                if(e.name === propRef.sourceName) myProp = e;
+            }
+            this.simpleCheck(myProp != null, "Valid Name Rule: cannot find property '" + propRef.sourceName + "' in " + enclosingConcept.name);
+        } else {
+            myProp = enclosingConcept.allProperties().find(e => {
+                e.name === "name"
+            });
+            this.simpleCheck(myProp == null, "Valid Name Rule: cannot find property 'name' in " + enclosingConcept.name);
+            tr.property = new PropertyRefExpression();
+            tr.property.sourceName = "name";
+        }
+        tr.property.myProperty = myProp;
     }
 
-    checkConformsTypeRule(tr: ConformsTypeRule, enclosingConcept: PiLangConceptReference) {
-        // console.log("Checking ConformsTo " + tr.type1.sourceName.name + " " + tr.type2.sourceName.name);
+    checkEqualsTypeRule(tr: EqualsTypeRule, enclosingConcept: PiLangConcept) {
         // check references to types
         this.nestedCheck(
             {
-                check: tr.type1 !== undefined || tr.type2 !== undefined,
-                error: `Typecheck "conformsTo" should have two types to compare`,
+                check: tr.type1 != null || tr.type2 != null,
+                error: `Typecheck "equalsType" should have two types to compare`,
                 whenOk: () => {
-                    this.checkTypeReference(tr.type1, enclosingConcept),
-                    this.checkTypeReference(tr.type2, enclosingConcept)  
+                    // console.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
+                    // this.checkLangReference(tr.type1, enclosingConcept),
+                    // this.checkLangReference(tr.type2, enclosingConcept)  
                 }
             })
     }
 
-    checkTypeReference(typeRef: TypeReference, enclosingConcept:PiLangConceptReference) {
-        // Note that there are two possible outcomes of the parser, which have to be changed into one.
-        // Either 'sourceName' represents the 'XXX' in "XXX.yyy" or 'yyy' in "yyy".
-        // Either 'partName' represents the 'yyy' in "XXX.yyy" or 'null' in "yyy".
-        if (!!typeRef.partName) {
-            // now we are sure that the parsed string was of the form 'XXX.yyy'
-            this.checkElementReference(typeRef.sourceName);
-            // see note in checkConceptReference
-            typeRef.partName.language = this.language;
-            typeRef.partName.owningelement = typeRef.sourceName;
-            this.checkPropertyReference(typeRef.partName);
-        } else {
-            // in this case the parsed string was of the form 'yyy' and represents a property 
-            // of the concept for which the rule was specified
-            typeRef.partName = new PiLangPropertyReference();
-            typeRef.partName.name = typeRef.sourceName.name;
-            typeRef.partName.language = this.language;
-            typeRef.partName.owningelement = enclosingConcept;
-            typeRef.sourceName = null;
-            this.checkPropertyReference(typeRef.partName);
-        }
-    }
-
-    checkPropertyReference(propRef: PiLangPropertyReference) {
-        // Note that the following statement is crucial, because the model we are testing is separate
-        // from the model of the language.
-        // If it is not set, the conceptReference will not find the refered language concept.
-        propRef.language = this.language;
+    checkConformsTypeRule(tr: ConformsTypeRule, enclosingConcept: PiLangConcept) {
+        // check references to types
         this.nestedCheck(
             {
-                check: propRef.name !== undefined,
-                error: `Property reference should have a name, but doesn't`,
-                whenOk: () => this.nestedCheck(
-                    {
-                        check: propRef.property() !== undefined,
-                        error: `PropertyReference to ${propRef.name} cannot be resolved`
-                    })
+                check: tr.type1 != null || tr.type2 != null,
+                error: `Typecheck "conformsTo" should have two types to compare`,
+                whenOk: () => {
+                    // console.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
+                //     this.checkLangReference(tr.type1, enclosingConcept),
+                //     this.checkLangReference(tr.type2, enclosingConcept)  
+                }
             })
     }
 
-    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: PiLangConceptReference) {
-        nr.property.language = this.language;
-        nr.property.owningelement = enclosingConcept;
-        this.checkPropertyReference(nr.property);
+    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: PiLangConcept) {
+        this.nestedCheck(
+            {
+                check: nr.property != null,
+                error: `Not Empty Rule should have a property`,
+                whenOk: () => {
+                    // console.log("Checking Not Empty ( " + nr.property.makeString() + " )");
+                    this.checkLangReference(nr.property, enclosingConcept);
+                } 
+            })
+    }
+
+    checkLangReference(langRef: LangRefExpression, enclosingConcept:PiLangConcept) {
+        console.log("Checking Language Reference " + langRef.sourceName );
+        if (langRef instanceof EnumRefExpression) {
+            this.checkEnumRefExpression(langRef, enclosingConcept);
+        } else if (langRef instanceof ThisExpression) {
+            this.checkThisExpression(langRef, enclosingConcept);
+        } else if (langRef instanceof PropertyRefExpression) {
+            this.checkPropertyRefExpression(langRef, enclosingConcept);
+        }
+    }
+
+    checkThisExpression(langRef: ThisExpression, enclosingConcept:PiLangConcept) {
+        console.log("Checking 'this' Reference " + langRef.makeString());
+        this.nestedCheck(
+            {
+                check: langRef.appliedFeature != null,
+                error: `'this' should be  followed by '.', followed by a property name`,
+                whenOk: () => {
+                    this.resolvePropRef(langRef.appliedFeature, enclosingConcept);
+                }
+            }
+        )
+    }
+
+    checkEnumRefExpression(langRef: EnumRefExpression, enclosingConcept:PiLangConcept) {
+        console.log("Checking Enumeration Reference " + langRef.makeString());
+    }
+
+    checkPropertyRefExpression(langRef: PropertyRefExpression, enclosingConcept:PiLangConcept) {
+        console.log("Checking Property Reference " + langRef.makeString());
+    }
+
+    resolvePropRef(feat: PropertyRefExpression, enclosingConcept:PiLangConcept) {
+        let found : PiLangProperty;
+        for ( let e of enclosingConcept.allProperties() ) {
+            if (e.name === feat.sourceName) {
+                found = e;
+            }
+        }
+        if (!found) {
+            for ( let e of enclosingConcept.allParts() ) {
+                if (e.name === feat.sourceName) {
+                    found = e;
+                    // feat.myProperty = e;
+                    if (found && feat.appliedFeature != null) {
+                        this.resolvePropRef(feat.appliedFeature, (found as PiLangElementProperty).type.concept() );
+                    }
+                }
+            }              
+        }
+        if (!found) {
+            for ( let e of enclosingConcept.allPReferences() ) {
+                if (e.name === feat.sourceName) {
+                    found = e;
+                }
+            }              
+        }
+
     }
 }
 

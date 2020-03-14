@@ -1,5 +1,5 @@
-import { PiLangConceptReference, PiLangPropertyReference } from "../../languagedef/metalanguage/PiLanguage";
-import { ValidatorDef, ConceptRule, NotEmptyRule, TypeRule, EqualsTypeRule, ConformsTypeRule, TypeReference } from "../metalanguage/ValidatorDefLang";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
+import { ValidatorDef, ConceptRule, NotEmptyRule, EqualsTypeRule, ConformsTypeRule, LangRefExpression, ThisExpression, EnumRefExpression, PropertyRefExpression, ValidNameRule } from "../metalanguage/ValidatorDefLang";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 // TODO change comment
@@ -26,18 +26,10 @@ export function createConceptRule(data: Partial<ConceptRule>): ConceptRule {
     if( !!data.conceptRef) {
         result.conceptRef = data.conceptRef;
     }
-    if( !!data.validNameRule) {
-        result.validNameRule = data.validNameRule;
+    if( !!data.rules) {
+        result.rules = data.rules;
     }
-    if( !!data.notEmptyRules) {
-        result.notEmptyRules = data.notEmptyRules;
-    }
-    if( !!data.typeRules) {
-        result.typeRules = data.typeRules;
-    }
-
     return result;
-
 }
 
 export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
@@ -46,13 +38,15 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     return result;
 }
 
-export function createPropertyReference(data: Partial<PiLangPropertyReference>): PiLangPropertyReference {
-    const result = new PiLangPropertyReference(); 
-    if(!!data.name) { result.name = data.name; }
+export function createValidNameRule(data: Partial<ValidNameRule>): ValidNameRule {
+    const result = new ValidNameRule();
+    if( !!data.property) {
+        result.property = data.property;
+    }
     return result;
 }
 
-export function createNotEmpty(data: Partial<NotEmptyRule>): NotEmptyRule {
+export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
     const result = new NotEmptyRule();
     if( !!data.property) {
         result.property = data.property;
@@ -72,18 +66,6 @@ export function createTypeEqualsRule(data: Partial<EqualsTypeRule>): EqualsTypeR
     return result;
 }
 
-export function createTypeReference(data: Partial<TypeReference>): TypeReference {
-    const result = new TypeReference();
-
-    if( !!data.sourceName) {
-        result.sourceName = data.sourceName;
-    }
-    if( !!data.partName) {
-        result.partName = data.partName;
-    }
-    return result;
-}
-
 export function createTypeConformsRule(data: Partial<ConformsTypeRule>): ConformsTypeRule {
     const result = new ConformsTypeRule();
 
@@ -95,3 +77,41 @@ export function createTypeConformsRule(data: Partial<ConformsTypeRule>): Conform
     }
     return result;
 }
+
+export function createThisExpression(data: Partial<ThisExpression>) {
+    const result : ThisExpression = new ThisExpression();
+    if (!!data.sourceName) {
+        result.sourceName = data.sourceName;
+    }
+    if (!!data.appliedFeature) {
+        result.appliedFeature = data.appliedFeature;
+    }
+    return result;
+}
+
+export function createPropertyRefExpression(data: Partial<PropertyRefExpression>): PropertyRefExpression {
+    const result = new PropertyRefExpression();
+
+    if (!!data.sourceName) {
+        result.sourceName = data.sourceName;
+    }
+    if (!!data.appliedFeature) {
+        result.appliedFeature = data.appliedFeature;
+    }
+    return result;
+}
+
+export function createEnumReference(data: Partial<EnumRefExpression>) {
+    const result : EnumRefExpression = new EnumRefExpression();
+    if (!!data.sourceName) {
+        result.sourceName = data.sourceName;
+    }
+    if (!!data.appliedFeature) {
+        result.appliedFeature = data.appliedFeature;
+    }
+    if (!!data.literalName) {
+        result.literalName = data.literalName;
+    }
+    return result;
+}
+

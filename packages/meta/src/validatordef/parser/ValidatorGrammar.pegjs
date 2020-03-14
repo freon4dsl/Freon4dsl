@@ -15,53 +15,72 @@ Validator_Definition
 validnameKey = "@validName" ws
 typecheckKey = "@typecheck" ws
 notEmptyKey = "@notEmpty" ws
+thisKey = "this" ws
 
 // TODO order of different kind of rules is set, these should be mixable
-conceptRule = conceptRef:conceptRef ws curly_begin ws validname:validnameKey? ws typeRules:typeRule* ws notEmptyRules:notEmptyRule* curly_end 
+conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end 
     { 
         return create.createConceptRule({ 
           "conceptRef": conceptRef, 
-          "validNameRule": !!validname,
-          "typeRules": typeRules,
-          "notEmptyRules": notEmptyRules
+          "rules": rules,
         }); 
     }
 
 conceptRef = name:var { return create.createConceptReference( { "name": name}); }
 
-notEmptyRule = notEmptyKey ws propertyRef:propertyRef ws {
-  return create.createNotEmpty( {
-    "property": propertyRef
+rule =  rule1: typeEqualsRule   { return rule1; }
+      / rule2: typeConformsRule { return rule2; }
+      / rule3: notEmptyRule     { return rule3; }
+      / rule4: validNameRule    { return rule4; }
+
+validNameRule = validnameKey property:langRefExpression? ws {
+  return create.createValidNameRule( {
+    "property": property
+  });
+}
+
+notEmptyRule = notEmptyKey property:langRefExpression ws {
+  return create.createNotEmptyRule( {
+    "property": property
   })
 }
 
-propertyRef = name:var { return create.createPropertyReference( { "name": name}); }
-
-typeRule = rule1:typeEqualsRule { return rule1; }
-          / rule2: typeConformsRule { return rule2; }
-
-typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:typeRef ws comma_separator ws type2:typeRef ws round_end ws {
+typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
   return create.createTypeEqualsRule( {
     "type1": type1,
     "type2": type2,
   });
 }
 
-typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:typeRef ws comma_separator ws type2:typeRef ws round_end ws {
+typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
   return create.createTypeConformsRule( {
     "type1": type1,
     "type2": type2,
   });
 }
 
-optionalPartName = SourceCharacter partName:propertyRef  {
-  return partName;
-} 
+langRefExpression = enumRefExpression:enumRefExpression { return enumRefExpression; } 
+                  / thisExpression:thisExpression       { return thisExpression; }
 
-typeRef = sourceName:conceptRef ws partName:optionalPartName?  {
-  return create.createTypeReference( {
+enumRefExpression = sourceName:var ':' literalName:var {
+  return create.createEnumReference ({
     "sourceName": sourceName,
-    "partName": partName
+    "literalName": literalName
+  })
+}
+
+thisExpression = sourceName:var appliedFeature:dotExpression {
+  return create.createThisExpression ({
+    "sourceName": sourceName,
+    "appliedFeature": appliedFeature
+  })
+}
+
+dotExpression = '.' sourceName:var appliedFeature:dotExpression?  {
+  return create.createPropertyRefExpression
+( {
+    "sourceName": sourceName,
+    "appliedFeature": appliedFeature
   })
 }
 

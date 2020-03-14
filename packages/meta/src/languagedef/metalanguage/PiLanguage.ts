@@ -230,12 +230,12 @@ export class PiLangEnumeration extends PiLangElement {
         super();
     }
 
-    findProperty(name:string) : PiLangProperty {
-        let result: PiLangEnumProperty = new PiLangEnumProperty();
-        let literal  = this.literals.find( elem => elem === name);
-        if(!(!!literal)) result.name = literal; 
-        return result;
-    }
+    // findProperty(name:string) : PiLangProperty {
+    //     let result: PiLangEnumProperty = new PiLangEnumProperty();
+    //     let literal  = this.literals.find( elem => elem === name);
+    //     if(!(!!literal)) result.name = literal; 
+    //     return result;
+    // }
 }
 
 export class PiLangEnumProperty extends PiLangProperty {
