@@ -1,5 +1,5 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguage, PiLangConceptReference, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiLangConceptReference, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty, PiLangPropertyReference } from "../../languagedef/metalanguage/PiLanguage";
 import { ConceptRule, ValidatorDef, EqualsTypeRule, Rule, ConformsTypeRule, NotEmptyRule, LangRefExpression, EnumRefExpression, ThisExpression, PropertyRefExpression, ValidNameRule } from "./ValidatorDefLang";
 
 export class ValidatorChecker extends Checker<ValidatorDef> {
@@ -53,13 +53,12 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
 
     checkRule(tr: Rule, enclosingConcept: PiLangConcept) {
         // if( tr instanceof EqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
-        // if( tr instanceof ConformsTypeRule) this.checkConformsTypeRule(tr, enclosingConcept);
-        // if( tr instanceof NotEmptyRule) this.checkNotEmptyRule(tr, enclosingConcept);
+        if( tr instanceof ConformsTypeRule) this.checkConformsTypeRule(tr, enclosingConcept);
+        if( tr instanceof NotEmptyRule) this.checkNotEmptyRule(tr, enclosingConcept);
         if( tr instanceof ValidNameRule) this.checkValidNameRule(tr, enclosingConcept);
     }
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiLangConcept){
-        // console.dir(enclosingConcept);
         // check whether tr.property (if set) is a property of enclosingConcept
         // if so, set myProperty to this property,
         // otherwise set myProperty to the 'name' property of the EnclosingConcept
@@ -73,6 +72,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 if(e.name === propRef.sourceName) myProp = e;
             }
             this.simpleCheck(myProp != null, "Valid Name Rule: cannot find property '" + propRef.sourceName + "' in " + enclosingConcept.name);
+            // TODO check if there are more names: propRef.appliedFeature != null
         } else {
             myProp = enclosingConcept.allProperties().find(e => {
                 e.name === "name"
@@ -106,22 +106,59 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 error: `Typecheck "conformsTo" should have two types to compare`,
                 whenOk: () => {
                     // console.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
-                //     this.checkLangReference(tr.type1, enclosingConcept),
-                //     this.checkLangReference(tr.type2, enclosingConcept)  
+                    // this.checkLangReference(tr.type1, enclosingConcept);
+                    // this.checkLangReference(tr.type2, enclosingConcept)  
                 }
             })
     }
 
     checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: PiLangConcept) {
-        this.nestedCheck(
+        // check whether nr.property is a property of enclosingConcept
+        // and whether it is a list 
+        // if so, set myProperty to this property,
+        let myProp : PiLangProperty;
+        if( nr.property != null ) {
+            let propRef = nr.property;
+            if (propRef.sourceName === "this" && nr.property.appliedFeature != null ) {
+                propRef = nr.property.appliedFeature;
+            }
+            let found: boolean = false;
+            while(!found) { // TODO should not be done, must be direct prop of enclosingConcept, so brings this to the general function
+                for( let e of enclosingConcept.allParts() ) {
+                    if(e.name === propRef.sourceName) myProp = e;
+                }
+                if (myProp == null) {
+                    for( let e of enclosingConcept.allPReferences() ) {
+                        if(e.name === propRef.sourceName) myProp = e;
+                    } 
+                }
+                if (myProp == null) {
+                    for( let e of enclosingConcept.allProperties() ) {
+                        if(e.name === propRef.sourceName) myProp = e;
+                    } 
+                }
+                if (myProp != null && propRef.appliedFeature != null && myProp instanceof PiLangElementProperty) {
+                    // find the next in the list of applied features
+                    propRef = propRef.appliedFeature;
+                    enclosingConcept = myProp.type.concept();
+                    (propRef as PropertyRefExpression).myProperty = myProp;
+                    myProp = null;
+                } else {
+                   found = true;
+                }
+            }
+            // TODO check if there are more names: propRef.appliedFeature != null,  must be direct prop of enclosingConcept
+            this.nestedCheck(
             {
-                check: nr.property != null,
-                error: `Not Empty Rule should have a property`,
+                check: myProp != null, 
+                error: "Not Empty Rule: cannot find property, part, or reference '" + propRef.sourceName + "' in " + enclosingConcept.name,
                 whenOk: () => {
-                    // console.log("Checking Not Empty ( " + nr.property.makeString() + " )");
-                    this.checkLangReference(nr.property, enclosingConcept);
-                } 
-            })
+                    this.simpleCheck(myProp.isList, "Not Empty Rule: part or reference '" + propRef.sourceName + "' in " + enclosingConcept.name + " is not a list");
+                }    
+            });
+        }
+        // TODO set nr.property
+        // nr.property = myProp;
     }
 
     checkLangReference(langRef: LangRefExpression, enclosingConcept:PiLangConcept) {

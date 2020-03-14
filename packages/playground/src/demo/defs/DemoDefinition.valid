@@ -2,7 +2,7 @@ validator Demo for language Demo
 
 DemoModel {
     @validName // default Identifier
-    @notEmpty this.entities.something
+    @notEmpty this.entities.name
     @notEmpty this.functions
 }
 

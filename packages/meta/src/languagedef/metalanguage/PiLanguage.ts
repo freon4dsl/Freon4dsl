@@ -196,6 +196,8 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
 }
 
 export abstract class PiLangProperty {
+    name: string;
+    isList: boolean;
     owningConcept: PiLangConcept;
 }
 export class PiLangPrimitiveProperty extends PiLangProperty {
@@ -204,8 +206,6 @@ export class PiLangPrimitiveProperty extends PiLangProperty {
         super();
     }
 
-    name: string;
-    isList: boolean;
     isStatic: boolean;
     initialValue: string;
     type: string;
@@ -217,8 +217,6 @@ export class PiLangElementProperty extends PiLangProperty {
         super();
     }
 
-    name: string;
-    isList: boolean;
     type: PiLangConceptReference;
 }
 export class PiLangEnumeration extends PiLangElement {
