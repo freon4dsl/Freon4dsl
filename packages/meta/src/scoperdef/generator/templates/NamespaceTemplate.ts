@@ -11,7 +11,7 @@ export class NamespaceTemplate {
         console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
-        const generatedClassName : String = Names.namespace(language, scopedef);
+        const generatedClassName : string = Names.namespace(language, scopedef);
         let myIfStatement = this.createIfStatement(scopedef);
 
         // Template starts here

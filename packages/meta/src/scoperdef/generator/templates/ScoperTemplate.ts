@@ -10,9 +10,9 @@ export class ScoperTemplate {
         console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
-        const generatedClassName : String = Names.scoper(language, scopedef);
-        const namespaceClassName : String = Names.namespace(language, scopedef);
-        const scoperInterfaceName : String = Names.scoperInterface(language);
+        const generatedClassName : string = Names.scoper(language, scopedef);
+        const namespaceClassName : string = Names.namespace(language, scopedef);
+        const scoperInterfaceName : string = Names.scoperInterface(language);
 
         // TODO removed DemoAttribute and DemoVariable
         // Template starts here
@@ -55,8 +55,8 @@ export class ScoperTemplate {
                 return null;
             }
             
-            getVisibleNames(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : String[] {
-                let result: String[] = [];
+            getVisibleNames(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : string[] {
+                let result: string[] = [];
                 let vis = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
                 for (let e of vis) {
                     let n: string = this.getNameOfConcept(e);
