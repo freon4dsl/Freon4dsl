@@ -5,3 +5,4 @@ export * from "./editor/components";
 export * from "./util";
 export * from "./storage";
 export * from "./scoper";
+export * from "./typer";
