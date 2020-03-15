@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLangEnumerationProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLangEnumProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ProjectionTemplate {
     constructor() {

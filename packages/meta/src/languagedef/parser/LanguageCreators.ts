@@ -5,7 +5,7 @@ import {
     PiLanguageUnit,
     PiLangEnumeration,
     PiLangUnion,
-    PiLangEnumerationProperty,
+    PiLangEnumProperty,
     PiLangExpressionConcept,
     PiLangBinaryExpressionConcept
 } from "../metalanguage/PiLanguage";
@@ -35,8 +35,8 @@ export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>):
     return result;
 }
 
-export function createEnumerationProperty(data: Partial<PiLangEnumerationProperty>): PiLangEnumerationProperty {
-    const result = new PiLangEnumerationProperty();
+export function createEnumerationProperty(data: Partial<PiLangEnumProperty>): PiLangEnumProperty {
+    const result = new PiLangEnumProperty();
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
@@ -107,19 +107,15 @@ function createCommonConceptParts(result: PiLangConcept, data: Partial<PiLangCon
     }
     if (!!data.properties) {
         result.properties = data.properties;
-        result.properties.forEach(p => p.owningConcept = result);
     }
     if (!!data.enumProperties) {
         result.enumProperties = data.enumProperties;
-        result.enumProperties.forEach(p => p.owningConcept = result);
     }
     if (!!data.parts) {
         result.parts = data.parts;
-        result.parts.forEach(p => p.owningConcept = result);
     }
     if (!!data.references) {
         result.references = data.references;
-        result.references.forEach(p => p.owningConcept = result);
     }
     result.parts.forEach(part => part.owningConcept = result);
     result.properties.forEach(prop => prop.owningConcept = result);
@@ -130,7 +126,6 @@ function createCommonConceptParts(result: PiLangConcept, data: Partial<PiLangCon
 export function createLanguage(data: Partial<PiLanguageUnit>): PiLanguageUnit {
     const result = new PiLanguageUnit();
     // console.log("Creating language with concepts: ");
-    // data.concepts.forEach(c => console.log("    concept "+ c.name));
     if( !!data.name) {
         result.name = data.name
     }
@@ -181,5 +176,5 @@ export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
 }
 
 export function isEnumerationProperty(p: Object){
-    return p instanceof PiLangEnumerationProperty;
+    return p instanceof PiLangEnumProperty;
 }

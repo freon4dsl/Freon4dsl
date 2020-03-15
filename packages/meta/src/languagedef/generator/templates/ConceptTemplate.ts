@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLangConcept, PiLangElementProperty, PiLangEnumerationProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept } from "../../metalanguage/PiLanguage";
+import { PiLangConcept, PiLangElementProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
@@ -160,7 +160,7 @@ export class ConceptTemplate {
         `;
     }
 
-    generateEnumerationProperty(property: PiLangEnumerationProperty): string {
+    generateEnumerationProperty(property: PiLangEnumProperty): string {
         return `
             @observable ${property.name}: ${Names.enumeration((property.type.enumeration()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.enumeration()))}.ANY;`};
         `;

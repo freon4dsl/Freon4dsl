@@ -1,4 +1,4 @@
-import { PiLangConcept, PiLangEnumeration, PiLanguageUnit, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLanguageUnit, PiLangUnion, PiLangCUI } from "../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
 import { PiValidatorDef } from "../validatordef/metalanguage/PiValidatorDefLang";
 
@@ -43,7 +43,7 @@ export class Names {
         return "MainProjectionalEditor";
     }
 
-    public static concept(concept: PiLangConcept){
+    public static concept(concept: PiLangCUI){
         return concept.name;
     }
 

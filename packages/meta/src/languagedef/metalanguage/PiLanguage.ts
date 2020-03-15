@@ -1,4 +1,4 @@
-import { PiLangConceptReference, PiLangEnumerationReference } from "./PiLangReferences";
+import { PiLangConceptReference, PiLangEnumerationReference, PiLangCUIReference, PiLangInterfaceReference } from "./PiLangReferences";
 
 export class PiLanguageUnit {
     name: string;
@@ -26,6 +26,14 @@ export class PiLanguageUnit {
         return this.interfaces.find(con => con.name === name);
     }
 
+    findCUI(name: string): PiLangCUI {
+        let result : PiLangCUI;
+        result = this.findConcept(name);
+        if (!!result) result = this.findUnion(name);
+        if (!!result) result = this.findInterface(name);
+        return result;
+    }
+
     findExpressionBase(): PiLangConcept {
         const result = this.concepts.find(c => {
             return c instanceof PiLangExpressionConcept && (!!c.base ? !(c.base.concept() instanceof PiLangExpressionConcept) : true);
@@ -49,7 +57,7 @@ export class PiLangConcept {
     isRoot:boolean;
     base: PiLangConceptReference;
     properties: PiLangPrimitiveProperty[] = [];
-    enumProperties: PiLangEnumerationProperty[] = [];
+    enumProperties: PiLangEnumProperty[] = [];
     parts: PiLangElementProperty[] = [];
     references: PiLangElementProperty[] = [];
     trigger: string;
@@ -117,27 +125,106 @@ export class PiLangConcept {
 export class PiLangInterface {
     language: PiLanguageUnit;
     name: string;  
-    base?: PiLangInterface; 
+    base?: PiLangInterfaceReference; 
     properties: PiLangPrimitiveProperty[] = [];
     enumproperties: PiLangEnumProperty[] = [];
     parts: PiLangElementProperty[] = [];
     references: PiLangElementProperty[] = [];
+    // isExpression: boolean;  
+    trigger: string;
+    // triggerIsRegExp: boolean;
 
-    isExpression: boolean;  
+    allProperties(): PiLangPrimitiveProperty[] {
+        if (this.base !== undefined) {
+            return this.properties.concat(this.base.concept().allProperties());
+        } else {
+            return this.properties;
+        }
+    }
+
+    allParts(): PiLangElementProperty[] {
+        if (this.base !== undefined) {
+            return this.parts.concat(this.base.concept().allParts());
+        } else {
+            return this.parts;
+        }
+    }
+
+    allPReferences(): PiLangElementProperty[] {
+        if (this.base !== undefined) {
+            return this.references.concat(this.base.concept().allPReferences());
+        } else {
+            return this.references;
+        }
+    }
+
+    getTrigger(): string {
+        const p = this.trigger;
+        return (!!p ? p : "undefined");
+    }
+
+    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
+    expression(): boolean {
+        return false;
+    }
+
+
 }
 
 export class PiLangUnion {
     language: PiLanguageUnit;
     name: string;
     members: PiLangConceptReference[] = [];
+    trigger: string;
+    // triggerIsRegExp: boolean;
 
     constructor() {
+    }
+
+    allProperties(): PiLangPrimitiveProperty[] {
+        // if (this.base !== undefined) {
+        //     return this.properties.concat(this.base.concept().allProperties());
+        // } else {
+        //     return this.properties;
+        // }
+        // TODO find right implementation
+        return null;
+    }
+
+    allParts(): PiLangElementProperty[] {
+        // if (this.base !== undefined) {
+        //     return this.parts.concat(this.base.concept().allParts());
+        // } else {
+        //     return this.parts;
+        // }
+        // TODO find right implementation
+        return null;
+    }
+
+    allPReferences(): PiLangElementProperty[] {
+        // if (this.base !== undefined) {
+        //     return this.references.concat(this.base.concept().allPReferences());
+        // } else {
+        //     return this.references;
+        // }
+        // TODO find right implementation
+        return null;
+    }
+
+    getTrigger(): string {
+        const p = this.trigger;
+        return (!!p ? p : "undefined");
+    }
+
+    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
+    expression(): boolean {
+        return false;
     }
 }
 
 export type PiCI_Type = PiLangConcept | PiLangInterface;
 
-export type PiCUI_Type = PiLangConcept | PiLangUnion | PiLangInterface ;
+export type PiLangCUI = PiLangConcept | PiLangUnion | PiLangInterface ;
 
 export class PiLangExpressionConcept extends PiLangConcept {
     // isBinaryExpression: boolean;
@@ -187,47 +274,46 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
 }
 
 export class PiLangProperty {
+    // TODO should 'owningConcept be replced by piContainer()????
+    owningConcept: PiLangConcept;
     name: string;
     isList: boolean;
 }
 
-export class PiLangPrimitiveProperty {
-    owningConcept: PiLangConcept;
-
-    constructor() {
-    }
-
-    name: string;
-    isList: boolean;
+export class PiLangPrimitiveProperty extends PiLangProperty {
     isStatic: boolean;
     initialValue: string;
-    type: string;
-}
-
-export class PiLangEnumerationProperty {
-    owningConcept: PiLangConcept;
+    type: PiPrimTypesEnum;
 
     constructor() {
+        super();
     }
+}
 
-    name: string;
-    isList: boolean;
+export class PiLangEnumProperty extends PiLangProperty {
     isStatic: boolean;
     initialValue: string;
     type: PiLangEnumerationReference;
-}
-
-export class PiLangElementProperty {
-    owningConcept: PiLangConcept;
 
     constructor() {
+        super();
     }
-
-    name: string;
-    isList: boolean;
-    type: PiLangConceptReference;
 }
 
+export class PiLangElementProperty extends PiLangProperty {
+    type: PiLangCUIReference;
+
+    constructor() {
+        super();
+    }
+}
+export class PiLangCUIProperty extends PiLangProperty {
+    type: PiLangCUIReference;
+
+    constructor() {
+        super();
+    }
+}
 export class PiLangEnumeration {
     language: PiLanguageUnit;
     name: string;
@@ -235,5 +321,9 @@ export class PiLangEnumeration {
 
     constructor() {
     }
+}
+
+export enum PiPrimTypesEnum {
+    "string", "number", "boolean"
 }
 

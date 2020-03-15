@@ -1,7 +1,6 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
-import { notStrictEqual } from "assert";
+import { PiLanguageUnit, PiLangElementProperty, PiLangProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiScopeDef, PiNamespace } from "../../metalanguage/PiScopeDefLang";
 
 export class NamespaceTemplate {
     constructor() {
@@ -112,11 +111,11 @@ export class NamespaceTemplate {
 
     private createIfStatement(scopedef: PiScopeDef) : string {
         let result : string = "";
-        scopedef.namespaces.forEach( ns => {
-            ns.conceptRefs.forEach(ref => {
+        for (let ns of scopedef.namespaces) {
+            for(let ref of ns.conceptRefs) {
                 result = result.concat("if (this._myElem instanceof " + ref.name + ") {")
-                ref.concept().parts.forEach( part => {
-                    part.type.concept().allProperties().forEach( kk  => {          
+                for (let part of ref.concept().allParts() ) { 
+                    for (let kk of part.type.concept().allProperties()) {          
                         if (kk.name === "name") {
                             if (part.isList) { 
                                 result = result.concat(
@@ -128,11 +127,11 @@ export class NamespaceTemplate {
                         } else {
                             result = result.concat("");
                         }
-                    })
-                })
+                    }
+                }
                 result = result.concat("}\n");
-            })
-        })
+            }
+        }
         return result;
     }
 }
