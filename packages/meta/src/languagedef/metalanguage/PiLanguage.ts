@@ -42,7 +42,6 @@ export class PiLanguageUnit {
     }
 }
 
-
 export class PiLangConcept {
     language: PiLanguageUnit;
     name: string;
@@ -187,9 +186,11 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
     }
 }
 
-export class PiLangEnumProperty {
-
+export class PiLangProperty {
+    name: string;
+    isList: boolean;
 }
+
 export class PiLangPrimitiveProperty {
     owningConcept: PiLangConcept;
 
