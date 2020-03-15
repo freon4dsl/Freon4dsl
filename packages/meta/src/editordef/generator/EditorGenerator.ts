@@ -5,6 +5,7 @@ import { UserTemplate } from "../../languagedef/generator/templates/UserTemplate
 import { EditorTemplate } from "./templates/EditorTemplate";
 import { EditorIndexTemplate } from "./templates/EditorIndexTemplate";
 import { Names } from "../../utils/Names";
+import { EnumerationSelectBoxTemplate } from "./templates/EnumerationSelectBoxTemplate";
 import { MainProjectionalEditorTemplate } from "./templates/MainProjectionalEditorTemplate";
 import { ProjectionTemplate } from "./templates/ProjectionTemplate";
 import { ActionsTemplate } from "./templates/ActionsTemplate";
@@ -26,6 +27,7 @@ export class EditorGenerator {
         console.log("start editor generator")
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
+        const enumProjection = new EnumerationSelectBoxTemplate();
         const contextTemplate = new ContextTemplate();
         const projectionalEditorTemplate = new MainProjectionalEditorTemplate();
         const editorTemplate = new EditorTemplate();
@@ -40,6 +42,9 @@ export class EditorGenerator {
         //  Generate it
         var projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language), "Projection Default");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
+
+        var enumProjectionFile = Helpers.pretty(enumProjection.generate(this.language), "Enumeration Projections");
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.enumProjections(this.language)}.ts`, enumProjectionFile);
 
         var defaultActionsFile = Helpers.pretty(actions.generateDefaultActions(this.language), "DefaultActions");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);

@@ -29,8 +29,9 @@ export class EnumerationTemplate {
             readonly $typename: ${language.name}ConceptType = "${Names.enumeration(enumeration)}";
             $id: string;
                 
-            constructor(id?: string) {
+            constructor(name: string, id?: string) {
                 super();
+                this.name = name;
                 if (!!id) { 
                     this.$id = id;
                 } else {
@@ -41,11 +42,13 @@ export class EnumerationTemplate {
             ${enumeration.literals.map(lit => 
                 `static ${lit}: ${Names.enumeration(enumeration)} = ${Names.enumeration(enumeration)}.fromString("${lit}")` ).join(";")}
             static ANY : ${Names.enumeration(enumeration)} = ${Names.enumeration(enumeration)}.fromString("ANY");
+
+            static values = [${enumeration.literals.map(l => `${Names.enumeration(enumeration)}.${l}`).join(", ")}]
         
-            private readonly literalName : string;
+            public readonly name : string;
         
             public asString(): string {
-                return this.literalName;
+                return this.name;
             }
         
             static fromString(v: string): ${Names.enumeration(enumeration)} {

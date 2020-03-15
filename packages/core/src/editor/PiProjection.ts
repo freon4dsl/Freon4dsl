@@ -10,5 +10,7 @@ export interface PiProjection {
      * returns the box for `element`.
      */
     getBox(element: PiElement): Box;
+
+    rootProjection: PiProjection;
 }
 // end::PiProjection[]

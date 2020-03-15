@@ -1,4 +1,13 @@
-import { PiLangPrimitiveProperty, PiLangConcept, PiLangElementProperty, PiLangConceptReference, PiLanguage, PiLangEnumeration, PiLangType } from "../metalanguage/PiLanguage";
+import {
+    PiLangPrimitiveProperty,
+    PiLangConcept,
+    PiLangElementProperty,
+    PiLangConceptReference,
+    PiLanguage,
+    PiLangEnumeration,
+    PiLangType,
+    PiLangEnumerationReference, PiLangEnumerationProperty
+} from "../metalanguage/PiLanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
@@ -8,8 +17,24 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     return result;
 }
 
+export function createEnumerationReference(data: Partial<PiLangEnumerationReference>): PiLangEnumerationReference {
+    const result = new PiLangEnumerationReference();
+    if(!!data.name) { result.name = data.name; }
+    return result;
+}
+
 export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>): PiLangPrimitiveProperty {
     const result = new PiLangPrimitiveProperty();
+    if(!!data.type) { result.type = data.type; }
+    if(!!data.name) { result.name = data.name; }
+    result.isList = data.isList;
+
+    // console.log("created property with name "+ result.name);
+    return result;
+}
+
+export function createEnumerationProperty(data: Partial<PiLangEnumerationProperty>): PiLangEnumerationProperty {
+    const result = new PiLangEnumerationProperty();
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
@@ -48,11 +73,15 @@ export function createConcept(data: Partial<PiLangConcept>): PiLangConcept {
     if(!!data.priority) { result.priority = data.priority; }
     if(!!data.base) { result.base = data.base; }
 
-    if(!!data.properties) { 
+    if(!!data.properties) {
         result.properties = data.properties;
         result.properties.forEach(p => p.owningConcept = result );
     }
-    if(!!data.parts) { 
+    if(!!data.enumProperties) {
+        result.enumProperties = data.enumProperties;
+        result.enumProperties.forEach(p => p.owningConcept = result );
+    }
+    if(!!data.parts) {
         result.parts = data.parts;
         result.parts.forEach(p => p.owningConcept = result );
     }
@@ -66,6 +95,7 @@ export function createConcept(data: Partial<PiLangConcept>): PiLangConcept {
 
     result.parts.forEach(part => part.owningConcept = result);
     result.properties.forEach(prop => prop.owningConcept = result);
+    result.enumProperties.forEach(prop => prop.owningConcept = result);
     result.references.forEach(ref => ref.owningConcept = result);
     // console.log("created  concept " + result.name);
     return result;
@@ -93,6 +123,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
         concept.language = result;
         concept.references.forEach(ref => ref.type.language = result);
         concept.parts.forEach(part => part.type.language = result);
+        concept.enumProperties.forEach(en => en.type.language = result);
         if( !!concept.base ){
             concept.base.language = result;
         }
@@ -121,4 +152,8 @@ export function createType(data: Partial<PiLangType>): PiLangType {
     if( !!data.name) { result.name = data.name; }
     if( !!data.literals) { result.literals = data.literals; }
     return result;
+}
+
+export function isEnumerationProperty(p: Object){
+    return p instanceof PiLangEnumerationProperty;
 }

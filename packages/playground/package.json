@@ -12,7 +12,9 @@
   "scripts": {
     "metaIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-language",
     "scopeIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-scoper -s src/demo/defs/LanguageDefinition.scop",
+    "editIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-editor -e src/demo/defs/LanguageDefinition.edit",
     "validateIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-validator -v src/demo/defs/LanguageDefinition.valid",
+    "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "build-wait": "tsc -w",
     "build": "yarn run metaIt && yarn run scopeIt && tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
@@ -29,7 +31,7 @@
     "@types/pegjs": "^0.10.1",
     "global": "^4.4.0",
     "prettier": "^1.15.3",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   },
   "publishConfig": {
     "access": "private"

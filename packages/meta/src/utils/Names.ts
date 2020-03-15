@@ -27,6 +27,10 @@ export class Names {
         return language.name + "ProjectionDefault";
     }
 
+    public static enumProjections(language: PiLanguage){
+        return language.name + "EnumerationProjections";
+    }
+
     public static projection(language: PiLanguage){
         return language.name + "Projection";
     }

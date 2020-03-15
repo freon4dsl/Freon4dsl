@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty } from "../../metalanguage/PiLanguage";
+import { PiLangConcept, PiLangElementProperty, PiLangEnumerationProperty, PiLangPrimitiveProperty } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
@@ -84,6 +84,7 @@ export class ConceptTemplate {
                 }
                 
                 ${concept.properties.map(p => this.generatePrimitiveProperty(p)).join("")}
+                ${concept.enumProperties.map(p => this.generateEnumerationProperty(p)).join("")}
                 ${concept.parts.map(p => this.generatePartProperty(p)).join("")}
                 ${concept.references.map(p => this.generateReferenceProperty(p)).join("")}
 
@@ -153,6 +154,12 @@ export class ConceptTemplate {
     generatePrimitiveProperty(property: PiLangPrimitiveProperty): string {
         return `
             @observable ${property.name}: ${property.type} ${property.isList ? "[]" : ""};
+        `;
+    }
+
+    generateEnumerationProperty(property: PiLangEnumerationProperty): string {
+        return `
+            @observable ${property.name}: ${Names.enumeration((property.type.enumeration()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.enumeration()))}.ANY;`};
         `;
     }
 

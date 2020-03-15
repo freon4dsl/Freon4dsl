@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLangEnumerationProperty, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ProjectionTemplate {
     constructor() {
@@ -7,10 +7,15 @@ export class ProjectionTemplate {
 
     generateProjection(language: PiLanguage): string {
         return `
-            import { ${Names.projectionDefault(language)} } from "./gen/${Names.projectionDefault(language)}";
+            import { PiProjection, PiElement, Box } from "@projectit/core";
         
-            export class ${Names.projection(language)} extends ${Names.projectionDefault(language)} {
-            
+            export class ${Names.projection(language)} implements PiProjection {
+                rootProjection: PiProjection;
+                
+                getBox(element: PiElement) : Box {
+                    // Add any handmade projections of your own before next statement 
+                    return null;
+                }            
             }
         `
     }
@@ -47,13 +52,15 @@ export class ProjectionTemplate {
                 isPiBinaryExpression,
                 PiBinaryExpression
             } from "@projectit/core";
-            import { WithType } from "../../language/WithType";
             
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
             ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../../language/${Names.enumeration(e)}";`).join("")}
+            import { ${language.name}EnumerationProjections } from "./${language.name}EnumerationProjections";
 
             export class ${Names.projectionDefault(language)} implements PiProjection {
+                private enumSelectBox: ${language.name}EnumerationProjections = new ${language.name}EnumerationProjections();
                 private editor: PiEditor;
+                rootProjection: PiProjection;
                 @observable showBrackets: boolean = false;
             
                 constructor() {}
@@ -62,7 +69,7 @@ export class ProjectionTemplate {
                     this.editor = e;
                 }
             
-                getBox(exp: WithType): Box {
+                getBox(exp: PiElement): Box {
                     switch( exp.piLanguageConcept() ) {
                         ${language.concepts.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
@@ -89,17 +96,28 @@ export class ProjectionTemplate {
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     return new VerticalListBox(element, "element", [
                         ${c.properties.map(p => `
-                        new HorizontalListBox(element, "element-${p.name}-list", [
+                            new HorizontalListBox(element, "element-${p.name}-list", [
+                                new LabelBox(element, "element-${p.name}-label", "${p.name}", {
+                                    style: demoStyles.propertykeyword
+                                }),
+                                new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type}),
+                                {
+                                    placeHolder: "text",
+                                    style: demoStyles.placeholdertext
+                                })
+                            ])`
+                        ).concat(
+                        c.enumProperties.map(p => `
+                            new HorizontalListBox(element, "element-${p.name}-list", [
                             new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                                style: demoStyles.propertykeyword
+                            style: demoStyles.propertykeyword
                             }),
-                            new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type}),
-                            {
-                                placeHolder: "text",
-                                style: demoStyles.placeholdertext
-                            })
-                        ])`
-                        ).concat(c.allParts().map(part => `
+                            this.enumSelectBox.enumSelectFor${p.type.name}(element, "${p.name}-type",
+                                () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
+                                (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.enumeration())}.fromString(o.id)),
+                            ])`
+                        )).concat(
+                        c.allParts().map(part => `
                         ${ part.isList ? `
                             new LabelBox(element, "element-${part.name}-label", "${part.name}", { 
                                 style: demoStyles.keyword
@@ -109,7 +127,7 @@ export class ProjectionTemplate {
                                     element,
                                     "${part.name}-list",
                                     element.${part.name}.map(ent => {
-                                        return this.get${part.type.concept().name}Box(ent);
+                                        return this.rootProjection.getBox(ent);
                                     }),
                                     {
                                         style: demoStyles.indent
@@ -121,7 +139,7 @@ export class ProjectionTemplate {
                             })
                         ` :
                             `new LabelBox(element, "element-${part.name}-label", "${part.name}", {}),
-                            this.getBox(element.${part.name})
+                            this.rootProjection.getBox(element.${part.name})
                         ` }`  )).join(",")}
                     ]);
                 }                
@@ -143,6 +161,7 @@ export class ProjectionTemplate {
                         return binBox;
                     }
                 }
+                
             }
         `;
     }

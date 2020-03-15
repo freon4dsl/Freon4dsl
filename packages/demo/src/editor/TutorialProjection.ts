@@ -58,6 +58,7 @@ var TMP: Object = {};
 
 export class TutorialProjection implements PiProjection {
     private editor: PiEditor;
+    rootProjection: PiProjection;
     @observable projectionType: MetaProjectionType1 = "text";
     @observable showBrackets: boolean = false;
 

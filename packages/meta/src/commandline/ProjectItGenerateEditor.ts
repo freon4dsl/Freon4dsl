@@ -20,8 +20,8 @@ export class ProjectItGenerateEditor extends ProjectItGenerateAction {
 
     generate(): void {
         const language = new LanguageParser().parse(this.languageFile);
-        this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.generate(language);
+        // this.languageGenerator.outputfolder = this.outputFolder;
+        // this.languageGenerator.generate(language);
 
         const editor = new EditorParser().parse(this.editorFile.value);
         this.editorGenerator.outputfolder = this.outputFolder;
