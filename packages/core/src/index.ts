@@ -6,3 +6,4 @@ export * from "./util";
 export * from "./storage";
 export * from "./scoper";
 export * from "./typer";
+export * from "./validator";

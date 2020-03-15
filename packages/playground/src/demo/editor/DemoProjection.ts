@@ -79,7 +79,7 @@ export class DemoProjection implements PiProjection {
         element: PiElement,
         role: string,
         placeholder: string,
-        metaType: DemoConceptType,
+        metaType: string,
         getAction: () => SelectOption,
         setAction: (o: SelectOption) => void
     ): SelectBox {

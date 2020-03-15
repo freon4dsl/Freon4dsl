@@ -1,5 +1,5 @@
+import { PiValidator } from "@projectit/core";
 import { AllDemoConcepts, DemoAttributeType } from "../language";
-import { IDemoValidator } from "../language/IDemoValidator";
 import { ViError } from "../language/IDemoValidator";
 import { DemoConceptType } from "../language/Demo";
 import {
@@ -31,7 +31,7 @@ import {
 } from "../language";
 import { DemoTyper } from "../typer/DemoTyper";
 
-export class DemoValidator implements IDemoValidator {
+export class DemoValidator implements PiValidator {
     typer = new DemoTyper();
 
 
