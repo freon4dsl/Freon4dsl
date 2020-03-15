@@ -31,6 +31,8 @@ export class ContextTemplate {
                     exp.container = this;
                     exp.propertyIndex = undefined;
                     exp.propertyName = "rootElement";
+                    // not a PiElement , therefore no root.
+                    exp.container = null;
                 }
             
                 get rootElement(): ${Names.concept(rootConcept)} {

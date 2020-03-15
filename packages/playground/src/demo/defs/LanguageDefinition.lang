@@ -110,6 +110,7 @@ concept DemoEqualsExpression base DemoComparisonExpression {
 
 concept DemoFunctionCallExpression base DemoExpression {
     @reference functionDefinition: DemoFunction
+    @editor trigger: string = "F"
 }
 
 concept DemoIfExpression base DemoExpression {
