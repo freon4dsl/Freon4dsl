@@ -9,9 +9,6 @@ import { PiLanguageUnit } from "../metalanguage/PiLanguage";
 import { ConceptTemplate } from "./templates/ConceptTemplate";
 import * as fs from "fs";
 import { LANGUAGE_FOLDER } from "../../utils/GeneratorConstants";
-import { ScoperInterfaceTemplate } from "./templates/ScoperInterfaceTemplate";
-import { TyperInterfaceTemplate } from "./templates/TyperInterfaceTemplate";
-import { ValidatorInterfaceTemplate } from "./templates/ValidatorInterfaceTemplate";
 
 export class LanguageGenerator {
     public outputfolder: string = ".";
@@ -27,9 +24,6 @@ export class LanguageGenerator {
         const typeTemplate = new UnionTemplate();
         const languageIndexTemplate = new LanguageIndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
-        const scoperTemplate = new ScoperInterfaceTemplate();
-        const typerTemplate = new TyperInterfaceTemplate();
-        const validatorTemplate = new ValidatorInterfaceTemplate();
 
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         Helpers.createDirIfNotExisting(this.languageFolder);
@@ -64,17 +58,6 @@ export class LanguageGenerator {
         console.log("Generating language index: index.ts");
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${this.languageFolder}/index.ts`, languageIndexFile);
-    
-        console.log("Generating Scoper interface: " + Names.scoperInterface(language) + ".ts");
-        var scoperFile = Helpers.pretty(scoperTemplate.generateScoperInterface(language), "Scoper Interface");
-        fs.writeFileSync(`${this.languageFolder}/${Names.scoperInterface(language)}.ts`, scoperFile);
 
-        console.log("Generating Typer interface: " + Names.typerInterface(language) + ".ts");
-        var typerFile = Helpers.pretty(typerTemplate.generateTyperInterface(language), "Typer Interface");
-        fs.writeFileSync(`${this.languageFolder}/${Names.typerInterface(language)}.ts`, typerFile);
-
-        console.log("Generating Validator interface: " + Names.validatorInterface(language) + ".ts");
-        var typerFile = Helpers.pretty(validatorTemplate.generateValidatorInterface(language), "Validator Interface");
-        fs.writeFileSync(`${this.languageFolder}/${Names.validatorInterface(language)}.ts`, typerFile);
     }
 }

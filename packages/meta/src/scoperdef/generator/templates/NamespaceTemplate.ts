@@ -10,7 +10,7 @@ export class NamespaceTemplate {
         console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
-        const generatedClassName : String = Names.namespace(language, scopedef);
+        const generatedClassName : string = Names.namespace(language, scopedef);
         let myIfStatement = this.createIfStatement(scopedef);
 
         // Template starts here
@@ -18,6 +18,7 @@ export class NamespaceTemplate {
         import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => `
         ${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "../../language";
         import { ${langConceptType} } from "../../language/Demo";
+        import { PiNamedElement } from "@projectit/core";
 
         export class ${generatedClassName} {
             _myElem : ${allLangConcepts}; // any element in the model
@@ -28,8 +29,8 @@ export class NamespaceTemplate {
         
             // if excludeSurrounding is true, then the elements from all parent namespaces are 
             // not included in the result
-            public getVisibleElements(metatype?: ${langConceptType}, excludeSurrounding?: boolean) : ${allLangConcepts}[] {
-                let result : ${allLangConcepts}[] = [];
+            public getVisibleElements(metatype?: ${langConceptType}, excludeSurrounding?: boolean) : PiNamedElement[] {
+                let result : PiNamedElement[] = [];
                 // from modelelement get its surrounding namespace
                 let ns = this.getSurroundingNamespace(this._myElem);
                 if (ns !== null) {
@@ -56,8 +57,8 @@ export class NamespaceTemplate {
                 return result;
             }
         
-            private internalVis(metatype?: ${langConceptType}): ${allLangConcepts}[] {
-                let result : ${allLangConcepts}[] = [];
+            private internalVis(metatype?: ${langConceptType}): PiNamedElement[] {
+                let result : PiNamedElement[] = [];
         
                 // for now we push all parts, later public/private annotations need to be taken into account 
                 ${myIfStatement}       
@@ -96,9 +97,9 @@ export class NamespaceTemplate {
                 return parent;
             }
 
-            private addIfTypeOK(z: ${allLangConcepts}, result: ${allLangConcepts}[], metatype?: ${langConceptType}) {
+            private addIfTypeOK(z: PiNamedElement, result: PiNamedElement[], metatype?: ${langConceptType}) {
                 if (metatype) {
-                    if (z.$typename === metatype) {
+                    if (z.piLanguageConcept() === metatype) {
                         result.push(z);
                     }
                 } else {

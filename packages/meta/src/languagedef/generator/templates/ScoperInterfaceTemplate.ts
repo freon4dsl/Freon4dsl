@@ -43,7 +43,7 @@ export class ScoperInterfaceTemplate {
 
                 // getVisibleNames does the same as getVisibleElements, only it does not return the elements,
                 // but the names of the elements
-                getVisibleNames(modelelement: ${allConceptsName}, metatype?: ${conceptType}, excludeSurrounding?: boolean) : String[] ;        
+                getVisibleNames(modelelement: ${allConceptsName}, metatype?: ${conceptType}, excludeSurrounding?: boolean) : string[] ;        
             }
         `;
     }

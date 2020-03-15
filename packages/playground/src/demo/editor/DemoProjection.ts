@@ -2,119 +2,104 @@
 import { PiProjection, PiElement, Box, VerticalListBox, HorizontalListBox, LabelBox, TextBox } from "@projectit/core";
 import { SelectBox, SelectOption } from "@projectit/core";
 import { createDefaultExpressionBox, KeyPressAction } from "@projectit/core";
-import { DemoAttribute, DemoAttributeType, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoVariable } from "../language";
+import { PiScoper } from "@projectit/core";
+import {
+    AllDemoConcepts,
+    DemoAttribute,
+    DemoAttributeType,
+    DemoFunction,
+    DemoFunctionCallExpression,
+    DemoNumberLiteralExpression,
+    DemoStringLiteralExpression,
+    DemoVariable
+} from "../language";
+import { DemoConceptType } from "../language/Demo";
+import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { demoStyles } from "../styles/styles";
 
 export class DemoProjection implements PiProjection {
     rootProjection: PiProjection;
 
     getBox(element: PiElement): Box {
-        // if( element instanceof DemoAttribute) {
-        //     return this.getDemoAttributeBox(element)
-        // }
-        if( element instanceof DemoStringLiteralExpression) {
-            return this.getDemoStringLiteralExpressionBox(element)
+        if (element instanceof DemoFunctionCallExpression) {
+            return this.getDemoFunctionCallExpressionBox(element);
         }
-        if( element instanceof DemoNumberLiteralExpression) {
-            return this.getDemoNumberLiteralExpressionBox(element)
+        if (element instanceof DemoStringLiteralExpression) {
+            return this.getDemoStringLiteralExpressionBox(element);
+        }
+        if (element instanceof DemoNumberLiteralExpression) {
+            return this.getDemoNumberLiteralExpressionBox(element);
         }
         // Add any handmade projections of your own before next statement
-        if( element instanceof DemoVariable){
+        if (element instanceof DemoVariable) {
             return new VerticalListBox(element, "element", [
                 new HorizontalListBox(element, "element-name-list", [
                     new LabelBox(element, "element-name-label", "variable name", {
                         style: demoStyles.propertykeyword
                     }),
-                    new TextBox(element, "element-name-text", () => element.name, (c: string) => (element.name = c as string), {
-                        placeHolder: "text",
-                        style: demoStyles.placeholdertext
-                    })
+                    new TextBox(
+                        element,
+                        "element-name-text",
+                        () => element.name,
+                        (c: string) => (element.name = c as string),
+                        {
+                            placeHolder: "text",
+                            style: demoStyles.placeholdertext
+                        }
+                    )
                 ])
             ]);
         }
         return null;
     }
 
-
-    public getDemoAttributeBox(element: DemoAttribute): Box {
-        console.log("============ attribute box for "+ element.name + " type ["+ element.declaredType.name + "]");
+    public getDemoFunctionCallExpressionBox(element: DemoFunctionCallExpression): Box {
+        const scoper: PiScoper = new DemoScoper();
         return new VerticalListBox(element, "element", [
-            new HorizontalListBox(element, "element-name-list", [
-                new LabelBox(element, "element-name-label", "name", {
-                    style: demoStyles.propertykeyword
-                }),
-                new TextBox(element, "element-name-text", () => element.name /*ok*/, (c: string) => (element.name = c), {
-                    placeHolder: "text",
-                    style: demoStyles.placeholdertext
-                })
-            ]),
-            new HorizontalListBox(element, "element-declaredType-list", [
-                new LabelBox(element, "element-declaredType-label", "ype", {
-                    style: demoStyles.propertykeyword
-                }),
-                // this.enumSelectForAttType(element, "attribute-type"),
-                this.enumSelectForAttType2(element, "attribute-type",
-                    () => { return { id: element.declaredType.name, label: element.declaredType.name} },
-                    (o: SelectOption) => element.declaredType = DemoAttributeType.fromString(o.id)),
-            ])
+            this.getReferenceBox(element, "func-call-exp", "<select function>", "DemoFunction",
+                () => {
+                    if (!!element.functionDefinition) {
+                        return { id: element.functionDefinition.name, label: element.functionDefinition.name };
+                    } else {
+                        return null;
+                    }
+                },
+                (option: SelectOption) => {
+                    element.functionDefinition = scoper.getFromVisibleElements(
+                        element,
+                        option.label,
+                        "DemoFunction"
+                    ) as DemoFunction;
+                }
+            )
         ]);
     }
 
-    protected enumSelectForAttType2(elem: PiElement, role: string, getAction: () => SelectOption, setAction: (o: SelectOption) => void) {
+    public getReferenceBox(
+        element: PiElement,
+        role: string,
+        placeholder: string,
+        metaType: string,
+        getAction: () => SelectOption,
+        setAction: (o: SelectOption) => void
+    ): SelectBox {
+        // TODO get the scoper from somewhere in the language configuration
+        const scoper: PiScoper = new DemoScoper();
         return new SelectBox(
-            elem,
+            element,
             role,
-            "<select type>",
+            placeholder,
             () => {
-                console.log("getOptions: "+ DemoAttributeType.values);
-                return DemoAttributeType.values.map(v =>
-                    (
-                        {
-                            id: v.asString(),
-                            label: v.asString()
-                        }
-                    ))
+                return scoper.getVisibleNames(element, metaType).map(name => ({
+                    id: name,
+                    label: name
+                }));
             },
             () => getAction(),
-            (option: SelectOption) => {
-                console.log("setSelectedOption: " + option);
-                setAction(option);
-            }
-            ,
-            { style: demoStyles.function }
+            (option: SelectOption) => setAction(option)
         );
     }
 
-
-    protected enumSelectForAttType(elem: DemoAttribute, role: string) {
-        return new SelectBox(
-            elem,
-            role,
-            "<select type>",
-            () => {
-                console.log("getOptions: "+ DemoAttributeType.values);
-                return DemoAttributeType.values.map(v =>
-                    (
-                        {
-                            id: v.asString(),
-                            label: v.asString()
-                        }
-                    ))
-            },
-            () => {
-                console.log("getSelectedOption");
-                return {
-                    id: elem.declaredType.name,
-                    label:elem.declaredType.name}
-            },
-            (option: SelectOption) => {
-                console.log("setSelectedOption: " + option);
-                elem.declaredType = DemoAttributeType.fromString(option.id);
-            }
-            ,
-            { style: demoStyles.function }
-        );
-    }
     public getDemoStringLiteralExpressionBox(literal: DemoStringLiteralExpression): Box {
         return createDefaultExpressionBox(literal, "string-literal-exp", [
             new HorizontalListBox(literal, "string-literal", [
@@ -123,7 +108,7 @@ export class DemoProjection implements PiProjection {
                     style: demoStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
-                new LabelBox(literal, "end-quote", '"', { selectable: false  })
+                new LabelBox(literal, "end-quote", '"', { selectable: false })
             ])
         ]);
     }
@@ -139,8 +124,8 @@ export class DemoProjection implements PiProjection {
             })
         ]);
     }
-
 }
+
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
@@ -152,4 +137,3 @@ function isNumber(currentText: string, key: string, index: number): KeyPressActi
         return KeyPressAction.OK;
     }
 }
-

@@ -13,7 +13,7 @@ import { EVENT_LOG, RENDER_LOG } from "../../../util/PiLogging";
 import { PiUtils } from "../../../util/PiUtils";
 import { STYLES } from "../styles/Styles";
 
-const LOGGER = new PiLogger("TextComponent");
+const LOGGER = new PiLogger("TextComponent").mute();
 
 export type TextComponentProps = {
     box: TextBox;

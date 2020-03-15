@@ -1,8 +1,8 @@
+import { PiError } from "@projectit/core";
 import { DemoModel, DemoAttributeType, DemoMultiplyExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoDivideExpression } from "../language";
 import { DemoTyper } from "../typer/DemoTyper";
 import { DemoValidator } from "../validator/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { ViError } from "../language/IDemoValidator";
 
 describe('Testing Validator', () => {
     describe('Validate DemoModel Instance', () => {
@@ -14,7 +14,7 @@ describe('Testing Validator', () => {
         });
 
         test("multiplication 3 * 10", () => {
-            let errors : ViError[] = [];
+            let errors : PiError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = new DemoNumberLiteralExpression("3");
             mult.right = new DemoNumberLiteralExpression("10");
@@ -23,7 +23,7 @@ describe('Testing Validator', () => {
         });
 
         test.skip("multiplication 3 * 'temp'", () => {
-            let errors : ViError[] = [];
+            let errors : PiError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = new DemoNumberLiteralExpression("3");
             mult.right = new DemoStringLiteralExpression("temp");
@@ -36,7 +36,7 @@ describe('Testing Validator', () => {
         });
 
         test.skip("multiplication (3/4) * 'temp'", () => {
-            let errors : ViError[] = [];
+            let errors : PiError[] = [];
             let div : DemoDivideExpression = new DemoDivideExpression();
             div.left = new DemoNumberLiteralExpression("3");
             div.right = new DemoNumberLiteralExpression("4");
