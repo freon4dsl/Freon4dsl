@@ -33,7 +33,6 @@
   "dependencies": {
     "@microsoft/ts-command-line": "4.3.10",
     "@projectit/core": "^0.0.5",
-    "@projectit/core": "^0.0.5",
     "@types/lodash": "4.14.73",
     "@types/pegjs": "^0.10.1",
     "axios": "0.18.0",
