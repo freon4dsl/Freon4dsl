@@ -9,6 +9,17 @@ export class PiLangConceptReference {
         if(!!this.language) return this.language.findConcept(this.name);
     }
 }
+export class PiLangEnumerationReference {
+    language: PiLanguage;
+    name: string;
+
+    constructor() {
+    }
+
+    enumeration(): PiLangEnumeration {
+        if(!!this.language) return this.language.findEnumeration(this.name);
+    }
+}
 
 export class PiLanguage {
     name: string;
@@ -22,6 +33,10 @@ export class PiLanguage {
 
     findConcept(name: string): PiLangConcept {
         return this.concepts.find(con => con.name === name);
+    }
+
+    findEnumeration(name: string): PiLangEnumeration {
+        return this.enumerations.find(con => con.name === name);
     }
 
     findExpressionBase(): PiLangConcept {
@@ -52,6 +67,7 @@ export class PiLangConcept {
     isRoot:boolean;
     base: PiLangConceptReference;
     properties: PiLangPrimitiveProperty[] = [];
+    enumProperties: PiLangEnumerationProperty[] = [];
     parts: PiLangElementProperty[] = [];
     references: PiLangElementProperty[] = [];
     isExpression: boolean;
@@ -144,6 +160,19 @@ export class PiLangPrimitiveProperty {
     isStatic: boolean;
     initialValue: string;
     type: string;
+}
+
+export class PiLangEnumerationProperty {
+    owningConcept: PiLangConcept;
+
+    constructor() {
+    }
+
+    name: string;
+    isList: boolean;
+    isStatic: boolean;
+    initialValue: string;
+    type: PiLangEnumerationReference;
 }
 
 export class PiLangElementProperty {

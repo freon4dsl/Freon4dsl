@@ -33,22 +33,22 @@ export class DemoModelCreator  {
         const f2 = DemoFunction.create("first");
         f2.declaredType = DemoAttributeType.Boolean;
         const f3 = DemoFunction.create("last");
-        f3.declaredType = entity1;
+        f3.declaredType = DemoAttributeType.Boolean;
         const f4 = DemoFunction.create("determine");
-        f4.declaredType = entity1;
+        f4.declaredType = DemoAttributeType.Boolean;
         const f5 = DemoFunction.create("another");
-        f5.declaredType = entity1;
+        f5.declaredType = DemoAttributeType.Boolean;
 
         const var1 = DemoVariable.create("Variable1")
-        var1.declaredType = entity1;
+        var1.declaredType = DemoAttributeType.Boolean;
         const var2 = DemoVariable.create("VariableNumber2")
-        var2.declaredType = entity2;
+        var2.declaredType = DemoAttributeType.Boolean;
         const var3 = DemoVariable.create("Resultvar")
-        var3.declaredType = entity1;
+        var3.declaredType = DemoAttributeType.Boolean;
         const var4 = DemoVariable.create("AAP")
-        var4.declaredType = entity1;
+        var4.declaredType = DemoAttributeType.Boolean;
         const var5 = DemoVariable.create("NOOT")
-        var5.declaredType = entity1;
+        var5.declaredType = DemoAttributeType.Boolean;
 
         this.model.entities.push(entity1);
         this.model.entities.push(entity2);

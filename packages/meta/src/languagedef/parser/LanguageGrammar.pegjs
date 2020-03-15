@@ -19,6 +19,7 @@ binaryKey       = "binary" ws { return true; }
 expressionKey   = "expression" ws { return true; }
 baseKey         = "base" ws { return true; }
 placeholderKey  = "placeholder" ws { return true; }
+enumKey         = "enum" { return true; }
 
 base = baseKey name:var { return create.createConceptReference( { "name": name}); }
 
@@ -31,7 +32,8 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
           curly_end 
     { 
         return create.createConcept({
-            "properties": att,
+            "properties": att.filter(a => !create.isEnumerationProperty(a)),
+            "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
             "parts": parts,
             "references": references,
             "name": name,
@@ -47,9 +49,14 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
         }); 
     }
 
-attribute = name:var ws name_separator ws type:var isList:"[]"? ws
-    { 
-        return create.createPrimitiveProperty({"name": name, "type": type, "isList": (isList?true:false) }) 
+attribute = name:var ws name_separator ws isEnum:"enum"? ws type:var isList:"[]"? ws
+    {
+        if( isEnum) {
+            const enumRef = create.createEnumerationReference({"name": type});
+            return create.createEnumerationProperty({"name": name, "type": enumRef, "isList": (isList?true:false) })
+        } else {
+            return create.createPrimitiveProperty({"name": name, "type": type, "isList": (isList?true:false) })
+        }
     }
 
 part = "@part" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws

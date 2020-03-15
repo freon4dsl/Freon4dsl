@@ -11,6 +11,7 @@ export class ContextTemplate {
         return `
             import { action, observable } from "mobx";
             import { PiContext, PiExpression } from "@projectit/core";
+            import { ${language.name}Initialization } from "../${language.name}Initialization";
             import { ${Names.concept(rootConcept)} } from "../../language/${Names.concept(rootConcept)}";
             import { ${Names.concept(placeholderConcept)} } from "../../language/${Names.concept(placeholderConcept)}";
             
@@ -20,8 +21,8 @@ export class ContextTemplate {
                 model: ${Names.concept(rootConcept)} = new ${Names.concept(rootConcept)}();
             
                 constructor(initialExpression?: ${Names.concept(rootConcept)}) {
-                    this.initialize();
                     this.rootElement = initialExpression ? initialExpression : this.model;
+                    this.initialize();
                 }
             
                 set rootElement(exp: ${Names.concept(rootConcept)}) {
@@ -46,6 +47,7 @@ export class ContextTemplate {
             
                 @action
                 private initialize() {
+                    this.rootElement = new ${language.name}Initialization().initialize();
                 }
             }
         
