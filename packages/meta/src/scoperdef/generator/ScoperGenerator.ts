@@ -1,5 +1,5 @@
 import { Helpers } from "../../utils/Helpers";
-import { PiLanguage } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import * as fs from "fs";
 import { SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils/GeneratorConstants";
 // import { PiScoperChecker } from "metalanguage/scoper/PiScoperChecker";
@@ -11,11 +11,11 @@ import { PiScopeDef } from "../metalanguage/PiScopeDefLang";
 
 export class ScoperGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: PiLanguageUnit;
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
-    constructor(language: PiLanguage) {
+    constructor(language: PiLanguageUnit) {
         this.language = language;
     }
 

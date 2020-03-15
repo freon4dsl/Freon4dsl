@@ -1,11 +1,11 @@
-import { PiLanguage } from "../../metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 import { Names } from "../../../utils/Names";
 
 export class ScoperInterfaceTemplate {
     constructor() {
     }
 
-    generateScoperInterface(language: PiLanguage) : string {
+    generateScoperInterface(language: PiLanguageUnit) : string {
         const allConceptsName = Names.allConcepts(language);
         const conceptType = Names.languageConceptType(language);
 

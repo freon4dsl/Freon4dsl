@@ -1,12 +1,13 @@
 import { flatten, flatMap, difference , xor } from "lodash";
 import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiLangExpressionConcept, PiLangBinaryExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ActionsTemplate {
     constructor() {
     }
 
-    generateDefaultActions(language: PiLanguage): string {
+    // TODO remove typecast on line 54
+    generateDefaultActions(language: PiLanguageUnit): string {
         return `
             import * as Keys from "@projectit/core";
             import {
@@ -34,7 +35,7 @@ export class ActionsTemplate {
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                ${language.concepts.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract && !!c.trigger).map(c =>
+                ${language.concepts.filter(c => c.expression() && !c.isAbstract && !!c.trigger).map(c =>
             `{
                     trigger: ${c.triggerIsRegExp ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
                     activeInBoxRoles: [
@@ -50,7 +51,7 @@ export class ActionsTemplate {
             export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
                 ${language.concepts.filter(c => c.binaryExpression() && !c.isAbstract).map(c =>
             `{
-                    trigger: "${c.getSymbol()}",
+                    trigger: "${(c as PiLangBinaryExpressionConcept).getSymbol()}",
                     activeInBoxRoles: [
                         LEFT_MOST,
                         RIGHT_MOST,
@@ -106,7 +107,7 @@ export class ActionsTemplate {
             `;
         }
 
-    generateManualActions(language: PiLanguage): string {
+    generateManualActions(language: PiLanguageUnit): string {
         return `
             import {
                 KeyboardShortcutBehavior,
@@ -133,7 +134,7 @@ export class ActionsTemplate {
         `;
     }
 
-    generateActions(language: PiLanguage): string {
+    generateActions(language: PiLanguageUnit): string {
         return `
             import {
                 KeyboardShortcutBehavior,

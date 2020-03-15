@@ -1,11 +1,11 @@
 import { Names } from "../../../utils/Names";
-import { PiLangEnumerationProperty, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLangEnumProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjection(language: PiLanguage): string {
+    generateProjection(language: PiLanguageUnit): string {
         return `
             import { PiProjection, PiElement, Box } from "@projectit/core";
         
@@ -20,7 +20,7 @@ export class ProjectionTemplate {
         `
     }
 
-    generateProjectionDefault(language: PiLanguage): string {
+    generateProjectionDefault(language: PiLanguageUnit): string {
         return `
             import { observable } from "mobx";
 
@@ -92,7 +92,7 @@ export class ProjectionTemplate {
                 :"" }
       
 
-                ${language.concepts.filter(c => !c.binaryExpression() && !c.isExpressionPlaceHolder).map(c => `
+                ${language.concepts.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).map(c => `
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     return new VerticalListBox(element, "element", [
                         ${c.properties.map(p => `

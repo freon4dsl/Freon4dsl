@@ -1,4 +1,4 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 
 export class PiValidatorDef {
     validatorName: string;

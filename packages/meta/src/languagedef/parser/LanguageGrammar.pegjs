@@ -2,14 +2,15 @@
     let create = require("./LanguageCreators");
 }
 
+// TODO the order of the element should not be fixed
 Editor_Definition
-  = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)* ws t:(type)*
+  = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)* ws t:(union)*
     {
         return create.createLanguage({
             "name": name,
             "concepts": c,
             "enumerations": e,
-            "types": t
+            "unions": t
         });
     } 
 
@@ -30,23 +31,50 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             references:reference*
             editorProps:editorProperty*
           curly_end 
-    { 
-        return create.createConcept({
-            "properties": att.filter(a => !create.isEnumerationProperty(a)),
-            "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
-            "parts": parts,
-            "references": references,
-            "name": name,
-            "base": base,
-            "isAbstract": (!!abs),
-            "isRoot": (!!isRoot),
-            "isBinaryExpression": !!binary,
-            "isExpression": (!!expression),
-            "isExpressionPlaceHolder": !!isExpressionPlaceHolder,
-            "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
-            "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
-            "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
-        }); 
+    {
+        if (!!binary) {
+            return create.createBinaryExpressionConcept({
+                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
+                "parts": parts,
+                "references": references,
+                "name": name,
+                "base": base,
+                "isAbstract": (!!abs),
+                "isRoot": (!!isRoot),
+                "_isExpressionPlaceHolder": !!isExpressionPlaceHolder,
+                "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
+                "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
+                "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
+            });
+        } else if (!!expression) {
+            return create.createExpressionConcept({
+                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
+                "parts": parts,
+                "references": references,
+                "name": name,
+                "base": base,
+                "isAbstract": (!!abs),
+                "isRoot": (!!isRoot),
+                "_isExpressionPlaceHolder": !!isExpressionPlaceHolder,
+                "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
+                "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
+                "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
+            });
+        } else {
+            return create.createConcept({
+                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
+                "parts": parts,
+                "references": references,
+                "name": name,
+                "base": base,
+                "isAbstract": (!!abs),
+                "isRoot": (!!isRoot),
+                "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
+            });
+        } 
     }
 
 attribute = name:var ws name_separator ws isEnum:"enum"? ws type:var isList:"[]"? ws
@@ -73,6 +101,7 @@ conceptReference = referredName:var {
     return create.createConceptReference({"name": referredName})
 }
 
+// TODO move to editorDef parser, except 'priority'
 editorProperty = "@editor" ws name:var ws name_separator ws type:var ws "=" ws "\"" value:string "\"" ws
     {
         switch(name) {
@@ -90,11 +119,11 @@ enumeration = "enumeration" ws name:var curly_begin
                     return create.createEnumeration({ "name": name, "literals": literals});
                 }
 
-type = "type" ws name:var curly_begin
-                    literals:var+
+union = "union" ws name:var curly_begin
+                    members:var+
                 curly_end
                 {
-                    return create.createType({ "name": name, "literals": literals});
+                    return create.createUnion({ "name": name, "members": members});
                 }
                 
 curly_begin    = ws "{" ws 

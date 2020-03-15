@@ -1,10 +1,11 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguage, PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "./PiScopeDefLang";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 
 export class PiScoperChecker extends Checker<PiScopeDef> {
     
-    constructor(language: PiLanguage) {
+    constructor(language: PiLanguageUnit) {
         super();
         this.language = language;
     }

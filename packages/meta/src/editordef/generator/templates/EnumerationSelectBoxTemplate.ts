@@ -1,9 +1,9 @@
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { Names } from "../../../utils/Names";
 
 export class EnumerationSelectBoxTemplate {
 
-    generate(language: PiLanguage): string {
+    generate(language: PiLanguageUnit): string {
         console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `

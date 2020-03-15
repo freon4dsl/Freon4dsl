@@ -2,12 +2,14 @@ import {
     PiLangPrimitiveProperty,
     PiLangConcept,
     PiLangElementProperty,
-    PiLangConceptReference,
-    PiLanguage,
+    PiLanguageUnit,
     PiLangEnumeration,
-    PiLangType,
-    PiLangEnumerationReference, PiLangEnumerationProperty
+    PiLangUnion,
+    PiLangEnumProperty,
+    PiLangExpressionConcept,
+    PiLangBinaryExpressionConcept
 } from "../metalanguage/PiLanguage";
+import { PiLangConceptReference, PiLangEnumerationReference } from "../../languagedef/metalanguage/PiLangReferences";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
@@ -33,8 +35,8 @@ export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>):
     return result;
 }
 
-export function createEnumerationProperty(data: Partial<PiLangEnumerationProperty>): PiLangEnumerationProperty {
-    const result = new PiLangEnumerationProperty();
+export function createEnumerationProperty(data: Partial<PiLangEnumProperty>): PiLangEnumProperty {
+    const result = new PiLangEnumProperty();
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
@@ -60,51 +62,70 @@ export function createReference(data: Partial<PiLangElementProperty>): PiLangEle
 }
 
 export function createConcept(data: Partial<PiLangConcept>): PiLangConcept {
-    // console.log("creating concept " + data.name);
     const result = new PiLangConcept();
-
-    result.isRoot = !!data.isRoot;
-    result.isAbstract = !!data.isAbstract;
-    result.isExpression = !!data.isExpression; 
-    result.isBinaryExpression = !!data.isBinaryExpression;
-    result.isExpressionPlaceHolder = !!data.isExpressionPlaceHolder; 
-
-    if(!!data.name) { result.name = data.name; }
-    if(!!data.priority) { result.priority = data.priority; }
-    if(!!data.base) { result.base = data.base; }
-
-    if(!!data.properties) {
-        result.properties = data.properties;
-        result.properties.forEach(p => p.owningConcept = result );
-    }
-    if(!!data.enumProperties) {
-        result.enumProperties = data.enumProperties;
-        result.enumProperties.forEach(p => p.owningConcept = result );
-    }
-    if(!!data.parts) {
-        result.parts = data.parts;
-        result.parts.forEach(p => p.owningConcept = result );
-    }
-    if(!!data.references) { 
-        result.references = data.references;
-        result.references.forEach(p => p.owningConcept = result );
-    }
-    if( !!data.trigger ){ result.trigger = data.trigger; }
-    if( !!data.symbol ){ result.symbol = data.symbol; }
-    if( !!data.priority ){ result.priority = data.priority; }
-
-    result.parts.forEach(part => part.owningConcept = result);
-    result.properties.forEach(prop => prop.owningConcept = result);
-    result.enumProperties.forEach(prop => prop.owningConcept = result);
-    result.references.forEach(ref => ref.owningConcept = result);
+    createCommonConceptParts(result, data);
     // console.log("created  concept " + result.name);
     return result;
 }
 
-export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
-    const result = new PiLanguage();
+export function createExpressionConcept(data: Partial<PiLangExpressionConcept>): PiLangExpressionConcept {
+    const result = new PiLangExpressionConcept();
+    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder; 
+    createCommonConceptParts(result, data);
+    // console.log("created  concept " + result.name);
+    return result;
+}
+
+export function createBinaryExpressionConcept(data: Partial<PiLangBinaryExpressionConcept>): PiLangBinaryExpressionConcept {
+    const result = new PiLangBinaryExpressionConcept();
+    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder; 
+    if (!!data.priority) {
+        result.priority = data.priority;
+    }
+    if (!!data.symbol) {
+        result.symbol = data.symbol;
+    }
+    if (!!data.priority) {
+        result.priority = data.priority;
+    }
+    createCommonConceptParts(result, data);
+    // console.log("created  concept " + result.name);
+    return result;
+}
+
+function createCommonConceptParts(result: PiLangConcept, data: Partial<PiLangConcept>) {
+    result.isRoot = !!data.isRoot;
+    result.isAbstract = !!data.isAbstract;
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.trigger) {
+        result.trigger = data.trigger;
+    }
+    if (!!data.base) {
+        result.base = data.base;
+    }
+    if (!!data.properties) {
+        result.properties = data.properties;
+    }
+    if (!!data.enumProperties) {
+        result.enumProperties = data.enumProperties;
+    }
+    if (!!data.parts) {
+        result.parts = data.parts;
+    }
+    if (!!data.references) {
+        result.references = data.references;
+    }
+    result.parts.forEach(part => part.owningConcept = result);
+    result.properties.forEach(prop => prop.owningConcept = result);
+    result.enumProperties.forEach(prop => prop.owningConcept = result);
+    result.references.forEach(ref => ref.owningConcept = result);
+}
+
+export function createLanguage(data: Partial<PiLanguageUnit>): PiLanguageUnit {
+    const result = new PiLanguageUnit();
     // console.log("Creating language with concepts: ");
-    // data.concepts.forEach(c => console.log("    concept "+ c.name));
     if( !!data.name) {
         result.name = data.name
     }
@@ -114,8 +135,8 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     if( !!data.enumerations) {
         result.enumerations = data.enumerations
     }
-    if( !!data.types) {
-        result.types = data.types
+    if( !!data.unions) {
+        result.unions = data.unions
     }
 
     // Ensure all references to the language are set.
@@ -133,7 +154,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
         enumeration.language = result;
     } );
 
-    result.types.forEach(type => {
+    result.unions.forEach(type => {
         type.language = result;
     } );
 
@@ -147,13 +168,13 @@ export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnume
     return result;
 }
 
-export function createType(data: Partial<PiLangType>): PiLangType {
-    const result = new PiLangType();
+export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
+    const result = new PiLangUnion();
     if( !!data.name) { result.name = data.name; }
-    if( !!data.literals) { result.literals = data.literals; }
+    if( !!data.members) { result.members = data.members; }
     return result;
 }
 
 export function isEnumerationProperty(p: Object){
-    return p instanceof PiLangEnumerationProperty;
+    return p instanceof PiLangEnumProperty;
 }

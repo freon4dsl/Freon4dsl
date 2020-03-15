@@ -1,10 +1,10 @@
-import { PiLanguage } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import { PiConceptEditor } from "./PiConceptEditor";
 import { PiEnumerationEditor } from "./PiEnumerationEditor";
 
 export class PiLanguageEditor {
     name: string;
-    language: PiLanguage;
+    language: PiLanguageUnit;
     concepts: PiConceptEditor[] = [];
     enumerations: PiEnumerationEditor[] = [];
 

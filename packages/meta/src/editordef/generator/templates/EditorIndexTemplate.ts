@@ -1,11 +1,11 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class EditorIndexTemplate {
     constructor() {
     }
 
-    generateGenIndex(language: PiLanguage): string {
+    generateGenIndex(language: PiLanguageUnit): string {
         return `
         export * from "./${Names.actions(language)}";
         export * from "./${Names.defaultActions(language)}";
@@ -15,7 +15,7 @@ export class EditorIndexTemplate {
         `;
     }
 
-    generateIndex(language: PiLanguage): string {
+    generateIndex(language: PiLanguageUnit): string {
         return `
         export * from "./gen";
         export * from "./${Names.projection(language)}";

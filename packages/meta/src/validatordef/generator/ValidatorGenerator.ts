@@ -1,5 +1,5 @@
 import { Helpers } from "../../utils/Helpers";
-import { PiLanguage } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import * as fs from "fs";
 import { VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/GeneratorConstants";
 import { Names } from "../../utils/Names";
@@ -8,11 +8,11 @@ import { PiValidatorDef } from "../metalanguage/PiValidatorDefLang";
 
 export class ValidatorGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguage;
+    public language: PiLanguageUnit;
     protected validatorGenFolder: string;
     protected validatorFolder: string;
 
-    constructor(language: PiLanguage) {
+    constructor(language: PiLanguageUnit) {
         this.language = language;
     }
 

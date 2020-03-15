@@ -1,11 +1,11 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class MainProjectionalEditorTemplate {
     constructor() {
     }
 
-    generateEditor(language: PiLanguage, withToolbar: boolean): string {
+    generateEditor(language: PiLanguageUnit, withToolbar: boolean): string {
         return `
             import { observable } from "mobx";
             import { observer } from "mobx-react";
