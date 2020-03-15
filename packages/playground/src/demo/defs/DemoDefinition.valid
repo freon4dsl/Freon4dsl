@@ -2,7 +2,7 @@ validator Demo for language Demo
 
 DemoModel {
     @validName // default Identifier
-    @notEmpty this.entities.name
+    @notEmpty this.entities
     @notEmpty this.functions
 }
 
@@ -17,8 +17,8 @@ DemoAttribute {
 }
 
 DemoFunction {
-    @typecheck conformsTo (this.expression, DemoAttributeType:String) 
-    @notEmpty this.expression
+    @typecheck conformsTo (this.expression.XXX, DemoAttributeType:String) 
+    @notEmpty this.parameters
     @validName 
 }
 
@@ -31,7 +31,7 @@ DemoAbsExpression {
 }
 
 DemoMultiplyExpression {
-    @typecheck equalsType( this.left, DemoAttributeType:Integer )
+    @typecheck equalsType( this.left.XXX, DemoAttributeType:Integer )
     @typecheck equalsType( this.right, DemoAttributeType:Integer )
 }
 

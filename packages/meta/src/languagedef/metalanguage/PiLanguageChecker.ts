@@ -48,22 +48,6 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             });
     }
 
-    checkPiPrimitiveProperty(element: PiLangPrimitiveProperty): void {
-        this.simpleCheck(!!element.name, "Property should have a name, it is empty");
-        this.nestedCheck(
-            {
-                check: !!element.type,
-                error: "Element should have a type",
-                whenOk: () => {this.checkPrimitiveType(element.type)}
-            });
-    }
-
-    checkPrimitiveType(type: string) {
-        this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
-            "Primitive property should have a primitive type (string, boolean, or number)"
-        );
-    }
-
     checkConceptReference(reference: PiLangConceptReference) {
         this.nestedCheck(
             {
@@ -89,6 +73,23 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                     })
             })
     }
+
+    checkPiPrimitiveProperty(element: PiLangPrimitiveProperty): void {
+        this.simpleCheck(!!element.name, "Property should have a name, it is empty");
+        this.nestedCheck(
+            {
+                check: !!element.type,
+                error: "Element should have a type",
+                whenOk: () => {this.checkPrimitiveType(element.type)}
+            });
+    }
+
+    checkPrimitiveType(type: string) {
+        this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
+            "Primitive property should have a primitive type (string, boolean, or number)"
+        );
+    }
+
 
 }
 

@@ -1,5 +1,8 @@
 import { PiLangConceptReference, PiLangConcept, PiLangEnumeration, PiLangElementProperty, PiLangProperty } from "../../languagedef/metalanguage/PiLanguage";
 
+// These classes combine the parse model (CST) of the validation definition (.valid file) with its AST.
+// All AST values have prefix 'ast'. They are set in the ValidatorChecker.
+
 export class ValidatorDef {
     validatorName: string;
     languageName: string;
@@ -11,6 +14,7 @@ export class ValidatorDef {
 
 export class ConceptRule {
     conceptRef: PiLangConceptReference;
+    astConcept: PiLangConcept;
     rules: Rule[];
 }
 
@@ -20,6 +24,8 @@ export abstract class Rule {
 export class EqualsTypeRule extends Rule {
     type1: LangRefExpression;
     type2: LangRefExpression;
+    astType1: PiLangConcept;
+    astType2: PiLangConcept;
 }
 
 export class ConformsTypeRule extends Rule {
@@ -29,9 +35,11 @@ export class ConformsTypeRule extends Rule {
 
 export class NotEmptyRule extends Rule {
     property: LangRefExpression;
+    refersTo: PiLangProperty; // is set by the checker
 }
 export class ValidNameRule extends Rule {
     property: PropertyRefExpression;
+    refersTo: PiLangProperty;  // is set by the checker
 }
 
 export abstract class LangRefExpression {

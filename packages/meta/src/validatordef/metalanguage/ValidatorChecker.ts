@@ -11,14 +11,19 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
 
     public check(definition: ValidatorDef): void {
         console.log("Checking Validator Definition " + definition.validatorName);
+        let errormess : string = "Language reference ('"+ definition.languageName;
+        errormess = errormess.concat("') in Validation Definition '" + definition.validatorName);
+        errormess = errormess.concat("' does not match language '" + this.language.name + "'.");
 
         this.nestedCheck(
             {
-                check: true,
-                error: "This error never happens"
-            });
-            definition.conceptRules.forEach(rule => {    
-                this.checkConceptRule(rule);
+                check: this.language.name === definition.languageName,
+                error: errormess,
+                whenOk: () => {
+                    definition.conceptRules.forEach(rule => {    
+                        this.checkConceptRule(rule);
+                    });        
+                }
             });
         }
 
@@ -52,7 +57,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     checkRule(tr: Rule, enclosingConcept: PiLangConcept) {
-        // if( tr instanceof EqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
+        if( tr instanceof EqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
         if( tr instanceof ConformsTypeRule) this.checkConformsTypeRule(tr, enclosingConcept);
         if( tr instanceof NotEmptyRule) this.checkNotEmptyRule(tr, enclosingConcept);
         if( tr instanceof ValidNameRule) this.checkValidNameRule(tr, enclosingConcept);
@@ -64,6 +69,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         // otherwise set myProperty to the 'name' property of the EnclosingConcept
         let myProp : PiLangPrimitiveProperty;
         if( tr.property != null ) {
+            //TODO use this.resolvePropRef
             let propRef = tr.property;
             if (propRef.sourceName === "this" && tr.property.appliedFeature != null ) {
                 propRef = tr.property.appliedFeature;
@@ -72,7 +78,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 if(e.name === propRef.sourceName) myProp = e;
             }
             this.simpleCheck(myProp != null, "Valid Name Rule: cannot find property '" + propRef.sourceName + "' in " + enclosingConcept.name);
-            // TODO check if there are more names: propRef.appliedFeature != null
+            // TODO check if there are no more names: propRef.appliedFeature != null
+            // TODO check if found property is of type 'string'
         } else {
             myProp = enclosingConcept.allProperties().find(e => {
                 e.name === "name"
@@ -81,6 +88,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
             tr.property = new PropertyRefExpression();
             tr.property.sourceName = "name";
         }
+        // TODO check if found property is of type 'string'
         tr.property.myProperty = myProp;
     }
 
@@ -92,8 +100,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 error: `Typecheck "equalsType" should have two types to compare`,
                 whenOk: () => {
                     // console.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
-                    // this.checkLangReference(tr.type1, enclosingConcept),
-                    // this.checkLangReference(tr.type2, enclosingConcept)  
+                    this.checkLangReference(tr.type1, enclosingConcept),
+                    this.checkLangReference(tr.type2, enclosingConcept)  
                 }
             })
     }
@@ -106,8 +114,8 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 error: `Typecheck "conformsTo" should have two types to compare`,
                 whenOk: () => {
                     // console.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
-                    // this.checkLangReference(tr.type1, enclosingConcept);
-                    // this.checkLangReference(tr.type2, enclosingConcept)  
+                    this.checkLangReference(tr.type1, enclosingConcept);
+                    this.checkLangReference(tr.type2, enclosingConcept)  
                 }
             })
     }
@@ -118,51 +126,13 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         // if so, set myProperty to this property,
         let myProp : PiLangProperty;
         if( nr.property != null ) {
-            let propRef = nr.property;
-            if (propRef.sourceName === "this" && nr.property.appliedFeature != null ) {
-                propRef = nr.property.appliedFeature;
-            }
-            let found: boolean = false;
-            while(!found) { // TODO should not be done, must be direct prop of enclosingConcept, so brings this to the general function
-                for( let e of enclosingConcept.allParts() ) {
-                    if(e.name === propRef.sourceName) myProp = e;
-                }
-                if (myProp == null) {
-                    for( let e of enclosingConcept.allPReferences() ) {
-                        if(e.name === propRef.sourceName) myProp = e;
-                    } 
-                }
-                if (myProp == null) {
-                    for( let e of enclosingConcept.allProperties() ) {
-                        if(e.name === propRef.sourceName) myProp = e;
-                    } 
-                }
-                if (myProp != null && propRef.appliedFeature != null && myProp instanceof PiLangElementProperty) {
-                    // find the next in the list of applied features
-                    propRef = propRef.appliedFeature;
-                    enclosingConcept = myProp.type.concept();
-                    (propRef as PropertyRefExpression).myProperty = myProp;
-                    myProp = null;
-                } else {
-                   found = true;
-                }
-            }
-            // TODO check if there are more names: propRef.appliedFeature != null,  must be direct prop of enclosingConcept
-            this.nestedCheck(
-            {
-                check: myProp != null, 
-                error: "Not Empty Rule: cannot find property, part, or reference '" + propRef.sourceName + "' in " + enclosingConcept.name,
-                whenOk: () => {
-                    this.simpleCheck(myProp.isList, "Not Empty Rule: part or reference '" + propRef.sourceName + "' in " + enclosingConcept.name + " is not a list");
-                }    
-            });
+            this.checkLangReference(nr.property, enclosingConcept);
         }
         // TODO set nr.property
-        // nr.property = myProp;
     }
 
     checkLangReference(langRef: LangRefExpression, enclosingConcept:PiLangConcept) {
-        console.log("Checking Language Reference " + langRef.sourceName );
+        // console.log("Checking Language Reference " + langRef.sourceName );
         if (langRef instanceof EnumRefExpression) {
             this.checkEnumRefExpression(langRef, enclosingConcept);
         } else if (langRef instanceof ThisExpression) {
@@ -173,7 +143,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     checkThisExpression(langRef: ThisExpression, enclosingConcept:PiLangConcept) {
-        console.log("Checking 'this' Reference " + langRef.makeString());
+        // console.log("Checking 'this' Reference " + langRef.makeString());
         this.nestedCheck(
             {
                 check: langRef.appliedFeature != null,
@@ -205,9 +175,6 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 if (e.name === feat.sourceName) {
                     found = e;
                     // feat.myProperty = e;
-                    if (found && feat.appliedFeature != null) {
-                        this.resolvePropRef(feat.appliedFeature, (found as PiLangElementProperty).type.concept() );
-                    }
                 }
             }              
         }
@@ -218,7 +185,15 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 }
             }              
         }
-
+        this.nestedCheck({
+            check: found != null, 
+            error: "Cannot find property, part, or reference '" + feat.sourceName + "' in '" + enclosingConcept.name + "'",
+            whenOk: () => {
+                if(feat.appliedFeature != null && found instanceof PiLangElementProperty ) {
+                    this.resolvePropRef(feat.appliedFeature, (found as PiLangElementProperty).type.concept());        
+                }
+            }
+        });
     }
 }
 
