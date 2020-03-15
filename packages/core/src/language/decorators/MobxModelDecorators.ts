@@ -18,7 +18,6 @@ export const MODEL_NAME = MODEL_PREFIX + "Name";
  * @param {string | symbol} propertyKey
  */
 export function observablereference(target: DecoratedModelElement, propertyKey: string | symbol) {
-    console.log("000000000000000000000000000000000000000000000000000000000000000000");
     ModelInfo.references.add(target.constructor.name, propertyKey.toString());
 }
 

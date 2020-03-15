@@ -3,41 +3,50 @@ import { PiProjection, PiElement, Box, VerticalListBox, HorizontalListBox, Label
 import { SelectBox, SelectOption } from "@projectit/core";
 import { createDefaultExpressionBox, KeyPressAction } from "@projectit/core";
 import {
+    AllDemoConcepts,
     DemoAttribute,
-    DemoAttributeType, DemoFunction,
+    DemoAttributeType,
+    DemoFunction,
     DemoFunctionCallExpression,
     DemoNumberLiteralExpression,
     DemoStringLiteralExpression,
     DemoVariable
 } from "../language";
+import { DemoConceptType } from "../language/Demo";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { demoStyles } from "../styles/styles";
-import { IDemoScoper } from "../language/IDemoScoper"
+import { IDemoScoper } from "../language/IDemoScoper";
 
 export class DemoProjection implements PiProjection {
     rootProjection: PiProjection;
 
     getBox(element: PiElement): Box {
-        if( element instanceof DemoFunctionCallExpression){
+        if (element instanceof DemoFunctionCallExpression) {
             return this.getDemoFunctionCallExpressionBox(element);
         }
-        if( element instanceof DemoStringLiteralExpression) {
-            return this.getDemoStringLiteralExpressionBox(element)
+        if (element instanceof DemoStringLiteralExpression) {
+            return this.getDemoStringLiteralExpressionBox(element);
         }
-        if( element instanceof DemoNumberLiteralExpression) {
-            return this.getDemoNumberLiteralExpressionBox(element)
+        if (element instanceof DemoNumberLiteralExpression) {
+            return this.getDemoNumberLiteralExpressionBox(element);
         }
         // Add any handmade projections of your own before next statement
-        if( element instanceof DemoVariable){
+        if (element instanceof DemoVariable) {
             return new VerticalListBox(element, "element", [
                 new HorizontalListBox(element, "element-name-list", [
                     new LabelBox(element, "element-name-label", "variable name", {
                         style: demoStyles.propertykeyword
                     }),
-                    new TextBox(element, "element-name-text", () => element.name, (c: string) => (element.name = c as string), {
-                        placeHolder: "text",
-                        style: demoStyles.placeholdertext
-                    })
+                    new TextBox(
+                        element,
+                        "element-name-text",
+                        () => element.name,
+                        (c: string) => (element.name = c as string),
+                        {
+                            placeHolder: "text",
+                            style: demoStyles.placeholdertext
+                        }
+                    )
                 ])
             ]);
         }
@@ -45,30 +54,50 @@ export class DemoProjection implements PiProjection {
     }
 
     public getDemoFunctionCallExpressionBox(element: DemoFunctionCallExpression): Box {
-        const scoper: IDemoScoper  = new DemoScoper();
-        console.log("SCOPER FD "+ element.functionDefinition)
-        console.log("SCOPER piC "+ element.piContainer)
-        scoper.getVisibleNames(element, "DemoFunction");
-        console.log("SCOPER " + scoper.getVisibleNames(element, "DemoFunction").join(", "))
+        const scoper: IDemoScoper = new DemoScoper();
         return new VerticalListBox(element, "element", [
-            new SelectBox(element, "func-call-exp", "function call",
+            this.getReferenceBox(element, "func-call-exp", "<select function>", "DemoFunction",
                 () => {
-                    return scoper.getVisibleNames(element, "DemoFunction").map(name => ({
-                        id: name,
-                        label: name
-                    }));
-                },
-                () => {
-                    if( !!element.functionDefinition) {
-                        return { id: element.functionDefinition.name, label: element.functionDefinition.name}
+                    if (!!element.functionDefinition) {
+                        return { id: element.functionDefinition.name, label: element.functionDefinition.name };
                     } else {
                         return null;
-                    } },
+                    }
+                },
                 (option: SelectOption) => {
-                    element.functionDefinition = scoper.getFromVisibleElements(element, option.label, "DemoFunction") as DemoFunction;
+                    element.functionDefinition = scoper.getFromVisibleElements(
+                        element,
+                        option.label,
+                        "DemoFunction"
+                    ) as DemoFunction;
                 }
-                )
+            )
         ]);
+    }
+
+    public getReferenceBox(
+        element: AllDemoConcepts,
+        role: string,
+        placeholder: string,
+        metaType: DemoConceptType,
+        getAction: () => SelectOption,
+        setAction: (o: SelectOption) => void
+    ): SelectBox {
+        // TODO get the scoper from somewhere in the language configuration
+        const scoper: IDemoScoper = new DemoScoper();
+        return new SelectBox(
+            element,
+            role,
+            placeholder,
+            () => {
+                return scoper.getVisibleNames(element, metaType).map(name => ({
+                    id: name,
+                    label: name
+                }));
+            },
+            () => getAction(),
+            (option: SelectOption) => setAction(option)
+        );
     }
 
     public getDemoStringLiteralExpressionBox(literal: DemoStringLiteralExpression): Box {
@@ -79,7 +108,7 @@ export class DemoProjection implements PiProjection {
                     style: demoStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
-                new LabelBox(literal, "end-quote", '"', { selectable: false  })
+                new LabelBox(literal, "end-quote", '"', { selectable: false })
             ])
         ]);
     }
@@ -95,8 +124,8 @@ export class DemoProjection implements PiProjection {
             })
         ]);
     }
-
 }
+
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
@@ -108,4 +137,3 @@ function isNumber(currentText: string, key: string, index: number): KeyPressActi
         return KeyPressAction.OK;
     }
 }
-
