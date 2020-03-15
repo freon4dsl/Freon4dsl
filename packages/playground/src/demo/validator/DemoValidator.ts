@@ -1,7 +1,6 @@
 import { PiValidator } from "@projectit/core";
+import { PiError } from "@projectit/core";
 import { AllDemoConcepts, DemoAttributeType } from "../language";
-import { ViError } from "../language/IDemoValidator";
-import { DemoConceptType } from "../language/Demo";
 import {
     DemoModel,
     DemoEntity,
@@ -35,8 +34,8 @@ export class DemoValidator implements PiValidator {
     typer = new DemoTyper();
 
 
-    public validate(modelelement: AllDemoConcepts, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    public validate(modelelement: AllDemoConcepts, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
 
         if (modelelement instanceof DemoModel) {
             result.concat(this.validateDemoModel(modelelement, includeChildren));
@@ -117,13 +116,13 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    validateDemoModel(modelelement: DemoModel, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoModel(modelelement: DemoModel, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         // @notEmpty entities
         if(modelelement.entities.length == 0) {
-            result.push(new ViError("List of entities may not be empty", modelelement.entities));
+            result.push(new PiError("List of entities may not be empty", modelelement.entities));
         }
 
         if (!(includeChildren === undefined) && includeChildren) {
@@ -138,8 +137,8 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    validateDemoEntity(modelelement: DemoEntity, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoEntity(modelelement: DemoEntity, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         if (!(includeChildren === undefined) && includeChildren) {
@@ -154,15 +153,15 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    validateDemoAttribute(modelelement: DemoAttribute, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoAttribute(modelelement: DemoAttribute, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoFunction(modelelement: DemoFunction, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoFunction(modelelement: DemoFunction, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         if (!(includeChildren === undefined) && includeChildren) {
@@ -175,57 +174,57 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    validateDemoVariable(modelelement: DemoVariable, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoVariable(modelelement: DemoVariable, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoExpression(modelelement: DemoExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoExpression(modelelement: DemoExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoLiteralExpression(modelelement: DemoLiteralExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoLiteralExpression(modelelement: DemoLiteralExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoAbsExpression(modelelement: DemoAbsExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoAbsExpression(modelelement: DemoAbsExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         if (!(includeChildren === undefined) && includeChildren) {
@@ -235,8 +234,8 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    validateDemoBinaryExpression(modelelement: DemoBinaryExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoBinaryExpression(modelelement: DemoBinaryExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         if (!(includeChildren === undefined) && includeChildren) {
@@ -247,89 +246,89 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    validateDemoMultiplyExpression(modelelement: DemoMultiplyExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoMultiplyExpression(modelelement: DemoMultiplyExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         // @typecheck left.type = DemoAttributeType.Integer
         if(this.typer.inferType(modelelement.left) !== DemoAttributeType.Integer) {
-            result.push(new ViError("Type should be Integer", modelelement.left));
+            result.push(new PiError("Type should be Integer", modelelement.left));
         }
 
         // @typecheck right.type = DemoAttributeType.Integer
         if(this.typer.inferType(modelelement.right) !== DemoAttributeType.Integer) {
-            result.push(new ViError("Type should be Integer", modelelement.right));
+            result.push(new PiError("Type should be Integer", modelelement.right));
         }
         // check rules of baseconcept(s)
         result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
         return result;
     }
 
-    validateDemoPlusExpression(modelelement: DemoPlusExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoPlusExpression(modelelement: DemoPlusExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoDivideExpression(modelelement: DemoDivideExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoDivideExpression(modelelement: DemoDivideExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoAndExpression(modelelement: DemoAndExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoAndExpression(modelelement: DemoAndExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoOrExpression(modelelement: DemoOrExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoOrExpression(modelelement: DemoOrExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoComparisonExpression(modelelement: DemoComparisonExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoComparisonExpression(modelelement: DemoComparisonExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoLessThenExpression(modelelement: DemoLessThenExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoLessThenExpression(modelelement: DemoLessThenExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoEqualsExpression(modelelement: DemoEqualsExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoEqualsExpression(modelelement: DemoEqualsExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
     }
 
-    validateDemoIfExpression(modelelement: DemoIfExpression, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoIfExpression(modelelement: DemoIfExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         if (!(includeChildren === undefined) && includeChildren) {
@@ -341,8 +340,8 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    validateDemoVariableRef(modelelement: DemoVariableRef, includeChildren?: boolean): ViError[] {
-        let result: ViError[] = [];
+    validateDemoVariableRef(modelelement: DemoVariableRef, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
         // include validations here
 
         return result;
