@@ -61,7 +61,7 @@ export function createDefaultBinaryBox(
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
 
     result.addChildren([
-        projection.getBox(exp.piLeft()),
+        projection.rootProjection.getBox(exp.piLeft()),
         new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
@@ -69,7 +69,7 @@ export function createDefaultBinaryBox(
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        projection.getBox(exp.piRight())
+        projection.rootProjection.getBox(exp.piRight())
     ]);
     return result;
 }

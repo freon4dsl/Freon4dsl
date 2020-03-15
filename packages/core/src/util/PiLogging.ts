@@ -69,5 +69,5 @@ export class PiLogger {
     }
 }
 
-export const EVENT_LOG = new PiLogger("EVENT");
-export const RENDER_LOG = new PiLogger("RENDER");//.mute();
+export const EVENT_LOG = new PiLogger("EVENT").mute();
+export const RENDER_LOG = new PiLogger("RENDER").mute();

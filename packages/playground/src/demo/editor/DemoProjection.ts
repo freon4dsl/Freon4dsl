@@ -9,9 +9,6 @@ export class DemoProjection implements PiProjection {
     rootProjection: PiProjection;
 
     getBox(element: PiElement): Box {
-        // if( element instanceof DemoAttribute) {
-        //     return this.getDemoAttributeBox(element)
-        // }
         if( element instanceof DemoStringLiteralExpression) {
             return this.getDemoStringLiteralExpressionBox(element)
         }
