@@ -1,4 +1,4 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { Editor } from "./Editor";
 import { PiLanguageEditor } from "./PiLanguageEditor";
 import { PiProjectionTemplate } from "./PiProjectionTemplate";

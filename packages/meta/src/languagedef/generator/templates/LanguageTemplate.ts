@@ -1,10 +1,10 @@
-import { PiLanguage } from "../../metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
 export class LanguageTemplates {
     constructor() {
     }
 
-    generateLanguage(language: PiLanguage): string {
+    generateLanguage(language: PiLanguageUnit): string {
 
         return `
         export type ${language.name}ConceptType = 

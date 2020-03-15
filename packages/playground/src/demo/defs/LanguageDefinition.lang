@@ -35,7 +35,7 @@ concept DemoVariable {
 
 abstract expression concept DemoExpression {}
 
-expression placeholder concept DemoPlaceholderExpression {}
+expression placeholder concept DemoPlaceholderExpression base DemoExpression {}
 
 abstract expression concept DemoLiteralExpression base DemoExpression {}
 
@@ -130,7 +130,7 @@ enumeration DemoAttributeType {
     Boolean
 }
 
-type DemoType {
+union DemoType {
     DemoEntity
     DemoAttributeType
 }

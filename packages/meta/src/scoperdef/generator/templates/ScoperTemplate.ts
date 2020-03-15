@@ -1,12 +1,12 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 
 export class ScoperTemplate {
     constructor() {
     }
 
-    generateScoper(language: PiLanguage, scopedef: PiScopeDef): string {
+    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef): string {
         console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     

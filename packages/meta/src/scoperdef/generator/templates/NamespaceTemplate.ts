@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguage, PiLangConcept, PiLangConceptReference } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 import { notStrictEqual } from "assert";
 
@@ -7,7 +7,7 @@ export class NamespaceTemplate {
     constructor() {
     }
 
-    generateNamespace(language: PiLanguage, scopedef: PiScopeDef): string {
+    generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef): string {
         console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     

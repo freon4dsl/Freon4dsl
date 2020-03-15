@@ -9,7 +9,7 @@ import { EnumerationSelectBoxTemplate } from "./templates/EnumerationSelectBoxTe
 import { MainProjectionalEditorTemplate } from "./templates/MainProjectionalEditorTemplate";
 import { ProjectionTemplate } from "./templates/ProjectionTemplate";
 import { ActionsTemplate } from "./templates/ActionsTemplate";
-import { PiLanguage } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import * as fs from "fs";
 import { EDITOR_GEN_FOLDER, EDITOR_FOLDER } from "../../utils/GeneratorConstants";
 
@@ -17,7 +17,7 @@ export class EditorGenerator {
     public outputfolder: string = ".";
     protected editorGenFolder: string;
     protected editorFolder: string;
-    language: PiLanguage;
+    language: PiLanguageUnit;
 
     protected userTemplate = new UserTemplate();
 

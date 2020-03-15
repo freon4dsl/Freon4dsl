@@ -1,11 +1,11 @@
-import { PiLanguage } from "../../metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 import { Names } from "../../../utils/Names";
 
 export class TyperInterfaceTemplate {
     constructor() {
     }
 
-    generateTyperInterface(language: PiLanguage) : string {
+    generateTyperInterface(language: PiLanguageUnit) : string {
         const allConceptsName = Names.allConcepts(language);
         const typeName = "DemoType"; // TODO get the types from the .lang file
 

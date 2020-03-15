@@ -3,9 +3,9 @@ import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";
 import { AllConceptsTemplate } from "./templates/AllConceptsTemplate";
 import { Names } from "../../utils/Names";
 import { EnumerationTemplate } from "./templates/EnumerationTemplate";
-import { TypeTemplate } from "./templates/TypeTemplate";
+import { UnionTemplate } from "./templates/UnionTemplate";
 import { LanguageTemplates } from "./templates/LanguageTemplate";
-import { PiLanguage } from "../metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../metalanguage/PiLanguage";
 import { ConceptTemplate } from "./templates/ConceptTemplate";
 import * as fs from "fs";
 import { LANGUAGE_FOLDER } from "../../utils/GeneratorConstants";
@@ -19,12 +19,12 @@ export class LanguageGenerator {
 
     constructor() {    }
 
-    generate(language: PiLanguage): void {
+    generate(language: PiLanguageUnit): void {
         console.log("start generator")
         const templates = new ConceptTemplate();
         const languageTemplate = new LanguageTemplates();
         const enumerationTemplate = new EnumerationTemplate();
-        const typeTemplate = new TypeTemplate();
+        const typeTemplate = new UnionTemplate();
         const languageIndexTemplate = new LanguageIndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
         const scoperTemplate = new ScoperInterfaceTemplate();
@@ -47,9 +47,9 @@ export class LanguageGenerator {
             fs.writeFileSync(`${this.languageFolder}/${Names.enumeration(enumeration)}.ts`, generated);
         });
 
-        language.types.forEach(type => {
+        language.unions.forEach(type => {
             console.log("Generating type: " + type.name);
-            var generated = Helpers.pretty(typeTemplate.generateType(type), "type " + type.name);
+            var generated = Helpers.pretty(typeTemplate.generateUnion(type), "type " + type.name);
             fs.writeFileSync(`${this.languageFolder}/${Names.type(type)}.ts`, generated);
         });
 

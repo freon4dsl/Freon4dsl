@@ -148,7 +148,7 @@ function peg$parse(input, options) {
                   "name": name,
                   "concepts": c,
                   "enumerations": e,
-                  "types": t
+                  "unions": t
               });
           },
       peg$c3 = "abstract",
@@ -170,22 +170,49 @@ function peg$parse(input, options) {
       peg$c19 = "concept",
       peg$c20 = peg$literalExpectation("concept", false),
       peg$c21 = function(isRoot, abs, binary, expression, isExpressionPlaceHolder, name, base, att, parts, references, editorProps) { 
-              return create.createConcept({
-                  "properties": att.filter(a => !create.isEnumerationProperty(a)),
-                  "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
-                  "parts": parts,
-                  "references": references,
-                  "name": name,
-                  "base": base,
-                  "isAbstract": (!!abs),
-                  "isRoot": (!!isRoot),
-                  "isBinaryExpression": !!binary,
-                  "isExpression": (!!expression),
-                  "isExpressionPlaceHolder": !!isExpressionPlaceHolder,
-                  "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
-                  "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
-                  "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
-              }); 
+              if (!!binary) {
+                  return create.createBinaryExpressionConcept({
+                      "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                      "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
+                      "parts": parts,
+                      "references": references,
+                      "name": name,
+                      "base": base,
+                      "isAbstract": (!!abs),
+                      "isRoot": (!!isRoot),
+                      "_isExpressionPlaceHolder": !!isExpressionPlaceHolder,
+                      "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
+                      "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
+                      "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
+                  });
+              } else if (!!expression) {
+                  return create.createExpressionConcept({
+                      "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                      "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
+                      "parts": parts,
+                      "references": references,
+                      "name": name,
+                      "base": base,
+                      "isAbstract": (!!abs),
+                      "isRoot": (!!isRoot),
+                      "_isExpressionPlaceHolder": !!isExpressionPlaceHolder,
+                      "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
+                      "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
+                      "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
+                  });
+              } else {
+                  return create.createConcept({
+                      "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                      "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
+                      "parts": parts,
+                      "references": references,
+                      "name": name,
+                      "base": base,
+                      "isAbstract": (!!abs),
+                      "isRoot": (!!isRoot),
+                      "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
+                  });
+              } 
           },
       peg$c22 = "[]",
       peg$c23 = peg$literalExpectation("[]", false),
@@ -229,10 +256,10 @@ function peg$parse(input, options) {
       peg$c41 = function(name, literals) {
                           return create.createEnumeration({ "name": name, "literals": literals});
                       },
-      peg$c42 = "type",
-      peg$c43 = peg$literalExpectation("type", false),
-      peg$c44 = function(name, literals) {
-                          return create.createType({ "name": name, "literals": literals});
+      peg$c42 = "union",
+      peg$c43 = peg$literalExpectation("union", false),
+      peg$c44 = function(name, members) {
+                          return create.createUnion({ "name": name, "members": members});
                       },
       peg$c45 = "{",
       peg$c46 = peg$literalExpectation("{", false),
@@ -464,10 +491,10 @@ function peg$parse(input, options) {
                     s9 = peg$parsews();
                     if (s9 !== peg$FAILED) {
                       s10 = [];
-                      s11 = peg$parsetype();
+                      s11 = peg$parseunion();
                       while (s11 !== peg$FAILED) {
                         s10.push(s11);
-                        s11 = peg$parsetype();
+                        s11 = peg$parseunion();
                       }
                       if (s10 !== peg$FAILED) {
                         peg$savedPos = s0;
@@ -1323,13 +1350,13 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parsetype() {
+  function peg$parseunion() {
     var s0, s1, s2, s3, s4, s5, s6;
 
     s0 = peg$currPos;
-    if (input.substr(peg$currPos, 4) === peg$c42) {
+    if (input.substr(peg$currPos, 5) === peg$c42) {
       s1 = peg$c42;
-      peg$currPos += 4;
+      peg$currPos += 5;
     } else {
       s1 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$c43); }

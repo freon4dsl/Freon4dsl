@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLangConcept, PiLangElementProperty, PiLangEnumerationProperty, PiLangPrimitiveProperty } from "../../metalanguage/PiLanguage";
+import { PiLangConcept, PiLangElementProperty, PiLangEnumerationProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
@@ -10,19 +10,22 @@ export class ConceptTemplate {
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.concept()) : "MobxModelElementImpl";
         const hasName = concept.properties.some(p => p.name === "name");
-        const hasSymbol = !!concept.symbol;
+        // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
         const isBinaryExpression = concept.binaryExpression();
         const isExpression = (!isBinaryExpression) && concept.expression() ;
         const abstract = (concept.isAbstract ? "abstract" : "");
         const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement"));
 
+        const binExpConcept : PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
+        const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
+
         const imports = Array.from(
             new Set(
                 concept.parts.map(p => Names.concept(p.type.concept()))
                     .concat(concept.references.map(r => Names.concept(r.type.concept())))
                     .concat(language.enumerations.map(e => Names.enumeration(e)))
-                    .concat(language.types.map(e => Names.type(e)))
+                    .concat(language.unions.map(e => Names.type(e)))
                     .concat(Names.concept(language.expressionPlaceholder()))
                     .concat([baseExpressionName])
                     .filter(name => !(name === concept.name))
@@ -108,17 +111,17 @@ export class ConceptTemplate {
                 
                 ${ isExpression || isBinaryExpression ? `
                 piIsExpressionPlaceHolder(): boolean {
-                    return ${concept.isExpressionPlaceHolder};
+                    return ${concept.isExpressionPlaceholder()};
                 }`
                 : ""}
                 
-                ${ isBinaryExpression ? `
+                ${ isBinaryExpression && binExpConcept != null ? `
                 public piSymbol(): string {
-                    return "${concept.symbol}";
+                    return "${binExpConcept.symbol}";
                 }
                 
                 piPriority(): number {
-                    return ${concept.getPriority() ? concept.getPriority() : "-1"};
+                    return ${binExpConcept.getPriority() ? binExpConcept.getPriority() : "-1"};
                 }
                 
                 public piLeft(): ${baseExpressionName} {

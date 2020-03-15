@@ -1,10 +1,10 @@
-import { PiLanguage } from "../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../languagedef/metalanguage/PiLanguage";
 
 export type CheckB = { check: boolean, error: string, whenOk?: () => void };
 
 export abstract class Checker<DEFINITION> {
     errors: string[] = [];
-    language : PiLanguage; // should be set in every checker, except the checker for the language definition langauge (LDL)
+    language : PiLanguageUnit; // should be set in every checker, except the checker for the language definition langauge (LDL)
 
     public abstract check(lang: DEFINITION): void;
 

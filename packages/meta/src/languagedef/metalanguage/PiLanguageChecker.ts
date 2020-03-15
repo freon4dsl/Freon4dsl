@@ -1,11 +1,12 @@
 import { Checker } from "../../utils/Checker";
-import { PiLangConcept, PiLangConceptReference, PiLangElementProperty, PiLanguage } from "./PiLanguage";
+import { PiLangConcept, PiLangElementProperty, PiLanguageUnit, PiLangBinaryExpressionConcept } from "./PiLanguage";
+import { PiLangConceptReference } from "./PiLangReferences";
 
 // export type CheckB = { check: boolean, error: string, whenOk?: () => void };
 
-export class PiLanguageChecker extends Checker<PiLanguage> {
+export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
-    public check(language: PiLanguage): void {
+    public check(language: PiLanguageUnit): void {
         this.nestedCheck(
             {
                 check: !!language.name,
@@ -24,8 +25,9 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         concept.references.forEach(ref => this.checkPiElementProperty(ref));
 
         if (concept.binaryExpression() && !(concept.isAbstract)) {
-            this.simpleCheck(concept.getSymbol() !== "undefined", `Concept ${concept.name} should have a symbol`);
-            this.simpleCheck(concept.getPriority() !== -1, `Concept ${concept.name} should have a priority`);
+            const binExpConcept = concept as PiLangBinaryExpressionConcept;
+            this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${concept.name} should have a symbol`);
+            this.simpleCheck(binExpConcept.getPriority() !== -1, `Concept ${concept.name} should have a priority`);
 
             const left = concept.allParts().find(part => part.name === "left");
             this.simpleCheck(!!left, `Concept ${concept.name} should have a left part, because it is a binary expression`);

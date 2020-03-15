@@ -1,11 +1,11 @@
 import { Names } from "../../../utils/Names";
-import { PiLangConcept, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ContextTemplate {
     constructor() {
     }
 
-    generateContext(language: PiLanguage): string {
+    generateContext(language: PiLanguageUnit): string {
         const rootConcept: PiLangConcept = language.rootConcept();
         const placeholderConcept: PiLangConcept = language.expressionPlaceholder();
         return `

@@ -1,4 +1,4 @@
-import { PiLangConcept, PiLangEnumeration, PiLanguage, PiLangType } from "../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLanguageUnit, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
 import { PiValidatorDef } from "../validatordef/metalanguage/PiValidatorDefLang";
 
@@ -7,39 +7,39 @@ import { PiValidatorDef } from "../validatordef/metalanguage/PiValidatorDefLang"
  * at each usage.
  */
 export class Names {
-    public static context(language: PiLanguage){
+    public static context(language: PiLanguageUnit){
         return language.name + "Context";
     }
 
-    public static actions(language: PiLanguage){
+    public static actions(language: PiLanguageUnit){
         return language.name + "Actions";
     }
 
-    public static defaultActions(language: PiLanguage){
+    public static defaultActions(language: PiLanguageUnit){
         return language.name + "DefaultActions";
     }
 
-    public static manualActions(language: PiLanguage){
+    public static manualActions(language: PiLanguageUnit){
         return language.name + "ManualActions";
     }
 
-    public static projectionDefault(language: PiLanguage){
+    public static projectionDefault(language: PiLanguageUnit){
         return language.name + "ProjectionDefault";
     }
 
-    public static enumProjections(language: PiLanguage){
+    public static enumProjections(language: PiLanguageUnit){
         return language.name + "EnumerationProjections";
     }
 
-    public static projection(language: PiLanguage){
+    public static projection(language: PiLanguageUnit){
         return language.name + "Projection";
     }
 
-    public static editor(language: PiLanguage){
+    public static editor(language: PiLanguageUnit){
         return language.name + "Editor";
     }
 
-    public static mainProjectionalEditor(language: PiLanguage){
+    public static mainProjectionalEditor(language: PiLanguageUnit){
         return "MainProjectionalEditor";
     }
 
@@ -51,43 +51,43 @@ export class Names {
         return enumeration.name;
     }
 
-    public static type(type: PiLangType){
+    public static type(type: PiLangUnion){
         return type.name;
     }
 
-    public static languageConceptType(language: PiLanguage){
+    public static languageConceptType(language: PiLanguageUnit){
         return language.name + "ConceptType";
     }
 
-    public static allConcepts(language: PiLanguage){
+    public static allConcepts(language: PiLanguageUnit){
         return "All" + language.name + "Concepts";
     }
 
-    public static scoperInterface(language: PiLanguage){
+    public static scoperInterface(language: PiLanguageUnit){
         return "I" + language.name + "Scoper";
     }
 
-    public static typerInterface(language: PiLanguage){
+    public static typerInterface(language: PiLanguageUnit){
         return "I" + language.name + "Typer";
     }
     
-    public static validatorInterface(language: PiLanguage){
+    public static validatorInterface(language: PiLanguageUnit){
         return "I" + language.name + "Validator";
     }
 
-    public static namespace(language: PiLanguage, scopedef: PiScopeDef){
+    public static namespace(language: PiLanguageUnit, scopedef: PiScopeDef){
         return scopedef.scoperName + "Namespace";
     }
 
-    public static scoper(language: PiLanguage, scopedef: PiScopeDef){
+    public static scoper(language: PiLanguageUnit, scopedef: PiScopeDef){
         return scopedef.scoperName + "Scoper";
     }
 
-    public static validator(language: PiLanguage, validdef: PiValidatorDef){
+    public static validator(language: PiLanguageUnit, validdef: PiValidatorDef){
         return "DemoValidator"; // TODO
     }
 
-    public static errorClassName(language: PiLanguage, ){
+    public static errorClassName(language: PiLanguageUnit, ){
         return "ViError"; // TODO
     }
 

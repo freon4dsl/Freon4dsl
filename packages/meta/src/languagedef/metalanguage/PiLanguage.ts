@@ -1,35 +1,14 @@
-export class PiLangConceptReference {
-    language: PiLanguage;
-    name: string;
+import { PiLangConceptReference, PiLangEnumerationReference } from "./PiLangReferences";
 
-    constructor() {
-    }
-
-    concept(): PiLangConcept {
-        if(!!this.language) return this.language.findConcept(this.name);
-    }
-}
-export class PiLangEnumerationReference {
-    language: PiLanguage;
-    name: string;
-
-    constructor() {
-    }
-
-    enumeration(): PiLangEnumeration {
-        if(!!this.language) return this.language.findEnumeration(this.name);
-    }
-}
-
-export class PiLanguage {
+export class PiLanguageUnit {
     name: string;
     concepts: PiLangConcept[] = [];
     enumerations: PiLangEnumeration[] = [];
-    types: PiLangType[] = [];
+    unions: PiLangUnion[] = [];
+    interfaces: PiLangInterface[] = [];
 
     constructor() {
     }
-
 
     findConcept(name: string): PiLangConcept {
         return this.concepts.find(con => con.name === name);
@@ -39,29 +18,33 @@ export class PiLanguage {
         return this.enumerations.find(con => con.name === name);
     }
 
+    findUnion(name: string): PiLangUnion {
+        return this.unions.find(con => con.name === name);
+    }
+
+    findInterface(name: string): PiLangInterface {
+        return this.interfaces.find(con => con.name === name);
+    }
+
     findExpressionBase(): PiLangConcept {
         const result = this.concepts.find(c => {
-            return c.isExpression && (!!c.base ? !(c.base.concept().isExpression) : true);
+            return c instanceof PiLangExpressionConcept && (!!c.base ? !(c.base.concept() instanceof PiLangExpressionConcept) : true);
         });
         return result;
     }
 
     expressionPlaceholder(): PiLangConcept {
-        return this.concepts.find(c => c.isExpression && c.isExpressionPlaceHolder);
+        return this.concepts.find(c => c instanceof PiLangExpressionConcept && c.isExpressionPlaceholder());
     }
 
     rootConcept():PiLangConcept{
         return this.concepts.find(c => c.isRoot);
     }
-
-    // TODO should this one be moved to Names???
-    contextClass(): string {
-        return this.name + "Context";
-    }
 }
 
+
 export class PiLangConcept {
-    language: PiLanguage;
+    language: PiLanguageUnit;
     name: string;
     isAbstract: boolean;
     isRoot:boolean;
@@ -70,40 +53,10 @@ export class PiLangConcept {
     enumProperties: PiLangEnumerationProperty[] = [];
     parts: PiLangElementProperty[] = [];
     references: PiLangElementProperty[] = [];
-    isExpression: boolean;
-    isBinaryExpression: boolean;
-    isExpressionPlaceHolder: boolean;
-    left?: PiLangConceptReference;
-    right?: PiLangConceptReference;
-    symbol?: string;
-    trigger?: string;
-    triggerIsRegExp?: boolean;
-    priority?: number;
+    trigger: string;
+    triggerIsRegExp: boolean;
 
     constructor() {
-    }
-
-    getSymbol(): string {
-        const p = this.symbol;
-        return (!!p ? p : "undefined");
-    }
-
-    getTrigger(): string {
-        const p = this.trigger;
-        return (!!p ? p : "undefined");
-    }
-
-    getPriority(): number {
-        const p = this.priority;
-        return (!!p ? p : -1);
-    }
-
-    binaryExpression(): boolean {
-        return (this.isBinaryExpression ? true : (this.base ? this.base.concept().binaryExpression() : false));
-    }
-
-    expression(): boolean {
-        return (this.isExpression ? true : (this.base ? this.base.concept().expression() : false));
     }
 
     allProperties(): PiLangPrimitiveProperty[] {
@@ -141,14 +94,102 @@ export class PiLangConcept {
         return result;
     }
 
+    getTrigger(): string {
+        const p = this.trigger;
+        return (!!p ? p : "undefined");
+    }
+
+    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
+    expression(): boolean {
+        return false;
+    }
+
+    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
+    binaryExpression(): boolean {
+        return false;
+    }
+
+    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
+    isExpressionPlaceholder(): boolean {
+        return false;
+    }
 }
 
+export class PiLangInterface {
+    language: PiLanguageUnit;
+    name: string;  
+    base?: PiLangInterface; 
+    properties: PiLangPrimitiveProperty[] = [];
+    enumproperties: PiLangEnumProperty[] = [];
+    parts: PiLangElementProperty[] = [];
+    references: PiLangElementProperty[] = [];
+
+    isExpression: boolean;  
+}
+
+export class PiLangUnion {
+    language: PiLanguageUnit;
+    name: string;
+    members: PiLangConceptReference[] = [];
+
+    constructor() {
+    }
+}
+
+export type PiCI_Type = PiLangConcept | PiLangInterface;
+
+export type PiCUI_Type = PiLangConcept | PiLangUnion | PiLangInterface ;
+
 export class PiLangExpressionConcept extends PiLangConcept {
+    // isBinaryExpression: boolean;
+    _isExpressionPlaceHolder: boolean;
+
+    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
+    expression(): boolean {
+        return true;
+    }
+
+    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
+    binaryExpression(): boolean {
+        return false;
+    }
+
+    // TODO this function could (???) be replaced by check on instance of PiLangBinaryExpressionConcept    
+    isExpressionPlaceholder(): boolean {
+        return this._isExpressionPlaceHolder;
+    }   
 }
 
 export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
+    left: PiLangConceptReference;
+    right: PiLangConceptReference;
+    symbol: string;
+    priority: number;
+
+    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
+    expression(): boolean {
+        return true;
+    }
+
+    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
+    binaryExpression(): boolean {
+        return true;
+    }
+
+    getSymbol(): string {
+        const p = this.symbol;
+        return (!!p ? p : "undefined");
+    }
+
+    getPriority(): number {
+        const p = this.priority;
+        return (!!p ? p : -1);
+    }
 }
 
+export class PiLangEnumProperty {
+
+}
 export class PiLangPrimitiveProperty {
     owningConcept: PiLangConcept;
 
@@ -187,7 +228,7 @@ export class PiLangElementProperty {
 }
 
 export class PiLangEnumeration {
-    language: PiLanguage;
+    language: PiLanguageUnit;
     name: string;
     literals: string[] = [];
 
@@ -195,11 +236,3 @@ export class PiLangEnumeration {
     }
 }
 
-export class PiLangType {
-    language: PiLanguage;
-    name: string;
-    literals: string[] = [];
-
-    constructor() {
-    }
-}
