@@ -2,6 +2,7 @@
 import { PiProjection, PiElement, Box, VerticalListBox, HorizontalListBox, LabelBox, TextBox } from "@projectit/core";
 import { SelectBox, SelectOption } from "@projectit/core";
 import { createDefaultExpressionBox, KeyPressAction } from "@projectit/core";
+import { PiScoper } from "@projectit/core";
 import {
     AllDemoConcepts,
     DemoAttribute,
@@ -15,7 +16,6 @@ import {
 import { DemoConceptType } from "../language/Demo";
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { demoStyles } from "../styles/styles";
-import { IDemoScoper } from "../language/IDemoScoper";
 
 export class DemoProjection implements PiProjection {
     rootProjection: PiProjection;
@@ -54,7 +54,7 @@ export class DemoProjection implements PiProjection {
     }
 
     public getDemoFunctionCallExpressionBox(element: DemoFunctionCallExpression): Box {
-        const scoper: IDemoScoper = new DemoScoper();
+        const scoper: PiScoper = new DemoScoper();
         return new VerticalListBox(element, "element", [
             this.getReferenceBox(element, "func-call-exp", "<select function>", "DemoFunction",
                 () => {
@@ -76,7 +76,7 @@ export class DemoProjection implements PiProjection {
     }
 
     public getReferenceBox(
-        element: AllDemoConcepts,
+        element: PiElement,
         role: string,
         placeholder: string,
         metaType: DemoConceptType,
@@ -84,7 +84,7 @@ export class DemoProjection implements PiProjection {
         setAction: (o: SelectOption) => void
     ): SelectBox {
         // TODO get the scoper from somewhere in the language configuration
-        const scoper: IDemoScoper = new DemoScoper();
+        const scoper: PiScoper = new DemoScoper();
         return new SelectBox(
             element,
             role,
