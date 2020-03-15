@@ -31,7 +31,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             references:reference*
             editorProps:editorProperty*
           curly_end 
-    { 
+    {
         if (!!binary) {
             return create.createBinaryExpressionConcept({
                 "properties": att.filter(a => !create.isEnumerationProperty(a)),

@@ -35,7 +35,7 @@ export class ActionsTemplate {
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                ${language.concepts.filter(c => c instanceof PiLangExpressionConcept && !c.binaryExpression() && !c.isAbstract && !!c.trigger).map(c =>
+                ${language.concepts.filter(c => c.expression() && !c.isAbstract && !!c.trigger).map(c =>
             `{
                     trigger: ${c.triggerIsRegExp ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
                     activeInBoxRoles: [

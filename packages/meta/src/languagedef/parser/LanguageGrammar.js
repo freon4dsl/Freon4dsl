@@ -169,7 +169,8 @@ function peg$parse(input, options) {
       peg$c18 = function(name) { return create.createConceptReference( { "name": name}); },
       peg$c19 = "concept",
       peg$c20 = peg$literalExpectation("concept", false),
-      peg$c21 = function(isRoot, abs, binary, expression, isExpressionPlaceHolder, name, base, att, parts, references, editorProps) { 
+      peg$c21 = function(isRoot, abs, binary, expression, isExpressionPlaceHolder, name, base, att, parts, references, editorProps) {
+              console.log("CONCEPT " + name + " binary "+ binary + " expression " + expression);
               if (!!binary) {
                   return create.createBinaryExpressionConcept({
                       "properties": att.filter(a => !create.isEnumerationProperty(a)),

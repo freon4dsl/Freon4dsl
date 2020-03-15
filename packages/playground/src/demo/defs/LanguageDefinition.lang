@@ -39,22 +39,22 @@ expression placeholder concept DemoPlaceholderExpression base DemoExpression {}
 
 abstract expression concept DemoLiteralExpression base DemoExpression {}
 
-concept DemoStringLiteralExpression base DemoLiteralExpression {
+expression concept DemoStringLiteralExpression base DemoLiteralExpression {
     value: string
     @editor trigger: string = "'"
 }
 
-concept DemoNumberLiteralExpression base DemoLiteralExpression {
+expression concept DemoNumberLiteralExpression base DemoLiteralExpression {
     value: string
     @editor trigger: regexp = "[0-9]"
 }
 
-concept DemoBooleanLiteralExpression base DemoLiteralExpression {
+expression concept DemoBooleanLiteralExpression base DemoLiteralExpression {
     value: string
     @editor trigger: regexp = "[TF]"
 }
 
-concept DemoAbsExpression base DemoExpression {
+expression concept DemoAbsExpression base DemoExpression {
     @part expr: DemoExpression
     @editor trigger: string = "abs"
 }
@@ -65,61 +65,61 @@ abstract binary expression concept DemoBinaryExpression base DemoExpression {
     @editor symbol: string = "unknown"
 }
 
-concept DemoMultiplyExpression base DemoBinaryExpression {
+binary expression concept DemoMultiplyExpression base DemoBinaryExpression {
     @editor symbol: string = "*"
     @editor priority: number = "8"
 }
 
-concept DemoPlusExpression base DemoBinaryExpression {
+binary expression concept DemoPlusExpression base DemoBinaryExpression {
     @editor symbol: string = "+"
     @editor priority: number = "4"
 }
 
-concept DemoDivideExpression base DemoBinaryExpression {
+binary expression concept DemoDivideExpression base DemoBinaryExpression {
     @editor symbol: string = "/"
     @editor priority: number = "8"
 }
 
-concept DemoAndExpression base DemoBinaryExpression {
+binary expression concept DemoAndExpression base DemoBinaryExpression {
     @editor symbol: string = "and"
     @editor priority: number = "1"
 }
 
-concept DemoOrExpression base DemoBinaryExpression {
+binary expression concept DemoOrExpression base DemoBinaryExpression {
     @editor symbol: string = "or"
     @editor priority: number = "1"
 }
 
-abstract concept DemoComparisonExpression base DemoBinaryExpression {
+abstract binary expression concept DemoComparisonExpression base DemoBinaryExpression {
 }
 
-concept DemoLessThenExpression base DemoComparisonExpression {
+binary expression concept DemoLessThenExpression base DemoComparisonExpression {
     @editor symbol: string = "<"
     @editor priority: number = "10"
 }
 
-concept DemoGreaterThenExpression base DemoComparisonExpression {
+binary expression concept DemoGreaterThenExpression base DemoComparisonExpression {
     @editor symbol: string = ">"
     @editor priority: number = "10"
 }
 
-concept DemoEqualsExpression base DemoComparisonExpression {
+binary expression concept DemoEqualsExpression base DemoComparisonExpression {
     @editor symbol: string = "="
     @editor priority: number = "10"
 }
 
-concept DemoFunctionCallExpression base DemoExpression {
+expression concept DemoFunctionCallExpression base DemoExpression {
     @reference functionDefinition: DemoFunction
 }
 
-concept DemoIfExpression base DemoExpression {
+expression concept DemoIfExpression base DemoExpression {
     @part condition: DemoExpression
     @part whenTrue: DemoExpression
     @part whenFalse: DemoExpression
     @editor trigger : string = "if"
 }
 
-concept DemoVariableRef base DemoExpression {
+expression concept DemoVariableRef base DemoExpression {
     referredName: string
     attribute: string
 }
