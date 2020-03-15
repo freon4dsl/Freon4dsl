@@ -17,7 +17,7 @@
     "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
     "edit-parser": "pegjs src/editordef/parser/EditorGrammar.pegjs",
     "start": "echo Starting meta",
-    "build": "tsc ",
+    "build": "yarn lang-parser && yarn scop-parser && yarn edit-parser && tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss1": "cp src/editordef/styles/*.scss ./dist/styles",
     "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
