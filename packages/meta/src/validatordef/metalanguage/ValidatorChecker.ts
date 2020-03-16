@@ -1,15 +1,16 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguage, PiLangConceptReference, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty, PiLangPropertyReference } from "../../languagedef/metalanguage/PiLanguage";
-import { ConceptRule, ValidatorDef, EqualsTypeRule, Rule, ConformsTypeRule, NotEmptyRule, LangRefExpression, EnumRefExpression, ThisExpression, PropertyRefExpression, ValidNameRule } from "./ValidatorDefLang";
+import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty, PiLangCUI } from "../../languagedef/metalanguage/PiLanguage";
+import { ConceptRule, PiValidatorDef, EqualsTypeRule, Rule, ConformsTypeRule, NotEmptyRule, LangRefExpression, EnumRefExpression, ThisExpression, PropertyRefExpression, ValidNameRule } from "./ValidatorDefLang";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 
-export class ValidatorChecker extends Checker<ValidatorDef> {
+export class ValidatorChecker extends Checker<PiValidatorDef> {
     
-    constructor(language: PiLanguage) {
+    constructor(language: PiLanguageUnit) {
         super();
         this.language = language;
     }
 
-    public check(definition: ValidatorDef): void {
+    public check(definition: PiValidatorDef): void {
         console.log("Checking Validator Definition " + definition.validatorName);
         let errormess : string = "Language reference ('"+ definition.languageName;
         errormess = errormess.concat("') in Validation Definition '" + definition.validatorName);
@@ -163,7 +164,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         console.log("Checking Property Reference " + langRef.makeString());
     }
 
-    resolvePropRef(feat: PropertyRefExpression, enclosingConcept:PiLangConcept) {
+    resolvePropRef(feat: PropertyRefExpression, enclosingConcept:PiLangCUI) {
         let found : PiLangProperty;
         for ( let e of enclosingConcept.allProperties() ) {
             if (e.name === feat.sourceName) {

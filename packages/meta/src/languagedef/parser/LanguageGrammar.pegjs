@@ -94,7 +94,7 @@ part = "@part" ws name:var ws name_separator ws type:conceptReference isList:"[]
         return create.createPart({"name": name, "type": type, "isList": (isList?true:false) }) 
     }
 
-reference = "@reference" ws name:var ws name_separator ws type:elementReference isList:"[]"? ws
+reference = "@reference" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
     { 
         return create.createReference({"name": name, "type": type, "isList": (isList?true:false) }) 
     }

@@ -22,8 +22,8 @@ export class ConceptTemplate {
 
         const imports = Array.from(
             new Set(
-                concept.parts.map(p => Names.concept(p.type.element()))
-                    .concat(concept.references.map(r => Names.concept(r.type.element())))
+                concept.parts.map(p => Names.concept(p.type.concept()))
+                    .concat(concept.references.map(r => Names.concept(r.type.concept())))
                     .concat(language.enumerations.map(e => Names.enumeration(e)))
                     .concat(language.unions.map(e => Names.type(e)))
                     .concat(Names.concept(language.expressionPlaceholder()))
@@ -169,9 +169,9 @@ export class ConceptTemplate {
     generatePartProperty(property: PiLangElementProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
-        const initializer = (property.type.element().expression() ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
+        const initializer = (property.type.concept().expression() ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.element())}${arrayType} ${initializer};
+            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType} ${initializer};
         `;
     }
 
@@ -179,7 +179,7 @@ export class ConceptTemplate {
         const decorator = property.isList ? "@observablelistreference" : "@observablereference";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.element())}${arrayType};
+            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType};
         `;
     }
 

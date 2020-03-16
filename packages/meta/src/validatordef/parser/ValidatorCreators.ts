@@ -1,11 +1,11 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLanguage";
-import { ValidatorDef, ConceptRule, NotEmptyRule, EqualsTypeRule, ConformsTypeRule, LangRefExpression, ThisExpression, EnumRefExpression, PropertyRefExpression, ValidNameRule } from "../metalanguage/ValidatorDefLang";
+import { PiValidatorDef, ConceptRule, NotEmptyRule, EqualsTypeRule, ConformsTypeRule, LangRefExpression, ThisExpression, EnumRefExpression, PropertyRefExpression, ValidNameRule } from "../metalanguage/ValidatorDefLang";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 // TODO change comment
 
-export function createValidatorDef(data: Partial<ValidatorDef>): ValidatorDef {
-    const result = new ValidatorDef();
+export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDef {
+    const result = new PiValidatorDef();
 
     if( !!data.validatorName) {
         result.validatorName = data.validatorName;

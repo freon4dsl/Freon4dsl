@@ -1,5 +1,3 @@
-import { PiValidator } from "@projectit/core";
-import { PiError } from "@projectit/core";
 import { AllDemoConcepts, DemoAttributeType } from "../language";
 import {
     DemoModel,

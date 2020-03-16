@@ -2,7 +2,6 @@ import { PiTyper } from "@projectit/core";
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression,
     DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression } from "../language";
 import { AllDemoConcepts } from "../language/AllDemoConcepts";
-import { PiTyper } from "@projectit/core"
 
 export class DemoTyper implements PiTyper {
 

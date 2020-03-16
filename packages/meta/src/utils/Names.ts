@@ -1,12 +1,13 @@
 import { PiLangConcept, PiLangEnumeration, PiLanguageUnit, PiLangUnion, PiLangCUI } from "../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
-import { PiValidatorDef } from "../validatordef/metalanguage/PiValidatorDefLang";
+import { PiValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
  * at each usage.
  */
 export class Names {
+    //TODO add check on undefined and null of parameter in all functions
     public static context(language: PiLanguageUnit){
         return language.name + "Context";
     }

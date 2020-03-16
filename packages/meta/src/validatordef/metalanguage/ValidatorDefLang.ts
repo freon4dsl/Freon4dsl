@@ -1,9 +1,10 @@
-import { PiLangConceptReference, PiLangConcept, PiLangEnumeration, PiLangElementProperty, PiLangProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLangElementProperty, PiLangProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 
 // These classes combine the parse model (CST) of the validation definition (.valid file) with its AST.
 // All AST values have prefix 'ast'. They are set in the ValidatorChecker.
 
-export class ValidatorDef {
+export class PiValidatorDef {
     validatorName: string;
     languageName: string;
     conceptRules: ConceptRule[];
