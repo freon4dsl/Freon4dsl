@@ -58,6 +58,5 @@ export class LanguageGenerator {
         console.log("Generating language index: index.ts");
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${this.languageFolder}/index.ts`, languageIndexFile);
-
     }
 }

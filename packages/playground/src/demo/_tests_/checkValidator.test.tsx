@@ -29,9 +29,8 @@ describe('Testing Validator', () => {
             mult.right = new DemoStringLiteralExpression("temp");
             errors = validator.validateDemoMultiplyExpression(mult);
             expect(errors.length).toBe(1);
-            // TODO use expect for under
             errors.forEach(e =>
-                console.dir("'" + e.message + "' reported on [" + e.reportedOn + "]")
+                expect(e.reportedOn).toBe(mult.right)
             );
         });
 
@@ -46,7 +45,7 @@ describe('Testing Validator', () => {
             errors = validator.validateDemoMultiplyExpression(mult);
             expect(errors.length).toBe(1);
             errors.forEach(e =>
-                console.log("'" + e.message + "' reported on [" + e.reportedOn + "]")
+                expect(e.reportedOn).toBe(mult.right)
             );
         });
 

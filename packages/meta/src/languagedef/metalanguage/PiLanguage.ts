@@ -168,7 +168,6 @@ export class PiLangInterface {
         return false;
     }
 
-
 }
 
 export class PiLangUnion {
@@ -306,6 +305,13 @@ export class PiLangElementProperty extends PiLangProperty {
     constructor() {
         super();
     }
+
+    // findProperty(name:string) : PiLangProperty {
+    //     let result: PiLangEnumProperty = new PiLangEnumProperty();
+    //     let literal  = this.literals.find( elem => elem === name);
+    //     if(!(!!literal)) result.name = literal; 
+    //     return result;
+    // }
 }
 export class PiLangCUIProperty extends PiLangProperty {
     type: PiLangCUIReference;
@@ -321,6 +327,7 @@ export class PiLangEnumeration {
 
     constructor() {
     }
+    
 }
 
 export enum PiPrimTypesEnum {

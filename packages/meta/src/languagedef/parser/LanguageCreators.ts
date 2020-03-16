@@ -30,8 +30,6 @@ export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>):
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
-
-    // console.log("created property with name "+ result.name);
     return result;
 }
 

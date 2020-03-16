@@ -15,15 +15,15 @@ export class ConceptTemplate {
         const isBinaryExpression = concept.binaryExpression();
         const isExpression = (!isBinaryExpression) && concept.expression() ;
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement"));
+        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
 
         const binExpConcept : PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
         const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
 
         const imports = Array.from(
             new Set(
-                concept.parts.map(p => Names.concept(p.type.concept()))
-                    .concat(concept.references.map(r => Names.concept(r.type.concept())))
+                concept.parts.map(p => Names.concept(p.type.element()))
+                    .concat(concept.references.map(r => Names.concept(r.type.element())))
                     .concat(language.enumerations.map(e => Names.enumeration(e)))
                     .concat(language.unions.map(e => Names.type(e)))
                     .concat(Names.concept(language.expressionPlaceholder()))
@@ -59,7 +59,7 @@ export class ConceptTemplate {
         const result = `
             ${concept.properties.length > 0 ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
+            import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/core";
             import { ${language.name}ConceptType } from "./${language.name}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
@@ -169,9 +169,9 @@ export class ConceptTemplate {
     generatePartProperty(property: PiLangElementProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
-        const initializer = (property.type.concept().expression() ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
+        const initializer = (property.type.element().expression() ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType} ${initializer};
+            ${decorator} ${property.name} : ${Names.concept(property.type.element())}${arrayType} ${initializer};
         `;
     }
 
@@ -179,7 +179,7 @@ export class ConceptTemplate {
         const decorator = property.isList ? "@observablelistreference" : "@observablereference";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType};
+            ${decorator} ${property.name} : ${Names.concept(property.type.element())}${arrayType};
         `;
     }
 

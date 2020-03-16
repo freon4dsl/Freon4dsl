@@ -3,6 +3,7 @@
 }
 
 // TODO the order of the element should not be fixed
+// TODO name chould be changed into Langauge_Definition
 Editor_Definition
   = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)* ws t:(union)*
     {
@@ -24,6 +25,7 @@ enumKey         = "enum" { return true; }
 
 base = baseKey name:var { return create.createConceptReference( { "name": name}); }
 
+// TODO one should be able to mingle parts, references and attributes
 concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
          "concept" ws name:var ws base:base? curly_begin 
             att:attribute*
@@ -92,7 +94,7 @@ part = "@part" ws name:var ws name_separator ws type:conceptReference isList:"[]
         return create.createPart({"name": name, "type": type, "isList": (isList?true:false) }) 
     }
 
-reference = "@reference" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
+reference = "@reference" ws name:var ws name_separator ws type:elementReference isList:"[]"? ws
     { 
         return create.createReference({"name": name, "type": type, "isList": (isList?true:false) }) 
     }

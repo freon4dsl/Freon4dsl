@@ -4,7 +4,7 @@ import * as fs from "fs";
 import { VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/GeneratorConstants";
 import { Names } from "../../utils/Names";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate";
-import { PiValidatorDef } from "../metalanguage/PiValidatorDefLang";
+import { ValidatorDef } from "../metalanguage/ValidatorDefLang";
 
 export class ValidatorGenerator {
     public outputfolder: string = ".";
@@ -16,7 +16,7 @@ export class ValidatorGenerator {
         this.language = language;
     }
 
-    generate(validdef: PiValidatorDef): void {
+    generate(validdef: ValidatorDef): void {
         console.log("Start validator generator");
 
         const validator = new ValidatorTemplate();

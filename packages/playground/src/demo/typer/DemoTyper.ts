@@ -2,6 +2,7 @@ import { PiTyper } from "@projectit/core";
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression,
     DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression } from "../language";
 import { AllDemoConcepts } from "../language/AllDemoConcepts";
+import { PiTyper } from "@projectit/core"
 
 export class DemoTyper implements PiTyper {
 
@@ -77,9 +78,4 @@ export class DemoTyper implements PiTyper {
         return false;
     }
 
-    typeName(elem: DemoType): string { 
-        if (elem instanceof DemoEntity) return elem.name;
-        if (elem instanceof DemoAttributeType) return elem.asString();
-        return "";
-    }
 }

@@ -21,6 +21,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.checkCUIReference(concept.base);
         }
 
+        concept.properties.forEach(prop => this.checkPiPrimitiveProperty(prop));
         concept.parts.forEach(part => this.checkPiElementProperty(part));
         concept.references.forEach(ref => this.checkPiElementProperty(ref));
 
@@ -60,6 +61,13 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                         error: `Reference to ${reference.name} cannot be resolved as one of concept, union, or interface`
                     })
             })
+    }
+
+    // TODO call this check where appropriate
+    checkPrimitiveType(type: string) {
+        this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
+            "Primitive property should have a primitive type (string, boolean, or number)"
+        );
     }
 }
 

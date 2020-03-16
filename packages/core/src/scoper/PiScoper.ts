@@ -31,5 +31,5 @@ export interface PiScoper {
 
     // getVisibleNames does the same as getVisibleElements, only it does not return the elements,
     // but the names of the elements
-    getVisibleNames(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): string[];
+    getVisibleNames(modelelement: PiElement, metatype?: string, excludeSurrounding?: boolean): String[];
 }

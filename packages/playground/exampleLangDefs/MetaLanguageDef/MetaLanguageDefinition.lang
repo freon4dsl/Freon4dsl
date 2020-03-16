@@ -1,67 +1,71 @@
 // tag::MetametaModel[]
-language PiMetaLanguage
+language PiLanguage
 
-concept PiLanguage {
+root concept PiLanguageUnit {
     name: string;
-    @part concepts: PiLangConcept[];
+    @part concepts: PiLangConceptReference[];
     @part enumerations: PiLangEnumeration[];
+    @part unions: PiLangUnion[];
 }
 
-concept PiLangConcept {
-    //readonly language: PiLanguage;
+abstract concept PiLangElement {
+    name: string
+}
+
+concept PiLangEnumeration base PiLangElement {
+    name: string;
+    @part literals: string[];
+}
+
+concept PiLangUnion base PiLangElement {
+    name: string;
+    @reference parts: PiLangConceptReference[];
+}
+
+concept PiLangConceptReference {
+    readonly language: PiLanguageUnit;
+    name: string;
+}
+
+concept PiLangConcept base PiLangElement {
+    //readonly language: PiLanguageUnit;
     name: string;
     isAbstract: boolean;
     isRoot:boolean;
-    //base: PiLangConceptReference; //A: optional???
-    @part properties: PiLangPrimitiveProperty[];
-    @part parts: PiLangElementProperty[];
-    @part references: PiLangElementProperty[];
 
     isExpression: boolean;
     isBinaryExpression: boolean;
     isExpressionPlaceHolder: boolean;
-    left?: PiLangConceptReference;
-    right?: PiLangConceptReference;
     symbol?: string;
-    trigger?: string;
-    triggerIsRegExp?: boolean;
     priority?: number;
+
+    @part properties: PiLangPrimitiveProperty[];
+    @part parts: PiLangConceptProperty[];
+    @part references: PiLangConceptProperty[];
+
+    @reference base?: PiLangConceptReference;
+
+    @reference left?: PiLangConceptReference;
+    @reference right?: PiLangConceptReference;
 }
 
-concept PiLangConceptReference {
-    language: PiLanguage;
-    name: string;
-
-    @reference concept: PiLangConcept;
-}
-
-concept PiLangExpressionConcept base PiLangConcept {
-}
-
-concept PiLangBinaryExpressionConcept base PiLangExpressionConcept {
-}
-
-concept PiLangPrimitiveProperty {
-    @part owningConcept: PiLangConcept;
-
+abstract concept PiLangProperty {
     name: string;
     isList: boolean;
+}
+
+concept PiLangPrimitiveProperty base PiLangProperty {
+    name: string;
     isStatic: boolean;
-    initialValue: string;
+    initialValue?: string;
     type: string;
+    @reference owningConcept: PiLangConceptReference;
 }
 
-concept PiLangElementProperty {
-    @part owningConcept: PiLangConcept;
-
+concept PiLangConceptProperty base PiLangProperty {
     name: string;
-    isList: boolean;
-    @part type: PiLangConceptReference;
+    @reference type: PiLangConceptReference;
+    @reference owningConcept: PiLangConceptReference;
 }
 
-concept PiLangEnumeration {
-    language: PiLanguage;
-    name: string;
-    @part literals: string[];
-}
 // end::MetametaModel[]

@@ -25,8 +25,9 @@ export class PiParser<DEFINITION> {
             model = this.parser["parse"](langSpec);
         } catch (e) {
             console.log(this.msg + ": Exception in Parser: " + e);
-            console.log(JSON.stringify(e, null, 4));
-            console.log("Location " + e.location.line + " col " + e.location.column);
+            // console.log(JSON.stringify(e, null, 4));
+            if (e.location && e.location.start)
+                console.log("\tError location: line " + e.location.start.line + ", column " + e.location.start.column);
             process.exit(-1);
         }
         if (model !== null) {

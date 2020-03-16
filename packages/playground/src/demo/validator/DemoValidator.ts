@@ -29,6 +29,7 @@ import {
     DemoVariableRef
 } from "../language";
 import { DemoTyper } from "../typer/DemoTyper";
+import { PiValidator, PiError } from "@projectit/core"
 
 export class DemoValidator implements PiValidator {
     typer = new DemoTyper();

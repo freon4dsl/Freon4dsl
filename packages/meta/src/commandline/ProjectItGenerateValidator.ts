@@ -3,9 +3,10 @@ import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
+import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 
 export class ProjectItGenerateValidator extends ProjectItGenerateAction {
-    private scopeFile: CommandLineStringParameter;
+    private defFile: CommandLineStringParameter;
     // protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected validatorGenerator: ValidatorGenerator;
 
@@ -23,17 +24,17 @@ export class ProjectItGenerateValidator extends ProjectItGenerateAction {
         // this.languageGenerator.outputfolder = this.outputFolder;
         // this.languageGenerator.generate(language);
 
-        // scoperParser needs language because it has to perform checks!
-        // const scoper = new ScoperParser(language).parse(this.scopeFile.value);
+        // validatorParser needs language because it has to perform checks!
+        const validator = new ValidatorParser(language).parse(this.defFile.value);
 
         // scoperGenerator needs language because ??? TODO
         this.validatorGenerator = new ValidatorGenerator(language);
         this.validatorGenerator.outputfolder = this.outputFolder;
-        this.validatorGenerator.generate(null);
+        this.validatorGenerator.generate(validator);
     }
 
     protected onDefineParameters(): void {
-        this.scopeFile = this.defineStringParameter({
+        this.defFile = this.defineStringParameter({
             argumentName: "VALIDATE",
             defaultValue: "LanguageDefinition.valid",
             parameterLongName: "--valid",
