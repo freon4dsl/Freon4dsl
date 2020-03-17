@@ -20,7 +20,7 @@ export class ScoperGenerator {
     }
 
     generate(scopedef: PiScopeDef): void {
-        console.log("Start scoper generator");
+        console.log("Generating scoper:" + scopedef?.scoperName);
 
         const namespace = new NamespaceTemplate();
         const scoper = new ScoperTemplate();
@@ -42,5 +42,8 @@ export class ScoperGenerator {
 
         // var scoperIndexFile = Helpers.pretty(ScoperIndexTemplate.generateIndex(this.language), "Scoper Index");
         // fs.writeFileSync(`${this.scoperFolder}/index.ts`, scoperIndexFile);
+
+        console.log("Succesfully generated scoper:" + scopedef?.scoperName);
+
     } 
 }

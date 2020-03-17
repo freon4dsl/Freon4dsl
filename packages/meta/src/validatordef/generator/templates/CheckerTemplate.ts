@@ -25,9 +25,16 @@ export class CheckerTemplate {
         ).join("\n\n")}
         
         private isValidName(name: string) : boolean {
+            // cannot start with number
+            if (/[A-Z]/.test( name[0]) ) return false; 
+            // may contain letters, number, '$', and '_', but no other characters
+            if (/[.,|!?@~%^&*-=+(){}[]"':;<>?\\/\\\]/.test( name ) ) return false; 
+            // may not contain spaces
+            if (/[ ]/.test( name[0]) ) return false; 
+            // may not be a Typescript keyword
             // TODO implement this
             return true;
-        }
+            }
         }`;
     }
 
@@ -56,11 +63,11 @@ export class CheckerTemplate {
                 `// ${r.toPiString()}
                 ${(r instanceof EqualsTypeRule ?
                     `if(!typer.equalsType(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        result.push(new PiError("Type of '${r.type2.toPiString()}' should be ${r.type2.toPiString()}", ${this.langRefToTypeScript(r.type2)}));
+                        result.push(new PiError("Type of '${r.type1.toPiString()}' should be ${r.type2.toPiString()}", ${this.langRefToTypeScript(r.type1)}));
                     }`
                 : (r instanceof ConformsTypeRule ?
                     `if(!typer.conformsTo(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        result.push(new PiError("Type of '${r.type2.toPiString()}' does not conform to type of '${r.type2.toPiString()}'", ${this.langRefToTypeScript(r.type2)}));
+                        result.push(new PiError("Type of '${r.type1.toPiString()}' does not conform to type of '${r.type2.toPiString()}'", ${this.langRefToTypeScript(r.type1)}));
                     }`           
                 : (r instanceof NotEmptyRule ?
                     `if(${this.langRefToTypeScript(r.property)}.length == 0) {
