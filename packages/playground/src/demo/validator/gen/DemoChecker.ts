@@ -202,6 +202,54 @@ export class DemoChecker {
         return result;
     }
 
+    public checkDemoExpression(modelelement: DemoExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoLiteralExpression(modelelement: DemoLiteralExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoBinaryExpression(modelelement: DemoBinaryExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoLessThenExpression(modelelement: DemoLessThenExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoEqualsExpression(modelelement: DemoEqualsExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, typer: PiTyper): PiError[] {
+        return null;
+    }
+
+    public checkDemoVariableRef(modelelement: DemoVariableRef, typer: PiTyper): PiError[] {
+        return null;
+    }
+
     private isValidName(name: string): boolean {
         // cannot start with number
         if (/[A-Z]/.test(name[0])) return false;
@@ -209,7 +257,7 @@ export class DemoChecker {
         if (/[.,|!?@~%^&*-=+(){}[]"':;<>?\/\]/.test(name)) return false;
         // may not contain spaces
         if (/[ ]/.test(name[0])) return false;
-        // may no be Typescript keywords
+        // may not be a Typescript keyword
         // TODO implement this
         return true;
     }

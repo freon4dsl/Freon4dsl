@@ -7,32 +7,23 @@ export class ValidatorTemplate {
     }
 
     generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        console.log("Creating Validator");
+        console.log(`Creating ${Names.validator(language, validdef)}`);
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
         const generatedClassName : String = Names.validator(language, validdef);
 
-        // language.concepts.map(concept => 
-        //     concept.parts.forEach(p => {
-
-        //     })
-        //     concept.parts.map( part => {
-        //         let p : PiLangElementProperty = part;
-        //         if( p.isList) {
-        //             p.for
-        //         }
-        //     })
-        // )
-
         // Template starts here 
         return `
         import { ${allLangConcepts} } from "../../language";
-        import { PiValidator, PiError } from "@projectit/core";
+        import { ${Names.validatorInterface()}, ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
         import { ${langConceptType} } from "../../language/${language.name}";   
         import { ${language.concepts.map(concept => `
                 ${concept.name}`).join(", ")} } from "../../language";     
-        
+        import { ${Names.checker(language,validdef)} } from "./DemoChecker";
+
         export class ${generatedClassName} implements PiValidator {
+            myTyper : ${Names.typerInterface()};
+
             public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : PiError[]{
                 let result : PiError[] = [];
                 ${language.concepts.map(concept => `
@@ -46,7 +37,7 @@ export class ValidatorTemplate {
             ${language.concepts.map(concept => `
                 public validate${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) : PiError[]{
                     let result : PiError[] = [];
-                    // include validations here
+                    result.concat(new ${Names.checker(language, validdef)}().check${concept.name}(modelelement, this.myTyper));
 
                     ${((concept.parts.length > 0)?
                     `if(!(includeChildren === undefined) && includeChildren) { 

@@ -1,13 +1,13 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiValidatorDef, EqualsTypeRule, LangRefExpression, EnumRefExpression, ThisExpression, PropertyRefExpression, ConformsTypeRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
+import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiValidatorDef, EqualsTypeRule, LangRefExpression, EnumRefExpression, ThisExpression, ConformsTypeRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
 
 export class CheckerTemplate {
     constructor() {
     }
 
     generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        console.log("Creating checker");
+        console.log(`Creating ${Names.checker(language, validdef)}`);
         // this.createRules(validdef);
         
         // the template starts here
@@ -23,6 +23,12 @@ export class CheckerTemplate {
                 return result;
             }`
         ).join("\n\n")}
+
+        ${this.conceptsWithoutRules(language, validdef).map(concept => 
+            `public check${concept.name}(modelelement: ${concept.name}, typer: ${Names.typerInterface()}) : ${Names.errorClassName()}[] {
+                return null;
+            }`
+        ).join("\n\n") }
         
         private isValidName(name: string) : boolean {
             // cannot start with number
@@ -89,5 +95,17 @@ export class CheckerTemplate {
         } else {
             return ref.toPiString();
         }
+    }
+
+    private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiLangConcept[] {
+        let withRules : PiLangConcept[] = [];
+        for (let ruleSet of validdef.conceptRules) {
+            withRules.push(ruleSet.conceptRef.concept());
+        }
+        let withoutRules : PiLangConcept[] = [];
+        for( let c of language.concepts) {
+            if( !withRules.includes(c) ) withoutRules.push(c);
+        }
+        return withoutRules;
     }
 }

@@ -51,9 +51,9 @@ export class Names {
     public static enumeration(enumeration: PiLangEnumeration){
         return enumeration.name;
     }
-
-    public static type(type: PiLangUnion){
-        return type.name;
+    // TODO change function name to 'union'
+    public static type(union: PiLangUnion){
+        return union.name;
     }
 
     public static languageConceptType(language: PiLanguageUnit){
@@ -78,6 +78,11 @@ export class Names {
 
     public static namespace(language: PiLanguageUnit, scopedef: PiScopeDef){
         return scopedef.scoperName + "Namespace";
+    }
+
+    // TODO validator gen needs this but it should be part of the environment
+    public static typer(language: PiLanguageUnit){
+        return language.name + "Typer";
     }
 
     public static scoper(language: PiLanguageUnit, scopedef: PiScopeDef){

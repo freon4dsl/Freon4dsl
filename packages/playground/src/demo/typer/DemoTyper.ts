@@ -6,7 +6,8 @@ import { AllDemoConcepts } from "../language/AllDemoConcepts";
 export class DemoTyper implements PiTyper {
    
     equalsType(elem1: AllDemoConcepts, elem2: AllDemoConcepts): boolean {
-        throw new Error("Method not implemented.");
+        if( this.inferType(elem1).$id === this.inferType(elem2).$id) return true;
+        return false;
     }
 
     inferType(modelelement: AllDemoConcepts): DemoType {
