@@ -17,7 +17,7 @@ DemoAttribute {
 }
 
 DemoFunction {
-    @typecheck conformsTo (this.expression.XXX, DemoAttributeType:String) 
+    @typecheck conformsTo (this.expression, DemoAttributeType:String) 
     @notEmpty this.parameters
     @validName 
 }
@@ -31,7 +31,7 @@ DemoAbsExpression {
 }
 
 DemoMultiplyExpression {
-    @typecheck equalsType( this.left.XXX, DemoAttributeType:Integer )
+    @typecheck equalsType( this.left, DemoAttributeType:Integer )
     @typecheck equalsType( this.right, DemoAttributeType:Integer )
 }
 

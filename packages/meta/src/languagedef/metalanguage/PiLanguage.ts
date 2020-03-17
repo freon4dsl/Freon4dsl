@@ -179,15 +179,23 @@ export class PiLangUnion {
 
     constructor() {
     }
-
+    
+    // returns all properties that are in all of the members
     allProperties(): PiLangPrimitiveProperty[] {
-        // if (this.base !== undefined) {
-        //     return this.properties.concat(this.base.concept().allProperties());
-        // } else {
-        //     return this.properties;
-        // }
-        // TODO find right implementation
-        return null;
+        // TODO test this code
+        let result : PiLangPrimitiveProperty[] = [];
+        for (let member1 of this.members) {
+            for(let prop of member1.concept().allProperties()){
+                let notFoundInAll = false;
+                for (let member2 of this.members) { 
+                    if( !member2.concept().allProperties().find(p => p.name === prop.name && p.type === prop.type)) {
+                        notFoundInAll = true;
+                    }
+                }
+                if (!notFoundInAll) result.push(prop);
+            }
+        }
+        return result;
     }
 
     allParts(): PiLangElementProperty[] {
@@ -273,7 +281,7 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
 }
 
 export class PiLangProperty {
-    // TODO should 'owningConcept be replced by piContainer()????
+    // TODO should 'owningConcept be replaced by piContainer()????
     owningConcept: PiLangConcept;
     name: string;
     isList: boolean;
@@ -331,6 +339,8 @@ export class PiLangEnumeration {
 }
 
 export enum PiPrimTypesEnum {
-    "string", "number", "boolean"
+    string = "string", 
+    number = "number", 
+    boolean = "boolean"
 }
 

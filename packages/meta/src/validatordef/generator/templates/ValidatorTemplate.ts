@@ -24,7 +24,7 @@ export class ValidatorTemplate {
         //     })
         // )
 
-        // Template starts here
+        // Template starts here 
         return `
         import { ${allLangConcepts} } from "../../language";
         import { PiValidator, PiError } from "@projectit/core";
@@ -44,7 +44,7 @@ export class ValidatorTemplate {
             }
 
             ${language.concepts.map(concept => `
-                private validate${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) : PiError[]{
+                public validate${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) : PiError[]{
                     let result : PiError[] = [];
                     // include validations here
 
@@ -62,9 +62,10 @@ export class ValidatorTemplate {
                     }`
                     : ``
                     )}
-                    // check rules of baseconcept(s)
+                    
                     ${((!!concept.base )?
-                        `result.concat( this.validate${concept.base.name}(modelelement, includeChildren) );`
+                        `// check rules of baseconcept(s)
+                        result.concat( this.validate${concept.base.name}(modelelement, includeChildren) );`
                     :
                         ``
                     )}

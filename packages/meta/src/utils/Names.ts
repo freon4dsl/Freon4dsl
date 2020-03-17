@@ -64,16 +64,16 @@ export class Names {
         return "All" + language.name + "Concepts";
     }
 
-    public static scoperInterface(language: PiLanguageUnit){
-        return "I" + language.name + "Scoper";
+    public static scoperInterface(){
+        return "PiScoper";
     }
 
-    public static typerInterface(language: PiLanguageUnit){
-        return "I" + language.name + "Typer";
+    public static typerInterface(){
+        return "PiTyper";
     }
     
-    public static validatorInterface(language: PiLanguageUnit){
-        return "I" + language.name + "Validator";
+    public static validatorInterface(){
+        return "PiValidator";
     }
 
     public static namespace(language: PiLanguageUnit, scopedef: PiScopeDef){
@@ -85,11 +85,15 @@ export class Names {
     }
 
     public static validator(language: PiLanguageUnit, validdef: PiValidatorDef){
-        return "DemoValidator"; // TODO
+        return validdef.validatorName + "Validator"; 
     }
 
-    public static errorClassName(language: PiLanguageUnit, ){
-        return "ViError"; // TODO
+    public static checker(language: PiLanguageUnit, validdef: PiValidatorDef){
+        return validdef.validatorName + "Checker"; 
+    }
+
+    public static errorClassName(){
+        return "PiError"; 
     }
 
 }

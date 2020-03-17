@@ -21,7 +21,7 @@ concept DemoAttribute {
 
 concept DemoFunction {
     name: string
-    declaredType : DemoAttributeType
+    declaredType : enum DemoAttributeType
     @part expression: DemoExpression
     @part parameters: DemoVariable[]
     @editor trigger: string = "function"
@@ -29,7 +29,7 @@ concept DemoFunction {
 
 concept DemoVariable {
     name: string
-    declaredType: DemoAttributeType
+    declaredType: enum DemoAttributeType
     @editor trigger: string = "var"
 }
 

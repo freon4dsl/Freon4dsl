@@ -4,6 +4,10 @@ import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoCompari
 import { AllDemoConcepts } from "../language/AllDemoConcepts";
 
 export class DemoTyper implements PiTyper {
+   
+    equalsType(elem1: AllDemoConcepts, elem2: AllDemoConcepts): boolean {
+        throw new Error("Method not implemented.");
+    }
 
     inferType(modelelement: AllDemoConcepts): DemoType {
         // generate if statement for all lang elements that have @hasType annotation
@@ -39,7 +43,7 @@ export class DemoTyper implements PiTyper {
 
     // for now: simply implemented on basis of equal identity of the types
     // should be implemented based on the conformance rules in Typer Description file
-    conform(type1: DemoType, type2: DemoType): boolean {
+    conformsTo(type1: DemoType, type2: DemoType): boolean {
         // @conformanceRule 'entityRule1' e1:PG_Entity <= e2:PG_Entity { // meaning that Entity e2 conforms to Entity e1 if the following holds
         //     e2.inheritsFrom(e1) // needs inheritance relationship between PG_Entities in .lang, this is currently not defined
         //     or 
@@ -62,7 +66,7 @@ export class DemoTyper implements PiTyper {
         if (typelist1.length !== typelist2.length) return false;
         let result : boolean = true;
         for (let index in typelist1) {
-            result = this.conform(typelist1[index], typelist2[index]);
+            result = this.conformsTo(typelist1[index], typelist2[index]);
             if (result == false) return result;
         }
         return result;

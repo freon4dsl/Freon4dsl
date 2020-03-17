@@ -22,7 +22,7 @@ describe('Testing Validator', () => {
             // expect(errors.length).toBe(0);
         });
 
-        test.skip("multiplication 3 * 'temp'", () => {
+        test("multiplication 3 * 'temp'", () => {
             let errors : PiError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = new DemoNumberLiteralExpression("3");
@@ -34,7 +34,7 @@ describe('Testing Validator', () => {
             );
         });
 
-        test.skip("multiplication (3/4) * 'temp'", () => {
+        test("multiplication (3/4) * 'temp'", () => {
             let errors : PiError[] = [];
             let div : DemoDivideExpression = new DemoDivideExpression();
             div.left = new DemoNumberLiteralExpression("3");
@@ -49,5 +49,14 @@ describe('Testing Validator', () => {
             );
         });
 
+        test("list model.entities is not empty", () => {
+            let errors : PiError[] = [];
+            errors = validator.validateDemoModel(new DemoModel());
+            expect(errors.length).toBe(1);
+            errors.forEach(e =>
+                expect(e.message).toBe("List of entities may not be empty")
+            );
+            
+        });
     });
 });

@@ -28,6 +28,7 @@ import {
 } from "../language";
 import { DemoTyper } from "../typer/DemoTyper";
 import { PiValidator, PiError } from "@projectit/core"
+import { DemoValidationChecker } from "./DemoValidationChecker";
 
 export class DemoValidator implements PiValidator {
     typer = new DemoTyper();
@@ -119,10 +120,7 @@ export class DemoValidator implements PiValidator {
         let result: PiError[] = [];
         // include validations here
 
-        // @notEmpty entities
-        if(modelelement.entities.length == 0) {
-            result.push(new PiError("List of entities may not be empty", modelelement.entities));
-        }
+        result = new DemoValidationChecker().checkDemoModel(modelelement, this.typer);
 
         if (!(includeChildren === undefined) && includeChildren) {
             modelelement.entities.forEach(p => {
@@ -248,16 +246,7 @@ export class DemoValidator implements PiValidator {
     validateDemoMultiplyExpression(modelelement: DemoMultiplyExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
-
-        // @typecheck left.type = DemoAttributeType.Integer
-        if(this.typer.inferType(modelelement.left) !== DemoAttributeType.Integer) {
-            result.push(new PiError("Type should be Integer", modelelement.left));
-        }
-
-        // @typecheck right.type = DemoAttributeType.Integer
-        if(this.typer.inferType(modelelement.right) !== DemoAttributeType.Integer) {
-            result.push(new PiError("Type should be Integer", modelelement.right));
-        }
+        result = new DemoValidationChecker().checkMultiplyExpression(modelelement, this.typer);
         // check rules of baseconcept(s)
         result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
         return result;

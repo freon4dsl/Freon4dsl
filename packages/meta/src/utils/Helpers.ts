@@ -31,7 +31,7 @@ export class Helpers {
     }
 
     public static createDirIfNotExisting(dir: string) {
-        console.log("dir: ["+ dir + "]");
+        // console.log("dir: ["+ dir + "]");
         const parts = dir.split("/");
         let current = ".";
         for (let i = 0; i < parts.length; i++) {

@@ -5,6 +5,7 @@ import { VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/GeneratorCon
 import { Names } from "../../utils/Names";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate";
 import { PiValidatorDef } from "../metalanguage/ValidatorDefLang";
+import { CheckerTemplate } from "./templates/CheckerTemplate";
 
 export class ValidatorGenerator {
     public outputfolder: string = ".";
@@ -17,9 +18,10 @@ export class ValidatorGenerator {
     }
 
     generate(validdef: PiValidatorDef): void {
-        console.log("Start validator generator");
+        console.log("Generating validator:" + validdef?.validatorName);
 
         const validator = new ValidatorTemplate();
+        const checker = new CheckerTemplate();
 
         //Prepare folders
         this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
@@ -27,9 +29,14 @@ export class ValidatorGenerator {
         Helpers.createDirIfNotExisting(this.validatorFolder);
         Helpers.createDirIfNotExisting(this.validatorGenFolder);
 
-        //  Generate it
+        //  Generate validator
         var validatorFile = Helpers.pretty(validator.generateValidator(this.language, validdef), "Validator Class");
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language, validdef)}.ts`, validatorFile);
 
+        //  Generate checker
+        var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef), "Checker Class");
+        fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language, validdef)}.ts`, checkerFile);
+
+        console.log("Succesfully generated validator:" + validdef?.validatorName);
     } 
 }

@@ -1,8 +1,7 @@
-import { PiValidatorDef, ConceptRule, NotEmptyRule, EqualsTypeRule, ConformsTypeRule, LangRefExpression, ThisExpression, EnumRefExpression, PropertyRefExpression, ValidNameRule } from "../metalanguage/ValidatorDefLang";
+import { PiValidatorDef, ConceptRuleSet, NotEmptyRule, EqualsTypeRule, ConformsTypeRule, LangRefExpression, ThisExpression, EnumRefExpression, PropertyRefExpression, ValidNameRule } from "../metalanguage/ValidatorDefLang";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 
-// Functions used to create instances of the language classes from the parsed data objects.
-// TODO change comment
+// Functions used to create instances of the language classes (in ValidatorDefLang) from the parsed data objects (from ValidatorGrammar.pegjs). 
 
 export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDef {
     const result = new PiValidatorDef();
@@ -20,8 +19,8 @@ export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDe
     return result;
 }
 
-export function createConceptRule(data: Partial<ConceptRule>): ConceptRule {
-    const result = new ConceptRule();
+export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet {
+    const result = new ConceptRuleSet();
 
     if( !!data.conceptRef) {
         result.conceptRef = data.conceptRef;

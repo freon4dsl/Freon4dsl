@@ -109,12 +109,14 @@ export class DemoValidator implements PiValidator {
         if (modelelement instanceof DemoVariableRef) {
             result.concat(this.validateDemoVariableRef(modelelement, includeChildren));
         }
+
         return result;
     }
 
-    private validateDemoModel(modelelement: DemoModel, includeChildren?: boolean): PiError[] {
+    public validateDemoModel(modelelement: DemoModel, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
+
         if (!(includeChildren === undefined) && includeChildren) {
             modelelement.entities.forEach(p => {
                 result.concat(this.validateDemoEntity(p, includeChildren));
@@ -123,14 +125,14 @@ export class DemoValidator implements PiValidator {
                 result.concat(this.validateDemoFunction(p, includeChildren));
             });
         }
-        // check rules of baseconcept(s)
 
         return result;
     }
 
-    private validateDemoEntity(modelelement: DemoEntity, includeChildren?: boolean): PiError[] {
+    public validateDemoEntity(modelelement: DemoEntity, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
+
         if (!(includeChildren === undefined) && includeChildren) {
             modelelement.attributes.forEach(p => {
                 result.concat(this.validateDemoAttribute(p, includeChildren));
@@ -139,62 +141,46 @@ export class DemoValidator implements PiValidator {
                 result.concat(this.validateDemoFunction(p, includeChildren));
             });
         }
-        // check rules of baseconcept(s)
 
         return result;
     }
 
-    private validateDemoAttribute(modelelement: DemoAttribute, includeChildren?: boolean): PiError[] {
+    public validateDemoAttribute(modelelement: DemoAttribute, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
-
-        // check rules of baseconcept(s)
 
         return result;
     }
 
-    private validateDemoFunction(modelelement: DemoFunction, includeChildren?: boolean): PiError[] {
+    public validateDemoFunction(modelelement: DemoFunction, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
+
         if (!(includeChildren === undefined) && includeChildren) {
             result.concat(this.validateDemoExpression(modelelement.expression, includeChildren));
             modelelement.parameters.forEach(p => {
                 result.concat(this.validateDemoVariable(p, includeChildren));
             });
         }
-        // check rules of baseconcept(s)
 
         return result;
     }
 
-    private validateDemoVariable(modelelement: DemoVariable, includeChildren?: boolean): PiError[] {
+    public validateDemoVariable(modelelement: DemoVariable, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
 
-        // check rules of baseconcept(s)
-
         return result;
     }
 
-    private validateDemoExpression(modelelement: DemoExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoExpression(modelelement: DemoExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
 
-        // check rules of baseconcept(s)
-
         return result;
     }
 
-    private validateDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-
-        return result;
-    }
-
-    private validateDemoLiteralExpression(modelelement: DemoLiteralExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
 
@@ -203,7 +189,16 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    private validateDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoLiteralExpression(modelelement: DemoLiteralExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
 
@@ -212,7 +207,7 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    private validateDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
 
@@ -221,7 +216,7 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    private validateDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
 
@@ -230,133 +225,139 @@ export class DemoValidator implements PiValidator {
         return result;
     }
 
-    private validateDemoAbsExpression(modelelement: DemoAbsExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoAbsExpression(modelelement: DemoAbsExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
+
         if (!(includeChildren === undefined) && includeChildren) {
             result.concat(this.validateDemoExpression(modelelement.expr, includeChildren));
         }
+
         // check rules of baseconcept(s)
         result.concat(this.validateDemoExpression(modelelement, includeChildren));
         return result;
     }
 
-    private validateDemoBinaryExpression(modelelement: DemoBinaryExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoBinaryExpression(modelelement: DemoBinaryExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
+
         if (!(includeChildren === undefined) && includeChildren) {
             result.concat(this.validateDemoExpression(modelelement.left, includeChildren));
             result.concat(this.validateDemoExpression(modelelement.right, includeChildren));
         }
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoMultiplyExpression(modelelement: DemoMultiplyExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoPlusExpression(modelelement: DemoPlusExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoDivideExpression(modelelement: DemoDivideExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoAndExpression(modelelement: DemoAndExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoOrExpression(modelelement: DemoOrExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoComparisonExpression(modelelement: DemoComparisonExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoLessThenExpression(modelelement: DemoLessThenExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoComparisonExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoComparisonExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoEqualsExpression(modelelement: DemoEqualsExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
-
-        // check rules of baseconcept(s)
-        result.concat(this.validateDemoComparisonExpression(modelelement, includeChildren));
-        return result;
-    }
-
-    private validateDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
-        // include validations here
 
         // check rules of baseconcept(s)
         result.concat(this.validateDemoExpression(modelelement, includeChildren));
         return result;
     }
 
-    private validateDemoIfExpression(modelelement: DemoIfExpression, includeChildren?: boolean): PiError[] {
+    public validateDemoMultiplyExpression(modelelement: DemoMultiplyExpression, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoPlusExpression(modelelement: DemoPlusExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoDivideExpression(modelelement: DemoDivideExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoAndExpression(modelelement: DemoAndExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoOrExpression(modelelement: DemoOrExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoComparisonExpression(modelelement: DemoComparisonExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoBinaryExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoLessThenExpression(modelelement: DemoLessThenExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoComparisonExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoComparisonExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoEqualsExpression(modelelement: DemoEqualsExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoComparisonExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
+        // check rules of baseconcept(s)
+        result.concat(this.validateDemoExpression(modelelement, includeChildren));
+        return result;
+    }
+
+    public validateDemoIfExpression(modelelement: DemoIfExpression, includeChildren?: boolean): PiError[] {
+        let result: PiError[] = [];
+        // include validations here
+
         if (!(includeChildren === undefined) && includeChildren) {
             result.concat(this.validateDemoExpression(modelelement.condition, includeChildren));
             result.concat(this.validateDemoExpression(modelelement.whenTrue, includeChildren));
             result.concat(this.validateDemoExpression(modelelement.whenFalse, includeChildren));
         }
+
         // check rules of baseconcept(s)
         result.concat(this.validateDemoExpression(modelelement, includeChildren));
         return result;
     }
 
-    private validateDemoVariableRef(modelelement: DemoVariableRef, includeChildren?: boolean): PiError[] {
+    public validateDemoVariableRef(modelelement: DemoVariableRef, includeChildren?: boolean): PiError[] {
         let result: PiError[] = [];
         // include validations here
 

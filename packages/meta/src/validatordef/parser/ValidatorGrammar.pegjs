@@ -17,7 +17,6 @@ typecheckKey = "@typecheck" ws
 notEmptyKey = "@notEmpty" ws
 thisKey = "this" ws
 
-// TODO order of different kind of rules is set, these should be mixable
 conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end 
     { 
         return create.createConceptRule({ 

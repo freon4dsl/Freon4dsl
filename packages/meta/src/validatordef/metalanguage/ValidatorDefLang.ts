@@ -1,68 +1,94 @@
-import { PiLangConcept, PiLangEnumeration, PiLangElementProperty, PiLangProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLangProperty, PiLangCUI } from "../../languagedef/metalanguage/PiLanguage";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-
-// These classes combine the parse model (CST) of the validation definition (.valid file) with its AST.
-// All AST values have prefix 'ast'. They are set in the ValidatorChecker.
 
 export class PiValidatorDef {
     validatorName: string;
     languageName: string;
-    conceptRules: ConceptRule[];
+    conceptRules: ConceptRuleSet[];
 
     constructor() { 
     }
 }
 
-export class ConceptRule {
+export class ConceptRuleSet {
     conceptRef: PiLangConceptReference;
-    astConcept: PiLangConcept;
-    rules: Rule[];
+    rules: ValidationRule[];
 }
 
-export abstract class Rule {   
+export abstract class ValidationRule {   
+    toPiString() : string {
+        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
+    }
 }
 
-export class EqualsTypeRule extends Rule {
+export class EqualsTypeRule extends ValidationRule {
     type1: LangRefExpression;
     type2: LangRefExpression;
-    astType1: PiLangConcept;
-    astType2: PiLangConcept;
+
+    toPiString(): string {
+        return `@typecheck equalsType( ${this.type1.toPiString()}, ${this.type2.toPiString()} )`;
+    }
 }
 
-export class ConformsTypeRule extends Rule {
+export class ConformsTypeRule extends ValidationRule {
     type1: LangRefExpression;
     type2: LangRefExpression;
+
+    toPiString(): string {
+        return `@typecheck conformsTo( ${this.type1.toPiString()}, ${this.type2.toPiString()} )`;
+    }
 }
 
-export class NotEmptyRule extends Rule {
+export class NotEmptyRule extends ValidationRule {
     property: LangRefExpression;
-    refersTo: PiLangProperty; // is set by the checker
+
+    toPiString(): string {
+        return `@notEmpty ${this.property.toPiString()}`; 
+    }
 }
-export class ValidNameRule extends Rule {
-    property: PropertyRefExpression;
-    refersTo: PiLangProperty;  // is set by the checker
+export class ValidNameRule extends ValidationRule {
+    property: LangRefExpression;
+
+    toPiString(): string {
+        return `@validName ${this.property.toPiString()}`; 
+    }
 }
+
+// The following classes combine the parse model (CST) of the validation definition (.valid file) with its AST.
+// All AST values have prefix 'ast'. They are set in the ValidatorChecker.
 
 export abstract class LangRefExpression {
     sourceName: string; // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
     appliedFeature?: PropertyRefExpression;   // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
 
-    makeString() : string {
-        let feat : string = this.appliedFeature ? '.' + this.appliedFeature.makeString() : ""; 
-        return this.sourceName + feat;  
+    toPiString() : string {
+        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.LangRefExpression'";
     }
 }
 export class ThisExpression extends LangRefExpression {
-    myConcept: PiLangConcept; // is set by the checker
+    astConcept: PiLangCUI; // is set by the checker
+
+    toPiString() : string {
+        let feat : string = this.appliedFeature ? '.' + this.appliedFeature.toPiString() : ""; 
+        return this.sourceName + feat;  
+    }
 }
 
 export class EnumRefExpression extends LangRefExpression {
     // no appliedfeature !!!
     literalName : string;
-    myEnumLiteral: PiLangEnumeration; // is set by the checker
+    astEnumType: PiLangEnumeration; // is set by the checker
+
+    toPiString() : string {
+        return this.sourceName + ":" + this.literalName;  
+    }
 }
 
 export class PropertyRefExpression extends LangRefExpression {
-    myProperty: PiLangProperty; // is set by the checker
+    astProperty: PiLangProperty; // is set by the checker
 
+    toPiString() : string {
+        let feat : string = this.appliedFeature ? '.' + this.appliedFeature.toPiString() : ""; 
+        return this.sourceName + feat;  
+    }
 }

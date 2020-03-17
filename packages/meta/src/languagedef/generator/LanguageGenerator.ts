@@ -17,7 +17,7 @@ export class LanguageGenerator {
     constructor() {    }
 
     generate(language: PiLanguageUnit): void {
-        console.log("start generator")
+        console.log("Start language generator")
         const templates = new ConceptTemplate();
         const languageTemplate = new LanguageTemplates();
         const enumerationTemplate = new EnumerationTemplate();
@@ -30,33 +30,35 @@ export class LanguageGenerator {
 
         console.log("Generating language: "+ language?.name);
         language.concepts.forEach(concept => {
-            console.log("Generating concept: " + concept.name);
+            // console.log("Generating concept: " + concept.name);
             var generated = Helpers.pretty(templates.generateConcept(concept), "concept " + concept.name);
             fs.writeFileSync(`${this.languageFolder}/${Names.concept(concept)}.ts`, generated);
         });
 
         language.enumerations.forEach(enumeration => {
-            console.log("Generating enumeration: " + enumeration.name);
+            // console.log("Generating enumeration: " + enumeration.name);
             var generated = Helpers.pretty(enumerationTemplate.generateEnumeration(enumeration), "Enumeration " + enumeration.name);
             fs.writeFileSync(`${this.languageFolder}/${Names.enumeration(enumeration)}.ts`, generated);
         });
 
         language.unions.forEach(type => {
-            console.log("Generating type: " + type.name);
+            // console.log("Generating type: " + type.name);
             var generated = Helpers.pretty(typeTemplate.generateUnion(type), "type " + type.name);
             fs.writeFileSync(`${this.languageFolder}/${Names.type(type)}.ts`, generated);
         });
 
-        console.log("Generating metatype info: " + language.name + ".ts");
+        // console.log("Generating metatype info: " + language.name + ".ts");
         var languageFile = Helpers.pretty(languageTemplate.generateLanguage(language), "Model info");
         fs.writeFileSync(`${this.languageFolder}/${language.name}.ts`, languageFile);
 
-        console.log("Generating " + Names.allConcepts(language) + " class: " + Names.allConcepts(language) + ".ts");
+        // console.log("Generating " + Names.allConcepts(language) + " class: " + Names.allConcepts(language) + ".ts");
         var allConceptsFile = Helpers.pretty(allConceptsTemplate.generateAllConceptsClass(language), "All Concepts Class");
         fs.writeFileSync(`${this.languageFolder}/${Names.allConcepts(language)}.ts`, allConceptsFile);
 
-        console.log("Generating language index: index.ts");
+        // console.log("Generating language index: index.ts");
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${this.languageFolder}/index.ts`, languageIndexFile);
+
+        console.log("Succesfully generated language:" + language?.name);
     }
 }
