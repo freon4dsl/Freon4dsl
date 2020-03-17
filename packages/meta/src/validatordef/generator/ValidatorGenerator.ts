@@ -37,6 +37,6 @@ export class ValidatorGenerator {
         var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef), "Checker Class");
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language, validdef)}.ts`, checkerFile);
 
-        console.log("Succesfully generated validator: jest" + validdef?.validatorName);
+        console.log("Succesfully generated validator: " + validdef?.validatorName);
     } 
 }

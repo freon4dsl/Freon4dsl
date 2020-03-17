@@ -17,26 +17,27 @@ export class CheckerTemplate {
 
         export class ${language.name}Checker {
         ${validdef.conceptRules.map(ruleSet =>
-            `public check${ruleSet.conceptRef.concept().name}(modelelement: ${ruleSet.conceptRef.concept().name}, typer: ${Names.typerInterface()}) : ${Names.errorClassName()}[] {
-                let result: PiError[] = [];
+            `public check${ruleSet.conceptRef.concept().name}(modelelement: ${ruleSet.conceptRef.concept().name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
                 ${this.createRules(ruleSet)}
-                return result;
             }`
         ).join("\n\n")}
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
-            `public check${concept.name}(modelelement: ${concept.name}, typer: ${Names.typerInterface()}) : ${Names.errorClassName()}[] {
+            `public check${concept.name}(modelelement: ${concept.name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
                 return null;
             }`
         ).join("\n\n") }
         
         private isValidName(name: string) : boolean {
+            if (name == null) return false;
             // cannot start with number
-            if (/[A-Z]/.test( name[0]) ) return false; 
-            // may contain letters, number, '$', and '_', but no other characters
-            if (/[.,|!?@~%^&*-=+(){}[]"':;<>?\\/\\\]/.test( name ) ) return false; 
-            // may not contain spaces
-            if (/[ ]/.test( name[0]) ) return false; 
+            if (/[0-9]/.test( name[0]) ) return false; 
+            // may contain letters, numbers, '$', and '_', but no other characters
+            if (/[.|,|!|?|@|~|%|^|&|*|-|=|+|(|)|{|}|"|'|:|;|<|>|?]/.test( name ) ) return false; 
+            if (/\\\\/.test(name)) return false;
+            if (/[\/|\[|\]]/.test(name)) return false;
+            // may not contain whitespaces
+            if (/[\\t|\\n|\\r| ]/.test(name)) return false;
             // may not be a Typescript keyword
             // TODO implement this
             return true;
@@ -69,19 +70,19 @@ export class CheckerTemplate {
                 `// ${r.toPiString()}
                 ${(r instanceof EqualsTypeRule ?
                     `if(!typer.equalsType(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        result.push(new PiError("Type of '${r.type1.toPiString()}' should be ${r.type2.toPiString()}", ${this.langRefToTypeScript(r.type1)}));
+                        errorList.push(new PiError("Type of '${r.type1.toPiString()}' should be ${r.type2.toPiString()}", ${this.langRefToTypeScript(r.type1)}));
                     }`
                 : (r instanceof ConformsTypeRule ?
                     `if(!typer.conformsTo(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        result.push(new PiError("Type of '${r.type1.toPiString()}' does not conform to type of '${r.type2.toPiString()}'", ${this.langRefToTypeScript(r.type1)}));
+                        errorList.push(new PiError("Type of '${r.type1.toPiString()}' does not conform to type of '${r.type2.toPiString()}'", ${this.langRefToTypeScript(r.type1)}));
                     }`           
                 : (r instanceof NotEmptyRule ?
                     `if(${this.langRefToTypeScript(r.property)}.length == 0) {
-                        result.push(new PiError("List of ${r.property.toPiString()} may not be empty", ${this.langRefToTypeScript(r.property)}));
+                        errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${this.langRefToTypeScript(r.property)}));
                     }`
                 : (r instanceof ValidNameRule ?
-                    `if(this.isValidName(${this.langRefToTypeScript(r.property)})) {
-                        result.push(new PiError("'${r.property.toPiString()}' is not a valid identifier", ${this.langRefToTypeScript(r.property)}));
+                    `if(!this.isValidName(modelelement.${this.langRefToTypeScript(r.property)})) {
+                        errorList.push(new PiError("'" + modelelement.${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", ${this.langRefToTypeScript(r.property)}));
                     }`
                 : ""))))}`
             ).join("\n")}`;

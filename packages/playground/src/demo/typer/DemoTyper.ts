@@ -7,6 +7,7 @@ export class DemoTyper implements PiTyper {
    
     equalsType(elem1: AllDemoConcepts, elem2: AllDemoConcepts): boolean {
         if( this.inferType(elem1).$id === this.inferType(elem2).$id) return true;
+        // console.log("EQUALSTYPE( " + this.inferType(elem1).name + ", " + this.inferType(elem2).name + " ) returns false");
         return false;
     }
 

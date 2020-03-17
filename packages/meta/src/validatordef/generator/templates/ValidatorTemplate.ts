@@ -24,30 +24,29 @@ export class ValidatorTemplate {
         export class ${generatedClassName} implements PiValidator {
             myTyper : ${Names.typerInterface()};
 
-            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : PiError[]{
-                let result : PiError[] = [];
+            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${Names.errorClassName()}[]{
+                let result : ${Names.errorClassName()}[] = [];
                 ${language.concepts.map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    result.concat( this.validate${concept.name}(modelelement, includeChildren) );
+                    this.validate${concept.name}(modelelement, result, includeChildren );
                 }`).join("")}
 
                 return result;
             }
 
             ${language.concepts.map(concept => `
-                public validate${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) : PiError[]{
-                    let result : PiError[] = [];
-                    result.concat(new ${Names.checker(language, validdef)}().check${concept.name}(modelelement, this.myTyper));
+                public validate${concept.name}(modelelement: ${concept.name}, result: ${Names.errorClassName()}[], includeChildren?: boolean) {
+                    new ${Names.checker(language, validdef)}().check${concept.name}(modelelement, this.myTyper, result);
 
                     ${((concept.parts.length > 0)?
                     `if(!(includeChildren === undefined) && includeChildren) { 
                         ${concept.parts.map( part =>
                             (part.isList ?
                                 `modelelement.${part.name}.forEach(p => {
-                                    result.concat( this.validate${part.type.name}(p, includeChildren) );
+                                    this.validate${part.type.name}(p, result, includeChildren );
                                 });`
                             :
-                                `result.concat( this.validate${part.type.name}(modelelement.${part.name}, includeChildren) );`
+                                `this.validate${part.type.name}(modelelement.${part.name}, result, includeChildren );`
                             )
                         ).join("\n")}
                     }`
@@ -56,11 +55,10 @@ export class ValidatorTemplate {
                     
                     ${((!!concept.base )?
                         `// check rules of baseconcept(s)
-                        result.concat( this.validate${concept.base.name}(modelelement, includeChildren) );`
+                        this.validate${concept.base.name}(modelelement, result, includeChildren);`
                     :
                         ``
                     )}
-                    return result;
                 }`).join("\n")}
         }`;
     }

@@ -31,232 +31,209 @@ import {
 } from "../../language";
 
 export class DemoChecker {
-    public checkDemoModel(modelelement: DemoModel, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoModel(modelelement: DemoModel, typer: PiTyper, errorList: PiError[]) {
         // @validName name
-        if (this.isValidName(name)) {
-            result.push(new PiError("'name' is not a valid identifier", name));
+        if (!this.isValidName(modelelement.name)) {
+            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
         // @notEmpty this.entities
         if (modelelement.entities.length == 0) {
-            result.push(new PiError("List of this.entities may not be empty", modelelement.entities));
+            errorList.push(new PiError("List 'this.entities' may not be empty", modelelement.entities));
         }
         // @notEmpty this.functions
         if (modelelement.functions.length == 0) {
-            result.push(new PiError("List of this.functions may not be empty", modelelement.functions));
+            errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
         }
-        return result;
     }
 
-    public checkDemoEntity(modelelement: DemoEntity, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoEntity(modelelement: DemoEntity, typer: PiTyper, errorList: PiError[]) {
         // @validName name
-        if (this.isValidName(name)) {
-            result.push(new PiError("'name' is not a valid identifier", name));
+        if (!this.isValidName(modelelement.name)) {
+            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
         // @notEmpty this.attributes
         if (modelelement.attributes.length == 0) {
-            result.push(new PiError("List of this.attributes may not be empty", modelelement.attributes));
+            errorList.push(new PiError("List 'this.attributes' may not be empty", modelelement.attributes));
         }
         // @notEmpty this.functions
         if (modelelement.functions.length == 0) {
-            result.push(new PiError("List of this.functions may not be empty", modelelement.functions));
+            errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
         }
-        return result;
     }
 
-    public checkDemoAttribute(modelelement: DemoAttribute, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoAttribute(modelelement: DemoAttribute, typer: PiTyper, errorList: PiError[]) {
         // @validName name
-        if (this.isValidName(name)) {
-            result.push(new PiError("'name' is not a valid identifier", name));
+        if (!this.isValidName(modelelement.name)) {
+            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
-        return result;
     }
 
-    public checkDemoFunction(modelelement: DemoFunction, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoFunction(modelelement: DemoFunction, typer: PiTyper, errorList: PiError[]) {
         // @typecheck conformsTo( this.expression, DemoAttributeType:String )
         if (!typer.conformsTo(modelelement.expression, DemoAttributeType.String)) {
-            result.push(
+            errorList.push(
                 new PiError("Type of 'this.expression' does not conform to type of 'DemoAttributeType:String'", modelelement.expression)
             );
         }
         // @notEmpty this.parameters
         if (modelelement.parameters.length == 0) {
-            result.push(new PiError("List of this.parameters may not be empty", modelelement.parameters));
+            errorList.push(new PiError("List 'this.parameters' may not be empty", modelelement.parameters));
         }
         // @validName name
-        if (this.isValidName(name)) {
-            result.push(new PiError("'name' is not a valid identifier", name));
+        if (!this.isValidName(modelelement.name)) {
+            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
-        return result;
     }
 
-    public checkDemoVariable(modelelement: DemoVariable, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoVariable(modelelement: DemoVariable, typer: PiTyper, errorList: PiError[]) {
         // @validName name
-        if (this.isValidName(name)) {
-            result.push(new PiError("'name' is not a valid identifier", name));
+        if (!this.isValidName(modelelement.name)) {
+            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
-        return result;
     }
 
-    public checkDemoAbsExpression(modelelement: DemoAbsExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoAbsExpression(modelelement: DemoAbsExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.expr, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.expr, DemoAttributeType.Integer)) {
-            result.push(new PiError("Type of 'this.expr' should be DemoAttributeType:Integer", modelelement.expr));
+            errorList.push(new PiError("Type of 'this.expr' should be DemoAttributeType:Integer", modelelement.expr));
         }
-        return result;
     }
 
-    public checkDemoMultiplyExpression(modelelement: DemoMultiplyExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoMultiplyExpression(modelelement: DemoMultiplyExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            result.push(new PiError("Type of 'this.left' should be DemoAttributeType:Integer", modelelement.left));
+            errorList.push(new PiError("Type of 'this.left' should be DemoAttributeType:Integer", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            result.push(new PiError("Type of 'this.right' should be DemoAttributeType:Integer", modelelement.right));
+            errorList.push(new PiError("Type of 'this.right' should be DemoAttributeType:Integer", modelelement.right));
         }
-        return result;
     }
 
-    public checkDemoPlusExpression(modelelement: DemoPlusExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoPlusExpression(modelelement: DemoPlusExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            result.push(new PiError("Type of 'this.left' should be DemoAttributeType:Integer", modelelement.left));
+            errorList.push(new PiError("Type of 'this.left' should be DemoAttributeType:Integer", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            result.push(new PiError("Type of 'this.right' should be DemoAttributeType:Integer", modelelement.right));
+            errorList.push(new PiError("Type of 'this.right' should be DemoAttributeType:Integer", modelelement.right));
         }
-        return result;
     }
 
-    public checkDemoDivideExpression(modelelement: DemoDivideExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoDivideExpression(modelelement: DemoDivideExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            result.push(new PiError("Type of 'this.left' should be DemoAttributeType:Integer", modelelement.left));
+            errorList.push(new PiError("Type of 'this.left' should be DemoAttributeType:Integer", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            result.push(new PiError("Type of 'this.right' should be DemoAttributeType:Integer", modelelement.right));
+            errorList.push(new PiError("Type of 'this.right' should be DemoAttributeType:Integer", modelelement.right));
         }
-        return result;
     }
 
-    public checkDemoAndExpression(modelelement: DemoAndExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoAndExpression(modelelement: DemoAndExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            result.push(new PiError("Type of 'this.left' should be DemoAttributeType:Boolean", modelelement.left));
+            errorList.push(new PiError("Type of 'this.left' should be DemoAttributeType:Boolean", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
-            result.push(new PiError("Type of 'this.right' should be DemoAttributeType:Boolean", modelelement.right));
+            errorList.push(new PiError("Type of 'this.right' should be DemoAttributeType:Boolean", modelelement.right));
         }
-        return result;
     }
 
-    public checkDemoOrExpression(modelelement: DemoOrExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoOrExpression(modelelement: DemoOrExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            result.push(new PiError("Type of 'this.left' should be DemoAttributeType:Boolean", modelelement.left));
+            errorList.push(new PiError("Type of 'this.left' should be DemoAttributeType:Boolean", modelelement.left));
         }
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            result.push(new PiError("Type of 'this.left' should be DemoAttributeType:Boolean", modelelement.left));
+            errorList.push(new PiError("Type of 'this.left' should be DemoAttributeType:Boolean", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
-            result.push(new PiError("Type of 'this.right' should be DemoAttributeType:Boolean", modelelement.right));
+            errorList.push(new PiError("Type of 'this.right' should be DemoAttributeType:Boolean", modelelement.right));
         }
-        return result;
     }
 
-    public checkDemoComparisonExpression(modelelement: DemoComparisonExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoComparisonExpression(modelelement: DemoComparisonExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, this.right )
         if (!typer.equalsType(modelelement.left, modelelement.right)) {
-            result.push(new PiError("Type of 'this.left' should be this.right", modelelement.left));
+            errorList.push(new PiError("Type of 'this.left' should be this.right", modelelement.left));
         }
-        return result;
     }
 
-    public checkDemoIfExpression(modelelement: DemoIfExpression, typer: PiTyper): PiError[] {
-        let result: PiError[] = [];
+    public checkDemoIfExpression(modelelement: DemoIfExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.condition, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.condition, DemoAttributeType.Boolean)) {
-            result.push(new PiError("Type of 'this.condition' should be DemoAttributeType:Boolean", modelelement.condition));
+            errorList.push(new PiError("Type of 'this.condition' should be DemoAttributeType:Boolean", modelelement.condition));
         }
         // @typecheck conformsTo( this.whenTrue, this.whenFalse )
         if (!typer.conformsTo(modelelement.whenTrue, modelelement.whenFalse)) {
-            result.push(new PiError("Type of 'this.whenTrue' does not conform to type of 'this.whenFalse'", modelelement.whenTrue));
+            errorList.push(new PiError("Type of 'this.whenTrue' does not conform to type of 'this.whenFalse'", modelelement.whenTrue));
         }
-        return result;
     }
 
-    public checkDemoExpression(modelelement: DemoExpression, typer: PiTyper): PiError[] {
+    public checkDemoExpression(modelelement: DemoExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, typer: PiTyper): PiError[] {
+    public checkDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoLiteralExpression(modelelement: DemoLiteralExpression, typer: PiTyper): PiError[] {
+    public checkDemoLiteralExpression(modelelement: DemoLiteralExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, typer: PiTyper): PiError[] {
+    public checkDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, typer: PiTyper): PiError[] {
+    public checkDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, typer: PiTyper): PiError[] {
+    public checkDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoBinaryExpression(modelelement: DemoBinaryExpression, typer: PiTyper): PiError[] {
+    public checkDemoBinaryExpression(modelelement: DemoBinaryExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoLessThenExpression(modelelement: DemoLessThenExpression, typer: PiTyper): PiError[] {
+    public checkDemoLessThenExpression(modelelement: DemoLessThenExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, typer: PiTyper): PiError[] {
+    public checkDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoEqualsExpression(modelelement: DemoEqualsExpression, typer: PiTyper): PiError[] {
+    public checkDemoEqualsExpression(modelelement: DemoEqualsExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, typer: PiTyper): PiError[] {
+    public checkDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
-    public checkDemoVariableRef(modelelement: DemoVariableRef, typer: PiTyper): PiError[] {
+    public checkDemoVariableRef(modelelement: DemoVariableRef, typer: PiTyper, errorList: PiError[]) {
         return null;
     }
 
     private isValidName(name: string): boolean {
+        if (name == null) return false;
         // cannot start with number
-        if (/[A-Z]/.test(name[0])) return false;
-        // may contain letters, number, '$', and '_', but no other characters
-        if (/[.,|!?@~%^&*-=+(){}[]"':;<>?\/\]/.test(name)) return false;
-        // may not contain spaces
-        if (/[ ]/.test(name[0])) return false;
+        if (/[0-9]/.test(name[0])) return false;
+        // may contain letters, numbers, '$', and '_', but no other characters
+        if (/[.|,|!|?|@|~|%|^|&|*|-|=|+|(|)|{|}|"|'|:|;|<|>|?]/.test(name)) return false;
+        if (/\\/.test(name)) return false;
+        if (/[/|[|]]/.test(name)) return false;
+        // may not contain whitespaces
+        if (/[\t|\n|\r| ]/.test(name)) return false;
         // may not be a Typescript keyword
         // TODO implement this
         return true;
