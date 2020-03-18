@@ -18,7 +18,7 @@ export class ValidatorGenerator {
     }
 
     generate(validdef: PiValidatorDef): void {
-        console.log("Generating validator:" + validdef?.validatorName);
+        console.log("Start validator generator for: " + validdef?.validatorName);
 
         const validator = new ValidatorTemplate();
         const checker = new CheckerTemplate();

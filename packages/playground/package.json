@@ -16,7 +16,7 @@
     "validateIt": "ts-node ../meta/src/commandline/projectit -l src/demo/defs/LanguageDefinition.lang -o src/demo generate-validator -v src/demo/defs/LanguageDefinition.valid",
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "build-wait": "tsc -w",
-    "build": "yarn run metaIt && yarn run scopeIt && yarn run editIt && tsc",
+    "build": "yarn run metaIt && yarn run scopeIt && yarn run editIt && yarn run validateIt && tsc",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",

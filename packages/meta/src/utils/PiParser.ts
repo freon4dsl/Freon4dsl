@@ -17,7 +17,7 @@ export class PiParser<DEFINITION> {
             console.log(this.msg + " definition file '" + definitionFile + "' does not exist, exiting.");
             process.exit(-1);
         }
-        console.log(this.msg + " file is [" + definitionFile + "] ");
+        // console.log(this.msg + " file is [" + definitionFile + "] ");
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "UTF8" });
         // Parse Language file
         let model: DEFINITION = null;

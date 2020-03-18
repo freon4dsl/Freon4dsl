@@ -4,8 +4,8 @@ import { Names } from "../../../utils/Names";
 export class EnumerationSelectBoxTemplate {
 
     generate(language: PiLanguageUnit): string {
-        console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
-        console.log("EnumSelectGenerator language " + language.enumerations[0].name);
+        // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
+        // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
         import { PiElement, SelectBox, SelectOption } from "@projectit/core";
         import { demoStyles } from "../../styles/styles";

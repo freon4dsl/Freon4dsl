@@ -53,7 +53,7 @@ describe('Testing Typer', () => {
                 if (fun.expression !== null) {
                     let expressionType = typer.inferType(fun.expression);
                     expect(expressionType).not.toBeNull;
-                    // expect(typer.conform(fun.declaredType, expressionType)).toBe(true)
+                    // expect(typer.conformsTo(fun.declaredType, expressionType)).toBe(true)
                 }
             });
             model.entities.forEach(ent => {
@@ -61,38 +61,39 @@ describe('Testing Typer', () => {
                     if (fun.expression !== null) {
                         let expressionType = typer.inferType(fun.expression);
                         expect(expressionType).not.toBeNull;
-                        // expect(typer.conform(fun.declaredType, expressionType)).toBe(true)
+                        // expect(typer.conformsTo(fun.declaredType, expressionType)).toBe(true)
                     }
                 });
             });
         });
   
         test("type conformance of the primitive types should be correct", () => {
-            expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.String)).toBe(false);
-            expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Integer)).toBe(true);
-            expect(typer.conform(DemoAttributeType.Integer, DemoAttributeType.Boolean)).toBe(false);
+            expect(typer.conformsTo(DemoAttributeType.Integer, DemoAttributeType.String)).toBe(false);
+            expect(typer.conformsTo(DemoAttributeType.Integer, DemoAttributeType.Integer)).toBe(true);
+            expect(typer.conformsTo(DemoAttributeType.Integer, DemoAttributeType.Boolean)).toBe(false);
 
-            expect(typer.conform(DemoAttributeType.String, DemoAttributeType.String)).toBe(true);
-            expect(typer.conform(DemoAttributeType.String, DemoAttributeType.Integer)).toBe(false);
-            expect(typer.conform(DemoAttributeType.String, DemoAttributeType.Boolean)).toBe(false);
+            expect(typer.conformsTo(DemoAttributeType.String, DemoAttributeType.String)).toBe(true);
+            expect(typer.conformsTo(DemoAttributeType.String, DemoAttributeType.Integer)).toBe(false);
+            expect(typer.conformsTo(DemoAttributeType.String, DemoAttributeType.Boolean)).toBe(false);
 
-            expect(typer.conform(DemoAttributeType.Boolean, DemoAttributeType.String)).toBe(false);
-            expect(typer.conform(DemoAttributeType.Boolean, DemoAttributeType.Integer)).toBe(false);
-            expect(typer.conform(DemoAttributeType.Boolean, DemoAttributeType.Boolean)).toBe(true);
+            expect(typer.conformsTo(DemoAttributeType.Boolean, DemoAttributeType.String)).toBe(false);
+            expect(typer.conformsTo(DemoAttributeType.Boolean, DemoAttributeType.Integer)).toBe(false);
+            expect(typer.conformsTo(DemoAttributeType.Boolean, DemoAttributeType.Boolean)).toBe(true);
   
         });
   
         test("type conformance of model entity types should be correct", () => {
             model.entities.forEach(ent => {
-                expect(typer.conform(ent, DemoAttributeType.String)).toBe(false);
-                expect(typer.conform(ent, DemoAttributeType.Integer)).toBe(false);
-                expect(typer.conform(ent, DemoAttributeType.Boolean)).toBe(false);  
+                expect(typer.conformsTo(ent, DemoAttributeType.String)).toBe(false);
+                expect(typer.conformsTo(ent, DemoAttributeType.Integer)).toBe(false);
+                expect(typer.conformsTo(ent, DemoAttributeType.Boolean)).toBe(false);  
                 model.entities.forEach(ent2 => {
                     if (ent !== ent2) {
-                        expect(typer.conform(ent, ent2)).toBe(false);
+                        expect(typer.conformsTo(ent, ent2)).toBe(false);
                     }
                 });  
             });  
         });
+
     });
 });

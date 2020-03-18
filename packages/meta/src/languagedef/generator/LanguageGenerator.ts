@@ -17,7 +17,7 @@ export class LanguageGenerator {
     constructor() {    }
 
     generate(language: PiLanguageUnit): void {
-        console.log("Start language generator")
+        console.log("Start language generator for: " + language.name);
         const templates = new ConceptTemplate();
         const languageTemplate = new LanguageTemplates();
         const enumerationTemplate = new EnumerationTemplate();
@@ -28,7 +28,7 @@ export class LanguageGenerator {
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         Helpers.createDirIfNotExisting(this.languageFolder);
 
-        console.log("Generating language: "+ language?.name);
+        // console.log("Generating language: "+ language?.name);
         language.concepts.forEach(concept => {
             // console.log("Generating concept: " + concept.name);
             var generated = Helpers.pretty(templates.generateConcept(concept), "concept " + concept.name);
@@ -59,6 +59,6 @@ export class LanguageGenerator {
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index");
         fs.writeFileSync(`${this.languageFolder}/index.ts`, languageIndexFile);
 
-        console.log("Succesfully generated language:" + language?.name);
+        console.log("Succesfully generated language: " + language.name);
     }
 }
