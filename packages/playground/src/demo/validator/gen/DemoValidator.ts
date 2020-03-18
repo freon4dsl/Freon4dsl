@@ -35,281 +35,473 @@ export class DemoValidator implements PiValidator {
     myTyper: PiTyper;
 
     public validate(modelelement: AllDemoConcepts, includeChildren?: boolean): PiError[] {
-        let result: PiError[] = [];
+        let errorlist: PiError[] = [];
 
         if (modelelement instanceof DemoModel) {
-            this.validateDemoModel(modelelement, result, includeChildren);
+            this.validateDemoModel(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoEntity) {
-            this.validateDemoEntity(modelelement, result, includeChildren);
+            this.validateDemoEntity(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoAttribute) {
-            this.validateDemoAttribute(modelelement, result, includeChildren);
+            this.validateDemoAttribute(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoFunction) {
-            this.validateDemoFunction(modelelement, result, includeChildren);
+            this.validateDemoFunction(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoVariable) {
-            this.validateDemoVariable(modelelement, result, includeChildren);
+            this.validateDemoVariable(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoExpression) {
-            this.validateDemoExpression(modelelement, result, includeChildren);
+            this.validateDemoExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoPlaceholderExpression) {
-            this.validateDemoPlaceholderExpression(modelelement, result, includeChildren);
+            this.validateDemoPlaceholderExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoLiteralExpression) {
-            this.validateDemoLiteralExpression(modelelement, result, includeChildren);
+            this.validateDemoLiteralExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoStringLiteralExpression) {
-            this.validateDemoStringLiteralExpression(modelelement, result, includeChildren);
+            this.validateDemoStringLiteralExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoNumberLiteralExpression) {
-            this.validateDemoNumberLiteralExpression(modelelement, result, includeChildren);
+            this.validateDemoNumberLiteralExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoBooleanLiteralExpression) {
-            this.validateDemoBooleanLiteralExpression(modelelement, result, includeChildren);
+            this.validateDemoBooleanLiteralExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoAbsExpression) {
-            this.validateDemoAbsExpression(modelelement, result, includeChildren);
+            this.validateDemoAbsExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoBinaryExpression) {
-            this.validateDemoBinaryExpression(modelelement, result, includeChildren);
+            this.validateDemoBinaryExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoMultiplyExpression) {
-            this.validateDemoMultiplyExpression(modelelement, result, includeChildren);
+            this.validateDemoMultiplyExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoPlusExpression) {
-            this.validateDemoPlusExpression(modelelement, result, includeChildren);
+            this.validateDemoPlusExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoDivideExpression) {
-            this.validateDemoDivideExpression(modelelement, result, includeChildren);
+            this.validateDemoDivideExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoAndExpression) {
-            this.validateDemoAndExpression(modelelement, result, includeChildren);
+            this.validateDemoAndExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoOrExpression) {
-            this.validateDemoOrExpression(modelelement, result, includeChildren);
+            this.validateDemoOrExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoComparisonExpression) {
-            this.validateDemoComparisonExpression(modelelement, result, includeChildren);
+            this.validateDemoComparisonExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoLessThenExpression) {
-            this.validateDemoLessThenExpression(modelelement, result, includeChildren);
+            this.validateDemoLessThenExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoGreaterThenExpression) {
-            this.validateDemoGreaterThenExpression(modelelement, result, includeChildren);
+            this.validateDemoGreaterThenExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoEqualsExpression) {
-            this.validateDemoEqualsExpression(modelelement, result, includeChildren);
+            this.validateDemoEqualsExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoFunctionCallExpression) {
-            this.validateDemoFunctionCallExpression(modelelement, result, includeChildren);
+            this.validateDemoFunctionCallExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoIfExpression) {
-            this.validateDemoIfExpression(modelelement, result, includeChildren);
+            this.validateDemoIfExpression(modelelement, errorlist, includeChildren);
         }
         if (modelelement instanceof DemoVariableRef) {
-            this.validateDemoVariableRef(modelelement, result, includeChildren);
+            this.validateDemoVariableRef(modelelement, errorlist, includeChildren);
         }
 
-        return result;
+        return errorlist;
     }
 
-    public validateDemoModel(modelelement: DemoModel, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoModel(modelelement, this.myTyper, result);
+    public validateDemoModel(modelelement: DemoModel, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoModel(modelelement, this.myTyper, errorlist);
+
+        // checking children in the model tree
         if (!(includeChildren === undefined) && includeChildren) {
             modelelement.entities.forEach(p => {
-                this.validateDemoEntity(p, result, includeChildren);
+                this.validateDemoEntity(p, errorlist, includeChildren);
             });
             modelelement.functions.forEach(p => {
-                this.validateDemoFunction(p, result, includeChildren);
+                this.validateDemoFunction(p, errorlist, includeChildren);
             });
         }
     }
 
-    public validateDemoEntity(modelelement: DemoEntity, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoEntity(modelelement, this.myTyper, result);
+    public validateDemoEntity(modelelement: DemoEntity, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoEntity(modelelement, this.myTyper, errorlist);
+
+        // checking children in the model tree
         if (!(includeChildren === undefined) && includeChildren) {
             modelelement.attributes.forEach(p => {
-                this.validateDemoAttribute(p, result, includeChildren);
+                this.validateDemoAttribute(p, errorlist, includeChildren);
             });
             modelelement.functions.forEach(p => {
-                this.validateDemoFunction(p, result, includeChildren);
+                this.validateDemoFunction(p, errorlist, includeChildren);
             });
         }
     }
 
-    public validateDemoAttribute(modelelement: DemoAttribute, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoAttribute(modelelement, this.myTyper, result);
+    public validateDemoAttribute(modelelement: DemoAttribute, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoAttribute(modelelement, this.myTyper, errorlist);
     }
 
-    public validateDemoFunction(modelelement: DemoFunction, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoFunction(modelelement, this.myTyper, result);
+    public validateDemoFunction(modelelement: DemoFunction, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoFunction(modelelement, this.myTyper, errorlist);
+
+        // checking children in the model tree
         if (!(includeChildren === undefined) && includeChildren) {
-            this.validateDemoExpression(modelelement.expression, result, includeChildren);
+            this.validateDemoExpression(modelelement.expression, errorlist, includeChildren);
             modelelement.parameters.forEach(p => {
-                this.validateDemoVariable(p, result, includeChildren);
+                this.validateDemoVariable(p, errorlist, includeChildren);
             });
         }
     }
 
-    public validateDemoVariable(modelelement: DemoVariable, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoVariable(modelelement, this.myTyper, result);
+    public validateDemoVariable(modelelement: DemoVariable, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoVariable(modelelement, this.myTyper, errorlist);
     }
 
-    public validateDemoExpression(modelelement: DemoExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoExpression(modelelement, this.myTyper, result);
-    }
+    public validateDemoExpression(modelelement: DemoExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
-    public validateDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoPlaceholderExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoLiteralExpression(modelelement: DemoLiteralExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoLiteralExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoStringLiteralExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoLiteralExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoNumberLiteralExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoLiteralExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoBooleanLiteralExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoLiteralExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoAbsExpression(modelelement: DemoAbsExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoAbsExpression(modelelement, this.myTyper, result);
-
-        if (!(includeChildren === undefined) && includeChildren) {
-            this.validateDemoExpression(modelelement.expr, result, includeChildren);
+        // use the right checks
+        if (modelelement instanceof DemoPlaceholderExpression) {
+            this.validateDemoPlaceholderExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoLiteralExpression) {
+            this.validateDemoLiteralExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoAbsExpression) {
+            this.validateDemoAbsExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoBinaryExpression) {
+            this.validateDemoBinaryExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoFunctionCallExpression) {
+            this.validateDemoFunctionCallExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoIfExpression) {
+            this.validateDemoIfExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoVariableRef) {
+            this.validateDemoVariableRef(modelelement, errorlist, includeChildren);
         }
 
-        // check rules of baseconcept(s)
-        this.validateDemoExpression(modelelement, result, includeChildren);
+        // add checks on this concept
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
     }
 
-    public validateDemoBinaryExpression(modelelement: DemoBinaryExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoBinaryExpression(modelelement, this.myTyper, result);
+    public validateDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
-        if (!(includeChildren === undefined) && includeChildren) {
-            this.validateDemoExpression(modelelement.left, result, includeChildren);
-            this.validateDemoExpression(modelelement.right, result, includeChildren);
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoPlaceholderExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoLiteralExpression(modelelement: DemoLiteralExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+        if (modelelement instanceof DemoStringLiteralExpression) {
+            this.validateDemoStringLiteralExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoNumberLiteralExpression) {
+            this.validateDemoNumberLiteralExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoBooleanLiteralExpression) {
+            this.validateDemoBooleanLiteralExpression(modelelement, errorlist, includeChildren);
         }
 
-        // check rules of baseconcept(s)
-        this.validateDemoExpression(modelelement, result, includeChildren);
+        // add checks on this concept
+        myChecker.checkDemoLiteralExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
     }
 
-    public validateDemoMultiplyExpression(modelelement: DemoMultiplyExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoMultiplyExpression(modelelement, this.myTyper, result);
+    public validateDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
-        // check rules of baseconcept(s)
-        this.validateDemoBinaryExpression(modelelement, result, includeChildren);
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoStringLiteralExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoLiteralExpression(modelelement, this.myTyper, errorlist);
     }
 
-    public validateDemoPlusExpression(modelelement: DemoPlusExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoPlusExpression(modelelement, this.myTyper, result);
+    public validateDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
-        // check rules of baseconcept(s)
-        this.validateDemoBinaryExpression(modelelement, result, includeChildren);
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoNumberLiteralExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoLiteralExpression(modelelement, this.myTyper, errorlist);
     }
 
-    public validateDemoDivideExpression(modelelement: DemoDivideExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoDivideExpression(modelelement, this.myTyper, result);
+    public validateDemoBooleanLiteralExpression(
+        modelelement: DemoBooleanLiteralExpression,
+        errorlist: PiError[],
+        includeChildren?: boolean
+    ) {
+        let myChecker = new DemoChecker();
 
-        // check rules of baseconcept(s)
-        this.validateDemoBinaryExpression(modelelement, result, includeChildren);
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoBooleanLiteralExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoLiteralExpression(modelelement, this.myTyper, errorlist);
     }
 
-    public validateDemoAndExpression(modelelement: DemoAndExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoAndExpression(modelelement, this.myTyper, result);
+    public validateDemoAbsExpression(modelelement: DemoAbsExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
-        // check rules of baseconcept(s)
-        this.validateDemoBinaryExpression(modelelement, result, includeChildren);
-    }
+        // use the right checks
 
-    public validateDemoOrExpression(modelelement: DemoOrExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoOrExpression(modelelement, this.myTyper, result);
+        // add checks on this concept
+        myChecker.checkDemoAbsExpression(modelelement, this.myTyper, errorlist);
 
-        // check rules of baseconcept(s)
-        this.validateDemoBinaryExpression(modelelement, result, includeChildren);
-    }
+        // add checks of baseconcept(s)
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
 
-    public validateDemoComparisonExpression(modelelement: DemoComparisonExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoComparisonExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoBinaryExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoLessThenExpression(modelelement: DemoLessThenExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoLessThenExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoComparisonExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoGreaterThenExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoComparisonExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoEqualsExpression(modelelement: DemoEqualsExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoEqualsExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoComparisonExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoFunctionCallExpression(modelelement, this.myTyper, result);
-
-        // check rules of baseconcept(s)
-        this.validateDemoExpression(modelelement, result, includeChildren);
-    }
-
-    public validateDemoIfExpression(modelelement: DemoIfExpression, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoIfExpression(modelelement, this.myTyper, result);
-
+        // checking children in the model tree
         if (!(includeChildren === undefined) && includeChildren) {
-            this.validateDemoExpression(modelelement.condition, result, includeChildren);
-            this.validateDemoExpression(modelelement.whenTrue, result, includeChildren);
-            this.validateDemoExpression(modelelement.whenFalse, result, includeChildren);
+            this.validateDemoExpression(modelelement.expr, errorlist, includeChildren);
+        }
+    }
+
+    public validateDemoBinaryExpression(modelelement: DemoBinaryExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+        if (modelelement instanceof DemoMultiplyExpression) {
+            this.validateDemoMultiplyExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoPlusExpression) {
+            this.validateDemoPlusExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoDivideExpression) {
+            this.validateDemoDivideExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoAndExpression) {
+            this.validateDemoAndExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoOrExpression) {
+            this.validateDemoOrExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoComparisonExpression) {
+            this.validateDemoComparisonExpression(modelelement, errorlist, includeChildren);
         }
 
-        // check rules of baseconcept(s)
-        this.validateDemoExpression(modelelement, result, includeChildren);
+        // add checks on this concept
+        myChecker.checkDemoBinaryExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
+
+        // checking children in the model tree
+        if (!(includeChildren === undefined) && includeChildren) {
+            this.validateDemoExpression(modelelement.left, errorlist, includeChildren);
+            this.validateDemoExpression(modelelement.right, errorlist, includeChildren);
+        }
     }
 
-    public validateDemoVariableRef(modelelement: DemoVariableRef, result: PiError[], includeChildren?: boolean) {
-        new DemoChecker().checkDemoVariableRef(modelelement, this.myTyper, result);
+    public validateDemoMultiplyExpression(modelelement: DemoMultiplyExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
 
-        // check rules of baseconcept(s)
-        this.validateDemoExpression(modelelement, result, includeChildren);
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoMultiplyExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoBinaryExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoPlusExpression(modelelement: DemoPlusExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoPlusExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoBinaryExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoDivideExpression(modelelement: DemoDivideExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoDivideExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoBinaryExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoAndExpression(modelelement: DemoAndExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoAndExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoBinaryExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoOrExpression(modelelement: DemoOrExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoOrExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoBinaryExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoComparisonExpression(modelelement: DemoComparisonExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+        if (modelelement instanceof DemoLessThenExpression) {
+            this.validateDemoLessThenExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoGreaterThenExpression) {
+            this.validateDemoGreaterThenExpression(modelelement, errorlist, includeChildren);
+        }
+        if (modelelement instanceof DemoEqualsExpression) {
+            this.validateDemoEqualsExpression(modelelement, errorlist, includeChildren);
+        }
+
+        // add checks on this concept
+        myChecker.checkDemoComparisonExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoBinaryExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoLessThenExpression(modelelement: DemoLessThenExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoLessThenExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoComparisonExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoGreaterThenExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoComparisonExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoEqualsExpression(modelelement: DemoEqualsExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoEqualsExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoComparisonExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoFunctionCallExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
+    }
+
+    public validateDemoIfExpression(modelelement: DemoIfExpression, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoIfExpression(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
+
+        // checking children in the model tree
+        if (!(includeChildren === undefined) && includeChildren) {
+            this.validateDemoExpression(modelelement.condition, errorlist, includeChildren);
+            this.validateDemoExpression(modelelement.whenTrue, errorlist, includeChildren);
+            this.validateDemoExpression(modelelement.whenFalse, errorlist, includeChildren);
+        }
+    }
+
+    public validateDemoVariableRef(modelelement: DemoVariableRef, errorlist: PiError[], includeChildren?: boolean) {
+        let myChecker = new DemoChecker();
+
+        // use the right checks
+
+        // add checks on this concept
+        myChecker.checkDemoVariableRef(modelelement, this.myTyper, errorlist);
+
+        // add checks of baseconcept(s)
+        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
     }
 }

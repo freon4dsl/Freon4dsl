@@ -91,12 +91,12 @@ export class PiLangConcept {
     }
 
     allSubConceptsDirect(): PiLangConcept[] {
-        return this.language.concepts.filter(c => c.base.concept() === this);
+        return this.language.concepts.filter(c => c.base?.concept() === this);
     }
 
     allSubConceptsRecursive(): PiLangConcept[] {
-        var result = this.language.concepts.filter(c => c.base.concept() === this);
-        const tmp = this.language.concepts.filter(c => c.base.concept() === this);
+        var result = this.language.concepts.filter(c => c.base?.concept() === this);
+        const tmp = this.language.concepts.filter(c => c.base?.concept() === this);
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
         return result;
     }

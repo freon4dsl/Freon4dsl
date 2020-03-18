@@ -1,5 +1,5 @@
-import { PiError } from "@projectit/core";
-import { DemoModel, DemoAttributeType, DemoMultiplyExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoDivideExpression, DemoVariableRef, DemoEntity, DemoAttribute } from "../language";
+import { PiError, PiElement } from "@projectit/core";
+import { DemoModel, DemoAttributeType, DemoMultiplyExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoDivideExpression, DemoVariableRef, DemoEntity, DemoAttribute, AllDemoConcepts, DemoFunction, DemoVariable } from "../language";
 import { DemoTyper } from "../typer/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -73,16 +73,32 @@ describe('Testing Validator', () => {
             variableExpression.attribute.declaredType = DemoAttributeType.String;
 
             const divideExpression = DemoModelCreator.MakePlusExp("1","2");
-            const multipleExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);
-            validator.validateDemoMultiplyExpression(multipleExpression, errors);
+            const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);
+            validator.validateDemoMultiplyExpression(multiplyExpression, errors);
+            expect(errors.length).toBe(1);
             errors.forEach(e =>
-                console.log(e.message)
-            );    
+                expect(e.reportedOn === multiplyExpression)
+            );
         })
 
-        test.skip("complete example model", () => {
+        test("'determine(AAP) = \"Hello Demo\" + \"Goodbye\"'' should give two type errors", () => {
             let errors : PiError[] = [];
-            validator.validateDemoModel(model, errors);
+            const determine = DemoFunction.create("determine");
+            const AAP = DemoVariable.create("AAP")
+            determine.parameters.push(AAP);
+            determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
+            // determine(AAP) = "Hello Demo" + "Goodbye"
+            validator.validateDemoFunction(determine, errors, true);
+            expect(errors.length).toBe(2);
+            errors.forEach(e => {
+                expect(e.reportedOn === determine);
+                console.log(e.message);
+            });
+        })
+
+        test("complete example model", () => {
+            let errors : PiError[] = [];
+            validator.validateDemoModel(model, errors, true);
             // expect(errors.length).toBe(3);            
             errors.forEach(e =>
                 console.log(e.message)
@@ -90,3 +106,4 @@ describe('Testing Validator', () => {
         });
     });
 });
+

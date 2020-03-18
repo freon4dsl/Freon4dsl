@@ -25,40 +25,52 @@ export class ValidatorTemplate {
             myTyper : ${Names.typerInterface()};
 
             public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${Names.errorClassName()}[]{
-                let result : ${Names.errorClassName()}[] = [];
+                let errorlist : ${Names.errorClassName()}[] = [];
                 ${language.concepts.map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    this.validate${concept.name}(modelelement, result, includeChildren );
+                    this.validate${concept.name}(modelelement, errorlist, includeChildren );
                 }`).join("")}
 
-                return result;
+                return errorlist;
             }
 
             ${language.concepts.map(concept => `
-                public validate${concept.name}(modelelement: ${concept.name}, result: ${Names.errorClassName()}[], includeChildren?: boolean) {
-                    new ${Names.checker(language, validdef)}().check${concept.name}(modelelement, this.myTyper, result);
+                public validate${concept.name}(modelelement: ${concept.name}, errorlist: ${Names.errorClassName()}[], includeChildren?: boolean) {
+                    let myChecker = new ${Names.checker(language, validdef)}();
+
+                    // use the right checks
+                    ${concept.allSubConceptsDirect().map ( sub =>
+                        `if( modelelement instanceof ${sub.name}) {
+                            this.validate${sub.name}(modelelement, errorlist, includeChildren);
+                        }`
+                    ).join("\n")}
+
+                    // add checks on this concept
+                    myChecker.check${concept.name}(modelelement, this.myTyper, errorlist);
+
+                    ${((!!concept.base )?
+                        `// add checks of baseconcept(s)
+                        myChecker.check${concept.base.name}(modelelement, this.myTyper, errorlist);`
+                    :
+                        ``
+                    )}
 
                     ${((concept.parts.length > 0)?
-                    `if(!(includeChildren === undefined) && includeChildren) { 
+                    ` // checking children in the model tree
+                    if(!(includeChildren === undefined) && includeChildren) { 
                         ${concept.parts.map( part =>
                             (part.isList ?
                                 `modelelement.${part.name}.forEach(p => {
-                                    this.validate${part.type.name}(p, result, includeChildren );
+                                    this.validate${part.type.name}(p, errorlist, includeChildren );
                                 });`
                             :
-                                `this.validate${part.type.name}(modelelement.${part.name}, result, includeChildren );`
+                                `this.validate${part.type.name}(modelelement.${part.name}, errorlist, includeChildren );`
                             )
                         ).join("\n")}
                     }`
                     : ``
                     )}
                     
-                    ${((!!concept.base )?
-                        `// check rules of baseconcept(s)
-                        this.validate${concept.base.name}(modelelement, result, includeChildren);`
-                    :
-                        ``
-                    )}
                 }`).join("\n")}
         }`;
     }

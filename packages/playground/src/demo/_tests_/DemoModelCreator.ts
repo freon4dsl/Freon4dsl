@@ -13,67 +13,77 @@ export class DemoModelCreator  {
 
 	public createCorrectModel() : DemoModel {
         let correctModel: DemoModel = DemoModel.create("DemoModel_1");
-        const entity1 = DemoEntity.create("Person");
-        const attribute1 = DemoAttribute.create("name");
-        const attribute2 = DemoAttribute.create("age");
 
-        const entity2 = DemoEntity.create("Company");
-        const attribute21 = DemoAttribute.create("name");
-        const attribute22 = DemoAttribute.create("VAT_Number");
+        const length = DemoFunction.create("length");
+        const Variable1 = DemoVariable.create("Variable1")
+        const VariableNumber2 = DemoVariable.create("VariableNumber2")
+        length.parameters.push(Variable1);
+        length.parameters.push(VariableNumber2);
+        length.expression = this.addComplexExpression1(); 
+        // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
-        const f1 = DemoFunction.create("length");
-        const f2 = DemoFunction.create("first");
-        const f3 = DemoFunction.create("last");
-        const f4 = DemoFunction.create("determine");
-        const f5 = DemoFunction.create("another");
+        const determine = DemoFunction.create("determine");
+        const AAP = DemoVariable.create("AAP")
+        determine.parameters.push(AAP);
+        determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
+        // determine(AAP) = "Hello Demo" + "Goodbye"
 
-        const var1 = DemoVariable.create("Variable1")
-        const var2 = DemoVariable.create("VariableNumber2")
-        const var3 = DemoVariable.create("Resultvar")
-        const var4 = DemoVariable.create("AAP")
-        const var5 = DemoVariable.create("NOOT")
+        const another = DemoFunction.create("another");
+        const NOOT = DemoVariable.create("NOOT")
+        const companyName = DemoAttribute.create("name");
+        another.parameters.push(NOOT);
+        another.expression = this.addComplexExpression2(companyName);
+        // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
-        correctModel.entities.push(entity1);
-        correctModel.entities.push(entity2);
-        correctModel.functions.push(f1);
-        correctModel.functions.push(f4);
-        correctModel.functions.push(f5);
-        entity1.attributes.push(attribute1);
-        entity1.attributes.push(attribute2);
-        entity2.attributes.push(attribute21);
-        entity2.attributes.push(attribute22);
-        entity1.functions.push(f2);
-        entity2.functions.push(f3);
-        f1.parameters.push(var1);
-        f1.parameters.push(var2);
-        f2.parameters.push(var3);
-        f4.parameters.push(var4);
-        f5.parameters.push(var5);
-        f1.expression = this.addComplexExpression1();
-        f2.expression = DemoModelCreator.MakePlusExp("5","24");
-        f3.expression = DemoModelCreator.MakePlusExp("5","woord");
-        f4.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
-        f5.expression = this.addComplexExpression2(attribute1);
+        correctModel.functions.push(length);
+        correctModel.functions.push(determine);
+        correctModel.functions.push(another);
+ 
+        const personEnt = DemoEntity.create("Person");
+        const age = DemoAttribute.create("age");
+        personEnt.attributes.push(age);
+        const first = DemoFunction.create("first");
+        const Resultvar = DemoVariable.create("Resultvar")
+        first.parameters.push(Resultvar);
+        first.expression = DemoModelCreator.MakePlusExp("5","24");
+        personEnt.functions.push(first);
+        // Person { age, first(Resultvar) = 5 + 24 }
 
-        this.addSimpleTypes(attribute21, attribute1, attribute2, attribute22, f1, f2, f3, f4, f5, var1, var2, var3, var4, var5);
+        const companyEnt = DemoEntity.create("Company");
+        const personName = DemoAttribute.create("name");
+        const VAT_Number = DemoAttribute.create("VAT_Number");
+        companyEnt.attributes.push(personName);
+        companyEnt.attributes.push(VAT_Number);
+        const last = DemoFunction.create("last");
+        last.expression = DemoModelCreator.MakePlusExp("5","woord");
+        companyEnt.functions.push(last);
+        // Company { name, VAT_Number, last() = 5 + "woord"}
+
+        correctModel.entities.push(personEnt);
+        correctModel.entities.push(companyEnt);
+
+        this.addSimpleTypes(personName, companyName, age, VAT_Number, length, first, last, determine, 
+            another, Variable1, VariableNumber2, Resultvar, AAP, NOOT);
         return correctModel;
     }
 
-    private addSimpleTypes(attribute21: DemoAttribute, attribute1: DemoAttribute, attribute2: DemoAttribute, attribute22: DemoAttribute, f1: DemoFunction, f2: DemoFunction, f3: DemoFunction, f4: DemoFunction, f5: DemoFunction, var1: DemoVariable, var2: DemoVariable, var3: DemoVariable, var4: DemoVariable, var5: DemoVariable) {
-        attribute21.declaredType = DemoAttributeType.String;
-        attribute1.declaredType = DemoAttributeType.Boolean;
-        attribute2.declaredType = DemoAttributeType.Boolean;
-        attribute22.declaredType = DemoAttributeType.Integer;
-        f1.declaredType = DemoAttributeType.Integer;
-        f2.declaredType = DemoAttributeType.Boolean;
-        f3.declaredType = DemoAttributeType.Boolean;
-        f4.declaredType = DemoAttributeType.Boolean;
-        f5.declaredType = DemoAttributeType.Boolean;
-        var1.declaredType = DemoAttributeType.Boolean;
-        var2.declaredType = DemoAttributeType.Boolean;
-        var3.declaredType = DemoAttributeType.Boolean;
-        var4.declaredType = DemoAttributeType.Boolean;
-        var5.declaredType = DemoAttributeType.Boolean;
+    private addSimpleTypes(personName: DemoAttribute, companyName: DemoAttribute, age: DemoAttribute, VAT_Number: DemoAttribute, 
+            length: DemoFunction, first: DemoFunction, last: DemoFunction, determine: DemoFunction, another: DemoFunction, 
+            Variable1: DemoVariable, VariableNumber2: DemoVariable, Resultvar: DemoVariable, AAP: DemoVariable, NOOT: DemoVariable) {
+        personName.declaredType = DemoAttributeType.String;
+        companyName.declaredType = DemoAttributeType.Boolean;
+        age.declaredType = DemoAttributeType.Boolean;
+        VAT_Number.declaredType = DemoAttributeType.Integer;
+        length.declaredType = DemoAttributeType.Integer;
+        first.declaredType = DemoAttributeType.Boolean;
+        last.declaredType = DemoAttributeType.Boolean;
+        determine.declaredType = DemoAttributeType.Boolean;
+        another.declaredType = DemoAttributeType.Boolean;
+        Variable1.declaredType = DemoAttributeType.Boolean;
+        VariableNumber2.declaredType = DemoAttributeType.Boolean;
+        Resultvar.declaredType = DemoAttributeType.Boolean;
+        AAP.declaredType = DemoAttributeType.Boolean;
+        NOOT.declaredType = DemoAttributeType.Boolean;
     }
 
     private addComplexTypes(entity1: DemoEntity, entity2: DemoEntity, attribute21: DemoAttribute, attribute1: DemoAttribute, attribute2: DemoAttribute, attribute22: DemoAttribute, f1: DemoFunction, f2: DemoFunction, f3: DemoFunction, f4: DemoFunction, f5: DemoFunction, var1: DemoVariable, var2: DemoVariable, var3: DemoVariable, var4: DemoVariable, var5: DemoVariable) {
@@ -108,7 +118,7 @@ export class DemoModelCreator  {
     }
 
     private addComplexExpression2(attr: DemoAttribute) : DemoExpression {
-        // ("Yes" or ("No" = Variable1))
+        // ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         const varRef = new DemoVariableRef();
         varRef.referredName = "Variable1";

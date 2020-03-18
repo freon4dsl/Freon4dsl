@@ -33,6 +33,7 @@ import { DemoUnparser } from "../../../demo/unparser/DemoUnparser";
 
 export class DemoChecker {
     myUnparser = new DemoUnparser();
+
     public checkDemoModel(modelelement: DemoModel, typer: PiTyper, errorList: PiError[]) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
@@ -74,14 +75,7 @@ export class DemoChecker {
         // @typecheck conformsTo( this.expression, DemoAttributeType:String )
         if (!typer.conformsTo(modelelement.expression, DemoAttributeType.String)) {
             errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.expression) +
-                        "' does not conform to the type of '" +
-                        this.myUnparser.unparse(DemoAttributeType.String) +
-                        "'",
-                    modelelement.expression
-                )
+                new PiError("Type of '"+ this.myUnparser.unparse(modelelement.expression) + "' does not conform to type of 'DemoAttributeType:String'", modelelement.expression)
             );
         }
         // @notEmpty this.parameters
@@ -104,232 +98,88 @@ export class DemoChecker {
     public checkDemoAbsExpression(modelelement: DemoAbsExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.expr, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.expr, DemoAttributeType.Integer)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.expr) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Integer) +
-                        "'",
-                    modelelement.expr
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.expr) + "' should be DemoAttributeType:Integer", modelelement.expr));
         }
     }
 
     public checkDemoMultiplyExpression(modelelement: DemoMultiplyExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Integer) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' should be DemoAttributeType:Integer", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.right) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Integer) +
-                        "'",
-                    modelelement.right
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.right) + "' should be DemoAttributeType:Integer", modelelement.right));
         }
     }
 
     public checkDemoPlusExpression(modelelement: DemoPlusExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Integer) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' should be DemoAttributeType:Integer", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.right) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Integer) +
-                        "'",
-                    modelelement.right
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.right) + "' should be DemoAttributeType:Integer", modelelement.right));
         }
         // @typecheck conformsTo( this.left, this.right )
         if (!typer.conformsTo(modelelement.left, modelelement.right)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' does not conform to the type of '" +
-                        this.myUnparser.unparse(modelelement.right) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' does not conform to type of 'this.right'", modelelement.left));
         }
     }
 
     public checkDemoDivideExpression(modelelement: DemoDivideExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Integer) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' should be DemoAttributeType:Integer", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.right) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Integer) +
-                        "'",
-                    modelelement.right
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.right) + "' should be DemoAttributeType:Integer", modelelement.right));
         }
     }
 
     public checkDemoAndExpression(modelelement: DemoAndExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Boolean) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' should be DemoAttributeType:Boolean", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.right) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Boolean) +
-                        "'",
-                    modelelement.right
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.right) + "' should be DemoAttributeType:Boolean", modelelement.right));
         }
     }
 
     public checkDemoOrExpression(modelelement: DemoOrExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Boolean) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' should be DemoAttributeType:Boolean", modelelement.left));
         }
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Boolean) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' should be DemoAttributeType:Boolean", modelelement.left));
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.right) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Boolean) +
-                        "'",
-                    modelelement.right
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.right) + "' should be DemoAttributeType:Boolean", modelelement.right));
         }
     }
 
     public checkDemoComparisonExpression(modelelement: DemoComparisonExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.left, this.right )
         if (!typer.equalsType(modelelement.left, modelelement.right)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(modelelement.right) +
-                        "'",
-                    modelelement.left
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.left) + "' should be this.right", modelelement.left));
         }
     }
 
     public checkDemoIfExpression(modelelement: DemoIfExpression, typer: PiTyper, errorList: PiError[]) {
         // @typecheck equalsType( this.condition, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.condition, DemoAttributeType.Boolean)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.condition) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Boolean) +
-                        "'",
-                    modelelement.condition
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.condition) + "' should be DemoAttributeType:Boolean", modelelement.condition));
         }
         // @typecheck conformsTo( this.whenTrue, this.whenFalse )
         if (!typer.conformsTo(modelelement.whenTrue, modelelement.whenFalse)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.whenTrue) +
-                        "' does not conform to the type of '" +
-                        this.myUnparser.unparse(modelelement.whenFalse) +
-                        "'",
-                    modelelement.whenTrue
-                )
-            );
+            errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(modelelement.whenTrue) + "' does not conform to type of '"+ this.myUnparser.unparse(modelelement.whenFalse) + "'", modelelement.whenTrue));
         }
     }
 

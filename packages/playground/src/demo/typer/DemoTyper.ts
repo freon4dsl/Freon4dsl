@@ -1,11 +1,12 @@
 import { PiTyper } from "@projectit/core";
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression,
-    DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression, DemoBooleanLiteralExpression } from "../language";
+    DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression, DemoBooleanLiteralExpression, DemoPlaceholderExpression } from "../language";
 import { AllDemoConcepts } from "../language/AllDemoConcepts";
 
 export class DemoTyper implements PiTyper {
    
     equalsType(elem1: AllDemoConcepts, elem2: AllDemoConcepts): boolean {
+        if ( this.inferType(elem1) === DemoAttributeType.ANY || this.inferType(elem2) === DemoAttributeType.ANY ) return true;
         if( this.inferType(elem1).$id === this.inferType(elem2).$id) return true;
         // console.log("EQUALSTYPE( " + this.inferType(elem1).name + ", " + this.inferType(elem2).name + " ) returns false");
         return false;
@@ -37,13 +38,15 @@ export class DemoTyper implements PiTyper {
            return modelelement.functionDefinition.declaredType;
         } else if (modelelement instanceof DemoIfExpression) {
             return this.inferType(modelelement.whenTrue);
+        } else if (modelelement instanceof DemoPlaceholderExpression) {
+            return DemoAttributeType.ANY;
         }
         return DemoAttributeType.ANY; // default
     }    
 
     // for now: simply implemented on basis of equal identity of the types
     // should be implemented based on the conformance rules in Typer Description file
-    conformsTo(type1: DemoType, type2: DemoType): boolean {
+    conformsTo(elem1: DemoType, elem2: DemoType): boolean {
         // @conformanceRule 'entityRule1' e1:PG_Entity <= e2:PG_Entity { // meaning that Entity e2 conforms to Entity e1 if the following holds
         //     e2.inheritsFrom(e1) // needs inheritance relationship between PG_Entities in .lang, this is currently not defined
         //     or 
@@ -58,7 +61,8 @@ export class DemoTyper implements PiTyper {
         //         }
         //     }
         // }
-        if( type1.$id === type2.$id) return true;
+        if ( this.inferType(elem1) === DemoAttributeType.ANY || this.inferType(elem2) === DemoAttributeType.ANY ) return true;
+        if( this.inferType(elem1).$id === this.inferType(elem2).$id) return true;
         return false;
     }
 

@@ -38,6 +38,7 @@ DemoMultiplyExpression {
 DemoPlusExpression {
     @typecheck equalsType( this.left, DemoAttributeType:Integer )
     @typecheck equalsType( this.right, DemoAttributeType:Integer )
+    @typecheck conformsTo( this.left, this.right )
 }
 
 DemoDivideExpression {

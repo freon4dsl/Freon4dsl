@@ -13,9 +13,11 @@ export class CheckerTemplate {
         // the template starts here
         return `
         import { ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
-        import { ${this.createImports(language, validdef)} } from "../../language";     
+        import { ${this.createImports(language, validdef)} } from "../../language"; 
+        import { ${Names.unparser(language)} } from "../../../demo/unparser/${Names.unparser(language)}";    
 
         export class ${language.name}Checker {
+            myUnparser = new ${Names.unparser(language)}();
         ${validdef.conceptRules.map(ruleSet =>
             `public check${ruleSet.conceptRef.concept().name}(modelelement: ${ruleSet.conceptRef.concept().name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
                 ${this.createRules(ruleSet)}
@@ -24,7 +26,6 @@ export class CheckerTemplate {
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
             `public check${concept.name}(modelelement: ${concept.name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
-                return null;
             }`
         ).join("\n\n") }
         
@@ -70,11 +71,13 @@ export class CheckerTemplate {
                 `// ${r.toPiString()}
                 ${(r instanceof EqualsTypeRule ?
                     `if(!typer.equalsType(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        errorList.push(new PiError("Type of '${r.type1.toPiString()}' should be ${r.type2.toPiString()}", ${this.langRefToTypeScript(r.type1)}));
+                        errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) 
+                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
                     }`
                 : (r instanceof ConformsTypeRule ?
                     `if(!typer.conformsTo(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        errorList.push(new PiError("Type of '${r.type1.toPiString()}' does not conform to type of '${r.type2.toPiString()}'", ${this.langRefToTypeScript(r.type1)}));
+                        errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) + 
+                        "' does not conform to (the type of) '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
                     }`           
                 : (r instanceof NotEmptyRule ?
                     `if(${this.langRefToTypeScript(r.property)}.length == 0) {
