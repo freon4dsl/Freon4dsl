@@ -106,10 +106,10 @@ export class DemoUnparser {
         // adding the unparse string of children in the model tree
         if (!(includeChildren === undefined) && includeChildren) {
             modelelement.attributes.forEach(p => {
-                result = result.concat( this.unparseDemoAttribute(p, includeChildren));
+                result = result.concat( this.unparseDemoAttribute(p, includeChildren)).concat(", ");
             });
             modelelement.functions.forEach(p => {
-                result = result.concat( this.unparseDemoFunction(p, includeChildren));
+                result = result.concat( this.unparseDemoFunction(p, includeChildren)).concat(", ");
             });
         }
         return result + "\n}";
@@ -137,7 +137,8 @@ export class DemoUnparser {
             modelelement.parameters.forEach(p => {
                 result = result.concat( this.unparseDemoVariable(p, includeChildren));
             });
-            result = result.concat(") ");
+            result = result.concat(" )");
+            result = result.concat(": " + this.unparse(modelelement.declaredType, includeChildren));
             result = result.concat( " = " + this.unparseDemoExpression(modelelement.expression, includeChildren));
         } else {
             result.concat( "()");

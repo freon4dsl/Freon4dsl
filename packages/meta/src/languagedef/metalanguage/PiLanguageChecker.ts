@@ -21,7 +21,9 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.checkCUIReference(concept.base);
         }
 
-        concept.properties.forEach(prop => this.checkPiPrimitiveProperty(prop));
+        concept.primProperties.forEach(prop => this.checkPiPrimitiveProperty(prop));
+        // TODO add the following:
+        // concept.enumProperties.forEach(prop => this.checkPiEnumProperty(prop));
         concept.parts.forEach(part => this.checkPiElementProperty(part));
         concept.references.forEach(ref => this.checkPiElementProperty(ref));
 

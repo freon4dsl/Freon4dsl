@@ -103,8 +103,8 @@ function createCommonConceptParts(result: PiLangConcept, data: Partial<PiLangCon
     if (!!data.base) {
         result.base = data.base;
     }
-    if (!!data.properties) {
-        result.properties = data.properties;
+    if (!!data.primProperties) {
+        result.primProperties = data.primProperties;
     }
     if (!!data.enumProperties) {
         result.enumProperties = data.enumProperties;
@@ -116,7 +116,7 @@ function createCommonConceptParts(result: PiLangConcept, data: Partial<PiLangCon
         result.references = data.references;
     }
     result.parts.forEach(part => part.owningConcept = result);
-    result.properties.forEach(prop => prop.owningConcept = result);
+    result.primProperties.forEach(prop => prop.owningConcept = result);
     result.enumProperties.forEach(prop => prop.owningConcept = result);
     result.references.forEach(ref => ref.owningConcept = result);
 }

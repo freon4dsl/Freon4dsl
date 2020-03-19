@@ -28,20 +28,19 @@ export class DemoModelCreator  {
         determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
         // determine(AAP) = "Hello Demo" + "Goodbye"
 
-        const another = DemoFunction.create("another");
-        const NOOT = DemoVariable.create("NOOT")
-        const companyName = DemoAttribute.create("name");
-        another.parameters.push(NOOT);
-        another.expression = this.addComplexExpression2(companyName);
-        // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
-
+        const last = DemoFunction.create("last");
+        last.expression = DemoModelCreator.MakePlusExp("5","woord");
+        // last() = 5 + "woord"
+        
         correctModel.functions.push(length);
         correctModel.functions.push(determine);
-        correctModel.functions.push(another);
+        correctModel.functions.push(last);
  
         const personEnt = DemoEntity.create("Person");
         const age = DemoAttribute.create("age");
+        const personName = DemoAttribute.create("name");
         personEnt.attributes.push(age);
+        personEnt.attributes.push(personName);
         const first = DemoFunction.create("first");
         const Resultvar = DemoVariable.create("Resultvar")
         first.parameters.push(Resultvar);
@@ -50,14 +49,19 @@ export class DemoModelCreator  {
         // Person { age, first(Resultvar) = 5 + 24 }
 
         const companyEnt = DemoEntity.create("Company");
-        const personName = DemoAttribute.create("name");
+        const companyName = DemoAttribute.create("name");
         const VAT_Number = DemoAttribute.create("VAT_Number");
-        companyEnt.attributes.push(personName);
+        companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
-        const last = DemoFunction.create("last");
-        last.expression = DemoModelCreator.MakePlusExp("5","woord");
-        companyEnt.functions.push(last);
-        // Company { name, VAT_Number, last() = 5 + "woord"}
+
+        const another = DemoFunction.create("another");
+        const NOOT = DemoVariable.create("NOOT")
+        another.parameters.push(NOOT);
+        another.expression = this.addComplexExpression2(companyName);
+        // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
+
+        companyEnt.functions.push(another);
+        // Company { name, VAT_Number, another(NOOT) = ... }
 
         correctModel.entities.push(personEnt);
         correctModel.entities.push(companyEnt);
@@ -74,7 +78,7 @@ export class DemoModelCreator  {
         companyName.declaredType = DemoAttributeType.Boolean;
         age.declaredType = DemoAttributeType.Boolean;
         VAT_Number.declaredType = DemoAttributeType.Integer;
-        length.declaredType = DemoAttributeType.Integer;
+        length.declaredType = DemoAttributeType.String;
         first.declaredType = DemoAttributeType.Boolean;
         last.declaredType = DemoAttributeType.Boolean;
         determine.declaredType = DemoAttributeType.Boolean;

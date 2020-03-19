@@ -71,14 +71,14 @@ export class DemoChecker {
     }
 
     public checkDemoFunction(modelelement: DemoFunction, typer: PiTyper, errorList: PiError[]) {
-        // @typecheck conformsTo( this.expression, DemoAttributeType:String )
-        if (!typer.conformsTo(modelelement.expression, DemoAttributeType.String)) {
+        // @typecheck conformsTo( this.expression, this.declaredType )
+        if (!typer.conformsTo(modelelement.expression, modelelement.declaredType)) {
             errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.expression) +
-                        "' does not conform to the type of '" +
-                        this.myUnparser.unparse(DemoAttributeType.String) +
+                        "' does not conform to (the type of) '" +
+                        this.myUnparser.unparse(modelelement.declaredType) +
                         "'",
                     modelelement.expression
                 )
@@ -179,7 +179,7 @@ export class DemoChecker {
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
-                        "' does not conform to the type of '" +
+                        "' does not conform to (the type of) '" +
                         this.myUnparser.unparse(modelelement.right) +
                         "'",
                     modelelement.left
@@ -260,19 +260,6 @@ export class DemoChecker {
                 )
             );
         }
-        // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
-        if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            errorList.push(
-                new PiError(
-                    "Type of '" +
-                        this.myUnparser.unparse(modelelement.left) +
-                        "' should be equal to (the type of) '" +
-                        this.myUnparser.unparse(DemoAttributeType.Boolean) +
-                        "'",
-                    modelelement.left
-                )
-            );
-        }
         // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
         if (!typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
             errorList.push(
@@ -324,7 +311,7 @@ export class DemoChecker {
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.whenTrue) +
-                        "' does not conform to the type of '" +
+                        "' does not conform to (the type of) '" +
                         this.myUnparser.unparse(modelelement.whenFalse) +
                         "'",
                     modelelement.whenTrue

@@ -3,12 +3,14 @@ import { DemoModel, DemoAttributeType, DemoMultiplyExpression, DemoNumberLiteral
 import { DemoTyper } from "../typer/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { DemoUnparser } from "../unparser/DemoUnparser";
 
 describe('Testing Validator', () => {
     describe('Validate DemoModel Instance', () => {
         const model : DemoModel = new DemoModelCreator().model;
         const validator = new DemoValidator();
         validator.myTyper = new DemoTyper();
+        const unparser : DemoUnparser = new DemoUnparser();
      
         beforeEach(done => {
           done();
@@ -87,22 +89,52 @@ describe('Testing Validator', () => {
             const AAP = DemoVariable.create("AAP")
             determine.parameters.push(AAP);
             determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
-            // determine(AAP) = "Hello Demo" + "Goodbye"
+            determine.declaredType = DemoAttributeType.Boolean;
+            // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             validator.validateDemoFunction(determine, errors, true);
-            expect(errors.length).toBe(2);
+            expect(errors.length).toBe(3);
             errors.forEach(e => {
                 expect(e.reportedOn === determine);
-                console.log(e.message);
+                // console.log(e.message);
             });
         })
 
-        test("complete example model", () => {
+        test("Person { name, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
+            let errors : PiError[] = [];
+            const personEnt = DemoEntity.create("Person");
+            const age = DemoAttribute.create("age");
+            const personName = DemoAttribute.create("name");
+            personEnt.attributes.push(age);
+            personEnt.attributes.push(personName);
+            const first = DemoFunction.create("first");
+            const Resultvar = DemoVariable.create("Resultvar")
+            first.parameters.push(Resultvar);
+            first.expression = DemoModelCreator.MakePlusExp("5","24");
+            personEnt.functions.push(first);
+
+            // add types to the model elements
+            personName.declaredType = DemoAttributeType.String;
+            age.declaredType = DemoAttributeType.Boolean;
+            first.declaredType = DemoAttributeType.Boolean;
+            Resultvar.declaredType = DemoAttributeType.Boolean;
+    
+            // Person { name, age, first(Resultvar) = 5 + 24 }
+        
+            // console.log("testing: " + unparser.unparseDemoEntity(personEnt, true));
+            validator.validateDemoEntity(personEnt, errors, true);
+            expect(errors.length).toBe(1);            
+            // errors.forEach(e =>
+            //     console.log(e.message)
+            // );
+        });
+
+        test("complete example model with simple attribute types", () => {
             let errors : PiError[] = [];
             validator.validateDemoModel(model, errors, true);
-            // expect(errors.length).toBe(3);            
-            errors.forEach(e =>
-                console.log(e.message)
-            );
+            expect(errors.length).toBe(19);            
+            // errors.forEach(e =>
+            //     console.log(e.message)
+            // );
         });
     });
 });

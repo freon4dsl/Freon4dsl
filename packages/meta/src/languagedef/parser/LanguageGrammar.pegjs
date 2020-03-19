@@ -36,7 +36,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
     {
         if (!!binary) {
             return create.createBinaryExpressionConcept({
-                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
                 "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
                 "parts": parts,
                 "references": references,
@@ -51,7 +51,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             });
         } else if (!!expression) {
             return create.createExpressionConcept({
-                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
                 "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
                 "parts": parts,
                 "references": references,
@@ -66,7 +66,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             });
         } else {
             return create.createConcept({
-                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
                 "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
                 "parts": parts,
                 "references": references,

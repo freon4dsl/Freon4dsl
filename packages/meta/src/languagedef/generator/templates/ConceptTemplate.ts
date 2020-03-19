@@ -9,7 +9,7 @@ export class ConceptTemplate {
         const language = concept.language;
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.concept()) : "MobxModelElementImpl";
-        const hasName = concept.properties.some(p => p.name === "name");
+        const hasName = concept.primProperties.some(p => p.name === "name");
         // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
         const isBinaryExpression = concept.binaryExpression();
@@ -57,7 +57,7 @@ export class ConceptTemplate {
 
         // Template starts here
         const result = `
-            ${concept.properties.length > 0 ? `import { observable } from "mobx";` : ""}
+            ${concept.primProperties.length > 0 ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
             import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/core";
@@ -86,7 +86,7 @@ export class ConceptTemplate {
                     }
                 }
                 
-                ${concept.properties.map(p => this.generatePrimitiveProperty(p)).join("")}
+                ${concept.primProperties.map(p => this.generatePrimitiveProperty(p)).join("")}
                 ${concept.enumProperties.map(p => this.generateEnumerationProperty(p)).join("")}
                 ${concept.parts.map(p => this.generatePartProperty(p)).join("")}
                 ${concept.references.map(p => this.generateReferenceProperty(p)).join("")}

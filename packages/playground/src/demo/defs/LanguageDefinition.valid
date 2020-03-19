@@ -17,7 +17,7 @@ DemoAttribute {
 }
 
 DemoFunction {
-    @typecheck conformsTo (this.expression, DemoAttributeType:String) 
+    @typecheck conformsTo (this.expression, this.declaredType) 
     @notEmpty this.parameters
     @validName 
 }
@@ -52,7 +52,6 @@ DemoAndExpression {
 }
 
 DemoOrExpression {
-    @typecheck equalsType( this.left, DemoAttributeType:Boolean )
     @typecheck equalsType( this.left, DemoAttributeType:Boolean )
     @typecheck equalsType( this.right, DemoAttributeType:Boolean )
 }
