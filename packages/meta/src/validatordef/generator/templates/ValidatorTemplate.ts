@@ -7,7 +7,6 @@ export class ValidatorTemplate {
     }
 
     generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        console.log(`Creating ${Names.validator(language, validdef)}`);
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
         const generatedClassName : String = Names.validator(language, validdef);

@@ -131,7 +131,7 @@ describe('Testing Validator', () => {
         test("complete example model with simple attribute types", () => {
             let errors : PiError[] = [];
             validator.validateDemoModel(model, errors, true);
-            expect(errors.length).toBe(19);            
+            expect(errors.length).toBe(19);                
             // errors.forEach(e =>
             //     console.log(e.message)
             // );

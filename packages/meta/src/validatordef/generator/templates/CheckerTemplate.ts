@@ -7,8 +7,6 @@ export class CheckerTemplate {
     }
 
     generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        console.log(`Creating ${Names.checker(language, validdef)}`);
-        // this.createRules(validdef);
         
         // the template starts here
         return `

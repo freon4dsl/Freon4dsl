@@ -1,13 +1,12 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
-import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { ScoperParser } from "../scoperdef/parser/ScoperParser";
-import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
+import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { PiLogger } from "../../../core/src/util/PiLogging";
 
-export class ProjectItGenerateValidator extends ProjectItGenerateAction {
-    private defFile: CommandLineStringParameter;
-    // protected languageGenerator: LanguageGenerator = new LanguageGenerator();
+const LOGGER = new PiLogger("ProjectItGenerateValidator"); // .mute();
+export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
+    private validdefFile: CommandLineStringParameter;
     protected validatorGenerator: ValidatorGenerator;
 
     public constructor() {
@@ -19,26 +18,29 @@ export class ProjectItGenerateValidator extends ProjectItGenerateAction {
     }
 
     generate(): void {
-        const language = new LanguageParser().parse(this.languageFile); 
-        // only read the .lang file, no need to generate
-        // this.languageGenerator.outputfolder = this.outputFolder;
-        // this.languageGenerator.generate(language);
-
-        // validatorParser needs language because it has to perform checks!
-        const validator = new ValidatorParser(language).parse(this.defFile.value);
-
-        // scoperGenerator needs language because ??? TODO
-        this.validatorGenerator = new ValidatorGenerator(language);
+        if (this.verbose) {
+            LOGGER.log("Starting ProjectIt validator generation ...");    
+        }
+        super.generate();
+        this.validatorGenerator = new ValidatorGenerator(this.language);
         this.validatorGenerator.outputfolder = this.outputFolder;
-        this.validatorGenerator.generate(validator);
+
+        const validator = new ValidatorParser(this.language).parse(this.validdefFile.value);
+        if (validator == null) {
+            LOGGER.error(this, "Validator definiton could not be parsed, exiting.");
+            process.exit(-1);
+        }
+        this.validatorGenerator.generate(validator, this.verbose);
+        // TODO add check on succesfullness
     }
 
     protected onDefineParameters(): void {
-        this.defFile = this.defineStringParameter({
+        super.onDefineParameters();
+        this.validdefFile = this.defineStringParameter({
             argumentName: "VALIDATE",
             defaultValue: "LanguageDefinition.valid",
-            parameterLongName: "--valid",
-            parameterShortName: "-v",
+            parameterLongName: "--checker",
+            parameterShortName: "-c",
             description: "Validation Definition file"
         });
     }

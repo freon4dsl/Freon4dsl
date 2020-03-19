@@ -7,6 +7,9 @@ type LogMessage = string | MessageFunction;
 
 export class PiLogger {
     private static muteAll: boolean = false;
+    private static FgRed = "\x1b[31m";
+    private static FgBlack = "\x1b[30m";
+    private static FgBlue = "\x1b[34m";
 
     static muteAllLogs() {
         PiLogger.muteAll = true;
@@ -22,26 +25,26 @@ export class PiLogger {
     category: string;
     active: boolean = true;
 
-    constructor(cat: string) {
+    constructor(cat: string) { 
         this.category = cat;
     }
 
     info(o: any, msg: LogMessage) {
         if (this.active && !PiLogger.muteAll) {
             const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-            this.logToConsole(this.category + " " + type + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FgBlue, this.category + " " + type + ": " + this.message(msg));
         }
     }
 
     log(msg: LogMessage) {
         if (this.active && !PiLogger.muteAll) {
-            this.logToConsole(this.category + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FgBlack, this.category + ": " + this.message(msg));
         }
     }
 
     error(o: any, msg: LogMessage) {
         const type = "NO_TYPE"; // Object.getPrototypeOf(o).constructor.name;
-        console.log("ERROR: " + this.category + " " + type + ": " + this.message(msg));
+        console.log(PiLogger.FgRed, "ERROR: " + this.category + " " + type + ": " + this.message(msg));
     }
 
     mute(): PiLogger {
@@ -58,12 +61,12 @@ export class PiLogger {
         return typeof msg === "string" ? msg : msg();
     }
 
-    protected logToConsole(message: string): void {
+    protected logToConsole(color : string, message: string): void {
         if (PiLogger.filter === null) {
-            console.log(message);
+            console.log(color, message);
         } else {
             if (message.includes(PiLogger.filter)) {
-                console.log(message);
+                console.log(color, message);
             }
         }
     }

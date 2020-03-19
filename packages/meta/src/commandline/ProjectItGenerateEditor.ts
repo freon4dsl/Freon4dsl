@@ -1,13 +1,13 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { EditorParser } from "../editordef/parser/EditorParser";
-import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
+import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { PiLogger } from "../../../core/src/util/PiLogging";
 
-export class ProjectItGenerateEditor extends ProjectItGenerateAction {
+const LOGGER = new PiLogger("ProjectItGenerateEditor"); // .mute();
+
+export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
     private editorFile: CommandLineStringParameter;
-    protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
 
     public constructor() {
@@ -19,17 +19,25 @@ export class ProjectItGenerateEditor extends ProjectItGenerateAction {
     }
 
     generate(): void {
-        const language = new LanguageParser().parse(this.languageFile);
-        // this.languageGenerator.outputfolder = this.outputFolder;
-        // this.languageGenerator.generate(language);
+        if (this.verbose) {
+            LOGGER.log("Starting ProjectIt editor generation ...");    
+        }
+        super.generate();
 
-        const editor = new EditorParser().parse(this.editorFile.value);
         this.editorGenerator.outputfolder = this.outputFolder;
-        this.editorGenerator.language = language;
-        this.editorGenerator.generate(editor);
+        this.editorGenerator.language = this.language;
+
+        const editor = new EditorParser().parse(this.editorFile.value, this.verbose);
+        if (editor == null) {
+            LOGGER.error(this, "Editor definition could not be parsed, exiting.");
+            process.exit(-1);
+        }
+       this.editorGenerator.generate(editor, this.verbose);
+        // TODO add check on succefullness of generation
     }
 
     protected onDefineParameters(): void {
+        super.onDefineParameters();
         this.editorFile = this.defineStringParameter({
             argumentName: "EDITOR",
             defaultValue: "LanguageDefinition.edit",

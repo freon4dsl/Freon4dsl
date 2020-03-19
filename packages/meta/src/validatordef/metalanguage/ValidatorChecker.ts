@@ -2,7 +2,9 @@ import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty, PiLangCUI, PiPrimTypesEnum } from "../../languagedef/metalanguage/PiLanguage";
 import { ConceptRuleSet, PiValidatorDef, EqualsTypeRule, ValidationRule, ConformsTypeRule, NotEmptyRule, LangRefExpression, EnumRefExpression, ThisExpression, PropertyRefExpression, ValidNameRule } from "./ValidatorDefLang";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLogger } from "../../../../core/src/util/PiLogging";
 
+const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
 export class ValidatorChecker extends Checker<PiValidatorDef> {
     
     constructor(language: PiLanguageUnit) {
@@ -10,8 +12,8 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.language = language;
     }
 
-    public check(definition: PiValidatorDef): void {
-        console.log("Checking Validator Definition '" + definition.validatorName + "'");
+    public check(definition: PiValidatorDef, verbose: boolean): void {
+        if (verbose) LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
         this.nestedCheck(
             {
@@ -110,7 +112,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check: tr.type1 != null || tr.type2 != null,
                 error: `Typecheck "equalsType" should have two types to compare`,
                 whenOk: () => {
-                    // console.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
+                    // if (verbose) LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
                     this.checkLangReference(tr.type1, enclosingConcept),
                     this.checkLangReference(tr.type2, enclosingConcept)  
                 }
@@ -124,7 +126,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check: tr.type1 != null || tr.type2 != null,
                 error: `Typecheck "conformsTo" should have two types to compare`,
                 whenOk: () => {
-                    // console.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
+                    // if (verbose) LOGGER.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
                     this.checkLangReference(tr.type1, enclosingConcept);
                     this.checkLangReference(tr.type2, enclosingConcept)  
                 }
@@ -143,7 +145,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     checkLangReference(langRef: LangRefExpression, enclosingConcept:PiLangConcept) {
-        // console.log("Checking Language Reference " + langRef.sourceName );
+        // if (verbose) LOGGER.log("Checking Language Reference " + langRef.sourceName );
         if (langRef instanceof EnumRefExpression) {
             this.checkEnumRefExpression(langRef, enclosingConcept);
         } else if (langRef instanceof ThisExpression) {
@@ -154,7 +156,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     checkThisExpression(langRef: ThisExpression, enclosingConcept:PiLangConcept) {
-        // console.log("Checking 'this' Reference " + langRef.makeString());
+        // if (verbose) LOGGER.log("Checking 'this' Reference " + langRef.makeString());
         this.nestedCheck(
             {
                 check: langRef.appliedFeature != null,
@@ -167,7 +169,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     checkEnumRefExpression(langRef: EnumRefExpression, enclosingConcept:PiLangConcept) {
-        // console.log("Checking Enumeration Reference " + langRef.makeString());
+        // if (verbose) LOGGER.log("Checking Enumeration Reference " + langRef.makeString());
         let myEnumType = this.language.findEnumeration(langRef.sourceName);
         this.nestedCheck({
             check: myEnumType != null,
@@ -182,7 +184,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                         this.simpleCheck(myLiteral != null,`Literal '${langRef.literalName}' unknown in '${langRef.sourceName}'`);
                         // set the found languge element
                         langRef.astEnumType = myEnumType;
-                        // console.log("FOUND enum " + langRef.astEnumType.name + " with literal " + langRef.literalName);
+                        // if (verbose) LOGGER.log("FOUND enum " + langRef.astEnumType.name + " with literal " + langRef.literalName);
                     }
                 });
             }
@@ -190,7 +192,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     checkPropertyRefExpression(langRef: PropertyRefExpression, enclosingConcept:PiLangConcept) {
-        console.log("Checking Property Reference " + langRef.toString());
+        LOGGER.log("Checking Property Reference " + langRef.toString());
         // TODO implement
     }
 

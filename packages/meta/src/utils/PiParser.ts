@@ -1,6 +1,9 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser } from "pegjs";
+import { PiLogger } from "../../../core/src/util/PiLogging";
+
+const LOGGER = new PiLogger("PiParser"); // .mute();
 /**
  * Generic Parser, subclasses need to initialize the parser, checker and msg fields.
  */
@@ -11,37 +14,37 @@ export class PiParser<DEFINITION> {
     checker: Checker<DEFINITION>;
     msg: string;
 
-    parse(definitionFile: string): DEFINITION {
+    parse(definitionFile: string, verbose?: boolean): DEFINITION {
         // Check language file
         if (!fs.existsSync(definitionFile)) {
-            console.log(this.msg + " definition file '" + definitionFile + "' does not exist, exiting.");
+            LOGGER.error(this, this.msg + " definition file '" + definitionFile + "' does not exist, exiting.");
             process.exit(-1);
         }
-        // console.log(this.msg + " file is [" + definitionFile + "] ");
+        if (verbose) LOGGER.log(this.msg + " file is [" + definitionFile + "] ");
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "UTF8" });
         // Parse Language file
         let model: DEFINITION = null;
         try {
             model = this.parser["parse"](langSpec);
         } catch (e) {
-            console.log(this.msg + ": Exception in Parser: " + e);
-            // console.log(JSON.stringify(e, null, 4));
+            LOGGER.error(this, this.msg + ": Exception in Parser: " + e);
+            if (verbose) LOGGER.log(JSON.stringify(e, null, 4));
             if (e.location && e.location.start)
-                console.log("\tError location: line " + e.location.start.line + ", column " + e.location.start.column);
+                LOGGER.error(this, "\tError location: line " + e.location.start.line + ", column " + e.location.start.column);
             process.exit(-1);
         }
         if (model !== null) {
-            this.checker.check(model);
+            this.checker.check(model, verbose);
             if (this.checker.hasErrors()) {
-                console.log(this.msg + " checking errors:");
-                this.checker.errors.forEach(error => console.log(error));
-                console.log("Stopping because of errors.");
+                LOGGER.error(this, this.msg + " checking errors:");
+                this.checker.errors.forEach(error => LOGGER.error(this, error));
+                LOGGER.error(this, "Stopping because of errors.");
                 process.exit(-1);
             }
             return model;
         } else {
             // TODO change error message
-            console.log("ERROR: Language parser does not return a PiLanguage");
+            LOGGER.error(this, "ERROR: Language parser does not return a PiLanguage");
             process.exit(-1);
         }
     }

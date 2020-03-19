@@ -2,7 +2,9 @@ import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "./PiScopeDefLang";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLogger } from "../../../../core/src/util/PiLogging";
 
+const LOGGER = new PiLogger("PiScoperChecker"); // .mute();
 export class PiScoperChecker extends Checker<PiScopeDef> {
     
     constructor(language: PiLanguageUnit) {
@@ -10,8 +12,8 @@ export class PiScoperChecker extends Checker<PiScopeDef> {
         this.language = language;
     }
 
-    public check(definition: PiScopeDef): void {
-        console.log("Checking Scope Definition " + definition.scoperName);
+    public check(definition: PiScopeDef, verbose: boolean): void {
+        if (verbose) LOGGER.log("Checking scope definition " + definition.scoperName);
         this.nestedCheck(
             {
                 check: true,
