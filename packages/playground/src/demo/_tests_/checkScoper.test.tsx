@@ -223,9 +223,9 @@ describe("testing Scoper", () => {
       });     
      }); 
 
-     test("isInscope 'last'", () => {
-      // last is Function of Company in DemoModel_1
-      let nameTotest : string = "last";
+     test("isInscope 'another'", () => {
+      // last is Function of DemoModel_1 
+      let nameTotest : string = "another";
       expect(scoper.isInScope(model, nameTotest)).toBe(false);
       // test if nameTotest is known in model functions
       model.functions.forEach(fun => {

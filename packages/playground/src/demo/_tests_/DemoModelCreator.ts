@@ -42,7 +42,7 @@ export class DemoModelCreator  {
         personEnt.attributes.push(age);
         personEnt.attributes.push(personName);
         const first = DemoFunction.create("first");
-        const Resultvar = DemoVariable.create("Resultvar")
+        const Resultvar = DemoVariable.create("Resultvar");
         first.parameters.push(Resultvar);
         first.expression = DemoModelCreator.MakePlusExp("5","24");
         personEnt.functions.push(first);
