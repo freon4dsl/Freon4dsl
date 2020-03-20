@@ -41,11 +41,11 @@ export class ProjectItParser extends CommandLineParser {
     }
 
     protected onExecute(): Promise<void> {
-        this.languageGenerator.verbose = this.verboseArg? true : false;
-        this.allGenerator.verbose = this.verboseArg? true : false;
-        this.editorGenerator.verbose = this.verboseArg? true : false;
-        this.scoperGenerator.verbose = this.verboseArg? true : false;
-        this.validatorGenerator.verbose = this.verboseArg? true : false;
+        this.languageGenerator.verbose = this.verboseArg.value;
+        this.allGenerator.verbose = this.verboseArg.value;
+        this.editorGenerator.verbose = this.verboseArg.value;
+        this.scoperGenerator.verbose = this.verboseArg.value;
+        this.validatorGenerator.verbose = this.verboseArg.value;
 
         return super.onExecute();
     }
