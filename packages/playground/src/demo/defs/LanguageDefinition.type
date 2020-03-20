@@ -1,66 +1,37 @@
 typer Demo for language Demo
 
-@isType { DemoEntity, DemoAttributeType, DemoType } 
+@isType { Entity, DemoAttributeType, DemoType }
 
-@conformsTo (@all, DemoAttributeType.ANY) = true 
-@conformsTo (isType, isType.base) = true
-@equalsType (@all, DemoAttributeType.ANY) = true 
+@conformsTo (@all, DemoAttributeType:ANY) = true 
+@conformsTo (@isType, @isType.base) = true
+@equalsType (@all, DemoAttributeType:ANY) = true 
 
-DemoAttribute {
-    @inferType declaredType
-}
+DemoAttribute @inferType this.declaredType
 
-DemoFunction {
-    @inferType declaredType
-}
+DemoFunction @inferType this.declaredType
 
-DemoVariable { 
-    @inferType declaredType
-}
+DemoVariable  @inferType this.declaredType
 
-DemoExpression {
-    abstract @inferType  // for now
-}
+DemoExpression abstract @inferType  // for now
 
-DemoStringLiteralExpression {
-    @inferType DemoAttributeType.String
-}
+DemoStringLiteralExpression @inferType DemoAttributeType:String
 
-DemoNumberLiteralExpression
-    @inferType DemoAttributeType.Integer
-}
+DemoNumberLiteralExpression @inferType DemoAttributeType:Integer
 
-DemoBooleanLiteralExpression
-    @inferType DemoAttributeType.Boolean
-}
+DemoBooleanLiteralExpression @inferType DemoAttributeType:Boolean
 
-DemoAbsExpression {
-    @inferType expr.type
-}
+DemoAbsExpression @inferType this.expr.type
 
-DemoMultiplyExpression {
-    @inferType left.type
-}
+DemoMultiplyExpression @inferType this.left.type
 
-DemoPlusExpression {
-    @inferType left.type
-}
+DemoPlusExpression @inferType this.left.type
 
-DemoDivideExpression {
-    @inferType left.type
-}
+DemoDivideExpression @inferType this.left.type
 
-DemoComparisonExpression {
-    @inferType DemoAttributeType.Boolean
-}
+DemoComparisonExpression @inferType DemoAttributeType:Boolean
 
-DemoFunctionCallExpression {
-    @inferType typeOf(function)
+DemoFunctionCallExpression @inferType typeOf(this.function)
 
-DemoIfExpression {   
-    @inferType commonSuperType(whenTrue, whenFalse)
-}
+DemoIfExpression    @inferType commonSuperType(this.whenTrue, this.whenFalse)
 
-DemoVariableRef {
-//    @inferType typeOf(attribute)  //not correct in .lang file
-}
+DemoVariableRef   @inferType typeOf(this.attribute)  //not correct in .lang file

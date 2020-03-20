@@ -1,7 +1,3 @@
-language Demo
+scoper Demo for language Demo
 
-@isNamespace DemoModel 
-
-@isNamespace DemoEntity 
-
-@isNamespace DemoFunction
+@namespace  { DemoModel DemoEntity DemoFunction }

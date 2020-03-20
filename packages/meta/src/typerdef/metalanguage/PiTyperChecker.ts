@@ -1,29 +1,30 @@
 import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty, PiLangCUI, PiPrimTypesEnum } from "../../languagedef/metalanguage/PiLanguage";
-import { ConceptRuleSet, PiValidatorDef, EqualsTypeRule, ValidationRule, ConformsTypeRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
+import { PiConceptTypeRuleSet, EqualsTypeRule, ConformsTypeRule, NotEmptyRule, ValidNameRule, PiTyperDef, PiTypeRule } from "./PiTyperDefLang";
 import { PiLangConceptReference, PropertyRefExpression, LangRefExpression, EnumRefExpression, ThisExpression } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+// import { ValidationRule } from "validatordef/metalanguage/ValidatorDefLang";
 
-const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
-export class ValidatorChecker extends Checker<PiValidatorDef> {
+const LOGGER = new PiLogger("PiTyperChecker"); // .mute();
+export class PiTyperChecker extends Checker<PiTyperDef> {
     
     constructor(language: PiLanguageUnit) {
         super();
         this.language = language;
     }
 
-    public check(definition: PiValidatorDef, verbose: boolean): void {
-        if (verbose) LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
+    public check(definition: PiTyperDef, verbose: boolean): void {
+        if (verbose) LOGGER.log("Checking typer definition '" + definition.name + "'");
 
         if( this.language === null ) {
-            LOGGER.error(this,  "Validator definition checker does not known the language, exiting.");
+            LOGGER.error(this,  "Typer definition checker does not known the language, exiting.");
             process.exit(-1);
         }
 
         this.nestedCheck(
             {
                 check: this.language.name === definition.languageName,
-                error: `Language reference ('${definition.languageName}') in Validation Definition '${definition.validatorName}' does not match language '${this.language.name}'.`,
+                error: `Language reference ('${definition.languageName}') in Typer Definition '${definition.name}' does not match language '${this.language.name}'.`,
                 whenOk: () => {
                     definition.conceptRules.forEach(rule => {    
                         this.checkConceptRule(rule);
@@ -32,7 +33,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             });
     }
 
-    private checkConceptRule(rule: ConceptRuleSet) {
+    private checkConceptRule(rule: PiConceptTypeRuleSet) {
         this.checkConceptReference(rule.conceptRef);
 
         let enclosingConcept = rule.conceptRef.concept(); 
@@ -61,7 +62,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             })
     }
 
-    checkRule(tr: ValidationRule, enclosingConcept: PiLangConcept) {
+    checkRule(tr: PiTypeRule, enclosingConcept: PiLangConcept) {
         if( tr instanceof EqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
         if( tr instanceof ConformsTypeRule) this.checkConformsTypeRule(tr, enclosingConcept);
         if( tr instanceof NotEmptyRule) this.checkNotEmptyRule(tr, enclosingConcept);

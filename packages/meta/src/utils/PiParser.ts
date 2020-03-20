@@ -44,7 +44,7 @@ export class PiParser<DEFINITION> {
             return model;
         } else {
             // TODO change error message
-            LOGGER.error(this, "ERROR: Language parser does not return a PiLanguage");
+            LOGGER.error(this, "ERROR: Parser does not return a PiLanguage");
             process.exit(-1);
         }
     }

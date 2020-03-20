@@ -1,6 +1,6 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiValidatorDef, EqualsTypeRule, ConformsTypeRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
+import { PiValidatorDef, ConceptRuleSet, EqualsTypeRule, ConformsTypeRule, NotEmptyRule, ValidNameRule } from "../../../validatordef/metalanguage/ValidatorDefLang";
 import { LangRefExpression, EnumRefExpression, ThisExpression } from "../../../languagedef/metalanguage/PiLangReferences";
 
 export class CheckerTemplate {

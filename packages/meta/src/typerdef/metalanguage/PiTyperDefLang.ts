@@ -1,26 +1,26 @@
 import { PiLangConceptReference, LangRefExpression } from "../../languagedef/metalanguage/PiLangReferences";
 
-export class PiValidatorDef {
-    validatorName: string;
+export class PiTyperDef {
+    name: string;
     languageName: string;
-    conceptRules: ConceptRuleSet[];
+    conceptRules: PiConceptTypeRuleSet[];
 
     constructor() { 
     }
 }
 
-export class ConceptRuleSet {
+export class PiConceptTypeRuleSet {
     conceptRef: PiLangConceptReference;
-    rules: ValidationRule[];
+    rules: PiTypeRule[];
 }
 
-export abstract class ValidationRule {   
+export abstract class PiTypeRule {   
     toPiString() : string {
-        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
+        return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PiTyperDefLang.PiTypeRule'";
     }
 }
 
-export class EqualsTypeRule extends ValidationRule {
+export class EqualsTypeRule extends PiTypeRule {
     type1: LangRefExpression;
     type2: LangRefExpression;
 
@@ -29,7 +29,7 @@ export class EqualsTypeRule extends ValidationRule {
     }
 }
 
-export class ConformsTypeRule extends ValidationRule {
+export class ConformsTypeRule extends PiTypeRule {
     type1: LangRefExpression;
     type2: LangRefExpression;
 
@@ -38,18 +38,17 @@ export class ConformsTypeRule extends ValidationRule {
     }
 }
 
-export class NotEmptyRule extends ValidationRule {
+export class NotEmptyRule extends PiTypeRule {
     property: LangRefExpression;
 
     toPiString(): string {
         return `@notEmpty ${this.property.toPiString()}`; 
     }
 }
-export class ValidNameRule extends ValidationRule {
+export class ValidNameRule extends PiTypeRule {
     property: LangRefExpression;
 
     toPiString(): string {
         return `@validName ${this.property.toPiString()}`; 
     }
 }
-
