@@ -110,7 +110,7 @@ binary expression concept DemoEqualsExpression base DemoComparisonExpression {
 
 expression concept DemoFunctionCallExpression base DemoExpression {
     @reference functionDefinition: DemoFunction
-    @editor trigger: string = "F"
+    @editor trigger: string = "function"
 }
 
 expression concept DemoIfExpression base DemoExpression {
@@ -123,6 +123,7 @@ expression concept DemoIfExpression base DemoExpression {
 expression concept DemoVariableRef base DemoExpression {
     referredName: string
     @reference attribute: DemoAttribute
+    @editor trigger: string = "var"
 }
 
 enumeration DemoAttributeType {
