@@ -15,13 +15,13 @@ concept DemoEntity {
 
 concept DemoAttribute {
     name: string
-    declaredType: enum DemoAttributeType
+    declaredType: DemoAttributeType
     @editor trigger: string = "attribute"
 }
 
 concept DemoFunction {
     name: string
-    declaredType : enum DemoAttributeType
+    declaredType : DemoType
     @part expression: DemoExpression
     @part parameters: DemoVariable[]
     @editor trigger: string = "function"
@@ -29,32 +29,32 @@ concept DemoFunction {
 
 concept DemoVariable {
     name: string
-    declaredType: enum DemoAttributeType
+    declaredType: DemoType
     @editor trigger: string = "var"
 }
 
 abstract expression concept DemoExpression {}
 
-expression placeholder concept DemoPlaceholderExpression base DemoExpression {}
+expression placeholder concept DemoPlaceholderExpression {}
 
 abstract expression concept DemoLiteralExpression base DemoExpression {}
 
-expression concept DemoStringLiteralExpression base DemoLiteralExpression {
+concept DemoStringLiteralExpression base DemoLiteralExpression {
     value: string
     @editor trigger: string = "'"
 }
 
-expression concept DemoNumberLiteralExpression base DemoLiteralExpression {
+concept DemoNumberLiteralExpression base DemoLiteralExpression {
     value: string
     @editor trigger: regexp = "[0-9]"
 }
 
-expression concept DemoBooleanLiteralExpression base DemoLiteralExpression {
+concept DemoBooleanLiteralExpression base DemoLiteralExpression {
     value: string
     @editor trigger: regexp = "[TF]"
 }
 
-expression concept DemoAbsExpression base DemoExpression {
+concept DemoAbsExpression base DemoExpression {
     @part expr: DemoExpression
     @editor trigger: string = "abs"
 }
@@ -65,64 +65,63 @@ abstract binary expression concept DemoBinaryExpression base DemoExpression {
     @editor symbol: string = "unknown"
 }
 
-binary expression concept DemoMultiplyExpression base DemoBinaryExpression {
+concept DemoMultiplyExpression base DemoBinaryExpression {
     @editor symbol: string = "*"
     @editor priority: number = "8"
 }
 
-binary expression concept DemoPlusExpression base DemoBinaryExpression {
+concept DemoPlusExpression base DemoBinaryExpression {
     @editor symbol: string = "+"
     @editor priority: number = "4"
 }
 
-binary expression concept DemoDivideExpression base DemoBinaryExpression {
+concept DemoDivideExpression base DemoBinaryExpression {
     @editor symbol: string = "/"
     @editor priority: number = "8"
 }
 
-binary expression concept DemoAndExpression base DemoBinaryExpression {
+concept DemoAndExpression base DemoBinaryExpression {
     @editor symbol: string = "and"
     @editor priority: number = "1"
 }
 
-binary expression concept DemoOrExpression base DemoBinaryExpression {
+concept DemoOrExpression base DemoBinaryExpression {
     @editor symbol: string = "or"
     @editor priority: number = "1"
 }
 
-abstract binary expression concept DemoComparisonExpression base DemoBinaryExpression {
+abstract concept DemoComparisonExpression base DemoBinaryExpression {
 }
 
-binary expression concept DemoLessThenExpression base DemoComparisonExpression {
+concept DemoLessThenExpression base DemoComparisonExpression {
     @editor symbol: string = "<"
     @editor priority: number = "10"
 }
 
-binary expression concept DemoGreaterThenExpression base DemoComparisonExpression {
+concept DemoGreaterThenExpression base DemoComparisonExpression {
     @editor symbol: string = ">"
     @editor priority: number = "10"
 }
 
-binary expression concept DemoEqualsExpression base DemoComparisonExpression {
+concept DemoEqualsExpression base DemoComparisonExpression {
     @editor symbol: string = "="
     @editor priority: number = "10"
 }
 
-expression concept DemoFunctionCallExpression base DemoExpression {
+concept DemoFunctionCallExpression base DemoExpression {
     @reference functionDefinition: DemoFunction
-    @editor trigger: string = "F"
 }
 
-expression concept DemoIfExpression base DemoExpression {
+concept DemoIfExpression base DemoExpression {
     @part condition: DemoExpression
     @part whenTrue: DemoExpression
     @part whenFalse: DemoExpression
     @editor trigger : string = "if"
 }
 
-expression concept DemoVariableRef base DemoExpression {
+concept DemoVariableRef base DemoExpression {
     referredName: string
-    @reference attribute: DemoAttribute
+    attribute: string
 }
 
 enumeration DemoAttributeType {
@@ -131,7 +130,7 @@ enumeration DemoAttributeType {
     Boolean
 }
 
-union DemoType {
+type DemoType {
     DemoEntity
     DemoAttributeType
 }
