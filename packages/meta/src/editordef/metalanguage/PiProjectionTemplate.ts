@@ -13,11 +13,14 @@ export class PiProjectionPropertyReference {
 }
 
 type ProjectionItem = PiProjectionIndent | PiProjectionText | PiProjectionPropertyReference;
-type ProjectionLine = ProjectionItem[];
+
+export class  PiProjectionLine {
+    items: ProjectionItem[];
+}
 
 export class PiProjectionTemplate {
     conceptEditor: PiConceptEditor;
-    lines: ProjectionLine[];
+    lines: PiProjectionLine[];
 
     // asString() : string {
     //     return this.lines.map()
