@@ -1,15 +1,17 @@
 import {
     CommandLineAction,
-    ICommandLineActionOptions
+    ICommandLineActionOptions,
+    CommandLineStringParameter
 } from "@microsoft/ts-command-line";
 
 /**
- * Generic generator action.
+ * Generic generator action. The only options defined here are the -o flag for the output folder, and the -v for verbose.
+ * Subclasses need to call super.onDefineParameters()!
  */
 export abstract class ProjectItGenerateAction extends CommandLineAction {
+    private outputFolderArg: CommandLineStringParameter;
     public verbose: boolean;
-    public languageFile: string;
-    public outputFolder: string;
+    protected outputFolder: string;
 
     public constructor(options: ICommandLineActionOptions) {
         super(options);
@@ -17,6 +19,7 @@ export abstract class ProjectItGenerateAction extends CommandLineAction {
 
     protected onExecute(): Promise<void> {
         const self = this;
+        self.outputFolder = this.outputFolderArg.value;
         return new Promise(function(resolve, rejest) {
             self.generate();
         });
@@ -24,11 +27,13 @@ export abstract class ProjectItGenerateAction extends CommandLineAction {
 
     public abstract generate(): void ;
 
-    public setOutputFolder(folder: string): void {
-        this.outputFolder = folder;
-    }
-
-    public setLanguageFile(file: string): void {
-        this.languageFile = file;
+    protected onDefineParameters(): void {
+        this.outputFolderArg = this.defineStringParameter({
+            argumentName: "OUTPUTDIR",
+            defaultValue: ".",
+            parameterLongName: "--output",
+            parameterShortName: "-o",
+            description: "The directory where the files are generated"
+        });
     }
 }

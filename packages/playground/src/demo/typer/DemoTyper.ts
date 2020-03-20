@@ -1,9 +1,16 @@
 import { PiTyper } from "@projectit/core";
 import { DemoAbsExpression, DemoAttributeType, DemoBinaryExpression, DemoComparisonExpression,
-    DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression } from "../language";
+    DemoEntity, DemoIfExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoType, DemoVariableRef, DemoFunctionCallExpression, DemoBooleanLiteralExpression, DemoPlaceholderExpression } from "../language";
 import { AllDemoConcepts } from "../language/AllDemoConcepts";
 
 export class DemoTyper implements PiTyper {
+   
+    equalsType(elem1: AllDemoConcepts, elem2: AllDemoConcepts): boolean {
+        if ( this.inferType(elem1) === DemoAttributeType.ANY || this.inferType(elem2) === DemoAttributeType.ANY ) return true;
+        if( this.inferType(elem1).$id === this.inferType(elem2).$id) return true;
+        // console.log("EQUALSTYPE( " + this.inferType(elem1).name + ", " + this.inferType(elem2).name + " ) returns false");
+        return false;
+    }
 
     inferType(modelelement: AllDemoConcepts): DemoType {
         // generate if statement for all lang elements that have @hasType annotation
@@ -15,8 +22,8 @@ export class DemoTyper implements PiTyper {
             return DemoAttributeType.String;
         } else if (modelelement instanceof DemoNumberLiteralExpression) {
             return DemoAttributeType.Integer;
-        // } else if (modelelement instanceof DemoBooleanLiteralExpression) {
-        //    return DemoAttributeType.Boolean;
+        } else if (modelelement instanceof DemoBooleanLiteralExpression) {
+           return DemoAttributeType.Boolean;
         // moet voor zijn parent staan om deze te overriden!
         } else if (modelelement instanceof DemoComparisonExpression) { 
             return DemoAttributeType.Boolean;
@@ -26,20 +33,20 @@ export class DemoTyper implements PiTyper {
         } else if (modelelement instanceof DemoAbsExpression) {
             return this.inferType(modelelement.expr);
        } else if (modelelement instanceof DemoVariableRef) {
-            return null;
-        //    return modelelement.referredName.type;
+           return modelelement.attribute.declaredType;
        } else if (modelelement instanceof DemoFunctionCallExpression) {
-           return null;
-        //    return modelelement.functionDefinition.name;
+           return modelelement.functionDefinition.declaredType;
         } else if (modelelement instanceof DemoIfExpression) {
             return this.inferType(modelelement.whenTrue);
+        } else if (modelelement instanceof DemoPlaceholderExpression) {
+            return DemoAttributeType.ANY;
         }
         return DemoAttributeType.ANY; // default
     }    
 
     // for now: simply implemented on basis of equal identity of the types
     // should be implemented based on the conformance rules in Typer Description file
-    conform(type1: DemoType, type2: DemoType): boolean {
+    conformsTo(elem1: DemoType, elem2: DemoType): boolean {
         // @conformanceRule 'entityRule1' e1:PG_Entity <= e2:PG_Entity { // meaning that Entity e2 conforms to Entity e1 if the following holds
         //     e2.inheritsFrom(e1) // needs inheritance relationship between PG_Entities in .lang, this is currently not defined
         //     or 
@@ -54,7 +61,8 @@ export class DemoTyper implements PiTyper {
         //         }
         //     }
         // }
-        if( type1.$id === type2.$id) return true;
+        if ( this.inferType(elem1) === DemoAttributeType.ANY || this.inferType(elem2) === DemoAttributeType.ANY ) return true;
+        if( this.inferType(elem1).$id === this.inferType(elem2).$id) return true;
         return false;
     }
 
@@ -62,7 +70,7 @@ export class DemoTyper implements PiTyper {
         if (typelist1.length !== typelist2.length) return false;
         let result : boolean = true;
         for (let index in typelist1) {
-            result = this.conform(typelist1[index], typelist2[index]);
+            result = this.conformsTo(typelist1[index], typelist2[index]);
             if (result == false) return result;
         }
         return result;
@@ -77,9 +85,4 @@ export class DemoTyper implements PiTyper {
         return false;
     }
 
-    typeName(elem: DemoType): string { 
-        if (elem instanceof DemoEntity) return elem.name;
-        if (elem instanceof DemoAttributeType) return elem.asString();
-        return "";
-    }
 }

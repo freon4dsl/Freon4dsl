@@ -7,7 +7,7 @@ export class NamespaceTemplate {
     }
 
     generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef): string {
-        console.log("Creating Namespace");
+        // console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
         const generatedClassName : string = Names.namespace(language, scopedef);
@@ -51,8 +51,6 @@ export class NamespaceTemplate {
                         // skip modelelements between parent and the modelelement that is its surrounding namespace
                         parent = this.getParent(ns._myElem);
                     }
-                } else {
-                    // TODO remove: console.log("skipping SurroundingNamespaces " + " [" + excludeSurrounding +"]");
                 }
                 return result;
             }

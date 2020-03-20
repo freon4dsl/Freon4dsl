@@ -1,74 +1,75 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit, PiLangElementProperty } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiValidatorDef } from "../../metalanguage/PiValidatorDefLang";
+import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
 
 export class ValidatorTemplate {
     constructor() {
     }
 
     generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        console.log("Creating Validator");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
         const generatedClassName : String = Names.validator(language, validdef);
 
-        // language.concepts.map(concept => 
-        //     concept.parts.forEach(p => {
-
-        //     })
-        //     concept.parts.map( part => {
-        //         let p : PiLangElementProperty = part;
-        //         if( p.isList) {
-        //             p.for
-        //         }
-        //     })
-        // )
-
-        // Template starts here
+        // Template starts here 
         return `
         import { ${allLangConcepts} } from "../../language";
-        import { PiValidator, PiError } from "@projectit/core";
+        import { ${Names.validatorInterface()}, ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
         import { ${langConceptType} } from "../../language/${language.name}";   
         import { ${language.concepts.map(concept => `
                 ${concept.name}`).join(", ")} } from "../../language";     
-        
+        import { ${Names.checker(language,validdef)} } from "./DemoChecker";
+
         export class ${generatedClassName} implements PiValidator {
-            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : PiError[]{
-                let result : PiError[] = [];
+            myTyper : ${Names.typerInterface()};
+
+            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${Names.errorClassName()}[]{
+                let errorlist : ${Names.errorClassName()}[] = [];
                 ${language.concepts.map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    result.concat( this.validate${concept.name}(modelelement, includeChildren) );
+                    this.validate${concept.name}(modelelement, errorlist, includeChildren );
                 }`).join("")}
 
-                return result;
+                return errorlist;
             }
 
             ${language.concepts.map(concept => `
-                private validate${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) : PiError[]{
-                    let result : PiError[] = [];
-                    // include validations here
+                public validate${concept.name}(modelelement: ${concept.name}, errorlist: ${Names.errorClassName()}[], includeChildren?: boolean) {
+                    let myChecker = new ${Names.checker(language, validdef)}();
+
+                    // use the right checks
+                    ${concept.allSubConceptsDirect().map ( sub =>
+                        `if( modelelement instanceof ${sub.name}) {
+                            this.validate${sub.name}(modelelement, errorlist, includeChildren);
+                        }`
+                    ).join("\n")}
+
+                    // add checks on this concept
+                    myChecker.check${concept.name}(modelelement, this.myTyper, errorlist);
+
+                    ${((!!concept.base )?
+                        `// add checks of baseconcept(s)
+                        myChecker.check${concept.base.name}(modelelement, this.myTyper, errorlist);`
+                    :
+                        ``
+                    )}
 
                     ${((concept.parts.length > 0)?
-                    `if(!(includeChildren === undefined) && includeChildren) { 
+                    ` // checking children in the model tree
+                    if(!(includeChildren === undefined) && includeChildren) { 
                         ${concept.parts.map( part =>
                             (part.isList ?
                                 `modelelement.${part.name}.forEach(p => {
-                                    result.concat( this.validate${part.type.name}(p, includeChildren) );
+                                    this.validate${part.type.name}(p, errorlist, includeChildren );
                                 });`
                             :
-                                `result.concat( this.validate${part.type.name}(modelelement.${part.name}, includeChildren) );`
+                                `this.validate${part.type.name}(modelelement.${part.name}, errorlist, includeChildren );`
                             )
                         ).join("\n")}
                     }`
                     : ``
                     )}
-                    // check rules of baseconcept(s)
-                    ${((!!concept.base )?
-                        `result.concat( this.validate${concept.base.name}(modelelement, includeChildren) );`
-                    :
-                        ``
-                    )}
-                    return result;
+                    
                 }`).join("\n")}
         }`;
     }

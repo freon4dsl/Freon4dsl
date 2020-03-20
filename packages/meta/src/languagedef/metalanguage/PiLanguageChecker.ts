@@ -1,5 +1,5 @@
 import { Checker } from "../../utils/Checker";
-import { PiLangConcept, PiLangElementProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangInterface } from "./PiLanguage";
+import { PiLangConcept, PiLangElementProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangInterface, PiLangPrimitiveProperty, PiPrimTypesEnum } from "./PiLanguage";
 import { PiLangConceptReference, PiLangCUIReference, PiLangInterfaceReference, PiLangUnionReference } from "./PiLangReferences";
 
 // export type CheckB = { check: boolean, error: string, whenOk?: () => void };
@@ -21,6 +21,9 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.checkCUIReference(concept.base);
         }
 
+        concept.primProperties.forEach(prop => this.checkPiPrimitiveProperty(prop));
+        // TODO add the following:
+        // concept.enumProperties.forEach(prop => this.checkPiEnumProperty(prop));
         concept.parts.forEach(part => this.checkPiElementProperty(part));
         concept.references.forEach(ref => this.checkPiElementProperty(ref));
 
@@ -49,7 +52,17 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             });
     }
 
-    checkCUIReference(reference: PiLangCUIReference): void {
+    checkPiPrimitiveProperty(element: PiLangPrimitiveProperty): void {
+        this.simpleCheck(!!element.name, "Property should have a name, it is empty");
+        this.nestedCheck(
+            {
+                check: !!element.type,
+                error: "Element should have a type",
+                whenOk: () => this.checkPrimitiveType(element.type)
+            });
+    }
+    
+     checkCUIReference(reference: PiLangCUIReference): void {
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
@@ -60,6 +73,13 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                         error: `Reference to ${reference.name} cannot be resolved as one of concept, union, or interface`
                     })
             })
+    }
+
+    checkPrimitiveType(type: PiPrimTypesEnum) {
+        //TODO implement this check
+        // this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
+        //     "Primitive property should have a primitive type (string, boolean, or number)"
+        // );
     }
 }
 

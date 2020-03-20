@@ -2,13 +2,13 @@ import { Helpers } from "../../utils/Helpers";
 import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import * as fs from "fs";
 import { SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils/GeneratorConstants";
-// import { PiScoperChecker } from "metalanguage/scoper/PiScoperChecker";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { Names } from "../../utils/Names";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-//import { ScoperIndexTemplate } from "./templates/ScoperIndexTemplate";
 import { PiScopeDef } from "../metalanguage/PiScopeDefLang";
+import { PiLogger } from "../../../../core/src/util/PiLogging";
 
+const LOGGER = new PiLogger("ScoperGenerator"); // .mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguageUnit;
@@ -19,28 +19,31 @@ export class ScoperGenerator {
         this.language = language;
     }
 
-    generate(scopedef: PiScopeDef): void {
-        console.log("Start scoper generator");
+    generate(scopedef: PiScopeDef, verbose: boolean): void {
+        this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
+        this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
+        if (verbose) LOGGER.log("Generating scoper '" + scopedef.scoperName + "' in folder " + this.scoperGenFolder);
 
         const namespace = new NamespaceTemplate();
         const scoper = new ScoperTemplate();
 
         //Prepare folders
-        this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
-        this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
-        Helpers.createDirIfNotExisting(this.scoperFolder);
-        Helpers.createDirIfNotExisting(this.scoperGenFolder);
+        Helpers.createDirIfNotExisting(this.scoperFolder, verbose);
+        Helpers.createDirIfNotExisting(this.scoperGenFolder, verbose);
 
         //  Generate it
-        console.log("\t-generating Namespace.ts");
-        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef), "Namespace Class");
+        if (verbose) LOGGER.log("Generating Namespace");
+        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef), "Namespace Class", verbose);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language, scopedef)}.ts`, namespaceFile);
         
-        console.log("\t-generating Scoper.ts");
-        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef), "Scoper Class");
+        if (verbose) LOGGER.log("Generating Scoper");
+        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef), "Scoper Class", verbose);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language, scopedef)}.ts`, scoperFile);
 
         // var scoperIndexFile = Helpers.pretty(ScoperIndexTemplate.generateIndex(this.language), "Scoper Index");
         // fs.writeFileSync(`${this.scoperFolder}/index.ts`, scoperIndexFile);
+
+        if (verbose) LOGGER.log("Succesfully generated scoper: " + scopedef?.scoperName);
+
     } 
 }

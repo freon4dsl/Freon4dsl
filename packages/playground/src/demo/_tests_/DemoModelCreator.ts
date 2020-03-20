@@ -2,142 +2,231 @@ import { DemoEntity, DemoAttribute, DemoFunction, DemoVariable,
         DemoVariableRef, DemoIfExpression, DemoComparisonExpression, 
         DemoNumberLiteralExpression, DemoOrExpression, DemoStringLiteralExpression, 
         DemoAndExpression, DemoPlusExpression, DemoPlaceholderExpression, DemoModel, 
-        DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression } from "../language";
+        DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression, DemoMultiplyExpression, DemoDivideExpression, DemoBooleanLiteralExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoLiteralExpression } from "../language";
 
 export class DemoModelCreator  {
-    model: DemoModel = DemoModel.create("DemoModel_1");
+    model: DemoModel;
     
     constructor() {
-        this.initializeModel();
+        this.model = this.createCorrectModel();
     }
 
-	private initializeModel() {
-        const entity1 = DemoEntity.create("Person");
-        const attribute1 = DemoAttribute.create("name");
-        attribute1.declaredType = DemoAttributeType.Boolean;
-        const attribute2 = DemoAttribute.create("age");
-        attribute2.declaredType = DemoAttributeType.Boolean;
-        entity1.attributes.push(attribute1);
-        entity1.attributes.push(attribute2);
+	public createCorrectModel() : DemoModel {
+        let correctModel: DemoModel = DemoModel.create("DemoModel_1");
 
-        const entity2 = DemoEntity.create("Company");
-        const attribute21 = DemoAttribute.create("name");
-        attribute21.declaredType = DemoAttributeType.String;
-        const attribute22 = DemoAttribute.create("VAT_Number");
-        attribute22.declaredType = DemoAttributeType.Integer;
-        entity2.attributes.push(attribute21);
-        entity2.attributes.push(attribute22);
+        const length = DemoFunction.create("length");
+        const Variable1 = DemoVariable.create("Variable1")
+        const VariableNumber2 = DemoVariable.create("VariableNumber2")
+        length.parameters.push(Variable1);
+        length.parameters.push(VariableNumber2);
+        length.expression = this.addComplexExpression1(); 
+        // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
-        const f1 = DemoFunction.create("length");
-        f1.declaredType = DemoAttributeType.Integer;
-        const f2 = DemoFunction.create("first");
-        f2.declaredType = DemoAttributeType.Boolean;
-        const f3 = DemoFunction.create("last");
-        f3.declaredType = DemoAttributeType.Boolean;
-        const f4 = DemoFunction.create("determine");
-        f4.declaredType = DemoAttributeType.Boolean;
-        const f5 = DemoFunction.create("another");
-        f5.declaredType = DemoAttributeType.Boolean;
+        const determine = DemoFunction.create("determine");
+        const AAP = DemoVariable.create("AAP")
+        determine.parameters.push(AAP);
+        determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
+        // determine(AAP) = "Hello Demo" + "Goodbye"
 
-        const var1 = DemoVariable.create("Variable1")
-        var1.declaredType = DemoAttributeType.Boolean;
-        const var2 = DemoVariable.create("VariableNumber2")
-        var2.declaredType = DemoAttributeType.Boolean;
-        const var3 = DemoVariable.create("Resultvar")
-        var3.declaredType = DemoAttributeType.Boolean;
-        const var4 = DemoVariable.create("AAP")
-        var4.declaredType = DemoAttributeType.Boolean;
-        const var5 = DemoVariable.create("NOOT")
-        var5.declaredType = DemoAttributeType.Boolean;
+        const last = DemoFunction.create("last");
+        last.expression = DemoModelCreator.MakePlusExp("5","woord");
+        // last() = 5 + "woord"
+        
+        correctModel.functions.push(length);
+        correctModel.functions.push(determine);
+        correctModel.functions.push(last);
+ 
+        const personEnt = DemoEntity.create("Person");
+        const age = DemoAttribute.create("age");
+        const personName = DemoAttribute.create("name");
+        personEnt.attributes.push(age);
+        personEnt.attributes.push(personName);
+        const first = DemoFunction.create("first");
+        const Resultvar = DemoVariable.create("Resultvar");
+        first.parameters.push(Resultvar);
+        first.expression = DemoModelCreator.MakePlusExp("5","24");
+        personEnt.functions.push(first);
+        // Person { age, first(Resultvar) = 5 + 24 }
 
-        this.model.entities.push(entity1);
-        this.model.entities.push(entity2);
-        this.model.functions.push(f1);
-        this.model.functions.push(f4);
-        this.model.functions.push(f5);
-        entity1.functions.push(f2);
-        entity2.functions.push(f3);
-        f1.parameters.push(var1);
-        f1.parameters.push(var2);
-        f2.parameters.push(var3);
-        f4.parameters.push(var4);
-        f5.parameters.push(var5);
-        f1.expression = this.getSampleExpression();
+        const companyEnt = DemoEntity.create("Company");
+        const companyName = DemoAttribute.create("name");
+        const VAT_Number = DemoAttribute.create("VAT_Number");
+        companyEnt.attributes.push(companyName);
+        companyEnt.attributes.push(VAT_Number);
+
+        const another = DemoFunction.create("another");
+        const NOOT = DemoVariable.create("NOOT")
+        another.parameters.push(NOOT);
+        another.expression = this.addComplexExpression2(companyName);
+        // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
+
+        companyEnt.functions.push(another);
+        // Company { name, VAT_Number, another(NOOT) = ... }
+
+        correctModel.entities.push(personEnt);
+        correctModel.entities.push(companyEnt);
+
+        this.addSimpleTypes(personName, companyName, age, VAT_Number, length, first, last, determine, 
+            another, Variable1, VariableNumber2, Resultvar, AAP, NOOT);
+        return correctModel;
     }
 
-    private getSampleExpression() : DemoExpression {
-        // (IF (2 > 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * $Person))
+    private addSimpleTypes(personName: DemoAttribute, companyName: DemoAttribute, age: DemoAttribute, VAT_Number: DemoAttribute, 
+            length: DemoFunction, first: DemoFunction, last: DemoFunction, determine: DemoFunction, another: DemoFunction, 
+            Variable1: DemoVariable, VariableNumber2: DemoVariable, Resultvar: DemoVariable, AAP: DemoVariable, NOOT: DemoVariable) {
+        personName.declaredType = DemoAttributeType.String;
+        companyName.declaredType = DemoAttributeType.Boolean;
+        age.declaredType = DemoAttributeType.Boolean;
+        VAT_Number.declaredType = DemoAttributeType.Integer;
+        length.declaredType = DemoAttributeType.String;
+        first.declaredType = DemoAttributeType.Boolean;
+        last.declaredType = DemoAttributeType.Boolean;
+        determine.declaredType = DemoAttributeType.Boolean;
+        another.declaredType = DemoAttributeType.Boolean;
+        Variable1.declaredType = DemoAttributeType.Boolean;
+        VariableNumber2.declaredType = DemoAttributeType.Boolean;
+        Resultvar.declaredType = DemoAttributeType.Boolean;
+        AAP.declaredType = DemoAttributeType.Boolean;
+        NOOT.declaredType = DemoAttributeType.Boolean;
+    }
+
+    private addComplexTypes(entity1: DemoEntity, entity2: DemoEntity, attribute21: DemoAttribute, attribute1: DemoAttribute, attribute2: DemoAttribute, attribute22: DemoAttribute, f1: DemoFunction, f2: DemoFunction, f3: DemoFunction, f4: DemoFunction, f5: DemoFunction, var1: DemoVariable, var2: DemoVariable, var3: DemoVariable, var4: DemoVariable, var5: DemoVariable) {
+        // attribute21.declaredType = entity1;
+        // attribute1.declaredType = DemoAttributeType.Boolean;
+        // attribute2.declaredType = DemoAttributeType.Boolean;
+        // attribute22.declaredType = DemoAttributeType.Integer;
+        // f1.declaredType = DemoAttributeType.Integer;
+        // f2.declaredType = entity2;
+        // f3.declaredType = entity1;
+        // f4.declaredType = DemoAttributeType.Boolean;
+        // f5.declaredType = DemoAttributeType.Boolean;
+        // var1.declaredType = DemoAttributeType.Boolean;
+        // var2.declaredType = DemoAttributeType.Boolean;
+        // var3.declaredType = entity2;
+        // var4.declaredType = DemoAttributeType.Boolean;
+        // var5.declaredType = DemoAttributeType.Boolean;
+    }
+
+    private addComplexExpression1() : DemoExpression {
+        // (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
         const ifExpression = new DemoIfExpression();
-        const condition: DemoBinaryExpression = this.MakeComparisonExp("2", "5"); //("<")
-        ifExpression.condition = condition;
-        const thenExpression = new DemoOrExpression();
-        const leftOr = new DemoOrExpression();
+        ifExpression.condition = DemoModelCreator.MakeLessThenExp("2", "5"); //("<")
+        ifExpression.whenTrue = DemoModelCreator.makeLiteralExp("1");
+        ifExpression.whenFalse = DemoModelCreator.makeLiteralExp("5");
+        const divideExpression = DemoModelCreator.MakeDivideExp("1","2");
+        const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression,"Person");
+        const plusExpression = DemoModelCreator.MakePlusExp(ifExpression, multiplyExpression);
+
+        return plusExpression;
+    }
+
+    private addComplexExpression2(attr: DemoAttribute) : DemoExpression {
+        // ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         const varRef = new DemoVariableRef();
         varRef.referredName = "Variable1";
-        varRef.attribute = "Name";
-        const equals : DemoBinaryExpression = this.MakeComparisonExp("No", varRef); // ("=");
-        //equals.right = varRef;
+        varRef.attribute = attr;
+
+        const equals : DemoBinaryExpression = DemoModelCreator.MakeEqualsExp("No", varRef); // ("=");
+        // equals : "No" = Variable1
+
+        const leftOr = new DemoOrExpression();
         leftOr.right = equals;
+        leftOr.left = DemoModelCreator.makeLiteralExp("Yes");
+        // leftOr : ("Yes" or ("No" = Variable1))
 
-        leftOr.left = new DemoStringLiteralExpression();
-        (leftOr.left as DemoStringLiteralExpression).value ="Yes";
-        thenExpression.left = leftOr;
+        const rightAnd : DemoBinaryExpression = DemoModelCreator.MakeLessThenExp("x", "122");        
+        // rightAnd : ("x" < 122)
+
+        const leftAnd = DemoModelCreator.MakeLessThenExp("Hello World", "Hello Universe");
+        // leftAnd : ("Hello World" < "Hello Universe")
+
         const rightOr = new DemoAndExpression();
-        thenExpression.right = rightOr;
-        const rightAnd : DemoBinaryExpression = this.MakeComparisonExp(new DemoNumberLiteralExpression(), "122");
-        
-        rightAnd.left = new DemoNumberLiteralExpression();
-        (rightAnd.left as DemoNumberLiteralExpression).value = "42";
-
-        const leftAnd = this.MakeComparisonExp("Hello World", "Hello Universe");
         rightOr.right = rightAnd;
         rightOr.left = leftAnd;
+        // rightOr : ("x" < 122) AND ("Hello World" < "Hello Universe")
 
-        ifExpression.whenTrue = thenExpression;
+        const thenExpression = new DemoOrExpression();
+        thenExpression.left = leftOr;
+        thenExpression.right = rightOr;
+        // thenExpression : ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe")
 
-        const divideExpression = this.MakePlusExp("1","2");
+        const divideExpression = DemoModelCreator.MakePlusExp("1","2");
+        // divideExpression : (1/2)
 
-        const attribute = new DemoVariableRef();
-        attribute.referredName = "Salary";
-        const variableExpression = new DemoVariableRef();
-        variableExpression.referredName = "Person";
-        // variableExpression.member = attribute;
+        const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, new DemoPlaceholderExpression());
+        // multiplyExpression : (1/2) * ...
 
-        const multiplyExpression = new DemoPlusExpression();
-        multiplyExpression.left = divideExpression;
-        multiplyExpression.right = new DemoPlaceholderExpression();
+        const plusExpression = DemoModelCreator.MakePlusExp(thenExpression, multiplyExpression);
+        // plusexpression : ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
-        const plusExpression = this.MakePlusExp("Maybe", multiplyExpression);
-
-        ifExpression.whenFalse = plusExpression;
-        
-        
-        const plus = this.MakePlusExp("Hello Demo","Goodbye")
-        return plus;
-        // return new DemoPlaceholderExpression();
-        // return ifExpression;
-        // return thenExpression;
-        // return rightAnd;
+        return plusExpression;
     }
 
-
-    private MakeComparisonExp(left: any, right: any) : DemoComparisonExpression {
+    public static MakeLessThenExp(left: any, right: any) : DemoComparisonExpression {
         const condition: DemoBinaryExpression = new DemoLessThenExpression(); // ("<");
-        condition.left = new DemoNumberLiteralExpression();
-        (condition.left as DemoNumberLiteralExpression).value = left;
-        condition.right = new DemoNumberLiteralExpression();
-        (condition.right as DemoNumberLiteralExpression).value = right;
+        DemoModelCreator.addToBinaryExpression(left, condition, right);
         return condition;
     }
 
-    private MakePlusExp(left: any, right: any) : DemoPlusExpression {
-        const result: DemoBinaryExpression = new DemoPlusExpression(); // ("+");
-        result.left = new DemoNumberLiteralExpression();
-        (result.left as DemoNumberLiteralExpression).value = left;
-        result.right = new DemoNumberLiteralExpression();
-        (result.right as DemoNumberLiteralExpression).value = right;
-        return result;
+    public static MakeGreaterThenExp(left: any, right: any) : DemoComparisonExpression {
+        const condition: DemoBinaryExpression = new DemoGreaterThenExpression(); // (">");
+        DemoModelCreator.addToBinaryExpression(left, condition, right);
+        return condition;
+    }
+
+    public static MakeEqualsExp(left: any, right: any) : DemoComparisonExpression {
+        const condition: DemoBinaryExpression = new DemoEqualsExpression(); // ("=");
+        DemoModelCreator.addToBinaryExpression(left, condition, right);
+        return condition;
+    }
+
+    public static MakeMultiplyExp(left: any, right: any) : DemoMultiplyExpression {
+        const multiplication: DemoMultiplyExpression = new DemoMultiplyExpression(); // ("*");
+        DemoModelCreator.addToBinaryExpression(left, multiplication, right);
+        return multiplication;
+    }
+
+    public static MakePlusExp(left: any, right: any) : DemoPlusExpression {
+        const plusExpression: DemoBinaryExpression = new DemoPlusExpression(); // ("+");
+        DemoModelCreator.addToBinaryExpression(left, plusExpression, right);
+        return plusExpression;
+    }
+
+    public static MakeDivideExp(left: any, right: any) : DemoDivideExpression {
+        const divideExpression: DemoBinaryExpression = new DemoDivideExpression(); // ("/");
+        DemoModelCreator.addToBinaryExpression(left, divideExpression, right);
+        return divideExpression;
+    }
+
+    private static addToBinaryExpression(left: any, binary: DemoBinaryExpression, right: any) {
+        binary.left = DemoModelCreator.determineType(left);
+        binary.right = DemoModelCreator.determineType(right);
+    }
+
+    private static determineType(incoming: any) : DemoExpression {
+        if (incoming instanceof DemoExpression) {
+            return incoming;
+        } else {
+            return DemoModelCreator.makeLiteralExp(incoming);
+        }
+    }
+
+    private static makeLiteralExp(incoming: any) {
+        let mine: DemoLiteralExpression;
+        if (typeof incoming === "string" && /[0-9]+/.test(incoming)) {
+            mine = new DemoNumberLiteralExpression();
+            (mine as DemoNumberLiteralExpression).value = incoming;
+        }
+        else if (typeof incoming === "string" && (incoming === "true" || incoming === "false")) {
+            mine = new DemoBooleanLiteralExpression();
+            (mine as DemoBooleanLiteralExpression).value = incoming;
+        }
+        else if (typeof incoming === "string") {
+            mine = new DemoStringLiteralExpression();
+            (mine as DemoStringLiteralExpression).value = incoming;
+        }
+        return mine;
     }
 }

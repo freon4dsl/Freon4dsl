@@ -1,65 +1,66 @@
 validator Demo for language Demo
 
 DemoModel {
-    @validName name // default Identifier
-    @notEmpty entities
-    @notEmpty functions
+    @validName // default Identifier
+    @notEmpty this.entities
+    @notEmpty this.functions
 }
 
 DemoEntity {
-    @validName: name
-    @notEmpty attributes
-    @notEmpty functions
+    @validName 
+    @notEmpty this.attributes
+    @notEmpty this.functions
 }
 
 DemoAttribute {
-    @validName: name 
+    @validName  
 }
 
 DemoFunction {
-    @validName name
-    @typecheck conforms(expression, AttributeType.String) 
-    @notEmpty expression
+    @typecheck conformsTo (this.expression, this.declaredType) 
+    @notEmpty this.parameters
+    @validName 
 }
 
 DemoVariable {
-    @validName name
+    @validName 
 }
 
-DemoAbsExpression base DemoExpression {
-    @typecheck equalsType(expr, DemoAttributeType.Integer)
+DemoAbsExpression {
+    @typecheck equalsType( this.expr, DemoAttributeType:Integer ) 
 }
 
 DemoMultiplyExpression {
-    @typecheck left = DemoAttributeType.Integer
-    @typecheck right = DemoAttributeType.Integer
+    @typecheck equalsType( this.left, DemoAttributeType:Integer )
+    @typecheck equalsType( this.right, DemoAttributeType:Integer )
 }
 
 DemoPlusExpression {
-    @typecheck left = DemoAttributeType.Integer
-    @typecheck right = DemoAttributeType.Integer
+    @typecheck equalsType( this.left, DemoAttributeType:Integer )
+    @typecheck equalsType( this.right, DemoAttributeType:Integer )
+    @typecheck conformsTo( this.left, this.right )
 }
 
 DemoDivideExpression {
-    @typecheck left = DemoAttributeType.Integer
-    @typecheck right = DemoAttributeType.Integer
+    @typecheck equalsType( this.left, DemoAttributeType:Integer )
+    @typecheck equalsType( this.right, DemoAttributeType:Integer )
 }
 
 DemoAndExpression {
-    @typecheck left = DemoAttributeType.Boolean
-    @typecheck right = DemoAttributeType.Boolean
+    @typecheck equalsType( this.left, DemoAttributeType:Boolean )
+    @typecheck equalsType( this.right, DemoAttributeType:Boolean )
 }
 
 DemoOrExpression {
-    @typecheck left = DemoAttributeType.Boolean
-    @typecheck right = DemoAttributeType.Boolean
+    @typecheck equalsType( this.left, DemoAttributeType:Boolean )
+    @typecheck equalsType( this.right, DemoAttributeType:Boolean )
 }
 
 DemoComparisonExpression {
-	@typecheck left conformsTo right
+    @typecheck equalsType( this.left, this.right )
 }
 
 DemoIfExpression {
-    @typecheck condition = DemoAttributeType.Boolean
-    @typecheck conformsTo(whenTrue, whenFalse)
+    @typecheck equalsType( this.condition, DemoAttributeType:Boolean )
+    @typecheck conformsTo( this.whenTrue, this.whenFalse )
 }

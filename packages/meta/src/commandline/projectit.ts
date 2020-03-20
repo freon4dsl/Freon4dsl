@@ -1,68 +1,51 @@
-import { CommandLineAction, CommandLineParser, CommandLineFlagParameter, CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { CommandLineParser, CommandLineFlagParameter } from "@microsoft/ts-command-line";
 import { ProjectItGenerateLanguage } from "./ProjectItGenerateLanguage";
+import { ProjectItGenerateAllAction } from "./ProjectItGenerateAllAction";
 import { ProjectItGenerateEditor } from "./ProjectItGenerateEditor";
 import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 
 export class ProjectItParser extends CommandLineParser {
-    private verbose: CommandLineFlagParameter;
-    private outputDir: CommandLineStringParameter;
-    private languageFile: CommandLineStringParameter;
-
     private languageGenerator: ProjectItGenerateLanguage;
+    private allGenerator: ProjectItGenerateAllAction;
     private editorGenerator: ProjectItGenerateEditor;
     private scoperGenerator: ProjectItGenerateScoper;
     private validatorGenerator: ProjectItGenerateValidator;
+    private verboseArg: CommandLineFlagParameter;
 
     public constructor() {
         super({
             toolFilename: "projectit",
-            toolDescription: "Projectit tools for generating languages, scopers, editors, etc."
+            toolDescription: "ProjectIt toolset for generating languages, scopers, editors, etc."
         });
+        // console.log("PROJECT_IT COMMANDLINE PARSER");
 
         this.languageGenerator = new ProjectItGenerateLanguage();
+        this.allGenerator = new ProjectItGenerateAllAction();
         this.editorGenerator = new ProjectItGenerateEditor();
         this.scoperGenerator = new ProjectItGenerateScoper();
         this.validatorGenerator = new ProjectItGenerateValidator();
         this.addAction(this.languageGenerator);
+        this.addAction(this.allGenerator);
         this.addAction(this.editorGenerator);
         this.addAction(this.scoperGenerator);
         this.addAction(this.validatorGenerator);
     }
 
-    protected onDefineParameters(): void { // abstract
-        this.verbose = this.defineFlagParameter({
+    protected onDefineParameters(): void { 
+        this.verboseArg = this.defineFlagParameter({
             parameterLongName: "--verbose",
             parameterShortName: "-v",
             description: "Show extra logging detail"
         });
-        this.outputDir = this.defineStringParameter({
-            argumentName: "OUTPUTDIR",
-            defaultValue: ".",
-            parameterLongName: "--output",
-            parameterShortName: "-o",
-            description: "The directory where the files are generated"
-        });
-        this.languageFile = this.defineStringParameter({
-            argumentName: "LANGUAGE",
-            defaultValue: "LanguageDefinition.lang",
-            parameterLongName: "--language",
-            parameterShortName: "-l",
-            description: "Language Definition file",
-            required: false
-        });
     }
 
     protected onExecute(): Promise<void> {
-        this.languageGenerator.setOutputFolder(this.outputDir.value);
-        this.languageGenerator.setLanguageFile(this.languageFile.value);
-        this.languageGenerator.verbose = this.verbose.value;
-        this.editorGenerator.setOutputFolder(this.outputDir.value);
-        this.editorGenerator.setLanguageFile(this.languageFile.value);
-        this.scoperGenerator.setOutputFolder(this.outputDir.value);
-        this.scoperGenerator.setLanguageFile(this.languageFile.value);
-        this.validatorGenerator.setOutputFolder(this.outputDir.value);
-        this.validatorGenerator.setLanguageFile(this.languageFile.value);
+        this.languageGenerator.verbose = this.verboseArg.value;
+        this.allGenerator.verbose = this.verboseArg.value;
+        this.editorGenerator.verbose = this.verboseArg.value;
+        this.scoperGenerator.verbose = this.verboseArg.value;
+        this.validatorGenerator.verbose = this.verboseArg.value;
 
         return super.onExecute();
     }

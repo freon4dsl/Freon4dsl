@@ -9,13 +9,13 @@ export class ConceptTemplate {
         const language = concept.language;
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.concept()) : "MobxModelElementImpl";
-        const hasName = concept.properties.some(p => p.name === "name");
+        const hasName = concept.primProperties.some(p => p.name === "name");
         // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
         const isBinaryExpression = concept.binaryExpression();
         const isExpression = (!isBinaryExpression) && concept.expression() ;
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement"));
+        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
 
         const binExpConcept : PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
         const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
@@ -57,9 +57,9 @@ export class ConceptTemplate {
 
         // Template starts here
         const result = `
-            ${concept.properties.length > 0 ? `import { observable } from "mobx";` : ""}
+            ${concept.primProperties.length > 0 ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
+            import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/core";
             import { ${language.name}ConceptType } from "./${language.name}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
@@ -86,7 +86,7 @@ export class ConceptTemplate {
                     }
                 }
                 
-                ${concept.properties.map(p => this.generatePrimitiveProperty(p)).join("")}
+                ${concept.primProperties.map(p => this.generatePrimitiveProperty(p)).join("")}
                 ${concept.enumProperties.map(p => this.generateEnumerationProperty(p)).join("")}
                 ${concept.parts.map(p => this.generatePartProperty(p)).join("")}
                 ${concept.references.map(p => this.generateReferenceProperty(p)).join("")}

@@ -3,6 +3,7 @@
 }
 
 // TODO the order of the element should not be fixed
+// TODO name chould be changed into Langauge_Definition
 Editor_Definition
   = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)* ws t:(union)*
     {
@@ -24,6 +25,7 @@ enumKey         = "enum" { return true; }
 
 base = baseKey name:var { return create.createConceptReference( { "name": name}); }
 
+// TODO one should be able to mingle parts, references and attributes
 concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
          "concept" ws name:var ws base:base? curly_begin 
             att:attribute*
@@ -34,7 +36,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
     {
         if (!!binary) {
             return create.createBinaryExpressionConcept({
-                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
                 "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
                 "parts": parts,
                 "references": references,
@@ -49,7 +51,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             });
         } else if (!!expression) {
             return create.createExpressionConcept({
-                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
                 "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
                 "parts": parts,
                 "references": references,
@@ -64,7 +66,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             });
         } else {
             return create.createConcept({
-                "properties": att.filter(a => !create.isEnumerationProperty(a)),
+                "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
                 "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
                 "parts": parts,
                 "references": references,

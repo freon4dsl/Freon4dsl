@@ -7,7 +7,7 @@ export class ScoperTemplate {
     }
 
     generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef): string {
-        console.log("Creating Scoper");
+        // console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
         const generatedClassName : string = Names.scoper(language, scopedef);
@@ -35,7 +35,7 @@ export class ScoperTemplate {
                 let result : PiNamedElement[] = [];
                 if(modelelement == null){
                     // TODO error mess console.log("getVisibleElements: modelelement is null");
-                    return null
+                    return null;
                 }
                 let ns = new ${namespaceClassName}(modelelement);
                 result = ns.getVisibleElements(metatype, excludeSurrounding); // true means that we are excluding names from parent namespaces                   

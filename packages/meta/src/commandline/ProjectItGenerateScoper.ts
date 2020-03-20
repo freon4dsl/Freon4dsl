@@ -1,41 +1,42 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
-import { EditorParser } from "../editordef/parser/EditorParser";
-import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";
-import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
+import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
+import { PiLogger } from "../../../core/src/util/PiLogging";
 
-export class ProjectItGenerateScoper extends ProjectItGenerateAction {
+const LOGGER = new PiLogger("ProjectItGenerateScoper"); // .mute();
+export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
     private scopeFile: CommandLineStringParameter;
-    // protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected scoperGenerator: ScoperGenerator;
 
     public constructor() {
         super({
             actionName: "generate-scoper",
             summary: "Generates the TypeScript code for the scoper for your language",
-            documentation: "Generates TypeScript code for the scoper of language defined in the .lang file. The scoper definition is found in the .scop file."
+            documentation: "Generates TypeScript code for the scoper of language defined in the .lang file. " + 
+            "The scoper definition is found in the .scop file."
         });
     }
 
     generate(): void {
-        const language = new LanguageParser().parse(this.languageFile); 
-        // only read the .lang file, no need to generate
-        // this.languageGenerator.outputfolder = this.outputFolder;
-        // this.languageGenerator.generate(language);
-
-        // scoperParser needs language because it has to perform checks!
-        const scoper = new ScoperParser(language).parse(this.scopeFile.value);
-
-        // scoperGenerator needs language because ??? TODO
-        this.scoperGenerator = new ScoperGenerator(language);
+        if (this.verbose) {
+            LOGGER.log("Starting ProjectIt scoper generation ...");    
+        }
+        super.generate();
+        this.scoperGenerator = new ScoperGenerator(this.language);
         this.scoperGenerator.outputfolder = this.outputFolder;
-        this.scoperGenerator.generate(scoper);
+
+        const scoper = new ScoperParser(this.language).parse(this.scopeFile.value, this.verbose);
+        if (scoper == null) {
+            LOGGER.error(this, "Scoper definition could not be parsed, exiting.");
+            process.exit(-1);
+        }
+        this.scoperGenerator.generate(scoper, this.verbose);
+        // TODO add check on succesfullness
     }
 
     protected onDefineParameters(): void {
+        super.onDefineParameters();
         this.scopeFile = this.defineStringParameter({
             argumentName: "SCOPE",
             defaultValue: "LanguageDefinition.scop",

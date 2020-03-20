@@ -95,7 +95,7 @@ export class ProjectionTemplate {
                 ${language.concepts.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).map(c => `
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     return new VerticalListBox(element, "element", [
-                        ${c.properties.map(p => `
+                        ${c.primProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
                                 new LabelBox(element, "element-${p.name}-label", "${p.name}", {
                                     style: demoStyles.propertykeyword
