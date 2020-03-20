@@ -14,10 +14,15 @@ export class PiScoperChecker extends Checker<PiScopeDef> {
 
     public check(definition: PiScopeDef, verbose: boolean): void {
         if (verbose) LOGGER.log("Checking scope definition " + definition.scoperName);
+        if( this.language === null ) {
+            LOGGER.error(this,  "Scoper definition checker does not known the language, exiting.");
+            process.exit(-1);
+        }
+
         this.nestedCheck(
             {
-                check: true,
-                error: "This error never happens"
+                check: this.language.name === definition.languageName,
+                error: `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' does not match language '${this.language.name}'.`,
             });
             definition.namespaces.forEach(ns => {
                 ns.conceptRefs.forEach(ref => 

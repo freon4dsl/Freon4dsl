@@ -15,24 +15,22 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     public check(definition: PiValidatorDef, verbose: boolean): void {
         if (verbose) LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
+        if( this.language === null ) {
+            LOGGER.error(this,  "Validator definition checker does not known the language, exiting.");
+            process.exit(-1);
+        }
+
         this.nestedCheck(
             {
-                check: this.language !== null,
-                error: "Validator Definition Checker does not known the language",
+                check: this.language.name === definition.languageName,
+                error: `Language reference ('${definition.languageName}') in Validation Definition '${definition.validatorName}' does not match language '${this.language.name}'.`,
                 whenOk: () => {
-                    this.nestedCheck(
-                        {
-                            check: this.language.name === definition.languageName,
-                            error: `Language reference ('${definition.languageName}') in Validation Definition '${definition.validatorName}' does not match language '${this.language.name}'.`,
-                            whenOk: () => {
-                                definition.conceptRules.forEach(rule => {    
-                                    this.checkConceptRule(rule);
-                                });        
-                            }
-                        });
-                    }
+                    definition.conceptRules.forEach(rule => {    
+                        this.checkConceptRule(rule);
+                    });        
+                }
             });
-        }
+    }
 
     private checkConceptRule(rule: ConceptRuleSet) {
         this.checkConceptReference(rule.conceptRef);

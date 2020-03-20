@@ -1,13 +1,15 @@
 import * as fs from "fs";
 import parserTypeScript = require("prettier/parser-typescript");
 import { PiLogger } from "../../../core/src/util/PiLogging";
+import { isRegExp } from "util";
 
 const LOGGER = new PiLogger("FileHelpers"); // .mute();
 const prettier = require("prettier/standalone");
+var path = require('path');
 
 export class Helpers {
 
-    public static generateManualFile(path: string, contents: string, message: string) {
+    public static generateManualFile(path: string, contents: string, message: string) { 
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, contents);
         } else {
@@ -43,6 +45,39 @@ export class Helpers {
                 fs.mkdirSync(current);
             }
         }
+    }
+
+    /*
+    * startPath:  
+    * extension: a regular expression to filter the filenames found
+    */
+    public static findFiles(startPath: string, extension?: string) : string[] {
+        if (!fs.existsSync(startPath)){
+            LOGGER.error(this, "cannot find folder '" + startPath + "'");
+            return [];
+        }
+        if (!fs.lstatSync(startPath).isDirectory()) {
+            LOGGER.error(this, "'" + startPath + "' is not a folder");
+            return [];
+        }
+        
+        let result : string[] = [];
+        var files=fs.readdirSync(startPath);
+        for(var i=0;i<files.length;i++){
+            var filename=path.join(startPath,files[i]);
+            var stat = fs.lstatSync(filename);
+            if (!stat.isDirectory()) {
+                if (extension === undefined) {
+                    result.push( filename );
+                } else {
+                    let regex = new RegExp(`\\${extension}\$`)
+                    if (regex.test(filename)) {
+                        result.push( filename );
+                    }
+                }
+            }
+        };
+        return result;
     }
 
 }
