@@ -3,6 +3,7 @@ import { PiProjection, PiElement, Box, VerticalListBox, HorizontalListBox, Label
 import { SelectBox, SelectOption } from "@projectit/core";
 import { createDefaultExpressionBox, KeyPressAction } from "@projectit/core";
 import { PiScoper } from "@projectit/core";
+import { PiEditor } from "@projectit/core";
 import {
     AllDemoConcepts,
     DemoAttribute,
@@ -13,17 +14,18 @@ import {
     DemoStringLiteralExpression,
     DemoVariable
 } from "../language";
-import { DemoConceptType } from "../language/Demo";
-import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { demoStyles } from "../styles/styles";
+import { DemoEnvironment } from "./DemoEnvironment";
+import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 
 export class DemoProjection implements PiProjection {
     rootProjection: PiProjection;
+    helpers = new DemoSelectionHelpers();
 
     getBox(element: PiElement): Box {
-        if (element instanceof DemoFunctionCallExpression) {
-            return this.getDemoFunctionCallExpressionBox(element);
-        }
+        // if (element instanceof DemoFunctionCallExpression) {
+        //     return this.getDemoFunctionCallExpressionBox(element);
+        // }
         if (element instanceof DemoStringLiteralExpression) {
             return this.getDemoStringLiteralExpressionBox(element);
         }
@@ -54,61 +56,35 @@ export class DemoProjection implements PiProjection {
     }
 
     public getDemoFunctionCallExpressionBox(element: DemoFunctionCallExpression): Box {
-        const scoper: PiScoper = new DemoScoper();
-        return new VerticalListBox(element, "element", [
-            this.getReferenceBox(element, "func-call-exp", "<select function>", "DemoFunction",
-                () => {
-                    if (!!element.functionDefinition) {
-                        return { id: element.functionDefinition.name, label: element.functionDefinition.name };
-                    } else {
-                        return null;
+        return createDefaultExpressionBox(element, "getDemoFunctionCallExpressionBox", [
+                this.helpers.getReferenceBox(element, "func-call-exp", "<select function>", "DemoFunction",
+                    () => {
+                        if (!!element.functionDefinition) {
+                            return { id: element.functionDefinition.name, label: element.functionDefinition.name };
+                        } else {
+                            return null;
+                        }
+                    },
+                    (option: SelectOption) => {
+                        element.functionDefinition = DemoEnvironment.getInstance().scoper.getFromVisibleElements(
+                            element,
+                            option.label,
+                            "DemoFunction"
+                        ) as DemoFunction;
                     }
-                },
-                (option: SelectOption) => {
-                    element.functionDefinition = scoper.getFromVisibleElements(
-                        element,
-                        option.label,
-                        "DemoFunction"
-                    ) as DemoFunction;
-                }
-            )
+                )
         ]);
-    }
-
-    public getReferenceBox(
-        element: PiElement,
-        role: string,
-        placeholder: string,
-        metaType: string,
-        getAction: () => SelectOption,
-        setAction: (o: SelectOption) => void
-    ): SelectBox {
-        // TODO get the scoper from somewhere in the language configuration
-        const scoper: PiScoper = new DemoScoper();
-        return new SelectBox(
-            element,
-            role,
-            placeholder,
-            () => {
-                return scoper.getVisibleNames(element, metaType).map(name => ({
-                    id: name,
-                    label: name
-                }));
-            },
-            () => getAction(),
-            (option: SelectOption) => setAction(option)
-        );
     }
 
     public getDemoStringLiteralExpressionBox(literal: DemoStringLiteralExpression): Box {
         return createDefaultExpressionBox(literal, "string-literal-exp", [
             new HorizontalListBox(literal, "string-literal", [
-                new LabelBox(literal, "start-quote", '"', { selectable: false }),
-                new TextBox(literal, "string-value", () => literal.value, (v: string) => (literal.value = v), {
+                new LabelBox(literal, "start-quote", "\"", { selectable: false }),
+                new TextBox(literal, "element-value-text", () => literal.value, (v: string) => (literal.value = v), {
                     style: demoStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
-                new LabelBox(literal, "end-quote", '"', { selectable: false })
+                new LabelBox(literal, "end-quote", "\"", { selectable: false })
             ])
         ]);
     }

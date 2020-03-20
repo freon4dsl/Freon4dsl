@@ -1,3 +1,4 @@
+import { createDefaultExpressionBox } from "@projectit/core";
 import { Names } from "../../../utils/Names";
 import { PiLangEnumProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
@@ -55,10 +56,11 @@ export class ProjectionTemplate {
             
             ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
             ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../../language/${Names.enumeration(e)}";`).join("")}
-            import { ${language.name}EnumerationProjections } from "./${language.name}EnumerationProjections";
+            import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
+            import { ${language.name}Environment } from "../${language.name}Environment";
 
             export class ${Names.projectionDefault(language)} implements PiProjection {
-                private enumSelectBox: ${language.name}EnumerationProjections = new ${language.name}EnumerationProjections();
+                private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};
                 private editor: PiEditor;
                 rootProjection: PiProjection;
                 @observable showBrackets: boolean = false;
@@ -94,7 +96,8 @@ export class ProjectionTemplate {
 
                 ${language.concepts.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).map(c => `
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
-                    return new VerticalListBox(element, "element", [
+                    ${c.expression() ? `return createDefaultExpressionBox(element, "getDemoFunctionCallExpressionBox", [` : 
+                    `return `} new VerticalListBox(element, "element", [
                         ${c.primProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
                                 new LabelBox(element, "element-${p.name}-label", "${p.name}", {
@@ -112,11 +115,12 @@ export class ProjectionTemplate {
                             new LabelBox(element, "element-${p.name}-label", "${p.name}", {
                             style: demoStyles.propertykeyword
                             }),
-                            this.enumSelectBox.enumSelectFor${p.type.name}(element, "${p.name}-type",
+                            this.helpers.enumSelectFor${p.type.name}(element, "${p.name}-type",
                                 () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
                                 (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.enumeration())}.fromString(o.id)),
                             ])`
                         )).concat(
+//  Map all parts
                         c.allParts().map(part => `
                         ${ part.isList ? `
                             new LabelBox(element, "element-${part.name}-label", "${part.name}", { 
@@ -140,8 +144,50 @@ export class ProjectionTemplate {
                         ` :
                             `new LabelBox(element, "element-${part.name}-label", "${part.name}", {}),
                             this.rootProjection.getBox(element.${part.name})
-                        ` }`  )).join(",")}
-                    ]);
+                        ` }`  )).concat(
+// Map all references
+                        c.allPReferences().map(ref => `
+                        ${ ref.isList ? `
+                            new LabelBox(element, "element-${ref.name}-label", "${ref.name}", { 
+                                style: demoStyles.keyword
+                            }),
+                            ( element.${ref.name}.length === 0 ? null : 
+                                new VerticalListBox(
+                                    element,
+                                    "${ref.name}-list",
+                                    element.${ref.name}.map(ent => {
+                                        return this.rootProjection.getBox(ent);
+                                    }),
+                                    {
+                                        style: demoStyles.indent
+                                    }
+                                )
+                            ),
+                            new AliasBox(element, "new-${ref.name}", "add ${ref.name}", {
+                                style: demoStyles.indentedplaceholdertext
+                            })
+                        ` :
+                            `
+                            this.helpers.getReferenceBox(element, "${ref.name}-exp", "< select ${ref.name}>", "${ref.type.name}",
+                                () => {
+                                    if (!!element.${ref.name}) {
+                                        return { id: element.${ref.name}.name, label: element.${ref.name}.name };
+                                    } else {
+                                        return null;
+                                    }
+                                },
+                                (option: SelectOption) => {
+                                    element.${ref.name} = ${language.name}Environment.getInstance().scoper.getFromVisibleElements(
+                                        element,
+                                        option.label,
+                                        "${ref.type.name}"
+                                    ) as ${ref.type.name};
+                                }
+                            )
+                        ` }`  )
+                ).join(",")}
+                    ])
+                ${c.expression() ? `])`: ""}
                 }                
                 `).join("\n")}          
                   
