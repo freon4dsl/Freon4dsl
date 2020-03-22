@@ -53,9 +53,7 @@ describe("Mobx Model", () => {
                 element => {
                     reaktion++;
                     // console.log("React " + reaktion + " on " + element);
-                },
-                false
-            );
+                }            );
             reaktion = 0;
             done();
         });

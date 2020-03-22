@@ -28,8 +28,8 @@ export class Names {
         return language?.name + "ProjectionDefault";
     }
 
-    public static enumProjections(language: PiLanguageUnit){
-        return language?.name + "EnumerationProjections";
+    public static selectionHelpers(language: PiLanguageUnit){
+        return language?.name + "SelectionHelpers";
     }
 
     public static projection(language: PiLanguageUnit){

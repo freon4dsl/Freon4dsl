@@ -1,2 +1,10 @@
 editor StartEditor for language Demo
 
+concept Demo
+projection DemoProjection1 [[
+   i   f( ${name} ) then
+    println("hoi "+ name);
+else
+    en ${mies}  en aap en ${piet} alala
+]]
+

@@ -16,15 +16,21 @@ const rootStores = {
 };
 
 // render react DOM
+// ReactDOM.render(
+//     <Provider {...rootStores}>
+//         <Root>
+//             <Router history={history}>
+//                 <Switch>
+//                     <Route path="/" component={MainProjectionalEditor} />
+//                 </Switch>
+//             </Router>
+//         </Root>
+//     </Provider>,
+//     document.getElementById("root")
+// );
 ReactDOM.render(
     <Provider {...rootStores}>
-        <Root>
-            <Router history={history}>
-                <Switch>
-                    <Route path="/" component={MainProjectionalEditor} />
-                </Switch>
-            </Router>
-        </Root>
+        <MainProjectionalEditor />
     </Provider>,
     document.getElementById("root")
 );

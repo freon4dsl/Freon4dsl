@@ -5,7 +5,7 @@ import { UserTemplate } from "../../languagedef/generator/templates/UserTemplate
 import { EditorTemplate } from "./templates/EditorTemplate";
 import { EditorIndexTemplate } from "./templates/EditorIndexTemplate";
 import { Names } from "../../utils/Names";
-import { EnumerationSelectBoxTemplate } from "./templates/EnumerationSelectBoxTemplate";
+import { SelectionHelpers } from "./templates/SelectionHelpers";
 import { MainProjectionalEditorTemplate } from "./templates/MainProjectionalEditorTemplate";
 import { ProjectionTemplate } from "./templates/ProjectionTemplate";
 import { ActionsTemplate } from "./templates/ActionsTemplate";
@@ -33,7 +33,7 @@ export class EditorGenerator {
         if (verbose) LOGGER.log("Generating editor '" + editor.name + "' in folder " + this.editorGenFolder);
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
-        const enumProjection = new EnumerationSelectBoxTemplate();
+        const enumProjection = new SelectionHelpers();
         const contextTemplate = new ContextTemplate();
         const projectionalEditorTemplate = new MainProjectionalEditorTemplate();
         const editorTemplate = new EditorTemplate();
@@ -50,7 +50,7 @@ export class EditorGenerator {
 
         if (verbose) LOGGER.log("Generating enumeration projections");
         var enumProjectionFile = Helpers.pretty(enumProjection.generate(this.language), "Enumeration Projections", verbose);
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.enumProjections(this.language)}.ts`, enumProjectionFile);
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.selectionHelpers(this.language)}.ts`, enumProjectionFile);
 
         if (verbose) LOGGER.log("Generating default actions");
         var defaultActionsFile = Helpers.pretty(actions.generateDefaultActions(this.language), "DefaultActions", verbose);
