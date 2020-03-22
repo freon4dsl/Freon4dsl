@@ -139,7 +139,7 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
     const getter = function(this: any) {
         let result = this[privatePropertyKey];
         if (result === undefined) {
-            const array = observable.shallowArray([]);
+            const array = observable.array([], {deep: false});
             result = array;
             this[privatePropertyKey] = result;
             (array as any)[MODEL_CONTAINER] = this;

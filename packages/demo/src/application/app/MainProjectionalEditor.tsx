@@ -12,7 +12,7 @@ import { TutorialProjection, DemoActions, DemoContext } from "../../editor";
 const LOGGER = new PiLogger("MainProjectionalEditor"); //.mute();
 
 export type MainProjectionalEditorProps = {
-    editor: PiEditor;
+    // editor: PiEditor;
 };
 
 @observer
