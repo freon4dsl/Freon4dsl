@@ -1,4 +1,5 @@
-import { PiLangConceptReference, LangRefExpression } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions"
 
 export class PiValidatorDef {
     validatorName: string;
@@ -20,18 +21,18 @@ export abstract class ValidationRule {
     }
 }
 
-export class EqualsTypeRule extends ValidationRule {
-    type1: LangRefExpression;
-    type2: LangRefExpression;
+export class CheckEqualsTypeRule extends ValidationRule {
+    type1: PiLangExp;
+    type2: PiLangExp;
 
     toPiString(): string {
         return `@typecheck equalsType( ${this.type1.toPiString()}, ${this.type2.toPiString()} )`;
     }
 }
 
-export class ConformsTypeRule extends ValidationRule {
-    type1: LangRefExpression;
-    type2: LangRefExpression;
+export class CheckConformsRule extends ValidationRule {
+    type1: PiLangExp;
+    type2: PiLangExp;
 
     toPiString(): string {
         return `@typecheck conformsTo( ${this.type1.toPiString()}, ${this.type2.toPiString()} )`;
@@ -39,14 +40,14 @@ export class ConformsTypeRule extends ValidationRule {
 }
 
 export class NotEmptyRule extends ValidationRule {
-    property: LangRefExpression;
+    property: PiLangExp;
 
     toPiString(): string {
         return `@notEmpty ${this.property.toPiString()}`; 
     }
 }
 export class ValidNameRule extends ValidationRule {
-    property: LangRefExpression;
+    property: PiLangExp;
 
     toPiString(): string {
         return `@validName ${this.property.toPiString()}`; 

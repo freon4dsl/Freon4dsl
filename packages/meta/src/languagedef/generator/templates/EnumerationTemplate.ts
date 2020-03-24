@@ -41,7 +41,7 @@ export class EnumerationTemplate {
 
             ${enumeration.literals.map(lit => 
                 `static ${lit}: ${Names.enumeration(enumeration)} = ${Names.enumeration(enumeration)}.fromString("${lit}")` ).join(";")}
-            static ANY : ${Names.enumeration(enumeration)} = ${Names.enumeration(enumeration)}.fromString("ANY");
+            static $piANY : ${Names.enumeration(enumeration)} = ${Names.enumeration(enumeration)}.fromString("$piANY");
 
             static values = [${enumeration.literals.map(l => `${Names.enumeration(enumeration)}.${l}`).join(", ")}]
         

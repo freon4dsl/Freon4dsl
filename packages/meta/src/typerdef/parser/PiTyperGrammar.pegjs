@@ -3,80 +3,109 @@
 }
 
 Typer_Definition
-  = ws "typer" ws name:var ws "for" ws "language" ws languageName:var ws tr:(typeRule)*
+  = ws "typer" ws name:var ws "for" ws "language" ws languageName:var ws tr:(typerRule)*
     {
-//        return create.createTyperDef({
-//            "name": name,
-//            "languageName": languageName,
-//            "typeRules": tr,
-//        });
+       return create.createTyperDef({
+           "name": name,
+           "languageName": languageName,
+           "typerRules": tr,
+       });
     } 
 
 isTypeKey     = "@isType" ws
+//aTypeKey      = "@anyType" ws { return true; }
 inferenceKey  = "@inferType" ws
 conformsKey   = "@conformsTo" ws
 equalsKey     = "@equalsType" ws
-allKey        = "@all" ws
+allKey        = "@anyType" ws { return true; }
 typeOfKey     = "typeOf" ws
 superTypeKey  = "commonSuperType" ws
 abstractKey   = "abstract" ws { return true; }
 thisKey       = "this" ws
-trueKey       = "true" ws
-falseKey      = "false" ws
+trueKey       = "true" ws { return true; }
+falseKey      = "false" ws { return false; }
 
-typeRule =  infr:inferenceRule { return infr; }
-          / itr: isTypeRule { return itr }
-          / cfr: conformanceRule { return cfr; }
-          / eqr: equalsRule { return eqr; }
+typerRule = infr:inferenceRule    { return infr; }
+          / itr: isTypeRule       { return itr }
+          / cfr: conformanceRule  { return cfr; }
+          / eqr: equalsRule       { return eqr; }
 
-inferenceRule = conceptRef:conceptRef ws abs:abstractKey? inferenceKey property:calculation? 
+inferenceRule = conceptRef:conceptRef ws abs:abstractKey? inferenceKey calculation:calculation? 
     { 
-//        return create.createInferenceRule({ 
-//          "conceptRef": conceptRef, 
-//          "propertyRef": propertyRef,
-//          "isAbstract": (!!abs)
-//         }); 
+      return create.createInferenceRule({ 
+        "conceptRef": conceptRef, 
+        "calculation": calculation,
+        "isAbstract": (!!abs)
+      }); 
     }
 
 calculation = 
-              typeOfKey round_begin ws xx:langRefExpression ws round_end
-            / superTypeKey round_begin ws xx:langRefExpression ws comma_separator ws yy:langRefExpression round_end  
+            typeOfKey round_begin ws type:langRefExpression ws round_end 
+              { return create.createTypeOfCalculation({
+                "type": type
+              })}
+            / superTypeKey round_begin ws prop1:langRefExpression ws comma_separator ws prop2:langRefExpression round_end 
+              { return create.createSuperTypeCalculation({
+                "type1": prop1,
+                "type2": prop2,
+              })}
             / property:langRefExpression? 
+              { return create.createPropertyCalculation({ 
+                "property": property 
+              })}
 
-conceptRef = name:var { return create.createConceptReference( { "name": name}); }
+conceptRef = name:var { return create.createElementReference( { "name": name}); }
 
-isTypeRule = isTypeKey curly_begin ws type1:conceptRef ws (comma_separator ws types:conceptRef)* ws curly_end {
-//  return create.createIsTypeRule( {
-//    "type1": type1
-//    "types": types
-//  });
+isTypeRule = isTypeKey curly_begin ws types:(
+      head:conceptRef
+      tail:(comma_separator v:conceptRef { return v; })*
+      { return [head].concat(tail); }
+    )
+   ws curly_end {
+  return create.createIsTypeRule( {
+   "types": types !== null ? types : []
+  });
 }
 
-conformanceRule = conformsKey round_begin ws type1:allOrRef ws comma_separator ws type2:allOrRef ws round_end ws 
-            ws equals_separator (t:trueKey / f:falseKey) 
+conformanceRule = conformsKey round_begin ws type1:typeValue ws comma_separator ws type2:typeValue ws round_end ws 
+            ws equals_separator value:booleanValue
 {
-//  return create.createConformanceRule( {
-//    "type1": type1,
-//    "type2": type2,
-//    "value": (!!t)
-//  });
+  return create.createConformanceRule( {
+   "type1": type1,
+   "type2": type2,
+   "value": value
+  });
 }
 
-equalsRule = equalsKey round_begin ws type1:allOrRef ws comma_separator ws type2:allOrRef ws round_end 
-            ws equals_separator (t:trueKey / f:falseKey) 
+equalsRule = equalsKey round_begin ws type1:typeValue ws comma_separator ws type2:typeValue ws round_end 
+            ws equals_separator value:booleanValue 
 {
-//  return create.createTypeEqualsRule( {
-//    "type1": type1,
-//    "type2": type2,
-//    "value": (!!t)
-//  });
+  return create.createTypeEqualsRule( {
+   "type1": type1,
+   "type2": type2, 
+   "value": value
+  });
 }
 
-allOrRef = isTypeKey appliedFeature:dotExpression? 
-          / allKey {
-            //return create.createAllTypesRef();
-            }
-          / ref:langRefExpression {return ref;}
+booleanValue =  trueKey  { return true; }
+              / falseKey {return false; }
+
+typeValue = 
+//tp:aTypeKey appliedFeature:dotExpression? { 
+  //return create.createTypeValue( { 
+    //"typeProperty": appliedFeature,
+  //  "isAType": (!!tp)
+  //}); }
+          /// 
+          all:allKey appliedFeature:dotExpression? { 
+  return create.createTypeValue( {
+    "typeProperty": appliedFeature,
+    "allTypes": (!!all)
+  }); }
+          / ref:enumRefExpression { 
+  return create.createTypeValue( { 
+    "enumRef": ref 
+  }); }
 
 // the following are equal to the parsing rules for the validator
 
@@ -98,8 +127,7 @@ thisExpression = sourceName:var appliedFeature:dotExpression {
 }
 
 dotExpression = '.' sourceName:var appliedFeature:dotExpression?  {
-  return create.createPropertyRefExpression
-( {
+  return create.createPropertyRefExpression ({
     "sourceName": sourceName,
     "appliedFeature": appliedFeature
   })

@@ -1,7 +1,7 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiValidatorDef, ConceptRuleSet, EqualsTypeRule, ConformsTypeRule, NotEmptyRule, ValidNameRule } from "../../../validatordef/metalanguage/ValidatorDefLang";
-import { LangRefExpression, EnumRefExpression, ThisExpression } from "../../../languagedef/metalanguage/PiLangReferences";
+import { PiValidatorDef, ConceptRuleSet, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "../../../validatordef/metalanguage/ValidatorDefLang";
+import { PiLangExp, PiLangEnumExp, PiLangThisExp } from "../../../languagedef/metalanguage/PiLangExpressions";
 
 export class CheckerTemplate {
     constructor() {
@@ -18,7 +18,7 @@ export class CheckerTemplate {
         export class ${language.name}Checker {
             myUnparser = new ${Names.unparser(language)}();
         ${validdef.conceptRules.map(ruleSet =>
-            `public check${ruleSet.conceptRef.concept().name}(modelelement: ${ruleSet.conceptRef.concept().name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
+            `public check${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
                 ${this.createRules(ruleSet)}
             }`
         ).join("\n\n")}
@@ -47,9 +47,9 @@ export class CheckerTemplate {
 
     private createImports(language: PiLanguageUnit, validdef: PiValidatorDef) : string {
         let result : string = "";
-        result = language.concepts?.map(concept => `
+        result = language.classes?.map(concept => `
                 ${concept.name}`).join(", ");
-        result = result.concat(language.concepts? `,` :``);
+        result = result.concat(language.classes? `,` :``);
         result = result.concat(
             language.enumerations?.map(concept => `
                 ${concept.name}`).join(", "));
@@ -68,12 +68,12 @@ export class CheckerTemplate {
        return `${
             ruleSet.rules.map(r => 
                 `// ${r.toPiString()}
-                ${(r instanceof EqualsTypeRule ?
+                ${(r instanceof CheckEqualsTypeRule ?
                     `if(!typer.equalsType(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
                         errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) 
                         + "' should be equal to (the type of) '" + this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
                     }`
-                : (r instanceof ConformsTypeRule ?
+                : (r instanceof CheckConformsRule ?
                     `if(!typer.conformsTo(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
                         errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) + 
                         "' does not conform to (the type of) '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
@@ -90,11 +90,11 @@ export class CheckerTemplate {
             ).join("\n")}`;
     }
 
-    private langRefToTypeScript(ref: LangRefExpression): string {
-        if (ref instanceof EnumRefExpression) {
-            return `${ref.sourceName}.${ref.literalName}`;
-        } else if (ref instanceof ThisExpression) {
-            return `modelelement.${ref.appliedFeature.toPiString()}`;
+    private langRefToTypeScript(ref: PiLangExp): string {
+        if (ref instanceof PiLangEnumExp) {
+            return `${ref.sourceName}.${ref.appliedfeature.reference.name}`;
+        } else if (ref instanceof PiLangThisExp) {
+            return `modelelement.${ref.appliedfeature.toPiString()}`;
         } else {
             return ref.toPiString();
         }
@@ -103,10 +103,10 @@ export class CheckerTemplate {
     private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiLangConcept[] {
         let withRules : PiLangConcept[] = [];
         for (let ruleSet of validdef.conceptRules) {
-            withRules.push(ruleSet.conceptRef.concept());
+            withRules.push(ruleSet.conceptRef.referedElement());
         }
         let withoutRules : PiLangConcept[] = [];
-        for( let c of language.concepts) {
+        for( let c of language.classes) {
             if( !withRules.includes(c) ) withoutRules.push(c);
         }
         return withoutRules;

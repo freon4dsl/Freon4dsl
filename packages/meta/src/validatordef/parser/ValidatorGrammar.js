@@ -203,25 +203,25 @@ function peg$parse(input, options) {
       peg$c30 = function(thisExpression) { return thisExpression; },
       peg$c31 = ":",
       peg$c32 = peg$literalExpectation(":", false),
-      peg$c33 = function(sourceName, literalName) {
+      peg$c33 = function(sourceName, appliedfeature) {
         return create.createEnumReference ({
           "sourceName": sourceName,
-          "literalName": literalName
+          "appliedfeature": appliedfeature
         })
       },
-      peg$c34 = function(sourceName, appliedFeature) {
+      peg$c34 = function(sourceName, appliedfeature) {
         return create.createThisExpression ({
           "sourceName": sourceName,
-          "appliedFeature": appliedFeature
+          "appliedfeature": appliedfeature
         })
       },
       peg$c35 = ".",
       peg$c36 = peg$literalExpectation(".", false),
-      peg$c37 = function(sourceName, appliedFeature) {
+      peg$c37 = function(sourceName, appliedfeature) {
         return create.createPropertyRefExpression
       ( {
           "sourceName": sourceName,
-          "appliedFeature": appliedFeature
+          "appliedfeature": appliedfeature
         })
       },
       peg$c38 = "{",

@@ -61,25 +61,25 @@ typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langRefExpr
 langRefExpression = enumRefExpression:enumRefExpression { return enumRefExpression; } 
                   / thisExpression:thisExpression       { return thisExpression; }
 
-enumRefExpression = sourceName:var ':' literalName:var {
+enumRefExpression = sourceName:var ':' appliedfeature:var {
   return create.createEnumReference ({
     "sourceName": sourceName,
-    "literalName": literalName
+    "appliedfeature": appliedfeature
   })
 }
 
-thisExpression = sourceName:var appliedFeature:dotExpression {
+thisExpression = sourceName:var appliedfeature:dotExpression {
   return create.createThisExpression ({
     "sourceName": sourceName,
-    "appliedFeature": appliedFeature
+    "appliedfeature": appliedfeature
   })
 }
 
-dotExpression = '.' sourceName:var appliedFeature:dotExpression?  {
+dotExpression = '.' sourceName:var appliedfeature:dotExpression?  {
   return create.createPropertyRefExpression
 ( {
     "sourceName": sourceName,
-    "appliedFeature": appliedFeature
+    "appliedfeature": appliedfeature
   })
 }
 

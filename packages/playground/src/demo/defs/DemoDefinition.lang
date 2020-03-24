@@ -128,6 +128,7 @@ enumeration DemoAttributeType {
     String
     Integer
     Boolean
+    ANY
 }
 
 union DemoType {

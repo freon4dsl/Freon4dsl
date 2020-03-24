@@ -41,7 +41,7 @@ export class PiScoperChecker extends Checker<PiScopeDef> {
                 error: `Element reference ${"UNKNOWN"}.type should have a name, but doesn't`,
                 whenOk: () => this.nestedCheck(
                     {
-                        check: reference.concept() !== undefined,
+                        check: reference.referedElement() !== undefined,
                         error: `ElementReference to ${reference.name} cannot be resolved`
                     })
             })

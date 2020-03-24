@@ -1,10 +1,29 @@
 typer Demo for language Demo
 
-@isType { Entity, DemoAttributeType, DemoType }
+@isType {DemoEntity, DemoAttributeType, DemoType }
 
-@conformsTo (@all, DemoAttributeType:ANY) = true 
-@conformsTo (@isType, @isType.base) = true
-@equalsType (@all, DemoAttributeType:ANY) = true 
+@allTypes {
+    @conformsto: this.super
+    @conformsto: this.implements
+}
+DemoEntity {
+    @conformsto: this.super
+    @conformsto: this.implements
+}
+
+DemoAttributeType {
+   @conformsTo: DemoAttributeType:ANY
+}
+
+DemoAttributeType.DecimalNumber {
+   @conformsTo: DemoAttributeType:Integer
+}
+
+@conformsTo (@anyType, DemoAttributeType:ANY) = true 
+@conformsTo (DemoEntity, this.super) = true 
+@equalsType (@anyType, @anyType.super) = true
+@equalsType (@anyType, DemoAttributeType:ANY) = true 
+@equalsType (DemoAttributeType:String, DemoAttributeType:ANY) = true 
 
 DemoAttribute @inferType this.declaredType
 
@@ -20,18 +39,22 @@ DemoNumberLiteralExpression @inferType DemoAttributeType:Integer
 
 DemoBooleanLiteralExpression @inferType DemoAttributeType:Boolean
 
-DemoAbsExpression @inferType this.expr.type
+DemoAbsExpression @inferType this.expr
 
-DemoMultiplyExpression @inferType this.left.type
+DemoMultiplyExpression @inferType this.left
 
-DemoPlusExpression @inferType this.left.type
+DemoPlusExpression @inferType if (this.left == String || this.right == String) String else commonSuperType(left,right) 
 
-DemoDivideExpression @inferType this.left.type
+DemoDivideExpression @inferType this.left
 
 DemoComparisonExpression @inferType DemoAttributeType:Boolean
 
-DemoFunctionCallExpression @inferType typeOf(this.function)
+DemoFunctionDefinition @inferType this.declaredType
+
+DemoFunctionCallExpression @inferType this.functionDefinition
 
 DemoIfExpression    @inferType commonSuperType(this.whenTrue, this.whenFalse)
 
-DemoVariableRef   @inferType typeOf(this.attribute)  //not correct in .lang file
+DemoVariable @inferType this.declaredType
+
+DemoVariableRef   @inferType this.attribute  

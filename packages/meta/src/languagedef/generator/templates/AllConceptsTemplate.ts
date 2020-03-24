@@ -8,7 +8,7 @@ export class AllConceptsTemplate {
     generateAllConceptsClass(language: PiLanguageUnit): string {
         // sort all names alphabetically
         let tmp : string[] = [];
-        language.concepts.map(c => 
+        language.classes.map(c => 
             tmp.push(Names.concept(c))
         );
         language.enumerations.map(c =>

@@ -29,10 +29,10 @@ export class PiTyperGenerator {
         Helpers.createDirIfNotExisting(this.typerFolder, verbose);
         Helpers.createDirIfNotExisting(this.typerGenFolder, verbose);
 
-        //  Generate validator
-        // if (verbose) LOGGER.log("Generating typer class");
-        // var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef), "Validator Class", verbose);
-        // fs.writeFileSync(`${this.typerGenFolder}/${Names.validator(this.language, typerdef)}.ts`, typerFile);
+        //  Generate typer
+        if (verbose) LOGGER.log("Generating typer class");
+        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef), "Validator Class", verbose);
+        fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
         if (verbose) LOGGER.log("Succesfully generated typer: " + typerdef.name);
     } 

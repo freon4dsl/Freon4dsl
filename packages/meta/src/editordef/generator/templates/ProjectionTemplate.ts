@@ -53,7 +53,7 @@ export class ProjectionTemplate {
                 PiBinaryExpression
             } from "@projectit/core";
             
-            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
+            ${language.classes.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
             ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../../language/${Names.enumeration(e)}";`).join("")}
             import { ${language.name}EnumerationProjections } from "./${language.name}EnumerationProjections";
 
@@ -71,7 +71,7 @@ export class ProjectionTemplate {
             
                 getBox(exp: PiElement): Box {
                     switch( exp.piLanguageConcept() ) {
-                        ${language.concepts.map(c => `
+                        ${language.classes.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
                         ).join("  ")}
                     }
@@ -79,7 +79,7 @@ export class ProjectionTemplate {
                     throw new Error("No box defined for this expression:" + exp.piId());
                 }
 
-                ${language.concepts.filter(c => c.binaryExpression()).map(c => `
+                ${language.classes.filter(c => c.binaryExpression()).map(c => `
                 private get${c.name}Box(element: ${Names.concept(c)}) {
                      return this.createBinaryBox(this, element);
                 }                
@@ -92,7 +92,7 @@ export class ProjectionTemplate {
                 :"" }
       
 
-                ${language.concepts.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).map(c => `
+                ${language.classes.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).map(c => `
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     return new VerticalListBox(element, "element", [
                         ${c.primProperties.map(p => `
@@ -114,7 +114,7 @@ export class ProjectionTemplate {
                             }),
                             this.enumSelectBox.enumSelectFor${p.type.name}(element, "${p.name}-type",
                                 () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
-                                (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.enumeration())}.fromString(o.id)),
+                                (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referedElement())}.fromString(o.id)),
                             ])`
                         )).concat(
                         c.allParts().map(part => `
