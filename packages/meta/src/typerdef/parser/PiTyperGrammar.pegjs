@@ -1,5 +1,6 @@
 {
     let create = require("./PiTyperCreators");
+    let expCreate = require("../../languagedef/parser/LanguageExpressionCreators");
 }
 
 Typer_Definition
@@ -107,29 +108,44 @@ typeValue =
     "enumRef": ref 
   }); }
 
-// the following are equal to the parsing rules for the validator
+// the following are the parsing rules for the expressions over the language structure,
+// as defined in meta/src/languagedef/metalanguage/PiLangExpressions.ts
 
-langRefExpression = enumRefExpression:enumRefExpression { return enumRefExpression; } 
-                  / thisExpression:thisExpression       { return thisExpression; }
+langRefExpression = enumRefExpression:enumRefExpression    { return enumRefExpression; } 
+                  / expression:expression                  { return expression; }
+                  / functionExpression:functionExpression  { return functionExpression; }
 
-enumRefExpression = sourceName:var ':' literalName:var {
-  return create.createEnumReference ({
+enumRefExpression = sourceName:var ':' appliedfeature:var {
+  return expCreate.createEnumReference ({
     "sourceName": sourceName,
-    "literalName": literalName
+    "appliedfeature": appliedfeature
   })
 }
 
-thisExpression = sourceName:var appliedFeature:dotExpression {
-  return create.createThisExpression ({
+expression = sourceName:var appliedfeature:dotExpression {
+  return expCreate.createExpression ({
     "sourceName": sourceName,
-    "appliedFeature": appliedFeature
+    "appliedfeature": appliedfeature
   })
 }
 
-dotExpression = '.' sourceName:var appliedFeature:dotExpression?  {
-  return create.createPropertyRefExpression ({
+functionExpression = sourceName:var round_begin actualparams:(
+      head:langRefExpression
+      tail:(comma_separator v:langRefExpression { return v; })*
+      { return [head].concat(tail); }
+    ) 
+    round_end {
+  return expCreate.createFunctionCall ({
     "sourceName": sourceName,
-    "appliedFeature": appliedFeature
+    "actualparams": actualparams
+  })
+}
+
+dotExpression = '.' sourceName:var appliedfeature:dotExpression?  {
+  return expCreate.createAppliedFeatureExp
+( {
+    "sourceName": sourceName,
+    "appliedfeature": appliedfeature
   })
 }
 

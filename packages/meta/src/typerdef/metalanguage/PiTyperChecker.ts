@@ -1,18 +1,22 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangConceptProperty} from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiLangProperty, PiLangConcept } from "../../languagedef/metalanguage/PiLanguage";
 import { ConformsTypeRule, PiTyperDef, PiTyperRule, InferenceRule, IsTypeRule, TypeEqualsRule, PropertyCalculation, TypeOfCalculation, CommonSuperTypeCalculation, PiCalculation, PiTypeValue } from "./PiTyperDefLang";
-import { PiLangAppliedFeatureExp, PiLangExp, PiLangEnumExp, PiLangThisExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangAppliedFeatureExp, PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAnyTypeExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiTyperChecker"); // .mute();
 export class PiTyperChecker extends Checker<PiTyperDef> {
     verbose: boolean = false;
     definition: PiTyperDef;
+    myExpressionChecker : PiLanguageExpressionChecker;
     
     constructor(language: PiLanguageUnit) {
         super();
         this.language = language;
+        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        this.myExpressionChecker.myTyperChecker = this;
     }
 
     public check(definition: PiTyperDef, verbose: boolean): void {
@@ -35,6 +39,10 @@ export class PiTyperChecker extends Checker<PiTyperDef> {
                     });        
                 }
             });
+    }
+
+    public checkAnyTypeExp(exp: PiLangAnyTypeExp) {
+        LOGGER.log("Checking AnyType Expression " + exp?.toPiString());
     }
 
     private checkTyperRule(rule: PiTyperRule) {
@@ -60,7 +68,7 @@ export class PiTyperChecker extends Checker<PiTyperDef> {
     }
     
     private checkTypeValue(typeVal: PiTypeValue) {
-        if (typeVal.enumRef) this.checkPiLangEnumExp(typeVal.enumRef);
+        // if (typeVal.enumRef) this.myExpressionChecker.checkLangExp(typeVal.enumRef, enclosingConcept);
         if (typeVal.allTypes && typeVal.typeProperty) {
             // check if the property is present on each concept, it should be a meta-property
             this.simpleCheck(typeVal.typeProperty.sourceName === 'base', "Expected '@anyType.base', found '" + typeVal.toPiString() + "'");
@@ -90,24 +98,24 @@ export class PiTyperChecker extends Checker<PiTyperDef> {
         // this.checkHasType(calc.property);
     }
 
-    private checkHasType(langRef: PiLangExp) {
-        let found: boolean = false;
-        for( let rule of this.definition.typerRules ) {
-            if (rule instanceof InferenceRule) {
-                if (langRef instanceof PiLangEnumExp) {
-                    // langRef.astEnumType should be in @isType { ... }
+    // private checkHasType(langRef: PiLangExp) {
+    //     let found: boolean = false;
+    //     for( let rule of this.definition.typerRules ) {
+    //         if (rule instanceof InferenceRule) {
+    //             if (langRef instanceof PiLangEnumExp) {
+    //                 // langRef.astEnumType should be in @isType { ... }
 
-                    this.simpleCheck(found, "Enumeration '" + name + "' is not a type" );
-                } else if (langRef instanceof PiLangThisExp) {
-                    // astProperty of the last appliedFeature in langRef should have an inference Rule, 
-                    // or its type should be in @isType { ... }
-                    // if( langRef.astConcept.name = rule.conceptRef.concept().name ) found = true;
-                    // this.simpleCheck(found, "There should be an inference rule for '" + langRef.toPiString() + "'" );
-                } 
-            }
-        }
-        this.simpleCheck(found, "There should be an inference rule for '" + langRef.toPiString() + "'" );
-    }
+    //                 this.simpleCheck(found, "Enumeration '" + name + "' is not a type" );
+    //             } else if (langRef instanceof PiLangThisExp) {
+    //                 // astProperty of the last appliedFeature in langRef should have an inference Rule, 
+    //                 // or its type should be in @isType { ... }
+    //                 // if( langRef.astConcept.name = rule.conceptRef.concept().name ) found = true;
+    //                 // this.simpleCheck(found, "There should be an inference rule for '" + langRef.toPiString() + "'" );
+    //             } 
+    //         }
+    //     }
+    //     this.simpleCheck(found, "There should be an inference rule for '" + langRef.toPiString() + "'" );
+    // }
     
     private checkElementReference(reference: PiLangConceptReference) {
         // Note that the following statement is crucial, because the model we are testing is separate
@@ -125,65 +133,48 @@ export class PiTyperChecker extends Checker<PiTyperDef> {
                 check: !(langRef instanceof PiLangAppliedFeatureExp),
                 error: "Expected an enumeration value, or 'this'",
                 whenOk: () => {
-                    if (langRef instanceof PiLangEnumExp) {
-                        this.checkPiLangEnumExp(langRef);
-                    } else if (langRef instanceof PiLangThisExp) {
-                        this.checkPiLangThisExp(langRef, enclosingConcept);
-                    }
+                    this.myExpressionChecker.checkLangExp(langRef, enclosingConcept);
                 }
             })
     }
 
-    checkPiLangThisExp(langRef: PiLangThisExp, enclosingConcept:PiLangConcept) {
-        // if (this.verbose) LOGGER.log("Checking 'this' Reference " + langRef.toPiString());
-        // this.nestedCheck(
-        //     {
-        //         check: langRef.appliedFeature != null,
-        //         error: `'this' should be followed by '.', followed by a property name`,
-        //         whenOk: () => {
-        //             this.checkAndResolvePropRef(langRef.appliedFeature, enclosingConcept);
-        //         }
-        //     }
-        // )
-    }
+    // checkPiLangEnumExp(langRef: PiLangEnumExp) {
+    //     // if (this.verbose) LOGGER.log("Checking Enumeration Reference " + langRef.toPiString());
+    //     let myEnumType = this.language.findEnumeration(langRef.sourceName);
+    //     this.nestedCheck({
+    //         check: myEnumType != null,
+    //         error: `Cannot find enumeration ${langRef.sourceName}`,
+    //         whenOk: () => {
+    //             this.nestedCheck({
+    //                 check: langRef.appliedfeature != null, 
+    //                 error:`${langRef.sourceName} should be followed by ':', followed by a literal`,
+    //                 whenOk: () => {
+    //                     // find literal in enum
+    //                     // let myLiteral = myEnumType.literals.find(l => l === langRef.appliedfeature);
+    //                     // this.simpleCheck(myLiteral != null,`Literal '${langRef.appliedfeature}' unknown in '${langRef.sourceName}'`);
+    //                     // // set the found languge element
+    //                     // langRef.astEnumType = myEnumType;
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
 
-    checkPiLangEnumExp(langRef: PiLangEnumExp) {
-        // if (this.verbose) LOGGER.log("Checking Enumeration Reference " + langRef.toPiString());
-        let myEnumType = this.language.findEnumeration(langRef.sourceName);
-        this.nestedCheck({
-            check: myEnumType != null,
-            error: `Cannot find enumeration ${langRef.sourceName}`,
-            whenOk: () => {
-                this.nestedCheck({
-                    check: langRef.appliedfeature != null, 
-                    error:`${langRef.sourceName} should be followed by ':', followed by a literal`,
-                    whenOk: () => {
-                        // find literal in enum
-                        // let myLiteral = myEnumType.literals.find(l => l === langRef.appliedfeature);
-                        // this.simpleCheck(myLiteral != null,`Literal '${langRef.appliedfeature}' unknown in '${langRef.sourceName}'`);
-                        // // set the found languge element
-                        // langRef.astEnumType = myEnumType;
-                    }
-                });
-            }
-        });
-    }
-
-    checkAndResolvePropRef(feat: PiLangAppliedFeatureExp, enclosingConcept:PiLangConcept) {
-        // if (this.verbose) LOGGER.log("Resolving: " + feat.toPiString());
-        let found : PiLangProperty;
-        for ( let e of enclosingConcept.allProperties() ) {
-            if (e.name === feat.sourceName) {
-                found = e;
-            }
-        }
-        // this.nestedCheck({
-        //     check: !!found, 
-        //     error: "Cannot find property, part, or reference '" + feat.sourceName + "' in '" + enclosingConcept.name + "'",
-        //     whenOk: () => {
-        //         if(feat.appliedFeature != null && found instanceof PiLangConceptPropertyappliedFeature, (found as PiLangConceptProperty                }
-        //     }
-        // });
-    }
+    // checkAndResolvePropRef(feat: PiLangAppliedFeatureExp, enclosingConcept:PiLangConcept) {
+    //     // if (this.verbose) LOGGER.log("Resolving: " + feat.toPiString());
+    //     let found : PiLangProperty;
+    //     for ( let e of enclosingConcept.allProperties() ) {
+    //         if (e.name === feat.sourceName) {
+    //             found = e;
+    //         }
+    //     }
+    //     // this.nestedCheck({
+    //     //     check: !!found, 
+    //     //     error: "Cannot find property, part, or reference '" + feat.sourceName + "' in '" + enclosingConcept.name + "'",
+    //     //     whenOk: () => {
+    //     //         if(feat.appliedFeature != null && found instanceof PiLangConceptPropertyappliedFeature, (found as PiLangConceptProperty                }
+    //     //     }
+    //     // });
+    // }
 }
 

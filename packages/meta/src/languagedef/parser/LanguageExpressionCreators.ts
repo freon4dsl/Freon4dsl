@@ -1,6 +1,6 @@
 import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageExpressionTester";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangThisExp, PiLangAppliedFeatureExp, PiLangEnumExp, PiLangExp, PiLangConceptExp, PiLangFunctionCallExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangThisExp, PiLangAppliedFeatureExp, PiLangEnumExp, PiLangExp, PiLangConceptExp, PiLangFunctionCallExp, PiLangAnyTypeExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
@@ -86,6 +86,18 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>) : PiLan
     }
     if (!!data.actualparams) {
         result.actualparams = data.actualparams;
+    }
+    return result;
+}
+
+export function createAnyTypeExp(data: Partial<PiLangAnyTypeExp>) : PiLangAnyTypeExp {
+    LOGGER.log("createAnyTypeExp");
+    const result : PiLangAnyTypeExp = new PiLangAnyTypeExp();
+    if (!!data.sourceName) {
+        result.sourceName = data.sourceName;
+    }
+    if (!!data.appliedfeature) {
+        result.appliedfeature = data.appliedfeature;
     }
     return result;
 }

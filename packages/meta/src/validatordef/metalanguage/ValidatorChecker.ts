@@ -1,8 +1,8 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangConceptProperty, PiLangPrimitiveProperty, PiLangClass } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiLangProperty, PiLangConcept } from "../../languagedef/metalanguage/PiLanguage";
 import { ConceptRuleSet, PiValidatorDef, CheckEqualsTypeRule, ValidationRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
-import { PiLangConceptReference, PiLangPropertyReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangAppliedFeatureExp, PiLangExp, PiLangEnumExp, PiLangThisExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLangAppliedFeatureExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 

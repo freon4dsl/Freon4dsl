@@ -7,7 +7,7 @@ DemoModel {
 }
 
 DemoEntity {
-    
+    @anyType.name;
     this.attributes;
     this.functions;
     DemoAttributeType.Integer;

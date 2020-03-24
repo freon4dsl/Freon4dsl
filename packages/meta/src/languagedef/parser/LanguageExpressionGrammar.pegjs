@@ -34,6 +34,7 @@ expWithSeparator = exp:langRefExpression semicolon_separator { return exp; }
 langRefExpression = enumRefExpression:enumRefExpression    { return enumRefExpression; } 
                   / expression:expression                  { return expression; }
                   / functionExpression:functionExpression  { return functionExpression; }
+                  / allTypesExp:allTypesExp                { return allTypesExp; }
 
 enumRefExpression = sourceName:var ':' appliedfeature:var {
   return expCreate.createEnumReference ({
@@ -61,6 +62,13 @@ functionExpression = sourceName:var round_begin actualparams:(
   })
 }
 
+allTypesExp = allKey appliedfeature:dotExpression?  {
+  return expCreate.createAnyTypeExp({
+    "sourceName": "anyTYpe",
+    "appliedfeature": appliedfeature
+  })
+}
+
 dotExpression = '.' sourceName:var appliedfeature:dotExpression?  {
   return expCreate.createAppliedFeatureExp
 ( {
@@ -68,6 +76,8 @@ dotExpression = '.' sourceName:var appliedfeature:dotExpression?  {
     "appliedfeature": appliedfeature
   })
 }
+
+allKey        = "@anyType" ws { return true; }
 
 // the following is basic stuff 
 

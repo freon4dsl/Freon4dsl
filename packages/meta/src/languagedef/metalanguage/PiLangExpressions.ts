@@ -73,10 +73,10 @@ export class PiLangFunctionCallExp extends PiLangExp {
 
 // only used in the typer definition
 
-class AnyTypeExp extends PiLangExp {
+export class PiLangAnyTypeExp extends PiLangExp {
 	// conceptually => reference: PiLangConceptReference[]; refers to all Concepts in LanguageUnit that are marked as type
 
 	toPiString() : string {
-        return "@allTypes" + (this.appliedfeature ? ('.' + this.appliedfeature.toPiString()) : "");  
+        return "@anyType" + (this.appliedfeature ? ('.' + this.appliedfeature.toPiString()) : "");  
     }
 }

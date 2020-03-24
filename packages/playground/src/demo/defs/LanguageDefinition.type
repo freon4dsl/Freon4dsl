@@ -3,27 +3,11 @@ typer Demo for language Demo
 @isType {DemoEntity, DemoAttributeType, DemoType }
 
 @allTypes {
-    @conformsto: this.super
+    @conformsto: this.base
     @conformsto: this.implements
+    @conformsto: DemoAttributeType:ANY
+    @equalsTo: DemoAttributeType:ANY
 }
-DemoEntity {
-    @conformsto: this.super
-    @conformsto: this.implements
-}
-
-DemoAttributeType {
-   @conformsTo: DemoAttributeType:ANY
-}
-
-DemoAttributeType.DecimalNumber {
-   @conformsTo: DemoAttributeType:Integer
-}
-
-@conformsTo (@anyType, DemoAttributeType:ANY) = true 
-@conformsTo (DemoEntity, this.super) = true 
-@equalsType (@anyType, @anyType.super) = true
-@equalsType (@anyType, DemoAttributeType:ANY) = true 
-@equalsType (DemoAttributeType:String, DemoAttributeType:ANY) = true 
 
 DemoAttribute @inferType this.declaredType
 

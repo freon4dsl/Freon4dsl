@@ -2,13 +2,15 @@ import { Checker } from "../../utils/Checker";
 import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangConcept, PiLangProperty } from "./PiLanguage";
 import { PiLangConceptReference } from "./PiLangReferences";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
-import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
+import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp, PiLangAnyTypeExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiTyperChecker } from "../../typerdef/metalanguage/PiTyperChecker";
 
 const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equalsType" ];
 
 export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {
+    myTyperChecker : PiTyperChecker;
 
     constructor(language: PiLanguageUnit) {
         super();
@@ -84,6 +86,8 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
             this.checkConceptExpression(langRef, enclosingConcept);
         } else if (langRef instanceof PiLangFunctionCallExp) {
             this.checkFunctionCallExpression(langRef, enclosingConcept);
+        } else if (langRef instanceof PiLangAnyTypeExp) {
+            this.checkAnyTypeExp(langRef, enclosingConcept);
         } else if (langRef instanceof PiLangAppliedFeatureExp) {
             this.checkAppliedFeatureExp(langRef, enclosingConcept);
         }
@@ -171,6 +175,12 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
                 }
             }
         });
+    }
+
+    // @anyType or @anyType.xxx
+    private checkAnyTypeExp(feat: PiLangAnyTypeExp, enclosingConcept:PiLangConcept) {
+        LOGGER.log("Checking AnyType Expression " + feat?.toPiString());
+        this.myTyperChecker?.checkAnyTypeExp(feat);
     }
 }
 

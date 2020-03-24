@@ -92,7 +92,7 @@ export class CheckerTemplate {
     }
 
     private langRefToTypeScript(ref: PiLangExp): string {
-        console.log(" generating " + ref.toPiString());
+        // console.log(" generating " + ref.toPiString());
         if (ref instanceof PiLangEnumExp) {
             return `${ref.sourceName}.${ref.appliedfeature}`;
         } else if (ref instanceof PiLangThisExp) {
