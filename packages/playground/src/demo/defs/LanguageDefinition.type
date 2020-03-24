@@ -4,41 +4,59 @@ typer Demo for language Demo
 
 @allTypes {
     @conformsto: this.base
-    @conformsto: this.implements
+    //@conformsto: this.implements
     @conformsto: DemoAttributeType:ANY
-    @equalsTo: DemoAttributeType:ANY
+    @equalsto: DemoAttributeType:ANY
 }
 
-DemoAttribute @inferType this.declaredType
-
-DemoFunction @inferType this.declaredType
-
-DemoVariable  @inferType this.declaredType
-
-DemoExpression abstract @inferType  // for now
-
-DemoStringLiteralExpression @inferType DemoAttributeType:String
-
-DemoNumberLiteralExpression @inferType DemoAttributeType:Integer
-
-DemoBooleanLiteralExpression @inferType DemoAttributeType:Boolean
-
-DemoAbsExpression @inferType this.expr
-
-DemoMultiplyExpression @inferType this.left
-
-DemoPlusExpression @inferType if (this.left == String || this.right == String) String else commonSuperType(left,right) 
-
-DemoDivideExpression @inferType this.left
-
-DemoComparisonExpression @inferType DemoAttributeType:Boolean
-
-DemoFunctionDefinition @inferType this.declaredType
-
-DemoFunctionCallExpression @inferType this.functionDefinition
-
-DemoIfExpression    @inferType commonSuperType(this.whenTrue, this.whenFalse)
-
-DemoVariable @inferType this.declaredType
-
-DemoVariableRef   @inferType this.attribute  
+DemoAttribute {
+    @inferType this.declaredType
+}
+DemoFunction {
+    @inferType this.declaredType
+}
+DemoVariable  {
+    @inferType this.declaredType
+}
+DemoExpression abstract {
+    @inferType  // for now
+}
+DemoStringLiteralExpression {
+    @inferType DemoAttributeType:String
+}
+DemoNumberLiteralExpression {
+    @inferType DemoAttributeType:Integer
+}
+DemoBooleanLiteralExpression {
+    @inferType DemoAttributeType:Boolean
+}
+DemoAbsExpression {
+    @inferType this.expr
+}
+DemoMultiplyExpression {
+    @inferType this.left
+}
+DemoPlusExpression {
+    @inferType commonSuperType(this.left, this.right) 
+}
+DemoDivideExpression {
+    @inferType this.left
+}
+DemoComparisonExpression {
+    @inferType DemoAttributeType:Boolean
+}
+DemoFunctionDefinition {
+    @inferType this.declaredType
+}
+DemoFunctionCallExpression {
+    @inferType this.functionDefinition
+}
+DemoIfExpression    {
+    @inferType commonSuperType(this.whenTrue, this.whenFalse)
+}
+DemoVariable {
+    @inferType this.declaredType
+}
+DemoVariableRef   {
+    @inferType this.attribute  
+}

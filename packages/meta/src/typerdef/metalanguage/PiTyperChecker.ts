@@ -1,7 +1,7 @@
 import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit, PiLangProperty, PiLangConcept } from "../../languagedef/metalanguage/PiLanguage";
 import { ConformsTypeRule, PiTyperDef, PiTyperRule, InferenceRule, IsTypeRule, TypeEqualsRule, PropertyCalculation, TypeOfCalculation, CommonSuperTypeCalculation, PiCalculation, PiTypeValue } from "./PiTyperDefLang";
-import { PiLangAppliedFeatureExp, PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAnyTypeExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangAppliedFeatureExp, PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
@@ -16,7 +16,6 @@ export class PiTyperChecker extends Checker<PiTyperDef> {
         super();
         this.language = language;
         this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
-        this.myExpressionChecker.myTyperChecker = this;
     }
 
     public check(definition: PiTyperDef, verbose: boolean): void {
@@ -39,10 +38,6 @@ export class PiTyperChecker extends Checker<PiTyperDef> {
                     });        
                 }
             });
-    }
-
-    public checkAnyTypeExp(exp: PiLangAnyTypeExp) {
-        LOGGER.log("Checking AnyType Expression " + exp?.toPiString());
     }
 
     private checkTyperRule(rule: PiTyperRule) {
