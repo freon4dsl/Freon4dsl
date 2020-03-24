@@ -2,7 +2,7 @@ import { Names } from "../../../utils/Names";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
 import { PiLangEnumerationReference } from "../../../languagedef/metalanguage/PiLangReferences";
-import { PiLangAppliedFeatureExp, PiLangThisExp, PiLangExp } from "../../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangAppliedFeatureExp, PiLangThisExp, PiLangExp, PiLangEnumExp } from "../../../languagedef/metalanguage/PiLangExpressions";
 
 export class CheckerTemplate {
     constructor() {
@@ -92,8 +92,9 @@ export class CheckerTemplate {
     }
 
     private langRefToTypeScript(ref: PiLangExp): string {
-        if (ref instanceof PiLangEnumerationReference) {
-            return `${ref.sourceName}.${ref.appliedfeature.reference.name}`;
+        console.log(" generating " + ref.toPiString());
+        if (ref instanceof PiLangEnumExp) {
+            return `${ref.sourceName}.${ref.appliedfeature}`;
         } else if (ref instanceof PiLangThisExp) {
             return `modelelement.${ref.appliedfeature.toPiString()}`;
         } else {

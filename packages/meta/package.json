@@ -18,6 +18,7 @@
     "edit-parser": "pegjs src/editordef/parser/EditorGrammar.pegjs",
     "valid-parser": "pegjs src/validatordef/parser/ValidatorGrammar.pegjs", 
     "type-parser": "pegjs src/typerdef/parser/PiTyperGrammar.pegjs", 
+    "lang-exp-parser": "pegjs src/languagedef/parser/LanguageExpressionGrammar.pegjs",
     "start": "echo Starting meta",
     "build": "yarn lang-parser && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",

@@ -5,6 +5,7 @@ import { ProjectItGenerateEditor } from "./ProjectItGenerateEditor";
 import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
+import { ProjectItTestLanguageExpressions } from "./ProjectItTestLanguageExpressions";
 
 export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
@@ -13,6 +14,7 @@ export class ProjectItParser extends CommandLineParser {
     private scoperGenerator: ProjectItGenerateScoper;
     private validatorGenerator: ProjectItGenerateValidator;
     private typerGenerator: ProjectItGenerateTyper;
+    private testGenerator: ProjectItTestLanguageExpressions;
     private verboseArg: CommandLineFlagParameter;
 
     public constructor() {
@@ -33,6 +35,10 @@ export class ProjectItParser extends CommandLineParser {
         this.addAction(this.scoperGenerator);
         this.addAction(this.validatorGenerator);
         this.addAction(this.typerGenerator);
+
+        // testGenerator is used only for testing purposes, should be removed from release
+        this.testGenerator = new ProjectItTestLanguageExpressions();
+        this.addAction(this.testGenerator);
     }
 
     protected onDefineParameters(): void { 
@@ -50,6 +56,7 @@ export class ProjectItParser extends CommandLineParser {
         this.scoperGenerator.verbose = this.verboseArg.value;
         this.validatorGenerator.verbose = this.verboseArg.value;
         this.typerGenerator.verbose = this.verboseArg.value;
+        this.testGenerator.verbose = this.verboseArg.value;
 
         return super.onExecute();
     }

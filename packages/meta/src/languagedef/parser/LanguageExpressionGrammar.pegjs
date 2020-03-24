@@ -1,67 +1,36 @@
+// These are the parsing rules for the expressions over the language structure,
+// as defined in meta/src/languagedef/metalanguage/PiLangExpressions.ts
+// They are not meant to be used separately, they should be used in the parser for 
+// projectIt parts that use the language expressions.
+// Because they are common they are developed and tested separately, together with the
+// creator functions in LanguageExpressionCreators.ts.
+
 {
-    let create = require("./ValidatorCreators");
-    let expCreate = require("../../languagedef/parser/LanguageExpressionCreators");
+    let expCreate = require("./LanguageExpressionCreators");
 }
 
-Validator_Definition
-  = ws "validator" ws validatorName:var ws "for" ws "language" ws languageName:var ws cr:(conceptRule)*
+LanguageExpressions_Definition
+  = ws "expressions" ws "for" ws "language" ws languageName:var ws cr:(conceptExps)*
     {
-        return create.createValidatorDef({
-            "validatorName": validatorName,
+        return expCreate.createTest({
             "languageName": languageName,
-            "conceptRules": cr,
+            "conceptExps": cr,
         });
     } 
 
-validnameKey = "@validName" ws
-typecheckKey = "@typecheck" ws
-notEmptyKey = "@notEmpty" ws
-thisKey = "this" ws
-
-conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end 
+conceptExps = conceptRef:conceptRef ws curly_begin ws exps:expWithSeparator* curly_end 
     { 
-        return create.createConceptRule({ 
+        return expCreate.createConceptExps({ 
           "conceptRef": conceptRef, 
-          "rules": rules,
+          "exps": exps,
         }); 
     }
 
-conceptRef = name:var { return create.createConceptReference( { "name": name}); }
+conceptRef = name:var { return expCreate.createConceptReference( { "name": name}); }
 
-rule =  rule1: typeEqualsRule   { return rule1; }
-      / rule2: typeConformsRule { return rule2; }
-      / rule3: notEmptyRule     { return rule3; }
-      / rule4: validNameRule    { return rule4; }
+expWithSeparator = exp:langRefExpression semicolon_separator { return exp; }
 
-validNameRule = validnameKey property:langRefExpression? ws {
-  return create.createValidNameRule( {
-    "property": property
-  });
-}
-
-notEmptyRule = notEmptyKey property:langRefExpression ws {
-  return create.createNotEmptyRule( {
-    "property": property
-  })
-}
-
-typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
-  return create.createTypeEqualsRule( {
-    "type1": type1,
-    "type2": type2,
-  });
-}
-
-typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
-  return create.createTypeConformsRule( {
-    "type1": type1,
-    "type2": type2,
-  });
-}
-
-// the following are the parsing rules for the expressions over the language structure,
-// as defined in meta/src/languagedef/metalanguage/PiLangExpressions.ts
-
+// the following rules should be part of a parser that wants to use PiLangExpressions.ts
 langRefExpression = enumRefExpression:enumRefExpression    { return enumRefExpression; } 
                   / expression:expression                  { return expression; }
                   / functionExpression:functionExpression  { return functionExpression; }
@@ -107,6 +76,7 @@ curly_end      = ws "}" ws
 round_begin    = ws "(" ws 
 round_end      = ws ")" ws
 comma_separator = ws "," ws
+semicolon_separator = ws ";" ws
 name_separator  = ws ":" ws
 
 ws "whitespace" = (([ \t\n\r]) / (SingleLineComment))*

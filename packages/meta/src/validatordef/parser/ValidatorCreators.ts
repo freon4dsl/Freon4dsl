@@ -78,7 +78,7 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
     return result;
 }
 
-export function createPiLangThisExpression(data: Partial<PiLangThisExp>) {
+export function createThisExpression(data: Partial<PiLangThisExp>) {
     const result : PiLangThisExp = new PiLangThisExp();
     if (!!data.sourceName) {
         result.sourceName = data.sourceName;

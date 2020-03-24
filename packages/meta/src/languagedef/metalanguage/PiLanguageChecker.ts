@@ -3,7 +3,7 @@ import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, P
 import { PiLangConceptReference } from "./PiLangReferences";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("PiLanguageChecker"); // .mute();
+const LOGGER = new PiLogger("PiLanguageChecker").mute();
 
 export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 

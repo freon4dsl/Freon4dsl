@@ -12,6 +12,7 @@
   "scripts": {
     "projectIt": 	"ts-node ../meta/src/commandline/projectit -v generate-all -d src/demo/defs -o src/demo",
     "projectIt-nonVerbose": 	"ts-node ../meta/src/commandline/projectit generate-all -d src/demo/defs -o src/demo",
+    "test-expressions": 		"ts-node ../meta/src/commandline/projectit -v test-expressions -l src/demo/defs/DemoDefinition.lang -X src/demo/defs/LanguageExpressions.pitest -o src/demo",
     "metaIt": 		"ts-node ../meta/src/commandline/projectit -v generate-language -l src/demo/defs/DemoDefinition.lang -o src/demo",
     "scopeIt": 		"ts-node ../meta/src/commandline/projectit -v generate-scoper -l src/demo/defs/DemoDefinition.lang -s src/demo/defs/DemoDefinition.scop -o src/demo",
     "editIt": 		"ts-node ../meta/src/commandline/projectit -v generate-editor -l src/demo/defs/DemoDefinition.lang -e src/demo/defs/DemoDefinition.edit -o src/demo",   
