@@ -118,6 +118,8 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
                 error: `'this' should be followed by '.', followed by a property`,
                 whenOk: () => {
                     this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
+                    langRef.reference = new PiLangConceptReference();
+                    langRef.reference.name = enclosingConcept.name;        
                 }
             }
         )

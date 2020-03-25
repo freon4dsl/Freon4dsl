@@ -1,5 +1,5 @@
 import { DemoModel, DemoAttributeType } from "../language";
-import { DemoTyper } from "../typer/DemoTyper";
+import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe('Testing Typer', () => {

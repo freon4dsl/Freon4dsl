@@ -189,16 +189,16 @@ export class DemoChecker {
     }
 
     public checkDemoDivideExpression(modelelement: DemoDivideExpression, typer: PiTyper, errorList: PiError[]) {
-        // @typecheck equalsType( this.lef, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.lef, DemoAttributeType.Integer)) {
+        // @typecheck equalsType( this.left, DemoAttributeType:Integer )
+        if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
             errorList.push(
                 new PiError(
                     "Type of '" +
-                        this.myUnparser.unparse(modelelement.lef) +
+                        this.myUnparser.unparse(modelelement.left) +
                         "' should be equal to (the type of) '" +
                         this.myUnparser.unparse(DemoAttributeType.Integer) +
                         "'",
-                    modelelement.lef
+                    modelelement.left
                 )
             );
         }

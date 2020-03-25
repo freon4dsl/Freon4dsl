@@ -5,6 +5,7 @@ export class PiTypeDefinition {
     name: string;
     languageName: string;
     typerRules: PiTypeRule[];
+    typeroot: PiLangConceptReference;
 
     constructor() { 
     }
@@ -46,7 +47,7 @@ export class PiTypeStatement {
     isAbstract: boolean;
 
     toPiString(): string {
-        return `${this.isAbstract? `abstract` : ``} ${this.statementtype} ${this.exp?.toPiString()}`;
+        return `${this.isAbstract? `abstract ` : ``}@${this.statementtype} ${this.exp?.toPiString()}`;
     }
 }
 

@@ -51,12 +51,26 @@ otherRule = conceptRef:conceptRef curly_begin statements:statement* curly_end
   })
 }
 
-statement = key:conformsKey langRefExpression
-            / key:equalsKey langRefExpression
-            / abs:abstractKey? key:inferenceKey exp:langRefExpression?
+statement = conformsKey:conformsKey exp:langRefExpression
 {
   return create.createStatement({
-    "statementtype":key,
+    "statementtype": "conformsto",
+    "exp": exp,
+    "isAbstract": false
+  })
+}            
+            / equalsKey:equalsKey exp:langRefExpression
+{
+  return create.createStatement({
+    "statementtype":"equalsto",
+    "exp": exp,
+    "isAbstract": false
+  })
+}            
+            / abs:abstractKey? inferenceKey:inferenceKey exp:langRefExpression?
+{
+  return create.createStatement({
+    "statementtype":"infertype",
     "exp": exp,
     "isAbstract": (!!abs)
   })

@@ -1,16 +1,17 @@
 typer Demo for language Demo
 
-@istype {DemoEntity, DemoAttributeType, DemoType }
+// for now: first is considered to be the root of the type hierarchy
+@istype {DemoType, DemoEntity, DemoAttributeType }
 
 @anytype {
-    @conformsto this.base
-    @conformsto this.implements
+    //@conformsto this.base
+    //@conformsto this.implements
     @conformsto DemoAttributeType:ANY
     @equalsto DemoAttributeType:ANY
 }
 
 DemoAttribute {
-    @infertype this.declaredTyp
+    @infertype this.declaredType
 }
 DemoFunction {
     @infertype this.declaredType
@@ -19,7 +20,7 @@ DemoVariable  {
     @infertype this.declaredType
 }
 DemoExpression {
-    abstract @infertype  this.test // for now
+    abstract @infertype 
 }
 DemoStringLiteralExpression {
     @infertype DemoAttributeType:String
@@ -44,9 +45,6 @@ DemoDivideExpression {
 }
 DemoComparisonExpression {
     @infertype DemoAttributeType:Boolean
-}
-DemoFunction {
-    @infertype this.declaredType
 }
 DemoFunctionCallExpression {
     @infertype this.functionDefinition
