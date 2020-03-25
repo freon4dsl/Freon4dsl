@@ -13,100 +13,56 @@ Typer_Definition
        });
     } 
 
-isTypeKey     = "@isType" ws
-//aTypeKey      = "@anyType" ws { return true; }
-inferenceKey  = "@inferType" ws
-conformsKey   = "@conformsTo" ws
-equalsKey     = "@equalsType" ws
-allKey        = "@anyType" ws { return true; }
-typeOfKey     = "typeOf" ws
+isTypeKey     = "@istype" ws
+inferenceKey  = "@infertype" ws
+conformsKey   = "@conformsto" ws
+equalsKey     = "@equalsto" ws
+anyKey        = "@anytype" ws { return true; }
 superTypeKey  = "commonSuperType" ws
 abstractKey   = "abstract" ws { return true; }
-thisKey       = "this" ws
-trueKey       = "true" ws { return true; }
-falseKey      = "false" ws { return false; }
 
-typerRule = infr:inferenceRule    { return infr; }
-          / itr: isTypeRule       { return itr }
-          / cfr: conformanceRule  { return cfr; }
-          / eqr: equalsRule       { return eqr; }
+typerRule = itr:isTypeRule   { return itr; }
+          / any:anyTypeRule  { return any; }
+          / other:otherRule  { return other; }
 
-inferenceRule = conceptRef:conceptRef ws abs:abstractKey? inferenceKey calculation:calculation? 
-    { 
-      return create.createInferenceRule({ 
-        "conceptRef": conceptRef, 
-        "calculation": calculation,
-        "isAbstract": (!!abs)
-      }); 
-    }
-
-calculation = 
-            typeOfKey round_begin ws type:langRefExpression ws round_end 
-              { return create.createTypeOfCalculation({
-                "type": type
-              })}
-            / superTypeKey round_begin ws prop1:langRefExpression ws comma_separator ws prop2:langRefExpression round_end 
-              { return create.createSuperTypeCalculation({
-                "type1": prop1,
-                "type2": prop2,
-              })}
-            / property:langRefExpression? 
-              { return create.createPropertyCalculation({ 
-                "property": property 
-              })}
-
-conceptRef = name:var { return create.createElementReference( { "name": name}); }
-
-isTypeRule = isTypeKey curly_begin ws types:(
+isTypeRule = isTypeKey curly_begin types:(
       head:conceptRef
       tail:(comma_separator v:conceptRef { return v; })*
       { return [head].concat(tail); }
-    )
-   ws curly_end {
-  return create.createIsTypeRule( {
-   "types": types !== null ? types : []
-  });
-}
-
-conformanceRule = conformsKey round_begin ws type1:typeValue ws comma_separator ws type2:typeValue ws round_end ws 
-            ws equals_separator value:booleanValue
+    ) curly_end 
 {
-  return create.createConformanceRule( {
-   "type1": type1,
-   "type2": type2,
-   "value": value
-  });
+  return create.createIsType({
+    "types":types
+  })
 }
 
-equalsRule = equalsKey round_begin ws type1:typeValue ws comma_separator ws type2:typeValue ws round_end 
-            ws equals_separator value:booleanValue 
+anyTypeRule = anyKey curly_begin statements:statement* curly_end 
 {
-  return create.createTypeEqualsRule( {
-   "type1": type1,
-   "type2": type2, 
-   "value": value
-  });
+  return create.createAnyTypeRule( {
+    "statements":statements
+  })
 }
 
-booleanValue =  trueKey  { return true; }
-              / falseKey {return false; }
+otherRule = conceptRef:conceptRef curly_begin statements:statement* curly_end
+{
+  return create.createConceptRule( {
+    "conceptRef": conceptRef,
+    "statements": statements
+  })
+}
 
-typeValue = 
-//tp:aTypeKey appliedFeature:dotExpression? { 
-  //return create.createTypeValue( { 
-    //"typeProperty": appliedFeature,
-  //  "isAType": (!!tp)
-  //}); }
-          /// 
-          all:allKey appliedFeature:dotExpression? { 
-  return create.createTypeValue( {
-    "typeProperty": appliedFeature,
-    "allTypes": (!!all)
-  }); }
-          / ref:enumRefExpression { 
-  return create.createTypeValue( { 
-    "enumRef": ref 
-  }); }
+statement = key:conformsKey langRefExpression
+            / key:equalsKey langRefExpression
+            / abs:abstractKey? key:inferenceKey exp:langRefExpression?
+{
+  return create.createStatement({
+    "statementtype":key,
+    "exp": exp,
+    "isAbstract": (!!abs)
+  })
+}            
+
+conceptRef = name:var { return expCreate.createConceptReference( { "name": name}); }
 
 // the following are the parsing rules for the expressions over the language structure,
 // as defined in meta/src/languagedef/metalanguage/PiLangExpressions.ts

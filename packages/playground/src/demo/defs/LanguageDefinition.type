@@ -1,62 +1,62 @@
 typer Demo for language Demo
 
-@isType {DemoEntity, DemoAttributeType, DemoType }
+@istype {DemoEntity, DemoAttributeType, DemoType }
 
-@allTypes {
-    @conformsto: this.base
-    //@conformsto: this.implements
-    @conformsto: DemoAttributeType:ANY
-    @equalsto: DemoAttributeType:ANY
+@anytype {
+    @conformsto this.base
+    @conformsto this.implements
+    @conformsto DemoAttributeType:ANY
+    @equalsto DemoAttributeType:ANY
 }
 
 DemoAttribute {
-    @inferType this.declaredType
+    @infertype this.declaredTyp
 }
 DemoFunction {
-    @inferType this.declaredType
+    @infertype this.declaredType
 }
 DemoVariable  {
-    @inferType this.declaredType
+    @infertype this.declaredType
 }
-DemoExpression abstract {
-    @inferType  // for now
+DemoExpression {
+    abstract @infertype  this.test // for now
 }
 DemoStringLiteralExpression {
-    @inferType DemoAttributeType:String
+    @infertype DemoAttributeType:String
 }
 DemoNumberLiteralExpression {
-    @inferType DemoAttributeType:Integer
+    @infertype DemoAttributeType:Integer
 }
 DemoBooleanLiteralExpression {
-    @inferType DemoAttributeType:Boolean
+    @infertype DemoAttributeType:Boolean
 }
 DemoAbsExpression {
-    @inferType this.expr
+    @infertype this.expr
 }
 DemoMultiplyExpression {
-    @inferType this.left
+    @infertype this.left
 }
 DemoPlusExpression {
-    @inferType commonSuperType(this.left, this.right) 
+    @infertype commonSuperType(this.left, this.right) 
 }
 DemoDivideExpression {
-    @inferType this.left
+    @infertype this.left
 }
 DemoComparisonExpression {
-    @inferType DemoAttributeType:Boolean
+    @infertype DemoAttributeType:Boolean
 }
-DemoFunctionDefinition {
-    @inferType this.declaredType
+DemoFunction {
+    @infertype this.declaredType
 }
 DemoFunctionCallExpression {
-    @inferType this.functionDefinition
+    @infertype this.functionDefinition
 }
 DemoIfExpression    {
-    @inferType commonSuperType(this.whenTrue, this.whenFalse)
+    @infertype commonSuperType(this.whenTrue, this.whenFalse)
 }
 DemoVariable {
-    @inferType this.declaredType
+    @infertype this.declaredType
 }
 DemoVariableRef   {
-    @inferType this.attribute  
+    @infertype this.attribute  
 }

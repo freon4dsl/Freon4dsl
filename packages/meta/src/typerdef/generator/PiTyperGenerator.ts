@@ -4,7 +4,7 @@ import * as fs from "fs";
 import { TYPER_FOLDER, TYPER_GEN_FOLDER } from "../../utils/GeneratorConstants";
 import { Names } from "../../utils/Names";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiTyperDef } from "../../typerdef/metalanguage/PiTyperDefLang";
+import { PiTypeDefinition } from "../../typerdef/metalanguage/PiTyperDefLang";
 import { PiTyperTemplate } from "./templates/PiTyperTemplate";
 
 const LOGGER = new PiLogger("PiTyperGenerator"); // .mute();
@@ -18,7 +18,7 @@ export class PiTyperGenerator {
         this.language = language;
     }
 
-    generate(typerdef: PiTyperDef, verbose?: boolean): void {
+    generate(typerdef: PiTypeDefinition, verbose?: boolean): void {
         this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
         this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
         if (verbose) LOGGER.log("Generating typer: " + typerdef.name + " in folder " + this.typerGenFolder);

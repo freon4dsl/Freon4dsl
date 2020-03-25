@@ -34,6 +34,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     });        
                 }
             });
+        this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 
     private checkConceptRule(rule: ConceptRuleSet) {

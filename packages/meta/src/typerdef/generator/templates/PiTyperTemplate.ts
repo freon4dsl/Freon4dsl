@@ -1,14 +1,14 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
-import { PiTyperDef, InferenceRule, TypeEqualsRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
+import { PiTypeDefinition, InferenceRule, TypeEqualsRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
 import { PiLangExp, PiLangEnumExp, PiLangThisExp } from "../../../languagedef/metalanguage/PiLangExpressions";
 
 export class PiTyperTemplate {
     constructor() {
     }
 
-    generateTyper(language: PiLanguageUnit, typerdef: PiTyperDef): string {
+    generateTyper(language: PiLanguageUnit, typerdef: PiTypeDefinition): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.languageConceptType(language);     
         // TODO should take name into account
