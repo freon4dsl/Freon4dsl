@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import { PiLanguageUnit } from "../metalanguage/PiLanguage";
 import { PiLanguageChecker } from "../metalanguage/PiLanguageChecker";
 import { PiParser } from "../../utils/PiParser";

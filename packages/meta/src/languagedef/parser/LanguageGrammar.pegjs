@@ -9,7 +9,7 @@ Editor_Definition
     {
         return create.createLanguage({
             "name": name,
-            "concepts": c,
+            "classes": c,
             "enumerations": e,
             "unions": t
         });
@@ -65,7 +65,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
                 "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
             });
         } else {
-            return create.createConcept({
+            return create.createClass({
                 "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
                 "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
                 "parts": parts,
@@ -85,7 +85,7 @@ attribute = name:var ws name_separator ws isEnum:"enum"? ws type:var isList:"[]"
             const enumRef = create.createEnumerationReference({"name": type});
             return create.createEnumerationProperty({"name": name, "type": enumRef, "isList": (isList?true:false) })
         } else {
-            return create.createPrimitiveProperty({"name": name, "type": type, "isList": (isList?true:false) })
+            return create.createPrimitiveProperty({"name": name, "primType": type, "isList": (isList?true:false) })
         }
     }
 
