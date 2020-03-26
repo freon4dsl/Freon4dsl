@@ -35,7 +35,7 @@ export class DemoTyper implements PiTyper {
        } else if (modelelement instanceof DemoVariableRef) {
            return modelelement.attribute.declaredType;
        } else if (modelelement instanceof DemoFunctionCallExpression) {
-           return modelelement.functionDefinition.declaredType;
+           return modelelement.functionDefinition.referred.declaredType;
         } else if (modelelement instanceof DemoIfExpression) {
             return this.inferType(modelelement.whenTrue);
         } else if (modelelement instanceof DemoPlaceholderExpression) {

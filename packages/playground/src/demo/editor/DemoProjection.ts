@@ -14,6 +14,7 @@ import {
     DemoStringLiteralExpression,
     DemoVariable
 } from "../language";
+import { PiElementReference } from "../PiElementReference";
 import { demoStyles } from "../styles/styles";
 import { DemoEnvironment } from "./DemoEnvironment";
 import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
@@ -23,9 +24,9 @@ export class DemoProjection implements PiProjection {
     helpers = new DemoSelectionHelpers();
 
     getBox(element: PiElement): Box {
-        // if (element instanceof DemoFunctionCallExpression) {
-        //     return this.getDemoFunctionCallExpressionBox(element);
-        // }
+        if (element instanceof DemoFunctionCallExpression) {
+            return this.getDemoFunctionCallExpressionBox(element);
+        }
         if (element instanceof DemoStringLiteralExpression) {
             return this.getDemoStringLiteralExpressionBox(element);
         }
@@ -66,13 +67,19 @@ export class DemoProjection implements PiProjection {
                         }
                     },
                     (option: SelectOption) => {
-                        element.functionDefinition = DemoEnvironment.getInstance().scoper.getFromVisibleElements(
+                        // TODO PiElementReference
+                        element.functionDefinition = new PiElementReference(DemoEnvironment.getInstance().scoper.getFromVisibleElements(
                             element,
                             option.label,
                             "DemoFunction"
-                        ) as DemoFunction;
+                        ) as DemoFunction, "DemoFunction");
                     }
-                )
+                ),
+            new TextBox(element, "blabla", () => element?.functionDefinition.name, (v: string) => (0), {
+                style: demoStyles.stringLiteral,
+                deleteWhenEmptyAndErase: true
+            }),
+
         ]);
     }
 
