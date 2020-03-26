@@ -10,7 +10,6 @@ describe('Testing Validator', () => {
         const model : DemoModel = new DemoModelCreator().model;
         const validator = new DemoValidator();
         validator.myTyper = new DemoTyper();
-        const unparser : DemoUnparser = new DemoUnparser();
      
         beforeEach(done => {
           done();
@@ -129,12 +128,13 @@ describe('Testing Validator', () => {
             // console.log("testing: " + unparser.unparseDemoEntity(personEnt, true));
             errors = validator.validate(personEnt, true);
             expect(errors.length).toBe(1);            
-            // errors.forEach(e =>
-            //     console.log(e.message)
-            // );
+            errors.forEach(e => {
+                expect(e.reportedOn === personEnt);
+                // console.log(e.message)
+            });
         });
 
-        test("complete example model with simple attribute types", () => {
+        test.skip("complete example model with simple attribute types", () => {
             let errors : PiError[] = [];
             errors =validator.validate(model, true);
             // expect(errors.length).toBe(19);                

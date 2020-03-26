@@ -24,13 +24,17 @@ export class CheckerTemplate {
             errorList: ${Names.errorClassName()}[] = [];
 
         ${validdef.conceptRules.map(ruleSet =>
-            `public exec${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
+            `public execBefore${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
                 ${this.createRules(ruleSet)}
+            }
+            public execAfter${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
             }`
         ).join("\n\n")}
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
-            `public exec${concept.name}(modelelement: ${concept.name}) {
+            `public execBefore${concept.name}(modelelement: ${concept.name}) {
+            }
+            public execAfter${concept.name}(modelelement: ${concept.name}) {
             }`
         ).join("\n\n") }
         

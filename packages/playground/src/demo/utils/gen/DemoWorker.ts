@@ -28,53 +28,78 @@ import {
 } from "../../language";
 
 export interface DemoWorker {
-    execDemoModel(modelelement: DemoModel);
+    execBeforeDemoModel(modelelement: DemoModel);
+    execAfterDemoModel(modelelement: DemoModel);
 
-    execDemoEntity(modelelement: DemoEntity);
+    execBeforeDemoEntity(modelelement: DemoEntity);
+    execAfterDemoEntity(modelelement: DemoEntity);
 
-    execDemoAttribute(modelelement: DemoAttribute);
+    execBeforeDemoAttribute(modelelement: DemoAttribute);
+    execAfterDemoAttribute(modelelement: DemoAttribute);
 
-    execDemoFunction(modelelement: DemoFunction);
+    execBeforeDemoFunction(modelelement: DemoFunction);
+    execAfterDemoFunction(modelelement: DemoFunction);
 
-    execDemoVariable(modelelement: DemoVariable);
+    execBeforeDemoVariable(modelelement: DemoVariable);
+    execAfterDemoVariable(modelelement: DemoVariable);
 
-    execDemoExpression(modelelement: DemoExpression);
+    execBeforeDemoExpression(modelelement: DemoExpression);
+    execAfterDemoExpression(modelelement: DemoExpression);
 
-    execDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression);
+    execBeforeDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression);
+    execAfterDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression);
 
-    execDemoLiteralExpression(modelelement: DemoLiteralExpression);
+    execBeforeDemoLiteralExpression(modelelement: DemoLiteralExpression);
+    execAfterDemoLiteralExpression(modelelement: DemoLiteralExpression);
 
-    execDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression);
+    execBeforeDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression);
+    execAfterDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression);
 
-    execDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression);
+    execBeforeDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression);
+    execAfterDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression);
 
-    execDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression);
+    execBeforeDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression);
+    execAfterDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression);
 
-    execDemoAbsExpression(modelelement: DemoAbsExpression);
+    execBeforeDemoAbsExpression(modelelement: DemoAbsExpression);
+    execAfterDemoAbsExpression(modelelement: DemoAbsExpression);
 
-    execDemoBinaryExpression(modelelement: DemoBinaryExpression);
+    execBeforeDemoBinaryExpression(modelelement: DemoBinaryExpression);
+    execAfterDemoBinaryExpression(modelelement: DemoBinaryExpression);
 
-    execDemoMultiplyExpression(modelelement: DemoMultiplyExpression);
+    execBeforeDemoMultiplyExpression(modelelement: DemoMultiplyExpression);
+    execAfterDemoMultiplyExpression(modelelement: DemoMultiplyExpression);
 
-    execDemoPlusExpression(modelelement: DemoPlusExpression);
+    execBeforeDemoPlusExpression(modelelement: DemoPlusExpression);
+    execAfterDemoPlusExpression(modelelement: DemoPlusExpression);
 
-    execDemoDivideExpression(modelelement: DemoDivideExpression);
+    execBeforeDemoDivideExpression(modelelement: DemoDivideExpression);
+    execAfterDemoDivideExpression(modelelement: DemoDivideExpression);
 
-    execDemoAndExpression(modelelement: DemoAndExpression);
+    execBeforeDemoAndExpression(modelelement: DemoAndExpression);
+    execAfterDemoAndExpression(modelelement: DemoAndExpression);
 
-    execDemoOrExpression(modelelement: DemoOrExpression);
+    execBeforeDemoOrExpression(modelelement: DemoOrExpression);
+    execAfterDemoOrExpression(modelelement: DemoOrExpression);
 
-    execDemoComparisonExpression(modelelement: DemoComparisonExpression);
+    execBeforeDemoComparisonExpression(modelelement: DemoComparisonExpression);
+    execAfterDemoComparisonExpression(modelelement: DemoComparisonExpression);
 
-    execDemoLessThenExpression(modelelement: DemoLessThenExpression);
+    execBeforeDemoLessThenExpression(modelelement: DemoLessThenExpression);
+    execAfterDemoLessThenExpression(modelelement: DemoLessThenExpression);
 
-    execDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression);
+    execBeforeDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression);
+    execAfterDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression);
 
-    execDemoEqualsExpression(modelelement: DemoEqualsExpression);
+    execBeforeDemoEqualsExpression(modelelement: DemoEqualsExpression);
+    execAfterDemoEqualsExpression(modelelement: DemoEqualsExpression);
 
-    execDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression);
+    execBeforeDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression);
+    execAfterDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression);
 
-    execDemoIfExpression(modelelement: DemoIfExpression);
+    execBeforeDemoIfExpression(modelelement: DemoIfExpression);
+    execAfterDemoIfExpression(modelelement: DemoIfExpression);
 
-    execDemoVariableRef(modelelement: DemoVariableRef);
+    execBeforeDemoVariableRef(modelelement: DemoVariableRef);
+    execAfterDemoVariableRef(modelelement: DemoVariableRef);
 }

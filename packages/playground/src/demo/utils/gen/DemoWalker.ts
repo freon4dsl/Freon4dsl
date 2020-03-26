@@ -38,87 +38,86 @@ export class DemoWalker {
     myWorker: DemoWorker;
 
     public walk(modelelement: AllDemoConcepts, includeChildren?: boolean) {
-        if (modelelement instanceof DemoModel) {
-            this.walkDemoModel(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoEntity) {
-            this.walkDemoEntity(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoAttribute) {
-            this.walkDemoAttribute(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoFunction) {
-            this.walkDemoFunction(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoVariable) {
-            this.walkDemoVariable(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoExpression) {
-            this.walkDemoExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoPlaceholderExpression) {
-            this.walkDemoPlaceholderExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoLiteralExpression) {
-            this.walkDemoLiteralExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoStringLiteralExpression) {
-            this.walkDemoStringLiteralExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoNumberLiteralExpression) {
-            this.walkDemoNumberLiteralExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoBooleanLiteralExpression) {
-            this.walkDemoBooleanLiteralExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoAbsExpression) {
-            this.walkDemoAbsExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoBinaryExpression) {
-            this.walkDemoBinaryExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoMultiplyExpression) {
-            this.walkDemoMultiplyExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoPlusExpression) {
-            this.walkDemoPlusExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoDivideExpression) {
-            this.walkDemoDivideExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoAndExpression) {
-            this.walkDemoAndExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoOrExpression) {
-            this.walkDemoOrExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoComparisonExpression) {
-            this.walkDemoComparisonExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoLessThenExpression) {
-            this.walkDemoLessThenExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoGreaterThenExpression) {
-            this.walkDemoGreaterThenExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoEqualsExpression) {
-            this.walkDemoEqualsExpression(modelelement, includeChildren);
-        }
-        if (modelelement instanceof DemoFunctionCallExpression) {
-            this.walkDemoFunctionCallExpression(modelelement, includeChildren);
+        if (modelelement instanceof DemoVariableRef) {
+            return this.walkDemoVariableRef(modelelement, includeChildren);
         }
         if (modelelement instanceof DemoIfExpression) {
-            this.walkDemoIfExpression(modelelement, includeChildren);
+            return this.walkDemoIfExpression(modelelement, includeChildren);
         }
-        if (modelelement instanceof DemoVariableRef) {
-            this.walkDemoVariableRef(modelelement, includeChildren);
+        if (modelelement instanceof DemoFunctionCallExpression) {
+            return this.walkDemoFunctionCallExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoEqualsExpression) {
+            return this.walkDemoEqualsExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoGreaterThenExpression) {
+            return this.walkDemoGreaterThenExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoLessThenExpression) {
+            return this.walkDemoLessThenExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoComparisonExpression) {
+            return this.walkDemoComparisonExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoOrExpression) {
+            return this.walkDemoOrExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoAndExpression) {
+            return this.walkDemoAndExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoDivideExpression) {
+            return this.walkDemoDivideExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoPlusExpression) {
+            return this.walkDemoPlusExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoMultiplyExpression) {
+            return this.walkDemoMultiplyExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoBinaryExpression) {
+            return this.walkDemoBinaryExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoAbsExpression) {
+            return this.walkDemoAbsExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoBooleanLiteralExpression) {
+            return this.walkDemoBooleanLiteralExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoNumberLiteralExpression) {
+            return this.walkDemoNumberLiteralExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoStringLiteralExpression) {
+            return this.walkDemoStringLiteralExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoLiteralExpression) {
+            return this.walkDemoLiteralExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoModel) {
+            return this.walkDemoModel(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoEntity) {
+            return this.walkDemoEntity(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoAttribute) {
+            return this.walkDemoAttribute(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoFunction) {
+            return this.walkDemoFunction(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoVariable) {
+            return this.walkDemoVariable(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoExpression) {
+            return this.walkDemoExpression(modelelement, includeChildren);
+        }
+        if (modelelement instanceof DemoPlaceholderExpression) {
+            return this.walkDemoPlaceholderExpression(modelelement, includeChildren);
         }
     }
 
     public walkDemoModel(modelelement: DemoModel, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoModel(modelelement);
+            this.myWorker.execBeforeDemoModel(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
@@ -129,6 +128,7 @@ export class DemoWalker {
                     this.walkDemoFunction(p, includeChildren);
                 });
             }
+            this.myWorker.execAfterDemoModel(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -137,8 +137,7 @@ export class DemoWalker {
 
     public walkDemoEntity(modelelement: DemoEntity, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoEntity(modelelement);
+            this.myWorker.execBeforeDemoEntity(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
@@ -149,6 +148,7 @@ export class DemoWalker {
                     this.walkDemoFunction(p, includeChildren);
                 });
             }
+            this.myWorker.execAfterDemoEntity(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -157,8 +157,9 @@ export class DemoWalker {
 
     public walkDemoAttribute(modelelement: DemoAttribute, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoAttribute(modelelement);
+            this.myWorker.execBeforeDemoAttribute(modelelement);
+
+            this.myWorker.execAfterDemoAttribute(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -167,8 +168,7 @@ export class DemoWalker {
 
     public walkDemoFunction(modelelement: DemoFunction, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoFunction(modelelement);
+            this.myWorker.execBeforeDemoFunction(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
@@ -177,6 +177,7 @@ export class DemoWalker {
                     this.walkDemoVariable(p, includeChildren);
                 });
             }
+            this.myWorker.execAfterDemoFunction(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -185,8 +186,9 @@ export class DemoWalker {
 
     public walkDemoVariable(modelelement: DemoVariable, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoVariable(modelelement);
+            this.myWorker.execBeforeDemoVariable(modelelement);
+
+            this.myWorker.execAfterDemoVariable(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -195,8 +197,9 @@ export class DemoWalker {
 
     public walkDemoExpression(modelelement: DemoExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoExpression(modelelement);
+            this.myWorker.execBeforeDemoExpression(modelelement);
+
+            this.myWorker.execAfterDemoExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -205,8 +208,9 @@ export class DemoWalker {
 
     public walkDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoPlaceholderExpression(modelelement);
+            this.myWorker.execBeforeDemoPlaceholderExpression(modelelement);
+
+            this.myWorker.execAfterDemoPlaceholderExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -215,8 +219,9 @@ export class DemoWalker {
 
     public walkDemoLiteralExpression(modelelement: DemoLiteralExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoLiteralExpression(modelelement);
+            this.myWorker.execBeforeDemoLiteralExpression(modelelement);
+
+            this.myWorker.execAfterDemoLiteralExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -225,8 +230,9 @@ export class DemoWalker {
 
     public walkDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoStringLiteralExpression(modelelement);
+            this.myWorker.execBeforeDemoStringLiteralExpression(modelelement);
+
+            this.myWorker.execAfterDemoStringLiteralExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -235,8 +241,9 @@ export class DemoWalker {
 
     public walkDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoNumberLiteralExpression(modelelement);
+            this.myWorker.execBeforeDemoNumberLiteralExpression(modelelement);
+
+            this.myWorker.execAfterDemoNumberLiteralExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -245,8 +252,9 @@ export class DemoWalker {
 
     public walkDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoBooleanLiteralExpression(modelelement);
+            this.myWorker.execBeforeDemoBooleanLiteralExpression(modelelement);
+
+            this.myWorker.execAfterDemoBooleanLiteralExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -255,13 +263,13 @@ export class DemoWalker {
 
     public walkDemoAbsExpression(modelelement: DemoAbsExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoAbsExpression(modelelement);
+            this.myWorker.execBeforeDemoAbsExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.expr, includeChildren);
             }
+            this.myWorker.execAfterDemoAbsExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -270,14 +278,14 @@ export class DemoWalker {
 
     public walkDemoBinaryExpression(modelelement: DemoBinaryExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoBinaryExpression(modelelement);
+            this.myWorker.execBeforeDemoBinaryExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoBinaryExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -286,14 +294,14 @@ export class DemoWalker {
 
     public walkDemoMultiplyExpression(modelelement: DemoMultiplyExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoMultiplyExpression(modelelement);
+            this.myWorker.execBeforeDemoMultiplyExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoMultiplyExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -302,14 +310,14 @@ export class DemoWalker {
 
     public walkDemoPlusExpression(modelelement: DemoPlusExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoPlusExpression(modelelement);
+            this.myWorker.execBeforeDemoPlusExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoPlusExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -318,14 +326,14 @@ export class DemoWalker {
 
     public walkDemoDivideExpression(modelelement: DemoDivideExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoDivideExpression(modelelement);
+            this.myWorker.execBeforeDemoDivideExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoDivideExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -334,14 +342,14 @@ export class DemoWalker {
 
     public walkDemoAndExpression(modelelement: DemoAndExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoAndExpression(modelelement);
+            this.myWorker.execBeforeDemoAndExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoAndExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -350,14 +358,14 @@ export class DemoWalker {
 
     public walkDemoOrExpression(modelelement: DemoOrExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoOrExpression(modelelement);
+            this.myWorker.execBeforeDemoOrExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoOrExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -366,14 +374,14 @@ export class DemoWalker {
 
     public walkDemoComparisonExpression(modelelement: DemoComparisonExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoComparisonExpression(modelelement);
+            this.myWorker.execBeforeDemoComparisonExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoComparisonExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -382,14 +390,14 @@ export class DemoWalker {
 
     public walkDemoLessThenExpression(modelelement: DemoLessThenExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoLessThenExpression(modelelement);
+            this.myWorker.execBeforeDemoLessThenExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoLessThenExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -398,14 +406,14 @@ export class DemoWalker {
 
     public walkDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoGreaterThenExpression(modelelement);
+            this.myWorker.execBeforeDemoGreaterThenExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoGreaterThenExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -414,14 +422,14 @@ export class DemoWalker {
 
     public walkDemoEqualsExpression(modelelement: DemoEqualsExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoEqualsExpression(modelelement);
+            this.myWorker.execBeforeDemoEqualsExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 this.walkDemoExpression(modelelement.left, includeChildren);
                 this.walkDemoExpression(modelelement.right, includeChildren);
             }
+            this.myWorker.execAfterDemoEqualsExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -430,8 +438,9 @@ export class DemoWalker {
 
     public walkDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoFunctionCallExpression(modelelement);
+            this.myWorker.execBeforeDemoFunctionCallExpression(modelelement);
+
+            this.myWorker.execAfterDemoFunctionCallExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -440,8 +449,7 @@ export class DemoWalker {
 
     public walkDemoIfExpression(modelelement: DemoIfExpression, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoIfExpression(modelelement);
+            this.myWorker.execBeforeDemoIfExpression(modelelement);
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
@@ -449,6 +457,7 @@ export class DemoWalker {
                 this.walkDemoExpression(modelelement.whenTrue, includeChildren);
                 this.walkDemoExpression(modelelement.whenFalse, includeChildren);
             }
+            this.myWorker.execAfterDemoIfExpression(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;
@@ -457,8 +466,9 @@ export class DemoWalker {
 
     public walkDemoVariableRef(modelelement: DemoVariableRef, includeChildren?: boolean) {
         if (!!this.myWorker) {
-            // do the work
-            this.myWorker.execDemoVariableRef(modelelement);
+            this.myWorker.execBeforeDemoVariableRef(modelelement);
+
+            this.myWorker.execAfterDemoVariableRef(modelelement);
         } else {
             LOGGER.error(this, "No worker found.");
             return;

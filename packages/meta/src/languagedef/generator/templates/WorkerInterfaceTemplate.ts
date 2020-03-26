@@ -15,7 +15,8 @@ export class WorkerInterfaceTemplate {
         export interface ${Names.workerInterface(language)} {
 
         ${language.classes.map(concept => 
-            `exec${concept.name}(modelelement: ${concept.name});`
+            `execBefore${concept.name}(modelelement: ${concept.name});
+            execAfter${concept.name}(modelelement: ${concept.name});`
         ).join("\n\n") }
         
         }`;

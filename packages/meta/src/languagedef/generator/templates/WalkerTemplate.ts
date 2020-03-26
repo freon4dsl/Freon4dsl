@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class WalkerTemplate {
     constructor() {
@@ -26,9 +26,9 @@ export class WalkerTemplate {
             myWorker : ${Names.workerInterface(language)};
 
             public walk(modelelement: ${allLangConcepts}, includeChildren?: boolean) {
-                ${language.classes.map(concept => `
+                ${this.sortClasses(language.classes).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    this.walk${concept.name}(modelelement, includeChildren );
+                    return this.walk${concept.name}(modelelement, includeChildren );
                 }`).join("")}
             }
 
@@ -36,8 +36,7 @@ export class WalkerTemplate {
                 public walk${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) {
                     if(!!this.myWorker) {
 
-                    // do the work
-                    this.myWorker.exec${concept.name}(modelelement);
+                    this.myWorker.execBefore${concept.name}(modelelement);
 
                     ${((concept.allParts().length > 0)?
                     ` // work on children in the model tree
@@ -54,6 +53,7 @@ export class WalkerTemplate {
                     }`
                     : ``
                     )}
+                    this.myWorker.execAfter${concept.name}(modelelement);
                 } else {
                     LOGGER.error(this, "No worker found.");
                     return;
@@ -62,11 +62,35 @@ export class WalkerTemplate {
                 }`).join("\n")}
         }`;
     }
+
+    // the entries for the walk${concept.name} must be sorted,
+    // because an entry for a subclass must preceed an entry for
+    // its base class, otherwise only the walk${concept.name} for
+    // the base class will be called.
+    private sortClasses(piclasses: PiLangClass[]) : PiLangClass[] {
+        let newList : PiLangClass[] = [];
+        for (let c of piclasses) {
+            // without base must be last
+            if ( !c.base ) {
+                newList.push(c);
+            }
+        }
+        while (newList.length < piclasses.length) {
+            for (let c of piclasses) {
+                if ( c.base ) {
+                    // push c before c.base
+                    if (newList.includes(c.base.referedElement())) {
+                        newList.unshift(c);
+                    }
+                }
+            }
+        }
+    
+        for (let c of newList) {
+            console.log("after while: "+ c.name);
+        }
+        return newList;
+    }
+
 }
-// ${concept.allSubConceptsDirect().length > 0? `// use the right worker function` : ``}
-// ${concept.allSubConceptsDirect().map ( sub =>
-//     `if( modelelement instanceof ${sub.name}) {
-//         this.walk${sub.name}(modelelement, includeChildren);
-//     }`
-// ).join("\n")}
 

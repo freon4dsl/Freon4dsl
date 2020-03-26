@@ -37,7 +37,7 @@ export class DemoChecker implements DemoWorker {
     typer: PiTyper;
     errorList: PiError[] = [];
 
-    public execDemoModel(modelelement: DemoModel) {
+    public execBeforeDemoModel(modelelement: DemoModel) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
             this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
@@ -51,8 +51,9 @@ export class DemoChecker implements DemoWorker {
             this.errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
         }
     }
+    public execAfterDemoModel(modelelement: DemoModel) {}
 
-    public execDemoEntity(modelelement: DemoEntity) {
+    public execBeforeDemoEntity(modelelement: DemoEntity) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
             this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
@@ -66,15 +67,17 @@ export class DemoChecker implements DemoWorker {
             this.errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
         }
     }
+    public execAfterDemoEntity(modelelement: DemoEntity) {}
 
-    public execDemoAttribute(modelelement: DemoAttribute) {
+    public execBeforeDemoAttribute(modelelement: DemoAttribute) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
             this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
     }
+    public execAfterDemoAttribute(modelelement: DemoAttribute) {}
 
-    public execDemoFunction(modelelement: DemoFunction) {
+    public execBeforeDemoFunction(modelelement: DemoFunction) {
         // @typecheck conformsTo( this.expression, this.declaredType )
         if (!this.typer.conformsTo(modelelement.expression, modelelement.declaredType)) {
             this.errorList.push(
@@ -97,15 +100,17 @@ export class DemoChecker implements DemoWorker {
             this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
     }
+    public execAfterDemoFunction(modelelement: DemoFunction) {}
 
-    public execDemoVariable(modelelement: DemoVariable) {
+    public execBeforeDemoVariable(modelelement: DemoVariable) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
             this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
     }
+    public execAfterDemoVariable(modelelement: DemoVariable) {}
 
-    public execDemoAbsExpression(modelelement: DemoAbsExpression) {
+    public execBeforeDemoAbsExpression(modelelement: DemoAbsExpression) {
         // @typecheck equalsType( this.expr, DemoAttributeType:Integer )
         if (!this.typer.equalsType(modelelement.expr, DemoAttributeType.Integer)) {
             this.errorList.push(
@@ -120,8 +125,9 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoAbsExpression(modelelement: DemoAbsExpression) {}
 
-    public execDemoMultiplyExpression(modelelement: DemoMultiplyExpression) {
+    public execBeforeDemoMultiplyExpression(modelelement: DemoMultiplyExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
             this.errorList.push(
@@ -149,8 +155,9 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoMultiplyExpression(modelelement: DemoMultiplyExpression) {}
 
-    public execDemoPlusExpression(modelelement: DemoPlusExpression) {
+    public execBeforeDemoPlusExpression(modelelement: DemoPlusExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
             this.errorList.push(
@@ -191,8 +198,9 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoPlusExpression(modelelement: DemoPlusExpression) {}
 
-    public execDemoDivideExpression(modelelement: DemoDivideExpression) {
+    public execBeforeDemoDivideExpression(modelelement: DemoDivideExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
             this.errorList.push(
@@ -220,8 +228,9 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoDivideExpression(modelelement: DemoDivideExpression) {}
 
-    public execDemoAndExpression(modelelement: DemoAndExpression) {
+    public execBeforeDemoAndExpression(modelelement: DemoAndExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
             this.errorList.push(
@@ -249,8 +258,9 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoAndExpression(modelelement: DemoAndExpression) {}
 
-    public execDemoOrExpression(modelelement: DemoOrExpression) {
+    public execBeforeDemoOrExpression(modelelement: DemoOrExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
             this.errorList.push(
@@ -278,8 +288,9 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoOrExpression(modelelement: DemoOrExpression) {}
 
-    public execDemoComparisonExpression(modelelement: DemoComparisonExpression) {
+    public execBeforeDemoComparisonExpression(modelelement: DemoComparisonExpression) {
         // @typecheck equalsType( this.left, this.right )
         if (!this.typer.equalsType(modelelement.left, modelelement.right)) {
             this.errorList.push(
@@ -294,8 +305,9 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoComparisonExpression(modelelement: DemoComparisonExpression) {}
 
-    public execDemoIfExpression(modelelement: DemoIfExpression) {
+    public execBeforeDemoIfExpression(modelelement: DemoIfExpression) {
         // @typecheck equalsType( this.condition, DemoAttributeType:Boolean )
         if (!this.typer.equalsType(modelelement.condition, DemoAttributeType.Boolean)) {
             this.errorList.push(
@@ -323,30 +335,43 @@ export class DemoChecker implements DemoWorker {
             );
         }
     }
+    public execAfterDemoIfExpression(modelelement: DemoIfExpression) {}
 
-    public execDemoExpression(modelelement: DemoExpression) {}
+    public execBeforeDemoExpression(modelelement: DemoExpression) {}
+    public execAfterDemoExpression(modelelement: DemoExpression) {}
 
-    public execDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression) {}
+    public execBeforeDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression) {}
+    public execAfterDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression) {}
 
-    public execDemoLiteralExpression(modelelement: DemoLiteralExpression) {}
+    public execBeforeDemoLiteralExpression(modelelement: DemoLiteralExpression) {}
+    public execAfterDemoLiteralExpression(modelelement: DemoLiteralExpression) {}
 
-    public execDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression) {}
+    public execBeforeDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression) {}
+    public execAfterDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression) {}
 
-    public execDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression) {}
+    public execBeforeDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression) {}
+    public execAfterDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression) {}
 
-    public execDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression) {}
+    public execBeforeDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression) {}
+    public execAfterDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression) {}
 
-    public execDemoBinaryExpression(modelelement: DemoBinaryExpression) {}
+    public execBeforeDemoBinaryExpression(modelelement: DemoBinaryExpression) {}
+    public execAfterDemoBinaryExpression(modelelement: DemoBinaryExpression) {}
 
-    public execDemoLessThenExpression(modelelement: DemoLessThenExpression) {}
+    public execBeforeDemoLessThenExpression(modelelement: DemoLessThenExpression) {}
+    public execAfterDemoLessThenExpression(modelelement: DemoLessThenExpression) {}
 
-    public execDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression) {}
+    public execBeforeDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression) {}
+    public execAfterDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression) {}
 
-    public execDemoEqualsExpression(modelelement: DemoEqualsExpression) {}
+    public execBeforeDemoEqualsExpression(modelelement: DemoEqualsExpression) {}
+    public execAfterDemoEqualsExpression(modelelement: DemoEqualsExpression) {}
 
-    public execDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression) {}
+    public execBeforeDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression) {}
+    public execAfterDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression) {}
 
-    public execDemoVariableRef(modelelement: DemoVariableRef) {}
+    public execBeforeDemoVariableRef(modelelement: DemoVariableRef) {}
+    public execAfterDemoVariableRef(modelelement: DemoVariableRef) {}
 
     private isValidName(name: string): boolean {
         if (name == null) return false;
