@@ -30,50 +30,54 @@ import {
     DemoType
 } from "../../language";
 import { DemoUnparser } from "../../../demo/unparser/DemoUnparser";
+import { DemoWorker } from "../../../demo/utils/gen/DemoWorker";
 
-export class DemoChecker {
+export class DemoChecker implements DemoWorker {
     myUnparser = new DemoUnparser();
-    public checkDemoModel(modelelement: DemoModel, typer: PiTyper, errorList: PiError[]) {
+    typer: PiTyper;
+    errorList: PiError[] = [];
+
+    public execDemoModel(modelelement: DemoModel) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
-            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
         // @notEmpty this.entities
         if (modelelement.entities.length == 0) {
-            errorList.push(new PiError("List 'this.entities' may not be empty", modelelement.entities));
+            this.errorList.push(new PiError("List 'this.entities' may not be empty", modelelement.entities));
         }
         // @notEmpty this.functions
         if (modelelement.functions.length == 0) {
-            errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
+            this.errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
         }
     }
 
-    public checkDemoEntity(modelelement: DemoEntity, typer: PiTyper, errorList: PiError[]) {
+    public execDemoEntity(modelelement: DemoEntity) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
-            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
         // @notEmpty this.attributes
         if (modelelement.attributes.length == 0) {
-            errorList.push(new PiError("List 'this.attributes' may not be empty", modelelement.attributes));
+            this.errorList.push(new PiError("List 'this.attributes' may not be empty", modelelement.attributes));
         }
         // @notEmpty this.functions
         if (modelelement.functions.length == 0) {
-            errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
+            this.errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
         }
     }
 
-    public checkDemoAttribute(modelelement: DemoAttribute, typer: PiTyper, errorList: PiError[]) {
+    public execDemoAttribute(modelelement: DemoAttribute) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
-            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
     }
 
-    public checkDemoFunction(modelelement: DemoFunction, typer: PiTyper, errorList: PiError[]) {
+    public execDemoFunction(modelelement: DemoFunction) {
         // @typecheck conformsTo( this.expression, this.declaredType )
-        if (!typer.conformsTo(modelelement.expression, modelelement.declaredType)) {
-            errorList.push(
+        if (!this.typer.conformsTo(modelelement.expression, modelelement.declaredType)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.expression) +
@@ -86,25 +90,25 @@ export class DemoChecker {
         }
         // @notEmpty this.parameters
         if (modelelement.parameters.length == 0) {
-            errorList.push(new PiError("List 'this.parameters' may not be empty", modelelement.parameters));
+            this.errorList.push(new PiError("List 'this.parameters' may not be empty", modelelement.parameters));
         }
         // @validName name
         if (!this.isValidName(modelelement.name)) {
-            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
     }
 
-    public checkDemoVariable(modelelement: DemoVariable, typer: PiTyper, errorList: PiError[]) {
+    public execDemoVariable(modelelement: DemoVariable) {
         // @validName name
         if (!this.isValidName(modelelement.name)) {
-            errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
         }
     }
 
-    public checkDemoAbsExpression(modelelement: DemoAbsExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoAbsExpression(modelelement: DemoAbsExpression) {
         // @typecheck equalsType( this.expr, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.expr, DemoAttributeType.Integer)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.expr, DemoAttributeType.Integer)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.expr) +
@@ -117,10 +121,10 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoMultiplyExpression(modelelement: DemoMultiplyExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoMultiplyExpression(modelelement: DemoMultiplyExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
@@ -132,8 +136,8 @@ export class DemoChecker {
             );
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.right) +
@@ -146,10 +150,10 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoPlusExpression(modelelement: DemoPlusExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoPlusExpression(modelelement: DemoPlusExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
@@ -161,8 +165,8 @@ export class DemoChecker {
             );
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.right) +
@@ -174,8 +178,8 @@ export class DemoChecker {
             );
         }
         // @typecheck conformsTo( this.left, this.right )
-        if (!typer.conformsTo(modelelement.left, modelelement.right)) {
-            errorList.push(
+        if (!this.typer.conformsTo(modelelement.left, modelelement.right)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
@@ -188,10 +192,10 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoDivideExpression(modelelement: DemoDivideExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoDivideExpression(modelelement: DemoDivideExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
@@ -203,8 +207,8 @@ export class DemoChecker {
             );
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Integer )
-        if (!typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.right) +
@@ -217,10 +221,10 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoAndExpression(modelelement: DemoAndExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoAndExpression(modelelement: DemoAndExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
-        if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
@@ -232,8 +236,8 @@ export class DemoChecker {
             );
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
-        if (!typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.right) +
@@ -246,10 +250,10 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoOrExpression(modelelement: DemoOrExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoOrExpression(modelelement: DemoOrExpression) {
         // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
-        if (!typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
@@ -261,8 +265,8 @@ export class DemoChecker {
             );
         }
         // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
-        if (!typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.right) +
@@ -275,10 +279,10 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoComparisonExpression(modelelement: DemoComparisonExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoComparisonExpression(modelelement: DemoComparisonExpression) {
         // @typecheck equalsType( this.left, this.right )
-        if (!typer.equalsType(modelelement.left, modelelement.right)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.left, modelelement.right)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.left) +
@@ -291,10 +295,10 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoIfExpression(modelelement: DemoIfExpression, typer: PiTyper, errorList: PiError[]) {
+    public execDemoIfExpression(modelelement: DemoIfExpression) {
         // @typecheck equalsType( this.condition, DemoAttributeType:Boolean )
-        if (!typer.equalsType(modelelement.condition, DemoAttributeType.Boolean)) {
-            errorList.push(
+        if (!this.typer.equalsType(modelelement.condition, DemoAttributeType.Boolean)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.condition) +
@@ -306,8 +310,8 @@ export class DemoChecker {
             );
         }
         // @typecheck conformsTo( this.whenTrue, this.whenFalse )
-        if (!typer.conformsTo(modelelement.whenTrue, modelelement.whenFalse)) {
-            errorList.push(
+        if (!this.typer.conformsTo(modelelement.whenTrue, modelelement.whenFalse)) {
+            this.errorList.push(
                 new PiError(
                     "Type of '" +
                         this.myUnparser.unparse(modelelement.whenTrue) +
@@ -320,29 +324,29 @@ export class DemoChecker {
         }
     }
 
-    public checkDemoExpression(modelelement: DemoExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoExpression(modelelement: DemoExpression) {}
 
-    public checkDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression) {}
 
-    public checkDemoLiteralExpression(modelelement: DemoLiteralExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoLiteralExpression(modelelement: DemoLiteralExpression) {}
 
-    public checkDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression) {}
 
-    public checkDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression) {}
 
-    public checkDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoBooleanLiteralExpression(modelelement: DemoBooleanLiteralExpression) {}
 
-    public checkDemoBinaryExpression(modelelement: DemoBinaryExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoBinaryExpression(modelelement: DemoBinaryExpression) {}
 
-    public checkDemoLessThenExpression(modelelement: DemoLessThenExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoLessThenExpression(modelelement: DemoLessThenExpression) {}
 
-    public checkDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression) {}
 
-    public checkDemoEqualsExpression(modelelement: DemoEqualsExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoEqualsExpression(modelelement: DemoEqualsExpression) {}
 
-    public checkDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression) {}
 
-    public checkDemoVariableRef(modelelement: DemoVariableRef, typer: PiTyper, errorList: PiError[]) {}
+    public execDemoVariableRef(modelelement: DemoVariableRef) {}
 
     private isValidName(name: string): boolean {
         if (name == null) return false;
