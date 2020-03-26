@@ -1,16 +1,13 @@
 import {
     PiLangPrimitiveProperty,
-    PiLangConcept,
     PiLangConceptProperty,
     PiLanguageUnit,
     PiLangEnumeration,
     PiLangUnion,
     PiLangEnumProperty,
-    PiLangExpressionConcept,
-    PiLangBinaryExpressionConcept,
-    PiLangClass
 } from "../metalanguage/PiLanguage";
 import { PiLangConceptReference, PiLangEnumerationReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiParseClass } from "./PiParseConcept";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
@@ -31,66 +28,21 @@ export function createLanguage(data: Partial<PiLanguageUnit>): PiLanguageUnit {
         result.unions = data.unions
     }
 
-    // Ensure all references to the language are set.
-    result.classes.forEach(concept => {
-        concept.language = result;
-        concept.references.forEach(ref => ref.type.language = result);
-        concept.parts.forEach(part => part.type.language = result);
-        concept.enumProperties.forEach(en => en.type.language = result);
-        if( !!concept.base ){
-            concept.base.language = result;
-        }
-    } );
-
-    result.enumerations.forEach(enumeration => {
-        enumeration.language = result;
-    } );
-
-    result.unions.forEach(type => {
-        type.language = result;
-    } );
-
     return result;
 }
 
-export function createClass(data: Partial<PiLangClass>): PiLangClass {
-    // console.log("createClass " + data.name);
-    const result = new PiLangClass();
-    createCommonClassParts(result, data);
-    // // console.log("created  class " + result.name);
-    return result;
-}
+// Because we do not yet know whether a concept is a PiLangClass, PiLangClass, or PiLangBinaryExpressionConcept,
+// we parse it and create this temporary object, which needs to be changed into the correct one.
+// The latter is done in the checker
+export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
+    // console.log("createParseConcept " + data.name);
+    const result = new PiParseClass();
 
-export function createExpressionConcept(data: Partial<PiLangExpressionConcept>): PiLangExpressionConcept {
-    // console.log("createExpressionConcept " + data.name);
-    const result = new PiLangExpressionConcept();
-    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder; 
-    createCommonClassParts(result, data);
-    // // console.log("created  class " + result.name);
-    return result;
-}
-
-export function createBinaryExpressionConcept(data: Partial<PiLangBinaryExpressionConcept>): PiLangBinaryExpressionConcept {
-    // console.log("createBinaryExpressionConcept " + data.name);
-    const result = new PiLangBinaryExpressionConcept();
-    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder; 
-    if (!!data.priority) {
-        result.priority = data.priority;
-    }
-    if (!!data.symbol) {
-        result.symbol = data.symbol;
-    }
-    if (!!data.priority) {
-        result.priority = data.priority;
-    }
-    createCommonClassParts(result, data);
-    // // console.log("created  concept " + result.name);
-    return result;
-}
-
-function createCommonClassParts(result: PiLangClass, data: Partial<PiLangClass>) {
     result.isRoot = !!data.isRoot;
     result.isAbstract = !!data.isAbstract;
+    result.isBinary = !!data.isBinary;
+    result.isExpression = !!data.isExpression;
+    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder; 
     if (!!data.name) {
         result.name = data.name;
     }
@@ -112,10 +64,17 @@ function createCommonClassParts(result: PiLangClass, data: Partial<PiLangClass>)
     if (!!data.references) {
         result.references = data.references;
     }
-    result.parts.forEach(part => part.owningConcept = result);
-    result.primProperties.forEach(prop => prop.owningConcept = result);
-    result.enumProperties.forEach(prop => prop.owningConcept = result);
-    result.references.forEach(ref => ref.owningConcept = result);
+    if (!!data.priority) {
+        result.priority = data.priority;
+    }
+    if (!!data.symbol) {
+        result.symbol = data.symbol;
+    }
+    if (!!data.priority) {
+        result.priority = data.priority;
+    }
+    // console.log("created parse class " + result.name);
+    return result;
 }
 
 export function createEnumerationReference(data: Partial<PiLangEnumerationReference>): PiLangEnumerationReference {

@@ -113,7 +113,18 @@ export class PiLangConcept extends PiLangElement {
     }
 }
 
-export class PiLangClass extends PiLangConcept {
+export interface PiLangClassInterface {
+    name: string;
+    primProperties: PiLangPrimitiveProperty[];
+    enumProperties: PiLangEnumProperty[];
+    parts: PiLangConceptProperty[];
+    references: PiLangConceptProperty[];
+    trigger: string;
+    isAbstract: boolean;
+    isRoot:boolean;
+    base: PiLangClassReference;
+}
+export class PiLangClass extends PiLangConcept implements PiLangClassInterface {
     isAbstract: boolean;
     isRoot:boolean;
     base: PiLangClassReference;

@@ -42,7 +42,7 @@ export class PiTyperTemplate {
         
             public inferType(modelelement: ${allLangConcepts}): ${rootType} {
                 ${this.makeInferenceStatements()}
-                return null;
+                return this.defaultType;
             }
 
             public conformsTo(elem1: ${rootType}, elem2: ${rootType}): boolean {

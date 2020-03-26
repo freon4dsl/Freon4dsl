@@ -92,7 +92,7 @@ export class DemoTyper implements PiTyper {
         if (modelelement instanceof DemoVariableRef) {
             return this.inferType(modelelement.attribute);
         }
-        return null;
+        return this.defaultType;
     }
 
     public conformsTo(elem1: DemoType, elem2: DemoType): boolean {

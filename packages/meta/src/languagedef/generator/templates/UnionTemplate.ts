@@ -11,10 +11,10 @@ export class UnionTemplate {
         // Template starts here
         return `
         ${union.members.map(lit => 
-            `import { ${lit} } from "./${lit}"` ).join(";")}
+            `import { ${lit.name} } from "./${lit.name}"` ).join(";")}
     
         export type ${Names.type(union)} = ${union.members.map(lit => 
-                `${lit}` ).join(" | ")}
+                `${lit.name}` ).join(" | ")}
         `;
     }
 }
