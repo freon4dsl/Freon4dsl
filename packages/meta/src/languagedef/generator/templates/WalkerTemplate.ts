@@ -85,10 +85,6 @@ export class WalkerTemplate {
                 }
             }
         }
-    
-        for (let c of newList) {
-            console.log("after while: "+ c.name);
-        }
         return newList;
     }
 

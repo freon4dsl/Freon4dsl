@@ -12,6 +12,7 @@ import { LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER } from "../../utils/GeneratorCon
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { WalkerTemplate } from "./templates/WalkerTemplate";
 import { WorkerInterfaceTemplate } from "./templates/WorkerInterfaceTemplate";
+import { UnparserTemplate } from "./templates/UnparserTemplate";
 
 const LOGGER = new PiLogger("LanguageGenerator"); // .mute();
 export class LanguageGenerator {
@@ -32,6 +33,7 @@ export class LanguageGenerator {
         const allConceptsTemplate = new AllConceptsTemplate();
         const walkerTemplate = new WalkerTemplate();
         const workerTemplate = new WorkerInterfaceTemplate();
+        const unparserTemplate = new UnparserTemplate();
 
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
@@ -78,6 +80,10 @@ export class LanguageGenerator {
         if (verbose) LOGGER.log("Generating language worker: " + Names.workerInterface(language) + ".ts");
         var workerFile = Helpers.pretty(workerTemplate.generateWorkerInterface(language), "WorkerInterface Class");
         fs.writeFileSync(`${this.utilsFolder}/${Names.workerInterface(language)}.ts`, workerFile);
+
+        if (verbose) LOGGER.log("Generating language unparser: " + Names.unparser(language) + ".ts");
+        var unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(language), "Unparser Class");
+        fs.writeFileSync(`${this.utilsFolder}/${Names.unparser(language)}.ts`, unparserFile);
 
         if (verbose) LOGGER.log("Succesfully generated language '" + language.name + "'"); // TODO check if it is really succesfull
     }
