@@ -10,7 +10,7 @@ export class PiReferenceTemplate {
         import { MobxModelElementImpl } from "@projectit/core";
         import { computed, observable } from "mobx";
         import { PiNamedElement } from "@projectit/core";
-        import { ${Names.environment(language)} } from "./editor/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "../environment/${Names.environment(language)}";
         
         /**
          * Implementation for a (named) reference in ProjectIt.

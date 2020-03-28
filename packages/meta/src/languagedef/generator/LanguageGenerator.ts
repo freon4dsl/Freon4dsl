@@ -1,4 +1,4 @@
-import { EnvironmentTemplate } from "languagedef/generator/templates/EnvironmentTemplate";
+import { EnvironmentTemplate } from "./templates/EnvironmentTemplate";
 import { PiReferenceTemplate } from "./templates/PiReferenceTemplate";
 import { Helpers } from "../../utils/Helpers";
 import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";

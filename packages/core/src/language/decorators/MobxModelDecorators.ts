@@ -19,59 +19,59 @@ export const MODEL_NAME = MODEL_PREFIX + "Name";
  */
 export function observablereference(target: DecoratedModelElement, propertyKey: string | symbol) {
     ModelInfo.references.add(target.constructor.name, propertyKey.toString());
-    const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
-
-    const getter = function(this: any) {
-        // console.log("GET observablereference observablereference observablereference observablereference");
-        const storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
-        let result: any = storedObserver ? storedObserver.get() : undefined;
-        if (result === undefined) {
-            result = null;
-            this[privatePropertyKey] = observable.box(result);
-        }
-        return result;
-    };
-
-    const setter = function(this: any, val: DecoratedModelElement) {
-        console.log("SET observablereference observablereference observablereference observablereference");
-        let storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
-        const storedValue = storedObserver ? storedObserver.get() : null;
-        // Clean container of current part
-        if (storedValue) {
-            storedValue.container = null;
-            storedValue.propertyName = "";
-            storedValue.propertyIndex = undefined;
-        }
-        if (storedObserver) {
-            storedObserver.set(val);
-        } else {
-            this[privatePropertyKey] = observable.box(val);
-            storedObserver = this[privatePropertyKey];
-        }
-        if (val !== null && val !== undefined) {
-            if (val.container !== undefined && val.container !== null) {
-                if (val.propertyIndex !== undefined) {
-                    // Clean new value from its containing list
-                    (val.container as any)[val.propertyName].splice(val.propertyIndex, 1);
-                } else {
-                    // Clean new value from its container
-                    (val.container as any)[MODEL_PREFIX + val.propertyName] = null;
-                }
-            }
-            // Set container
-            val.container = this;
-            val.propertyName = propertyKey.toString();
-            val.propertyIndex = undefined;
-        }
-    };
-
-    // tslint:disable no-unused-expression
-    Reflect.deleteProperty(target, propertyKey);
-    Reflect.defineProperty(target, propertyKey, {
-        get: getter,
-        set: setter,
-        configurable: true
-    });
+    // const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
+    //
+    // const getter = function(this: any) {
+    //     // console.log("GET observablereference observablereference observablereference observablereference");
+    //     const storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
+    //     let result: any = storedObserver ? storedObserver.get() : undefined;
+    //     if (result === undefined) {
+    //         result = null;
+    //         this[privatePropertyKey] = observable.box(result);
+    //     }
+    //     return result;
+    // };
+    //
+    // const setter = function(this: any, val: DecoratedModelElement) {
+    //     console.log("SET observablereference observablereference observablereference observablereference");
+    //     let storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
+    //     const storedValue = storedObserver ? storedObserver.get() : null;
+    //     // Clean container of current part
+    //     if (storedValue) {
+    //         storedValue.container = null;
+    //         storedValue.propertyName = "";
+    //         storedValue.propertyIndex = undefined;
+    //     }
+    //     if (storedObserver) {
+    //         storedObserver.set(val);
+    //     } else {
+    //         this[privatePropertyKey] = observable.box(val);
+    //         storedObserver = this[privatePropertyKey];
+    //     }
+    //     if (val !== null && val !== undefined) {
+    //         if (val.container !== undefined && val.container !== null) {
+    //             if (val.propertyIndex !== undefined) {
+    //                 // Clean new value from its containing list
+    //                 (val.container as any)[val.propertyName].splice(val.propertyIndex, 1);
+    //             } else {
+    //                 // Clean new value from its container
+    //                 (val.container as any)[MODEL_PREFIX + val.propertyName] = null;
+    //             }
+    //         }
+    //         // Set container
+    //         val.container = this;
+    //         val.propertyName = propertyKey.toString();
+    //         val.propertyIndex = undefined;
+    //     }
+    // };
+    //
+    // // tslint:disable no-unused-expression
+    // Reflect.deleteProperty(target, propertyKey);
+    // Reflect.defineProperty(target, propertyKey, {
+    //     get: getter,
+    //     set: setter,
+    //     configurable: true
+    // });
 }
 
 /**
@@ -223,7 +223,7 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
 function willChange(
     change: IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement>
 ): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
-    console.log("willChange [" + change.type + "]");
+    // console.log("willChange [" + change.type + "]");
     switch (change.type) {
         // console.log("no change");
         case "update":

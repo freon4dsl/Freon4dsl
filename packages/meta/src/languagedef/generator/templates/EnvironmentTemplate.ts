@@ -10,10 +10,10 @@ export class EnvironmentTemplate {
         import { CompositeProjection, PiEnvironment } from "@projectit/core";
         import { PiProjection, PiScoper, PiTyper, PiValidator } from "@projectit/core";
         import { ${language.name}Scoper } from "../scoper/gen/${language.name}Scoper";
-        import { ${language.name}Typer } from "../typer/${language.name}Typer";
+        import { ${language.name}Typer } from "../typer/gen/${language.name}Typer";
         import { ${language.name}Validator } from "../validator/gen/${language.name}Validator";
-        import { ${language.name}Projection } from "./${language.name}Projection";
-        import { ${language.name}ProjectionDefault } from "./gen";
+        import { ${language.name}Projection } from "../editor/${language.name}Projection";
+        import { ${language.name}ProjectionDefault } from "../editor/gen";
         
         export class ${Names.environment(language)} implements PiEnvironment {
         

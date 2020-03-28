@@ -16,7 +16,7 @@ import {
 } from "../language";
 import { PiElementReference } from "../language/PiElementReference";
 import { demoStyles } from "../styles/styles";
-import { DemoEnvironment } from "./DemoEnvironment";
+import { DemoEnvironment } from "../environment/DemoEnvironment";
 import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 
 export class DemoProjection implements PiProjection {
@@ -68,11 +68,11 @@ export class DemoProjection implements PiProjection {
                     },
                     (option: SelectOption) => {
                         // TODO PiElementReference
-                        element.functionDefinition = new PiElementReference(DemoEnvironment.getInstance().scoper.getFromVisibleElements(
+                        element.functionDefinition = DemoEnvironment.getInstance().scoper.getFromVisibleElements(
                             element,
                             option.label,
                             "DemoFunction"
-                        ) as DemoFunction, "DemoFunction");
+                        ) as DemoFunction, "DemoFunction";
                     }
                 ),
             new TextBox(element, "blabla", () => element?.functionDefinition.name, (v: string) => (0), {
