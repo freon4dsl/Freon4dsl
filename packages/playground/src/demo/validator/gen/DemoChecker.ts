@@ -28,9 +28,9 @@ import {
     DemoVariableRef,
     DemoAttributeType,
     DemoType
-} from "../../language";
-import { DemoUnparser } from "../../../demo/unparser/DemoUnparser";
-import { DemoWorker } from "../../../demo/utils/gen/DemoWorker";
+} from "../../../../src/demo/language";
+import { DemoUnparser } from "../../../../src/demo/unparser/DemoUnparser";
+import { DemoWorker } from "../../../../src/demo/utils/gen/DemoWorker";
 
 export class DemoChecker implements DemoWorker {
     myUnparser = new DemoUnparser();

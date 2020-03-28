@@ -1,4 +1,4 @@
-import { PiLanguageUnit, PiLangConcept, PiLangEnumeration, PiLangUnion } from "languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiLangConcept, PiLangEnumeration, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
 import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
 import { PiValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
@@ -52,6 +52,31 @@ export class PathProvider {
         return "@projectit/core"
     }
 
+    // the generated classes that implement the language can be found in ...
+    public static languageFolder(): string {
+        return "language";
+    }
+
+    public static concept(concept: PiLangConcept): string {
+        return "language/" + Names.concept(concept);
+    }
+
+    public static enumeration(enumeration: PiLangEnumeration): string {
+        return "language/" + Names.enumeration(enumeration);
+    }
+    // TODO change function name to 'union'
+    public static type(union: PiLangUnion): string {
+        return "language/" + Names.type(union);
+    }
+
+    public static languageConceptType(language: PiLanguageUnit): string {
+        return "language/" + Names.languageConceptType(language);
+    }
+
+    public static allConcepts(language: PiLanguageUnit): string {
+        return "language/" + Names.allConcepts(language);
+    }
+
     // the generated classes that implement the editor can be found in ...
     public static context(language: PiLanguageUnit): string {
         return "editor/gen/" + Names.context(language);  ;
@@ -89,27 +114,6 @@ export class PathProvider {
         return "editor/gen/" + Names.mainProjectionalEditor(language);
     }
 
-    // the generated classes that implement the language can be found in ...
-    public static concept(concept: PiLangConcept): string {
-        return "language/gen/" + Names.concept(concept);
-    }
-
-    public static enumeration(enumeration: PiLangEnumeration): string {
-        return "language/gen/" + Names.enumeration(enumeration);
-    }
-    // TODO change function name to 'union'
-    public static type(union: PiLangUnion): string {
-        return "language/gen/" + Names.type(union);
-    }
-
-    public static languageConceptType(language: PiLanguageUnit): string {
-        return "language/gen/" + Names.languageConceptType(language);
-    }
-
-    public static allConcepts(language: PiLanguageUnit): string {
-        return "language/gen/" + Names.allConcepts(language);
-    }
-
     // the generated classes that implement the scoper can be found in ...
     public static namespace(language: PiLanguageUnit): string {
         return "scoper/gen/" + Names.namespace(language);
@@ -135,7 +139,9 @@ export class PathProvider {
 
     // the generated classes that implement the unparser can be found in ...
     public static unparser(language: PiLanguageUnit): string {
-        return "unparser/gen/" + Names.unparser(language);
+        // TODO should be changed into 
+        // return "unparser/gen/" + Names.unparser(language);
+        return "unparser/" + Names.unparser(language);
     }
 
     // the generated classes that implement the visitor pattern can be found in ...

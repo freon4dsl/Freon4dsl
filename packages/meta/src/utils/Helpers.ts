@@ -48,7 +48,7 @@ export class Helpers {
     }
 
     /*
-    * startPath:  
+    * startPath: the folder where the files should be located 
     * extension: a regular expression to filter the filenames found
     */
     public static findFiles(startPath: string, extension?: string) : string[] {

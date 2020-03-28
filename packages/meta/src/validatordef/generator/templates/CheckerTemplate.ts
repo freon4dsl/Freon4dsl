@@ -1,27 +1,31 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
-import { PiLangEnumerationReference } from "../../../languagedef/metalanguage/PiLangReferences";
-import { PiLangAppliedFeatureExp, PiLangThisExp, PiLangExp, PiLangEnumExp } from "../../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangThisExp, PiLangExp, PiLangEnumExp } from "../../../languagedef/metalanguage/PiLangExpressions";
 
 export class CheckerTemplate {
     constructor() {
     }
 
-    generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        let interfaceName = Names.workerInterface(language);
+    generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef, outputFolder: string): string {
+        const workerInterfaceName = Names.workerInterface(language);
+        const errorClassName : string = Names.errorClassName();
+        const checkerClassName : string = Names.checker(language);
+        const typerInterfaceName: string = Names.typerInterface();
+        const unparserClassName: string = Names.unparser(language);
         
         // the template starts here
         return `
-        import { ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
-        import { ${this.createImports(language, validdef)} } from "../../language"; 
-        import { ${Names.unparser(language)} } from "../../../demo/unparser/${Names.unparser(language)}";    
-        import { ${interfaceName} } from "../../../demo/utils/gen/${interfaceName}";
+        import { ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.errorClass()}";
+        import { ${this.createImports(language, validdef)} } from "${outputFolder}/${PathProvider.languageFolder()}"; 
+        import { ${unparserClassName} } from "${outputFolder}/${PathProvider.unparser(language)}";    
+        import { ${workerInterfaceName} } from "${outputFolder}/${PathProvider.workerInterface(language)}";
 
-        export class ${language.name}Checker implements ${interfaceName}{
-            myUnparser = new ${Names.unparser(language)}();
-            typer: ${Names.typerInterface()};
-            errorList: ${Names.errorClassName()}[] = [];
+        export class ${checkerClassName} implements ${workerInterfaceName} {
+            myUnparser = new ${unparserClassName}();
+            typer: ${typerInterfaceName};
+            errorList: ${errorClassName}[] = [];
 
         ${validdef.conceptRules.map(ruleSet =>
             `public execBefore${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
