@@ -39,7 +39,7 @@ export class LanguageGenerator {
         this.environmentFolder = this.outputfolder + "/" + ENVIRONMENT_FOLDER;
         Helpers.createDirIfNotExisting(this.environmentFolder);
 
-        language.concepts.forEach(concept => {
+        language.classes.forEach(concept => {
             if (verbose) LOGGER.log("Generating concept: " + concept.name);
             var generated = Helpers.pretty(conceptTemplate.generateConcept(concept), "concept " + concept.name);
             fs.writeFileSync(`${this.languageFolder}/${Names.concept(concept)}.ts`, generated);

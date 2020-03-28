@@ -15,13 +15,13 @@ concept DemoEntity {
 
 concept DemoAttribute {
     name: string
-    declaredType: DemoAttributeType
+    declaredType: enum DemoAttributeType
     @editor trigger: string = "attribute"
 }
 
 concept DemoFunction {
     name: string
-    declaredType : DemoType
+    declaredType : enum DemoAttributeType
     @part expression: DemoExpression
     @part parameters: DemoVariable[]
     @editor trigger: string = "function"
@@ -29,7 +29,7 @@ concept DemoFunction {
 
 concept DemoVariable {
     name: string
-    declaredType: DemoType
+    declaredType: enum DemoAttributeType
     @editor trigger: string = "var"
 }
 
@@ -121,7 +121,7 @@ concept DemoIfExpression base DemoExpression {
 
 concept DemoVariableRef base DemoExpression {
     referredName: string
-    attribute: string
+    @reference attribute: DemoAttribute
 }
 
 enumeration DemoAttributeType {
@@ -130,7 +130,7 @@ enumeration DemoAttributeType {
     Boolean
 }
 
-type DemoType {
+union DemoType {
     DemoEntity
     DemoAttributeType
 }

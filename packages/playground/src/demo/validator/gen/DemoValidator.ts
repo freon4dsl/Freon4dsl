@@ -193,9 +193,6 @@ export class DemoValidator implements PiValidator {
         let myChecker = new DemoChecker();
 
         // use the right checks
-        if (modelelement instanceof DemoPlaceholderExpression) {
-            this.validateDemoPlaceholderExpression(modelelement, errorlist, includeChildren);
-        }
         if (modelelement instanceof DemoLiteralExpression) {
             this.validateDemoLiteralExpression(modelelement, errorlist, includeChildren);
         }
@@ -226,9 +223,6 @@ export class DemoValidator implements PiValidator {
 
         // add checks on this concept
         myChecker.checkDemoPlaceholderExpression(modelelement, this.myTyper, errorlist);
-
-        // add checks of baseconcept(s)
-        myChecker.checkDemoExpression(modelelement, this.myTyper, errorlist);
     }
 
     public validateDemoLiteralExpression(modelelement: DemoLiteralExpression, errorlist: PiError[], includeChildren?: boolean) {

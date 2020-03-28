@@ -1,66 +1,60 @@
 typer Demo for language Demo
 
-@isType { DemoEntity, DemoAttributeType, DemoType } 
+// for now: first is considered to be the root of the type hierarchy
+@istype {DemoType, DemoEntity, DemoAttributeType }
 
-@conformsTo (@all, DemoAttributeType.ANY) = true 
-@conformsTo (isType, isType.base) = true
-@equalsType (@all, DemoAttributeType.ANY) = true 
+@anytype {
+    //@conformsto this.base
+    //@conformsto this.implements
+    @conformsto DemoAttributeType:ANY
+    @equalsto DemoAttributeType:ANY
+}
 
 DemoAttribute {
-    @inferType declaredType
+    @infertype this.declaredType
 }
-
 DemoFunction {
-    @inferType declaredType
+    @infertype this.declaredType
 }
-
-DemoVariable { 
-    @inferType declaredType
+DemoVariable  {
+    @infertype this.declaredType
 }
-
 DemoExpression {
-    abstract @inferType  // for now
+    abstract @infertype 
 }
-
 DemoStringLiteralExpression {
-    @inferType DemoAttributeType.String
+    @infertype DemoAttributeType:String
 }
-
-DemoNumberLiteralExpression
-    @inferType DemoAttributeType.Integer
+DemoNumberLiteralExpression {
+    @infertype DemoAttributeType:Integer
 }
-
-DemoBooleanLiteralExpression
-    @inferType DemoAttributeType.Boolean
+DemoBooleanLiteralExpression {
+    @infertype DemoAttributeType:Boolean
 }
-
 DemoAbsExpression {
-    @inferType expr.type
+    @infertype this.expr
 }
-
 DemoMultiplyExpression {
-    @inferType left.type
+    @infertype this.left
 }
-
 DemoPlusExpression {
-    @inferType left.type
+    @infertype commonSuperType(this.left, this.right) 
 }
-
 DemoDivideExpression {
-    @inferType left.type
+    @infertype this.left
 }
-
 DemoComparisonExpression {
-    @inferType DemoAttributeType.Boolean
+    @infertype DemoAttributeType:Boolean
 }
-
 DemoFunctionCallExpression {
-    @inferType typeOf(function)
-
-DemoIfExpression {   
-    @inferType commonSuperType(whenTrue, whenFalse)
+    @infertype this.functionDefinition
 }
-
-DemoVariableRef {
-//    @inferType typeOf(attribute)  //not correct in .lang file
+DemoIfExpression    {
+    @infertype commonSuperType(this.whenTrue, this.whenFalse)
+}
+DemoVariable {
+    @infertype this.declaredType
+}
+DemoVariableRef   {
+    @infertype this.attribute  
 }

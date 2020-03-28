@@ -1,5 +1,6 @@
 {
     let create = require("./ValidatorCreators");
+    let expCreate = require("../../languagedef/parser/LanguageExpressionCreators"); 
 }
 
 Validator_Definition
@@ -58,28 +59,44 @@ typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langRefExpr
   });
 }
 
-langRefExpression = enumRefExpression:enumRefExpression { return enumRefExpression; } 
-                  / thisExpression:thisExpression       { return thisExpression; }
+// the following are the parsing rules for the expressions over the language structure,
+// as defined in meta/src/languagedef/metalanguage/PiLangExpressions.ts
 
-enumRefExpression = sourceName:var ':' literalName:var {
-  return create.createEnumReference ({
+langRefExpression = enumRefExpression:enumRefExpression    { return enumRefExpression; } 
+                  / expression:expression                  { return expression; }
+                  / functionExpression:functionExpression  { return functionExpression; }
+
+enumRefExpression = sourceName:var ':' appliedfeature:var {
+  return expCreate.createEnumReference ({
     "sourceName": sourceName,
-    "literalName": literalName
+    "appliedfeature": appliedfeature
   })
 }
 
-thisExpression = sourceName:var appliedFeature:dotExpression {
-  return create.createThisExpression ({
+expression = sourceName:var appliedfeature:dotExpression {
+  return expCreate.createExpression ({
     "sourceName": sourceName,
-    "appliedFeature": appliedFeature
+    "appliedfeature": appliedfeature
   })
 }
 
-dotExpression = '.' sourceName:var appliedFeature:dotExpression?  {
-  return create.createPropertyRefExpression
+functionExpression = sourceName:var round_begin actualparams:(
+      head:langRefExpression
+      tail:(comma_separator v:langRefExpression { return v; })*
+      { return [head].concat(tail); }
+    ) 
+    round_end {
+  return expCreate.createFunctionCall ({
+    "sourceName": sourceName,
+    "actualparams": actualparams
+  })
+}
+
+dotExpression = '.' sourceName:var appliedfeature:dotExpression?  {
+  return expCreate.createAppliedFeatureExp
 ( {
     "sourceName": sourceName,
-    "appliedFeature": appliedFeature
+    "appliedfeature": appliedfeature
   })
 }
 

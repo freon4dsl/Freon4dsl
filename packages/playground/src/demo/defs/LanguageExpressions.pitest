@@ -1,0 +1,66 @@
+expressions for language Demo
+
+DemoModel {
+    // default Identifier
+    this.entities.extr;
+    this.functions;
+}
+
+DemoEntity {
+    this.attributes;
+    this.functions;
+    DemoAttributeType.Integer;
+}
+
+DemoAttribute {
+     DemoVariable.name;
+}
+
+DemoFunction {
+    conformsTo (this.declaredType); 
+    this.parameters;
+    DemoFunction.parameters;
+}
+
+DemoVariable {
+    
+}
+
+DemoAbsExpression {
+    equalsType( this.expr, DemoAttributeType:Integer ) ;
+}
+
+DemoMultiplyExpression {
+    equalsType( this.left, DemoAttributeType:Integer );
+    equalsType( this.right, DemoAttributeType:Integer );
+}
+
+DemoPlusExpression {
+    equalsType( this.left, DemoAttributeType:Integer );
+    equalsType( this.right, DemoAttributeType:Integer );
+    conformsTo( this.left, this.right );
+}
+
+DemoDivideExpression {
+    equalsType( this.left, DemoAttributeType:Integer );
+    equalsType( this.right, DemoAttributeType:Integer );
+}
+
+DemoAndExpression {
+    equalsType( this.left, DemoAttributeType:Boolean );
+    equalsType( this.right, DemoAttributeType:Boolean );
+}
+
+DemoOrExpression {
+    equalsType( this.left, DemoAttributeType:Boolean );
+    equalsType( this.right, DemoAttributeType:Boolean );
+}
+
+DemoComparisonExpression {
+    equalsType( this.left, this.right );
+}
+
+DemoIfExpression {
+    equalsType( this.condition, DemoAttributeType:Boolean );
+    conformsTo( this.whenTrue, this.whenFalse );
+}
