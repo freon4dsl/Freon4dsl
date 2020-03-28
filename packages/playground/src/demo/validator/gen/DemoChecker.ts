@@ -373,6 +373,9 @@ export class DemoChecker implements DemoWorker {
     public execBeforeDemoVariableRef(modelelement: DemoVariableRef) {}
     public execAfterDemoVariableRef(modelelement: DemoVariableRef) {}
 
+    public execBeforeDemoAttributeType(modelelement: DemoAttributeType) {}
+    public execAfterDemoAttributeType(modelelement: DemoAttributeType) {}
+
     private isValidName(name: string): boolean {
         if (name == null) return false;
         // cannot start with number

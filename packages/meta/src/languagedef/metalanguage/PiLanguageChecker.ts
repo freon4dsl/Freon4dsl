@@ -7,6 +7,7 @@ import { PiParseClass } from "../../languagedef/parser/PiParseConcept";
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
 
 export class PiLanguageChecker extends Checker<PiLanguageUnit> {
+    foundRoot = false;
 
     public check(language: PiLanguageUnit): void {
         LOGGER.log("Checking language '" + language.name + "'");
@@ -25,18 +26,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.unions.forEach(concept => this.checkUnion(concept));
         // TODO: checkInterface
         // language.interfaces.forEach(concept => this.checkInterface(concept));
-    }
-
-    private checkUnion(union: PiLangUnion): void {
-        union.members.forEach (mem => 
-            this.checkConceptReference(mem)
-        );
-    }
-
-    private checkEnumeration(enumConcept: PiLangEnumeration) {
-        this.simpleCheck(enumConcept.parts.length == 0 || enumConcept.references.length == 0 
-            || enumConcept.enumProperties.length == 0 || enumConcept.primProperties.length == 0, 
-            `Enumeration '${enumConcept.name}' may not have  properties.`);
     }
 
     private setLanguageReferences(language: PiLanguageUnit) {
@@ -131,12 +120,30 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         return false;
     }
 
+    // the remaining functions are checking functions
+    private checkUnion(union: PiLangUnion): void {
+        union.members.forEach (mem => 
+            this.checkConceptReference(mem)
+        );
+    }
 
-    checkClass(piClass: PiLangClass): void {
+    private checkEnumeration(enumConcept: PiLangEnumeration) {
+        this.simpleCheck(enumConcept.parts.length == 0 || enumConcept.references.length == 0 
+            || enumConcept.enumProperties.length == 0 || enumConcept.primProperties.length == 0, 
+            `Enumeration '${enumConcept.name}' may not have  properties.`);
+    }
+
+
+    private checkClass(piClass: PiLangClass): void {
         LOGGER.log("Checking class '" + piClass.name + "'");
         this.simpleCheck(!!piClass.name, "Concept should have a name, it is empty");
         if(!!piClass.base) {
             this.checkConceptReference(piClass.base);
+        }
+
+        if( piClass.isRoot ) {
+            this.simpleCheck(!this.foundRoot,`There may be only one root class in the language definition, error in ('${piClass.name}').`);
+            this.foundRoot = true;
         }
 
         piClass.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));

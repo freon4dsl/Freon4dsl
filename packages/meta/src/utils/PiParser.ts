@@ -29,7 +29,7 @@ export class PiParser<DEFINITION> {
         } catch (e) {
             let errorstr = `${this.msg}: ${e} ${(e.location && e.location.start)? `[line ${e.location.start.line}, column ${e.location.start.column}`: ``}]`;
             LOGGER.error(this, errorstr);
-            if (verbose) LOGGER.log(JSON.stringify(e, null, 4));
+            // if (verbose) LOGGER.log(JSON.stringify(e, null, 4));
             process.exit(-1);
         }
         if (model !== null) {

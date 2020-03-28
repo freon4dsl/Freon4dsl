@@ -57,7 +57,7 @@ export class ConceptTemplate {
 
         // Template starts here
         const result = `
-            ${concept.primProperties.length > 0 ? `import { observable } from "mobx";` : ""}
+            ${(concept.primProperties.length > 0 || concept.enumProperties.length > 0)? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
             import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/core";
@@ -162,7 +162,7 @@ export class ConceptTemplate {
 
     generateEnumerationProperty(property: PiLangEnumProperty): string {
         return `
-            @observable ${property.name}: ${Names.enumeration((property.type.referedElement()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referedElement()))}.ANY;`};
+            @observable ${property.name}: ${Names.enumeration((property.type.referedElement()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referedElement()))}.$piANY;`};
         `;
     }
 

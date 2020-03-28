@@ -16,7 +16,10 @@ export class WalkerTemplate {
         import { ${langConceptType} } from "../../language/${language.name}";   
         import { ${language.classes.map(concept => `
                 ${concept.name}`).join(", ")} } from "../../language";     
-        // TODO change import to @project/core
+        import { ${language.enumerations.map(concept => `
+            ${concept.name}`).join(", ")} } from "../../language";     
+
+            // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
                 
@@ -58,8 +61,15 @@ export class WalkerTemplate {
                     LOGGER.error(this, "No worker found.");
                     return;
                 }
-                
-                }`).join("\n")}
+            }`).join("\n")}
+
+            ${language.enumerations.map(concept => `
+            public walk${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) {
+                if(!!this.myWorker) {
+                    this.myWorker.execBefore${concept.name}(modelelement);
+                    this.myWorker.execAfter${concept.name}(modelelement);
+                }
+            }`).join("\n")}
         }`;
     }
 

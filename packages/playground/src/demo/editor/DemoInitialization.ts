@@ -1,4 +1,4 @@
-import { DemoModelCreator } from "../_tests_/DemoModelCreator";
+import { DemoModelCreator } from "../__tests__/DemoModelCreator";
 import { DemoModel } from "../language";
 
 export class DemoInitialization {

@@ -371,6 +371,12 @@ export class PiLangPrimitiveProperty extends PiLangProperty {
 	// type is primitive, which is not a subtype of PiLangElementReference
 	// therefore, here we have:
     primType: string;
+    get type() : PiLangElementReference {
+        let value : PiLangElementReference = new PiLangElementReference();
+        value.name = this.primType;
+        return value;
+    }
+
 }
 
 export class PiLangEnumProperty extends PiLangProperty {

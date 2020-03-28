@@ -73,6 +73,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.scoperGenerator = new ScoperGenerator(language);
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper, this.verbose);
+        } else {
+            LOGGER.log("Generating default scoper");
         }
     }
 

@@ -13,11 +13,9 @@ export class ScoperTemplate {
         const generatedClassName : string = Names.scoper(language, scopedef);
         const namespaceClassName : string = Names.namespace(language, scopedef);
 
-        // TODO removed DemoAttribute and DemoVariable
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => `
-        ${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")}, DemoVariable, DemoAttribute } from "../../language";
+        import { ${allLangConcepts} } from "../../language";
         import { ${langConceptType} } from "../../language/${language.name}";        
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { PiScoper, PiNamedElement } from "@projectit/core"
@@ -66,4 +64,26 @@ export class ScoperTemplate {
             }
         }`;
     }
+
+    private createImports(language: PiLanguageUnit) : string {
+        // sort all names alphabetically
+        let tmp : string[] = [];
+        language.classes.map(c => 
+            tmp.push(Names.concept(c))
+        );
+        language.enumerations.map(c =>
+            tmp.push(Names.enumeration(c))
+        );
+        language.unions.map(c =>
+            tmp.push(Names.type(c))
+        );
+        tmp = tmp.sort();
+    
+        // the template starts here
+        return `
+            ${tmp.map(c => 
+                `${c}`
+            ).join(", ")}`;
+    }
+
 }

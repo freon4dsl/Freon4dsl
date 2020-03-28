@@ -38,6 +38,13 @@ export class CheckerTemplate {
             }`
         ).join("\n\n") }
         
+        ${language.enumerations.map(concept => 
+            `public execBefore${concept.name}(modelelement: ${concept.name}) {
+            }
+            public execAfter${concept.name}(modelelement: ${concept.name}) {
+            }`
+        ).join("\n\n") }
+
         private isValidName(name: string) : boolean {
             if (name == null) return false;
             // cannot start with number

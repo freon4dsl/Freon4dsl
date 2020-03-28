@@ -1,6 +1,6 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
+import { PiScopeDef, PiNamespace } from "../../metalanguage/PiScopeDefLang";
 
 export class NamespaceTemplate {
     constructor() {
@@ -17,7 +17,9 @@ export class NamespaceTemplate {
         return `
         import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => `
         ${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "../../language";
-        import { ${langConceptType} } from "../../language/Demo";
+        ${scopedef.namespaces.length == 0?
+            `import { ${language.rootConcept().name} } from "../../language";` : ``}  
+        import { ${langConceptType} } from "../../language/${language.name}";
         import { PiNamedElement } from "@projectit/core";
 
         export class ${generatedClassName} {
@@ -77,8 +79,10 @@ export class NamespaceTemplate {
             private isNameSpace(modelelement : ${allLangConcepts}) : boolean {
                 // if-statement generated for each concept marked with @namespace annotation!
                 ${scopedef.namespaces.map(ns => `
-                    ${ns.conceptRefs.map(ref => `if(modelelement instanceof ${ref.name}) return true`).join("; ")}
+                    ${ns.conceptRefs.map(ref => `if(modelelement instanceof ${ref.name}) return true;`).join("\n")}
                 `)}
+                ${scopedef.namespaces.length == 0?
+                `if(modelelement instanceof ${language.rootConcept().name}) return true;` : ``}              
                 return false;
             }
         

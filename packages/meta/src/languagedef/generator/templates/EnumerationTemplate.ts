@@ -61,10 +61,10 @@ export class EnumerationTemplate {
                     }`                   
                     ).join(";")}
                     default: 
-                    if (this.ANY !== null) {
-                        return new ${Names.enumeration(enumeration)}("ANY");
+                    if (this.$piANY !== null) {
+                        return new ${Names.enumeration(enumeration)}("$piANY");
                     } else {
-                        return ${Names.enumeration(enumeration)}.ANY;
+                        return ${Names.enumeration(enumeration)}.$piANY;
                     }
                 }
             }

@@ -28,6 +28,8 @@ import {
     DemoIfExpression,
     DemoVariableRef
 } from "../../language";
+import { DemoAttributeType } from "../../language";
+
 // TODO change import to @project/core
 import { PiLogger } from "../../../../../core/src/util/PiLogging";
 import { DemoWorker } from "./DemoWorker";
@@ -472,6 +474,13 @@ export class DemoWalker {
         } else {
             LOGGER.error(this, "No worker found.");
             return;
+        }
+    }
+
+    public walkDemoAttributeType(modelelement: DemoAttributeType, includeChildren?: boolean) {
+        if (!!this.myWorker) {
+            this.myWorker.execBeforeDemoAttributeType(modelelement);
+            this.myWorker.execAfterDemoAttributeType(modelelement);
         }
     }
 }

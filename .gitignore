@@ -34,14 +34,16 @@ yarn-error.log
 
 # generated files
 packages/docs/*/modules/*/examples/*
-packages/playground/src/demo/language/*
-packages/playground/src/demo/scoper/gen/*
-packages/playground/src/demo/editor/gen/*
 packages/meta/src/languagedef/parser/LanguageGrammar.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.js
 packages/meta/src/editordef/parser/EditorGrammar.js
-packages/playground/src/demo/language/*
-packages/playground/src/demo/validator/gen/DemoChecker.ts
-packages/playground/src/demo/validator/gen/DemoValidator.ts
 packages/meta/src/validatordef/parser/ValidatorGrammar.js
 packages/meta/src/typerdef/parser/PiTyperGrammar.js
+packages/playground/src/demo/language/*
+packages/playground/src/demo/scoper/gen/*
+packages/playground/src/demo/editor/gen/*
+packages/playground/src/demo/language/*
+packages/playground/src/demo/validator/gen/*
+packages/playground/src/demo/utils/gen/*
+packages/playground/src/taxrules/language/*
+packages/playground/src/taxrules/utils/gen/*
