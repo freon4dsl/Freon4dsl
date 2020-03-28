@@ -72,7 +72,7 @@ export class ProjectionTemplate {
                 }
             
                 getBox(exp: PiElement): Box {
-                    switch( exp.piLanguageConcept() ) {
+                    switch( exp.piLanguageConcept() ) { 
                         ${language.classes.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
                         ).join("  ")}
@@ -103,7 +103,7 @@ export class ProjectionTemplate {
                                 new LabelBox(element, "element-${p.name}-label", "${p.name}", {
                                     style: demoStyles.propertykeyword
                                 }),
-                                new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type}),
+                                new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type.name}),
                                 {
                                     placeHolder: "text",
                                     style: demoStyles.placeholdertext

@@ -30,170 +30,170 @@ import {
 } from "../../language";
 
 export class DemoCreator {
-    createDemoModel(name: string): DemoModel {
-        let result = new DemoModel();
-        result.name = name;
-        // let xx = this.createDemoEntity( ... );
-        // result.entities = [];
-        // result.entities.push(xx);
-        // let xx = this.createDemoFunction( ... );
-        // result.functions = [];
-        // result.functions.push(xx);
+    public createDemoModel(name: string, entities: DemoEntity, functions: DemoFunction): DemoModel {
+        let _result = new DemoModel();
+        _result.name = name;
 
-        return result;
+        if (entities !== null) _result.entities.push(entities);
+        if (functions !== null) _result.functions.push(functions);
+
+        return _result;
     }
-    createDemoEntity(name: string): DemoEntity {
-        let result = new DemoEntity();
-        result.name = name;
-        // let xx = this.createDemoAttribute( ... );
-        // result.attributes = [];
-        // result.attributes.push(xx);
-        // let xx = this.createDemoFunction( ... );
-        // result.functions = [];
-        // result.functions.push(xx);
+    public createDemoEntity(name: string, attributes: DemoAttribute, functions: DemoFunction): DemoEntity {
+        let _result = new DemoEntity();
+        _result.name = name;
 
-        return result;
+        if (attributes !== null) _result.attributes.push(attributes);
+        if (functions !== null) _result.functions.push(functions);
+
+        return _result;
     }
-    createDemoAttribute(name: string, declaredType: DemoAttributeType): DemoAttribute {
-        let result = new DemoAttribute();
-        result.name = name;
+    public createDemoAttribute(name: string, declaredType: DemoAttributeType): DemoAttribute {
+        let _result = new DemoAttribute();
+        _result.name = name;
+        _result.declaredType = declaredType;
 
-        return result;
+        return _result;
     }
-    createDemoFunction(name: string, declaredType: DemoAttributeType): DemoFunction {
-        let result = new DemoFunction();
-        result.name = name;
-        // result.expression = this.createDemoExpression( ... );
-        // let xx = this.createDemoVariable( ... );
-        // result.parameters = [];
-        // result.parameters.push(xx);
+    public createDemoFunction(
+        name: string,
+        declaredType: DemoAttributeType,
+        expression: DemoExpression,
+        parameters: DemoVariable
+    ): DemoFunction {
+        let _result = new DemoFunction();
+        _result.name = name;
+        _result.declaredType = declaredType;
+        _result.expression = expression;
+        if (parameters !== null) _result.parameters.push(parameters);
 
-        return result;
+        return _result;
     }
-    createDemoVariable(name: string, declaredType: DemoAttributeType): DemoVariable {
-        let result = new DemoVariable();
-        result.name = name;
+    public createDemoVariable(name: string, declaredType: DemoAttributeType): DemoVariable {
+        let _result = new DemoVariable();
+        _result.name = name;
+        _result.declaredType = declaredType;
 
-        return result;
-    }
-
-    createDemoPlaceholderExpression(): DemoPlaceholderExpression {
-        let result = new DemoPlaceholderExpression();
-
-        return result;
+        return _result;
     }
 
-    createDemoStringLiteralExpression(value: string): DemoStringLiteralExpression {
-        let result = new DemoStringLiteralExpression();
-        result.value = value;
+    public createDemoPlaceholderExpression(): DemoPlaceholderExpression {
+        let _result = new DemoPlaceholderExpression();
 
-        return result;
-    }
-    createDemoNumberLiteralExpression(value: string): DemoNumberLiteralExpression {
-        let result = new DemoNumberLiteralExpression();
-        result.value = value;
-
-        return result;
-    }
-    createDemoBooleanLiteralExpression(value: string): DemoBooleanLiteralExpression {
-        let result = new DemoBooleanLiteralExpression();
-        result.value = value;
-
-        return result;
-    }
-    createDemoAbsExpression(): DemoAbsExpression {
-        let result = new DemoAbsExpression();
-
-        // result.expr = this.createDemoExpression( ... );
-
-        return result;
+        return _result;
     }
 
-    createDemoMultiplyExpression(): DemoMultiplyExpression {
-        let result = new DemoMultiplyExpression();
+    public createDemoStringLiteralExpression(value: string): DemoStringLiteralExpression {
+        let _result = new DemoStringLiteralExpression();
+        _result.value = value;
 
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
-
-        return result;
+        return _result;
     }
-    createDemoPlusExpression(): DemoPlusExpression {
-        let result = new DemoPlusExpression();
+    public createDemoNumberLiteralExpression(value: string): DemoNumberLiteralExpression {
+        let _result = new DemoNumberLiteralExpression();
+        _result.value = value;
 
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
-
-        return result;
+        return _result;
     }
-    createDemoDivideExpression(): DemoDivideExpression {
-        let result = new DemoDivideExpression();
+    public createDemoBooleanLiteralExpression(value: string): DemoBooleanLiteralExpression {
+        let _result = new DemoBooleanLiteralExpression();
+        _result.value = value;
 
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
-
-        return result;
+        return _result;
     }
-    createDemoAndExpression(): DemoAndExpression {
-        let result = new DemoAndExpression();
+    public createDemoAbsExpression(expr: DemoExpression): DemoAbsExpression {
+        let _result = new DemoAbsExpression();
 
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
+        _result.expr = expr;
 
-        return result;
-    }
-    createDemoOrExpression(): DemoOrExpression {
-        let result = new DemoOrExpression();
-
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
-
-        return result;
+        return _result;
     }
 
-    createDemoLessThenExpression(): DemoLessThenExpression {
-        let result = new DemoLessThenExpression();
+    public createDemoMultiplyExpression(left: DemoExpression, right: DemoExpression): DemoMultiplyExpression {
+        let _result = new DemoMultiplyExpression();
 
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
+        _result.left = left;
+        _result.right = right;
 
-        return result;
+        return _result;
     }
-    createDemoGreaterThenExpression(): DemoGreaterThenExpression {
-        let result = new DemoGreaterThenExpression();
+    public createDemoPlusExpression(left: DemoExpression, right: DemoExpression): DemoPlusExpression {
+        let _result = new DemoPlusExpression();
 
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
+        _result.left = left;
+        _result.right = right;
 
-        return result;
+        return _result;
     }
-    createDemoEqualsExpression(): DemoEqualsExpression {
-        let result = new DemoEqualsExpression();
+    public createDemoDivideExpression(left: DemoExpression, right: DemoExpression): DemoDivideExpression {
+        let _result = new DemoDivideExpression();
 
-        // result.left = this.createDemoExpression( ... );
-        // result.right = this.createDemoExpression( ... );
+        _result.left = left;
+        _result.right = right;
 
-        return result;
+        return _result;
     }
-    createDemoFunctionCallExpression(): DemoFunctionCallExpression {
-        let result = new DemoFunctionCallExpression();
+    public createDemoAndExpression(left: DemoExpression, right: DemoExpression): DemoAndExpression {
+        let _result = new DemoAndExpression();
 
-        // result.functionDefinition = this.createDemoFunction( ... );
-        return result;
+        _result.left = left;
+        _result.right = right;
+
+        return _result;
     }
-    createDemoIfExpression(): DemoIfExpression {
-        let result = new DemoIfExpression();
+    public createDemoOrExpression(left: DemoExpression, right: DemoExpression): DemoOrExpression {
+        let _result = new DemoOrExpression();
 
-        // result.condition = this.createDemoExpression( ... );
-        // result.whenTrue = this.createDemoExpression( ... );
-        // result.whenFalse = this.createDemoExpression( ... );
+        _result.left = left;
+        _result.right = right;
 
-        return result;
+        return _result;
     }
-    createDemoVariableRef(referredName: string): DemoVariableRef {
-        let result = new DemoVariableRef();
-        result.referredName = referredName;
 
-        // result.attribute = this.createDemoAttribute( ... );
-        return result;
+    public createDemoLessThenExpression(left: DemoExpression, right: DemoExpression): DemoLessThenExpression {
+        let _result = new DemoLessThenExpression();
+
+        _result.left = left;
+        _result.right = right;
+
+        return _result;
+    }
+    public createDemoGreaterThenExpression(left: DemoExpression, right: DemoExpression): DemoGreaterThenExpression {
+        let _result = new DemoGreaterThenExpression();
+
+        _result.left = left;
+        _result.right = right;
+
+        return _result;
+    }
+    public createDemoEqualsExpression(left: DemoExpression, right: DemoExpression): DemoEqualsExpression {
+        let _result = new DemoEqualsExpression();
+
+        _result.left = left;
+        _result.right = right;
+
+        return _result;
+    }
+    public createDemoFunctionCallExpression(functionDefinition: DemoFunction): DemoFunctionCallExpression {
+        let _result = new DemoFunctionCallExpression();
+
+        _result.functionDefinition = functionDefinition;
+        return _result;
+    }
+    public createDemoIfExpression(condition: DemoExpression, whenTrue: DemoExpression, whenFalse: DemoExpression): DemoIfExpression {
+        let _result = new DemoIfExpression();
+
+        _result.condition = condition;
+        _result.whenTrue = whenTrue;
+        _result.whenFalse = whenFalse;
+
+        return _result;
+    }
+    public createDemoVariableRef(referredName: string, attribute: DemoAttribute): DemoVariableRef {
+        let _result = new DemoVariableRef();
+        _result.referredName = referredName;
+
+        _result.attribute = attribute;
+        return _result;
     }
 }
