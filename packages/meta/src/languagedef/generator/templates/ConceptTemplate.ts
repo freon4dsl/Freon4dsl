@@ -61,6 +61,7 @@ export class ConceptTemplate {
             import * as uuid from "uuid";
             import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/core";
+            import { PiElementReference } from "./PiElementReference";
             import { ${language.name}ConceptType } from "./${language.name}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
@@ -181,6 +182,11 @@ export class ConceptTemplate {
         return `
             ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType};
         `;
+        // const decorator = property.isList ? "@observablepartreference" : "@observablepart";
+        // const arrayType = property.isList ? "[]" : "";
+        // return `
+        //     ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.concept())}>${arrayType};
+        // `;
     }
 
 }

@@ -14,7 +14,7 @@ import {
     DemoStringLiteralExpression,
     DemoVariable
 } from "../language";
-import { PiElementReference } from "../PiElementReference";
+import { PiElementReference } from "../language/PiElementReference";
 import { demoStyles } from "../styles/styles";
 import { DemoEnvironment } from "./DemoEnvironment";
 import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
