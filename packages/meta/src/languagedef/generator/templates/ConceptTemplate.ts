@@ -49,10 +49,14 @@ export class ConceptTemplate {
             mobxImports.push("observablepart");
         }
         if (concept.references.some(ref => ref.isList)) {
-            mobxImports.push("observablelistreference");
+            if( !mobxImports.some( im => im === "observablelistpart")) {
+                mobxImports.push("observablelistpart");
+            }
         }
         if (concept.references.some(ref => !ref.isList)) {
-            mobxImports.push("observablereference");
+            if( !mobxImports.some( im => im === "observablepart")) {
+                mobxImports.push("observablepart");
+            }
         }
 
         // Template starts here
@@ -177,16 +181,11 @@ export class ConceptTemplate {
     }
 
     generateReferenceProperty(property: PiLangConceptProperty): string {
-        const decorator = property.isList ? "@observablelistreference" : "@observablereference";
+        const decorator = property.isList ? "@observablepartreference" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.referedElement())}${arrayType};
+            ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.referedElement())}>${arrayType};
         `;
-        // const decorator = property.isList ? "@observablepartreference" : "@observablepart";
-        // const arrayType = property.isList ? "[]" : "";
-        // return `
-        //     ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.concept())}>${arrayType};
-        // `;
     }
 
 }

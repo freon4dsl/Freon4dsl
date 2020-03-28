@@ -68,11 +68,11 @@ export class DemoProjection implements PiProjection {
                     },
                     (option: SelectOption) => {
                         // TODO PiElementReference
-                        element.functionDefinition = DemoEnvironment.getInstance().scoper.getFromVisibleElements(
+                        element.functionDefinition = new PiElementReference<DemoFunction>(DemoEnvironment.getInstance().scoper.getFromVisibleElements(
                             element,
                             option.label,
                             "DemoFunction"
-                        ) as DemoFunction, "DemoFunction";
+                        ) as DemoFunction, "DemoFunction");
                     }
                 ),
             new TextBox(element, "blabla", () => element?.functionDefinition.name, (v: string) => (0), {

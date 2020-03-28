@@ -11,15 +11,15 @@ export class PiTyperTemplate {
 
     generateTyper(language: PiLanguageUnit, typerdef: PiTypeDefinition): string {
         this.typerdef = typerdef;
-        const allLangConcepts : string = Names.allConcepts(language);   
-        const langConceptType : string = Names.languageConceptType(language);     
+        const allLangConcepts: string = Names.allConcepts(language);
+        const langConceptType: string = Names.languageConceptType(language);
         // TODO should take name into account
         // const generatedClassName : String = Names.typer(language, typerdef);
-        const generatedClassName : string = Names.typer(language);
-        const rootType : string = this.typerdef.typeroot.name;
-        const defaultType : string = this.findDefault();
-        
-        // Template starts here 
+        const generatedClassName: string = Names.typer(language);
+        const rootType: string = this.typerdef.typeroot.name;
+        const defaultType: string = this.findDefault();
+
+        // Template starts here
         return `
         import { ${allLangConcepts} } from "../../language";
         import { ${Names.typerInterface()} } from "@projectit/core";

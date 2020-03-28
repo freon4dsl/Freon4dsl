@@ -54,6 +54,7 @@ export class ProjectionTemplate {
                 PiBinaryExpression
             } from "@projectit/core";
             
+            import { PiElementReference } from "../../language/PiElementReference";
             ${language.classes.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
             ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../../language/${Names.enumeration(e)}";`).join("")}
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
@@ -177,11 +178,12 @@ export class ProjectionTemplate {
                                     }
                                 },
                                 (option: SelectOption) => {
-                                    element.${ref.name} = ${language.name}Environment.getInstance().scoper.getFromVisibleElements(
+                                    element.${ref.name} = new PiElementReference<${ref.type.name}>(
+                                        ${language.name}Environment.getInstance().scoper.getFromVisibleElements(
                                         element,
                                         option.label,
                                         "${ref.type.name}"
-                                    ) as ${ref.type.name};
+                                    ) as ${ref.type.name}, "${ref.type.name}");
                                 }
                             )
                         ` }`  )
