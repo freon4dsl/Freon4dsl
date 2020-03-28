@@ -1,4 +1,6 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
+import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";
@@ -20,6 +22,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected editorGenerator: EditorGenerator = new EditorGenerator();
     protected scoperGenerator: ScoperGenerator;         // constructor needs language
     protected validatorGenerator: ValidatorGenerator;   // constructor needs language
+    protected typerGenerator: PiTyperGenerator;   // constructor needs language
 
     public constructor() {
         super({
@@ -73,6 +76,12 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.scoperGenerator = new ScoperGenerator(language);
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper, this.verbose);
+        }
+        if (typerFile.length > 0) {
+            const typer = new PiTyperParser(language).parse(typerFile, this.verbose);
+            this.typerGenerator = new PiTyperGenerator(language);
+            this.typerGenerator.outputfolder = this.outputFolder;
+            this.typerGenerator.generate(typer, this.verbose);
         }
     }
 
