@@ -9,23 +9,32 @@ export class CheckerTemplate {
     }
 
     generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef): string {
+        let interfaceName = Names.workerInterface(language);
         
         // the template starts here
         return `
         import { ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
         import { ${this.createImports(language, validdef)} } from "../../language"; 
         import { ${Names.unparser(language)} } from "../../../demo/unparser/${Names.unparser(language)}";    
+        import { ${interfaceName} } from "../../../demo/utils/gen/${interfaceName}";
 
-        export class ${language.name}Checker {
+        export class ${language.name}Checker implements ${interfaceName}{
             myUnparser = new ${Names.unparser(language)}();
+            typer: ${Names.typerInterface()};
+            errorList: ${Names.errorClassName()}[] = [];
+
         ${validdef.conceptRules.map(ruleSet =>
-            `public check${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
+            `public execBefore${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
                 ${this.createRules(ruleSet)}
+            }
+            public execAfter${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
             }`
         ).join("\n\n")}
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
-            `public check${concept.name}(modelelement: ${concept.name}, typer: ${Names.typerInterface()}, errorList: ${Names.errorClassName()}[]) {
+            `public execBefore${concept.name}(modelelement: ${concept.name}) {
+            }
+            public execAfter${concept.name}(modelelement: ${concept.name}) {
             }`
         ).join("\n\n") }
         
@@ -70,22 +79,22 @@ export class CheckerTemplate {
             ruleSet.rules.map(r => 
                 `// ${r.toPiString()}
                 ${(r instanceof CheckEqualsTypeRule ?
-                    `if(!typer.equalsType(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) 
+                    `if(!this.typer.equalsType(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
+                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) 
                         + "' should be equal to (the type of) '" + this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
                     }`
                 : (r instanceof CheckConformsRule ?
-                    `if(!typer.conformsTo(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) + 
+                    `if(!this.typer.conformsTo(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
+                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) + 
                         "' does not conform to (the type of) '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
                     }`           
                 : (r instanceof NotEmptyRule ?
                     `if(${this.langRefToTypeScript(r.property)}.length == 0) {
-                        errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${this.langRefToTypeScript(r.property)}));
+                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${this.langRefToTypeScript(r.property)}));
                     }`
                 : (r instanceof ValidNameRule ?
                     `if(!this.isValidName(modelelement.${this.langRefToTypeScript(r.property)})) {
-                        errorList.push(new PiError("'" + modelelement.${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", ${this.langRefToTypeScript(r.property)}));
+                        this.errorList.push(new PiError("'" + modelelement.${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", ${this.langRefToTypeScript(r.property)}));
                     }`
                 : ""))))}`
             ).join("\n")}`;
