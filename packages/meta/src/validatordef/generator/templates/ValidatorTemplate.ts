@@ -1,6 +1,7 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
+import { PathProvider } from "utils/PathProvider";
 
 export class ValidatorTemplate {
     constructor() {
@@ -15,8 +16,8 @@ export class ValidatorTemplate {
         // Template starts here 
         return `
         import { ${allLangConcepts} } from "../../language";
-        import { ${Names.validatorInterface()}, ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
-        import { ${Names.checker(language,validdef)} } from "./${Names.checker(language,validdef)}";
+        import { ${Names.validatorInterface()}, ${Names.errorClassName()}, ${Names.typerInterface()} } from "${PathProvider.errorClass()}";
+        import { ${Names.checker(language,validdef)} } from "./${PathProvider.checker(language)}";
         import { ${walkerName} } from "../../../demo/utils/gen/${walkerName}";
 
         export class ${generatedClassName} implements ${Names.validatorInterface()} {

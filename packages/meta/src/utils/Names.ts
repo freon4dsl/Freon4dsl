@@ -7,7 +7,6 @@ import { PiValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
  * at each usage.
  */
 export class Names {
-    //TODO add check on undefined and null of parameter in all functions
     public static context(language: PiLanguageUnit): string {
         return language?.name + "Context";
     }
@@ -76,29 +75,29 @@ export class Names {
         return "PiValidator";
     }
 
-    public static namespace(language: PiLanguageUnit, scopedef: PiScopeDef): string {
-        return scopedef.scoperName + "Namespace";
-    }
-
-    // TODO validator gen needs this but it should be part of the environment
-    public static typer(language: PiLanguageUnit): string {
-        return language?.name + "Typer";
-    }
-
-    public static scoper(language: PiLanguageUnit, scopedef: PiScopeDef): string {
-        return scopedef?.scoperName + "Scoper";
-    }
-
-    public static validator(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        return validdef?.validatorName + "Validator"; 
-    }
-
-    public static checker(language: PiLanguageUnit, validdef: PiValidatorDef): string {
-        return validdef?.validatorName + "Checker"; 
-    }
-
     public static errorClassName(): string {
         return "PiError"; 
+    }
+
+    // TODO remove unused parameters
+    public static namespace(language: PiLanguageUnit, scopedef?: PiScopeDef): string {
+        return language?.name + "Namespace";
+    }
+
+    public static scoper(language: PiLanguageUnit, scopedef?: PiScopeDef): string {
+        return language?.name + "Scoper";
+    }
+
+    public static validator(language: PiLanguageUnit, validdef?: PiValidatorDef): string {
+        return language?.name + "Validator"; 
+    }
+
+    public static checker(language: PiLanguageUnit, validdef?: PiValidatorDef): string {
+        return language?.name + "Checker"; 
+    }
+
+    public static typer(language: PiLanguageUnit): string {
+        return language?.name + "Typer";
     }
 
     public static unparser(language: PiLanguageUnit): string {
