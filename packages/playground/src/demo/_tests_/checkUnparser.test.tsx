@@ -1,10 +1,6 @@
-import { PiError, PiElement } from "@projectit/core";
 import { DemoModel, DemoAttributeType, DemoMultiplyExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoDivideExpression, DemoVariableRef, DemoEntity, DemoAttribute, AllDemoConcepts, DemoFunction, DemoVariable } from "../language";
-import { DemoTyper } from "../typer/gen/DemoTyper";
-import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoUnparser } from "../unparser/DemoUnparser";
-import { NewDemoUnparser } from "../unparser/NewDemoUnparser";
 
 describe('Testing Unparser', () => {
     describe('Unparse DemoModel Instance', () => {
