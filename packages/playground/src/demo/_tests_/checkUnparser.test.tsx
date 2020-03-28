@@ -107,7 +107,7 @@ describe('Testing Unparser', () => {
             expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = ( 5 + 24 ), \n}");            
         });
 
-        test("complete example model with simple attribute types", () => {
+        test.skip("complete example model with simple attribute types", () => {
             let result : string = "";
             result = unparser.unparse(model, true);
             expect(result.length).toBe(556);                
