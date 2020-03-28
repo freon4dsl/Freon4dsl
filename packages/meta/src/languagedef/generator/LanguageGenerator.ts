@@ -1,3 +1,4 @@
+import { PiReferenceTemplate } from "./templates/PiReferenceTemplate";
 import { Helpers } from "../../utils/Helpers";
 import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";
 import { AllConceptsTemplate } from "./templates/AllConceptsTemplate";
@@ -27,6 +28,7 @@ export class LanguageGenerator {
         const typeTemplate = new UnionTemplate();
         const languageIndexTemplate = new LanguageIndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
+        const piReferenceTemplate = new PiReferenceTemplate();
 
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         Helpers.createDirIfNotExisting(this.languageFolder);
@@ -50,6 +52,10 @@ export class LanguageGenerator {
         });
 
         // TODO generate interfaces
+
+        if (verbose) LOGGER.log("Generating PeElementReference.ts");
+        var referenceFile = Helpers.pretty(piReferenceTemplate.generatePiReference(language), "PiElementReference");
+        fs.writeFileSync(`${this.languageFolder}/PiElementReference.ts`, referenceFile);
 
         if (verbose) LOGGER.log("Generating metatype info: " + language.name + ".ts");
         var languageFile = Helpers.pretty(languageTemplate.generateLanguage(language), "Model info");

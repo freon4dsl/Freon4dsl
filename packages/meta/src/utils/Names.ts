@@ -80,6 +80,11 @@ export class Names {
         return scopedef.scoperName + "Namespace";
     }
 
+    public static environment(language: PiLanguageUnit){
+        return language.name + "Environment";
+    }
+
+
     // TODO validator gen needs this but it should be part of the environment
     public static typer(language: PiLanguageUnit){
         return language?.name + "Typer";
