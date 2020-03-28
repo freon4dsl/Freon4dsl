@@ -120,7 +120,6 @@ concept DemoIfExpression base DemoExpression {
 }
 
 concept DemoVariableRef base DemoExpression {
-    referredName: string
     @reference attribute: DemoAttribute
 }
 

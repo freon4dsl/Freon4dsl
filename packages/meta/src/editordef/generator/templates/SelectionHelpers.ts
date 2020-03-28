@@ -9,7 +9,7 @@ export class SelectionHelpers {
         return `
         import { PiElement, SelectBox, SelectOption } from "@projectit/core";
         import { demoStyles } from "../../styles/styles";
-        import { DemoEnvironment } from "../DemoEnvironment";
+        import { ${Names.environment(language)} } from "../../environment/${Names.environment(language)}";
 
         ${language.enumerations.map(en =>
             `import { ${Names.enumeration(en)} } from "../../language/${Names.enumeration(en)}";`
@@ -60,7 +60,7 @@ export class SelectionHelpers {
                 role,
                 placeholder,
                 () => {
-                    return ${language.name}Environment.getInstance().scoper.getVisibleNames(element, metaType).map(name => ({
+                    return ${Names.environment(language)}.getInstance().scoper.getVisibleNames(element, metaType).map(name => ({
                         id: name,
                         label: name
                     }));

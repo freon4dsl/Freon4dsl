@@ -1,0 +1,57 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "downlevelIteration": true,
+    "declarationMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "es6",
+      "es2016.array.include"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": false,
+    "target": "es5",
+    "types": [
+      "node",
+      "jest",
+      "jest-enzyme"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@projectit/core/*": [
+        "packages/core/src/*"
+      ],
+      "@projectit/meta/*": [
+        "packages/meta/src/*"
+      ],
+      "@projectit/demo/*": [
+        "packages/demo/src/*"
+      ],
+      "@projectit/playground/*": [
+        "packages/playground/src/*"
+      ],
+      "@projectit/server/*": [
+        "packages/server/src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "../../packages/core/dist",
+    "../../packages/core/dist/*",
+    "packages/core/dist",
+    "packages/core/dist/*",
+    "packages/**/dist"
+  ]
+}
