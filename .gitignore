@@ -41,3 +41,7 @@ packages/meta/src/languagedef/parser/LanguageGrammar.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.js
 packages/meta/src/editordef/parser/EditorGrammar.js
 packages/playground/src/demo/language/*
+packages/playground/src/demo/validator/gen/DemoChecker.ts
+packages/playground/src/demo/validator/gen/DemoValidator.ts
+packages/meta/src/validatordef/parser/ValidatorGrammar.js
+packages/meta/src/typerdef/parser/PiTyperGrammar.js

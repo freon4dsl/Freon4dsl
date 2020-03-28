@@ -10,6 +10,7 @@ import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { EditorParser } from "../editordef/parser/EditorParser";
 import { PathProvider } from "../utils/PathProvider";
 import { PiLogger } from "../../../core/src/util/PiLogging";
+import { Helpers } from "../utils/Helpers";
 
 const LOGGER = new PiLogger("ProjectItGenerateAllAction"); // .mute();
 
@@ -34,40 +35,76 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             LOGGER.log("Starting generating all parts of your language as defined in "+ this.defFolder.value);
             LOGGER.log("Output will be generated in: " + this.outputFolder);
         }
+        let languageFile : string = "";
+        let editFile : string = "";
+        let validFile : string = "";
+        let scopeFile  : string = ""; 
+        let typerFile  : string = ""; 
         // find the definition files
-        if( !this.defFolder.value ) {
-            LOGGER.error( this, "No definitions folder, exiting.");
-            process.exit(-1);        
-        }
-        const languageFileShort : string = "LanguageDefinition.lang";
-        const languageFile = PathProvider.langFile(this.defFolder.value, languageFileShort);       // TODO find any file with .lang extension      
+        ({ languageFile, editFile, validFile, scopeFile, typerFile } = this.findDefinitionFiles(languageFile, editFile, validFile, scopeFile, typerFile));
+
         if (this.verbose) LOGGER.log("languageFile: " + languageFile);
-        const editFile : string = PathProvider.editFile(this.defFolder.value, languageFileShort);  // TODO find any file with .edit extension
         if (this.verbose) LOGGER.log("editFile: " + editFile);
-        const validFile : string = PathProvider.validFile(this.defFolder.value, languageFileShort); // TODO find any file with .valid extension
         if (this.verbose) LOGGER.log("validFile: " + validFile);
-        const scopeFile : string = PathProvider.scopeFile(this.defFolder.value, languageFileShort); // TODO find any file with .scop extension
         if (this.verbose) LOGGER.log("scopeFile: " + scopeFile);
+        if (this.verbose) LOGGER.log("typerFile: " + typerFile);
 
         // generate the language
         const language = new LanguageParser().parse(languageFile, this.verbose); 
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(language, this.verbose);
 
-        const editor = new EditorParser().parse(editFile, this.verbose);
-        this.editorGenerator.outputfolder = this.outputFolder;
-        this.editorGenerator.language = language;
-        this.editorGenerator.generate(editor, this.verbose);
+        if (editFile.length >0) {
+            const editor = new EditorParser().parse(editFile, this.verbose);
+            this.editorGenerator.outputfolder = this.outputFolder;
+            this.editorGenerator.language = language;
+            this.editorGenerator.generate(editor, this.verbose);
+        }
 
-        const validator = new ValidatorParser(language).parse(validFile, this.verbose);
-        this.validatorGenerator = new ValidatorGenerator(language);
-        this.validatorGenerator.outputfolder = this.outputFolder;
-        this.validatorGenerator.generate(validator, this.verbose);
+        if(validFile.length > 0) {
+            const validator = new ValidatorParser(language).parse(validFile, this.verbose);
+            this.validatorGenerator = new ValidatorGenerator(language);
+            this.validatorGenerator.outputfolder = this.outputFolder;
+            this.validatorGenerator.generate(validator, this.verbose);
+        }
 
-        const scoper = new ScoperParser(language).parse(scopeFile, this.verbose);
-        this.scoperGenerator = new ScoperGenerator(language);
-        this.scoperGenerator.outputfolder = this.outputFolder;
-        this.scoperGenerator.generate(scoper, this.verbose);
+        if (scopeFile.length > 0) {
+            const scoper = new ScoperParser(language).parse(scopeFile, this.verbose);
+            this.scoperGenerator = new ScoperGenerator(language);
+            this.scoperGenerator.outputfolder = this.outputFolder;
+            this.scoperGenerator.generate(scoper, this.verbose);
+        }
+    }
+
+    private findDefinitionFiles(languageFile: string, editFile: string, validFile: string, scopeFile: string, typerFile: string) {
+        if (!this.defFolder.value) {
+            LOGGER.error(this, "No definitions folder, exiting.");
+            process.exit(-1);
+        }
+        let myFileSet: string[] = Helpers.findFiles(this.defFolder.value);
+        if (myFileSet.length === 0) {
+            LOGGER.error(this, "No files found in '" + this.defFolder.value + "', exiting.");
+            process.exit(-1);
+        }
+        for (let filename of myFileSet) {
+            // TODO take into account multiple files with the same extension
+            if (/\.lang$/.test(filename)) {
+                languageFile = filename;
+            }
+            else if (/\.edit$/.test(filename)) {
+                editFile = filename;
+            }
+            else if (/\.valid$/.test(filename)) {
+                validFile = filename;
+            }
+            else if (/\.scop$/.test(filename)) {
+                scopeFile = filename;
+            }
+            else if (/\.type$/.test(filename)) {
+                typerFile = filename;
+            }
+        }
+        return { languageFile, editFile, validFile, scopeFile, typerFile };
     }
 
     protected onDefineParameters(): void {

@@ -1,17 +1,15 @@
-import { PiLangConceptReference, PiLangEnumerationReference, PiLangCUIReference, PiLangInterfaceReference } from "./PiLangReferences";
+import { PiLangElementReference, PiLangConceptReference, PiLangClassReference, PiLangInterfaceReference, PiLangEnumerationReference } from "./PiLangReferences";
 
+// PiLanguage structure
 export class PiLanguageUnit {
     name: string;
-    concepts: PiLangConcept[] = [];
+    classes: PiLangClass[] = [];
     enumerations: PiLangEnumeration[] = [];
     unions: PiLangUnion[] = [];
     interfaces: PiLangInterface[] = [];
 
-    constructor() {
-    }
-
-    findConcept(name: string): PiLangConcept {
-        return this.concepts.find(con => con.name === name);
+    findClass(name: string): PiLangClass {
+        return this.classes.find(con => con.name === name);
     }
 
     findEnumeration(name: string): PiLangEnumeration {
@@ -26,44 +24,56 @@ export class PiLanguageUnit {
         return this.interfaces.find(con => con.name === name);
     }
 
-    findCUI(name: string): PiLangCUI {
-        let result : PiLangCUI;
-        result = this.findConcept(name);
-        if (!!result) result = this.findUnion(name);
-        if (!!result) result = this.findInterface(name);
+    findConcept(name: string): PiLangConcept {
+        let result : PiLangConcept;
+        result = this.findClass(name);
+        if (result === undefined) result = this.findUnion(name);
+        if (result === undefined) result = this.findInterface(name);
+        if (result === undefined) result = this.findEnumeration(name);
         return result;
     }
 
-    findCI(name: string): PiLangCI {
-        let result : PiLangCI;
-        result = this.findConcept(name);
-        if (!!result) result = this.findInterface(name);
-        return result;
+	findBinaryExpConcept(name: string): PiLangBinaryExpressionConcept {
+        let result = this.findClass(name);
+        if (result instanceof PiLangBinaryExpressionConcept) return result;
+        return null;
     }
-
+    
+	findExpressionConcept(name: string): PiLangExpressionConcept {
+        let result = this.findClass(name);
+        if (result instanceof PiLangExpressionConcept) return result;
+        return null;
+    }
+    
     findExpressionBase(): PiLangConcept {
-        const result = this.concepts.find(c => {
-            return c instanceof PiLangExpressionConcept && (!!c.base ? !(c.base.concept() instanceof PiLangExpressionConcept) : true);
+        const result = this.classes.find(c => {
+            return c instanceof PiLangExpressionConcept && (!!c.base ? !(c.base.referedElement() instanceof PiLangExpressionConcept) : true);
         });
         return result;
     }
 
     expressionPlaceholder(): PiLangConcept {
-        return this.concepts.find(c => c instanceof PiLangExpressionConcept && c.isExpressionPlaceholder());
+        return this.classes.find(c => c instanceof PiLangExpressionConcept && c.isExpressionPlaceholder());
     }
 
     rootConcept():PiLangConcept{
-        return this.concepts.find(c => c.isRoot);
+        return this.classes.find(c => c.isRoot);
     }
 }
 
-export class PiLangCI {
-    language: PiLanguageUnit;
+// root of the inheritance structure
+export abstract class PiLangElement {
     name: string;
+}
+
+export class PiLangConcept extends PiLangElement {
+    language: PiLanguageUnit;
     primProperties: PiLangPrimitiveProperty[] = [];
     enumProperties: PiLangEnumProperty[] = [];
-    parts: PiLangElementProperty[] = [];
-    references: PiLangElementProperty[] = [];
+    parts: PiLangConceptProperty[] = [];
+    references: PiLangConceptProperty[] = [];
+    trigger: string;
+    triggerIsRegExp: boolean;
 
     // the following functions should be implemented by sybclasses
     // TODO investigate which implementations can be raised to this class
@@ -73,27 +83,55 @@ export class PiLangCI {
     allEnumProperties(): PiLangEnumProperty[] {
         return [];
     }
-    allParts(): PiLangElementProperty[] {
+    allParts(): PiLangConceptProperty[] {
         return [];
     }
-    allPReferences(): PiLangElementProperty[] {
+    allPReferences(): PiLangConceptProperty[] {
         return [];
     }
     allProperties(): PiLangProperty[] {
         return [];
-    } 
-
+	}
+	findFunction(name: string, formalparams: PiLangConceptReference[]): PiLangFunction {
+		throw new Error("Method not implemented.");
+	}
+	findConceptProperty(name: string): PiLangConceptProperty {
+		throw new Error("Method not implemented.");
+	}
+	findEnumProperty(name: string): PiLangEnumProperty {
+		throw new Error("Method not implemented.");
+	}
+	findPrimitiveProperty(name: string): PiLangPrimitiveProperty {
+		throw new Error("Method not implemented.");
+	}
+	findProperty(name: string): PiLangProperty {
+		throw new Error("Method not implemented.");
+	}
+    getTrigger(): string {
+        const p = this.trigger;
+        return (!!p ? p : "undefined");
+    }
 }
-export class PiLangConcept extends PiLangCI {
+
+export interface PiLangClassInterface {
+    name: string;
+    primProperties: PiLangPrimitiveProperty[];
+    enumProperties: PiLangEnumProperty[];
+    parts: PiLangConceptProperty[];
+    references: PiLangConceptProperty[];
+    trigger: string;
     isAbstract: boolean;
     isRoot:boolean;
-    base: PiLangConceptReference;
-    trigger: string;
-    triggerIsRegExp: boolean;
+    base: PiLangClassReference;
+}
+export class PiLangClass extends PiLangConcept implements PiLangClassInterface {
+    isAbstract: boolean;
+    isRoot:boolean;
+    base: PiLangClassReference;
 
     allPrimProperties(): PiLangPrimitiveProperty[] {
         if (this.base !== undefined) {
-            return this.primProperties.concat(this.base.concept().allPrimProperties());
+            return this.primProperties.concat(this.base.referedElement().allPrimProperties());
         } else {
             return this.primProperties;
         }
@@ -101,23 +139,23 @@ export class PiLangConcept extends PiLangCI {
 
     allEnumProperties(): PiLangEnumProperty[] {
         if (this.base !== undefined) {
-            return this.enumProperties.concat(this.base.concept().allEnumProperties());
+            return this.enumProperties.concat(this.base.referedElement().allEnumProperties());
         } else {
             return this.enumProperties;
         }
     }
 
-    allParts(): PiLangElementProperty[] {
+    allParts(): PiLangConceptProperty[] {
         if (this.base !== undefined) {
-            return this.parts.concat(this.base.concept().allParts());
+            return this.parts.concat(this.base.referedElement().allParts());
         } else {
             return this.parts;
         }
     }
 
-    allPReferences(): PiLangElementProperty[] {
+    allPReferences(): PiLangConceptProperty[] {
         if (this.base !== undefined) {
-            return this.references.concat(this.base.concept().allPReferences());
+            return this.references.concat(this.base.referedElement().allPReferences());
         } else {
             return this.references;
         }
@@ -129,13 +167,13 @@ export class PiLangConcept extends PiLangCI {
         return result;
     } 
 
-    allSubConceptsDirect(): PiLangConcept[] {
-        return this.language.concepts.filter(c => c.base?.concept() === this);
+    allSubConceptsDirect(): PiLangClass[] {
+        return this.language.classes.filter(c => c.base?.referedElement() === this);
     }
 
-    allSubConceptsRecursive(): PiLangConcept[] {
-        var result = this.language.concepts.filter(c => c.base?.concept() === this);
-        const tmp = this.language.concepts.filter(c => c.base?.concept() === this);
+    allSubConceptsRecursive(): PiLangClass[] {
+        var result = this.language.classes.filter(c => c.base?.referedElement() === this);
+        const tmp = this.language.classes.filter(c => c.base?.referedElement() === this);
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
         return result;
     }
@@ -161,40 +199,59 @@ export class PiLangConcept extends PiLangCI {
     }
 }
 
-export class PiLangInterface extends PiLangCI {
-    language: PiLanguageUnit;
-    name: string;  
+export class PiLangInterface extends PiLangConcept {
     base?: PiLangInterfaceReference; 
-    properties: PiLangPrimitiveProperty[] = [];
-    enumproperties: PiLangEnumProperty[] = [];
-    parts: PiLangElementProperty[] = [];
-    references: PiLangElementProperty[] = [];
     // isExpression: boolean;  
     trigger: string;
     // triggerIsRegExp: boolean;
 
-    allProperties(): PiLangPrimitiveProperty[] {
+    allPrimProperties(): PiLangPrimitiveProperty[] {
         if (this.base !== undefined) {
-            return this.properties.concat(this.base.concept().allProperties());
+            return this.primProperties.concat(this.base.referedElement().allPrimProperties());
         } else {
-            return this.properties;
+            return this.primProperties;
         }
     }
 
-    allParts(): PiLangElementProperty[] {
+    allEnumProperties(): PiLangEnumProperty[] {
         if (this.base !== undefined) {
-            return this.parts.concat(this.base.concept().allParts());
+            return this.enumProperties.concat(this.base.referedElement().allEnumProperties());
+        } else {
+            return this.enumProperties;
+        }
+    }
+
+    allParts(): PiLangConceptProperty[] {
+        if (this.base !== undefined) {
+            return this.parts.concat(this.base.referedElement().allParts());
         } else {
             return this.parts;
         }
     }
 
-    allPReferences(): PiLangElementProperty[] {
+    allPReferences(): PiLangConceptProperty[] {
         if (this.base !== undefined) {
-            return this.references.concat(this.base.concept().allPReferences());
+            return this.references.concat(this.base.referedElement().allPReferences());
         } else {
             return this.references;
         }
+    }
+
+    allProperties(): PiLangProperty[] {
+        let result : PiLangProperty[] = [];
+        result = result.concat(this.allPrimProperties()).concat(this.allEnumProperties()).concat(this.allParts()).concat(this.allPReferences());
+        return result;
+    } 
+
+    allSubConceptsDirect(): PiLangInterface[] {
+        return this.language.interfaces.filter(c => c.base?.referedElement() === this);
+    }
+
+    allSubConceptsRecursive(): PiLangInterface[] {
+        var result = this.language.interfaces.filter(c => c.base?.referedElement() === this);
+        const tmp = this.language.interfaces.filter(c => c.base?.referedElement() === this);
+        tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
+        return result;
     }
 
     getTrigger(): string {
@@ -209,16 +266,23 @@ export class PiLangInterface extends PiLangCI {
 
 }
 
-export class PiLangUnion {
-    language: PiLanguageUnit;
-    name: string;
+export class PiLangEnumeration extends PiLangConcept {
+	literals: string[] = [];
+	
+	allLiterals() : string[] {
+		return this.literals;
+	}
+
+	findLiteral(name: string) {
+		return this.literals.find(l => l === name);
+	}
+}
+
+export class PiLangUnion extends PiLangConcept {
     members: PiLangConceptReference[] = [];
     trigger: string;
     // triggerIsRegExp: boolean;
 
-    constructor() {
-    }
-    
     // returns all properties that are in all of the members
     allProperties(): PiLangPrimitiveProperty[] {
         // TODO check and test this code idea
@@ -237,26 +301,6 @@ export class PiLangUnion {
         return result;
     }
 
-    allParts(): PiLangElementProperty[] {
-        // if (this.base !== undefined) {
-        //     return this.parts.concat(this.base.concept().allParts());
-        // } else {
-        //     return this.parts;
-        // }
-        // TODO find right implementation
-        return null;
-    }
-
-    allPReferences(): PiLangElementProperty[] {
-        // if (this.base !== undefined) {
-        //     return this.references.concat(this.base.concept().allPReferences());
-        // } else {
-        //     return this.references;
-        // }
-        // TODO find right implementation
-        return null;
-    }
-
     getTrigger(): string {
         const p = this.trigger;
         return (!!p ? p : "undefined");
@@ -268,9 +312,7 @@ export class PiLangUnion {
     }
 }
 
-export type PiLangCUI = PiLangConcept | PiLangUnion | PiLangInterface ;
-
-export class PiLangExpressionConcept extends PiLangConcept {
+export class PiLangExpressionConcept extends PiLangClass {
     // isBinaryExpression: boolean;
     _isExpressionPlaceHolder: boolean;
 
@@ -317,67 +359,36 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
     }
 }
 
-export class PiLangProperty {
-    // TODO should 'owningConcept be replaced by piContainer()????
+export class PiLangProperty extends PiLangElement {
+	type: PiLangElementReference;
+	isList: boolean;
     owningConcept: PiLangConcept;
-    name: string;
-    isList: boolean;
 }
 
 export class PiLangPrimitiveProperty extends PiLangProperty {
     isStatic: boolean;
-    initialValue: string;
-    type: PiPrimTypesEnum;
-
-    constructor() {
-        super();
-    }
+	initialValue: string;
+	// type is primitive, which is not a subtype of PiLangElementReference
+	// therefore, here we have:
+    primType: string;
 }
 
 export class PiLangEnumProperty extends PiLangProperty {
     isStatic: boolean;
     initialValue: string;
     type: PiLangEnumerationReference;
-
-    constructor() {
-        super();
-    }
 }
 
-export class PiLangElementProperty extends PiLangProperty {
-    type: PiLangCUIReference;
-
-    constructor() {
-        super();
-    }
-
-    // findProperty(name:string) : PiLangProperty {
-    //     let result: PiLangEnumProperty = new PiLangEnumProperty();
-    //     let literal  = this.literals.find( elem => elem === name);
-    //     if(!(!!literal)) result.name = literal; 
-    //     return result;
-    // }
-}
-export class PiLangCUIProperty extends PiLangProperty {
-    type: PiLangCUIReference;
-
-    constructor() {
-        super();
-    }
-}
-export class PiLangEnumeration {
-    language: PiLanguageUnit;
-    name: string;
-    literals: string[] = [];
-
-    constructor() {
-    }
-    
+export class PiLangConceptProperty extends PiLangProperty {
+    type: PiLangConceptReference;
 }
 
-export enum PiPrimTypesEnum {
-    string = "string", 
-    number = "number", 
-    boolean = "boolean"
+// the following two classes are only used in the typer and validator definitions
+export class PiLangFunction extends PiLangElement {
+    formalparams: PiLangParameter[];
+    returnType: PiLangConceptReference;
 }
 
+export class PiLangParameter extends PiLangElement {
+    type: PiLangConceptReference;
+}

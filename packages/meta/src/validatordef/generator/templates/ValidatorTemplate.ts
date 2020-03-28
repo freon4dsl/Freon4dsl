@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguageUnit, PiLangElementProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
 
 export class ValidatorTemplate {
@@ -16,16 +16,16 @@ export class ValidatorTemplate {
         import { ${allLangConcepts} } from "../../language";
         import { ${Names.validatorInterface()}, ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
         import { ${langConceptType} } from "../../language/${language.name}";   
-        import { ${language.concepts.map(concept => `
+        import { ${language.classes.map(concept => `
                 ${concept.name}`).join(", ")} } from "../../language";     
-        import { ${Names.checker(language,validdef)} } from "./DemoChecker";
+        import { ${Names.checker(language,validdef)} } from "./${Names.checker(language,validdef)}";
 
-        export class ${generatedClassName} implements PiValidator {
+        export class ${generatedClassName} implements ${Names.validatorInterface()} {
             myTyper : ${Names.typerInterface()};
 
             public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${Names.errorClassName()}[]{
                 let errorlist : ${Names.errorClassName()}[] = [];
-                ${language.concepts.map(concept => `
+                ${language.classes.map(concept => `
                 if(modelelement instanceof ${concept.name}) {
                     this.validate${concept.name}(modelelement, errorlist, includeChildren );
                 }`).join("")}
@@ -33,7 +33,7 @@ export class ValidatorTemplate {
                 return errorlist;
             }
 
-            ${language.concepts.map(concept => `
+            ${language.classes.map(concept => `
                 public validate${concept.name}(modelelement: ${concept.name}, errorlist: ${Names.errorClassName()}[], includeChildren?: boolean) {
                     let myChecker = new ${Names.checker(language, validdef)}();
 

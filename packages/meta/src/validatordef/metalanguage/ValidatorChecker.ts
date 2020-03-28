@@ -1,43 +1,46 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangElementProperty, PiLangPrimitiveProperty, PiLangCUI, PiPrimTypesEnum } from "../../languagedef/metalanguage/PiLanguage";
-import { ConceptRuleSet, PiValidatorDef, EqualsTypeRule, ValidationRule, ConformsTypeRule, NotEmptyRule, LangRefExpression, EnumRefExpression, ThisExpression, PropertyRefExpression, ValidNameRule } from "./ValidatorDefLang";
+import { PiLanguageUnit, PiLangProperty, PiLangConcept } from "../../languagedef/metalanguage/PiLanguage";
+import { ConceptRuleSet, PiValidatorDef, CheckEqualsTypeRule, ValidationRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLangAppliedFeatureExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 
 const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
 export class ValidatorChecker extends Checker<PiValidatorDef> {
+    myExpressionChecker : PiLanguageExpressionChecker;
     
     constructor(language: PiLanguageUnit) {
         super();
         this.language = language;
+        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
     }
 
     public check(definition: PiValidatorDef, verbose: boolean): void {
         if (verbose) LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
+        if( this.language === null ) {
+            LOGGER.error(this,  "Validator definition checker does not known the language, exiting.");
+            process.exit(-1);
+        }
+
         this.nestedCheck(
             {
-                check: this.language !== null,
-                error: "Validator Definition Checker does not known the language",
+                check: this.language.name === definition.languageName,
+                error: `Language reference ('${definition.languageName}') in Validation Definition '${definition.validatorName}' does not match language '${this.language.name}'.`,
                 whenOk: () => {
-                    this.nestedCheck(
-                        {
-                            check: this.language.name === definition.languageName,
-                            error: `Language reference ('${definition.languageName}') in Validation Definition '${definition.validatorName}' does not match language '${this.language.name}'.`,
-                            whenOk: () => {
-                                definition.conceptRules.forEach(rule => {    
-                                    this.checkConceptRule(rule);
-                                });        
-                            }
-                        });
-                    }
+                    definition.conceptRules.forEach(rule => {    
+                        this.checkConceptRule(rule);
+                    });        
+                }
             });
-        }
+        this.errors = this.errors.concat(this.myExpressionChecker.errors);
+    }
 
     private checkConceptRule(rule: ConceptRuleSet) {
         this.checkConceptReference(rule.conceptRef);
 
-        let enclosingConcept = rule.conceptRef.concept(); 
+        let enclosingConcept = rule.conceptRef.referedElement(); 
         if (enclosingConcept) {
             rule.rules.forEach(tr => {
                 this.checkRule(tr, enclosingConcept);
@@ -57,15 +60,15 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 error: `Concept reference should have a name, but doesn't`,
                 whenOk: () => this.nestedCheck(
                     {
-                        check: reference.concept() !== undefined,
+                        check: reference.referedElement() !== undefined,
                         error: `Concept reference to ${reference.name} cannot be resolved`
                     })
             })
     }
 
     checkRule(tr: ValidationRule, enclosingConcept: PiLangConcept) {
-        if( tr instanceof EqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
-        if( tr instanceof ConformsTypeRule) this.checkConformsTypeRule(tr, enclosingConcept);
+        if( tr instanceof CheckEqualsTypeRule) this.checkEqualsTypeRule(tr, enclosingConcept);
+        if( tr instanceof CheckConformsRule) this.checkConformsTypeRule(tr, enclosingConcept);
         if( tr instanceof NotEmptyRule) this.checkNotEmptyRule(tr, enclosingConcept);
         if( tr instanceof ValidNameRule) this.checkValidNameRule(tr, enclosingConcept);
     }
@@ -76,36 +79,36 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         // otherwise set myProperty to the 'name' property of the EnclosingConcept
         let myProp: PiLangProperty;
         if( tr.property != null ) {
-            // TODO use this.resolvePropRef
+            // TODO use this.myExpressionChecker.checkLangExp
             let propRef = tr.property;
-            if (propRef.sourceName === "this" && tr.property.appliedFeature != null ) {
-                propRef = tr.property.appliedFeature;
+            if (propRef.sourceName === "this" && tr.property.appliedfeature != null ) {
+                propRef = tr.property.appliedfeature;
             }
             for( let e of enclosingConcept.allProperties() ) {
                 if(e.name === propRef.sourceName) myProp = e;
             }
             this.simpleCheck(myProp != null, "Cannot find property '" + propRef.sourceName + "' in " + enclosingConcept.name);
-            this.simpleCheck(propRef.appliedFeature == null, 
+            this.simpleCheck(propRef.appliedfeature == null, 
                             "Property used in a ValidName Rule should be a direct property of '" + enclosingConcept.name + "'");
         } else {
             myProp = enclosingConcept.allProperties().find(e => {
                 e.name === "name"
             });
             this.simpleCheck(myProp == null, "Cannot find property 'name' in " + enclosingConcept.name);
-            tr.property = new PropertyRefExpression();
+            tr.property = new PiLangAppliedFeatureExp();
             tr.property.sourceName = "name";
         }
         // check if found property is of type 'string'
-        if (myProp) 
-            this.simpleCheck(myProp instanceof PiLangPrimitiveProperty && (myProp as PiLangPrimitiveProperty).type === PiPrimTypesEnum.string,
-                        "Property '" + myProp.name + "' should have type 'string'");
+        // if (myProp) 
+        //     this.simpleCheck(myProp instanceof PiLangPrimitiveProperty && (myProp as PiLangPrimitiveProperty).type === PiPrimTypesEnum.string,
+        //                 "Property '" + myProp.name + "' should have type 'string'");
         // TODO find out which elements of the AST need to be set
         // if(tr.property instanceof PropertyRefExpression) {
         //     (tr.property as PropertyRefExpression).astProperty = myProp;
         // }
     }
 
-    checkEqualsTypeRule(tr: EqualsTypeRule, enclosingConcept: PiLangConcept) {
+    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: PiLangConcept) {
         // check references to types
         this.nestedCheck(
             {
@@ -113,13 +116,13 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 error: `Typecheck "equalsType" should have two types to compare`,
                 whenOk: () => {
                     // if (verbose) LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
-                    this.checkLangReference(tr.type1, enclosingConcept),
-                    this.checkLangReference(tr.type2, enclosingConcept)  
+                    this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept),
+                    this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept)  
                 }
             })
     }
 
-    checkConformsTypeRule(tr: ConformsTypeRule, enclosingConcept: PiLangConcept) {
+    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: PiLangConcept) {
         // check references to types
         this.nestedCheck(
             {
@@ -127,8 +130,8 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 error: `Typecheck "conformsTo" should have two types to compare`,
                 whenOk: () => {
                     // if (verbose) LOGGER.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
-                    this.checkLangReference(tr.type1, enclosingConcept);
-                    this.checkLangReference(tr.type2, enclosingConcept)  
+                    this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
+                    this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept)  
                 }
             })
     }
@@ -139,94 +142,9 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         // if so, set myProperty to this property,
         let myProp : PiLangProperty;
         if( nr.property != null ) {
-            this.checkLangReference(nr.property, enclosingConcept);
+            this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
         }
         // TODO set nr.property
-    }
-
-    checkLangReference(langRef: LangRefExpression, enclosingConcept:PiLangConcept) {
-        // if (verbose) LOGGER.log("Checking Language Reference " + langRef.sourceName );
-        if (langRef instanceof EnumRefExpression) {
-            this.checkEnumRefExpression(langRef, enclosingConcept);
-        } else if (langRef instanceof ThisExpression) {
-            this.checkThisExpression(langRef, enclosingConcept);
-        } else if (langRef instanceof PropertyRefExpression) {
-            this.checkPropertyRefExpression(langRef, enclosingConcept);
-        }
-    }
-
-    checkThisExpression(langRef: ThisExpression, enclosingConcept:PiLangConcept) {
-        // if (verbose) LOGGER.log("Checking 'this' Reference " + langRef.makeString());
-        this.nestedCheck(
-            {
-                check: langRef.appliedFeature != null,
-                error: `'this' should be followed by '.', followed by a property name`,
-                whenOk: () => {
-                    this.resolvePropRef(langRef.appliedFeature, enclosingConcept);
-                }
-            }
-        )
-    }
-
-    checkEnumRefExpression(langRef: EnumRefExpression, enclosingConcept:PiLangConcept) {
-        // if (verbose) LOGGER.log("Checking Enumeration Reference " + langRef.makeString());
-        let myEnumType = this.language.findEnumeration(langRef.sourceName);
-        this.nestedCheck({
-            check: myEnumType != null,
-            error: `Cannot find enumeration ${langRef.sourceName}`,
-            whenOk: () => {
-                this.nestedCheck({
-                    check: langRef.literalName != null, 
-                    error:`${langRef.sourceName} should be followed by ':', followed by a literal`,
-                    whenOk: () => {
-                        // find literal in enum
-                        let myLiteral = myEnumType.literals.find(l => l === langRef.literalName);
-                        this.simpleCheck(myLiteral != null,`Literal '${langRef.literalName}' unknown in '${langRef.sourceName}'`);
-                        // set the found languge element
-                        langRef.astEnumType = myEnumType;
-                        // if (verbose) LOGGER.log("FOUND enum " + langRef.astEnumType.name + " with literal " + langRef.literalName);
-                    }
-                });
-            }
-        });
-    }
-
-    checkPropertyRefExpression(langRef: PropertyRefExpression, enclosingConcept:PiLangConcept) {
-        LOGGER.log("Checking Property Reference " + langRef.toString());
-        // TODO implement
-    }
-
-    resolvePropRef(feat: PropertyRefExpression, enclosingConcept:PiLangCUI) {
-        let found : PiLangProperty;
-        for ( let e of enclosingConcept.allProperties() ) {
-            if (e.name === feat.sourceName) {
-                found = e;
-            }
-        }
-        if (!found) {
-            for ( let e of enclosingConcept.allParts() ) {
-                if (e.name === feat.sourceName) {
-                    found = e;
-                    // feat.myProperty = e;
-                }
-            }              
-        }
-        if (!found) {
-            for ( let e of enclosingConcept.allPReferences() ) {
-                if (e.name === feat.sourceName) {
-                    found = e;
-                }
-            }              
-        }
-        this.nestedCheck({
-            check: found != null, 
-            error: "Cannot find property, part, or reference '" + feat.sourceName + "' in '" + enclosingConcept.name + "'",
-            whenOk: () => {
-                if(feat.appliedFeature != null && found instanceof PiLangElementProperty ) {
-                    this.resolvePropRef(feat.appliedFeature, (found as PiLangElementProperty).type.concept());        
-                }
-            }
-        });
     }
 }
 

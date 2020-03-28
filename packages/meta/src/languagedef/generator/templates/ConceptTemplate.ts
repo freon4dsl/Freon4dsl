@@ -1,14 +1,14 @@
 import { Names } from "../../../utils/Names";
-import { PiLangConcept, PiLangElementProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept } from "../../metalanguage/PiLanguage";
+import { PiLangConcept, PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
     }
 
-    generateConcept(concept: PiLangConcept): string {
+    generateConcept(concept: PiLangClass): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? Names.concept(concept.base.concept()) : "MobxModelElementImpl";
+        const extendsClass = hasSuper ? Names.concept(concept.base.referedElement()) : "MobxModelElementImpl";
         const hasName = concept.primProperties.some(p => p.name === "name");
         // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
@@ -22,15 +22,15 @@ export class ConceptTemplate {
 
         const imports = Array.from(
             new Set(
-                concept.parts.map(p => Names.concept(p.type.concept()))
-                    .concat(concept.references.map(r => Names.concept(r.type.concept())))
+                concept.parts.map(p => Names.concept(p.type.referedElement()))
+                    .concat(concept.references.map(r => Names.concept(r.type.referedElement())))
                     .concat(language.enumerations.map(e => Names.enumeration(e)))
                     .concat(language.unions.map(e => Names.type(e)))
                     .concat(Names.concept(language.expressionPlaceholder()))
                     .concat([baseExpressionName])
                     .filter(name => !(name === concept.name))
                     // .concat(element.properties.map(p => p.type).filter(t => language.enumerations.some(e => e.name === t)))
-                    .concat((concept.base ? Names.concept(concept.base.concept()) : null))
+                    .concat((concept.base ? Names.concept(concept.base.referedElement()) : null))
                     .filter(r => r !== null)
             )
         );
@@ -156,30 +156,30 @@ export class ConceptTemplate {
 
     generatePrimitiveProperty(property: PiLangPrimitiveProperty): string {
         return `
-            @observable ${property.name}: ${property.type} ${property.isList ? "[]" : ""};
+            @observable ${property.name}: ${property.primType} ${property.isList ? "[]" : ""};
         `;
     }
 
     generateEnumerationProperty(property: PiLangEnumProperty): string {
         return `
-            @observable ${property.name}: ${Names.enumeration((property.type.enumeration()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.enumeration()))}.ANY;`};
+            @observable ${property.name}: ${Names.enumeration((property.type.referedElement()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referedElement()))}.ANY;`};
         `;
     }
 
-    generatePartProperty(property: PiLangElementProperty): string {
+    generatePartProperty(property: PiLangConceptProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
-        const initializer = (property.type.concept().expression() ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
+        const initializer = ((property.type.referedElement() instanceof PiLangExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType} ${initializer};
+            ${decorator} ${property.name} : ${Names.concept(property.type.referedElement())}${arrayType} ${initializer};
         `;
     }
 
-    generateReferenceProperty(property: PiLangElementProperty): string {
+    generateReferenceProperty(property: PiLangConceptProperty): string {
         const decorator = property.isList ? "@observablelistreference" : "@observablereference";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.concept())}${arrayType};
+            ${decorator} ${property.name} : ${Names.concept(property.type.referedElement())}${arrayType};
         `;
     }
 

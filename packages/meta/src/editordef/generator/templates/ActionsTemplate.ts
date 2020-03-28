@@ -32,10 +32,10 @@ export class ActionsTemplate {
                 RIGHT_MOST
             } from "@projectit/core";
             
-            ${language.concepts.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
+            ${language.classes.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                ${language.concepts.filter(c => c.expression() && !c.isAbstract && !!c.trigger).map(c =>
+                ${language.classes.filter(c => c.expression() && !c.isAbstract && !!c.trigger).map(c =>
             `{
                     trigger: ${c.triggerIsRegExp ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
                     activeInBoxRoles: [
@@ -49,7 +49,7 @@ export class ActionsTemplate {
             ];
 
             export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
-                ${language.concepts.filter(c => c.binaryExpression() && !c.isAbstract).map(c =>
+                ${language.classes.filter(c => c.binaryExpression() && !c.isAbstract).map(c =>
             `{
                     trigger: "${(c as PiLangBinaryExpressionConcept).getSymbol()}",
                     activeInBoxRoles: [
@@ -68,13 +68,13 @@ export class ActionsTemplate {
             ];
             
             export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
-                ${flatten(language.concepts.map(c => c.parts)).filter(p => p.isList).map(part => {
+                ${flatten(language.classes.map(c => c.parts)).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
-                    const partConcept = part.type.concept();
+                    const partConcept = part.type.referedElement();
                 return `
                 {
                     activeInBoxRoles: ["new-${part.name}"],
-                    trigger: "${!!part.type.concept().trigger ? part.type.concept().getTrigger() : part.name}",
+                    trigger: "${!!part.type.referedElement().trigger ? part.type.referedElement().getTrigger() : part.name}",
                     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                         var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
                         const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
@@ -87,9 +87,9 @@ export class ActionsTemplate {
             ];
             
             export const KEYBOARD: KeyboardShortcutBehavior[] = [
-                ${flatten(language.concepts.map(c => c.parts)).filter(p => p.isList).map(part => {
+                ${flatten(language.classes.map(c => c.parts)).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
-                    const partConcept = part.type.concept();
+                    const partConcept = part.type.referedElement();
                     return `
                     {
                         activeInBoxRoles: ["new-${part.name}"],

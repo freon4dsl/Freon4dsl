@@ -27,16 +27,14 @@ export class PiParser<DEFINITION> {
         try {
             model = this.parser["parse"](langSpec);
         } catch (e) {
-            LOGGER.error(this, this.msg + ": Exception in Parser: " + e);
+            let errorstr = `${this.msg}: ${e} ${(e.location && e.location.start)? `[line ${e.location.start.line}, column ${e.location.start.column}`: ``}]`;
+            LOGGER.error(this, errorstr);
             if (verbose) LOGGER.log(JSON.stringify(e, null, 4));
-            if (e.location && e.location.start)
-                LOGGER.error(this, "\tError location: line " + e.location.start.line + ", column " + e.location.start.column);
             process.exit(-1);
         }
         if (model !== null) {
             this.checker.check(model, verbose);
             if (this.checker.hasErrors()) {
-                LOGGER.error(this, this.msg + " checking errors:");
                 this.checker.errors.forEach(error => LOGGER.error(this, error));
                 LOGGER.error(this, "Stopping because of errors.");
                 process.exit(-1);
@@ -44,7 +42,7 @@ export class PiParser<DEFINITION> {
             return model;
         } else {
             // TODO change error message
-            LOGGER.error(this, "ERROR: Language parser does not return a PiLanguage");
+            LOGGER.error(this, "ERROR: Parser does not return a PiLanguage");
             process.exit(-1);
         }
     }

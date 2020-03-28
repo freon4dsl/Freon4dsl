@@ -6,3 +6,5 @@ export const SCOPER_FOLDER = "scoper";
 export const SCOPER_GEN_FOLDER = "scoper/gen";
 export const VALIDATOR_FOLDER = "validator";
 export const VALIDATOR_GEN_FOLDER = "validator/gen";
+export const TYPER_FOLDER = "typer";
+export const TYPER_GEN_FOLDER = "typer/gen";

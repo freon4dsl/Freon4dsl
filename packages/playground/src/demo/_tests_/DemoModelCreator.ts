@@ -226,6 +226,9 @@ export class DemoModelCreator  {
         else if (typeof incoming === "string") {
             mine = new DemoStringLiteralExpression();
             (mine as DemoStringLiteralExpression).value = incoming;
+        }else {
+            // When no expression can be created, return a place holder expression.
+            mine = new DemoPlaceholderExpression();
         }
         return mine;
     }

@@ -4,6 +4,8 @@ import { ProjectItGenerateAllAction } from "./ProjectItGenerateAllAction";
 import { ProjectItGenerateEditor } from "./ProjectItGenerateEditor";
 import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
+import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
+import { ProjectItTestLanguageExpressions } from "./ProjectItTestLanguageExpressions";
 
 export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
@@ -11,6 +13,8 @@ export class ProjectItParser extends CommandLineParser {
     private editorGenerator: ProjectItGenerateEditor;
     private scoperGenerator: ProjectItGenerateScoper;
     private validatorGenerator: ProjectItGenerateValidator;
+    private typerGenerator: ProjectItGenerateTyper;
+    private testGenerator: ProjectItTestLanguageExpressions;
     private verboseArg: CommandLineFlagParameter;
 
     public constructor() {
@@ -18,18 +22,23 @@ export class ProjectItParser extends CommandLineParser {
             toolFilename: "projectit",
             toolDescription: "ProjectIt toolset for generating languages, scopers, editors, etc."
         });
-        // console.log("PROJECT_IT COMMANDLINE PARSER");
 
         this.languageGenerator = new ProjectItGenerateLanguage();
         this.allGenerator = new ProjectItGenerateAllAction();
         this.editorGenerator = new ProjectItGenerateEditor();
         this.scoperGenerator = new ProjectItGenerateScoper();
         this.validatorGenerator = new ProjectItGenerateValidator();
+        this.typerGenerator = new ProjectItGenerateTyper();
         this.addAction(this.languageGenerator);
         this.addAction(this.allGenerator);
         this.addAction(this.editorGenerator);
         this.addAction(this.scoperGenerator);
         this.addAction(this.validatorGenerator);
+        this.addAction(this.typerGenerator);
+
+        // testGenerator is used only for testing purposes, should be removed from release
+        this.testGenerator = new ProjectItTestLanguageExpressions();
+        this.addAction(this.testGenerator);
     }
 
     protected onDefineParameters(): void { 
@@ -46,6 +55,8 @@ export class ProjectItParser extends CommandLineParser {
         this.editorGenerator.verbose = this.verboseArg.value;
         this.scoperGenerator.verbose = this.verboseArg.value;
         this.validatorGenerator.verbose = this.verboseArg.value;
+        this.typerGenerator.verbose = this.verboseArg.value;
+        this.testGenerator.verbose = this.verboseArg.value;
 
         return super.onExecute();
     }

@@ -12,7 +12,7 @@ export class DemoTyper implements PiTyper {
         return false;
     }
 
-    inferType(modelelement: AllDemoConcepts): DemoType {
+    inferType(modelelement: AllDemoConcepts): DemoType { 
         // generate if statement for all lang elements that have @hasType annotation
         // the result should be according to the @inferType rules
         // i.e. every @hasType annotated elem should have an @inferType rule
