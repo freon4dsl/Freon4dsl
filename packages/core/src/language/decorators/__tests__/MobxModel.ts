@@ -1,22 +1,20 @@
 import "reflect-metadata";
 import { PiElementReferenceM } from "./PiElementReferenceM";
 import { observablelistpart, observablelistreference, observablepart, observablereference } from "../MobxModelDecorators";
-import { DecoratedModelElement } from "../DecoratedModelElement";
+import { DecoratedModelElement, MobxModelElementImpl } from "../DecoratedModelElement";
 import { observable } from "mobx";
 
-export class MobxTestElement implements DecoratedModelElement {
-    container: DecoratedModelElement;
-    propertyName: string;
-    propertyIndex: number;
+export class MobxTestElement extends MobxModelElementImpl {
 
     @observable public name: string;
 
     constructor(name: string) {
+        super();
         this.name = name;
     }
 
     toString() {
-        return "Expression '" + this.name + "'";
+        return "MobxTestElement '" + this.name + "'";
     }
 
     text(): string {
@@ -72,28 +70,3 @@ export class MobxTestReferences extends MobxTestElement {
     }
 }
 
-// export function printExp(exp: MobxTestElement | null, indent: string) {
-//     if (exp instanceof BinExpression) {
-//         console.log(indent + (exp as BinExpression).name);
-//         printExp(exp.left, indent + "    ");
-//         printExp(exp.right, indent + "    ");
-//     } else if (exp instanceof FunctionCallExpression) {
-//         console.log("Funcvtion call " + exp.name);
-//         exp.args.forEach(s => {
-//             printExp(s, indent + " s  ");
-//         });
-//     } else if (exp instanceof MobxTestElement) {
-//         const cont = exp.container as MobxTestElement;
-//         console.log(
-//             indent +
-//                 exp.name +
-//                 " => " +
-//                 (cont ? cont.name : "null") +
-//                 " : " +
-//                 exp.propertyName +
-//                 "[" +
-//                 exp.propertyIndex +
-//                 "]"
-//         );
-//     }
-// }
