@@ -1,4 +1,4 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiLangConceptReference } from "../../languagedef/metalanguage";
 import {
     Direction, ListJoin,
     ListJoinType,
@@ -12,6 +12,7 @@ import {
 } from "../metalanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
+// This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
 export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
     const result = new PiLangConceptReference();
@@ -25,21 +26,11 @@ export function createConceptEditor(data: Partial<PiDefEditorConcept>): PiDefEdi
     // console.log("creating concept " + data.name);
     const result = new PiDefEditorConcept();
 
-    result.isExpression = !!data.isExpression;
-    result.isBinaryExpression = !!data.isBinaryExpression;
-    result.isExpressionPlaceHolder = !!data.isExpressionPlaceHolder;
-
-    if (!!data.priority) {
-        result.priority = data.priority;
-    }
     if (!!data.trigger) {
         result.trigger = data.trigger;
     }
     if (!!data.symbol) {
         result.symbol = data.symbol;
-    }
-    if (!!data.priority) {
-        result.priority = data.priority;
     }
     if (!!data.projection) {
         result.projection = data.projection;
@@ -53,15 +44,15 @@ export function createLanguageEditor(data: Partial<PiDefEditorLanguage>): PiDefE
     if (!!data.name) {
         result.name = data.name;
     }
-    if (!!data.concepts) {
-        result.concepts = data.concepts;
+    if (!!data.conceptEditors) {
+        result.conceptEditors = data.conceptEditors;
     }
     if (!!data.enumerations) {
         result.enumerations = data.enumerations;
     }
 
     // Ensure all references to the language are set.
-    result.concepts.forEach(concept => {
+    result.conceptEditors.forEach(concept => {
         concept.languageEditor = result;
     });
     result.enumerations.forEach(enumeration => {
@@ -102,8 +93,6 @@ export function createIndent(data: Partial<PiDefEditorProjectionIndent>): PiDefE
 }
 
 export function createText(data: string): PiDefEditorProjectionText {
-    const a: string = data;
-    // console.log(`createText <<${a}>>`);
     const result = new PiDefEditorProjectionText();
     if (!!data) {
         result.text = data;
@@ -136,18 +125,17 @@ export function createJoinType(data: Object): ListJoinType {
 
 export function createListJoin(data: Partial<ListJoin>): ListJoin {
     const result = new ListJoin();
-    if( !!data.direction) {
-        result.direction = data.direction
+    if (!!data.direction) {
+        result.direction = data.direction;
     }
-    if( !!data.joinType) {
-        result.joinType = data.joinType
+    if (!!data.joinType) {
+        result.joinType = data.joinType;
     }
-    if( !!data.joinText) {
-        result.joinText = data.joinText
+    if (!!data.joinText) {
+        result.joinText = data.joinText;
     }
     return result;
 }
-
 
 export function createExpression(data: Partial<PiDefEditorProjectionExpression>): PiDefEditorProjectionExpression {
     // console.log("createExpression <<" + data.propertyName + ">>");
@@ -159,9 +147,7 @@ export function createExpression(data: Partial<PiDefEditorProjectionExpression>)
 }
 
 export function createNewline(): PiDefEditorNewline {
-    // console.log("createNewline <<>>");
-    const result = new PiDefEditorNewline();
-    return result;
+    return new PiDefEditorNewline();
 }
 
 export function createEnumeration(data: Partial<PiDefEditorEnumeration>): PiDefEditorEnumeration {

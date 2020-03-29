@@ -3,34 +3,35 @@
 }
 
 Editor_Definition
-  = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws c:(concept)* ws
+  = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws concepts:(conceptEditor)* ws
     {
         return creator.createLanguageEditor({
-            "name": name,
-            "concepts": c
+            "name"          : name,
+            "conceptEditors": concepts
         });
     } 
 
 conceptRef = name:var { return creator.createConceptReference( { "name": name}); }
 
-concept = concept:conceptRef curly_begin ws
-             projection:projection?
-             trigger:trigger?
-             symbol:symbol?
-         curly_end
+conceptEditor =
+            concept:conceptRef curly_begin ws
+                projection:projection?
+                trigger:trigger?
+                symbol:symbol?
+            curly_end
 {
     return creator.createConceptEditor({
-        "trigger": ( !!trigger),
-        "symbol": ( !!symbol),
+        "trigger"   : !!trigger,
+        "symbol"    : !!symbol,
         "projection": projection
     });
 }
 
 projection = "@projection" ws name:var projection_begin
-                   l:line*
+                   lines:line*
               projection_end
               {
-                    return creator.createProjection({ "lines" : l, "name": name });
+                    return creator.createProjection({ "lines" : lines, "name": name });
               }
 
 templateSpace = s:[ ]+
@@ -47,35 +48,32 @@ sub_projection = "[[" ws "this" ws "." ws prop:var ws
 
 listJoin =  l:listJoinSimple+
                 {
-                    let direction = l.find(j => !!j.direction);
-                    direction = (!!direction ? direction.direction : undefined);
-                    let joinType = l.find(j => !!j.joinType);
-                    joinType = (!!joinType ? joinType.joinType : undefined);
-                    let joinText = l.find(j => !!j.joinText);
-                    joinText = (!!joinText ? joinText.joinText : undefined);
+                    let directionObject = l.find(j => !!j.direction);
+                    let joinTypeObject  = l.find(j => !!j.joinType);
+                    let joinTextObject  = l.find(j => !!j.joinText);
 
-                    return creator.createListJoin( {"direction": direction,
-                                                    "joinType": joinType,
-                                                    "joinText": joinText } );
+                    return creator.createListJoin( {"direction": (!!directionObject ? directionObject.direction : undefined),
+                                                    "joinType" : (!!joinTypeObject ? joinTypeObject.joinType    : undefined),
+                                                    "joinText" : (!!joinTextObject ? joinTextObject.joinText    : undefined) } );
                 }
 
-listJoinSimple =    ( direction:direction  { return {"direction" : direction }; } )
-                    / (type:listJoinType   { return {"joinType" : type }; } )
-                    / (t:joinText         { return {"joinText" : t }; } )
+listJoinSimple =      (direction:direction  { return {"direction" : direction }; } )
+                    / (type:listJoinType    { return {"joinType"  : type      }; } )
+                    / (t:joinText           { return {"joinText"  : t         }; } )
 
 joinText = "[" t:anythingButEndBracket* "]" ws
             {
                 return t.join("");
             }
 
-direction = hor:("@horizontal" / "@vertical") ws
+direction = dir:("@horizontal" / "@vertical") ws
                 {
-                    return creator.createListDirection( {"direction": hor } );
+                    return creator.createListDirection( {"direction": dir } );
                 }
 
-listJoinType = sep:("@separator" / "@terminator") ws
+listJoinType = joinType:("@separator" / "@terminator") ws
                 {
-                    return creator.createJoinType( {"type": sep } );
+                    return creator.createJoinType( {"type": joinType } );
                 }
 
 expression  = "${" t:var "}"
