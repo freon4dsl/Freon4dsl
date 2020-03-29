@@ -1,10 +1,8 @@
-import { Helpers } from "../../utils/Helpers";
-import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import * as fs from "fs";
-import { TYPER_FOLDER, TYPER_GEN_FOLDER } from "../../utils/GeneratorConstants";
-import { Names } from "../../utils/Names";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiTypeDefinition } from "../../typerdef/metalanguage/PiTyperDefLang";
+import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiTypeDefinition } from "../metalanguage";
+import { Helpers, Names, TYPER_FOLDER, TYPER_GEN_FOLDER } from "../../utils";
 import { PiTyperTemplate } from "./templates/PiTyperTemplate";
 
 const LOGGER = new PiLogger("PiTyperGenerator"); // .mute();

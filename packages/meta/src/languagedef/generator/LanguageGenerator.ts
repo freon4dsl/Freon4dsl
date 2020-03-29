@@ -1,39 +1,45 @@
-import { Helpers } from "../../utils/Helpers";
-import { IndexTemplate } from "./templates/IndexTemplate";
-import { AllConceptsTemplate } from "./templates/AllConceptsTemplate";
-import { Names } from "../../utils/Names";
-import { EnumerationTemplate } from "./templates/EnumerationTemplate";
-import { UnionTemplate } from "./templates/UnionTemplate";
-import { MetaTypeTemplate } from "./templates/MetaTypeTemplate";
-import { PiLanguageUnit } from "../metalanguage/PiLanguage";
-import { ConceptTemplate } from "./templates/ConceptTemplate";
 import * as fs from "fs";
-import { LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER } from "../../utils/GeneratorConstants";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { WalkerTemplate } from "./templates/WalkerTemplate";
-import { WorkerInterfaceTemplate } from "./templates/WorkerInterfaceTemplate";
-import { UnparserTemplate } from "./templates/UnparserTemplate";
 import { ModelCreatorTemplate } from "./conveniences/ModelCreatorTemplate";
+import { ENVIRONMENT_FOLDER, Helpers, LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER, Names } from "../../utils";
+import { PiLanguageUnit } from "../metalanguage/PiLanguage";
+import {
+    AllConceptsTemplate,
+    ConceptTemplate,
+    EnumerationTemplate,
+    EnvironmentTemplate,
+    IndexTemplate,
+    MetaTypeTemplate,
+    PiReferenceTemplate,
+    UnionTemplate,
+    UnparserTemplate,
+    WalkerTemplate,
+    WorkerInterfaceTemplate
+} from "./templates";
 
 const LOGGER = new PiLogger("LanguageGenerator"); // .mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
     protected languageFolder: string;
+    protected environmentFolder: string;
     utilsFolder: string;
 
-    constructor() {    }
+    constructor() {}
 
     generate(language: PiLanguageUnit, verbose?: boolean): void {
         if (verbose) LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_FOLDER);
         this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
         this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
+        this.environmentFolder = this.outputfolder + "/" + ENVIRONMENT_FOLDER;
 
         const conceptTemplate = new ConceptTemplate();
-        const languageTemplate = new MetaTypeTemplate();
+        const metaTypeTemplate = new MetaTypeTemplate();
         const enumerationTemplate = new EnumerationTemplate();
         const typeTemplate = new UnionTemplate();
         const languageIndexTemplate = new IndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
+        const piReferenceTemplate = new PiReferenceTemplate();
+        const environmentTemplate = new EnvironmentTemplate();
         const walkerTemplate = new WalkerTemplate();
         const workerTemplate = new WorkerInterfaceTemplate();
         const unparserTemplate = new UnparserTemplate();
@@ -42,6 +48,7 @@ export class LanguageGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.languageFolder);
         Helpers.createDirIfNotExisting(this.utilsFolder);
+        Helpers.createDirIfNotExisting(this.environmentFolder);
 
         // set relative path to get the imports right
         let relativePath = "../";
@@ -68,8 +75,12 @@ export class LanguageGenerator {
         // TODO generate language.interfaces
 
         // the following classes do not need the relative path for their imports
+        if (verbose) LOGGER.log("Generating PeElementReference.ts");
+        var referenceFile = Helpers.pretty(piReferenceTemplate.generatePiReference(language), "PiElementReference");
+        fs.writeFileSync(`${this.languageFolder}/PiElementReference.ts`, referenceFile);
+
         if (verbose) LOGGER.log("Generating metatype info: " + language.name + ".ts");
-        var languageFile = Helpers.pretty(languageTemplate.generateMetaType(language), "Model info");
+        var languageFile = Helpers.pretty(metaTypeTemplate.generateMetaType(language), "Model info");
         fs.writeFileSync(`${this.languageFolder}/${Names.metaType(language)}.ts`, languageFile);
 
         if (verbose) LOGGER.log("Generating " + Names.allConcepts(language) + " class: " + Names.allConcepts(language) + ".ts");
@@ -82,6 +93,10 @@ export class LanguageGenerator {
 
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
+        // Environment
+        if (verbose) LOGGER.log("Generating environment");
+        var environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language), "Language Environment");
+        fs.writeFileSync(`${this.environmentFolder}/${Names.environment(language)}.ts`, environmentFile);
 
         // generate the utility classes
         if (verbose) LOGGER.log("Generating language walker: " + Names.walker(language) + ".ts");

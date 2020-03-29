@@ -189,9 +189,8 @@ export class DemoCreator {
 
         return _result;
     }
-    public createDemoVariableRef(referredName: string, attribute: DemoAttribute): DemoVariableRef {
+    public createDemoVariableRef(attribute: DemoAttribute): DemoVariableRef {
         let _result = new DemoVariableRef();
-        _result.referredName = referredName;
 
         _result.attribute = attribute;
         return _result;

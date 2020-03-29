@@ -1,17 +1,17 @@
-import { PiLanguageEditor } from "../metalanguage/PiLanguageEditor";
-import { Helpers } from "../../utils/Helpers";
-import { ContextTemplate } from "./templates/ContextTemplate";
-import { EditorTemplate } from "./templates/EditorTemplate";
-import { EditorIndexTemplate } from "./templates/EditorIndexTemplate";
-import { Names } from "../../utils/Names";
-import { SelectionHelpers } from "./templates/SelectionHelpers";
-import { MainProjectionalEditorTemplate } from "./templates/MainProjectionalEditorTemplate";
-import { ProjectionTemplate } from "./templates/ProjectionTemplate";
-import { ActionsTemplate } from "./templates/ActionsTemplate";
-import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
+import { PiDefEditorLanguage } from "../metalanguage";
+import { PiLanguageUnit } from "../../languagedef/metalanguage";
 import * as fs from "fs";
-import { EDITOR_GEN_FOLDER, EDITOR_FOLDER } from "../../utils/GeneratorConstants";
+import { Names, Helpers, EDITOR_GEN_FOLDER, EDITOR_FOLDER } from "../../utils";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import {
+    ActionsTemplate,
+    ContextTemplate,
+    EditorIndexTemplate,
+    EditorTemplate,
+    MainProjectionalEditorTemplate,
+    ProjectionTemplate,
+    SelectionHelpers
+} from "./templates";
 
 const LOGGER = new PiLogger("EditorGenerator"); // .mute();
 
@@ -23,13 +23,16 @@ export class EditorGenerator {
 
     constructor() {    }
 
-    generate(editor: PiLanguageEditor, verbose?: boolean): void {
+    generate(editor: PiDefEditorLanguage, verbose?: boolean): void {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
 
-        if (verbose) LOGGER.log("Generating editor '" + editor.name + "' in folder " + this.editorGenFolder);
+        if (verbose) {
+            LOGGER.log("Generating editor '" + editor.name + "' in folder " + this.editorGenFolder);
+        }
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
+
         const enumProjection = new SelectionHelpers();
         const contextTemplate = new ContextTemplate();
         const projectionalEditorTemplate = new MainProjectionalEditorTemplate();
@@ -72,8 +75,10 @@ export class EditorGenerator {
         if (verbose) LOGGER.log("Generating manual actions");
         var manualActionsFile = Helpers.pretty(actions.generateManualActions(this.language), "ManualActions", verbose);
         Helpers.generateManualFile(`${this.editorFolder}/${Names.manualActions(this.language)}.ts`, manualActionsFile, "ManualActions");
-        
-        if (verbose) LOGGER.log("Generating actions");
+
+        if (verbose) {
+            LOGGER.log("Generating actions");
+        }
         var actionsFile = Helpers.pretty(actions.generateActions(this.language), "Actions", verbose);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
 
@@ -85,11 +90,15 @@ export class EditorGenerator {
         var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language), "Editor Gen Index", verbose);
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
 
-        if (verbose) LOGGER.log("Generating editor index");
+        if (verbose) {
+            LOGGER.log("Generating editor index");
+        }
         var editorIndexFile = Helpers.pretty(editorIndexTemplate.generateIndex(this.language), "Editor Index", verbose);
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
-        if (verbose) LOGGER.log("Succesfully generated editor");
+        if (verbose) {
+            LOGGER.log("Succesfully generated editor");
+        }
     }
 
 }

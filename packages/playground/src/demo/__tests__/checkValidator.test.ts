@@ -1,5 +1,19 @@
-import { PiError } from "@projectit/core";
-import { DemoModel, DemoAttributeType, DemoMultiplyExpression, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoDivideExpression, DemoVariableRef, DemoEntity, DemoAttribute, AllDemoConcepts, DemoFunction, DemoVariable } from "../language";
+import { PiError, PiElement } from "@projectit/core";
+import {
+    DemoModel,
+    DemoAttributeType,
+    DemoMultiplyExpression,
+    DemoNumberLiteralExpression,
+    DemoStringLiteralExpression,
+    DemoDivideExpression,
+    DemoVariableRef,
+    DemoEntity,
+    DemoAttribute,
+    AllDemoConcepts,
+    DemoFunction,
+    DemoVariable,
+    PiElementReference
+} from "../language";
 import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -73,10 +87,13 @@ describe('Testing Validator', () => {
         test("(1 + 2) * 'Person' should give type error", () => {
             let errors : PiError[] = [];
             const variableExpression = new DemoVariableRef();
-            variableExpression.referredName = "Person";
-            variableExpression.attribute = new DemoAttribute();
-            variableExpression.attribute.name = "Person";
-            variableExpression.attribute.declaredType = DemoAttributeType.String;
+            const attribute = DemoAttribute.create("Person");
+            attribute.declaredType = DemoAttributeType.String;
+            variableExpression.attribute = new PiElementReference<DemoAttribute>(attribute, "DemoAttribute");
+            // variableExpression.referredName = "Person";
+            // variableExpression.attribute = new DemoAttribute();
+            // variableExpression.attribute.name = "Person";
+            // variableExpression.attribute.declaredType = DemoAttributeType.String;
 
             const divideExpression = DemoModelCreator.MakePlusExp("1","2");
             const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);

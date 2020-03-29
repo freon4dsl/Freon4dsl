@@ -1,12 +1,10 @@
-import { Helpers } from "../../utils/Helpers";
-import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import * as fs from "fs";
-import { SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils/GeneratorConstants";
-import { NamespaceTemplate } from "./templates/NamespaceTemplate";
-import { Names } from "../../utils/Names";
-import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { PiScopeDef } from "../metalanguage/PiScopeDefLang";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
+import { PiScopeDef } from "../metalanguage";
+import { NamespaceTemplate } from "./templates/NamespaceTemplate";
+import { ScoperTemplate } from "./templates/ScoperTemplate";
 
 const LOGGER = new PiLogger("ScoperGenerator"); // .mute();
 export class ScoperGenerator {

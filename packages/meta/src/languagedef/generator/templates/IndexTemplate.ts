@@ -27,6 +27,7 @@ export class IndexTemplate {
         ${tmp.map(c => 
             `export * from "./${c}";`
         ).join("\n")}
+        export * from "./PiElementReference";
         `;
     }
 

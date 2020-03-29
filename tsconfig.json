@@ -30,20 +30,20 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@projectit/core": [
-        "packages/core/src"
+      "@projectit/core/*": [
+        "packages/core/src/*"
       ],
-      "@projectit/meta": [
-        "packages/meta/src"
+      "@projectit/meta/*": [
+        "packages/meta/src/*"
       ],
-      "@projectit/demo": [
-        "packages/demo/src"
+      "@projectit/demo/*": [
+        "packages/demo/src/*"
       ],
-      "@projectit/playground": [
-        "packages/playground/src"
+      "@projectit/playground/*": [
+        "packages/playground/src/*"
       ],
-      "@projectit/server": [
-        "packages/server/src"
+      "@projectit/server/*": [
+        "packages/server/src/*"
       ]
     }
   },

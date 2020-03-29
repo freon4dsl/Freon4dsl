@@ -3,3 +3,4 @@ export * from "./PiContext";
 export * from "./PiEditor";
 export * from "./PiProjection";
 export * from "./CompositeProjection";
+export * from "./boxes";
