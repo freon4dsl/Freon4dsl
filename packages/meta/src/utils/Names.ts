@@ -18,6 +18,7 @@ export class Names {
     public static PiEditor = "PiEditor";
     public static PiProjection = "PiProjection";
     public static Box = "Box";
+    public static PiElementReference = "PiElementReference";
 
     // TODO take language name into account
     public static styles(language: PiLanguageUnit) {

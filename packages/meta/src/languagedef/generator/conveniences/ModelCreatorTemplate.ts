@@ -1,16 +1,17 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils";
 import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class ModelCreatorTemplate {
     constructor() {
     }
 
-    generateModelCreator(language: PiLanguageUnit): string {
+    generateModelCreator(language: PiLanguageUnit, relativePath: string): string {
         // TODO use Names for class name
         
         // the template starts here
         return `
-        import { ${this.createImports(language, )} } from "../../language"; 
+        import { ${this.createImports(language)}, ${Names.PiElementReference} } from "${relativePath}${PathProvider.languageFolder}"; 
 
         export class ${language.name}Creator {
 
@@ -30,9 +31,9 @@ export class ModelCreatorTemplate {
                     `_result.${prop.name} = ${prop.name};`}`
                 ).join("\n")}
                 ${concept.allPReferences().map(prop => 
-                `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(${prop.name});` 
+                `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(new ${Names.PiElementReference}(${prop.name}, "${prop.type.name}"));` 
                     : 
-                    `_result.${prop.name} = ${prop.name};`}`
+                    `_result.${prop.name} = new ${Names.PiElementReference}(${prop.name}, "${prop.type.name}");`}`
                 ).join("\n")}
                 return _result;
             }`
@@ -43,11 +44,6 @@ export class ModelCreatorTemplate {
     private makeParams(concept: PiLangClass) : string {
         return `${concept.allProperties().map(prop => 
             `${prop.name}: ${prop.type.name}`).join(", ")}`;
-            // return `${concept.allPrimProperties().map(prop => 
-            //     `${prop.name}: ${prop.primType}`).concat(
-            //         `${concept.allEnumProperties().map(prop => 
-            //             `${prop.name}: ${prop.type.name}`)}`
-            //     ).join(", ")}`;
     }
 
     private createImports(language: PiLanguageUnit) : string {

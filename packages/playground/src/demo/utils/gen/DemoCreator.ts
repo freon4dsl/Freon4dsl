@@ -26,7 +26,8 @@ import {
     DemoStringLiteralExpression,
     DemoType,
     DemoVariable,
-    DemoVariableRef
+    DemoVariableRef,
+    PiElementReference
 } from "../../language";
 
 export class DemoCreator {
@@ -177,7 +178,7 @@ export class DemoCreator {
     public createDemoFunctionCallExpression(functionDefinition: DemoFunction): DemoFunctionCallExpression {
         let _result = new DemoFunctionCallExpression();
 
-        _result.functionDefinition = functionDefinition;
+        _result.functionDefinition = new PiElementReference(functionDefinition, "DemoFunction");
         return _result;
     }
     public createDemoIfExpression(condition: DemoExpression, whenTrue: DemoExpression, whenFalse: DemoExpression): DemoIfExpression {
@@ -192,7 +193,7 @@ export class DemoCreator {
     public createDemoVariableRef(attribute: DemoAttribute): DemoVariableRef {
         let _result = new DemoVariableRef();
 
-        _result.attribute = attribute;
+        _result.attribute = new PiElementReference(attribute, "DemoAttribute");
         return _result;
     }
 }

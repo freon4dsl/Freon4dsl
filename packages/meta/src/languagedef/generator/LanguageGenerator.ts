@@ -113,7 +113,7 @@ export class LanguageGenerator {
 
         // generate the convenience classes
         if (verbose) LOGGER.log(`Generating language model creator: ${language.name}Creator.ts`);
-        var creatorFile = Helpers.pretty(modelcreatorTemplate.generateModelCreator(language), "Model Creator Class");
+        var creatorFile = Helpers.pretty(modelcreatorTemplate.generateModelCreator(language, relativePath), "Model Creator Class");
         fs.writeFileSync(`${this.utilsFolder}/${language.name}Creator.ts`, creatorFile);
 
         if (verbose) LOGGER.log("Succesfully generated language '" + language.name + "'"); // TODO check if it is really succesfull

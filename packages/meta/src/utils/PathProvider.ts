@@ -60,6 +60,7 @@ export class PathProvider {
 
     // the generated classes that implement the language can be found in ...
     public static languageFolder = "language";
+    public static environment = "environment";
 
     public static concept(concept: PiLangConcept): string {
         return "language/" + Names.concept(concept);

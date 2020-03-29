@@ -58,7 +58,7 @@ export class ProjectionTemplate {
             import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
             import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
-            import { ${Names.environment(language)} } from "../${Names.environment(language)}";
+            import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environment}/${Names.environment(language)}";
 
             export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
                 private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};

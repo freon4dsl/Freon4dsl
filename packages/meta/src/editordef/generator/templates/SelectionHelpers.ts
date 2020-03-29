@@ -10,7 +10,7 @@ export class SelectionHelpers {
         return `
         import { ${Names.PiElement}, SelectBox, SelectOption } from "${PathProvider.corePath}";
         import { ${Names.styles(language)} } from "${relativePath}${PathProvider.editorstyles}";
-        import { ${Names.environment(language)} } from "../${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environment}/${Names.environment(language)}";
 
         import { ${language.enumerations.map(en =>
             ` ${Names.enumeration(en)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";

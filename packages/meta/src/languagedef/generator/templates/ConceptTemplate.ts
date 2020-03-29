@@ -67,6 +67,7 @@ export class ConceptTemplate {
             import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PathProvider.corePath}";
             import { ${mobxImports.join(",")} } from "${PathProvider.corePath}";
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
+            import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
             @model
             export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi} 
