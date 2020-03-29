@@ -99,7 +99,7 @@ describe('Testing Validator', () => {
             // expect(errors.length).toBe(3);
             errors.forEach(e => {
                 expect(e.reportedOn === determine);
-                console.log(e.message);
+                // console.log(e.message);
             });
         })
 

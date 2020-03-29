@@ -31,18 +31,18 @@ export class ValidatorGenerator {
         Helpers.createDirIfNotExisting(this.validatorFolder, verbose);
         Helpers.createDirIfNotExisting(this.validatorGenFolder, verbose);
 
-        // set relative path for imports
-        this.outputfolder = "../../../../" + this.outputfolder;
+        // set relative path to get the imports right
+        let relativePath = "../../";
 
         //  Generate validator
         if (verbose) LOGGER.log("Generating validator class");
-        var validatorFile = Helpers.pretty(validator.generateValidator(this.language, validdef, this.outputfolder), "Validator Class", verbose);
-        fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language, validdef)}.ts`, validatorFile);
+        var validatorFile = Helpers.pretty(validator.generateValidator(this.language, validdef, relativePath), "Validator Class", verbose);
+        fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         //  Generate checker
         if (verbose) LOGGER.log("Generating checker class");
-        var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, this.outputfolder), "Checker Class", verbose);
-        fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language, validdef)}.ts`, checkerFile);
+        var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class", verbose);
+        fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);
 
         if (verbose) LOGGER.log("Succesfully generated validator: " + validdef.validatorName);
     } 

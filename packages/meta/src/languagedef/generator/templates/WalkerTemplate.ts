@@ -1,23 +1,23 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class WalkerTemplate {
     constructor() {
     }
 
-    generateWalker(language: PiLanguageUnit): string {
+    generateWalker(language: PiLanguageUnit, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
-        const langConceptType : string = Names.languageConceptType(language);     
+        const langConceptType : string = Names.metaType(language);     
         const generatedClassName : String = Names.walker(language);
 
         // Template starts here 
         return `
-        import { ${allLangConcepts} } from "../../language";
-        import { ${langConceptType} } from "../../language/${language.name}";   
+        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "../../language";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
         import { ${language.enumerations.map(concept => `
-            ${concept.name}`).join(", ")} } from "../../language";     
+            ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
 
             // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";

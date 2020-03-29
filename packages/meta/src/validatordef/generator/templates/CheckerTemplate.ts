@@ -8,19 +8,19 @@ export class CheckerTemplate {
     constructor() {
     }
 
-    generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef, outputFolder: string): string {
+    generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
-        const errorClassName : string = Names.errorClassName();
+        const errorClassName : string = Names.PiError;
         const checkerClassName : string = Names.checker(language);
-        const typerInterfaceName: string = Names.typerInterface();
+        const typerInterfaceName: string = Names.PiTyper;
         const unparserClassName: string = Names.unparser(language);
         
         // the template starts here
         return `
-        import { ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.errorClass()}";
-        import { ${this.createImports(language, validdef)} } from "${outputFolder}/${PathProvider.languageFolder()}"; 
-        import { ${unparserClassName} } from "${outputFolder}/${PathProvider.unparser(language)}";    
-        import { ${workerInterfaceName} } from "${outputFolder}/${PathProvider.workerInterface(language)}";
+        import { ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.corePath}";
+        import { ${this.createImports(language, validdef)} } from "${relativePath}${PathProvider.languageFolder}"; 
+        import { ${unparserClassName} } from "${relativePath}${PathProvider.unparser(language)}";    
+        import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";
 
         export class ${checkerClassName} implements ${workerInterfaceName} {
             myUnparser = new ${unparserClassName}();

@@ -1,19 +1,19 @@
-import { createDefaultExpressionBox } from "@projectit/core";
 import { Names } from "../../../utils/Names";
-import { PiLangEnumProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PathProvider } from "../../../utils/PathProvider";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjection(language: PiLanguageUnit): string {
+    generateProjection(language: PiLanguageUnit, relativePath: string): string {
         return `
-            import { PiProjection, PiElement, Box } from "@projectit/core";
+            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PathProvider.corePath}";
         
-            export class ${Names.projection(language)} implements PiProjection {
-                rootProjection: PiProjection;
+            export class ${Names.projection(language)} implements ${Names.PiProjection} {
+                rootProjection: ${Names.PiProjection};
                 
-                getBox(element: PiElement) : Box {
+                getBox(element: ${Names.PiElement}) : Box {
                     // Add any handmade projections of your own before next statement 
                     return null;
                 }            
@@ -21,11 +21,11 @@ export class ProjectionTemplate {
         `
     }
 
-    generateProjectionDefault(language: PiLanguageUnit): string {
+    generateProjectionDefault(language: PiLanguageUnit,  relativePath: string): string {
         return `
             import { observable } from "mobx";
 
-            import { demoStyles } from "../../styles/styles"
+            import { ${Names.styles(language)} } from "${relativePath}${PathProvider.editorstyles}";
             import {
                 AliasBox,
                 Box,
@@ -38,9 +38,9 @@ export class ProjectionTemplate {
                 SelectBox,
                 KeyPressAction,
                 LabelBox,
-                PiEditor,
-                PiElement,
-                PiProjection,
+                ${Names.PiEditor},
+                ${Names.PiElement},
+                ${Names.PiProjection},
                 TextBox,
                 VerticalListBox,
                 VerticalPiElementListBox,
@@ -51,27 +51,27 @@ export class ProjectionTemplate {
                 PiLogger,
                 STYLES,
                 isPiBinaryExpression,
-                PiBinaryExpression
-            } from "@projectit/core";
+                ${Names.PiBinaryExpression}
+            } from "${PathProvider.corePath}";
             
-            ${language.classes.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
-            ${language.enumerations.map(e => `import { ${Names.enumeration(e)} } from "../../language/${Names.enumeration(e)}";`).join("")}
+            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
+            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
-            import { ${language.name}Environment } from "../${language.name}Environment";
+            import { ${Names.environment(language)} } from "../${Names.environment(language)}";
 
-            export class ${Names.projectionDefault(language)} implements PiProjection {
+            export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
                 private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};
-                private editor: PiEditor;
-                rootProjection: PiProjection;
+                private editor: ${Names.PiEditor};
+                rootProjection: ${Names.PiProjection};
                 @observable showBrackets: boolean = false;
             
                 constructor() {}
             
-                setEditor(e: PiEditor) {
+                setEditor(e: ${Names.PiEditor}) {
                     this.editor = e;
                 }
             
-                getBox(exp: PiElement): Box {
+                getBox(exp: ${Names.PiElement}): Box {
                     switch( exp.piLanguageConcept() ) { 
                         ${language.classes.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`

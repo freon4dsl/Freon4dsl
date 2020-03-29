@@ -1,13 +1,14 @@
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { Names } from "../../../utils/Names";
 
-export class LanguageTemplates {
+export class MetaTypeTemplate {
     constructor() {
     }
 
-    generateLanguage(language: PiLanguageUnit): string {
+    generateMetaType(language: PiLanguageUnit): string {
 
         return `
-        export type ${language.name}ConceptType = 
+        export type ${Names.metaType(language)} = 
         ${language.enumerations.length > 0 ? `${language.enumerations.map(c => `"${c.name}"`).join(" | ")} |` : ""}
         ${language.classes.map(c => `"${c.name}"`).join(" | ")}
         `;

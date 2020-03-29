@@ -8,7 +8,6 @@ import { PiValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
  * at each usage.
  */
 export class PathProvider {
-
     // the definitions files can be found in ...
     public static editFile(defFolder: string, languageFile: string) : string {
         let languageName : string = languageFile.slice(0, languageFile.length-5);
@@ -36,6 +35,9 @@ export class PathProvider {
     }
 
     // the predefined interfaces and classes can be found in ...
+    // TODO change into properties
+    public static corePath = "@projectit/core";
+    
     public static scoperInterface(): string {
         return "@projectit/core"
     }
@@ -52,10 +54,12 @@ export class PathProvider {
         return "@projectit/core"
     }
 
-    // the generated classes that implement the language can be found in ...
-    public static languageFolder(): string {
-        return "language";
+    public static piNamedElement() {
+        return "@projectit/core"
     }
+
+    // the generated classes that implement the language can be found in ...
+    public static languageFolder = "language";
 
     public static concept(concept: PiLangConcept): string {
         return "language/" + Names.concept(concept);
@@ -64,13 +68,13 @@ export class PathProvider {
     public static enumeration(enumeration: PiLangEnumeration): string {
         return "language/" + Names.enumeration(enumeration);
     }
-    // TODO change function name to 'union'
-    public static type(union: PiLangUnion): string {
-        return "language/" + Names.type(union);
+    
+    public static union(union: PiLangUnion): string {
+        return "language/" + Names.union(union);
     }
 
     public static languageConceptType(language: PiLanguageUnit): string {
-        return "language/" + Names.languageConceptType(language);
+        return "language/" + Names.metaType(language);
     }
 
     public static allConcepts(language: PiLanguageUnit): string {
@@ -78,6 +82,7 @@ export class PathProvider {
     }
 
     // the generated classes that implement the editor can be found in ...
+    public static editorstyles = "styles/styles";
     public static context(language: PiLanguageUnit): string {
         return "editor/gen/" + Names.context(language);  ;
     }

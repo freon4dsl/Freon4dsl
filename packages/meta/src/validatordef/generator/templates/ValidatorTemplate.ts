@@ -7,21 +7,21 @@ export class ValidatorTemplate {
     constructor() {
     }
 
-    generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef, outputFolder: string): string {
+    generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : string = Names.validator(language);
-        const errorClassName : string = Names.errorClassName();
+        const errorClassName : string = Names.PiError;
         const checkerClassName : string = Names.checker(language);
         const walkerClassName: string = Names.walker(language);
-        const validatorInterfaceName: string = Names.validatorInterface();
-        const typerInterfaceName: string = Names.typerInterface();
+        const validatorInterfaceName: string = Names.PiValidator;
+        const typerInterfaceName: string = Names.PiTyper;
 
         // Template starts here 
         return `
-        import { ${validatorInterfaceName}, ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.errorClass()}";
-        import { ${allLangConcepts} } from "${outputFolder}/${PathProvider.allConcepts(language)}";
-        import { ${checkerClassName} } from "${outputFolder}/${PathProvider.checker(language)}";
-        import { ${walkerClassName} } from "${outputFolder}/${PathProvider.walker(language)}";
+        import { ${validatorInterfaceName}, ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.corePath}";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
+        import { ${checkerClassName} } from "${relativePath}${PathProvider.checker(language)}";
+        import { ${walkerClassName} } from "${relativePath}${PathProvider.walker(language)}";
 
         export class ${generatedClassName} implements ${validatorInterfaceName} {
             myTyper : ${typerInterfaceName};

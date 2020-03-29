@@ -1,20 +1,21 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class UnparserTemplate {
     constructor() {
     }
 
-    generateUnparser(language: PiLanguageUnit): string {
+    generateUnparser(language: PiLanguageUnit, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : String = Names.unparser(language);
         // TODO use the editor definition language to create the bodies of the functions
 
         // Template starts here 
         return `
-        import { ${allLangConcepts} } from "../../language";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageFolder}";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "../../language";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
                 

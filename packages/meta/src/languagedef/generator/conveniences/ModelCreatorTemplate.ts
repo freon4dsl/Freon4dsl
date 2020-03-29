@@ -60,7 +60,7 @@ export class ModelCreatorTemplate {
             tmp.push(Names.enumeration(c))
         );
         language.unions.map(c =>
-            tmp.push(Names.type(c))
+            tmp.push(Names.union(c))
         );
         tmp = tmp.sort();
     
