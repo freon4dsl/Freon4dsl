@@ -105,7 +105,7 @@ export class PiLangConcept extends PiLangElement {
 		throw new Error("Method not implemented.");
 	}
 	findProperty(name: string): PiLangProperty {
-		throw new Error("Method not implemented.");
+        return this.allProperties().find(p => p.name === name);
 	}
     getTrigger(): string {
         const p = this.trigger;

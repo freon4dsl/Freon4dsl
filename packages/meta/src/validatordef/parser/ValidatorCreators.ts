@@ -1,6 +1,5 @@
-import { PiValidatorDef, ConceptRuleSet, NotEmptyRule, CheckEqualsTypeRule, CheckConformsRule, ValidNameRule } from "../metalanguage/ValidatorDefLang";
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangThisExp, PiLangEnumExp, PiLangAppliedFeatureExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangAppliedFeatureExp, PiLangConceptReference, PiLangEnumExp, PiLangThisExp } from "../../languagedef/metalanguage";
+import { CheckConformsRule, CheckEqualsTypeRule, ConceptRuleSet, NotEmptyRule, PiValidatorDef, ValidNameRule } from "../metalanguage/ValidatorDefLang";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang) from the parsed data objects (from ValidatorGrammar.pegjs). 
 

@@ -26,6 +26,7 @@ export class LanguageIndexTemplate {
         ${tmp.map(c => 
             `export * from "./${c}";`
         ).join("\n")}
+        export * from "./PiElementReference";
         `;
     }
 

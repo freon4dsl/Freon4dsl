@@ -19,6 +19,59 @@ export const MODEL_NAME = MODEL_PREFIX + "Name";
  */
 export function observablereference(target: DecoratedModelElement, propertyKey: string | symbol) {
     ModelInfo.references.add(target.constructor.name, propertyKey.toString());
+    // const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
+    //
+    // const getter = function(this: any) {
+    //     // console.log("GET observablereference observablereference observablereference observablereference");
+    //     const storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
+    //     let result: any = storedObserver ? storedObserver.get() : undefined;
+    //     if (result === undefined) {
+    //         result = null;
+    //         this[privatePropertyKey] = observable.box(result);
+    //     }
+    //     return result;
+    // };
+    //
+    // const setter = function(this: any, val: DecoratedModelElement) {
+    //     console.log("SET observablereference observablereference observablereference observablereference");
+    //     let storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
+    //     const storedValue = storedObserver ? storedObserver.get() : null;
+    //     // Clean container of current part
+    //     if (storedValue) {
+    //         storedValue.container = null;
+    //         storedValue.propertyName = "";
+    //         storedValue.propertyIndex = undefined;
+    //     }
+    //     if (storedObserver) {
+    //         storedObserver.set(val);
+    //     } else {
+    //         this[privatePropertyKey] = observable.box(val);
+    //         storedObserver = this[privatePropertyKey];
+    //     }
+    //     if (val !== null && val !== undefined) {
+    //         if (val.container !== undefined && val.container !== null) {
+    //             if (val.propertyIndex !== undefined) {
+    //                 // Clean new value from its containing list
+    //                 (val.container as any)[val.propertyName].splice(val.propertyIndex, 1);
+    //             } else {
+    //                 // Clean new value from its container
+    //                 (val.container as any)[MODEL_PREFIX + val.propertyName] = null;
+    //             }
+    //         }
+    //         // Set container
+    //         val.container = this;
+    //         val.propertyName = propertyKey.toString();
+    //         val.propertyIndex = undefined;
+    //     }
+    // };
+    //
+    // // tslint:disable no-unused-expression
+    // Reflect.deleteProperty(target, propertyKey);
+    // Reflect.defineProperty(target, propertyKey, {
+    //     get: getter,
+    //     set: setter,
+    //     configurable: true
+    // });
 }
 
 /**
@@ -39,9 +92,11 @@ export function model1() {
 }
 
 interface ctor {
-    new (...args: any[]): any;
+    new(...args: any[]): any;
+
     run: any;
 }
+
 export function model2(target: Function) {
     ModelInfo.addClass(target.name, target);
     // return (constructor: ctor ) => {
@@ -66,9 +121,11 @@ export function model2(target: Function) {
         return f;
     };
 }
+
 export function model(target: Function) {
     ModelInfo.addClass(target.name, target);
 }
+
 /**
  *
  * This property decorator can be used to decorate properties of type ModelElement.
@@ -139,7 +196,7 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
     const getter = function(this: any) {
         let result = this[privatePropertyKey];
         if (result === undefined) {
-            const array = observable.array([], {deep: false});
+            const array = observable.array([], { deep: false });
             result = array;
             this[privatePropertyKey] = result;
             (array as any)[MODEL_CONTAINER] = this;
@@ -166,31 +223,34 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
 function willChange(
     change: IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement>
 ): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
+    // console.log("willChange [" + change.type + "]");
     switch (change.type) {
+        // console.log("no change");
         case "update":
-            if (change.newValue === change.object[change.index]) {
-                // console.log("no change");
-            } else {
+            const newValue = change.newValue;
+            const oldValue = change.
+                object[change.index];
+            if (newValue === oldValue) {
                 // new object at index
-                const value = change.newValue;
-                if (value) {
-                    if (value.container) {
+            } else {
+                if (!!newValue) {
+                    if (!!newValue.container) {
                         // cleanup old container reference of new value
-                        if (value.propertyIndex !== undefined) {
-                            (value.container as any)[value.propertyName][value.propertyIndex] = null;
+                        if (newValue.propertyIndex !== undefined) {
+                            (newValue.container as any)[newValue.propertyName][newValue.propertyIndex] = null;
                         } else {
-                            (value.container as any)[value.propertyName] = null;
+                            (newValue.container as any)[newValue.propertyName] = null;
                         }
                     }
-                    change.newValue.container = change.object[change.index].container;
-                    change.newValue.propertyName = change.object[change.index].propertyName;
-                    change.newValue.propertyIndex = change.object[change.index].propertyIndex;
+                    newValue.container = oldValue.container;
+                    newValue.propertyName = oldValue.propertyName;
+                    newValue.propertyIndex = oldValue.propertyIndex;
                 }
 
                 // Cleanup container reference of old value
-                change.object[change.index].container = null;
-                change.object[change.index].propertyName = "";
-                change.object[change.index].propertyIndex = undefined;
+                oldValue.container = null;
+                oldValue.propertyName = "";
+                oldValue.propertyIndex = undefined;
             }
             break;
         case "splice":
@@ -200,9 +260,21 @@ function willChange(
             const addedCount = added.length;
             const xxx = change.object;
             for (const i in added) {
-                added[i].container = (change.object as any)[MODEL_CONTAINER];
-                added[i].propertyName = (change.object as any)[MODEL_NAME];
-                added[i].propertyIndex = index + Number(i);
+                // cleanup old container reference of new value
+                const element = added[i];
+                if(!!element) {
+                    if (!!element.container) {
+                        if (element.propertyIndex !== undefined) {
+                            (element.container as any)[element.propertyName][element.propertyIndex] = null;
+                        } else {
+                            (element.container as any)[element.propertyName] = null;
+                        }
+                    }
+                    // set the container properties for inserted elements
+                    element.container = (change.object as any)[MODEL_CONTAINER];
+                    element.propertyName = (change.object as any)[MODEL_NAME];
+                    element.propertyIndex = index + Number(i);
+                }
             }
             for (let num = 0; num < removedCount; num++) {
                 let rr = index + num;

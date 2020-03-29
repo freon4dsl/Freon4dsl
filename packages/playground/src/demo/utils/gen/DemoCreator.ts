@@ -26,7 +26,7 @@ import {
     DemoStringLiteralExpression,
     DemoType,
     DemoVariable,
-    DemoVariableRef
+    DemoVariableRef, PiElementReference
 } from "../../language";
 
 export class DemoCreator {
@@ -189,11 +189,11 @@ export class DemoCreator {
 
         return _result;
     }
-    public createDemoVariableRef(referredName: string, attribute: DemoAttribute): DemoVariableRef {
+    createDemoVariableRef(referredName: string): DemoVariableRef {
         let _result = new DemoVariableRef();
-        _result.referredName = referredName;
+        _result.attribute = PiElementReference.createNamed(referredName, "DemoAttribute");
+        // result.referredName = referredName;
 
-        _result.attribute = attribute;
         return _result;
     }
 }

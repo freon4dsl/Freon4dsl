@@ -1,10 +1,9 @@
 import { Checker } from "../../utils/Checker";
-import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangConcept, PiLangProperty } from "./PiLanguage";
-import { PiLangConceptReference } from "./PiLangReferences";
+import { PiLangConceptProperty, PiLanguageUnit, PiLangConcept, PiLangProperty } from "./PiLanguage";
+import { PiLangConceptReference, PiLangPropertyReference } from "./PiLangReferences";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
 import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiTyperChecker } from "../../typerdef/metalanguage/PiTyperChecker";
 
 const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equalsType" ];
@@ -163,6 +162,14 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         for ( let e of enclosingConcept.allProperties() ) {
             if (e.name === feat.sourceName) {
                 found = e;
+                // resolve it
+                let ref : PiLangPropertyReference = new PiLangPropertyReference();
+                ref.language = this.language;
+                ref.name = e.name;
+                ref.owningConcept = new PiLangConceptReference();
+                ref.owningConcept.language = this.language;
+                ref.owningConcept.name = enclosingConcept.name;
+                feat.reference = ref;
             }
         }
         this.nestedCheck({

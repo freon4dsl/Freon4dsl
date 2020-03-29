@@ -1,7 +1,7 @@
-import { PiScoperChecker } from "../metalanguage/PiScoperChecker";
-import { PiParser } from "../../utils/PiParser";
-import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
-import { PiScopeDef } from "../metalanguage/PiScopeDefLang";
+import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiParser } from "../../utils";
+import { PiScopeDef, PiScoperChecker } from "../metalanguage";
+
 let scoperParser = require("./ScoperGrammar");
 
 export class ScoperParser extends PiParser<PiScopeDef> {

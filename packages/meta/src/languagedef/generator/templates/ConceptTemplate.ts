@@ -49,10 +49,14 @@ export class ConceptTemplate {
             mobxImports.push("observablepart");
         }
         if (concept.references.some(ref => ref.isList)) {
-            mobxImports.push("observablelistreference");
+            if( !mobxImports.some( im => im === "observablelistpart")) {
+                mobxImports.push("observablelistpart");
+            }
         }
         if (concept.references.some(ref => !ref.isList)) {
-            mobxImports.push("observablereference");
+            if( !mobxImports.some( im => im === "observablepart")) {
+                mobxImports.push("observablepart");
+            }
         }
 
         // Template starts here
@@ -61,6 +65,7 @@ export class ConceptTemplate {
             import * as uuid from "uuid";
             import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
             import { ${mobxImports.join(",")} } from "@projectit/core";
+            import { PiElementReference } from "./PiElementReference";
             import { ${language.name}ConceptType } from "./${language.name}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
@@ -176,10 +181,10 @@ export class ConceptTemplate {
     }
 
     generateReferenceProperty(property: PiLangConceptProperty): string {
-        const decorator = property.isList ? "@observablelistreference" : "@observablereference";
+        const decorator = property.isList ? "@observablepartreference" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.referedElement())}${arrayType};
+            ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.referedElement())}>${arrayType};
         `;
     }
 

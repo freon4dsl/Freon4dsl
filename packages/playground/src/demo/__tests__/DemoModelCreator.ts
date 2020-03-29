@@ -1,8 +1,9 @@
-import { DemoEntity, DemoAttribute, DemoFunction, DemoVariable, 
+import { PiElementReference, DemoEntity, DemoAttribute, DemoFunction, DemoVariable,
         DemoVariableRef, DemoIfExpression, DemoComparisonExpression, 
         DemoNumberLiteralExpression, DemoOrExpression, DemoStringLiteralExpression, 
         DemoAndExpression, DemoPlusExpression, DemoPlaceholderExpression, DemoModel, 
-        DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression, DemoMultiplyExpression, DemoDivideExpression, DemoBooleanLiteralExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoLiteralExpression } from "../language";
+        DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression, DemoMultiplyExpression,
+    DemoDivideExpression, DemoBooleanLiteralExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoLiteralExpression } from "../language";
 
 export class DemoModelCreator  {
     model: DemoModel;
@@ -125,8 +126,8 @@ export class DemoModelCreator  {
         // ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         const varRef = new DemoVariableRef();
-        varRef.referredName = "Variable1";
-        varRef.attribute = attr;
+        // varRef.referredName = "Variable1";
+        varRef.attribute = new PiElementReference<DemoAttribute>(attr, "DemoAttribute");
 
         const equals : DemoBinaryExpression = DemoModelCreator.MakeEqualsExp("No", varRef); // ("=");
         // equals : "No" = Variable1
@@ -226,6 +227,9 @@ export class DemoModelCreator  {
         else if (typeof incoming === "string") {
             mine = new DemoStringLiteralExpression();
             (mine as DemoStringLiteralExpression).value = incoming;
+        }else {
+            // When no expression can be created, return a place holder expression.
+            mine = new DemoPlaceholderExpression();
         }
         return mine;
     }

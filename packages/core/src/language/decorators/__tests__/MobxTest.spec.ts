@@ -1,232 +1,248 @@
-import { BinExpression, Expression, FunctionCallExpression, ModelContext } from "./MobxModel";
+import { PiElementReferenceM } from "./PiElementReferenceM";
+import { TestScoper } from "./TestScoper";
+import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel";
 import { observe, reaction } from "mobx";
-import { } from "jasmine";
+import {} from "jasmine";
 
 describe("Mobx Model", () => {
     describe("container settings", () => {
         const ctx: ModelContext = new ModelContext();
-        let root: BinExpression;
-        let fcall: FunctionCallExpression;
-        let left: Expression;
-        let right: Expression;
-        let exp1: Expression;
-        let exp2: Expression;
+        let root: MobxTestRoot;
+        let element: MobxTestParts;
+        let part1: MobxTestElement;
+        let part2: MobxTestElement;
+        let part3: MobxTestElement;
         let reaktion: number = 0;
         let observedLeft: number = 0;
 
         beforeEach(done => {
-            root = new BinExpression("root");
-            left = new Expression("left1");
-            fcall = new FunctionCallExpression("max");
-            right = fcall;
+            root = new MobxTestRoot("root");
+            element = new MobxTestParts("partsContainer");
+            part1 = new MobxTestElement("part1");
+            part2 = new MobxTestElement("part2");
+            part3 = new MobxTestElement("part3");
 
-            root.left = left;
-            root.right = right;
+            root.element = element;
+            element.manyPart.push(part1);
+            element.manyPart.push(part2);
+            element.singlePart = part3;
 
-            exp1 = new Expression("list-exp1");
-            exp2 = new Expression("list-exp2");
-            fcall.args.push(exp1, exp2);
+            // const observableRoot = observable(root);
+            element.singleReference = PiElementReferenceM.create(part2, "tt");
 
             ctx.root = root;
-            /*
-                root {
-                    left: "left1",
-                    rught: "max" [
-                            "exp1",
-                            "exp2"
-                        ]
-                }
-             */
+
+            TestScoper.getInstance().root = root;
             observedLeft = 0;
             observe(ctx, "root", () => observedLeft++);
-            // const observableRoot = observable(root);
             // observe(observableRoot, "left", () => observedLeft++);
             reaction(
                 () => {
                     return [
-                        root.right,
-                        root.left,
-                        fcall.args.length > 0 ? fcall.args[0] : null,
-                        fcall.args.length > 1 ? fcall.args[1] : null
+                        root.element
                     ];
                 },
                 element => {
                     reaktion++;
-                    // console.log("React " + reaktion + " on " + element);
-                }            );
+                    console.log("React " + reaktion + " on " + (!!element ? element["name"] : "element is null"));
+                });
             reaktion = 0;
             done();
+
+        });
+        it("references 1", () => {
+            // name and reference should be to part2
+            expect(element.singleReference.name).toBe("part2");
+            expect(element.singleReference.referred).toBe(part2);
+            checkUnchanged();
+
+            element.singleReference.name = "part1";
+
+            // name and reference should be changed
+            expect(element.manyPart.length).toBe(2);
+            expect(element.singleReference.referred).toBe(part1);
+            expect(element.singleReference.name).toBe("part1");
+            checkUnchanged();
+
+            element.singleReference.name = "part44";
+            // old reference is gone, new one cannot be found
+            expect(element.singleReference.name).toBe("part44");
+            expect(element.singleReference.referred).toBe(undefined);
+
+            element.singleReference.name = "part1";
+            // back to part1
+            expect(element.singleReference.name).toBe("part1");
+            expect(element.singleReference.referred).toBe(part1);
+            checkUnchanged();
+
+            part1.name = "part1-newname";
+            // referred part changes name, thus reference follows this change
+            expect(element.singleReference.name).toBe("part1-newname");
+            expect(element.singleReference.referred).toBe(part1);
+            checkUnchanged();
+
+            element.singleReference.name = "part1";
+
+            // reference to part1 cannot be found anymore
+            expect(element.singleReference.name).toBe("part1");
+            expect(element.singleReference.referred).toBe(undefined);
+            checkUnchanged();
+
+            part1.name = "part1";
+            // reference to part1 can be found again
+            expect(element.singleReference.name).toBe("part1");
+            expect(element.singleReference.referred).toBe(part1);
+            checkUnchanged();
+
+            element.singleReference.referred = part2;
+            expect(element.singleReference.name).toBe("part2");
+            expect(element.singleReference.referred).toBe(part2);
+            checkUnchanged();
+
+            const singleRef = element.singleReference;
+            element.singleReference = PiElementReferenceM.create(part1, "tt");
+            expect(element.singleReference.name).toBe("part1");
+            expect(element.singleReference.referred).toBe(part1);
+            expect(singleRef.piContainer() === null);
+
         });
 
         it("of children should be set at start", () => {
-            expect(left.container).toBe(root);
-            expect(left.propertyName).toBe("left");
-            expect(left.propertyIndex).toBe(undefined);
-            expect(right.container).toBe(root);
-            expect(right.propertyName).toBe("right");
-            expect(right.propertyIndex).toBe(undefined);
-            expect(exp1.container).toBe(fcall);
-            expect(exp1.propertyName).toBe("args");
-            expect(exp1.propertyIndex).toBe(0);
-            expect(exp2.container).toBe(fcall);
-            expect(exp2.propertyName).toBe("args");
-            expect(exp2.propertyIndex).toBe(1);
-            expect(fcall.args[0]).toBe(exp1);
-            expect(fcall.args[1]).toBe(exp2);
-            expect(fcall.args.length).toBe(2);
+            expect(element.container).toBe(root);
+            expect(element.propertyName).toBe("element");
+            expect(root.element.propertyIndex).toBe(undefined);
+
+            expect(part1.propertyIndex).toBe(0);
+            expect(part1.container).toBe(element);
+            expect(part1.propertyName).toBe("manyPart");
+
+            expect(part2.propertyIndex).toBe(1);
+            expect(part2.container).toBe(element);
+            expect(part2.propertyName).toBe("manyPart");
+
+            expect(element.singlePart).toBe(part3);
         });
 
         it("should be unset when assigned to null", () => {
-            root.left = null;
+            root.element = null;
 
-            expect(root.left).toBe(null);
-            expect(left.container).toBe(null);
-            expect(left.propertyName).toBe("");
-            expect(left.propertyIndex).toBe(undefined);
+            expect(root.element).toBe(null);
+            expect(element.container).toBe(null);
+            expect(element.propertyName).toBe("");
+            expect(element.propertyIndex).toBe(undefined);
             expect(reaktion).toBe(1);
+
+            root.element = element;
+            expect(element.container).toBe(root);
+            expect(element.propertyName).toBe("element");
+            expect(root.element.propertyIndex).toBe(undefined);
         });
 
         it("should be changed when moved", () => {
-            root.left = right;
-            expect(root.right).toBe(null);
-            expect(root.left).toBe(right);
+            element.singlePart = part1;
 
-            const tmp = fcall.args[0];
-            root.right = tmp;
+            expect(part1.container).toBe(element);
+            expect(part1.propertyName).toBe("singlePart");
+            expect(part1.propertyIndex).toBe(undefined);
 
-            expect(left.container).toBe(null);
-            expect(left.propertyName).toBe("");
-            expect(left.propertyIndex).toBe(undefined);
+            expect(part2.container).toBe(element);
+            expect(part2.propertyName).toBe("manyPart");
+            expect(part2.propertyIndex).toBe(0);
 
-            expect(right.container).toBe(root);
-            expect(right.propertyName).toBe("left");
-            expect(right.propertyIndex).toBe(undefined);
-            expect(fcall.args[0]).toBe(exp2);
-            expect(fcall.args.length).toBe(1);
-            expect(reaktion).toBe(2);
-        });
+            expect(part3.container).toBe(null);
+            expect(part3.propertyName).toBe("");
+            expect(part3.propertyIndex).toBe(undefined);
 
-        it("should be changed when last element of array is moved", () => {
-            root.left = fcall.args[1];
-
-            expect(root.left).toBe(exp2);
-
-            expect(left.container).toBe(null);
-            expect(left.propertyName).toBe("");
-            expect(left.propertyIndex).toBe(undefined);
-
-            expect(exp2.container).toBe(root);
-            expect(exp2.propertyName).toBe("left");
-            expect(exp2.propertyIndex).toBe(undefined);
-
-            expect(fcall.args[0]).toBe(exp1);
-            expect(fcall.args.length).toBe(1);
-            expect(reaktion).toBe(2);
-        });
-        it("should be changed when first element of array is moved 2", () => {
-            root.left = fcall.args[0];
-
-            expect(root.left).toBe(exp1);
-
-            expect(left.container).toBe(null);
-            expect(left.propertyName).toBe("");
-            expect(left.propertyIndex).toBe(undefined);
-
-            expect(exp1.container).toBe(root);
-            expect(exp1.propertyName).toBe("left");
-            expect(exp1.propertyIndex).toBe(undefined);
-
-            expect(fcall.args[0]).toBe(exp2);
-            expect(fcall.args.length).toBe(1);
-            expect(reaktion).toBe(2);
         });
         it("should be changed when element is assigned to array", () => {
-            fcall.args[0] = left;
+            element.manyPart.splice(0, 0, part3);
 
-            expect(root.left).toBe(null);
+            expect(element.singlePart).toBe(null);
 
-            expect(left.container).toBe(fcall);
-            expect(left.propertyName).toBe("args");
-            expect(left.propertyIndex).toBe(0);
+            expect(part1.container).toBe(element);
+            expect(part1.propertyName).toBe("manyPart");
+            expect(part1.propertyIndex).toBe(1);
 
-            expect(exp1.container).toBe(null);
-            expect(exp1.propertyName).toBe("");
-            expect(exp1.propertyIndex).toBe(undefined);
+            expect(part2.container).toBe(element);
+            expect(part2.propertyName).toBe("manyPart");
+            expect(part2.propertyIndex).toBe(2);
 
-            expect(fcall.args[0]).toBe(left);
-            expect(fcall.args[1]).toBe(exp2);
-            expect(fcall.args.length).toBe(2);
-            expect(reaktion).toBe(2);
+            expect(part3.container).toBe(element);
+            expect(part3.propertyName).toBe("manyPart");
+            expect(part3.propertyIndex).toBe(0);
+
         });
         it("should be changed when array is cleared", () => {
-            fcall.args.splice(0, 2);
+            element.manyPart.splice(0, 2);
 
-            expect(exp1.container).toBe(null);
-            expect(exp1.propertyName).toBe("");
-            expect(exp1.propertyIndex).toBe(undefined);
-            expect(exp2.container).toBe(null);
-            expect(exp2.propertyName).toBe("");
-            expect(exp2.propertyIndex).toBe(undefined);
+            expect(part1.container).toBe(null);
+            expect(part1.propertyName).toBe("");
+            expect(part1.propertyIndex).toBe(undefined);
 
-            expect(fcall.args.length).toBe(0);
-            expect(reaktion).toBe(1);
+            expect(part2.container).toBe(null);
+            expect(part2.propertyName).toBe("");
+            expect(part2.propertyIndex).toBe(undefined);
+
+            expect(element.manyPart.length).toBe(0);
         });
         it("should be changed when array element assigned null", () => {
-            fcall.args[0] = null;
+            element.manyPart[0] = null;
 
-            expect(exp1.container).toBe(null);
-            expect(exp1.propertyName).toBe("");
-            expect(exp1.propertyIndex).toBe(undefined);
-            expect(fcall.args[0]).toBe(null);
+            expect(part1.container).toBe(null);
+            expect(part1.propertyName).toBe("");
+            expect(part1.propertyIndex).toBe(undefined);
+            expect(element.manyPart[0]).toBe(null);
 
-            expect(exp2.container).toBe(fcall);
-            expect(exp2.propertyName).toBe("args");
-            expect(exp2.propertyIndex).toBe(1);
-            expect(fcall.args[1]).toBe(exp2);
+            expect(part2.container).toBe(element);
+            expect(part2.propertyName).toBe("manyPart");
+            expect(part2.propertyIndex).toBe(1);
+            expect(element.manyPart[1]).toBe(part2);
 
-            expect(fcall.args.length).toBe(2);
-            expect(reaktion).toBe(1);
+            expect(element.manyPart.length).toBe(2);
+            // expect(reaktion).toBe(1);
+        });
+        it("push null", () => {
+            element.manyPart.push(null);
+
+            expect(element.manyPart.length).toBe(3);
+            expect(element.manyPart[2]).toBe(null);
+        });
+        it("splice null", () => {
+            element.manyPart.splice(0, 0, null);
+
+            expect(element.manyPart.length).toBe(3);
+            expect(element.manyPart[0]).toBe(null);
+
+            expect(part1.container).toBe(element);
+            expect(part1.propertyName).toBe("manyPart");
+            expect(part1.propertyIndex).toBe(1);
+
+            expect(part2.container).toBe(element);
+            expect(part2.propertyName).toBe("manyPart");
+            expect(part2.propertyIndex).toBe(2);
         });
         it("should be changed when array element is removed", () => {
-            fcall.args.splice(0, 1);
+            element.manyPart.splice(0, 1);
 
-            expect(exp1.container).toBe(null);
-            expect(exp1.propertyName).toBe("");
-            expect(exp1.propertyIndex).toBe(undefined);
-            expect(fcall.args[0]).toBe(exp2);
+            expect(part1.container).toBe(null);
+            expect(part1.propertyName).toBe("");
+            expect(part1.propertyIndex).toBe(undefined);
 
-            expect(exp2.container).toBe(fcall);
-            expect(exp2.propertyName).toBe("args");
-            expect(exp2.propertyIndex).toBe(0);
+            expect(part2.container).toBe(element);
+            expect(part2.propertyName).toBe("manyPart");
+            expect(part2.propertyIndex).toBe(0);
 
-            expect(fcall.args.length).toBe(1);
-            expect(reaktion).toBe(1);
-
-            fcall.args.splice(0, 1);
+            expect(element.manyPart.length).toBe(1);
         });
-        it("should be changed when array element is inserted", () => {
-            const newExp = new Expression("new expression");
-            fcall.args.splice(1, 0, newExp);
 
-            expect(newExp.container).toBe(fcall);
-            expect(newExp.propertyName).toBe("args");
-            expect(newExp.propertyIndex).toBe(1);
-            expect(fcall.args[1]).toBe(newExp);
+        function checkUnchanged() {
+            expect(part1.propertyIndex).toBe(0);
+            expect(part1.container).toBe(element);
+            expect(part1.propertyName).toBe("manyPart");
 
-            expect(exp1.container).toBe(fcall);
-            expect(exp1.propertyName).toBe("args");
-            expect(exp1.propertyIndex).toBe(0);
-            expect(fcall.args[0]).toBe(exp1);
-
-            expect(exp2.container).toBe(fcall);
-            expect(exp2.propertyName).toBe("args");
-            expect(exp2.propertyIndex).toBe(2);
-            expect(fcall.args[2]).toBe(exp2);
-
-            expect(fcall.args.length).toBe(3);
-            // expect(reaktion).toBe(1);
-
-            // fcall.args.splice(0, 1);
-        });
+            expect(part2.propertyIndex).toBe(1);
+            expect(part2.container).toBe(element);
+            expect(part2.propertyName).toBe("manyPart");
+        }
     });
 });

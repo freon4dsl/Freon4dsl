@@ -41,7 +41,7 @@ export class ProjectItParser extends CommandLineParser {
         this.addAction(this.testGenerator);
     }
 
-    protected onDefineParameters(): void { 
+    protected onDefineParameters(): void {
         this.verboseArg = this.defineFlagParameter({
             parameterLongName: "--verbose",
             parameterShortName: "-v",
@@ -58,7 +58,12 @@ export class ProjectItParser extends CommandLineParser {
         this.typerGenerator.verbose = this.verboseArg.value;
         this.testGenerator.verbose = this.verboseArg.value;
 
-        return super.onExecute();
+        try {
+            return super.onExecute();
+        } catch (e) {
+            console.log(e.stack);
+        }
+
     }
 }
 
