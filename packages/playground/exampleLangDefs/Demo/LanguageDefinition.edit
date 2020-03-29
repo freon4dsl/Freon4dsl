@@ -1,40 +1,37 @@
 editor StartEditor for language Demo
 
 IfExpression {
-    @projection default
-        [
-        if( [[ this.condition ]] ) then
-            [[ this.whenTrue ]]
+    @projection <name>
+        [+
+        if( [[this.condition]] ) then
+            [[this.whenTrue]]
+        ${this.whenFalse is not empty ?
+        [-
         else
             [[this.whenfalse]]
+        -] }
         endif
-        ]
+        +]
 
     @trigger "if"
     @symbol "+"
 }
 
-PlusExpression {
-    @symbol "+"
-}
-
-DemoEntity {
-    @trigger "entity"
-}
-
 functioncallexpression {
     @projection gewoon
         [
-        [[this.name]] (  )
+        [[this.name]] ( ${ param not empty ? [tekst [[this.param:projectienaam]] } )
         ]
     @trigger "function"
 }
 
 Parameter {
     @projection params
-        [ [[ this.name]] : [[this.type]]]
+        [[this.name] : [this.type]]
     @trigger "param"
 }
+
+// lists
 
 functioncallexpression {
     @projection gewoon
@@ -45,7 +42,7 @@ functioncallexpression {
 }
 
 DemoModel {
-    @projection dasda
+    @projection
         [
         model [[this.name]] {
         entities:
@@ -54,7 +51,7 @@ DemoModel {
                 @terminator [\n\n]
             ]]
         functions:
-            [[this.functions @horizontal @separator [\n] ]]
+            [[this.functions @vertical @terminator [\n] ]]
         }
         ]
  }
