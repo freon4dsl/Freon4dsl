@@ -1,4 +1,4 @@
-import { Checker } from "../../utils/Checker";
+import { Checker } from "../../utils";
 import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangClassInterface, PiLangEnumeration, PiLangUnion, PiLangEnumProperty } from "./PiLanguage";
 import { PiLangConceptReference, PiLangBinaryExpConceptReference } from "./PiLangReferences";
 import { PiLogger } from "../../../../core/src/util/PiLogging";

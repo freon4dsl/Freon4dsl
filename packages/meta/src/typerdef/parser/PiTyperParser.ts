@@ -1,7 +1,7 @@
-import { PiParser } from "../../utils/PiParser";
-import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
-import { PiTypeDefinition } from "../metalanguage/PiTyperDefLang";
-import { PiTyperChecker } from "../metalanguage/PiTyperChecker";
+import { PiParser } from "../../utils";
+import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiTypeDefinition } from "../metalanguage";
+import { PiTyperChecker } from "../metalanguage";
 
 let typerParser = require("./PiTyperGrammar");
 

@@ -1,5 +1,4 @@
 export * from "./editor";
-export * from "./editor/boxes";
 export * from "./editor/components";
 export * from "./language";
 export * from "./scoper";

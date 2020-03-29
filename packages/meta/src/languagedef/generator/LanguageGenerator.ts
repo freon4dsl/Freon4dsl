@@ -1,20 +1,20 @@
-import { EnvironmentTemplate } from "./templates/EnvironmentTemplate";
-import { PiReferenceTemplate } from "./templates/PiReferenceTemplate";
-import { Helpers } from "../../utils/Helpers";
-import { LanguageIndexTemplate } from "./templates/LanguageIndexTemplate";
-import { AllConceptsTemplate } from "./templates/AllConceptsTemplate";
-import { Names } from "../../utils/Names";
-import { EnumerationTemplate } from "./templates/EnumerationTemplate";
-import { UnionTemplate } from "./templates/UnionTemplate";
-import { LanguageTemplates } from "./templates/LanguageTemplate";
-import { PiLanguageUnit } from "../metalanguage/PiLanguage";
-import { ConceptTemplate } from "./templates/ConceptTemplate";
 import * as fs from "fs";
-import { ENVIRONMENT_FOLDER, LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER } from "../../utils/GeneratorConstants";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { WalkerTemplate } from "./templates/WalkerTemplate";
-import { WorkerInterfaceTemplate } from "./templates/WorkerInterfaceTemplate";
-import { UnparserTemplate } from "./templates/UnparserTemplate";
+import { ENVIRONMENT_FOLDER, Helpers, LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER, Names } from "../../utils";
+import { PiLanguageUnit } from "../metalanguage/PiLanguage";
+import {
+    AllConceptsTemplate,
+    ConceptTemplate,
+    EnumerationTemplate,
+    EnvironmentTemplate,
+    LanguageIndexTemplate,
+    LanguageTemplates,
+    PiReferenceTemplate,
+    UnionTemplate,
+    UnparserTemplate,
+    WalkerTemplate,
+    WorkerInterfaceTemplate
+} from "./templates";
 
 const LOGGER = new PiLogger("LanguageGenerator"); // .mute();
 export class LanguageGenerator {
@@ -23,7 +23,7 @@ export class LanguageGenerator {
     protected environmentFolder: string;
     utilsFolder: string;
 
-    constructor() {    }
+    constructor() {}
 
     generate(language: PiLanguageUnit, verbose?: boolean): void {
         if (verbose) LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_FOLDER);
