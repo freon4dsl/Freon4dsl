@@ -1,5 +1,5 @@
-import { PiScopeDef, PiNamespace } from "../metalanguage/PiScopeDefLang";
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { PiScopeDef, PiNamespace } from "../metalanguage";
+import { PiLangConceptReference } from "../../languagedef/metalanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 // TODO change comment

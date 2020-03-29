@@ -110,6 +110,7 @@ concept DemoEqualsExpression base DemoComparisonExpression {
 
 concept DemoFunctionCallExpression base DemoExpression {
     @reference functionDefinition: DemoFunction
+    @editor trigger: string = "function"
 }
 
 concept DemoIfExpression base DemoExpression {
@@ -121,6 +122,8 @@ concept DemoIfExpression base DemoExpression {
 
 concept DemoVariableRef base DemoExpression {
     @reference attribute: DemoAttribute
+    @editor symbol: string = "varref"
+
 }
 
 enumeration DemoAttributeType {

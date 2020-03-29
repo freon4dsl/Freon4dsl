@@ -1,11 +1,12 @@
 import {
-    PiLangElementReference,
-    PiLangPropertyReference,
+    PiLangConceptProperty,
     PiLangConceptReference,
+    PiLangElementReference,
     PiLangEnumerationReference,
-    PiLangFunctionReference
-} from "./PiLangReferences";
-import { PiLangConceptProperty, PiLangProperty } from "./PiLanguage";
+    PiLangFunctionReference,
+    PiLangProperty,
+    PiLangPropertyReference
+} from ".";
 
 // Expressions over the PiLanguage structure
 

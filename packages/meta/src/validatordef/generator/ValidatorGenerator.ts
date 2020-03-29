@@ -1,12 +1,10 @@
-import { Helpers } from "../../utils/Helpers";
-import { PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
 import * as fs from "fs";
-import { VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/GeneratorConstants";
-import { Names } from "../../utils/Names";
-import { ValidatorTemplate } from "./templates/ValidatorTemplate";
-import { PiValidatorDef } from "../metalanguage/ValidatorDefLang";
-import { CheckerTemplate } from "./templates/CheckerTemplate";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { Helpers, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils";
+import { PiValidatorDef } from "../metalanguage";
+import { CheckerTemplate } from "./templates/CheckerTemplate";
+import { ValidatorTemplate } from "./templates/ValidatorTemplate";
 
 const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
 export class ValidatorGenerator {

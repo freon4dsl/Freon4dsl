@@ -1,10 +1,8 @@
+import { PiDefEditor, PiDefEditorLanguage, PiDefEditorProjection } from ".";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { Editor } from "./Editor";
-import { PiLanguageEditor } from "./PiLanguageEditor";
-import { PiProjectionTemplate } from "./PiProjectionTemplate";
 
-export class PiConceptEditor implements Editor {
-    languageEditor: PiLanguageEditor;
+export class PiDefEditorConcept implements PiDefEditor {
+    languageEditor: PiDefEditorLanguage;
     concept: PiLangConceptReference;
 
     trigger: string;
@@ -15,5 +13,5 @@ export class PiConceptEditor implements Editor {
     isBinaryExpression: boolean;
     isExpressionPlaceHolder: boolean;
 
-    projection: PiProjectionTemplate;
+    projection: PiDefEditorProjection;
 }
