@@ -17,7 +17,6 @@ import {
 import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoUnparser } from "../unparser/DemoUnparser";
 
 describe('Testing Validator', () => {
     describe('Validate DemoModel Instance', () => {
@@ -117,7 +116,7 @@ describe('Testing Validator', () => {
             // expect(errors.length).toBe(3);
             errors.forEach(e => {
                 expect(e.reportedOn === determine);
-                console.log(e.message);
+                // console.log(e.message);
             });
         })
 

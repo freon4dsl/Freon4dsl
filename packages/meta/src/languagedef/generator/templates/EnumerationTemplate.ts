@@ -1,16 +1,18 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLangEnumeration } from "../../metalanguage/PiLanguage";
 
 export class EnumerationTemplate {
     constructor() {
     }
 
-    generateEnumeration(enumeration: PiLangEnumeration): string {
+    generateEnumeration(enumeration: PiLangEnumeration, relativePath: string): string {
         const language = enumeration.language;
         const extendsClass = "MobxModelElementImpl";
         const isBinaryExpression = false;
         const isExpression = false;       
-        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement"));    
+        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : "PiElement")); 
+        const enumerationName = Names.enumeration(enumeration);   
 
         const mobxImports: string[] = ["model"];
         // if( element.references.length > 0) {
@@ -21,12 +23,12 @@ export class EnumerationTemplate {
         // Template starts here
         return `
         import * as uuid from "uuid";
-        import { ${language.name}ConceptType } from "./${language.name}";
-        import { ${mobxImports.join(",")} } from "@projectit/core";
-        import { PiElement, PiExpression, PiBinaryExpression } from "@projectit/core";
+        import { ${Names.metaType(language)} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${mobxImports.join(",")} } from "${PathProvider.corePath}";
+        import { ${Names.PiElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression } } from "${PathProvider.corePath}";
     
-        export class ${Names.enumeration(enumeration)} extends ${extendsClass} implements ${implementsPi} {
-            readonly $typename: ${language.name}ConceptType = "${Names.enumeration(enumeration)}";
+        export class ${enumerationName} extends ${extendsClass} implements ${implementsPi} {
+            readonly $typename: ${language.name}ConceptType = "${enumerationName}";
             $id: string;
                 
             constructor(name: string, id?: string) {
@@ -40,10 +42,10 @@ export class EnumerationTemplate {
             }
 
             ${enumeration.literals.map(lit => 
-                `static ${lit}: ${Names.enumeration(enumeration)} = ${Names.enumeration(enumeration)}.fromString("${lit}")` ).join(";")}
-            static $piANY : ${Names.enumeration(enumeration)} = ${Names.enumeration(enumeration)}.fromString("$piANY");
+                `static ${lit}: ${enumerationName} = ${enumerationName}.fromString("${lit}")` ).join(";")}
+            static $piANY : ${enumerationName} = ${enumerationName}.fromString("$piANY");
 
-            static values = [${enumeration.literals.map(l => `${Names.enumeration(enumeration)}.${l}`).join(", ")}]
+            static values = [${enumeration.literals.map(l => `${enumerationName}.${l}`).join(", ")}]
         
             public readonly name : string;
         
@@ -51,20 +53,20 @@ export class EnumerationTemplate {
                 return this.name;
             }
         
-            static fromString(v: string): ${Names.enumeration(enumeration)} {
+            static fromString(v: string): ${enumerationName} {
                 switch(v) {
                     ${enumeration.literals.map(lit => `case "${lit}": 
                     if (this.${lit} !== null) {
-                        return new ${Names.enumeration(enumeration)}("${lit}");
+                        return new ${enumerationName}("${lit}");
                     } else {
-                        return ${Names.enumeration(enumeration)}.${lit};
+                        return ${enumerationName}.${lit};
                     }`                   
                     ).join(";")}
                     default: 
-                    if (this.ANY !== null) {
-                        return new ${Names.enumeration(enumeration)}("ANY");
+                    if (this.$piANY !== null) {
+                        return new ${enumerationName}("$piANY");
                     } else {
-                        return ${Names.enumeration(enumeration)}.ANY;
+                        return ${enumerationName}.$piANY;
                     }
                 }
             }

@@ -1,7 +1,9 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
 import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage/PiLangExpressions";
+import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
+
 
 export class PiTyperTemplate {
     typerdef: PiTypeDefinition;
@@ -9,29 +11,26 @@ export class PiTyperTemplate {
     constructor() {
     }
 
-    generateTyper(language: PiLanguageUnit, typerdef: PiTypeDefinition): string {
+    generateTyper(language: PiLanguageUnit, typerdef: PiTypeDefinition, relativePath: string): string {
         this.typerdef = typerdef;
-        const allLangConcepts: string = Names.allConcepts(language);
-        const langConceptType: string = Names.languageConceptType(language);
-        // TODO should take name into account
-        // const generatedClassName : String = Names.typer(language, typerdef);
-        const generatedClassName: string = Names.typer(language);
-        const rootType: string = this.typerdef.typeroot.name;
-        const defaultType: string = this.findDefault();
-
-        // Template starts here
+        const allLangConcepts : string = Names.allConcepts(language);   
+        const generatedClassName : string = Names.typer(language);
+        const typerInterfaceName : string = Names.PiTyper;
+        const rootType : string = this.typerdef.typeroot.name;
+        const defaultType : string = this.findDefault();
+        
+        // Template starts here 
         return `
-        import { ${allLangConcepts} } from "../../language";
-        import { ${Names.typerInterface()} } from "@projectit/core";
-        import { ${langConceptType} } from "../../language/${language.name}";   
+        import { ${typerInterfaceName} } from "${PathProvider.corePath}";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageFolder}";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "../../language";      
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";      
                 import { ${language.enumerations.map(concept => `
-                ${concept.name}`).join(", ")} } from "../../language";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
         import { ${language.unions.map(concept => `
-                ${concept.name}`).join(", ")} } from "../../language";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
 
-        export class ${generatedClassName} implements ${Names.typerInterface()} {
+        export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType : ${rootType} = ${defaultType};
 
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
@@ -123,7 +122,7 @@ export class PiTyperTemplate {
             if (tr instanceof PiTypeConceptRule) {
                 let myConceptName = tr.conceptRef.name;
                 for ( let stat of tr.statements  ) {
-                    // TODO change all references to the string to a global variable
+                    // TODO change all references to the string "infertype" to a global variable
                     // TODO change the order in which the statements are generated, because subclasses need to overwrite their super
                     // and thus their statement needs to come before the super statement
                     if ( stat.statementtype === "infertype" && !stat.isAbstract) {                        

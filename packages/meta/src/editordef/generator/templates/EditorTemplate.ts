@@ -1,13 +1,14 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class EditorTemplate {
     constructor() {
     }
 
-    generateEditor(language: PiLanguageUnit, withToolbar: boolean): string {
+    generateEditor(language: PiLanguageUnit, withToolbar: boolean, relativePath: string): string {
         return `
-            import { PiActions, PiContext, PiEditor, PiProjection } from "@projectit/core";
+            import { ${Names.PiActions}, ${Names.PiContext}, ${Names.PiEditor}, ${Names.PiProjection} } from "${PathProvider.corePath}";
             ${withToolbar ? `
             import { PiEditorWithToolbar } from "../../toolbars/ToolBarDefinition";
             import { MyToolbarItem } from "../../toolbars/MyToolbarItem";

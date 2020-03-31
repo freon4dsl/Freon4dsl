@@ -1,4 +1,5 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 
@@ -6,23 +7,21 @@ export class ScoperTemplate {
     constructor() {
     }
 
-    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef): string {
+    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
         // console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
-        const langConceptType : string = Names.languageConceptType(language);     
-        const generatedClassName : string = Names.scoper(language, scopedef);
-        const namespaceClassName : string = Names.namespace(language, scopedef);
+        const langConceptType : string = Names.metaType(language);     
+        const generatedClassName : string = Names.scoper(language);
+        const namespaceClassName : string = Names.namespace(language);
+        const scoperInterfaceName : string = Names.PiScoper;
 
-        // TODO removed DemoAttribute and DemoVariable
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => `
-        ${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")}, DemoVariable, DemoAttribute } from "../../language";
-        import { ${langConceptType} } from "../../language/${language.name}";        
+        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";   
         import { ${namespaceClassName} } from "./${namespaceClassName}";
-        import { PiScoper, PiNamedElement } from "@projectit/core"
+        import { ${scoperInterfaceName},  ${Names.PiNamedElement} } from "${PathProvider.scoperInterface()}"
         
-        export class ${generatedClassName} implements PiScoper {
+        export class ${generatedClassName} implements ${scoperInterfaceName} {
             isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
                 if (this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null) {
                     return true;
@@ -66,4 +65,5 @@ export class ScoperTemplate {
             }
         }`;
     }
+
 }

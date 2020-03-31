@@ -1,7 +1,7 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
-export class LanguageIndexTemplate {
+export class IndexTemplate {
     constructor() {
     }
 
@@ -15,9 +15,10 @@ export class LanguageIndexTemplate {
             tmp.push(Names.enumeration(c))
         );
         language.unions.map(c =>
-            tmp.push(Names.type(c))
+            tmp.push(Names.union(c))
         );
         tmp.push(Names.allConcepts(language));
+        tmp.push(Names.metaType(language));
 
         tmp = tmp.sort();
 

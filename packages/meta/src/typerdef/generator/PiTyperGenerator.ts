@@ -27,9 +27,12 @@ export class PiTyperGenerator {
         Helpers.createDirIfNotExisting(this.typerFolder, verbose);
         Helpers.createDirIfNotExisting(this.typerGenFolder, verbose);
 
+        // set relative path to get the imports right
+        let relativePath = "../../";
+
         //  Generate typer
         if (verbose) LOGGER.log("Generating typer class");
-        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef), "Validator Class", verbose);
+        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Validator Class", verbose);
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
         if (verbose) LOGGER.log("Succesfully generated typer: " + typerdef.name);

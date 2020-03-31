@@ -29,8 +29,8 @@ import {
     DemoAttributeType,
     DemoType
 } from "../../language";
-import { DemoUnparser } from "../../../demo/unparser/DemoUnparser";
-import { DemoWorker } from "../../../demo/utils/gen/DemoWorker";
+import { DemoUnparser } from "../../unparser/DemoUnparser";
+import { DemoWorker } from "../../utils/gen/DemoWorker";
 
 export class DemoChecker implements DemoWorker {
     myUnparser = new DemoUnparser();
@@ -372,6 +372,9 @@ export class DemoChecker implements DemoWorker {
 
     public execBeforeDemoVariableRef(modelelement: DemoVariableRef) {}
     public execAfterDemoVariableRef(modelelement: DemoVariableRef) {}
+
+    public execBeforeDemoAttributeType(modelelement: DemoAttributeType) {}
+    public execAfterDemoAttributeType(modelelement: DemoAttributeType) {}
 
     private isValidName(name: string): boolean {
         if (name == null) return false;

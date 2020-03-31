@@ -1,11 +1,12 @@
 import { Names } from "../../../utils/Names";
-import { PiLangConcept, PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangClass } from "../../metalanguage/PiLanguage";
+import { PathProvider } from "../../../utils/PathProvider";
+import { PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
     }
 
-    generateConcept(concept: PiLangClass): string {
+    generateConcept(concept: PiLangClass, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.referedElement()) : "MobxModelElementImpl";
@@ -25,7 +26,7 @@ export class ConceptTemplate {
                 concept.parts.map(p => Names.concept(p.type.referedElement()))
                     .concat(concept.references.map(r => Names.concept(r.type.referedElement())))
                     .concat(language.enumerations.map(e => Names.enumeration(e)))
-                    .concat(language.unions.map(e => Names.type(e)))
+                    .concat(language.unions.map(e => Names.union(e)))
                     .concat(Names.concept(language.expressionPlaceholder()))
                     .concat([baseExpressionName])
                     .filter(name => !(name === concept.name))
@@ -61,14 +62,13 @@ export class ConceptTemplate {
 
         // Template starts here
         const result = `
-            ${concept.primProperties.length > 0 ? `import { observable } from "mobx";` : ""}
+            ${(concept.primProperties.length > 0 || concept.enumProperties.length > 0)? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
-            import { ${mobxImports.join(",")} } from "@projectit/core";
-            import { PiElementReference } from "./PiElementReference";
-            import { ${language.name}ConceptType } from "./${language.name}";
+            import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PathProvider.corePath}";
+            import { ${mobxImports.join(",")} } from "${PathProvider.corePath}";
+            import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
+            import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
-
             @model
             export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi} 
             {
@@ -167,7 +167,7 @@ export class ConceptTemplate {
 
     generateEnumerationProperty(property: PiLangEnumProperty): string {
         return `
-            @observable ${property.name}: ${Names.enumeration((property.type.referedElement()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referedElement()))}.ANY;`};
+            @observable ${property.name}: ${Names.enumeration((property.type.referedElement()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referedElement()))}.$piANY;`};
         `;
     }
 
