@@ -1,22 +1,22 @@
-import { flatten, flatMap, difference , xor } from "lodash";
+import { flatten } from "lodash";
 import { Names } from "../../../utils/Names";
-import { PiLanguageUnit, PiLangExpressionConcept, PiLangBinaryExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PathProvider } from "../../../utils/PathProvider";
+import { PiLanguageUnit, PiLangBinaryExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ActionsTemplate {
     constructor() {
     }
 
     // TODO remove typecast on line 54
-    generateDefaultActions(language: PiLanguageUnit): string {
+    generateDefaultActions(language: PiLanguageUnit, relativePath: string): string {
         return `
-            import * as Keys from "@projectit/core";
+            import * as Keys from "${PathProvider.corePath}";
             import {
                 AFTER_BINARY_OPERATOR,
                 BEFORE_BINARY_OPERATOR,
-                Box,
                 EXPRESSION_PLACEHOLDER,
+                Box,
                 KeyboardShortcutBehavior,
-                LEFT_MOST,
                 MetaKey,
                 PiActions,
                 PiBinaryExpressionCreator,
@@ -29,10 +29,11 @@ export class ActionsTemplate {
                 PiLogger,
                 PiTriggerType,
                 PiUtils,
+                LEFT_MOST,
                 RIGHT_MOST
-            } from "@projectit/core";
+            } from "${PathProvider.corePath}";
             
-            ${language.classes.map(c => `import { ${Names.concept(c)} } from "../../language/${Names.concept(c)}";`).join("")}
+            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.classes.filter(c => c.expression() && !c.isAbstract && !!c.trigger).map(c =>
@@ -114,7 +115,7 @@ export class ActionsTemplate {
                 PiBinaryExpressionCreator,
                 PiCustomBehavior,
                 PiExpressionCreator
-            } from "@projectit/core";
+            } from "${PathProvider.corePath}";
             
             export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 // Add your own custom expression creators here
@@ -143,12 +144,12 @@ export class ActionsTemplate {
                 PiBinaryExpressionCreator,
                 PiCustomBehavior,
                 PiExpressionCreator
-            } from "@projectit/core";
+            } from "${PathProvider.corePath}";
             
             import { EXPRESSION_CREATORS, BINARY_EXPRESSION_CREATORS, CUSTOM_BEHAVIORS, KEYBOARD } from "./${Names.defaultActions(language)}";
             import { MANUAL_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS, MANUAL_CUSTOM_BEHAVIORS, MANUAL_KEYBOARD } from "../${Names.manualActions(language)}";
 
-            export class ${Names.actions(language)} implements PiActions {
+            export class ${Names.actions(language)} implements ${Names.PiActions} {
                 // Combine generated and manually written actions, where manual actions may override the generated ones
                 expressionCreators: PiExpressionCreator[] = PiActionsUtil.join(EXPRESSION_CREATORS, MANUAL_EXPRESSION_CREATORS) as PiExpressionCreator[];
                 binaryExpressionCreators: PiBinaryExpressionCreator[] = PiActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS) as PiBinaryExpressionCreator[];

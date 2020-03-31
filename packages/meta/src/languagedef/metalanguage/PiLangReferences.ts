@@ -18,13 +18,13 @@ import { PiLangElement, PiLanguageUnit, PiLangClass, PiLangConcept, PiLangInterf
 // the hierarchy mirrors the hierarchy of the language structure
 
 // root of the references 
-export abstract class PiLangElementReference {
+export class PiLangElementReference {
 	language: PiLanguageUnit;
 	name: string; // maybe later this should be path
 	
 	referedElement() : PiLangElement {
 		// return this.language?.findElement(this.name);
-		return null; // Shoule be implemented by subclasses
+		return null; // Should be implemented by subclasses
 	}
 }
 
@@ -35,7 +35,6 @@ export class PiLangConceptReference extends PiLangElementReference {
 }
 
 export class PiLangClassReference extends PiLangConceptReference {
-
 	referedElement() : PiLangClass {
 		return this.language?.findClass(this.name);
 	}

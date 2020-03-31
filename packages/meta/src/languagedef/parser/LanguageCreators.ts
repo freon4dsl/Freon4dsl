@@ -99,7 +99,6 @@ export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>):
     // console.log("createPrimitiveProperty " + data.name);
     const result = new PiLangPrimitiveProperty();
     if(!!data.primType) { result.primType = data.primType; }
-    if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
     return result;

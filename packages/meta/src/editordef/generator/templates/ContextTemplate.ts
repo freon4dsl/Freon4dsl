@@ -1,31 +1,34 @@
 import { Names } from "../../../utils/Names";
-import { PiLangConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PathProvider } from "../../../utils/PathProvider";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+
 
 export class ContextTemplate {
     constructor() {
     }
 
-    generateContext(language: PiLanguageUnit): string {
-        const rootConcept: PiLangConcept = language.rootConcept();
-        const placeholderConcept: PiLangConcept = language.expressionPlaceholder();
+    generateContext(language: PiLanguageUnit, relativePath: string): string {
+        const rootConceptName = Names.concept(language.rootConcept());
+        const placeHolderConceptName = Names.concept(language.expressionPlaceholder());
+        const initializationName = Names.initialization(language);
+
         return `
             import { action, observable } from "mobx";
-            import { PiContext, PiExpression } from "@projectit/core";
-            import { ${language.name}Initialization } from "../${language.name}Initialization";
-            import { ${Names.concept(rootConcept)} } from "../../language/${Names.concept(rootConcept)}";
-            import { ${Names.concept(placeholderConcept)} } from "../../language/${Names.concept(placeholderConcept)}";
+            import { ${Names.PiContext}, ${Names.PiExpression} } from "${PathProvider.corePath}";
+            import { ${initializationName} } from "../${initializationName}";
+            import { ${rootConceptName}, ${placeHolderConceptName} } from "${relativePath}${PathProvider.languageFolder}";
             
             export class ${Names.context(language)} implements PiContext {
-                @observable private _rootElement: ${Names.concept(language.rootConcept())};
+                @observable private _rootElement: ${rootConceptName};
             
-                model: ${Names.concept(rootConcept)} = new ${Names.concept(rootConcept)}();
+                model: ${rootConceptName} = new ${rootConceptName}();
             
-                constructor(initialExpression?: ${Names.concept(rootConcept)}) {
+                constructor(initialExpression?: ${rootConceptName}) {
                     this.rootElement = initialExpression ? initialExpression : this.model;
                     this.initialize();
                 }
             
-                set rootElement(exp: ${Names.concept(rootConcept)}) {
+                set rootElement(exp: ${rootConceptName}) {
                     this._rootElement = exp;
                     this._rootElement.container = null;
                     exp.container = this;
@@ -35,7 +38,7 @@ export class ContextTemplate {
                     exp.container = null;
                 }
             
-                get rootElement(): ${Names.concept(rootConcept)} {
+                get rootElement(): ${rootConceptName} {
                     return this._rootElement;
                 }
             
@@ -44,12 +47,12 @@ export class ContextTemplate {
                 }
             
                 getPlaceHolderExpression(): PiExpression {
-                    return new ${Names.concept(placeholderConcept)}; 
+                    return new ${placeHolderConceptName}; 
                 }
             
                 @action
                 private initialize() {
-                    this.rootElement = new ${language.name}Initialization().initialize();
+                    this.rootElement = new ${initializationName}().initialize();
                 }
             }
         
