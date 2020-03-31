@@ -1,11 +1,12 @@
 import { Names } from "../../../utils/Names";
-import { PiLangEnumeration, PiLangUnion } from "../../metalanguage/PiLanguage";
+import { PathProvider } from "../../../utils/PathProvider";
+import { PiLangUnion } from "../../metalanguage/PiLanguage";
 
 export class UnionTemplate {
     constructor() {
     }
 
-    generateUnion(union: PiLangUnion): string {
+    generateUnion(union: PiLangUnion, relativePath: string): string {
         const language = union.language;
 
         // Template starts here
@@ -13,7 +14,7 @@ export class UnionTemplate {
         ${union.members.map(lit => 
             `import { ${lit.name} } from "./${lit.name}"` ).join(";")}
     
-        export type ${Names.type(union)} = ${union.members.map(lit => 
+        export type ${Names.union(union)} = ${union.members.map(lit => 
                 `${lit.name}` ).join(" | ")}
         `;
     }

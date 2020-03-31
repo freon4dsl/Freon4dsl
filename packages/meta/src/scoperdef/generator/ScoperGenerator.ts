@@ -29,14 +29,17 @@ export class ScoperGenerator {
         Helpers.createDirIfNotExisting(this.scoperFolder, verbose);
         Helpers.createDirIfNotExisting(this.scoperGenFolder, verbose);
 
+        // set relative path to get the imports right
+        let relativePath = "../../";
+
         //  Generate it
         if (verbose) LOGGER.log("Generating Namespace");
-        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef), "Namespace Class", verbose);
-        fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language, scopedef)}.ts`, namespaceFile);
+        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef, relativePath), "Namespace Class", verbose);
+        fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`, namespaceFile);
         
         if (verbose) LOGGER.log("Generating Scoper");
-        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef), "Scoper Class", verbose);
-        fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language, scopedef)}.ts`, scoperFile);
+        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class", verbose);
+        fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
         // var scoperIndexFile = Helpers.pretty(ScoperIndexTemplate.generateIndex(this.language), "Scoper Index");
         // fs.writeFileSync(`${this.scoperFolder}/index.ts`, scoperIndexFile);

@@ -1,4 +1,5 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 
@@ -6,21 +7,21 @@ export class ScoperTemplate {
     constructor() {
     }
 
-    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef): string {
+    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
         // console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
-        const langConceptType : string = Names.languageConceptType(language);     
-        const generatedClassName : string = Names.scoper(language, scopedef);
-        const namespaceClassName : string = Names.namespace(language, scopedef);
+        const langConceptType : string = Names.metaType(language);     
+        const generatedClassName : string = Names.scoper(language);
+        const namespaceClassName : string = Names.namespace(language);
+        const scoperInterfaceName : string = Names.PiScoper;
 
         // Template starts here
         return `
-        import { ${allLangConcepts} } from "../../language";
-        import { ${langConceptType} } from "../../language/${language.name}";        
+        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";   
         import { ${namespaceClassName} } from "./${namespaceClassName}";
-        import { PiScoper, PiNamedElement } from "@projectit/core"
+        import { ${scoperInterfaceName},  ${Names.PiNamedElement} } from "${PathProvider.scoperInterface()}"
         
-        export class ${generatedClassName} implements PiScoper {
+        export class ${generatedClassName} implements ${scoperInterfaceName} {
             isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
                 if (this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null) {
                     return true;
@@ -63,27 +64,6 @@ export class ScoperTemplate {
                 return result;
             }
         }`;
-    }
-
-    private createImports(language: PiLanguageUnit) : string {
-        // sort all names alphabetically
-        let tmp : string[] = [];
-        language.classes.map(c => 
-            tmp.push(Names.concept(c))
-        );
-        language.enumerations.map(c =>
-            tmp.push(Names.enumeration(c))
-        );
-        language.unions.map(c =>
-            tmp.push(Names.type(c))
-        );
-        tmp = tmp.sort();
-    
-        // the template starts here
-        return `
-            ${tmp.map(c => 
-                `${c}`
-            ).join(", ")}`;
     }
 
 }

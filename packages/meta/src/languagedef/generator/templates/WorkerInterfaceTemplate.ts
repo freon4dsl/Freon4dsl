@@ -1,15 +1,16 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
 export class WorkerInterfaceTemplate {
     constructor() {
     }
 
-    generateWorkerInterface(language: PiLanguageUnit): string {
+    generateWorkerInterface(language: PiLanguageUnit, relativePath: string): string {
         
         // the template starts here
         return `
-        import { ${this.createImports(language, )} } from "../../language"; 
+        import { ${this.createImports(language, )} } from "${relativePath}${PathProvider.languageFolder}"; 
 
         export interface ${Names.workerInterface(language)} {
 
@@ -36,7 +37,7 @@ export class WorkerInterfaceTemplate {
             tmp.push(Names.enumeration(c))
         );
         language.unions.map(c =>
-            tmp.push(Names.type(c))
+            tmp.push(Names.union(c))
         );
         tmp = tmp.sort();
     

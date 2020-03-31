@@ -1,19 +1,19 @@
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class SelectionHelpers {
 
-    generate(language: PiLanguageUnit): string {
+    generateEnumProjection(language: PiLanguageUnit, relativePath: string): string {
         // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
-        import { PiElement, SelectBox, SelectOption } from "@projectit/core";
-        import { demoStyles } from "../../styles/styles";
-        import { ${Names.environment(language)} } from "../../environment/${Names.environment(language)}";
+        import { ${Names.PiElement}, SelectBox, SelectOption } from "${PathProvider.corePath}";
+        import { ${Names.styles(language)} } from "${relativePath}${PathProvider.editorstyles}";
+        import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environment}/${Names.environment(language)}";
 
-        ${language.enumerations.map(en =>
-            `import { ${Names.enumeration(en)} } from "../../language/${Names.enumeration(en)}";`
-        ).join("")}
+        import { ${language.enumerations.map(en =>
+            ` ${Names.enumeration(en)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
 
         export class ${Names.selectionHelpers(language)} {
         ${language.enumerations.map(en =>
@@ -35,7 +35,7 @@ export class SelectionHelpers {
                     (option: SelectOption) => {
                         setAction(option);
                     },
-                    { style: demoStyles.function }
+                    { style: ${Names.styles(language)}.function }
                 );
             }
         `
@@ -48,7 +48,7 @@ export class SelectionHelpers {
     generateRefs(language: PiLanguageUnit): string {
         return `
         public getReferenceBox(
-            element: PiElement,
+            element: ${Names.PiElement},
             role: string,
             placeholder: string,
             metaType: string,

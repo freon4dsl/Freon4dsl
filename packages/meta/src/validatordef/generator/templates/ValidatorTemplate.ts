@@ -1,4 +1,5 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
 
@@ -6,29 +7,32 @@ export class ValidatorTemplate {
     constructor() {
     }
 
-    generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef): string {
+    generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
-        const langConceptType : string = Names.languageConceptType(language);     
-        const generatedClassName : string = Names.validator(language, validdef);
-        const walkerName: string = Names.walker(language);
+        const generatedClassName : string = Names.validator(language);
+        const errorClassName : string = Names.PiError;
+        const checkerClassName : string = Names.checker(language);
+        const walkerClassName: string = Names.walker(language);
+        const validatorInterfaceName: string = Names.PiValidator;
+        const typerInterfaceName: string = Names.PiTyper;
 
         // Template starts here 
         return `
-        import { ${allLangConcepts} } from "../../language";
-        import { ${Names.validatorInterface()}, ${Names.errorClassName()}, ${Names.typerInterface()} } from "@projectit/core";
-        import { ${Names.checker(language,validdef)} } from "./${Names.checker(language,validdef)}";
-        import { ${walkerName} } from "../../../demo/utils/gen/${walkerName}";
+        import { ${validatorInterfaceName}, ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.corePath}";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
+        import { ${checkerClassName} } from "${relativePath}${PathProvider.checker(language)}";
+        import { ${walkerClassName} } from "${relativePath}${PathProvider.walker(language)}";
 
-        export class ${generatedClassName} implements ${Names.validatorInterface()} {
-            myTyper : ${Names.typerInterface()};
+        export class ${generatedClassName} implements ${validatorInterfaceName} {
+            myTyper : ${typerInterfaceName};
 
-            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${Names.errorClassName()}[]{
-                let myChecker = new ${Names.checker(language, validdef)}();
-                let errorlist : ${Names.errorClassName()}[] = [];
+            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${errorClassName}[]{
+                let myChecker = new ${checkerClassName}();
+                let errorlist : ${errorClassName}[] = [];
                 myChecker.errorList = errorlist;
                 myChecker.typer = this.myTyper;
 
-                let myWalker = new ${walkerName}();
+                let myWalker = new ${walkerClassName}();
                 myWalker.myWorker = myChecker;
                 myWalker.walk(modelelement, includeChildren );
 

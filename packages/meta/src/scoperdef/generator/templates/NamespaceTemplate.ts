@@ -1,26 +1,27 @@
 import { Names } from "../../../utils/Names";
+import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiScopeDef, PiNamespace } from "../../metalanguage/PiScopeDefLang";
+import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 
 export class NamespaceTemplate {
     constructor() {
     }
 
-    generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef): string {
+    generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
         // console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
-        const langConceptType : string = Names.languageConceptType(language);     
-        const generatedClassName : string = Names.namespace(language, scopedef);
+        const langConceptType : string = Names.metaType(language);     
+        const generatedClassName : string = Names.namespace(language);
+        const piNamedElementClassName : string = Names.PiNamedElement;
         let myIfStatement = this.createIfStatement(scopedef);
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => `
-        ${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "../../language";
-        ${scopedef.namespaces.length == 0?
-            `import { ${language.rootConcept().name} } from "../../language";` : ``}  
-        import { ${langConceptType} } from "../../language/${language.name}";
-        import { PiNamedElement } from "@projectit/core";
+        import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => 
+            `${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${scopedef.namespaces.length == 0? `${language.rootConcept().name}, ` : ``}
+             ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${Names.PiNamedElement}} from "${PathProvider.corePath}";
 
         export class ${generatedClassName} {
             _myElem : ${allLangConcepts}; // any element in the model
@@ -31,8 +32,8 @@ export class NamespaceTemplate {
         
             // if excludeSurrounding is true, then the elements from all parent namespaces are 
             // not included in the result
-            public getVisibleElements(metatype?: ${langConceptType}, excludeSurrounding?: boolean) : PiNamedElement[] {
-                let result : PiNamedElement[] = [];
+            public getVisibleElements(metatype?: ${langConceptType}, excludeSurrounding?: boolean) : ${piNamedElementClassName}[] {
+                let result : ${piNamedElementClassName}[] = [];
                 // from modelelement get its surrounding namespace
                 let ns = this.getSurroundingNamespace(this._myElem);
                 if (ns !== null) {
@@ -57,8 +58,8 @@ export class NamespaceTemplate {
                 return result;
             }
         
-            private internalVis(metatype?: ${langConceptType}): PiNamedElement[] {
-                let result : PiNamedElement[] = [];
+            private internalVis(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
+                let result : ${piNamedElementClassName}[] = [];
         
                 // for now we push all parts, later public/private annotations need to be taken into account 
                 ${myIfStatement}       
@@ -99,7 +100,7 @@ export class NamespaceTemplate {
                 return parent;
             }
 
-            private addIfTypeOK(z: PiNamedElement, result: PiNamedElement[], metatype?: ${langConceptType}) {
+            private addIfTypeOK(z: ${piNamedElementClassName}, result: ${piNamedElementClassName}[], metatype?: ${langConceptType}) {
                 if (metatype) {
                     if (z.piLanguageConcept() === metatype) {
                         result.push(z);
