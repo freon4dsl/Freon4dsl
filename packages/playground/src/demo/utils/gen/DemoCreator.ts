@@ -26,16 +26,16 @@ import {
     DemoStringLiteralExpression,
     DemoType,
     DemoVariable,
-    DemoVariableRef, PiElementReference
+    DemoVariableRef
 } from "../../language";
 
 export class DemoCreator {
-    public createDemoModel(name: string, entities: DemoEntity, functions: DemoFunction): DemoModel {
+    public createDemoModel(name: string, functions: DemoFunction, entities: DemoEntity): DemoModel {
         let _result = new DemoModel();
         _result.name = name;
 
-        if (entities !== null) _result.entities.push(entities);
         if (functions !== null) _result.functions.push(functions);
+        if (entities !== null) _result.entities.push(entities);
 
         return _result;
     }
@@ -189,11 +189,10 @@ export class DemoCreator {
 
         return _result;
     }
-    createDemoVariableRef(referredName: string): DemoVariableRef {
+    public createDemoVariableRef(attribute: DemoAttribute): DemoVariableRef {
         let _result = new DemoVariableRef();
-        _result.attribute = PiElementReference.createNamed(referredName, "DemoAttribute");
-        // result.referredName = referredName;
 
+        _result.attribute = attribute;
         return _result;
     }
 }

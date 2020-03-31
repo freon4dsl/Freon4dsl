@@ -1,8 +1,8 @@
 import { Checker } from "../../utils";
-import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangClassInterface, PiLangEnumeration, PiLangUnion, PiLangEnumProperty } from "./PiLanguage";
+import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangEnumeration, PiLangUnion, PiLangEnumProperty } from "./PiLanguage";
 import { PiLangConceptReference, PiLangBinaryExpConceptReference } from "./PiLangReferences";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiParseClass } from "../../languagedef/parser/PiParseConcept";
+import { PiParseClass } from "../parser/PiParseLanguage";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
 
@@ -26,6 +26,9 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.unions.forEach(concept => this.checkUnion(concept));
         // TODO: checkInterface
         // language.interfaces.forEach(concept => this.checkInterface(concept));
+
+        this.simpleCheck(!!language.classes.find(c => c.isRoot), "There should be a root concept in your language.");
+        this.simpleCheck(!(!!language.classes.find(c => c instanceof PiParseClass)), "Error in checker: there are unresolved parse classes.");
     }
 
     private setLanguageReferences(language: PiLanguageUnit) {
@@ -189,7 +192,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             {
                 check: !!element.primType,
                 error: "Property '" + element.name + "' should have a type " + element.primType + " " + element.type,
-                whenOk: () => this.checkPrimitiveType(element.primType)
+                whenOk: () => this.checkPrimitiveType(element.primType, element)
             });
     }
     
@@ -207,10 +210,10 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             })
     }
 
-    checkPrimitiveType(type: string) {
+    checkPrimitiveType(type: string, element: PiLangPrimitiveProperty) {
         LOGGER.log("Checking primitive type '" + type + "'");
         this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
-            "Primitive property should have a primitive type (string, boolean, or number)"
+            "Primitive property '" + element.name + "' should have a primitive type (string, boolean, or number)"
         );
     }
 }

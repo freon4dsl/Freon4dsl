@@ -5,29 +5,31 @@ import {
     PiLangEnumeration,
     PiLangUnion,
     PiLangEnumProperty,
+    PiLangClass,
 } from "../metalanguage/PiLanguage";
 import { PiLangConceptReference, PiLangEnumerationReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiParseClass } from "./PiParseConcept";
+import { PiParseClass, PiParseLanguageUnit } from "./PiParseLanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
-export function createLanguage(data: Partial<PiLanguageUnit>): PiLanguageUnit {
+export function createLanguage(data: Partial<PiParseLanguageUnit>): PiLanguageUnit {
     // console.log("createLanguage " + data.name);
     const result = new PiLanguageUnit();
     // // console.log("Creating language with concepts: ");
     if( !!data.name) {
         result.name = data.name
     }
-    if( !!data.classes) {
-        result.classes = data.classes
+    if( !!data.defs) {
+        for( let def of data.defs) {
+            if (def instanceof PiParseClass) {
+                result.classes.push(def)
+            } else if (def instanceof PiLangEnumeration) {
+                result.enumerations.push(def)
+            } else if (def instanceof PiLangUnion) {
+                result.unions.push(def)
+            }
+        }
     }
-    if( !!data.enumerations) {
-        result.enumerations = data.enumerations
-    }
-    if( !!data.unions) {
-        result.unions = data.unions
-    }
-
     return result;
 }
 
@@ -52,17 +54,22 @@ export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
     if (!!data.base) {
         result.base = data.base;
     }
-    if (!!data.primProperties) {
-        result.primProperties = data.primProperties;
-    }
-    if (!!data.enumProperties) {
-        result.enumProperties = data.enumProperties;
-    }
-    if (!!data.parts) {
-        result.parts = data.parts;
-    }
-    if (!!data.references) {
-        result.references = data.references;
+    if(!!data.properties) {   
+        for(let prop of data.properties) { 
+            if (prop instanceof PiLangPrimitiveProperty) {
+                result.primProperties.push(prop);
+            }
+            if (prop instanceof PiLangEnumProperty) {
+                result.enumProperties.push(prop);
+            }
+            if (prop instanceof PiLangConceptProperty) {
+                if (prop.isPart) {
+                    result.parts.push(prop);
+                } else {
+                    result.references.push(prop);
+                }
+            }
+        }
     }
     if (!!data.priority) {
         result.priority = data.priority;
@@ -110,6 +117,7 @@ export function createPart(data: Partial<PiLangConceptProperty>): PiLangConceptP
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = !!data.isList;
+    result.isPart = true;
     return result;
 }
 
@@ -119,6 +127,7 @@ export function createReference(data: Partial<PiLangConceptProperty>): PiLangCon
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = !!data.isList;
+    result.isPart = false;
     return result;
 }
 
@@ -145,6 +154,6 @@ export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
     return result;
 }
 
-export function isEnumerationProperty(p: Object){
-    return p instanceof PiLangEnumProperty;
-}
+// export function isEnumerationProperty(p: Object){
+//     return p instanceof PiLangEnumProperty;
+// }

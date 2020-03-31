@@ -2,7 +2,8 @@
 import { observable } from "mobx";
 import * as uuid from "uuid";
 import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
-import { model, MobxModelElementImpl, observablepart, observablereference } from "@projectit/core";
+import { model, MobxModelElementImpl, observablepart } from "@projectit/core";
+import { PiElementReference } from "./PiElementReference";
 import { TaxRulesConceptType } from "./TaxRules";
 import { Money } from "./Money";
 import { TaxPayer } from "./TaxPayer";
@@ -32,7 +33,7 @@ export class IncomePart extends MobxModelElementImpl implements PiElement {
 
     @observablepart amount: Money;
 
-    @observablereference source: TaxPayer;
+    @observablepart source: PiElementReference<TaxPayer>;
 
     piLanguageConcept(): TaxRulesConceptType {
         return this.$typename;

@@ -5,13 +5,11 @@
 // TODO the order of the element should not be fixed
 // TODO name chould be changed into Langauge_Definition
 Editor_Definition
-  = ws "language" ws name:var ws c:(concept)* ws e:(enumeration)* ws t:(union)*
+  = ws "language" ws name:var ws defs:(langdef)* 
     {
         return create.createLanguage({
             "name": name,
-            "classes": c,
-            "enumerations": e,
-            "unions": t
+            "defs": defs
         });
     } 
 
@@ -23,16 +21,13 @@ baseKey         = "base" ws { return true; }
 placeholderKey  = "placeholder" ws { return true; }
 enumKey         = "enum" { return true; }
 
+langdef = c:(concept) { return c;} / e:(enumeration) {return e;}/ t:(union) {return t;}
+
 base = baseKey name:var { return create.createConceptReference( { "name": name}); }
 
 // TODO one should be able to mingle parts, references and attributes
 concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
-         "concept" ws name:var ws base:base? curly_begin 
-            att:attribute*
-            parts:part* 
-            references:reference*
-            editorProps:editorProperty* 
-          curly_end 
+         "concept" ws name:var ws base:base? curly_begin props:property* editorProps:editorProperty* curly_end 
     {
         return create.createParseClass({
             "isRoot": (!!isRoot),
@@ -42,15 +37,16 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             "_isExpressionPlaceHolder": !!isExpressionPlaceHolder,
             "name": name,
             "base": base,
-            "primProperties": att.filter(a => !create.isEnumerationProperty(a)),
-            "enumProperties": att.filter(a => create.isEnumerationProperty(a)),
-            "parts": parts,
-            "references": references,
+            "properties": props,
             "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
             "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
             "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
         });
     }
+
+property =  att:attribute { return att; }
+            / part:part { return part; }
+            / ref:reference { return ref; }
 
 attribute = name:var ws name_separator ws isEnum:"enum"? ws type:var isList:"[]"? ws
     {
@@ -105,16 +101,16 @@ curly_begin    = ws "{" ws
 curly_end      = ws "}" ws
 name_separator  = ws ":" ws
 
-ws "whitespace" = (([ \t\n\r]) / (SingleLineComment))*
+ws "whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComment) )*
 
 var "var"
-  = first:varLetter rest:varLetterOrDigit* ws { return first + rest.join(""); }
+  = first:varLetter rest:identifierChar* ws { return first + rest.join(""); }
 
 string           = chars:anyChar* { return chars.join(""); }
 
 varLetter           = [a-zA-Z]
-varLetterOrDigit    = [a-zA-Z0-9]
-anyChar             = [*a-zA-Z0-9'/\-[\]+<>=]
+identifierChar      = [a-zA-Z0-9_$] // anychar but not /.,!?@~%^&*-=+(){}"':;<>?[]\/
+anyChar             = [*a-zA-Z0-9'/\-[\]+<>=#$_.,!?@~%^&*-=+(){}:;<>?]
 
 // van javascript example
 SingleLineComment
@@ -125,6 +121,13 @@ LineTerminator
 
 SourceCharacter
   = .
+
+Comment "comment"
+  = MultiLineComment
+  / SingleLineComment
+
+MultiLineComment
+  = "/*" (!"*/" SourceCharacter)* "*/"
 
 // from JSOM example
 char

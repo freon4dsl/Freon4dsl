@@ -31,3 +31,4 @@ export * from "./TaxPayerType";
 export * from "./TaxRule";
 export * from "./TaxRuleCall";
 export * from "./TaxRuleSet";
+export * from "./PiElementReference";

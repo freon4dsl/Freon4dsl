@@ -2,6 +2,7 @@
 import * as uuid from "uuid";
 import { PiElement, PiNamedElement, PiExpression, PiBinaryExpression } from "@projectit/core";
 import { model, MobxModelElementImpl, observablelistpart, observablepart } from "@projectit/core";
+import { PiElementReference } from "./PiElementReference";
 import { TaxRulesConceptType } from "./TaxRules";
 import { TaxRuleSet } from "./TaxRuleSet";
 import { TaxPayer } from "./TaxPayer";

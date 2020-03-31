@@ -50,7 +50,7 @@ concept RuleParameter {
 
 concept PercentageExpression base Expression {
     @part inner : Expression 
-    @editor symbol: string = "perc" // should be "%"
+    @editor symbol: string = "%"
     @editor priority: number = "2"
 }
 
@@ -61,6 +61,19 @@ concept MoneyLiteralExp base LiteralExpression {
 
 concept TaxRuleCall {//base FunctionCallExpression {
     @reference functionDefinition: TaxRule
+}
+
+enumeration IncomeType {
+    Salary
+    Royalties
+    Gift
+}
+
+enumeration TaxPayerType {
+    Company
+    NGO
+    Goverment
+    Person
 }
 
 //concept FunctionCallExpression base Expression {
@@ -157,18 +170,6 @@ concept IfExpression base Expression {
 
 // end import Expression lib
 
-enumeration IncomeType {
-    Salary
-    Royalties
-    Gift
-}
-
-enumeration TaxPayerType {
-    Company
-    NGO
-    Goverment
-    Person
-}
 
 // in Scope Def: @langscope generalDeduction : Money = 3000,-
 // in Scope Def: @langscope toBePaid : Money // holds result for every TaxRule

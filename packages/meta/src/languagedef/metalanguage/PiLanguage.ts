@@ -113,18 +113,18 @@ export class PiLangConcept extends PiLangElement {
     }
 }
 
-export interface PiLangClassInterface {
-    name: string;
-    primProperties: PiLangPrimitiveProperty[];
-    enumProperties: PiLangEnumProperty[];
-    parts: PiLangConceptProperty[];
-    references: PiLangConceptProperty[];
-    trigger: string;
-    isAbstract: boolean;
-    isRoot:boolean;
-    base: PiLangClassReference;
-}
-export class PiLangClass extends PiLangConcept implements PiLangClassInterface {
+// export interface PiLangClassInterface {
+//     name: string;
+//     primProperties: PiLangPrimitiveProperty[];
+//     enumProperties: PiLangEnumProperty[];
+//     parts: PiLangConceptProperty[];
+//     references: PiLangConceptProperty[];
+//     trigger: string;
+//     isAbstract: boolean;
+//     isRoot:boolean;
+//     base: PiLangClassReference;
+// }
+export class PiLangClass extends PiLangConcept { // implements PiLangClassInterface {
     isAbstract: boolean;
     isRoot:boolean;
     base: PiLangClassReference;
@@ -376,7 +376,6 @@ export class PiLangPrimitiveProperty extends PiLangProperty {
         value.name = this.primType;
         return value;
     }
-
 }
 
 export class PiLangEnumProperty extends PiLangProperty {
@@ -387,6 +386,7 @@ export class PiLangEnumProperty extends PiLangProperty {
 
 export class PiLangConceptProperty extends PiLangProperty {
     type: PiLangConceptReference;
+    isPart: boolean; // needed for parsing
 }
 
 // the following two classes are only used in the typer and validator definitions

@@ -1,9 +1,9 @@
 language Demo
 
 root concept DemoModel {
+    @part functions: DemoFunction[]
     name: string
     @part entities: DemoEntity[]
-    @part functions: DemoFunction[]
 }
 
 concept DemoEntity {

@@ -123,11 +123,11 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                modelelement.entities.forEach(p => {
-                    this.walkDemoEntity(p, includeChildren);
-                });
                 modelelement.functions.forEach(p => {
                     this.walkDemoFunction(p, includeChildren);
+                });
+                modelelement.entities.forEach(p => {
+                    this.walkDemoEntity(p, includeChildren);
                 });
             }
             this.myWorker.execAfterDemoModel(modelelement);
