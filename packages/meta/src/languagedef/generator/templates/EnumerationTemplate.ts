@@ -23,7 +23,7 @@ export class EnumerationTemplate {
         // Template starts here
         return `
         import * as uuid from "uuid";
-        import { ${Names.metaType(language)} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
         import { ${mobxImports.join(",")} } from "${PathProvider.corePath}";
         import { ${Names.PiElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression } } from "${PathProvider.corePath}";
     

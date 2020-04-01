@@ -17,7 +17,7 @@ export class ScoperTemplate {
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";   
+        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${PathProvider.languageGenFolder}";   
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement} } from "${PathProvider.scoperInterface()}"
         

@@ -33,7 +33,7 @@ export class ActionsTemplate {
                 RIGHT_MOST
             } from "${PathProvider.corePath}";
             
-            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
+            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageGenFolder}";
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.classes.filter(c => c.expression() && !c.isAbstract && !!c.trigger).map(c =>

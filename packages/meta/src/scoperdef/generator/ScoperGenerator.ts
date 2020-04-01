@@ -28,6 +28,7 @@ export class ScoperGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.scoperFolder, verbose);
         Helpers.createDirIfNotExisting(this.scoperGenFolder, verbose);
+        Helpers.deleteFilesInDir(this.scoperGenFolder);
 
         // set relative path to get the imports right
         let relativePath = "../../";

@@ -18,9 +18,9 @@ export class NamespaceTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => 
-            `${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";
+            `${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";
         import { ${scopedef.namespaces.length == 0? `${language.rootConcept().name}, ` : ``}
-             ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";
+             ${langConceptType} } from "${relativePath}${PathProvider.languageGenFolder}";
         import { ${Names.PiNamedElement}} from "${PathProvider.corePath}";
 
         export class ${generatedClassName} {

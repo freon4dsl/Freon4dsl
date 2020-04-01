@@ -11,7 +11,7 @@ export class ModelCreatorTemplate {
         
         // the template starts here
         return `
-        import { ${this.createImports(language)}, ${Names.PiElementReference} } from "${relativePath}${PathProvider.languageFolder}"; 
+        import { ${this.createImports(language)}, ${Names.PiElementReference} } from "${relativePath}${PathProvider.languageGenFolder}"; 
 
         export class ${language.name}Creator {
 

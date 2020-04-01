@@ -54,11 +54,11 @@ export class ProjectionTemplate {
                 ${Names.PiBinaryExpression}
             } from "${PathProvider.corePath}";
             
-            import { PiElementReference } from "../../language/PiElementReference";
-            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
-            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
+            import { ${Names.PiElementReference} } from "${relativePath}${PathProvider.languageGenFolder}${Names.PiElementReference}";
+            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageGenFolder}";
+            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageGenFolder}";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
-            import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environment}/${Names.environment(language)}";
+            import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environmentGenFolder}/${Names.environment(language)}";
 
             export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
                 private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};

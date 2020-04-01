@@ -18,7 +18,7 @@ export class CheckerTemplate {
         // the template starts here
         return `
         import { ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.corePath}";
-        import { ${this.createImports(language, validdef)} } from "${relativePath}${PathProvider.languageFolder}"; 
+        import { ${this.createImports(language, validdef)} } from "${relativePath}${PathProvider.languageGenFolder}"; 
         import { ${unparserClassName} } from "${relativePath}${PathProvider.unparser(language)}";    
         import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";
 

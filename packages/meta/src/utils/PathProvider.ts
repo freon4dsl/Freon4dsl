@@ -59,104 +59,108 @@ export class PathProvider {
     }
 
     // the generated classes that implement the language can be found in ...
-    public static languageFolder = "language";
-    public static environment = "environment";
+    public static languageGenFolder = "language/gen/";
+    public static environmentGenFolder = "environment/gen/";
 
     public static concept(concept: PiLangConcept): string {
-        return "language/" + Names.concept(concept);
+        return this.languageGenFolder + Names.concept(concept);
     }
 
     public static enumeration(enumeration: PiLangEnumeration): string {
-        return "language/" + Names.enumeration(enumeration);
+        return this.languageGenFolder + Names.enumeration(enumeration);
     }
     
     public static union(union: PiLangUnion): string {
-        return "language/" + Names.union(union);
+        return this.languageGenFolder + Names.union(union);
     }
 
     public static languageConceptType(language: PiLanguageUnit): string {
-        return "language/" + Names.metaType(language);
+        return this.languageGenFolder + Names.metaType(language);
     }
 
     public static allConcepts(language: PiLanguageUnit): string {
-        return "language/" + Names.allConcepts(language);
+        return this.languageGenFolder + Names.allConcepts(language);
     }
 
     // the generated classes that implement the editor can be found in ...
+    public static editorGenFolder = "editor/gen/";
+    public static editorFolder = "editor/";
     public static editorstyles = "styles/styles";
     public static context(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.context(language);  ;
+        return this.editorGenFolder + Names.context(language);  ;
     }
 
     public static actions(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.actions(language);
+        return this.editorGenFolder + Names.actions(language);
     }
 
     public static defaultActions(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.defaultActions(language);
+        return this.editorGenFolder + Names.defaultActions(language);
     }
 
     public static manualActions(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.manualActions(language);
+        return this.editorGenFolder + Names.manualActions(language);
     }
 
     public static projectionDefault(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.projectionDefault(language);
+        return this.editorGenFolder + Names.projectionDefault(language);
     }
 
     public static selectionHelpers(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.selectionHelpers(language);
+        return this.editorGenFolder + Names.selectionHelpers(language);
     }
 
     public static projection(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.projection(language);
+        return this.editorGenFolder + Names.projection(language);
     }
 
     public static editor(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.editor(language);
+        return this.editorGenFolder + Names.editor(language);
     }
 
     public static mainProjectionalEditor(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.mainProjectionalEditor(language);
+        return this.editorGenFolder + Names.mainProjectionalEditor(language);
     }
 
     // the generated classes that implement the scoper can be found in ...
+    public static scoperGenFolder = "scoper/gen/";
     public static namespace(language: PiLanguageUnit): string {
-        return "scoper/gen/" + Names.namespace(language);
+        return this.scoperGenFolder + Names.namespace(language);
     }
 
     public static scoper(language: PiLanguageUnit): string {
-        return "scoper/gen/" + Names.scoper(language);
+        return this.scoperGenFolder + Names.scoper(language);
     }
 
     // the generated classes that implement the typer can be found in ...
+    public static typerGenFolder = "typer/gen/";
     public static typer(language: PiLanguageUnit): string {
-        return "typer/gen/" + Names.typer(language);
+        return this.typerGenFolder + Names.typer(language);
     }
 
     // the generated classes that implement the validator can be found in ...
+    public static validatorGenFolder = "validator/gen/";
     public static validator(language: PiLanguageUnit): string {
-        return "validator/gen/" + Names.validator(language);
+        return this.validatorGenFolder + Names.validator(language);
     }
 
     public static checker(language: PiLanguageUnit): string {
-        return "validator/gen/" + Names.checker(language);
+        return this.validatorGenFolder + Names.checker(language);
     }
 
     // the generated classes that implement the unparser can be found in ...
+    public static utilsGenFolder = "utils/gen/";
     public static unparser(language: PiLanguageUnit): string {
-        // TODO should be changed into 
-        // return "unparser/gen/" + Names.unparser(language);
-        return "unparser/" + Names.unparser(language);
+        return this.utilsGenFolder + Names.unparser(language);
     }
 
     // the generated classes that implement the visitor pattern can be found in ...
     public static walker(language: PiLanguageUnit): string {
-        return "utils/gen/" + Names.walker(language);
+        return this.utilsGenFolder + Names.walker(language);
     }
 
     public static workerInterface(language: PiLanguageUnit): string {
-        return "utils/gen/" + Names.workerInterface(language);
+        return this.utilsGenFolder + Names.workerInterface(language);
     }
 
 }

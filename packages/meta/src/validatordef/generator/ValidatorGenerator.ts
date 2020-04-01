@@ -6,7 +6,7 @@ import { PiValidatorDef } from "../metalanguage";
 import { CheckerTemplate } from "./templates/CheckerTemplate";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate";
 
-const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
+const LOGGER = new PiLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: PiLanguageUnit;
@@ -28,6 +28,7 @@ export class ValidatorGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.validatorFolder, verbose);
         Helpers.createDirIfNotExisting(this.validatorGenFolder, verbose);
+        Helpers.deleteFilesInDir(this.validatorGenFolder);
 
         // set relative path to get the imports right
         let relativePath = "../../";

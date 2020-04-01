@@ -3,7 +3,7 @@ import { PiElementReference, DemoEntity, DemoAttribute, DemoFunction, DemoVariab
         DemoNumberLiteralExpression, DemoOrExpression, DemoStringLiteralExpression, 
         DemoAndExpression, DemoPlusExpression, DemoPlaceholderExpression, DemoModel, 
         DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression, DemoMultiplyExpression,
-    DemoDivideExpression, DemoBooleanLiteralExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoLiteralExpression } from "../language";
+    DemoDivideExpression, DemoBooleanLiteralExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoLiteralExpression } from "../language/gen";
 
 export class DemoModelCreator  {
     model: DemoModel;

@@ -13,9 +13,9 @@ export class UnparserTemplate {
 
         // Template starts here 
         return `
-        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageGenFolder}";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
                 
@@ -26,7 +26,7 @@ export class UnparserTemplate {
         // will be used to generate the bodies of the functions below.
         export class ${generatedClassName}  {
 
-            public uparse(modelelement: ${allLangConcepts}) : string {
+            public unparse(modelelement: ${allLangConcepts}) : string {
                 ${this.sortClasses(language.classes).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
                     return this.unparse${concept.name}(modelelement);

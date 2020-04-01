@@ -2,7 +2,7 @@
 import { PiProjection, PiElement, Box, VerticalListBox, HorizontalListBox, LabelBox, TextBox } from "@projectit/core";
 import { SelectBox, SelectOption } from "@projectit/core";
 import { createDefaultExpressionBox, KeyPressAction } from "@projectit/core";
-import { DemoAttribute, DemoAttributeType, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoVariable } from "../language";
+import { DemoAttribute, DemoAttributeType, DemoNumberLiteralExpression, DemoStringLiteralExpression, DemoVariable } from "../language/gen";
 import { demoStyles } from "../styles/styles";
 
 export class DemoProjection implements PiProjection {

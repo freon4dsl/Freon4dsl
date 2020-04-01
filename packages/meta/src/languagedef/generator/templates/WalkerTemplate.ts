@@ -8,16 +8,15 @@ export class WalkerTemplate {
 
     generateWalker(language: PiLanguageUnit, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
-        const langConceptType : string = Names.metaType(language);     
         const generatedClassName : String = Names.walker(language);
 
         // Template starts here 
         return `
-        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageGenFolder}";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
         import { ${language.enumerations.map(concept => `
-            ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
+            ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
 
             // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";

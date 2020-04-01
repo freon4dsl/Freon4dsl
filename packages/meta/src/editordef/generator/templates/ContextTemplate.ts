@@ -16,7 +16,7 @@ export class ContextTemplate {
             import { action, observable } from "mobx";
             import { ${Names.PiContext}, ${Names.PiExpression} } from "${PathProvider.corePath}";
             import { ${initializationName} } from "../${initializationName}";
-            import { ${rootConceptName}, ${placeHolderConceptName} } from "${relativePath}${PathProvider.languageFolder}";
+            import { ${rootConceptName}, ${placeHolderConceptName} } from "${relativePath}${PathProvider.languageGenFolder}";
             
             export class ${Names.context(language)} implements PiContext {
                 @observable private _rootElement: ${rootConceptName};

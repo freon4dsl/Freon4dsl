@@ -19,7 +19,7 @@ export class ConceptTemplate {
         const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
 
         const binExpConcept : PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
-        const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
+        // const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
 
         const imports = Array.from(
             new Set(

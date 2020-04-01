@@ -10,7 +10,7 @@ export class WorkerInterfaceTemplate {
         
         // the template starts here
         return `
-        import { ${this.createImports(language, )} } from "${relativePath}${PathProvider.languageFolder}"; 
+        import { ${this.createImports(language, )} } from "${relativePath}${PathProvider.languageGenFolder}"; 
 
         export interface ${Names.workerInterface(language)} {
 

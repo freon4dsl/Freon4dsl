@@ -42,6 +42,7 @@ export class EditorGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.editorFolder, verbose);
         Helpers.createDirIfNotExisting(this.editorGenFolder, verbose);
+        Helpers.deleteFilesInDir(this.editorGenFolder);
 
         // set relative path to get the imports right
         let relativePath = "../../";

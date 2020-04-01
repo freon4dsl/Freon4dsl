@@ -26,6 +26,7 @@ export class PiTyperGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.typerFolder, verbose);
         Helpers.createDirIfNotExisting(this.typerGenFolder, verbose);
+        Helpers.deleteFilesInDir(this.typerGenFolder);
 
         // set relative path to get the imports right
         let relativePath = "../../";

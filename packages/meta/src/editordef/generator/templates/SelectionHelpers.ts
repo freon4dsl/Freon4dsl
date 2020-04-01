@@ -10,10 +10,10 @@ export class SelectionHelpers {
         return `
         import { ${Names.PiElement}, SelectBox, SelectOption } from "${PathProvider.corePath}";
         import { ${Names.styles(language)} } from "${relativePath}${PathProvider.editorstyles}";
-        import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environment}/${Names.environment(language)}";
+        import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environmentGenFolder}/${Names.environment(language)}";
 
         import { ${language.enumerations.map(en =>
-            ` ${Names.enumeration(en)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
+            ` ${Names.enumeration(en)}`).join(", ") } } from "${relativePath}${PathProvider.languageGenFolder}";
 
         export class ${Names.selectionHelpers(language)} {
         ${language.enumerations.map(en =>

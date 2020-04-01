@@ -22,13 +22,13 @@ export class PiTyperTemplate {
         // Template starts here 
         return `
         import { ${typerInterfaceName} } from "${PathProvider.corePath}";
-        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageGenFolder}";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";      
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";      
                 import { ${language.enumerations.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
         import { ${language.unions.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
 
         export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType : ${rootType} = ${defaultType};
