@@ -8,7 +8,6 @@ import { PiLangThisExp } from "../../languagedef/metalanguage/PiLangExpressions"
 
 const LOGGER = new PiLogger("PiTyperChecker"); // .mute();
 export class PiTyperChecker extends Checker<PiTypeDefinition> {
-    verbose: boolean = false;
     definition: PiTypeDefinition;
     myExpressionChecker : PiLanguageExpressionChecker;
     
@@ -18,10 +17,9 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
     }
 
-    public check(definition: PiTypeDefinition, verbose: boolean): void {
-        this.verbose = verbose;
+    public check(definition: PiTypeDefinition): void {
         this.definition = definition;
-        if (verbose) LOGGER.log("Checking typer definition '" + definition.name + "'");
+        LOGGER.log("Checking typer definition '" + definition.name + "'");
 
         if( !!this.language ) {
             if( !!definition ) {
@@ -47,7 +45,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
    }
 
     private checkTyperRule(rule: PiTypeRule) {
-        if (this.verbose) LOGGER.log("Checking checkTyperRule '" + rule.toPiString() + "'");
+        LOGGER.log("Checking checkTyperRule '" + rule.toPiString() + "'");
         if (rule instanceof PiTypeIsTypeRule) {
             this.checkIsTypeRule(rule);
         } else if (rule instanceof PiTypeAnyTypeRule) {
@@ -58,7 +56,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     }    
 
     private checkConceptRule(rule: PiTypeConceptRule) {
-        if (this.verbose) LOGGER.log("Checking checkConceptRule '" + rule.toPiString() + "'");
+        LOGGER.log("Checking checkConceptRule '" + rule.toPiString() + "'");
         this.checkConceptReference(rule.conceptRef);
         
         for( let stat of rule.statements) {
@@ -67,7 +65,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     }
 
     private checkIsTypeRule(rule: PiTypeIsTypeRule) {
-        if (this.verbose) LOGGER.log("Checking checkIsTypeRule '" + rule.toPiString() + "'");
+        LOGGER.log("Checking checkIsTypeRule '" + rule.toPiString() + "'");
         let first = true;
         for (let t of rule.types) {
             this.checkConceptReference(t);
@@ -79,8 +77,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     }
 
     private checkAnyTypeRule(rule: PiTypeAnyTypeRule) {
-        // LOGGER.log("checkAnyTypeRule ");
-        if (this.verbose) LOGGER.log("Checking checkAnyTypeRule '" + rule.toPiString() + "'");
+        LOGGER.log("Checking checkAnyTypeRule '" + rule.toPiString() + "'");
         let myTypes : PiLangConcept[] = [];
         for (let r of this.definition.typerRules) {
             if ( r instanceof PiTypeIsTypeRule ) {
@@ -107,7 +104,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         // Note that the following statement is crucial, because the model we are testing is separate
         // from the model of the language.
         // If it is not set, the conceptReference will not find the refered language concept.
-        if (this.verbose) LOGGER.log("Checking checkConceptReference '" + reference.name + "'");
+        LOGGER.log("Checking checkConceptReference '" + reference.name + "'");
         reference.language = this.language;
 
         this.nestedCheck(
@@ -123,7 +120,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     }
 
     private checkStatement(stat: PiTypeStatement, enclosingConcept: PiLangConcept, predefined?: PiLangProperty[]) {
-        if (this.verbose) LOGGER.log("Checking checkStatement '" + stat.toPiString() + "'");
+        LOGGER.log("Checking checkStatement '" + stat.toPiString() + "'");
         if (stat.isAbstract) {
             this.simpleCheck(stat.exp == null, "An abstract rule may not be defined.")
         } else if (!!enclosingConcept && stat.exp) {

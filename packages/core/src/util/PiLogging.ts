@@ -15,6 +15,9 @@ export class PiLogger {
         PiLogger.muteAll = true;
     }
 
+    static unmuteAllLogs() {
+        PiLogger.muteAll = false;
+    }
 
     static filter: string = null;
 

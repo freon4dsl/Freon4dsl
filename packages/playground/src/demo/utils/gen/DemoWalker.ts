@@ -145,6 +145,9 @@ export class DemoWalker {
                 modelelement.attributes.forEach(p => {
                     this.walkDemoAttribute(p, includeChildren);
                 });
+                modelelement.functions.forEach(p => {
+                    this.walkDemoFunction(p, includeChildren);
+                });
             }
             this.myWorker.execAfterDemoEntity(modelelement);
         } else {

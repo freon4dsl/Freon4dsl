@@ -15,7 +15,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.language = language;
     }
 
-    public check(definition: LanguageExpressionTester, verbose: boolean): void {
+    public check(definition: LanguageExpressionTester): void {
         LOGGER.log("Checking test expressions");
 
         if( !!this.language ) {

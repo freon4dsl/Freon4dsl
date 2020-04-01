@@ -62,9 +62,9 @@ export class DemoChecker implements DemoWorker {
         if (modelelement.attributes.length == 0) {
             this.errorList.push(new PiError("List 'this.attributes' may not be empty", modelelement.attributes));
         }
-        // @notEmpty this.functions.referred
-        if (modelelement.functions.referred.length == 0) {
-            this.errorList.push(new PiError("List 'this.functions.referred' may not be empty", modelelement.functions.referred));
+        // @notEmpty this.functions
+        if (modelelement.functions.length == 0) {
+            this.errorList.push(new PiError("List 'this.functions' may not be empty", modelelement.functions));
         }
     }
     public execAfterDemoEntity(modelelement: DemoEntity) {}

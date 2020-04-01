@@ -16,27 +16,27 @@ export class PiTyperGenerator {
         this.language = language;
     }
 
-    generate(typerdef: PiTypeDefinition, verbose?: boolean): void {
+    generate(typerdef: PiTypeDefinition): void {
         this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
         this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
         let name = typerdef? typerdef.name + " " : "";
-        if (verbose) LOGGER.log("Generating typer: " + name + "in folder " + this.typerGenFolder);
+        LOGGER.log("Generating typer: " + name + "in folder " + this.typerGenFolder);
 
         const typer = new PiTyperTemplate();
 
         //Prepare folders
-        Helpers.createDirIfNotExisting(this.typerFolder, verbose);
-        Helpers.createDirIfNotExisting(this.typerGenFolder, verbose);
+        Helpers.createDirIfNotExisting(this.typerFolder);
+        Helpers.createDirIfNotExisting(this.typerGenFolder);
         Helpers.deleteFilesInDir(this.typerGenFolder);
 
         // set relative path to get the imports right
         let relativePath = "../../";
 
         //  Generate typer
-        if (verbose) LOGGER.log("Generating typer class");
-        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class", verbose);
+        LOGGER.log("Generating typer class");
+        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class");
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
-        if (verbose) LOGGER.log("Succesfully generated typer: " + name);
+        LOGGER.log("Succesfully generated typer: " + name);
     } 
 }
