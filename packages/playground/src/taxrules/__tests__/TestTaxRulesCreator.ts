@@ -6,7 +6,7 @@ import {
     RevenueService,
     TaxPayerType,
     IncomeType
-} from "../language";
+} from "../language/gen";
 import { TaxRulesCreator } from "../../taxrules/utils/gen/TaxRulesCreator";
 
 // examples
