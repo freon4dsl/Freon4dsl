@@ -13,20 +13,20 @@ concept DemoEntity {
 }
 
 concept DemoAttribute {
-    declaredType: enum DemoAttributeType
+    declaredType: DemoAttributeType
     name: string
 }
 
 concept DemoFunction {
     name: string
-    declaredType : enum DemoAttributeType
+    declaredType : DemoAttributeType
     part expression: DemoExpression
     part parameters: DemoVariable[]
 }
 
 concept DemoVariable {
     name: string
-    declaredType: enum DemoAttributeType
+    declaredType: DemoAttributeType
 }
 
 abstract expression concept DemoExpression {}

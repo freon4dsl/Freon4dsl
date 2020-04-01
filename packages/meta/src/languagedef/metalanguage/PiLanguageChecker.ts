@@ -4,7 +4,7 @@ import { PiLangConceptReference, PiLangEnumerationReference } from "./PiLangRefe
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiParseClass } from "../parser/PiParseLanguage";
 
-const LOGGER = new PiLogger("PiLanguageChecker"); //.mute();
+const LOGGER = new PiLogger("PiLanguageChecker").mute();
 
 export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     foundRoot = false;
@@ -84,16 +84,17 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         return newList;
     }
 
-    private copyCommonProperties(result: PiLangClass, concept: PiLangClass & PiParseClass) {
+    private copyCommonProperties(result: PiLangClass, concept: PiParseClass) {
         result.isRoot = concept.isRoot;
         result.isAbstract = concept.isAbstract;
         result.name = concept.name;
         result.base = concept.base;
-        result.primProperties = concept.primProperties;
-        result.enumProperties = concept.enumProperties;
         result.parts = concept.parts;
         result.references = concept.references;
         result.trigger = concept.trigger;
+        result.primProperties = concept.primProperties;
+        result.enumProperties = concept.enumProperties;
+
         // set owning class
         result.parts.forEach(part => part.owningConcept = result);
         result.primProperties.forEach(prop => prop.owningConcept = result);
@@ -149,8 +150,11 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.foundRoot = true;
         }
 
+        // resolve the properties: find out which is a primitive and which is an enum prop
+        this.resolveSimpleProperties(piClass);
+
         piClass.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
-        piClass.enumProperties.forEach(prop => this.checkPiEnumProperty(prop));
+        piClass.enumProperties.forEach(prop => this.checkEnumProperty(prop));
         piClass.parts.forEach(part => this.checkConceptProperty(part));
         piClass.references.forEach(ref => this.checkConceptProperty(ref));
 
@@ -169,7 +173,34 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         }
     }
 
-    checkPiEnumProperty(prop: PiLangEnumProperty) {
+    private resolveSimpleProperties(piClass: PiLangClass) {
+        LOGGER.log("\nResolving class: " + piClass.name );
+        let toBeRemoved: PiLangEnumProperty[] = [];
+        // if the property has a primitive type, then add it as PrimitiveProperty ...
+        for (let prop of piClass.enumProperties) {
+            let typename = prop.type.name;
+            if (typename === "string" || typename === "boolean" || typename === "number") {
+                let primProp = new PiLangPrimitiveProperty();
+                primProp.name = prop.name;
+                primProp.isList = prop.isList;
+                primProp.isStatic = prop.isStatic;
+                primProp.initialValue = prop.initialValue;
+                primProp.owningConcept = prop.owningConcept;
+                primProp.primType = typename;
+                piClass.primProperties.push(primProp);
+                toBeRemoved.push(prop);
+            }
+        }
+        // ... and remove it from the list of EnumProperties
+        for (let prop of toBeRemoved) {
+            let index = piClass.enumProperties.indexOf(prop);
+            if (index != -1) {
+                piClass.enumProperties.splice(index, 1);
+            }
+        }
+    }
+
+    checkEnumProperty(prop: PiLangEnumProperty) {
         this.simpleCheck(prop.owningConcept !== null, `Property '${prop.name}' should belong to a concept.`);
         // TODO check initialValue? check type?
     }
@@ -198,7 +229,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             });
     }
     
-     checkConceptReference(reference: PiLangConceptReference): void {
+    checkConceptReference(reference: PiLangConceptReference): void {
         LOGGER.log("Checking concept reference '" + reference.name + "'");
         this.nestedCheck(
             {
