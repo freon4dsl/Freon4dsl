@@ -8,6 +8,13 @@ export class NamespaceTemplate {
     }
 
     generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
+
+        if (scopedef == null) {
+            scopedef = new PiScopeDef();
+            scopedef.languageName = language.name;
+            scopedef.namespaces = [];
+        }
+        
         // console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.metaType(language);     

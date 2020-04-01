@@ -9,7 +9,7 @@ root concept DemoModel {
 concept DemoEntity {
     name: string
     @part attributes: DemoAttribute[]
-    @part functions: DemoFunction[]
+    @reference functions: DemoFunction[]
     @editor trigger: string = "entity"
 }
 

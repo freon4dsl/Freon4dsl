@@ -11,9 +11,9 @@ import {
     AllDemoConcepts,
     DemoFunction,
     DemoVariable, PiElementReference
-} from "../language";
+} from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoUnparser } from "../unparser/DemoUnparser";
+import { DemoUnparser } from "../utils/DemoUnparser";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -28,7 +28,7 @@ describe("Testing Unparser", () => {
             let result: string = "";
             let left = new DemoNumberLiteralExpression();
             left.value = "3";
-            result = unparser.unparse(left, true);
+            result = unparser.unparse(left);
             expect(result).toBe("3");
         });
 
@@ -39,7 +39,7 @@ describe("Testing Unparser", () => {
             (mult.left as DemoNumberLiteralExpression).value = "3";
             mult.right = new DemoNumberLiteralExpression();
             (mult.right as DemoNumberLiteralExpression).value = "10";
-            result = unparser.unparse(mult, true);
+            result = unparser.unparse(mult);
             expect(result).toBe("( 3 * 10 )");
         });
 
@@ -50,7 +50,7 @@ describe("Testing Unparser", () => {
             (mult.left as DemoNumberLiteralExpression).value = "3";
             mult.right = new DemoStringLiteralExpression();
             (mult.right as DemoStringLiteralExpression).value = "temp";
-            result = unparser.unparse(mult, true);
+            result = unparser.unparse(mult);
             expect(result).toBe("( 3 * \"temp\" )");
         });
 
@@ -65,7 +65,7 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = new DemoStringLiteralExpression();
             (mult.right as DemoStringLiteralExpression).value = "temp";
-            result = unparser.unparse(mult, true);
+            result = unparser.unparse(mult);
             expect(result).toBe("( ( 3 / 4 ) * \"temp\" )");
         });
 
@@ -84,7 +84,7 @@ describe("Testing Unparser", () => {
 
             const divideExpression = DemoModelCreator.MakePlusExp("1", "2");
             const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);
-            result = unparser.unparse(multiplyExpression, true);
+            result = unparser.unparse(multiplyExpression);
             expect(result).toBe("( ( 1 + 2 ) * Person )");
         });
 
@@ -97,7 +97,7 @@ describe("Testing Unparser", () => {
             determine.expression = DemoModelCreator.MakePlusExp("Hello Demo", "Goodbye");
             determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
-            result = unparser.unparse(determine, true);
+            result = unparser.unparse(determine);
             expect(result).toBe("determine( AAP : Integer ): Boolean = ( \"Hello Demo\" + \"Goodbye\" )");
         });
 
@@ -121,13 +121,13 @@ describe("Testing Unparser", () => {
             Resultvar.declaredType = DemoAttributeType.Boolean;
             // Person { name, age, first(Resultvar) = 5 + 24 }
 
-            result = unparser.unparse(personEnt, true);
+            result = unparser.unparse(personEnt);
             expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = ( 5 + 24 ), \n}");
         });
 
         test.skip("complete example model with simple attribute types", () => {
             let result: string = "";
-            result = unparser.unparse(model, true);
+            result = unparser.unparse(model);
             expect(result.length).toBe(556);
         });
     });

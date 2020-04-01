@@ -20,7 +20,8 @@ export class ValidatorGenerator {
     generate(validdef: PiValidatorDef, verbose?: boolean): void {
         this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
         this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
-        if (verbose) LOGGER.log("Generating validator: " + validdef.validatorName + " in folder " + this.validatorGenFolder);
+        let name = validdef? validdef.validatorName + " " : "";
+        if (verbose) LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
 
         const validator = new ValidatorTemplate();
         const checker = new CheckerTemplate();
@@ -39,10 +40,11 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         //  Generate checker
+        if (validdef == null) return;
         if (verbose) LOGGER.log("Generating checker class");
         var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class", verbose);
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);
 
-        if (verbose) LOGGER.log("Succesfully generated validator: " + validdef.validatorName);
+        if (verbose) LOGGER.log("Succesfully generated validator: " + name);
     } 
 }

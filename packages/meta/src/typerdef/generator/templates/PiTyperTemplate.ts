@@ -12,11 +12,13 @@ export class PiTyperTemplate {
     }
 
     generateTyper(language: PiLanguageUnit, typerdef: PiTypeDefinition, relativePath: string): string {
+        if (typerdef == null) return this.generateDefault(language, relativePath);
+
         this.typerdef = typerdef;
+        const rootType : string = this.typerdef.typeroot.name;
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : string = Names.typer(language);
         const typerInterfaceName : string = Names.PiTyper;
-        const rootType : string = this.typerdef.typeroot.name;
         const defaultType : string = this.findDefault();
         
         // Template starts here 
@@ -70,6 +72,34 @@ export class PiTyperTemplate {
                 if (type1 === type2) return type1;
                 return this.defaultType;
             }   
+        }`;
+    }
+
+    generateDefault(language: PiLanguageUnit, relativePath: string): string {
+        const allLangConcepts : string = Names.allConcepts(language);   
+        const typerInterfaceName : string = Names.PiTyper;
+
+        // Template starts here 
+        return `
+        import { ${typerInterfaceName} } from "${PathProvider.corePath}";
+        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageGenFolder}";
+        
+        export class TaxRulesTyper implements PiTyper {
+            inferType(modelelement: AllTaxRulesConcepts): AllTaxRulesConcepts {
+                return null;
+            }
+            equalsType(elem1: AllTaxRulesConcepts, elem2: AllTaxRulesConcepts): boolean {
+                return true;
+            }
+            conformsTo(elem1: AllTaxRulesConcepts, elem2: AllTaxRulesConcepts): boolean {
+                return true;
+            }
+            conformList(typelist1: AllTaxRulesConcepts[], typelist2: AllTaxRulesConcepts[]): boolean {
+                return true;
+            }
+            isType(elem: AllTaxRulesConcepts): boolean {
+                return false;
+            }      
         }`;
     }
 
@@ -218,7 +248,6 @@ export class PiTyperTemplate {
         } else {
             return ref?.toPiString();
         }
-
     }
 
 }

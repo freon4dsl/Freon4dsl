@@ -181,7 +181,7 @@ export class ConceptTemplate {
     }
 
     generateReferenceProperty(property: PiLangConceptProperty): string {
-        const decorator = property.isList ? "@observablepartreference" : "@observablepart";
+        const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         return `
             ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.referedElement())}>${arrayType};

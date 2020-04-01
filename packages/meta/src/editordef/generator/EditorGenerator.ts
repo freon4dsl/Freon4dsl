@@ -26,9 +26,9 @@ export class EditorGenerator {
     generate(editor: PiDefEditorLanguage, verbose?: boolean): void {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
-
+        let name = editor? editor.name : "";
         if (verbose) {
-            LOGGER.log("Generating editor '" + editor.name + "' in folder " + this.editorGenFolder);
+            LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder);
         }
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
@@ -98,7 +98,7 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (verbose) {
-            LOGGER.log("Succesfully generated editor");
+            LOGGER.log("Succesfully generated editor " + name);
         }
     }
 

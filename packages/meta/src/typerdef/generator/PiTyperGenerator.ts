@@ -19,7 +19,8 @@ export class PiTyperGenerator {
     generate(typerdef: PiTypeDefinition, verbose?: boolean): void {
         this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
         this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
-        if (verbose) LOGGER.log("Generating typer: " + typerdef.name + " in folder " + this.typerGenFolder);
+        let name = typerdef? typerdef.name + " " : "";
+        if (verbose) LOGGER.log("Generating typer: " + name + "in folder " + this.typerGenFolder);
 
         const typer = new PiTyperTemplate();
 
@@ -33,9 +34,9 @@ export class PiTyperGenerator {
 
         //  Generate typer
         if (verbose) LOGGER.log("Generating typer class");
-        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Validator Class", verbose);
+        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class", verbose);
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
-        if (verbose) LOGGER.log("Succesfully generated typer: " + typerdef.name);
+        if (verbose) LOGGER.log("Succesfully generated typer: " + name);
     } 
 }

@@ -20,7 +20,8 @@ export class ScoperGenerator {
     generate(scopedef: PiScopeDef, verbose: boolean): void {
         this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
         this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
-        if (verbose) LOGGER.log("Generating scoper '" + scopedef.scoperName + "' in folder " + this.scoperGenFolder);
+        let name = scopedef? scopedef.scoperName + " " : "";
+        if (verbose) LOGGER.log("Generating scoper " + name + "in folder " + this.scoperGenFolder);
 
         const namespace = new NamespaceTemplate();
         const scoper = new ScoperTemplate();
@@ -39,13 +40,12 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`, namespaceFile);
         
         if (verbose) LOGGER.log("Generating Scoper");
-        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class", verbose);
+        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, relativePath), "Scoper Class", verbose);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
         // var scoperIndexFile = Helpers.pretty(ScoperIndexTemplate.generateIndex(this.language), "Scoper Index");
         // fs.writeFileSync(`${this.scoperFolder}/index.ts`, scoperIndexFile);
 
-        if (verbose) LOGGER.log("Succesfully generated scoper: " + scopedef?.scoperName);
-
+        if (verbose) LOGGER.log("Succesfully generated scoper: " + name);
     } 
 }

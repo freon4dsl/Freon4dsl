@@ -21,6 +21,7 @@ export class Names {
     public static PiElementReference = "PiElementReference";
     public static PiEnvironment = "PiEnvironment";
     public static CompositeProjection = "CompositeProjection";
+    public static ProjectionalEditor = "ProjectionalEditor";
 
     // TODO take language name into account
     public static styles(language: PiLanguageUnit) {

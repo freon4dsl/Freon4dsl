@@ -13,7 +13,7 @@ import {
     DemoFunction,
     DemoVariable,
     PiElementReference
-} from "../language";
+} from "../language/gen";
 import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";

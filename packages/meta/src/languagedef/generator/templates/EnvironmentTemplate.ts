@@ -12,7 +12,6 @@ export class EnvironmentTemplate {
         import { ${Names.typer(language)}  } from "${relativePath}${PathProvider.typerGenFolder}${Names.typer(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${PathProvider.validatorGenFolder}${Names.validator(language)}";
         import { ${Names.projection(language)} } from "${relativePath}${PathProvider.editorFolder}${Names.projection(language)}";
-        import { ${Names.projectionDefault(language) } } from "${relativePath}${PathProvider.editorGenFolder}";
         
         export class ${Names.environment(language)} implements PiEnvironment {
         

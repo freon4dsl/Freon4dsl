@@ -7,12 +7,13 @@ export class MainProjectionalEditorTemplate {
     }
 
     generateEditor(language: PiLanguageUnit, withToolbar: boolean): string {
-        return `
+            // TODO use Names for MyToolbarComponent and its import statement
+            return `
             import { observable } from "mobx";
             import { observer } from "mobx-react";
             import * as React from "react";
             
-            import { ${Names.PiEditor}, ProjectionalEditor, CompositeProjection } from "${PathProvider.corePath}";
+            import { ${Names.PiEditor}, ${Names.ProjectionalEditor}, ${Names.CompositeProjection} } from "${PathProvider.corePath}";
             
             import { ${Names.projection(language)} } from "../${Names.projection(language)}";
             import { ${Names.projectionDefault(language)} } from "./${Names.projectionDefault(language)}";

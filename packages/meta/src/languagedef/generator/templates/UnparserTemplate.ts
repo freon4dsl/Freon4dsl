@@ -16,6 +16,8 @@ export class UnparserTemplate {
         import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageGenFolder}";
         import { ${language.classes.map(concept => `
                 ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
+        import { ${language.enumerations.map(concept => `
+                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
                 
@@ -31,13 +33,21 @@ export class UnparserTemplate {
                 if(modelelement instanceof ${concept.name}) {
                     return this.unparse${concept.name}(modelelement);
                 }`).join("")}
-            }
+                ${language.enumerations.map(concept => `
+                if(modelelement instanceof ${concept.name}) {
+                    return this.unparse${concept.name}(modelelement);
+                }`).join("")}
+           }
 
             ${language.classes.map(concept => `
                 private unparse${concept.name}(modelelement: ${concept.name}) : string {
                     return "";
                 }`).join("\n")}
-        }`;
+            ${language.enumerations.map(concept => `
+                private unparse${concept.name}(modelelement: ${concept.name}) : string {
+                    return "";
+                }`).join("\n")}
+            }`;
     }
 
     // As in the WalkerTemplate,

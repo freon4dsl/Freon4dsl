@@ -7,7 +7,7 @@ export class ScoperTemplate {
     constructor() {
     }
 
-    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
+    generateScoper(language: PiLanguageUnit, relativePath: string): string {
         // console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.metaType(language);     
