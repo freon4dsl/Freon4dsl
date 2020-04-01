@@ -40,12 +40,12 @@ export class DemoCreator {
 
         return _result;
     }
-    public createDemoEntity(name: string, attributes: DemoAttribute, functions: DemoFunction): DemoEntity {
+    public createDemoEntity(name: string, attributes: DemoAttribute, functions: DemoAttributeType): DemoEntity {
         let _result = new DemoEntity();
         _result.name = name;
 
         if (attributes !== null) _result.attributes.push(attributes);
-        if (functions !== null) _result.functions.push(new PiElementReference(functions, "DemoFunction"));
+        if (functions !== null) _result.functions.push(new PiElementReference(functions, "DemoAttributeType"));
         return _result;
     }
     public createDemoAttribute(name: string, declaredType: DemoAttributeType): DemoAttribute {

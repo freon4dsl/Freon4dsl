@@ -17,7 +17,7 @@ import {
     WorkerInterfaceTemplate
 } from "./templates";
 
-const LOGGER = new PiLogger("LanguageGenerator"); // .mute();
+const LOGGER = new PiLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
     protected languageGenFolder: string;

@@ -1,10 +1,10 @@
 import { Checker } from "../../utils";
 import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangEnumeration, PiLangUnion, PiLangEnumProperty } from "./PiLanguage";
-import { PiLangConceptReference, PiLangBinaryExpConceptReference } from "./PiLangReferences";
+import { PiLangConceptReference, PiLangEnumerationReference } from "./PiLangReferences";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiParseClass } from "../parser/PiParseLanguage";
 
-const LOGGER = new PiLogger("PiLanguageChecker").mute();
+const LOGGER = new PiLogger("PiLanguageChecker"); //.mute();
 
 export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     foundRoot = false;
@@ -55,7 +55,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         this.language.classes.forEach(concept => {
             if (concept instanceof PiParseClass) { // should always be the case
                 if (concept.isBinary || this.baseIsBinary(concept)) { // found binary expression  
-                    LOGGER.log("found binary expression " + concept.name);
+                    // LOGGER.log("found binary expression " + concept.name);
                     let result = new PiLangBinaryExpressionConcept();
                     // copy properties
                     result.symbol = concept.symbol;
@@ -65,7 +65,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                     newList.push(result);
                 }
                 else if (concept.isExpression || this.baseIsExpression(concept)) { // found expression
-                    LOGGER.log("found expression " + concept.name);
+                    // LOGGER.log("found expression " + concept.name);
                     let result = new PiLangExpressionConcept();
                     // copy properties
                     result._isExpressionPlaceHolder = concept._isExpressionPlaceHolder;
@@ -73,7 +73,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                     newList.push(result);
                 }
                 else { // found class
-                    LOGGER.log("found class " + concept.name);
+                    // LOGGER.log("found class " + concept.name);
                     let result = new PiLangClass();
                     // copy properties
                     this.copyCommonProperties(result, concept);
@@ -150,7 +150,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         }
 
         piClass.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
-        // TODO add the following:
         piClass.enumProperties.forEach(prop => this.checkPiEnumProperty(prop));
         piClass.parts.forEach(part => this.checkConceptProperty(part));
         piClass.references.forEach(ref => this.checkConceptProperty(ref));
@@ -172,7 +171,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
     checkPiEnumProperty(prop: PiLangEnumProperty) {
         this.simpleCheck(prop.owningConcept !== null, `Property '${prop.name}' should belong to a concept.`);
-        // check initialValue? check type?
+        // TODO check initialValue? check type?
     }
 
     checkConceptProperty(element: PiLangConceptProperty): void {
@@ -181,7 +180,10 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             {
                 check: !!element.type,
                 error: "Element should have a type",
-                whenOk: () => this.checkConceptReference(element.type)
+                whenOk: () => {
+                    this.checkConceptReference(element.type); 
+                    this.simpleCheck(!(element.type.referedElement() instanceof PiLangEnumeration), "Part or reference property '" + element.name + "' may not have an Enumeration as type.");
+                }
             });
     }
 
