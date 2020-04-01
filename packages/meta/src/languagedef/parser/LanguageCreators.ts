@@ -74,12 +74,6 @@ export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
     if (!!data.priority) {
         result.priority = data.priority;
     }
-    if (!!data.symbol) {
-        result.symbol = data.symbol;
-    }
-    if (!!data.priority) {
-        result.priority = data.priority;
-    }
     // console.log("created parse class " + result.name);
     return result;
 }
@@ -153,7 +147,3 @@ export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
     if( !!data.members) { result.members = data.members; }
     return result;
 }
-
-// export function isEnumerationProperty(p: Object){
-//     return p instanceof PiLangEnumProperty;
-// }

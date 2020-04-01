@@ -72,6 +72,7 @@ export class PiLangConcept extends PiLangElement {
     enumProperties: PiLangEnumProperty[] = [];
     parts: PiLangConceptProperty[] = [];
     references: PiLangConceptProperty[] = [];
+    // TODO the following should be moved to the editor generator
     trigger: string;
     triggerIsRegExp: boolean;
 

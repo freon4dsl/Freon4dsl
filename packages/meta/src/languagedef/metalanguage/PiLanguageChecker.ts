@@ -58,7 +58,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                     // LOGGER.log("found binary expression " + concept.name);
                     let result = new PiLangBinaryExpressionConcept();
                     // copy properties
-                    result.symbol = concept.symbol;
+                    // result.symbol = concept.symbol;
                     result.priority = concept.priority;
                     result._isExpressionPlaceHolder = concept._isExpressionPlaceHolder;
                     this.copyCommonProperties(result, concept);
@@ -156,7 +156,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
         if (piClass.binaryExpression() && !(piClass.isAbstract)) {
             const binExpConcept = piClass as PiLangBinaryExpressionConcept;
-            this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
+            // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
             this.simpleCheck(binExpConcept.getPriority() !== -1, `Concept ${piClass.name} should have a priority`);
 
             const left = piClass.allParts().find(part => part.name === "left");

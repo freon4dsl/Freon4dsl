@@ -20,6 +20,9 @@ expressionKey   = "expression" ws { return true; }
 baseKey         = "base" ws { return true; }
 placeholderKey  = "placeholder" ws { return true; }
 enumKey         = "enum" { return true; }
+partKey         = "part" 
+referenceKey    = "reference" 
+priorityKey     = "priority" 
 
 langdef = c:(concept) { return c;} / e:(enumeration) {return e;}/ t:(union) {return t;}
 
@@ -27,7 +30,7 @@ base = baseKey name:var { return create.createConceptReference( { "name": name})
 
 // TODO one should be able to mingle parts, references and attributes
 concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
-         "concept" ws name:var ws base:base? curly_begin props:property* editorProps:editorProperty* curly_end 
+         "concept" ws name:var ws base:base? curly_begin props:property* priority:priority? curly_end 
     {
         return create.createParseClass({
             "isRoot": (!!isRoot),
@@ -38,9 +41,7 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             "name": name,
             "base": base,
             "properties": props,
-            "trigger": ( !!editorProps.find(p => p.trigger) ? editorProps.find(p => p.trigger).trigger : undefined),
-            "symbol": ( !!editorProps.find(p => p.symbol) ? editorProps.find(p => p.symbol).symbol : undefined),
-            "priority": ( !!editorProps.find(p => p.priority) ? editorProps.find(p => p.priority).priority : undefined)
+            "priority": (!!priority ? priority : 0)
         });
     }
 
@@ -58,12 +59,12 @@ attribute = name:var ws name_separator ws isEnum:"enum"? ws type:var isList:"[]"
         }
     }
 
-part = "@part" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
+part = partKey ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
     { 
         return create.createPart({"name": name, "type": type, "isList": (isList?true:false) }) 
     }
 
-reference = "@reference" ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
+reference = referenceKey ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
     { 
         return create.createReference({"name": name, "type": type, "isList": (isList?true:false) }) 
     }
@@ -72,16 +73,9 @@ conceptReference = referredName:var {
     return create.createConceptReference({"name": referredName})
 }
 
-// TODO move to editorDef parser, except 'priority'
-editorProperty = "@editor" ws name:var ws name_separator ws type:var ws "=" ws "\"" value:string "\"" ws
-    {
-        switch(name) {
-            case "trigger": return { "trigger": value }
-            case "priority": return { "priority": Number.parseInt(value) };
-            case "symbol": return { "symbol": value };
-        };
-        return {"name": name, "type": type, "value": value, "isEditor": true }
-    }  
+priority = priorityKey ws "=" ws "\"" value:string "\"" ws {
+    return Number.parseInt(value);
+}  
 
 enumeration = "enumeration" ws name:var curly_begin
                     literals:var+

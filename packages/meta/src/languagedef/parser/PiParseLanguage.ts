@@ -26,7 +26,5 @@ export class PiParseClass extends PiLangClass {
     enumProperties: PiLangEnumProperty[] = [];
     parts: PiLangConceptProperty[] = [];
     references: PiLangConceptProperty[] = [];
-    trigger: string;
-    symbol: string;
     priority: number;
 }
