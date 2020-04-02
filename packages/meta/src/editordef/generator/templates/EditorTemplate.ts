@@ -7,11 +7,12 @@ export class EditorTemplate {
     }
 
     generateEditor(language: PiLanguageUnit, withToolbar: boolean, relativePath: string): string {
+        // TODO use Names and PathProvider for PiEditorWithToolbar and MyToolbarItem and their imports
         return `
             import { ${Names.PiActions}, ${Names.PiContext}, ${Names.PiEditor}, ${Names.PiProjection} } from "${PathProvider.corePath}";
             ${withToolbar ? `
-            import { PiEditorWithToolbar } from "../../toolbars/ToolBarDefinition";
-            import { MyToolbarItem } from "../../toolbars/MyToolbarItem";
+            import { PiEditorWithToolbar } from "../../webapp/toolbars/ToolBarDefinition";
+            import { MyToolbarItem } from "../../webapp/toolbars/MyToolbarItem";
             `: ""}
             
             export class ${Names.editor(language)} extends ${ withToolbar? `PiEditorWithToolbar` : `PiEditor`} {

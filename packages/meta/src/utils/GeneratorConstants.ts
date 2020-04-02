@@ -11,3 +11,9 @@ export const VALIDATOR_FOLDER = "validator";
 export const VALIDATOR_GEN_FOLDER = "validator/gen";
 export const TYPER_FOLDER = "typer";
 export const TYPER_GEN_FOLDER = "typer/gen";
+export const WEBAPP_FOLDER = "webapp"
+export const APP_FOLDER = "webapp/app"
+export const ASSETS_FOLDER = "webapp/assets"
+export const STYLES_FOLDER = "webapp/styles"
+export const TOOLBARS_FOLDER = "webapp/toolbars"
+// TODO move all of these to PathProvider

@@ -1,7 +1,6 @@
 import { PiLanguageUnit, PiLangConcept, PiLangEnumeration, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
-import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
-import { PiValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
+import { TYPER_FOLDER, TYPER_GEN_FOLDER, STYLES_FOLDER } from "./GeneratorConstants";
 
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical
@@ -85,7 +84,7 @@ export class PathProvider {
     // the generated classes that implement the editor can be found in ...
     public static editorGenFolder = "editor/gen/";
     public static editorFolder = "editor/";
-    public static editorstyles = "styles/styles";
+    public static editorstyles = STYLES_FOLDER + "/styles";
     public static context(language: PiLanguageUnit): string {
         return this.editorGenFolder + Names.context(language);  ;
     }

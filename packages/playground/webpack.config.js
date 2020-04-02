@@ -13,7 +13,7 @@ module.exports = {
   mode: 'development',
   context: sourcePath,
   entry: {
-    main: "./demo/application/run.ts",
+    main: "./demo/webapp/run.ts",
     vendor: [
       'react',
       'react-dom',
@@ -132,7 +132,7 @@ module.exports = {
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new HtmlWebpackPlugin({
-      template: 'demo/application/assets/index.html'
+      template: 'demo/webapp/assets/index.html'
     })
   ],
   devServer: {

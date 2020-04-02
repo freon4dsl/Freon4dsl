@@ -11,7 +11,7 @@
   },
   "scripts": {
     "projectit": 	"ts-node ../meta/src/commandline/projectit -v all -d src/demo/defs -o src/demo",
-    "projectit-nonVerbose": 	"ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",
+    "projectit-nonverbose": 	"ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",
     "test-expressions": 		"ts-node ../meta/src/commandline/projectit -v test-expressions -l src/demo/defs/LanguageDefinition.lang -X src/demo/defs/LanguageExpressions.pitest -o src/demo",
     "meta-it": 		"ts-node ../meta/src/commandline/projectit -v meta-it -l src/demo/defs/LanguageDefinition.lang -o src/demo",
     "scope-it": 		"ts-node ../meta/src/commandline/projectit -v scope-it -l src/demo/defs/LanguageDefinition.lang -s src/demo/defs/LanguageDefinition.scop -o src/demo",
@@ -20,7 +20,7 @@
     "type-it": 	"ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "build-wait": "tsc -w",
-    "build": "yarn run projectIt-nonVerbose && tsc ",
+    "build": "yarn run projectit-nonverbose && tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",

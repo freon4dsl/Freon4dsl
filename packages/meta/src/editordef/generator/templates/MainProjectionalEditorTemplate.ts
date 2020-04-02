@@ -7,7 +7,7 @@ export class MainProjectionalEditorTemplate {
     }
 
     generateEditor(language: PiLanguageUnit, withToolbar: boolean): string {
-            // TODO use Names for MyToolbarComponent and its import statement
+            // TODO use Names and PathProvider for MyToolbarComponent and its import statement
             return `
             import { observable } from "mobx";
             import { observer } from "mobx-react";
@@ -20,7 +20,7 @@ export class MainProjectionalEditorTemplate {
             import { ${Names.actions(language)} } from "./${Names.actions(language)}";
             import { ${Names.context(language)} } from "./${Names.context(language)}";
             import { ${Names.editor(language)} } from "./${Names.editor(language)}";
-            import { MyToolbarComponent } from "../../toolbars/MyToolbarComponent";
+            import { MyToolbarComponent } from "../../webapp/toolbars/MyToolbarComponent";
 
             @observer
             export class MainProjectionalEditor extends React.Component< any, {}> {

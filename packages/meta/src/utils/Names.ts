@@ -64,6 +64,7 @@ export class Names {
     }
 
     public static mainProjectionalEditor(language: PiLanguageUnit): string {
+        // TODO remove parameter
         return "MainProjectionalEditor";
     }
 
