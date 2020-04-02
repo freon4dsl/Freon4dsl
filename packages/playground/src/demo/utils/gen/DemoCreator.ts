@@ -28,7 +28,7 @@ import {
     DemoVariable,
     DemoVariableRef,
     PiElementReference
-} from "../../language/gen/";
+} from "../../language/gen";
 
 export class DemoCreator {
     public createDemoModel(name: string, functions: DemoFunction, entities: DemoEntity): DemoModel {

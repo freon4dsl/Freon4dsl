@@ -28,7 +28,7 @@ import {
     DemoVariableRef,
     DemoAttributeType,
     DemoType
-} from "../../language/gen/";
+} from "../../language/gen";
 import { DemoUnparser } from "../../utils/gen/DemoUnparser";
 import { DemoWorker } from "../../utils/gen/DemoWorker";
 

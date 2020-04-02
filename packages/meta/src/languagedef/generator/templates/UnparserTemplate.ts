@@ -1,6 +1,6 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
+import { sortClasses } from "../../../utils/ModelHelpers";
 
 export class UnparserTemplate {
     constructor() {
@@ -13,11 +13,11 @@ export class UnparserTemplate {
 
         // Template starts here 
         return `
-        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageGenFolder}";
+        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         import { ${language.enumerations.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
                 
@@ -29,7 +29,7 @@ export class UnparserTemplate {
         export class ${generatedClassName}  {
 
             public unparse(modelelement: ${allLangConcepts}) : string {
-                ${this.sortClasses(language.classes).map(concept => `
+                ${sortClasses(language.classes).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
                     return this.unparse${concept.name}(modelelement);
                 }`).join("")}
@@ -50,31 +50,6 @@ export class UnparserTemplate {
             }`;
     }
 
-    // As in the WalkerTemplate,
-    // the entries for the unparse${concept.name} must be sorted,
-    // because an entry for a subclass must preceed an entry for
-    // its base class, otherwise only the unparse${concept.name} for
-    // the base class will be called.
-    private sortClasses(piclasses: PiLangClass[]) : PiLangClass[] {
-        let newList : PiLangClass[] = [];
-        for (let c of piclasses) {
-            // without base must be last
-            if ( !c.base ) {
-                newList.push(c);
-            }
-        }
-        while (newList.length < piclasses.length) {
-            for (let c of piclasses) {
-                if ( c.base ) {
-                    // push c before c.base
-                    if (newList.includes(c.base.referedElement())) {
-                        newList.unshift(c);
-                    }
-                }
-            }
-        }
-        return newList;
-    }
 
 }
 

@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { PathProvider, EDITOR_GEN_FOLDER } from "../../../utils/PathProvider";
 
 export class AppTemplate {
 
@@ -19,7 +19,7 @@ export class AppTemplate {
         import { Root } from "./containers/Root/index";
         import { RouterStore } from "./stores/index";
         import { STORE_ROUTER } from "./constants/stores";
-        import { ${Names.mainProjectionalEditor} } from "${relativePath}${PathProvider.editorGenFolder}${Names.mainProjectionalEditor}";
+        import { ${Names.mainProjectionalEditor} } from "${relativePath}${EDITOR_GEN_FOLDER}${Names.mainProjectionalEditor}";
 
         // prepare MobX stores
         const history = createBrowserHistory();

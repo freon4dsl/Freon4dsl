@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ProjectionTemplate {
@@ -8,7 +7,7 @@ export class ProjectionTemplate {
 
     generateProjection(language: PiLanguageUnit, relativePath: string): string {
         return `
-            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PathProvider.corePath}";
+            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PROJECTITCORE}";
         
             export class ${Names.projection(language)} implements ${Names.PiProjection} {
                 rootProjection: ${Names.PiProjection};
@@ -22,10 +21,10 @@ export class ProjectionTemplate {
     }
 
     generateProjectionDefault(language: PiLanguageUnit,  relativePath: string): string {
-        return `
+        return ` 
             import { observable } from "mobx";
 
-            import { ${Names.styles(language)} } from "${relativePath}${PathProvider.editorstyles}";
+            import { ${Names.styles(language)} } from "${relativePath}${EDITORSTYLES}";
             import {
                 AliasBox,
                 Box,
@@ -52,13 +51,13 @@ export class ProjectionTemplate {
                 STYLES,
                 isPiBinaryExpression,
                 ${Names.PiBinaryExpression}
-            } from "${PathProvider.corePath}";
+            } from "${PROJECTITCORE}";
             
-            import { ${Names.PiElementReference} } from "${relativePath}${PathProvider.languageGenFolder}${Names.PiElementReference}";
-            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageGenFolder}";
-            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageGenFolder}";
+            import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }/${Names.PiElementReference}";
+            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
-            import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environmentGenFolder}/${Names.environment(language)}";
+            import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
             export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
                 private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};

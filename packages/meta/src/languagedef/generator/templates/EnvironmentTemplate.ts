@@ -1,4 +1,4 @@
-import { Names, PathProvider } from "../../../utils/";
+import { Names, PathProvider, PROJECTITCORE, TYPER_GEN_FOLDER, SCOPER_GEN_FOLDER, VALIDATOR_GEN_FOLDER, EDITOR_FOLDER } from "../../../utils/";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
 export class EnvironmentTemplate {
@@ -7,11 +7,11 @@ export class EnvironmentTemplate {
 
     generateEnvironment(language: PiLanguageUnit, relativePath: string): string {
         return `
-        import { ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator} } from "${PathProvider.corePath}";
-        import { ${Names.scoper(language)} } from "${relativePath}${PathProvider.scoperGenFolder}${Names.scoper(language)}";
-        import { ${Names.typer(language)}  } from "${relativePath}${PathProvider.typerGenFolder}${Names.typer(language)}";
-        import { ${Names.validator(language)} } from "${relativePath}${PathProvider.validatorGenFolder}${Names.validator(language)}";
-        import { ${Names.projection(language)} } from "${relativePath}${PathProvider.editorFolder}${Names.projection(language)}";
+        import { ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator} } from "${PROJECTITCORE}";
+        import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
+        import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
+        import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
+        import { ${Names.projection(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.projection(language)}";
         
         export class ${Names.environment(language)} implements PiEnvironment {
         

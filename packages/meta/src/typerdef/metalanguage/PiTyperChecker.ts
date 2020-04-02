@@ -86,18 +86,6 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
                 }
             }
         }
-        for (let type of myTypes) {
-            for( let stat of rule.statements) {
-                if (stat.exp instanceof PiLangThisExp) {
-                    // check for the two predefined properties: 'base' and 'implements'
-                    // TODO remove this!!! base and implements should be part of the language def!!!
-                    let name = stat.exp.appliedfeature?.sourceName;
-                    if ( name !== "base" && name !== "implements" ) {
-                        this.checkStatement(stat, type);
-                    }
-                }
-            }
-        }
     }
 
     private checkConceptReference(reference: PiLangConceptReference) {

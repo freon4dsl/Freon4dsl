@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 
@@ -14,9 +13,9 @@ export class ContextTemplate {
 
         return `
             import { action, observable } from "mobx";
-            import { ${Names.PiContext}, ${Names.PiExpression} } from "${PathProvider.corePath}";
+            import { ${Names.PiContext}, ${Names.PiExpression} } from "${PROJECTITCORE}";
             import { ${initializationName} } from "../${initializationName}";
-            import { ${rootConceptName}, ${placeHolderConceptName} } from "${relativePath}${PathProvider.languageGenFolder}";
+            import { ${rootConceptName}, ${placeHolderConceptName} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             
             export class ${Names.context(language)} implements PiContext {
                 @observable private _rootElement: ${rootConceptName};

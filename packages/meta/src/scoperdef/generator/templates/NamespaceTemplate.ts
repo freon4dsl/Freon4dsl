@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 
@@ -25,10 +24,10 @@ export class NamespaceTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => 
-            `${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "${relativePath}${PathProvider.languageGenFolder}";
+            `${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${scopedef.namespaces.length == 0? `${language.rootConcept().name}, ` : ``}
-             ${langConceptType} } from "${relativePath}${PathProvider.languageGenFolder}";
-        import { ${Names.PiNamedElement}} from "${PathProvider.corePath}";
+             ${langConceptType} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.PiNamedElement}} from "${PROJECTITCORE}";
 
         export class ${generatedClassName} {
             _myElem : ${allLangConcepts}; // any element in the model

@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils";
+import { PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class ModelCreatorTemplate {
@@ -11,7 +11,7 @@ export class ModelCreatorTemplate {
         
         // the template starts here
         return `
-        import { ${this.createImports(language)}, ${Names.PiElementReference} } from "${relativePath}${PathProvider.languageGenFolder}"; 
+        import { ${this.createImports(language)}, ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER}"; 
 
         export class ${language.name}Creator {
 

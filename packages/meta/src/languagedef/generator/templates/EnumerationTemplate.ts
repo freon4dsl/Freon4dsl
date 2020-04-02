@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
 import { PiLangEnumeration } from "../../metalanguage/PiLanguage";
 
 export class EnumerationTemplate {
@@ -24,8 +24,8 @@ export class EnumerationTemplate {
         return `
         import * as uuid from "uuid";
         import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
-        import { ${mobxImports.join(",")} } from "${PathProvider.corePath}";
-        import { ${Names.PiElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression } } from "${PathProvider.corePath}";
+        import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
+        import { ${Names.PiElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression } } from "${PROJECTITCORE}";
     
         export class ${enumerationName} extends ${extendsClass} implements ${implementsPi} {
             readonly $typename: ${language.name}ConceptType = "${enumerationName}";

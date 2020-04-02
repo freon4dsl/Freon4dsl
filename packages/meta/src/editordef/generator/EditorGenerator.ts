@@ -82,7 +82,7 @@ export class EditorGenerator {
 
         LOGGER.log("Generating MainProjectionalEditor");
         var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateEditor(this.language, true), "MainProjectionalEditor");
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor(this.language)}.tsx`, projectionalEditorFile);
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor}.tsx`, projectionalEditorFile);
 
         LOGGER.log("Generating editor gen index");
         var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language), "Editor Gen Index");

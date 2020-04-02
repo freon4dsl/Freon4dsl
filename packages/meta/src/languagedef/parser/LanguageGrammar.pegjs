@@ -2,9 +2,7 @@
     let create = require("./LanguageCreators");
 }
 
-// TODO the order of the element should not be fixed
-// TODO name chould be changed into Langauge_Definition
-Editor_Definition
+Language_Definition
   = ws "language" ws name:var ws defs:(langdef)* 
     {
         return create.createLanguage({
@@ -28,7 +26,6 @@ langdef = c:(concept) { return c;} / e:(enumeration) {return e;}/ t:(union) {ret
 
 base = baseKey name:var { return create.createConceptReference( { "name": name}); }
 
-// TODO one should be able to mingle parts, references and attributes
 concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
          "concept" ws name:var ws base:base? curly_begin props:property* priority:priority? curly_end 
     {

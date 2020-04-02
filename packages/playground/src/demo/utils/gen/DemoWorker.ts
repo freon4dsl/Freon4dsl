@@ -27,7 +27,7 @@ import {
     DemoType,
     DemoVariable,
     DemoVariableRef
-} from "../../language/gen/";
+} from "../../language/gen";
 
 export interface DemoWorker {
     execBeforeDemoModel(modelelement: DemoModel);

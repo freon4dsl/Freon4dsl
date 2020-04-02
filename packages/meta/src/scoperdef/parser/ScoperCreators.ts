@@ -1,9 +1,6 @@
 import { PiScopeDef, PiNamespace } from "../metalanguage";
 import { PiLangConceptReference } from "../../languagedef/metalanguage";
 
-// Functions used to create instances of the language classes from the parsed data objects.
-// TODO change comment
-
 export function createScopeDef(data: Partial<PiScopeDef>): PiScopeDef {
     const result = new PiScopeDef();
 

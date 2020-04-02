@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class MainProjectionalEditorTemplate {
@@ -13,7 +13,7 @@ export class MainProjectionalEditorTemplate {
             import { observer } from "mobx-react";
             import * as React from "react";
             
-            import { ${Names.PiEditor}, ${Names.ProjectionalEditor}, ${Names.CompositeProjection} } from "${PathProvider.corePath}";
+            import { ${Names.PiEditor}, ${Names.ProjectionalEditor}, ${Names.CompositeProjection} } from "${PROJECTITCORE}";
             
             import { ${Names.projection(language)} } from "../${Names.projection(language)}";
             import { ${Names.projectionDefault(language)} } from "./${Names.projectionDefault(language)}";

@@ -11,7 +11,7 @@ export class EditorIndexTemplate {
         export * from "./${Names.defaultActions(language)}";
         export * from "./${Names.context(language)}";
         export * from "./${Names.projectionDefault(language)}";
-        export * from "./${Names.mainProjectionalEditor(language)}";
+        export * from "./${Names.mainProjectionalEditor}";
         `;
     }
 
