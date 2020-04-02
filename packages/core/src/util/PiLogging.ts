@@ -33,9 +33,10 @@ export class PiLogger {
     }
 
     info(o: any, msg: LogMessage) {
-        if (this.active && !PiLogger.muteAll) {
-            const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-            this.logToConsole(PiLogger.FgBlue, this.category + " " + type + ": " + this.message(msg));
+        if (this.active) {
+                const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
+            // this.logToConsole(PiLogger.FgBlue, this.category + " " + type + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FgBlue, this.category + ": " + this.message(msg));
         }
     }
 
@@ -66,12 +67,30 @@ export class PiLogger {
 
     protected logToConsole(color : string, message: string): void {
         if (PiLogger.filter === null) {
-            console.log(color, message);
+            console.log(color, message, PiLogger.FgBlack, "");
+            // this.colorMyText();
         } else {
             if (message.includes(PiLogger.filter)) {
-                console.log(color, message);
+                console.log(color, message, PiLogger.FgBlack, "");
             }
         }
+    }
+
+    // following does not work
+    colorMyText() {
+        var text = 'some text with some {special} formatting on this {keyword} and this {keyword}';
+        var splitText = text.split(' ');
+        var cssRules = [];
+        var styledText = '';
+        for (var split of splitText)  {
+            if (/^\{/.test(split)) {
+                cssRules.push(PiLogger.FgBlue);
+            } else {
+                cssRules.push('color:inherit')
+            }
+            styledText += `%c${split} `
+        };
+        console.log(styledText , ...cssRules)
     }
 }
 

@@ -40,10 +40,15 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         //  Generate checker
-        if (validdef == null) return;
-        LOGGER.log("Generating checker class");
-        var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class");
-        fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);
+        if (validdef !== null) {
+            LOGGER.log("Generating checker class");
+            var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class");
+            fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);
+        }
+
+        LOGGER.log("Generating validator index class");
+        var indexFile = Helpers.pretty(validator.generateIndex(this.language, validdef), "Index Class");
+        fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
 
         LOGGER.log("Succesfully generated validator: " + name);
     } 

@@ -66,4 +66,11 @@ export class ScoperTemplate {
         }`;
     }
 
+    generateIndex(language: PiLanguageUnit): string {
+        return `
+        export * from "./${Names.scoper(language)}";
+        export * from "./${Names.namespace(language)}";
+        `;
+    }
+
 }

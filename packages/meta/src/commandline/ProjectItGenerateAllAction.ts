@@ -38,7 +38,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting generating all parts of your language as defined in "+ this.defFolder.value);
+        LOGGER.info(this, "Starting generation of all parts of your language as defined in "+ this.defFolder.value);
         LOGGER.log("Output will be generated in: " + this.outputFolder);
         
         let languageFile : string = "";
@@ -56,10 +56,12 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         LOGGER.log("typerFile: " + typerFile);
 
         // generate the language
+        LOGGER.info(this, "Generating language structure");
         const language = new LanguageParser().parse(languageFile); 
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(language);
 
+        LOGGER.info(this, "Generating editor");
         let editor : PiDefEditorLanguage;
         if (editFile.length >0) {
             editor = new PiDefEditorParser().parse(editFile);
@@ -70,6 +72,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.editorGenerator.language = language;
         this.editorGenerator.generate(editor);
 
+        LOGGER.info(this, "Generating validator");
         let validator : PiValidatorDef;
         if(validFile.length > 0) {
             validator = new ValidatorParser(language).parse(validFile);
@@ -80,6 +83,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.validatorGenerator.outputfolder = this.outputFolder;
         this.validatorGenerator.generate(validator);
 
+        LOGGER.info(this, "Generating scoper");
         let scoper : PiScopeDef;
         if (scopeFile.length > 0) {
             scoper = new ScoperParser(language).parse(scopeFile);
@@ -90,6 +94,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.scoperGenerator.outputfolder = this.outputFolder;
         this.scoperGenerator.generate(scoper);
 
+        LOGGER.info(this, "Generating typer");
         let typer : PiTypeDefinition;
         if (typerFile.length > 0) {
             typer = new PiTyperParser(language).parse(typerFile);

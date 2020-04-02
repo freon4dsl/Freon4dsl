@@ -62,4 +62,12 @@ export class ValidatorTemplate {
             }
         }`;
     }
+
+    generateIndex(language: PiLanguageUnit, validdef: PiValidatorDef): string {
+        return `
+        export * from "./${Names.validator(language)}";
+        ${!!validdef ? `export * from "./${Names.checker(language)}";` : ``}
+        `;
+    }
+
 }

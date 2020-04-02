@@ -103,6 +103,12 @@ export class PiTyperTemplate {
         }`;
     }
 
+    generateGenIndex(language: PiLanguageUnit): string {
+        return `
+        export * from "./${Names.typer(language)}";
+        `;
+    }
+
     private findDefault() : string {
         let result : string = "";
         for ( let tr of this.typerdef.typerRules ) {

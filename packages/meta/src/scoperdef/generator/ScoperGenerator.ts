@@ -43,8 +43,9 @@ export class ScoperGenerator {
         var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, relativePath), "Scoper Class");
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
-        // var scoperIndexFile = Helpers.pretty(ScoperIndexTemplate.generateIndex(this.language), "Scoper Index");
-        // fs.writeFileSync(`${this.scoperFolder}/index.ts`, scoperIndexFile);
+        LOGGER.log("Generating Scoper Gen Index");
+        var scoperIndexFile = Helpers.pretty(scoper.generateIndex(this.language), "Scoper Gen Index");
+        fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
         LOGGER.log("Succesfully generated scoper: " + name);
     } 

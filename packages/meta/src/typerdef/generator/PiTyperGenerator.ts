@@ -37,6 +37,10 @@ export class PiTyperGenerator {
         var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class");
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
+        LOGGER.log("Generating typer gen index");
+        var typerIndexGenFile = Helpers.pretty(typer.generateGenIndex(this.language), "Typer Gen Index");
+        fs.writeFileSync(`${this.typerGenFolder}/index.ts`, typerIndexGenFile);
+
         LOGGER.log("Succesfully generated typer: " + name);
     } 
 }
