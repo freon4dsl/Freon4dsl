@@ -46,10 +46,10 @@ export class WalkerTemplate {
                         ${concept.allParts().map( part =>
                             (part.isList ?
                                 `modelelement.${part.name}.forEach(p => {
-                                    this.walk${part.type.name}(p, includeChildren );
+                                    this.walk(p, includeChildren );
                                 });`
                             :
-                                `this.walk${part.type.name}(modelelement.${part.name}, includeChildren );`
+                                `this.walk(modelelement.${part.name}, includeChildren );`
                             )
                         ).join("\n")}
                     }`

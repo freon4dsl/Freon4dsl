@@ -14,6 +14,8 @@ import {
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoUnparser } from "../utils/DemoUnparser";
+import { makeLiteralExp } from "./HelperFunctions";
+import * as fs from "fs";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -35,38 +37,31 @@ describe("Testing Unparser", () => {
         test("multiplication 3 * 10", () => {
             let result: string = "";
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
-            mult.left = new DemoNumberLiteralExpression();
-            (mult.left as DemoNumberLiteralExpression).value = "3";
-            mult.right = new DemoNumberLiteralExpression();
-            (mult.right as DemoNumberLiteralExpression).value = "10";
+            mult.left = makeLiteralExp("3");
+            mult.right = makeLiteralExp("10");
             result = unparser.unparse(mult);
-            expect(result).toBe("( 3 * 10 )");
+            expect(result).toBe("(3 * 10)");
         });
 
         test("multiplication 3 * 'temp'", () => {
             let result: string = "";
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
-            mult.left = new DemoNumberLiteralExpression();
-            (mult.left as DemoNumberLiteralExpression).value = "3";
-            mult.right = new DemoStringLiteralExpression();
-            (mult.right as DemoStringLiteralExpression).value = "temp";
+            mult.left = makeLiteralExp("3");
+            mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("( 3 * \"temp\" )");
+            expect(result).toBe("(3 * \"temp\")");
         });
 
         test("multiplication (3/4) * 'temp'", () => {
             let result: string = "";
             let div: DemoDivideExpression = new DemoDivideExpression();
-            div.left = new DemoNumberLiteralExpression();
-            (div.left as DemoNumberLiteralExpression).value = "3";
-            div.right = new DemoNumberLiteralExpression();
-            (div.right as DemoNumberLiteralExpression).value = "4";
+            div.left = makeLiteralExp("3");
+            div.right = makeLiteralExp("4");
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = div;
-            mult.right = new DemoStringLiteralExpression();
-            (mult.right as DemoStringLiteralExpression).value = "temp";
+            mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("( ( 3 / 4 ) * \"temp\" )");
+            expect(result).toBe("((3 / 4) * \"temp\")");
         });
 
         test("(1 + 2) * 'Person'", () => {
@@ -85,7 +80,7 @@ describe("Testing Unparser", () => {
             const divideExpression = DemoModelCreator.MakePlusExp("1", "2");
             const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.unparse(multiplyExpression);
-            expect(result).toBe("( ( 1 + 2 ) * Person )");
+            expect(result).toBe("((1 + 2) * Person)");
         });
 
         test("'determine(AAP : Integer) : Boolean = \"Hello Demo\" + \"Goodbye\"'", () => {
@@ -98,7 +93,7 @@ describe("Testing Unparser", () => {
             determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             result = unparser.unparse(determine);
-            expect(result).toBe("determine( AAP : Integer ): Boolean = ( \"Hello Demo\" + \"Goodbye\" )");
+            expect(result).toBe("determine( AAP : Integer ): Boolean\n\t\t= (\"Hello Demo\" + \"Goodbye\")");
         });
 
         test("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
@@ -122,12 +117,19 @@ describe("Testing Unparser", () => {
             // Person { name, age, first(Resultvar) = 5 + 24 }
 
             result = unparser.unparse(personEnt);
-            expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = ( 5 + 24 ), \n}");
+            expect(result).toBe("Person {\n\tage : Boolean,\n\tname : String,\n\tfirst( Resultvar : Boolean ): Boolean\n\t\t= (5 + 24),\n}");
         });
 
         test.skip("complete example model with simple attribute types", () => {
             let result: string = "";
             result = unparser.unparse(model);
+            // let path : string = "./handmade/unparsedDemoModel.txt";
+            // if (!fs.existsSync(path)) {
+                // fs.writeFileSync(path, result);
+            // } else {
+            //     console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
+            // }
+    
             expect(result.length).toBe(556);
         });
     });

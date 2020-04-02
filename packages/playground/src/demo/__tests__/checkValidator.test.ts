@@ -12,11 +12,15 @@ import {
     AllDemoConcepts,
     DemoFunction,
     DemoVariable,
-    PiElementReference
+    PiElementReference,
+    DemoLiteralExpression,
+    DemoBooleanLiteralExpression,
+    DemoPlaceholderExpression
 } from "../language/gen";
 import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { makeLiteralExp } from "./HelperFunctions";
 
 describe('Testing Validator', () => {
     describe('Validate DemoModel Instance', () => {
@@ -31,21 +35,17 @@ describe('Testing Validator', () => {
         test("multiplication 3 * 10", () => {
             let errors : PiError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
-            mult.left = new DemoNumberLiteralExpression("3");
-            mult.right = new DemoNumberLiteralExpression("10"); 
+            mult.left = makeLiteralExp("3");
+            mult.right = makeLiteralExp("10"); 
             errors = validator.validate(mult);
             expect(errors.length).toBe(0);
-            errors.forEach(e => {
-                expect(e.reportedOn).toBe(mult.right);
-                // console.log(e.message);
-            });
         });
 
         test("multiplication 3 * 'temp'", () => {
             let errors : PiError[] = [];
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
-            mult.left = new DemoNumberLiteralExpression("3");
-            mult.right = new DemoStringLiteralExpression("temp");
+            mult.left = makeLiteralExp("3");
+            mult.right = makeLiteralExp("temp"); 
             errors = validator.validate(mult);
             expect(errors.length).toBe(1);
             errors.forEach(e => {
@@ -57,11 +57,11 @@ describe('Testing Validator', () => {
         test("multiplication (3/4) * 'temp'", () => {
             let errors : PiError[] = [];
             let div : DemoDivideExpression = new DemoDivideExpression();
-            div.left = new DemoNumberLiteralExpression("3");
-            div.right = new DemoNumberLiteralExpression("4");
+            div.left = makeLiteralExp("3");
+            div.right = makeLiteralExp("4");
             let mult : DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = div;
-            mult.right = new DemoStringLiteralExpression("temp");
+            mult.right = makeLiteralExp("temp");
             errors = validator.validate(mult);
             expect(errors.length).toBe(1);
             errors.forEach(e => {
@@ -90,18 +90,27 @@ describe('Testing Validator', () => {
             const attribute = DemoAttribute.create("Person");
             attribute.declaredType = DemoAttributeType.String;
             variableExpression.attribute = new PiElementReference<DemoAttribute>(attribute, "DemoAttribute");
-            // variableExpression.referredName = "Person";
-            // variableExpression.attribute = new DemoAttribute();
-            // variableExpression.attribute.name = "Person";
-            // variableExpression.attribute.declaredType = DemoAttributeType.String;
 
-            const divideExpression = DemoModelCreator.MakePlusExp("1","2");
-            const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);
+            const plusExpression = DemoModelCreator.MakePlusExp("1","2");
+            const multiplyExpression = DemoModelCreator.MakeMultiplyExp(plusExpression, variableExpression);
             errors = validator.validate(multiplyExpression);
             expect(errors.length).toBe(1);
             errors.forEach(e =>
                 expect(e.reportedOn === multiplyExpression)
             );
+        })
+
+        test("\"Hello Demo\" + \"Goodbye\"'' should have 2 errors", () => {
+            let errors : PiError[] = [];
+            let expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
+            // "Hello Demo" + "Goodbye"
+
+            errors = validator.validate(expression);
+            expect(errors.length).toBe(2);
+            errors.forEach(e => {
+                expect(e.reportedOn === expression);
+                // console.log(e.message);
+            });
         })
 
         test("'determine(AAP) : Boolean = \"Hello Demo\" + \"Goodbye\"'' should have 3 errors", () => {
@@ -113,7 +122,7 @@ describe('Testing Validator', () => {
             determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             errors = validator.validate(determine, true);
-            // expect(errors.length).toBe(3);
+            expect(errors.length).toBe(3);
             errors.forEach(e => {
                 expect(e.reportedOn === determine);
                 // console.log(e.message);
@@ -141,23 +150,24 @@ describe('Testing Validator', () => {
     
             // Person { name, age, first(Resultvar) = 5 + 24 }
         
-            // console.log("testing: " + unparser.unparseDemoEntity(personEnt, true));
             errors = validator.validate(personEnt, true);
-            expect(errors.length).toBe(1);            
             errors.forEach(e => {
                 expect(e.reportedOn === personEnt);
                 // console.log(e.message)
             });
+            expect(errors.length).toBe(1);            
         });
 
-        test.skip("complete example model with simple attribute types", () => {
+        test("complete example model with simple attribute types", () => {
             let errors : PiError[] = [];
             errors =validator.validate(model, true);
-            // expect(errors.length).toBe(19);                
             // errors.forEach(e =>
             //     console.log(e.message)
             // );
+            expect(errors.length).toBe(17);                
         });
     });
 });
+
+
 

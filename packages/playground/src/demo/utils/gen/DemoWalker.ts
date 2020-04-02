@@ -123,10 +123,10 @@ export class DemoWalker {
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 modelelement.functions.forEach(p => {
-                    this.walkDemoFunction(p, includeChildren);
+                    this.walk(p, includeChildren);
                 });
                 modelelement.entities.forEach(p => {
-                    this.walkDemoEntity(p, includeChildren);
+                    this.walk(p, includeChildren);
                 });
             }
             this.myWorker.execAfterDemoModel(modelelement);
@@ -143,10 +143,10 @@ export class DemoWalker {
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
                 modelelement.attributes.forEach(p => {
-                    this.walkDemoAttribute(p, includeChildren);
+                    this.walk(p, includeChildren);
                 });
                 modelelement.functions.forEach(p => {
-                    this.walkDemoFunction(p, includeChildren);
+                    this.walk(p, includeChildren);
                 });
             }
             this.myWorker.execAfterDemoEntity(modelelement);
@@ -173,9 +173,9 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.expression, includeChildren);
+                this.walk(modelelement.expression, includeChildren);
                 modelelement.parameters.forEach(p => {
-                    this.walkDemoVariable(p, includeChildren);
+                    this.walk(p, includeChildren);
                 });
             }
             this.myWorker.execAfterDemoFunction(modelelement);
@@ -268,7 +268,7 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.expr, includeChildren);
+                this.walk(modelelement.expr, includeChildren);
             }
             this.myWorker.execAfterDemoAbsExpression(modelelement);
         } else {
@@ -283,8 +283,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoBinaryExpression(modelelement);
         } else {
@@ -299,8 +299,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoMultiplyExpression(modelelement);
         } else {
@@ -315,8 +315,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoPlusExpression(modelelement);
         } else {
@@ -331,8 +331,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoDivideExpression(modelelement);
         } else {
@@ -347,8 +347,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoAndExpression(modelelement);
         } else {
@@ -363,8 +363,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoOrExpression(modelelement);
         } else {
@@ -379,8 +379,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoComparisonExpression(modelelement);
         } else {
@@ -395,8 +395,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoLessThenExpression(modelelement);
         } else {
@@ -411,8 +411,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoGreaterThenExpression(modelelement);
         } else {
@@ -427,8 +427,8 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.left, includeChildren);
-                this.walkDemoExpression(modelelement.right, includeChildren);
+                this.walk(modelelement.left, includeChildren);
+                this.walk(modelelement.right, includeChildren);
             }
             this.myWorker.execAfterDemoEqualsExpression(modelelement);
         } else {
@@ -454,9 +454,9 @@ export class DemoWalker {
 
             // work on children in the model tree
             if (!(includeChildren === undefined) && includeChildren) {
-                this.walkDemoExpression(modelelement.condition, includeChildren);
-                this.walkDemoExpression(modelelement.whenTrue, includeChildren);
-                this.walkDemoExpression(modelelement.whenFalse, includeChildren);
+                this.walk(modelelement.condition, includeChildren);
+                this.walk(modelelement.whenTrue, includeChildren);
+                this.walk(modelelement.whenFalse, includeChildren);
             }
             this.myWorker.execAfterDemoIfExpression(modelelement);
         } else {

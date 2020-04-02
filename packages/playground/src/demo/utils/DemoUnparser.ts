@@ -118,34 +118,34 @@ export class DemoUnparser {
     }
 
     public unparseDemoModel(modelelement: DemoModel) : string {
-        let result : string = modelelement.name + "{ ";
+        let result : string = modelelement.name + " {\n";
 
         // adding the unparse string of children in the model tree
         modelelement.entities.forEach(p => {
-            result = result.concat( this.unparseDemoEntity(p) + "\n" );
+            result = result.concat("\t" + this.unparse(p) + "\n" );
         });
         modelelement.functions.forEach(p => {
-            result = result.concat( this.unparseDemoFunction(p) + "\n" );
+            result = result.concat("\t" + this.unparse(p) + "\n" );
         });
         return result + "\n}";
     }
 
     public unparseDemoEntity(modelelement: DemoEntity) : string {
-        let result : string = modelelement.name + "{ ";
+        let result : string = modelelement.name + " {";
 
         // adding the unparse string of children in the model tree
         modelelement.attributes.forEach(p => {
-            result = result.concat( this.unparseDemoAttribute(p)).concat(", ");
+            result = result.concat("\n\t" + this.unparse(p)).concat(",");
         });
         modelelement.functions.forEach(p => {
-            result = result.concat( this.unparseDemoFunction(p)).concat(", ");
+            result = result.concat("\n\t" + this.unparse(p)).concat(",");
         });
         return result + "\n}";
     }
 
     public unparseDemoAttribute(modelelement: DemoAttribute) : string {
         let result : string = modelelement.name;
-        result = result.concat( " : " + this.unparseDemoAttributeType(modelelement.declaredType));
+        result = result.concat( " : " + this.unparse(modelelement.declaredType));
         return result;
     }
 
@@ -160,11 +160,11 @@ export class DemoUnparser {
         // adding the unparse string of children in the model tree
         result = result.concat("( ");
         modelelement.parameters.forEach(p => {
-            result = result.concat( this.unparseDemoVariable(p));
+            result = result.concat( this.unparse(p));
         });
         result = result.concat(" )");
         result = result.concat(": " + this.unparse(modelelement.declaredType));
-        result = result.concat( " = " + this.unparse(modelelement.expression));
+        result = result.concat("\n\t\t= " + this.unparse(modelelement.expression));
         return result;
     }
 
@@ -227,7 +227,7 @@ export class DemoUnparser {
     }
 
     public unparseDemoAbsExpression(modelelement: DemoAbsExpression) : string {
-        return "abs( " + this.unparse(modelelement.expr) + " )";
+        return "abs(" + this.unparse(modelelement.expr) + " ";
     }
 
     public unparseDemoBinaryExpression(modelelement: DemoBinaryExpression) : string {
@@ -239,7 +239,7 @@ export class DemoUnparser {
     }
 
     public unparseDemoIfExpression(modelelement: DemoIfExpression) : string {
-        return "if ( " + this.unparse(modelelement.condition) + " ) { " + 
+        return "if (" + this.unparse(modelelement.condition) + ") { " + 
             this.unparse(modelelement.whenTrue) + " } else { "
             + this.unparse(modelelement.whenFalse) + " }";
     }
@@ -249,23 +249,23 @@ export class DemoUnparser {
     }
     
     private unparseDemoMultiplyExpression(modelelement: DemoMultiplyExpression): string {
-        return "( " + this.unparse(modelelement.left) + " * " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " * " +  this.unparse(modelelement.right) + ")";
     }
 
     private unparseDemoPlusExpression(modelelement: DemoPlusExpression): string {
-        return "( " + this.unparse(modelelement.left) + " + " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " + " +  this.unparse(modelelement.right) + ")";
     }
 
     private unparseDemoDivideExpression(modelelement: DemoDivideExpression): string {
-        return "( " + this.unparse(modelelement.left) + " / " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " / " +  this.unparse(modelelement.right) + ")";
     }
 
     private unparseDemoAndExpression(modelelement: DemoAndExpression): string {
-        return "( " + this.unparse(modelelement.left) + " and " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " and " +  this.unparse(modelelement.right) + ")";
     }
 
     private unparseDemoOrExpression(modelelement: DemoOrExpression): string {
-        return "( " + this.unparse(modelelement.left) + " or " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " or " +  this.unparse(modelelement.right) + ")";
     }
 
     private unparseDemoComparisonExpression(modelelement: DemoComparisonExpression): string {
@@ -273,15 +273,15 @@ export class DemoUnparser {
     }
 
     private unparseDemoLessThenExpression(modelelement: DemoLessThenExpression): string {
-        return "( " + this.unparse(modelelement.left) + " < " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " < " +  this.unparse(modelelement.right) + ")";
     }
 
     private unparseDemoGreaterThenExpression(modelelement: DemoGreaterThenExpression): string {
-        return "( " + this.unparse(modelelement.left) + " > " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " > " +  this.unparse(modelelement.right) + ")";
     }
 
     private unparseDemoEqualsExpression(modelelement: DemoEqualsExpression): string {
-        return "( " + this.unparse(modelelement.left) + " = " +  this.unparse(modelelement.right) + " )";
+        return "(" + this.unparse(modelelement.left) + " = " +  this.unparse(modelelement.right) + ")";
     }
 
 }

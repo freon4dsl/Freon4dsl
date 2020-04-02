@@ -29,7 +29,7 @@ import {
     DemoAttributeType,
     DemoType
 } from "../../language/gen/";
-import { DemoUnparser } from "../../utils/gen/DemoUnparser";
+import { DemoUnparser } from "../../utils/DemoUnparser";
 import { DemoWorker } from "../../utils/gen/DemoWorker";
 
 export class DemoChecker implements DemoWorker {

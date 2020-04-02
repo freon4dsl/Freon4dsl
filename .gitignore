@@ -53,3 +53,4 @@ packages/playground/src/taxrules/scoper/gen/*
 packages/playground/src/taxrules/typer/gen/*
 packages/playground/src/taxrules/utils/gen/*
 packages/playground/src/taxrules/validator/gen/*
+packages/playground/handmade/unparsedDemoModel.txt

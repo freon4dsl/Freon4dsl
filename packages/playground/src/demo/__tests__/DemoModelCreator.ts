@@ -4,6 +4,7 @@ import { PiElementReference, DemoEntity, DemoAttribute, DemoFunction, DemoVariab
         DemoAndExpression, DemoPlusExpression, DemoPlaceholderExpression, DemoModel, 
         DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression, DemoMultiplyExpression,
     DemoDivideExpression, DemoBooleanLiteralExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoLiteralExpression } from "../language/gen";
+import { makeLiteralExp } from "./HelperFunctions";
 
 export class DemoModelCreator  {
     model: DemoModel;
@@ -113,8 +114,8 @@ export class DemoModelCreator  {
 
         const ifExpression = new DemoIfExpression();
         ifExpression.condition = DemoModelCreator.MakeLessThenExp("2", "5"); //("<")
-        ifExpression.whenTrue = DemoModelCreator.makeLiteralExp("1");
-        ifExpression.whenFalse = DemoModelCreator.makeLiteralExp("5");
+        ifExpression.whenTrue = makeLiteralExp("1");
+        ifExpression.whenFalse = makeLiteralExp("5");
         const divideExpression = DemoModelCreator.MakeDivideExp("1","2");
         const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression,"Person");
         const plusExpression = DemoModelCreator.MakePlusExp(ifExpression, multiplyExpression);
@@ -134,7 +135,7 @@ export class DemoModelCreator  {
 
         const leftOr = new DemoOrExpression();
         leftOr.right = equals;
-        leftOr.left = DemoModelCreator.makeLiteralExp("Yes");
+        leftOr.left = makeLiteralExp("Yes");
         // leftOr : ("Yes" or ("No" = Variable1))
 
         const rightAnd : DemoBinaryExpression = DemoModelCreator.MakeLessThenExp("x", "122");        
@@ -210,27 +211,8 @@ export class DemoModelCreator  {
         if (incoming instanceof DemoExpression) {
             return incoming;
         } else {
-            return DemoModelCreator.makeLiteralExp(incoming);
+            return makeLiteralExp(incoming);
         }
     }
 
-    private static makeLiteralExp(incoming: any) {
-        let mine: DemoLiteralExpression;
-        if (typeof incoming === "string" && /[0-9]+/.test(incoming)) {
-            mine = new DemoNumberLiteralExpression();
-            (mine as DemoNumberLiteralExpression).value = incoming;
-        }
-        else if (typeof incoming === "string" && (incoming === "true" || incoming === "false")) {
-            mine = new DemoBooleanLiteralExpression();
-            (mine as DemoBooleanLiteralExpression).value = incoming;
-        }
-        else if (typeof incoming === "string") {
-            mine = new DemoStringLiteralExpression();
-            (mine as DemoStringLiteralExpression).value = incoming;
-        }else {
-            // When no expression can be created, return a place holder expression.
-            mine = new DemoPlaceholderExpression();
-        }
-        return mine;
-    }
 }
