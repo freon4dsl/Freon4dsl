@@ -1,6 +1,6 @@
 import { Checker } from "../../utils";
 import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangEnumeration, PiLangUnion, PiLangEnumProperty } from "./PiLanguage";
-import { PiLangConceptReference, PiLangEnumerationReference } from "./PiLangReferences";
+import { PiLangConceptReference } from "./PiLangReferences";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiParseClass } from "../parser/PiParseLanguage";
 
@@ -150,9 +150,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.foundRoot = true;
         }
 
-        // resolve the properties: find out which is a primitive and which is an enum prop
-        this.resolveSimpleProperties(piClass);
-
         piClass.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         piClass.enumProperties.forEach(prop => this.checkEnumProperty(prop));
         piClass.parts.forEach(part => this.checkConceptProperty(part));
@@ -170,33 +167,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             const right = piClass.allParts().find(part => part.name === "right");
             this.simpleCheck(!!right, `Concept ${piClass.name} should have a right part, because it is a binary expression`);
             this.simpleCheck(!!right && right.type.referedElement() instanceof PiLangExpressionConcept, `Concept ${piClass.name}.right should be an expression, but it isn't`);
-        }
-    }
-
-    private resolveSimpleProperties(piClass: PiLangClass) {
-        LOGGER.log("\nResolving class: " + piClass.name );
-        let toBeRemoved: PiLangEnumProperty[] = [];
-        // if the property has a primitive type, then add it as PrimitiveProperty ...
-        for (let prop of piClass.enumProperties) {
-            let typename = prop.type.name;
-            if (typename === "string" || typename === "boolean" || typename === "number") {
-                let primProp = new PiLangPrimitiveProperty();
-                primProp.name = prop.name;
-                primProp.isList = prop.isList;
-                primProp.isStatic = prop.isStatic;
-                primProp.initialValue = prop.initialValue;
-                primProp.owningConcept = prop.owningConcept;
-                primProp.primType = typename;
-                piClass.primProperties.push(primProp);
-                toBeRemoved.push(prop);
-            }
-        }
-        // ... and remove it from the list of EnumProperties
-        for (let prop of toBeRemoved) {
-            let index = piClass.enumProperties.indexOf(prop);
-            if (index != -1) {
-                piClass.enumProperties.splice(index, 1);
-            }
         }
     }
 

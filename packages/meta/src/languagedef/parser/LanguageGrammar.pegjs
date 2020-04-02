@@ -51,10 +51,12 @@ property =  att:attribute { return att; }
 
 attribute = name:var ws name_separator ws type:var isList:"[]"? ws
     {
-      // we always create an EnumerationProperty, even if it is a PrimitiveProperty
-      // this is corrected in the Checker
-      const enumRef = create.createEnumerationReference({"name": type});
-      return create.createEnumerationProperty({"name": name, "type": enumRef, "isList": (isList?true:false) })
+      if (type === "string" || type === "boolean" || type === "number") {
+        return create.createPrimitiveProperty({"name": name, "primType": type, "isList": (isList?true:false) });
+      } else {
+        const enumRef = create.createEnumerationReference({"name": type});
+        return create.createEnumerationProperty({"name": name, "type": enumRef, "isList": (isList?true:false) })
+      }
     }
 
 part = partKey ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
