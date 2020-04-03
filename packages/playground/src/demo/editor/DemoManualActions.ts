@@ -2,7 +2,7 @@
 import { KeyboardShortcutBehavior, PiBinaryExpressionCreator, PiCustomBehavior, PiExpressionCreator } from "@projectit/core";
 import { EXPRESSION_PLACEHOLDER } from "@projectit/core";
 import { Box, PiEditor, PiTriggerType } from "@projectit/core";
-import { DemoNumberLiteralExpression } from "../language";
+import { DemoNumberLiteralExpression } from "../language/gen";
 export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {

@@ -5,12 +5,11 @@ import {
 } from "@microsoft/ts-command-line";
 
 /**
- * Generic generator action. The only options defined here are the -o flag for the output folder, and the -v for verbose.
+ * Generic generator action. The only option defined here is the -o flag for the output folder.
  * Subclasses need to call super.onDefineParameters()!
  */
 export abstract class ProjectItGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
-    public verbose: boolean;
     protected outputFolder: string;
 
     public constructor(options: ICommandLineActionOptions) {

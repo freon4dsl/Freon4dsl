@@ -1,4 +1,4 @@
-import { DemoModel, DemoAttributeType } from "../language";
+import { DemoModel, DemoAttributeType } from "../language/gen";
 import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoModelCreator } from "./DemoModelCreator";
 

@@ -28,8 +28,8 @@ import {
     DemoVariableRef,
     DemoAttributeType,
     DemoType
-} from "../../language";
-import { DemoUnparser } from "../../unparser/DemoUnparser";
+} from "../../language/gen";
+import { DemoUnparser } from "../../utils/gen/DemoUnparser";
 import { DemoWorker } from "../../utils/gen/DemoWorker";
 
 export class DemoChecker implements DemoWorker {

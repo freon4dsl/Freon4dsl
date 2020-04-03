@@ -16,8 +16,8 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
     }
 
-    public check(definition: PiValidatorDef, verbose: boolean): void {
-        if (verbose) LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
+    public check(definition: PiValidatorDef): void {
+        LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
         if( this.language === null ) {
             LOGGER.error(this,  "Validator definition checker does not known the language, exiting.");
@@ -115,7 +115,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check: tr.type1 != null || tr.type2 != null,
                 error: `Typecheck "equalsType" should have two types to compare`,
                 whenOk: () => {
-                    // if (verbose) LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
+                    // LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept),
                     this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept)  
                 }
@@ -129,7 +129,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check: tr.type1 != null || tr.type2 != null,
                 error: `Typecheck "conformsTo" should have two types to compare`,
                 whenOk: () => {
-                    // if (verbose) LOGGER.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
+                    // LOGGER.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
                     this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept)  
                 }

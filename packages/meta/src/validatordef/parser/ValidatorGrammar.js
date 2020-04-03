@@ -154,12 +154,12 @@ function peg$parse(input, options) {
                   "conceptRules": cr,
               });
           },
-      peg$c7 = "@validName",
-      peg$c8 = peg$literalExpectation("@validName", false),
-      peg$c9 = "@typecheck",
-      peg$c10 = peg$literalExpectation("@typecheck", false),
-      peg$c11 = "@notEmpty",
-      peg$c12 = peg$literalExpectation("@notEmpty", false),
+      peg$c7 = "validName",
+      peg$c8 = peg$literalExpectation("validName", false),
+      peg$c9 = "typecheck",
+      peg$c10 = peg$literalExpectation("typecheck", false),
+      peg$c11 = "notEmpty",
+      peg$c12 = peg$literalExpectation("notEmpty", false),
       peg$c13 = "this",
       peg$c14 = peg$literalExpectation("this", false),
       peg$c15 = function(conceptRef, rules) { 
@@ -540,9 +540,9 @@ function peg$parse(input, options) {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    if (input.substr(peg$currPos, 10) === peg$c7) {
+    if (input.substr(peg$currPos, 9) === peg$c7) {
       s1 = peg$c7;
-      peg$currPos += 10;
+      peg$currPos += 9;
     } else {
       s1 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$c8); }
@@ -568,9 +568,9 @@ function peg$parse(input, options) {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    if (input.substr(peg$currPos, 10) === peg$c9) {
+    if (input.substr(peg$currPos, 9) === peg$c9) {
       s1 = peg$c9;
-      peg$currPos += 10;
+      peg$currPos += 9;
     } else {
       s1 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$c10); }
@@ -596,9 +596,9 @@ function peg$parse(input, options) {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    if (input.substr(peg$currPos, 9) === peg$c11) {
+    if (input.substr(peg$currPos, 8) === peg$c11) {
       s1 = peg$c11;
-      peg$currPos += 9;
+      peg$currPos += 8;
     } else {
       s1 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$c12); }

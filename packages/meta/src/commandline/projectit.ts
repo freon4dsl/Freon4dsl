@@ -6,6 +6,7 @@ import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
 import { ProjectItTestLanguageExpressions } from "./ProjectItTestLanguageExpressions";
+import { PiLogger } from "../../../core/src/util/PiLogging";
 
 export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
@@ -23,14 +24,14 @@ export class ProjectItParser extends CommandLineParser {
             toolDescription: "ProjectIt toolset for generating languages, scopers, editors, etc."
         });
 
-        this.languageGenerator = new ProjectItGenerateLanguage();
         this.allGenerator = new ProjectItGenerateAllAction();
+        this.languageGenerator = new ProjectItGenerateLanguage();
         this.editorGenerator = new ProjectItGenerateEditor();
         this.scoperGenerator = new ProjectItGenerateScoper();
         this.validatorGenerator = new ProjectItGenerateValidator();
         this.typerGenerator = new ProjectItGenerateTyper();
-        this.addAction(this.languageGenerator);
         this.addAction(this.allGenerator);
+        this.addAction(this.languageGenerator);
         this.addAction(this.editorGenerator);
         this.addAction(this.scoperGenerator);
         this.addAction(this.validatorGenerator);
@@ -50,14 +51,8 @@ export class ProjectItParser extends CommandLineParser {
     }
 
     protected onExecute(): Promise<void> {
-        this.languageGenerator.verbose = this.verboseArg.value;
-        this.allGenerator.verbose = this.verboseArg.value;
-        this.editorGenerator.verbose = this.verboseArg.value;
-        this.scoperGenerator.verbose = this.verboseArg.value;
-        this.validatorGenerator.verbose = this.verboseArg.value;
-        this.typerGenerator.verbose = this.verboseArg.value;
-        this.testGenerator.verbose = this.verboseArg.value;
-
+        if (!this.verboseArg.value) PiLogger.muteAllLogs();
+        if (this.verboseArg.value) PiLogger.unmuteAllLogs();
         try {
             return super.onExecute();
         } catch (e) {

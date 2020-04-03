@@ -19,10 +19,13 @@ export class Names {
     public static PiProjection = "PiProjection";
     public static Box = "Box";
     public static PiElementReference = "PiElementReference";
+    public static PiEnvironment = "PiEnvironment";
+    public static CompositeProjection = "CompositeProjection";
+    public static ProjectionalEditor = "ProjectionalEditor";
+    public static mainProjectionalEditor = "MainProjectionalEditor";
 
-    // TODO take language name into account
     public static styles(language: PiLanguageUnit) {
-        return "demoStyles";
+        return language?.name.toLowerCase() + "Styles";
     }
     
     public static environment(language: PiLanguageUnit) {
@@ -58,10 +61,6 @@ export class Names {
 
     public static editor(language: PiLanguageUnit): string {
         return language?.name + "Editor";
-    }
-
-    public static mainProjectionalEditor(language: PiLanguageUnit): string {
-        return "MainProjectionalEditor";
     }
 
     public static initialization(language: PiLanguageUnit) {

@@ -8,19 +8,17 @@ export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
 
     public constructor() {
         super({
-            actionName: "generate-language",
+            actionName: "meta-it",
             summary: "Generates the TypeScript code for your language",
             documentation: "Generates TypeScript code for the language defined in the .lang file."
         });
     }
 
     generate(): void {
-        if (this.verbose) {
-            LOGGER.log("Starting ProjectIt language generation ...");    
-        }
+        LOGGER.log("Starting ProjectIt language generation ...");    
         super.generate();
         this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.generate(this.language, this.verbose);
+        this.languageGenerator.generate(this.language);
     }
 
     protected onDefineParameters(): void {

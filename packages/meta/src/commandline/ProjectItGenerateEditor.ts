@@ -12,27 +12,25 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
 
     public constructor() {
         super({
-            actionName: "generate-editor",
+            actionName: "edit-it",
             summary: "Generates the typeScript code for the projectional editor for your language",
             documentation: "Generates TypeScript code for the projectional editor of language defined in the .lang file."
         });
     }
 
     generate(): void {
-        if (this.verbose) {
-            LOGGER.log("Starting ProjectIt editor generation ...");    
-        }
+        LOGGER.log("Starting ProjectIt editor generation ...");    
         super.generate();
 
         this.editorGenerator.outputfolder = this.outputFolder;
         this.editorGenerator.language = this.language;
 
-        const editor = new PiDefEditorParser().parse(this.editorFile.value, this.verbose);
+        const editor = new PiDefEditorParser().parse(this.editorFile.value);
         if (editor == null) {
             LOGGER.error(this, "Editor definition could not be parsed, exiting.");
             process.exit(-1);
         }
-       this.editorGenerator.generate(editor, this.verbose);
+       this.editorGenerator.generate(editor);
         // TODO add check on succefullness of generation
     }
 

@@ -1,16 +1,16 @@
-import { Names } from "../../../utils/Names";
+import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
 export class PiReferenceTemplate {
     constructor() {
     }
 
-    generatePiReference(language: PiLanguageUnit): string {
+    generatePiReference(language: PiLanguageUnit, relativePath: string): string {
         return `
-        import { MobxModelElementImpl } from "@projectit/core";
+        import { MobxModelElementImpl } from "${PROJECTITCORE}";
         import { computed, observable } from "mobx";
-        import { PiNamedElement } from "@projectit/core";
-        import { ${Names.environment(language)} } from "../environment/${Names.environment(language)}";
+        import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         
         /**
          * Implementation for a (named) reference in ProjectIt.

@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage/PiLangExpressions";
 import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
@@ -12,23 +11,25 @@ export class PiTyperTemplate {
     }
 
     generateTyper(language: PiLanguageUnit, typerdef: PiTypeDefinition, relativePath: string): string {
+        if (typerdef == null) return this.generateDefault(language, relativePath);
+
         this.typerdef = typerdef;
+        const rootType : string = this.typerdef.typeroot.name;
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : string = Names.typer(language);
         const typerInterfaceName : string = Names.PiTyper;
-        const rootType : string = this.typerdef.typeroot.name;
         const defaultType : string = this.findDefault();
         
         // Template starts here 
         return `
-        import { ${typerInterfaceName} } from "${PathProvider.corePath}";
-        import { ${allLangConcepts} } from "${relativePath}${PathProvider.languageFolder}";
+        import { ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";      
+                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
                 import { ${language.enumerations.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         import { ${language.unions.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";     
+                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
 
         export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType : ${rootType} = ${defaultType};
@@ -71,6 +72,40 @@ export class PiTyperTemplate {
                 return this.defaultType;
             }   
         }`;
+    }
+
+    generateDefault(language: PiLanguageUnit, relativePath: string): string {
+        const allLangConcepts : string = Names.allConcepts(language);   
+        const typerInterfaceName : string = Names.PiTyper;
+
+        // Template starts here 
+        return `
+        import { ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        
+        export class TaxRulesTyper implements PiTyper {
+            inferType(modelelement: AllTaxRulesConcepts): AllTaxRulesConcepts {
+                return null;
+            }
+            equalsType(elem1: AllTaxRulesConcepts, elem2: AllTaxRulesConcepts): boolean {
+                return true;
+            }
+            conformsTo(elem1: AllTaxRulesConcepts, elem2: AllTaxRulesConcepts): boolean {
+                return true;
+            }
+            conformList(typelist1: AllTaxRulesConcepts[], typelist2: AllTaxRulesConcepts[]): boolean {
+                return true;
+            }
+            isType(elem: AllTaxRulesConcepts): boolean {
+                return false;
+            }      
+        }`;
+    }
+
+    generateGenIndex(language: PiLanguageUnit): string {
+        return `
+        export * from "./${Names.typer(language)}";
+        `;
     }
 
     private findDefault() : string {
@@ -122,7 +157,6 @@ export class PiTyperTemplate {
             if (tr instanceof PiTypeConceptRule) {
                 let myConceptName = tr.conceptRef.name;
                 for ( let stat of tr.statements  ) {
-                    // TODO change all references to the string "infertype" to a global variable
                     // TODO change the order in which the statements are generated, because subclasses need to overwrite their super
                     // and thus their statement needs to come before the super statement
                     if ( stat.statementtype === "infertype" && !stat.isAbstract) {                        
@@ -218,7 +252,6 @@ export class PiTyperTemplate {
         } else {
             return ref?.toPiString();
         }
-
     }
 
 }

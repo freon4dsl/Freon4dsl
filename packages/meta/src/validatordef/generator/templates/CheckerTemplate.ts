@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
 import { PiLangThisExp, PiLangExp, PiLangEnumExp } from "../../../languagedef/metalanguage/PiLangExpressions";
@@ -17,8 +16,8 @@ export class CheckerTemplate {
         
         // the template starts here
         return `
-        import { ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.corePath}";
-        import { ${this.createImports(language, validdef)} } from "${relativePath}${PathProvider.languageFolder}"; 
+        import { ${errorClassName}, ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${this.createImports(language, validdef)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${unparserClassName} } from "${relativePath}${PathProvider.unparser(language)}";    
         import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";
 

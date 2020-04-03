@@ -14,13 +14,13 @@ export class PiParser<DEFINITION> {
     checker: Checker<DEFINITION>;
     msg: string;
 
-    parse(definitionFile: string, verbose?: boolean): DEFINITION {
+    parse(definitionFile: string): DEFINITION {
         // Check language file
         if (!fs.existsSync(definitionFile)) {
             LOGGER.error(this, this.msg + " definition file '" + definitionFile + "' does not exist, exiting.");
             process.exit(-1);
         }
-        if (verbose) LOGGER.log(this.msg + " file is [" + definitionFile + "] ");
+        LOGGER.log(this.msg + " file is [" + definitionFile + "] ");
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "UTF8" });
         // Parse Language file
         let model: DEFINITION = null;
@@ -29,11 +29,11 @@ export class PiParser<DEFINITION> {
         } catch (e) {
             let errorstr = `${this.msg}: ${e} ${(e.location && e.location.start)? `[line ${e.location.start.line}, column ${e.location.start.column}`: ``}]`;
             LOGGER.error(this, errorstr);
-            // if (verbose) LOGGER.log(JSON.stringify(e, null, 4));
+            // LOGGER.log(JSON.stringify(e, null, 4));
             process.exit(-1);
         }
         if (model !== null) {
-            this.checker.check(model, verbose);
+            this.checker.check(model);
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOGGER.error(this, error));
                 LOGGER.error(this, "Stopping because of errors.");
@@ -41,8 +41,7 @@ export class PiParser<DEFINITION> {
             }
             return model;
         } else {
-            // TODO change error message
-            LOGGER.error(this, "ERROR: Parser does not return a PiLanguage");
+            LOGGER.error(this, "ERROR: Parser does not return a language definition.");
             process.exit(-1);
         }
     }

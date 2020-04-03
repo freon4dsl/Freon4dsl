@@ -13,9 +13,9 @@ Validator_Definition
         });
     } 
 
-validnameKey = "@validName" ws
-typecheckKey = "@typecheck" ws
-notEmptyKey = "@notEmpty" ws
+validnameKey = "validName" ws
+typecheckKey = "typecheck" ws
+notEmptyKey = "notEmpty" ws
 thisKey = "this" ws
 
 conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end 

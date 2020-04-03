@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class MainProjectionalEditorTemplate {
@@ -7,19 +7,20 @@ export class MainProjectionalEditorTemplate {
     }
 
     generateEditor(language: PiLanguageUnit, withToolbar: boolean): string {
-        return `
+            // TODO use Names and PathProvider for MyToolbarComponent and its import statement
+            return `
             import { observable } from "mobx";
             import { observer } from "mobx-react";
             import * as React from "react";
             
-            import { ${Names.PiEditor}, ProjectionalEditor, CompositeProjection } from "${PathProvider.corePath}";
+            import { ${Names.PiEditor}, ${Names.ProjectionalEditor}, ${Names.CompositeProjection} } from "${PROJECTITCORE}";
             
             import { ${Names.projection(language)} } from "../${Names.projection(language)}";
             import { ${Names.projectionDefault(language)} } from "./${Names.projectionDefault(language)}";
             import { ${Names.actions(language)} } from "./${Names.actions(language)}";
             import { ${Names.context(language)} } from "./${Names.context(language)}";
             import { ${Names.editor(language)} } from "./${Names.editor(language)}";
-            import { MyToolbarComponent } from "../../toolbars/MyToolbarComponent";
+            import { MyToolbarComponent } from "../../webapp/toolbars/MyToolbarComponent";
 
             @observer
             export class MainProjectionalEditor extends React.Component< any, {}> {

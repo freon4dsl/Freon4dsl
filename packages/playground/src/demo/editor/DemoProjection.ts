@@ -13,10 +13,10 @@ import {
     DemoNumberLiteralExpression,
     DemoStringLiteralExpression,
     DemoVariable
-} from "../language";
-import { PiElementReference } from "../language/PiElementReference";
-import { demoStyles } from "../styles/styles";
-import { DemoEnvironment } from "../environment/DemoEnvironment";
+} from "../language/gen";
+import { PiElementReference } from "../language/gen/PiElementReference";
+import { demoStyles } from "../webapp/styles/styles";
+import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 
 export class DemoProjection implements PiProjection {
