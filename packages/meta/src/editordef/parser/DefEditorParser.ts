@@ -1,9 +1,9 @@
 import { PiParser } from "../../utils";
-import { PiDefEditorChecker, PiDefEditorLanguage } from "../metalanguage";
+import { PiDefEditorChecker, DefEditorLanguage } from "../metalanguage";
 
 let editorParser = require("./EditorGrammar");
 
-export class PiDefEditorParser extends PiParser<PiDefEditorLanguage> {
+export class DefEditorParser extends PiParser<DefEditorLanguage> {
 
     constructor() {
         super();

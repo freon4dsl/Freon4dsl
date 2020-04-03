@@ -1,5 +1,5 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { PiDefEditorParser } from "../editordef/parser/PiDefEditorParser";
+import { DefEditorParser } from "../editordef/parser/DefEditorParser";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
@@ -58,7 +58,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.languageGenerator.generate(language, this.verbose);
 
         if (editFile.length >0) {
-            const editor = new PiDefEditorParser().parse(editFile, this.verbose);
+            const editor = new DefEditorParser().parse(editFile, this.verbose);
             this.editorGenerator.outputfolder = this.outputFolder;
             this.editorGenerator.language = language;
             this.editorGenerator.generate(editor, this.verbose);

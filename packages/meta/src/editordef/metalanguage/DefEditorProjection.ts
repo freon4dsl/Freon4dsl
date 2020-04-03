@@ -1,12 +1,12 @@
 import { PiDefEditorConcept } from "./PiDefEditorConcept";
 
-export class PiDefEditorNewline {
+export class DefEditorNewline {
     toString(): string {
         return "\n";
     }
 }
 
-export class PiDefEditorProjectionIndent {
+export class DefEditorProjectionIndent {
     indent: string = ";";
 
     toString() : string {
@@ -14,7 +14,7 @@ export class PiDefEditorProjectionIndent {
     }
 }
 
-export class PiDefEditorProjectionText {
+export class DefEditorProjectionText {
     text: string = "";
     toString() : string {
         return this.text;
@@ -43,7 +43,7 @@ export class ListJoin {
     }
 }
 
-export class PiDefEditorSubProjection {
+export class DefEditorSubProjection {
     propertyName: string = "";
     listJoin: ListJoin;
 
@@ -53,28 +53,28 @@ export class PiDefEditorSubProjection {
 
 }
 
-export class PiDefEditorProjectionExpression {
+export class DefEditorProjectionExpression {
     propertyName: string = "";
 }
 
-type PiDefEditorProjectionItem =
-    PiDefEditorProjectionIndent
-    | PiDefEditorProjectionText
-    | PiDefEditorSubProjection
-    | PiDefEditorProjectionExpression;
+type DefEditorProjectionItem =
+    DefEditorProjectionIndent
+    | DefEditorProjectionText
+    | DefEditorSubProjection
+    | DefEditorProjectionExpression;
 
-export class PiDefEditorProjectionLine {
-    items: PiDefEditorProjectionItem[];
+export class MetaEditorProjectionLine {
+    items: DefEditorProjectionItem[];
 
     toString(): string {
         return this.items.map(item => item.toString()).join("");
     }
 }
 
-export class PiDefEditorProjection {
+export class DefEditorProjection {
     name: string;
     conceptEditor: PiDefEditorConcept;
-    lines: PiDefEditorProjectionLine[];
+    lines: MetaEditorProjectionLine[];
 
     toString() {
         return `projection ${this.name}

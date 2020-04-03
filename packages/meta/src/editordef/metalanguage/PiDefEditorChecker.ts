@@ -1,9 +1,9 @@
 import { Checker } from "../../utils";
-import { PiDefEditorLanguage } from "./PiDefEditorLanguage";
+import { DefEditorLanguage } from "./DefEditorLanguage";
 
-export class PiDefEditorChecker extends Checker<PiDefEditorLanguage> {
+export class PiDefEditorChecker extends Checker<DefEditorLanguage> {
 
-    public check(language: PiDefEditorLanguage): void {
+    public check(language: DefEditorLanguage): void {
         this.nestedCheck(
             {
                 check: !!language.name,

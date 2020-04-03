@@ -4,11 +4,11 @@ import {
     ListJoinType,
     PiDefEditorConcept,
     PiDefEditorEnumeration,
-    PiDefEditorLanguage, PiDefEditorNewline,
-    PiDefEditorProjection, PiDefEditorProjectionExpression,
-    PiDefEditorProjectionIndent,
-    PiDefEditorProjectionLine,
-    PiDefEditorProjectionText, PiDefEditorSubProjection
+    DefEditorLanguage, DefEditorNewline,
+    DefEditorProjection, DefEditorProjectionExpression,
+    DefEditorProjectionIndent,
+    MetaEditorProjectionLine,
+    DefEditorProjectionText, DefEditorSubProjection
 } from "../metalanguage";
 
 // Functions used to create instances of the language classes from the parsed data objects.
@@ -39,8 +39,8 @@ export function createConceptEditor(data: Partial<PiDefEditorConcept>): PiDefEdi
     return result;
 }
 
-export function createLanguageEditor(data: Partial<PiDefEditorLanguage>): PiDefEditorLanguage {
-    const result = new PiDefEditorLanguage();
+export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEditorLanguage {
+    const result = new DefEditorLanguage();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -62,8 +62,8 @@ export function createLanguageEditor(data: Partial<PiDefEditorLanguage>): PiDefE
 
 }
 
-export function createProjection(data: Partial<PiDefEditorProjection>): PiDefEditorProjection {
-    const result = new PiDefEditorProjection();
+export function createProjection(data: Partial<DefEditorProjection>): DefEditorProjection {
+    const result = new DefEditorProjection();
     if (!!data.lines) {
         result.lines = data.lines;
     }
@@ -74,35 +74,35 @@ export function createProjection(data: Partial<PiDefEditorProjection>): PiDefEdi
     return result;
 }
 
-export function createLine(data: Partial<PiDefEditorProjectionLine>): PiDefEditorProjectionLine {
+export function createLine(data: Partial<MetaEditorProjectionLine>): MetaEditorProjectionLine {
     // console.log("Create LINE " + JSON.stringify(data));
-    const result = new PiDefEditorProjectionLine();
+    const result = new MetaEditorProjectionLine();
     if (!!data.items) {
         result.items = data.items;
     }
     return result;
 }
 
-export function createIndent(data: Partial<PiDefEditorProjectionIndent>): PiDefEditorProjectionIndent {
+export function createIndent(data: Partial<DefEditorProjectionIndent>): DefEditorProjectionIndent {
     // console.log("createIndent <<" + data.indent + ">>");
-    const result = new PiDefEditorProjectionIndent();
+    const result = new DefEditorProjectionIndent();
     if (!!data.indent) {
         result.indent = data.indent;
     }
     return result;
 }
 
-export function createText(data: string): PiDefEditorProjectionText {
-    const result = new PiDefEditorProjectionText();
+export function createText(data: string): DefEditorProjectionText {
+    const result = new DefEditorProjectionText();
     if (!!data) {
         result.text = data;
     }
     return result;
 }
 
-export function createSubProjection(data: Partial<PiDefEditorSubProjection>): PiDefEditorSubProjection {
+export function createSubProjection(data: Partial<DefEditorSubProjection>): DefEditorSubProjection {
     // console.log("create SubProjection <<" + data.propertyName + ">> join ["+ data.listJoin + "]");
-    const result = new PiDefEditorSubProjection();
+    const result = new DefEditorSubProjection();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
@@ -137,17 +137,17 @@ export function createListJoin(data: Partial<ListJoin>): ListJoin {
     return result;
 }
 
-export function createExpression(data: Partial<PiDefEditorProjectionExpression>): PiDefEditorProjectionExpression {
+export function createExpression(data: Partial<DefEditorProjectionExpression>): DefEditorProjectionExpression {
     // console.log("createExpression <<" + data.propertyName + ">>");
-    const result = new PiDefEditorProjectionExpression();
+    const result = new DefEditorProjectionExpression();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
     return result;
 }
 
-export function createNewline(): PiDefEditorNewline {
-    return new PiDefEditorNewline();
+export function createNewline(): DefEditorNewline {
+    return new DefEditorNewline();
 }
 
 export function createEnumeration(data: Partial<PiDefEditorEnumeration>): PiDefEditorEnumeration {

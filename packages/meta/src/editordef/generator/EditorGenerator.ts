@@ -1,4 +1,4 @@
-import { PiDefEditorLanguage } from "../metalanguage";
+import { DefEditorLanguage } from "../metalanguage";
 import { PiLanguageUnit } from "../../languagedef/metalanguage";
 import * as fs from "fs";
 import { Names, Helpers, EDITOR_GEN_FOLDER, EDITOR_FOLDER } from "../../utils";
@@ -23,7 +23,7 @@ export class EditorGenerator {
 
     constructor() {    }
 
-    generate(editor: PiDefEditorLanguage, verbose?: boolean): void {
+    generate(editor: DefEditorLanguage, verbose?: boolean): void {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
 

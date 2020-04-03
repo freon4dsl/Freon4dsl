@@ -2,7 +2,7 @@ import { PiLanguageUnit } from "../../languagedef/metalanguage";
 import { PiDefEditorConcept } from "./PiDefEditorConcept";
 import { PiDefEditorEnumeration } from "./PiDefEditorEnumeration";
 
-export class PiDefEditorLanguage {
+export class DefEditorLanguage {
     name: string;
     language: PiLanguageUnit;
     conceptEditors: PiDefEditorConcept[] = [];
