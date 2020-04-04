@@ -74,6 +74,10 @@ export class ProjectionTemplate {
                 }
             
                 getBox(exp: ${Names.PiElement}): Box {
+                    if( exp === null ) {
+                        return null;
+                    }
+
                     switch( exp.piLanguageConcept() ) { 
                         ${language.classes.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
