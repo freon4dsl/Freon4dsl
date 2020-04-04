@@ -21,7 +21,7 @@
     "type-it": 	"ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "build-wait": "tsc -w",
-    "build": "yarn run projectit-nonverbose && taxrules && tsc ",
+    "build": "yarn run projectit-nonverbose && yarn run taxrules && tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
