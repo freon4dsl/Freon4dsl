@@ -6,6 +6,7 @@
  * But .. after that DemoExpression can be used as a ProExpression, fully type-safe.
  */
 import { PiElement, PiExpression, PiBinaryExpression, PiContainerDescriptor } from "@projectit/core";
+import { symbol } from "../model/expressions/DemoUtil";
 
 import { DemoBinaryExpression, DemoExpression, DemoPlaceholderExpression } from "../model/index";
 import { DemoModelElement } from "../model/DemoModel";
@@ -26,11 +27,15 @@ DemoModelElement.prototype.piIsExpression = function(): boolean {
 DemoModelElement.prototype.piContainer = function() {
     return this.container
         ? {
-              container: this.container,
-              propertyName: this.propertyName!,
-              propertyIndex: this.propertyIndex
-          }
+            container: this.container,
+            propertyName: this.propertyName!,
+            propertyIndex: this.propertyIndex
+        }
         : null;
+};
+
+DemoModelElement.prototype.piLanguageConcept = function() {
+    return this.$typename
 };
 
 declare module "../model/expressions/DemoExpression" {
@@ -82,10 +87,6 @@ declare module "../model/expressions/DemoBinaryExpression" {
     interface DemoBinaryExpression extends PiBinaryExpression {}
 }
 
-DemoBinaryExpression.prototype.piSymbol = function(): string {
-    return this.symbol;
-};
-
 DemoBinaryExpression.prototype.piLeft = function(): DemoExpression {
     return this.left;
 };
@@ -103,7 +104,7 @@ DemoBinaryExpression.prototype.piSetRight = function(value: DemoExpression): voi
 };
 
 DemoBinaryExpression.prototype.piPriority = function(): number {
-    return (priorities as any)[this.symbol];
+    return (priorities as any)[symbol(this)];
 };
 
 DemoBinaryExpression.prototype.piIsBinaryExpression = function(): boolean {

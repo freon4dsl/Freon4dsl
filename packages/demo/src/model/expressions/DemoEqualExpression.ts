@@ -5,7 +5,4 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 export class DemoEqualExpression extends DemoBinaryExpression {
     $typename: string = "DemoEqualExpression";
 
-    get symbol(): string {
-        return "==";
-    }
 }

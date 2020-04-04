@@ -2,12 +2,11 @@ import { observablepart } from "@projectit/core";
 
 import { DemoExpression } from "./DemoExpression";
 import { DemoPlaceholderExpression } from "./DemoPlaceholderExpression";
+import { symbol } from "./DemoUtil";
 
 export abstract class DemoBinaryExpression extends DemoExpression {
     @observablepart left: DemoExpression;
     @observablepart right: DemoExpression;
-
-    abstract symbol: string;
 
     constructor() {
         super();
@@ -20,10 +19,10 @@ export abstract class DemoBinaryExpression extends DemoExpression {
     }
 
     toString(): string {
-        return "(" + this.left.toString() + " " + this.symbol + " " + this.right.toString() + ")";
+        return "(" + this.left.toString() + " " + symbol(this) + " " + this.right.toString() + ")";
     }
 
     asString(): string {
-        return "(" + this.left.asString() + " " + this.symbol + " " + this.right.asString() + ")";
+        return "(" + this.left.asString() + " " + symbol(this) + " " + this.right.asString() + ")";
     }
 }

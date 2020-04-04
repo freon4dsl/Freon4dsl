@@ -25,8 +25,6 @@ export interface PiExpression extends PiElement {
 }
 
 export interface PiBinaryExpression extends PiExpression {
-    // TODO Should be moved to editor
-    piSymbol(): string;
 
     piLeft(): PiExpression;
 

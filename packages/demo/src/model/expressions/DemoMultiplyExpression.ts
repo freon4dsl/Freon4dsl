@@ -5,7 +5,4 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 export class DemoMultiplyExpression extends DemoBinaryExpression {
     $typename: string = "DemoMultiplyExpression";
 
-    get symbol(): string {
-        return "*";
-    }
 }

@@ -26,6 +26,7 @@ import {
 } from "@projectit/core";
 import { sumIcon } from "../editor/Icons";
 import { DemoSumExpression } from "../model/expressions/DemoSumExpression";
+import { symbol } from "../model/expressions/DemoUtil";
 import { projectitStyles } from "../styles/styles";
 
 require("flatted");
@@ -218,7 +219,7 @@ export class TutorialProjection implements PiProjection {
         if (this.projectionType === "tree") {
             return this.createBinaryBoxTree(exp);
         } else {
-            let binBox = createDefaultBinaryBox(this, exp, exp.piSymbol());
+            let binBox = createDefaultBinaryBox(this, exp, symbol(exp));
             if (
                 this.showBrackets &&
                 !!exp.piContainer().container &&
@@ -240,7 +241,7 @@ export class TutorialProjection implements PiProjection {
             exp,
             "binary1",
             [
-                new LabelBox(exp, "symbol", exp.piSymbol()),
+                new LabelBox(exp, "symbol", symbol(exp)),
                 new VerticalListBox(exp, "args", [this.getBox(exp.piLeft()), this.getBox(exp.piRight())])
             ],
             {

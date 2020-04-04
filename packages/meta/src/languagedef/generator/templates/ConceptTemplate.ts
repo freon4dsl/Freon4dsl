@@ -121,10 +121,6 @@ export class ConceptTemplate {
                 : ""}
                 
                 ${ isBinaryExpression && binExpConcept != null ? `
-                public piSymbol(): string {
-                    return "${binExpConcept.symbol}";
-                }
-                
                 piPriority(): number {
                     return ${binExpConcept.getPriority() ? binExpConcept.getPriority() : "-1"};
                 }
