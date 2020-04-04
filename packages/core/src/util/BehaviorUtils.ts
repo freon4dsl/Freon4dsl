@@ -47,7 +47,7 @@ export enum BehaviorExecutionResult {
  */
 export async function executeBehavior(box: Box, text: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
     let partialMatch: boolean = false;
-    LOGGER.log("MATCH EXECUTE BEHAVIOR");
+    // LOGGER.log("MATCH EXECUTE BEHAVIOR");
 
     for (const a of editor.behaviors) {
         const trigger = a.trigger;

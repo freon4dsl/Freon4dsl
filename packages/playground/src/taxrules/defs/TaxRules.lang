@@ -1,161 +1,65 @@
 language TaxRules
 
 root concept RevenueService {
-    @part rules: TaxRuleSet //[]
-    @part payers: TaxPayer[]
+    part rules: TaxRuleSet //[]
+    part payers: TaxPayer[]
 }
 
 concept TaxRuleSet {
-    year: number
-    @part taxrules: TaxRule[]
+    year: string //number
+    part taxrules: TaxRule[]
 }
 
 concept TaxPayer {
     name: string
     address: string
-    payerType: enum TaxPayerType
-    @part taxId: TaxID
-    @part incomeParts: IncomePart[]
-    @part totalIncome: Money
-    @part totalTaxes: Money
+    payerType: TaxPayerType
+    part taxId: TaxID
+    part incomeParts: IncomePart[]
+    part totalIncome: Money
+    part totalTaxes: Money
 }
 
 concept IncomePart {
-    incomeType: enum IncomeType
-    @part deduction: Money
-    @part amount: Money
-    @reference source: TaxPayer
+    incomeType: IncomeType
+    part deduction: Money
+    part amount: Money
+    reference source: TaxPayer
 }
 
 concept Money {
-    amount: number
+    amount: string //number
     // currency: ???
 }
 
 concept TaxID {
-    id : number
+    id : string //number
 }
 
 concept TaxRule { 
     name: string
-//    @part parameters: RuleParameter[]
-    @part expression: Expression
-//    @part result : Money
+//    part parameters: RuleParameter[]
+    part expression: Expression
+//    part result : Money
 }
 
 concept RuleParameter {
     name : string
-    @part type : IncomePart
+    part type : IncomePart
 }
 
 concept PercentageExpression base Expression {
-    @part inner : Expression 
-    @editor symbol: string = "perc" // should be "%"
-    @editor priority: number = "2"
+    part inner : Expression 
+    priority = "2"
 }
 
 concept MoneyLiteralExp base LiteralExpression {
     value : string
-    @editor symbol: string = "Euro"
 }
 
 concept TaxRuleCall {//base FunctionCallExpression {
-    @reference functionDefinition: TaxRule
+    reference functionDefinition: TaxRule
 }
-
-//concept FunctionCallExpression base Expression {
-//    @reference functionDefinition: Function
-//}
-
-//concept VariableRef base Expression {
-//    referredName: string
-//    @reference attribute: Attribute
-//}
-
-// import Expression lib
-abstract expression concept Expression {}
-
-expression placeholder concept PlaceholderExpression {}
-
-abstract expression concept LiteralExpression base Expression {}
-
-concept StringLiteralExpression base LiteralExpression {
-    value: string
-    @editor trigger: string = "'"
-}
-
-concept NumberLiteralExpression base LiteralExpression {
-    value: string
-    @editor trigger: regexp = "[0-9]"
-}
-
-concept BooleanLiteralExpression base LiteralExpression {
-    value: string
-    @editor trigger: regexp = "[TF]"
-}
-
-concept AbsExpression base Expression {
-    @part expr: Expression
-    @editor trigger: string = "abs"
-}
-
-abstract binary expression concept BinaryExpression base Expression {
-    @part left: Expression
-    @part right: Expression
-    @editor symbol: string = "unknown"
-}
-
-concept MultiplyExpression base BinaryExpression {
-    @editor symbol: string = "*"
-    @editor priority: number = "8"
-}
-
-concept PlusExpression base BinaryExpression {
-    @editor symbol: string = "+"
-    @editor priority: number = "4"
-}
-
-concept DivideExpression base BinaryExpression {
-    @editor symbol: string = "/"
-    @editor priority: number = "8"
-}
-
-concept AndExpression base BinaryExpression {
-    @editor symbol: string = "and"
-    @editor priority: number = "1"
-}
-
-concept OrExpression base BinaryExpression {
-    @editor symbol: string = "or"
-    @editor priority: number = "1"
-}
-
-abstract concept ComparisonExpression base BinaryExpression {
-}
-
-concept LessThenExpression base ComparisonExpression {
-    @editor symbol: string = "<"
-    @editor priority: number = "10"
-}
-
-concept GreaterThenExpression base ComparisonExpression {
-    @editor symbol: string = ">"
-    @editor priority: number = "10"
-}
-
-concept EqualsExpression base ComparisonExpression {
-    @editor symbol: string = "="
-    @editor priority: number = "10"
-}
-
-concept IfExpression base Expression {
-    @part condition: Expression
-    @part whenTrue: Expression
-    @part whenFalse: Expression
-    @editor trigger : string = "if"
-}
-
-// end import Expression lib
 
 enumeration IncomeType {
     Salary
@@ -170,7 +74,91 @@ enumeration TaxPayerType {
     Person
 }
 
-// in Scope Def: @langscope generalDeduction : Money = 3000,-
-// in Scope Def: @langscope toBePaid : Money // holds result for every TaxRule
+//concept FunctionCallExpression base Expression {
+//    reference functionDefinition: Function
+//}
+
+//concept VariableRef base Expression {
+//    referredName: string
+//    reference attribute: Attribute
+//}
+
+// import Expression lib
+abstract expression concept Expression {}
+
+expression placeholder concept PlaceholderExpression {}
+
+abstract expression concept LiteralExpression base Expression {}
+
+concept StringLiteralExpression base LiteralExpression {
+    value: string
+}
+
+concept NumberLiteralExpression base LiteralExpression {
+    value: string
+}
+
+concept BooleanLiteralExpression base LiteralExpression {
+    value: string
+}
+
+concept AbsExpression base Expression {
+    part expr: Expression
+}
+
+abstract binary expression concept BinaryExpression base Expression {
+    part left: Expression
+    part right: Expression
+}
+
+concept MultiplyExpression base BinaryExpression {
+    priority = "8"
+}
+
+concept PlusExpression base BinaryExpression {
+    priority = "4"
+}
+
+concept DivideExpression base BinaryExpression {
+    priority = "8"
+}
+
+concept AndExpression base BinaryExpression {
+    priority = "1"
+}
+
+concept OrExpression base BinaryExpression {
+    priority = "1"
+}
+
+abstract concept ComparisonExpression base BinaryExpression {
+}
+
+concept LessThenExpression base ComparisonExpression {
+    priority = "10"
+}
+
+concept GreaterThenExpression base ComparisonExpression {
+    // symbol: string = ">"
+    priority = "10"
+}
+
+concept EqualsExpression base ComparisonExpression {
+    // symbol: string = "="
+    priority = "10"
+}
+
+concept IfExpression base Expression {
+    part condition: Expression
+    part whenTrue: Expression
+    part whenFalse: Expression
+ //   trigger : string = "if"
+}
+
+// end import Expression lib
+
+
+// in Scope Def: langscope generalDeduction : Money = 3000,-
+// in Scope Def: langscope toBePaid : Money // holds result for every TaxRule
 // in Type def: PercentageExpression { inner.type = number }
-// in Type def: MoneyLiteralExp  @inferType = Money
+// in Type def: MoneyLiteralExp  inferType = Money

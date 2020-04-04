@@ -12,7 +12,7 @@ Scoper_Definition
         });
     } 
 
-namespaceKey = "@namespace" ws
+namespaceKey = "namespace" ws
 
 namespace = namespaceKey curly_begin conceptRefs:(conceptRef)* ws curly_end 
     { 

@@ -10,7 +10,7 @@ export abstract class Checker<DEFINITION> {
         this.language = language;
     }
 
-    public abstract check(lang: DEFINITION, verbose: boolean): void;
+    public abstract check(lang: DEFINITION): void;
 
     public hasErrors(): boolean {
         return this.errors.length > 0;

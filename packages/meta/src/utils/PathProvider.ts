@@ -1,7 +1,33 @@
 import { PiLanguageUnit, PiLangConcept, PiLangEnumeration, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
-import { PiScopeDef } from "../scoperdef/metalanguage/PiScopeDefLang";
-import { PiValidatorDef } from "../validatordef/metalanguage/ValidatorDefLang";
+
+// files need to be generated into folders ...
+export const LANGUAGE_FOLDER = "language";
+export const LANGUAGE_GEN_FOLDER = "language/gen";
+export const ENVIRONMENT_FOLDER = "environment";
+export const ENVIRONMENT_GEN_FOLDER = "environment/gen";
+export const LANGUAGE_UTILS_GEN_FOLDER = "utils/gen";
+export const EDITOR_FOLDER = "editor";
+export const EDITOR_GEN_FOLDER = "editor/gen";
+export const SCOPER_FOLDER = "scoper";
+export const SCOPER_GEN_FOLDER = "scoper/gen";
+export const VALIDATOR_FOLDER = "validator";
+export const VALIDATOR_GEN_FOLDER = "validator/gen";
+export const TYPER_FOLDER = "typer";
+export const TYPER_GEN_FOLDER = "typer/gen";
+export const WEBAPP_FOLDER = "../webapp"
+export const APP_FOLDER = "../webapp/app"
+export const ASSETS_FOLDER = "../webapp/assets"
+export const STYLES_FOLDER = "../webapp/styles"
+export const TOOLBARS_FOLDER = "../webapp/toolbars"
+// the predefined interfaces and classes can be found in ...
+export const PROJECTITCORE = "@projectit/core";
+export const scoperInterface = PROJECTITCORE;
+export const typerInterface = PROJECTITCORE;
+export const validatorInterface = PROJECTITCORE;
+export const errorClass = PROJECTITCORE;
+export const piNamedElement = PROJECTITCORE;
+export const EDITORSTYLES = STYLES_FOLDER + "/styles";
 
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical
@@ -34,129 +60,99 @@ export class PathProvider {
         return defFolder + "/" + languageName + ".type";
     }
 
-    // the predefined interfaces and classes can be found in ...
-    // TODO change into properties
-    public static corePath = "@projectit/core";
-    
-    public static scoperInterface(): string {
-        return "@projectit/core"
-    }
-
-    public static typerInterface(): string {
-        return "@projectit/core"
-    }
-    
-    public static validatorInterface(): string {
-        return "@projectit/core"
-    }
-
-    public static errorClass(): string {
-        return "@projectit/core"
-    }
-
-    public static piNamedElement() {
-        return "@projectit/core"
-    }
-
     // the generated classes that implement the language can be found in ...
-    public static languageFolder = "language";
-    public static environment = "environment";
-
     public static concept(concept: PiLangConcept): string {
-        return "language/" + Names.concept(concept);
+        return LANGUAGE_GEN_FOLDER + "/" + Names.concept(concept);
     }
 
     public static enumeration(enumeration: PiLangEnumeration): string {
-        return "language/" + Names.enumeration(enumeration);
+        return LANGUAGE_GEN_FOLDER + "/" + Names.enumeration(enumeration);
     }
     
     public static union(union: PiLangUnion): string {
-        return "language/" + Names.union(union);
+        return LANGUAGE_GEN_FOLDER + "/" + Names.union(union);
     }
 
     public static languageConceptType(language: PiLanguageUnit): string {
-        return "language/" + Names.metaType(language);
+        return LANGUAGE_GEN_FOLDER + "/" + Names.metaType(language);
     }
 
     public static allConcepts(language: PiLanguageUnit): string {
-        return "language/" + Names.allConcepts(language);
+        return LANGUAGE_GEN_FOLDER + "/" + Names.allConcepts(language); 
     }
 
     // the generated classes that implement the editor can be found in ...
-    public static editorstyles = "styles/styles";
     public static context(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.context(language);  ;
+        return EDITOR_GEN_FOLDER + "/" + Names.context(language);  ;
     }
 
     public static actions(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.actions(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.actions(language);
     }
 
     public static defaultActions(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.defaultActions(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.defaultActions(language);
     }
 
     public static manualActions(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.manualActions(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.manualActions(language);
     }
 
     public static projectionDefault(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.projectionDefault(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.projectionDefault(language);
     }
 
     public static selectionHelpers(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.selectionHelpers(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.selectionHelpers(language);
     }
 
     public static projection(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.projection(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.projection(language);
     }
 
     public static editor(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.editor(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.editor(language);
     }
 
     public static mainProjectionalEditor(language: PiLanguageUnit): string {
-        return "editor/gen/" + Names.mainProjectionalEditor(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.mainProjectionalEditor;
     }
 
     // the generated classes that implement the scoper can be found in ...
     public static namespace(language: PiLanguageUnit): string {
-        return "scoper/gen/" + Names.namespace(language);
+        return SCOPER_GEN_FOLDER + "/" + Names.namespace(language);
     }
 
     public static scoper(language: PiLanguageUnit): string {
-        return "scoper/gen/" + Names.scoper(language);
+        return SCOPER_GEN_FOLDER + "/" + Names.scoper(language);
     }
 
     // the generated classes that implement the typer can be found in ...
     public static typer(language: PiLanguageUnit): string {
-        return "typer/gen/" + Names.typer(language);
+        return TYPER_GEN_FOLDER + "/" + Names.typer(language);
     }
 
     // the generated classes that implement the validator can be found in ...
     public static validator(language: PiLanguageUnit): string {
-        return "validator/gen/" + Names.validator(language);
+        return VALIDATOR_GEN_FOLDER + "/" + Names.validator(language);
     }
 
     public static checker(language: PiLanguageUnit): string {
-        return "validator/gen/" + Names.checker(language);
+        return VALIDATOR_GEN_FOLDER + "/" + Names.checker(language);
     }
 
     // the generated classes that implement the unparser can be found in ...
     public static unparser(language: PiLanguageUnit): string {
-        // TODO should be changed into 
-        // return "unparser/gen/" + Names.unparser(language);
-        return "unparser/" + Names.unparser(language);
+        return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.unparser(language);
     }
 
     // the generated classes that implement the visitor pattern can be found in ...
     public static walker(language: PiLanguageUnit): string {
-        return "utils/gen/" + Names.walker(language);
+        return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.walker(language);
     }
 
     public static workerInterface(language: PiLanguageUnit): string {
-        return "utils/gen/" + Names.workerInterface(language);
+        return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.workerInterface(language);
     }
 
 }

@@ -14,7 +14,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         super(language);
     }
 
-    public check(definition: LanguageExpressionTester, verbose: boolean): void {
+    public check(definition: LanguageExpressionTester): void {
         LOGGER.log("Checking test expressions");
 
         if( !!this.language ) {
@@ -41,7 +41,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
 
     // ConceptName { exp exp exp }
     private checkLangExpSet(rule: TestExpressionsForConcept) {
-        LOGGER.log("checkConceptExpression");
+        LOGGER.log("checkLangSetExp");
         this.checkConceptReference(rule.conceptRef);
 
         let enclosingConcept = rule.conceptRef.referedElement(); 
@@ -77,6 +77,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         LOGGER.log("Checking Language Reference " + langRef.sourceName );
         if (langRef instanceof PiLangEnumExp) {
             this.checkEnumRefExpression(langRef, enclosingConcept);
+
         } else if (langRef instanceof PiLangThisExp) {
             this.checkThisExpression(langRef, enclosingConcept);
         } else if (langRef instanceof PiLangConceptExp) {
@@ -92,8 +93,9 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     private checkEnumRefExpression(langRef: PiLangEnumExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking Enumeration Reference " + langRef?.toPiString());
         let myEnumType = this.language.findEnumeration(langRef.sourceName);
+        langRef.referedElement = myEnumType;
         this.nestedCheck({
-            check: myEnumType != null,
+            check: !!myEnumType,
             error: `Cannot find enumeration ${langRef.sourceName}`,
             whenOk: () => {
                 if (!!langRef.appliedfeature) { // if an appliedfeature is present, it should refer to one of the literals
@@ -110,14 +112,13 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     // this.XXX
     private checkThisExpression(langRef: PiLangThisExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking 'this' Expression " + langRef?.toPiString());
+        langRef.referedElement = enclosingConcept;
         this.nestedCheck(
             {
                 check: langRef.appliedfeature != null,
                 error: `'this' should be followed by '.', followed by a property`,
                 whenOk: () => {
                     this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
-                    langRef.reference = new PiLangConceptReference();
-                    langRef.reference.name = enclosingConcept.name;        
                 }
             }
         )
@@ -126,8 +127,9 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     // ConceptName.XXX
     private checkConceptExpression(langRef: PiLangConceptExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking Concept Expression " + langRef?.toPiString());
-        this.checkConceptReference(langRef.reference);
-        let myConcept = langRef.reference.referedElement();
+        // find the concept that langRef.name refers to
+        const myConcept = this.language.findConcept(langRef.sourceName);
+        langRef.referedElement = myConcept;
 
         this.nestedCheck(
             {
@@ -144,6 +146,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     private checkFunctionCallExpression(langRef: PiLangFunctionCallExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking Function Call Expression " + langRef?.toPiString());
         let functionName = validFunctionNames.find(name => name === langRef.sourceName);
+        // TODO set langRef.referedElement to one of the predefined functions
         this.simpleCheck(!!functionName, `${langRef.sourceName} is not a valid function.`); 
         this.nestedCheck({
             check: langRef.actualparams.length === 2,
@@ -157,26 +160,17 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     // .XXX
     private checkAppliedFeatureExp(feat: PiLangAppliedFeatureExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking Applied Feature " + feat?.toPiString());
-        let found : PiLangProperty;
         for ( let e of enclosingConcept.allProperties() ) {
             if (e.name === feat.sourceName) {
-                found = e;
-                // resolve it
-                let ref : PiLangPropertyReference = new PiLangPropertyReference();
-                ref.language = this.language;
-                ref.name = e.name;
-                ref.owningConcept = new PiLangConceptReference();
-                ref.owningConcept.language = this.language;
-                ref.owningConcept.name = enclosingConcept.name;
-                feat.reference = ref;
+                feat.referedElement = e;
             }
         }
         this.nestedCheck({
-            check: found != null, 
+            check: !!feat.referedElement,
             error: "Cannot find property '" + feat.sourceName + "' in '" + enclosingConcept.name + "' (maybe '.' should be ':').",
             whenOk: () => {
-                if(feat.appliedfeature != null && found instanceof PiLangConceptProperty ) {
-                    this.checkAppliedFeatureExp(feat.appliedfeature, (found as PiLangConceptProperty).type.referedElement());        
+                if (feat.appliedfeature != null) {
+                    this.checkAppliedFeatureExp(feat.appliedfeature, (feat.referedElement.type.referedElement() as PiLangConcept));
                 }
             }
         });

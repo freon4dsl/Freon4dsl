@@ -11,26 +11,25 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
 
     public constructor() {
         super({
-            actionName: "generate-typer",
+            actionName: "type-it",
             summary: "Generates the TypeScript code for the typer for your language",
             documentation: "Generates TypeScript code for the typer of language defined in the .lang file. The typer definition is found in the .type file."
         });
     }
 
     generate(): void {
-        if (this.verbose) {
-            LOGGER.log("Starting ProjectIt typer generation ...");    
-        }
+        LOGGER.log("Starting ProjectIt typer generation ...");    
+
         super.generate();
         this.typerGenerator = new PiTyperGenerator(this.language);
         this.typerGenerator.outputfolder = this.outputFolder;
 
-        const typer = new PiTyperParser(this.language).parse(this.typerdefFile.value, true);
+        const typer = new PiTyperParser(this.language).parse(this.typerdefFile.value);
         if (typer == null) {
             LOGGER.error(this, "Typer definition could not be parsed, exiting.");
             process.exit(-1);
         }
-        this.typerGenerator.generate(typer, this.verbose);
+        this.typerGenerator.generate(typer);
         // TODO add check on succesfullness
     }
 

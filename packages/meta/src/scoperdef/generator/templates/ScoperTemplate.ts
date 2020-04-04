@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, LANGUAGE_GEN_FOLDER, PROJECTITCORE } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 
@@ -7,7 +6,7 @@ export class ScoperTemplate {
     constructor() {
     }
 
-    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
+    generateScoper(language: PiLanguageUnit, relativePath: string): string {
         // console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.metaType(language);     
@@ -17,10 +16,12 @@ export class ScoperTemplate {
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";   
+        import { ${allLangConcepts}, ${langConceptType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";   
         import { ${namespaceClassName} } from "./${namespaceClassName}";
-        import { ${scoperInterfaceName},  ${Names.PiNamedElement} } from "${PathProvider.scoperInterface()}"
+        import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger } from "${PROJECTITCORE}"
         
+        const LOGGER = new PiLogger("${generatedClassName}");   
+
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
                 if (this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null) {
@@ -33,7 +34,7 @@ export class ScoperTemplate {
             getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): PiNamedElement[] {
                 let result : PiNamedElement[] = [];
                 if(modelelement == null){
-                    // TODO error mess console.log("getVisibleElements: modelelement is null");
+                    LOGGER.error(this, "getVisibleElements: modelelement is null");
                     return null;
                 }
                 let ns = new ${namespaceClassName}(modelelement);
@@ -64,6 +65,13 @@ export class ScoperTemplate {
                 return result;
             }
         }`;
+    }
+
+    generateIndex(language: PiLanguageUnit): string {
+        return `
+        export * from "./${Names.scoper(language)}";
+        export * from "./${Names.namespace(language)}";
+        `;
     }
 
 }

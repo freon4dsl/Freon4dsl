@@ -13,11 +13,11 @@ Typer_Definition
        });
     } 
 
-isTypeKey     = "@istype" ws
-inferenceKey  = "@infertype" ws
-conformsKey   = "@conformsto" ws
-equalsKey     = "@equalsto" ws
-anyKey        = "@anytype" ws { return true; }
+isTypeKey     = "istype" ws
+inferenceKey  = "infertype" ws
+conformsKey   = "conformsto" ws
+equalsKey     = "equalsto" ws
+anyKey        = "anytype" ws { return true; }
 superTypeKey  = "commonSuperType" ws
 abstractKey   = "abstract" ws { return true; }
 

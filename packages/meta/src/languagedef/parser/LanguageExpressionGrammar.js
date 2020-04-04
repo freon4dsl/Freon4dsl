@@ -166,10 +166,13 @@ function peg$parse(input, options) {
       peg$c12 = function(functionExpression) { return functionExpression; },
       peg$c13 = ":",
       peg$c14 = peg$literalExpectation(":", false),
-      peg$c15 = function(sourceName, appliedfeature) {
+      peg$c15 = function(sourceName, literal) {
         return expCreate.createEnumReference ({
           "sourceName": sourceName,
-          "appliedfeature": appliedfeature
+          "appliedfeature": expCreate.createAppliedFeatureExp
+                            ( {
+                                "sourceName": literal,
+                              })
         })
       },
       peg$c16 = function(sourceName, appliedfeature) {

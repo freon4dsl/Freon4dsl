@@ -28,15 +28,15 @@ import {
     DemoVariable,
     DemoVariableRef,
     PiElementReference
-} from "../../language";
+} from "../../language/gen";
 
 export class DemoCreator {
-    public createDemoModel(name: string, entities: DemoEntity, functions: DemoFunction): DemoModel {
+    public createDemoModel(name: string, functions: DemoFunction, entities: DemoEntity): DemoModel {
         let _result = new DemoModel();
         _result.name = name;
 
-        if (entities !== null) _result.entities.push(entities);
         if (functions !== null) _result.functions.push(functions);
+        if (entities !== null) _result.entities.push(entities);
 
         return _result;
     }

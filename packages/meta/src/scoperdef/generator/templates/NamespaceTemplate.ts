@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 
@@ -8,6 +7,13 @@ export class NamespaceTemplate {
     }
 
     generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
+
+        if (scopedef == null) {
+            scopedef = new PiScopeDef();
+            scopedef.languageName = language.name;
+            scopedef.namespaces = [];
+        }
+        
         // console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.metaType(language);     
@@ -18,10 +24,10 @@ export class NamespaceTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts}, ${scopedef.namespaces.map(ns => 
-            `${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "${relativePath}${PathProvider.languageFolder}";
+            `${ns.conceptRefs.map(ref => `${ref.name}`)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${scopedef.namespaces.length == 0? `${language.rootConcept().name}, ` : ``}
-             ${langConceptType} } from "${relativePath}${PathProvider.languageFolder}";
-        import { ${Names.PiNamedElement}} from "${PathProvider.corePath}";
+             ${langConceptType} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.PiNamedElement}} from "${PROJECTITCORE}";
 
         export class ${generatedClassName} {
             _myElem : ${allLangConcepts}; // any element in the model

@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
 import { PiLangThisExp, PiLangExp, PiLangEnumExp } from "../../../languagedef/metalanguage/PiLangExpressions";
@@ -17,8 +16,8 @@ export class CheckerTemplate {
         
         // the template starts here
         return `
-        import { ${errorClassName}, ${typerInterfaceName} } from "${PathProvider.corePath}";
-        import { ${this.createImports(language, validdef)} } from "${relativePath}${PathProvider.languageFolder}"; 
+        import { ${errorClassName}, ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${this.createImports(language, validdef)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${unparserClassName} } from "${relativePath}${PathProvider.unparser(language)}";    
         import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";
 
@@ -104,8 +103,8 @@ export class CheckerTemplate {
                         this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${this.langRefToTypeScript(r.property)}));
                     }`
                 : (r instanceof ValidNameRule ?
-                    `if(!this.isValidName(modelelement.${this.langRefToTypeScript(r.property)})) {
-                        this.errorList.push(new PiError("'" + modelelement.${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", ${this.langRefToTypeScript(r.property)}));
+                    `if(!this.isValidName(${this.langRefToTypeScript(r.property)})) {
+                        this.errorList.push(new PiError("'" + ${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
                     }`
                 : ""))))}`
             ).join("\n")}`;

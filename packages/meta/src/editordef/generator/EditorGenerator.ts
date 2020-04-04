@@ -23,13 +23,13 @@ export class EditorGenerator {
 
     constructor() {}
 
-    generate(editor: DefEditorLanguage, verbose?: boolean): void {
+    generate(editor: DefEditorLanguage): void {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
+        let name = editor? editor.name : "";
+        LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder);
 
-        if (verbose) {
-            LOGGER.log("Generating editor '" + editor.name + "' in folder " + this.editorGenFolder);
-        }
+        LOGGER.log("Generating editor '" + editor.name + "' in folder " + this.editorGenFolder);
         if(editor === null || editor === undefined) {
             editor = new DefEditorLanguage();
         }
@@ -47,30 +47,31 @@ export class EditorGenerator {
         const editorIndexTemplate = new EditorIndexTemplate();
 
         //Prepare folders
-        Helpers.createDirIfNotExisting(this.editorFolder, verbose);
-        Helpers.createDirIfNotExisting(this.editorGenFolder, verbose);
+        Helpers.createDirIfNotExisting(this.editorFolder);
+        Helpers.createDirIfNotExisting(this.editorGenFolder);
+        Helpers.deleteFilesInDir(this.editorGenFolder);
 
         // set relative path to get the imports right
         let relativePath = "../../";
 
         //  Generate it
-        if (verbose) LOGGER.log("Generating projection default");
-        var projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language, editor, relativePath), "Projection Default", verbose);
+        LOGGER.log("Generating projection default");
+        var projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language, editor, relativePath), "Projection Default");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
 
-        if (verbose) LOGGER.log("Generating enumeration projections");
-        var enumProjectionFile = Helpers.pretty(enumProjection.generateEnumProjection(this.language, editor, relativePath), "Enumeration Projections", verbose);
+        LOGGER.log("Generating enumeration projections");
+        var enumProjectionFile = Helpers.pretty(enumProjection.generateEnumProjection(this.language, editor, relativePath), "Enumeration Projections");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.selectionHelpers(this.language)}.ts`, enumProjectionFile);
 
-        if (verbose) LOGGER.log("Generating default actions");
-        var defaultActionsFile = Helpers.pretty(actions.generateDefaultActions(this.language, editor, relativePath), "DefaultActions", verbose);
+        LOGGER.log("Generating default actions");
+        var defaultActionsFile = Helpers.pretty(actions.generateDefaultActions(this.language, editor, relativePath), "DefaultActions");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
 
-        if (verbose) LOGGER.log("Generating context");
-        var contextFile = Helpers.pretty(contextTemplate.generateContext(this.language, editor, relativePath), "Context", verbose);
+        LOGGER.log("Generating context");
+        var contextFile = Helpers.pretty(contextTemplate.generateContext(this.language, editor, relativePath), "Context");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.context(this.language)}.ts`, contextFile);
 
-        if (verbose) LOGGER.log("Generating ProjectionalEditorManual");
+        LOGGER.log("Generating ProjectionalEditorManual");
         var projectionalEditorManualFile = Helpers.pretty(
             projection.generateProjection(this.language, editor, relativePath),
             "ProjectionalEditorManual",
@@ -78,37 +79,32 @@ export class EditorGenerator {
         );
         Helpers.generateManualFile(`${this.editorFolder}/${Names.projection(this.language)}.ts`, projectionalEditorManualFile, "ManualProjections");
 
-        if (verbose) LOGGER.log("Generating Editor");
-        var editorFile = Helpers.pretty(editorTemplate.generateEditor(this.language, editor, true, relativePath), "Editor", verbose);
+        LOGGER.log("Generating Editor");
+        var editorFile = Helpers.pretty(editorTemplate.generateEditor(this.language, editor, true, relativePath), "Editor");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.editor(this.language)}.ts`, editorFile);
 
         // the following do not need the relativePath for imports
-        if (verbose) LOGGER.log("Generating manual actions");
-        var manualActionsFile = Helpers.pretty(actions.generateManualActions(this.language, editor), "ManualActions", verbose);
+        LOGGER.log("Generating manual actions");
+        var manualActionsFile = Helpers.pretty(actions.generateManualActions(this.language, editor), "ManualActions");
         Helpers.generateManualFile(`${this.editorFolder}/${Names.manualActions(this.language)}.ts`, manualActionsFile, "ManualActions");
 
-        if (verbose) {
-            LOGGER.log("Generating actions");
-        }
-        var actionsFile = Helpers.pretty(actions.generateActions(this.language, editor), "Actions", verbose);
+        LOGGER.log("Generating actions");
+
+        var actionsFile = Helpers.pretty(actions.generateActions(this.language, editor), "Actions");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
 
-        if (verbose) LOGGER.log("Generating MainProjectionalEditor");
-        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateEditor(this.language, editor, true), "MainProjectionalEditor", verbose);
+        LOGGER.log("Generating MainProjectionalEditor");
+        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateEditor(this.language, editor, true), "MainProjectionalEditor");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor(this.language)}.tsx`, projectionalEditorFile);
 
-        if (verbose) LOGGER.log("Generating editor gen index");
-        var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editor), "Editor Gen Index", verbose);
+        LOGGER.log("Generating editor gen index");
+        var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editor), "Editor Gen Index");
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
 
-        if (verbose) {
-            LOGGER.log("Generating editor index");
-        }
-        var editorIndexFile = Helpers.pretty(editorIndexTemplate.generateIndex(this.language, editor), "Editor Index", verbose);
+        LOGGER.log("Generating editor index");
+        var editorIndexFile = Helpers.pretty(editorIndexTemplate.generateIndex(this.language, editor), "Editor Index");
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
-        if (verbose) {
-            LOGGER.log("Succesfully generated editor");
-        }
+        LOGGER.log("Succesfully generated editor " + name);
     }
 }

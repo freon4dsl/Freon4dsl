@@ -22,12 +22,11 @@ export class ProjectItTestLanguageExpressions extends ProjectItGeneratePartActio
         // this.typerGenerator = new PiTyperGenerator(this.language);
         // this.typerGenerator.outputfolder = this.outputFolder;
 
-        const readTest = new LanguageExpressionParser(this.language).parse(this.testFile.value, true);
+        const readTest = new LanguageExpressionParser(this.language).parse(this.testFile.value);
         if (readTest == null) {
             LOGGER.error(this, "Expressions could not be parsed, exiting.");
             process.exit(-1);
         }
-        // this.typerGenerator.generate(typer, this.verbose);
     }
 
     protected onDefineParameters(): void {

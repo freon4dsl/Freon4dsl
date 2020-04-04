@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
 export class WorkerInterfaceTemplate {
@@ -10,7 +9,7 @@ export class WorkerInterfaceTemplate {
         
         // the template starts here
         return `
-        import { ${this.createImports(language, )} } from "${relativePath}${PathProvider.languageFolder}"; 
+        import { ${this.createImports(language, )} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
 
         export interface ${Names.workerInterface(language)} {
 

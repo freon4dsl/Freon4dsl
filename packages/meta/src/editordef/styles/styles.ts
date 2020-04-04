@@ -1,4 +1,4 @@
-export const demoStyles: {
+export const projectitStyles: {
     variable: string;
     member: string;
     keyword: string;

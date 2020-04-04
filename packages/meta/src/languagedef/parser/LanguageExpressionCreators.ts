@@ -40,8 +40,8 @@ export function createExpression(data: Partial<PiLangExp>) : PiLangExp {
         } else {
             result = new PiLangConceptExp();
             LOGGER.log("createConceptExpression");
-            result.reference = new PiLangConceptReference();
-            result.reference.name = data.sourceName;
+            result.referedElement = new PiLangConceptReference();
+            result.referedElement.name = data.sourceName;
             result.sourceName = data.sourceName;
         }
     }

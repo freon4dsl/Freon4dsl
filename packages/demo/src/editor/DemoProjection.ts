@@ -28,7 +28,7 @@ import {
 } from "@projectit/core";
 import { sumIcon } from "../editor/Icons";
 import { DemoSumExpression } from "../model/expressions/DemoSumExpression";
-import { demoStyles } from "../styles/styles";
+import { projectitStyles } from "../styles/styles";
 require("flatted");
 
 import { DemoModel } from "../model/DemoModel";
@@ -134,7 +134,7 @@ export class DemoProjection implements PiProjection {
                 new VerticalListBox(exp, "args", [projection.getBox(exp.piLeft()), projection.getBox(exp.piRight())])
             ],
             {
-                style: demoStyles.tree
+                style: projectitStyles.tree
             }
         );
         return result;
@@ -225,7 +225,7 @@ export class DemoProjection implements PiProjection {
                 column: 1,
                 columnSpan: 2,
                 box: this.getBox(sum.from),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             },
             {
                 row: 2,
@@ -235,14 +235,14 @@ export class DemoProjection implements PiProjection {
                     height: 50,
                     selectable: false
                 }),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             },
             {
                 row: 1,
                 column: 1,
                 columnSpan: 2,
                 box: this.getBox(sum.to),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             },
             {
                 row: 2,
@@ -252,11 +252,11 @@ export class DemoProjection implements PiProjection {
                     this.getBox(sum.body),
                     new LabelBox(sum, "sum-body-close", ")", { style: STYLES.bracket })
                 ]),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             }
         ];
         let result = new GridBox(sum, "sum-all", cells, {
-            style: demoStyles.mygrid
+            style: projectitStyles.mygrid
         });
         return createDefaultExpressionBox(sum, "sum-exp", [result]);
     }
@@ -279,7 +279,7 @@ export class DemoProjection implements PiProjection {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-keyword", [
                 new LabelBox(model, "model-label", "model", {
-                    style: demoStyles.keyword
+                    style: projectitStyles.keyword
                 }),
                 new TextBox(model, "textC", () => model.name, (c: string) => (model.name = c))
                 // SHORTHAND: this.textbox(model, "name"),
@@ -305,12 +305,12 @@ export class DemoProjection implements PiProjection {
             // ),
 
             // new LabelBox(model, "entity-list", "entities", {
-            //     style: demoStyles.keyword
+            //     style: projectitStyles.keyword
             // }),
             // new VerticalPiElementListBox(model, "entities", model.entities,"entities", () => new DemoEntity(), this.editor,
             //     { roleToSelectAfterCreation: "entity-name" }),
             new LabelBox(model, "entityexpression", "expression", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             this.getBox(model.functions[0].expression)
             //     ,
@@ -329,7 +329,7 @@ export class DemoProjection implements PiProjection {
             new HorizontalListBox(literal, "string-literal", [
                 new LabelBox(literal, "start-quote", '"', { selectable: false}),
                 new TextBox(literal, "string-value", () => literal.value, (v: string) => (literal.value = v), {
-                    style: demoStyles.stringLiteral,
+                    style: projectitStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
                 new LabelBox(literal, "end-quote", '"', { selectable: false })
@@ -408,7 +408,7 @@ export class DemoProjection implements PiProjection {
         return createDefaultExpressionBox(exp, "number-literal", [
             new TextBox(exp, "num-literal-value", () => exp.value, (v: string) => (exp.value = v), {
                 deleteWhenEmpty: true,
-                style: demoStyles.stringLiteral,
+                style: projectitStyles.stringLiteral,
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isNumber(currentText, key, index);
                 }
@@ -422,7 +422,7 @@ export class DemoProjection implements PiProjection {
     //             new LabelBox(exp, "hdhd", "@"),
     //             new TextBox(exp, "num-literal-value", () => exp.value, (v: string) => exp.value = v,
     //                 {
-    //                     style: demoStyles.stringLiteral,
+    //                     style: projectitStyles.stringLiteral,
     //                     keyPressAction: (currentText: string, key: string, index: number) => {
     //                         return isNumber(currentText, key, index);
     //                     }

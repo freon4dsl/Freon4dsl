@@ -1,5 +1,5 @@
 import { TestTaxRulesCreator } from "./TestTaxRulesCreator";
-import { RevenueService, IfExpression } from "../language/index"
+import { RevenueService, IfExpression } from "../language/gen/index"
 
 
 describe("Tax Rules Model", () => {
@@ -11,7 +11,7 @@ describe("Tax Rules Model", () => {
       });
   
       test("rules apply to year 2020", () => {
-        expect(model.rules.year).toBe(2020);
+        expect(model.rules.year).toBe("2020");
       });
 
       test("there are two tax payers", () => {

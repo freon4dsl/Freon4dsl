@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
 import { PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangClass } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
@@ -19,7 +19,7 @@ export class ConceptTemplate {
         const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
 
         const binExpConcept : PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
-        const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
+        // const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
 
         const imports = Array.from(
             new Set(
@@ -64,8 +64,8 @@ export class ConceptTemplate {
         const result = `
             ${(concept.primProperties.length > 0 || concept.enumProperties.length > 0)? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PathProvider.corePath}";
-            import { ${mobxImports.join(",")} } from "${PathProvider.corePath}";
+            import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PROJECTITCORE}";
+            import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
@@ -181,7 +181,7 @@ export class ConceptTemplate {
     }
 
     generateReferenceProperty(property: PiLangConceptProperty): string {
-        const decorator = property.isList ? "@observablepartreference" : "@observablepart";
+        const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         return `
             ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.referedElement())}>${arrayType};

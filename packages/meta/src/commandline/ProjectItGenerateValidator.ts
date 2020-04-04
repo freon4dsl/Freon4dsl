@@ -11,16 +11,15 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
 
     public constructor() {
         super({
-            actionName: "generate-validator",
+            actionName: "validate-it",
             summary: "Generates the TypeScript code for the validator for your language",
             documentation: "Generates TypeScript code for the validator of language defined in the .lang file. The validator definition is found in the .valid file."
         });
     }
 
     generate(): void {
-        if (this.verbose) {
-            LOGGER.log("Starting ProjectIt validator generation ...");    
-        }
+        LOGGER.log("Starting ProjectIt validator generation ...");    
+
         super.generate();
         this.validatorGenerator = new ValidatorGenerator(this.language);
         this.validatorGenerator.outputfolder = this.outputFolder;
@@ -30,7 +29,7 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
             LOGGER.error(this, "Validator definition could not be parsed, exiting.");
             process.exit(-1);
         }
-        this.validatorGenerator.generate(validator, this.verbose);
+        this.validatorGenerator.generate(validator);
         // TODO add check on succesfullness
     }
 

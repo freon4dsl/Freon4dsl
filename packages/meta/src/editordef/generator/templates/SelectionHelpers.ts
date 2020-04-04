@@ -1,5 +1,4 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider } from "../../../utils/PathProvider";
+import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
 
@@ -9,17 +8,18 @@ export class SelectionHelpers {
         // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
-        import { ${Names.PiElement}, SelectBox, SelectOption } from "${PathProvider.corePath}";
-        import { ${Names.styles(language)} } from "${relativePath}${PathProvider.editorstyles}";
-        import { ${Names.environment(language)} } from "${relativePath}${PathProvider.environment}/${Names.environment(language)}";
+        import { ${Names.PiElement}, SelectBox, SelectOption } from "${PROJECTITCORE}";
+        import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
+        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
         import { ${language.enumerations.map(en =>
-            ` ${Names.enumeration(en)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
+            ` ${Names.enumeration(en)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
         export class ${Names.selectionHelpers(language)} {
         ${language.enumerations.map(en =>
             `
-            public enumSelectFor${en.name}(elem: PiElement, role: string, getAction: () => SelectOption, setAction: (o: SelectOption) => void) {
+            public enumSelectFor${en.name}(elem: PiElement, role: string, getAction: () => 
+                SelectOption, setAction: (o: SelectOption) => void) {
                 return new SelectBox(
                     elem,
                     role,
@@ -36,7 +36,7 @@ export class SelectionHelpers {
                     (option: SelectOption) => {
                         setAction(option);
                     },
-                    { style: ${Names.styles(language)}.function }
+                    { style: ${Names.styles}.function }
                 );
             }
         `

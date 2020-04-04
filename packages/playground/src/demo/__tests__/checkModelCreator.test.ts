@@ -1,4 +1,4 @@
-import { DemoModel, DemoFunction, DemoEntity, AllDemoConcepts } from "../language";
+import { DemoModel, DemoFunction, DemoEntity, AllDemoConcepts } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Demo Model", () => {

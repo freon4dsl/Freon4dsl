@@ -28,8 +28,8 @@ import {
     DemoVariableRef,
     DemoAttributeType,
     DemoType
-} from "../../language";
-import { DemoUnparser } from "../../unparser/DemoUnparser";
+} from "../../language/gen";
+import { DemoUnparser } from "../../utils/gen/DemoUnparser";
 import { DemoWorker } from "../../utils/gen/DemoWorker";
 
 export class DemoChecker implements DemoWorker {
@@ -38,9 +38,9 @@ export class DemoChecker implements DemoWorker {
     errorList: PiError[] = [];
 
     public execBeforeDemoModel(modelelement: DemoModel) {
-        // @validName name
+        // @validName undefined.name
         if (!this.isValidName(modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
         // @notEmpty this.entities
         if (modelelement.entities.length == 0) {
@@ -54,9 +54,9 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoModel(modelelement: DemoModel) {}
 
     public execBeforeDemoEntity(modelelement: DemoEntity) {
-        // @validName name
+        // @validName undefined.name
         if (!this.isValidName(modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
         // @notEmpty this.attributes
         if (modelelement.attributes.length == 0) {
@@ -70,9 +70,9 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoEntity(modelelement: DemoEntity) {}
 
     public execBeforeDemoAttribute(modelelement: DemoAttribute) {
-        // @validName name
+        // @validName this.name
         if (!this.isValidName(modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
     }
     public execAfterDemoAttribute(modelelement: DemoAttribute) {}
@@ -95,23 +95,23 @@ export class DemoChecker implements DemoWorker {
         if (modelelement.parameters.length == 0) {
             this.errorList.push(new PiError("List 'this.parameters' may not be empty", modelelement.parameters));
         }
-        // @validName name
+        // @validName undefined.name
         if (!this.isValidName(modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
     }
     public execAfterDemoFunction(modelelement: DemoFunction) {}
 
     public execBeforeDemoVariable(modelelement: DemoVariable) {
-        // @validName name
+        // @validName undefined.name
         if (!this.isValidName(modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", name));
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
     }
     public execAfterDemoVariable(modelelement: DemoVariable) {}
 
     public execBeforeDemoAbsExpression(modelelement: DemoAbsExpression) {
-        // @typecheck equalsType( this.expr, DemoAttributeType:Integer )
+        // @typecheck equalsType( this.expr, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.expr, DemoAttributeType.Integer)) {
             this.errorList.push(
                 new PiError(
@@ -128,7 +128,7 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoAbsExpression(modelelement: DemoAbsExpression) {}
 
     public execBeforeDemoMultiplyExpression(modelelement: DemoMultiplyExpression) {
-        // @typecheck equalsType( this.left, DemoAttributeType:Integer )
+        // @typecheck equalsType( this.left, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
             this.errorList.push(
                 new PiError(
@@ -141,7 +141,7 @@ export class DemoChecker implements DemoWorker {
                 )
             );
         }
-        // @typecheck equalsType( this.right, DemoAttributeType:Integer )
+        // @typecheck equalsType( this.right, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
             this.errorList.push(
                 new PiError(
@@ -158,7 +158,7 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoMultiplyExpression(modelelement: DemoMultiplyExpression) {}
 
     public execBeforeDemoPlusExpression(modelelement: DemoPlusExpression) {
-        // @typecheck equalsType( this.left, DemoAttributeType:Integer )
+        // @typecheck equalsType( this.left, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
             this.errorList.push(
                 new PiError(
@@ -171,7 +171,7 @@ export class DemoChecker implements DemoWorker {
                 )
             );
         }
-        // @typecheck equalsType( this.right, DemoAttributeType:Integer )
+        // @typecheck equalsType( this.right, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
             this.errorList.push(
                 new PiError(
@@ -201,7 +201,7 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoPlusExpression(modelelement: DemoPlusExpression) {}
 
     public execBeforeDemoDivideExpression(modelelement: DemoDivideExpression) {
-        // @typecheck equalsType( this.left, DemoAttributeType:Integer )
+        // @typecheck equalsType( this.left, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Integer)) {
             this.errorList.push(
                 new PiError(
@@ -214,7 +214,7 @@ export class DemoChecker implements DemoWorker {
                 )
             );
         }
-        // @typecheck equalsType( this.right, DemoAttributeType:Integer )
+        // @typecheck equalsType( this.right, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Integer)) {
             this.errorList.push(
                 new PiError(
@@ -231,7 +231,7 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoDivideExpression(modelelement: DemoDivideExpression) {}
 
     public execBeforeDemoAndExpression(modelelement: DemoAndExpression) {
-        // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
+        // @typecheck equalsType( this.left, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
             this.errorList.push(
                 new PiError(
@@ -244,7 +244,7 @@ export class DemoChecker implements DemoWorker {
                 )
             );
         }
-        // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
+        // @typecheck equalsType( this.right, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
             this.errorList.push(
                 new PiError(
@@ -261,7 +261,7 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoAndExpression(modelelement: DemoAndExpression) {}
 
     public execBeforeDemoOrExpression(modelelement: DemoOrExpression) {
-        // @typecheck equalsType( this.left, DemoAttributeType:Boolean )
+        // @typecheck equalsType( this.left, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.left, DemoAttributeType.Boolean)) {
             this.errorList.push(
                 new PiError(
@@ -274,7 +274,7 @@ export class DemoChecker implements DemoWorker {
                 )
             );
         }
-        // @typecheck equalsType( this.right, DemoAttributeType:Boolean )
+        // @typecheck equalsType( this.right, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.right, DemoAttributeType.Boolean)) {
             this.errorList.push(
                 new PiError(
@@ -308,7 +308,7 @@ export class DemoChecker implements DemoWorker {
     public execAfterDemoComparisonExpression(modelelement: DemoComparisonExpression) {}
 
     public execBeforeDemoIfExpression(modelelement: DemoIfExpression) {
-        // @typecheck equalsType( this.condition, DemoAttributeType:Boolean )
+        // @typecheck equalsType( this.condition, DemoAttributeType )
         if (!this.typer.equalsType(modelelement.condition, DemoAttributeType.Boolean)) {
             this.errorList.push(
                 new PiError(

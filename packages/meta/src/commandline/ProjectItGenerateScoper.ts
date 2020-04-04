@@ -11,7 +11,7 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
 
     public constructor() {
         super({
-            actionName: "generate-scoper",
+            actionName: "scope-it",
             summary: "Generates the TypeScript code for the scoper for your language",
             documentation: "Generates TypeScript code for the scoper of language defined in the .lang file. " + 
             "The scoper definition is found in the .scop file."
@@ -19,19 +19,17 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        if (this.verbose) {
-            LOGGER.log("Starting ProjectIt scoper generation ...");    
-        }
+        // LOGGER.log("Starting ProjectIt scoper generation ...");
         super.generate();
         this.scoperGenerator = new ScoperGenerator(this.language);
         this.scoperGenerator.outputfolder = this.outputFolder;
 
-        const scoper = new ScoperParser(this.language).parse(this.scopeFile.value, this.verbose);
+        const scoper = new ScoperParser(this.language).parse(this.scopeFile.value);
         if (scoper == null) {
             LOGGER.error(this, "Scoper definition could not be parsed, exiting.");
             process.exit(-1);
         }
-        this.scoperGenerator.generate(scoper, this.verbose);
+        this.scoperGenerator.generate(scoper);
         // TODO add check on succesfullness
     }
 

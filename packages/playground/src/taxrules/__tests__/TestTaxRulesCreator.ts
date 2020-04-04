@@ -6,7 +6,7 @@ import {
     RevenueService,
     TaxPayerType,
     IncomeType
-} from "../language";
+} from "../language/gen";
 import { TaxRulesCreator } from "../../taxrules/utils/gen/TaxRulesCreator";
 
 // examples
@@ -32,8 +32,6 @@ export class TestTaxRulesCreator extends TaxRulesCreator {
     }
 
     private buildModel() : RevenueService{
-
-
         let condition = this.createEqualsExpression(
             this.createStringLiteralExpression("incomePart.souceType"),
             this.createStringLiteralExpression("SouceType.NGO")
@@ -41,13 +39,13 @@ export class TestTaxRulesCreator extends TaxRulesCreator {
         let exp : Expression = this.createMoneyLiteralExp("0");
         let whenexp = this.createIfExpression(condition, exp, null);
         let companyTax = this.createTaxRule( "NGO_income_tax_free", whenexp);
-        let ruleset : TaxRuleSet = this.createTaxRuleSet(2020, companyTax);
+        let ruleset : TaxRuleSet = this.createTaxRuleSet("2020", companyTax);
         this.addRulesToSet(ruleset);
 
-        let usGov : TaxPayer = this.createTaxPayer("USA Goverment", "Washington", TaxPayerType.Goverment, this.createTaxID(4444), null , null, null);
+        let usGov : TaxPayer = this.createTaxPayer("USA Goverment", "Washington", TaxPayerType.Goverment, this.createTaxID("4444"), null , null, null);
 
-        let income : IncomePart = this.createIncomePart(IncomeType.Salary, this.createMoney(0),this.createMoney(5000000), usGov);
-        let trump : TaxPayer = this.createTaxPayer("Donald Trump", "Mar-a-Lago", TaxPayerType.Person, this.createTaxID(987654321), income , null, null);
+        let income : IncomePart = this.createIncomePart(IncomeType.Salary, this.createMoney("0"),this.createMoney("5000000"), usGov);
+        let trump : TaxPayer = this.createTaxPayer("Donald Trump", "Mar-a-Lago", TaxPayerType.Person, this.createTaxID("987654321"), income , null, null);
 
         let rs = this.createRevenueService(ruleset, trump);
         rs.payers.push(usGov);

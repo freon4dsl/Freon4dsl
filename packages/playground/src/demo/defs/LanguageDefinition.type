@@ -1,60 +1,60 @@
 typer Demo for language Demo
 
 // for now: first is considered to be the root of the type hierarchy
-@istype {DemoType, DemoEntity, DemoAttributeType }
+istype {DemoType, DemoEntity, DemoAttributeType }
 
-@anytype {
-    //@conformsto this.base
-    //@conformsto this.implements
-    @conformsto DemoAttributeType:ANY
-    @equalsto DemoAttributeType:ANY
+anytype {
+    //conformsto this.base
+    //conformsto this.implements
+    conformsto DemoAttributeType:ANY
+    equalsto DemoAttributeType:ANY
 }
 
 DemoAttribute {
-    @infertype this.declaredType
+    infertype this.declaredType
 }
 DemoFunction {
-    @infertype this.declaredType
+    infertype this.declaredType
 }
 DemoVariable  {
-    @infertype this.declaredType
+    infertype this.declaredType
 }
 DemoExpression {
-    abstract @infertype 
+    abstract infertype 
 }
 DemoStringLiteralExpression {
-    @infertype DemoAttributeType:String
+    infertype DemoAttributeType:String
 }
 DemoNumberLiteralExpression {
-    @infertype DemoAttributeType:Integer
+    infertype DemoAttributeType:Integer
 }
 DemoBooleanLiteralExpression {
-    @infertype DemoAttributeType:Boolean
+    infertype DemoAttributeType:Boolean
 }
 DemoAbsExpression {
-    @infertype this.expr
+    infertype this.expr
 }
 DemoMultiplyExpression {
-    @infertype this.left
+    infertype this.left
 }
 DemoPlusExpression {
-    @infertype commonSuperType(this.left, this.right) 
+    infertype commonSuperType(this.left, this.right) 
 }
 DemoDivideExpression {
-    @infertype this.left
+    infertype this.left
 }
 DemoComparisonExpression {
-    @infertype DemoAttributeType:Boolean
+    infertype DemoAttributeType:Boolean
 }
 DemoFunctionCallExpression {
-    @infertype this.functionDefinition
+    infertype this.functionDefinition
 }
 DemoIfExpression    {
-    @infertype commonSuperType(this.whenTrue, this.whenFalse)
+    infertype commonSuperType(this.whenTrue, this.whenFalse)
 }
 DemoVariable {
-    @infertype this.declaredType
+    infertype this.declaredType
 }
 DemoVariableRef   {
-    @infertype this.attribute  
+    infertype this.attribute  
 }
