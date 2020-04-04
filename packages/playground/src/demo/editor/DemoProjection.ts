@@ -15,7 +15,7 @@ import {
     DemoVariable
 } from "../language/gen";
 import { PiElementReference } from "../language/gen/PiElementReference";
-import { projectitStyles } from "../../webapp/styles/styles";
+import { projectitStyles } from "../webapp/styles/styles";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 

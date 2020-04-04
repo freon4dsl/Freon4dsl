@@ -3,7 +3,8 @@ import * as ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Provider } from "mobx-react";
 import { RouterStore } from "./app/stores";
-import { MainProjectionalEditor } from "../demo/editor";
+// change used editor here:
+import { MainProjectionalEditor } from "../editor";
 
 const STORE_ROUTER = "router";
 // prepare MobX stores
