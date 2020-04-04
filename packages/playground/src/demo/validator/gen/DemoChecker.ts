@@ -39,8 +39,8 @@ export class DemoChecker implements DemoWorker {
 
     public execBeforeDemoModel(modelelement: DemoModel) {
         // @validName undefined.name
-        if (!this.isValidName(modelelement.modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.modelelement.name + "' is not a valid identifier", modelelement.name));
+        if (!this.isValidName(modelelement.name)) {
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
         // @notEmpty this.entities
         if (modelelement.entities.length == 0) {
@@ -55,8 +55,8 @@ export class DemoChecker implements DemoWorker {
 
     public execBeforeDemoEntity(modelelement: DemoEntity) {
         // @validName undefined.name
-        if (!this.isValidName(modelelement.modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.modelelement.name + "' is not a valid identifier", modelelement.name));
+        if (!this.isValidName(modelelement.name)) {
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
         // @notEmpty this.attributes
         if (modelelement.attributes.length == 0) {
@@ -71,8 +71,8 @@ export class DemoChecker implements DemoWorker {
 
     public execBeforeDemoAttribute(modelelement: DemoAttribute) {
         // @validName this.name
-        if (!this.isValidName(modelelement.modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.modelelement.name + "' is not a valid identifier", modelelement.name));
+        if (!this.isValidName(modelelement.name)) {
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
     }
     public execAfterDemoAttribute(modelelement: DemoAttribute) {}
@@ -96,16 +96,16 @@ export class DemoChecker implements DemoWorker {
             this.errorList.push(new PiError("List 'this.parameters' may not be empty", modelelement.parameters));
         }
         // @validName undefined.name
-        if (!this.isValidName(modelelement.modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.modelelement.name + "' is not a valid identifier", modelelement.name));
+        if (!this.isValidName(modelelement.name)) {
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
     }
     public execAfterDemoFunction(modelelement: DemoFunction) {}
 
     public execBeforeDemoVariable(modelelement: DemoVariable) {
         // @validName undefined.name
-        if (!this.isValidName(modelelement.modelelement.name)) {
-            this.errorList.push(new PiError("'" + modelelement.modelelement.name + "' is not a valid identifier", modelelement.name));
+        if (!this.isValidName(modelelement.name)) {
+            this.errorList.push(new PiError("'" + modelelement.name + "' is not a valid identifier", modelelement));
         }
     }
     public execAfterDemoVariable(modelelement: DemoVariable) {}
