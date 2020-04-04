@@ -103,8 +103,8 @@ export class CheckerTemplate {
                         this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${this.langRefToTypeScript(r.property)}));
                     }`
                 : (r instanceof ValidNameRule ?
-                    `if(!this.isValidName(modelelement.${this.langRefToTypeScript(r.property)})) {
-                        this.errorList.push(new PiError("'" + modelelement.${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", ${this.langRefToTypeScript(r.property)}));
+                    `if(!this.isValidName(${this.langRefToTypeScript(r.property)})) {
+                        this.errorList.push(new PiError("'" + ${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
                     }`
                 : ""))))}`
             ).join("\n")}`;

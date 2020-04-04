@@ -13,7 +13,7 @@ export class PiScoperChecker extends Checker<PiScopeDef> {
     }
 
     public check(definition: PiScopeDef): void {
-        LOGGER.log("Checking scope definition " + definition.scoperName);
+        // LOGGER.log("Checking scope definition " + definition.scoperName);
         if( this.language === null ) {
             LOGGER.error(this,  "Scoper definition checker does not known the language, exiting.");
             process.exit(-1);

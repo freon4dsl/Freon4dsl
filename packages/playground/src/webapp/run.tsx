@@ -2,12 +2,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Provider } from "mobx-react";
-import { Router, Route, Switch } from "react-router";
-import { Root } from "./containers/Root/index";
-import { MainProjectionalEditor } from "../../editor/gen/MainProjectionalEditor";
-import { RouterStore } from "./stores/index";
-import { STORE_ROUTER } from "./constants/stores";
+import { RouterStore } from "./app/stores";
+// change used editor here:
+import { MainProjectionalEditor } from "../demo/editor";
 
+const STORE_ROUTER = "router";
 // prepare MobX stores
 const history = createBrowserHistory();
 const routerStore = new RouterStore(history);

@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
+import { PathProvider, PROJECTITCORE, TOOLBARS_FOLDER } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class EditorTemplate {
@@ -11,8 +11,8 @@ export class EditorTemplate {
         return `
             import { ${Names.PiActions}, ${Names.PiContext}, ${Names.PiEditor}, ${Names.PiProjection} } from "${PROJECTITCORE}";
             ${withToolbar ? `
-            import { PiEditorWithToolbar } from "../../webapp/toolbars/ToolBarDefinition";
-            import { MyToolbarItem } from "../../webapp/toolbars/MyToolbarItem";
+            import { PiEditorWithToolbar } from "${relativePath}${TOOLBARS_FOLDER}/ToolBarDefinition";
+            import { MyToolbarItem } from "${relativePath}${TOOLBARS_FOLDER}/MyToolbarItem";
             `: ""}
             
             export class ${Names.editor(language)} extends ${ withToolbar? `PiEditorWithToolbar` : `PiEditor`} {

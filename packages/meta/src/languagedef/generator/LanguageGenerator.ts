@@ -99,7 +99,7 @@ export class LanguageGenerator {
 
         LOGGER.log("Generating environment");
         var environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment");
-        fs.writeFileSync(`${this.environmentGenFolder}/${Names.environment(language)}.ts`, environmentFile);
+        fs.writeFileSync(`${this.environmentGenFolder}/${Names.environment(language)}.tsx`, environmentFile);
 
         // generate the utility classes
         LOGGER.log("Generating language walker: " + Names.walker(language) + ".ts");

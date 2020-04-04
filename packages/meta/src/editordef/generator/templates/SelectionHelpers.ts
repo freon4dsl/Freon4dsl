@@ -8,7 +8,7 @@ export class SelectionHelpers {
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
         import { ${Names.PiElement}, SelectBox, SelectOption } from "${PROJECTITCORE}";
-        import { ${Names.styles(language)} } from "${relativePath}${EDITORSTYLES}";
+        import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
         import { ${language.enumerations.map(en =>
@@ -17,7 +17,8 @@ export class SelectionHelpers {
         export class ${Names.selectionHelpers(language)} {
         ${language.enumerations.map(en =>
             `
-            public enumSelectFor${en.name}(elem: PiElement, role: string, getAction: () => SelectOption, setAction: (o: SelectOption) => void) {
+            public enumSelectFor${en.name}(elem: PiElement, role: string, getAction: () => 
+                SelectOption, setAction: (o: SelectOption) => void) {
                 return new SelectBox(
                     elem,
                     role,
@@ -34,7 +35,7 @@ export class SelectionHelpers {
                     (option: SelectOption) => {
                         setAction(option);
                     },
-                    { style: ${Names.styles(language)}.function }
+                    { style: ${Names.styles}.function }
                 );
             }
         `

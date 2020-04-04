@@ -1,5 +1,5 @@
 import { ModelSerializer, ModelInfo } from "@projectit/core";
-import { STYLES } from "./toolbars/ToolbarStyles";
+import { STYLES } from "../toolbars/ToolbarStyles";
 import axios from "axios";
 import { observable } from "mobx";
 import { observer } from "mobx-react";

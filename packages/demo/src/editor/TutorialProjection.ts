@@ -26,7 +26,7 @@ import {
 } from "@projectit/core";
 import { sumIcon } from "../editor/Icons";
 import { DemoSumExpression } from "../model/expressions/DemoSumExpression";
-import { demoStyles } from "../styles/styles";
+import { projectitStyles } from "../styles/styles";
 
 require("flatted");
 
@@ -130,7 +130,7 @@ export class TutorialProjection implements PiProjection {
     private createModelBox2(model: DemoModel): Box {
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "Model", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
                 placeHolder: "<name>"
@@ -147,7 +147,7 @@ export class TutorialProjection implements PiProjection {
             // end::ModelBox3[]
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "Model", {
-                    style: demoStyles.keyword
+                    style: projectitStyles.keyword
                 }),
                 new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
                     placeHolder: "<name>"
@@ -155,7 +155,7 @@ export class TutorialProjection implements PiProjection {
             ]),
             // tag::ModelBox3[]
             new LabelBox(model, "entity-keyword", "Entities", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             new VerticalListBox(
                 model,
@@ -176,14 +176,14 @@ export class TutorialProjection implements PiProjection {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "DemoModel", {
-                    style: demoStyles.keyword
+                    style: projectitStyles.keyword
                 }),
                 new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
                     placeHolder: "<name>"
                 })
             ]),
             new LabelBox(model, "entity-list", "Entities", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             new VerticalListBox(
                 model,
@@ -193,9 +193,9 @@ export class TutorialProjection implements PiProjection {
                 })
 
             ).addChild(new AliasBox(model, "end-of-entity-list",
-                "add entity", { style: demoStyles.indent })),        // <1>
+                "add entity", { style: projectitStyles.indent })),        // <1>
             new LabelBox(model, "functions-list", "Functions", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             // tag::CreateFunctionAction[]
             new VerticalListBox(
@@ -207,7 +207,7 @@ export class TutorialProjection implements PiProjection {
 
             )
                 // .addChild(new AliasBox(model, "end-of-function-list",
-                // "add function", { style: demoStyles.indent }))
+                // "add function", { style: projectitStyles.indent }))
             // end::CreateFunctionAction[]
         ]);
     }
@@ -244,7 +244,7 @@ export class TutorialProjection implements PiProjection {
                 new VerticalListBox(exp, "args", [this.getBox(exp.piLeft()), this.getBox(exp.piRight())])
             ],
             {
-                style: demoStyles.tree
+                style: projectitStyles.tree
             }
         );
         return result;
@@ -274,7 +274,7 @@ export class TutorialProjection implements PiProjection {
                     }
                 )
             ],
-            { style: demoStyles.indent }
+            { style: projectitStyles.indent }
         );
     }
     // end::AttributeBox[]
@@ -302,7 +302,7 @@ export class TutorialProjection implements PiProjection {
                     }
                 )
             ],
-            { style: demoStyles.indent }
+            { style: projectitStyles.indent }
         );
     }
 
@@ -311,7 +311,7 @@ export class TutorialProjection implements PiProjection {
         return new VerticalListBox(entity, "entity", [
             new HorizontalListBox(entity, "entity-keyword", [
                 new LabelBox(entity, "entity-label", "entity", {
-                    style: demoStyles.keyword
+                    style: projectitStyles.keyword
                 }),
                 new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
             ]),
@@ -333,7 +333,7 @@ export class TutorialProjection implements PiProjection {
             [
                 new HorizontalListBox(entity, "entity-info", [
                     new LabelBox(entity, "entity-keyword", "Entity", {
-                        style: demoStyles.keyword
+                        style: projectitStyles.keyword
                     }),
                     new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c), {
                         placeHolder: "<name>"
@@ -345,7 +345,7 @@ export class TutorialProjection implements PiProjection {
                     })
                 )
             ],
-            { style: demoStyles.indent }
+            { style: projectitStyles.indent }
         );
     }
 
@@ -359,7 +359,7 @@ export class TutorialProjection implements PiProjection {
             [
                 new HorizontalListBox(entity, "entity-keyword", [
                     new LabelBox(entity, "entity-label", "entity", {
-                        style: demoStyles.keyword
+                        style: projectitStyles.keyword
                     }),
                     new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
                 ]),
@@ -369,11 +369,11 @@ export class TutorialProjection implements PiProjection {
                         return this.createAttributeBox(att);
                     })
                 ).addChild(new AliasBox(entity, "end-of-attribute-list",
-                    "add attribute", { style: demoStyles.indent }))
+                    "add attribute", { style: projectitStyles.indent }))
                 // end::CreateAttributeAction[]
             ],
             {
-                style: demoStyles.indent
+                style: projectitStyles.indent
             }
         );
     }
@@ -385,7 +385,7 @@ export class TutorialProjection implements PiProjection {
                 column: 1,
                 columnSpan: 2,
                 box: this.getBox(sum.from),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             },
             {
                 row: 2,
@@ -395,14 +395,14 @@ export class TutorialProjection implements PiProjection {
                     height: 50,
                     selectable: false
                 }),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             },
             {
                 row: 1,
                 column: 1,
                 columnSpan: 2,
                 box: this.getBox(sum.to),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             },
             {
                 row: 2,
@@ -412,11 +412,11 @@ export class TutorialProjection implements PiProjection {
                     this.getBox(sum.body),
                     new LabelBox(sum, "sum-body-close", ")", { style: STYLES.bracket })
                 ]),
-                style: demoStyles.mycell
+                style: projectitStyles.mycell
             }
         ];
         let result = new GridBox(sum, "sum-all", cells, {
-            style: demoStyles.mygrid
+            style: projectitStyles.mygrid
         });
         return createDefaultExpressionBox(sum, "sum-exp", [result]);
     }
@@ -439,7 +439,7 @@ export class TutorialProjection implements PiProjection {
             new HorizontalListBox(literal, "string-literal", [
                 new LabelBox(literal, "start-quote", "\"", { selectable: false }),
                 new TextBox(literal, "string-value", () => literal.value, (v: string) => (literal.value = v), {
-                    style: demoStyles.stringLiteral,
+                    style: projectitStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
                 new LabelBox(literal, "end-quote", "\"", { selectable: false })
@@ -519,7 +519,7 @@ export class TutorialProjection implements PiProjection {
         return createDefaultExpressionBox(exp, "number-literal", [
             new TextBox(exp, "num-literal-value", () => exp.value, (v: string) => (exp.value = v), {
                 deleteWhenEmpty: true,
-                style: demoStyles.stringLiteral,
+                style: projectitStyles.stringLiteral,
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isNumber(currentText, key, index);
                 }
@@ -534,7 +534,7 @@ export class TutorialProjection implements PiProjection {
             [
                 new HorizontalListBox(fun, "fun-keyword", [
                     new LabelBox(fun, "fun-label", "function", {
-                        style: demoStyles.keyword
+                        style: projectitStyles.keyword
                     }),
                     new TextBox(fun, "fun-name", () => fun.name, (c: string) => (fun.name = c))
                 ]),
@@ -544,11 +544,11 @@ export class TutorialProjection implements PiProjection {
                         return this.createParameterBox(att);
                     })
                 ).addChild(new AliasBox(fun, "end-of-parameter-list",
-                    "add parameter", { style: demoStyles.indent }))
+                    "add parameter", { style: projectitStyles.indent }))
                 // end::CreateAttributeAction[]
             ],
             {
-                style: demoStyles.indent
+                style: projectitStyles.indent
             }
         );
     }

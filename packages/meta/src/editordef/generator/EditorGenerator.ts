@@ -70,7 +70,11 @@ export class EditorGenerator {
         LOGGER.log("Generating Editor");
         var editorFile = Helpers.pretty(editorTemplate.generateEditor(this.language, true, relativePath), "Editor");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.editor(this.language)}.ts`, editorFile);
-        
+
+        LOGGER.log("Generating MainProjectionalEditor");
+        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateMainProjectionalEditor(this.language, true, relativePath), "MainProjectionalEditor");
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor}.tsx`, projectionalEditorFile);
+
         // the following do not need the relativePath for imports
         LOGGER.log("Generating manual actions");
         var manualActionsFile = Helpers.pretty(actions.generateManualActions(this.language), "ManualActions");
@@ -79,10 +83,6 @@ export class EditorGenerator {
         LOGGER.log("Generating actions");        
         var actionsFile = Helpers.pretty(actions.generateActions(this.language), "Actions");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
-
-        LOGGER.log("Generating MainProjectionalEditor");
-        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateEditor(this.language, true), "MainProjectionalEditor");
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor}.tsx`, projectionalEditorFile);
 
         LOGGER.log("Generating editor gen index");
         var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language), "Editor Gen Index");

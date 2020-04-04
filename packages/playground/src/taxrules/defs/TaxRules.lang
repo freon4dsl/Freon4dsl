@@ -1,0 +1,164 @@
+language TaxRules
+
+root concept RevenueService {
+    part rules: TaxRuleSet //[]
+    part payers: TaxPayer[]
+}
+
+concept TaxRuleSet {
+    year: string //number
+    part taxrules: TaxRule[]
+}
+
+concept TaxPayer {
+    name: string
+    address: string
+    payerType: TaxPayerType
+    part taxId: TaxID
+    part incomeParts: IncomePart[]
+    part totalIncome: Money
+    part totalTaxes: Money
+}
+
+concept IncomePart {
+    incomeType: IncomeType
+    part deduction: Money
+    part amount: Money
+    reference source: TaxPayer
+}
+
+concept Money {
+    amount: string //number
+    // currency: ???
+}
+
+concept TaxID {
+    id : string //number
+}
+
+concept TaxRule { 
+    name: string
+//    part parameters: RuleParameter[]
+    part expression: Expression
+//    part result : Money
+}
+
+concept RuleParameter {
+    name : string
+    part type : IncomePart
+}
+
+concept PercentageExpression base Expression {
+    part inner : Expression 
+    priority = "2"
+}
+
+concept MoneyLiteralExp base LiteralExpression {
+    value : string
+}
+
+concept TaxRuleCall {//base FunctionCallExpression {
+    reference functionDefinition: TaxRule
+}
+
+enumeration IncomeType {
+    Salary
+    Royalties
+    Gift
+}
+
+enumeration TaxPayerType {
+    Company
+    NGO
+    Goverment
+    Person
+}
+
+//concept FunctionCallExpression base Expression {
+//    reference functionDefinition: Function
+//}
+
+//concept VariableRef base Expression {
+//    referredName: string
+//    reference attribute: Attribute
+//}
+
+// import Expression lib
+abstract expression concept Expression {}
+
+expression placeholder concept PlaceholderExpression {}
+
+abstract expression concept LiteralExpression base Expression {}
+
+concept StringLiteralExpression base LiteralExpression {
+    value: string
+}
+
+concept NumberLiteralExpression base LiteralExpression {
+    value: string
+}
+
+concept BooleanLiteralExpression base LiteralExpression {
+    value: string
+}
+
+concept AbsExpression base Expression {
+    part expr: Expression
+}
+
+abstract binary expression concept BinaryExpression base Expression {
+    part left: Expression
+    part right: Expression
+}
+
+concept MultiplyExpression base BinaryExpression {
+    priority = "8"
+}
+
+concept PlusExpression base BinaryExpression {
+    priority = "4"
+}
+
+concept DivideExpression base BinaryExpression {
+    priority = "8"
+}
+
+concept AndExpression base BinaryExpression {
+    priority = "1"
+}
+
+concept OrExpression base BinaryExpression {
+    priority = "1"
+}
+
+abstract concept ComparisonExpression base BinaryExpression {
+}
+
+concept LessThenExpression base ComparisonExpression {
+    priority = "10"
+}
+
+concept GreaterThenExpression base ComparisonExpression {
+    // symbol: string = ">"
+    priority = "10"
+}
+
+concept EqualsExpression base ComparisonExpression {
+    // symbol: string = "="
+    priority = "10"
+}
+
+concept IfExpression base Expression {
+    part condition: Expression
+    part whenTrue: Expression
+    part whenFalse: Expression
+ //   trigger : string = "if"
+}
+
+// end import Expression lib
+
+
+// in Scope Def: langscope generalDeduction : Money = 3000,-
+// in Scope Def: langscope toBePaid : Money // holds result for every TaxRule
+// in Type def: PercentageExpression { inner.type = number }
+// in Type def: MoneyLiteralExp  inferType = Money

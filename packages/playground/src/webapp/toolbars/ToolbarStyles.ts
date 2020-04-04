@@ -4,4 +4,4 @@
 export const STYLES: {
     toolbar: string;
     toolbarItem: string;
-} = require("./toolbarstyle.scss");
+} = require("../styles/toolbarstyle.scss");

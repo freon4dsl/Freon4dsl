@@ -2,8 +2,6 @@ import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GE
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ProjectionTemplate {
-    constructor() {
-    }
 
     generateProjection(language: PiLanguageUnit, relativePath: string): string {
         return `
@@ -17,14 +15,14 @@ export class ProjectionTemplate {
                     return null;
                 }            
             }
-        `
+        `;
     }
 
-    generateProjectionDefault(language: PiLanguageUnit,  relativePath: string): string {
+    generateProjectionDefault(language: PiLanguageUnit, relativePath: string): string {
         return ` 
             import { observable } from "mobx";
 
-            import { ${Names.styles(language)} } from "${relativePath}${EDITORSTYLES}";
+            import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
             import {
                 AliasBox,
                 Box,
@@ -55,7 +53,8 @@ export class ProjectionTemplate {
             
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }/${Names.PiElementReference}";
             import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } 
+                    from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
@@ -101,19 +100,19 @@ export class ProjectionTemplate {
                         ${c.primProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
                                 new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                                    style: demoStyles.propertykeyword
+                                    style: ${Names.styles}.propertykeyword
                                 }),
                                 new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type.name}),
                                 {
                                     placeHolder: "text",
-                                    style: demoStyles.placeholdertext
+                                    style: ${Names.styles}.placeholdertext
                                 })
                             ])`
                         ).concat(
                         c.enumProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
                             new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                            style: demoStyles.propertykeyword
+                            style: ${Names.styles}.propertykeyword
                             }),
                             this.helpers.enumSelectFor${p.type.name}(element, "${p.name}-type",
                                 () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
@@ -124,7 +123,7 @@ export class ProjectionTemplate {
                         c.allParts().map(part => `
                         ${ part.isList ? `
                             new LabelBox(element, "element-${part.name}-label", "${part.name}", { 
-                                style: demoStyles.keyword
+                                style: ${Names.styles}.keyword
                             }),
                             ( element.${part.name}.length === 0 ? null : 
                                 new VerticalListBox(
@@ -134,12 +133,12 @@ export class ProjectionTemplate {
                                         return this.rootProjection.getBox(ent);
                                     }),
                                     {
-                                        style: demoStyles.indent
+                                        style: ${Names.styles}.indent
                                     }
                                 )
                             ),
                             new AliasBox(element, "new-${part.name}", "add ${part.name}", {
-                                style: demoStyles.indentedplaceholdertext
+                                style: ${Names.styles}.indentedplaceholdertext
                             })
                         ` :
                             `new LabelBox(element, "element-${part.name}-label", "${part.name}", {}),
@@ -149,7 +148,7 @@ export class ProjectionTemplate {
                         c.allPReferences().map(ref => `
                         ${ ref.isList ? `
                             new LabelBox(element, "element-${ref.name}-label", "${ref.name}", { 
-                                style: demoStyles.keyword
+                                style: ${Names.styles}.keyword
                             }),
                             ( element.${ref.name}.length === 0 ? null : 
                                 new VerticalListBox(
@@ -159,12 +158,12 @@ export class ProjectionTemplate {
                                         return this.rootProjection.getBox(ent);
                                     }),
                                     {
-                                        style: demoStyles.indent
+                                        style: ${Names.styles}.indent
                                     }
                                 )
                             ),
                             new AliasBox(element, "new-${ref.name}", "add ${ref.name}", {
-                                style: demoStyles.indentedplaceholdertext
+                                style: ${Names.styles}.indentedplaceholdertext
                             })
                         ` :
                             `
