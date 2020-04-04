@@ -29,7 +29,6 @@ export class EditorGenerator {
         let name = editor? editor.name : "";
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder);
 
-        LOGGER.log("Generating editor '" + editor.name + "' in folder " + this.editorGenFolder);
         if(editor === null || editor === undefined) {
             editor = new DefEditorLanguage();
         }
@@ -74,14 +73,17 @@ export class EditorGenerator {
         LOGGER.log("Generating ProjectionalEditorManual");
         var projectionalEditorManualFile = Helpers.pretty(
             projection.generateProjection(this.language, editor, relativePath),
-            "ProjectionalEditorManual",
-            verbose
+            "ProjectionalEditorManual"
         );
         Helpers.generateManualFile(`${this.editorFolder}/${Names.projection(this.language)}.ts`, projectionalEditorManualFile, "ManualProjections");
 
         LOGGER.log("Generating Editor");
         var editorFile = Helpers.pretty(editorTemplate.generateEditor(this.language, editor, true, relativePath), "Editor");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.editor(this.language)}.ts`, editorFile);
+
+        LOGGER.log("Generating MainProjectionalEditor");
+        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateMainProjectionalEditor(this.language, editor, true, relativePath), "MainProjectionalEditor");
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor}.tsx`, projectionalEditorFile);
 
         // the following do not need the relativePath for imports
         LOGGER.log("Generating manual actions");
@@ -93,9 +95,6 @@ export class EditorGenerator {
         var actionsFile = Helpers.pretty(actions.generateActions(this.language, editor), "Actions");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
 
-        LOGGER.log("Generating MainProjectionalEditor");
-        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateEditor(this.language, editor, true), "MainProjectionalEditor");
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor(this.language)}.tsx`, projectionalEditorFile);
 
         LOGGER.log("Generating editor gen index");
         var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editor), "Editor Gen Index");
