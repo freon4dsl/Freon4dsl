@@ -1,4 +1,4 @@
-export const demoStyles: {
+export const projectitStyles: {
     placeholdertext: string;
     variable: string;
     member: string;

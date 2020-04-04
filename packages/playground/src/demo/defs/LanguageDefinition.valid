@@ -13,7 +13,7 @@ DemoEntity {
 }
 
 DemoAttribute {
-    validName  
+    validName this.name
 }
 
 DemoFunction {

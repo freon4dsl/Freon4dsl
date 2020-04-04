@@ -40,7 +40,7 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         //  Generate checker
-        if (validdef !== null) {
+        if (validdef !== null && validdef !== undefined) {
             LOGGER.log("Generating checker class");
             var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class");
             fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);

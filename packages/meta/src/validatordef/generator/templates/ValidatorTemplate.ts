@@ -11,12 +11,12 @@ export class ValidatorTemplate {
     }
 
     generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef, relativePath: string): string {
-    
-        if (validdef == null) return this.generateDefault(language, relativePath);
 
-        const allLangConcepts : string = Names.allConcepts(language);   
-        const generatedClassName : string = Names.validator(language);
-        const checkerClassName : string = Names.checker(language);
+        if (validdef === null || validdef === undefined) return this.generateDefault(language, relativePath);
+
+        const allLangConcepts: string = Names.allConcepts(language);
+        const generatedClassName: string = Names.validator(language);
+        const checkerClassName: string = Names.checker(language);
         const walkerClassName: string = Names.walker(language);
     
         // Template starts here 
@@ -45,8 +45,8 @@ export class ValidatorTemplate {
     }
 
     generateDefault(language: PiLanguageUnit, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);   
-        const generatedClassName : string = Names.validator(language);
+        const allLangConcepts: string = Names.allConcepts(language);
+        const generatedClassName: string = Names.validator(language);
 
         // Template starts here 
         return `

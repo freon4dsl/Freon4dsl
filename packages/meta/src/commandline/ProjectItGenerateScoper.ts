@@ -19,7 +19,7 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt scoper generation ...");    
+        // LOGGER.log("Starting ProjectIt scoper generation ...");
         super.generate();
         this.scoperGenerator = new ScoperGenerator(this.language);
         this.scoperGenerator.outputfolder = this.outputFolder;

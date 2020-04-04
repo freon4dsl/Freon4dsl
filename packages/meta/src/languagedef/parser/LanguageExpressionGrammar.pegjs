@@ -35,10 +35,13 @@ langRefExpression = enumRefExpression:enumRefExpression    { return enumRefExpre
                   / expression:expression                  { return expression; }
                   / functionExpression:functionExpression  { return functionExpression; }
 
-enumRefExpression = sourceName:var ':' appliedfeature:var {
+enumRefExpression = sourceName:var ':' literal:var {
   return expCreate.createEnumReference ({
     "sourceName": sourceName,
-    "appliedfeature": appliedfeature
+    "appliedfeature": expCreate.createAppliedFeatureExp
+                      ( {
+                          "sourceName": literal,
+                        })
   })
 }
 

@@ -23,11 +23,8 @@ export class Names {
     public static CompositeProjection = "CompositeProjection";
     public static ProjectionalEditor = "ProjectionalEditor";
     public static mainProjectionalEditor = "MainProjectionalEditor";
+    public static styles = "projectitStyles";
 
-    public static styles(language: PiLanguageUnit) {
-        return language?.name.toLowerCase() + "Styles";
-    }
-    
     public static environment(language: PiLanguageUnit) {
         return language?.name + "Environment";
     }

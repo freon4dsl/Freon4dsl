@@ -2,14 +2,14 @@ expressions for language Demo
 
 DemoModel {
     // default Identifier
-    this.entities.extr;
+    this.entities.expr;
     this.functions;
 }
 
 DemoEntity {
     this.attributes;
     this.functions;
-    DemoAttributeType.Integer;
+    DemoAttributeType:Inter;
 }
 
 DemoAttribute {
@@ -17,7 +17,7 @@ DemoAttribute {
 }
 
 DemoFunction {
-    conformsTo (this.declaredType); 
+    conformsTo (this.declaredType);
     this.parameters;
     DemoFunction.parameters;
 }

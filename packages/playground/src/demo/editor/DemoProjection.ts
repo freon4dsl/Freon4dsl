@@ -15,7 +15,7 @@ import {
     DemoVariable
 } from "../language/gen";
 import { PiElementReference } from "../language/gen/PiElementReference";
-import { demoStyles } from "../webapp/styles/styles";
+import { projectitStyles } from "../webapp/styles/styles";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 
@@ -38,7 +38,7 @@ export class DemoProjection implements PiProjection {
             return new VerticalListBox(element, "element", [
                 new HorizontalListBox(element, "element-name-list", [
                     new LabelBox(element, "element-name-label", "variable name", {
-                        style: demoStyles.propertykeyword
+                        style: projectitStyles.propertykeyword
                     }),
                     new TextBox(
                         element,
@@ -47,7 +47,7 @@ export class DemoProjection implements PiProjection {
                         (c: string) => (element.name = c as string),
                         {
                             placeHolder: "text",
-                            style: demoStyles.placeholdertext
+                            style: projectitStyles.placeholdertext
                         }
                     )
                 ])
@@ -76,7 +76,7 @@ export class DemoProjection implements PiProjection {
     //                 }
     //             ),
     //         new TextBox(element, "blabla", () => element?.functionDefinition.name, (v: string) => (0), {
-    //             style: demoStyles.stringLiteral,
+    //             style: projectitStyles.stringLiteral,
     //             deleteWhenEmptyAndErase: true
     //         }),
     //
@@ -88,7 +88,7 @@ export class DemoProjection implements PiProjection {
             new HorizontalListBox(literal, "string-literal", [
                 new LabelBox(literal, "start-quote", "\"", { selectable: false }),
                 new TextBox(literal, "element-value-text", () => literal.value, (v: string) => (literal.value = v), {
-                    style: demoStyles.stringLiteral,
+                    style: projectitStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
                 new LabelBox(literal, "end-quote", "\"", { selectable: false })
@@ -100,7 +100,7 @@ export class DemoProjection implements PiProjection {
         return createDefaultExpressionBox(exp, "number-literal", [
             new TextBox(exp, "num-literal-value", () => exp.value, (v: string) => (exp.value = v), {
                 deleteWhenEmpty: true,
-                style: demoStyles.stringLiteral,
+                style: projectitStyles.stringLiteral,
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isNumber(currentText, key, index);
                 }
