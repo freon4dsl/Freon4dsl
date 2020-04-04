@@ -1,4 +1,4 @@
-import { AllDemoConcepts, DemoAttributeType } from "./../language";
+import { AllDemoConcepts, DemoAttributeType } from "../language/gen";
 import { PiValidator, PiError, PiTyper } from "@projectit/core";
 import {
     DemoModel,
@@ -26,7 +26,7 @@ import {
     DemoFunctionCallExpression,
     DemoIfExpression,
     DemoVariableRef
-} from "./../language";
+} from "../language/gen";
 
 export class DemoUnparser {
 
