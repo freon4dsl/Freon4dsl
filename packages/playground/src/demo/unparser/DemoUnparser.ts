@@ -225,7 +225,7 @@ export class DemoUnparser {
                 break;
 
         }
-        return "( " + this.unparseDemoExpression(modelelement.left) + " " + modelelement.piSymbol() + " " + this.unparseDemoExpression(modelelement.right) + " )";
+        return "( " + this.unparseDemoExpression(modelelement.left) + " " + symbol + " " + this.unparseDemoExpression(modelelement.right) + " )";
     }
 
     public unparseDemoFunctionCallExpression(modelelement: DemoFunctionCallExpression, includeChildren?: boolean): string {
