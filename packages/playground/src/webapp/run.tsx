@@ -4,7 +4,7 @@ import { createBrowserHistory } from "history";
 import { Provider } from "mobx-react";
 import { RouterStore } from "./app/stores";
 // change used editor here:
-import { MainProjectionalEditor } from "../editor";
+import { MainProjectionalEditor } from "../demo/editor";
 
 const STORE_ROUTER = "router";
 // prepare MobX stores
