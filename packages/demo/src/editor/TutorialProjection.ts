@@ -218,7 +218,7 @@ export class TutorialProjection implements PiProjection {
         if (this.projectionType === "tree") {
             return this.createBinaryBoxTree(exp);
         } else {
-            let binBox = createDefaultBinaryBox(this, exp);
+            let binBox = createDefaultBinaryBox(this, exp, exp.piSymbol());
             if (
                 this.showBrackets &&
                 !!exp.piContainer().container &&

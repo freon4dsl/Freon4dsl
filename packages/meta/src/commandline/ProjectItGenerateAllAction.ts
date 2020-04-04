@@ -1,5 +1,6 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { PiDefEditorParser } from "../editordef/parser/PiDefEditorParser";
+import { DefEditorLanguage } from "../editordef/metalanguage";
+import { DefEditorParser } from "../editordef/parser/DefEditorParser";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
@@ -16,7 +17,6 @@ import { Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
-import { PiDefEditorLanguage } from "../editordef/metalanguage";
 
 const LOGGER = new PiLogger("ProjectItGenerateAllAction"); // .mute();
 
@@ -40,70 +40,73 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     generate(): void {
         LOGGER.info(this, "Starting generation of all parts of your language as defined in "+ this.defFolder.value);
         LOGGER.log("Output will be generated in: " + this.outputFolder);
-        
-        let languageFile : string = "";
-        let editFile : string = "";
-        let validFile : string = "";
-        let scopeFile  : string = ""; 
-        let typerFile  : string = ""; 
-        // find the definition files
-        ({ languageFile, editFile, validFile, scopeFile, typerFile } = this.findDefinitionFiles(languageFile, editFile, validFile, scopeFile, typerFile));
+try {
+    let languageFile: string = "";
+    let editFile: string = "";
+    let validFile: string = "";
+    let scopeFile: string = "";
+    let typerFile: string = "";
+    // find the definition files
+    ({ languageFile, editFile, validFile, scopeFile, typerFile } = this.findDefinitionFiles(languageFile, editFile, validFile, scopeFile, typerFile));
 
-        LOGGER.log("languageFile: " + languageFile);
-        LOGGER.log("editFile: " + editFile);
-        LOGGER.log("validFile: " + validFile);
-        LOGGER.log("scopeFile: " + scopeFile);
-        LOGGER.log("typerFile: " + typerFile);
+    LOGGER.log("languageFile: " + languageFile);
+    LOGGER.log("editFile: " + editFile);
+    LOGGER.log("validFile: " + validFile);
+    LOGGER.log("scopeFile: " + scopeFile);
+    LOGGER.log("typerFile: " + typerFile);
 
-        // generate the language
-        LOGGER.info(this, "Generating language structure");
-        const language = new LanguageParser().parse(languageFile); 
-        this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.generate(language);
+    // generate the language
+    LOGGER.info(this, "Generating language structure");
+    const language = new LanguageParser().parse(languageFile);
+    this.languageGenerator.outputfolder = this.outputFolder;
+    this.languageGenerator.generate(language);
 
-        LOGGER.info(this, "Generating editor");
-        let editor : PiDefEditorLanguage;
-        if (editFile.length >0) {
-            editor = new PiDefEditorParser().parse(editFile);
-        } else {
-            LOGGER.log("Generating default editor");
-        }
-        this.editorGenerator.outputfolder = this.outputFolder;
-        this.editorGenerator.language = language;
-        this.editorGenerator.generate(editor);
+    LOGGER.info(this, "Generating editor");
+    let editor: DefEditorLanguage;
+    if (editFile.length > 0) {
+        editor = new DefEditorParser(language).parse(editFile);
+    } else {
+        LOGGER.log("Generating default editor");
+    }
+    this.editorGenerator.outputfolder = this.outputFolder;
+    this.editorGenerator.language = language;
+    this.editorGenerator.generate(editor);
 
-        LOGGER.info(this, "Generating validator");
-        let validator : PiValidatorDef;
-        if(validFile.length > 0) {
-            validator = new ValidatorParser(language).parse(validFile);
-        } else {
-            LOGGER.log("Generating default validator");
-        }
-        this.validatorGenerator = new ValidatorGenerator(language);
-        this.validatorGenerator.outputfolder = this.outputFolder;
-        this.validatorGenerator.generate(validator);
+    LOGGER.info(this, "Generating validator");
+    let validator: PiValidatorDef;
+    if (validFile.length > 0) {
+        validator = new ValidatorParser(language).parse(validFile);
+    } else {
+        LOGGER.log("Generating default validator");
+    }
+    this.validatorGenerator = new ValidatorGenerator(language);
+    this.validatorGenerator.outputfolder = this.outputFolder;
+    this.validatorGenerator.generate(validator);
 
-        LOGGER.info(this, "Generating scoper");
-        let scoper : PiScopeDef;
-        if (scopeFile.length > 0) {
-            scoper = new ScoperParser(language).parse(scopeFile);
-        } else {
-            LOGGER.log("Generating default scoper");
-        }
-        this.scoperGenerator = new ScoperGenerator(language);
-        this.scoperGenerator.outputfolder = this.outputFolder;
-        this.scoperGenerator.generate(scoper);
+    LOGGER.info(this, "Generating scoper");
+    let scoper: PiScopeDef;
+    if (scopeFile.length > 0) {
+        scoper = new ScoperParser(language).parse(scopeFile);
+    } else {
+        LOGGER.log("Generating default scoper");
+    }
+    this.scoperGenerator = new ScoperGenerator(language);
+    this.scoperGenerator.outputfolder = this.outputFolder;
+    this.scoperGenerator.generate(scoper);
 
-        LOGGER.info(this, "Generating typer");
-        let typer : PiTypeDefinition;
-        if (typerFile.length > 0) {
-            typer = new PiTyperParser(language).parse(typerFile);
-        } else {
-            LOGGER.log("Generating default typer");
-        }
-        this.typerGenerator = new PiTyperGenerator(language);
-        this.typerGenerator.outputfolder = this.outputFolder;
-        this.typerGenerator.generate(typer);
+    LOGGER.info(this, "Generating typer");
+    let typer: PiTypeDefinition;
+    if (typerFile.length > 0) {
+        typer = new PiTyperParser(language).parse(typerFile);
+    } else {
+        LOGGER.log("Generating default typer");
+    }
+    this.typerGenerator = new PiTyperGenerator(language);
+    this.typerGenerator.outputfolder = this.outputFolder;
+    this.typerGenerator.generate(typer);
+} catch(e) {
+    console.log(e.stack);
+}
     }
 
     private findDefinitionFiles(languageFile: string, editFile: string, validFile: string, scopeFile: string, typerFile: string) {

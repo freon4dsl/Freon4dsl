@@ -1,45 +1,39 @@
 editor StartEditor for language Demo
 
-DemoIfExpression {
-    @projection default
-        [
-        if( [[ this.condition ]] ) then
-            [[ this.whenTrue ]]
+IfExpression {
+    @projection <name>
+        [+
+        if( [[this.condition]] ) then
+            [[this.whenTrue]]
+        ${this.whenFalse is not empty ?
+        [-
         else
             [[this.whenfalse]]
+        -] }
         endif
-        ]
+        +]
 
     @trigger "if"
-    @symbol "if"
-}
-
-DemoPlusExpression {
     @symbol "+"
 }
 
-DemoMultiplyExpression {
-    @symbol "*"
-}
-
-DemoDivideExpression {
-    @symbol "/"
-}
-
-DemoEntity {
-    @trigger "entity"
-}
-
-DemoFunctionCallExpression {
+functioncallexpression {
     @projection gewoon
         [
-        [[this.name]] (  )
+        [[this.name]] ( ${ param not empty ? [tekst [[this.param:projectienaam]] } )
         ]
     @trigger "function"
 }
 
+Parameter {
+    @projection params
+        [[this.name] : [this.type]]
+    @trigger "param"
+}
 
-DemoFunctionCallExpression {
+// lists
+
+functioncallexpression {
     @projection gewoon
         [
         [[this.name]] ( [[this.params @separator [, ] ]] )
@@ -48,7 +42,7 @@ DemoFunctionCallExpression {
 }
 
 DemoModel {
-    @projection dasda
+    @projection
         [
         model [[this.name]] {
         entities:
@@ -57,7 +51,7 @@ DemoModel {
                 @terminator [\n\n]
             ]]
         functions:
-            [[this.functions @horizontal @separator [\n] ]]
+            [[this.functions @vertical @terminator [\n] ]]
         }
         ]
  }

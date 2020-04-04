@@ -11,8 +11,7 @@ const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equal
 export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {
 
     constructor(language: PiLanguageUnit) {
-        super();
-        this.language = language;
+        super(language);
     }
 
     public check(definition: LanguageExpressionTester): void {

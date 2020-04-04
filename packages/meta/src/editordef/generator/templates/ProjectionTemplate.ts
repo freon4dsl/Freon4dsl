@@ -1,9 +1,12 @@
 import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { DefEditorLanguage } from "../../metalanguage";
 
 export class ProjectionTemplate {
+    constructor() {
+    }
 
-    generateProjection(language: PiLanguageUnit, relativePath: string): string {
+    generateProjection(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
         return `
             import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PROJECTITCORE}";
         
@@ -18,8 +21,8 @@ export class ProjectionTemplate {
         `;
     }
 
-    generateProjectionDefault(language: PiLanguageUnit, relativePath: string): string {
-        return ` 
+    generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
+        return `
             import { observable } from "mobx";
 
             import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
@@ -71,6 +74,10 @@ export class ProjectionTemplate {
                 }
             
                 getBox(exp: ${Names.PiElement}): Box {
+                    if( exp === null ) {
+                        return null;
+                    }
+
                     switch( exp.piLanguageConcept() ) { 
                         ${language.classes.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
@@ -82,7 +89,7 @@ export class ProjectionTemplate {
 
                 ${language.classes.filter(c => c.binaryExpression()).map(c => `
                 private get${c.name}Box(element: ${Names.concept(c)}) {
-                     return this.createBinaryBox(this, element);
+                     return this.createBinaryBox(this, element, "${editorDef.findConceptEditor(c).symbol}");
                 }                
                 `).join("\n")}    
                 
@@ -191,8 +198,8 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}          
                   
-                private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression): Box {
-                    let binBox = createDefaultBinaryBox(this, exp);
+                private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
+                    let binBox = createDefaultBinaryBox(this, exp, symbol);
                     if (
                         this.showBrackets &&
                         !!exp.piContainer().container &&

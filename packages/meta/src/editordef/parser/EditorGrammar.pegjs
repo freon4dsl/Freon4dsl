@@ -3,43 +3,78 @@
 }
 
 Editor_Definition
-  = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws c:(concept)* ws
+  = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws concepts:(conceptEditor)* ws
     {
         return creator.createLanguageEditor({
-            "name": name,
-            "concepts": c
+            "name"          : name,
+            "conceptEditors": concepts
         });
     } 
 
-conceptKey      = "concept" ws
-binaryKey       = "binary" ws { return true; }
-expressionKey   = "expression" ws { return true; }
-placeholderKey  = "placeholder" ws { return true; }
+conceptRef = name:var { return creator.createConceptReference( { "name": name}); }
 
-conceptRef = conceptKey name:var { return creator.createConceptReference( { "name": name}); }
+conceptEditor =
+            concept:conceptRef curly_begin ws
+                projection:projection?
+                trigger:trigger?
+                symbol:symbol?
+            curly_end
+{
+    return creator.createConceptEditor({
+        "concept"   : concept,
+        "trigger"   : trigger,
+        "symbol"    : symbol,
+        "projection": projection
+    });
+}
 
-concept = concept:conceptRef ws binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
-         trigger:trigger?
-         symbol:symbol?
-         priority: priority?
-         "projection" ws name:var curly_begin
-          l:line*
-          curly_end
-    { 
-        return creator.createConceptEditor({
-            "isBinaryExpression": !!binary,
-            "isExpression": (!!expression),
-            "isExpressionPlaceHolder": !!isExpressionPlaceHolder,
-            "trigger": ( !!trigger),
-            "symbol": ( !!symbol),
-            "priority": ( !!priority),
-            "projection": creator.createProjection({ "lines" : l})
-        }); 
-    }
+projection = "@projection" ws name:var projection_begin
+                   lines:line*
+              projection_end
+              {
+                    return creator.createProjection({ "lines" : lines, "name": name });
+              }
 
-spaces      = s:[ ]+
+templateSpace = s:[ ]+
                 {
                     return creator.createIndent( { "indent": s.join("") });
+                }
+
+sub_projection = "[[" ws "this" ws "." ws prop:var ws
+                        join:listJoin?
+                 "]]"
+            {
+                return creator.createSubProjection( { "propertyName": prop, "listJoin": join });
+            }
+
+listJoin =  l:listJoinSimple+
+                {
+                    let directionObject = l.find(j => !!j.direction);
+                    let joinTypeObject  = l.find(j => !!j.joinType);
+                    let joinTextObject  = l.find(j => !!j.joinText);
+
+                    return creator.createListJoin( {"direction": (!!directionObject ? directionObject.direction : undefined),
+                                                    "joinType" : (!!joinTypeObject ? joinTypeObject.joinType    : undefined),
+                                                    "joinText" : (!!joinTextObject ? joinTextObject.joinText    : undefined) } );
+                }
+
+listJoinSimple =      (direction:direction  { return {"direction" : direction }; } )
+                    / (type:listJoinType    { return {"joinType"  : type      }; } )
+                    / (t:joinText           { return {"joinText"  : t         }; } )
+
+joinText = "[" t:anythingButEndBracket* "]" ws
+            {
+                return t.join("");
+            }
+
+direction = dir:("@horizontal" / "@vertical") ws
+                {
+                    return creator.createListDirection( {"direction": dir } );
+                }
+
+listJoinType = joinType:("@separator" / "@terminator") ws
+                {
+                    return creator.createJoinType( {"type": joinType } );
                 }
 
 expression  = "${" t:var "}"
@@ -51,16 +86,24 @@ text        = chars:anythingBut+
                 return creator.createText( chars.join("") );
              }
 
-anythingBut = !("${" / newline / "]]" ) src:sourceChar
+anythingButEndBracket = !("]" ) src:sourceChar
+            {
+                return src;
+            }
+
+anythingBut = !("${" / newline / "]" / "[[" ) src:sourceChar
             {
                 return src;
             }
 
 sourceChar = .
 
-newline     = "\r"? "\n"            { return "\n"; }
+newline     = "\r"? "\n"
+                {
+                    return creator.createNewline();
+                }
 
-line        = items:(s:spaces / t:text / e:expression)* newline
+line        = items:(s:templateSpace / t:text / p:sub_projection / e:expression / w:newline )+
                 {
                     return creator.createLine( {"items": items} );
                 }
@@ -69,22 +112,24 @@ conceptReference = referredName:var {
     return creator.createConceptReference({"name": referredName})
 }
 
-trigger = "trigger" ws ":" ws "\"" value:string "\"" ws
+trigger = "@trigger" ws "\"" value:string "\"" ws
     {
-        return { "trigger": value }
+        return value
     }
-symbol = "symbol" ws ":" ws "\"" value:string "\"" ws
+symbol = "@symbol" ws "\"" value:string "\"" ws
     {
-        return { "symbol": value }
+        return value
     }
 priority = "priority" ws ":" ws "\"" value:string "\"" ws
     {
-        return { "priority": value }
+        return value
     }
 
 
-curly_begin    = ws "[[" newline
-curly_end      = "]]" ws
+projection_begin    = ws "["
+projection_end      = "]" ws
+curly_begin    = ws "{" newline
+curly_end      = "}" ws
 name_separator  = ws ":" ws
 
 ws "whitespace" = [ \t\n\r]*

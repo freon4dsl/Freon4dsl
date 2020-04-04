@@ -1,12 +1,13 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { DefEditorLanguage } from "../../metalanguage";
 
 
 export class ContextTemplate {
     constructor() {
     }
 
-    generateContext(language: PiLanguageUnit, relativePath: string): string {
+    generateContext(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
         const rootConceptName = Names.concept(language.rootConcept());
         const placeHolderConceptName = Names.concept(language.expressionPlaceholder());
         const initializationName = Names.initialization(language);

@@ -44,7 +44,7 @@ export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
     result.isAbstract = !!data.isAbstract;
     result.isBinary = !!data.isBinary;
     result.isExpression = !!data.isExpression;
-    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder; 
+    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder;
     if (!!data.name) {
         result.name = data.name;
     }

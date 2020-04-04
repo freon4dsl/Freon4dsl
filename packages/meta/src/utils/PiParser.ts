@@ -27,7 +27,7 @@ export class PiParser<DEFINITION> {
         try {
             model = this.parser["parse"](langSpec);
         } catch (e) {
-            let errorstr = `${this.msg}: ${e} ${(e.location && e.location.start)? `[line ${e.location.start.line}, column ${e.location.start.column}`: ``}]`;
+            let errorstr = `Pase error: ${this.msg}: ${e} ${(e.location && e.location.start)? `[line ${e.location.start.line}, column ${e.location.start.column}`: ``}]`;
             LOGGER.error(this, errorstr);
             // LOGGER.log(JSON.stringify(e, null, 4));
             process.exit(-1);

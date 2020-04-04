@@ -6,6 +6,10 @@ export abstract class Checker<DEFINITION> {
     errors: string[] = [];
     language : PiLanguageUnit; // should be set in every checker, except the checker for the language definition langauge (LDL)
 
+    constructor(language: PiLanguageUnit) {
+        this.language = language;
+    }
+
     public abstract check(lang: DEFINITION): void;
 
     public hasErrors(): boolean {

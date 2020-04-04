@@ -1,9 +1,9 @@
 import { PiDefEditor } from "./PiDefEditor";
-import { PiDefEditorLanguage } from "./PiDefEditorLanguage";
-import { PiDefEditorProjection } from "./PiDefEditorProjection";
+import { DefEditorLanguage } from "./DefEditorLanguage";
+import { DefEditorProjection } from "./DefEditorProjection";
 
 export class PiDefEditorEnumeration implements PiDefEditor {
-    languageEditor: PiDefEditorLanguage;
+    languageEditor: DefEditorLanguage;
 
-    projection: PiDefEditorProjection;
+    projection: DefEditorProjection;
 }

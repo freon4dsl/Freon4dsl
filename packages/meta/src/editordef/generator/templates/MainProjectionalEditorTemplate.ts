@@ -1,12 +1,13 @@
 import { Names } from "../../../utils/Names";
 import { ENVIRONMENT_GEN_FOLDER, PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { DefEditorLanguage } from "../../metalanguage";
 
 export class MainProjectionalEditorTemplate {
     constructor() {
     }
 
-    generateMainProjectionalEditor(language: PiLanguageUnit, withToolbar: boolean, relativePath: string): string {
+    generateMainProjectionalEditor(language: PiLanguageUnit, editorDef: DefEditorLanguage, withToolbar: boolean, relativePath: string): string {
             // TODO use Names and PathProvider for MyToolbarComponent and its import statement
             return `
             

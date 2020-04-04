@@ -3,7 +3,7 @@ language PiLanguage
 
 root concept PiLanguageUnit {
     name: string;
-    @part concepts: PiLangConceptReference[];
+    @part concepts: PiLangConcep[];
     @part enumerations: PiLangEnumeration[];
     @part unions: PiLangUnion[];
 }
@@ -13,18 +13,12 @@ abstract concept PiLangElement {
 }
 
 concept PiLangEnumeration base PiLangElement {
-    name: string;
     @part literals: string[];
 }
 
 concept PiLangUnion base PiLangElement {
     name: string;
-    @reference parts: PiLangConceptReference[];
-}
-
-concept PiLangConceptReference {
-    readonly language: PiLanguageUnit;
-    name: string;
+    @reference parts: PiLangConcept[];
 }
 
 concept PiLangConcept base PiLangElement {
@@ -43,10 +37,10 @@ concept PiLangConcept base PiLangElement {
     @part parts: PiLangConceptProperty[];
     @part references: PiLangConceptProperty[];
 
-    @reference base?: PiLangConceptReference;
+    @reference base?: PiLangConcept;
 
-    @reference left?: PiLangConceptReference;
-    @reference right?: PiLangConceptReference;
+    @reference left?: PiLangConcept;
+    @reference right?: PiLangConcept;
 }
 
 abstract concept PiLangProperty {
@@ -59,13 +53,13 @@ concept PiLangPrimitiveProperty base PiLangProperty {
     isStatic: boolean;
     initialValue?: string;
     type: string;
-    @reference owningConcept: PiLangConceptReference;
+    @reference owningConcept: PiLangConcept;
 }
 
 concept PiLangConceptProperty base PiLangProperty {
     name: string;
-    @reference type: PiLangConceptReference;
-    @reference owningConcept: PiLangConceptReference;
+    @reference type: PiLangConcept;
+    @reference owningConcept: PiLangConcept;
 }
 
 // end::MetametaModel[]
