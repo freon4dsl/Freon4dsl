@@ -4,15 +4,16 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 @model
 export class DemoComparisonExpression extends DemoBinaryExpression {
     $typename: string = "DemoComparisonExpression";
-    symbol: string = ">";
+
+    comparisonType: string
 
     constructor() {
         super();
     }
 
-    static create(symbol: string): DemoComparisonExpression {
+    static create(comparison: string): DemoComparisonExpression {
         const result = new DemoComparisonExpression();
-        result.symbol = symbol;
+        result.comparisonType = comparison;
         return result;
     }
 }

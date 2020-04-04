@@ -5,10 +5,6 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 export class DemoBinaryExpressionPlaceholder extends DemoBinaryExpression {
     $typename: string = "DemoBinaryExpressionPlaceholder";
 
-    get symbol(): string {
-        return "#";
-    }
-
     asString(): string {
         return "...";
     }

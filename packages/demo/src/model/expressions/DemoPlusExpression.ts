@@ -5,9 +5,6 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 export class DemoPlusExpression extends DemoBinaryExpression {
     $typename: string = "DemoPlusExpression";
 
-    get symbol(): string {
-        return "+";
-    }
 
     toString(): string {
         return "DemoPlusExpression";

@@ -211,7 +211,7 @@ export class DemoUnparser {
     }
 
     public unparseDemoBinaryExpression(modelelement: DemoBinaryExpression, includeChildren?: boolean): string {
-        let symbol = modelelement.piSymbol();
+        let symbol = "SYMBOL";
         // TODO This should be taken from the editor definition.
         switch (modelelement.$typename) {
             case "DemoPlusExpression":

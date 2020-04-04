@@ -5,7 +5,5 @@ import { DemoBinaryExpression } from "./DemoBinaryExpression";
 export class DemoPowerExpression extends DemoBinaryExpression {
     $typename: string = "DemoPowerExpression";
 
-    get symbol(): string {
-        return "^";
-    }
+
 }
