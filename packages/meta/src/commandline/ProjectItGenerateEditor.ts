@@ -20,20 +20,24 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
 
     generate(): void {
         if (this.verbose) {
-            LOGGER.log("Starting ProjectIt editor generation ...");    
+            LOGGER.log("Starting ProjectIt editor generation ...");
         }
-        super.generate();
+        try {
+            super.generate();
 
-        this.editorGenerator.outputfolder = this.outputFolder;
-        this.editorGenerator.language = this.language;
+            this.editorGenerator.outputfolder = this.outputFolder;
+            this.editorGenerator.language = this.language;
 
-        const editor = new DefEditorParser().parse(this.editorFile.value, this.verbose);
-        if (editor == null) {
-            LOGGER.error(this, "Editor definition could not be parsed, exiting.");
-            process.exit(-1);
+            const editor = new DefEditorParser(this.language).parse(this.editorFile.value, this.verbose);
+            if (editor == null) {
+                LOGGER.error(this, "Editor definition could not be parsed, exiting.");
+                process.exit(-1);
+            }
+            this.editorGenerator.generate(editor, this.verbose);
+            // TODO add check on succefullness of generation
+        } catch (e) {
+            console.log(e.stack);
         }
-        this.editorGenerator.generate(editor, this.verbose);
-        // TODO add check on succefullness of generation
     }
 
     protected onDefineParameters(): void {

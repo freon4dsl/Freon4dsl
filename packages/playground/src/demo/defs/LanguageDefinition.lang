@@ -66,17 +66,14 @@ abstract binary expression concept DemoBinaryExpression base DemoExpression {
 }
 
 concept DemoMultiplyExpression base DemoBinaryExpression {
-    @editor symbol: string = "*"
     @editor priority: number = "8"
 }
 
 concept DemoPlusExpression base DemoBinaryExpression {
-    @editor symbol: string = "+"
     @editor priority: number = "4"
 }
 
 concept DemoDivideExpression base DemoBinaryExpression {
-    @editor symbol: string = "/"
     @editor priority: number = "8"
 }
 

@@ -13,9 +13,8 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     myExpressionChecker : PiLanguageExpressionChecker;
     
     constructor(language: PiLanguageUnit) {
-        super();
-        this.language = language;
-        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        super(language);
+       this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
     }
 
     public check(definition: PiTypeDefinition, verbose: boolean): void {

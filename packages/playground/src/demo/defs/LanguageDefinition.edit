@@ -1,6 +1,6 @@
 editor StartEditor for language Demo
 
-IfExpression {
+DemoIfExpression {
     @projection default
         [
         if( [[ this.condition ]] ) then
@@ -11,18 +11,26 @@ IfExpression {
         ]
 
     @trigger "if"
+    @symbol "if"
+}
+
+DemoPlusExpression {
     @symbol "+"
 }
 
-PlusExpression {
-    @symbol "+"
+DemoMultiplyExpression {
+    @symbol "*"
+}
+
+DemoDivideExpression {
+    @symbol "/"
 }
 
 DemoEntity {
     @trigger "entity"
 }
 
-functioncallexpression {
+DemoFunctionCallExpression {
     @projection gewoon
         [
         [[this.name]] (  )
@@ -30,13 +38,8 @@ functioncallexpression {
     @trigger "function"
 }
 
-Parameter {
-    @projection params
-        [ [[ this.name]] : [[this.type]]]
-    @trigger "param"
-}
 
-functioncallexpression {
+DemoFunctionCallExpression {
     @projection gewoon
         [
         [[this.name]] ( [[this.params @separator [, ] ]] )

@@ -2,13 +2,14 @@ import { flatten } from "lodash";
 import { Names } from "../../../utils/Names";
 import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit, PiLangBinaryExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { DefEditorLanguage } from "../../metalanguage";
 
 export class ActionsTemplate {
     constructor() {
     }
 
     // TODO remove typecast on line 54
-    generateDefaultActions(language: PiLanguageUnit, relativePath: string): string {
+    generateDefaultActions(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
         return `
             import * as Keys from "${PathProvider.corePath}";
             import {
@@ -36,9 +37,9 @@ export class ActionsTemplate {
             import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${PathProvider.languageFolder}";
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                ${language.classes.filter(c => c.expression() && !c.isAbstract && !!c.trigger).map(c =>
+                ${language.classes.filter(c => c.expression() && !c.isAbstract).map(c =>
             `{
-                    trigger: ${c.triggerIsRegExp ? `/${c.getTrigger()}/` : `"${c.getTrigger()}"`},
+                    trigger: ${c.triggerIsRegExp ? `/${editorDef.findConceptEditor(c).trigger}/` : `"${editorDef.findConceptEditor(c).trigger}"`},
                     activeInBoxRoles: [
                         EXPRESSION_PLACEHOLDER
                     ],
@@ -52,7 +53,7 @@ export class ActionsTemplate {
             export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
                 ${language.classes.filter(c => c.binaryExpression() && !c.isAbstract).map(c =>
             `{
-                    trigger: "${(c as PiLangBinaryExpressionConcept).getSymbol()}",
+                    trigger: "${editorDef.findConceptEditor(c).symbol}",
                     activeInBoxRoles: [
                         LEFT_MOST,
                         RIGHT_MOST,
@@ -108,7 +109,7 @@ export class ActionsTemplate {
             `;
         }
 
-    generateManualActions(language: PiLanguageUnit): string {
+    generateManualActions(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
         return `
             import {
                 KeyboardShortcutBehavior,
@@ -135,7 +136,7 @@ export class ActionsTemplate {
         `;
     }
 
-    generateActions(language: PiLanguageUnit): string {
+    generateActions(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
         return `
             import {
                 KeyboardShortcutBehavior,

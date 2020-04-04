@@ -1,12 +1,13 @@
 import { Names } from "../../../utils/Names";
 import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { DefEditorLanguage } from "../../metalanguage";
 
 export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjection(language: PiLanguageUnit, relativePath: string): string {
+    generateProjection(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
         return `
             import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PathProvider.corePath}";
         
@@ -21,7 +22,7 @@ export class ProjectionTemplate {
         `
     }
 
-    generateProjectionDefault(language: PiLanguageUnit,  relativePath: string): string {
+    generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
         return `
             import { observable } from "mobx";
 
@@ -84,7 +85,7 @@ export class ProjectionTemplate {
 
                 ${language.classes.filter(c => c.binaryExpression()).map(c => `
                 private get${c.name}Box(element: ${Names.concept(c)}) {
-                     return this.createBinaryBox(this, element);
+                     return this.createBinaryBox(this, element, "${editorDef.findConceptEditor(c).symbol}");
                 }                
                 `).join("\n")}    
                 
@@ -193,8 +194,8 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}          
                   
-                private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression): Box {
-                    let binBox = createDefaultBinaryBox(this, exp);
+                private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
+                    let binBox = createDefaultBinaryBox(this, exp, symbol);
                     if (
                         this.showBrackets &&
                         !!exp.piContainer().container &&

@@ -8,8 +8,7 @@ const LOGGER = new PiLogger("PiScoperChecker"); // .mute();
 export class PiScoperChecker extends Checker<PiScopeDef> {
     
     constructor(language: PiLanguageUnit) {
-        super();
-        this.language = language;
+        super(language);
     }
 
     public check(definition: PiScopeDef, verbose: boolean): void {

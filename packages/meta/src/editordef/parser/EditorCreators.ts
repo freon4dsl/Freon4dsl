@@ -2,7 +2,7 @@ import { PiLangConceptReference } from "../../languagedef/metalanguage";
 import {
     Direction, ListJoin,
     ListJoinType,
-    PiDefEditorConcept,
+    DefEditorConcept,
     PiDefEditorEnumeration,
     DefEditorLanguage, DefEditorNewline,
     DefEditorProjection, DefEditorProjectionExpression,
@@ -22,9 +22,9 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     return result;
 }
 
-export function createConceptEditor(data: Partial<PiDefEditorConcept>): PiDefEditorConcept {
+export function createConceptEditor(data: Partial<DefEditorConcept>): DefEditorConcept {
     // console.log("creating concept " + data.name);
-    const result = new PiDefEditorConcept();
+    const result = new DefEditorConcept();
 
     if (!!data.trigger) {
         result.trigger = data.trigger;
@@ -34,6 +34,9 @@ export function createConceptEditor(data: Partial<PiDefEditorConcept>): PiDefEdi
     }
     if (!!data.projection) {
         result.projection = data.projection;
+    }
+    if (!!data.concept) {
+        result.concept = data.concept;
     }
 
     return result;
@@ -51,9 +54,10 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
         result.enumerations = data.enumerations;
     }
 
-    // Ensure all references to the language are set.
+    // Ensure all internal editor references to the editorlanguage are set.
     result.conceptEditors.forEach(concept => {
         concept.languageEditor = result;
+
     });
     result.enumerations.forEach(enumeration => {
         enumeration.languageEditor = result;

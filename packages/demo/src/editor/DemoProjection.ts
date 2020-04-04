@@ -108,7 +108,7 @@ export class DemoProjection implements PiProjection {
         if (this.projectionType === "tree") {
             return this.createBinaryBoxTree(projection, exp);
         } else {
-            let binBox = createDefaultBinaryBox(this, exp);
+            let binBox = createDefaultBinaryBox(this, exp, exp.piSymbol());
             if (
                 this.showBrackets &&
                 !!exp.piContainer().container &&

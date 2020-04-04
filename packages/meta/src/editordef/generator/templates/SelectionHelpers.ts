@@ -1,10 +1,11 @@
 import { Names } from "../../../utils/Names";
 import { PathProvider } from "../../../utils/PathProvider";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { DefEditorLanguage } from "../../metalanguage";
 
 export class SelectionHelpers {
 
-    generateEnumProjection(language: PiLanguageUnit, relativePath: string): string {
+    generateEnumProjection(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
         // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `

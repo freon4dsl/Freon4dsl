@@ -21,8 +21,9 @@ conceptEditor =
             curly_end
 {
     return creator.createConceptEditor({
-        "trigger"   : !!trigger,
-        "symbol"    : !!symbol,
+        "concept"   : concept,
+        "trigger"   : trigger,
+        "symbol"    : symbol,
         "projection": projection
     });
 }
@@ -113,15 +114,15 @@ conceptReference = referredName:var {
 
 trigger = "@trigger" ws "\"" value:string "\"" ws
     {
-        return { "trigger": value }
+        return value
     }
 symbol = "@symbol" ws "\"" value:string "\"" ws
     {
-        return { "symbol": value }
+        return value
     }
 priority = "priority" ws ":" ws "\"" value:string "\"" ws
     {
-        return { "priority": value }
+        return value
     }
 
 

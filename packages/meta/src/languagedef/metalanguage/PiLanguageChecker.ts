@@ -154,7 +154,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
         if (piClass.binaryExpression() && !(piClass.isAbstract)) {
             const binExpConcept = piClass as PiLangBinaryExpressionConcept;
-            this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
+            // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
             this.simpleCheck(binExpConcept.getPriority() !== -1, `Concept ${piClass.name} should have a priority`);
 
             const left = piClass.allParts().find(part => part.name === "left");

@@ -56,6 +56,7 @@ export function createDefaultExpressionBox(
 export function createDefaultBinaryBox(
     projection: PiProjection,
     exp: PiBinaryExpression,
+    symbol: string,
     style?: string
 ): HorizontalListBox {
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
@@ -66,7 +67,7 @@ export function createDefaultBinaryBox(
         new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        createOperatorBox(projection["editor"], exp),
+        createOperatorBox(projection["editor"], exp,symbol),
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
@@ -81,7 +82,7 @@ export function createDefaultBinaryBox(
  * @param exp
  * @param style
  */
-export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, style?: string): Box {
+export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: string): Box {
     const operatorBox = new SelectBox(
         exp,
         EXPRESSION_SYMBOL,
@@ -125,7 +126,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sty
     );
 
     operatorBox.getSelectedOption = () => {
-        return { id: exp.piSymbol(), label: exp.piSymbol() };
+        return { id: symbol, label: symbol };
     };
 
     return operatorBox;

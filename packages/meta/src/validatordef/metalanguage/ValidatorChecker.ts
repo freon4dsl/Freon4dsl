@@ -11,8 +11,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     myExpressionChecker : PiLanguageExpressionChecker;
     
     constructor(language: PiLanguageUnit) {
-        super();
-        this.language = language;
+        super(language);
         this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
     }
 

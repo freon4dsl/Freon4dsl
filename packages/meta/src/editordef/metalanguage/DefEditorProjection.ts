@@ -1,4 +1,4 @@
-import { PiDefEditorConcept } from "./PiDefEditorConcept";
+import { DefEditorConcept } from "./DefEditorConcept";
 
 export class DefEditorNewline {
     toString(): string {
@@ -73,7 +73,7 @@ export class MetaEditorProjectionLine {
 
 export class DefEditorProjection {
     name: string;
-    conceptEditor: PiDefEditorConcept;
+    conceptEditor: DefEditorConcept;
     lines: MetaEditorProjectionLine[];
 
     toString() {
