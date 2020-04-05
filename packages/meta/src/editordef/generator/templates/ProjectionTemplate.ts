@@ -1,6 +1,13 @@
 import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
-import { DefEditorLanguage } from "../../metalanguage";
+import { PiLangClass, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import {
+    DefEditorConcept,
+    DefEditorLanguage,
+    DefEditorProjection,
+    DefEditorProjectionExpression,
+    DefEditorProjectionText,
+    DefEditorSubProjection
+} from "../../metalanguage";
 
 export class ProjectionTemplate {
     constructor() {
@@ -22,6 +29,19 @@ export class ProjectionTemplate {
     }
 
     generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
+        const binaryConceptsWithDefaultProjection = language.classes.filter(c => c.binaryExpression()).filter(c => {
+            const editor = editorDef.findConceptEditor(c);
+            return editor === undefined || editor.projection === null;
+        });
+        const nonBinaryConceptsWithDefaultProjection = language.classes.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).filter(c => {
+            const editor = editorDef.findConceptEditor(c);
+            return editor === undefined || editor.projection === null;
+        });
+        const nonBinaryConceptsWithProjection = language.classes.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).filter(c => {
+            const editor = editorDef.findConceptEditor(c);
+            return !!editor && !!editor.projection;
+        });
+
         return `
             import { observable } from "mobx";
 
@@ -87,7 +107,7 @@ export class ProjectionTemplate {
                     throw new Error("No box defined for this expression:" + exp.piId());
                 }
 
-                ${language.classes.filter(c => c.binaryExpression()).map(c => `
+                ${binaryConceptsWithDefaultProjection.map(c => `
                 private get${c.name}Box(element: ${Names.concept(c)}) {
                      return this.createBinaryBox(this, element, "${editorDef.findConceptEditor(c).symbol}");
                 }                
@@ -100,7 +120,9 @@ export class ProjectionTemplate {
                 :"" }
       
 
-                ${language.classes.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).map(c => `
+                ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(c, editorDef.findConceptEditor(c))).join("\n")}
+                
+                ${nonBinaryConceptsWithDefaultProjection.map(c => `
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     ${c.expression() ? `return createDefaultExpressionBox(element, "getDemoFunctionCallExpressionBox", [` : 
                     `return `} new VerticalListBox(element, "element", [
@@ -217,5 +239,51 @@ export class ProjectionTemplate {
                 
             }
         `;
+    }
+
+    private generateUserProjection(c: PiLangClass, editor: DefEditorConcept) {
+        let result: string = "";
+        const projection: DefEditorProjection = editor.projection;
+        const multiLine = projection.lines.length > 1;
+        if(multiLine){
+            result += `new VerticalListBox(element, "${c.name}-overall", [
+            `;
+        }
+        projection.lines.forEach( (line, index) => {
+            result += `
+                new HorizontalListBox(element, "${c.name}-line-${index}", [
+            `;
+            line.items.forEach((item, itemIndex) => {
+                if ( item instanceof DefEditorProjectionText ){
+                    result += `
+                    new LabelBox(element, "${c.name}-name-${index}-${itemIndex}", "${item.text}", {
+                        style: projectitStyles.propertykeyword
+                    }),
+                    `
+                } else if( item instanceof DefEditorSubProjection){
+                    result += `
+                        new TextBox(element, "element-${item.propertyName}-text", () => element.${item.propertyName}, (c: string) => (element.${item.propertyName} = c as ${"string"}),
+                        {
+                            placeHolder: "text",
+                            style: ${Names.styles}.placeholdertext
+                        })
+                    `
+                }
+            });
+            result += `
+                ])
+            `
+            if( index !== projection.lines.length -1) {
+              result += ",";
+            }
+        });
+        if( multiLine){
+            result += `
+                ]);
+            `;
+        }
+        return `public get${c.name}Box(element: ${Names.concept(c)}): Box {
+                    return ${result};
+                }`;
     }
 }

@@ -8,5 +8,5 @@ export class DefEditorConcept implements DefEditor {
     trigger: string = null;
     symbol: string = null;     // only for binary expressions
 
-    projection: DefEditorProjection;
+    projection: DefEditorProjection = null;
 }

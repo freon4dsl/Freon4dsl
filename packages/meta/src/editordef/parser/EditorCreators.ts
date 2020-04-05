@@ -76,6 +76,7 @@ export function createProjection(data: Partial<DefEditorProjection>): DefEditorP
     if (!!data.name) {
         result.name = data.name;
     }
+    result.breakLines();
     console.log(result.toString());
     return result;
 }

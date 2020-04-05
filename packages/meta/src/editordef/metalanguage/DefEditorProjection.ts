@@ -59,7 +59,7 @@ export class DefEditorProjectionExpression {
 type DefEditorProjectionItem = DefEditorProjectionIndent | DefEditorProjectionText | DefEditorSubProjection | DefEditorProjectionExpression;
 
 export class MetaEditorProjectionLine {
-    items: DefEditorProjectionItem[];
+    items: DefEditorProjectionItem[] = [];
 
     toString(): string {
         return this.items.map(item => item.toString()).join("");
@@ -70,6 +70,19 @@ export class DefEditorProjection {
     name: string;
     conceptEditor: DefEditorConcept;
     lines: MetaEditorProjectionLine[];
+
+    breakLines() {
+        const result: MetaEditorProjectionLine[] = [];
+        let currentLine = new MetaEditorProjectionLine();
+        this.lines[0].items.forEach(item => {
+            currentLine.items.push(item);
+            if( item instanceof DefEditorNewline ){
+                result.push(currentLine);
+                currentLine = new MetaEditorProjectionLine();
+            }
+        });
+        this.lines = result;
+    }
 
     toString() {
         return `projection ${this.name}
