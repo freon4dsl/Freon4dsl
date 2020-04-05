@@ -272,9 +272,11 @@ export class ProjectionTemplate {
                         }),
                     `
                     } else if( appliedFeature instanceof PiLangEnumProperty) {
-                        result += "// enum property box here";
+                        result += `// enum property box here for ${appliedFeature.name}
+                        `;
                     } else if( appliedFeature instanceof PiLangConceptProperty) {
-                        result += "// concept box here";
+                        result += `// concept box here for ${appliedFeature.name}
+                        `;
                         if(appliedFeature.isList) {
                             const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
                             result += `
@@ -287,7 +289,13 @@ export class ProjectionTemplate {
                                 }
                             ),
                         `
+                        } else {
+                            result += `this.rootProjection.getBox(element.${appliedFeature.name}),`
                         }
+                    } else {
+                        // result += `// unknown property box here for ${appliedFeature.name}
+                        // `;
+
                     }
                 }
             });

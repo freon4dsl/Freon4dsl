@@ -1,12 +1,20 @@
 editor StartEditor for language Demo
 
+DemoStringLiteralExpression {
+    @projection default
+        [
+        '[[this.value]]'
+        ]
+    @trigger "'"
+}
+
 DemoIfExpression {
     @projection default
         [
         if( [[ this.condition ]] ) then
             [[ this.whenTrue ]]
         else
-            [[this.whenfalse]]
+            [[this.whenalse]]
         endif
         ]
 
@@ -24,6 +32,12 @@ DemoMultiplyExpression {
 
 DemoDivideExpression {
     @symbol "/"
+}
+DemoLessThenExpression {
+    @symbol "<"
+}
+DemoOrExpression {
+    @symbol "or"
 }
 
 DemoEntity {

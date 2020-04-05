@@ -27,9 +27,9 @@ export class DemoProjection implements PiProjection {
         // if (element instanceof DemoFunctionCallExpression) {
         //     return this.getDemoFunctionCallExpressionBox(element);
         // }
-        if (element instanceof DemoStringLiteralExpression) {
-            return this.getDemoStringLiteralExpressionBox(element);
-        }
+        // if (element instanceof DemoStringLiteralExpression) {
+        //     return this.getDemoStringLiteralExpressionBox(element);
+        // }
         if (element instanceof DemoNumberLiteralExpression) {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
