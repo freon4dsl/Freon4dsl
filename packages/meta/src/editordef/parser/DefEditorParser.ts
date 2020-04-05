@@ -1,6 +1,6 @@
 import { PiLanguageUnit } from "../../languagedef/metalanguage";
 import { PiParser } from "../../utils";
-import { PiDefEditorChecker, DefEditorLanguage } from "../metalanguage";
+import { DefEditorChecker, DefEditorLanguage } from "../metalanguage";
 
 let editorParser = require("./EditorGrammar");
 
@@ -12,6 +12,6 @@ export class DefEditorParser extends PiParser<DefEditorLanguage> {
         this.language = language;
         this.parser = editorParser;
         this.msg = "Editor";
-        this.checker = new PiDefEditorChecker(language);
+        this.checker = new DefEditorChecker(language);
     }
 }

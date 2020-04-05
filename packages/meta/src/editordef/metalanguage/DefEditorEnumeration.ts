@@ -1,8 +1,8 @@
-import { PiDefEditor } from "./PiDefEditor";
+import { DefEditor } from "./DefEditor";
 import { DefEditorLanguage } from "./DefEditorLanguage";
 import { DefEditorProjection } from "./DefEditorProjection";
 
-export class PiDefEditorEnumeration implements PiDefEditor {
+export class DefEditorEnumeration implements DefEditor {
     languageEditor: DefEditorLanguage;
 
     projection: DefEditorProjection;
