@@ -56,7 +56,7 @@ DemoModel {
                 @vertical
                 @terminator [\n\n]
             ]]
-        functions:
+        model wide functions:
             [[this.functions @horizontal @separator [\n] ]]
         }
         ]

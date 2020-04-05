@@ -1,5 +1,6 @@
 {
     let creator = require("./EditorCreators");
+    let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
 
 Editor_Definition
@@ -10,9 +11,6 @@ Editor_Definition
             "conceptEditors": concepts
         });
     } 
-
-conceptRef = name:var { return creator.createConceptReference( { "name": name}); }
-
 conceptEditor =
             concept:conceptRef curly_begin ws
                 projection:projection?
@@ -40,12 +38,19 @@ templateSpace = s:[ ]+
                     return creator.createIndent( { "indent": s.join("") });
                 }
 
-sub_projection = "[[" ws "this" ws "." ws prop:var ws
+sub_projection = "[[" ws exp:expression ws
                         join:listJoin?
                  "]]"
             {
-                return creator.createSubProjection( { "propertyName": prop, "listJoin": join });
+                return creator.createSubProjection( {  "expression": exp, "listJoin": join });
             }
+
+//sub_projection = "[[" ws "this" ws "." ws prop:var ws
+//                        join:listJoin?
+//                 "]]"
+//            {
+//                return creator.createSubProjection( { "propertyName": prop, "listJoin": join });
+//            }
 
 listJoin =  l:listJoinSimple+
                 {
@@ -77,7 +82,7 @@ listJoinType = joinType:("@separator" / "@terminator") ws
                     return creator.createJoinType( {"type": joinType } );
                 }
 
-expression  = "${" t:var "}"
+projectionexpression  = "${" t:var "}"
                 {
                     return creator.createPropertyRef( { "propertyName": t });
                 }
@@ -103,7 +108,7 @@ newline     = "\r"? "\n"
                     return creator.createNewline();
                 }
 
-line        = items:(s:templateSpace / t:text / p:sub_projection / e:expression / w:newline )+
+line        = items:(s:templateSpace / t:text / p:sub_projection / e:projectionexpression / w:newline )+
                 {
                     return creator.createLine( {"items": items} );
                 }
@@ -125,51 +130,6 @@ priority = "priority" ws ":" ws "\"" value:string "\"" ws
         return value
     }
 
-
 projection_begin    = ws "["
 projection_end      = "]" ws
-curly_begin    = ws "{" newline
-curly_end      = "}" ws
-name_separator  = ws ":" ws
 
-ws "whitespace" = [ \t\n\r]*
-
-var "var"
-  = first:varLetter rest:varLetterOrDigit* ws { return first + rest.join(""); }
-
-string           = chars:anyChar* { return chars.join(""); }
-
-varLetter           = [a-zA-Z]
-varLetterOrDigit    = [a-zA-Z0-9]
-anyChar             = [*a-zA-Z0-9'/\-[\]+<>=]
-
-// from JSOM example
-char
-  = unescaped
-  / escape
-    sequence:(
-        '"'
-      / "\\"
-      / "/"
-      / "b" { return "\b"; }
-      / "f" { return "\f"; }
-      / "n" { return "\n"; }
-      / "r" { return "\r"; }
-      / "t" { return "\t"; }
-      / "u" digits:$(HEXDIG HEXDIG HEXDIG HEXDIG) {
-          return String.fromCharCode(parseInt(digits, 16));
-        }
-    )
-    { return sequence; }
-
-escape
-  = "\\"
-
-unescaped
-  = [^\0-\x1F\x22\x5C]
-
-// ----- Core ABNF Rules -----
-
-// See RFC 4234, Appendix B (http://tools.ietf.org/html/rfc4234).
-DIGIT  = [0-9]
-HEXDIG = [0-9a-f]

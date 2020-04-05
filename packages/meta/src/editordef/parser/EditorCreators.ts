@@ -108,13 +108,16 @@ export function createText(data: string): DefEditorProjectionText {
 }
 
 export function createSubProjection(data: Partial<DefEditorSubProjection>): DefEditorSubProjection {
-    // console.log("create SubProjection <<" + data.propertyName + ">> join ["+ data.listJoin + "]");
+    console.log("create SubProjection <<" + data.propertyName + ">> join ["+ data.listJoin + "]");
     const result = new DefEditorSubProjection();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
     if (!!(data.listJoin)) {
         result.listJoin = data.listJoin;
+    }
+    if (!!(data.expression)) {
+        result.expression = data.expression;
     }
     return result;
 }

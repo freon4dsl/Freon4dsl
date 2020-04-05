@@ -1,3 +1,4 @@
+import { PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangProperty, PiLangThisExp } from "../../../languagedef/metalanguage";
 import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { PiLangClass, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {
@@ -6,7 +7,7 @@ import {
     DefEditorProjection,
     DefEditorProjectionExpression,
     DefEditorProjectionText,
-    DefEditorSubProjection
+    DefEditorSubProjection, Direction
 } from "../../metalanguage";
 
 export class ProjectionTemplate {
@@ -261,13 +262,33 @@ export class ProjectionTemplate {
                     }),
                     `
                 } else if( item instanceof DefEditorSubProjection){
-                    result += `
-                        new TextBox(element, "element-${item.propertyName}-text", () => element.${item.propertyName}, (c: string) => (element.${item.propertyName} = c as ${"string"}),
+                    const appliedFeature: PiLangProperty = item.expression.appliedfeature.referedElement;
+                    if( appliedFeature instanceof PiLangPrimitiveProperty){
+                        result += `
+                        new TextBox(element, "element-${appliedFeature.name}-text", () => element.${appliedFeature.name}, (c: string) => (element.${appliedFeature.name} = c as ${"string"}),
                         {
                             placeHolder: "text",
                             style: ${Names.styles}.placeholdertext
-                        })
+                        }),
                     `
+                    } else if( appliedFeature instanceof PiLangEnumProperty) {
+                        result += "// enum property box here";
+                    } else if( appliedFeature instanceof PiLangConceptProperty) {
+                        result += "// concept box here";
+                        if(appliedFeature.isList) {
+                            const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
+                            result += `
+                            new ${direction}ListBox(element, "element-${appliedFeature.name}", 
+                                element.${appliedFeature.name}.map(feature => {
+                                    return this.rootProjection.getBox(feature);
+                                }),
+                                {
+                                    style: projectitStyles.indent
+                                }
+                            ),
+                        `
+                        }
+                    }
                 }
             });
             result += `

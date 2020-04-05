@@ -1,3 +1,4 @@
+import { PiLangExp } from "../../languagedef/metalanguage";
 import { DefEditorConcept } from "./DefEditorConcept";
 
 export class DefEditorNewline {
@@ -46,9 +47,10 @@ export class ListJoin {
 export class DefEditorSubProjection {
     propertyName: string = "";
     listJoin: ListJoin;
+    expression: PiLangExp;
 
     toString(): string {
-        return "[-[" + this.propertyName + (!!this.listJoin ? " " + this.listJoin.toString() : "") + "]-]";
+        return "[-[" + this.expression.sourceName + "." + this.expression.appliedfeature.sourceName + (!!this.listJoin ? " " + this.listJoin.toString() : "") + "]-]";
     }
 }
 
