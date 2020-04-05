@@ -9,28 +9,28 @@ export class DefEditorNewline {
 export class DefEditorProjectionIndent {
     indent: string = ";";
 
-    toString() : string {
+    toString(): string {
         return this.indent.replace(/ /g, "_");
     }
 }
 
 export class DefEditorProjectionText {
     text: string = "";
-    toString() : string {
+    toString(): string {
         return this.text;
     }
 }
 
 export enum Direction {
-    NONE="NONE",
-    Horizontal="Horizontal",
-    Vertical="Vertical"
+    NONE = "NONE",
+    Horizontal = "Horizontal",
+    Vertical = "Vertical"
 }
 
 export enum ListJoinType {
-    NONE= "NONE",
-    Terminator="Terminator",
-    Separator="Separator"
+    NONE = "NONE",
+    Terminator = "Terminator",
+    Separator = "Separator"
 }
 
 export class ListJoin {
@@ -47,21 +47,16 @@ export class DefEditorSubProjection {
     propertyName: string = "";
     listJoin: ListJoin;
 
-    toString() : string {
-        return "[-[" + this.propertyName + (!!(this.listJoin)? " " + this.listJoin.toString() : "" ) + "]-]";
+    toString(): string {
+        return "[-[" + this.propertyName + (!!this.listJoin ? " " + this.listJoin.toString() : "") + "]-]";
     }
-
 }
 
 export class DefEditorProjectionExpression {
     propertyName: string = "";
 }
 
-type DefEditorProjectionItem =
-    DefEditorProjectionIndent
-    | DefEditorProjectionText
-    | DefEditorSubProjection
-    | DefEditorProjectionExpression;
+type DefEditorProjectionItem = DefEditorProjectionIndent | DefEditorProjectionText | DefEditorSubProjection | DefEditorProjectionExpression;
 
 export class MetaEditorProjectionLine {
     items: DefEditorProjectionItem[];
@@ -79,6 +74,6 @@ export class DefEditorProjection {
     toString() {
         return `projection ${this.name}
 ${this.lines.map(line => line.toString()).join("")}
-`
+`;
     }
 }

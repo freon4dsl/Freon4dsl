@@ -3,7 +3,7 @@ import {
     Direction, ListJoin,
     ListJoinType,
     DefEditorConcept,
-    PiDefEditorEnumeration,
+    DefEditorEnumeration,
     DefEditorLanguage, DefEditorNewline,
     DefEditorProjection, DefEditorProjectionExpression,
     DefEditorProjectionIndent,
@@ -156,8 +156,8 @@ export function createNewline(): DefEditorNewline {
     return new DefEditorNewline();
 }
 
-export function createEnumeration(data: Partial<PiDefEditorEnumeration>): PiDefEditorEnumeration {
-    const result = new PiDefEditorEnumeration();
+export function createEnumeration(data: Partial<DefEditorEnumeration>): DefEditorEnumeration {
+    const result = new DefEditorEnumeration();
     return result;
 }
 

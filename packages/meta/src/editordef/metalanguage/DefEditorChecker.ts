@@ -3,7 +3,7 @@ import { Checker } from "../../utils";
 import { DefEditorConcept } from "./DefEditorConcept";
 import { DefEditorLanguage } from "./DefEditorLanguage";
 
-export class PiDefEditorChecker extends Checker<DefEditorLanguage> {
+export class DefEditorChecker extends Checker<DefEditorLanguage> {
 
     constructor(language: PiLanguageUnit) {
         super(language);

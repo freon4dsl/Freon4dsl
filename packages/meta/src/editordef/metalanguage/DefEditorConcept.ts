@@ -1,7 +1,7 @@
-import { PiDefEditor, DefEditorLanguage, DefEditorProjection } from ".";
+import { DefEditor, DefEditorLanguage, DefEditorProjection } from ".";
 import { PiLangConceptReference } from "../../languagedef/metalanguage";
 
-export class DefEditorConcept implements PiDefEditor {
+export class DefEditorConcept implements DefEditor {
     languageEditor: DefEditorLanguage;
     concept: PiLangConceptReference;
 

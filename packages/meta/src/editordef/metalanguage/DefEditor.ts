@@ -1,5 +1,5 @@
 import { DefEditorProjection } from "./DefEditorProjection";
 
-export interface PiDefEditor {
+export interface DefEditor {
     projection: DefEditorProjection;
 }
