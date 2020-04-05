@@ -1,3 +1,5 @@
+// This is a partial grammar file for re-use in other grammars
+
 // the following is basic stuff
 
 curly_begin    = ws "{" ws

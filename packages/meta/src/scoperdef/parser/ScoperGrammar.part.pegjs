@@ -1,6 +1,7 @@
+// This is a partial grammar file
+// Needs to be concatenated with the Basic and Expression grammars
 {
     let create = require("./ScoperCreators");
-    let expCreate = require("../../languagedef/parser/LanguageExpressionCreators");
 }
 
 Scoper_Definition
