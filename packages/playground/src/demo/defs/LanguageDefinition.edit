@@ -14,7 +14,7 @@ DemoIfExpression {
         if( [[ this.condition ]] ) then
             [[ this.whenTrue ]]
         else
-            [[this.whenalse]]
+            [[this.whenFalse]]
         endif
         ]
 
@@ -44,6 +44,7 @@ DemoEntity {
     @trigger "entity"
 }
 
+/*
 DemoFunctionCallExpression {
     @projection gewoon
         [
@@ -51,15 +52,16 @@ DemoFunctionCallExpression {
         ]
     @trigger "function"
 }
-
+*/
 
 DemoFunctionCallExpression {
     @projection gewoon
         [
-        [[this.name]] ( [[this.params @separator [, ] ]] )
+        CALL [[this.functionDefinition]] (  )
         ]
     @trigger "function"
 }
+
 
 DemoModel {
     @projection dasda
