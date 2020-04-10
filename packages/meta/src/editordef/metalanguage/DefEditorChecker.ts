@@ -2,7 +2,7 @@ import { PiLangClass, PiLangConcept, PiLanguageExpressionChecker, PiLanguageUnit
 import { Checker } from "../../utils";
 import { DefEditorConcept } from "./DefEditorConcept";
 import { DefEditorLanguage } from "./DefEditorLanguage";
-import { DefEditorProjection, DefEditorSubProjection } from "./DefEditorProjection";
+import { MetaEditorProjection, DefEditorSubProjection } from "./MetaEditorProjection";
 
 export class DefEditorChecker extends Checker<DefEditorLanguage> {
     myExpressionChecker: PiLanguageExpressionChecker;
@@ -32,7 +32,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         });
     }
 
-    private checkProjection(projection: DefEditorProjection, cls: PiLangConcept){
+    private checkProjection(projection: MetaEditorProjection, cls: PiLangConcept){
         if(!!projection) {
             projection.lines.forEach(line => {
                 line.items.forEach(item => {

@@ -4,11 +4,12 @@ import { PiLangClass, PiLanguageUnit } from "../../../languagedef/metalanguage/P
 import {
     DefEditorConcept,
     DefEditorLanguage,
-    DefEditorProjection,
+    MetaEditorProjection,
     DefEditorProjectionExpression,
     DefEditorProjectionText,
-    DefEditorSubProjection, Direction
+    DefEditorSubProjection, Direction, DefEditorProjectionIndent
 } from "../../metalanguage";
+import has = Reflect.has;
 
 export class ProjectionTemplate {
     constructor() {
@@ -51,6 +52,7 @@ export class ProjectionTemplate {
                 AliasBox,
                 Box,
                 GridBox,
+                IndentBox,
                 GridCell,
                 GridUtil,
                 HorizontalListBox,
@@ -132,21 +134,15 @@ export class ProjectionTemplate {
                                 new LabelBox(element, "element-${p.name}-label", "${p.name}", {
                                     style: ${Names.styles}.propertykeyword
                                 }),
-                                new TextBox(element, "element-${p.name}-text", () => element.${p.name}, (c: string) => (element.${p.name} = c as ${p.type.name}),
-                                {
-                                    placeHolder: "text",
-                                    style: ${Names.styles}.placeholdertext
-                                })
+                                ${this.primitivePropertyProjection(p)},
                             ])`
                         ).concat(
                         c.enumProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
-                            new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                            style: ${Names.styles}.propertykeyword
-                            }),
-                            this.helpers.enumSelectFor${p.type.name}(element, "${p.name}-type",
-                                () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
-                                (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referedElement())}.fromString(o.id)),
+                                new LabelBox(element, "element-${p.name}-label", "${p.name}", {
+                                style: ${Names.styles}.propertykeyword
+                                }),
+                                ${this.enumPropertyProjection(p)},
                             ])`
                         )).concat(
 //  Map all parts
@@ -156,15 +152,8 @@ export class ProjectionTemplate {
                                 style: ${Names.styles}.keyword
                             }),
                             ( element.${part.name}.length === 0 ? null : 
-                                new VerticalListBox(
-                                    element,
-                                    "${part.name}-list",
-                                    element.${part.name}.map(ent => {
-                                        return this.rootProjection.getBox(ent);
-                                    }),
-                                    {
-                                        style: ${Names.styles}.indent
-                                    }
+                                new IndentBox(element, "indent-part-${part.name}", 4, 
+                                    ${this.conceptPartListProjection("Vertical", part)}
                                 )
                             ),
                             new AliasBox(element, "new-${part.name}", "add ${part.name}", {
@@ -181,40 +170,14 @@ export class ProjectionTemplate {
                                 style: ${Names.styles}.keyword
                             }),
                             ( element.${ref.name}.length === 0 ? null : 
-                                new VerticalListBox(
-                                    element,
-                                    "${ref.name}-list",
-                                    element.${ref.name}.map(ent => {
-                                        return this.rootProjection.getBox(ent);
-                                    }),
-                                    {
-                                        style: ${Names.styles}.indent
-                                    }
-                                )
+                                ${this.conceptReferenceListProjection("Vertical", ref)}
                             ),
                             new AliasBox(element, "new-${ref.name}", "add ${ref.name}", {
                                 style: ${Names.styles}.indentedplaceholdertext
                             })
                         ` :
-                            `
-                            this.helpers.getReferenceBox(element, "${ref.name}-exp", "< select ${ref.name}>", "${ref.type.name}",
-                                () => {
-                                    if (!!element.${ref.name}) {
-                                        return { id: element.${ref.name}.name, label: element.${ref.name}.name };
-                                    } else {
-                                        return null;
-                                    }
-                                },
-                                (option: SelectOption) => {
-                                    element.${ref.name} = new PiElementReference<${ref.type.name}>(
-                                        ${language.name}Environment.getInstance().scoper.getFromVisibleElements(
-                                        element,
-                                        option.label,
-                                        "${ref.type.name}"
-                                    ) as ${ref.type.name}, "${ref.type.name}");
-                                }
-                            )
-                        ` }`  )
+                            (this.conceptReferenceProjection(ref) + ", ")
+                        }`  )
                 ).join(",")}
                     ])
                 ${c.expression() ? `])`: ""}
@@ -244,15 +207,22 @@ export class ProjectionTemplate {
 
     private generateUserProjection(language: PiLanguageUnit, c: PiLangClass, editor: DefEditorConcept) {
         let result: string = "";
-        const projection: DefEditorProjection = editor.projection;
+        const projection: MetaEditorProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if(multiLine){
             result += `new VerticalListBox(element, "${c.name}-overall", [
             `;
         }
+
         projection.lines.forEach( (line, index) => {
-            result += `
-                new HorizontalListBox(element, "${c.name}-line-${index}", [ `;
+            let hasIndent = false;
+            const firstItem = line.items[0];
+            if( firstItem instanceof DefEditorProjectionIndent  && firstItem.amount > 0) {
+                result += ` // INDENT should be ${firstItem.amount}
+                                new IndentBox(element, "indent", ${firstItem.amount}, `
+                hasIndent = true;
+            }
+            result += `new HorizontalListBox(element, "${c.name}-line-${index}", [ `;
             line.items.forEach((item, itemIndex) => {
                 if ( item instanceof DefEditorProjectionText ){
                     result += `
@@ -262,66 +232,44 @@ export class ProjectionTemplate {
                 } else if( item instanceof DefEditorSubProjection){
                     const appliedFeature: PiLangProperty = item.expression.appliedfeature.referedElement;
                     if( appliedFeature instanceof PiLangPrimitiveProperty){
-                        result += `
-                            new TextBox(element, "element-${appliedFeature.name}-text", () => element.${appliedFeature.name}, (c: string) => (element.${appliedFeature.name} = c as ${"string"}),
-                            {
-                                placeHolder: "text",
-                                style: ${Names.styles}.placeholdertext
-                            }),`
+                        result += this.primitivePropertyProjection(appliedFeature) + ", ";
                     } else if( appliedFeature instanceof PiLangEnumProperty) {
-                        result += `// enum property box here for ${appliedFeature.name}
-                        `;
+                        result += this.enumPropertyProjection(appliedFeature) + ", ";
                     } else if( appliedFeature instanceof PiLangConceptProperty) {
-                        result += `// concept box here for ${appliedFeature.name} isPart : ${appliedFeature.isPartOf()}
-                        `;
                         if( appliedFeature.isPartOf()) {
                             if (appliedFeature.isList) {
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
-                                result += `
-                                    new ${direction}ListBox(element, "element-${appliedFeature.name}", 
-                                        element.${appliedFeature.name}.map(feature => {
-                                            return this.rootProjection.getBox(feature);
-                                        }),
-                                        {
-                                            style: projectitStyles.indent
-                                        }
-                                    ),`
+                                result += this.conceptPartListProjection(direction, appliedFeature)+ ",";
                             } else {
                                 result += `this.rootProjection.getBox(element.${appliedFeature.name}),`
                             }
-                        } else {
-                            result += `// reference ${appliedFeature.name} should go here
-                            `;
-                            const featureType = appliedFeature.type.name;
-                            result += `
-                                this.helpers.getReferenceBox(element, "${appliedFeature.name}", "< select ${appliedFeature.name}>", "${featureType}",
-                                    () => {
-                                        if (!!element.${appliedFeature.name}) {
-                                            return { id: element.${appliedFeature.name}.name, label: element.${appliedFeature.name}.name };
-                                        } else {
-                                            return null;
-                                        }
-                                    },
-                                    (option: SelectOption) => {
-                                        // TODO PiElementReference
-                                        element.${appliedFeature.name} = new PiElementReference<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                                            element,
-                                            option.label,
-                                            "${featureType}"
-                                        ) as ${featureType}, "${featureType}");
-                                    }
-                                ),`
+                        } else { // reference
+                            if( appliedFeature.isList){
+                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
+                                result += this.conceptReferenceListProjection(direction, appliedFeature) + ",";
+                            }else {
+                                result += this.conceptReferenceProjection(appliedFeature) + ", ";
+                            }
                         }
                     } else {
-                        result += `// unknown property box here for ${appliedFeature.name}
+                        result += `// ERROR unknown property box here for ${appliedFeature.name}
                         `;
-
                     }
+                // } else if( item instanceof DefEditorProjectionIndent  && itemIndex === 0 && item.amount > 0) {
+                //     result += ` // INDENT should be ${item.amount}
+                //         new IndentBox(element, "indent", ${item.amount}, `
+                //     hasIndent = true;
                 }
             });
             result += `
                 ])
             `
+            if( hasIndent){
+                // end of line, finish indent when applicable
+                result += ` // END OF INDENT
+                    `
+                result += ` )`;
+            }
             if( index !== projection.lines.length -1) {
               result += ",";
             }
@@ -335,4 +283,67 @@ export class ProjectionTemplate {
                     return ${result};
                 }`;
     }
+
+    enumPropertyProjection(p: PiLangEnumProperty) {
+        return `
+            this.helpers.enumSelectFor${p.type.name}(element, 
+                "${p.name}-type",
+                () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
+                (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referedElement())}.fromString(o.id)
+            )
+        `;
+    }
+    conceptPartListProjection(direction: string, propertyConcept: PiLangConceptProperty) {
+        return `
+            new ${direction}ListBox(element, "element-${propertyConcept.name}-list", 
+                element.${propertyConcept.name}.map(feature => {
+                    return this.rootProjection.getBox(feature);
+                })
+            )`;
+    }
+
+    conceptReferenceProjection(appliedFeature: PiLangConceptProperty) {
+        const featureType = appliedFeature.type.name;
+        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}", "< select ${appliedFeature.name}>", "${featureType}",
+                    () => {
+                        if (!!element.${appliedFeature.name}) {
+                            return { id: element.${appliedFeature.name}.name, label: element.${appliedFeature.name}.name };
+                        } else {
+                            return null;
+                        }
+                    },
+                    (option: SelectOption) => {
+                        element.${appliedFeature.name} = new PiElementReference<${featureType}>(${Names.environment(appliedFeature.owningConcept.language)}.getInstance().scoper.getFromVisibleElements(
+                            element,
+                            option.label,
+                            "${featureType}"
+                        ) as ${featureType}, "${featureType}");
+                    }
+                )
+            `
+    }
+
+    conceptReferenceListProjection(direction: string, reference: PiLangConceptProperty) {
+        return `new ${direction}ListBox(
+                    element,
+                    "${reference.name}-list",
+                    element.${reference.name}.map(ent => {
+                        ${this.conceptReferenceProjection(reference) + ","}
+                    }),
+                    {
+                        style: ${Names.styles}.indent
+                    }
+                )
+            `
+    }
+
+    primitivePropertyProjection(appliedFeature: PiLangPrimitiveProperty) {
+        // TODO This now only works for strings
+        return `new TextBox(element, "element-${appliedFeature.name}-text", () => element.${appliedFeature.name}, (c: string) => (element.${appliedFeature.name} = c as ${"string"}),
+                {
+                    placeHolder: "text",
+                    style: ${Names.styles}.placeholdertext
+                })`
+    }
+
 }

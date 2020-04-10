@@ -3,4 +3,4 @@ export * from "./DefEditorChecker";
 export * from "./DefEditorConcept";
 export * from "./DefEditorEnumeration";
 export * from "./DefEditorLanguage";
-export * from "./DefEditorProjection";
+export * from "./MetaEditorProjection";

@@ -1,5 +1,5 @@
-import { DefEditorProjection } from "./DefEditorProjection";
+import { MetaEditorProjection } from "./MetaEditorProjection";
 
 export interface DefEditor {
-    projection: DefEditorProjection;
+    projection: MetaEditorProjection;
 }

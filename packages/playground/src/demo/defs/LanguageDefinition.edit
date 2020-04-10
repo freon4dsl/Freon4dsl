@@ -1,15 +1,19 @@
 editor StartEditor for language Demo
 
+DemoAttribute {
+    @projection attribuut [[[this.name]] : [[this.declaredType]]]
+}
+
 DemoStringLiteralExpression {
-    @projection default
+    @projection DemoStringLiteralExpression
         [
-        '[[this.value]]'
+		'[[this.value]]'
         ]
     @trigger "'"
 }
 
 DemoIfExpression {
-    @projection default
+    @projection DemoIfExpression
         [
         if( [[ this.condition ]] ) then
             [[ this.whenTrue ]]
@@ -55,16 +59,15 @@ DemoFunctionCallExpression {
 */
 
 DemoFunctionCallExpression {
-    @projection gewoon
+    @projection DemoFunctionCallExpression
         [
         CALL [[this.functionDefinition]] (  )
         ]
     @trigger "function"
 }
 
-
 DemoModel {
-    @projection dasda
+    @projection DemoModel
         [
         model [[this.name]] {
         entities:
@@ -76,4 +79,4 @@ DemoModel {
             [[this.functions @horizontal @separator [\n] ]]
         }
         ]
- }
+}

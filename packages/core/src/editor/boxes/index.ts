@@ -7,3 +7,4 @@ export * from "./SelectBox";
 export * from "./GridBox";
 export * from "./SvgBox";
 export * from "./SelectOption";
+export * from "./IndentBox";

@@ -1,5 +1,5 @@
 import { useDebugValue } from "react";
-import { DefEditor, DefEditorLanguage, DefEditorProjection } from ".";
+import { DefEditor, DefEditorLanguage, MetaEditorProjection } from ".";
 import { PiLangConceptReference } from "../../languagedef/metalanguage";
 
 export class DefEditorConcept implements DefEditor {
@@ -21,5 +21,5 @@ export class DefEditorConcept implements DefEditor {
         this._trigger = value;
     }
 
-    projection: DefEditorProjection = null;
+    projection: MetaEditorProjection = null;
 }

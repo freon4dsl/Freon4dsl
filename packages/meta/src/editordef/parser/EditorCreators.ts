@@ -5,7 +5,7 @@ import {
     DefEditorConcept,
     DefEditorEnumeration,
     DefEditorLanguage, DefEditorNewline,
-    DefEditorProjection, DefEditorProjectionExpression,
+    MetaEditorProjection, DefEditorProjectionExpression,
     DefEditorProjectionIndent,
     MetaEditorProjectionLine,
     DefEditorProjectionText, DefEditorSubProjection
@@ -68,15 +68,15 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
 
 }
 
-export function createProjection(data: Partial<DefEditorProjection>): DefEditorProjection {
-    const result = new DefEditorProjection();
+export function createProjection(data: Partial<MetaEditorProjection>): MetaEditorProjection {
+    const result = new MetaEditorProjection();
     if (!!data.lines) {
         result.lines = data.lines;
     }
     if (!!data.name) {
         result.name = data.name;
     }
-    result.breakLines();
+    result.normalize();
     console.log(result.toString());
     return result;
 }
