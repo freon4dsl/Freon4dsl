@@ -54,3 +54,15 @@ packages/playground/src/taxrules/typer/gen/*
 packages/playground/src/taxrules/utils/gen/*
 packages/playground/src/taxrules/validator/gen/*
 packages/playground/handmade/unparsedDemoModel.txt
+/packages/meta/src/editordef/parser/EditorGrammar.pegjs
+/packages/playground/exampleLangDefs/Entity/EntityDefinition.edit
+/packages/playground/exampleLangDefs/Entity/EntityDefinition.lang
+/packages/playground/exampleLangDefs/Entity/EntityDefinition.scop
+/packages/playground/exampleLangDefs/Entity/EntityDefinition.type
+/packages/playground/exampleLangDefs/Entity/EntityDefinition.valid
+/packages/meta/src/languagedef/parser/ExpressionGrammar.js
+/packages/meta/src/languagedef/parser/ExpressionGrammar.pegjs
+/packages/meta/src/languagedef/parser/LanguageGrammar.pegjs
+/packages/meta/src/typerdef/parser/PiTyperGrammar.pegjs
+/packages/meta/src/scoperdef/parser/ScoperGrammar.pegjs
+/packages/meta/src/validatordef/parser/ValidatorGrammar.pegjs
