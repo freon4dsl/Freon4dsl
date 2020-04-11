@@ -10,7 +10,7 @@ import { ErrorList } from "./ErrorList";
 export const EditorArea: React.FunctionComponent = () => {
   return (
       <Flex fill={true} hAlign="stretch">
-          <Flex.Item size="20%" >
+          <Flex.Item size="20%" flexDirection="row" >
               <Box
                   // content="navigator"
                   styles={{
@@ -24,7 +24,7 @@ export const EditorArea: React.FunctionComponent = () => {
               </Box>
           </Flex.Item>
           <Flex.Item >
-              <Flex column={true} fill={true} hAlign="stretch">
+              <Flex column={true} fill={true} hAlign="stretch" vAlign="stretch">
                   <Flex.Item size="size.large">
                       <Box
                           styles={{
@@ -41,14 +41,14 @@ export const EditorArea: React.FunctionComponent = () => {
                           <Image src="editor-screenshot-april-6-2020.png" alt="editor"/>
                       </Box>
                   </Flex.Item>
-                  <Flex.Item size="size.half">
+                  <Flex.Item size="size.quarter">
                       <Box
                           // content="errorList"
                           styles={{
                               // border: '2px solid #ccc',
                               color: 'blue',
                               // minheight: '100px',
-                              maxheight: '400px',
+                              maxheight: '100px',
                               ':hover': {
                                   color: 'red',
                               },

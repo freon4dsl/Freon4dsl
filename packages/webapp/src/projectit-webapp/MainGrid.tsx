@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from '@fluentui/react';
-import { Grid, Segment, Flex, Text, Image, Header } from '@fluentui/react-northstar';
+import { Grid, Segment, Flex, Text, Image, Header } from "@fluentui/react-northstar";
 import {getTheme, mergeStyleSets} from "office-ui-fabric-react/lib/Styling";
 import Menubar from "./Menubar";
 import {EditorArea} from "./EditorArea";
@@ -24,6 +24,7 @@ const classNames = mergeStyleSets({
     },
 });
 
+
 export const MainGrid: React.FunctionComponent = () => {
     return (
         // Grid has 6 columns
@@ -34,26 +35,26 @@ export const MainGrid: React.FunctionComponent = () => {
         // TODO looks like columns are no longer needed
         // TODO the only color that is working is "brand"
 
-        <Grid columns="repeat(6, 1fr)" >
+        <Grid columns="repeat(6, 1fr)" rows="20px 40px 40px 10px 20 px" >
             {/* "header" */}
-            <Segment
-                color="brand"
-                inverted
-                styles={{
-                    gridColumn: 'span 6'
-                }}>
                 <Flex gap="gap.small" padding="padding.medium" hAlign="stretch"
                       styles={{
-                          height: '20px'
+                          height: '60px',
+                          gridColumn: 'span 6',
+                          backgroundColor: "darkblue"
                       }}>
                     <Flex.Item align='center' grow>
                         <Header as="h3" content="ProjectIt Language Environment" color="white"/>
                     </Flex.Item>
-                    <Flex.Item align='center' size="size.medium" >
-                        <Image fluid src="public/projectit.png" alt={"logo"}/>
+                    <Flex.Item align='center' size="size.small" >
+                        <Image src="projectit.png"  alt={"ProjectIt"}
+                               styles={{
+                                   maxHeight: '60px',
+                                   maxWidth: "80px"
+                               }}
+                        />
                     </Flex.Item>
                 </Flex>
-            </Segment>
 
             {/* "menubar" */}
             <Segment
@@ -61,7 +62,6 @@ export const MainGrid: React.FunctionComponent = () => {
                 inverted
                 styles={{
                     gridColumn: 'span 6',
-                    height: '100%',
                 }}>
                 <Menubar />
             </Segment>
@@ -82,6 +82,7 @@ export const MainGrid: React.FunctionComponent = () => {
                 inverted
                 styles={{
                     gridColumn: 'span 6',
+                    backgroundColor: "darkblue"
                 }}>
                 <Flex hAlign="center" gap="gap.medium">
                     <Text content="Created by ProjectIt " size='medium'/>
