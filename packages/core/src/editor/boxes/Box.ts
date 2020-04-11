@@ -74,6 +74,7 @@ export abstract class Box {
         }
     }
 
+    // TODO Recursively look into siblings children
     get nextLeafRight(): Box {
         if (!this.parent) {
             return null;
@@ -87,6 +88,7 @@ export abstract class Box {
         }
     }
 
+    // TODO Recursively look into siblings children
     get nextLeafLeft(): Box {
         if (!this.parent) {
             return null;
@@ -101,7 +103,11 @@ export abstract class Box {
     }
 
     private getSelectableChildren(): Box[] {
-        return this.children.filter(c => c.selectable);
+        let result = this.children.filter(c => c.selectable);
+        // TODO Make this recurive
+        // this.children.forEach(child =>
+        //     result = result.concat(child.getSelectableChildren()));
+        return result;
     }
 
     private getSelectableSiblings(): Box[] {
@@ -162,6 +168,7 @@ export abstract class Box {
         // LOGGER.info(this, "setSetFocus set for  "+ this.id+ " id " + this.$id );
         this.setFocus = func;
     }
+
     /** @internal
      * This function is called to set the focus on this element.
      */

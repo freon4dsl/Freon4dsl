@@ -1,7 +1,7 @@
 editor StartEditor for language Demo
 
 DemoAttribute {
-    @projection attribuut [[[this.name]] : [[this.declaredType]]]
+    @projection attribuut [ [[this.name]] : [[this.declaredType]] ]
 }
 
 DemoStringLiteralExpression {
@@ -12,20 +12,31 @@ DemoStringLiteralExpression {
     @trigger "'"
 }
 
+
 DemoIfExpression {
     @projection DemoIfExpression
         [
         if( [[ this.condition ]] ) then
-            [[ this.whenTrue ]]
+                  [[ this.whenTrue ]]
         else
-            [[this.whenFalse]]
+           [[this.whenFalse]]
         endif
         ]
 
     @trigger "if"
     @symbol "if"
 }
+/*
+DemoIfExpression {
+    @projection DemoIfExpression
+        [
+        ([[ this.condition ]] ? [[ this.whenTrue ]] : [[this.whenFalse]] )
+        ]
 
+    @trigger "if"
+    @symbol "if"
+}
+*/
 DemoPlusExpression {
     @symbol "+"
 }

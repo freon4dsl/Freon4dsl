@@ -132,7 +132,8 @@ export class ProjectionTemplate {
                         ${c.primProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
                                 new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                                    style: ${Names.styles}.propertykeyword
+                                    style: ${Names.styles}.propertykeyword,
+                                    selectable: false
                                 }),
                                 ${this.primitivePropertyProjection(p)},
                             ])`
@@ -140,7 +141,8 @@ export class ProjectionTemplate {
                         c.enumProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
                                 new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                                style: ${Names.styles}.propertykeyword
+                                    style: ${Names.styles}.propertykeyword,
+                                    selectable: false
                                 }),
                                 ${this.enumPropertyProjection(p)},
                             ])`
@@ -149,7 +151,8 @@ export class ProjectionTemplate {
                         c.allParts().map(part => `
                         ${ part.isList ? `
                             new LabelBox(element, "element-${part.name}-label", "${part.name}", { 
-                                style: ${Names.styles}.keyword
+                                style: ${Names.styles}.keyword,
+                                selectable: false
                             }),
                             ( element.${part.name}.length === 0 ? null : 
                                 new IndentBox(element, "indent-part-${part.name}", 4, 
@@ -160,14 +163,18 @@ export class ProjectionTemplate {
                                 style: ${Names.styles}.indentedplaceholdertext
                             })
                         ` :
-                            `new LabelBox(element, "element-${part.name}-label", "${part.name}", {}),
+                            `new LabelBox(element, "element-${part.name}-label", "${part.name}", {
+                                style: ${Names.styles}.propertykeyword,
+                                selectable: false
+                             }),
                             this.rootProjection.getBox(element.${part.name})
                         ` }`  )).concat(
 // Map all references
                         c.allPReferences().map(ref => `
                         ${ ref.isList ? `
                             new LabelBox(element, "element-${ref.name}-label", "${ref.name}", { 
-                                style: ${Names.styles}.keyword
+                                style: ${Names.styles}.keyword,
+                                selectable: false
                             }),
                             ( element.${ref.name}.length === 0 ? null : 
                                 ${this.conceptReferenceListProjection("Vertical", ref)}
@@ -214,20 +221,29 @@ export class ProjectionTemplate {
             `;
         }
 
+        let indentNr = 0;
         projection.lines.forEach( (line, index) => {
-            let hasIndent = false;
-            const firstItem = line.items[0];
-            if( firstItem instanceof DefEditorProjectionIndent  && firstItem.amount > 0) {
-                result += ` // INDENT should be ${firstItem.amount}
-                                new IndentBox(element, "indent", ${firstItem.amount}, `
-                hasIndent = true;
+            // let hasIndent = false;
+            // const firstItem = line.items[0];
+            // if( firstItem instanceof DefEditorProjectionIndent  && firstItem.amount > 0) {
+            //     result += ` // INDENT should be ${firstItem.amount}
+            //                     new IndentBox(element, "indent", ${firstItem.amount}, `
+            //     hasIndent = true;
+            // }
+            if( line.indent > 0) {
+                result += ` // INDENT should be ${line.indent}
+                                new IndentBox(element, "${"indent-" + indentNr++}", ${line.indent}, `
+                // hasIndent = true;
             }
-            result += `new HorizontalListBox(element, "${c.name}-line-${index}", [ `;
+            if( line.items.length > 1) {
+                result += `new HorizontalListBox(element, "${c.name}-line-${index}", [ `;
+            }
             line.items.forEach((item, itemIndex) => {
                 if ( item instanceof DefEditorProjectionText ){
                     result += `
                         new LabelBox(element, "${c.name}-name-${index}-${itemIndex}", "${item.text}", {
-                            style: projectitStyles.propertykeyword
+                            style: projectitStyles.propertykeyword,
+                            selectable: false
                         }),`
                 } else if( item instanceof DefEditorSubProjection){
                     const appliedFeature: PiLangProperty = item.expression.appliedfeature.referedElement;
@@ -255,19 +271,13 @@ export class ProjectionTemplate {
                         result += `// ERROR unknown property box here for ${appliedFeature.name}
                         `;
                     }
-                // } else if( item instanceof DefEditorProjectionIndent  && itemIndex === 0 && item.amount > 0) {
-                //     result += ` // INDENT should be ${item.amount}
-                //         new IndentBox(element, "indent", ${item.amount}, `
-                //     hasIndent = true;
                 }
             });
-            result += `
-                ])
-            `
-            if( hasIndent){
+            if( line.items.length > 1) {
+                result += ` ] ) `
+            }
+            if( line.indent > 0 ){
                 // end of line, finish indent when applicable
-                result += ` // END OF INDENT
-                    `
                 result += ` )`;
             }
             if( index !== projection.lines.length -1) {
@@ -275,7 +285,7 @@ export class ProjectionTemplate {
             }
         });
         if( multiLine){
-            result += `
+            result += ` 
                 ]);
             `;
         }
