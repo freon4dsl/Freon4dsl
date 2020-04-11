@@ -1,19 +1,42 @@
 editor StartEditor for language Demo
 
+DemoAttribute {
+    @projection attribuut [ [[this.name]] : [[this.declaredType]] ]
+}
+
+DemoStringLiteralExpression {
+    @projection DemoStringLiteralExpression
+        [
+		'[[this.value]]'
+        ]
+    @trigger "'"
+}
+
+
 DemoIfExpression {
-    @projection default
+    @projection DemoIfExpression
         [
         if( [[ this.condition ]] ) then
-            [[ this.whenTrue ]]
+                  [[ this.whenTrue ]]
         else
-            [[this.whenfalse]]
+           [[this.whenFalse]]
         endif
         ]
 
     @trigger "if"
     @symbol "if"
 }
+/*
+DemoIfExpression {
+    @projection DemoIfExpression
+        [
+        ([[ this.condition ]] ? [[ this.whenTrue ]] : [[this.whenFalse]] )
+        ]
 
+    @trigger "if"
+    @symbol "if"
+}
+*/
 DemoPlusExpression {
     @symbol "+"
 }
@@ -25,11 +48,18 @@ DemoMultiplyExpression {
 DemoDivideExpression {
     @symbol "/"
 }
+DemoLessThenExpression {
+    @symbol "<"
+}
+DemoOrExpression {
+    @symbol "or"
+}
 
 DemoEntity {
     @trigger "entity"
 }
 
+/*
 DemoFunctionCallExpression {
     @projection gewoon
         [
@@ -37,18 +67,18 @@ DemoFunctionCallExpression {
         ]
     @trigger "function"
 }
-
+*/
 
 DemoFunctionCallExpression {
-    @projection gewoon
+    @projection DemoFunctionCallExpression
         [
-        [[this.name]] ( [[this.params @separator [, ] ]] )
+        CALL [[this.functionDefinition]] (  )
         ]
     @trigger "function"
 }
 
 DemoModel {
-    @projection dasda
+    @projection DemoModel
         [
         model [[this.name]] {
         entities:
@@ -56,8 +86,8 @@ DemoModel {
                 @vertical
                 @terminator [\n\n]
             ]]
-        functions:
+        model wide functions:
             [[this.functions @horizontal @separator [\n] ]]
         }
         ]
- }
+}

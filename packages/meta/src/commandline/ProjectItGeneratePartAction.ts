@@ -14,7 +14,7 @@ export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
     private languageFileArg: CommandLineStringParameter;
     protected languageFile: string;
     protected language: PiLanguageUnit;
-    protected succesfull: boolean = true;;
+    protected succesfull: boolean = true;
 
     public constructor(options: ICommandLineActionOptions) {
         super(options);

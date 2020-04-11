@@ -388,6 +388,9 @@ export class PiLangEnumProperty extends PiLangProperty {
 export class PiLangConceptProperty extends PiLangProperty {
     type: PiLangConceptReference;
     isPart: boolean; // needed for parsing
+    isPartOf() : boolean {
+        return this.owningConcept.parts.includes(this);
+    }
 }
 
 // the following two classes are only used in the typer and validator definitions

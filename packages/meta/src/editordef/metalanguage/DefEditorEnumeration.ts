@@ -1,9 +1,9 @@
 import { DefEditor } from "./DefEditor";
 import { DefEditorLanguage } from "./DefEditorLanguage";
-import { DefEditorProjection } from "./DefEditorProjection";
+import { MetaEditorProjection } from "./MetaEditorProjection";
 
 export class DefEditorEnumeration implements DefEditor {
     languageEditor: DefEditorLanguage;
 
-    projection: DefEditorProjection;
+    projection: MetaEditorProjection;
 }

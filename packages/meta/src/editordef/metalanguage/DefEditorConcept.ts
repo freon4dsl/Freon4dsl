@@ -1,12 +1,25 @@
-import { DefEditor, DefEditorLanguage, DefEditorProjection } from ".";
+import { useDebugValue } from "react";
+import { DefEditor, DefEditorLanguage, MetaEditorProjection } from ".";
 import { PiLangConceptReference } from "../../languagedef/metalanguage";
 
 export class DefEditorConcept implements DefEditor {
     languageEditor: DefEditorLanguage;
     concept: PiLangConceptReference;
 
-    trigger: string = null;
+    _trigger: string = null;
     symbol: string = null;     // only for binary expressions
 
-    projection: DefEditorProjection;
+    get trigger(): string {
+        if(!!this._trigger) {
+            return this._trigger
+        } else {
+            return this.symbol;
+        }
+    }
+
+    set trigger(value: string) {
+        this._trigger = value;
+    }
+
+    projection: MetaEditorProjection = null;
 }

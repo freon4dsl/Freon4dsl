@@ -2,8 +2,10 @@ import * as React from "react";
 import { observer } from "mobx-react";
 
 import { SelectBox } from "../boxes/SelectBox";
+import { IndentBox } from "../boxes/IndentBox";
 import { SvgBox } from "../boxes/SvgBox";
 import { GridBox } from "../boxes/GridBox";
+import { IndentComponent } from "./boxes/IndentComponent";
 import { SelectComponent } from "./boxes/SelectComponent";
 import { SvgComponent } from "./boxes/SvgComponent";
 import { GridComponent } from "./boxes/GridComponent";
@@ -41,6 +43,8 @@ export function renderComponent(box: Box, editor: PiEditor): React.ReactElement<
             return <TextComponent box={box as TextBox} editor={editor} />;
         case "AliasBox":
             return <AliasComponent box={box as AliasBox} editor={editor} />;
+        case "IndentBox":
+            return <IndentComponent box={box as IndentBox} editor={editor} />;
         case "SelectBox":
             return <SelectComponent box={box as SelectBox} editor={editor} />;
         case "SvgBox":

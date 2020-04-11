@@ -21,4 +21,5 @@ export const STYLES: {
     gridcellOr: string;
     grid: string;
     gridcell: string;
+    indent: string;
 } = require("./style.scss");

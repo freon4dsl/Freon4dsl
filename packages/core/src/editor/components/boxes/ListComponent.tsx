@@ -34,6 +34,7 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
 
     render() {
         RENDER_LOG.info(this, "");
+        const children = this.props.box.children;
         const styleClasses = classNames(
             this.props.box.kind === "HorizontalListBox" ? STYLES.horizontalList : STYLES.verticalList,
             this.props.box.style
@@ -41,10 +42,10 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
         const gridStyle =
             this.props.box.kind === "HorizontalListBox"
                 ? {
-                      gridTemplateColumns: "repeat(" + this.props.box.children.length + ", auto)"
+                      gridTemplateColumns: "repeat(" + children.length + ", auto)"
                   }
                 : {
-                      gridTemplateRows: "repeat(" + this.props.box.children.length + ", auto)"
+                      gridTemplateRows: "repeat(" + children.length + ", auto)"
                   };
         if (this.props.box.kind === "HorizontalListBox") {
             return (
@@ -55,7 +56,7 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
                     ref={this.setElement}
                     tabIndex={0}
                 >
-                    {this.props.box.children.map((ch, index) => (
+                    {children.map((ch, index) => (
                         <RenderBox key={ch.id + index} box={ch} editor={this.props.editor} />
                     ))}
                 </div>
@@ -70,7 +71,7 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
                     ref={this.setElement}
                     tabIndex={0}
                 >
-                    {this.props.box.children.map((ch, index) => (
+                    {children.map((ch, index) => (
                         <RenderBox key={ch.id + index} box={ch} editor={this.props.editor} />
                     ))}
                 </div>

@@ -36,7 +36,7 @@ export class ActionsTemplate {
             import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                ${language.classes.filter(c => c.expression() && !c.isAbstract).map(c =>
+                ${language.classes.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract).map(c =>
             `{
                     trigger: ${c.triggerIsRegExp ? `/${editorDef.findConceptEditor(c).trigger}/` : `"${editorDef.findConceptEditor(c).trigger}"`},
                     activeInBoxRoles: [

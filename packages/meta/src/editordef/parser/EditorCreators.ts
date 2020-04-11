@@ -5,7 +5,7 @@ import {
     DefEditorConcept,
     DefEditorEnumeration,
     DefEditorLanguage, DefEditorNewline,
-    DefEditorProjection, DefEditorProjectionExpression,
+    MetaEditorProjection, DefEditorProjectionExpression,
     DefEditorProjectionIndent,
     MetaEditorProjectionLine,
     DefEditorProjectionText, DefEditorSubProjection
@@ -68,14 +68,15 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
 
 }
 
-export function createProjection(data: Partial<DefEditorProjection>): DefEditorProjection {
-    const result = new DefEditorProjection();
+export function createProjection(data: Partial<MetaEditorProjection>): MetaEditorProjection {
+    const result = new MetaEditorProjection();
     if (!!data.lines) {
         result.lines = data.lines;
     }
     if (!!data.name) {
         result.name = data.name;
     }
+    result.normalize();
     console.log(result.toString());
     return result;
 }
@@ -107,13 +108,16 @@ export function createText(data: string): DefEditorProjectionText {
 }
 
 export function createSubProjection(data: Partial<DefEditorSubProjection>): DefEditorSubProjection {
-    // console.log("create SubProjection <<" + data.propertyName + ">> join ["+ data.listJoin + "]");
+    console.log("create SubProjection <<" + data.propertyName + ">> join ["+ data.listJoin + "]");
     const result = new DefEditorSubProjection();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
     if (!!(data.listJoin)) {
         result.listJoin = data.listJoin;
+    }
+    if (!!(data.expression)) {
+        result.expression = data.expression;
     }
     return result;
 }
