@@ -1,0 +1,149 @@
+import * as React from 'react';
+import {
+    DetailsList,
+    DetailsListLayoutMode,
+    IDetailsHeaderProps,
+    Selection,
+    IColumn,
+    ConstrainMode,
+} from 'office-ui-fabric-react/lib/DetailsList';
+import { IRenderFunction } from 'office-ui-fabric-react/lib/Utilities';
+import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip';
+import { ScrollablePane, ScrollbarVisibility } from 'office-ui-fabric-react/lib/ScrollablePane';
+import { Sticky, StickyPositionType } from 'office-ui-fabric-react/lib/Sticky';
+import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
+import { IDetailsColumnRenderTooltipProps } from 'office-ui-fabric-react/lib/DetailsList';
+import { SelectionMode } from "office-ui-fabric-react/lib/Selection";
+import { EditorEnvironment, IErrorItem } from "../gateway-to-projectit/EditorEnvironment";
+
+// This component holds the errorlist
+
+const classNames = mergeStyleSets({
+    wrapper: {
+        height: '80vh',
+        position: 'relative',
+        border: "inherit"
+    },
+    filter: {
+        paddingBottom: 20,
+        maxWidth: 300,
+    },
+    header: {
+        margin: 0,
+    },
+    row: {
+        display: 'inline-block',
+    },
+});
+
+export interface IErrorListState {
+    items: IErrorItem[];
+}
+
+export class ErrorList extends React.Component<{}, IErrorListState> {
+    private _selection: Selection;
+    private _allItems: IErrorItem[]; // should be observable!
+    private _columns: IColumn[];
+
+    constructor(props: {}) {
+        super(props);
+
+        this._selection = new Selection();
+        this._allItems = [];
+        this.getErrors();
+        this.makeColumns(props);
+        // must be done after getErrors
+        this.state = {
+            items: this._allItems,
+        };
+    }
+
+    private getErrors() {
+        for(let error of EditorEnvironment.getErrors()) {
+            this._allItems.push({
+                key: error.key,
+                errormessage: error.errormessage,
+                errorlocation: error.errorlocation,
+            });
+        }
+    }
+
+    private makeColumns(props: {}) {
+        this._columns = [];
+        this._columns.push({
+            key: 'message',
+            name: 'message',
+            fieldName: 'errormessage',
+            minWidth: 200,
+            maxWidth: 600,
+            isResizable: true,
+        });
+        this._columns.push({
+            key: 'location',
+            name: 'found in',
+            fieldName: 'errorlocation',
+            minWidth: 200,
+            maxWidth: 400,
+            isResizable: true,
+        });
+    }
+
+    public render(): JSX.Element {
+        const { items } = this.state;
+
+        return (
+            <div className={classNames.wrapper}  >
+                <ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto} >
+                    <Sticky stickyPosition={StickyPositionType.Header}>
+                        <h3 className={classNames.header}>errors found</h3>
+                    </Sticky>
+                    <DetailsList
+                        items={items}
+                        columns={this._columns}
+                        setKey="set"
+                        layoutMode={DetailsListLayoutMode.fixedColumns}
+                        constrainMode={ConstrainMode.unconstrained}
+                        onRenderDetailsHeader={onRenderDetailsHeader}
+                        selection={this._selection}
+                        selectionMode={SelectionMode.single}
+                        selectionPreservedOnEmptyClick={true}
+                        ariaLabelForSelectionColumn="Toggle selection"
+                        ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+                        onItemInvoked={_onItemInvoked}
+                        onActiveItemChanged={_onActiveItemChanged}
+                    />
+                </ScrollablePane>
+            </div>
+        );
+    }
+}
+
+function _onItemInvoked(item: IErrorItem): void {
+    alert('Item invoked: ' + item.errormessage);
+}
+
+function _onActiveItemChanged(item: IErrorItem): void {
+    // give signal to EditorEnvironment
+    EditorEnvironment.errorSelected((item));
+}
+
+const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defaultRender) => {
+    if (!props) {
+        return null;
+    }
+
+    const onRenderColumnHeaderTooltip: IRenderFunction<IDetailsColumnRenderTooltipProps> = tooltipHostProps => (
+        <TooltipHost {...tooltipHostProps} />
+    );
+
+    return (
+        <Sticky stickyPosition={StickyPositionType.Header} isScrollSynced={true}>
+            {defaultRender!({
+                ...props,
+                onRenderColumnHeaderTooltip,
+            })}
+        </Sticky>
+    );
+};
+
+
