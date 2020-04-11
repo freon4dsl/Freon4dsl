@@ -23,6 +23,7 @@ export class IndentBox extends Box {
         this.indent = indent;
         this.child = child;
         child.parent = this;
+        this.selectable = false;
     }
 
     /**

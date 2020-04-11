@@ -130,8 +130,13 @@ export class PiEditor {
         LOGGER.info(this, "==> SelectParent");
         const parent = this.selectedBox.parent;
         if (parent) {
-            this.selectBox(parent);
-            parent.setFocus();
+            if( parent.selectable) {
+                this.selectBox(parent);
+                parent.setFocus();
+            } else {
+                this.selectBox(parent);
+                this.selectParentBox()
+            }
         }
     }
 

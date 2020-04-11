@@ -71,7 +71,7 @@ export class PiUtils {
      */
     static async handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): Promise<boolean> {
         for (const act of editor.keyboardActions) {
-            LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
+            // LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
             if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
                 if (act.activeInBoxRoles.includes(box.role)) {
                     LOGGER.log("handleKeyboardShortcut: executing keyboard action");

@@ -54,68 +54,74 @@ export abstract class Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box {
-        const selectable = this.getSelectableChildren();
-        if (selectable.length > 0) {
-            return selectable[0].firstLeaf;
-        } else {
+        if( this.isLeaf() && this.selectable){
             return this;
         }
+
+        for(let child of this.children){
+            const leafChild = child.firstLeaf;
+            if( !!leafChild ){
+                return leafChild;
+            }
+        }
+        return null;
+    }
+
+    isLeaf(): boolean {
+        return this.children.length == 0;
     }
 
     /**
      * Get the last selectable leaf box in the tree with `this` as root.
      */
     get lastLeaf(): Box {
-        const selectable = this.getSelectableChildren();
-        if (selectable.length > 0) {
-            return selectable[selectable.length - 1].lastLeaf;
-        } else {
+        if( this.isLeaf() && this.selectable){
             return this;
         }
+        const childrenReversed = this.children.filter(ch => true).reverse();
+        for(let child of childrenReversed){
+            const leafChild = child.lastLeaf;
+            if( !!leafChild ){
+                return leafChild;
+            }
+        }
+        return null;
     }
 
-    // TODO Recursively look into siblings children
     get nextLeafRight(): Box {
-        if (!this.parent) {
+        if( !this.parent) {
             return null;
         }
-        const selectable = this.getSelectableSiblings();
-        const thisIndex = selectable.indexOf(this);
-        if (thisIndex < selectable.length - 1) {
-            return selectable[thisIndex + 1].firstLeaf;
-        } else {
-            return this.parent.nextLeafRight;
+        const thisIndex = this.parent.children.indexOf(this);
+        let rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
+        for(let sibling of rightSiblings){
+            const siblingChild = sibling.firstLeaf;
+            if( !!siblingChild ){
+                return siblingChild;
+            }
+            if (sibling.isLeaf() && sibling.selectable){
+                return sibling;
+            }
         }
+        return this.parent.nextLeafRight;
     }
 
-    // TODO Recursively look into siblings children
     get nextLeafLeft(): Box {
-        if (!this.parent) {
+        if( !this.parent) {
             return null;
         }
-        const selectableSiblings = this.getSelectableSiblings();
-        const thisIndex = selectableSiblings.indexOf(this);
-        if (thisIndex > 0) {
-            return selectableSiblings[thisIndex - 1].lastLeaf;
-        } else {
-            return this.parent.nextLeafLeft;
+        const thisIndex = this.parent.children.indexOf(this);
+        let leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
+        for(let sibling of leftSiblings){
+            const siblingChild = sibling.lastLeaf;
+            if( !!siblingChild ){
+                return siblingChild;
+            }
+            if (sibling.isLeaf() && sibling.selectable){
+                return sibling;
+            }
         }
-    }
-
-    private getSelectableChildren(): Box[] {
-        let result = this.children.filter(c => c.selectable);
-        // TODO Make this recurive
-        // this.children.forEach(child =>
-        //     result = result.concat(child.getSelectableChildren()));
-        return result;
-    }
-
-    private getSelectableSiblings(): Box[] {
-        if (this.parent) {
-            return this.parent.children.filter(c => c.selectable);
-        } else {
-            return [];
-        }
+        return this.parent.nextLeafLeft
     }
 
     toString() {
