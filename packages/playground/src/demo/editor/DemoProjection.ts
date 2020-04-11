@@ -33,26 +33,7 @@ export class DemoProjection implements PiProjection {
         if (element instanceof DemoNumberLiteralExpression) {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
-        // Add any handmade projections of your own before next statement
-        if (element instanceof DemoVariable) {
-            return new VerticalListBox(element, "element", [
-                new HorizontalListBox(element, "element-name-list", [
-                    new LabelBox(element, "element-name-label", "variable name", {
-                        style: projectitStyles.propertykeyword
-                    }),
-                    new TextBox(
-                        element,
-                        "element-name-text",
-                        () => element.name,
-                        (c: string) => (element.name = c as string),
-                        {
-                            placeHolder: "text",
-                            style: projectitStyles.placeholdertext
-                        }
-                    )
-                ])
-            ]);
-        }
+
         return null;
     }
 
