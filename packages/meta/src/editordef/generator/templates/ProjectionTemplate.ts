@@ -136,7 +136,7 @@ export class ProjectionTemplate {
                                     selectable: false
                                 }),
                                 ${this.primitivePropertyProjection(p)},
-                            ])`
+                            ], { selectable: false })`
                         ).concat(
                         c.enumProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
@@ -145,7 +145,7 @@ export class ProjectionTemplate {
                                     selectable: false
                                 }),
                                 ${this.enumPropertyProjection(p)},
-                            ])`
+                            ], { selectable: false })`
                         )).concat(
 //  Map all parts
                         c.allParts().map(part => `
@@ -274,7 +274,7 @@ export class ProjectionTemplate {
                 }
             });
             if( line.items.length > 1) {
-                result += ` ] ) `
+                result += ` ], { selectable: false } ) `
             }
             if( line.indent > 0 ){
                 // end of line, finish indent when applicable
