@@ -1,11 +1,4 @@
 {
-  "packages": [
-    "packages/core",
-    "packages/meta",
-    "packages/demo",
-    "packages/playground",
-    "packages/server"
-  ],
   "npmClient": "yarn",
   "useWorkspaces": true,
   "version": "0.0.5",

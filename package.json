@@ -77,7 +77,11 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "workspaces": [
-    "packages/*"
+    "packages/core",
+    "packages/meta",
+    "packages/demo",
+    "packages/playground",
+    "packages/server"
   ],
   "jest": {
     "globalSetup": "./testSetup.js",
