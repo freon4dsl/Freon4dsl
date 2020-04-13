@@ -1,4 +1,4 @@
-import { PiLangAppliedFeatureExp, PiLangConceptReference, PiLangEnumExp, PiLangThisExp } from "../../languagedef/metalanguage";
+import { PiLangAppliedFeatureExp, PiLangConceptReference, PiLangEnumExp, PiLangSelfExp } from "../../languagedef/metalanguage";
 import { CheckConformsRule, CheckEqualsTypeRule, ConceptRuleSet, NotEmptyRule, PiValidatorDef, ValidNameRule } from "../metalanguage/ValidatorDefLang";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang) from the parsed data objects (from ValidatorGrammar.pegjs). 
@@ -77,8 +77,8 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
     return result;
 }
 
-export function createThisExpression(data: Partial<PiLangThisExp>) {
-    const result : PiLangThisExp = new PiLangThisExp();
+export function createThisExpression(data: Partial<PiLangSelfExp>) {
+    const result : PiLangSelfExp = new PiLangSelfExp();
     if (!!data.sourceName) {
         result.sourceName = data.sourceName;
     }

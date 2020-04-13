@@ -4,7 +4,7 @@ import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTy
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangThisExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangSelfExp } from "../../languagedef/metalanguage/PiLangExpressions";
 
 const LOGGER = new PiLogger("PiTyperChecker"); // .mute();
 export class PiTyperChecker extends Checker<PiTypeDefinition> {

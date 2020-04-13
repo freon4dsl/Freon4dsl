@@ -1,4 +1,4 @@
-import { PiLangClass } from "../languagedef/metalanguage";
+import { PiLangClass, PiLangEnumExp, PiLangExp, PiLangSelfExp } from "../languagedef/metalanguage";
 
     // As in the WalkerTemplate,
     // the entries for the unparse${concept.name} must be sorted,
@@ -26,3 +26,14 @@ import { PiLangClass } from "../languagedef/metalanguage";
         }
         return newList;
     }
+
+    export function  langRefToTypeScript(ref: PiLangExp): string {
+    // console.log(" generating " + ref.toPiString());
+    if (ref instanceof PiLangEnumExp) {
+        return `${ref.sourceName}.${ref.appliedfeature}`;
+    } else if (ref instanceof PiLangSelfExp) {
+        return `modelelement.${ref.appliedfeature.toPiString()}`;
+    } else {
+        return ref.toPiString();
+    }
+}

@@ -1,6 +1,6 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangExp, PiLangEnumExp, PiLangSelfExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage/PiLangExpressions";
 import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
 
 
@@ -229,7 +229,7 @@ export class PiTyperTemplate {
     private langRefToTypeScript(ref: PiLangExp): string {
         if (ref instanceof PiLangEnumExp) {
             return `${ref.sourceName}.${ref.appliedfeature}`;
-        } else if (ref instanceof PiLangThisExp) {
+        } else if (ref instanceof PiLangSelfExp) {
             return `modelelement.${ref.appliedfeature?.toPiString()}`;
         } else if (ref instanceof PiLangFunctionCallExp) {
             return `this.${ref.sourceName} (${ref.actualparams.map(
@@ -243,7 +243,7 @@ export class PiTyperTemplate {
     private makeTypeRef(ref: PiLangExp) : string {
         if (ref instanceof PiLangEnumExp) {
             return `${ref.sourceName}.${ref.appliedfeature}`;
-        } else if (ref instanceof PiLangThisExp) {
+        } else if (ref instanceof PiLangSelfExp) {
             return `this.inferType(modelelement.${ref.appliedfeature?.toPiString()})`;
         } else if (ref instanceof PiLangFunctionCallExp) {
             return `this.${ref.sourceName} (${ref.actualparams.map(
