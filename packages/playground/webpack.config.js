@@ -13,7 +13,8 @@ module.exports = {
   mode: 'development',
   context: sourcePath,
   entry: {
-    main: "./webapp/run.tsx",
+      // main: "./webapp/run.tsx",
+      main: "./webapp2/index.tsx",
     vendor: [
       'react',
       'react-dom',

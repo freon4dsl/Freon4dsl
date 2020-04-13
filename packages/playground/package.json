@@ -19,7 +19,7 @@
     "validate-it": 	"ts-node ../meta/src/commandline/projectit -v validate-it -l src/demo/defs/LanguageDefinition.lang -c src/demo/defs/LanguageDefinition.valid -o src/demo",
     "taxrules": 	"ts-node ../meta/src/commandline/projectit all -d src/taxrules/defs -o src/taxrules",
     "type-it": 	"ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
-    "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
+    "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3001 --open",
     "build-wait": "tsc -w",
     "build": "yarn run projectit-nonverbose && yarn run taxrules && tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
@@ -28,8 +28,12 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/react": "^16.9.5",
-    "@types/react-dom": "^16.9.1",
+    "@uifabric/example-data": "^7.0.9",
+    "@uifabric/fluent-theme": "^7.1.51",
+    "@fluentui/react": "^7.105.13",
+    "@fluentui/react-northstar": "^0.47.0",
+    "@types/react": "16.8.15",
+    "@types/react-dom": "16.8.4",
     "@types/react-router": "^5.1.4",
     "@types/webpack": "^4.39.2",
     "@types/webpack-env": "^1.14.0",

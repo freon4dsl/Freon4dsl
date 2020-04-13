@@ -1,4 +1,5 @@
 import { PiEditor, PiProjection } from "../editor";
+import { ProjectionalEditor } from "../editor/components";
 import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
 import { PiTyper } from "../typer";
@@ -10,4 +11,5 @@ export interface PiEnvironment {
     editor: PiEditor;
 
     projection: PiProjection;
+    projectionalEditorComponent: ProjectionalEditor ;
 }
