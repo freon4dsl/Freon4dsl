@@ -63,12 +63,12 @@ export class App extends React.Component<{}, IDialogState> {
                         "height": "50px",
                         "marginTop": "-50px",
                         "backgroundColor": "darkblue",
-                        "color": "white"
+                        "color": "rgba(211, 227, 253, 255)"
                     }}>
                         {/*"footer"*/}
                         <Flex gap="gap.small" padding="padding.medium" hAlign="center">
                             <Text content="Created by ProjectIt " size='medium'/>
-                            <Link href="http://www.projectit.org/" target="_blank"><Text content="(www.projectit.org)." color="red"/></Link>
+                            <Link href="http://www.projectit.org/" target="_blank"><Text content="(www.projectit.org)."/></Link>
                         </Flex>
                         {/*Global dialog needs to be on the main page*/}
                         <Dialog

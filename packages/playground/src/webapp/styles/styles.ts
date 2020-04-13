@@ -22,4 +22,5 @@ export const projectitStyles: {
     tree: string;
     indent: string;
     indent2: string;
+    myButton: string;
 } = require("./style.scss");
