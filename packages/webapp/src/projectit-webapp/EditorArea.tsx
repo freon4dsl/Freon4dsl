@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Flex, Image, Box } from '@fluentui/react-northstar';
+import { EditorEnvironment } from "../gateway-to-projectit/EditorEnvironment";
 import { Navigator } from "./Navigator";
 import { ErrorList } from "./ErrorList";
 
@@ -38,7 +39,7 @@ export const EditorArea: React.FunctionComponent = () => {
                                   color: 'red',
                               },
                           }}>
-                          <Image src="editor-screenshot-april-6-2020.png" alt="editor"/>
+                          {EditorEnvironment.getEditor()}
                       </Box>
                   </Flex.Item>
                   <Flex.Item size="size.quarter">

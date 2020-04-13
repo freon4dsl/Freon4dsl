@@ -20,16 +20,17 @@ import { EditorEnvironment, IErrorItem } from "../gateway-to-projectit/EditorEnv
 
 const classNames = mergeStyleSets({
     wrapper: {
-        height: '80vh',
+        height: '200px',
         position: 'relative',
         border: "inherit"
     },
     filter: {
-        paddingBottom: 20,
+        paddingBottom: 10,
         maxWidth: 300,
     },
     header: {
         margin: 0,
+        height: "30px"
     },
     row: {
         display: 'inline-block',
@@ -98,6 +99,7 @@ export class ErrorList extends React.Component<{}, IErrorListState> {
                         <h3 className={classNames.header}>errors found</h3>
                     </Sticky>
                     <DetailsList
+                        compact={true}
                         items={items}
                         columns={this._columns}
                         setKey="set"

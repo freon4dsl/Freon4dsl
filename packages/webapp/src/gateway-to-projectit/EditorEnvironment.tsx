@@ -1,5 +1,8 @@
 // This file contains all the stuff that needs to connect to the projectIt generated langauge environment
 
+import { Image } from "@fluentui/react-northstar";
+import * as React from "react";
+
 export interface IModelUnit {
     id: number,
     name: string,
@@ -15,6 +18,11 @@ export interface IErrorItem {
 }
 
 export class EditorEnvironment {
+    // for the communication with the editor
+    static getEditor(): JSX.Element {
+        return <Image src="editor-screenshot-april-6-2020.png" alt="editor"/>
+    }
+    //
     // for the communication with the menubar
     static new() {
         console.log("EditorEnvironment new called");
