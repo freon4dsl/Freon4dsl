@@ -96,9 +96,9 @@ export class ErrorList extends React.Component<{}, IErrorListState> {
         return (
             <div className={classNames.wrapper}>
                 {/*<ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>*/}
-                    <Sticky stickyPosition={StickyPositionType.Header}>
-                        <h3 className={classNames.header} style={{ height: "20px" }}>errors found</h3>
-                    </Sticky>
+                {/*    <Sticky stickyPosition={StickyPositionType.Header}>*/}
+                {/*        <h3 className={classNames.header} style={{ height: "20px" }}>errors found</h3>*/}
+                {/*    </Sticky>*/}
                     <Box
                         // content="errorList"
                         styles={{
