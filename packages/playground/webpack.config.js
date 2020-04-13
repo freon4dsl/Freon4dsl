@@ -133,7 +133,7 @@ module.exports = {
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new HtmlWebpackPlugin({
-      template: './webapp/assets/index.html'
+      template: './webapp2/assets/index.html'
     })
   ],
   devServer: {
