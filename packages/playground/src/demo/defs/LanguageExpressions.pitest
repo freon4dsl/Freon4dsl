@@ -2,13 +2,13 @@ expressions for language Demo
 
 DemoModel {
     // default Identifier
-    this.entities.expr;
-    this.functions;
+    self.entities.expr;
+    self.functions;
 }
 
 DemoEntity {
-    this.attributes;
-    this.functions;
+    self.attributes;
+    self.functions;
     DemoAttributeType:Inter;
 }
 
@@ -17,8 +17,8 @@ DemoAttribute {
 }
 
 DemoFunction {
-    conformsTo (this.declaredType);
-    this.parameters;
+    conformsTo (self.declaredType);
+    self.parameters;
     DemoFunction.parameters;
 }
 
@@ -27,40 +27,40 @@ DemoVariable {
 }
 
 DemoAbsExpression {
-    equalsType( this.expr, DemoAttributeType:Integer ) ;
+    equalsType( self.expr, DemoAttributeType:Integer ) ;
 }
 
 DemoMultiplyExpression {
-    equalsType( this.left, DemoAttributeType:Integer );
-    equalsType( this.right, DemoAttributeType:Integer );
+    equalsType( self.left, DemoAttributeType:Integer );
+    equalsType( self.right, DemoAttributeType:Integer );
 }
 
 DemoPlusExpression {
-    equalsType( this.left, DemoAttributeType:Integer );
-    equalsType( this.right, DemoAttributeType:Integer );
-    conformsTo( this.left, this.right );
+    equalsType( self.left, DemoAttributeType:Integer );
+    equalsType( self.right, DemoAttributeType:Integer );
+    conformsTo( self.left, self.right );
 }
 
 DemoDivideExpression {
-    equalsType( this.left, DemoAttributeType:Integer );
-    equalsType( this.right, DemoAttributeType:Integer );
+    equalsType( self.left, DemoAttributeType:Integer );
+    equalsType( self.right, DemoAttributeType:Integer );
 }
 
 DemoAndExpression {
-    equalsType( this.left, DemoAttributeType:Boolean );
-    equalsType( this.right, DemoAttributeType:Boolean );
+    equalsType( self.left, DemoAttributeType:Boolean );
+    equalsType( self.right, DemoAttributeType:Boolean );
 }
 
 DemoOrExpression {
-    equalsType( this.left, DemoAttributeType:Boolean );
-    equalsType( this.right, DemoAttributeType:Boolean );
+    equalsType( self.left, DemoAttributeType:Boolean );
+    equalsType( self.right, DemoAttributeType:Boolean );
 }
 
 DemoComparisonExpression {
-    equalsType( this.left, this.right );
+    equalsType( self.left, self.right );
 }
 
 DemoIfExpression {
-    equalsType( this.condition, DemoAttributeType:Boolean );
-    conformsTo( this.whenTrue, this.whenFalse );
+    equalsType( self.condition, DemoAttributeType:Boolean );
+    conformsTo( self.whenTrue, self.whenFalse );
 }

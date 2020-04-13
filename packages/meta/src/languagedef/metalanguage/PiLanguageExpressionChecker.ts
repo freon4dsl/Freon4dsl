@@ -2,7 +2,7 @@ import { Checker } from "../../utils/Checker";
 import { PiLangConceptProperty, PiLanguageUnit, PiLangConcept, PiLangProperty } from "./PiLanguage";
 import { PiLangConceptReference, PiLangPropertyReference } from "./PiLangReferences";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
-import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
+import { PiLangExp, PiLangEnumExp, PiLangSelfExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
@@ -78,7 +78,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         if (langRef instanceof PiLangEnumExp) {
             this.checkEnumRefExpression(langRef, enclosingConcept);
 
-        } else if (langRef instanceof PiLangThisExp) {
+        } else if (langRef instanceof PiLangSelfExp) {
             this.checkThisExpression(langRef, enclosingConcept);
         } else if (langRef instanceof PiLangConceptExp) {
             this.checkConceptExpression(langRef, enclosingConcept);
@@ -110,7 +110,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // this.XXX
-    private checkThisExpression(langRef: PiLangThisExp, enclosingConcept:PiLangConcept) {
+    private checkThisExpression(langRef: PiLangSelfExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking 'this' Expression " + langRef?.toPiString());
         langRef.referedElement = enclosingConcept;
         this.nestedCheck(
@@ -133,13 +133,22 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
 
         this.nestedCheck(
             {
-                check: langRef.appliedfeature != null,
-                error: `Concept should be followed by '.', followed by a property`,
+                check: !!myConcept,
+                error: "Concept '" + langRef.sourceName + "' not found",
                 whenOk: () => {
-                    this.checkAppliedFeatureExp(langRef.appliedfeature, myConcept);
+                    this.nestedCheck(
+                        {
+                            check: langRef.appliedfeature != null,
+                            error: `Concept should be followed by '.', followed by a property`,
+                            whenOk: () => {
+                                this.checkAppliedFeatureExp(langRef.appliedfeature, myConcept);
+                            }
+                        }
+                    );
                 }
             }
         )
+
     }
 
     // someFunction( XXX, YYY )

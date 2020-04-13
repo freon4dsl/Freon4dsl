@@ -1,13 +1,13 @@
 editor StartEditor for language Demo
 
 DemoAttribute {
-    @projection attribuut [ [[this.name]] : [[this.declaredType]] ]
+    @projection attribuut [ [[self.name]] : [[self.declaredType]] ]
 }
 
 DemoStringLiteralExpression {
     @projection DemoStringLiteralExpression
         [
-		'[[this.value]]'
+		'[[self.value]]'
         ]
     @trigger "'"
 }
@@ -16,10 +16,10 @@ DemoStringLiteralExpression {
 DemoIfExpression {
     @projection DemoIfExpression
         [
-        if( [[ this.condition ]] ) then
-                  [[ this.whenTrue ]]
+        if( [[ self.condition ]] ) then
+                  [[ self.whenTrue ]]
         else
-           [[this.whenFalse]]
+           [[self.whenFalse]]
         endif
         ]
 
@@ -30,7 +30,7 @@ DemoIfExpression {
 DemoIfExpression {
     @projection DemoIfExpression
         [
-        ([[ this.condition ]] ? [[ this.whenTrue ]] : [[this.whenFalse]] )
+        ([[ self.condition ]] ? [[ self.whenTrue ]] : [[self.whenFalse]] )
         ]
 
     @trigger "if"
@@ -63,7 +63,7 @@ DemoEntity {
 DemoFunctionCallExpression {
     @projection gewoon
         [
-        [[this.name]] (  )
+        [[self.name]] (  )
         ]
     @trigger "function"
 }
@@ -72,7 +72,7 @@ DemoFunctionCallExpression {
 DemoFunctionCallExpression {
     @projection DemoFunctionCallExpression
         [
-        CALL [[this.functionDefinition]] (  )
+        CALL [[self.functionDefinition]] (  )
         ]
     @trigger "function"
 }
@@ -80,14 +80,14 @@ DemoFunctionCallExpression {
 DemoModel {
     @projection DemoModel
         [
-        model [[this.name]] {
+        model [[self.name]] {
         entities:
-            [[this.entities
+            [[self.entities
                 @vertical
                 @terminator [\n\n]
             ]]
         model wide functions:
-            [[this.functions @horizontal @separator [\n] ]]
+            [[self.functions @horizontal @separator [\n] ]]
         }
         ]
 }

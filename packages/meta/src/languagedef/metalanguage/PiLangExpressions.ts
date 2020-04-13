@@ -25,7 +25,7 @@ export abstract class PiLangExp {
 
 }
 
-export class PiLangThisExp extends PiLangExp {
+export class PiLangSelfExp extends PiLangExp {
     referedElement: PiLangConcept; // is not needed, can be determined based on its parent
 
     toPiString(): string {
