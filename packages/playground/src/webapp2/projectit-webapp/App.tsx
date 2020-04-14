@@ -73,7 +73,7 @@ export class App extends React.Component<{}, IDialogState> {
                         {/*Global dialog needs to be on the main page*/}
                         <Dialog
                             hidden={hideDialog}
-                            onDismiss={this._closeDialog}
+                            onDismiss={this._dismissDialog}
                             dialogContentProps={{
                                 type: DialogType.largeHeader,
                                 title: title,
@@ -90,8 +90,8 @@ export class App extends React.Component<{}, IDialogState> {
                         >
                             {content}
                             <DialogFooter>
-                                <PrimaryButton onClick={this._closeDialog} text="Ok"/>
-                                {this.useDefaultButton ? <DefaultButton onClick={this._closeDialog} text="Cancel"/> : null}
+                                <PrimaryButton onClick={this._okDialog} text="Ok"/>
+                                {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel"/> : null}
                             </DialogFooter>
                         </Dialog>
                     </div>
@@ -105,7 +105,24 @@ export class App extends React.Component<{}, IDialogState> {
         this.setState({ hideDialog: false });
     };
 
-    private _closeDialog = (): void => {
+    private _dismissDialog = (): void => {
+        this.setState({ hideDialog: true });
+        this.useDefaultButton = false;
+        App.onSave = null;
+    };
+
+    private _okDialog = (): void => {
+        this.setState({ hideDialog: true });
+        this.useDefaultButton = false;
+        if (!!App.onSave) {
+            console.log("Calling onSave");
+            App.onSave();
+            App.onSave = null;
+        }
+    };
+
+    private _cancelDialog = (): void => {
+        App.onSave = null;
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
     };
@@ -116,12 +133,19 @@ export class App extends React.Component<{}, IDialogState> {
 
     // set of statics to enable the calling of the dialog from elsewhere in the application
     static thisApp: App;
+    static onSave: () => void;
+
+    public static showSaveDialog(onSave: () => void) {
+        this.onSave = onSave;
+        !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
+    };
+
     public static showDialog = (): void => {
         !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
     };
 
     public static closeDialog = (): void => {
-        !!App.thisApp ? App.thisApp._closeDialog() : console.error("No App object found");
+        !!App.thisApp ? App.thisApp._okDialog() : console.error("No App object found");
     };
 
     public static useDefaultButton = (): void => {

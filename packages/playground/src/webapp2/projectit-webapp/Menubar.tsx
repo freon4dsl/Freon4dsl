@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Menu, Tooltip, Icon, Flex, Text} from "@fluentui/react-northstar";
+import {Menu, Tooltip, Icon, Flex, Text, Input} from "@fluentui/react-northstar";
 import { Link } from '@fluentui/react';
 import { EditorEnvironment } from "../gateway-to-projectit/EditorEnvironment";
 import { App } from "./App";
@@ -191,20 +191,20 @@ export default class Menubar extends React.Component {
         App.setDialogTitle("Save Model as ...");
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(<TextField label="New name:" underlined onChange={this.captureName}/>);
-        App.showDialog();
+        App.setDialogContent(<Input  inputRef={this.setInput} />);
+        App.showSaveDialog(this.saveAsClosed);
     }
 
-    private newValue: string;
-    captureName (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) {
-        // TODO how to capture the new name???
-        console.log("event type is " + event.type );
-        // if (!!newValue ) this.newValue = newValue;
-    }
+    private input: HTMLInputElement = null;
+    private setInput = (element: any | null) => {
+        this.input = element;
+    };
 
-    saveAsClosed() {
-        App.closeDialog();
-        if (!!this.newValue ) EditorEnvironment.saveAs(this.newValue);
+    saveAsClosed = () => {
+        const saveName = this.input.value;
+        console.log("SAVE Input data "+ saveName);
+        // App.closeDialog();
+        if (!!saveName ) EditorEnvironment.saveAs(saveName);
     }
 
     search() {
