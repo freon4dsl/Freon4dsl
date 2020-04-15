@@ -4,6 +4,19 @@ import { Parser } from "pegjs";
 import { PiLogger } from "../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiParser"); // .mute();
+
+// the following two type are used to store the location information from the parser
+export type ParseLocation = {
+    start: Location;
+    end: Location;
+}
+
+export  type Location = {
+    offset: number;
+    line: number;
+    column: number;
+}
+
 /**
  * Generic Parser, subclasses need to initialize the parser, checker and msg fields.
  */
@@ -27,7 +40,7 @@ export class PiParser<DEFINITION> {
         try {
             model = this.parser["parse"](langSpec);
         } catch (e) {
-            let errorstr = `Pase error: ${this.msg}: ${e} ${(e.location && e.location.start)? `[line ${e.location.start.line}, column ${e.location.start.column}`: ``}]`;
+            let errorstr = `Parse error: ${this.msg}: ${e} ${(e.location && e.location.start)? `[line ${e.location.start.line}, column ${e.location.start.column}]`: ``}`;
             LOGGER.error(this, errorstr);
             // LOGGER.log(JSON.stringify(e, null, 4));
             process.exit(-1);

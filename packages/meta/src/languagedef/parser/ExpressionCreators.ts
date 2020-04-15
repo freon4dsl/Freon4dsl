@@ -2,9 +2,9 @@ import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageE
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangThisExp, PiLangAppliedFeatureExp, PiLangEnumExp, PiLangExp, PiLangConceptExp, PiLangFunctionCallExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { ParseLocation } from "../../utils";
 
-const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
-
+const LOGGER = new PiLogger("PiLanguageExpressionCreator"); //.mute();
 
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");
@@ -48,6 +48,11 @@ export function createExpression(data: Partial<PiLangExp>) : PiLangExp {
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
     }
+    if (!!data.location) {
+        result.location = data.location;
+        LOGGER.log("found location offset: [" + result.location.start.offset + "]" );
+    }
+    LOGGER.log("@@@ found location offset: [" + result.location?.start.line + "]" );
     return result;
 }
 

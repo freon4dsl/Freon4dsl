@@ -1,11 +1,13 @@
 // This is a partial grammar file
 // Needs to be concatenated with the Basic and Expression grammars
+// The neccesary require statements for all grammars should be defined here
 {
     let create = require("./ScoperCreators");
+    let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
 
 Scoper_Definition
-  = ws "scoper" ws scoperName:var ws "for" ws "language" ws languageName:var ws ns:(namespace)*
+  = ws "scoper" ws scoperName:var ws "for" ws "language" ws languageName:var ws ns:(namespace)* defs:conceptDefinition*
     {
         return create.createScopeDef({
             "scoperName": scoperName,
@@ -14,14 +16,19 @@ Scoper_Definition
         });
     } 
 
-namespaceKey = "namespace" ws
+isnamespaceKey = ws "isnamespace" ws
+namespaceKey = ws "namespace" ws
+plus_separator = ws "+" ws
 
-namespace = namespaceKey curly_begin conceptRefs:(conceptRef)* ws curly_end 
+namespace = isnamespaceKey curly_begin conceptRefs:(conceptRef)* ws curly_end
     { 
         return create.createNamespace({ "conceptRefs": conceptRefs }); 
     }
 
-conceptRef = name:var { return create.createConceptReference( { "name": name}); }
+conceptDefinition = name:var curly_begin namespaceDefinition curly_end
 
+namespaceDefinition = namespaceKey list:expressionlist
+
+expressionlist = langRefExpression (plus_separator langRefExpression)+
 
 

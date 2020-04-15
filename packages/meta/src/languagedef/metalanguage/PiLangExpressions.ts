@@ -6,6 +6,7 @@ import {
     PiLangFunction,
     PiLangProperty
 } from ".";
+import { ParseLocation } from "../../utils";
 
 // Expressions over the PiLanguage structure
 
@@ -13,6 +14,7 @@ export abstract class PiLangExp {
     sourceName: string;							// either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
     appliedfeature: PiLangAppliedFeatureExp;	// either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
     referedElement: PiLangElement;			    // refers to the element called 'sourceName'
+    location: ParseLocation;                    // holds start and end in the parsed file
 
     // returns the element to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
     findRefOfLastAppliedFeature(): PiLangProperty {

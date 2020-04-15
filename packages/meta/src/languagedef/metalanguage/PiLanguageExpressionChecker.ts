@@ -5,7 +5,7 @@ import { LanguageExpressionTester, TestExpressionsForConcept } from "../../langu
 import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
+const LOGGER = new PiLogger("PiLanguageExpressionChecker"); //.mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equalsType" ];
 
 export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {
@@ -116,7 +116,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.nestedCheck(
             {
                 check: langRef.appliedfeature != null,
-                error: `'this' should be followed by '.', followed by a property`,
+                error: `'this' should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}]`,
                 whenOk: () => {
                     this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
                 }
