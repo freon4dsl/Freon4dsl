@@ -66,3 +66,7 @@ packages/playground/handmade/unparsedDemoModel.txt
 /packages/meta/src/typerdef/parser/PiTyperGrammar.pegjs
 /packages/meta/src/scoperdef/parser/ScoperGrammar.pegjs
 /packages/meta/src/validatordef/parser/ValidatorGrammar.pegjs
+/packages/playground/src/demo/utils/gen/DemoCreator.ts
+/packages/playground/src/demo/typer/gen/DemoTyper.ts
+/packages/playground/src/demo/validator/gen/
+/packages/playground/src/demo/utils/gen/

@@ -16,7 +16,7 @@ DemoStringLiteralExpression {
 DemoIfExpression {
     @projection DemoIfExpression
         [
-        if( [[ self.condition ]] ) then
+        if ([[ self.condition ]]) then
                   [[ self.whenTrue ]]
         else
            [[self.whenFalse]]

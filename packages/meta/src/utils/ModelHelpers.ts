@@ -1,4 +1,4 @@
-import { PiLangClass, PiLangEnumExp, PiLangExp, PiLangSelfExp } from "../languagedef/metalanguage";
+import { PiLangClass, PiLangElement, PiLangEnumExp, PiLangExp, PiLangSelfExp } from "../languagedef/metalanguage";
 
     // As in the WalkerTemplate,
     // the entries for the unparse${concept.name} must be sorted,
@@ -27,7 +27,11 @@ import { PiLangClass, PiLangEnumExp, PiLangExp, PiLangSelfExp } from "../languag
         return newList;
     }
 
-    export function  langRefToTypeScript(ref: PiLangExp): string {
+    export function isPrimitiveType(type: PiLangElement): boolean {
+        return (type.name === "string" || type.name === "number" || type.name === "boolean")
+    }
+
+    export function langRefToTypeScript(ref: PiLangExp): string {
     // console.log(" generating " + ref.toPiString());
     if (ref instanceof PiLangEnumExp) {
         return `${ref.sourceName}.${ref.appliedfeature}`;

@@ -6,6 +6,5 @@ export * from "./IndexTemplate";
 export * from "./MetaTypeTemplate";
 export * from "./PiReferenceTemplate";
 export * from "./UnionTemplate";
-export * from "./UnparserTemplate";
 export * from "./WalkerTemplate";
 export * from "./WorkerInterfaceTemplate";

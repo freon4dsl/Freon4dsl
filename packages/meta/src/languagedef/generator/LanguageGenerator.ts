@@ -12,7 +12,6 @@ import {
     MetaTypeTemplate,
     PiReferenceTemplate,
     UnionTemplate,
-    UnparserTemplate,
     WalkerTemplate,
     WorkerInterfaceTemplate
 } from "./templates";
@@ -42,7 +41,6 @@ export class LanguageGenerator {
         const environmentTemplate = new EnvironmentTemplate();
         const walkerTemplate = new WalkerTemplate();
         const workerTemplate = new WorkerInterfaceTemplate();
-        const unparserTemplate = new UnparserTemplate();
         const modelcreatorTemplate = new ModelCreatorTemplate();
 
         //Prepare folders
@@ -109,10 +107,6 @@ export class LanguageGenerator {
         LOGGER.log("Generating language worker: " + Names.workerInterface(language) + ".ts");
         var workerFile = Helpers.pretty(workerTemplate.generateWorkerInterface(language, relativePath), "WorkerInterface Class");
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`, workerFile);
-
-        LOGGER.log("Generating language unparser: " + Names.unparser(language) + ".ts");
-        var unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(language, relativePath), "Unparser Class");
-        fs.writeFileSync(`${this.utilsGenFolder}/${Names.unparser(language)}.ts`, unparserFile);
 
         // generate the convenience classes
         LOGGER.log(`Generating language model creator: ${language.name}Creator.ts`);

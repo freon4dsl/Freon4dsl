@@ -64,10 +64,10 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
 
     findRefOfLastAppliedFeature(): PiLangProperty {
         if (this.appliedfeature !== undefined) {
-            console.log(" last of: " + this.appliedfeature.sourceName);
+            // console.log(" last of: " + this.appliedfeature.sourceName);
             return this.appliedfeature.findRefOfLastAppliedFeature();
         } else {
-            console.log("found reference: " + this.referedElement?.name);
+            // console.log("found reference: " + this.referedElement?.name);
             return this.referedElement;
         }
     }

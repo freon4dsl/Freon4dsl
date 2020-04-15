@@ -40,7 +40,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
             result = unparser.unparse(mult);
-            expect(result).toBe("(3 * 10)");
+            expect(result).toBe("3*10");
         });
 
         test("multiplication 3 * 'temp'", () => {
@@ -49,7 +49,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("(3 * \"temp\")");
+            expect(result).toBe("3* \'temp\'");
         });
 
         test("multiplication (3/4) * 'temp'", () => {
@@ -61,7 +61,7 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("((3 / 4) * \"temp\")");
+            expect(result).toBe("3/4* \'temp\'");
         });
 
         test("(1 + 2) * 'Person'", () => {
@@ -80,7 +80,7 @@ describe("Testing Unparser", () => {
             const divideExpression = DemoModelCreator.MakePlusExp("1", "2");
             const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.unparse(multiplyExpression);
-            expect(result).toBe("((1 + 2) * Person)");
+            expect(result).toBe("1+2*Person");
         });
 
         test("'determine(AAP : Integer) : Boolean = \"Hello Demo\" + \"Goodbye\"'", () => {
@@ -93,13 +93,14 @@ describe("Testing Unparser", () => {
             determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             result = unparser.unparse(determine);
-            expect(result).toBe("determine( AAP : Integer ): Boolean\n\t\t= (\"Hello Demo\" + \"Goodbye\")");
+            expect(result).toBe("determine( AAP : Integer ): Boolean = \'Hello Demo\' + \'Goodbye\'");
         });
 
         test("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
             const personEnt = DemoEntity.create("Person");
             const age = DemoAttribute.create("age");
+
             const personName = DemoAttribute.create("name");
             personEnt.attributes.push(age);
             personEnt.attributes.push(personName);
@@ -117,18 +118,18 @@ describe("Testing Unparser", () => {
             // Person { name, age, first(Resultvar) = 5 + 24 }
 
             result = unparser.unparse(personEnt);
-            expect(result).toBe("Person {\n\tage : Boolean,\n\tname : String,\n\tfirst( Resultvar : Boolean ): Boolean\n\t\t= (5 + 24),\n}");
+            expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = 5+24}");
         });
 
-        test.skip("complete example model with simple attribute types", () => {
+        test("complete example model with simple attribute types", () => {
             let result: string = "";
             result = unparser.unparse(model);
-            // let path : string = "./handmade/unparsedDemoModel.txt";
-            // if (!fs.existsSync(path)) {
-                // fs.writeFileSync(path, result);
-            // } else {
-            //     console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
-            // }
+            let path : string = "./handmade/unparsedDemoModel.txt";
+            if (!fs.existsSync(path)) {
+                fs.writeFileSync(path, result);
+            } else {
+                console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
+            }
     
             expect(result.length).toBe(556);
         });
