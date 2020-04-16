@@ -20,7 +20,7 @@ DemoVariable  {
     infertype this.declaredType
 }
 DemoExpression {
-    abstract infertype 
+    abstract infertype
 }
 DemoStringLiteralExpression {
     infertype DemoAttributeType:String
@@ -38,7 +38,7 @@ DemoMultiplyExpression {
     infertype this.left
 }
 DemoPlusExpression {
-    infertype commonSuperType(this.left, this.right) 
+    infertype commonSuperType(this.left, this.right)
 }
 DemoDivideExpression {
     infertype this.left
