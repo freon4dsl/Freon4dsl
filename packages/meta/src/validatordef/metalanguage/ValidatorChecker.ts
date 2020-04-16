@@ -19,7 +19,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
         if ( this.language === null || this.language === undefined ) {
-            LOGGER.error(this, "Validator definition checker does not known the language, exiting.");
+            LOGGER.error(this, `Validator definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
             process.exit(-1);
         }
 
@@ -27,7 +27,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             {
                 check: this.language.name === definition.languageName,
                 error: `Language reference ('${definition.languageName}') in 
-                    Validation Definition '${definition.validatorName}' does not match language '${this.language.name}'.`,
+                    Validation Definition '${definition.validatorName}' does not match language '${this.language.name}' [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
                 whenOk: () => {
                     definition.conceptRules.forEach(rule => {
                         this.checkConceptRule(rule);
@@ -57,11 +57,11 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Concept reference should have a name, but doesn't`,
+                error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
                 whenOk: () => this.nestedCheck(
                     {
                         check: reference.referedElement() !== undefined,
-                        error: `Concept reference to ${reference.name} cannot be resolved`
+                        error: `Concept reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
                     })
             })
     }
@@ -85,7 +85,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             });
             this.nestedCheck({
                 check:!(!!myProp),
-                error: "Cannot find property 'name' in " + enclosingConcept.name,
+                error: `Cannot find property 'name' in ${enclosingConcept.name} [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
                     tr.property = new PiLangThisExp();
                     tr.property.appliedfeature = new PiLangAppliedFeatureExp();
@@ -106,7 +106,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.type1 != null || tr.type2 != null,
-                error: `Typecheck "equalsType" should have two types to compare`,
+                error: `Typecheck "equalsType" should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
                     // LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept),
@@ -120,7 +120,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.type1 != null || tr.type2 != null,
-                error: `Typecheck "conformsTo" should have two types to compare`,
+                error: `Typecheck "conformsTo" should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
                     // LOGGER.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);

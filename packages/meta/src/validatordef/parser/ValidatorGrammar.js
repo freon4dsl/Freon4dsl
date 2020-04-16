@@ -152,6 +152,7 @@ function peg$parse(input, options) {
                   "validatorName": validatorName,
                   "languageName": languageName,
                   "conceptRules": cr,
+                  "location": location()
               });
           },
       peg$c7 = "validName",
@@ -166,6 +167,7 @@ function peg$parse(input, options) {
               return create.createConceptRule({ 
                 "conceptRef": conceptRef, 
                 "rules": rules,
+                "location": location()
               }); 
           },
       peg$c16 = function(rule1) { return rule1; },
@@ -174,12 +176,14 @@ function peg$parse(input, options) {
       peg$c19 = function(rule4) { return rule4; },
       peg$c20 = function(property) {
         return create.createValidNameRule( {
-          "property": property
+          "property": property,
+          "location": location()
         });
       },
       peg$c21 = function(property) {
         return create.createNotEmptyRule( {
-          "property": property
+          "property": property,
+          "location": location()
         })
       },
       peg$c22 = "equalsType",
@@ -188,6 +192,7 @@ function peg$parse(input, options) {
         return create.createTypeEqualsRule( {
           "type1": type1,
           "type2": type2,
+          "location": location()
         });
       },
       peg$c25 = "conformsTo",
@@ -196,6 +201,7 @@ function peg$parse(input, options) {
         return create.createTypeConformsRule( {
           "type1": type1,
           "type2": type2,
+          "location": location()
         });
       },
       peg$c28 = "expressions",

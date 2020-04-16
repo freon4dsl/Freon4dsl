@@ -10,6 +10,7 @@ Validator_Definition
             "validatorName": validatorName,
             "languageName": languageName,
             "conceptRules": cr,
+            "location": location()
         });
     } 
 
@@ -23,6 +24,7 @@ conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end
         return create.createConceptRule({ 
           "conceptRef": conceptRef, 
           "rules": rules,
+          "location": location()
         }); 
     }
 
@@ -35,13 +37,15 @@ rule =  rule1: typeEqualsRule   { return rule1; }
 
 validNameRule = validnameKey property:langExpression? ws {
   return create.createValidNameRule( {
-    "property": property
+    "property": property,
+    "location": location()
   });
 }
 
 notEmptyRule = notEmptyKey property:langExpression ws {
   return create.createNotEmptyRule( {
-    "property": property
+    "property": property,
+    "location": location()
   })
 }
 
@@ -49,6 +53,7 @@ typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langExpressio
   return create.createTypeEqualsRule( {
     "type1": type1,
     "type2": type2,
+    "location": location()
   });
 }
 
@@ -56,6 +61,7 @@ typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langExpress
   return create.createTypeConformsRule( {
     "type1": type1,
     "type2": type2,
+    "location": location()
   });
 }
 
