@@ -53,7 +53,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // ConceptName
-    private checkConceptReference(reference: PiLangConceptReference) {
+    public checkConceptReference(reference: PiLangConceptReference) {
         LOGGER.log("checkConceptReference " + reference?.name);
         // Note that the following statement is crucial, because the model we are testing is separate
         // from the model of the language.

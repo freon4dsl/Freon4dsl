@@ -38,7 +38,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkConceptRule(rule: ConceptRuleSet) {
-        this.checkConceptReference(rule.conceptRef);
+        this.myExpressionChecker.checkConceptReference(rule.conceptRef);
 
         const enclosingConcept = rule.conceptRef.referedElement();
         if (enclosingConcept) {
@@ -46,24 +46,6 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 this.checkRule(tr, enclosingConcept);
             });
         }
-    }
-
-    private checkConceptReference(reference: PiLangConceptReference) {
-        // Note that the following statement is crucial, because the model we are testing is separate
-        // from the model of the language.
-        // If it is not set, the conceptReference will not find the refered language concept.
-        reference.language = this.language;
-
-        this.nestedCheck(
-            {
-                check: reference.name !== undefined,
-                error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
-                whenOk: () => this.nestedCheck(
-                    {
-                        check: reference.referedElement() !== undefined,
-                        error: `Concept reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
-                    })
-            })
     }
 
     checkRule(tr: ValidationRule, enclosingConcept: PiLangConcept) {

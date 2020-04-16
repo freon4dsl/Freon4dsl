@@ -4,7 +4,6 @@ import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTy
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangThisExp } from "../../languagedef/metalanguage/PiLangExpressions";
 
 const LOGGER = new PiLogger("PiTyperChecker"); // .mute();
 export class PiTyperChecker extends Checker<PiTypeDefinition> {
@@ -13,7 +12,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     
     constructor(language: PiLanguageUnit) {
         super(language);
-       this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
     }
 
     public check(definition: PiTypeDefinition): void {
@@ -57,7 +56,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
 
     private checkConceptRule(rule: PiTypeConceptRule) {
         LOGGER.log("Checking checkConceptRule '" + rule.toPiString() + "'");
-        this.checkConceptReference(rule.conceptRef);
+        this.myExpressionChecker.checkConceptReference(rule.conceptRef);
         
         for( let stat of rule.statements) {
             this.checkStatement(stat, rule.conceptRef.referedElement());
@@ -68,7 +67,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         LOGGER.log("Checking checkIsTypeRule '" + rule.toPiString() + "'");
         let first = true;
         for (let t of rule.types) {
-            this.checkConceptReference(t);
+            this.myExpressionChecker.checkConceptReference(t);
             if (first) {
                 this.definition.typeroot = t;
                 first = false;
@@ -86,25 +85,6 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
                 }
             }
         }
-    }
-
-    private checkConceptReference(reference: PiLangConceptReference) {
-        // Note that the following statement is crucial, because the model we are testing is separate
-        // from the model of the language.
-        // If it is not set, the conceptReference will not find the refered language concept.
-        LOGGER.log("Checking checkConceptReference '" + reference.name + "'");
-        reference.language = this.language;
-
-        this.nestedCheck(
-            {
-                check: reference.name !== undefined,
-                error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
-                whenOk: () => this.nestedCheck(
-                    {
-                        check: reference.referedElement() !== undefined,
-                        error: `Concept reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
-                    })
-            })
     }
 
     private checkStatement(stat: PiTypeStatement, enclosingConcept: PiLangConcept, predefined?: PiLangProperty[]) {

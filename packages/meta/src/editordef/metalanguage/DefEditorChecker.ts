@@ -25,6 +25,8 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
     }
 
     private checkConceptEditor(conceptEditor: DefEditorConcept){
+        // maybe use
+        // this.myExpressionChecker.checkConceptReference(conceptEditor.concept);
         this.nestedCheck({
             check: !!conceptEditor.concept.referedElement(),
             error: `Concept ${conceptEditor.concept.name} is unknown [line: ${conceptEditor.location?.start.line}, column: ${conceptEditor.location?.start.column}].`,
