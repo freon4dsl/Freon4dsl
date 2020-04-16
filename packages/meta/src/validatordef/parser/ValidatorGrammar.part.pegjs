@@ -28,8 +28,6 @@ conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end
         }); 
     }
 
-//conceptRef = name:var { return create.createConceptReference( { "name": name}); }
-
 rule =  rule1: typeEqualsRule   { return rule1; }
       / rule2: typeConformsRule { return rule2; }
       / rule3: notEmptyRule     { return rule3; }

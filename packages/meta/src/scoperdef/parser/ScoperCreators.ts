@@ -24,9 +24,3 @@ export function createNamespace(data: Partial<PiNamespace>): PiNamespace {
     return result;
 }
 
-export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
-    const result = new PiLangConceptReference(); 
-    if (!!data.name) { result.name = data.name; }
-    if (!!data.location) { result.location = data.location; }
-    return result;
-}

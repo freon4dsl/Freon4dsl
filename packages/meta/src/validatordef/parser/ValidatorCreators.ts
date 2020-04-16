@@ -32,13 +32,6 @@ export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet
     return result;
 }
 
-export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
-    const result = new PiLangConceptReference(); 
-    if(!!data.name) { result.name = data.name; }
-    if (!!data.location) { result.location = data.location; }
-    return result;
-}
-
 export function createValidNameRule(data: Partial<ValidNameRule>): ValidNameRule {
     const result = new ValidNameRule();
     if( !!data.property) {
@@ -83,40 +76,4 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
     return result;
 }
 
-// export function createThisExpression(data: Partial<PiLangThisExp>) {
-//     const result : PiLangThisExp = new PiLangThisExp();
-//     if (!!data.sourceName) {
-//         result.sourceName = data.sourceName;
-//     }
-//     if (!!data.appliedfeature) {
-//         result.appliedfeature = data.appliedfeature;
-//     }
-//     if (!!data.location) { result.location = data.location; }
-//     return result;
-// }
-//
-// export function createPropertyRefExpression(data: Partial<PiLangAppliedFeatureExp>): PiLangAppliedFeatureExp {
-//     const result = new PiLangAppliedFeatureExp();
-//
-//     if (!!data.sourceName) {
-//         result.sourceName = data.sourceName;
-//     }
-//     if (!!data.appliedfeature) {
-//         result.appliedfeature = data.appliedfeature;
-//     }
-//     if (!!data.location) { result.location = data.location; }
-//     return result;
-// }
-//
-// export function createEnumReference(data: Partial<PiLangEnumExp>) {
-//     const result : PiLangEnumExp = new PiLangEnumExp();
-//     if (!!data.sourceName) {
-//         result.sourceName = data.sourceName;
-//     }
-//     if (!!data.appliedfeature) {
-//         result.appliedfeature = data.appliedfeature;
-//     }
-//     if (!!data.location) { result.location = data.location; }
-//     return result;
-// }
 

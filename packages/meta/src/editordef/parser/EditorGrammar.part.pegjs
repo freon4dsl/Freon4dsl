@@ -117,7 +117,7 @@ line        = items:(s:templateSpace / t:text / p:sub_projection / e:projectione
                 }
 
 conceptReference = referredName:var {
-    return creator.createConceptReference({"name": referredName, "location": location()})
+    return expCreator.createConceptReference({"name": referredName, "location": location()})
 }
 
 trigger = "@trigger" ws "\"" value:string "\"" ws
