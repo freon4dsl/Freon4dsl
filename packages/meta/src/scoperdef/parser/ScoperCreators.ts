@@ -20,9 +20,9 @@ export function createScopeDef(data: Partial<PiScopeDef>): PiScopeDef {
         result.scopeConceptDefs = data.scopeConceptDefs
     }
     if (!!data.location) { result.location = data.location; }
-    result.namespaces.forEach(ns => {
-        LOGGER.log("namespace: " + ns.name + " created");
-    });
+    // result.namespaces.forEach(ns => {
+    //     LOGGER.log("namespace: " + ns.name + " created");
+    // });
     return result;
 }
 

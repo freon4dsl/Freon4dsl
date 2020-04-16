@@ -31,13 +31,3 @@ import { PiLangClass, PiLangElement, PiLangEnumExp, PiLangExp, PiLangSelfExp } f
         return (type.name === "string" || type.name === "number" || type.name === "boolean")
     }
 
-    export function langRefToTypeScript(ref: PiLangExp): string {
-    // console.log(" generating " + ref.toPiString());
-    if (ref instanceof PiLangEnumExp) {
-        return `${ref.sourceName}.${ref.appliedfeature}`;
-    } else if (ref instanceof PiLangSelfExp) {
-        return `modelelement.${ref.appliedfeature.toPiString()}`;
-    } else {
-        return ref.toPiString();
-    }
-}

@@ -1,4 +1,4 @@
-import { langRefToTypeScript, LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import { PiLangBinaryExpressionConcept, PiLangClass, PiLangConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
 import {
@@ -12,6 +12,7 @@ import {
     ListJoinType,
     MetaEditorProjectionLine
 } from "../../metalanguage";
+import { langRefToTypeScript } from "../../../languagedef/metalanguage";
 
 export class UnparserTemplate {
     constructor() {
@@ -45,7 +46,7 @@ export class UnparserTemplate {
             public unparse(modelelement: ${allLangConcepts}) : string {
                 ${sortClasses(language.classes).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    console.log("found a ${concept.name}");
+                    //console.log("found a ${concept.name}");
                     return this.unparse${concept.name}(modelelement);
                 }`).join("")}
                 ${language.enumerations.map(concept => `

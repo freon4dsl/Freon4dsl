@@ -90,7 +90,7 @@ export class PiLangFunctionCallExp extends PiLangExp {
 export function langRefToTypeScript(exp: PiLangExp): string {
     if (exp instanceof PiLangEnumExp) {
         return `${exp.sourceName}.${exp.appliedfeature}`;
-    } else if (exp instanceof PiLangThisExp) {
+    } else if (exp instanceof PiLangSelfExp) {
         return `modelelement.${this.langRefToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
         return `this.${exp.sourceName} (${exp.actualparams.map(

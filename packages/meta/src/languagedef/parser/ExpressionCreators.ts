@@ -3,37 +3,39 @@ import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangRef
 import { PiLangSelfExp, PiLangAppliedFeatureExp, PiLangEnumExp, PiLangExp, PiLangConceptExp, PiLangFunctionCallExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
+const LOGGER = new PiLogger("PiLanguageExpressionCreator"); //.mute();
 const nameForSelf = "self";
 
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");
     const result = new LanguageExpressionTester();
-    if(!!data.languageName) { result.languageName = data.languageName; }
-    if(!!data.conceptExps) { result.conceptExps = data.conceptExps; }
+    if (!!data.languageName) { result.languageName = data.languageName; }
+    if (!!data.conceptExps) { result.conceptExps = data.conceptExps; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
 export function createConceptExps(data: Partial<TestExpressionsForConcept>): TestExpressionsForConcept {
     LOGGER.log("createConceptExps");
     const result = new TestExpressionsForConcept();
-    if(!!data.conceptRef) { result.conceptRef = data.conceptRef; }
-    if(!!data.exps) { result.exps = data.exps; }
+    if (!!data.conceptRef) { result.conceptRef = data.conceptRef; }
+    if (!!data.exps) { result.exps = data.exps; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
 export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
     LOGGER.log("createConceptReference " + data.name);
     const result = new PiLangConceptReference();
-    if(!!data.name) { result.name = data.name; }
+    if (!!data.name) { result.name = data.name; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
 export function createExpression(data: Partial<PiLangExp>) : PiLangExp {
-    LOGGER.log("createExpression");
     let result : PiLangExp;
     if (!!data.sourceName ) {
-        if ( data.sourceName === nameForSelf) {
+        if (data.sourceName === nameForSelf) {
             result = new PiLangSelfExp();
             LOGGER.log("createSelfExpression");
             result.sourceName = data.sourceName;
@@ -48,6 +50,7 @@ export function createExpression(data: Partial<PiLangExp>) : PiLangExp {
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -61,6 +64,7 @@ export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>):
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -73,6 +77,7 @@ export function createEnumReference(data: Partial<PiLangEnumExp>) : PiLangEnumEx
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -88,5 +93,6 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>) : PiLan
     if (!!data.actualparams) {
         result.actualparams = data.actualparams;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }

@@ -1,15 +1,15 @@
 validator Demo for language Demo
 
 DemoModel {
-    validName // default Identifier
     notEmpty self.entities
     notEmpty self.functions
+    validName // default Identifier
 }
 
 DemoEntity {
-    validName 
     notEmpty self.attributes
     notEmpty self.functions
+    validName
 }
 
 DemoAttribute {
