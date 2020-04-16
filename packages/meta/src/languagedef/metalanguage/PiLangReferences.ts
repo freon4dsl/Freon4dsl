@@ -1,5 +1,6 @@
 import { PiLangElement, PiLanguageUnit, PiLangClass, PiLangConcept, PiLangInterface, 
 	PiLangEnumeration, PiLangUnion, PiLangExpressionConcept, PiLangBinaryExpressionConcept, PiLangProperty, PiLangPrimitiveProperty, PiLangEnumProperty, PiLangConceptProperty, PiLangFunction } from "./PiLanguage";
+import { ParseLocation } from "../../utils";
 
 // Language references
 
@@ -19,6 +20,7 @@ import { PiLangElement, PiLanguageUnit, PiLangClass, PiLangConcept, PiLangInterf
 
 // root of the references 
 export class PiLangElementReference {
+	location: ParseLocation;
 	language: PiLanguageUnit;
 	name: string; // maybe later this should be path
 	

@@ -5,10 +5,11 @@ import { LanguageExpressionTester, TestExpressionsForConcept } from "../../langu
 import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
+const LOGGER = new PiLogger("PiLanguageExpressionChecker"); //.mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equalsType" ];
 
 export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {
+    strictUseOfThis: boolean = true; // if true, then a ThisExpression must have an appliedfeature
 
     constructor(language: PiLanguageUnit) {
         super(language);
@@ -53,7 +54,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // ConceptName
-    private checkConceptReference(reference: PiLangConceptReference) {
+    public checkConceptReference(reference: PiLangConceptReference) {
         LOGGER.log("checkConceptReference " + reference?.name);
         // Note that the following statement is crucial, because the model we are testing is separate
         // from the model of the language.
@@ -63,11 +64,11 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Concept reference should have a name, but doesn't`,
+                error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
                 whenOk: () => this.nestedCheck(
                     {
                         check: reference.referedElement() !== undefined,
-                        error: `Concept reference to ${reference.name} cannot be resolved`
+                        error: `Concept reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
                     })
             })
     }
@@ -96,7 +97,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         langRef.referedElement = myEnumType;
         this.nestedCheck({
             check: !!myEnumType,
-            error: `Cannot find enumeration ${langRef.sourceName}`,
+            error: `Cannot find enumeration ${langRef.sourceName} [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
             whenOk: () => {
                 if (!!langRef.appliedfeature) { // if an appliedfeature is present, it should refer to one of the literals
                     // find literal in enum
@@ -113,15 +114,17 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     private checkThisExpression(langRef: PiLangThisExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking 'this' Expression " + langRef?.toPiString());
         langRef.referedElement = enclosingConcept;
-        this.nestedCheck(
-            {
-                check: langRef.appliedfeature != null,
-                error: `'this' should be followed by '.', followed by a property`,
-                whenOk: () => {
-                    this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
+        if (this.strictUseOfThis) {
+            this.nestedCheck(
+                {
+                    check: langRef.appliedfeature != null,
+                    error: `'this' should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
+                    whenOk: () => {
+                        this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 
     // ConceptName.XXX
@@ -134,7 +137,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.nestedCheck(
             {
                 check: langRef.appliedfeature != null,
-                error: `Concept should be followed by '.', followed by a property`,
+                error: `Concept should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
                 whenOk: () => {
                     this.checkAppliedFeatureExp(langRef.appliedfeature, myConcept);
                 }
@@ -150,7 +153,8 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.simpleCheck(!!functionName, `${langRef.sourceName} is not a valid function.`); 
         this.nestedCheck({
             check: langRef.actualparams.length === 2,
-            error: `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, found ${langRef.actualparams.length}.`,
+            error: `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, ` +
+                   `found ${langRef.actualparams.length} [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
             whenOk: () => langRef.actualparams?.forEach( p =>
                 this.checkLangExp(p, enclosingConcept)
             )}
@@ -167,7 +171,8 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         }
         this.nestedCheck({
             check: !!feat.referedElement,
-            error: "Cannot find property '" + feat.sourceName + "' in '" + enclosingConcept.name + "' (maybe '.' should be ':').",
+            error: `Cannot find property '${feat.sourceName}' in '${enclosingConcept.name}'` +
+                   ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}]. (Maybe '.' should be ':'?)`,
             whenOk: () => {
                 if (feat.appliedfeature != null) {
                     this.checkAppliedFeatureExp(feat.appliedfeature, (feat.referedElement.type.referedElement() as PiLangConcept));

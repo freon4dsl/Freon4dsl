@@ -1,8 +1,10 @@
 import { useDebugValue } from "react";
 import { DefEditor, DefEditorLanguage, MetaEditorProjection } from ".";
 import { PiLangConceptReference } from "../../languagedef/metalanguage";
+import { ParseLocation } from "../../utils";
 
 export class DefEditorConcept implements DefEditor {
+    location: ParseLocation;
     languageEditor: DefEditorLanguage;
     concept: PiLangConceptReference;
 

@@ -2,6 +2,7 @@ expressions for language Demo
 
 DemoModel {
     // default Identifier
+    this;
     this.entities.expr;
     this.functions;
 }

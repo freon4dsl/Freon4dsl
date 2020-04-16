@@ -1,3 +1,40 @@
 scoper Demo for language Demo
 
-namespace  { DemoModel DemoEntity DemoFunction }
+isnamespace { DemoModel DemoEntity DemoFunction }
+
+/*
+EntityModel {
+	namespace {}
+}
+*/
+// Overerving
+DemoEntity {
+    namespace = this.baseEntity
+}
+/*
+Entity {
+    namespace {
+	    this
+		+ this.baseEntity
+		+ this.implements
+	}
+	scope {
+		blabla + andereBlaBla
+	}
+}
+
+@namespace EntityInterface {
+    this
+    + this.baseInterface
+}
+*/
+// TODO Define Appliedfeature in .lang file
+/*
+AppliedFeature {
+	scope {
+		typeof this.source
+	}
+}
+*/
+//    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'
+//    include: if( t.friends.includes(context)) then t.attributes where visibility = 'friends'

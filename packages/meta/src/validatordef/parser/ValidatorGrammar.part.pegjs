@@ -10,6 +10,7 @@ Validator_Definition
             "validatorName": validatorName,
             "languageName": languageName,
             "conceptRules": cr,
+            "location": location()
         });
     } 
 
@@ -23,39 +24,42 @@ conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end
         return create.createConceptRule({ 
           "conceptRef": conceptRef, 
           "rules": rules,
+          "location": location()
         }); 
     }
-
-//conceptRef = name:var { return create.createConceptReference( { "name": name}); }
 
 rule =  rule1: typeEqualsRule   { return rule1; }
       / rule2: typeConformsRule { return rule2; }
       / rule3: notEmptyRule     { return rule3; }
       / rule4: validNameRule    { return rule4; }
 
-validNameRule = validnameKey property:langRefExpression? ws {
+validNameRule = validnameKey property:langExpression? ws {
   return create.createValidNameRule( {
-    "property": property
+    "property": property,
+    "location": location()
   });
 }
 
-notEmptyRule = notEmptyKey property:langRefExpression ws {
+notEmptyRule = notEmptyKey property:langExpression ws {
   return create.createNotEmptyRule( {
-    "property": property
+    "property": property,
+    "location": location()
   })
 }
 
-typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
+typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langExpression ws comma_separator ws type2:langExpression ws round_end ws {
   return create.createTypeEqualsRule( {
     "type1": type1,
     "type2": type2,
+    "location": location()
   });
 }
 
-typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
+typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langExpression ws comma_separator ws type2:langExpression ws round_end ws {
   return create.createTypeConformsRule( {
     "type1": type1,
     "type2": type2,
+    "location": location()
   });
 }
 

@@ -34,7 +34,7 @@ export class PiLogger {
 
     info(o: any, msg: LogMessage) {
         if (this.active) {
-                const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
+            const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
             // this.logToConsole(PiLogger.FgBlue, this.category + " " + type + ": " + this.message(msg));
             this.logToConsole(PiLogger.FgBlue, this.category + ": " + this.message(msg));
         }
@@ -47,7 +47,7 @@ export class PiLogger {
     }
 
     error(o: any, msg: LogMessage) {
-        const type = "NO_TYPE"; // Object.getPrototypeOf(o).constructor.name;
+        const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
         console.log(PiLogger.FgRed, "ERROR: " + this.category + " " + type + ": " + this.message(msg));
     }
 
