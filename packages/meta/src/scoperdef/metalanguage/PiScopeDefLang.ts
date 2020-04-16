@@ -1,7 +1,9 @@
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangExp } from "../../languagedef/metalanguage";
+import { ParseLocation } from "../../utils";
 
 export class PiScopeDef {
+    location: ParseLocation;
     scoperName: string;
     languageName: string;
     namespaces: PiNamespace[] = [];
@@ -11,6 +13,7 @@ export class PiScopeDef {
 }
 
 export class PiNamespace {
+    location: ParseLocation;
     conceptRefs: PiLangConceptReference[];
 
     constructor() {

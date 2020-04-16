@@ -13,6 +13,7 @@ Scoper_Definition
             "scoperName": scoperName,
             "languageName": languageName,
             "namespaces": ns,
+            "location": location()
         });
     } 
 
@@ -22,7 +23,7 @@ plus_separator = ws "+" ws
 
 namespace = isnamespaceKey curly_begin conceptRefs:(conceptRef)* ws curly_end
     { 
-        return create.createNamespace({ "conceptRefs": conceptRefs }); 
+        return create.createNamespace({ "conceptRefs": conceptRefs, "location": location() });
     }
 
 conceptDefinition = name:var curly_begin namespaceDefinition curly_end

@@ -24,11 +24,12 @@ conceptExps = conceptRef:conceptRef ws curly_begin ws exps:expWithSeparator* cur
         }); 
     }
 
-conceptRef = name:var { return expCreate.createConceptReference( { "name": name}); }
 
 expWithSeparator = exp:langExpression semicolon_separator { return exp; }
 
 // the following rules should be part of a parser that wants to use PiLangExpressions.ts
+
+conceptRef = name:var { return expCreate.createConceptReference( { "name": name, "location":location()}); }
 
 langExpression = functionExpression:functionExpression  { return functionExpression; }
                   / expression:expression                  { return expression; }

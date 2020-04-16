@@ -214,8 +214,8 @@ function peg$parse(input, options) {
                 "location": location()
               }); 
           },
-      peg$c32 = function(name) { return expCreate.createConceptReference( { "name": name}); },
-      peg$c33 = function(exp) { return exp; },
+      peg$c32 = function(exp) { return exp; },
+      peg$c33 = function(name) { return expCreate.createConceptReference( { "name": name, "location":location()}); },
       peg$c34 = function(functionExpression) { return functionExpression; },
       peg$c35 = function(expression) { return expression; },
       peg$c36 = ":",
@@ -1173,20 +1173,6 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseconceptRef() {
-    var s0, s1;
-
-    s0 = peg$currPos;
-    s1 = peg$parsevar();
-    if (s1 !== peg$FAILED) {
-      peg$savedPos = s0;
-      s1 = peg$c32(s1);
-    }
-    s0 = s1;
-
-    return s0;
-  }
-
   function peg$parseexpWithSeparator() {
     var s0, s1, s2;
 
@@ -1196,7 +1182,7 @@ function peg$parse(input, options) {
       s2 = peg$parsesemicolon_separator();
       if (s2 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$c33(s1);
+        s1 = peg$c32(s1);
         s0 = s1;
       } else {
         peg$currPos = s0;
@@ -1206,6 +1192,20 @@ function peg$parse(input, options) {
       peg$currPos = s0;
       s0 = peg$FAILED;
     }
+
+    return s0;
+  }
+
+  function peg$parseconceptRef() {
+    var s0, s1;
+
+    s0 = peg$currPos;
+    s1 = peg$parsevar();
+    if (s1 !== peg$FAILED) {
+      peg$savedPos = s0;
+      s1 = peg$c33(s1);
+    }
+    s0 = s1;
 
     return s0;
   }

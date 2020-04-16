@@ -14,14 +14,15 @@ export class PiScoperChecker extends Checker<PiScopeDef> {
     public check(definition: PiScopeDef): void {
         // LOGGER.log("Checking scope definition " + definition.scoperName);
         if( this.language === null ) {
-            LOGGER.error(this,  "Scoper definition checker does not known the language, exiting.");
+            LOGGER.error(this,  `Scoper definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
             process.exit(-1);
         }
 
         this.nestedCheck(
             {
                 check: this.language.name === definition.languageName,
-                error: `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' does not match language '${this.language.name}'.`,
+                error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' `+
+                        `does not match language '${this.language.name}'[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
             });
             definition.namespaces.forEach(ns => {
                 ns.conceptRefs.forEach(ref => 
@@ -37,11 +38,11 @@ export class PiScoperChecker extends Checker<PiScopeDef> {
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Element reference ${"UNKNOWN"}.type should have a name, but doesn't`,
+                error: `Element reference ${"UNKNOWN"}.type should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
                 whenOk: () => this.nestedCheck(
                     {
                         check: reference.referedElement() !== undefined,
-                        error: `ElementReference to ${reference.name} cannot be resolved`
+                        error: `ElementReference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
                     })
             })
     }
