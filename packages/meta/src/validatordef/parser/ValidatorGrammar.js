@@ -204,12 +204,14 @@ function peg$parse(input, options) {
               return expCreate.createTest({
                   "languageName": languageName,
                   "conceptExps": cr,
+                  "location": location()
               });
           },
       peg$c31 = function(conceptRef, exps) { 
               return expCreate.createConceptExps({ 
                 "conceptRef": conceptRef, 
                 "exps": exps,
+                "location": location()
               }); 
           },
       peg$c32 = function(name) { return expCreate.createConceptReference( { "name": name}); },

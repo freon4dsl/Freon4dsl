@@ -11,6 +11,7 @@ LanguageExpressions_Definition
         return expCreate.createTest({
             "languageName": languageName,
             "conceptExps": cr,
+            "location": location()
         });
     } 
 
@@ -19,6 +20,7 @@ conceptExps = conceptRef:conceptRef ws curly_begin ws exps:expWithSeparator* cur
         return expCreate.createConceptExps({ 
           "conceptRef": conceptRef, 
           "exps": exps,
+          "location": location()
         }); 
     }
 

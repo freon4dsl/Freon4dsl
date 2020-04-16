@@ -11,6 +11,7 @@ export function createTest(data: Partial<LanguageExpressionTester>): LanguageExp
     const result = new LanguageExpressionTester();
     if(!!data.languageName) { result.languageName = data.languageName; }
     if(!!data.conceptExps) { result.conceptExps = data.conceptExps; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -19,6 +20,7 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     const result = new TestExpressionsForConcept();
     if(!!data.conceptRef) { result.conceptRef = data.conceptRef; }
     if(!!data.exps) { result.exps = data.exps; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -26,6 +28,7 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     LOGGER.log("createConceptReference " + data.name);
     const result = new PiLangConceptReference();
     if(!!data.name) { result.name = data.name; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -48,11 +51,7 @@ export function createExpression(data: Partial<PiLangExp>) : PiLangExp {
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
     }
-    if (!!data.location) {
-        result.location = data.location;
-        LOGGER.log("found location offset: [" + result.location.start.offset + "]" );
-    }
-    LOGGER.log("@@@ found location offset: [" + result.location?.start.line + "]" );
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -66,6 +65,7 @@ export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>):
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -78,6 +78,7 @@ export function createEnumReference(data: Partial<PiLangEnumExp>) : PiLangEnumEx
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -93,5 +94,6 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>) : PiLan
     if (!!data.actualparams) {
         result.actualparams = data.actualparams;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }

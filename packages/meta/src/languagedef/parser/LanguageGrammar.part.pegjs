@@ -7,7 +7,8 @@ Language_Definition
     {
         return create.createLanguage({
             "name": name,
-            "defs": defs
+            "defs": defs,
+            "location": location()
         });
     } 
 
@@ -38,7 +39,8 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             "name": name,
             "base": base,
             "properties": props,
-            "priority": (!!priority ? priority : 0)
+            "priority": (!!priority ? priority : 0),
+            "location": location()
         });
     }
 
@@ -49,25 +51,25 @@ property =  att:attribute { return att; }
 attribute = name:var ws name_separator ws type:var isList:"[]"? ws
     {
       if (type === "string" || type === "boolean" || type === "number") {
-        return create.createPrimitiveProperty({"name": name, "primType": type, "isList": (isList?true:false) });
+        return create.createPrimitiveProperty({"name": name, "primType": type, "isList": (isList?true:false), "location": location() });
       } else {
         const enumRef = create.createEnumerationReference({"name": type});
-        return create.createEnumerationProperty({"name": name, "type": enumRef, "isList": (isList?true:false) })
+        return create.createEnumerationProperty({"name": name, "type": enumRef, "isList": (isList?true:false), "location": location() })
       }
     }
 
 part = partKey ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
     { 
-        return create.createPart({"name": name, "type": type, "isList": (isList?true:false) }) 
+        return create.createPart({"name": name, "type": type, "isList": (isList?true:false), "location": location() })
     }
 
 reference = referenceKey ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
     { 
-        return create.createReference({"name": name, "type": type, "isList": (isList?true:false) }) 
+        return create.createReference({"name": name, "type": type, "isList": (isList?true:false), "location": location() })
     }
 
 conceptReference = referredName:var {
-    return create.createConceptReference({"name": referredName})
+    return create.createConceptReference({"name": referredName, "location": location()})
 }
 
 priority = priorityKey ws "=" ws "\"" value:string "\"" ws {
@@ -78,12 +80,12 @@ enumeration = "enumeration" ws name:var curly_begin
                     literals:var+
                 curly_end
                 {
-                    return create.createEnumeration({ "name": name, "literals": literals});
+                    return create.createEnumeration({ "name": name, "literals": literals, "location": location()});
                 }
 
 union = "union" ws name:var curly_begin
                     members:conceptReference+
                 curly_end
                 {
-                    return create.createUnion({ "name": name, "members": members});
+                    return create.createUnion({ "name": name, "members": members, "location": location()});
                 }

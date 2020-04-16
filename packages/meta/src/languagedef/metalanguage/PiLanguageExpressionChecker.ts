@@ -63,11 +63,11 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Concept reference should have a name, but doesn't`,
+                error: `Concept reference should have a name, but doesn't [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
                 whenOk: () => this.nestedCheck(
                     {
                         check: reference.referedElement() !== undefined,
-                        error: `Concept reference to ${reference.name} cannot be resolved`
+                        error: `Concept reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
                     })
             })
     }
@@ -96,7 +96,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         langRef.referedElement = myEnumType;
         this.nestedCheck({
             check: !!myEnumType,
-            error: `Cannot find enumeration ${langRef.sourceName}`,
+            error: `Cannot find enumeration ${langRef.sourceName} [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
             whenOk: () => {
                 if (!!langRef.appliedfeature) { // if an appliedfeature is present, it should refer to one of the literals
                     // find literal in enum
@@ -116,7 +116,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.nestedCheck(
             {
                 check: langRef.appliedfeature != null,
-                error: `'this' should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}]`,
+                error: `'this' should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
                 whenOk: () => {
                     this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
                 }
@@ -168,7 +168,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         }
         this.nestedCheck({
             check: !!feat.referedElement,
-            error: `Cannot find property '" + feat.sourceName + "' in '" + enclosingConcept.name + "' ` +
+            error: `Cannot find property '${feat.sourceName}' in '${enclosingConcept.name}'` +
                    ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}]. (Maybe '.' should be ':'?)`,
             whenOk: () => {
                 if (feat.appliedfeature != null) {
