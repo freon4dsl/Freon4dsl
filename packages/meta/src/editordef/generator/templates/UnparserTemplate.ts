@@ -60,7 +60,7 @@ export class UnparserTemplate {
                     return "";
                 }`).join("\n")}
                         
-            private unparseList(list: AllDemoConcepts[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
+            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
                     result = result.concat(this.unparse(listElem));
