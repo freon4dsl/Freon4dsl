@@ -8,7 +8,8 @@ Editor_Definition
     {
         return creator.createLanguageEditor({
             "name"          : name,
-            "conceptEditors": concepts
+            "conceptEditors": concepts,
+            "location": location()
         });
     } 
 conceptEditor =
@@ -22,7 +23,8 @@ conceptEditor =
         "concept"   : concept,
         "trigger"   : trigger,
         "symbol"    : symbol,
-        "projection": projection
+        "projection": projection,
+        "location": location()
     });
 }
 
@@ -30,26 +32,26 @@ projection = "@projection" ws name:var projection_begin
                    lines:line*
               projection_end
               {
-                    return creator.createProjection({ "lines" : lines, "name": name });
+                    return creator.createProjection({ "lines" : lines, "name": name, "location": location() });
               }
 
 templateSpace = s:[ ]+
                 {
-                    return creator.createIndent( { "indent": s.join("") });
+                    return creator.createIndent( { "indent": s.join(""), "location": location() });
                 }
 
 sub_projection = "[[" ws exp:expression ws
                         join:listJoin?
                  "]]"
             {
-                return creator.createSubProjection( {  "expression": exp, "listJoin": join });
+                return creator.createSubProjection( {  "expression": exp, "listJoin": join, "location": location() });
             }
 
 //sub_projection = "[[" ws "this" ws "." ws prop:var ws
 //                        join:listJoin?
 //                 "]]"
 //            {
-//                return creator.createSubProjection( { "propertyName": prop, "listJoin": join });
+//                return creator.createSubProjection( { "propertyName": prop, "listJoin": join, "location": location() });
 //            }
 
 listJoin =  l:listJoinSimple+
@@ -60,12 +62,13 @@ listJoin =  l:listJoinSimple+
 
                     return creator.createListJoin( {"direction": (!!directionObject ? directionObject.direction : undefined),
                                                     "joinType" : (!!joinTypeObject ? joinTypeObject.joinType    : undefined),
-                                                    "joinText" : (!!joinTextObject ? joinTextObject.joinText    : undefined) } );
+                                                    "joinText" : (!!joinTextObject ? joinTextObject.joinText    : undefined),
+                                                    "location": location()} );
                 }
 
-listJoinSimple =      (direction:direction  { return {"direction" : direction }; } )
-                    / (type:listJoinType    { return {"joinType"  : type      }; } )
-                    / (t:joinText           { return {"joinText"  : t         }; } )
+listJoinSimple =      (direction:direction  { return {"direction" : direction, "location": location() }; } )
+                    / (type:listJoinType    { return {"joinType"  : type, "location": location()      }; } )
+                    / (t:joinText           { return {"joinText"  : t, "location": location()         }; } )
 
 joinText = "[" t:anythingButEndBracket* "]" ws
             {
@@ -74,17 +77,17 @@ joinText = "[" t:anythingButEndBracket* "]" ws
 
 direction = dir:("@horizontal" / "@vertical") ws
                 {
-                    return creator.createListDirection( {"direction": dir } );
+                    return creator.createListDirection( {"direction": dir, "location": location() } );
                 }
 
 listJoinType = joinType:("@separator" / "@terminator") ws
                 {
-                    return creator.createJoinType( {"type": joinType } );
+                    return creator.createJoinType( {"type": joinType, "location": location() } );
                 }
 
 projectionexpression  = "${" t:var "}"
                 {
-                    return creator.createPropertyRef( { "propertyName": t });
+                    return creator.createPropertyRef( { "propertyName": t, "location": location() });
                 }
 text        = chars:anythingBut+
             {
@@ -114,7 +117,7 @@ line        = items:(s:templateSpace / t:text / p:sub_projection / e:projectione
                 }
 
 conceptReference = referredName:var {
-    return creator.createConceptReference({"name": referredName})
+    return creator.createConceptReference({"name": referredName, "location": location()})
 }
 
 trigger = "@trigger" ws "\"" value:string "\"" ws

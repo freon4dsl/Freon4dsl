@@ -17,7 +17,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         this.nestedCheck(
             {
                 check: !!editor.name,
-                error: "Editor should have a name, it is empty"
+                error: `Editor should have a name, it is empty [line: ${editor.location?.start.line}, column: ${editor.location?.start.column}].`
             });
         for(let conceptEditor of editor.conceptEditors){
             this.checkConceptEditor(conceptEditor);
@@ -27,7 +27,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
     private checkConceptEditor(conceptEditor: DefEditorConcept){
         this.nestedCheck({
             check: !!conceptEditor.concept.referedElement(),
-            error: `Concept ${conceptEditor.concept.name} is unknown`,
+            error: `Concept ${conceptEditor.concept.name} is unknown [line: ${conceptEditor.location?.start.line}, column: ${conceptEditor.location?.start.column}].`,
             whenOk: () => { this.checkProjection(conceptEditor.projection, conceptEditor.concept.referedElement()); }
         });
     }

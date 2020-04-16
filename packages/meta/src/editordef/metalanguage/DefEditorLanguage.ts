@@ -1,8 +1,10 @@
 import { PiLangClass, PiLangClassReference, PiLanguageUnit } from "../../languagedef/metalanguage";
 import { DefEditorConcept } from "./DefEditorConcept";
 import { DefEditorEnumeration } from "./DefEditorEnumeration";
+import { ParseLocation } from "../../utils";
 
 export class DefEditorLanguage {
+    location: ParseLocation;
     name: string;
     language: PiLanguageUnit;
     conceptEditors: DefEditorConcept[] = [];
