@@ -29,6 +29,6 @@ conceptDefinition = name:var curly_begin namespaceDefinition curly_end
 
 namespaceDefinition = namespaceKey list:expressionlist
 
-expressionlist = langRefExpression (plus_separator langRefExpression)+
+expressionlist = langExpression (plus_separator langExpression)+
 
 

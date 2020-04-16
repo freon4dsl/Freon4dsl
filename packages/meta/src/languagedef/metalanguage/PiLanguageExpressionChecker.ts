@@ -134,7 +134,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.nestedCheck(
             {
                 check: langRef.appliedfeature != null,
-                error: `Concept should be followed by '.', followed by a property`,
+                error: `Concept should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
                 whenOk: () => {
                     this.checkAppliedFeatureExp(langRef.appliedfeature, myConcept);
                 }
@@ -150,7 +150,8 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.simpleCheck(!!functionName, `${langRef.sourceName} is not a valid function.`); 
         this.nestedCheck({
             check: langRef.actualparams.length === 2,
-            error: `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, found ${langRef.actualparams.length}.`,
+            error: `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, ` +
+                   `found ${langRef.actualparams.length} [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
             whenOk: () => langRef.actualparams?.forEach( p =>
                 this.checkLangExp(p, enclosingConcept)
             )}
@@ -167,7 +168,8 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         }
         this.nestedCheck({
             check: !!feat.referedElement,
-            error: "Cannot find property '" + feat.sourceName + "' in '" + enclosingConcept.name + "' (maybe '.' should be ':').",
+            error: `Cannot find property '" + feat.sourceName + "' in '" + enclosingConcept.name + "' ` +
+                   ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}]. (Maybe '.' should be ':'?)`,
             whenOk: () => {
                 if (feat.appliedfeature != null) {
                     this.checkAppliedFeatureExp(feat.appliedfeature, (feat.referedElement.type.referedElement() as PiLangConcept));

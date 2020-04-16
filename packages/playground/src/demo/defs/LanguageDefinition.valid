@@ -1,13 +1,14 @@
 validator Demo for language Demo
 
 DemoModel {
-    validName // default Identifier
+
     notEmpty this.entities
     notEmpty this.functions
-}
+    validName // default Identifier
+    }
 
 DemoEntity {
-    validName 
+    validName this.name
     notEmpty this.attributes
     notEmpty this.functions
 }

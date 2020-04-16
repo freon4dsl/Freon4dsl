@@ -33,26 +33,26 @@ rule =  rule1: typeEqualsRule   { return rule1; }
       / rule3: notEmptyRule     { return rule3; }
       / rule4: validNameRule    { return rule4; }
 
-validNameRule = validnameKey property:langRefExpression? ws {
+validNameRule = validnameKey property:langExpression? ws {
   return create.createValidNameRule( {
     "property": property
   });
 }
 
-notEmptyRule = notEmptyKey property:langRefExpression ws {
+notEmptyRule = notEmptyKey property:langExpression ws {
   return create.createNotEmptyRule( {
     "property": property
   })
 }
 
-typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
+typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langExpression ws comma_separator ws type2:langExpression ws round_end ws {
   return create.createTypeEqualsRule( {
     "type1": type1,
     "type2": type2,
   });
 }
 
-typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langRefExpression ws comma_separator ws type2:langRefExpression ws round_end ws {
+typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langExpression ws comma_separator ws type2:langExpression ws round_end ws {
   return create.createTypeConformsRule( {
     "type1": type1,
     "type2": type2,

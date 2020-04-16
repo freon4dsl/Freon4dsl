@@ -24,11 +24,11 @@ conceptExps = conceptRef:conceptRef ws curly_begin ws exps:expWithSeparator* cur
 
 conceptRef = name:var { return expCreate.createConceptReference( { "name": name}); }
 
-expWithSeparator = exp:langRefExpression semicolon_separator { return exp; }
+expWithSeparator = exp:langExpression semicolon_separator { return exp; }
 
 // the following rules should be part of a parser that wants to use PiLangExpressions.ts
-// TODO change name into langExpression
-langRefExpression = functionExpression:functionExpression  { return functionExpression; }
+
+langExpression = functionExpression:functionExpression  { return functionExpression; }
                   / expression:expression                  { return expression; }
 
 expression = sourceName:var ':' literal:var  {
@@ -58,19 +58,21 @@ dotExpression = '.' sourceName:var appliedfeature:dotExpression?  {
   return expCreate.createAppliedFeatureExp
 ( {
     "sourceName": sourceName,
-    "appliedfeature": appliedfeature
+    "appliedfeature": appliedfeature,
+    "location": location()
   })
 }
 
 functionExpression = sourceName:var round_begin actualparams:(
-      head:langRefExpression
-      tail:(comma_separator v:langRefExpression { return v; })*
+      head:langExpression
+      tail:(comma_separator v:langExpression { return v; })*
       { return [head].concat(tail); }
     )
     round_end {
   return expCreate.createFunctionCall ({
     "sourceName": sourceName,
-    "actualparams": actualparams
+    "actualparams": actualparams,
+    "location": location()
   })
 }
 

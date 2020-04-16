@@ -38,5 +38,3 @@ AppliedFeature {
 */
 //    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'
 //    include: if( t.friends.includes(context)) then t.attributes where visibility = 'friends'
-
-}

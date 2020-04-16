@@ -244,7 +244,8 @@ function peg$parse(input, options) {
         return expCreate.createAppliedFeatureExp
       ( {
           "sourceName": sourceName,
-          "appliedfeature": appliedfeature
+          "appliedfeature": appliedfeature,
+          "location": location()
         })
       },
       peg$c44 = function(sourceName, head, v) { return v; },
@@ -252,7 +253,8 @@ function peg$parse(input, options) {
       peg$c46 = function(sourceName, actualparams) {
         return expCreate.createFunctionCall ({
           "sourceName": sourceName,
-          "actualparams": actualparams
+          "actualparams": actualparams,
+          "location": location()
         })
       },
       peg$c47 = "{",
@@ -778,7 +780,7 @@ function peg$parse(input, options) {
     s0 = peg$currPos;
     s1 = peg$parsevalidnameKey();
     if (s1 !== peg$FAILED) {
-      s2 = peg$parselangRefExpression();
+      s2 = peg$parselangExpression();
       if (s2 === peg$FAILED) {
         s2 = null;
       }
@@ -810,7 +812,7 @@ function peg$parse(input, options) {
     s0 = peg$currPos;
     s1 = peg$parsenotEmptyKey();
     if (s1 !== peg$FAILED) {
-      s2 = peg$parselangRefExpression();
+      s2 = peg$parselangExpression();
       if (s2 !== peg$FAILED) {
         s3 = peg$parsews();
         if (s3 !== peg$FAILED) {
@@ -853,7 +855,7 @@ function peg$parse(input, options) {
           if (s4 !== peg$FAILED) {
             s5 = peg$parsews();
             if (s5 !== peg$FAILED) {
-              s6 = peg$parselangRefExpression();
+              s6 = peg$parselangExpression();
               if (s6 !== peg$FAILED) {
                 s7 = peg$parsews();
                 if (s7 !== peg$FAILED) {
@@ -861,7 +863,7 @@ function peg$parse(input, options) {
                   if (s8 !== peg$FAILED) {
                     s9 = peg$parsews();
                     if (s9 !== peg$FAILED) {
-                      s10 = peg$parselangRefExpression();
+                      s10 = peg$parselangExpression();
                       if (s10 !== peg$FAILED) {
                         s11 = peg$parsews();
                         if (s11 !== peg$FAILED) {
@@ -948,7 +950,7 @@ function peg$parse(input, options) {
           if (s4 !== peg$FAILED) {
             s5 = peg$parsews();
             if (s5 !== peg$FAILED) {
-              s6 = peg$parselangRefExpression();
+              s6 = peg$parselangExpression();
               if (s6 !== peg$FAILED) {
                 s7 = peg$parsews();
                 if (s7 !== peg$FAILED) {
@@ -956,7 +958,7 @@ function peg$parse(input, options) {
                   if (s8 !== peg$FAILED) {
                     s9 = peg$parsews();
                     if (s9 !== peg$FAILED) {
-                      s10 = peg$parselangRefExpression();
+                      s10 = peg$parselangExpression();
                       if (s10 !== peg$FAILED) {
                         s11 = peg$parsews();
                         if (s11 !== peg$FAILED) {
@@ -1187,7 +1189,7 @@ function peg$parse(input, options) {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    s1 = peg$parselangRefExpression();
+    s1 = peg$parselangExpression();
     if (s1 !== peg$FAILED) {
       s2 = peg$parsesemicolon_separator();
       if (s2 !== peg$FAILED) {
@@ -1206,7 +1208,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parselangRefExpression() {
+  function peg$parselangExpression() {
     var s0, s1;
 
     s0 = peg$currPos;
@@ -1338,13 +1340,13 @@ function peg$parse(input, options) {
       s2 = peg$parseround_begin();
       if (s2 !== peg$FAILED) {
         s3 = peg$currPos;
-        s4 = peg$parselangRefExpression();
+        s4 = peg$parselangExpression();
         if (s4 !== peg$FAILED) {
           s5 = [];
           s6 = peg$currPos;
           s7 = peg$parsecomma_separator();
           if (s7 !== peg$FAILED) {
-            s8 = peg$parselangRefExpression();
+            s8 = peg$parselangExpression();
             if (s8 !== peg$FAILED) {
               peg$savedPos = s6;
               s7 = peg$c44(s1, s4, s8);
@@ -1362,7 +1364,7 @@ function peg$parse(input, options) {
             s6 = peg$currPos;
             s7 = peg$parsecomma_separator();
             if (s7 !== peg$FAILED) {
-              s8 = peg$parselangRefExpression();
+              s8 = peg$parselangExpression();
               if (s8 !== peg$FAILED) {
                 peg$savedPos = s6;
                 s7 = peg$c44(s1, s4, s8);
