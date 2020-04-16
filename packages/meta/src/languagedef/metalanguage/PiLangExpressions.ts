@@ -61,15 +61,16 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
             const ref = this.referedElement;
             isRef = (ref instanceof PiLangConceptProperty) && ref.owningConcept.references.some(r => r === ref);
         }
-        return this.sourceName + (isRef ? ".referred" : "") + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+        // return this.sourceName + (isRef ? ".referred" : "") + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+        return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
     }
 
     findRefOfLastAppliedFeature(): PiLangProperty {
         if (this.appliedfeature !== undefined) {
-            console.log(" last of: " + this.appliedfeature.sourceName);
+            // console.log(" last of: " + this.appliedfeature.sourceName);
             return this.appliedfeature.findRefOfLastAppliedFeature();
         } else {
-            console.log("found reference: " + this.referedElement?.name);
+            // console.log("found reference: " + this.referedElement?.name);
             return this.referedElement;
         }
     }
@@ -83,5 +84,26 @@ export class PiLangFunctionCallExp extends PiLangExp {
 
     toPiString(): string {
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+    }
+}
+
+export function langRefToTypeScript(exp: PiLangExp): string {
+    if (exp instanceof PiLangEnumExp) {
+        return `${exp.sourceName}.${exp.appliedfeature}`;
+    } else if (exp instanceof PiLangThisExp) {
+        return `modelelement.${this.langRefToTypeScript(exp.appliedfeature)}`;
+    } else if (exp instanceof PiLangFunctionCallExp) {
+        return `this.${exp.sourceName} (${exp.actualparams.map(
+            param => `${this.makeTypeExp(param)}`
+        ).join(", ")})`
+    } else if (exp instanceof PiLangAppliedFeatureExp) {
+        let isRef: boolean = false;
+        if (!!exp.referedElement) {
+            const ref = exp.referedElement;
+            isRef = (ref instanceof PiLangConceptProperty) && ref.owningConcept.references.some(r => r === ref);
+        }
+        return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
+    } else {
+        return exp?.toPiString();
     }
 }

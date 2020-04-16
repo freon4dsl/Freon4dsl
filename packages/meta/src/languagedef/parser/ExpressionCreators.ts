@@ -2,15 +2,14 @@ import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageE
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangThisExp, PiLangAppliedFeatureExp, PiLangEnumExp, PiLangExp, PiLangConceptExp, PiLangFunctionCallExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { ParseLocation } from "../../utils";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator"); //.mute();
 
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");
     const result = new LanguageExpressionTester();
-    if(!!data.languageName) { result.languageName = data.languageName; }
-    if(!!data.conceptExps) { result.conceptExps = data.conceptExps; }
+    if (!!data.languageName) { result.languageName = data.languageName; }
+    if (!!data.conceptExps) { result.conceptExps = data.conceptExps; }
     if (!!data.location) { result.location = data.location; }
     return result;
 }
@@ -18,8 +17,8 @@ export function createTest(data: Partial<LanguageExpressionTester>): LanguageExp
 export function createConceptExps(data: Partial<TestExpressionsForConcept>): TestExpressionsForConcept {
     LOGGER.log("createConceptExps");
     const result = new TestExpressionsForConcept();
-    if(!!data.conceptRef) { result.conceptRef = data.conceptRef; }
-    if(!!data.exps) { result.exps = data.exps; }
+    if (!!data.conceptRef) { result.conceptRef = data.conceptRef; }
+    if (!!data.exps) { result.exps = data.exps; }
     if (!!data.location) { result.location = data.location; }
     return result;
 }

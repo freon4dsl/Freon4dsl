@@ -9,6 +9,7 @@ const LOGGER = new PiLogger("PiLanguageExpressionChecker"); //.mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equalsType" ];
 
 export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {
+    strictUseOfThis: boolean = true; // if true, then a ThisExpression must have an appliedfeature
 
     constructor(language: PiLanguageUnit) {
         super(language);
@@ -63,7 +64,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Concept reference should have a name, but doesn't [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
+                error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
                 whenOk: () => this.nestedCheck(
                     {
                         check: reference.referedElement() !== undefined,
@@ -113,15 +114,17 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     private checkThisExpression(langRef: PiLangThisExp, enclosingConcept:PiLangConcept) {
         LOGGER.log("Checking 'this' Expression " + langRef?.toPiString());
         langRef.referedElement = enclosingConcept;
-        this.nestedCheck(
-            {
-                check: langRef.appliedfeature != null,
-                error: `'this' should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
-                whenOk: () => {
-                    this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
+        if (this.strictUseOfThis) {
+            this.nestedCheck(
+                {
+                    check: langRef.appliedfeature != null,
+                    error: `'this' should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
+                    whenOk: () => {
+                        this.checkAppliedFeatureExp(langRef.appliedfeature, enclosingConcept);
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 
     // ConceptName.XXX

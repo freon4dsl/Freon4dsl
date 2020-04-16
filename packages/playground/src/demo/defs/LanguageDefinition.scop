@@ -8,8 +8,8 @@ EntityModel {
 }
 */
 // Overerving
-Entity {
-    namespace this + this.baseEntity
+DemoEntity {
+    namespace = this.baseEntity
 }
 /*
 Entity {

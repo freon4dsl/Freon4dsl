@@ -1,7 +1,13 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage/PiLangExpressions";
-import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
+import {
+    PiLangExp,
+    PiLangEnumExp,
+    PiLangThisExp,
+    PiLangFunctionCallExp,
+    langRefToTypeScript
+} from "../../../languagedef/metalanguage/PiLangExpressions";
+import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage/PiTyperDefLang";
 
 
 export class PiTyperTemplate {
@@ -114,7 +120,7 @@ export class PiTyperTemplate {
             if (tr instanceof PiTypeAnyTypeRule) {
                 for ( let stat of tr.statements  ) {
                     if ( stat.statementtype === "conformsto" ) {                        
-                        result = result.concat(`${this.makeTypeRef(stat.exp)}`);
+                        result = result.concat(`${this.makeTypeExp(stat.exp)}`);
                     }
                 }
             } 
@@ -141,7 +147,7 @@ export class PiTyperTemplate {
                     // console.log(" stat: " + stat.toPiString());
                     if ( stat.statementtype === "conformsto" ) {                        
                         // console.log(" stat.statementtype: " + stat.statementtype);
-                        result = result.concat(`if ( this.inferType(elem2) === ${this.makeTypeRef(stat.exp)}) {
+                        result = result.concat(`if ( this.inferType(elem2) === ${this.makeTypeExp(stat.exp)}) {
                             return true;
                         }`);
                     }
@@ -161,7 +167,7 @@ export class PiTyperTemplate {
                     // and thus their statement needs to come before the super statement
                     if ( stat.statementtype === "infertype" && !stat.isAbstract) {                        
                         result = result.concat(`if (modelelement instanceof ${myConceptName}) {
-                            return ${this.makeTypeRef(stat.exp)};
+                            return ${this.makeTypeExp(stat.exp)};
                         }`);
                     }
                 }
@@ -226,31 +232,17 @@ export class PiTyperTemplate {
     return "";
     }
 
-    private langRefToTypeScript(ref: PiLangExp): string {
-        if (ref instanceof PiLangEnumExp) {
-            return `${ref.sourceName}.${ref.appliedfeature}`;
-        } else if (ref instanceof PiLangThisExp) {
-            return `modelelement.${ref.appliedfeature?.toPiString()}`;
-        } else if (ref instanceof PiLangFunctionCallExp) {
-            return `this.${ref.sourceName} (${ref.actualparams.map(
-                param => `${this.makeTypeRef(param)}`
+    private makeTypeExp(exp: PiLangExp) : string {
+        if (exp instanceof PiLangEnumExp) {
+            return `${exp.sourceName}.${exp.appliedfeature}`;
+        } else if (exp instanceof PiLangThisExp) {
+            return `this.inferType(modelelement.${langRefToTypeScript(exp.appliedfeature)})`;
+        } else if (exp instanceof PiLangFunctionCallExp) {
+            return `this.${exp.sourceName} (${exp.actualparams.map(
+                param => `${this.makeTypeExp(param)}`
             ).join(", ")})`
         } else {
-            return ref?.toPiString();
-        }
-    }
-
-    private makeTypeRef(ref: PiLangExp) : string {
-        if (ref instanceof PiLangEnumExp) {
-            return `${ref.sourceName}.${ref.appliedfeature}`;
-        } else if (ref instanceof PiLangThisExp) {
-            return `this.inferType(modelelement.${ref.appliedfeature?.toPiString()})`;
-        } else if (ref instanceof PiLangFunctionCallExp) {
-            return `this.${ref.sourceName} (${ref.actualparams.map(
-                param => `${this.makeTypeRef(param)}`
-            ).join(", ")})`
-        } else {
-            return ref?.toPiString();
+            return exp?.toPiString();
         }
     }
 
