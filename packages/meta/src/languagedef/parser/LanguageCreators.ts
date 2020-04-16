@@ -30,6 +30,7 @@ export function createLanguage(data: Partial<PiParseLanguageUnit>): PiLanguageUn
             }
         }
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -75,6 +76,7 @@ export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
         result.priority = data.priority;
     }
     // console.log("created parse class " + result.name);
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -82,6 +84,7 @@ export function createEnumerationReference(data: Partial<PiLangEnumerationRefere
     // console.log("createEnumerationReference " + data.name);
     const result = new PiLangEnumerationReference();
     if(!!data.name) { result.name = data.name; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -91,7 +94,7 @@ export function createEnumerationProperty(data: Partial<PiLangEnumProperty>): Pi
     if(!!data.type) { result.type = data.type; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
-
+    if (!!data.location) { result.location = data.location; }
     // // console.log("created property with name "+ result.name);
     return result;
 }
@@ -102,6 +105,7 @@ export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>):
     if(!!data.primType) { result.primType = data.primType; }
     if(!!data.name) { result.name = data.name; }
     result.isList = data.isList;
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -112,6 +116,7 @@ export function createPart(data: Partial<PiLangConceptProperty>): PiLangConceptP
     if(!!data.name) { result.name = data.name; }
     result.isList = !!data.isList;
     result.isPart = true;
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -122,6 +127,7 @@ export function createReference(data: Partial<PiLangConceptProperty>): PiLangCon
     if(!!data.name) { result.name = data.name; }
     result.isList = !!data.isList;
     result.isPart = false;
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -129,6 +135,7 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     // console.log("createConceptReference " + data.name);
     const result = new PiLangConceptReference();
     if(!!data.name) { result.name = data.name; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -137,6 +144,7 @@ export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnume
     const result = new PiLangEnumeration();
     if( !!data.name) { result.name = data.name; }
     if( !!data.literals) { result.literals = data.literals; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -145,5 +153,6 @@ export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
     const result = new PiLangUnion();
     if( !!data.name) { result.name = data.name; }
     if( !!data.members) { result.members = data.members; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }

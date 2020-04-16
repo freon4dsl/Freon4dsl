@@ -1,7 +1,13 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiLangExp, PiLangEnumExp, PiLangSelfExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage/PiLangExpressions";
-import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../../typerdef/metalanguage/PiTyperDefLang";
+import {
+    PiLangExp,
+    PiLangEnumExp,
+    PiLangThisExp,
+    PiLangFunctionCallExp,
+    langRefToTypeScript
+} from "../../../languagedef/metalanguage/PiLangExpressions";
+import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage/PiTyperDefLang";
 
 
 export class PiTyperTemplate {
@@ -226,28 +232,14 @@ export class PiTyperTemplate {
     return "";
     }
 
-    private langRefToTypeScript(ref: PiLangExp): string {
-        if (ref instanceof PiLangEnumExp) {
-            return `${ref.sourceName}.${ref.appliedfeature}`;
-        } else if (ref instanceof PiLangSelfExp) {
-            return `modelelement.${ref.appliedfeature?.toPiString()}`;
-        } else if (ref instanceof PiLangFunctionCallExp) {
-            return `this.${ref.sourceName} (${ref.actualparams.map(
-                param => `${this.makeTypeRef(param)}`
-            ).join(", ")})`
-        } else {
-            return ref?.toPiString();
-        }
-    }
-
-    private makeTypeRef(ref: PiLangExp) : string {
-        if (ref instanceof PiLangEnumExp) {
-            return `${ref.sourceName}.${ref.appliedfeature}`;
-        } else if (ref instanceof PiLangSelfExp) {
-            return `this.inferType(modelelement.${ref.appliedfeature?.toPiString()})`;
-        } else if (ref instanceof PiLangFunctionCallExp) {
-            return `this.${ref.sourceName} (${ref.actualparams.map(
-                param => `${this.makeTypeRef(param)}`
+    private makeTypeExp(exp: PiLangExp) : string {
+        if (exp instanceof PiLangEnumExp) {
+            return `${exp.sourceName}.${exp.appliedfeature}`;
+        } else if (exp instanceof PiLangThisExp) {
+            return `this.inferType(modelelement.${langRefToTypeScript(exp.appliedfeature)})`;
+        } else if (exp instanceof PiLangFunctionCallExp) {
+            return `this.${exp.sourceName} (${exp.actualparams.map(
+                param => `${this.makeTypeExp(param)}`
             ).join(", ")})`
         } else {
             return ref?.toPiString();

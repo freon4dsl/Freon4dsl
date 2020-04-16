@@ -13,6 +13,43 @@ export class DemoModelCreator  {
         this.model = this.createCorrectModel();
     }
 
+    public createInheritanceModel() : DemoModel {
+        let inheritanceModel: DemoModel = DemoModel.create("DemoModel_with_inheritance");
+        const vehicleEnt = DemoEntity.create("Vehicle");
+        const brand = DemoAttribute.create("brand");
+        const vehicleName = DemoAttribute.create("name");
+        vehicleEnt.attributes.push(brand);
+        vehicleEnt.attributes.push(vehicleName);
+
+        const carEnt = DemoEntity.create("Car");
+        const numberplate = DemoAttribute.create("numberplate");
+        const carType = DemoAttribute.create("make");
+        carEnt.baseEntity = new PiElementReference<DemoEntity>(vehicleEnt, "DemoEntity");
+        carEnt.attributes.push(numberplate);
+        carEnt.attributes.push(carType);
+
+        const bikeEnt = DemoEntity.create("Bike");
+        const backseat = DemoAttribute.create("backseat");
+        const gears = DemoAttribute.create("gears");
+        bikeEnt.baseEntity = new PiElementReference<DemoEntity>(vehicleEnt, "DemoEntity");
+        bikeEnt.attributes.push(backseat);
+        bikeEnt.attributes.push(gears);
+
+        const racebikeEnt = DemoEntity.create("RaceBike");
+        const color = DemoAttribute.create("color");
+        const wheelsize = DemoAttribute.create("wheelsize");
+        racebikeEnt.baseEntity = new PiElementReference<DemoEntity>(bikeEnt, "DemoEntity");
+        racebikeEnt.attributes.push(color);
+        racebikeEnt.attributes.push(wheelsize);
+
+        inheritanceModel.entities.push(vehicleEnt);
+        inheritanceModel.entities.push(carEnt);
+        inheritanceModel.entities.push(bikeEnt);
+        inheritanceModel.entities.push(racebikeEnt);
+
+        return inheritanceModel;
+    }
+
 	public createCorrectModel() : DemoModel {
         let correctModel: DemoModel = DemoModel.create("DemoModel_1");
 

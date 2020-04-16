@@ -1,7 +1,9 @@
 import { PiLangElementReference, PiLangConceptReference, PiLangClassReference, PiLangInterfaceReference, PiLangEnumerationReference } from "./PiLangReferences";
+import { ParseLocation } from "../../utils";
 
 // PiLanguage structure
 export class PiLanguageUnit {
+    location: ParseLocation;
     name: string;
     classes: PiLangClass[] = [];
     enumerations: PiLangEnumeration[] = [];
@@ -63,6 +65,7 @@ export class PiLanguageUnit {
 
 // root of the inheritance structure
 export abstract class PiLangElement {
+    location: ParseLocation;
     name: string;
 }
 

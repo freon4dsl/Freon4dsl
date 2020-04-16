@@ -11,6 +11,7 @@ LanguageExpressions_Definition
         return expCreate.createTest({
             "languageName": languageName,
             "conceptExps": cr,
+            "location": location()
         });
     } 
 
@@ -19,49 +20,63 @@ conceptExps = conceptRef:conceptRef ws curly_begin ws exps:expWithSeparator* cur
         return expCreate.createConceptExps({ 
           "conceptRef": conceptRef, 
           "exps": exps,
+          "location": location()
         }); 
     }
 
-conceptRef = name:var { return expCreate.createConceptReference( { "name": name}); }
 
-expWithSeparator = exp:langRefExpression semicolon_separator { return exp; }
+expWithSeparator = exp:langExpression semicolon_separator { return exp; }
 
 // the following rules should be part of a parser that wants to use PiLangExpressions.ts
-langRefExpression = enumRefExpression:enumRefExpression    { return enumRefExpression; } 
+
+conceptRef = name:var { return expCreate.createConceptReference( { "name": name, "location":location()}); }
+
+langExpression = functionExpression:functionExpression  { return functionExpression; }
                   / expression:expression                  { return expression; }
-                  / functionExpression:functionExpression  { return functionExpression; }
 
-enumRefExpression = sourceName:var ':' appliedfeature:var {
-  return expCreate.createEnumReference ({
-    "sourceName": sourceName,
-    "appliedfeature": appliedfeature
-  })
-}
-
-expression = sourceName:var appliedfeature:dotExpression {
-  return expCreate.createExpression ({
-    "sourceName": sourceName,
-    "appliedfeature": appliedfeature
-  })
-}
-
-functionExpression = sourceName:var round_begin actualparams:(
-      head:langRefExpression
-      tail:(comma_separator v:langRefExpression { return v; })*
-      { return [head].concat(tail); }
-    ) 
-    round_end {
-  return expCreate.createFunctionCall ({
-    "sourceName": sourceName,
-    "actualparams": actualparams
-  })
-}
+expression = sourceName:var ':' literal:var  {
+                                                return expCreate.createEnumReference ({
+                                                  "sourceName": sourceName,
+                                                  "appliedfeature": literal,
+                                                  "location": location()
+                                                })
+                                              }
+            / sourceName:var appliedfeature:dotExpression
+            {
+                return expCreate.createExpression ({
+                    "sourceName": sourceName,
+                    "appliedfeature": appliedfeature,
+                    "location": location()
+                })
+            }
+            / sourceName:var
+            {
+                return expCreate.createExpression ({
+                    "sourceName": sourceName,
+                    "location": location()
+                })
+            }
 
 dotExpression = '.' sourceName:var appliedfeature:dotExpression?  {
   return expCreate.createAppliedFeatureExp
 ( {
     "sourceName": sourceName,
-    "appliedfeature": appliedfeature
+    "appliedfeature": appliedfeature,
+    "location": location()
   })
 }
+
+functionExpression = sourceName:var round_begin actualparams:(
+      head:langExpression
+      tail:(comma_separator v:langExpression { return v; })*
+      { return [head].concat(tail); }
+    )
+    round_end {
+  return expCreate.createFunctionCall ({
+    "sourceName": sourceName,
+    "actualparams": actualparams,
+    "location": location()
+  })
+}
+
 

@@ -13,6 +13,7 @@ Typer_Definition
            "name": name,
            "languageName": languageName,
            "typerRules": tr,
+           "location": location()
        });
     } 
 
@@ -35,14 +36,16 @@ isTypeRule = isTypeKey curly_begin types:(
     ) curly_end 
 {
   return create.createIsType({
-    "types":types
+    "types":types,
+    "location": location()
   })
 }
 
 anyTypeRule = anyKey curly_begin statements:statement* curly_end 
 {
   return create.createAnyTypeRule( {
-    "statements":statements
+    "statements":statements,
+    "location": location()
   })
 }
 
@@ -50,32 +53,36 @@ otherRule = conceptRef:conceptRef curly_begin statements:statement* curly_end
 {
   return create.createConceptRule( {
     "conceptRef": conceptRef,
-    "statements": statements
+    "statements": statements,
+    "location": location()
   })
 }
 
-statement = conformsKey:conformsKey exp:langRefExpression
+statement = conformsKey:conformsKey exp:langExpression
 {
   return create.createStatement({
     "statementtype": "conformsto",
     "exp": exp,
-    "isAbstract": false
+    "isAbstract": false,
+    "location": location()
   })
 }            
-            / equalsKey:equalsKey exp:langRefExpression
+            / equalsKey:equalsKey exp:langExpression
 {
   return create.createStatement({
     "statementtype":"equalsto",
     "exp": exp,
-    "isAbstract": false
+    "isAbstract": false,
+    "location": location()
   })
 }            
-            / abs:abstractKey? inferenceKey:inferenceKey exp:langRefExpression?
+            / abs:abstractKey? inferenceKey:inferenceKey exp:langExpression?
 {
   return create.createStatement({
     "statementtype":"infertype",
     "exp": exp,
-    "isAbstract": (!!abs)
+    "isAbstract": (!!abs),
+    "location": location()
   })
 }            
 

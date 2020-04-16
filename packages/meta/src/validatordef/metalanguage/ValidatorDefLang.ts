@@ -1,7 +1,9 @@
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions"
+import { ParseLocation } from "../../utils";
 
 export class PiValidatorDef {
+    location: ParseLocation;
     validatorName: string;
     languageName: string;
     conceptRules: ConceptRuleSet[];
@@ -11,11 +13,13 @@ export class PiValidatorDef {
 }
 
 export class ConceptRuleSet {
+    location: ParseLocation;
     conceptRef: PiLangConceptReference;
     rules: ValidationRule[];
 }
 
-export abstract class ValidationRule {   
+export abstract class ValidationRule {
+    location: ParseLocation;
     toPiString() : string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
     }

@@ -1,5 +1,6 @@
 import { PiLangExp } from "../../languagedef/metalanguage";
 import { DefEditorConcept } from "./DefEditorConcept";
+import { ParseLocation } from "../../utils";
 
 export class DefEditorNewline {
     toString(): string {
@@ -8,6 +9,7 @@ export class DefEditorNewline {
 }
 
 export class DefEditorProjectionIndent {
+    location: ParseLocation;
     indent: string = "";
     amount: number = 0;
 
@@ -29,6 +31,7 @@ export class DefEditorProjectionIndent {
 }
 
 export class DefEditorProjectionText {
+    location: ParseLocation;
     text: string = "";
 
     toString(): string {
@@ -49,6 +52,7 @@ export enum ListJoinType {
 }
 
 export class ListJoin {
+    location: ParseLocation;
     direction: Direction = Direction.Horizontal;
     joinType?: ListJoinType;
     joinText?: string;
@@ -59,6 +63,7 @@ export class ListJoin {
 }
 
 export class DefEditorSubProjection {
+    location: ParseLocation;
     propertyName: string = "";
     listJoin: ListJoin;
     expression: PiLangExp;
@@ -69,12 +74,14 @@ export class DefEditorSubProjection {
 }
 
 export class DefEditorProjectionExpression {
+    location: ParseLocation;
     propertyName: string = "";
 }
 
 type DefEditorProjectionItem = DefEditorProjectionIndent | DefEditorProjectionText | DefEditorSubProjection | DefEditorProjectionExpression;
 
 export class MetaEditorProjectionLine {
+    location: ParseLocation;
     items: DefEditorProjectionItem[] = [];
     indent: number = 0;
 
@@ -88,6 +95,7 @@ export class MetaEditorProjectionLine {
 }
 
 export class MetaEditorProjection {
+    location: ParseLocation;
     name: string;
     conceptEditor: DefEditorConcept;
     lines: MetaEditorProjectionLine[];

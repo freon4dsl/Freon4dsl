@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-cat  ScoperGrammar.part.pegjs ../../languagedef/parser/BasicGrammar.part.pegjs > ScoperGrammar.pegjs
+LANGDEV=../../languagedef/parser
+
+cat  ScoperGrammar.part.pegjs $LANGDEV/ExpressionGrammar.part.pegjs $LANGDEV/BasicGrammar.part.pegjs > ScoperGrammar.pegjs
