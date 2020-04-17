@@ -47,7 +47,7 @@
     "jest": "^24.7.1",
     "jest-css-modules-transform": "^2.1.1",
     "jest-enzyme": "^7.0.2",
-    "js-yaml": "3.7.0",
+    "js-yaml": "3.13.1",
     "mobx-react-devtools": "^4.2.15",
     "node-sass": "^4.5.3",
     "nodemon": "^1.19.0",
