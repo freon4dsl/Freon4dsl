@@ -11,7 +11,9 @@ describe("testing Scoper", () => {
         done();
     });
 
+    // TODO make this two separate tests, that each run every time
     function testInheritedPropsrecursive(ent: DemoEntity, vis: string[]) {
+        // when the property is not a list:
         if (!!ent.baseEntity) {
             // extra props should be visible
             ent.baseEntity.referred.attributes.forEach(attr => {
@@ -19,6 +21,14 @@ describe("testing Scoper", () => {
             });
             testInheritedPropsrecursive(ent.baseEntity.referred, vis);
         }
+        // when the property is a list
+        // for (let ww of ent.baseEntity) {
+        //     // extra props should be visible
+        //     ww.referred.attributes.forEach(attr => {
+        //         expect(vis).toContain(attr.name);
+        //     });
+        //     testInheritedPropsrecursive(ww.referred, vis);
+        // }
     }
 
     test("inheritance", () => {
@@ -29,9 +39,8 @@ describe("testing Scoper", () => {
                 expect(vis).toContain(attr.name);
             });
             testInheritedPropsrecursive(ent, vis);
-            console.log("visible elements for " + ent.name + ":");
+            // console.log("visible elements for " + ent.name + ":");
             vis.forEach(n => {console.log(n);});
-
         });
 
     });

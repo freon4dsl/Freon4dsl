@@ -5,7 +5,7 @@ import { LanguageExpressionTester, TestExpressionsForConcept } from "../../langu
 import { PiLangExp, PiLangEnumExp, PiLangThisExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("PiLanguageExpressionChecker"); //.mute();
+const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equalsType" ];
 
 export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {

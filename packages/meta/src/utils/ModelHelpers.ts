@@ -1,4 +1,4 @@
-import { PiLangClass } from "../languagedef/metalanguage";
+import { PiLangClass, PiLangConcept, PiLangConceptReference, PiLangElement, PiLangElementReference } from "../languagedef/metalanguage";
 
     // As in the WalkerTemplate,
     // the entries for the unparse${concept.name} must be sorted,
@@ -25,4 +25,23 @@ import { PiLangClass } from "../languagedef/metalanguage";
             }
         }
         return newList;
+    }
+
+    /**
+     * returns true if the list of concept references contains the element, whether the element is a reference to, or the concept itself
+     */
+    export function refListIncludes(list: PiLangElementReference[], element: PiLangElementReference | PiLangElement): boolean {
+        // TODO ??? should we add a check on the types of the list and the element?
+        for (let xx of list) {
+            if (element instanceof PiLangElement) {
+                if (xx.referedElement() === element) {
+                    return true;
+                }
+            } else if (element instanceof PiLangElementReference) {
+                if (xx.referedElement() === element.referedElement()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }

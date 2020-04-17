@@ -1,5 +1,5 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLangConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 import { langRefToTypeScript } from "../../../languagedef/metalanguage";
 
@@ -157,15 +157,35 @@ export class NamespaceTemplate {
                 let con = e.conceptRef.referedElement().name;
                 result = result.concat(`if (this._myElem instanceof ${con}) {`);
                 for(let xx of e.namespaceDef.expressions) {
-                    result = result.concat(`
-                    // expression ${xx.toPiString()} 
-                    if (!!this._myElem.${xx.appliedfeature.toPiString()}) {
-                        if (this.isNameSpace(this._myElem.${langRefToTypeScript(xx.appliedfeature)})) {
-                            // wrap the found element
-                            let extraNamespace = new ${generatedClassName}(this._myElem.${langRefToTypeScript(xx.appliedfeature)});
-                            result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
-                        }                  
-                    }`);
+                    let myRef = xx.findRefOfLastAppliedFeature();
+                    let loopVar: string = "yy";
+                    let loopVarExtended = loopVar;
+                    if(myRef.isList) {
+                        if (myRef instanceof PiLangConceptProperty) {
+                            if (!myRef.isPartOf()) {
+                                loopVarExtended = loopVarExtended.concat(".referred");
+                            }
+                        }
+                        result = result.concat(`
+                        // generated based on '${xx.toPiString()}'
+                        for (let ${loopVar} of this._myElem.${xx.appliedfeature.toPiString()}) {
+                            if (this.isNameSpace(${loopVarExtended})) {
+                                // wrap the found element
+                                let extraNamespace = new ${generatedClassName}(${loopVarExtended});
+                                result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                            }
+                        }`);
+                    } else {
+                        result = result.concat(`
+                        // generated based on '${xx.toPiString()}' 
+                        if (!!this._myElem.${xx.appliedfeature.toPiString()}) {
+                            if (this.isNameSpace(this._myElem.${langRefToTypeScript(xx.appliedfeature)})) {
+                                // wrap the found element
+                                let extraNamespace = new ${generatedClassName}(this._myElem.${langRefToTypeScript(xx.appliedfeature)});
+                                result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                            }                  
+                        }`);
+                    }
                 }
                 result = result.concat("}");
             }

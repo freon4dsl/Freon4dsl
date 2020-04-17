@@ -25,6 +25,7 @@ export class DemoModelCreator  {
         const numberplate = DemoAttribute.create("numberplate");
         const carType = DemoAttribute.create("make");
         carEnt.baseEntity = new PiElementReference<DemoEntity>(vehicleEnt, "DemoEntity");
+        // carEnt.baseEntity.push( new PiElementReference<DemoEntity>(vehicleEnt, "DemoEntity"));
         carEnt.attributes.push(numberplate);
         carEnt.attributes.push(carType);
 
@@ -32,6 +33,7 @@ export class DemoModelCreator  {
         const backseat = DemoAttribute.create("backseat");
         const gears = DemoAttribute.create("gears");
         bikeEnt.baseEntity = new PiElementReference<DemoEntity>(vehicleEnt, "DemoEntity");
+        // bikeEnt.baseEntity.push( new PiElementReference<DemoEntity>(vehicleEnt, "DemoEntity"));
         bikeEnt.attributes.push(backseat);
         bikeEnt.attributes.push(gears);
 
@@ -39,6 +41,7 @@ export class DemoModelCreator  {
         const color = DemoAttribute.create("color");
         const wheelsize = DemoAttribute.create("wheelsize");
         racebikeEnt.baseEntity = new PiElementReference<DemoEntity>(bikeEnt, "DemoEntity");
+        // racebikeEnt.baseEntity.push( new PiElementReference<DemoEntity>(bikeEnt, "DemoEntity"));
         racebikeEnt.attributes.push(color);
         racebikeEnt.attributes.push(wheelsize);
 

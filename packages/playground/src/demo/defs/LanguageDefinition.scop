@@ -1,18 +1,20 @@
 scoper Demo for language Demo
 
-isnamespace { DemoModel DemoEntity DemoFunction }
+isnamespace { DemoModel DemoEntity DemoFunction DemoAttributeType }
 
-/*
-EntityModel {
-	namespace {}
-}
-*/
 // Overerving
 DemoEntity {
-    namespace = this.baseEntity
+    namespace_addition = this.baseEntity
+    //namespace_addition = this.name
+    //namespace_addition = this.declaredType
+    //namespace_addition = this.attributes
 }
 /*
-Entity {
+DemoAttribute {
+    namespace_addition = this.declaredType
+}
+
+DemoEntity {
     namespace {
 	    this
 		+ this.baseEntity
@@ -23,7 +25,7 @@ Entity {
 	}
 }
 
-@namespace EntityInterface {
+@namespace DemoEntityInterface {
     this
     + this.baseInterface
 }

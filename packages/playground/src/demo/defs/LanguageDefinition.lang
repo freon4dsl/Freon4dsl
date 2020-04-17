@@ -8,6 +8,7 @@ root concept DemoModel {
 
 concept DemoEntity {
     name: string
+    declaredType : DemoAttributeType
     part attributes: DemoAttribute[]
     part functions: DemoFunction[]
     reference baseEntity: DemoEntity
@@ -30,9 +31,18 @@ concept DemoVariable {
     declaredType: DemoAttributeType
 }
 
-abstract expression concept DemoExpression {}
+abstract expression concept DemoExpression {
+    part appliedfeature: AppliedFeature
+}
 
-expression placeholder concept DemoPlaceholderExpression {}
+concept AppliedFeature {
+    part appliedfeature: AppliedFeature
+    value: string
+}
+
+expression placeholder concept DemoPlaceholderExpression {
+    part appliedfeature: AppliedFeature
+}
 
 abstract expression concept DemoLiteralExpression base DemoExpression {}
 

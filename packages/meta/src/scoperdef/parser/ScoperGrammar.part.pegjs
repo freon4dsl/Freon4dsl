@@ -19,7 +19,7 @@ Scoper_Definition
     } 
 
 isnamespaceKey = ws "isnamespace" ws
-namespaceKey = ws "namespace" ws
+namespaceKey = ws "namespace_addition" ws
 plus_separator = ws "+" ws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(conceptRef)* ws curly_end
