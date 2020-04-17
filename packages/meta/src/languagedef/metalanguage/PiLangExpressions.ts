@@ -27,7 +27,7 @@ export abstract class PiLangExp {
 
 }
 
-export class PiLangThisExp extends PiLangExp {
+export class PiLangSelfExp extends PiLangExp {
     referedElement: PiLangConcept; // is not needed, can be determined based on its parent
 
     toPiString(): string {
@@ -90,7 +90,7 @@ export class PiLangFunctionCallExp extends PiLangExp {
 export function langRefToTypeScript(exp: PiLangExp): string {
     if (exp instanceof PiLangEnumExp) {
         return `${exp.sourceName}.${exp.appliedfeature}`;
-    } else if (exp instanceof PiLangThisExp) {
+    } else if (exp instanceof PiLangSelfExp) {
         return `modelelement.${this.langRefToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
         return `this.${exp.sourceName} (${exp.actualparams.map(

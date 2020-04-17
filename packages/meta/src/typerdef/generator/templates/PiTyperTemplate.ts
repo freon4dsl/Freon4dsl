@@ -3,9 +3,8 @@ import { PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/P
 import {
     PiLangExp,
     PiLangEnumExp,
-    PiLangThisExp,
     PiLangFunctionCallExp,
-    langRefToTypeScript
+    langRefToTypeScript, PiLangSelfExp
 } from "../../../languagedef/metalanguage/PiLangExpressions";
 import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage/PiTyperDefLang";
 
@@ -235,7 +234,7 @@ export class PiTyperTemplate {
     private makeTypeExp(exp: PiLangExp) : string {
         if (exp instanceof PiLangEnumExp) {
             return `${exp.sourceName}.${exp.appliedfeature}`;
-        } else if (exp instanceof PiLangThisExp) {
+        } else if (exp instanceof PiLangSelfExp) {
             return `this.inferType(modelelement.${langRefToTypeScript(exp.appliedfeature)})`;
         } else if (exp instanceof PiLangFunctionCallExp) {
             return `this.${exp.sourceName} (${exp.actualparams.map(

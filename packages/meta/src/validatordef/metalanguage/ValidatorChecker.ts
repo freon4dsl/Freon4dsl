@@ -2,7 +2,7 @@ import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangPrimitiveProperty } from "../../languagedef/metalanguage/PiLanguage";
 import { ConceptRuleSet, PiValidatorDef, CheckEqualsTypeRule, ValidationRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
 import { PiLangConceptReference, PiLangPropertyReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangAppliedFeatureExp, PiLangThisExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 
@@ -69,7 +69,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check:!(!!myProp),
                 error: `Cannot find property 'name' in ${enclosingConcept.name} [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
-                    tr.property = new PiLangThisExp();
+                    tr.property = new PiLangSelfExp();
                     tr.property.appliedfeature = new PiLangAppliedFeatureExp();
                     tr.property.appliedfeature.sourceName = "name";
                     tr.property.appliedfeature.referedElement = myProp;

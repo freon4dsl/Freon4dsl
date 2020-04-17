@@ -40,7 +40,7 @@ describe("testing Scoper", () => {
             });
             testInheritedPropsrecursive(ent, vis);
             // console.log("visible elements for " + ent.name + ":");
-            vis.forEach(n => {console.log(n);});
+            // vis.forEach(n => {console.log(n);});
         });
 
     });

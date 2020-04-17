@@ -1,3 +1,4 @@
+import { PiLangClass, PiLangElement, PiLangEnumExp, PiLangExp, PiLangSelfExp } from "../languagedef/metalanguage";
 import { PiLangClass, PiLangConcept, PiLangConceptReference, PiLangElement, PiLangElementReference } from "../languagedef/metalanguage";
 
     // As in the WalkerTemplate,
@@ -45,3 +46,8 @@ import { PiLangClass, PiLangConcept, PiLangConceptReference, PiLangElement, PiLa
         }
         return false;
     }
+
+    export function isPrimitiveType(type: PiLangElement): boolean {
+        return (type.name === "string" || type.name === "number" || type.name === "boolean")
+    }
+
