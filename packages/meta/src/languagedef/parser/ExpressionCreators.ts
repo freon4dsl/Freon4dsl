@@ -1,9 +1,10 @@
 import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageExpressionTester";
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangThisExp, PiLangAppliedFeatureExp, PiLangEnumExp, PiLangExp, PiLangConceptExp, PiLangFunctionCallExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import { PiLangSelfExp, PiLangAppliedFeatureExp, PiLangEnumExp, PiLangExp, PiLangConceptExp, PiLangFunctionCallExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator"); //.mute();
+const nameForSelf = "self";
 
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");
@@ -26,18 +27,17 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
 export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
     LOGGER.log("createConceptReference " + data.name);
     const result = new PiLangConceptReference();
-    if(!!data.name) { result.name = data.name; }
+    if (!!data.name) { result.name = data.name; }
     if (!!data.location) { result.location = data.location; }
     return result;
 }
 
 export function createExpression(data: Partial<PiLangExp>) : PiLangExp {
-    LOGGER.log("createExpression");
     let result : PiLangExp;
     if (!!data.sourceName ) {
-        if ( data.sourceName === "this") {
-            result = new PiLangThisExp();
-            LOGGER.log("createThisExpression");
+        if (data.sourceName === nameForSelf) {
+            result = new PiLangSelfExp();
+            LOGGER.log("createSelfExpression");
             result.sourceName = data.sourceName;
         } else {
             result = new PiLangConceptExp();

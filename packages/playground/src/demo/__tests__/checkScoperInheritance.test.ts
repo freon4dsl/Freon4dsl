@@ -29,9 +29,8 @@ describe("testing Scoper", () => {
                 expect(vis).toContain(attr.name);
             });
             testInheritedPropsrecursive(ent, vis);
-            console.log("visible elements for " + ent.name + ":");
-            vis.forEach(n => {console.log(n);});
-
+            // console.log("visible elements for " + ent.name + ":");
+            // vis.forEach(n => {console.log(n);});
         });
 
     });

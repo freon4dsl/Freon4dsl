@@ -1,4 +1,4 @@
-import { PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangProperty, PiLangThisExp } from "../../../languagedef/metalanguage";
+import { PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangProperty, PiLangSelfExp } from "../../../languagedef/metalanguage";
 import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { PiLangClass, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {

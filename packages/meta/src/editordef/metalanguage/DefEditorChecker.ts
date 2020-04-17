@@ -22,6 +22,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         for(let conceptEditor of editor.conceptEditors){
             this.checkConceptEditor(conceptEditor);
         }
+        this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 
     private checkConceptEditor(conceptEditor: DefEditorConcept){

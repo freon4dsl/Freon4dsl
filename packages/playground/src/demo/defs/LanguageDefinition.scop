@@ -9,14 +9,13 @@ EntityModel {
 */
 // Overerving
 DemoEntity {
-    namespace = this.baseEntity
+    namespace = self.baseEntity
 }
 /*
 Entity {
     namespace {
-	    this
-		+ this.baseEntity
-		+ this.implements
+		+ self.baseEntity
+		+ self.implements
 	}
 	scope {
 		blabla + andereBlaBla
@@ -24,8 +23,7 @@ Entity {
 }
 
 @namespace EntityInterface {
-    this
-    + this.baseInterface
+    + self.baseInterface
 }
 */
 // TODO Define Appliedfeature in .lang file
