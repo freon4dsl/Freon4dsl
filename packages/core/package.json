@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "tsc && yarn run copy-scss && yarn run copy-fonts",
+    "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-scss": "cp src/editor/components/styles/*.scss ./dist/editor/components/styles",
