@@ -1,3 +1,4 @@
+// TODO Is only used in demo package, should be replaced by GenericModelSerializer
 import { Checker } from "awesome-typescript-loader/dist/checker";
 import { MODEL_PREFIX, MODEL_PREFIX_LENGTH } from "../language/decorators/MobxModelDecorators";
 import { DecoratedModelElement, MobxModelElementImpl } from "../language/decorators/DecoratedModelElement";

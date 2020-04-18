@@ -65,12 +65,13 @@ export class GenericModelSerializer {
                     }
                     break;
                 case "enumeration":
+                    const enumeration = this.language.enumeration(property.type);
                     if (property.isList) {
                         for (var item in value) {
-                            result[property.name].push(value[item]);
+                            result[property.name].push(enumeration.literal(value[item]));
                         }
                     } else {
-                        result[property.name] = value;
+                        result[property.name] = enumeration.literal(value);
                     }
                     break;
                 case "part":
@@ -87,10 +88,10 @@ export class GenericModelSerializer {
                 case "reference":
                     if (property.isList) {
                         for (var item in value) {
-                            result[property.name].push(value[item]["name"]);
+                            result[property.name].push(this.language.referenceCreator(value[item], property.type));
                         }
                     } else {
-                        console.log("Serializer creating property " + property.name + "  referene [" + value + "] to a [" + property.type+ "]")
+                        console.log("Serializer creating property " + property.name + "  reference [" + value + "] to a [" + property.type+ "]")
                         result[property.name] = this.language.referenceCreator(value, property.type);
                     }
                     break;

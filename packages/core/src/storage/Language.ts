@@ -16,10 +16,16 @@ export type Concept = {
     constructor: () => PiElement;
 };
 
+export type Enumeration = {
+    typeName: string;
+    literal: (literal: string) => PiElement;
+};
+
 export class Language {
 
     private static theInstance: Language = null;
     private concepts : Map<string, Concept> = new Map<string, Concept>();
+    private enumerations : Map<string, Enumeration> = new Map<string, Enumeration>();
 
     private constructor() {
     }
@@ -33,6 +39,10 @@ export class Language {
 
     concept(typeName, propertyName): Concept {
         return this.concepts.get(typeName);
+    }
+
+    enumeration(typeName): Enumeration {
+        return this.enumerations.get(typeName);
     }
 
     conceptProperty(typeName, propertyName): Property {
@@ -50,6 +60,10 @@ export class Language {
 
     addConcept(conceptName: string, concept: Concept){
         this.concepts.set(conceptName, concept);
+    }
+
+    addEnumeration(enumName: string, enumeration: Enumeration){
+        this.enumerations.set(enumName, enumeration);
     }
 
     referenceCreator: (name: string, type: string) => any;

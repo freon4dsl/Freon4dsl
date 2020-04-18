@@ -15,7 +15,7 @@ export class LanguageTemplate {
     }
 
     generateLanguage(language: PiLanguageUnit, relativePath: string): string {
-        return `import { Language, Property, Concept } from "@projectit/core";
+        return `import { Language, Property, Concept, Enumeration } from "@projectit/core";
         
             ${language.classes.map(concept =>
                 `import { ${Names.concept(concept)} } from "./${Names.concept(concept)}";`
@@ -30,7 +30,7 @@ export class LanguageTemplate {
                     `Language.getInstance().addConcept("${Names.concept(concept)}", describe${Names.concept(concept)}());`
                 ).join("\n")}
                 ${language.enumerations.map(enu =>
-                    `Language.getInstance().addConcept("${Names.enumeration(enu)}", describe${Names.enumeration(enu)}());`
+                    `Language.getInstance().addEnumeration("${Names.enumeration(enu)}", describe${Names.enumeration(enu)}());`
                 ).join("\n")}
                 Language.getInstance().addReferenceCreator( (name: string, type: string) => { return PiElementReference.createNamed(name, type)});
             }
@@ -80,20 +80,12 @@ export class LanguageTemplate {
             }`
             ).join("\n")}
             ${language.enumerations.map(enu =>
-            `function describe${enu.name}(): Concept {
-                            const concept =             {
+            `function describe${enu.name}(): Enumeration {
+                            const enumeration =             {
                                 typeName: "${Names.enumeration(enu)}",
-                                constructor: () => { return null; },
-                                properties: new Map< string, Property>(),
-                                baseNames: null
+                                literal: (literal: string) => { return ${Names.enumeration(enu)}.fromString(literal); }
                             }
-                            concept.properties.set("name", {
-                                name: "name",
-                                type: "string",
-                                isList: false ,
-                                propertyType: "primitive"
-                            });
-                            return concept;
+                            return enumeration;
                         }`
         ).join("\n")}
         `;
