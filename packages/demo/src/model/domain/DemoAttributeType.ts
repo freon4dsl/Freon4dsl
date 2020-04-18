@@ -26,6 +26,7 @@ export class DemoAttributeType extends DemoModelElement {
         if (v === "Boolean") return DemoAttributeType.Boolean;
         if (v === "Any") return DemoAttributeType.Any;
         console.error("cannot create DemoAttributeType from " + v);
+        return DemoAttributeType.Any;
     }
 
 }
