@@ -10,6 +10,7 @@ concept DemoEntity {
     name: string
     part attributes: DemoAttribute[]
     part functions: DemoFunction[]
+    reference baseEntity: DemoEntity
 }
 
 concept DemoAttribute {

@@ -1,7 +1,7 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
-import { PiLangThisExp, PiLangExp, PiLangEnumExp } from "../../../languagedef/metalanguage/PiLangExpressions";
+import { langRefToTypeScript } from "../../../languagedef/metalanguage";
 
 export class CheckerTemplate {
     constructor() {
@@ -89,37 +89,27 @@ export class CheckerTemplate {
             ruleSet.rules.map(r => 
                 `// ${r.toPiString()}
                 ${(r instanceof CheckEqualsTypeRule ?
-                    `if(!this.typer.equalsType(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) 
-                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
+                    `if(!this.typer.equalsType(${langRefToTypeScript(r.type1)}, ${langRefToTypeScript(r.type2)})) {
+                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langRefToTypeScript(r.type1)}) 
+                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langRefToTypeScript(r.type2)}) + "'", ${langRefToTypeScript(r.type1)}));
                     }`
                 : (r instanceof CheckConformsRule ?
-                    `if(!this.typer.conformsTo(${this.langRefToTypeScript(r.type1)}, ${this.langRefToTypeScript(r.type2)})) {
-                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type1)}) + 
-                        "' does not conform to (the type of) '"+ this.myUnparser.unparse(${this.langRefToTypeScript(r.type2)}) + "'", ${this.langRefToTypeScript(r.type1)}));
+                    `if(!this.typer.conformsTo(${langRefToTypeScript(r.type1)}, ${langRefToTypeScript(r.type2)})) {
+                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langRefToTypeScript(r.type1)}) + 
+                        "' does not conform to (the type of) '"+ this.myUnparser.unparse(${langRefToTypeScript(r.type2)}) + "'", ${langRefToTypeScript(r.type1)}));
                     }`           
                 : (r instanceof NotEmptyRule ?
-                    `if(${this.langRefToTypeScript(r.property)}.length == 0) {
-                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${this.langRefToTypeScript(r.property)}));
+                    `if(${langRefToTypeScript(r.property)}.length == 0) {
+                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${langRefToTypeScript(r.property)}));
                     }`
                 : (r instanceof ValidNameRule ?
-                    `if(!this.isValidName(${this.langRefToTypeScript(r.property)})) {
-                        this.errorList.push(new PiError("'" + ${this.langRefToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
+                    `if(!this.isValidName(${langRefToTypeScript(r.property)})) {
+                        this.errorList.push(new PiError("'" + ${langRefToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
                     }`
                 : ""))))}`
             ).join("\n")}`;
     }
 
-    private langRefToTypeScript(ref: PiLangExp): string {
-        // console.log(" generating " + ref.toPiString());
-        if (ref instanceof PiLangEnumExp) {
-            return `${ref.sourceName}.${ref.appliedfeature}`;
-        } else if (ref instanceof PiLangThisExp) {
-            return `modelelement.${ref.appliedfeature.toPiString()}`;
-        } else {
-            return ref.toPiString();
-        }
-    }
 
     private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiLangConcept[] {
         let withRules : PiLangConcept[] = [];

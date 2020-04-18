@@ -21,6 +21,7 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     if (!!data.name) {
         result.name = data.name;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -40,7 +41,7 @@ export function createConceptEditor(data: Partial<DefEditorConcept>): DefEditorC
     if (!!data.concept) {
         result.concept = data.concept;
     }
-
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -64,8 +65,8 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
     result.enumerations.forEach(enumeration => {
         enumeration.languageEditor = result;
     });
+    if (!!data.location) { result.location = data.location; }
     return result;
-
 }
 
 export function createProjection(data: Partial<MetaEditorProjection>): MetaEditorProjection {
@@ -78,6 +79,7 @@ export function createProjection(data: Partial<MetaEditorProjection>): MetaEdito
     }
     result.normalize();
     console.log(result.toString());
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -87,6 +89,7 @@ export function createLine(data: Partial<MetaEditorProjectionLine>): MetaEditorP
     if (!!data.items) {
         result.items = data.items;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -96,6 +99,7 @@ export function createIndent(data: Partial<DefEditorProjectionIndent>): DefEdito
     if (!!data.indent) {
         result.indent = data.indent;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -104,6 +108,7 @@ export function createText(data: string): DefEditorProjectionText {
     if (!!data) {
         result.text = data;
     }
+    // if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -119,6 +124,7 @@ export function createSubProjection(data: Partial<DefEditorSubProjection>): DefE
     if (!!(data.expression)) {
         result.expression = data.expression;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -144,6 +150,7 @@ export function createListJoin(data: Partial<ListJoin>): ListJoin {
     if (!!data.joinText) {
         result.joinText = data.joinText;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -153,6 +160,7 @@ export function createExpression(data: Partial<DefEditorProjectionExpression>): 
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -162,6 +170,7 @@ export function createNewline(): DefEditorNewline {
 
 export function createEnumeration(data: Partial<DefEditorEnumeration>): DefEditorEnumeration {
     const result = new DefEditorEnumeration();
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 

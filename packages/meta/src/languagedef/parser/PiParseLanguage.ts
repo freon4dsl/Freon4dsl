@@ -1,9 +1,11 @@
 import { PiLangPrimitiveProperty, PiLangEnumProperty, PiLangConceptProperty, PiLangConcept, PiLangClass, PiLangProperty } from "../metalanguage/PiLanguage";
 import { PiLangClassReference } from "../metalanguage/PiLangReferences";
+import { ParseLocation } from "../../utils";
 
 // Becasue we want to be able to mix definitions of classes, enums, etc in the .lang file
 // we parse them as PiLangConcepts and then create a PiLanguageUnit in the LanguageCreators.
 export class PiParseLanguageUnit {
+    location: ParseLocation;
     name: string;
     defs: PiLangConcept[] = [];
 }

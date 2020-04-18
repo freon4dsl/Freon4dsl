@@ -14,7 +14,7 @@ export function createTyperDef(data: Partial<PiTypeDefinition>): PiTypeDefinitio
     if( !!data.typerRules) {
         result.typerRules = data.typerRules;
     }
-
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -24,7 +24,7 @@ export function createIsType(data: Partial<PiTypeIsTypeRule>): PiTypeIsTypeRule 
     if( !!data.types) {
         result.types = data.types;
     }
-
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -34,7 +34,7 @@ export function createAnyTypeRule(data: Partial<PiTypeAnyTypeRule>): PiTypeAnyTy
     if( !!data.statements) {
         result.statements = data.statements;
     }
-
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -47,7 +47,7 @@ export function createConceptRule(data: Partial<PiTypeConceptRule>): PiTypeConce
     if( !!data.statements) {
         result.statements = data.statements;
     }
-
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -63,7 +63,7 @@ export function createStatement(data: Partial<PiTypeStatement>) : PiTypeStatemen
     if( !!data.isAbstract) {
         result.isAbstract = data.isAbstract;
     }
-
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 

@@ -1,4 +1,3 @@
-import { PiLangAppliedFeatureExp, PiLangConceptReference, PiLangEnumExp, PiLangThisExp } from "../../languagedef/metalanguage";
 import { CheckConformsRule, CheckEqualsTypeRule, ConceptRuleSet, NotEmptyRule, PiValidatorDef, ValidNameRule } from "../metalanguage/ValidatorDefLang";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang) from the parsed data objects (from ValidatorGrammar.pegjs). 
@@ -15,7 +14,7 @@ export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDe
     if( !!data.conceptRules) {
         result.conceptRules = data.conceptRules;
     }
-
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -28,12 +27,7 @@ export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet
     if( !!data.rules) {
         result.rules = data.rules;
     }
-    return result;
-}
-
-export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
-    const result = new PiLangConceptReference(); 
-    if(!!data.name) { result.name = data.name; }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -42,6 +36,7 @@ export function createValidNameRule(data: Partial<ValidNameRule>): ValidNameRule
     if( !!data.property) {
         result.property = data.property;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -50,6 +45,7 @@ export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
     if( !!data.property) {
         result.property = data.property;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -62,6 +58,7 @@ export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckE
     if( !!data.type2) {
         result.type2 = data.type2;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
@@ -74,40 +71,8 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
     if( !!data.type2) {
         result.type2 = data.type2;
     }
+    if (!!data.location) { result.location = data.location; }
     return result;
 }
 
-export function createThisExpression(data: Partial<PiLangThisExp>) {
-    const result : PiLangThisExp = new PiLangThisExp();
-    if (!!data.sourceName) {
-        result.sourceName = data.sourceName;
-    }
-    if (!!data.appliedfeature) {
-        result.appliedfeature = data.appliedfeature;
-    }
-    return result;
-}
-
-export function createPropertyRefExpression(data: Partial<PiLangAppliedFeatureExp>): PiLangAppliedFeatureExp {
-    const result = new PiLangAppliedFeatureExp();
-
-    if (!!data.sourceName) {
-        result.sourceName = data.sourceName;
-    }
-    if (!!data.appliedfeature) {
-        result.appliedfeature = data.appliedfeature;
-    }
-    return result;
-}
-
-export function createEnumReference(data: Partial<PiLangEnumExp>) {
-    const result : PiLangEnumExp = new PiLangEnumExp();
-    if (!!data.sourceName) {
-        result.sourceName = data.sourceName;
-    }
-    if (!!data.appliedfeature) {
-        result.appliedfeature = data.appliedfeature;
-    }
-    return result;
-}
 

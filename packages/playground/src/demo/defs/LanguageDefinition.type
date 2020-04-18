@@ -4,20 +4,20 @@ typer Demo for language Demo
 istype {DemoType, DemoEntity, DemoAttributeType }
 
 anytype {
-    //conformsto this.base
-    //conformsto this.implements
+    //conformsto self.base
+    //conformsto self.implements
     conformsto DemoAttributeType:ANY
     equalsto DemoAttributeType:ANY
 }
 
 DemoAttribute {
-    infertype this.declaredType
+    infertype self.declaredType
 }
 DemoFunction {
-    infertype this.declaredType
+    infertype self.declaredType
 }
 DemoVariable  {
-    infertype this.declaredType
+    infertype self.declaredType
 }
 DemoExpression {
     abstract infertype 
@@ -32,29 +32,29 @@ DemoBooleanLiteralExpression {
     infertype DemoAttributeType:Boolean
 }
 DemoAbsExpression {
-    infertype this.expr
+    infertype self.expr
 }
 DemoMultiplyExpression {
-    infertype this.left
+    infertype self.left
 }
 DemoPlusExpression {
-    infertype commonSuperType(this.left, this.right) 
+    infertype commonSuperType(self.left, self.right)
 }
 DemoDivideExpression {
-    infertype this.left
+    infertype self.left
 }
 DemoComparisonExpression {
     infertype DemoAttributeType:Boolean
 }
 DemoFunctionCallExpression {
-    infertype this.functionDefinition
+    infertype self.functionDefinition
 }
 DemoIfExpression    {
-    infertype commonSuperType(this.whenTrue, this.whenFalse)
+    infertype commonSuperType(self.whenTrue, self.whenFalse)
 }
 DemoVariable {
-    infertype this.declaredType
+    infertype self.declaredType
 }
 DemoVariableRef   {
-    infertype this.attribute  
+    infertype self.attribute
 }
