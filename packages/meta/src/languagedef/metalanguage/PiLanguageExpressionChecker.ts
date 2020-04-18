@@ -6,7 +6,8 @@ import { PiLangExp, PiLangEnumExp, PiLangSelfExp, PiLangAppliedFeatureExp, PiLan
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
-const validFunctionNames : string[] = [ "commonSuperType", "conformsTo",  "equalsType" ];
+const validFunctionNames : string[] = [ "commonSuperType", "conformsTo", "equalsType", "typeof" ];
+const containerKeyword : string = "container";
 
 export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {
     strictUseOfSelf: boolean = true; // if true, then a ThisExpression must have an appliedfeature
@@ -128,45 +129,72 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // ConceptName.XXX
-    private checkConceptExpression(langRef: PiLangConceptExp, enclosingConcept:PiLangConcept) {
-        LOGGER.log("Checking Concept Expression " + langRef?.toPiString());
+    private checkConceptExpression(langExp: PiLangConceptExp, enclosingConcept:PiLangConcept) {
+        LOGGER.log("Checking Concept Expression " + langExp?.toPiString());
         // find the concept that langRef.name refers to
-        const myConcept = this.language.findConcept(langRef.sourceName);
-        langRef.referedElement = myConcept;
+        let myConcept = this.language.findConcept(langExp.sourceName);
+        let skipCheck: boolean = false;
 
-        this.nestedCheck(
-            {
-                check: !!myConcept,
-                error: `Concept '${langRef.sourceName}' not found [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
-                whenOk: () => {
-                    this.nestedCheck(
-                        {
-                            check: langRef.appliedfeature != null,
-                            error: `Concept should be followed by '.', followed by a property [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
-                            whenOk: () => {
-                                this.checkAppliedFeatureExp(langRef.appliedfeature, myConcept);
-                            }
-                        }
-                    );
-                }
+        if (!(!!myConcept)) {
+            //check if the keyword 'container' was used
+            if (langExp.sourceName === containerKeyword) {
+                // create a dummy concept
+                myConcept = new PiLangConcept();
+                myConcept.name = "container";
+                myConcept.language = this.language;
+                myConcept.location = langExp.location;
+                skipCheck = true;
             }
-        );
+        }
+
+        langExp.referedElement = myConcept;
+        if (!skipCheck) {
+            this.nestedCheck(
+                {
+                    check: !!myConcept,
+                    error: `Concept '${langExp.sourceName}' not found [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                    whenOk: () => {
+                        this.nestedCheck(
+                            {
+                                check: langExp.appliedfeature != null,
+                                error: `Concept '${myConcept.name}' should be followed by '.', followed by a property [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                                whenOk: () => {
+                                    this.checkAppliedFeatureExp(langExp.appliedfeature, myConcept);
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+        }
     }
 
     // someFunction( XXX, YYY )
-    private checkFunctionCallExpression(langRef: PiLangFunctionCallExp, enclosingConcept:PiLangConcept) {
-        LOGGER.log("Checking Function Call Expression " + langRef?.toPiString());
-        let functionName = validFunctionNames.find(name => name === langRef.sourceName);
+    private checkFunctionCallExpression(langExp: PiLangFunctionCallExp, enclosingConcept:PiLangConcept) {
+        LOGGER.log("Checking Function Call Expression " + langExp?.toPiString());
+        let functionName = validFunctionNames.find(name => name === langExp.sourceName);
         // TODO set langRef.referedElement to one of the predefined functions
-        this.simpleCheck(!!functionName, `${langRef.sourceName} is not a valid function.`);
-        this.nestedCheck({
-            check: langRef.actualparams.length === 2,
-            error: `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, ` +
-                `found ${langRef.actualparams.length} [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}].`,
-            whenOk: () => langRef.actualparams?.forEach( p =>
-                this.checkLangExp(p, enclosingConcept)
-            )}
-        );
+        this.simpleCheck(!!functionName, `${langExp.sourceName} is not a valid function.`);
+        if (langExp.sourceName === "typeof") {
+            this.nestedCheck({
+                check: langExp.actualparams.length === 1,
+                error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
+                        `found ${langExp.actualparams.length} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                whenOk: () => langExp.actualparams?.forEach( p =>
+                    this.checkLangExp(p, enclosingConcept)
+                )}
+            );
+        } else {
+            this.nestedCheck({
+                check: langExp.actualparams.length === 2,
+                error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, ` +
+                        `found ${langExp.actualparams.length} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                whenOk: () => langExp.actualparams?.forEach( p =>
+                    this.checkLangExp(p, enclosingConcept)
+                )}
+            );
+        }
+
     }
 
     // .XXX

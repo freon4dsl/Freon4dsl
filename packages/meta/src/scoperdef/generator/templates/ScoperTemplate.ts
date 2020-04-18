@@ -23,23 +23,17 @@ export class ScoperTemplate {
         const LOGGER = new PiLogger("${generatedClassName}");   
 
         export class ${generatedClassName} implements ${scoperInterfaceName} {
-            isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
-                if (this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
             
             getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): PiNamedElement[] {
                 let result : PiNamedElement[] = [];
-                if(modelelement == null){
+                if (!!modelelement) {
+                    let ns = new ${namespaceClassName}(modelelement);
+                    result = ns.getVisibleElements(metatype, excludeSurrounding); // true means that we are excluding names from parent namespaces                   
+                    return result;
+                } else {
                     LOGGER.error(this, "getVisibleElements: modelelement is null");
-                    return null;
+                    return result;
                 }
-                let ns = new ${namespaceClassName}(modelelement);
-                result = ns.getVisibleElements(metatype, excludeSurrounding); // true means that we are excluding names from parent namespaces                   
-                return result;
             }
             
             getFromVisibleElements(modelelement: ${allLangConcepts}, name : string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : PiNamedElement {
@@ -63,6 +57,14 @@ export class ScoperTemplate {
                     result.push(n);                    
                 }
                 return result;
+            }
+            
+            isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
+                if (this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }`;
     }

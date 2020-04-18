@@ -153,10 +153,10 @@ export class NamespaceTemplate {
     private createExtras(scopedef: PiScopeDef, generatedClassName: string): string {
         let result: string = '';
         for(let e of scopedef.scopeConceptDefs) {
-            if(!!e.namespaceDef) {
+            if(!!e.namespaceAdditions) {
                 let con = e.conceptRef.referedElement().name;
                 result = result.concat(`if (this._myElem instanceof ${con}) {`);
-                for(let xx of e.namespaceDef.expressions) {
+                for(let xx of e.namespaceAdditions.expressions) {
                     let myRef = xx.findRefOfLastAppliedFeature();
                     let loopVar: string = "yy";
                     let loopVarExtended = loopVar;

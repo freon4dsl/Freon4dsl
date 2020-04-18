@@ -57,27 +57,27 @@ export class DemoModelCreator  {
         let correctModel: DemoModel = DemoModel.create("DemoModel_1");
 
         const length = DemoFunction.create("length");
-        const Variable1 = DemoVariable.create("Variable1")
-        const VariableNumber2 = DemoVariable.create("VariableNumber2")
+        const Variable1 = DemoVariable.create("Variable1");
+        const VariableNumber2 = DemoVariable.create("VariableNumber2");
         length.parameters.push(Variable1);
         length.parameters.push(VariableNumber2);
-        length.expression = this.addComplexExpression1(); 
+        length.expression = this.addComplexExpression1();
         // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
         const determine = DemoFunction.create("determine");
-        const AAP = DemoVariable.create("AAP")
+        const AAP = DemoVariable.create("AAP");
         determine.parameters.push(AAP);
-        determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
+        determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye");
         // determine(AAP) = "Hello Demo" + "Goodbye"
 
         const last = DemoFunction.create("last");
         last.expression = DemoModelCreator.MakePlusExp("5","woord");
         // last() = 5 + "woord"
-        
+
         correctModel.functions.push(length);
         correctModel.functions.push(determine);
         correctModel.functions.push(last);
- 
+
         const personEnt = DemoEntity.create("Person");
         const age = DemoAttribute.create("age");
         const personName = DemoAttribute.create("name");
@@ -97,7 +97,7 @@ export class DemoModelCreator  {
         companyEnt.attributes.push(VAT_Number);
 
         const another = DemoFunction.create("another");
-        const NOOT = DemoVariable.create("NOOT")
+        const NOOT = DemoVariable.create("NOOT");
         another.parameters.push(NOOT);
         another.expression = this.addComplexExpression2(companyName);
         // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
@@ -108,45 +108,51 @@ export class DemoModelCreator  {
         correctModel.entities.push(personEnt);
         correctModel.entities.push(companyEnt);
 
-        this.addSimpleTypes(personName, companyName, age, VAT_Number, length, first, last, determine, 
-            another, Variable1, VariableNumber2, Resultvar, AAP, NOOT);
+        this.addEntityTypes(companyEnt, personEnt, personName, companyName, age,
+                            VAT_Number, length, first, last, determine,
+                            another, Variable1, VariableNumber2, Resultvar, AAP,
+                            NOOT);
         return correctModel;
     }
 
-    private addSimpleTypes(personName: DemoAttribute, companyName: DemoAttribute, age: DemoAttribute, VAT_Number: DemoAttribute, 
-            length: DemoFunction, first: DemoFunction, last: DemoFunction, determine: DemoFunction, another: DemoFunction, 
-            Variable1: DemoVariable, VariableNumber2: DemoVariable, Resultvar: DemoVariable, AAP: DemoVariable, NOOT: DemoVariable) {
-        personName.declaredType = DemoAttributeType.String;
-        companyName.declaredType = DemoAttributeType.Boolean;
-        age.declaredType = DemoAttributeType.Boolean;
-        VAT_Number.declaredType = DemoAttributeType.Integer;
-        length.declaredType = DemoAttributeType.String;
-        first.declaredType = DemoAttributeType.Boolean;
-        last.declaredType = DemoAttributeType.Boolean;
-        determine.declaredType = DemoAttributeType.Boolean;
-        another.declaredType = DemoAttributeType.Boolean;
-        Variable1.declaredType = DemoAttributeType.Boolean;
-        VariableNumber2.declaredType = DemoAttributeType.Boolean;
-        Resultvar.declaredType = DemoAttributeType.Boolean;
-        AAP.declaredType = DemoAttributeType.Boolean;
-        NOOT.declaredType = DemoAttributeType.Boolean;
+    private addSimpleTypes(personName: DemoAttribute, companyName: DemoAttribute, age: DemoAttribute,
+                           VAT_Number: DemoAttribute, length: DemoFunction, first: DemoFunction, last: DemoFunction, determine: DemoFunction,
+                           another: DemoFunction, Variable1: DemoVariable, VariableNumber2: DemoVariable, Resultvar: DemoVariable, AAP: DemoVariable,
+                           NOOT: DemoVariable) {
+        // personName.declaredType = DemoAttributeType.String;
+        // companyName.declaredType = DemoAttributeType.String;
+        // age.declaredType = DemoAttributeType.Integer;
+        // VAT_Number.declaredType = DemoAttributeType.Integer;
+        // length.declaredType = DemoAttributeType.String;
+        // first.declaredType = DemoAttributeType.Boolean;
+        // last.declaredType = DemoAttributeType.Boolean;
+        // determine.declaredType = DemoAttributeType.Boolean;
+        // another.declaredType = DemoAttributeType.Boolean;
+        // Variable1.declaredType = DemoAttributeType.Boolean;
+        // VariableNumber2.declaredType = DemoAttributeType.Boolean;
+        // Resultvar.declaredType = DemoAttributeType.Boolean;
+        // AAP.declaredType = DemoAttributeType.Boolean;
+        // NOOT.declaredType = DemoAttributeType.Boolean;
     }
 
-    private addComplexTypes(entity1: DemoEntity, entity2: DemoEntity, attribute21: DemoAttribute, attribute1: DemoAttribute, attribute2: DemoAttribute, attribute22: DemoAttribute, f1: DemoFunction, f2: DemoFunction, f3: DemoFunction, f4: DemoFunction, f5: DemoFunction, var1: DemoVariable, var2: DemoVariable, var3: DemoVariable, var4: DemoVariable, var5: DemoVariable) {
-        // attribute21.declaredType = entity1;
-        // attribute1.declaredType = DemoAttributeType.Boolean;
-        // attribute2.declaredType = DemoAttributeType.Boolean;
-        // attribute22.declaredType = DemoAttributeType.Integer;
-        // f1.declaredType = DemoAttributeType.Integer;
-        // f2.declaredType = entity2;
-        // f3.declaredType = entity1;
-        // f4.declaredType = DemoAttributeType.Boolean;
-        // f5.declaredType = DemoAttributeType.Boolean;
-        // var1.declaredType = DemoAttributeType.Boolean;
-        // var2.declaredType = DemoAttributeType.Boolean;
-        // var3.declaredType = entity2;
-        // var4.declaredType = DemoAttributeType.Boolean;
-        // var5.declaredType = DemoAttributeType.Boolean;
+    private addEntityTypes(companyEnt: DemoEntity, personEnt: DemoEntity, personName: DemoAttribute, companyName: DemoAttribute, age: DemoAttribute,
+                           VAT_Number: DemoAttribute, length: DemoFunction, first: DemoFunction, last: DemoFunction, determine: DemoFunction,
+                           another: DemoFunction, Variable1: DemoVariable, VariableNumber2: DemoVariable, Resultvar: DemoVariable, AAP: DemoVariable,
+                           NOOT: DemoVariable)  {
+        personName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        companyName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        age.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        VAT_Number.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        length.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        first.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        last.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        determine.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        another.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        Variable1.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        VariableNumber2.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        Resultvar.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        AAP.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        NOOT.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
     }
 
     private addComplexExpression1() : DemoExpression {

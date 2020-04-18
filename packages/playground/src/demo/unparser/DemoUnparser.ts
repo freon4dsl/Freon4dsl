@@ -118,7 +118,7 @@ export class DemoUnparser {
     public unparseDemoAttribute(modelelement: DemoAttribute, includeChildren?: boolean): string {
         let result: string = modelelement.name;
         if (!(includeChildren === undefined) && includeChildren) {
-            result = result.concat(" : " + this.unparseDemoAttributeType(modelelement.declaredType));
+            result = result.concat(" : " + this.unparse(modelelement.declaredType.referred, includeChildren));
         }
         return result;
     }
@@ -138,7 +138,7 @@ export class DemoUnparser {
                 result = result.concat(this.unparseDemoVariable(p, includeChildren));
             });
             result = result.concat(" )");
-            result = result.concat(": " + this.unparse(modelelement.declaredType, includeChildren));
+            result = result.concat(": " + this.unparse(modelelement.declaredType.referred, includeChildren));
             result = result.concat(" = " + this.unparseDemoExpression(modelelement.expression, includeChildren));
         } else {
             result.concat("()");

@@ -1,5 +1,4 @@
-import { PiLangClass, PiLangElement, PiLangEnumExp, PiLangExp, PiLangSelfExp } from "../languagedef/metalanguage";
-import { PiLangClass, PiLangConcept, PiLangConceptReference, PiLangElement, PiLangElementReference } from "../languagedef/metalanguage";
+import { PiLangClass, PiLangElement, PiLangElementReference } from "../languagedef/metalanguage";
 
     // As in the WalkerTemplate,
     // the entries for the unparse${concept.name} must be sorted,

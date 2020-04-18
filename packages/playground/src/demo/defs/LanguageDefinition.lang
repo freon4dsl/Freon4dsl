@@ -8,27 +8,26 @@ root concept DemoModel {
 
 concept DemoEntity {
     name: string
-    declaredType : DemoAttributeType
     part attributes: DemoAttribute[]
     part functions: DemoFunction[]
     reference baseEntity: DemoEntity
 }
 
 concept DemoAttribute {
-    declaredType: DemoAttributeType
+    reference declaredType: DemoEntity
     name: string
 }
 
 concept DemoFunction {
     name: string
-    declaredType : DemoAttributeType
+    reference declaredType : DemoEntity
     part expression: DemoExpression
     part parameters: DemoVariable[]
 }
 
 concept DemoVariable {
     name: string
-    declaredType: DemoAttributeType
+    reference declaredType: DemoEntity
 }
 
 abstract expression concept DemoExpression {

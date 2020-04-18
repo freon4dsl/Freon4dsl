@@ -16,10 +16,16 @@ export class PiScopeDef {
 export class ScopeConceptDef {
     location: ParseLocation;
     conceptRef: PiLangConceptReference;
-    namespaceDef: PiNamespaceDef;
+    namespaceAdditions: PiNamespaceAddition;
+    alternativeScope: PiAlternativeScope;
 }
 
-export class PiNamespaceDef {
+export class PiNamespaceAddition {
     location: ParseLocation;
     expressions: PiLangExp[];
+}
+
+export class PiAlternativeScope {
+    location: ParseLocation;
+    expression: PiLangExp;
 }

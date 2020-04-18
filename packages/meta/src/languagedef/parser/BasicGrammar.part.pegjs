@@ -10,6 +10,7 @@ comma_separator = ws "," ws
 semicolon_separator = ws ";" ws
 name_separator  = ws ":" ws
 equals_separator  = ws "=" ws
+plus_separator = ws "+" ws
 ws "whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComment) )*
 
 var "var"

@@ -2,41 +2,23 @@ scoper Demo for language Demo
 
 isnamespace { DemoModel DemoEntity DemoFunction DemoAttributeType }
 
-// Overerving
+// Inheritance scope
 DemoEntity {
-    namespace_addition = this.baseEntity
-    //namespace_addition = this.name
-    //namespace_addition = this.declaredType
-    //namespace_addition = this.attributes
+    namespace_addition = self.baseEntity
+    // the following are used for testing
+    //namespace_addition = self.name
+    //namespace_addition = self.declaredType
+    //namespace_addition = self.attributes
 }
-/*
-DemoAttribute {
-    namespace_addition = this.declaredType
-}
-
-DemoEntity {
-    namespace {
-	    this
-		+ this.baseEntity
-		+ this.implements
-	}
-	scope {
-		blabla + andereBlaBla
-	}
-}
-
-@namespace DemoEntityInterface {
-    this
-    + this.baseInterface
+/* to be added when interfaces are supported
+DemoEntityInterface {
+    namespace_addition = self.baseInterface
 }
 */
-// TODO Define Appliedfeature in .lang file
-/*
+
 AppliedFeature {
-	scope {
-		typeof this.source
-	}
+	scope = typeof( container )
 }
-*/
+
 //    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'
 //    include: if( t.friends.includes(context)) then t.attributes where visibility = 'friends'
