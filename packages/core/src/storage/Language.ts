@@ -54,16 +54,25 @@ export class Language {
         return this.concepts.get(typeName).properties.values();
     }
 
+    /**
+     * Create a new instance of the class `typeName`.
+     * @param typeName
+     */
     createConcept(typeName: string): PiElement {
         return this.concepts.get(typeName).constructor();
     }
 
-    addConcept(conceptName: string, concept: Concept){
-        this.concepts.set(conceptName, concept);
+    /**
+     * Add a concept definition to this language
+     * @param conceptName
+     * @param concept
+     */
+    addConcept(concept: Concept){
+        this.concepts.set(concept.typeName, concept);
     }
 
-    addEnumeration(enumName: string, enumeration: Enumeration){
-        this.enumerations.set(enumName, enumeration);
+    addEnumeration(enumeration: Enumeration){
+        this.enumerations.set(enumeration.typeName, enumeration);
     }
 
     referenceCreator: (name: string, type: string) => any;

@@ -27,10 +27,10 @@ export class LanguageTemplate {
     
             export function initializeLanguage() {
                 ${language.classes.map(concept =>
-                    `Language.getInstance().addConcept("${Names.concept(concept)}", describe${Names.concept(concept)}());`
+                    `Language.getInstance().addConcept(describe${Names.concept(concept)}());`
                 ).join("\n")}
                 ${language.enumerations.map(enu =>
-                    `Language.getInstance().addEnumeration("${Names.enumeration(enu)}", describe${Names.enumeration(enu)}());`
+                    `Language.getInstance().addEnumeration(describe${Names.enumeration(enu)}());`
                 ).join("\n")}
                 Language.getInstance().addReferenceCreator( (name: string, type: string) => { return PiElementReference.createNamed(name, type)});
             }
