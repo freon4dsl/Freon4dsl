@@ -14,7 +14,7 @@ module.exports = {
   context: sourcePath,
   entry: {
       // main: "./webapp/run.tsx",
-      main: "./webapp2/index.tsx",
+      main: "./webapp/index.tsx",
     vendor: [
       'react',
       'react-dom',
@@ -133,7 +133,7 @@ module.exports = {
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new HtmlWebpackPlugin({
-      template: './webapp2/assets/index.html'
+      template: './webapp/assets/index.html'
     })
   ],
   devServer: {

@@ -133,6 +133,7 @@ export class App extends React.Component<{}, IDialogState> {
 
     // set of statics to enable the calling of the dialog from elsewhere in the application
     static thisApp: App;
+    // set when a save dialog is opened.
     static onSave: () => void;
 
     public static showSaveDialog(onSave: () => void) {

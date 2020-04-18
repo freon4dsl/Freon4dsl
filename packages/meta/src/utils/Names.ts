@@ -56,6 +56,10 @@ export class Names {
         return language?.name + "Projection";
     }
 
+    public static language(language: PiLanguageUnit): string {
+        return language?.name + "Language";
+    }
+
     public static editor(language: PiLanguageUnit): string {
         return language?.name + "Editor";
     }

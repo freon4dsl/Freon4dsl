@@ -9,6 +9,7 @@ import {
     EnumerationTemplate,
     EnvironmentTemplate,
     IndexTemplate,
+    LanguageTemplate,
     MetaTypeTemplate,
     PiReferenceTemplate,
     UnionTemplate,
@@ -33,6 +34,7 @@ export class LanguageGenerator {
         this.environmentGenFolder = this.outputfolder + "/" + ENVIRONMENT_GEN_FOLDER;
 
         const conceptTemplate = new ConceptTemplate();
+        const languageTemplate = new LanguageTemplate();
         const metaTypeTemplate = new MetaTypeTemplate();
         const enumerationTemplate = new EnumerationTemplate();
         const typeTemplate = new UnionTemplate();
@@ -55,7 +57,7 @@ export class LanguageGenerator {
 
         // set relative path to get the imports right
         let relativePath = "../";
- 
+
         //  Generate it
         language.classes.forEach(concept => {
             LOGGER.log("Generating concept: " + concept.name);
@@ -96,6 +98,10 @@ export class LanguageGenerator {
         LOGGER.log("Generating PeElementReference.ts");
         var referenceFile = Helpers.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "PiElementReference");
         fs.writeFileSync(`${this.languageGenFolder}/PiElementReference.ts`, referenceFile);
+
+        LOGGER.log("Generating Language.ts");
+        var referenceFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language");
+        fs.writeFileSync(`${this.languageGenFolder}/${language.name}Language.ts`, referenceFile);
 
         LOGGER.log("Generating environment");
         var environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment");

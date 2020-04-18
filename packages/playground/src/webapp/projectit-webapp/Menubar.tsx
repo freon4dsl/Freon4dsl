@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Menu, Tooltip, Icon, Flex, Text, Input} from "@fluentui/react-northstar";
 import { Link } from '@fluentui/react';
 import { EditorEnvironment } from "../gateway-to-projectit/EditorEnvironment";
+import { ServerCommunication } from "../gateway-to-projectit/ServerCommunication";
 import { App } from "./App";
 import { Navigator } from "./Navigator";
 import { TextField } from "@fluentui/react";
@@ -185,6 +186,7 @@ export default class Menubar extends React.Component {
         App.setDialogSubText("");
         App.setDialogContent(<Navigator/>);
         App.showDialog();
+        ServerCommunication.loadModel("testjea");
     }
 
     saveAs() {
@@ -202,8 +204,6 @@ export default class Menubar extends React.Component {
 
     saveAsClosed = () => {
         const saveName = this.input.value;
-        console.log("SAVE Input data "+ saveName);
-        // App.closeDialog();
         if (!!saveName ) EditorEnvironment.saveAs(saveName);
     }
 

@@ -9,3 +9,4 @@ export * from "./UnionTemplate";
 export * from "./UnparserTemplate";
 export * from "./WalkerTemplate";
 export * from "./WorkerInterfaceTemplate";
+export * from "./LanguageTemplate";

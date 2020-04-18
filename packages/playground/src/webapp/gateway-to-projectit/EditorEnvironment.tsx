@@ -1,8 +1,9 @@
 // This file contains all the stuff that needs to connect to the projectIt generated langauge environment
-
-import { ProjectionalEditor } from "@projectit/core";
+import {ProjectionalEditor } from "@projectit/core";
 import * as React from "react";
-import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
+
+import { environment } from "./Environment";
+import { ServerCommunication } from "./ServerCommunication";
 
 export interface IModelUnit {
     id: number,
@@ -19,12 +20,12 @@ export interface IErrorItem {
 }
 
 export class EditorEnvironment {
+
     // for the communication with the editor
     static getEditor(): ProjectionalEditor {
-        return DemoEnvironment.getInstance().projectionalEditorComponent;
-        // return <Image src="editor-screenshot-april-6-2020.png" alt="editor"/>
+        return environment.projectionalEditorComponent;
     }
-    //
+
     // for the communication with the menubar
     static new() {
         console.log("EditorEnvironment new called");
@@ -36,6 +37,7 @@ export class EditorEnvironment {
 
     static saveAs(newValue: string) {
         console.log("EditorEnvironment save as called, new name: " + newValue);
+        ServerCommunication.putModel(newValue)
     }
 
     static redo() {
