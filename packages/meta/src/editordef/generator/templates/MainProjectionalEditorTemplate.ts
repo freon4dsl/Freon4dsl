@@ -7,8 +7,7 @@ export class MainProjectionalEditorTemplate {
     constructor() {
     }
 
-    generateMainProjectionalEditor(language: PiLanguageUnit, editorDef: DefEditorLanguage, withToolbar: boolean, relativePath: string): string {
-            // TODO use Names and PathProvider for MyToolbarComponent and its import statement
+    generateMainProjectionalEditor(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
             return `
             
             import { observer } from "mobx-react";

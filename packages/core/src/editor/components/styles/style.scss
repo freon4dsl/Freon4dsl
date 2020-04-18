@@ -5,7 +5,8 @@ $toolbar-item-color: blue;
 $toolbar-background: whitesmoke;
 $toolbar-item-background: #dcfaff;
 
-$selected-backgound-color: #d5eed3;
+//$selected-backgound-color: #d5eed3;
+$selected-backgound-color: rgba(211, 227, 253, 255);
 
 @font-face {
     font-family: "Source Code Pro";
@@ -33,21 +34,15 @@ $font-family-base: "Source Code Pro", "Courier New";
 }
 
 .projectionalEditor {
-    border: 1px solid green;
+    //border: 1px solid green;
 }
 
 .projectit {
-    padding: 10px;
     font-family: $font-family-base;
-    font-size: 14px;
-    position: relative;
-    left: 0;
-    top: 0;
-    width: 900px;
-    height: 600px;
+    font-size: 12px;
+    width: 100%;
     color: $projectit-color;
     overflow-x: auto;
-    border: 1px solid yellow;
 }
 
 .unSelectedComponent {
@@ -58,8 +53,8 @@ $font-family-base: "Source Code Pro", "Courier New";
 }
 
 .selectedComponent {
-    background-color: lightgreen;
-    border: 1px solid green;
+    background-color: $selected-backgound-color;
+    border: 1px solid darkblue;
     display: inline-block;
     vertical-align: middle;
     border-radius: 3px;
@@ -69,7 +64,7 @@ $font-family-base: "Source Code Pro", "Courier New";
     background-color: $selected-backgound-color;
     border: 1px solid transparent;
     display: inline-block;
-    color: darkgreen;
+    color: black;
     vertical-align: middle;
 }
 

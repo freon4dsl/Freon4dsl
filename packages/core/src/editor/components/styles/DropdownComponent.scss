@@ -20,10 +20,10 @@ $item-match: rebeccapurple;
 
 .popup {
     position: relative;
-    max-height: 162px;
+    //max-height: 162px;
     min-width: 60px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     padding: 4px;
 
     z-index: 99;

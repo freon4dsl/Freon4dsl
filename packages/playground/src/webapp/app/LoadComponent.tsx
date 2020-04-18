@@ -1,5 +1,5 @@
 import { ModelSerializer, ModelInfo } from "@projectit/core";
-import { STYLES } from "../toolbars/ToolbarStyles";
+import { projectitStyles } from "../styles/styles";
 import axios from "axios";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -29,7 +29,7 @@ export class LoadComponent extends React.Component<LoadProps, {}> {
                     ))}
                 </select>
                 <br />
-                <button className={STYLES.toolbarItem} onClick={this.onClick}>
+                <button className={projectitStyles.myButton} onClick={this.onClick}>
                     Open Model
                 </button>
                 <br />

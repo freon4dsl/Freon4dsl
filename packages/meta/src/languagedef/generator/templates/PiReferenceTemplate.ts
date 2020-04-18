@@ -33,7 +33,8 @@ export class PiReferenceTemplate {
         
             set name(value: string) {
                 this._PI_name = value;
-                this._PI_referred = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
+                this._PI_referred = null;
+                // this._PI_referred = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
             }
         
             @computed
@@ -80,6 +81,7 @@ export class PiReferenceTemplate {
                     result.name = name;
                 } else if( typeof name === "object" ){
                     result.referred = name;
+                    result.name = result.referred.name;
                 }
                 result.typeName = typeName;
                 return result;

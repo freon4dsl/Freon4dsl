@@ -53,7 +53,7 @@ export class ModelSerializer {
         const type: string = jsonObject[MODEL_TYPE];
         const id: string = jsonObject[MODEL_ID];
         const dummy = this.constructors[type];
-        console.log("TS type " + type + "  id " + id);
+        console.log("TS type " + type + "  id " + id + "  nr pf constructors: "+ JSON.stringify(this.constructors));
         if (dummy === undefined) {
             console.log(JSON.stringify(jsonObject));
         }

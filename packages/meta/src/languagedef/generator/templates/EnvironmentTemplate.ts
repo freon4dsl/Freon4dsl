@@ -6,7 +6,7 @@ import {
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
     EDITOR_FOLDER,
-    EDITOR_GEN_FOLDER
+    EDITOR_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER
 } from "../../../utils/";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
@@ -25,6 +25,7 @@ export class EnvironmentTemplate {
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
         import { ${Names.projection(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.projection(language)}";
+        import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
         
         export class ${Names.environment(language)} implements ${Names.PiEnvironment} {       
             private static environment: ${Names.PiEnvironment} ;
@@ -48,11 +49,13 @@ export class EnvironmentTemplate {
                 projectionDefault.setEditor(this.editor);
         
                 this.projection = rootProjection;
+                
+                initializeLanguage();
             }
             
             get projectionalEditorComponent() : ${Names.ProjectionalEditor} {
                 if( this._projectionalEditorComponent === null ){
-                    this._projectionalEditorComponent = \<${Names.ProjectionalEditor} editor={this.editor} /\> as any as ${Names.ProjectionalEditor};
+                    this._projectionalEditorComponent = \< ${Names.ProjectionalEditor} editor={this.editor} /\> as any as ${Names.ProjectionalEditor};
                 }
                 return this._projectionalEditorComponent;
             }    

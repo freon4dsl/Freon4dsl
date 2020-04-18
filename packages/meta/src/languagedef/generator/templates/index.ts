@@ -8,3 +8,4 @@ export * from "./PiReferenceTemplate";
 export * from "./UnionTemplate";
 export * from "./WalkerTemplate";
 export * from "./WorkerInterfaceTemplate";
+export * from "./LanguageTemplate";
