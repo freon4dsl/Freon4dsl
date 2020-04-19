@@ -1,11 +1,13 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, DemoFunction } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { DemoUnparser } from "../unparser/DemoUnparser";
 
 describe("testing Scoper", () => {
   describe('Scoper.getVisibleElements from DemoModel Instance', () => {
     let model : DemoModel = new DemoModelCreator().model;
     let scoper = new DemoScoper();
+    let unparser = new DemoUnparser();
  
     beforeEach(done => {
       done();
@@ -95,6 +97,7 @@ describe("testing Scoper", () => {
 
     test("isInscope 'DemoModel_1'", () => {
       let nameTotest : string = "DemoModel_1";
+      console.log(this.unparser.unparse(model));
       expect(scoper.isInScope(model, nameTotest)).toBe(false);
       // test if nameTotest is known in model functions
       model.functions.forEach(fun => {

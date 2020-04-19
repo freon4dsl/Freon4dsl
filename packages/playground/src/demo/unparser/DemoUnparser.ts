@@ -1,4 +1,4 @@
-import { AllDemoConcepts, DemoAttributeType } from "../language/gen";
+import { AllDemoConcepts, AppliedFeature, DemoAttributeType } from "../language/gen";
 import { PiValidator, PiError, PiTyper } from "@projectit/core";
 import {
     DemoModel,
@@ -83,6 +83,13 @@ export class DemoUnparser {
         if (modelelement instanceof DemoAttributeType) {
             return this.unparseDemoAttributeType(modelelement, includeChildren);
         }
+        if (modelelement instanceof AppliedFeature) {
+            return this.unparseAppliedFeature(modelelement, includeChildren);
+        }
+    }
+
+    public unparseAppliedFeature(modelelement: AppliedFeature, includeChildren?: boolean): string {
+        return "." + modelelement.value + (!!modelelement.appliedfeature ? this.unparse(modelelement.appliedfeature) : "");
     }
 
     public unparseDemoModel(modelelement: DemoModel, includeChildren?: boolean): string {
@@ -106,10 +113,10 @@ export class DemoUnparser {
         // adding the unparse string of children in the model tree
         if (!(includeChildren === undefined) && includeChildren) {
             modelelement.attributes.forEach(p => {
-                result = result.concat(this.unparseDemoAttribute(p, includeChildren)).concat(", ");
+                result = result.concat(this.unparse(p, includeChildren)).concat(", ");
             });
             modelelement.functions.forEach(p => {
-                result = result.concat(this.unparseDemoFunction(p, includeChildren)).concat(", ");
+                result = result.concat(this.unparse(p, includeChildren)).concat(", ");
             });
         }
         return result + "\n}";
@@ -118,7 +125,7 @@ export class DemoUnparser {
     public unparseDemoAttribute(modelelement: DemoAttribute, includeChildren?: boolean): string {
         let result: string = modelelement.name;
         if (!(includeChildren === undefined) && includeChildren) {
-            result = result.concat(" : " + this.unparse(modelelement.declaredType.referred, includeChildren));
+            result = result.concat(" : " + this.unparse(modelelement.declaredType.referred, false));
         }
         return result;
     }
@@ -135,11 +142,11 @@ export class DemoUnparser {
         if (!(includeChildren === undefined) && includeChildren) {
             result = result.concat("( ");
             modelelement.parameters.forEach(p => {
-                result = result.concat(this.unparseDemoVariable(p, includeChildren));
+                result = result.concat(this.unparse(p, includeChildren));
             });
             result = result.concat(" )");
-            result = result.concat(": " + this.unparse(modelelement.declaredType.referred, includeChildren));
-            result = result.concat(" = " + this.unparseDemoExpression(modelelement.expression, includeChildren));
+            result = result.concat(": " + this.unparse(modelelement.declaredType.referred, false));
+            result = result.concat(" = " + this.unparse(modelelement.expression, includeChildren));
         } else {
             result.concat("()");
         }
@@ -155,27 +162,32 @@ export class DemoUnparser {
     }
 
     public unparseDemoExpression(modelelement: DemoExpression, includeChildren?: boolean): string {
+        let result = "";
         if (modelelement instanceof DemoPlaceholderExpression) {
-            return this.unparseDemoPlaceholderExpression(modelelement, includeChildren);
+            result = result + result.concat(this.unparseDemoPlaceholderExpression(modelelement, includeChildren));
         }
         if (modelelement instanceof DemoLiteralExpression) {
-            return this.unparseDemoLiteralExpression(modelelement, includeChildren);
+            result = result + result.concat(this.unparseDemoLiteralExpression(modelelement, includeChildren));
         }
         if (modelelement instanceof DemoAbsExpression) {
-            return this.unparseDemoAbsExpression(modelelement, includeChildren);
+            result = result + result.concat(this.unparseDemoAbsExpression(modelelement, includeChildren));
         }
         if (modelelement instanceof DemoBinaryExpression) {
-            return this.unparseDemoBinaryExpression(modelelement, includeChildren);
+            result = result + result.concat(this.unparseDemoBinaryExpression(modelelement, includeChildren));
         }
         if (modelelement instanceof DemoFunctionCallExpression) {
-            return this.unparseDemoFunctionCallExpression(modelelement, includeChildren);
+            result = result + result.concat(this.unparseDemoFunctionCallExpression(modelelement, includeChildren));
         }
         if (modelelement instanceof DemoIfExpression) {
-            return this.unparseDemoIfExpression(modelelement, includeChildren);
+            result = result + result.concat(this.unparseDemoIfExpression(modelelement, includeChildren));
         }
         if (modelelement instanceof DemoVariableRef) {
-            return this.unparseDemoVariableRef(modelelement, includeChildren);
+            result = result + result.concat(this.unparseDemoVariableRef(modelelement, includeChildren));
         }
+        if (!!modelelement.appliedfeature) {
+            result = result + result.concat(this.unparse(modelelement.appliedfeature));
+        }
+        return result;
     }
 
     public unparseDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean): string {

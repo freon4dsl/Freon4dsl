@@ -1,18 +1,57 @@
-import { PiElementReference, DemoEntity, DemoAttribute, DemoFunction, DemoVariable,
-        DemoVariableRef, DemoIfExpression, DemoComparisonExpression, 
-        DemoNumberLiteralExpression, DemoOrExpression, DemoStringLiteralExpression, 
-        DemoAndExpression, DemoPlusExpression, DemoPlaceholderExpression, DemoModel, 
-        DemoAttributeType, DemoExpression, DemoBinaryExpression, DemoLessThenExpression, DemoMultiplyExpression,
-    DemoDivideExpression, DemoBooleanLiteralExpression, DemoGreaterThenExpression, DemoEqualsExpression, DemoLiteralExpression } from "../language/gen";
+import {
+    PiElementReference,
+    DemoEntity,
+    DemoAttribute,
+    DemoFunction,
+    DemoVariable,
+    DemoVariableRef,
+    DemoIfExpression,
+    DemoComparisonExpression,
+    DemoNumberLiteralExpression,
+    DemoOrExpression,
+    DemoStringLiteralExpression,
+    DemoAndExpression,
+    DemoPlusExpression,
+    DemoPlaceholderExpression,
+    DemoModel,
+    DemoAttributeType,
+    DemoExpression,
+    DemoBinaryExpression,
+    DemoLessThenExpression,
+    DemoMultiplyExpression,
+    DemoDivideExpression,
+    DemoBooleanLiteralExpression,
+    DemoGreaterThenExpression,
+    DemoEqualsExpression,
+    DemoLiteralExpression,
+    AppliedFeature
+} from "../language/gen";
 import { makeLiteralExp } from "./HelperFunctions";
+import { DemoUnparser } from "../unparser/DemoUnparser";
 
 export class DemoModelCreator  {
     model: DemoModel;
+    myUnparser = new DemoUnparser();
     
     constructor() {
         this.model = this.createCorrectModel();
     }
 
+    public createModelWithAppliedfeature() : DemoModel {
+        let result = this.createCorrectModel();
+        let length = result.functions[0];
+        let expression: DemoVariableRef = new DemoVariableRef();
+        expression.attribute = new PiElementReference<DemoAttribute>(length.parameters[0], "DemoAttribute"); // Variable1 : Person
+        let xx : AppliedFeature = new AppliedFeature();
+        xx.value = "myfirstAppliedFeature";
+        expression.appliedfeature = xx;
+        let yy : AppliedFeature = new AppliedFeature();
+        yy.value = "mysecondAppliedFeature";
+        xx.appliedfeature = yy;
+        length.expression = expression;
+        console.log(this.myUnparser.unparse(length, true));
+        return result;
+    }
     public createInheritanceModel() : DemoModel {
         let inheritanceModel: DemoModel = DemoModel.create("DemoModel_with_inheritance");
         const vehicleEnt = DemoEntity.create("Vehicle");
