@@ -1,8 +1,11 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import * as  fs from "fs";
 import { DefEditorLanguage } from "../editordef/metalanguage";
 import { DefEditorParser } from "../editordef/parser/DefEditorParser";
+import { PiLanguageUnit } from "../languagedef/metalanguage";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
+import { FileWatcher } from "../utils/FileWatcher";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";
@@ -21,95 +24,116 @@ import { PiValidatorDef } from "../validatordef/metalanguage";
 const LOGGER = new PiLogger("ProjectItGenerateAllAction"); // .mute();
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
+    public watch: boolean = false;''
     private defFolder: CommandLineStringParameter;
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
     protected scoperGenerator: ScoperGenerator;         // constructor needs language
     protected validatorGenerator: ValidatorGenerator;   // constructor needs language
     protected typerGenerator: PiTyperGenerator;   // constructor needs language
+    protected language: PiLanguageUnit;
 
     public constructor() {
         super({
             actionName: "all",
             summary: "Generates the TypeScript code for all parts of the work environment for your language",
             documentation: "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, and the " +
-            "validator for language as defined in files in DEFINITIONS_DIR." 
+                "validator for language as defined in files in DEFINITIONS_DIR."
         });
     }
 
+    private languageFile: string = "";
+    private editFile: string = "";
+    private validFile: string = "";
+    private scopeFile: string = "";
+    private typerFile: string = "";
+
     generate(): void {
-        LOGGER.info(this, "Starting generation of all parts of your language as defined in "+ this.defFolder.value);
+        LOGGER.info(this, "Starting generation of all parts of your language as defined in " + this.defFolder.value);
         LOGGER.log("Output will be generated in: " + this.outputFolder);
-try {
-    let languageFile: string = "";
-    let editFile: string = "";
-    let validFile: string = "";
-    let scopeFile: string = "";
-    let typerFile: string = "";
-    // find the definition files
-    ({ languageFile, editFile, validFile, scopeFile, typerFile } = this.findDefinitionFiles(languageFile, editFile, validFile, scopeFile, typerFile));
 
-    LOGGER.log("languageFile: " + languageFile);
-    LOGGER.log("editFile: " + editFile);
-    LOGGER.log("validFile: " + validFile);
-    LOGGER.log("scopeFile: " + scopeFile);
-    LOGGER.log("typerFile: " + typerFile);
+        try {
+            this.findDefinitionFiles();
 
-    // generate the language
-    LOGGER.info(this, "Generating language structure");
-    const language = new LanguageParser().parse(languageFile);
-    this.languageGenerator.outputfolder = this.outputFolder;
-    this.languageGenerator.generate(language);
+            LOGGER.log("languageFile: " + this.languageFile);
+            LOGGER.log("editFile: " + this.editFile);
+            LOGGER.log("validFile: " + this.validFile);
+            LOGGER.log("scopeFile: " + this.scopeFile);
+            LOGGER.log("typerFile: " + this.typerFile);
 
-    LOGGER.info(this, "Generating editor");
-    let editor: DefEditorLanguage;
-    if (editFile.length > 0) {
-        editor = new DefEditorParser(language).parse(editFile);
-    } else {
-        LOGGER.log("Generating default editor");
-    }
-    this.editorGenerator.outputfolder = this.outputFolder;
-    this.editorGenerator.language = language;
-    this.editorGenerator.generate(editor);
+            if( this.watch) {
+                new FileWatcher(this.languageFile, this.generateLanguage);
+                new FileWatcher(this.editFile, this.generateEditor);
+                new FileWatcher(this.typerFile, this.generateTyper);
+                new FileWatcher(this.scopeFile, this.generateScoper);
+                new FileWatcher(this.validFile, this.generateValidator);
+                LOGGER.log("Starting in watch mode");
+            }
 
-    LOGGER.info(this, "Generating validator");
-    let validator: PiValidatorDef;
-    if (validFile.length > 0) {
-        validator = new ValidatorParser(language).parse(validFile);
-    } else {
-        LOGGER.log("Generating default validator");
-    }
-    this.validatorGenerator = new ValidatorGenerator(language);
-    this.validatorGenerator.outputfolder = this.outputFolder;
-    this.validatorGenerator.generate(validator);
-
-    LOGGER.info(this, "Generating scoper");
-    let scoper: PiScopeDef;
-    if (scopeFile.length > 0) {
-        scoper = new ScoperParser(language).parse(scopeFile);
-    } else {
-        LOGGER.log("Generating default scoper");
-    }
-    this.scoperGenerator = new ScoperGenerator(language);
-    this.scoperGenerator.outputfolder = this.outputFolder;
-    this.scoperGenerator.generate(scoper);
-
-    LOGGER.info(this, "Generating typer");
-    let typer: PiTypeDefinition;
-    if (typerFile.length > 0) {
-        typer = new PiTyperParser(language).parse(typerFile);
-    } else {
-        LOGGER.log("Generating default typer");
-    }
-    this.typerGenerator = new PiTyperGenerator(language);
-    this.typerGenerator.outputfolder = this.outputFolder;
-    this.typerGenerator.generate(typer);
-} catch(e) {
-    console.log(e.stack);
-}
+            // generate the language
+            this.generateLanguage();
+            this.generateEditor();
+            this.generateValidator();
+            this.generateScoper();
+            this.generateTyper();
+        } catch (e) {
+            console.log(e.stack);
+        }
     }
 
-    private findDefinitionFiles(languageFile: string, editFile: string, validFile: string, scopeFile: string, typerFile: string) {
+    private generateTyper = () => {
+        LOGGER.info(this, "Generating typer");
+        let typer: PiTypeDefinition;
+        if (this.typerFile.length > 0) {
+            typer = new PiTyperParser(this.language).parse(this.typerFile);
+        } else {
+            LOGGER.log("Generating default typer");
+        }
+        this.typerGenerator = new PiTyperGenerator(this.language);
+        this.typerGenerator.outputfolder = this.outputFolder;
+        this.typerGenerator.generate(typer);
+    }
+
+    private generateScoper = () => {
+        LOGGER.info(this, "Generating scoper");
+        let scoper: PiScopeDef;
+        if (this.scopeFile.length > 0) {
+            scoper = new ScoperParser(this.language).parse(this.scopeFile);
+        } else {
+            LOGGER.log("Generating default scoper");
+        }
+        this.scoperGenerator = new ScoperGenerator(this.language);
+        this.scoperGenerator.outputfolder = this.outputFolder;
+        this.scoperGenerator.generate(scoper);
+    }
+
+    private generateValidator = () => {
+        LOGGER.info(this, "Generating validator");
+        let validator: PiValidatorDef;
+        if (this.validFile.length > 0) {
+            validator = new ValidatorParser(this.language).parse(this.validFile);
+        } else {
+            LOGGER.log("Generating default validator");
+        }
+        this.validatorGenerator = new ValidatorGenerator(this.language);
+        this.validatorGenerator.outputfolder = this.outputFolder;
+        this.validatorGenerator.generate(validator);
+    }
+
+    private generateEditor = () => {
+        LOGGER.info(this, "Generating editor");
+        let editor: DefEditorLanguage;
+        if (this.editFile.length > 0) {
+            editor = new DefEditorParser(this.language).parse(this.editFile);
+        } else {
+            LOGGER.log("Generating default editor");
+        }
+        this.editorGenerator.outputfolder = this.outputFolder;
+        this.editorGenerator.language = this.language;
+        this.editorGenerator.generate(editor);
+    }
+
+    private findDefinitionFiles() {
         if (!this.defFolder.value) {
             LOGGER.error(this, "No definitions folder, exiting.");
             process.exit(-1);
@@ -122,22 +146,17 @@ try {
         for (let filename of myFileSet) {
             // TODO take into account multiple files with the same extension
             if (/\.lang$/.test(filename)) {
-                languageFile = filename;
-            }
-            else if (/\.edit$/.test(filename)) {
-                editFile = filename;
-            }
-            else if (/\.valid$/.test(filename)) {
-                validFile = filename;
-            }
-            else if (/\.scop$/.test(filename)) {
-                scopeFile = filename;
-            }
-            else if (/\.type$/.test(filename)) {
-                typerFile = filename;
+                this.languageFile = filename;
+            } else if (/\.edit$/.test(filename)) {
+                this.editFile = filename;
+            } else if (/\.valid$/.test(filename)) {
+                this.validFile = filename;
+            } else if (/\.scop$/.test(filename)) {
+                this.scopeFile = filename;
+            } else if (/\.type$/.test(filename)) {
+                this.typerFile = filename;
             }
         }
-        return { languageFile, editFile, validFile, scopeFile, typerFile };
     }
 
     protected onDefineParameters(): void {
@@ -149,5 +168,13 @@ try {
             parameterShortName: "-d",
             description: "Folder where your language definition files can be found"
         });
+    }
+
+    generateLanguage= () => {
+        // generate the language
+        LOGGER.info(this, "Generating language structure");
+        this.language = new LanguageParser().parse(this.languageFile);
+        this.languageGenerator.outputfolder = this.outputFolder;
+        this.languageGenerator.generate(this.language);
     }
 }
