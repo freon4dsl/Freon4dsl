@@ -69,7 +69,7 @@ describe("Testing Unparser", () => {
             const variableExpression = new DemoVariableRef();
             const attribute = new DemoAttribute();
             attribute.name = "Person";
-            attribute.declaredType = DemoAttributeType.String;
+            // attribute.declaredType = DemoAttributeType.String;
             variableExpression.attribute = new PiElementReference<DemoAttribute>(attribute, "DemoAttribute");
 
             // variableExpression.referredName = "Person";
@@ -88,9 +88,9 @@ describe("Testing Unparser", () => {
             const determine = DemoFunction.create("determine");
             const AAP = DemoVariable.create("AAP");
             determine.parameters.push(AAP);
-            AAP.declaredType = DemoAttributeType.Integer;
+            // AAP.declaredType = DemoAttributeType.Integer;
             determine.expression = DemoModelCreator.MakePlusExp("Hello Demo", "Goodbye");
-            determine.declaredType = DemoAttributeType.Boolean;
+            // determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             result = unparser.unparse(determine);
             expect(result).toBe("determine( AAP : Integer ): Boolean = \'Hello Demo\' + \'Goodbye\'");
@@ -111,10 +111,10 @@ describe("Testing Unparser", () => {
             personEnt.functions.push(first);
 
             // add types to the model elements
-            personName.declaredType = DemoAttributeType.String;
-            age.declaredType = DemoAttributeType.Boolean;
-            first.declaredType = DemoAttributeType.Boolean;
-            Resultvar.declaredType = DemoAttributeType.Boolean;
+            // personName.declaredType = DemoAttributeType.String;
+            // age.declaredType = DemoAttributeType.Boolean;
+            // first.declaredType = DemoAttributeType.Boolean;
+            // Resultvar.declaredType = DemoAttributeType.Boolean;
             // Person { name, age, first(Resultvar) = 5 + 24 }
 
             result = unparser.unparse(personEnt);

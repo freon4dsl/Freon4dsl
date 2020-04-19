@@ -1,14 +1,14 @@
 import { Names, PathProvider, LANGUAGE_GEN_FOLDER, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage";
 import { langExpToTypeScript, PiLangExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage";
+import { must } from "parjs/combinators";
 
 export class ScoperTemplate {
-    constructor() {
-    }
+    alternativeScopeImports: string = "";
 
     generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
-        console.log("Creating Scoper");
+        // console.log("Creating Scoper");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.metaType(language);     
         const generatedClassName : string = Names.scoper(language);
@@ -19,25 +19,14 @@ export class ScoperTemplate {
         let generateAlternativeScopes = false;
         let alternativeScopeStatement: string = "";
 
-        for (let def of scopedef.scopeConceptDefs) {
-            if (!!def.alternativeScope) {
-                generateAlternativeScopes = true;
-                alternativeScopeStatement =
-                    `if (modelelement instanceof ${def.conceptRef.name}) {
-                        // use alternative scope '${def.alternativeScope.expression.toPiString()}'
-                        let newScopeElement = ${this.altScopeExpToTypeScript(def.alternativeScope.expression, allLangConcepts)};
-                        let ns = new ${namespaceClassName}(newScopeElement);
-                        result = ns.getVisibleElements(metatype, true); // true means that we are excluding names from parent namespaces
-                    } else {
-                        let ns = new ${namespaceClassName}(modelelement);
-                        result = ns.getVisibleElements(metatype, excludeSurrounding); // true means that we are excluding names from parent namespaces 
-                    }`
-            }
+        if (!!scopedef) {
+            alternativeScopeStatement = this.createAlternativeScopeStatement(scopedef, language);
+            if (alternativeScopeStatement.length > 0) generateAlternativeScopes = true;
         }
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${langConceptType}, AppliedFeature } from "${relativePath}${LANGUAGE_GEN_FOLDER}";   
+        import { ${allLangConcepts}, ${langConceptType}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";   
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger } from "${PROJECTITCORE}"
         ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }
@@ -93,6 +82,34 @@ export class ScoperTemplate {
                 }
             }
         }`;
+    }
+
+    private createAlternativeScopeStatement(scopedef: PiScopeDef, language: PiLanguageUnit) : string {
+        let result: string = "";
+        let allLangConcepts: string = Names.allConcepts(language);
+        let namespaceClassName: string = Names.namespace(language);
+        let mustAddElse: boolean = false;
+        for (let def of scopedef.scopeConceptDefs) {
+            if (!!def.alternativeScope) {
+                this.alternativeScopeImports = ", " + def.conceptRef.referedElement().name;
+                result = result.concat(
+                    `${mustAddElse? ` else ` : ``} if (modelelement instanceof ${def.conceptRef.name}) {
+                            // use alternative scope '${def.alternativeScope.expression.toPiString()}'
+                            let newScopeElement = ${this.altScopeExpToTypeScript(def.alternativeScope.expression, allLangConcepts)};
+                            let ns = new ${namespaceClassName}(newScopeElement);
+                            result = ns.getVisibleElements(metatype, true); // true means that we are excluding names from parent namespaces
+                    }`);
+                mustAddElse = true;
+            }
+        }
+        if (mustAddElse) {
+            result = result.concat(
+                ` else {
+                   let ns = new ${namespaceClassName}(modelelement);
+                   result = ns.getVisibleElements(metatype, excludeSurrounding); // true means that we are excluding names from parent namespaces 
+                }`);
+        }
+        return result;
     }
 
     generateIndex(language: PiLanguageUnit): string {

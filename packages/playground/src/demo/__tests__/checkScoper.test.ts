@@ -97,7 +97,6 @@ describe("testing Scoper", () => {
 
     test("isInscope 'DemoModel_1'", () => {
       let nameTotest : string = "DemoModel_1";
-      console.log(this.unparser.unparse(model));
       expect(scoper.isInScope(model, nameTotest)).toBe(false);
       // test if nameTotest is known in model functions
       model.functions.forEach(fun => {

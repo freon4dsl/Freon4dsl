@@ -86,6 +86,7 @@ export class DemoUnparser {
         if (modelelement instanceof AppliedFeature) {
             return this.unparseAppliedFeature(modelelement, includeChildren);
         }
+        return "";
     }
 
     public unparseAppliedFeature(modelelement: AppliedFeature, includeChildren?: boolean): string {
@@ -204,6 +205,7 @@ export class DemoUnparser {
         if (modelelement instanceof DemoBooleanLiteralExpression) {
             return this.unparseDemoBooleanLiteralExpression(modelelement, includeChildren);
         }
+        return "";
     }
 
     public unparseDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean): string {

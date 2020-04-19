@@ -99,7 +99,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
     if (exp instanceof PiLangEnumExp) {
         return `${exp.sourceName}.${exp.appliedfeature}`;
     } else if (exp instanceof PiLangSelfExp) {
-        return `modelelement.${this.langRefToTypeScript(exp.appliedfeature)}`;
+        return `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
         return `this.${exp.sourceName} (${exp.actualparams.map(
             param => `${this.makeTypeExp(param)}`
