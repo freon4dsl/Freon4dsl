@@ -12,7 +12,7 @@ import {
     ListJoinType,
     MetaEditorProjectionLine
 } from "../../metalanguage";
-import { langRefToTypeScript } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
 export class UnparserTemplate {
     constructor() {
@@ -80,7 +80,7 @@ export class UnparserTemplate {
     }
 
     makeConceptMethod (conceptDef: DefEditorConcept ) : string {
-        console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
+        // console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
         let myConcept: PiLangConcept = conceptDef.concept.referedElement();
         let name: string = myConcept.name;
         let lines: MetaEditorProjectionLine[] = conceptDef.projection?.lines;
@@ -132,18 +132,18 @@ export class UnparserTemplate {
                         if (item.listJoin.joinType === ListJoinType.Terminator) {
                             joinType = "SeparatorType.Terminator";
                         }
-                        result = result + `\" + this.unparseList(${langRefToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
+                        result = result + `\" + this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
                     } else {
-                        result = result + `\" + this.unparse(${langRefToTypeScript(item.expression)}) + \"`;
+                        result = result + `\" + this.unparse(${langExpToTypeScript(item.expression)}) + \"`;
                     }
                 } else {
                     // the expression is of primitive type
                     if (myElem.isList) {
-                        result = result + `\" + ${langRefToTypeScript(item.expression)}.map(listElem => {
-                                    ${langRefToTypeScript(item.expression)}
+                        result = result + `\" + ${langExpToTypeScript(item.expression)}.map(listElem => {
+                                    ${langExpToTypeScript(item.expression)}
                                 }) + \"`;
                     } else {
-                        result = result + `\" + ${langRefToTypeScript(item.expression)} + \"`;
+                        result = result + `\" + ${langExpToTypeScript(item.expression)} + \"`;
                     }
                 }
             }

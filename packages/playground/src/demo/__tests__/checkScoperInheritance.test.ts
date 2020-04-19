@@ -11,15 +11,42 @@ describe("testing Scoper", () => {
         done();
     });
 
-    function testInheritedPropsrecursive(ent: DemoEntity, vis: string[]) {
-        if (!!ent.baseEntity) {
+    // TODO make this two separate tests, that each run every time
+    function testInheritedPropsrecursive(ent: DemoEntity, vis: string[], done: DemoEntity[]) {
+        // when the property is not a list:
+        if (!done.includes(ent) && !!ent.baseEntity) {
             // extra props should be visible
             ent.baseEntity.referred.attributes.forEach(attr => {
                 expect(vis).toContain(attr.name);
             });
-            testInheritedPropsrecursive(ent.baseEntity.referred, vis);
+            done.push(ent);
+            testInheritedPropsrecursive(ent.baseEntity.referred, vis, done);
         }
+        // when the property is a list
+        // for (let ww of ent.baseEntity) {
+        //     // extra props should be visible
+        //     ww.referred.attributes.forEach(attr => {
+        //         expect(vis).toContain(attr.name);
+        //     });
+        //     testInheritedPropsrecursive(ww.referred, vis);
+        // }
     }
+
+    test("inheritance on loop", () => {
+        modelCreator.createInheritanceWithLoop().entities.forEach(ent => {
+            let vis = scoper.getVisibleNames(ent);
+            expect(vis).toContain(ent.name);
+            ent.attributes.forEach(attr => {
+                expect(vis).toContain(attr.name);
+            });
+            let done: DemoEntity[] = [];
+            done.push(ent);
+            testInheritedPropsrecursive(ent, vis, done);
+            // console.log("visible elements for " + ent.name + ":");
+            // vis.forEach(n => {console.log(n);});
+        });
+    });
+
 
     test("inheritance", () => {
         inheritanceModel.entities.forEach(ent => {
@@ -28,10 +55,11 @@ describe("testing Scoper", () => {
             ent.attributes.forEach(attr => {
                 expect(vis).toContain(attr.name);
             });
-            testInheritedPropsrecursive(ent, vis);
+            let done: DemoEntity[] = [];
+            done.push(ent);
+            testInheritedPropsrecursive(ent, vis, done);
             // console.log("visible elements for " + ent.name + ":");
             // vis.forEach(n => {console.log(n);});
         });
-
     });
 });

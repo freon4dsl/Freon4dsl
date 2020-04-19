@@ -1,7 +1,7 @@
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
 import { GenericModelSerializer } from "@projectit/core";
-import { JsonModelCreator } from "../language/JsonModelCreator";
+import { JsonModelCreator } from "./JsonModelCreator";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Demo Model", () => {
@@ -18,13 +18,13 @@ describe("Demo Model", () => {
             expect(initialModel.name).not.toBeNull;
             const serial = new GenericModelSerializer();
             const jsonOut = serial.convertToJSON(initialModel);
-            console.log(JSON.stringify(jsonOut));
+            // console.log(JSON.stringify(jsonOut));
 
             const typescript = serial.toTypeScriptInstance(jsonOut);
-            console.log("typescript  type: " + typescript["$typename"]);
+            // console.log("typescript  type: " + typescript["$typename"]);
 
             const inModel = typescript as DemoModel;
-            console.log("inModel type: " + inModel.piLanguageConcept() + "  and name " + inModel.name + " id "+ inModel.$id);
+            // console.log("inModel type: " + inModel.piLanguageConcept() + "  and name " + inModel.name + " id "+ inModel.$id);
             expect(typescript instanceof DemoModel).toBeTruthy();
             expect(typescript instanceof DemoFunction).toBeFalsy();
             expect(inModel.name).toBe("DemoModel_1");

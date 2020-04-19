@@ -19,20 +19,25 @@ Scoper_Definition
     } 
 
 isnamespaceKey = ws "isnamespace" ws
-namespaceKey = ws "namespace" ws
-plus_separator = ws "+" ws
+additionKey = ws "namespace_addition" ws
+alternativeScopeKey = ws "scope" ws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(conceptRef)* ws curly_end
     { 
         return conceptRefs;
     }
 
-conceptDefinition = name:conceptRef curly_begin nsDef:namespaceDefinition curly_end
+conceptDefinition = name:conceptRef curly_begin nsDef:namespaceAddition? alternativeScope:alternativeScope? curly_end
     {
-        return create.createScoperConceptDef({ "conceptRef":name, "namespaceDef":nsDef, "location":location() });
+        return create.createScoperConceptDef({
+            "conceptRef":name,
+            "namespaceAdditions": nsDef,
+            "alternativeScope": alternativeScope,
+            "location":location()
+        });
     }
 
-namespaceDefinition = namespaceKey equals_separator list:expressionlist
+namespaceAddition = additionKey equals_separator list:expressionlist
     {
         return create.createNamespaceDef({ "expressions": list, "location":location() });
     }
@@ -42,5 +47,12 @@ expressionlist =
       tail:(plus_separator v:langExpression { return v; })*
       { return [head].concat(tail); }
 
+alternativeScope = alternativeScopeKey equals_separator exp:langExpression
+    {
+        return create.createAlternativeScope({
+            "expression": exp,
+            "location": location()
+        });
+    }
 
 

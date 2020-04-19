@@ -1,4 +1,4 @@
-import { PiScopeDef, ScopeConceptDef, PiNamespaceDef } from "../metalanguage";
+import { PiScopeDef, ScopeConceptDef, PiNamespaceAddition, PiAlternativeScope } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("ScoperCreator"); //.mute();
@@ -30,15 +30,24 @@ export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeCon
     LOGGER.log("createScoperConceptDef");
     const result = new ScopeConceptDef();
     if (!!data.conceptRef) { result.conceptRef = data.conceptRef }
-    if (!!data.namespaceDef) { result.namespaceDef = data.namespaceDef }
+    if (!!data.namespaceAdditions) { result.namespaceAdditions = data.namespaceAdditions }
+    if (!!data.alternativeScope) { result.alternativeScope = data.alternativeScope }
     if (!!data.location) { result.location = data.location; }
     return result;
 }
 
-export function createNamespaceDef(data: Partial<PiNamespaceDef>): PiNamespaceDef {
+export function createNamespaceDef(data: Partial<PiNamespaceAddition>): PiNamespaceAddition {
     LOGGER.log("createNamespaceDef");
-    const result = new PiNamespaceDef();
+    const result = new PiNamespaceAddition();
     if (!!data.expressions) { result.expressions = data.expressions }
+    if (!!data.location) { result.location = data.location; }
+    return result;
+}
+
+export function createAlternativeScope(data: Partial<PiAlternativeScope>): PiAlternativeScope {
+    LOGGER.log("createAlternativeScope");
+    const result = new PiAlternativeScope();
+    if (!!data.expression) { result.expression = data.expression }
     if (!!data.location) { result.location = data.location; }
     return result;
 }

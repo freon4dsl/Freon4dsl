@@ -4,7 +4,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 
 describe('Testing Typer', () => {
     describe('Typer.isType on DemoModel Instance', () => {
-        let model : DemoModel = new DemoModelCreator().model;
+        let model : DemoModel = new DemoModelCreator().createCorrectModel();
         let typer = new DemoTyper();
      
         beforeEach(done => {
@@ -32,18 +32,18 @@ describe('Testing Typer', () => {
                 ent.attributes.forEach(att => {
                     expect(att.declaredType).not.toBeNull;
                     expect(att.declaredType).not.toBeUndefined;
-                    expect(typer.isType(att.declaredType)).toBe(true);
+                    expect(typer.isType(att.declaredType.referred)).toBe(true);
                 });
             });
         });
     
         test("all functions should have a return type", () => {
             model.functions.forEach(fun => {
-                expect(typer.isType(fun.declaredType)).toBe(true);
+                expect(typer.isType(fun.declaredType.referred)).toBe(true);
             });
             model.entities.forEach(ent => {
                 ent.functions.forEach(fun => {
-                    expect(typer.isType(fun.declaredType)).toBe(true);
+                    expect(typer.isType(fun.declaredType.referred)).toBe(true);
                 });
             });
         });
