@@ -67,7 +67,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 new FileWatcher(this.typerFile, this.generateTyper);
                 new FileWatcher(this.scopeFile, this.generateScoper);
                 new FileWatcher(this.validFile, this.generateValidator);
-                LOGGER.log("Starting in watch mode");
             }
 
             // generate the language
@@ -76,6 +75,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.generateValidator();
             this.generateScoper();
             this.generateTyper();
+            LOGGER.info(this,"Watching language definition files ...");
+
         } catch (e) {
             console.log(e.stack);
         }
