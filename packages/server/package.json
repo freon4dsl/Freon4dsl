@@ -16,7 +16,7 @@
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
