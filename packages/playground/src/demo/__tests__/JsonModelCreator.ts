@@ -1,4 +1,4 @@
-import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType } from "./gen";
+import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, PiElementReference } from "../language/gen";
 
 export class JsonModelCreator {
     model: DemoModel;
@@ -12,9 +12,11 @@ export class JsonModelCreator {
 
         const personEnt = DemoEntity.create("Person");
         const age = DemoAttribute.create("age");
-        age.declaredType = DemoAttributeType.Integer;
+        // age.declaredType = DemoAttributeType.Integer;
+        age.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
         const personName = DemoAttribute.create("name");
-        personName.declaredType = DemoAttributeType.String;
+        // personName.declaredType = DemoAttributeType.String;
+        personName.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
         personEnt.attributes.push(age);
         personEnt.attributes.push(personName);
 

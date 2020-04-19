@@ -14,25 +14,35 @@ concept DemoEntity {
 }
 
 concept DemoAttribute {
-    declaredType: DemoAttributeType
+    reference declaredType: DemoEntity
     name: string
 }
 
 concept DemoFunction {
     name: string
-    declaredType : DemoAttributeType
+    reference declaredType : DemoEntity
     part expression: DemoExpression
     part parameters: DemoVariable[]
 }
 
 concept DemoVariable {
     name: string
-    declaredType: DemoAttributeType
+    reference declaredType: DemoEntity
 }
 
-abstract expression concept DemoExpression {}
+abstract expression concept DemoExpression {
+    part appliedfeature: AppliedFeature
+}
 
-expression placeholder concept DemoPlaceholderExpression {}
+concept AppliedFeature {
+    part appliedfeature: AppliedFeature
+    value: string
+    reference type: DemoEntity
+}
+
+expression placeholder concept DemoPlaceholderExpression {
+    part appliedfeature: AppliedFeature
+}
 
 abstract expression concept DemoLiteralExpression base DemoExpression {}
 

@@ -1,6 +1,23 @@
 import { Checker } from "../../utils";
-import { PiLangConceptProperty, PiLanguageUnit, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangPrimitiveProperty, PiLangClass, PiLangEnumeration, PiLangUnion, PiLangEnumProperty } from "./PiLanguage";
-import { PiLangConceptReference } from "./PiLangReferences";
+import {
+    PiLangConceptProperty,
+    PiLanguageUnit,
+    PiLangBinaryExpressionConcept,
+    PiLangExpressionConcept,
+    PiLangPrimitiveProperty,
+    PiLangClass,
+    PiLangEnumeration,
+    PiLangUnion,
+    PiLangEnumProperty,
+    PiLangConcept, PiLangInterface
+} from "./PiLanguage";
+import {
+    PiLangClassReference,
+    PiLangConceptReference,
+    PiLangEnumerationReference,
+    PiLangInterfaceReference,
+    PiLangUnionReference
+} from "./PiLangReferences";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiParseClass } from "../parser/PiParseLanguage";
 
@@ -126,11 +143,23 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         return false;
     }
 
-    // the remaining functions are checking functions
+    // the remaining functions are checking functions, only the concept references are morfed into
     private checkUnion(union: PiLangUnion): void {
-        union.members.forEach (mem => 
-            this.checkConceptReference(mem)
-        );
+        let newMembers: PiLangConceptReference[] = [];
+        union.members.forEach (mem => {
+            this.checkConceptReference(mem);
+            if (!!mem.referedElement()) { // error message taken care of by checkConceptReference
+                this.nestedCheck({
+                    check: (mem.referedElement() instanceof PiLangClass || mem.referedElement() instanceof PiLangEnumeration),
+                    error:  `A member of a union concept '${mem.name}' must be a class or enumeration concept `+
+                            `[line: ${mem.location?.start.line}, column: ${mem.location?.start.column}].`,
+                    whenOk: () => {
+                        newMembers.push(this.morfConceptReferenceIntoSubClass(mem));
+                    }
+                });
+            }
+        });
+        union.members = newMembers;
     }
 
     private checkEnumeration(enumConcept: PiLangEnumeration) {
@@ -145,6 +174,16 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         this.simpleCheck(!!piClass.name, `Concept should have a name [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
         if(!!piClass.base) {
             this.checkConceptReference(piClass.base);
+            if (!!piClass.base.referedElement()) { // error message taken care of by checkConceptReference
+                this.nestedCheck({
+                    check: (piClass.base.referedElement() instanceof PiLangClass),
+                    error:  `Base concept '${piClass.base.name}' must be a class concept `+
+                        `[line: ${piClass.base.location?.start.line}, column: ${piClass.base.location?.start.column}].`,
+                    whenOk: () => {
+                        piClass.base = this.morfConceptReferenceIntoSubClass(piClass.base) as PiLangClassReference;
+                    }
+                });
+            }
         }
 
         if( piClass.isRoot ) {
@@ -177,9 +216,27 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     }
 
     checkEnumProperty(prop: PiLangEnumProperty) {
-        this.simpleCheck(prop.owningConcept !== null,
-            `Property '${prop.name}' should belong to a concept [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`);
-        // TODO check initialValue? check type?
+        LOGGER.log(`Checking enum property '${prop.name}' [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}]`);
+        // this.simpleCheck(prop.owningConcept !== null,
+        //     `Property '${prop.name}' should belong to a concept [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`);
+        this.nestedCheck(
+            {
+                check: !!prop.type,
+                error: `Property '${prop.name}' should have a type [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`,
+                whenOk: () => {
+                    this.checkConceptReference(prop.type);
+                    if (!!prop.type.referedElement()){ // error message taken care of by checkConceptReference
+                        this.nestedCheck({
+                            check: prop.type.referedElement() instanceof PiLangEnumeration,
+                            error:  `Enum property '${prop.name}' should have an enumeration concept as type `+
+                                    `[line: ${prop.type.location?.start.line}, column: ${prop.type.location?.start.column}]. (Maybe use prefix 'part' or 'reference'?)`,
+                            whenOk: () => {
+                                prop.type = this.morfConceptReferenceIntoSubClass(prop.type) as PiLangEnumerationReference;
+                            }
+                        });
+                    }
+                }
+            });
     }
 
     checkConceptProperty(element: PiLangConceptProperty): void {
@@ -189,9 +246,17 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 check: !!element.type,
                 error: "Element should have a type",
                 whenOk: () => {
-                    this.checkConceptReference(element.type); 
-                    this.simpleCheck(!(element.type.referedElement() instanceof PiLangEnumeration),
-                        `Part or reference property '${element.name}' may not have an Enumeration as type [line: ${element.location?.start.line}, column: ${element.location?.start.column}].`);
+                    this.checkConceptReference(element.type);
+                    if (!!element.type.referedElement()) { // error message taken care of by checkConceptReference
+                        this.nestedCheck({
+                            check: !(element.type.referedElement() instanceof PiLangEnumeration),
+                            error:  `Part or reference property '${element.name}' may not have an enumeration concept as type `+
+                                    `[line: ${element.location?.start.line}, column: ${element.location?.start.column}].`,
+                            whenOk: () => {
+                                element.type = this.morfConceptReferenceIntoSubClass(element.type);
+                            }
+                        });
+                    }
                 }
             });
     }
@@ -206,7 +271,11 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 whenOk: () => this.checkPrimitiveType(element.primType, element)
             });
     }
-    
+
+    /**
+     * After this method is called, 'morfConceptReferenceIntoSubClass' should be called to change the reference into the correct subclass
+     * of PiLangConceptReference
+     */
     checkConceptReference(reference: PiLangConceptReference): void {
         LOGGER.log("Checking concept reference '" + reference.name + "'");
         this.nestedCheck(
@@ -224,8 +293,31 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     checkPrimitiveType(type: string, element: PiLangPrimitiveProperty) {
         LOGGER.log("Checking primitive type '" + type + "'");
         this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
-            "Primitive property '" + element.name + "' should have a primitive type (string, boolean, or number) [line: ${langRef.location?.start.line}, column: ${langRef.location?.start.column}]."
+            `Primitive property '${element.name}' should have a primitive type (string, boolean, or number) [line: ${element.location?.start.line}, column: ${element.location?.start.column}].`
         );
+    }
+
+    /**
+     * This method changes the input into one of its subclasses based on its referedElement.
+     * The return type is PiLangConceptReference, but what is actually returned, is one of its subclasses.
+     */
+    private morfConceptReferenceIntoSubClass(ref: PiLangConceptReference): PiLangConceptReference {
+        let result : PiLangConceptReference = ref;
+        if (ref.referedElement() instanceof PiLangClass)  {
+            result = new PiLangClassReference();
+        } else if (ref.referedElement() instanceof PiLangInterface) {
+            result = new PiLangInterfaceReference();
+        } else if (ref.referedElement() instanceof PiLangEnumeration) {
+            result = new PiLangEnumerationReference();
+        } else if (ref.referedElement() instanceof PiLangUnion) {
+            result = new PiLangUnionReference();
+        }
+        if (result !== ref) {
+            result.language = ref.language;
+            result.location = ref.location;
+            result.name = ref.name;
+        }
+        return result;
     }
 }
 

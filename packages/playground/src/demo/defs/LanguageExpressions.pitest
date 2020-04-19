@@ -7,13 +7,17 @@ DemoModel {
 }
 
 DemoEntity {
-    self.attributes;
+    self.attrutes;
     self.functions;
     DemoAttributeType:Inter;
+    container;
+    typeof ( self.attributes );
+    typeof ( container );
+    typeof ( xx );
 }
 
 DemoAttribute {
-     DemoVariable.name;
+     DemoVariable;
 }
 
 DemoFunction {

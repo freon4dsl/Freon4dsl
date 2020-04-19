@@ -91,7 +91,7 @@ export class GenericModelSerializer {
                             result[property.name].push(this.language.referenceCreator(value[item], property.type));
                         }
                     } else {
-                        console.log("Serializer creating property " + property.name + "  reference [" + value + "] to a [" + property.type+ "]")
+                        // console.log("Serializer creating property " + property.name + "  reference [" + value + "] to a [" + property.type+ "]")
                         result[property.name] = this.language.referenceCreator(value, property.type);
                     }
                     break;

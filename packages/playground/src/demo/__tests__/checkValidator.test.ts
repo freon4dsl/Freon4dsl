@@ -20,11 +20,11 @@ import {
 import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { makeLiteralExp } from "./HelperFunctions";
+import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
 describe('Testing Validator', () => {
     describe('Validate DemoModel Instance', () => {
-        const model : DemoModel = new DemoModelCreator().model;
+        const model : DemoModel = new DemoModelCreator().createCorrectModel();
         const validator = new DemoValidator();
         validator.myTyper = new DemoTyper();
      
@@ -88,11 +88,13 @@ describe('Testing Validator', () => {
             let errors : PiError[] = [];
             const variableExpression = new DemoVariableRef();
             const attribute = DemoAttribute.create("Person");
-            attribute.declaredType = DemoAttributeType.String;
+            const personEnt = DemoEntity.create("Person");
+            attribute.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+            // attribute.declaredType = DemoAttributeType.String;
             variableExpression.attribute = new PiElementReference<DemoAttribute>(attribute, "DemoAttribute");
 
-            const plusExpression = DemoModelCreator.MakePlusExp("1","2");
-            const multiplyExpression = DemoModelCreator.MakeMultiplyExp(plusExpression, variableExpression);
+            const plusExpression = MakePlusExp("1","2");
+            const multiplyExpression = MakeMultiplyExp(plusExpression, variableExpression);
             errors = validator.validate(multiplyExpression);
             expect(errors.length).toBe(1);
             errors.forEach(e =>
@@ -102,7 +104,7 @@ describe('Testing Validator', () => {
 
         test("\"Hello Demo\" + \"Goodbye\"'' should have 2 errors", () => {
             let errors : PiError[] = [];
-            let expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
+            let expression = MakePlusExp("Hello Demo","Goodbye")
             // "Hello Demo" + "Goodbye"
 
             errors = validator.validate(expression);
@@ -116,10 +118,11 @@ describe('Testing Validator', () => {
         test("'determine(AAP) : Boolean = \"Hello Demo\" + \"Goodbye\"'' should have 3 errors", () => {
             let errors : PiError[] = [];
             const determine = DemoFunction.create("determine");
-            const AAP = DemoVariable.create("AAP")
+            const AAP = DemoVariable.create("AAP");
             determine.parameters.push(AAP);
-            determine.expression = DemoModelCreator.MakePlusExp("Hello Demo","Goodbye")
-            determine.declaredType = DemoAttributeType.Boolean;
+            determine.expression = MakePlusExp("Hello Demo","Goodbye");
+            const personEnt = DemoEntity.create("Person");
+            determine.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             errors = validator.validate(determine, true);
             expect(errors.length).toBe(3);
@@ -139,15 +142,19 @@ describe('Testing Validator', () => {
             const first = DemoFunction.create("first");
             const Resultvar = DemoVariable.create("Resultvar")
             first.parameters.push(Resultvar);
-            first.expression = DemoModelCreator.MakePlusExp("5","24");
+            first.expression = MakePlusExp("5","24");
             personEnt.functions.push(first);
 
             // add types to the model elements
-            personName.declaredType = DemoAttributeType.String;
-            age.declaredType = DemoAttributeType.Boolean;
-            first.declaredType = DemoAttributeType.Boolean;
-            Resultvar.declaredType = DemoAttributeType.Boolean;
-    
+            // personName.declaredType = DemoAttributeType.String;
+            // age.declaredType = DemoAttributeType.Boolean;
+            // first.declaredType = DemoAttributeType.Boolean;
+            // Resultvar.declaredType = DemoAttributeType.Boolean;
+            personName.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+            age.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+            first.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+            Resultvar.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+
             // Person { name, age, first(Resultvar) = 5 + 24 }
         
             errors = validator.validate(personEnt, true);

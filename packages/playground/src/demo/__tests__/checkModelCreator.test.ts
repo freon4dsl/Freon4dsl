@@ -3,7 +3,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Demo Model", () => {
   describe("Checking DemoModel instance", () => {
-    let model: DemoModel = new DemoModelCreator().model;
+    let model: DemoModel = new DemoModelCreator().createCorrectModel();
 
     beforeEach(done => {
       done();

@@ -4,7 +4,7 @@ import {
     PiLangExp,
     PiLangEnumExp,
     PiLangFunctionCallExp,
-    langRefToTypeScript, PiLangSelfExp
+    langExpToTypeScript, PiLangSelfExp
 } from "../../../languagedef/metalanguage/PiLangExpressions";
 import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage/PiTyperDefLang";
 
@@ -208,20 +208,20 @@ export class PiTyperTemplate {
         // case: two enum refs
         // if (!!rule.type1.enumRef && !!rule.type2.enumRef) {
         //     return `
-        //         if ( this.inferType(elem1) === ${this.langRefToTypeScript(rule.type1.enumRef)} 
-        //             && this.inferType(elem2) === ${this.langRefToTypeScript(rule.type2.enumRef)} ) { return true; }
-        //         if ( this.inferType(elem2) === ${this.langRefToTypeScript(rule.type1.enumRef)} 
-        //             && this.inferType(elem1) === ${this.langRefToTypeScript(rule.type2.enumRef)} ) { return true; }
+        //         if ( this.inferType(elem1) === ${this.langExpToTypeScript(rule.type1.enumRef)}
+        //             && this.inferType(elem2) === ${this.langExpToTypeScript(rule.type2.enumRef)} ) { return true; }
+        //         if ( this.inferType(elem2) === ${this.langExpToTypeScript(rule.type1.enumRef)}
+        //             && this.inferType(elem1) === ${this.langExpToTypeScript(rule.type2.enumRef)} ) { return true; }
         //         `
         //     ;
         // }
         // // case: one enum ref and one @anyType
         // let enumstr: string = "";
         // if (!!rule.type1.enumRef)
-        //     enumstr = this.langRefToTypeScript(rule.type1.enumRef);
+        //     enumstr = this.langExpToTypeScript(rule.type1.enumRef);
         
         // if (!!rule.type2.enumRef) {
-        //     enumstr = this.langRefToTypeScript(rule.type2.enumRef);
+        //     enumstr = this.langExpToTypeScript(rule.type2.enumRef);
         // }            
 
         // if (!!enumstr && (!!rule.type1.allTypes || !!rule.type2.allTypes)) {
@@ -235,7 +235,7 @@ export class PiTyperTemplate {
         if (exp instanceof PiLangEnumExp) {
             return `${exp.sourceName}.${exp.appliedfeature}`;
         } else if (exp instanceof PiLangSelfExp) {
-            return `this.inferType(modelelement.${langRefToTypeScript(exp.appliedfeature)})`;
+            return `this.inferType(modelelement.${langExpToTypeScript(exp.appliedfeature)})`;
         } else if (exp instanceof PiLangFunctionCallExp) {
             return `this.${exp.sourceName} (${exp.actualparams.map(
                 param => `${this.makeTypeExp(param)}`

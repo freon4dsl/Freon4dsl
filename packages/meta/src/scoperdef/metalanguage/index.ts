@@ -1,2 +1,2 @@
 export * from "./PiScopeDefLang";
-export * from "./PiScoperChecker";
+export * from "./ScoperChecker";

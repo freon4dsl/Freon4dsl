@@ -83,15 +83,23 @@ export class PiLangFunctionCallExp extends PiLangExp {
     referedElement: PiLangFunction;
 
     toPiString(): string {
-        return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+        let actualPars: string = '( ';
+        for (let actual of this.actualparams) {
+            actualPars = actualPars.concat(actual.toPiString());
+            if (this.actualparams.indexOf(actual) !== this.actualparams.length -1) {
+                actualPars = actualPars.concat(", ");
+            }
+        }
+        actualPars = actualPars.concat(` )`);
+        return this.sourceName + actualPars + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
     }
 }
 
-export function langRefToTypeScript(exp: PiLangExp): string {
+export function langExpToTypeScript(exp: PiLangExp): string {
     if (exp instanceof PiLangEnumExp) {
         return `${exp.sourceName}.${exp.appliedfeature}`;
     } else if (exp instanceof PiLangSelfExp) {
-        return `modelelement.${this.langRefToTypeScript(exp.appliedfeature)}`;
+        return `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
         return `this.${exp.sourceName} (${exp.actualparams.map(
             param => `${this.makeTypeExp(param)}`

@@ -1,7 +1,7 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLangConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
-import { langRefToTypeScript } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
 export class NamespaceTemplate {
     constructor() {
@@ -32,9 +32,13 @@ export class NamespaceTemplate {
 
         export class ${generatedClassName} {
             _myElem : ${allLangConcepts}; // any element in the model
+            _searched: ${allLangConcepts}[] = [];
         
-            constructor(elem : ${allLangConcepts}) {
+            constructor(elem : ${allLangConcepts}, searched?: ${allLangConcepts}[]) {
                 this._myElem = elem;
+                if (!!searched) {
+                    this._searched = searched;
+                }
             }
         
             // if excludeSurrounding is true, then the elements from all parent namespaces are 
@@ -45,8 +49,9 @@ export class NamespaceTemplate {
                 let ns = this.getSurroundingNamespace(this._myElem);
                 if (ns !== null) {
                     result = ns.internalVis(metatype); 
+                    this._searched.push(this._myElem);
                     // add extra namespaces from the scope definition
-                    result = result.concat(this.addExtras()); 
+                    result = result.concat(this.addExtras(metatype, excludeSurrounding)); 
                 }
                 if(!(!(excludeSurrounding === undefined) && excludeSurrounding)) { 
                     // add elements from surrounding Namespaces
@@ -153,19 +158,45 @@ export class NamespaceTemplate {
     private createExtras(scopedef: PiScopeDef, generatedClassName: string): string {
         let result: string = '';
         for(let e of scopedef.scopeConceptDefs) {
-            if(!!e.namespaceDef) {
+            if(!!e.namespaceAdditions) {
                 let con = e.conceptRef.referedElement().name;
                 result = result.concat(`if (this._myElem instanceof ${con}) {`);
-                for(let xx of e.namespaceDef.expressions) {
-                    result = result.concat(`
-                    // expression ${xx.toPiString()} 
-                    if (!!this._myElem.${xx.appliedfeature.toPiString()}) {
-                        if (this.isNameSpace(this._myElem.${langRefToTypeScript(xx.appliedfeature)})) {
-                            // wrap the found element
-                            let extraNamespace = new ${generatedClassName}(this._myElem.${langRefToTypeScript(xx.appliedfeature)});
-                            result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
-                        }                  
-                    }`);
+                for(let xx of e.namespaceAdditions.expressions) {
+                    let myRef = xx.findRefOfLastAppliedFeature();
+                    let loopVar: string = "yy";
+                    let loopVarExtended = loopVar;
+                    if(myRef.isList) {
+                        if (myRef instanceof PiLangConceptProperty) {
+                            if (!myRef.isPartOf()) {
+                                loopVarExtended = loopVarExtended.concat(".referred");
+                            }
+                        }
+                        result = result.concat(`
+                        // generated based on '${xx.toPiString()}'
+                        for (let ${loopVar} of this._myElem.${xx.appliedfeature.toPiString()}) {
+                            if (!this._searched.includes(this._myElem.${langExpToTypeScript(xx.appliedfeature)}) ) {
+                                if (this.isNameSpace(${loopVarExtended})) {
+                                    // wrap the found element
+                                    let extraNamespace = new ${generatedClassName}(${loopVarExtended}, this._searched);
+                                    result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                                    this._searched.push(this._myElem.${langExpToTypeScript(xx.appliedfeature)});
+                                }
+                            }
+                        }`);
+                    } else {
+                        result = result.concat(`
+                        // generated based on '${xx.toPiString()}' 
+                        if (!!this._myElem.${xx.appliedfeature.toPiString()}) {
+                            if (!this._searched.includes(this._myElem.${langExpToTypeScript(xx.appliedfeature)}) ) {
+                                if (this.isNameSpace(this._myElem.${langExpToTypeScript(xx.appliedfeature)})) {
+                                    // wrap the found element
+                                    let extraNamespace = new ${generatedClassName}(this._myElem.${langExpToTypeScript(xx.appliedfeature)}, this._searched);
+                                    result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                                    this._searched.push(this._myElem.${langExpToTypeScript(xx.appliedfeature)});
+                                }  
+                            }                
+                        }`);
+                    }
                 }
                 result = result.concat("}");
             }

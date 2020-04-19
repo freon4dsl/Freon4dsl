@@ -53,19 +53,19 @@ attribute = name:var ws name_separator ws type:var isList:"[]"? ws
       if (type === "string" || type === "boolean" || type === "number") {
         return create.createPrimitiveProperty({"name": name, "primType": type, "isList": (isList?true:false), "location": location() });
       } else {
-        const enumRef = create.createEnumerationReference({"name": type});
+        const enumRef = create.createConceptReference({"name": type, "location": location()});
         return create.createEnumerationProperty({"name": name, "type": enumRef, "isList": (isList?true:false), "location": location() })
       }
     }
 
 part = partKey ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
     { 
-        return create.createPart({"name": name, "type": type, "isList": (isList?true:false), "location": location() })
+        return create.createPartProperty({"name": name, "type": type, "isList": (isList?true:false), "location": location() })
     }
 
 reference = referenceKey ws name:var ws name_separator ws type:conceptReference isList:"[]"? ws
     { 
-        return create.createReference({"name": name, "type": type, "isList": (isList?true:false), "location": location() })
+        return create.createReferenceProperty({"name": name, "type": type, "isList": (isList?true:false), "location": location() })
     }
 
 conceptReference = referredName:var {
