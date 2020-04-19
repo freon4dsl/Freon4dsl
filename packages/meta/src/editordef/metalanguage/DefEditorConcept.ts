@@ -9,11 +9,11 @@ export class DefEditorConcept implements DefEditor {
     concept: PiLangConceptReference;
 
     _trigger: string = null;
-    symbol: string = null;     // only for binary expressions
+    symbol: string = null; // only for binary expressions
 
     get trigger(): string {
-        if(!!this._trigger) {
-            return this._trigger
+        if (!!this._trigger) {
+            return this._trigger;
         } else {
             return this.symbol;
         }

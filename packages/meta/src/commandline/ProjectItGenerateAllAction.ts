@@ -1,5 +1,5 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import * as  fs from "fs";
+import * as fs from "fs";
 import { DefEditorLanguage } from "../editordef/metalanguage";
 import { DefEditorParser } from "../editordef/parser/DefEditorParser";
 import { PiLanguageUnit } from "../languagedef/metalanguage";
@@ -24,20 +24,22 @@ import { PiValidatorDef } from "../validatordef/metalanguage";
 const LOGGER = new PiLogger("ProjectItGenerateAllAction"); // .mute();
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
-    public watch: boolean = false;''
+    public watch: boolean = false;
+    "";
     private defFolder: CommandLineStringParameter;
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
-    protected scoperGenerator: ScoperGenerator;         // constructor needs language
-    protected validatorGenerator: ValidatorGenerator;   // constructor needs language
-    protected typerGenerator: PiTyperGenerator;   // constructor needs language
+    protected scoperGenerator: ScoperGenerator; // constructor needs language
+    protected validatorGenerator: ValidatorGenerator; // constructor needs language
+    protected typerGenerator: PiTyperGenerator; // constructor needs language
     protected language: PiLanguageUnit;
 
     public constructor() {
         super({
             actionName: "all",
             summary: "Generates the TypeScript code for all parts of the work environment for your language",
-            documentation: "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, and the " +
+            documentation:
+                "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, and the " +
                 "validator for language as defined in files in DEFINITIONS_DIR."
         });
     }
@@ -61,7 +63,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             LOGGER.log("scopeFile: " + this.scopeFile);
             LOGGER.log("typerFile: " + this.typerFile);
 
-            if( this.watch) {
+            if (this.watch) {
                 new FileWatcher(this.languageFile, this.generateLanguage);
                 new FileWatcher(this.editFile, this.generateEditor);
                 new FileWatcher(this.typerFile, this.generateTyper);
@@ -75,8 +77,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.generateValidator();
             this.generateScoper();
             this.generateTyper();
-            LOGGER.info(this,"Watching language definition files ...");
-
+            LOGGER.info(this, "Watching language definition files ...");
         } catch (e) {
             console.log(e.stack);
         }
@@ -93,7 +94,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.typerGenerator = new PiTyperGenerator(this.language);
         this.typerGenerator.outputfolder = this.outputFolder;
         this.typerGenerator.generate(typer);
-    }
+    };
 
     private generateScoper = () => {
         LOGGER.info(this, "Generating scoper");
@@ -106,7 +107,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.scoperGenerator = new ScoperGenerator(this.language);
         this.scoperGenerator.outputfolder = this.outputFolder;
         this.scoperGenerator.generate(scoper);
-    }
+    };
 
     private generateValidator = () => {
         LOGGER.info(this, "Generating validator");
@@ -119,7 +120,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.validatorGenerator = new ValidatorGenerator(this.language);
         this.validatorGenerator.outputfolder = this.outputFolder;
         this.validatorGenerator.generate(validator);
-    }
+    };
 
     private generateEditor = () => {
         LOGGER.info(this, "Generating editor");
@@ -132,7 +133,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.editorGenerator.outputfolder = this.outputFolder;
         this.editorGenerator.language = this.language;
         this.editorGenerator.generate(editor);
-    }
+    };
 
     private findDefinitionFiles() {
         if (!this.defFolder.value) {
@@ -171,11 +172,11 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         });
     }
 
-    generateLanguage= () => {
+    generateLanguage = () => {
         // generate the language
         LOGGER.info(this, "Generating language structure");
         this.language = new LanguageParser().parse(this.languageFile);
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);
-    }
+    };
 }

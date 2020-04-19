@@ -10,34 +10,31 @@ export class DefEditorLanguage {
     conceptEditors: DefEditorConcept[] = [];
     enumerations: DefEditorEnumeration[] = [];
 
-    constructor() {
-    }
+    constructor() {}
 
     findConceptEditor(cls: PiLangClass): DefEditorConcept {
-        const result =  this.conceptEditors.find(con => con.concept.referedElement() === cls);
+        const result = this.conceptEditors.find(con => con.concept.referedElement() === cls);
         // console.log("Finding editor for "+ cls.name + " is [" + result +  "]");
         return result;
     }
 
     addDefaults() {
-        this.language.classes.forEach( cls => {
+        this.language.classes.forEach(cls => {
             let conceptEditor = this.findConceptEditor(cls);
-            if(conceptEditor === null || conceptEditor === undefined){
-                console.log("Adding editor for "+ cls.name);
+            if (conceptEditor === null || conceptEditor === undefined) {
+                console.log("Adding editor for " + cls.name);
                 conceptEditor = new DefEditorConcept();
                 conceptEditor.concept = new PiLangClassReference();
                 conceptEditor.concept.name = cls.name;
                 conceptEditor.concept.language = this.language;
                 this.conceptEditors.push(conceptEditor);
             }
-            if( conceptEditor.trigger === null ){
+            if (conceptEditor.trigger === null) {
                 conceptEditor.trigger = cls.name;
             }
-            if( conceptEditor.symbol === null){
+            if (conceptEditor.symbol === null) {
                 conceptEditor.symbol = cls.name;
             }
-        })
+        });
     }
-
 }
-

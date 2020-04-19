@@ -22,12 +22,7 @@ import { NBSP, PiUtils } from "./PiUtils";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
-export function createDefaultExpressionBox(
-    exp: PiExpression,
-    role: string,
-    children: Box[],
-    initializer?: Partial<HorizontalListBox>
-): Box {
+export function createDefaultExpressionBox(exp: PiExpression, role: string, children: Box[], initializer?: Partial<HorizontalListBox>): Box {
     const leftMost = BTREE.isLeftMostChild(exp);
     const rightMost = BTREE.isRightMostChild(exp);
     if (leftMost || rightMost) {
@@ -53,21 +48,16 @@ export function createDefaultExpressionBox(
     }
 }
 
-export function createDefaultBinaryBox(
-    projection: PiProjection,
-    exp: PiBinaryExpression,
-    symbol: string,
-    style?: string
-): HorizontalListBox {
+export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, style?: string): HorizontalListBox {
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
-    const projectionToUse = (!!projection.rootProjection ? projection.rootProjection : projection);
+    const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
     result.addChildren([
         projectionToUse.getBox(exp.piLeft()),
         new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        createOperatorBox(projection["editor"], exp,symbol),
+        createOperatorBox(projection["editor"], exp, symbol),
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
@@ -105,9 +95,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         () => null,
         async (option: SelectOption) => {
             if (editor.actions && editor.actions.binaryExpressionCreators) {
-                const alias = editor.actions.binaryExpressionCreators.filter(
-                    e => (e.trigger as string) === option.id
-                )[0];
+                const alias = editor.actions.binaryExpressionCreators.filter(e => (e.trigger as string) === option.id)[0];
                 if (alias) {
                     const newExp = alias.expressionBuilder(operatorBox, alias.trigger, editor);
                     newExp.piSetLeft(exp.piLeft());

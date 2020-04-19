@@ -27,7 +27,7 @@ export interface PiScoper {
     // When parameter 'excludeSurrounding' is present, it returns the element that is visible in
     // either the namespace containing 'modelelement', without looking in surrounding namespaces. Elements in
     // surrounding namespaces are shadowed by elements with the same name in an inner namespace.
-    getFromVisibleElements( modelelement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean ): PiNamedElement;
+    getFromVisibleElements(modelelement: PiElement, name: string, metatype?: string, excludeSurrounding?: boolean): PiNamedElement;
 
     // getVisibleNames does the same as getVisibleElements, only it does not return the elements,
     // but the names of the elements

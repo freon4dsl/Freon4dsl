@@ -38,17 +38,15 @@ describe("Mobx Model", () => {
             // observe(observableRoot, "left", () => observedLeft++);
             reaction(
                 () => {
-                    return [
-                        root.element
-                    ];
+                    return [root.element];
                 },
                 element => {
                     reaktion++;
                     console.log("React " + reaktion + " on " + (!!element ? element["name"] : "element is null"));
-                });
+                }
+            );
             reaktion = 0;
             done();
-
         });
         it("references 1", () => {
             // name and reference should be to part2
@@ -104,7 +102,6 @@ describe("Mobx Model", () => {
             expect(element.singleReference.name).toBe("part1");
             expect(element.singleReference.referred).toBe(part1);
             expect(singleRef.piContainer() === null);
-
         });
 
         it("of children should be set at start", () => {
@@ -152,7 +149,6 @@ describe("Mobx Model", () => {
             expect(part3.container).toBe(null);
             expect(part3.propertyName).toBe("");
             expect(part3.propertyIndex).toBe(undefined);
-
         });
         it("should be changed when element is assigned to array", () => {
             element.manyPart.splice(0, 0, part3);
@@ -170,7 +166,6 @@ describe("Mobx Model", () => {
             expect(part3.container).toBe(element);
             expect(part3.propertyName).toBe("manyPart");
             expect(part3.propertyIndex).toBe(0);
-
         });
         it("should be changed when array is cleared", () => {
             element.manyPart.splice(0, 2);

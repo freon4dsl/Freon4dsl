@@ -92,7 +92,7 @@ export function model1() {
 }
 
 interface ctor {
-    new(...args: any[]): any;
+    new (...args: any[]): any;
 
     run: any;
 }
@@ -228,8 +228,7 @@ function willChange(
         // console.log("no change");
         case "update":
             const newValue = change.newValue;
-            const oldValue = change.
-                object[change.index];
+            const oldValue = change.object[change.index];
             if (newValue === oldValue) {
                 // new object at index
             } else {
@@ -262,7 +261,7 @@ function willChange(
             for (const i in added) {
                 // cleanup old container reference of new value
                 const element = added[i];
-                if(!!element) {
+                if (!!element) {
                     if (!!element.container) {
                         if (element.propertyIndex !== undefined) {
                             (element.container as any)[element.propertyName][element.propertyIndex] = null;

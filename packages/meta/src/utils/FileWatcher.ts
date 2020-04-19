@@ -16,9 +16,8 @@ export class FileWatcher {
         const process = this.lastChanged !== timestamp;
         this.lastChanged = timestamp;
         console.log("Change in file [" + filename + "] event [" + event + "] stats [" + timestamp + "] process [" + process + "]");
-        if(process){
+        if (process) {
             this.callback();
         }
     };
-
 }

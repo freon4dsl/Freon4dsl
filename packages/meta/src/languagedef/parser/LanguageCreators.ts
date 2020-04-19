@@ -5,7 +5,7 @@ import {
     PiLangEnumeration,
     PiLangUnion,
     PiLangEnumProperty,
-    PiLangClass,
+    PiLangClass
 } from "../metalanguage/PiLanguage";
 import { PiLangConceptReference, PiLangEnumerationReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiParseClass, PiParseLanguageUnit } from "./PiParseLanguage";
@@ -16,28 +16,30 @@ export function createLanguage(data: Partial<PiParseLanguageUnit>): PiLanguageUn
     // console.log("createLanguage " + data.name);
     const result = new PiLanguageUnit();
     // // console.log("Creating language with concepts: ");
-    if( !!data.name) {
-        result.name = data.name
+    if (!!data.name) {
+        result.name = data.name;
     }
-    if( !!data.defs) {
-        for( let def of data.defs) {
+    if (!!data.defs) {
+        for (let def of data.defs) {
             if (def instanceof PiParseClass) {
-                result.classes.push(def)
+                result.classes.push(def);
             } else if (def instanceof PiLangEnumeration) {
-                result.enumerations.push(def)
+                result.enumerations.push(def);
             } else if (def instanceof PiLangUnion) {
-                result.unions.push(def)
+                result.unions.push(def);
             }
         }
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 // Because we do not yet know whether a concept is a PiLangClass, PiLangClass, or PiLangBinaryExpressionConcept,
 // we parse it and create this temporary object, which needs to be changed into the correct one.
 // The latter is done in the checker
-export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
+export function createParseClass(data: Partial<PiParseClass>): PiParseClass {
     // console.log("createParseConcept " + data.name);
     const result = new PiParseClass();
 
@@ -55,8 +57,8 @@ export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
     if (!!data.base) {
         result.base = data.base;
     }
-    if(!!data.properties) {   
-        for(let prop of data.properties) { 
+    if (!!data.properties) {
+        for (let prop of data.properties) {
             if (prop instanceof PiLangPrimitiveProperty) {
                 result.primProperties.push(prop);
             }
@@ -76,69 +78,106 @@ export function createParseClass(data: Partial<PiParseClass>) : PiParseClass {
         result.priority = data.priority;
     }
     // console.log("created parse class " + result.name);
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnumeration {
     // console.log("createEnumeration " + data.name);
     const result = new PiLangEnumeration();
-    if( !!data.name) { result.name = data.name; }
-    if( !!data.literals) { result.literals = data.literals; }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.literals) {
+        result.literals = data.literals;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
     // console.log("createUnion " + data.name);
     const result = new PiLangUnion();
-    if( !!data.name) { result.name = data.name; }
-    if( !!data.members) { result.members = data.members; }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.members) {
+        result.members = data.members;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>): PiLangPrimitiveProperty {
     // console.log("createPrimitiveProperty " + data.name);
     const result = new PiLangPrimitiveProperty();
-    if(!!data.primType) { result.primType = data.primType; }
-    if(!!data.name) { result.name = data.name; }
+    if (!!data.primType) {
+        result.primType = data.primType;
+    }
+    if (!!data.name) {
+        result.name = data.name;
+    }
     result.isList = data.isList;
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createEnumerationProperty(data: Partial<PiLangEnumProperty>): PiLangEnumProperty {
     // console.log("createEnumerationProperty " + data.name);
     const result = new PiLangEnumProperty();
-    if(!!data.type) { result.type = data.type; }
-    if(!!data.name) { result.name = data.name; }
+    if (!!data.type) {
+        result.type = data.type;
+    }
+    if (!!data.name) {
+        result.name = data.name;
+    }
     result.isList = data.isList;
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     // // console.log("created property with name "+ result.name);
     return result;
 }
 
-
 export function createPartProperty(data: Partial<PiLangConceptProperty>): PiLangConceptProperty {
     // console.log("createPart " + data.name);
     const result = new PiLangConceptProperty();
-    if(!!data.type) { result.type = data.type; }
-    if(!!data.name) { result.name = data.name; }
+    if (!!data.type) {
+        result.type = data.type;
+    }
+    if (!!data.name) {
+        result.name = data.name;
+    }
     result.isList = !!data.isList;
     result.isPart = true;
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createReferenceProperty(data: Partial<PiLangConceptProperty>): PiLangConceptProperty {
     // console.log("createReference " + data.name);
     const result = new PiLangConceptProperty();
-    if(!!data.type) { result.type = data.type; }
-    if(!!data.name) { result.name = data.name; }
+    if (!!data.type) {
+        result.type = data.type;
+    }
+    if (!!data.name) {
+        result.name = data.name;
+    }
     result.isList = !!data.isList;
     result.isPart = false;
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -147,8 +186,11 @@ export function createReferenceProperty(data: Partial<PiLangConceptProperty>): P
 export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
     // console.log("createConceptReference " + data.name);
     const result = new PiLangConceptReference();
-    if(!!data.name) { result.name = data.name; }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
-

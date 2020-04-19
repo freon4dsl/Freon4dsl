@@ -35,10 +35,7 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
     render() {
         RENDER_LOG.info(this, "");
         const children = this.props.box.children;
-        const styleClasses = classNames(
-            this.props.box.kind === "HorizontalListBox" ? STYLES.horizontalList : STYLES.verticalList,
-            this.props.box.style
-        );
+        const styleClasses = classNames(this.props.box.kind === "HorizontalListBox" ? STYLES.horizontalList : STYLES.verticalList, this.props.box.style);
         const gridStyle =
             this.props.box.kind === "HorizontalListBox"
                 ? {
@@ -49,13 +46,7 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
                   };
         if (this.props.box.kind === "HorizontalListBox") {
             return (
-                <div
-                    id={this.props.box.id}
-                    className={styleClasses}
-                    onClick={this.oops}
-                    ref={this.setElement}
-                    tabIndex={0}
-                >
+                <div id={this.props.box.id} className={styleClasses} onClick={this.oops} ref={this.setElement} tabIndex={0}>
                     {children.map((ch, index) => (
                         <RenderBox key={ch.id + index} box={ch} editor={this.props.editor} />
                     ))}
@@ -63,14 +54,7 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
             );
         } else {
             return (
-                <div
-                    id={this.props.box.id}
-                    className={styleClasses}
-                    onClick={this.oops}
-                    style={gridStyle}
-                    ref={this.setElement}
-                    tabIndex={0}
-                >
+                <div id={this.props.box.id} className={styleClasses} onClick={this.oops} style={gridStyle} ref={this.setElement} tabIndex={0}>
                     {children.map((ch, index) => (
                         <RenderBox key={ch.id + index} box={ch} editor={this.props.editor} />
                     ))}

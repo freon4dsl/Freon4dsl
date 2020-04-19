@@ -11,5 +11,5 @@ export interface PiEnvironment {
     editor: PiEditor;
 
     projection: PiProjection;
-    projectionalEditorComponent: ProjectionalEditor ;
+    projectionalEditorComponent: ProjectionalEditor;
 }

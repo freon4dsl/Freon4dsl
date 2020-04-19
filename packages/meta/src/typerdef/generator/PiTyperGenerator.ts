@@ -19,7 +19,7 @@ export class PiTyperGenerator {
     generate(typerdef: PiTypeDefinition): void {
         this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
         this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
-        let name = typerdef? typerdef.name + " " : "";
+        let name = typerdef ? typerdef.name + " " : "";
         LOGGER.log("Generating typer: " + name + "in folder " + this.typerGenFolder);
 
         const typer = new PiTyperTemplate();
@@ -42,5 +42,5 @@ export class PiTyperGenerator {
         fs.writeFileSync(`${this.typerGenFolder}/index.ts`, typerIndexGenFile);
 
         LOGGER.log("Succesfully generated typer: " + name);
-    } 
+    }
 }

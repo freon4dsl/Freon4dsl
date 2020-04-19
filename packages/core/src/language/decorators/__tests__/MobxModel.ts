@@ -5,7 +5,6 @@ import { DecoratedModelElement, MobxModelElementImpl } from "../DecoratedModelEl
 import { observable } from "mobx";
 
 export class MobxTestElement extends MobxModelElementImpl {
-
     @observable public name: string;
 
     constructor(name: string) {
@@ -23,7 +22,7 @@ export class MobxTestElement extends MobxModelElementImpl {
 }
 
 export class MobxTestRoot extends MobxTestElement {
-    @observablepart element: MobxTestParts
+    @observablepart element: MobxTestParts;
 }
 
 export class ModelContext {
@@ -69,4 +68,3 @@ export class MobxTestReferences extends MobxTestElement {
         super(name);
     }
 }
-

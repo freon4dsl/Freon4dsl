@@ -30,10 +30,10 @@ export class EditorGenerator {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
         this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
-        let name = editDef? editDef.name : "";
+        let name = editDef ? editDef.name : "";
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder);
 
-        if(editDef === null || editDef === undefined) {
+        if (editDef === null || editDef === undefined) {
             editDef = new DefEditorLanguage();
         }
         editDef.language = this.language;
@@ -76,10 +76,7 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorGenFolder}/${Names.context(this.language)}.ts`, contextFile);
 
         LOGGER.log(`Generating ProjectionalEditorManual: ${Names.projection(this.language)}.ts`);
-        var projectionalEditorManualFile = Helpers.pretty(
-            projection.generateProjection(this.language, editDef, relativePath),
-            "ProjectionalEditorManual"
-        );
+        var projectionalEditorManualFile = Helpers.pretty(projection.generateProjection(this.language, editDef, relativePath), "ProjectionalEditorManual");
         Helpers.generateManualFile(`${this.editorFolder}/${Names.projection(this.language)}.ts`, projectionalEditorManualFile, "ManualProjections");
 
         LOGGER.log(`Generating Editor: ${Names.editor(this.language)}.ts`);
@@ -87,7 +84,10 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorGenFolder}/${Names.editor(this.language)}.ts`, editorFile);
 
         LOGGER.log(`Generating MainProjectionalEditor: ${Names.mainProjectionalEditor}.tsx`);
-        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateMainProjectionalEditor(this.language, editDef, relativePath), "MainProjectionalEditor");
+        var projectionalEditorFile = Helpers.pretty(
+            projectionalEditorTemplate.generateMainProjectionalEditor(this.language, editDef, relativePath),
+            "MainProjectionalEditor"
+        );
         fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor}.tsx`, projectionalEditorFile);
 
         // the following do not need the relativePath for imports

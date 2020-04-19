@@ -1,13 +1,6 @@
 import { Box, Grid } from "@fluentui/react-northstar";
 import * as React from "react";
-import {
-    DetailsList,
-    DetailsListLayoutMode,
-    IDetailsHeaderProps,
-    Selection,
-    IColumn,
-    ConstrainMode
-} from "office-ui-fabric-react/lib/DetailsList";
+import { DetailsList, DetailsListLayoutMode, IDetailsHeaderProps, Selection, IColumn, ConstrainMode } from "office-ui-fabric-react/lib/DetailsList";
 import { IRenderFunction } from "office-ui-fabric-react/lib/Utilities";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
 import { ScrollablePane, ScrollbarVisibility } from "office-ui-fabric-react/lib/ScrollablePane";
@@ -99,30 +92,30 @@ export class ErrorList extends React.Component<{}, IErrorListState> {
                 {/*    <Sticky stickyPosition={StickyPositionType.Header}>*/}
                 {/*        <h3 className={classNames.header} style={{ height: "20px" }}>errors found</h3>*/}
                 {/*    </Sticky>*/}
-                    <Box
-                        // content="errorList"
-                        styles={{
-                            height: "calc((100vh - 220px) * 0.20)",
-                            overflowX: "auto",
-
-                        }}>
-                        <DetailsList
-                            compact={true}
-                            items={items}
-                            columns={this._columns}
-                            setKey="set"
-                            layoutMode={DetailsListLayoutMode.fixedColumns}
-                            constrainMode={ConstrainMode.unconstrained}
-                            onRenderDetailsHeader={onRenderDetailsHeader}
-                            selection={this._selection}
-                            selectionMode={SelectionMode.single}
-                            selectionPreservedOnEmptyClick={true}
-                            ariaLabelForSelectionColumn="Toggle selection"
-                            ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-                            onItemInvoked={_onItemInvoked}
-                            onActiveItemChanged={_onActiveItemChanged}
-                        />
-                    </Box>
+                <Box
+                    // content="errorList"
+                    styles={{
+                        height: "calc((100vh - 220px) * 0.20)",
+                        overflowX: "auto"
+                    }}
+                >
+                    <DetailsList
+                        compact={true}
+                        items={items}
+                        columns={this._columns}
+                        setKey="set"
+                        layoutMode={DetailsListLayoutMode.fixedColumns}
+                        constrainMode={ConstrainMode.unconstrained}
+                        onRenderDetailsHeader={onRenderDetailsHeader}
+                        selection={this._selection}
+                        selectionMode={SelectionMode.single}
+                        selectionPreservedOnEmptyClick={true}
+                        ariaLabelForSelectionColumn="Toggle selection"
+                        ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+                        onItemInvoked={_onItemInvoked}
+                        onActiveItemChanged={_onActiveItemChanged}
+                    />
+                </Box>
                 {/*</ScrollablePane>*/}
             </div>
         );
@@ -135,7 +128,7 @@ function _onItemInvoked(item: IErrorItem): void {
 
 function _onActiveItemChanged(item: IErrorItem): void {
     // give signal to EditorEnvironment
-    EditorEnvironment.errorSelected((item));
+    EditorEnvironment.errorSelected(item);
 }
 
 const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defaultRender) => {
@@ -143,9 +136,7 @@ const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defa
         return null;
     }
 
-    const onRenderColumnHeaderTooltip: IRenderFunction<IDetailsColumnRenderTooltipProps> = tooltipHostProps => (
-        <TooltipHost {...tooltipHostProps} />
-    );
+    const onRenderColumnHeaderTooltip: IRenderFunction<IDetailsColumnRenderTooltipProps> = tooltipHostProps => <TooltipHost {...tooltipHostProps} />;
 
     return (
         <Sticky stickyPosition={StickyPositionType.Header} isScrollSynced={true}>
@@ -156,5 +147,3 @@ const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defa
         </Sticky>
     );
 };
-
-

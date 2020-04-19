@@ -15,7 +15,6 @@ export type IndentComponentProps = {
 
 @observer
 export class IndentComponent extends React.Component<IndentComponentProps, {}> {
-
     indentStyle: object;
 
     constructor(props: IndentComponentProps) {
@@ -26,16 +25,11 @@ export class IndentComponent extends React.Component<IndentComponentProps, {}> {
         RENDER_LOG.info(this, "Indent");
         const box = this.props.box;
         this.indentStyle = {
-            marginLeft: "" + (this.props.box.indent * 8) + "px"
+            marginLeft: "" + this.props.box.indent * 8 + "px"
         };
 
-
         return (
-            <div
-                id={this.props.box.id}
-                style={this.indentStyle}
-                tabIndex={0}
-            >
+            <div id={this.props.box.id} style={this.indentStyle} tabIndex={0}>
                 <RenderBox key={this.props.box.child.id} box={this.props.box.child} editor={this.props.editor} />
             </div>
         );

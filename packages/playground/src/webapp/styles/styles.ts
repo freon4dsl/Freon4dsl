@@ -2,7 +2,7 @@ export const projectitStyles: {
     placeholdertext: string;
     variable: string;
     member: string;
-    keyword: string
+    keyword: string;
     propertykeyword: string;
     indentedplaceholdertext: string;
     numeric: string;

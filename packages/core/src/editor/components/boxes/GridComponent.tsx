@@ -29,12 +29,7 @@ export class GridComponent extends React.Component<GridComponentProps, {}> {
         const className = classNames(this.props.box.style, styles.maingrid);
 
         return (
-            <div
-                id={this.props.box.id}
-                className={className}
-                onClick={this.onClick}
-                style={{ gridTemplateColumns: columns, gridTemplateRows: rows }}
-            >
+            <div id={this.props.box.id} className={className} onClick={this.onClick} style={{ gridTemplateColumns: columns, gridTemplateRows: rows }}>
                 {this.props.box.cells.map(this.renderCell)}
             </div>
         );

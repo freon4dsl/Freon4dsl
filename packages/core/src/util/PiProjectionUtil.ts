@@ -8,13 +8,9 @@ export class PiProjectionUtil {
         let result: TextBox = null;
         const value = element[property];
         if (value !== undefined && value !== null && typeof value === "string") {
-            result = new TextBox(
-                element,
-                "textbox-" + property,
-                () => element[property],
-                (v: string) => (element[property] = v),
-                { placeHolder: `<${property}>` }
-            );
+            result = new TextBox(element, "textbox-" + property, () => element[property], (v: string) => (element[property] = v), {
+                placeHolder: `<${property}>`
+            });
         } else {
             PiUtils.CHECK(false, "Property " + property + " does not exist or is not a string: " + value);
         }

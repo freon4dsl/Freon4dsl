@@ -10,8 +10,8 @@ import { ErrorList } from "./ErrorList";
 
 export const EditorArea: React.FunctionComponent = () => {
     return (
-        <div >
-            <Grid styles={{gridTemplateColumns: "1fr 7fr"}}>
+        <div>
+            <Grid styles={{ gridTemplateColumns: "1fr 7fr" }}>
                 <Box
                     // content="navigator"
                     styles={{
@@ -20,9 +20,10 @@ export const EditorArea: React.FunctionComponent = () => {
                         border: "2px solid #ccc",
                         color: "blue",
                         height: "calc((100vh - 220px) * 0.80)",
-                        overflowX: "auto",
-                    }}>
-                    <Navigator/>
+                        overflowX: "auto"
+                    }}
+                >
+                    <Navigator />
                 </Box>
                 <Box
                     styles={{
@@ -31,8 +32,9 @@ export const EditorArea: React.FunctionComponent = () => {
                         gridRow: "1",
                         border: "2px solid #ccc",
                         width: "100%",
-                        overflowX: "auto",
-                    }}>
+                        overflowX: "auto"
+                    }}
+                >
                     {EditorEnvironment.getEditor()}
                 </Box>
                 <Box
@@ -44,10 +46,11 @@ export const EditorArea: React.FunctionComponent = () => {
                         // border: '2px solid #ccc',
                         color: "blue",
                         // minheight: '100px',
-                        height: "20vh",
+                        height: "20vh"
                         // overflowX: "auto",
-                    }}>
-                    <ErrorList/>
+                    }}
+                >
+                    <ErrorList />
                 </Box>
             </Grid>
         </div>

@@ -6,7 +6,6 @@ import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
 import { environment } from "./Environment";
 
 export class ServerCommunication {
-
     static serial: GenericModelSerializer = new GenericModelSerializer();
 
     static async putModel(modelName: string) {
@@ -28,7 +27,7 @@ export class ServerCommunication {
             const model = ServerCommunication.serial.toTypeScriptInstance(modelJSON);
             environment.editor.context.rootElement = model as PiElement;
         }
-    };
+    }
 
     static async getModel(name: string): Promise<Object> {
         console.log("getModel");
@@ -51,5 +50,4 @@ export class ServerCommunication {
         }
         return {};
     }
-
 }

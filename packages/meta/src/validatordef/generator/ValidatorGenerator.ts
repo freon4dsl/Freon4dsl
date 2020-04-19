@@ -20,7 +20,7 @@ export class ValidatorGenerator {
     generate(validdef: PiValidatorDef): void {
         this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
         this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
-        let name = validdef? validdef.validatorName + " " : "";
+        let name = validdef ? validdef.validatorName + " " : "";
         LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
 
         const validator = new ValidatorTemplate();
@@ -51,5 +51,5 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
 
         LOGGER.log("Succesfully generated validator: " + name);
-    } 
+    }
 }

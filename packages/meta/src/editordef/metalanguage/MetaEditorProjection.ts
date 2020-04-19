@@ -69,7 +69,14 @@ export class DefEditorSubProjection {
     expression: PiLangExp;
 
     toString(): string {
-        return "[-[" + this.expression.sourceName + "." + this.expression.appliedfeature.sourceName + (!!this.listJoin ? " " + this.listJoin.toString() : "") + "]-]";
+        return (
+            "[-[" +
+            this.expression.sourceName +
+            "." +
+            this.expression.appliedfeature.sourceName +
+            (!!this.listJoin ? " " + this.listJoin.toString() : "") +
+            "]-]"
+        );
     }
 }
 
@@ -135,15 +142,15 @@ export class MetaEditorProjection {
         this.lines.forEach(line => {
             const firstItem = line.items[0];
             if (firstItem instanceof DefEditorProjectionIndent) {
-                ignoredIndent = (ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount));
+                ignoredIndent = ignoredIndent === 0 ? firstItem.amount : Math.min(ignoredIndent, firstItem.amount);
             }
         });
         // find indent of first line and substract that from all other lines
         this.lines.forEach(line => {
             const firstItem = line.items[0];
             if (firstItem instanceof DefEditorProjectionIndent) {
-                const indent = (firstItem.amount - ignoredIndent);
-                line.indent = (firstItem.amount - ignoredIndent);
+                const indent = firstItem.amount - ignoredIndent;
+                line.indent = firstItem.amount - ignoredIndent;
                 line.items.splice(0, 1);
             }
         });
@@ -151,7 +158,6 @@ export class MetaEditorProjection {
         this.lines.forEach(line => {
             line.items = line.items.filter(item => !(item instanceof DefEditorProjectionIndent));
         });
-
     }
 
     toString() {

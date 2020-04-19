@@ -30,7 +30,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
             LOGGER.error(this, "Editor definition could not be parsed, exiting.");
             process.exit(-1);
         }
-       this.editorGenerator.generate(editor);
+        this.editorGenerator.generate(editor);
         // TODO add check on succefullness of generation
     }
 

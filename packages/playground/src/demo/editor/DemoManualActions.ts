@@ -14,7 +14,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
             return x;
         },
         boxRoleToSelect: "num-literal-value"
-    },
+    }
 ];
 
 export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
@@ -28,5 +28,3 @@ export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
 export const MANUAL_KEYBOARD: KeyboardShortcutBehavior[] = [
     // Add your own custom keyboard shortcuts here
 ];
-
-
