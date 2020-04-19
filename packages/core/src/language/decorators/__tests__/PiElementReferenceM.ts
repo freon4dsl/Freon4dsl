@@ -17,7 +17,8 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
 
     set name(value: string) {
         this._PI_name = value;
-        this._PI_referred = TestScoper.getInstance().getFromVisibleElements(value) as T;
+        this._PI_referred = null;
+        // this._PI_referred = TestScoper.getInstance().getFromVisibleElements(value) as T;
     }
 
     // @computed
@@ -62,6 +63,7 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
             result.name = name;
         } else if( typeof name === "object" ){
             result.referred = name;
+            result.name = result.referred.name;
         }
         result.typeName = typeName;
         return result;

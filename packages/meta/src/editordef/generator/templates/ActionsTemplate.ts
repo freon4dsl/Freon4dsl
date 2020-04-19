@@ -33,7 +33,7 @@ export class ActionsTemplate {
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
             
-            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { PiElementReference, ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.classes.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract).map(c =>
@@ -72,18 +72,35 @@ export class ActionsTemplate {
                 ${flatten(language.classes.map(c => c.parts)).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referedElement();
-                return `
-                {
-                    activeInBoxRoles: ["new-${part.name}"],
-                    trigger: "${!!part.type.referedElement().trigger ? part.type.referedElement().getTrigger() : part.name}",
-                    action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                        var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
-                        const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
-                        parent.${part.name}.push(new${part.name});
-                        return new${part.name};
-                    },
-                    boxRoleToSelect: "${part.name}-name"
-                }
+                    return `
+                        {
+                            activeInBoxRoles: ["new-${part.name}"],
+                            trigger: "${!!part.type.referedElement().trigger ? part.type.referedElement().getTrigger() : part.name}",
+                            action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                                var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                                const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                                parent.${part.name}.push(new${part.name});
+                                return new${part.name};
+                            },
+                            boxRoleToSelect: "${part.name}-name"
+                        }
+                `}).join(",")}
+                ,
+                ${flatten(language.classes.map(c => c.references)).filter(p => p.isList).map(reference => {
+                    const parentConcept = reference.owningConcept;
+                    const partConcept = reference.type.referedElement();
+                    return `
+                        {
+                            activeInBoxRoles: ["new-${reference.name}"],
+                            trigger: "${!!reference.type.referedElement().trigger ? reference.type.referedElement().getTrigger() : reference.name}",
+                            action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                                var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                                const newBase: PiElementReference< ${Names.concept(reference.type.referedElement())}> = PiElementReference.createNamed("", null);
+                                parent.${reference.name}.push(newBase);
+                                return null;
+                            },
+                            boxRoleToSelect: "${reference.name}-name"
+                        }
                 `}).join(",")}
             ];
             

@@ -2,7 +2,7 @@ import axios from "axios";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
-import { STYLES } from "../toolbars/ToolbarStyles";
+import { projectitStyles } from "../styles/styles";
 import { PiEditor, } from "@projectit/core";
 import { ModelSerializer, ModelInfo } from "@projectit/core";
 import * as React from "react";
@@ -27,7 +27,7 @@ export class SaveComponent extends React.Component<SaveProps, {}> {
                     Name:
                     <input type="text" value={this.modelName} onChange={this.onChange} />
                 </label>
-                <button className={STYLES.toolbarItem} onClick={this.onClick}>
+                <button className={projectitStyles.myButton} onClick={this.onClick}>
                     Save Model
                 </button>
                 <br />

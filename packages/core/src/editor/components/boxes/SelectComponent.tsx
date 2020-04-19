@@ -87,6 +87,7 @@ export class SelectComponent extends AbstractChoiceComponent {
                 return this.props.box.getOptions();
             }
         }
+        return [];
     };
 
     stopEditing = () => {

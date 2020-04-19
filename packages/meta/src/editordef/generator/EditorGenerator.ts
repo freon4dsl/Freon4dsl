@@ -83,11 +83,11 @@ export class EditorGenerator {
         Helpers.generateManualFile(`${this.editorFolder}/${Names.projection(this.language)}.ts`, projectionalEditorManualFile, "ManualProjections");
 
         LOGGER.log(`Generating Editor: ${Names.editor(this.language)}.ts`);
-        var editorFile = Helpers.pretty(editorTemplate.generateEditor(this.language, editDef, true, relativePath), "Editor");
+        var editorFile = Helpers.pretty(editorTemplate.generateEditor(this.language, editDef, relativePath), "Editor");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.editor(this.language)}.ts`, editorFile);
 
         LOGGER.log(`Generating MainProjectionalEditor: ${Names.mainProjectionalEditor}.tsx`);
-        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateMainProjectionalEditor(this.language, editDef, true, relativePath), "MainProjectionalEditor");
+        var projectionalEditorFile = Helpers.pretty(projectionalEditorTemplate.generateMainProjectionalEditor(this.language, editDef, relativePath), "MainProjectionalEditor");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.mainProjectionalEditor}.tsx`, projectionalEditorFile);
 
         // the following do not need the relativePath for imports

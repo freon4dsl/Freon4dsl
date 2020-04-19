@@ -28,8 +28,12 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@types/react": "^16.9.5",
-    "@types/react-dom": "^16.9.1",
+    "@uifabric/example-data": "^7.0.9",
+    "@uifabric/fluent-theme": "^7.1.51",
+    "@fluentui/react": "^7.105.13",
+    "@fluentui/react-northstar": "^0.47.0",
+    "@types/react": "16.8.15",
+    "@types/react-dom": "16.8.4",
     "@types/react-router": "^5.1.4",
     "@types/webpack": "^4.39.2",
     "@types/webpack-env": "^1.14.0",

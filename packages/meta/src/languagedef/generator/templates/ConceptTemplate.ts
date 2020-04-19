@@ -1,6 +1,14 @@
 import { Names } from "../../../utils/Names";
 import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
-import { PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangBinaryExpressionConcept, PiLangExpressionConcept, PiLangClass } from "../../metalanguage/PiLanguage";
+import {
+    PiLangConceptProperty,
+    PiLangEnumProperty,
+    PiLangPrimitiveProperty,
+    PiLangBinaryExpressionConcept,
+    PiLangExpressionConcept,
+    PiLangClass,
+    PiLanguageUnit
+} from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
@@ -14,11 +22,11 @@ export class ConceptTemplate {
         // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
         const isBinaryExpression = concept.binaryExpression();
-        const isExpression = (!isBinaryExpression) && concept.expression() ;
+        const isExpression = (!isBinaryExpression) && concept.expression();
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (isExpression ? "PiExpression": (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
+        const implementsPi = (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
 
-        const binExpConcept : PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
+        const binExpConcept: PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
         // const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
 
         const imports = Array.from(
@@ -50,19 +58,29 @@ export class ConceptTemplate {
             mobxImports.push("observablepart");
         }
         if (concept.references.some(ref => ref.isList)) {
-            if( !mobxImports.some( im => im === "observablelistpart")) {
+            if (!mobxImports.some(im => im === "observablelistpart")) {
                 mobxImports.push("observablelistpart");
             }
         }
         if (concept.references.some(ref => !ref.isList)) {
-            if( !mobxImports.some( im => im === "observablepart")) {
+            if (!mobxImports.some(im => im === "observablepart")) {
                 mobxImports.push("observablepart");
+            }
+        }
+        if (concept.enumProperties.some(ref => ref.isList)) {
+            if (!mobxImports.some(im => im === "observablelistreference")) {
+                mobxImports.push("observablelistreference");
+            }
+        }
+        if (concept.enumProperties.some(ref => !ref.isList)) {
+            if (!mobxImports.some(im => im === "observablereference")) {
+                mobxImports.push("observablereference");
             }
         }
 
         // Template starts here
         const result = `
-            ${(concept.primProperties.length > 0 || concept.enumProperties.length > 0)? `import { observable } from "mobx";` : ""}
+            ${(concept.primProperties.length > 0 || concept.enumProperties.length > 0) ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
             import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PROJECTITCORE}";
             import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
@@ -83,12 +101,12 @@ export class ConceptTemplate {
                         } else {
                             this.$id = uuid.v4();
                         }` : ""
-                    }
+        }
                     ${concept.binaryExpression() ? `
                     this.left = new ${Names.concept(language.expressionPlaceholder())};
                     this.right = new ${Names.concept(language.expressionPlaceholder())};
-                    `: ""
-                    }
+                    ` : ""
+        }
                 }
                 
                 ${concept.primProperties.map(p => this.generatePrimitiveProperty(p)).join("")}
@@ -104,7 +122,7 @@ export class ConceptTemplate {
                 piId(): string {
                     return this.$id;
                 }`
-                : ""}
+            : ""}
                 
                 piIsExpression(): boolean {
                     return ${isExpression || isBinaryExpression};
@@ -114,13 +132,13 @@ export class ConceptTemplate {
                     return ${isBinaryExpression};
                 }
                 
-                ${ isExpression || isBinaryExpression ? `
+                ${isExpression || isBinaryExpression ? `
                 piIsExpressionPlaceHolder(): boolean {
                     return ${concept.isExpressionPlaceholder()};
                 }`
-                : ""}
+            : ""}
                 
-                ${ isBinaryExpression && binExpConcept != null ? `
+                ${isBinaryExpression && binExpConcept != null ? `
                 piPriority(): number {
                     return ${binExpConcept.getPriority() ? binExpConcept.getPriority() : "-1"};
                 }
@@ -141,7 +159,7 @@ export class ConceptTemplate {
                     this.right = value;
                 }
                 `
-                : ""}
+            : ""}
 
                 ${hasName ? `
                 static create(name: string): ${concept.name} {
@@ -183,5 +201,4 @@ export class ConceptTemplate {
             ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.referedElement())}>${arrayType};
         `;
     }
-
 }

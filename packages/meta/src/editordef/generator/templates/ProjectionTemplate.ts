@@ -333,13 +333,31 @@ export class ProjectionTemplate {
             `
     }
 
+    conceptReferenceProjectionInList(appliedFeature: PiLangConceptProperty) {
+        const featureType = appliedFeature.type.name;
+        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}-" + index, "< select ${appliedFeature.name}>", "${featureType}",
+                    () => {
+                        if (!!element.${appliedFeature.name}) {
+                            return { id: ent.name, label: ent.name };
+                        } else {
+                            return null;
+                        }
+                    },
+                    (option: SelectOption) => {
+                        ent.name = option.label;
+                    }
+                )
+            `
+    }
+
+
     conceptReferenceListProjection(direction: string, reference: PiLangConceptProperty) {
         return `new ${direction}ListBox(
                     element,
                     "${reference.name}-list",
-                    element.${reference.name}.map(ent => {
-                        ${this.conceptReferenceProjection(reference) + ","}
-                    }),
+                    element.${reference.name}.map((ent, index) => {
+                        return ${this.conceptReferenceProjectionInList(reference) }
+                    }), //  this one?
                     {
                         style: ${Names.styles}.indent
                     }

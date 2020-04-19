@@ -19,7 +19,6 @@ export const WEBAPP_FOLDER = "../webapp"
 export const APP_FOLDER = "../webapp/app"
 export const ASSETS_FOLDER = "../webapp/assets"
 export const STYLES_FOLDER = "../webapp/styles"
-export const TOOLBARS_FOLDER = "../webapp/toolbars"
 // the predefined interfaces and classes can be found in ...
 export const PROJECTITCORE = "@projectit/core";
 export const scoperInterface = PROJECTITCORE;
