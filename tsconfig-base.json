@@ -5,6 +5,7 @@
     "declarationMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
     "jsx": "react",
     "lib": [
       "dom",
@@ -13,6 +14,7 @@
     ],
     "module": "commonjs",
     "moduleResolution": "node",
+    "newLine": "lf",
     "noEmit": false,
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
