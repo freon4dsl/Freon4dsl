@@ -12,7 +12,7 @@ import {
     ListJoinType,
     MetaEditorProjectionLine
 } from "../../metalanguage";
-import { langRefToTypeScript } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
 export class UnparserTemplate {
     constructor() {
@@ -131,18 +131,18 @@ export class UnparserTemplate {
                         if (item.listJoin.joinType === ListJoinType.Terminator) {
                             joinType = "SeparatorType.Terminator";
                         }
-                        result = result + `\" + this.unparseList(${langRefToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
+                        result = result + `\" + this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
                     } else {
-                        result = result + `\" + this.unparse(${langRefToTypeScript(item.expression)}) + \"`;
+                        result = result + `\" + this.unparse(${langExpToTypeScript(item.expression)}) + \"`;
                     }
                 } else {
                     // the expression is of primitive type
                     if (myElem.isList) {
-                        result = result + `\" + ${langRefToTypeScript(item.expression)}.map(listElem => {
-                                    ${langRefToTypeScript(item.expression)}
+                        result = result + `\" + ${langExpToTypeScript(item.expression)}.map(listElem => {
+                                    ${langExpToTypeScript(item.expression)}
                                 }) + \"`;
                     } else {
-                        result = result + `\" + ${langRefToTypeScript(item.expression)} + \"`;
+                        result = result + `\" + ${langExpToTypeScript(item.expression)} + \"`;
                     }
                 }
             }

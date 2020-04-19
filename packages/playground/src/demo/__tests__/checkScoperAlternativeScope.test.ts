@@ -1,5 +1,5 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
-import { DemoModel, DemoFunction } from "../language/gen";
+import { DemoModel, DemoFunction, AppliedFeature } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("testing Alternative Scopes", () => {
@@ -12,37 +12,26 @@ describe("testing Alternative Scopes", () => {
       done();
     });
 
-    test("isInscope 'DemoModel_1' in applied expression", () => {
-      // let nameTotest : string = "DemoModel_1";
-      // expect(scoper.isInScope(model, nameTotest)).toBe(false);
-      // // test if nameTotest is known in model functions
-      // model.functions.forEach(fun => {
-      //   expect(scoper.isInScope(fun, nameTotest)).toBe(false);
-      // });
-      // // test the same on entities and entity functions
-      // model.entities.forEach(ent => {
-      //   expect(scoper.isInScope(ent, nameTotest)).toBe(false);
-      //   ent.functions.forEach(fun => {
-      //     expect(scoper.isInScope(fun, nameTotest)).toBe(false);
-      //   });
-      // });
-    });  
+    test("isInscope of applied expression 'myfirstAppliedFeature'", () => {
+      let modelAttr : string = "Person";
+      let companyAttr : string = "VAT_Number";
+      let personAttr : string = "age";
+      let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature;
+      expect(scoper.isInScope(appliedFeature, modelAttr)).toBe(false);
+      expect(scoper.isInScope(appliedFeature, companyAttr)).toBe(false);
+      expect(scoper.isInScope(appliedFeature, personAttr)).toBe(true);
+    });
+
+    test("isInscope of applied expression 'mysecondAppliedFeature'", () => {
+      let modelAttr : string = "Person";
+      let companyAttr : string = "VAT_Number";
+      let personAttr : string = "age";
+      let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
+      expect(scoper.isInScope(appliedFeature, modelAttr)).toBe(false);
+      expect(scoper.isInScope(appliedFeature, companyAttr)).toBe(false);
+      expect(scoper.isInScope(appliedFeature, personAttr)).toBe(false);
+    });
 
   });
 });
 
-function testEntity(scoper: DemoScoper, model: DemoModel, nameTotest: string) {
-  expect(scoper.isInScope(model, nameTotest, "DemoEntity")).toBe(true);
-  // test if nameTotest is known in model functions
-  model.functions.forEach(fun => {
-    expect(scoper.isInScope(fun, nameTotest, "DemoEntity")).toBe(true);
-    expect(scoper.isInScope(fun, nameTotest, "DemoFunction")).toBe(false);
-  });
-  // test the same on entities and entity functions
-  model.entities.forEach(ent => {
-    expect(scoper.isInScope(ent, nameTotest)).toBe(true);
-    ent.functions.forEach(fun => {
-      expect(scoper.isInScope(fun, nameTotest)).toBe(true);
-    });
-  });
-}

@@ -5,10 +5,7 @@ isnamespace { DemoModel DemoEntity DemoFunction DemoAttributeType }
 // Inheritance scope
 DemoEntity {
     namespace_addition = self.baseEntity
-    // the following are used for testing
-    //namespace_addition = self.name
-    //namespace_addition = self.declaredType
-    //namespace_addition = self.attributes
+
 }
 /* to be added when interfaces are supported
 DemoEntityInterface {

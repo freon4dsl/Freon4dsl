@@ -1,7 +1,7 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLangConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
-import { langRefToTypeScript } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
 export class NamespaceTemplate {
     constructor() {
@@ -179,9 +179,9 @@ export class NamespaceTemplate {
                         result = result.concat(`
                         // generated based on '${xx.toPiString()}' 
                         if (!!this._myElem.${xx.appliedfeature.toPiString()}) {
-                            if (this.isNameSpace(this._myElem.${langRefToTypeScript(xx.appliedfeature)})) {
+                            if (this.isNameSpace(this._myElem.${langExpToTypeScript(xx.appliedfeature)})) {
                                 // wrap the found element
-                                let extraNamespace = new ${generatedClassName}(this._myElem.${langRefToTypeScript(xx.appliedfeature)});
+                                let extraNamespace = new ${generatedClassName}(this._myElem.${langExpToTypeScript(xx.appliedfeature)});
                                 result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
                             }                  
                         }`);

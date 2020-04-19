@@ -1,7 +1,7 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
-import { langRefToTypeScript } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
 export class CheckerTemplate {
     constructor() {
@@ -89,22 +89,22 @@ export class CheckerTemplate {
             ruleSet.rules.map(r => 
                 `// ${r.toPiString()}
                 ${(r instanceof CheckEqualsTypeRule ?
-                    `if(!this.typer.equalsType(${langRefToTypeScript(r.type1)}, ${langRefToTypeScript(r.type2)})) {
-                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langRefToTypeScript(r.type1)}) 
-                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langRefToTypeScript(r.type2)}) + "'", ${langRefToTypeScript(r.type1)}));
+                    `if(!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
+                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}) 
+                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}) + "'", ${langExpToTypeScript(r.type1)}));
                     }`
                 : (r instanceof CheckConformsRule ?
-                    `if(!this.typer.conformsTo(${langRefToTypeScript(r.type1)}, ${langRefToTypeScript(r.type2)})) {
-                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langRefToTypeScript(r.type1)}) + 
-                        "' does not conform to (the type of) '"+ this.myUnparser.unparse(${langRefToTypeScript(r.type2)}) + "'", ${langRefToTypeScript(r.type1)}));
+                    `if(!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
+                        this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}) + 
+                        "' does not conform to (the type of) '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type2)}) + "'", ${langExpToTypeScript(r.type1)}));
                     }`           
                 : (r instanceof NotEmptyRule ?
-                    `if(${langRefToTypeScript(r.property)}.length == 0) {
-                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${langRefToTypeScript(r.property)}));
+                    `if(${langExpToTypeScript(r.property)}.length == 0) {
+                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${langExpToTypeScript(r.property)}));
                     }`
                 : (r instanceof ValidNameRule ?
-                    `if(!this.isValidName(${langRefToTypeScript(r.property)})) {
-                        this.errorList.push(new PiError("'" + ${langRefToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
+                    `if(!this.isValidName(${langExpToTypeScript(r.property)})) {
+                        this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
                     }`
                 : ""))))}`
             ).join("\n")}`;
