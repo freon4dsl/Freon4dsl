@@ -53,6 +53,7 @@ export class UnparserTemplate {
                 if(modelelement instanceof ${concept.name}) {
                     return this.unparse${concept.name}(modelelement);
                 }`).join("")}
+                return "";
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}

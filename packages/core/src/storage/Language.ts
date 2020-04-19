@@ -16,10 +16,16 @@ export type Concept = {
     constructor: () => PiElement;
 };
 
+export type Enumeration = {
+    typeName: string;
+    literal: (literal: string) => PiElement;
+};
+
 export class Language {
 
     private static theInstance: Language = null;
     private concepts : Map<string, Concept> = new Map<string, Concept>();
+    private enumerations : Map<string, Enumeration> = new Map<string, Enumeration>();
 
     private constructor() {
     }
@@ -35,6 +41,10 @@ export class Language {
         return this.concepts.get(typeName);
     }
 
+    enumeration(typeName): Enumeration {
+        return this.enumerations.get(typeName);
+    }
+
     conceptProperty(typeName, propertyName): Property {
         return this.concepts.get(typeName).properties.get(propertyName);
     }
@@ -44,12 +54,25 @@ export class Language {
         return this.concepts.get(typeName).properties.values();
     }
 
+    /**
+     * Create a new instance of the class `typeName`.
+     * @param typeName
+     */
     createConcept(typeName: string): PiElement {
         return this.concepts.get(typeName).constructor();
     }
 
-    addConcept(conceptName: string, concept: Concept){
-        this.concepts.set(conceptName, concept);
+    /**
+     * Add a concept definition to this language
+     * @param conceptName
+     * @param concept
+     */
+    addConcept(concept: Concept){
+        this.concepts.set(concept.typeName, concept);
+    }
+
+    addEnumeration(enumeration: Enumeration){
+        this.enumerations.set(enumeration.typeName, enumeration);
     }
 
     referenceCreator: (name: string, type: string) => any;

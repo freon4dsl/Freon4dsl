@@ -83,6 +83,7 @@ export class DemoUnparser {
         if (modelelement instanceof DemoAttributeType) {
             return this.unparseDemoAttributeType(modelelement, includeChildren);
         }
+        return "";
     }
 
     public unparseDemoModel(modelelement: DemoModel, includeChildren?: boolean): string {
@@ -176,6 +177,7 @@ export class DemoUnparser {
         if (modelelement instanceof DemoVariableRef) {
             return this.unparseDemoVariableRef(modelelement, includeChildren);
         }
+        return "";
     }
 
     public unparseDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean): string {
@@ -192,6 +194,7 @@ export class DemoUnparser {
         if (modelelement instanceof DemoBooleanLiteralExpression) {
             return this.unparseDemoBooleanLiteralExpression(modelelement, includeChildren);
         }
+        return "";
     }
 
     public unparseDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean): string {

@@ -58,7 +58,7 @@ export class ProjectItParser extends CommandLineParser {
         } catch (e) {
             console.log(e.stack);
         }
-
+        return null;
     }
 }
 
