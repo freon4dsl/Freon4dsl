@@ -46,7 +46,7 @@ export class NamespaceTemplate {
                 if (ns !== null) {
                     result = ns.internalVis(metatype); 
                     // add extra namespaces from the scope definition
-                    result = result.concat(this.addExtras()); 
+                    result = result.concat(this.addExtras(metatype, excludeSurrounding)); 
                 }
                 if(!(!(excludeSurrounding === undefined) && excludeSurrounding)) { 
                     // add elements from surrounding Namespaces

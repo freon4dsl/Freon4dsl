@@ -87,6 +87,13 @@ export class DemoModelCreator {
         return inheritanceModel;
     }
 
+    public createInheritanceWithLoop(): DemoModel {
+        let result = this.createInheritanceModel();
+        // let Vehicle inherit from RaceBike
+        result.entities[0].baseEntity = new PiElementReference<DemoEntity>(result.entities[3], "DemoEntity");
+        return result;
+    }
+
     public createCorrectModel(): DemoModel {
         let correctModel: DemoModel = DemoModel.create("DemoModel_1");
 
