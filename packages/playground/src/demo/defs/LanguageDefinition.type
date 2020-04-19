@@ -4,12 +4,16 @@ typer Demo for language Demo
 istype {DemoType, DemoEntity, DemoAttributeType }
 
 anytype {
-    //conformsto self.base
+    // conformsto self.base
     //conformsto self.implements
     conformsto DemoAttributeType:ANY
     equalsto DemoAttributeType:ANY
 }
-
+/*
+DemoEntity {
+    conformsto self.base
+}
+*/
 DemoAttribute {
     infertype self.declaredType
 }

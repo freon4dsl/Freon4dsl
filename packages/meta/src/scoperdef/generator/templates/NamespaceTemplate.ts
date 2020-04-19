@@ -32,9 +32,13 @@ export class NamespaceTemplate {
 
         export class ${generatedClassName} {
             _myElem : ${allLangConcepts}; // any element in the model
+            _searched: ${allLangConcepts}[] = [];
         
-            constructor(elem : ${allLangConcepts}) {
+            constructor(elem : ${allLangConcepts}, searched?: ${allLangConcepts}[]) {
                 this._myElem = elem;
+                if (!!searched) {
+                    this._searched = searched;
+                }
             }
         
             // if excludeSurrounding is true, then the elements from all parent namespaces are 
@@ -45,6 +49,7 @@ export class NamespaceTemplate {
                 let ns = this.getSurroundingNamespace(this._myElem);
                 if (ns !== null) {
                     result = ns.internalVis(metatype); 
+                    this._searched.push(this._myElem);
                     // add extra namespaces from the scope definition
                     result = result.concat(this.addExtras(metatype, excludeSurrounding)); 
                 }
@@ -169,21 +174,27 @@ export class NamespaceTemplate {
                         result = result.concat(`
                         // generated based on '${xx.toPiString()}'
                         for (let ${loopVar} of this._myElem.${xx.appliedfeature.toPiString()}) {
-                            if (this.isNameSpace(${loopVarExtended})) {
-                                // wrap the found element
-                                let extraNamespace = new ${generatedClassName}(${loopVarExtended});
-                                result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                            if (!this._searched.includes(this._myElem.${langExpToTypeScript(xx.appliedfeature)}) ) {
+                                if (this.isNameSpace(${loopVarExtended})) {
+                                    // wrap the found element
+                                    let extraNamespace = new ${generatedClassName}(${loopVarExtended}, this._searched);
+                                    result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                                    this._searched.push(this._myElem.${langExpToTypeScript(xx.appliedfeature)});
+                                }
                             }
                         }`);
                     } else {
                         result = result.concat(`
                         // generated based on '${xx.toPiString()}' 
                         if (!!this._myElem.${xx.appliedfeature.toPiString()}) {
-                            if (this.isNameSpace(this._myElem.${langExpToTypeScript(xx.appliedfeature)})) {
-                                // wrap the found element
-                                let extraNamespace = new ${generatedClassName}(this._myElem.${langExpToTypeScript(xx.appliedfeature)});
-                                result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
-                            }                  
+                            if (!this._searched.includes(this._myElem.${langExpToTypeScript(xx.appliedfeature)}) ) {
+                                if (this.isNameSpace(this._myElem.${langExpToTypeScript(xx.appliedfeature)})) {
+                                    // wrap the found element
+                                    let extraNamespace = new ${generatedClassName}(this._myElem.${langExpToTypeScript(xx.appliedfeature)}, this._searched);
+                                    result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                                    this._searched.push(this._myElem.${langExpToTypeScript(xx.appliedfeature)});
+                                }  
+                            }                
                         }`);
                     }
                 }
