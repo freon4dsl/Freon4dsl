@@ -14,12 +14,12 @@ import {
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoUnparser } from "../unparser/DemoUnparser";
-import { makeLiteralExp } from "./HelperFunctions";
+import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import * as fs from "fs";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
-        const model: DemoModel = new DemoModelCreator().model;
+        const model: DemoModel = new DemoModelCreator().createCorrectModel();
         const unparser = new DemoUnparser();
 
         beforeEach(done => {
@@ -77,8 +77,8 @@ describe("Testing Unparser", () => {
             // variableExpression.attribute.name = "Person";
             // variableExpression.attribute.declaredType = DemoAttributeType.String;
 
-            const divideExpression = DemoModelCreator.MakePlusExp("1", "2");
-            const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, variableExpression);
+            const divideExpression = MakePlusExp("1", "2");
+            const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.unparse(multiplyExpression);
             expect(result).toBe("1+2*Person");
         });
@@ -89,7 +89,7 @@ describe("Testing Unparser", () => {
             const AAP = DemoVariable.create("AAP");
             determine.parameters.push(AAP);
             // AAP.declaredType = DemoAttributeType.Integer;
-            determine.expression = DemoModelCreator.MakePlusExp("Hello Demo", "Goodbye");
+            determine.expression = MakePlusExp("Hello Demo", "Goodbye");
             // determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             result = unparser.unparse(determine);
@@ -107,7 +107,7 @@ describe("Testing Unparser", () => {
             const first = DemoFunction.create("first");
             const Resultvar = DemoVariable.create("Resultvar");
             first.parameters.push(Resultvar);
-            first.expression = DemoModelCreator.MakePlusExp("5", "24");
+            first.expression = MakePlusExp("5", "24");
             personEnt.functions.push(first);
 
             // add types to the model elements

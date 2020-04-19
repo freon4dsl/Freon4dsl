@@ -26,16 +26,10 @@ import {
     DemoLiteralExpression,
     AppliedFeature
 } from "../language/gen";
-import { makeLiteralExp } from "./HelperFunctions";
+import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import { DemoUnparser } from "../unparser/DemoUnparser";
 
 export class DemoModelCreator {
-    model: DemoModel;
-    myUnparser = new DemoUnparser();
-
-    constructor() {
-        this.model = this.createCorrectModel();
-    }
 
     public createModelWithAppliedfeature(): DemoModel {
         let result = this.createCorrectModel();
@@ -44,12 +38,12 @@ export class DemoModelCreator {
         expression.attribute = new PiElementReference<DemoAttribute>(length.parameters[0], "DemoAttribute"); // Variable1 : Person
         let xx: AppliedFeature = new AppliedFeature();
         xx.value = "myfirstAppliedFeature";
+        xx.type = new PiElementReference<DemoEntity>(result.entities[1], "DemoEntity"); // Company
         expression.appliedfeature = xx;
         let yy: AppliedFeature = new AppliedFeature();
         yy.value = "mysecondAppliedFeature";
         xx.appliedfeature = yy;
         length.expression = expression;
-        console.log(this.myUnparser.unparse(length, true));
         return result;
     }
 
@@ -107,11 +101,11 @@ export class DemoModelCreator {
         const determine = DemoFunction.create("determine");
         const AAP = DemoVariable.create("AAP")
         determine.parameters.push(AAP);
-        determine.expression = DemoModelCreator.MakePlusExp("Hello Demo", "Goodbye")
+        determine.expression = MakePlusExp("Hello Demo", "Goodbye")
         // determine(AAP) = "Hello Demo" + "Goodbye"
 
         const last = DemoFunction.create("last");
-        last.expression = DemoModelCreator.MakePlusExp("5", "woord");
+        last.expression = MakePlusExp("5", "woord");
         // last() = 5 + "woord"
 
         correctModel.functions.push(length);
@@ -126,7 +120,7 @@ export class DemoModelCreator {
         const first = DemoFunction.create("first");
         const Resultvar = DemoVariable.create("Resultvar");
         first.parameters.push(Resultvar);
-        first.expression = DemoModelCreator.MakePlusExp("5", "24");
+        first.expression = MakePlusExp("5", "24");
         personEnt.functions.push(first);
         // Person { age, first(Resultvar) = 5 + 24 }
 
@@ -199,12 +193,12 @@ export class DemoModelCreator {
         // (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
         const ifExpression = new DemoIfExpression();
-        ifExpression.condition = DemoModelCreator.MakeLessThenExp("2", "5"); //("<")
+        ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
         ifExpression.whenTrue = makeLiteralExp("1");
         ifExpression.whenFalse = makeLiteralExp("5");
-        const divideExpression = DemoModelCreator.MakeDivideExp("1", "2");
-        const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, "Person");
-        const plusExpression = DemoModelCreator.MakePlusExp(ifExpression, multiplyExpression);
+        const divideExpression = MakeDivideExp("1", "2");
+        const multiplyExpression = MakeMultiplyExp(divideExpression, "Person");
+        const plusExpression = MakePlusExp(ifExpression, multiplyExpression);
 
         return plusExpression;
     }
@@ -216,7 +210,7 @@ export class DemoModelCreator {
         // varRef.referredName = "Variable1";
         varRef.attribute = new PiElementReference<DemoAttribute>(attr, "DemoAttribute");
 
-        const equals: DemoBinaryExpression = DemoModelCreator.MakeEqualsExp("No", varRef); // ("=");
+        const equals: DemoBinaryExpression = MakeEqualsExp("No", varRef); // ("=");
         // equals : "No" = Variable1
 
         const leftOr = new DemoOrExpression();
@@ -224,10 +218,10 @@ export class DemoModelCreator {
         leftOr.left = makeLiteralExp("Yes");
         // leftOr : ("Yes" or ("No" = Variable1))
 
-        const rightAnd: DemoBinaryExpression = DemoModelCreator.MakeLessThenExp("x", "122");
+        const rightAnd: DemoBinaryExpression = MakeLessThenExp("x", "122");
         // rightAnd : ("x" < 122)
 
-        const leftAnd = DemoModelCreator.MakeLessThenExp("Hello World", "Hello Universe");
+        const leftAnd = MakeLessThenExp("Hello World", "Hello Universe");
         // leftAnd : ("Hello World" < "Hello Universe")
 
         const rightOr = new DemoAndExpression();
@@ -240,65 +234,18 @@ export class DemoModelCreator {
         thenExpression.right = rightOr;
         // thenExpression : ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe")
 
-        const divideExpression = DemoModelCreator.MakePlusExp("1", "2");
+        const divideExpression = MakePlusExp("1", "2");
         // divideExpression : (1/2)
 
-        const multiplyExpression = DemoModelCreator.MakeMultiplyExp(divideExpression, new DemoPlaceholderExpression());
+        const multiplyExpression = MakeMultiplyExp(divideExpression, new DemoPlaceholderExpression());
         // multiplyExpression : (1/2) * ...
 
-        const plusExpression = DemoModelCreator.MakePlusExp(thenExpression, multiplyExpression);
+        const plusExpression = MakePlusExp(thenExpression, multiplyExpression);
         // plusexpression : ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         return plusExpression;
     }
 
-    public static MakeLessThenExp(left: any, right: any): DemoComparisonExpression {
-        const condition: DemoBinaryExpression = new DemoLessThenExpression(); // ("<");
-        DemoModelCreator.addToBinaryExpression(left, condition, right);
-        return condition;
-    }
 
-    public static MakeGreaterThenExp(left: any, right: any): DemoComparisonExpression {
-        const condition: DemoBinaryExpression = new DemoGreaterThenExpression(); // (">");
-        DemoModelCreator.addToBinaryExpression(left, condition, right);
-        return condition;
-    }
-
-    public static MakeEqualsExp(left: any, right: any): DemoComparisonExpression {
-        const condition: DemoBinaryExpression = new DemoEqualsExpression(); // ("=");
-        DemoModelCreator.addToBinaryExpression(left, condition, right);
-        return condition;
-    }
-
-    public static MakeMultiplyExp(left: any, right: any): DemoMultiplyExpression {
-        const multiplication: DemoMultiplyExpression = new DemoMultiplyExpression(); // ("*");
-        DemoModelCreator.addToBinaryExpression(left, multiplication, right);
-        return multiplication;
-    }
-
-    public static MakePlusExp(left: any, right: any): DemoPlusExpression {
-        const plusExpression: DemoBinaryExpression = new DemoPlusExpression(); // ("+");
-        DemoModelCreator.addToBinaryExpression(left, plusExpression, right);
-        return plusExpression;
-    }
-
-    public static MakeDivideExp(left: any, right: any): DemoDivideExpression {
-        const divideExpression: DemoBinaryExpression = new DemoDivideExpression(); // ("/");
-        DemoModelCreator.addToBinaryExpression(left, divideExpression, right);
-        return divideExpression;
-    }
-
-    private static addToBinaryExpression(left: any, binary: DemoBinaryExpression, right: any) {
-        binary.left = DemoModelCreator.determineType(left);
-        binary.right = DemoModelCreator.determineType(right);
-    }
-
-    private static determineType(incoming: any): DemoExpression {
-        if (incoming instanceof DemoExpression) {
-            return incoming;
-        } else {
-            return makeLiteralExp(incoming);
-        }
-    }
 
 }

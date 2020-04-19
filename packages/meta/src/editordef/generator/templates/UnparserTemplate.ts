@@ -80,7 +80,7 @@ export class UnparserTemplate {
     }
 
     makeConceptMethod (conceptDef: DefEditorConcept ) : string {
-        console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
+        // console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
         let myConcept: PiLangConcept = conceptDef.concept.referedElement();
         let name: string = myConcept.name;
         let lines: MetaEditorProjectionLine[] = conceptDef.projection?.lines;

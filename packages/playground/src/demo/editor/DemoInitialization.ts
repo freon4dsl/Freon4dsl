@@ -4,6 +4,6 @@ import { DemoModel } from "../language/gen";
 export class DemoInitialization {
 
     initialize(): DemoModel {
-        return new DemoModelCreator().model;
+        return new DemoModelCreator().createCorrectModel();
     }
 }

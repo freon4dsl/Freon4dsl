@@ -22,6 +22,9 @@ DemoVariable  {
 DemoExpression {
     abstract infertype 
 }
+AppliedFeature {
+    infertype self.type
+}
 DemoStringLiteralExpression {
     infertype DemoAttributeType:String
 }

@@ -5,7 +5,7 @@ import { DemoUnparser } from "../unparser/DemoUnparser";
 
 describe("testing Scoper", () => {
   describe('Scoper.getVisibleElements from DemoModel Instance', () => {
-    let model : DemoModel = new DemoModelCreator().model;
+    let model : DemoModel = new DemoModelCreator().createCorrectModel();
     let scoper = new DemoScoper();
     let unparser = new DemoUnparser();
  
@@ -88,7 +88,7 @@ describe("testing Scoper", () => {
   });
 
   describe("testing IsInScope", () => {
-    let model : DemoModel = new DemoModelCreator().model;
+    let model : DemoModel = new DemoModelCreator().createCorrectModel();
     let scoper = new DemoScoper();
  
     beforeEach(done => {

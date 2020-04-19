@@ -37,6 +37,7 @@ abstract expression concept DemoExpression {
 concept AppliedFeature {
     part appliedfeature: AppliedFeature
     value: string
+    reference type: DemoEntity
 }
 
 expression placeholder concept DemoPlaceholderExpression {
