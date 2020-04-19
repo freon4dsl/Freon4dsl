@@ -7,12 +7,12 @@ export type Property = {
     type: string;
     isList: boolean;
     propertyType: PropertyType;
-}
+};
 
 export type Concept = {
     typeName: string;
     baseNames: string;
-    properties: Map<string,Property>;
+    properties: Map<string, Property>;
     constructor: () => PiElement;
 };
 
@@ -22,15 +22,13 @@ export type Enumeration = {
 };
 
 export class Language {
-
     private static theInstance: Language = null;
-    private concepts : Map<string, Concept> = new Map<string, Concept>();
-    private enumerations : Map<string, Enumeration> = new Map<string, Enumeration>();
+    private concepts: Map<string, Concept> = new Map<string, Concept>();
+    private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
 
-    private constructor() {
-    }
+    private constructor() {}
 
-    static  getInstance() {
+    static getInstance() {
         if (Language.theInstance === null) {
             Language.theInstance = new Language();
         }
@@ -67,18 +65,17 @@ export class Language {
      * @param conceptName
      * @param concept
      */
-    addConcept(concept: Concept){
+    addConcept(concept: Concept) {
         this.concepts.set(concept.typeName, concept);
     }
 
-    addEnumeration(enumeration: Enumeration){
+    addEnumeration(enumeration: Enumeration) {
         this.enumerations.set(enumeration.typeName, enumeration);
     }
 
     referenceCreator: (name: string, type: string) => any;
 
-    addReferenceCreator( creator: (name: string, type: string) => any) {
+    addReferenceCreator(creator: (name: string, type: string) => any) {
         this.referenceCreator = creator;
     }
 }
-

@@ -20,7 +20,7 @@ export class ScoperGenerator {
     generate(scopedef: PiScopeDef): void {
         this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
         this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
-        let name = scopedef? scopedef.scoperName + " " : "";
+        let name = scopedef ? scopedef.scoperName + " " : "";
         LOGGER.log("Generating scoper " + name + "in folder " + this.scoperGenFolder);
 
         const namespace = new NamespaceTemplate();
@@ -38,7 +38,7 @@ export class ScoperGenerator {
         LOGGER.log("Generating Namespace");
         var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef, relativePath), "Namespace Class");
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`, namespaceFile);
-        
+
         LOGGER.log("Generating Scoper");
         var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class");
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
@@ -48,5 +48,5 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
         LOGGER.log("Succesfully generated scoper: " + name);
-    } 
+    }
 }

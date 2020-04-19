@@ -29,9 +29,7 @@ import {
 } from "../language/gen";
 
 export class DemoUnparser {
-
     public unparse(modelelement: AllDemoConcepts, includeChildren?: boolean): string {
-
         if (modelelement instanceof DemoModel) {
             return this.unparseDemoModel(modelelement, includeChildren);
         }
@@ -209,7 +207,7 @@ export class DemoUnparser {
     }
 
     public unparseDemoStringLiteralExpression(modelelement: DemoStringLiteralExpression, includeChildren?: boolean): string {
-        return "\"" + modelelement.value + "\"";
+        return '"' + modelelement.value + '"';
     }
 
     public unparseDemoNumberLiteralExpression(modelelement: DemoNumberLiteralExpression, includeChildren?: boolean): string {
@@ -237,7 +235,6 @@ export class DemoUnparser {
             case "DemoMultiplyExpression":
                 symbol = "*";
                 break;
-
         }
         return "( " + this.unparseDemoExpression(modelelement.left) + " " + symbol + " " + this.unparseDemoExpression(modelelement.right) + " )";
     }
@@ -247,9 +244,15 @@ export class DemoUnparser {
     }
 
     public unparseDemoIfExpression(modelelement: DemoIfExpression, includeChildren?: boolean): string {
-        return "if ( " + this.unparseDemoExpression(modelelement.condition) + " ) { " +
-            this.unparseDemoExpression(modelelement.whenTrue, includeChildren) + " } else { "
-            + this.unparseDemoExpression(modelelement.whenFalse, includeChildren) + " }";
+        return (
+            "if ( " +
+            this.unparseDemoExpression(modelelement.condition) +
+            " ) { " +
+            this.unparseDemoExpression(modelelement.whenTrue, includeChildren) +
+            " } else { " +
+            this.unparseDemoExpression(modelelement.whenFalse, includeChildren) +
+            " }"
+        );
     }
 
     public unparseDemoVariableRef(modelelement: DemoVariableRef, includeChildren?: boolean): string {

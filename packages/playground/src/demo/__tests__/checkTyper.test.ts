@@ -2,13 +2,13 @@ import { DemoModel, DemoAttributeType } from "../language/gen";
 import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoModelCreator } from "./DemoModelCreator";
 
-describe('Testing Typer', () => {
-    describe('Typer.isType on DemoModel Instance', () => {
-        let model : DemoModel = new DemoModelCreator().createCorrectModel();
+describe("Testing Typer", () => {
+    describe("Typer.isType on DemoModel Instance", () => {
+        let model: DemoModel = new DemoModelCreator().createCorrectModel();
         let typer = new DemoTyper();
-     
+
         beforeEach(done => {
-          done();
+            done();
         });
 
         test("all entities should be types", () => {
@@ -26,7 +26,7 @@ describe('Testing Typer', () => {
                 });
             });
         });
-    
+
         test("all attributes should have a valid type", () => {
             model.entities.forEach(ent => {
                 ent.attributes.forEach(att => {
@@ -36,7 +36,7 @@ describe('Testing Typer', () => {
                 });
             });
         });
-    
+
         test("all functions should have a return type", () => {
             model.functions.forEach(fun => {
                 expect(typer.isType(fun.declaredType.referred)).toBe(true);
@@ -47,7 +47,7 @@ describe('Testing Typer', () => {
                 });
             });
         });
-    
+
         test("the type of every expresion can be inferred and equals the declared type of its function", () => {
             model.functions.forEach(fun => {
                 if (fun.expression !== null) {
@@ -66,7 +66,7 @@ describe('Testing Typer', () => {
                 });
             });
         });
-  
+
         test("type conformance of the primitive types should be correct", () => {
             expect(typer.conformsTo(DemoAttributeType.Integer, DemoAttributeType.String)).toBe(false);
             expect(typer.conformsTo(DemoAttributeType.Integer, DemoAttributeType.Integer)).toBe(true);
@@ -79,21 +79,19 @@ describe('Testing Typer', () => {
             expect(typer.conformsTo(DemoAttributeType.Boolean, DemoAttributeType.String)).toBe(false);
             expect(typer.conformsTo(DemoAttributeType.Boolean, DemoAttributeType.Integer)).toBe(false);
             expect(typer.conformsTo(DemoAttributeType.Boolean, DemoAttributeType.Boolean)).toBe(true);
-  
         });
-  
+
         test("type conformance of model entity types should be correct", () => {
             model.entities.forEach(ent => {
                 expect(typer.conformsTo(ent, DemoAttributeType.String)).toBe(false);
                 expect(typer.conformsTo(ent, DemoAttributeType.Integer)).toBe(false);
-                expect(typer.conformsTo(ent, DemoAttributeType.Boolean)).toBe(false);  
+                expect(typer.conformsTo(ent, DemoAttributeType.Boolean)).toBe(false);
                 model.entities.forEach(ent2 => {
                     if (ent !== ent2) {
                         expect(typer.conformsTo(ent, ent2)).toBe(false);
                     }
-                });  
-            });  
+                });
+            });
         });
-
     });
 });

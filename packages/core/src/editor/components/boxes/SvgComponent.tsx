@@ -18,12 +18,7 @@ export class SvgComponent extends React.Component<SvgComponentProps, {}> {
 
         // TODO 500, 500 in viewbox is dependent on the SVG image !!
         return (
-            <svg
-                id={this.props.box.id}
-                width={this.props.box.width}
-                height={this.props.box.height}
-                viewBox={"0 0 500 500"}
-            >
+            <svg id={this.props.box.id} width={this.props.box.width} height={this.props.box.height} viewBox={"0 0 500 500"}>
                 {this.props.box.svg}
             </svg>
         );

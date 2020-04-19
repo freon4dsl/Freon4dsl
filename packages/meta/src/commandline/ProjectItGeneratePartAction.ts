@@ -6,7 +6,7 @@ import { PiLogger } from "../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("ProjectItGeneratePartAction"); // .mute();
 /**
- * Generic generator action for generating part of the language, e.g. only the typer. 
+ * Generic generator action for generating part of the language, e.g. only the typer.
  * The only option defined here is the -l flag for the language file.
  * Subclasses need to call super.generate().
  */
@@ -24,7 +24,7 @@ export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
         this.languageFile = this.languageFileArg.value;
         // we only read the .lang file, no need to generate
         // the actual generation, when needed, is done by subclasses
-        this.language = new LanguageParser().parse(this.languageFile); 
+        this.language = new LanguageParser().parse(this.languageFile);
         if (this.language == null) {
             LOGGER.error(this, "Language could not be parsed, exiting.");
             process.exit(-1);

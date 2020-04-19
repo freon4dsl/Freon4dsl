@@ -76,13 +76,12 @@ export class SelectComponent extends AbstractChoiceComponent {
         if (isSelectBox(this.props.box)) {
             if (!!this.element.innerText) {
                 LOGGER.info(this, "innerText [" + this.element.innerText + "]");
-                const options: SelectOption[] =
-                this.props.box.getOptions().filter(s => {
-                    LOGGER.info(this, "filtering [" + s.label+ "]");
+                const options: SelectOption[] = this.props.box.getOptions().filter(s => {
+                    LOGGER.info(this, "filtering [" + s.label + "]");
                     return s.label.startsWith(this.element.innerText);
                 });
                 LOGGER.info(this, "options [" + JSON.stringify(options) + "]");
-                return options
+                return options;
             } else {
                 return this.props.box.getOptions();
             }

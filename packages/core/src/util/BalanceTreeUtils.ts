@@ -70,10 +70,7 @@ class BTree {
     insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: PiEditor): PiElement | null {
         LOGGER.log("insertBinaryExpression for " + box.element);
         let selectedElement: PiElement | null = null;
-        PiUtils.CHECK(
-            isPiExpression(box.element),
-            "insertBinaryExpression: current element should be a ProExpression, but it isn't"
-        );
+        PiUtils.CHECK(isPiExpression(box.element), "insertBinaryExpression: current element should be a ProExpression, but it isn't");
         const exp = box.element as PiExpression;
         switch (box.role) {
             case LEFT_MOST:

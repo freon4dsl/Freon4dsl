@@ -4,7 +4,6 @@ import { PiParser } from "../../utils/PiParser";
 let pegjsParser = require("./LanguageGrammar");
 
 export class LanguageParser extends PiParser<PiLanguageUnit> {
-
     constructor() {
         super();
         this.parser = pegjsParser;

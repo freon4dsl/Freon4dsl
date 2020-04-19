@@ -15,7 +15,7 @@ export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt language generation ...");    
+        LOGGER.log("Starting ProjectIt language generation ...");
         super.generate();
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);

@@ -21,13 +21,13 @@ type TreeElement = {
     title: string;
     items: TreeElement[];
     onTitleClick: ComponentEventHandler<TreeElement>;
-    as: string // TODO add styling
-}
+    as: string; // TODO add styling
+};
 
 const titleRenderer = (Component, { content, open, hasSubtree, ...restProps }) => (
     // TODO triangle-down does not work
     <Component open={open} hasSubtree={hasSubtree} {...restProps}>
-        {hasSubtree && <Icon name={open ? "triangle-down" : "triangle-right"}/>}
+        {hasSubtree && <Icon name={open ? "triangle-down" : "triangle-right"} />}
         <span>{content}</span>
     </Component>
 );
@@ -54,7 +54,7 @@ export class Navigator extends React.Component<{}, IModelListState> {
     private buildTree(): TreeElement[] {
         let tree: TreeElement[] = [];
         for (let lang of this.findlanguages()) {
-            if (!(!!this._activeItemId)) {
+            if (!!!this._activeItemId) {
                 this._activeItemId = lang;
             }
             let group: TreeElement = {
@@ -99,33 +99,28 @@ export class Navigator extends React.Component<{}, IModelListState> {
     }
 
     render(): JSX.Element {
-        return <Box
-            styles={{
-                gridColumn: "2",
-                // height: "calc((100vh -220px) * 0.80)",
-                gridRow: "1",
-                // border: "1px solid #ccc",
-                width: "100%",
-                // overflowX: "auto",
-                // overflowY: "auto"
-
-
-
-            }}
-
-        >
-            {/*<SelectionZone selection={this._selection} selectionMode={SelectionMode.single}>*/}
+        return (
+            <Box
+                styles={{
+                    gridColumn: "2",
+                    // height: "calc((100vh -220px) * 0.80)",
+                    gridRow: "1",
+                    // border: "1px solid #ccc",
+                    width: "100%"
+                    // overflowX: "auto",
+                    // overflowY: "auto"
+                }}
+            >
+                {/*<SelectionZone selection={this._selection} selectionMode={SelectionMode.single}>*/}
                 <Tree
                     items={this._tree}
                     title="Model Units"
                     renderItemTitle={titleRenderer}
                     aria-label="Initially open"
-                    defaultActiveItemIds={[
-                        this._activeItemId
-                    ]}
+                    defaultActiveItemIds={[this._activeItemId]}
                 />
-            {/*</SelectionZone>*/}
-        </Box>;
+                {/*</SelectionZone>*/}
+            </Box>
+        );
     }
 }
-

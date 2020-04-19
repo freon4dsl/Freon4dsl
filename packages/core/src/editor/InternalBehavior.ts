@@ -1,12 +1,6 @@
 import { action } from "mobx";
 
-import {
-    PiCustomBehavior,
-    PiBehavior,
-    PiTriggerType,
-    PiBinaryExpressionCreator,
-    PiExpressionCreator
-} from "./PiAction";
+import { PiCustomBehavior, PiBehavior, PiTriggerType, PiBinaryExpressionCreator, PiExpressionCreator } from "./PiAction";
 import { isPiExpression, PiElement, PiExpression, PiBinaryExpression } from "../language/PiModel";
 import { Box } from "./boxes/Box";
 import { PiEditor } from "../editor/PiEditor";

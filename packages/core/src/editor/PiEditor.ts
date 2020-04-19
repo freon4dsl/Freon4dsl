@@ -1,12 +1,7 @@
 import { observable, computed, action } from "mobx";
 
 import { PiContainerDescriptor } from "../language/PiModel";
-import {
-    InternalBehavior,
-    InternalBinaryBehavior,
-    InternalCustomBehavior,
-    InternalExpressionBehavior
-} from "./InternalBehavior";
+import { InternalBehavior, InternalBinaryBehavior, InternalCustomBehavior, InternalExpressionBehavior } from "./InternalBehavior";
 import { PiCaret } from "../util/BehaviorUtils";
 import { PiElement, isPiExpression } from "../language/PiModel";
 import { PiProjection } from "./PiProjection";
@@ -130,12 +125,12 @@ export class PiEditor {
         LOGGER.info(this, "==> SelectParent");
         const parent = this.selectedBox.parent;
         if (parent) {
-            if( parent.selectable) {
+            if (parent.selectable) {
                 this.selectBox(parent);
                 parent.setFocus();
             } else {
                 this.selectBox(parent);
-                this.selectParentBox()
+                this.selectParentBox();
             }
         }
     }
@@ -203,10 +198,7 @@ export class PiEditor {
 
     async selectFirstEditableChildBox() {
         const first = this.selectedBox.firstEditableChild;
-        LOGGER.info(
-            this,
-            "selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role
-        );
+        LOGGER.info(this, "selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
         if (first) {
             LOGGER.info(this, "selectFirstEditableChildBox: first found with role " + first.role);
             this.selectBox(first);

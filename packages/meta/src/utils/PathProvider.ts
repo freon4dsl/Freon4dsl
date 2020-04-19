@@ -15,10 +15,10 @@ export const VALIDATOR_FOLDER = "validator";
 export const VALIDATOR_GEN_FOLDER = "validator/gen";
 export const TYPER_FOLDER = "typer";
 export const TYPER_GEN_FOLDER = "typer/gen";
-export const WEBAPP_FOLDER = "../webapp"
-export const APP_FOLDER = "../webapp/app"
-export const ASSETS_FOLDER = "../webapp/assets"
-export const STYLES_FOLDER = "../webapp/styles"
+export const WEBAPP_FOLDER = "../webapp";
+export const APP_FOLDER = "../webapp/app";
+export const ASSETS_FOLDER = "../webapp/assets";
+export const STYLES_FOLDER = "../webapp/styles";
 // the predefined interfaces and classes can be found in ...
 export const PROJECTITCORE = "@projectit/core";
 export const scoperInterface = PROJECTITCORE;
@@ -34,28 +34,28 @@ export const EDITORSTYLES = STYLES_FOLDER + "/styles";
  */
 export class PathProvider {
     // the definitions files can be found in ...
-    public static editFile(defFolder: string, languageFile: string) : string {
-        let languageName : string = languageFile.slice(0, languageFile.length-5);
+    public static editFile(defFolder: string, languageFile: string): string {
+        let languageName: string = languageFile.slice(0, languageFile.length - 5);
         return defFolder + "/" + languageName + ".edit";
     }
-    
-    public static langFile(defFolder: string, languageFile: string) : string {
-        let languageName : string = languageFile.slice(0, languageFile.length-5);
+
+    public static langFile(defFolder: string, languageFile: string): string {
+        let languageName: string = languageFile.slice(0, languageFile.length - 5);
         return defFolder + "/" + languageName + ".lang";
     }
-    
-    public static validFile(defFolder: string, languageFile: string) : string {
-        let languageName : string = languageFile.slice(0, languageFile.length-5);
+
+    public static validFile(defFolder: string, languageFile: string): string {
+        let languageName: string = languageFile.slice(0, languageFile.length - 5);
         return defFolder + "/" + languageName + ".valid";
     }
-    
-    public static scopeFile(defFolder: string, languageFile: string) : string {
-        let languageName : string = languageFile.slice(0, languageFile.length-5);
+
+    public static scopeFile(defFolder: string, languageFile: string): string {
+        let languageName: string = languageFile.slice(0, languageFile.length - 5);
         return defFolder + "/" + languageName + ".scop";
     }
-    
-    public static typeFile(defFolder: string, languageFile: string) : string {
-        let languageName : string = languageFile.slice(0, languageFile.length-5);
+
+    public static typeFile(defFolder: string, languageFile: string): string {
+        let languageName: string = languageFile.slice(0, languageFile.length - 5);
         return defFolder + "/" + languageName + ".type";
     }
 
@@ -67,7 +67,7 @@ export class PathProvider {
     public static enumeration(enumeration: PiLangEnumeration): string {
         return LANGUAGE_GEN_FOLDER + "/" + Names.enumeration(enumeration);
     }
-    
+
     public static union(union: PiLangUnion): string {
         return LANGUAGE_GEN_FOLDER + "/" + Names.union(union);
     }
@@ -77,12 +77,12 @@ export class PathProvider {
     }
 
     public static allConcepts(language: PiLanguageUnit): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.allConcepts(language); 
+        return LANGUAGE_GEN_FOLDER + "/" + Names.allConcepts(language);
     }
 
     // the generated classes that implement the editor can be found in ...
     public static context(language: PiLanguageUnit): string {
-        return EDITOR_GEN_FOLDER + "/" + Names.context(language);  ;
+        return EDITOR_GEN_FOLDER + "/" + Names.context(language);
     }
 
     public static actions(language: PiLanguageUnit): string {
@@ -153,5 +153,4 @@ export class PathProvider {
     public static workerInterface(language: PiLanguageUnit): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.workerInterface(language);
     }
-
 }

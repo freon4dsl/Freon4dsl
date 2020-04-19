@@ -1,6 +1,6 @@
-import * as React from 'react';
-import {Menu, Tooltip, Icon, Flex, Text, Input} from "@fluentui/react-northstar";
-import { Link } from '@fluentui/react';
+import * as React from "react";
+import { Menu, Tooltip, Icon, Flex, Text, Input } from "@fluentui/react-northstar";
+import { Link } from "@fluentui/react";
 import { EditorEnvironment } from "../gateway-to-projectit/EditorEnvironment";
 import { ServerCommunication } from "../gateway-to-projectit/ServerCommunication";
 import { App } from "./App";
@@ -20,50 +20,50 @@ export default class Menubar extends React.Component {
                         key: "filenew",
                         content: "new",
                         icon: "add",
-                        tooltip: 'Create a new model unit',
+                        tooltip: "Create a new model unit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="newtip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="newtip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => EditorEnvironment.new(),
+                        onClick: () => EditorEnvironment.new()
                     },
                     {
                         key: "fileopen",
                         content: "open ...",
-                        icon : "download",
-                        tooltip: 'Open an existing model unit',
+                        icon: "download",
+                        tooltip: "Open an existing model unit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="opentip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="opentip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => this.openModel(),
+                        onClick: () => this.openModel()
                     },
                     {
                         key: "filesave",
                         content: "save",
-                        icon : "open-outside",
-                        tooltip: 'Save the current model unit on the server',
+                        icon: "open-outside",
+                        tooltip: "Save the current model unit on the server",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="savetip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="savetip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => EditorEnvironment.save(),
+                        onClick: () => EditorEnvironment.save()
                     },
                     {
                         key: "filesaveas",
                         content: "save as ...",
                         icon: "files-txt",
-                        tooltip: 'Save the current model unit with a different name',
+                        tooltip: "Save the current model unit with a different name",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => this.saveAs(),
-                    },
+                        onClick: () => this.saveAs()
+                    }
                 ]
             }
         },
@@ -77,27 +77,27 @@ export default class Menubar extends React.Component {
                         content: "undo (not yet implemented)",
                         icon: "undo",
                         disabled: true,
-                        tooltip: 'Undo the last edit',
+                        tooltip: "Undo the last edit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="undotip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="undotip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => EditorEnvironment.undo(),
+                        onClick: () => EditorEnvironment.undo()
                     },
                     {
                         key: "editredo",
                         content: "redo (not yet implemented)",
                         icon: "redo",
                         disabled: true,
-                        tooltip: 'Redo the last edit',
+                        tooltip: "Redo the last edit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="redotip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="redotip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => EditorEnvironment.redo(),
-                    },
+                        onClick: () => EditorEnvironment.redo()
+                    }
                 ]
             }
         },
@@ -110,14 +110,14 @@ export default class Menubar extends React.Component {
                         key: "searchstring",
                         content: "search (not yet implemented)",
                         icon: "search",
-                        tooltip: 'Search in the model unit',
+                        tooltip: "Search in the model unit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="searchtip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="searchtip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => this.search(),
-                    },
+                        onClick: () => this.search()
+                    }
                 ]
             }
         },
@@ -130,61 +130,69 @@ export default class Menubar extends React.Component {
                         key: "helpkeys",
                         content: "keybindings",
                         icon: "hand",
-                        tooltip: 'Show a list of keybindings for the editor',
+                        tooltip: "Show a list of keybindings for the editor",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="keystip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="keystip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => this.keybindings(),
+                        onClick: () => this.keybindings()
                     },
                     {
                         key: "helphelp",
                         content: "help",
                         icon: "question-circle",
-                        tooltip: 'Show help',
+                        tooltip: "Show help",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="helptip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="helptip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => this.help(),
+                        onClick: () => this.help()
                     },
                     {
                         key: "helpabout",
                         content: "about",
                         icon: "notes",
-                        tooltip: 'Show information about this tool',
+                        tooltip: "Show information about this tool",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
-                            const {tooltip, ...rest} = props;
-                            return <Tooltip key="abouttip" content={tooltip} trigger={<Component {...props} />}/>
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="abouttip" content={tooltip} trigger={<Component {...props} />} />;
                         },
-                        onClick: () => this.about(),
-                    },
+                        onClick: () => this.about()
+                    }
                 ]
             }
         }
     ];
 
-    aboutContent = ( <Flex gap="gap.small" padding="padding.medium" column={true}>
-        <Text align="center" content={"ProjectIt version " + versionNumber}/>
-        <Text align="center" content={"ProjectIt is an open source project which can be found at"}/>
-        <Text align="center"><Link align="center" href="http://projectit.org/" target="_blank">www.projectit.org.</Link></Text>
-        <Text align="center" content={"Created by"}/>
-        <Text align="center"><Link align="center" href="http://openmodeling.nl/" target="_blank">www.openmodeling.nl.</Link></Text>
-    </Flex>);
-
-
+    aboutContent = (
+        <Flex gap="gap.small" padding="padding.medium" column={true}>
+            <Text align="center" content={"ProjectIt version " + versionNumber} />
+            <Text align="center" content={"ProjectIt is an open source project which can be found at"} />
+            <Text align="center">
+                <Link align="center" href="http://projectit.org/" target="_blank">
+                    www.projectit.org.
+                </Link>
+            </Text>
+            <Text align="center" content={"Created by"} />
+            <Text align="center">
+                <Link align="center" href="http://openmodeling.nl/" target="_blank">
+                    www.openmodeling.nl.
+                </Link>
+            </Text>
+        </Flex>
+    );
 
     render(): JSX.Element {
-        return <Menu defaultActiveIndex={0} items={this.menuItems}/>
+        return <Menu defaultActiveIndex={0} items={this.menuItems} />;
     }
 
     openModel() {
         App.setDialogTitle("Open Model");
         App.setDialogSubText("");
-        App.setDialogContent(<Navigator/>);
+        App.setDialogContent(<Navigator />);
         App.showDialog();
         ServerCommunication.loadModel("testjea");
     }
@@ -193,7 +201,7 @@ export default class Menubar extends React.Component {
         App.setDialogTitle("Save Model as ...");
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(<Input  inputRef={this.setInput} />);
+        App.setDialogContent(<Input inputRef={this.setInput} />);
         App.showSaveDialog(this.saveAsClosed);
     }
 
@@ -204,8 +212,8 @@ export default class Menubar extends React.Component {
 
     saveAsClosed = () => {
         const saveName = this.input.value;
-        if (!!saveName ) EditorEnvironment.saveAs(saveName);
-    }
+        if (!!saveName) EditorEnvironment.saveAs(saveName);
+    };
 
     search() {
         App.setDialogTitle("Search");
@@ -224,7 +232,13 @@ export default class Menubar extends React.Component {
     help() {
         App.setDialogTitle("Help for ProjectIt");
         App.setDialogSubText("Currently there is no in-build help functionality.\nWe refer you to our website.\n");
-        App.setDialogContent(<Text align="center"><Link align="center" href="http://projectit.org/" target="_blank">www.projectit.org.</Link></Text>);
+        App.setDialogContent(
+            <Text align="center">
+                <Link align="center" href="http://projectit.org/" target="_blank">
+                    www.projectit.org.
+                </Link>
+            </Text>
+        );
         App.showDialog();
     }
 
@@ -236,4 +250,3 @@ export default class Menubar extends React.Component {
         App.showDialog();
     }
 }
-

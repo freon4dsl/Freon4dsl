@@ -1,10 +1,10 @@
 import { PiLanguageUnit } from "../languagedef/metalanguage/PiLanguage";
 
-export type CheckB = { check: boolean, error: string, whenOk?: () => void };
+export type CheckB = { check: boolean; error: string; whenOk?: () => void };
 
 export abstract class Checker<DEFINITION> {
     errors: string[] = [];
-    language : PiLanguageUnit; // should be set in every checker, except the checker for the language definition langauge (LDL)
+    language: PiLanguageUnit; // should be set in every checker, except the checker for the language definition langauge (LDL)
 
     constructor(language: PiLanguageUnit) {
         this.language = language;
@@ -28,12 +28,11 @@ export abstract class Checker<DEFINITION> {
         if (Array.isArray(check)) {
             check.forEach(chk => this.simpleCheck(chk.check, chk.error));
         } else {
-            if (this.simpleCheck(check.check, check.error) ){
-                if( !!check.whenOk) {
+            if (this.simpleCheck(check.check, check.error)) {
+                if (!!check.whenOk) {
                     check.whenOk();
                 }
             }
         }
     }
-
 }

@@ -13,12 +13,13 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
         super({
             actionName: "validate-it",
             summary: "Generates the TypeScript code for the validator for your language",
-            documentation: "Generates TypeScript code for the validator of language defined in the .lang file. The validator definition is found in the .valid file."
+            documentation:
+                "Generates TypeScript code for the validator of language defined in the .lang file. The validator definition is found in the .valid file."
         });
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt validator generation ...");    
+        LOGGER.log("Starting ProjectIt validator generation ...");
 
         super.generate();
         this.validatorGenerator = new ValidatorGenerator(this.language);

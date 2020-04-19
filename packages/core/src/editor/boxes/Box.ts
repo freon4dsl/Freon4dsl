@@ -54,13 +54,13 @@ export abstract class Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box {
-        if( this.isLeaf() && this.selectable){
+        if (this.isLeaf() && this.selectable) {
             return this;
         }
 
-        for(let child of this.children){
+        for (let child of this.children) {
             const leafChild = child.firstLeaf;
-            if( !!leafChild ){
+            if (!!leafChild) {
                 return leafChild;
             }
         }
@@ -75,13 +75,13 @@ export abstract class Box {
      * Get the last selectable leaf box in the tree with `this` as root.
      */
     get lastLeaf(): Box {
-        if( this.isLeaf() && this.selectable){
+        if (this.isLeaf() && this.selectable) {
             return this;
         }
         const childrenReversed = this.children.filter(ch => true).reverse();
-        for(let child of childrenReversed){
+        for (let child of childrenReversed) {
             const leafChild = child.lastLeaf;
-            if( !!leafChild ){
+            if (!!leafChild) {
                 return leafChild;
             }
         }
@@ -89,17 +89,17 @@ export abstract class Box {
     }
 
     get nextLeafRight(): Box {
-        if( !this.parent) {
+        if (!this.parent) {
             return null;
         }
         const thisIndex = this.parent.children.indexOf(this);
         let rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
-        for(let sibling of rightSiblings){
+        for (let sibling of rightSiblings) {
             const siblingChild = sibling.firstLeaf;
-            if( !!siblingChild ){
+            if (!!siblingChild) {
                 return siblingChild;
             }
-            if (sibling.isLeaf() && sibling.selectable){
+            if (sibling.isLeaf() && sibling.selectable) {
                 return sibling;
             }
         }
@@ -107,21 +107,21 @@ export abstract class Box {
     }
 
     get nextLeafLeft(): Box {
-        if( !this.parent) {
+        if (!this.parent) {
             return null;
         }
         const thisIndex = this.parent.children.indexOf(this);
         let leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
-        for(let sibling of leftSiblings){
+        for (let sibling of leftSiblings) {
             const siblingChild = sibling.lastLeaf;
-            if( !!siblingChild ){
+            if (!!siblingChild) {
                 return siblingChild;
             }
-            if (sibling.isLeaf() && sibling.selectable){
+            if (sibling.isLeaf() && sibling.selectable) {
                 return sibling;
             }
         }
-        return this.parent.nextLeafLeft
+        return this.parent.nextLeafLeft;
     }
 
     toString() {

@@ -1,14 +1,18 @@
 import { PiLangConceptReference } from "../../languagedef/metalanguage";
 import {
-    Direction, ListJoin,
+    Direction,
+    ListJoin,
     ListJoinType,
     DefEditorConcept,
     DefEditorEnumeration,
-    DefEditorLanguage, DefEditorNewline,
-    MetaEditorProjection, DefEditorProjectionExpression,
+    DefEditorLanguage,
+    DefEditorNewline,
+    MetaEditorProjection,
+    DefEditorProjectionExpression,
     DefEditorProjectionIndent,
     MetaEditorProjectionLine,
-    DefEditorProjectionText, DefEditorSubProjection
+    DefEditorProjectionText,
+    DefEditorSubProjection
 } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
@@ -21,7 +25,9 @@ export function createConceptReference(data: Partial<PiLangConceptReference>): P
     if (!!data.name) {
         result.name = data.name;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -41,7 +47,9 @@ export function createConceptEditor(data: Partial<DefEditorConcept>): DefEditorC
     if (!!data.concept) {
         result.concept = data.concept;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -60,12 +68,13 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
     // Ensure all internal editor references to the editorlanguage are set.
     result.conceptEditors.forEach(concept => {
         concept.languageEditor = result;
-
     });
     result.enumerations.forEach(enumeration => {
         enumeration.languageEditor = result;
     });
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -79,7 +88,9 @@ export function createProjection(data: Partial<MetaEditorProjection>): MetaEdito
     }
     result.normalize();
     console.log(result.toString());
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -89,7 +100,9 @@ export function createLine(data: Partial<MetaEditorProjectionLine>): MetaEditorP
     if (!!data.items) {
         result.items = data.items;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -99,7 +112,9 @@ export function createIndent(data: Partial<DefEditorProjectionIndent>): DefEdito
     if (!!data.indent) {
         result.indent = data.indent;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -113,30 +128,32 @@ export function createText(data: string): DefEditorProjectionText {
 }
 
 export function createSubProjection(data: Partial<DefEditorSubProjection>): DefEditorSubProjection {
-    console.log("create SubProjection <<" + data.propertyName + ">> join ["+ data.listJoin + "]");
+    console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listJoin + "]");
     const result = new DefEditorSubProjection();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
-    if (!!(data.listJoin)) {
+    if (!!data.listJoin) {
         result.listJoin = data.listJoin;
     }
-    if (!!(data.expression)) {
+    if (!!data.expression) {
         result.expression = data.expression;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createListDirection(data: Object): Direction {
     const dir = data["direction"];
-    return (dir === "@horizontal" ? Direction.Horizontal : (dir === "@vertical" ? Direction.Vertical : Direction.NONE));
+    return dir === "@horizontal" ? Direction.Horizontal : dir === "@vertical" ? Direction.Vertical : Direction.NONE;
 }
 
 export function createJoinType(data: Object): ListJoinType {
     const type = data["type"];
 
-    return (type === "@separator" ? ListJoinType.Separator : (type === "@terminator" ? ListJoinType.Terminator : ListJoinType.NONE));
+    return type === "@separator" ? ListJoinType.Separator : type === "@terminator" ? ListJoinType.Terminator : ListJoinType.NONE;
 }
 
 export function createListJoin(data: Partial<ListJoin>): ListJoin {
@@ -150,7 +167,9 @@ export function createListJoin(data: Partial<ListJoin>): ListJoin {
     if (!!data.joinText) {
         result.joinText = data.joinText;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -160,7 +179,9 @@ export function createExpression(data: Partial<DefEditorProjectionExpression>): 
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
@@ -170,8 +191,8 @@ export function createNewline(): DefEditorNewline {
 
 export function createEnumeration(data: Partial<DefEditorEnumeration>): DefEditorEnumeration {
     const result = new DefEditorEnumeration();
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
-
-

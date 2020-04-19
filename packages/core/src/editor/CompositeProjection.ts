@@ -4,17 +4,15 @@ import { OrderedList } from "./OrderedList";
 import { PiProjection } from "./PiProjection";
 
 export class CompositeProjection implements PiProjection {
-
     private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
     private _rootProjection: PiProjection | null = null;
 
     set rootProjection(p: CompositeProjection) {
         this._rootProjection = p;
-        this.projections.toArray().forEach(child => child.element.rootProjection = p);
+        this.projections.toArray().forEach(child => (child.element.rootProjection = p));
     }
 
-    constructor() {
-    }
+    constructor() {}
 
     getBox(element: PiElement): Box {
         for (let p of this.projections.toArray()) {
@@ -24,12 +22,12 @@ export class CompositeProjection implements PiProjection {
             }
         }
         // return a default box if nothing has been  found.
-        return new LabelBox(element, "unknown-projection", () => ("unknown box for " + element));
+        return new LabelBox(element, "unknown-projection", () => "unknown box for " + element);
     }
 
     addProjection(name: string, p: PiProjection) {
         this.projections.add(name, p);
-        p.rootProjection = this;//(!!this.rootProjection ? this : this.rootProjection);
+        p.rootProjection = this; //(!!this.rootProjection ? this : this.rootProjection);
     }
 
     projectiontoFront(name: string) {

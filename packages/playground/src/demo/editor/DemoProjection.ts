@@ -7,7 +7,8 @@ import { PiEditor } from "@projectit/core";
 import {
     AllDemoConcepts,
     DemoAttribute,
-    DemoAttributeType, DemoEntity,
+    DemoAttributeType,
+    DemoEntity,
     DemoFunction,
     DemoFunctionCallExpression,
     DemoNumberLiteralExpression,
@@ -131,40 +132,42 @@ export class DemoProjection implements PiProjection {
 
     public getDemoFunctionCallExpressionBox(element: DemoFunctionCallExpression): Box {
         return createDefaultExpressionBox(element, "getDemoFunctionCallExpressionBox", [
-                this.helpers.getReferenceBox(element, "func-call-exp", "<select function>", "DemoFunction",
-                    () => {
-                        if (!!element.functionDefinition) {
-                            return { id: element.functionDefinition.name, label: element.functionDefinition.name };
-                        } else {
-                            return null;
-                        }
-                    },
-                    (option: SelectOption) => {
-                        // TODO PiElementReference
-                        element.functionDefinition = new PiElementReference<DemoFunction>(DemoEnvironment.getInstance().scoper.getFromVisibleElements(
-                            element,
-                            option.label,
-                            "DemoFunction"
-                        ) as DemoFunction, "DemoFunction");
+            this.helpers.getReferenceBox(
+                element,
+                "func-call-exp",
+                "<select function>",
+                "DemoFunction",
+                () => {
+                    if (!!element.functionDefinition) {
+                        return { id: element.functionDefinition.name, label: element.functionDefinition.name };
+                    } else {
+                        return null;
                     }
-                ),
+                },
+                (option: SelectOption) => {
+                    // TODO PiElementReference
+                    element.functionDefinition = new PiElementReference<DemoFunction>(
+                        DemoEnvironment.getInstance().scoper.getFromVisibleElements(element, option.label, "DemoFunction") as DemoFunction,
+                        "DemoFunction"
+                    );
+                }
+            )
             // new TextBox(element, "blabla", () => element?.functionDefinition.name, (v: string) => (0), {
             //     style: projectitStyles.stringLiteral,
             //     deleteWhenEmptyAndErase: true
             // }),
-
         ]);
     }
 
     public getDemoStringLiteralExpressionBox(literal: DemoStringLiteralExpression): Box {
         return createDefaultExpressionBox(literal, "string-literal-exp", [
             new HorizontalListBox(literal, "string-literal", [
-                new LabelBox(literal, "start-quote", "\"", { selectable: false }),
+                new LabelBox(literal, "start-quote", '"', { selectable: false }),
                 new TextBox(literal, "element-value-text", () => literal.value, (v: string) => (literal.value = v), {
                     style: projectitStyles.stringLiteral,
                     deleteWhenEmptyAndErase: true
                 }),
-                new LabelBox(literal, "end-quote", "\"", { selectable: false })
+                new LabelBox(literal, "end-quote", '"', { selectable: false })
             ])
         ]);
     }

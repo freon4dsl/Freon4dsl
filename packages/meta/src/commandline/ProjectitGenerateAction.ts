@@ -1,8 +1,4 @@
-import {
-    CommandLineAction,
-    ICommandLineActionOptions,
-    CommandLineStringParameter
-} from "@microsoft/ts-command-line";
+import { CommandLineAction, ICommandLineActionOptions, CommandLineStringParameter } from "@microsoft/ts-command-line";
 
 /**
  * Generic generator action. The only option defined here is the -o flag for the output folder.
@@ -24,7 +20,7 @@ export abstract class ProjectItGenerateAction extends CommandLineAction {
         });
     }
 
-    public abstract generate(): void ;
+    public abstract generate(): void;
 
     protected onDefineParameters(): void {
         this.outputFolderArg = this.defineStringParameter({

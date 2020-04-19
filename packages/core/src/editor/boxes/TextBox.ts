@@ -34,13 +34,7 @@ export class TextBox extends Box {
         return KeyPressAction.OK;
     };
 
-    constructor(
-        exp: PiElement,
-        role: string,
-        getText: () => string,
-        setText: (text: string) => void,
-        initializer?: Partial<TextBox>
-    ) {
+    constructor(exp: PiElement, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
         super(exp, role);
         PiUtils.initializeObject(this, initializer);
         this.getText = getText;

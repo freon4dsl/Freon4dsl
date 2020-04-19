@@ -4,7 +4,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("testing Scoper", () => {
     let modelCreator = new DemoModelCreator();
-    let inheritanceModel : DemoModel = modelCreator.createInheritanceModel();
+    let inheritanceModel: DemoModel = modelCreator.createInheritanceModel();
     let scoper = new DemoScoper();
 
     beforeEach(done => {
@@ -46,7 +46,6 @@ describe("testing Scoper", () => {
             // vis.forEach(n => {console.log(n);});
         });
     });
-
 
     test("inheritance", () => {
         inheritanceModel.entities.forEach(ent => {

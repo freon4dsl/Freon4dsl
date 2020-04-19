@@ -18,7 +18,7 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        LOGGER.log("Starting ProjectIt typer generation ...");    
+        LOGGER.log("Starting ProjectIt typer generation ...");
 
         super.generate();
         this.typerGenerator = new PiTyperGenerator(this.language);

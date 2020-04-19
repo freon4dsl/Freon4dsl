@@ -10,7 +10,8 @@ import {
     DemoAttribute,
     AllDemoConcepts,
     DemoFunction,
-    DemoVariable, PiElementReference
+    DemoVariable,
+    PiElementReference
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoUnparser } from "../unparser/DemoUnparser";
@@ -49,7 +50,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3* \'temp\'");
+            expect(result).toBe("3* 'temp'");
         });
 
         test.skip("multiplication (3/4) * 'temp'", () => {
@@ -61,7 +62,7 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3/4* \'temp\'");
+            expect(result).toBe("3/4* 'temp'");
         });
 
         test.skip("(1 + 2) * 'Person'", () => {
@@ -83,7 +84,7 @@ describe("Testing Unparser", () => {
             expect(result).toBe("1+2*Person");
         });
 
-        test.skip("'determine(AAP : Integer) : Boolean = \"Hello Demo\" + \"Goodbye\"'", () => {
+        test.skip('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
             let result: string = "";
             const determine = DemoFunction.create("determine");
             const AAP = DemoVariable.create("AAP");
@@ -93,7 +94,7 @@ describe("Testing Unparser", () => {
             // determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             result = unparser.unparse(determine);
-            expect(result).toBe("determine( AAP : Integer ): Boolean = \'Hello Demo\' + \'Goodbye\'");
+            expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
         });
 
         test.skip("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
@@ -124,15 +125,14 @@ describe("Testing Unparser", () => {
         test.skip("complete example model with simple attribute types", () => {
             let result: string = "";
             result = unparser.unparse(model);
-            let path : string = "./handmade/unparsedDemoModel.txt";
+            let path: string = "./handmade/unparsedDemoModel.txt";
             if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, result);
             } else {
                 console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
             }
-    
+
             expect(result.length).toBe(556);
         });
     });
 });
-

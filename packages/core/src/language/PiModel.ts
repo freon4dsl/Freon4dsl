@@ -25,7 +25,6 @@ export interface PiExpression extends PiElement {
 }
 
 export interface PiBinaryExpression extends PiExpression {
-
     piLeft(): PiExpression;
 
     piSetLeft(left: PiExpression): void;

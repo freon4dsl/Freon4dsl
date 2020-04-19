@@ -1,5 +1,5 @@
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions"
+import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
 
 export class PiValidatorDef {
@@ -8,8 +8,7 @@ export class PiValidatorDef {
     languageName: string;
     conceptRules: ConceptRuleSet[];
 
-    constructor() { 
-    }
+    constructor() {}
 }
 
 export class ConceptRuleSet {
@@ -20,7 +19,7 @@ export class ConceptRuleSet {
 
 export abstract class ValidationRule {
     location: ParseLocation;
-    toPiString() : string {
+    toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
     }
 }
@@ -47,14 +46,13 @@ export class NotEmptyRule extends ValidationRule {
     property: PiLangExp;
 
     toPiString(): string {
-        return `@notEmpty ${this.property.toPiString()}`; 
+        return `@notEmpty ${this.property.toPiString()}`;
     }
 }
 export class ValidNameRule extends ValidationRule {
     property: PiLangExp;
 
     toPiString(): string {
-        return `@validName ${this.property.toPiString()}`; 
+        return `@validName ${this.property.toPiString()}`;
     }
 }
-

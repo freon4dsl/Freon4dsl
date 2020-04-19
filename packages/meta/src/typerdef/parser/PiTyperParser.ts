@@ -8,7 +8,7 @@ let typerParser = require("./PiTyperGrammar");
 export class PiTyperParser extends PiParser<PiTypeDefinition> {
     public language: PiLanguageUnit;
 
-    constructor(language : PiLanguageUnit) {
+    constructor(language: PiLanguageUnit) {
         super();
         this.parser = typerParser;
         this.msg = "Typer";
