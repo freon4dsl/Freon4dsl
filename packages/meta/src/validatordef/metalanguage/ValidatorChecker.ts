@@ -120,13 +120,13 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
 
     checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: PiLangConcept) {
         // check whether nr.property is a property of enclosingConcept
-        // and whether it is a list 
-        // if so, set myProperty to this property,
+        // and whether it is a list
         let myProp : PiLangProperty;
         if( nr.property != null ) {
             this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
+            this.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,
+                `NotEmpty rule '${nr.property.toPiString()}' should refer to a list [line: ${nr.location?.start.line}, column: ${nr.location?.start.column}].`)
         }
-        // TODO set nr.property
     }
 }
 
