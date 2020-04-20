@@ -14,13 +14,12 @@ DemoEntity {
     conformsto self.base
 }
 */
+
 DemoAttribute {
     infertype self.declaredType
 }
+
 DemoFunction {
-    infertype self.declaredType
-}
-DemoVariable  {
     infertype self.declaredType
 }
 DemoExpression {
