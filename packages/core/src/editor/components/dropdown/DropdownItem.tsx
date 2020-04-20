@@ -25,13 +25,7 @@ export class DropdownItem extends React.Component<DropdownItemProps, {}> {
         }
 
         return (
-            <div
-                className={allClassNames}
-                key="label"
-                onMouseDown={this.onMouseDown}
-                onClick={this.onClick}
-                tabIndex={0}
-            >
+            <div className={allClassNames} key="label" onMouseDown={this.onMouseDown} onClick={this.onClick} tabIndex={0}>
                 {this.props.option.label}
             </div>
         );

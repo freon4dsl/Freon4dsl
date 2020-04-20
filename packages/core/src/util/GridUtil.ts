@@ -24,10 +24,7 @@ export class GridUtil {
         editor: PiEditor,
         initializer?: Partial<GridBox>
     ): Box {
-        PiUtils.CHECK(
-            element[listPropertyName] === list,
-            "createCollectionRowGrid: listPropertyname should result in the list"
-        );
+        PiUtils.CHECK(element[listPropertyName] === list, "createCollectionRowGrid: listPropertyname should result in the list");
         const cells: GridCell[] = [];
         columnNames.forEach((item: string, index: number) => {
             cells.push({
@@ -45,10 +42,7 @@ export class GridUtil {
                 cells.push({
                     row: rowIndex + 2,
                     column: columnIndex + 1,
-                    box: new HorizontalListBox(item, "xx-" + columnIndex, [
-                        projector(item),
-                        new AliasBox(item, "new-" + columnIndex, NBSP)
-                    ])
+                    box: new HorizontalListBox(item, "xx-" + columnIndex, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP)])
                 });
             });
         });
@@ -61,20 +55,11 @@ export class GridUtil {
         });
 
         // Add keyboard actions to grid such that new rows can be added by Return Key
+        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid<ELEMENT_TYPE>(element, role, builder));
         editor.keyboardActions.splice(
             0,
             0,
-            this.createKeyboardShortcutForCollectionGrid<ELEMENT_TYPE>(element, role, builder)
-        );
-        editor.keyboardActions.splice(
-            0,
-            0,
-            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(
-                element,
-                listPropertyName,
-                builder,
-                "textbox-name"
-            )
+            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(element, listPropertyName, builder, "textbox-name")
         );
         return new GridBox(element, role, cells, initializer);
     }
@@ -104,18 +89,11 @@ export class GridUtil {
                 cells.push({
                     column: rowIndex + 2,
                     row: columnIndex + 1,
-                    box: new HorizontalListBox(item, "xx-" + columnIndex, [
-                        projector(item),
-                        new AliasBox(item, "new-" + columnIndex, NBSP)
-                    ])
+                    box: new HorizontalListBox(item, "xx-" + columnIndex, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP)])
                 });
             });
         });
-        editor.keyboardActions.splice(
-            0,
-            0,
-            this.createKeyboardShortcutForCollectionGrid<ELEMENT_TYPE>(element, role, builder)
-        );
+        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid<ELEMENT_TYPE>(element, role, builder));
         return new GridBox(element, role, cells, initializer);
     }
 
@@ -133,19 +111,7 @@ export class GridUtil {
     ): KeyboardShortcutBehavior {
         const listKeyboardShortcut: KeyboardShortcutBehavior = {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
-            activeInBoxRoles: [
-                "new-0",
-                "new-1",
-                "new-2",
-                "new-3",
-                "new-4",
-                "new-5",
-                "new-6",
-                "new-7",
-                "new-8",
-                "new-9",
-                "new-10"
-            ],
+            activeInBoxRoles: ["new-0", "new-1", "new-2", "new-3", "new-4", "new-5", "new-6", "new-7", "new-8", "new-9", "new-10"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;
                 const proc = element.piContainer();

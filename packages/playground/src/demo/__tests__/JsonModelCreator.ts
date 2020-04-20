@@ -30,5 +30,4 @@ export class JsonModelCreator {
         correctModel.entities.push(companyEnt);
         return correctModel;
     }
-
 }

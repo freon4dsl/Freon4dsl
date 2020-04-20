@@ -3,7 +3,6 @@ import { Language } from "./Language";
 
 // const MODEL_TYPE = "$typename";
 
-
 /**
  * Helper class to serialize a model using MobXModelElementImpl.
  * Will take care of model references.
@@ -107,7 +106,7 @@ export class GenericModelSerializer {
     convertToJSON(tsObject: PiElement): Object {
         const typename = tsObject.piLanguageConcept();
         // console.log("start converting concept name " + typename);
-        var result: Object = { "$typename": typename };
+        var result: Object = { $typename: typename };
         for (let p of this.language.allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyType);
             switch (p.propertyType) {
@@ -134,7 +133,7 @@ export class GenericModelSerializer {
                     } else {
                         // single reference
                         const value = tsObject[p.name];
-                        result[p.name] = (!!value ? tsObject[p.name]["name"] : null );
+                        result[p.name] = !!value ? tsObject[p.name]["name"] : null;
                     }
                     break;
                 case "enumeration":
@@ -169,4 +168,3 @@ export class GenericModelSerializer {
         return result;
     }
 }
-

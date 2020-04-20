@@ -28,7 +28,7 @@ export class PiLogger {
     category: string;
     active: boolean = true;
 
-    constructor(cat: string) { 
+    constructor(cat: string) {
         this.category = cat;
     }
 
@@ -65,7 +65,7 @@ export class PiLogger {
         return typeof msg === "string" ? msg : msg();
     }
 
-    protected logToConsole(color : string, message: string): void {
+    protected logToConsole(color: string, message: string): void {
         if (PiLogger.filter === null) {
             console.log(color, message, PiLogger.FgBlack, "");
             // this.colorMyText();
@@ -78,19 +78,19 @@ export class PiLogger {
 
     // following does not work
     colorMyText() {
-        var text = 'some text with some {special} formatting on this {keyword} and this {keyword}';
-        var splitText = text.split(' ');
+        var text = "some text with some {special} formatting on this {keyword} and this {keyword}";
+        var splitText = text.split(" ");
         var cssRules = [];
-        var styledText = '';
-        for (var split of splitText)  {
+        var styledText = "";
+        for (var split of splitText) {
             if (/^\{/.test(split)) {
                 cssRules.push(PiLogger.FgBlue);
             } else {
-                cssRules.push('color:inherit')
+                cssRules.push("color:inherit");
             }
-            styledText += `%c${split} `
-        };
-        console.log(styledText , ...cssRules)
+            styledText += `%c${split} `;
+        }
+        console.log(styledText, ...cssRules);
     }
 }
 

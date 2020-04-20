@@ -238,7 +238,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
                     if (isAliasBox(this.props.box)) {
                         PiUtils.handleKeyboardShortcut(Keys.reactToKey(e), this.props.box, this.props.editor);
                         // if (handled) {
-                            e.stopPropagation();
+                        e.stopPropagation();
                         // }
                     }
                     // TODO Copied from TExtComponent for special case, should solve generically

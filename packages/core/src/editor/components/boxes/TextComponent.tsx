@@ -134,17 +134,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
     };
 
     private onKeyDown = async (e: React.KeyboardEvent<any>) => {
-        EVENT_LOG.info(
-            this,
-            "onKeyDown: key " +
-                e.key +
-                " keyCode " +
-                e.keyCode +
-                " charCode " +
-                e.charCode +
-                " isMeta?: " +
-                isMetaKey(e)
-        );
+        EVENT_LOG.info(this, "onKeyDown: key " + e.key + " keyCode " + e.keyCode + " charCode " + e.charCode + " isMeta?: " + isMetaKey(e));
         let handled: boolean = false;
         const caretPosition = this.getCaretPosition();
         if (e.keyCode === Keys.DELETE) {

@@ -12,13 +12,7 @@ export class IndentBox extends Box {
     @observable child: Box = null;
     @observable indent: number = 4;
 
-    constructor(
-        exp: PiElement,
-        role: string,
-        indent: number,
-        child: Box
-
-    ) {
+    constructor(exp: PiElement, role: string, indent: number, child: Box) {
         super(exp, role);
         this.indent = indent;
         this.child = child;
@@ -30,7 +24,7 @@ export class IndentBox extends Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box {
-        return this.child.firstLeaf
+        return this.child.firstLeaf;
     }
 
     get lastLeaf(): Box {
@@ -42,9 +36,8 @@ export class IndentBox extends Box {
     }
 
     get children(): ReadonlyArray<Box> {
-        return [ this.child];
+        return [this.child];
     }
-
 }
 
 export function isIndentBox(b: Box): b is IndentBox {

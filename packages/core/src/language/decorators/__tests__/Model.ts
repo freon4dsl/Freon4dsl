@@ -48,16 +48,6 @@ export function printExp(exp: Expression | null, indent: string) {
         });
     } else if (exp instanceof Expression) {
         const cont = exp.container as Expression;
-        console.log(
-            indent +
-                exp.name +
-                " => " +
-                (cont ? cont.name : "null") +
-                " : " +
-                exp.propertyName +
-                "[" +
-                exp.propertyIndex +
-                "]"
-        );
+        console.log(indent + exp.name + " => " + (cont ? cont.name : "null") + " : " + exp.propertyName + "[" + exp.propertyIndex + "]");
     }
 }

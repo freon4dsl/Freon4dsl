@@ -34,11 +34,7 @@ export class AliasComponent extends AbstractChoiceComponent {
 
     protected getOptions = (): SelectOption[] => {
         const result = this.props.editor.behaviors
-            .filter(
-                a =>
-                    a.activeInBoxRoles.includes(this.props.box.role) &&
-                    MatchUtil.partialMatch(this.element.innerText, a.trigger)
-            )
+            .filter(a => a.activeInBoxRoles.includes(this.props.box.role) && MatchUtil.partialMatch(this.element.innerText, a.trigger))
             .map(a => {
                 return {
                     id: triggerToString(a.trigger),
@@ -50,10 +46,7 @@ export class AliasComponent extends AbstractChoiceComponent {
     };
 
     handleStringInput = async (s: string) => {
-        LOGGER.info(
-            this,
-            "handleStringInput for box " + this.props.box.role + " isOpen " + this.OPEN + " text is [" + this.text + "]"
-        );
+        LOGGER.info(this, "handleStringInput for box " + this.props.box.role + " isOpen " + this.OPEN + " text is [" + this.text + "]");
         const options = this.getOptions();
         if (options.length > 1) {
             LOGGER.info(this, " > 1 option");

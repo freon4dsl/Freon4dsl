@@ -11,6 +11,7 @@
   },
   "scripts": {
     "projectit": 	"ts-node ../meta/src/commandline/projectit -v all -d src/demo/defs -o src/demo",
+    "projectit-watch": 	"ts-node ../meta/src/commandline/projectit -vw all -d src/demo/defs -o src/demo",
     "projectit-nonverbose": 	"ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",
     "test-expressions": 		"ts-node ../meta/src/commandline/projectit -v test-expressions -l src/demo/defs/LanguageDefinition.lang -X src/demo/defs/LanguageExpressions.pitest -o src/demo",
     "meta-it": 		"ts-node ../meta/src/commandline/projectit -v meta-it -l src/demo/defs/LanguageDefinition.lang -o src/demo",
@@ -32,6 +33,7 @@
     "@uifabric/fluent-theme": "^7.1.51",
     "@fluentui/react": "^7.105.13",
     "@fluentui/react-northstar": "^0.47.0",
+    "@types/pegjs": "^0.10.1",
     "@types/react": "16.8.15",
     "@types/react-dom": "16.8.4",
     "@types/react-router": "^5.1.4",
@@ -45,17 +47,16 @@
     "ts-node": "^8.4.1",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.2"
+    "webpack-dev-server": "^3.8.2",
+    "prettier": "^2.0.4",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "@projectit/core": "^0.0.5",
     "@projectit/meta": "^0.0.5",
     "@types/lodash": "4.14.73",
-    "@types/pegjs": "^0.10.1",
     "@types/history": "^4.7.5",
     "global": "^4.4.0",
-    "prettier": "^1.15.3",
-    "typescript": "^3.8.3",
     "mobx": "^5.14.0",
     "mobx-react": "6.1.3"
   },

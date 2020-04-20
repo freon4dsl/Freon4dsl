@@ -7,7 +7,7 @@ let pegjsParser = require("./ExpressionGrammar");
 export class LanguageExpressionParser extends PiParser<LanguageExpressionTester> {
     public language: PiLanguageUnit;
 
-    constructor(language : PiLanguageUnit) {
+    constructor(language: PiLanguageUnit) {
         super();
         this.parser = pegjsParser;
         this.msg = "Language Expressions";

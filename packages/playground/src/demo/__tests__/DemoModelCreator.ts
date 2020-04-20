@@ -30,7 +30,6 @@ import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMult
 import { DemoUnparser } from "../unparser/DemoUnparser";
 
 export class DemoModelCreator {
-
     public createModelWithAppliedfeature(): DemoModel {
         let result = this.createCorrectModel();
         let length = result.functions[0];
@@ -98,17 +97,17 @@ export class DemoModelCreator {
         let correctModel: DemoModel = DemoModel.create("DemoModel_1");
 
         const length = DemoFunction.create("length");
-        const Variable1 = DemoVariable.create("Variable1")
-        const VariableNumber2 = DemoVariable.create("VariableNumber2")
+        const Variable1 = DemoVariable.create("Variable1");
+        const VariableNumber2 = DemoVariable.create("VariableNumber2");
         length.parameters.push(Variable1);
         length.parameters.push(VariableNumber2);
         length.expression = this.addComplexExpression1();
         // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
         const determine = DemoFunction.create("determine");
-        const AAP = DemoVariable.create("AAP")
+        const AAP = DemoVariable.create("AAP");
         determine.parameters.push(AAP);
-        determine.expression = MakePlusExp("Hello Demo", "Goodbye")
+        determine.expression = MakePlusExp("Hello Demo", "Goodbye");
         // determine(AAP) = "Hello Demo" + "Goodbye"
 
         const last = DemoFunction.create("last");
@@ -149,17 +148,43 @@ export class DemoModelCreator {
         correctModel.entities.push(personEnt);
         correctModel.entities.push(companyEnt);
 
-        this.addEntityTypes(companyEnt, personEnt, personName, companyName, age,
-            VAT_Number, length, first, last, determine,
-            another, Variable1, VariableNumber2, Resultvar, AAP,
-            NOOT);
+        this.addEntityTypes(
+            companyEnt,
+            personEnt,
+            personName,
+            companyName,
+            age,
+            VAT_Number,
+            length,
+            first,
+            last,
+            determine,
+            another,
+            Variable1,
+            VariableNumber2,
+            Resultvar,
+            AAP,
+            NOOT
+        );
         return correctModel;
     }
 
-    private addSimpleTypes(personName: DemoAttribute, companyName: DemoAttribute, age: DemoAttribute,
-                           VAT_Number: DemoAttribute, length: DemoFunction, first: DemoFunction, last: DemoFunction, determine: DemoFunction,
-                           another: DemoFunction, Variable1: DemoVariable, VariableNumber2: DemoVariable, Resultvar: DemoVariable, AAP: DemoVariable,
-                           NOOT: DemoVariable) {
+    private addSimpleTypes(
+        personName: DemoAttribute,
+        companyName: DemoAttribute,
+        age: DemoAttribute,
+        VAT_Number: DemoAttribute,
+        length: DemoFunction,
+        first: DemoFunction,
+        last: DemoFunction,
+        determine: DemoFunction,
+        another: DemoFunction,
+        Variable1: DemoVariable,
+        VariableNumber2: DemoVariable,
+        Resultvar: DemoVariable,
+        AAP: DemoVariable,
+        NOOT: DemoVariable
+    ) {
         // personName.declaredType = DemoAttributeType.String;
         // companyName.declaredType = DemoAttributeType.String;
         // age.declaredType = DemoAttributeType.Integer;
@@ -176,10 +201,24 @@ export class DemoModelCreator {
         // NOOT.declaredType = DemoAttributeType.Boolean;
     }
 
-    private addEntityTypes(companyEnt: DemoEntity, personEnt: DemoEntity, personName: DemoAttribute, companyName: DemoAttribute, age: DemoAttribute,
-                           VAT_Number: DemoAttribute, length: DemoFunction, first: DemoFunction, last: DemoFunction, determine: DemoFunction,
-                           another: DemoFunction, Variable1: DemoVariable, VariableNumber2: DemoVariable, Resultvar: DemoVariable, AAP: DemoVariable,
-                           NOOT: DemoVariable) {
+    private addEntityTypes(
+        companyEnt: DemoEntity,
+        personEnt: DemoEntity,
+        personName: DemoAttribute,
+        companyName: DemoAttribute,
+        age: DemoAttribute,
+        VAT_Number: DemoAttribute,
+        length: DemoFunction,
+        first: DemoFunction,
+        last: DemoFunction,
+        determine: DemoFunction,
+        another: DemoFunction,
+        Variable1: DemoVariable,
+        VariableNumber2: DemoVariable,
+        Resultvar: DemoVariable,
+        AAP: DemoVariable,
+        NOOT: DemoVariable
+    ) {
         personName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
         companyName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
         age.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
@@ -252,7 +291,4 @@ export class DemoModelCreator {
 
         return plusExpression;
     }
-
-
-
 }

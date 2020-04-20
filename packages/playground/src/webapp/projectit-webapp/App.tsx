@@ -44,31 +44,41 @@ export class App extends React.Component<{}, IDialogState> {
         const { hideDialog, title, subText, content } = this.state;
         return (
             <div>
-                <div style={{
-                    height: "100%",
-                    margin: "0"
-                }}>
-                    <div style={{
-                        minHeight: "100%",
-                        minWidth: "100%"
-                    }}>
-                        <div style={{
-                            padding: "20px",
-                            paddingBottom: "50px"
-                        }}>
-                            <MainGrid/>
+                <div
+                    style={{
+                        height: "100%",
+                        margin: "0"
+                    }}
+                >
+                    <div
+                        style={{
+                            minHeight: "100%",
+                            minWidth: "100%"
+                        }}
+                    >
+                        <div
+                            style={{
+                                padding: "20px",
+                                paddingBottom: "50px"
+                            }}
+                        >
+                            <MainGrid />
                         </div>
                     </div>
-                    <div style={{
-                        "height": "50px",
-                        "marginTop": "-50px",
-                        "backgroundColor": "darkblue",
-                        "color": "rgba(211, 227, 253, 255)"
-                    }}>
+                    <div
+                        style={{
+                            height: "50px",
+                            marginTop: "-50px",
+                            backgroundColor: "darkblue",
+                            color: "rgba(211, 227, 253, 255)"
+                        }}
+                    >
                         {/*"footer"*/}
                         <Flex gap="gap.small" padding="padding.medium" hAlign="center">
-                            <Text content="Created by ProjectIt " size='medium'/>
-                            <Link href="http://www.projectit.org/" target="_blank"><Text content="(www.projectit.org)."/></Link>
+                            <Text content="Created by ProjectIt " size="medium" />
+                            <Link href="http://www.projectit.org/" target="_blank">
+                                <Text content="(www.projectit.org)." />
+                            </Link>
                         </Flex>
                         {/*Global dialog needs to be on the main page*/}
                         <Dialog
@@ -90,14 +100,13 @@ export class App extends React.Component<{}, IDialogState> {
                         >
                             {content}
                             <DialogFooter>
-                                <PrimaryButton onClick={this._okDialog} text="Ok"/>
-                                {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel"/> : null}
+                                <PrimaryButton onClick={this._okDialog} text="Ok" />
+                                {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel" /> : null}
                             </DialogFooter>
                         </Dialog>
                     </div>
                 </div>
             </div>
-
         );
     }
 
@@ -128,7 +137,7 @@ export class App extends React.Component<{}, IDialogState> {
     };
 
     private setInitialDialogContent = () => {
-        return <Text content="There should be some text here" size='medium'/>;
+        return <Text content="There should be some text here" size="medium" />;
     };
 
     // set of statics to enable the calling of the dialog from elsewhere in the application
@@ -139,7 +148,7 @@ export class App extends React.Component<{}, IDialogState> {
     public static showSaveDialog(onSave: () => void) {
         this.onSave = onSave;
         !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
-    };
+    }
 
     public static showDialog = (): void => {
         !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
@@ -150,18 +159,18 @@ export class App extends React.Component<{}, IDialogState> {
     };
 
     public static useDefaultButton = (): void => {
-        !!App.thisApp ? App.thisApp.useDefaultButton = true : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.useDefaultButton = true) : console.error("No App object found");
     };
 
     public static setDialogTitle = (newTitle: string): void => {
-        !!App.thisApp ? App.thisApp.state.title = newTitle : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.state.title = newTitle) : console.error("No App object found");
     };
 
     public static setDialogSubText = (newSubText: string): void => {
-        !!App.thisApp ? App.thisApp.state.subText = newSubText : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.state.subText = newSubText) : console.error("No App object found");
     };
 
     public static setDialogContent = (newContent: JSX.Element): void => {
-        !!App.thisApp ? App.thisApp.state.content = newContent : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.state.content = newContent) : console.error("No App object found");
     };
 }

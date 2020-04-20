@@ -1,15 +1,14 @@
 import { BinExpression, Expression, ModelContext } from "./Model";
 import { observe, reaction } from "mobx";
-import { } from "jasmine";
+import {} from "jasmine";
 
 describe("Model", () => {
     describe("dummy", () => {
-        console.log("Dummy")
+        console.log("Dummy");
 
         it("dummy", () => {
-            expect(1+1).toBe(2);
+            expect(1 + 1).toBe(2);
         });
-
     });
 });
 

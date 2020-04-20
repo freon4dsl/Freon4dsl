@@ -5,7 +5,7 @@ import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
 import Menubar from "./Menubar";
 import { EditorArea } from "./EditorArea";
-const Logo = require('../images/inverse-colors.png');
+const Logo = require("../images/inverse-colors.png");
 // this component holds the header, the toolbar, the editor area, and the footer
 
 // TODO use themes or get rid of this:
@@ -35,33 +35,41 @@ export const MainGrid: React.FunctionComponent = () => {
         // TODO looks like columns are no longer needed
         // TODO the only color that is working is "brand"
         <div>
-            <div style={{
-                height: "60px",
-                backgroundColor: "darkblue"
-            }}>
-                <Flex gap="gap.small" padding="padding.medium" hAlign="stretch"
-                      styles={{
-                          height: '60px',
-                          gridColumn: 'span 6',
-                          backgroundColor: "darkblue"
-                      }}>
-                    <Flex.Item align='center' grow>
-                        <Header as="h3" content="ProjectIt Language Environment" color="white"/>
+            <div
+                style={{
+                    height: "60px",
+                    backgroundColor: "darkblue"
+                }}
+            >
+                <Flex
+                    gap="gap.small"
+                    padding="padding.medium"
+                    hAlign="stretch"
+                    styles={{
+                        height: "60px",
+                        gridColumn: "span 6",
+                        backgroundColor: "darkblue"
+                    }}
+                >
+                    <Flex.Item align="center" grow>
+                        <Header as="h3" content="ProjectIt Language Environment" color="white" />
                     </Flex.Item>
-                    <Flex.Item align='center' size="size.small" >
-                        <Image src={Logo}  alt={"ProjectIt"}
-                               styles={{
-                                   maxHeight: '60px',
-                                   maxWidth: "80px"
-                               }}
+                    <Flex.Item align="center" size="size.small">
+                        <Image
+                            src={Logo}
+                            alt={"ProjectIt"}
+                            styles={{
+                                maxHeight: "60px",
+                                maxWidth: "80px"
+                            }}
                         />
                     </Flex.Item>
                 </Flex>
             </div>
             {/* "menubar" */}
-            <Menubar/>
+            <Menubar />
             {/* editor area */}
-            <EditorArea/>
+            <EditorArea />
             {/*{DemoEnvironment.getInstance().projectionalEditorComponent}*/}
         </div>
     );

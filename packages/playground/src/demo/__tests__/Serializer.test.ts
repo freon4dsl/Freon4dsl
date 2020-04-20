@@ -37,7 +37,6 @@ describe("Demo Model", () => {
             // expect(e1.functions.length).toBe(1);
             // expect(inModel.functions.length).toBe(3);
             expect(e1.piLanguageConcept()).toBe("DemoEntity");
-
         });
 
         // test("model functions should be set correctly", () => {

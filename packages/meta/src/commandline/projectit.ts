@@ -17,6 +17,7 @@ export class ProjectItParser extends CommandLineParser {
     private typerGenerator: ProjectItGenerateTyper;
     private testGenerator: ProjectItTestLanguageExpressions;
     private verboseArg: CommandLineFlagParameter;
+    private watchArg: CommandLineFlagParameter;
 
     public constructor() {
         super({
@@ -48,11 +49,19 @@ export class ProjectItParser extends CommandLineParser {
             parameterShortName: "-v",
             description: "Show extra logging detail"
         });
+        this.watchArg = this.defineFlagParameter({
+            parameterLongName: "--watch",
+            parameterShortName: "-w",
+            description: "Start generator in watch mode (only in combination with 'all')"
+        });
     }
 
     protected onExecute(): Promise<void> {
         if (!this.verboseArg.value) PiLogger.muteAllLogs();
         if (this.verboseArg.value) PiLogger.unmuteAllLogs();
+        if (!!this.watchArg.value) {
+            this.allGenerator.watch = true;
+        }
         try {
             return super.onExecute();
         } catch (e) {

@@ -13,8 +13,8 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
         super({
             actionName: "scope-it",
             summary: "Generates the TypeScript code for the scoper for your language",
-            documentation: "Generates TypeScript code for the scoper of language defined in the .lang file. " + 
-            "The scoper definition is found in the .scop file."
+            documentation:
+                "Generates TypeScript code for the scoper of language defined in the .lang file. " + "The scoper definition is found in the .scop file."
         });
     }
 

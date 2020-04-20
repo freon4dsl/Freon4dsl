@@ -4,7 +4,7 @@ import { PiLogger } from "./PiLogging";
 import { Box } from "../editor/boxes/Box";
 import { PiEditor } from "../editor/PiEditor";
 
-const LOGGER = new PiLogger("BehaviorUtils");//.mute();
+const LOGGER = new PiLogger("BehaviorUtils"); //.mute();
 
 export enum PiCaretPosition {
     UNSPECIFIED,
@@ -54,14 +54,7 @@ export async function executeBehavior(box: Box, text: string, editor: PiEditor):
         if (a.activeInBoxRoles.includes(box.role)) {
             if (isRegExp(trigger)) {
                 const matchArray = text.match(trigger);
-                LOGGER.log(
-                    "MATCH " +
-                        text +
-                        " against " +
-                        trigger +
-                        "  results in " +
-                        (!!matchArray ? matchArray.length : "null")
-                );
+                LOGGER.log("MATCH " + text + " against " + trigger + "  results in " + (!!matchArray ? matchArray.length : "null"));
                 if (matchArray !== null && text === matchArray[0]) {
                     a.execute(box, text, editor);
                     return BehaviorExecutionResult.EXECUTED;

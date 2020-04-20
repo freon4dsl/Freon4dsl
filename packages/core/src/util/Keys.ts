@@ -72,12 +72,7 @@ export const DELETE = 46;
 
 export function isNumeric(event: React.KeyboardEvent<any>): boolean {
     const keyCode = event.keyCode;
-    return (
-        !event.altKey &&
-        !event.shiftKey &&
-        !event.ctrlKey &&
-        ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105))
-    );
+    return !event.altKey && !event.shiftKey && !event.ctrlKey && ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105));
 }
 
 export function isPrintable(event: React.KeyboardEvent<any>): boolean {

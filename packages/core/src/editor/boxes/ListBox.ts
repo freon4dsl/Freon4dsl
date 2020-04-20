@@ -145,11 +145,7 @@ export class VerticalPiElementListBox extends VerticalListBox {
             })
         );
         // Add keyboard actions to grid such that new rows can be added by Return Key
-        this.editor.keyboardActions.splice(
-            0,
-            0,
-            createKeyboardShortcutForList(this.role, this.insertElement, this.roleToSelectAfterCreation)
-        );
+        this.editor.keyboardActions.splice(0, 0, createKeyboardShortcutForList(this.role, this.insertElement, this.roleToSelectAfterCreation));
         // this.editor.keyboardActions.splice(0,0,
         //     createKeyboardShortcutForEmptyList(this.role, this.insertElement, this.roleToSelectAfterCreation))
     }

@@ -49,8 +49,8 @@ export class LanguageGenerator {
         Helpers.createDirIfNotExisting(this.languageGenFolder);
         Helpers.createDirIfNotExisting(this.utilsGenFolder);
         Helpers.createDirIfNotExisting(this.environmentGenFolder);
+        // TODO clean files in utils/gen, except Unparser!
         Helpers.deleteFilesInDir(this.languageGenFolder);
-        Helpers.deleteFilesInDir(this.utilsGenFolder);
         Helpers.deleteFilesInDir(this.environmentGenFolder);
 
         // set relative path to get the imports right

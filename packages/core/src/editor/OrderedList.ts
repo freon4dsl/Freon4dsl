@@ -4,11 +4,9 @@ export interface NamedElement<T> {
 }
 
 export class OrderedList<T> {
-
     private elements: NamedElement<T>[] = [];
 
-    constructor() {
-    }
+    constructor() {}
 
     toArray(): NamedElement<T>[] {
         return this.elements;
@@ -37,7 +35,7 @@ export class OrderedList<T> {
         }
         const size = this.elements.length;
         const tobeMoved = this.elements[index];
-        for (let i: number = index; i < (size - 1); i++) {
+        for (let i: number = index; i < size - 1; i++) {
             this.elements[i] = this.elements[i + 1];
         }
         this.elements[0] = tobeMoved;
