@@ -91,7 +91,7 @@ describe("Testing Validator", () => {
             const personEnt = DemoEntity.create("Person");
             attribute.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
             // attribute.declaredType = DemoAttributeType.String;
-            variableExpression.attribute = new PiElementReference<DemoAttribute>(attribute, "DemoAttribute");
+            variableExpression.variable = new PiElementReference<DemoVariable>(attribute, "DemoVariable");
 
             const plusExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(plusExpression, variableExpression);

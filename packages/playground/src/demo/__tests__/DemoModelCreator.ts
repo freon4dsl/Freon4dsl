@@ -34,7 +34,7 @@ export class DemoModelCreator {
         let result = this.createCorrectModel();
         let length = result.functions[0];
         let expression: DemoVariableRef = new DemoVariableRef();
-        expression.attribute = new PiElementReference<DemoAttribute>(length.parameters[0], "DemoAttribute"); // Variable1 : Person
+        expression.variable = new PiElementReference<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1 : Person
         let xx: AppliedFeature = new AppliedFeature();
         xx.value = "myfirstAppliedFeature";
         xx.type = new PiElementReference<DemoEntity>(result.entities[1], "DemoEntity"); // Company
@@ -254,7 +254,7 @@ export class DemoModelCreator {
 
         const varRef = new DemoVariableRef();
         // varRef.referredName = "Variable1";
-        varRef.attribute = new PiElementReference<DemoAttribute>(attr, "DemoAttribute");
+        varRef.variable = new PiElementReference<DemoAttribute>(attr, "DemoAttribute");
 
         const equals: DemoBinaryExpression = MakeEqualsExp("No", varRef); // ("=");
         // equals : "No" = Variable1

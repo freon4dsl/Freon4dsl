@@ -1,7 +1,7 @@
 import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangPrimitiveProperty } from "../../languagedef/metalanguage/PiLanguage";
 import { ConceptRuleSet, PiValidatorDef, CheckEqualsTypeRule, ValidationRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
-import { PiLangConceptReference, PiLangPropertyReference } from "../../languagedef/metalanguage/PiLangReferences";
+import { nameForSelf } from "../../languagedef/parser/ExpressionCreators";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
@@ -62,25 +62,32 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if (!!tr.property) {
             this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
         } else {
-            const myProp = enclosingConcept.allProperties().find(e => {
-                e.name === "name"
-            });
+            let myProp: PiLangProperty;
+            for (let i of enclosingConcept.allProperties()) {
+                if (i.name === "name") {
+                    myProp = i;
+                }
+            }
             this.nestedCheck({
-                check:!(!!myProp),
+                check:!!myProp,
                 error: `Cannot find property 'name' in ${enclosingConcept.name} [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
                     tr.property = new PiLangSelfExp();
+                    tr.property.sourceName = nameForSelf;
+                    tr.property.referedElement = enclosingConcept;
                     tr.property.appliedfeature = new PiLangAppliedFeatureExp();
                     tr.property.appliedfeature.sourceName = "name";
                     tr.property.appliedfeature.referedElement = myProp;
-                }
+                    tr.property.location = tr.location;
+                  }
             });
         }
-        // TODO check if found property is of type 'string'
-        // if (!!tr.property) {
-        //     this.simpleCheck(tr.property instanceof PiLangPrimitiveProperty && (tr.property as PiLangPrimitiveProperty).primType === "string",
-        //         "Property '" + tr.property.sourceName + "' should have type 'string'");
-        // }
+        // check if found property is of type 'string'
+        if (!!tr.property) {
+            let myProp = tr.property.findRefOfLastAppliedFeature();
+            this.simpleCheck((myProp instanceof PiLangPrimitiveProperty) && myProp.primType === "string",
+                `Validname rule expression '${tr.property.toPiString()}' should have type 'string' [line: ${tr.property.location?.start.line}, column: ${tr.property.location?.start.column}].`);
+        }
     }
 
     checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: PiLangConcept) {

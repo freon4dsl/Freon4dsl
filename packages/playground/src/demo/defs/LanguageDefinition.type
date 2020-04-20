@@ -62,5 +62,5 @@ DemoVariable {
     infertype self.declaredType
 }
 DemoVariableRef   {
-    infertype self.attribute
+    infertype self.variable
 }
