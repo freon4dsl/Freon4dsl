@@ -1,6 +1,7 @@
 import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
+import * as os from 'os';
 
 export class PiTypeDefinition {
     location: ParseLocation;
@@ -32,7 +33,7 @@ export class PiTypeAnyTypeRule extends PiTypeRule {
     statements: PiTypeStatement[] = [];
 
     toPiString(): string {
-        return `anyType { ${this.statements.map( t => t.toPiString() ).join("\n")} }`;
+        return `anyType { ${this.statements.map( t => t.toPiString() ).join(os.EOL)} }`;
     }
 }
 
@@ -41,7 +42,7 @@ export class PiTypeConceptRule extends PiTypeRule {
     statements: PiTypeStatement[] = [];
 
     toPiString(): string {
-        return `${this.conceptRef.name} { ${this.statements.map( t => t.toPiString() ).join("\n")} }`;
+        return `${this.conceptRef.name} { ${this.statements.map( t => t.toPiString() ).join(os.EOL)} }`;
     }
 }
 

@@ -1,5 +1,6 @@
 import { Names, PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import * as os from 'os';
 
 export class WorkerInterfaceTemplate {
     constructor() {
@@ -16,12 +17,12 @@ export class WorkerInterfaceTemplate {
         ${language.classes.map(concept => 
             `execBefore${concept.name}(modelelement: ${concept.name});
             execAfter${concept.name}(modelelement: ${concept.name});`
-        ).join("\n\n") }
+        ).join(os.EOL + os.EOL) }
 
         ${language.enumerations.map(concept => 
             `execBefore${concept.name}(modelelement: ${concept.name});
             execAfter${concept.name}(modelelement: ${concept.name});`
-        ).join("\n\n") }
+        ).join(os.EOL + os.EOL) }
         
         }`;
     }

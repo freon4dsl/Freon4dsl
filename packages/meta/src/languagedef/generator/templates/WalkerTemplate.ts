@@ -1,6 +1,7 @@
 import { Names, PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
+import * as os from 'os';
 
 export class WalkerTemplate {
     constructor() {
@@ -51,7 +52,7 @@ export class WalkerTemplate {
                             :
                                 `this.walk(modelelement.${part.name}, includeChildren );`
                             )
-                        ).join("\n")}
+                        ).join(os.EOL)}
                     }`
                     : ``
                     )}
@@ -60,7 +61,7 @@ export class WalkerTemplate {
                     LOGGER.error(this, "No worker found.");
                     return;
                 }
-            }`).join("\n")}
+            }`).join(os.EOL)}
 
             ${language.enumerations.map(concept => `
             public walk${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) {
@@ -68,7 +69,7 @@ export class WalkerTemplate {
                     this.myWorker.execBefore${concept.name}(modelelement);
                     this.myWorker.execAfter${concept.name}(modelelement);
                 }
-            }`).join("\n")}
+            }`).join(os.EOL)}
         }`;
     }
 

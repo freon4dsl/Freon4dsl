@@ -10,6 +10,7 @@ import {
     DefEditorSubProjection, Direction, DefEditorProjectionIndent
 } from "../../metalanguage";
 import has = Reflect.has;
+import * as os from 'os';
 
 export class ProjectionTemplate {
     constructor() {
@@ -114,7 +115,7 @@ export class ProjectionTemplate {
                 private get${c.name}Box(element: ${Names.concept(c)}) {
                      return this.createBinaryBox(this, element, "${editorDef.findConceptEditor(c).symbol}");
                 }                
-                `).join("\n")}    
+                `).join(os.EOL)}    
                 
                 ${ language.expressionPlaceholder() !== null ? `
                 private get${language.expressionPlaceholder().name}Box(element: ${Names.concept(language.expressionPlaceholder())}) {
@@ -123,7 +124,7 @@ export class ProjectionTemplate {
                 :"" }
       
 
-                ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
+                ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join(os.EOL)}
                 
                 ${nonBinaryConceptsWithDefaultProjection.map(c => `
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
@@ -189,7 +190,7 @@ export class ProjectionTemplate {
                     ])
                 ${c.expression() ? `])`: ""}
                 }                
-                `).join("\n")}          
+                `).join(os.EOL)}          
                   
                 private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
                     let binBox = createDefaultBinaryBox(this, exp, symbol);

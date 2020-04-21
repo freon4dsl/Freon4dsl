@@ -9,6 +9,7 @@ import {
     PiLangClass,
     PiLanguageUnit
 } from "../../metalanguage/PiLanguage";
+import * as os from 'os';
 
 export class LanguageTemplate {
     constructor() {
@@ -19,19 +20,19 @@ export class LanguageTemplate {
         
             ${language.classes.map(concept =>
                 `import { ${Names.concept(concept)} } from "./${Names.concept(concept)}";`
-            ).join("\n")}
+            ).join(os.EOL)}
             ${language.enumerations.map(enu =>
                 `import { ${Names.enumeration(enu)} } from "./${Names.enumeration(enu)}";`
-            ).join("\n")}
+            ).join(os.EOL)}
             import { PiElementReference } from "./PiElementReference";
     
             export function initializeLanguage() {
                 ${language.classes.map(concept =>
                     `Language.getInstance().addConcept(describe${Names.concept(concept)}());`
-                ).join("\n")}
+                ).join(os.EOL)}
                 ${language.enumerations.map(enu =>
                     `Language.getInstance().addEnumeration(describe${Names.enumeration(enu)}());`
-                ).join("\n")}
+                ).join(os.EOL)}
                 Language.getInstance().addReferenceCreator( (name: string, type: string) => { return PiElementReference.createNamed(name, type)});
             }
             
@@ -51,7 +52,7 @@ export class LanguageTemplate {
                                 isList: ${prop.isList} ,
                                 propertyType: "primitive"
                             });`
-                    ).join("\n")}
+                    ).join(os.EOL)}
                     ${concept.allEnumProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
@@ -59,7 +60,7 @@ export class LanguageTemplate {
                                 isList: ${prop.isList} ,
                                 propertyType: "enumeration"
                             });`
-                    ).join("\n")}
+                    ).join(os.EOL)}
                     ${concept.allParts().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
@@ -67,7 +68,7 @@ export class LanguageTemplate {
                                 isList: ${prop.isList} ,
                                 propertyType: "part"
                             });`
-                    ).join("\n")}
+                    ).join(os.EOL)}
                     ${concept.allPReferences().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
@@ -75,10 +76,10 @@ export class LanguageTemplate {
                                 isList: ${prop.isList} ,
                                 propertyType: "reference"
                             });`
-                    ).join("\n")}
+                    ).join(os.EOL)}
                 return concept;
             }`
-            ).join("\n")}
+            ).join(os.EOL)}
             ${language.enumerations.map(enu =>
             `function describe${enu.name}(): Enumeration {
                             const enumeration =             {
@@ -87,7 +88,7 @@ export class LanguageTemplate {
                             }
                             return enumeration;
                         }`
-        ).join("\n")}
+        ).join(os.EOL)}
         `;
     }
 }
