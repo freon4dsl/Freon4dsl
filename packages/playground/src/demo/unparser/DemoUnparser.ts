@@ -256,6 +256,6 @@ export class DemoUnparser {
     }
 
     public unparseDemoVariableRef(modelelement: DemoVariableRef, includeChildren?: boolean): string {
-        return modelelement.attribute.name;
+        return modelelement.variable.name;
     }
 }

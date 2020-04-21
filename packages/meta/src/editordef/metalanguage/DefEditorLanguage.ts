@@ -22,7 +22,7 @@ export class DefEditorLanguage {
         this.language.classes.forEach(cls => {
             let conceptEditor = this.findConceptEditor(cls);
             if (conceptEditor === null || conceptEditor === undefined) {
-                console.log("Adding editor for " + cls.name);
+                // console.log("Adding editor for " + cls.name);
                 conceptEditor = new DefEditorConcept();
                 conceptEditor.concept = new PiLangClassReference();
                 conceptEditor.concept.name = cls.name;

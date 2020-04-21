@@ -1,16 +1,17 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses } from "../../../utils";
+import { PiLangClass, PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiLangExp,
     PiLangEnumExp,
     PiLangFunctionCallExp,
     langExpToTypeScript, PiLangSelfExp
 } from "../../../languagedef/metalanguage/PiLangExpressions";
-import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage/PiTyperDefLang";
+import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeRule } from "../../metalanguage/PiTyperDefLang";
 
 
 export class PiTyperTemplate {
     typerdef: PiTypeDefinition;
+    language: PiLanguageUnit;
 
     constructor() {
     }
@@ -19,6 +20,7 @@ export class PiTyperTemplate {
         if (typerdef == null) return this.generateDefault(language, relativePath);
 
         this.typerdef = typerdef;
+        this.language = language;
         const rootType : string = this.typerdef.typeroot.name;
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : string = Names.typer(language);
@@ -158,19 +160,8 @@ export class PiTyperTemplate {
 
     private makeInferenceStatements() : string {
         let result : string = "";
-        for ( let tr of this.typerdef.typerRules ) {
-            if (tr instanceof PiTypeConceptRule) {
-                let myConceptName = tr.conceptRef.name;
-                for ( let stat of tr.statements  ) {
-                    // TODO change the order in which the statements are generated, because subclasses need to overwrite their super
-                    // and thus their statement needs to come before the super statement
-                    if ( stat.statementtype === "infertype" && !stat.isAbstract) {                        
-                        result = result.concat(`if (modelelement instanceof ${myConceptName}) {
-                            return ${this.makeTypeExp(stat.exp)};
-                        }`);
-                    }
-                }
-            } 
+
+        for ( let tr of this.typerdef.typerRules) {
             if (tr instanceof PiTypeIsTypeRule) {
                 for (let type of tr.types) {
                     if (!(type.referedElement() instanceof PiLangUnion)) {
@@ -181,8 +172,42 @@ export class PiTyperTemplate {
                     }
                 }
             }
+            // TODO check what to do with PiTypeAnyTypeRule
+        }
+        // change the order in which the statements are generated, because subclasses need to overwrite their super
+        // and thus their statement needs to come before the super statement
+        let myList = this.sortConceptRules(this.typerdef.conceptRules);
+        for (let tr of myList) {
+            let myConceptName = tr.conceptRef.name;
+            for ( let stat of tr.statements  ) {
+                 if ( stat.statementtype === "infertype" && !stat.isAbstract) {
+                    result = result.concat(`if (modelelement instanceof ${myConceptName}) {
+                            return ${this.makeTypeExp(stat.exp)};
+                        }`);
+                }
+            }
         }
         return result;
+    }
+
+    private sortConceptRules(conceptRules: PiTypeConceptRule[]): PiTypeConceptRule[] {
+        let sortedConceptRules: PiTypeConceptRule[] = [];
+        let sortedClasses = sortClasses(this.language.classes);
+        for (let piclass of sortedClasses) {
+            // find conceptRule for this piclass
+            let myRule: PiTypeConceptRule;
+            for (let rule of conceptRules) {
+                if (piclass === rule.conceptRef.referedElement()) {
+                    myRule = rule;
+                    // console.log("found " + piclass.name + ", index in classes: " + sortedClasses.indexOf(piclass) + ", index in rules: " + conceptRules.indexOf(rule));
+                }
+            }
+            // if found push rule
+            if (!!myRule) {
+                sortedConceptRules.push(myRule);
+            }
+        }
+        return sortedConceptRules;
     }
 
     private makeIsType() : string {
@@ -191,7 +216,7 @@ export class PiTyperTemplate {
             if (tr instanceof PiTypeIsTypeRule) {
                 for ( let type of tr.types  ) {
                     if (!(type.referedElement() instanceof PiLangUnion)) {
-                        //TODO if Union remains in the meta meta language then all concepts withion the union should be added
+                        //TODO if Union remains in the meta meta language then all concepts within the union should be added
                         result = result.concat(`if (elem instanceof ${type.name}) {
                             return true;
                         }`);
@@ -219,10 +244,10 @@ export class PiTyperTemplate {
         // let enumstr: string = "";
         // if (!!rule.type1.enumRef)
         //     enumstr = this.langExpToTypeScript(rule.type1.enumRef);
-        
+
         // if (!!rule.type2.enumRef) {
         //     enumstr = this.langExpToTypeScript(rule.type2.enumRef);
-        // }            
+        // }
 
         // if (!!enumstr && (!!rule.type1.allTypes || !!rule.type2.allTypes)) {
         //     return `if ( this.inferType(elem1) === ${enumstr} || this.inferType(elem2) === ${enumstr} ) { return true; }`

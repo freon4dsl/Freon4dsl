@@ -1,5 +1,4 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import * as fs from "fs";
 import { DefEditorLanguage } from "../editordef/metalanguage";
 import { DefEditorParser } from "../editordef/parser/DefEditorParser";
 import { PiLanguageUnit } from "../languagedef/metalanguage";
@@ -14,7 +13,6 @@ import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { PathProvider } from "../utils/PathProvider";
 import { PiLogger } from "../../../core/src/util/PiLogging";
 import { Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
@@ -79,7 +77,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.generateTyper();
             LOGGER.info(this, "Watching language definition files ...");
         } catch (e) {
-            console.log(e.stack);
+            LOGGER.error(this, e.stack);
         }
     }
 

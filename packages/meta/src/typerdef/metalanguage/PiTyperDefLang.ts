@@ -7,6 +7,7 @@ export class PiTypeDefinition {
     name: string;
     languageName: string;
     typerRules: PiTypeRule[];
+    conceptRules: PiTypeConceptRule[];
     typeroot: PiLangConceptReference;
 
     constructor() { 

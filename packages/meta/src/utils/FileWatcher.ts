@@ -15,7 +15,7 @@ export class FileWatcher {
         const timestamp = fs.statSync(this.filename).mtimeMs;
         const process = this.lastChanged !== timestamp;
         this.lastChanged = timestamp;
-        console.log("Change in file [" + filename + "] event [" + event + "] stats [" + timestamp + "] process [" + process + "]");
+        // console.log("Change in file [" + filename + "] event [" + event + "] stats [" + timestamp + "] process [" + process + "]");
         if (process) {
             this.callback();
         }
