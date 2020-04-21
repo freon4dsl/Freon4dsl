@@ -34,6 +34,12 @@ export class DefEditorProjectionText {
     location: ParseLocation;
     text: string = "";
 
+    public static create(text: string): DefEditorProjectionText {
+        const result = new DefEditorProjectionText();
+        result.text = text;
+        return result;
+    }
+
     toString(): string {
         return this.text;
     }
@@ -105,9 +111,12 @@ export class MetaEditorProjection {
     location: ParseLocation;
     name: string;
     conceptEditor: DefEditorConcept;
-    lines: MetaEditorProjectionLine[];
+    lines: MetaEditorProjectionLine[] = [];
 
-    /** break lines at newline, remove empty lines,
+    /** Normalizing means:
+     * - break lines at newline,
+     * - remove empty lines
+     * - set indent property per line and then remove all indent items
      */
     normalize() {
         const result: MetaEditorProjectionLine[] = [];
@@ -146,6 +155,7 @@ export class MetaEditorProjection {
             }
         });
         // find indent of first line and substract that from all other lines
+        // set indent of each line to the remainder
         this.lines.forEach(line => {
             const firstItem = line.items[0];
             if (firstItem instanceof DefEditorProjectionIndent) {
