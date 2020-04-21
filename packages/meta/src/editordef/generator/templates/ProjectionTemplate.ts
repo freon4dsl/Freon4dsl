@@ -30,10 +30,12 @@ export class ProjectionTemplate {
     }
 
     generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
-        const binaryConceptsWithDefaultProjection = language.classes.filter(c => c.binaryExpression()).filter(c => {
+        const binaryConceptsWithDefaultProjection = language.classes.filter(c => c.binaryExpression())
+            .filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
-        });
+        })
+        ;
         const nonBinaryConceptsWithDefaultProjection = language.classes.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
@@ -153,20 +155,17 @@ export class ProjectionTemplate {
                                 style: ${Names.styles}.keyword,
                                 selectable: false
                             }),
-                            ( element.${part.name}.length === 0 ? null : 
-                                new IndentBox(element, "indent-part-${part.name}", 4, 
-                                    ${this.conceptPartListProjection("Vertical", part)}
-                                )
+                            new IndentBox(element, "indent-part-${part.name}", 4, 
+                                ${this.conceptPartListProjection("Vertical", part)}
                             ),
-                            new AliasBox(element, "new-${part.name}", "add ${part.name}", {
-                                style: ${Names.styles}.indentedplaceholdertext
-                            })
                         ` :
-                            `new LabelBox(element, "element-${part.name}-label", "${part.name}", {
+                            `new HorizontalListBox(element, "element-${part.name}", [
+                            new LabelBox(element, "element-${part.name}-label", "${part.name}", {
                                 style: ${Names.styles}.propertykeyword,
                                 selectable: false
                              }),
                             this.rootProjection.getBox(element.${part.name})
+                            ], { selectable: false })                            
                         ` }`  )).concat(
 // Map all references
                         c.allPReferences().map(ref => `
@@ -175,14 +174,18 @@ export class ProjectionTemplate {
                                 style: ${Names.styles}.keyword,
                                 selectable: false
                             }),
-                            ( element.${ref.name}.length === 0 ? null : 
-                                ${this.conceptReferenceListProjection("Vertical", ref)}
-                            ),
+                            ${this.conceptReferenceListProjection("Vertical", ref)},
                             new AliasBox(element, "new-${ref.name}", "add ${ref.name}", {
                                 style: ${Names.styles}.indentedplaceholdertext
                             })
                         ` :
-                            (this.conceptReferenceProjection(ref) + ", ")
+                            `new HorizontalListBox(element, "element-${ref.name}-list", [
+                                new LabelBox(element, "element-${ref.name}-label", "${ref.name}", {
+                                    style: ${Names.styles}.propertykeyword,
+                                    selectable: false
+                                }),
+                                ${this.conceptReferenceProjection(ref)},
+                            ], { selectable: false })`
                         }`  )
                 ).join(",")}
                     ])
@@ -222,17 +225,8 @@ export class ProjectionTemplate {
 
         let indentNr = 0;
         projection.lines.forEach( (line, index) => {
-            // let hasIndent = false;
-            // const firstItem = line.items[0];
-            // if( firstItem instanceof DefEditorProjectionIndent  && firstItem.amount > 0) {
-            //     result += ` // INDENT should be ${firstItem.amount}
-            //                     new IndentBox(element, "indent", ${firstItem.amount}, `
-            //     hasIndent = true;
-            // }
             if( line.indent > 0) {
-                result += ` // INDENT should be ${line.indent}
-                                new IndentBox(element, "${"indent-" + indentNr++}", ${line.indent}, `
-                // hasIndent = true;
+                result += `new IndentBox(element, "${"indent-" + indentNr++}", ${line.indent}, `
             }
             if( line.items.length > 1) {
                 result += `new HorizontalListBox(element, "${c.name}-line-${index}", [ `;
@@ -255,6 +249,7 @@ export class ProjectionTemplate {
                             if (appliedFeature.isList) {
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
                                 result += this.conceptPartListProjection(direction, appliedFeature)+ ",";
+
                             } else {
                                 result += `this.rootProjection.getBox(element.${appliedFeature.name}),`
                             }
@@ -273,7 +268,8 @@ export class ProjectionTemplate {
                 }
             });
             if( line.items.length > 1) {
-                result += ` ], { selectable: false } ) `
+                // TODO Too many thigs are now selectable, but if fasle, you cannot select e.g. an attribute
+                result += ` ], { selectable: true } ) `
             }
             if( line.indent > 0 ){
                 // end of line, finish indent when applicable
@@ -307,7 +303,11 @@ export class ProjectionTemplate {
             new ${direction}ListBox(element, "element-${propertyConcept.name}-list", 
                 element.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
-                })
+                }).concat(
+                    new AliasBox(element, "new-${propertyConcept.name}", "ADD ${propertyConcept.name}", {
+                        style: ${Names.styles}.placeholdertext
+                    })
+                )
             )`;
     }
 

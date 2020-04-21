@@ -86,6 +86,7 @@ export function createProjection(data: Partial<MetaEditorProjection>): MetaEdito
     if (!!data.name) {
         result.name = data.name;
     }
+    // Now cleanup the parsed projection
     result.normalize();
     if (!!data.location) {
         result.location = data.location;

@@ -40,6 +40,13 @@ export class PiLangClassReference extends PiLangConceptReference {
 	referedElement() : PiLangClass {
 		return this.language?.findClass(this.name);
 	}
+
+	static create(name: string, language: PiLanguageUnit): PiLangClassReference {
+		const result = new PiLangClassReference();
+		result.name = name;
+		result.language = language;
+		return result;
+	}
 }
 
 export class PiLangInterfaceReference extends PiLangConceptReference {
