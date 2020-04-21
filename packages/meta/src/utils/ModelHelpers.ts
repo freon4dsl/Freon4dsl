@@ -1,11 +1,14 @@
 import { PiLangClass, PiLangElement, PiLangElementReference } from "../languagedef/metalanguage";
 
-// As in the WalkerTemplate,
-// the entries for the unparse${concept.name} must be sorted,
-// because an entry for a subclass must preceed an entry for
-// its base class, otherwise only the unparse${concept.name} for
-// the base class will be called.
-// TODO change description
+/**
+ * This function sorts the list of PiClasses in such a way that
+ * when a class had a base class, this base class comes after the class.
+ * This is needed in cases where an if-statement is generated where the
+ * condition is the type of the object, for instance in the unparser.
+ * An entry for a subclass must precede an entry for its base class,
+ * otherwise the unparse${concept.name} for the base class will be called.
+ * @param piclasses: the list of classes to be sorted
+ */
 export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
     let newList: PiLangClass[] = [];
     for (let c of piclasses) {
@@ -28,7 +31,11 @@ export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
 }
 
 /**
- * returns true if the list of concept references contains the element, whether the element is a reference to, or the concept itself
+ * This function returns true if 'list' contains 'element', whether the element
+ * is a reference to, or the concept itself.
+ *
+ * @param list
+ * @param element
  */
 export function refListIncludes(list: PiLangElementReference[], element: PiLangElementReference | PiLangElement): boolean {
     // TODO ??? should we add a check on the types of the list and the element?
@@ -46,6 +53,11 @@ export function refListIncludes(list: PiLangElementReference[], element: PiLangE
     return false;
 }
 
+/**
+ * This function returns true if 'type' is regarded a primitive in PiLanguage. It can
+ * have the values "string", "number", or "boolean".
+ * @param type
+ */
 export function isPrimitiveType(type: PiLangElement): boolean {
     return type.name === "string" || type.name === "number" || type.name === "boolean";
 }

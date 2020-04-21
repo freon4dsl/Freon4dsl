@@ -9,11 +9,10 @@ anytype {
     conformsto DemoAttributeType:ANY
     equalsto DemoAttributeType:ANY
 }
-/*
+
 DemoEntity {
-    conformsto self.base
+    conformsto self.baseEntity
 }
-*/
 
 DemoAttribute {
     infertype self.declaredType
@@ -64,3 +63,4 @@ DemoVariable {
 DemoVariableRef   {
     infertype self.variable
 }
+

@@ -7,6 +7,9 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 
 const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
+const equalsTypeName = "equalsType";
+const conformsToName = "conformsTo";
+
 export class ValidatorChecker extends Checker<PiValidatorDef> {
     myExpressionChecker: PiLanguageExpressionChecker;
     
@@ -26,8 +29,9 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: this.language.name === definition.languageName,
-                error: `Language reference ('${definition.languageName}') in 
-                    Validation Definition '${definition.validatorName}' does not match language '${this.language.name}' [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
+                error: `Language reference ('${definition.languageName}') in `+
+                    `validator definition '${definition.validatorName}' does not match language '${this.language.name}' `+
+                    `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
                 whenOk: () => {
                     definition.conceptRules.forEach(rule => {
                         this.checkConceptRule(rule);
@@ -57,8 +61,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiLangConcept) {
         // check whether tr.property (if set) is a property of enclosingConcept
-        // if so, set myProperty to this property,
-        // otherwise set myProperty to the 'name' property of the EnclosingConcept
+        // if not set, set tr.property to the 'self.name' property of the enclosingConcept
         if (!!tr.property) {
             this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
         } else {
@@ -95,7 +98,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.type1 != null || tr.type2 != null,
-                error: `Typecheck "equalsType" should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                error: `Typecheck '${equalsTypeName}' should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
                     // LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept),
@@ -109,9 +112,8 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.type1 != null || tr.type2 != null,
-                error: `Typecheck "conformsTo" should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                error: `Typecheck "${conformsToName}" should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
-                    // LOGGER.log("Checking ConformsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() + " )");
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
                     this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept)  
                 }

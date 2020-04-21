@@ -6,6 +6,8 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLangConceptReference } from "../../languagedef/metalanguage";
 
 const LOGGER = new PiLogger("PiTyperChecker").mute();
+const infertypeName = "infertype";
+
 export class PiTyperChecker extends Checker<PiTypeDefinition> {
     definition: PiTypeDefinition;
     myExpressionChecker : PiLanguageExpressionChecker;
@@ -21,28 +23,28 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         this.definition = definition;
         LOGGER.log("Checking typer definition '" + definition.name + "'");
 
-        if( !!this.language ) {
-            this.nestedCheck(
-                {
-                    check: this.language.name === definition.languageName,
-                    error:  `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' `+
-                        `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
-                    whenOk: () => {
-                        // sort out the different types of rules
-                        this.sortRules(definition);
-                        definition.typerRules.forEach(rule => {
-                            this.checkTyperRule(rule);
-                        });
-                        definition.conceptRules.forEach(rule => {
-                            this.checkConceptRule(rule);
-                        });
-                    }
-                });
-            // TODO add check on double rules for the same concept
-        } else {
-            LOGGER.error(this, "Typer Definition checker does not known the language, exiting.");
+        if ( this.language === null || this.language === undefined ) {
+            LOGGER.error(this, `Typer definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
             process.exit(-1);
         }
+
+        this.nestedCheck(
+            {
+                check: this.language.name === definition.languageName,
+                error:  `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' `+
+                    `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
+                whenOk: () => {
+                    // sort out the different types of rules
+                    this.sortRules(definition);
+                    definition.typerRules.forEach(rule => {
+                        this.checkTyperRule(rule);
+                    });
+                    definition.conceptRules.forEach(rule => {
+                        this.checkConceptRule(rule);
+                    });
+                }
+            });
+
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
    }
 
@@ -54,7 +56,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
             this.checkAnyTypeRule(rule);
         } else if (rule instanceof PiTypeConceptRule) {
             // should never be called, because the rules are sorted before this method is called
-            this.checkConceptRule(rule);
+           this.checkConceptRule(rule);
         }
     }    
 
@@ -63,6 +65,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         this.myExpressionChecker.checkConceptReference(rule.conceptRef);
         if (!!rule.conceptRef.referedElement()) { // error messages done by myExpressionChecker
             let myConcept = rule.conceptRef.referedElement();
+
             this.nestedCheck({
                 check: !this.conceptsWithRules.includes(myConcept),
                 error: `Found a second entry for ${myConcept.name} [line: ${rule.location?.start.line}, column: ${rule.location?.start.column}].`,
@@ -104,12 +107,15 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     private checkStatement(stat: PiTypeStatement, enclosingConcept: PiLangConcept, predefined?: PiLangProperty[]) {
         LOGGER.log("Checking checkStatement '" + stat.toPiString() + "'");
         if (stat.isAbstract) {
-            this.simpleCheck(stat.exp == null, `An abstract rule may not be defined [line: ${stat.location?.start.line}, column: ${stat.location?.start.column}].`)
+            this.simpleCheck(stat.exp == null,
+                `An abstract rule may not be defined [line: ${stat.location?.start.line}, column: ${stat.location?.start.column}].`)
         } else if (!!enclosingConcept && stat.exp) {
             this.myExpressionChecker.checkLangExp(stat.exp, enclosingConcept);
-            this.simpleCheck(!this.typeConcepts.includes(enclosingConcept),
-                `${enclosingConcept.name} is a type itself, and cannot have an inference rule `+
-                       `[line: ${stat.location?.start.line}, column: ${stat.location?.start.column}].`);
+            if ( stat.statementtype === infertypeName ) {
+                this.simpleCheck(!this.typeConcepts.includes(enclosingConcept),
+                    `${enclosingConcept.name} is a type itself, and cannot have an inference rule `+
+                    `[line: ${stat.location?.start.line}, column: ${stat.location?.start.column}].`);
+            }
         }
     }
 
@@ -127,6 +133,5 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         definition.typerRules = newTypeRules;
         definition.conceptRules = conceptRules;
     }
-
 }
 
