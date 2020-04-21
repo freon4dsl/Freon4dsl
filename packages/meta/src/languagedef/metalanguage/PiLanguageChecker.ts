@@ -9,7 +9,7 @@ import {
     PiLangEnumeration,
     PiLangUnion,
     PiLangEnumProperty,
-    PiLangConcept, PiLangInterface
+    PiLangInterface
 } from "./PiLanguage";
 import {
     PiLangClassReference,
@@ -41,11 +41,11 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         this.setLanguageReferences(language);    
 
         // now check the whole language
+        // TODO check that all concepts have unique names
         language.classes.forEach(concept => this.checkClass(concept));
         language.enumerations.forEach(concept => this.checkEnumeration(concept));
         language.unions.forEach(concept => this.checkUnion(concept));
-        // TODO: checkInterface
-        // language.interfaces.forEach(concept => this.checkInterface(concept));
+        language.interfaces.forEach(concept => this.checkInterface(concept));
 
         this.simpleCheck(!!language.classes.find(c => c.isRoot),
             `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
@@ -62,6 +62,9 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             if (!!concept.base) {
                 concept.base.language = language;
             }
+            for (let i of concept.interfaces) {
+                i.language = language;
+            }
         });
         language.enumerations.forEach(enumeration => {
             enumeration.language = language;
@@ -69,6 +72,15 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.unions.forEach(union => {
             union.language = language;
             union.members.forEach(mem => mem.language = language);
+        });
+        language.interfaces.forEach(concept => {
+            concept.language = language;
+            concept.references.forEach(ref => ref.type.language = language);
+            concept.parts.forEach(part => part.type.language = language);
+            concept.enumProperties.forEach(en => en.type.language = language);
+            if (!!concept.base) {
+                concept.base.language = language;
+            }
         });
     }
 
@@ -111,6 +123,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         result.isAbstract = concept.isAbstract;
         result.name = concept.name;
         result.base = concept.base;
+        result.interfaces = concept.interfaces;
         result.parts = concept.parts;
         result.references = concept.references;
         result.trigger = concept.trigger;
@@ -166,6 +179,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     }
 
     private checkEnumeration(enumConcept: PiLangEnumeration) {
+        // TODO check that all literal have unique names
         this.simpleCheck(enumConcept.parts.length == 0 || enumConcept.references.length == 0 
             || enumConcept.enumProperties.length == 0 || enumConcept.primProperties.length == 0, 
             `Enumeration '${enumConcept.name}' may not have  properties [line: ${enumConcept.location?.start.line}, column: ${enumConcept.location?.start.column}].`);
@@ -174,7 +188,15 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
     private checkClass(piClass: PiLangClass): void {
         LOGGER.log("Checking class '" + piClass.name + "'");
+        // TODO check that all properties have unique names
         this.simpleCheck(!!piClass.name, `Concept should have a name [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
+
+        if( piClass.isRoot ) {
+            this.simpleCheck(!this.foundRoot,
+                `There may be only one root class in the language definition [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
+            this.foundRoot = true;
+        }
+
         if(!!piClass.base) {
             this.checkConceptReference(piClass.base);
             if (!!piClass.base.referedElement()) { // error message taken care of by checkConceptReference
@@ -189,11 +211,21 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             }
         }
 
-        if( piClass.isRoot ) {
-            this.simpleCheck(!this.foundRoot,
-                `There may be only one root class in the language definition [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
-            this.foundRoot = true;
+        let newInterfaces: PiLangInterfaceReference[] = [];
+        for (let intf of piClass.interfaces) {
+            this.checkConceptReference(intf);
+            if (!!intf.referedElement()) { // error message taken care of by checkConceptReference
+                this.nestedCheck({
+                    check: (intf.referedElement() instanceof PiLangInterface),
+                    error:  `'${intf.name}' is not an interface concept `+
+                        `[line: ${intf.location?.start.line}, column: ${intf.location?.start.column}].`,
+                    whenOk: () => {
+                        newInterfaces.push(this.morfConceptReferenceIntoSubClass(intf) as PiLangInterfaceReference);
+                    }
+                });
+            }
         }
+        piClass.interfaces = newInterfaces;
 
         piClass.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         piClass.enumProperties.forEach(prop => this.checkEnumProperty(prop));
@@ -303,6 +335,28 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         );
     }
 
+    checkInterface(piInterface: PiLangInterface) {
+        this.simpleCheck(!!piInterface.name, `Concept should have a name [line: ${piInterface.location?.start.line}, column: ${piInterface.location?.start.column}].`);
+        if(!!piInterface.base) {
+            this.checkConceptReference(piInterface.base);
+            if (!!piInterface.base.referedElement()) { // error message taken care of by checkConceptReference
+                this.nestedCheck({
+                    check: (piInterface.base.referedElement() instanceof PiLangInterface),
+                    error:  `Base concept '${piInterface.base.name}' must be an interface concept `+
+                        `[line: ${piInterface.base.location?.start.line}, column: ${piInterface.base.location?.start.column}].`,
+                    whenOk: () => {
+                        piInterface.base = this.morfConceptReferenceIntoSubClass(piInterface.base) as PiLangClassReference;
+                    }
+                });
+            }
+        }
+
+        piInterface.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
+        piInterface.enumProperties.forEach(prop => this.checkEnumProperty(prop));
+        piInterface.parts.forEach(part => this.checkConceptProperty(part));
+        piInterface.references.forEach(ref => this.checkConceptProperty(ref));
+    }
+
     /**
      * This method changes the input into one of its subclasses based on its referedElement.
      * The return type is PiLangConceptReference, but what is actually returned, is one of its subclasses.
@@ -325,5 +379,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         }
         return result;
     }
+
+
 }
 

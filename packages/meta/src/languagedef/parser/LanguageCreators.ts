@@ -5,7 +5,7 @@ import {
     PiLangEnumeration,
     PiLangUnion,
     PiLangEnumProperty,
-    PiLangClass
+    PiLangClass, PiLangInterface
 } from "../metalanguage/PiLanguage";
 import { PiLangConceptReference, PiLangEnumerationReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiParseClass, PiParseLanguageUnit } from "./PiParseLanguage";
@@ -27,6 +27,8 @@ export function createLanguage(data: Partial<PiParseLanguageUnit>): PiLanguageUn
                 result.enumerations.push(def);
             } else if (def instanceof PiLangUnion) {
                 result.unions.push(def);
+            } else if (def instanceof PiLangInterface) {
+                result.interfaces.push(def);
             }
         }
     }
@@ -57,6 +59,9 @@ export function createParseClass(data: Partial<PiParseClass>): PiParseClass {
     if (!!data.base) {
         result.base = data.base;
     }
+    if (!!data.interfaces) {
+        result.interfaces = data.interfaces;
+    }
     if (!!data.properties) {
         for (let prop of data.properties) {
             if (prop instanceof PiLangPrimitiveProperty) {
@@ -78,6 +83,42 @@ export function createParseClass(data: Partial<PiParseClass>): PiParseClass {
         result.priority = data.priority;
     }
     // console.log("created parse class " + result.name);
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createInterface(data: Partial<PiParseClass>): PiLangInterface {
+    // console.log("createInterface " + data.name);
+    const result = new PiLangInterface();
+
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.trigger) {
+        result.trigger = data.trigger;
+    }
+    if (!!data.base) {
+        result.base = data.base;
+    }
+    if (!!data.properties) {
+        for (let prop of data.properties) {
+            if (prop instanceof PiLangPrimitiveProperty) {
+                result.primProperties.push(prop);
+            }
+            if (prop instanceof PiLangEnumProperty) {
+                result.enumProperties.push(prop);
+            }
+            if (prop instanceof PiLangConceptProperty) {
+                if (prop.isPart) {
+                    result.parts.push(prop);
+                } else {
+                    result.references.push(prop);
+                }
+            }
+        }
+    }
     if (!!data.location) {
         result.location = data.location;
     }
