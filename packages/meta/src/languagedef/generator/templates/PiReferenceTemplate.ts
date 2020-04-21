@@ -45,7 +45,6 @@ export class PiReferenceTemplate {
                 }else{
                     this._PI_referred = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
                 }
-                console.log("_PI_name: " + this._PI_name);
                 return this._PI_name;
             }
         
