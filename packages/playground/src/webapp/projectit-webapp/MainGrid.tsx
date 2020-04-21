@@ -33,7 +33,6 @@ export const MainGrid: React.FunctionComponent = () => {
         // Menu, Editor, and ErrorList togther positioned on column 1-6, row 3
         // Footer positioned on columns 1-6, rows 4
         // TODO looks like columns are no longer needed
-        // TODO the only color that is working is "brand"
         <div>
             <div
                 style={{

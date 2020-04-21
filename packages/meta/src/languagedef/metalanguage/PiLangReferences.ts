@@ -57,7 +57,6 @@ export class PiLangInterfaceReference extends PiLangConceptReference {
 
 export class PiLangEnumerationReference extends PiLangConceptReference {
 	referedElement() : PiLangEnumeration {
-		console.log("PiLangEnumerationReference.referedElement()");
 		return this.language?.findEnumeration(this.name);
 	}
 }

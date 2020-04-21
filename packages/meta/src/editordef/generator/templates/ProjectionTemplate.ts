@@ -9,7 +9,6 @@ import {
     DefEditorProjectionText,
     DefEditorSubProjection, Direction, DefEditorProjectionIndent
 } from "../../metalanguage";
-import has = Reflect.has;
 
 export class ProjectionTemplate {
     constructor() {

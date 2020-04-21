@@ -46,7 +46,7 @@ export class CheckerTemplate {
             }
             public execAfter${concept.name}(modelelement: ${concept.name}) {
             }`
-        ).join("\n\n") }
+        ).join("\n" + "\n") }
 
         private isValidName(name: string) : boolean {
             if (name == null) return false;

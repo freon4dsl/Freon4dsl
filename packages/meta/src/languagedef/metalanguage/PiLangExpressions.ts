@@ -85,16 +85,18 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
 
 export class PiLangFunctionCallExp extends PiLangExp {
     //sourceName: string; 			// in typer: name can only be 'commonSuperType', in validator: only 'conformsTo' and 'equalsType'
-    actualparams: PiLangExp[]; 	  	// ElementExp, EnumerationExp, but no other subclasses allowed
-    returnValue: boolean; 			// shift to typer and validator ???
+    actualparams: PiLangExp[] = [];
+    returnValue: boolean;
     referedElement: PiLangFunction;
 
     toPiString(): string {
         let actualPars: string = '( ';
-        for (let actual of this.actualparams) {
-            actualPars = actualPars.concat(actual.toPiString());
-            if (this.actualparams.indexOf(actual) !== this.actualparams.length -1) {
-                actualPars = actualPars.concat(", ");
+        if (!!this.actualparams) {
+            for (let actual of this.actualparams) {
+                actualPars = actualPars.concat(actual.toPiString());
+                if (this.actualparams.indexOf(actual) !== this.actualparams.length -1) {
+                    actualPars = actualPars.concat(", ");
+                }
             }
         }
         actualPars = actualPars.concat(` )`);

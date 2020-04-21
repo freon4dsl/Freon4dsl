@@ -1,9 +1,10 @@
-import { GenericModelSerializer } from "@projectit/core";
+import { GenericModelSerializer, PiLogger } from "@projectit/core";
 import axios from "axios";
-
 import { PiElement } from "@projectit/core";
-import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
 import { environment } from "./Environment";
+
+const LOGGER = new PiLogger("ServerCommunication");
+const url = "http://127.0.0.1:3001/";
 
 export class ServerCommunication {
     static serial: GenericModelSerializer = new GenericModelSerializer();
@@ -12,10 +13,9 @@ export class ServerCommunication {
         if (modelName !== "" && modelName.match(/^[a-z,A-Z]+$/)) {
             const model = ServerCommunication.serial.convertToJSON(environment.editor.context.rootElement);
             try {
-                console.log("putModel");
-                const res = await axios.put(`http://127.0.0.1:3001/putModel?name=${modelName}`, model);
+                const res = await axios.put(`${url}putModel?name=${modelName}`, model);
             } catch (e) {
-                console.log("Error " + e.toString());
+                LOGGER.error(this, e.toString());
             }
         }
     }
@@ -30,23 +30,21 @@ export class ServerCommunication {
     }
 
     static async getModel(name: string): Promise<Object> {
-        console.log("getModel");
         try {
-            const res = await axios.get(`http://127.0.0.1:3001/getModel?name=${name}`);
+            const res = await axios.get(`${url}getModel?name=${name}`);
             return res.data;
         } catch (e) {
-            console.log("Error " + e.toString());
+            LOGGER.error(this, e.toString());
         }
         return {};
     }
 
     static async getModelList(): Promise<Object> {
-        console.log("getModelList");
         try {
-            const res = await axios.get(`http://127.0.0.1:3001/getModelList`);
+            const res = await axios.get(`${url}getModelList`);
             return res;
         } catch (e) {
-            console.log("Error " + e.toString());
+            LOGGER.error(this, e.toString());
         }
         return {};
     }

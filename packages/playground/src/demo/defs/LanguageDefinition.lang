@@ -113,7 +113,7 @@ concept DemoIfExpression base DemoExpression {
 }
 
 concept DemoVariableRef base DemoExpression {
-    reference attribute: DemoAttribute
+    reference variable: DemoVariable
 }
 
 enumeration DemoAttributeType {

@@ -30,7 +30,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
     public check(language: PiLanguageUnit): void {
         LOGGER.log("Checking language '" + language.name + "'");
-        this.simpleCheck(!!language.name, "Language should have a name, it is empty");
+        this.simpleCheck(!!language.name,
+            `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
 
         this.language = language;
         // first resolve the PiParseClasses, and replace the parse classes by the resolved classes
@@ -46,8 +47,10 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         // TODO: checkInterface
         // language.interfaces.forEach(concept => this.checkInterface(concept));
 
-        this.simpleCheck(!!language.classes.find(c => c.isRoot), "There should be a root concept in your language.");
-        this.simpleCheck(!(!!language.classes.find(c => c instanceof PiParseClass)), "Error in checker: there are unresolved parse classes.");
+        this.simpleCheck(!!language.classes.find(c => c.isRoot),
+            `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
+        this.simpleCheck(!(!!language.classes.find(c => c instanceof PiParseClass)),
+            `Error in checker: there are unresolved parse classes [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
     }
 
     private setLanguageReferences(language: PiLanguageUnit) {
@@ -204,12 +207,14 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 `Concept ${piClass.name} should have a priority [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
 
             const left = piClass.allParts().find(part => part.name === "left");
-            this.simpleCheck(!!left, `Concept ${piClass.name} should have a left part, because it is a binary expression`);
+            this.simpleCheck(!!left,
+                `Concept ${piClass.name} should have a left part, because it is a binary expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
             this.simpleCheck(!!left && left.type.referedElement() instanceof PiLangExpressionConcept,
                 `Concept ${piClass.name}.left should be an expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
 
             const right = piClass.allParts().find(part => part.name === "right");
-            this.simpleCheck(!!right, `Concept ${piClass.name} should have a right part, because it is a binary expression`);
+            this.simpleCheck(!!right,
+                `Concept ${piClass.name} should have a right part, because it is a binary expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
             this.simpleCheck(!!right && right.type.referedElement() instanceof PiLangExpressionConcept,
                 `Concept ${piClass.name}.right should be an expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
         }
@@ -244,7 +249,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         this.nestedCheck(
             {
                 check: !!element.type,
-                error: "Element should have a type",
+                error: `Element '${element.name}' should have a type [line: ${element.location?.start.line}, column: ${element.location?.start.column}].`,
                 whenOk: () => {
                     this.checkConceptReference(element.type);
                     if (!!element.type.referedElement()) { // error message taken care of by checkConceptReference
@@ -263,7 +268,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
     checkPrimitiveProperty(element: PiLangPrimitiveProperty): void {
         LOGGER.log("Checking primitive property '" + element.name + "'");
-        this.simpleCheck(!!element.name, `Property should have a name, it is empty [line: ${element.location?.start.line}, column: ${element.location?.start.column}].`);
+        this.simpleCheck(!!element.name,
+            `Property should have a name [line: ${element.location?.start.line}, column: ${element.location?.start.column}].`);
         this.nestedCheck(
             {
                 check: !!element.primType,
