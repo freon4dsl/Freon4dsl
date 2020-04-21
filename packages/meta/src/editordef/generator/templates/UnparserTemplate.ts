@@ -72,7 +72,7 @@ export class UnparserTemplate {
                     if (sepType === SeparatorType.Terminator) {
                         result = result.concat(sepText);
                     }
-                    if (vertical) result = result.concat("\n");
+                    if (vertical) result = result.concat("\\n");
                 });
                 return result;
             }
@@ -88,7 +88,7 @@ export class UnparserTemplate {
         if (!!lines) {
             return `
                 private unparse${name}(modelelement: ${name}) : string {
-                    return "${lines.map(line => `${this.makeLine(line)}` ).join("\n")}"
+                    return "${lines.map(line => `${this.makeLine(line)}` ).join("\\n")}"
                 }`
         } else {
             if (myConcept instanceof  PiLangBinaryExpressionConcept && !!(conceptDef.symbol)) {
