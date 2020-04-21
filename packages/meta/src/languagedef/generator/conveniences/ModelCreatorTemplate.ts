@@ -1,7 +1,6 @@
 import { Names } from "../../../utils/Names";
 import { PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
-import * as os from 'os';
 
 export class ModelCreatorTemplate {
     constructor() {
@@ -30,15 +29,15 @@ export class ModelCreatorTemplate {
                 `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(${prop.name});` 
                     : 
                     `_result.${prop.name} = ${prop.name};`}`
-                ).join(os.EOL)}
+                ).join("\n")}
                 ${concept.allPReferences().map(prop => 
                 `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(new ${Names.PiElementReference}(${prop.name}, "${prop.type.name}"));` 
                     : 
                     `_result.${prop.name} = new ${Names.PiElementReference}(${prop.name}, "${prop.type.name}");`}`
-                ).join(os.EOL)}
+                ).join("\n")}
                 return _result;
             }`
-        }`).join(os.EOL) }
+        }`).join("\n") }
         }`;
     }
 

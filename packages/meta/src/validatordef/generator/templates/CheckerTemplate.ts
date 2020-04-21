@@ -2,7 +2,6 @@ import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../.
 import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
 import { langExpToTypeScript } from "../../../languagedef/metalanguage";
-import * as os from 'os';
 
 export class CheckerTemplate {
     constructor() {
@@ -33,21 +32,21 @@ export class CheckerTemplate {
             }
             public execAfter${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
             }`
-        ).join(os.EOL + os.EOL)}
+        ).join("\n\n")}
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
             `public execBefore${concept.name}(modelelement: ${concept.name}) {
             }
             public execAfter${concept.name}(modelelement: ${concept.name}) {
             }`
-        ).join(os.EOL + os.EOL) }
+        ).join("\n\n") }
         
         ${language.enumerations.map(concept => 
             `public execBefore${concept.name}(modelelement: ${concept.name}) {
             }
             public execAfter${concept.name}(modelelement: ${concept.name}) {
             }`
-        ).join(os.EOL + os.EOL) }
+        ).join("\n" + "\n") }
 
         private isValidName(name: string) : boolean {
             if (name == null) return false;
@@ -108,7 +107,7 @@ export class CheckerTemplate {
                         this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
                     }`
                 : ""))))}`
-            ).join(os.EOL)}`;
+            ).join("\n")}`;
     }
 
 

@@ -13,7 +13,6 @@ import {
     MetaEditorProjectionLine
 } from "../../metalanguage";
 import { langExpToTypeScript } from "../../../languagedef/metalanguage";
-import * as os from 'os';
 
 export class UnparserTemplate {
     constructor() {
@@ -26,7 +25,6 @@ export class UnparserTemplate {
 
         // Template starts here 
         return `
-        import * as os from 'os'; 
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.classes.map(concept => `
                 ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
@@ -58,11 +56,11 @@ export class UnparserTemplate {
                 return "";
             }
 
-            ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join(os.EOL)}
+            ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
             ${language.enumerations.map(concept => `
                 private unparse${concept.name}(modelelement: ${concept.name}) : string {
                     return "";
-                }`).join(os.EOL)}
+                }`).join("\n")}
                         
             private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
                 let result: string = "";
@@ -74,7 +72,7 @@ export class UnparserTemplate {
                     if (sepType === SeparatorType.Terminator) {
                         result = result.concat(sepText);
                     }
-                    if (vertical) result = result.concat(os.EOL);
+                    if (vertical) result = result.concat("\n");
                 });
                 return result;
             }
@@ -90,7 +88,7 @@ export class UnparserTemplate {
         if (!!lines) {
             return `
                 private unparse${name}(modelelement: ${name}) : string {
-                    return "${lines.map(line => `${this.makeLine(line)}` ).join(os.EOL)}"
+                    return "${lines.map(line => `${this.makeLine(line)}` ).join("\n")}"
                 }`
         } else {
             if (myConcept instanceof  PiLangBinaryExpressionConcept && !!(conceptDef.symbol)) {

@@ -2,7 +2,6 @@ import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../.
 import { PiLangConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 import { langExpToTypeScript } from "../../../languagedef/metalanguage";
-import * as os from 'os';
 
 export class NamespaceTemplate {
     constructor() {
@@ -94,7 +93,7 @@ export class NamespaceTemplate {
         
             private isNameSpace(modelelement : ${allLangConcepts}) : boolean {
                 // if-statement generated for each concept marked with @namespace annotation!
-                ${scopedef.namespaces.map(ref => `if(modelelement instanceof ${ref.name}) return true;`).join(os.EOL)}
+                ${scopedef.namespaces.map(ref => `if(modelelement instanceof ${ref.name}) return true;`).join("\n")}
                 ${scopedef.namespaces.length == 0?
                 `if(modelelement instanceof ${language.rootConcept().name}) return true;` : ``}              
                 return false;
@@ -151,7 +150,7 @@ export class NamespaceTemplate {
                     }
                 }
             }
-            result = result.concat("}" + os.EOL);
+            result = result.concat("}" + "\n");
         }
         return result;
     }

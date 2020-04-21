@@ -1,6 +1,5 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
-import * as os from 'os';
 
 export class IndexTemplate {
     constructor() {
@@ -27,7 +26,7 @@ export class IndexTemplate {
         return `
         ${tmp.map(c => 
             `export * from "./${c}";`
-        ).join(os.EOL)}
+        ).join("\n")}
         export * from "./PiElementReference";
         `;
     }

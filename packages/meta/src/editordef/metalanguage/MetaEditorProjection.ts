@@ -1,11 +1,10 @@
 import { PiLangExp } from "../../languagedef/metalanguage";
 import { DefEditorConcept } from "./DefEditorConcept";
 import { ParseLocation } from "../../utils";
-import * as os from 'os';
 
 export class DefEditorNewline {
     toString(): string {
-        return os.EOL;
+        return "\n";
     }
 }
 
