@@ -12,23 +12,22 @@ Language_Definition
         });
     } 
 
-abstractKey     = "abstract" ws { return true; }
-rootKey         = "root" ws { return true; }
-binaryKey       = "binary" ws { return true; }
-expressionKey   = "expression" ws { return true; }
-baseKey         = "base" ws { return true; }
-placeholderKey  = "placeholder" ws { return true; }
-enumKey         = "enum" { return true; }
-partKey         = "part" 
-referenceKey    = "reference" 
-priorityKey     = "priority" 
+abstractKey     = ws "abstract" ws { return true; }
+rootKey         = ws "root" ws { return true; }
+binaryKey       = ws "binary" ws { return true; }
+expressionKey   = ws "expression" ws { return true; }
+baseKey         = ws "base" ws { return true; }
+placeholderKey  = ws "placeholder" ws { return true; }
+enumKey         = ws "enum" ws { return true; }
+partKey         = ws "part" ws
+referenceKey    = ws "reference" ws
+priorityKey     = ws "priority" ws
+implementsKey   = ws "implements" ws
 
-langdef = c:(concept) { return c;} / e:(enumeration) {return e;}/ t:(union) {return t;}
-
-base = baseKey name:var { return create.createConceptReference( { "name": name}); }
+langdef = c:(concept) { return c;} / e:(enumeration) {return e;}/ t:(union) {return t;} / i:(interface) {return i;}
 
 concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressionKey? isExpressionPlaceHolder:placeholderKey?
-         "concept" ws name:var ws base:base? curly_begin props:property* priority:priority? curly_end 
+         "concept" ws name:var ws base:base? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* priority:priority? curly_end
     {
         return create.createParseClass({
             "isRoot": (!!isRoot),
@@ -38,11 +37,24 @@ concept = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expression:expressi
             "_isExpressionPlaceHolder": !!isExpressionPlaceHolder,
             "name": name,
             "base": base,
+            "interfaces": implementedInterfaces,
             "properties": props,
             "priority": (!!priority ? priority : 0),
             "location": location()
         });
     }
+
+interface = "interface" ws name:var ws base:base? curly_begin props:property* curly_end
+                {
+                    return create.createInterface({
+                        "name": name,
+                        "base": base,
+                        "properties": props,
+                        "location": location()
+                    });
+                }
+
+base = baseKey conceptReference:conceptReference { return conceptReference; }
 
 property =  att:attribute { return att; }
             / part:part { return part; }
@@ -72,10 +84,19 @@ conceptReference = referredName:var {
     return create.createConceptReference({"name": referredName, "location": location()})
 }
 
+implementedInterfaces = implementsKey conceptRefs:(
+                                             head:conceptReference
+                                             tail:(comma_separator v:conceptReference { return v; })*
+                                             { return [head].concat(tail); }
+                                       )
+    { return conceptRefs; }
+
+
 priority = priorityKey ws "=" ws "\"" value:string "\"" ws {
     return Number.parseInt(value);
 }  
 
+// TODO should we accept base and interfaces for enumerations?
 enumeration = "enumeration" ws name:var curly_begin
                     literals:var+
                 curly_end
@@ -83,9 +104,11 @@ enumeration = "enumeration" ws name:var curly_begin
                     return create.createEnumeration({ "name": name, "literals": literals, "location": location()});
                 }
 
+// TODO remove union
 union = "union" ws name:var curly_begin
                     members:conceptReference+
                 curly_end
                 {
                     return create.createUnion({ "name": name, "members": members, "location": location()});
                 }
+

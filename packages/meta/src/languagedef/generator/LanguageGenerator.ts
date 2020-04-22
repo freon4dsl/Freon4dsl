@@ -16,6 +16,7 @@ import {
     WalkerTemplate,
     WorkerInterfaceTemplate
 } from "./templates";
+import { InterfaceTemplate } from "./templates/InterfaceTemplate";
 
 const LOGGER = new PiLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
@@ -36,7 +37,8 @@ export class LanguageGenerator {
         const languageTemplate = new LanguageTemplate();
         const metaTypeTemplate = new MetaTypeTemplate();
         const enumerationTemplate = new EnumerationTemplate();
-        const typeTemplate = new UnionTemplate();
+        const unionTemplate = new UnionTemplate();
+        const interfaceTemplate = new InterfaceTemplate();
         const languageIndexTemplate = new IndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
         const piReferenceTemplate = new PiReferenceTemplate();
@@ -71,11 +73,15 @@ export class LanguageGenerator {
 
         language.unions.forEach(union => {
             LOGGER.log("Generating union: " + union.name);
-            var generated = Helpers.pretty(typeTemplate.generateUnion(union, relativePath), "union " + union.name);
+            var generated = Helpers.pretty(unionTemplate.generateUnion(union, relativePath), "union " + union.name);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.union(union)}.ts`, generated);
         });
 
-        // TODO generate language.interfaces
+        language.interfaces.forEach(piInterface => {
+            LOGGER.log("Generating union: " + piInterface.name);
+            var generated = Helpers.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name);
+            fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(piInterface)}.ts`, generated);
+        });
 
         // the following classes do not need the relative path for their imports
         LOGGER.log("Generating metatype info: " + language.name + ".ts");

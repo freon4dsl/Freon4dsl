@@ -1,5 +1,5 @@
 import { PiLangPrimitiveProperty, PiLangEnumProperty, PiLangConceptProperty, PiLangConcept, PiLangClass, PiLangProperty } from "../metalanguage/PiLanguage";
-import { PiLangClassReference } from "../metalanguage/PiLangReferences";
+import { PiLangClassReference, PiLangConceptReference, PiLangInterfaceReference } from "../metalanguage/PiLangReferences";
 import { ParseLocation } from "../../utils";
 
 // Becasue we want to be able to mix definitions of classes, enums, etc in the .lang file
@@ -23,6 +23,7 @@ export class PiParseClass extends PiLangClass {
     _isExpressionPlaceHolder: boolean;
     name: string;
     base: PiLangClassReference;
+    interfaces: PiLangInterfaceReference[] = [];
     properties: PiLangProperty[] = [];
     primProperties: PiLangPrimitiveProperty[] = [];
     enumProperties: PiLangEnumProperty[] = [];

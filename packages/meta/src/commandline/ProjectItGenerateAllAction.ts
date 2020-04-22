@@ -23,7 +23,7 @@ const LOGGER = new PiLogger("ProjectItGenerateAllAction"); // .mute();
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
-    "";
+
     private defFolder: CommandLineStringParameter;
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
@@ -75,7 +75,9 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.generateValidator();
             this.generateScoper();
             this.generateTyper();
-            LOGGER.info(this, "Watching language definition files ...");
+            if (this.watch){
+                LOGGER.info(this, "Watching language definition files ...");
+            }
         } catch (e) {
             LOGGER.error(this, e.stack);
         }
@@ -144,6 +146,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             process.exit(-1);
         }
         for (let filename of myFileSet) {
+            LOGGER.info(this, "found: " + filename);
             // TODO take into account multiple files with the same extension
             if (/\.lang$/.test(filename)) {
                 this.languageFile = filename;

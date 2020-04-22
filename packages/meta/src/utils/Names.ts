@@ -1,4 +1,4 @@
-import { PiLangConcept, PiLangEnumeration, PiLanguageUnit, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
+import { PiLangConcept, PiLangEnumeration, PiLangInterface, PiLanguageUnit, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -75,9 +75,13 @@ export class Names {
     public static enumeration(enumeration: PiLangEnumeration): string {
         return enumeration?.name;
     }
-    
+
     public static union(union: PiLangUnion): string {
         return union?.name;
+    }
+
+    public static interface(interf: PiLangInterface): string {
+        return interf?.name;
     }
 
     public static metaType(language: PiLanguageUnit): string {
