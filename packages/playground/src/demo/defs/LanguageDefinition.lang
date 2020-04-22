@@ -79,38 +79,38 @@ abstract binary expression concept DemoBinaryExpression base DemoExpression {
 }
 
 concept DemoMultiplyExpression base DemoBinaryExpression {
-    priority = "8"
+    priority = 8
 }
 
 concept DemoPlusExpression base DemoBinaryExpression {
-    priority = "4"
+    priority = 4
 }
 
 concept DemoDivideExpression base DemoBinaryExpression {
-    priority = "8"
+    priority = 8
 }
 
 concept DemoAndExpression base DemoBinaryExpression {
-    priority = "1"
+    priority = 1
 }
 
 concept DemoOrExpression base DemoBinaryExpression {
-    priority = "1"
+    priority = 1
 }
 
 abstract concept DemoComparisonExpression base DemoBinaryExpression {
 }
 
 concept DemoLessThenExpression base DemoComparisonExpression {
-    priority = "10"
+    priority = 10
 }
 
 concept DemoGreaterThenExpression base DemoComparisonExpression {
-    priority = "10"
+    priority = 10
 }
 
 concept DemoEqualsExpression base DemoComparisonExpression {
-    priority = "10"
+    priority = 10
 }
 
 concept DemoFunctionCallExpression base DemoExpression {
