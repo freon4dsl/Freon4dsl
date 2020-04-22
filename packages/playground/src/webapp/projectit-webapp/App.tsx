@@ -9,7 +9,6 @@ import { Text, Flex, Box } from "@fluentui/react-northstar";
 import { MainGrid } from "./MainGrid";
 
 // This component holds the MainGrid and the Dialog
-// TODO title of webpage is "React MainGrid", this should be changed
 // TODO states should be implemented differently: using mobx
 
 export interface IDialogState {

@@ -8,6 +8,8 @@ import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
 import { ProjectItTestLanguageExpressions } from "./ProjectItTestLanguageExpressions";
 import { PiLogger } from "../../../core/src/util/PiLogging";
 
+const LOGGER = new PiLogger("ProjectItParser"); // .mute();
+
 export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
     private allGenerator: ProjectItGenerateAllAction;
@@ -65,7 +67,7 @@ export class ProjectItParser extends CommandLineParser {
         try {
             return super.onExecute();
         } catch (e) {
-            console.log(e.stack);
+            LOGGER.error(this, e.stack);
         }
         return null;
     }

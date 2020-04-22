@@ -18,13 +18,19 @@ export class ConceptTemplate {
         const language = concept.language;
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.referedElement()) : "MobxModelElementImpl";
-        const hasName = concept.primProperties.some(p => p.name === "name");
+        const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
         const isBinaryExpression = concept.binaryExpression();
         const isExpression = (!isBinaryExpression) && concept.expression();
         const abstract = (concept.isAbstract ? "abstract" : "");
         const implementsPi = (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
+        const hasInterface = concept.interfaces.length > 0;
+        const intfaces = Array.from(
+            new Set(
+                concept.interfaces.map(i => Names.interface(i.referedElement()))
+            )
+        );
 
         const binExpConcept: PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
         // const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
@@ -33,6 +39,7 @@ export class ConceptTemplate {
             new Set(
                 concept.parts.map(p => Names.concept(p.type.referedElement()))
                     .concat(concept.references.map(r => Names.concept(r.type.referedElement())))
+                    .concat(concept.interfaces.map(i => Names.interface(i.referedElement())))
                     .concat(language.enumerations.map(e => Names.enumeration(e)))
                     .concat(language.unions.map(e => Names.union(e)))
                     .concat(Names.concept(language.expressionPlaceholder()))
@@ -88,7 +95,7 @@ export class ConceptTemplate {
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
             @model
-            export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi} 
+            export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
                 readonly $typename: ${language.name}ConceptType = "${concept.name}";
                 ${!hasSuper ? "$id: string;" : ""}
@@ -109,10 +116,10 @@ export class ConceptTemplate {
         }
                 }
                 
-                ${concept.primProperties.map(p => this.generatePrimitiveProperty(p)).join("")}
-                ${concept.enumProperties.map(p => this.generateEnumerationProperty(p)).join("")}
-                ${concept.parts.map(p => this.generatePartProperty(p)).join("")}
-                ${concept.references.map(p => this.generateReferenceProperty(p)).join("")}
+                ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("")}
+                ${concept.implementedEnumProperties().map(p => this.generateEnumerationProperty(p)).join("")}
+                ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
+                ${concept.implementedPReferences().map(p => this.generateReferenceProperty(p)).join("")}
 
                 piLanguageConcept(): ${language.name}ConceptType {
                     return this.$typename;

@@ -86,8 +86,8 @@ export function createProjection(data: Partial<MetaEditorProjection>): MetaEdito
     if (!!data.name) {
         result.name = data.name;
     }
+    // Now cleanup the parsed projection
     result.normalize();
-    console.log(result.toString());
     if (!!data.location) {
         result.location = data.location;
     }
@@ -128,7 +128,7 @@ export function createText(data: string): DefEditorProjectionText {
 }
 
 export function createSubProjection(data: Partial<DefEditorSubProjection>): DefEditorSubProjection {
-    console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listJoin + "]");
+    // console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listJoin + "]");
     const result = new DefEditorSubProjection();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;

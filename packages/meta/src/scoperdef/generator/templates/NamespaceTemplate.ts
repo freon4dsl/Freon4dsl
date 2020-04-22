@@ -150,7 +150,7 @@ export class NamespaceTemplate {
                     }
                 }
             }
-            result = result.concat("}\n");
+            result = result.concat("}" + "\n");
         }
         return result;
     }

@@ -10,8 +10,8 @@ import {
 } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("PiLanguageExpressionCreator"); //.mute();
-const nameForSelf = "self";
+const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
+export const nameForSelf = "self";
 
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");

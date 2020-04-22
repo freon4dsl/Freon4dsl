@@ -5,28 +5,6 @@
 // Because they are common they are developed and tested separately, together with the
 // creator functions in LanguageExpressionCreators.ts.
 
-LanguageExpressions_Definition
-  = ws "expressions" ws "for" ws "language" ws languageName:var ws cr:(conceptExps)*
-    {
-        return expCreate.createTest({
-            "languageName": languageName,
-            "conceptExps": cr,
-            "location": location()
-        });
-    } 
-
-conceptExps = conceptRef:conceptRef ws curly_begin ws exps:expWithSeparator* curly_end 
-    { 
-        return expCreate.createConceptExps({ 
-          "conceptRef": conceptRef, 
-          "exps": exps,
-          "location": location()
-        }); 
-    }
-
-
-expWithSeparator = exp:langExpression semicolon_separator { return exp; }
-
 // the following rules should be part of a parser that wants to use PiLangExpressions.ts
 
 conceptRef = name:var { return expCreate.createConceptReference( { "name": name, "location":location()}); }
@@ -70,7 +48,7 @@ functionExpression = sourceName:var round_begin actualparams:(
       head:langExpression
       tail:(comma_separator v:langExpression { return v; })*
       { return [head].concat(tail); }
-    )
+    )?
     round_end {
   return expCreate.createFunctionCall ({
     "sourceName": sourceName,
