@@ -84,26 +84,27 @@ export class PiTyperTemplate {
     generateDefault(language: PiLanguageUnit, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const typerInterfaceName : string = Names.PiTyper;
+        const generatedClassName : string = Names.typer(language);
 
         // Template starts here 
         return `
         import { ${typerInterfaceName} } from "${PROJECTITCORE}";
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         
-        export class TaxRulesTyper implements PiTyper {
-            inferType(modelelement: AllTaxRulesConcepts): AllTaxRulesConcepts {
+        export class ${generatedClassName} implements ${typerInterfaceName} {
+            inferType(modelelement: ${allLangConcepts}): ${allLangConcepts} {
                 return null;
             }
-            equalsType(elem1: AllTaxRulesConcepts, elem2: AllTaxRulesConcepts): boolean {
+            equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
                 return true;
             }
-            conformsTo(elem1: AllTaxRulesConcepts, elem2: AllTaxRulesConcepts): boolean {
+            conformsTo(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
                 return true;
             }
-            conformList(typelist1: AllTaxRulesConcepts[], typelist2: AllTaxRulesConcepts[]): boolean {
+            conformList(typelist1: ${allLangConcepts}[], typelist2: ${allLangConcepts}[]): boolean {
                 return true;
             }
-            isType(elem: AllTaxRulesConcepts): boolean {
+            isType(elem: ${allLangConcepts}): boolean {
                 return false;
             }      
         }`;
