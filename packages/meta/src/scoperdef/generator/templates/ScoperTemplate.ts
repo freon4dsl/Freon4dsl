@@ -30,14 +30,15 @@ export class ScoperTemplate {
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger } from "${PROJECTITCORE}"
         ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";
-                                      import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}${Names.environment(language)}";`:`` }
+                                      import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";`:`` }
         
         const LOGGER = new PiLogger("${generatedClassName}");   
 
         export class ${generatedClassName} implements ${scoperInterfaceName} {
-            ${generateAlternativeScopes? `myTyper: ${typerClassName} = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
+            ${generateAlternativeScopes? `myTyper: ${typerClassName};` : ``}
     
             getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): PiNamedElement[] {
+                ${generateAlternativeScopes? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
                 let result : PiNamedElement[] = [];
                 if (!!modelelement) {
                 ${generateAlternativeScopes? 

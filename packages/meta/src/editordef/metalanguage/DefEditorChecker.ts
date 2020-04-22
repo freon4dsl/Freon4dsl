@@ -3,6 +3,9 @@ import { Checker } from "../../utils";
 import { DefEditorConcept } from "./DefEditorConcept";
 import { DefEditorLanguage } from "./DefEditorLanguage";
 import { MetaEditorProjection, DefEditorSubProjection } from "./MetaEditorProjection";
+import { PiLogger } from "../../../../core/src/util/PiLogging";
+
+const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
 
 export class DefEditorChecker extends Checker<DefEditorLanguage> {
     myExpressionChecker: PiLanguageExpressionChecker;
@@ -13,16 +16,28 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
     }
 
     public check(editor: DefEditorLanguage): void {
-        this.resolveReferences(editor)
+        if ( this.language === null || this.language === undefined ) {
+            throw new Error(`Editor definition checker does not known the language.`);
+        }
+
         this.nestedCheck(
             {
-                check: !!editor.name,
-                error: `Editor should have a name, it is empty [line: ${editor.location?.start.line}, column: ${editor.location?.start.column}].`
+                check: this.language.name === editor.languageName,
+                error:  `Language reference ('${editor.languageName}') in editor definition '${editor.name}' `+
+                    `does not match language '${this.language.name}' [line: ${editor.location?.start.line}, column: ${editor.location?.start.column}].`,
+                whenOk: () => {
+                    this.resolveReferences(editor);
+                    this.nestedCheck(
+                        {
+                            check: !!editor.name,
+                            error: `Editor should have a name, it is empty [line: ${editor.location?.start.line}, column: ${editor.location?.start.column}].`
+                        });
+                    for(let conceptEditor of editor.conceptEditors){
+                        this.checkConceptEditor(conceptEditor);
+                    }
+                    this.errors = this.errors.concat(this.myExpressionChecker.errors);
+                }
             });
-        for(let conceptEditor of editor.conceptEditors){
-            this.checkConceptEditor(conceptEditor);
-        }
-        this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 
     private checkConceptEditor(conceptEditor: DefEditorConcept){
@@ -36,7 +51,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
     }
 
     private checkProjection(projection: MetaEditorProjection, cls: PiLangConcept){
-        if(!!projection) {
+        if (!!projection) {
             projection.lines.forEach(line => {
                 line.items.forEach(item => {
                     if (item instanceof DefEditorSubProjection) {
@@ -47,12 +62,11 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         }
     }
 
-    resolveReferences(editorDef: DefEditorLanguage) {
-        for(let conceptEditor of editorDef.conceptEditors) {
+    private resolveReferences(editorDef: DefEditorLanguage) {
+        for (let conceptEditor of editorDef.conceptEditors) {
             conceptEditor.languageEditor = editorDef;
             conceptEditor.concept.language = this.language;
         }
     }
-
 }
 

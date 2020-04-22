@@ -26,8 +26,7 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
 
         const typer = new PiTyperParser(this.language).parse(this.typerdefFile.value);
         if (typer == null) {
-            LOGGER.error(this, "Typer definition could not be parsed, exiting.");
-            process.exit(-1);
+            throw new Error("Typer definition could not be parsed, exiting.");
         }
         this.typerGenerator.generate(typer);
         // TODO add check on succesfullness

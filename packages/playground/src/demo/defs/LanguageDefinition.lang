@@ -5,7 +5,7 @@ root concept DemoModel {
     name: string
     part entities: DemoEntity[]
 }
-/*
+
 interface BaseType {
     someProp: number
 }
@@ -16,8 +16,8 @@ interface Type base BaseType {
     part int_functions: DemoFunction[]
     reference baseInterface: DemoEntity
 }
-*/
-concept DemoEntity { // implements Type {
+
+concept DemoEntity implements Type {
     name: string
     part attributes: DemoAttribute[]
     part functions: DemoFunction[]

@@ -24,8 +24,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         LOGGER.log("Checking typer definition '" + definition.name + "'");
 
         if ( this.language === null || this.language === undefined ) {
-            LOGGER.error(this, `Typer definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
-            process.exit(-1);
+            throw new Error(`Typer definition checker does not known the language.`);
         }
 
         this.nestedCheck(

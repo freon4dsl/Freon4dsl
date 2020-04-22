@@ -8,6 +8,7 @@ Editor_Definition
     {
         return creator.createLanguageEditor({
             "name"          : name,
+            "languageName"  : languageName,
             "conceptEditors": concepts,
             "location": location()
         });

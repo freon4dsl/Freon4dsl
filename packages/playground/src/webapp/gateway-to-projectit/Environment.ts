@@ -7,5 +7,5 @@ import { TaxRulesEnvironment } from "../../taxrules/environment/gen/TaxRulesEnvi
  * The one and only reference to the actual language for which this editor runs
  */
 // export const environment: PiEnvironment = CalculatorEnvironment.getInstance();
-export const environment: PiEnvironment = DemoEnvironment.getInstance();
-// export const environment: PiEnvironment = TaxRulesEnvironment.getInstance();
+// export const environment: PiEnvironment = DemoEnvironment.getInstance();
+export const environment: PiEnvironment = TaxRulesEnvironment.getInstance();

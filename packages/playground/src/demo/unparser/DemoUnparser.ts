@@ -1,4 +1,4 @@
-import { AllDemoConcepts, AppliedFeature, DemoAttributeType } from "../language/gen";
+import { DemoEveryConcept, AppliedFeature, DemoAttributeType } from "../language/gen";
 import { PiValidator, PiError, PiTyper } from "@projectit/core";
 import {
     DemoModel,
@@ -29,7 +29,7 @@ import {
 } from "../language/gen";
 
 export class DemoUnparser {
-    public unparse(modelelement: AllDemoConcepts, includeChildren?: boolean): string {
+    public unparse(modelelement: DemoEveryConcept, includeChildren?: boolean): string {
         if (modelelement instanceof DemoModel) {
             return this.unparseDemoModel(modelelement, includeChildren);
         }

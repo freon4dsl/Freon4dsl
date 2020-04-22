@@ -5,7 +5,7 @@ import { LanguageExpressionTester, TestExpressionsForConcept } from "../../langu
 import { PiLangExp, PiLangEnumExp, PiLangSelfExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("PiLanguageExpressionChecker"); //.mute();
+const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo", "equalsType", "typeof" ];
 const containerKeyword : string = "container";
 
@@ -19,8 +19,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     public check(definition: LanguageExpressionTester): void {
         LOGGER.log("Checking test expressions");
         if ( this.language === null || this.language === undefined ) {
-            LOGGER.error(this, `Expression Tester definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
-            process.exit(-1);
+            throw new Error(`Expression Tester definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
         }
 
         this.nestedCheck(

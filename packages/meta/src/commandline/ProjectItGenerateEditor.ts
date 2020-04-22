@@ -27,8 +27,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
 
         const editor = new DefEditorParser(this.language).parse(this.editorFile.value);
         if (editor == null) {
-            LOGGER.error(this, "Editor definition could not be parsed, exiting.");
-            process.exit(-1);
+            throw new Error("Editor definition could not be parsed, exiting.");
         }
         this.editorGenerator.generate(editor);
         // TODO add check on succefullness of generation
