@@ -20,6 +20,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
 
     generate(): void {
         LOGGER.log("Starting ProjectIt editor generation ...");
+        try {
         super.generate();
 
         this.editorGenerator.outputfolder = this.outputFolder;
@@ -30,6 +31,9 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
             throw new Error("Editor definition could not be parsed, exiting.");
         }
         this.editorGenerator.generate(editor);
+        } catch (e) {
+            console.log(e.stack);
+        }
         // TODO add check on succefullness of generation
     }
 

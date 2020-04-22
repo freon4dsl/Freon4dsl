@@ -74,6 +74,13 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
             return this.referedElement;
         }
     }
+
+    static create(name: string, referred: PiLangProperty): PiLangAppliedFeatureExp {
+        const result = new PiLangAppliedFeatureExp();
+        result.referedElement = referred;
+        result.sourceName = name;
+        return result;
+    }
 }
 
 export class PiLangFunctionCallExp extends PiLangExp {
