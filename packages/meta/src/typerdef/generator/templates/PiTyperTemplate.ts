@@ -1,8 +1,7 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses } from "../../../utils";
-import { PiLangClass, PiLanguageUnit, PiLangUnion } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiLangExp,
-    PiLangEnumExp,
     PiLangFunctionCallExp,
     langExpToTypeScript, PiLangSelfExp
 } from "../../../languagedef/metalanguage/PiLangExpressions";
@@ -31,12 +30,8 @@ export class PiTyperTemplate {
         return `
         import { ${typerInterfaceName} } from "${PROJECTITCORE}";
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
-                import { ${language.enumerations.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
-        import { ${language.unions.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
+        import { ${language.concepts.map(concept => `
+                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";       
 
         export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType : ${rootType} = ${defaultType};
@@ -165,12 +160,10 @@ export class PiTyperTemplate {
         for ( let tr of this.typerdef.typerRules) {
             if (tr instanceof PiTypeIsTypeRule) {
                 for (let type of tr.types) {
-                    if (!(type.referedElement() instanceof PiLangUnion)) {
-                        let myConceptName = type.name;
-                        result = result.concat(`if (modelelement instanceof ${myConceptName}) {
+                    let myConceptName = type.name;
+                    result = result.concat(`if (modelelement instanceof ${myConceptName}) {
                             return modelelement;
                         }`);
-                    }
                 }
             }
             // TODO check what to do with PiTypeAnyTypeRule
@@ -193,12 +186,12 @@ export class PiTyperTemplate {
 
     private sortConceptRules(conceptRules: PiTypeConceptRule[]): PiTypeConceptRule[] {
         let sortedConceptRules: PiTypeConceptRule[] = [];
-        let sortedClasses = sortClasses(this.language.classes);
+        let sortedClasses = sortClasses(this.language.concepts);
         for (let piclass of sortedClasses) {
             // find conceptRule for this piclass
             let myRule: PiTypeConceptRule;
             for (let rule of conceptRules) {
-                if (piclass === rule.conceptRef.referedElement()) {
+                if (piclass === rule.conceptRef.referred) {
                     myRule = rule;
                     // console.log("found " + piclass.name + ", index in classes: " + sortedClasses.indexOf(piclass) + ", index in rules: " + conceptRules.indexOf(rule));
                 }
@@ -216,12 +209,9 @@ export class PiTyperTemplate {
         for ( let tr of this.typerdef.typerRules ) {
             if (tr instanceof PiTypeIsTypeRule) {
                 for ( let type of tr.types  ) {
-                    if (!(type.referedElement() instanceof PiLangUnion)) {
-                        //TODO if Union remains in the meta meta language then all concepts within the union should be added
-                        result = result.concat(`if (elem instanceof ${type.name}) {
+                    result = result.concat(`if (elem instanceof ${type.name}) {
                             return true;
                         }`);
-                    }
                 }
             }
         }
@@ -258,9 +248,10 @@ export class PiTyperTemplate {
     }
 
     private makeTypeExp(exp: PiLangExp) : string {
-        if (exp instanceof PiLangEnumExp) {
-            return `${exp.sourceName}.${exp.appliedfeature}`;
-        } else if (exp instanceof PiLangSelfExp) {
+        // if (exp instanceof PiLangEnumExp) {
+        //     return `${exp.sourceName}.${exp.appliedfeature}`;
+        // } else
+        if (exp instanceof PiLangSelfExp) {
             return `this.inferType(modelelement.${langExpToTypeScript(exp.appliedfeature)})`;
         } else if (exp instanceof PiLangFunctionCallExp) {
             return `this.${exp.sourceName} (${exp.actualparams.map(

@@ -1,12 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
 import {
-    PiLangConceptProperty,
-    PiLangEnumProperty,
-    PiLangPrimitiveProperty,
-    PiLangBinaryExpressionConcept,
-    PiLangExpressionConcept,
-    PiLangClass,
     PiLanguageUnit
 } from "../../metalanguage/PiLanguage";
 
@@ -17,25 +10,19 @@ export class LanguageTemplate {
     generateLanguage(language: PiLanguageUnit, relativePath: string): string {
         return `import { Language, Property, Concept, Enumeration } from "@projectit/core";
         
-            ${language.classes.map(concept =>
+            ${language.concepts.map(concept =>
                 `import { ${Names.concept(concept)} } from "./${Names.concept(concept)}";`
-            ).join("\n")}
-            ${language.enumerations.map(enu =>
-                `import { ${Names.enumeration(enu)} } from "./${Names.enumeration(enu)}";`
             ).join("\n")}
             import { PiElementReference } from "./PiElementReference";
     
             export function initializeLanguage() {
-                ${language.classes.map(concept =>
+                ${language.concepts.map(concept =>
                     `Language.getInstance().addConcept(describe${Names.concept(concept)}());`
-                ).join("\n")}
-                ${language.enumerations.map(enu =>
-                    `Language.getInstance().addEnumeration(describe${Names.enumeration(enu)}());`
                 ).join("\n")}
                 Language.getInstance().addReferenceCreator( (name: string, type: string) => { return PiElementReference.createNamed(name, type)});
             }
             
-            ${language.classes.map(concept =>
+            ${language.concepts.map(concept =>
             `
                 function describe${concept.name}(): Concept {
                     const concept =             {
@@ -52,14 +39,6 @@ export class LanguageTemplate {
                                 propertyType: "primitive"
                             });`
                     ).join("\n")}
-                    ${concept.allEnumProperties().map(prop =>
-                        `concept.properties.set("${prop.name}", {
-                                name: "${prop.name}",
-                                type: "${prop.type.name}",
-                                isList: ${prop.isList} ,
-                                propertyType: "enumeration"
-                            });`
-                    ).join("\n")}
                     ${concept.allParts().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
@@ -68,7 +47,7 @@ export class LanguageTemplate {
                                 propertyType: "part"
                             });`
                     ).join("\n")}
-                    ${concept.allPReferences().map(prop =>
+                    ${concept.allReferences().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 type: "${prop.type.name}",
@@ -79,15 +58,6 @@ export class LanguageTemplate {
                 return concept;
             }`
             ).join("\n")}
-            ${language.enumerations.map(enu =>
-            `function describe${enu.name}(): Enumeration {
-                            const enumeration =             {
-                                typeName: "${Names.enumeration(enu)}",
-                                literal: (literal: string) => { return ${Names.enumeration(enu)}.fromString(literal); }
-                            }
-                            return enumeration;
-                        }`
-        ).join("\n")}
         `;
     }
 }

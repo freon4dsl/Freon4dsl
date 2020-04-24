@@ -1,13 +1,12 @@
 import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiLangBinaryExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
 
 export class ActionsTemplate {
     constructor() {
     }
 
-    // TODO remove typecast on line 54
     generateDefaultActions(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
         return `
             import * as Keys from "${PROJECTITCORE}";
@@ -33,10 +32,10 @@ export class ActionsTemplate {
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
             
-            import { PiElementReference, ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { PiElementReference, ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
-                ${language.classes.filter(c => c.expression() && !c.binaryExpression() && !c.isAbstract).map(c =>
+                ${language.concepts.filter(c => c instanceof PiExpressionConcept && !(c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `{
                     trigger: ${c.triggerIsRegExp ? `/${editorDef.findConceptEditor(c).trigger}/` : `"${editorDef.findConceptEditor(c).trigger}"`},
                     activeInBoxRoles: [
@@ -50,7 +49,7 @@ export class ActionsTemplate {
             ];
 
             export const BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
-                ${language.classes.filter(c => c.binaryExpression() && !c.isAbstract).map(c =>
+                ${language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `{
                     trigger: "${editorDef.findConceptEditor(c).symbol}",
                     activeInBoxRoles: [
@@ -69,13 +68,13 @@ export class ActionsTemplate {
             ];
             
             export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
-                ${flatten(language.classes.map(c => c.parts)).filter(p => p.isList).map(part => {
-                    const parentConcept = part.owningConcept;
-                    const partConcept = part.type.referedElement();
+                ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
+                    const parentConcept = part.owningConcept.referred;
+                    const partConcept = part.type.referred;
                     return `
                         {
                             activeInBoxRoles: ["new-${part.name}"],
-                            trigger: "${!!part.type.referedElement().trigger ? part.type.referedElement().getTrigger() : part.name}",
+                            trigger: "${!!editorDef.findConceptEditor(part.type.referred).trigger ? `${editorDef.findConceptEditor(part.type.referred).trigger}` : part.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                 var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
                                 const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
@@ -86,16 +85,16 @@ export class ActionsTemplate {
                         }
                 `}).join(",")}
                 ,
-                ${flatten(language.classes.map(c => c.references)).filter(p => p.isList).map(reference => {
-                    const parentConcept = reference.owningConcept;
-                    const partConcept = reference.type.referedElement();
+                ${flatten(language.concepts.map(c => c.references())).filter(p => p.isList).map(reference => {
+                    const parentConcept = reference.owningConcept.referred;
+                    const partConcept = reference.type.referred;
                     return `
                         {
                             activeInBoxRoles: ["new-${reference.name}"],
-                            trigger: "${!!reference.type.referedElement().trigger ? reference.type.referedElement().getTrigger() : reference.name}",
+                            trigger: "${!!editorDef.findConceptEditor(reference.type.referred).trigger ? `${editorDef.findConceptEditor(reference.type.referred).trigger}` : reference.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                 var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
-                                const newBase: PiElementReference< ${Names.concept(reference.type.referedElement())}> = PiElementReference.createNamed("", null);
+                                const newBase: PiElementReference< ${Names.concept(reference.type.referred)}> = PiElementReference.createNamed("", null);
                                 parent.${reference.name}.push(newBase);
                                 return null;
                             },
@@ -105,9 +104,9 @@ export class ActionsTemplate {
             ];
             
             export const KEYBOARD: KeyboardShortcutBehavior[] = [
-                ${flatten(language.classes.map(c => c.parts)).filter(p => p.isList).map(part => {
-                    const parentConcept = part.owningConcept;
-                    const partConcept = part.type.referedElement();
+                ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
+                    const parentConcept = part.owningConcept.referred;
+                    const partConcept = part.type.referred;
                     return `
                     {
                         activeInBoxRoles: ["new-${part.name}"],

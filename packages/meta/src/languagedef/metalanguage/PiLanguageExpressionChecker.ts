@@ -1,9 +1,9 @@
 import { Checker } from "../../utils/Checker";
-import { PiLangConceptProperty, PiLanguageUnit, PiLangConcept, PiLangProperty } from "./PiLanguage";
-import { PiLangConceptReference, PiLangPropertyReference } from "./PiLangReferences";
+import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty } from "./PiLanguage";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
-import { PiLangExp, PiLangEnumExp, PiLangSelfExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
+import { PiLangExp, PiLangSelfExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiElementReference } from "./PiElementReference";
 
 const LOGGER = new PiLogger("PiLanguageExpressionChecker"); //.mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo", "equalsType", "typeof" ];
@@ -41,7 +41,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
         LOGGER.log("checkLangSetExp");
         this.checkConceptReference(rule.conceptRef);
 
-        let enclosingConcept = rule.conceptRef.referedElement();
+        let enclosingConcept = rule.conceptRef.referred;
         if (enclosingConcept) {
             rule.exps.forEach(tr => {
                 this.checkLangExp(tr, enclosingConcept);
@@ -50,12 +50,12 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // ConceptName
-    public checkConceptReference(reference: PiLangConceptReference) {
+    public checkConceptReference(reference: PiElementReference<PiClassifier>) {
         LOGGER.log("checkConceptReference " + reference?.name);
         // Note that the following statement is crucial, because the model we are testing is separate
         // from the model of the language.
         // If it is not set, the conceptReference will not find the refered language concept.
-        reference.language = this.language;
+        // reference.language = this.language;
 
         this.nestedCheck(
             {
@@ -63,18 +63,19 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
                 error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
                 whenOk: () => this.nestedCheck(
                     {
-                        check: reference.referedElement() !== undefined,
+                        check: reference.referred !== undefined,
                         error: `Concept reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
                     })
             })
     }
 
     // exp
-    public checkLangExp(langRef: PiLangExp, enclosingConcept:PiLangConcept) {
+    public checkLangExp(langRef: PiLangExp, enclosingConcept:PiConcept) {
         LOGGER.log("checkLangExp " + langRef.sourceName );
-        if (langRef instanceof PiLangEnumExp) {
-            this.checkEnumRefExpression(langRef, enclosingConcept);
-        } else if (langRef instanceof PiLangSelfExp) {
+        // if (langRef instanceof PiLangEnumExp) {
+        //     this.checkEnumRefExpression(langRef, enclosingConcept);
+        // } else
+        if (langRef instanceof PiLangSelfExp) {
             this.checkSelfExpression(langRef, enclosingConcept);
         } else if (langRef instanceof PiLangConceptExp) {
             this.checkConceptExpression(langRef, enclosingConcept);
@@ -86,29 +87,29 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // EnumType:literal
-    private checkEnumRefExpression(langExp: PiLangEnumExp, enclosingConcept:PiLangConcept) {
-        LOGGER.log("checkEnumRefExpression " + langExp?.toPiString());
-        let myEnumType = this.language.findEnumeration(langExp.sourceName);
-        langExp.referedElement = myEnumType;
-        this.nestedCheck({
-            check: !!myEnumType,
-            error: `Cannot find enumeration ${langExp.sourceName} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
-            whenOk: () => {
-                if (!!langExp.appliedfeature) { // if an appliedfeature is present, it should refer to one of the literals
-                    // find literal in enum
-                    let foundLiteral = myEnumType.literals.find(l => l === langExp.appliedfeature.sourceName);
-                    this.simpleCheck(langExp.appliedfeature.sourceName === foundLiteral,
-                        `${langExp.appliedfeature.sourceName} is not a literal of ${myEnumType.name} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`
-                    );
-                }
-            }
-        });
-    }
+    // private checkEnumRefExpression(langExp: PiLangEnumExp, enclosingConcept:PiConcept) {
+    //     LOGGER.log("checkEnumRefExpression " + langExp?.toPiString());
+    //     let myEnumType = this.language.findEnumeration(langExp.sourceName);
+    //     langExp.referedElement = myEnumType;
+    //     this.nestedCheck({
+    //         check: !!myEnumType,
+    //         error: `Cannot find enumeration ${langExp.sourceName} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+    //         whenOk: () => {
+    //             if (!!langExp.appliedfeature) { // if an appliedfeature is present, it should refer to one of the literals
+    //                 // find literal in enum
+    //                 let foundLiteral = myEnumType.literals.find(l => l === langExp.appliedfeature.sourceName);
+    //                 this.simpleCheck(langExp.appliedfeature.sourceName === foundLiteral,
+    //                     `${langExp.appliedfeature.sourceName} is not a literal of ${myEnumType.name} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`
+    //                 );
+    //             }
+    //         }
+    //     });
+    // }
 
     // self.XXX
-    private checkSelfExpression(langExp: PiLangSelfExp, enclosingConcept:PiLangConcept) {
+    private checkSelfExpression(langExp: PiLangSelfExp, enclosingConcept:PiConcept) {
         LOGGER.log("checkSelfExpression " + langExp?.toPiString());
-        langExp.referedElement = enclosingConcept;
+        langExp.referedElement = PiElementReference.create<PiConcept>(enclosingConcept, "PiConcept");
         if (this.strictUseOfSelf) {
             this.nestedCheck(
                 {
@@ -123,7 +124,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // ConceptName.XXX
-    private checkConceptExpression(langExp: PiLangConceptExp, enclosingConcept:PiLangConcept) {
+    private checkConceptExpression(langExp: PiLangConceptExp, enclosingConcept:PiConcept) {
         LOGGER.log("checkConceptExpression " + langExp?.toPiString());
         // find the concept that langRef.name refers to
         let myConcept = this.language.findConcept(langExp.sourceName);
@@ -133,7 +134,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
             //check if the keyword 'container' was used
             if (langExp.sourceName === containerKeyword) {
                 // create a dummy concept
-                myConcept = new PiLangConcept();
+                myConcept = new PiConcept();
                 myConcept.name = containerKeyword;
                 myConcept.language = this.language;
                 myConcept.location = langExp.location;
@@ -141,7 +142,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
             }
         }
 
-        langExp.referedElement = myConcept;
+        langExp.referedElement = PiElementReference.create<PiConcept>(myConcept, "PiConcept");
         if (!skipCheck) {
             this.nestedCheck(
                 {
@@ -164,7 +165,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // someFunction( XXX, YYY )
-    private checkFunctionCallExpression(langExp: PiLangFunctionCallExp, enclosingConcept:PiLangConcept) {
+    private checkFunctionCallExpression(langExp: PiLangFunctionCallExp, enclosingConcept:PiConcept) {
         LOGGER.log("checkFunctionCallExpression " + langExp?.toPiString());
         let functionName = validFunctionNames.find(name => name === langExp.sourceName);
         // TODO ??? set langRef.referedElement to one of the predefined functions
@@ -196,20 +197,20 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     }
 
     // .XXX
-    private checkAppliedFeatureExp(feat: PiLangAppliedFeatureExp, enclosingConcept:PiLangConcept) {
+    private checkAppliedFeatureExp(feat: PiLangAppliedFeatureExp, enclosingConcept:PiClassifier) {
         LOGGER.log("checkAppliedFeatureExp " + feat?.toPiString());
         for ( let e of enclosingConcept.allProperties() ) {
             if (e.name === feat.sourceName) {
-                feat.referedElement = e;
+                feat.referedElement = PiElementReference.create<PiProperty>(e, "PiProperty");
             }
         }
         this.nestedCheck({
-            check: !!feat.referedElement,
+            check: !!feat.referedElement.referred,
             error: `Cannot find property '${feat.sourceName}' in '${enclosingConcept.name}'` +
                 ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}].`,
             whenOk: () => {
                 if (feat.appliedfeature != null) {
-                    this.checkAppliedFeatureExp(feat.appliedfeature, (feat.referedElement.type.referedElement() as PiLangConcept));
+                    this.checkAppliedFeatureExp(feat.appliedfeature, feat.referedElement.referred.type.referred);
                 }
             }
         });

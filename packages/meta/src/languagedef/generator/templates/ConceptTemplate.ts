@@ -1,52 +1,47 @@
 import { Names } from "../../../utils/Names";
 import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
 import {
-    PiLangConceptProperty,
-    PiLangEnumProperty,
-    PiLangPrimitiveProperty,
-    PiLangBinaryExpressionConcept,
-    PiLangExpressionConcept,
-    PiLangClass,
-    PiLanguageUnit
+    PiConceptProperty,
+    PiPrimitiveProperty,
+    PiBinaryExpressionConcept,
+    PiExpressionConcept, PiConcept
 } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
     constructor() {
     }
 
-    generateConcept(concept: PiLangClass, relativePath: string): string {
+    generateConcept(concept: PiConcept, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? Names.concept(concept.base.referedElement()) : "MobxModelElementImpl";
+        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
-        const isBinaryExpression = concept.binaryExpression();
-        const isExpression = (!isBinaryExpression) && concept.expression();
+        const isBinaryExpression = concept instanceof PiBinaryExpressionConcept;
+        const isExpression = (!isBinaryExpression) && concept instanceof PiExpressionConcept;
         const abstract = (concept.isAbstract ? "abstract" : "");
         const implementsPi = (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
         const hasInterface = concept.interfaces.length > 0;
         const intfaces = Array.from(
             new Set(
-                concept.interfaces.map(i => Names.interface(i.referedElement()))
+                concept.interfaces.map(i => Names.interface(i.referred))
             )
         );
 
-        const binExpConcept: PiLangBinaryExpressionConcept = isBinaryExpression ? concept as PiLangBinaryExpressionConcept : null;
-        // const expConcept : PiLangExpressionConcept = isExpression ? concept as PiLangExpressionConcept : null;
+        const binExpConcept: PiBinaryExpressionConcept = isBinaryExpression ? concept as PiBinaryExpressionConcept : null;
+        // const expConcept : PiExpressionConcept = isExpression ? concept as PiExpressionConcept : null;
 
         const imports = Array.from(
             new Set(
-                concept.parts.map(p => Names.concept(p.type.referedElement()))
-                    .concat(concept.references.map(r => Names.concept(r.type.referedElement())))
-                    .concat(concept.interfaces.map(i => Names.interface(i.referedElement())))
-                    .concat(language.enumerations.map(e => Names.enumeration(e)))
-                    .concat(language.unions.map(e => Names.union(e)))
-                    .concat(Names.concept(language.expressionPlaceholder()))
+                concept.parts().map(p => Names.classifier(p.type.referred))
+                    .concat(concept.references().map(r => Names.classifier(r.type.referred)))
+                    .concat(concept.interfaces.map(i => Names.interface(i.referred)))
+                    .concat(Names.concept(language.expressionPlaceHolder))
                     .concat([baseExpressionName])
                     .filter(name => !(name === concept.name))
                     // .concat(element.properties.map(p => p.type).filter(t => language.enumerations.some(e => e.name === t)))
-                    .concat((concept.base ? Names.concept(concept.base.referedElement()) : null))
+                    .concat((concept.base ? Names.concept(concept.base.referred) : null))
                     .filter(r => r !== null)
             )
         );
@@ -58,36 +53,36 @@ export class ConceptTemplate {
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }
-        if (concept.parts.some(part => part.isList)) {
+        if (concept.parts().some(part => part.isList)) {
             mobxImports.push("observablelistpart");
         }
-        if (concept.parts.some(part => !part.isList)) {
+        if (concept.parts().some(part => !part.isList)) {
             mobxImports.push("observablepart");
         }
-        if (concept.references.some(ref => ref.isList)) {
+        if (concept.references().some(ref => ref.isList)) {
             if (!mobxImports.some(im => im === "observablelistpart")) {
                 mobxImports.push("observablelistpart");
             }
         }
-        if (concept.references.some(ref => !ref.isList)) {
+        if (concept.references().some(ref => !ref.isList)) {
             if (!mobxImports.some(im => im === "observablepart")) {
                 mobxImports.push("observablepart");
             }
         }
-        if (concept.enumProperties.some(ref => ref.isList)) {
-            if (!mobxImports.some(im => im === "observablelistreference")) {
-                mobxImports.push("observablelistreference");
-            }
-        }
-        if (concept.enumProperties.some(ref => !ref.isList)) {
-            if (!mobxImports.some(im => im === "observablereference")) {
-                mobxImports.push("observablereference");
-            }
-        }
+        // if (concept.enumProperties.some(ref => ref.isList)) {
+        //     if (!mobxImports.some(im => im === "observablelistreference")) {
+        //         mobxImports.push("observablelistreference");
+        //     }
+        // }
+        // if (concept.enumProperties.some(ref => !ref.isList)) {
+        //     if (!mobxImports.some(im => im === "observablereference")) {
+        //         mobxImports.push("observablereference");
+        //     }
+        // }
 
         // Template starts here
         const result = `
-            ${(concept.primProperties.length > 0 || concept.enumProperties.length > 0) ? `import { observable } from "mobx";` : ""}
+            ${(concept.primProperties.length > 0 ) ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
             import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PROJECTITCORE}";
             import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
@@ -109,15 +104,14 @@ export class ConceptTemplate {
                             this.$id = uuid.v4();
                         }` : ""
         }
-                    ${concept.binaryExpression() ? `
-                    this.left = new ${Names.concept(language.expressionPlaceholder())};
-                    this.right = new ${Names.concept(language.expressionPlaceholder())};
+                    ${concept instanceof PiBinaryExpressionConcept ? `
+                    this.left = new ${Names.concept(language.expressionPlaceHolder)};
+                    this.right = new ${Names.concept(language.expressionPlaceHolder)};
                     ` : ""
         }
                 }
                 
                 ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("")}
-                ${concept.implementedEnumProperties().map(p => this.generateEnumerationProperty(p)).join("")}
                 ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
                 ${concept.implementedPReferences().map(p => this.generateReferenceProperty(p)).join("")}
 
@@ -141,7 +135,7 @@ export class ConceptTemplate {
                 
                 ${isExpression || isBinaryExpression ? `
                 piIsExpressionPlaceHolder(): boolean {
-                    return ${concept.isExpressionPlaceholder()};
+                    return ${concept instanceof PiExpressionConcept && concept.isExpressionPlaceholder()};
                 }`
             : ""}
                 
@@ -180,32 +174,32 @@ export class ConceptTemplate {
         return result;
     }
 
-    generatePrimitiveProperty(property: PiLangPrimitiveProperty): string {
+    generatePrimitiveProperty(property: PiPrimitiveProperty): string {
         return `
             @observable ${property.name}: ${property.primType} ${property.isList ? "[]" : ""};
         `;
     }
 
-    generateEnumerationProperty(property: PiLangEnumProperty): string {
+    // generateEnumerationProperty(property: PiLangEnumProperty): string {
+    //     return `
+    //         @observable ${property.name}: ${Names.enumeration((property.type.referred))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referred))}.$piANY;`};
+    //     `;
+    // }
+
+    generatePartProperty(property: PiConceptProperty): string {
+        const decorator = property.isList ? "@observablelistpart" : "@observablepart";
+        const arrayType = property.isList ? "[]" : "";
+        const initializer = ((property.type.referred instanceof PiExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.referred.language.expressionPlaceHolder)} ${property.isList ? "]" : ""}` : "");
         return `
-            @observable ${property.name}: ${Names.enumeration((property.type.referedElement()))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referedElement()))}.$piANY;`};
+            ${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer};
         `;
     }
 
-    generatePartProperty(property: PiLangConceptProperty): string {
-        const decorator = property.isList ? "@observablelistpart" : "@observablepart";
-        const arrayType = property.isList ? "[]" : "";
-        const initializer = ((property.type.referedElement() instanceof PiLangExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceholder())} ${property.isList ? "]" : ""}` : "");
-        return `
-            ${decorator} ${property.name} : ${Names.concept(property.type.referedElement())}${arrayType} ${initializer};
-        `;
-    }
-
-    generateReferenceProperty(property: PiLangConceptProperty): string {
+    generateReferenceProperty(property: PiConceptProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         return `
-            ${decorator} ${property.name} : PiElementReference<${Names.concept(property.type.referedElement())}>${arrayType};
+            ${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType};
         `;
     }
 }

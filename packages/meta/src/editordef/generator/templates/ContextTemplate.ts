@@ -8,8 +8,8 @@ export class ContextTemplate {
     }
 
     generateContext(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
-        const rootConceptName = Names.concept(language.rootConcept());
-        const placeHolderConceptName = Names.concept(language.expressionPlaceholder());
+        const rootConceptName = Names.concept(language.rootConcept);
+        const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
         const initializationName = Names.initialization(language);
 
         return `

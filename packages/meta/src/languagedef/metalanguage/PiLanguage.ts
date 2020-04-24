@@ -1,67 +1,5 @@
-import { PiLangElementReference, PiLangConceptReference, PiLangClassReference, PiLangInterfaceReference, PiLangEnumerationReference } from "./PiLangReferences";
 import { ParseLocation } from "../../utils";
-
-// PiLanguage structure
-export class PiLanguageUnit {
-    location: ParseLocation;
-    name: string;
-    classes: PiLangClass[] = [];
-    enumerations: PiLangEnumeration[] = [];
-    unions: PiLangUnion[] = [];
-    interfaces: PiLangInterface[] = [];
-
-    findClass(name: string): PiLangClass {
-        return this.classes.find(con => con.name === name);
-    }
-
-    findEnumeration(name: string): PiLangEnumeration {
-        return this.enumerations.find(con => con.name === name);
-    }
-
-    findUnion(name: string): PiLangUnion {
-        return this.unions.find(con => con.name === name);
-    }
-
-    findInterface(name: string): PiLangInterface {
-        return this.interfaces.find(con => con.name === name);
-    }
-
-    findConcept(name: string): PiLangConcept {
-        let result : PiLangConcept;
-        result = this.findClass(name);
-        if (result === undefined) result = this.findUnion(name);
-        if (result === undefined) result = this.findInterface(name);
-        if (result === undefined) result = this.findEnumeration(name);
-        return result;
-    }
-
-	findBinaryExpConcept(name: string): PiLangBinaryExpressionConcept {
-        let result = this.findClass(name);
-        if (result instanceof PiLangBinaryExpressionConcept) return result;
-        return null;
-    }
-    
-	findExpressionConcept(name: string): PiLangExpressionConcept {
-        let result = this.findClass(name);
-        if (result instanceof PiLangExpressionConcept) return result;
-        return null;
-    }
-    
-    findExpressionBase(): PiLangConcept {
-        const result = this.classes.find(c => {
-            return c instanceof PiLangExpressionConcept && (!!c.base ? !(c.base.referedElement() instanceof PiLangExpressionConcept) : true);
-        });
-        return result;
-    }
-
-    expressionPlaceholder(): PiLangConcept {
-        return this.classes.find(c => c instanceof PiLangExpressionConcept && c.isExpressionPlaceholder());
-    }
-
-    rootConcept():PiLangConcept{
-        return this.classes.find(c => c.isRoot);
-    }
-}
+import { PiElementReference } from "./PiElementReference";
 
 // root of the inheritance structure
 export abstract class PiLangElement {
@@ -69,338 +7,203 @@ export abstract class PiLangElement {
     name: string;
 }
 
-export class PiLangConcept extends PiLangElement {
-    language: PiLanguageUnit;
-    primProperties: PiLangPrimitiveProperty[] = [];
-    enumProperties: PiLangEnumProperty[] = [];
-    parts: PiLangConceptProperty[] = [];
-    references: PiLangConceptProperty[] = [];
-    interfaces: PiLangInterfaceReference[] = []; // the interfaces that this concept implements
-    // TODO the following should be moved to the editor generator
-    trigger: string;
-    triggerIsRegExp: boolean;
+export class PiLanguageUnit extends PiLangElement {
+    concepts: PiConcept[] = [];
+    interfaces: PiInterface[] = [];
+    expressionPlaceHolder: PiExpressionConcept; // set by checker
+    rootConcept: PiConcept; // set by the checker
 
-    // the following functions should be implemented by sybclasses
-    // TODO investigate which implementations can be raised to this class
-    allPrimProperties(): PiLangPrimitiveProperty[] {
-        return [];
+    findConcept(name: string): PiConcept {
+        return this.concepts.find(con => con.name === name);
     }
-    allEnumProperties(): PiLangEnumProperty[] {
-        return [];
+
+    findInterface(name: string): PiInterface {
+        return this.interfaces.find(con => con.name === name);
     }
-    allParts(): PiLangConceptProperty[] {
-        return [];
+
+    findClassifier(name: string): PiClassifier {
+        let result : PiClassifier;
+        result = this.findConcept(name);
+        if (result === undefined) result = this.findInterface(name);
+        return result;
     }
-    allPReferences(): PiLangConceptProperty[] {
-        return [];
-    }
-    allProperties(): PiLangProperty[] {
-        return [];
-	}
-    implementedPrimProperties(): PiLangPrimitiveProperty[] {
-        return [];
-    }
-    implementedEnumProperties(): PiLangEnumProperty[] {
-        return [];
-    }
-    implementedParts(): PiLangConceptProperty[] {
-        return [];
-    }
-    implementedPReferences(): PiLangConceptProperty[] {
-        return [];
-    }
-    implementedProperties(): PiLangProperty[] {
-        return [];
-    }
-	findFunction(name: string, formalparams: PiLangConceptReference[]): PiLangFunction {
-		throw new Error("Method not implemented.");
-	}
-	findConceptProperty(name: string): PiLangConceptProperty {
-		throw new Error("Method not implemented.");
-	}
-	findEnumProperty(name: string): PiLangEnumProperty {
-		throw new Error("Method not implemented.");
-	}
-	findPrimitiveProperty(name: string): PiLangPrimitiveProperty {
-		throw new Error("Method not implemented.");
-	}
-	findProperty(name: string): PiLangProperty {
-        return this.allProperties().find(p => p.name === name);
-	}
-    getTrigger(): string {
-        const p = this.trigger;
-        return (!!p ? p : "undefined");
+
+    findExpressionBase(): PiConcept {
+        const result = this.concepts.find(c => {
+            return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
+        });
+        return result;
     }
 }
 
-export class PiLangClass extends PiLangConcept { // implements PiLangClassInterface {
+export abstract class PiClassifier extends PiLangElement {
+    language: PiLanguageUnit;
+    properties: PiProperty[];
+    primProperties: PiPrimitiveProperty[];
+
+    parts(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = [];
+        for (let prop of this.properties) {
+            if (prop instanceof PiConceptProperty && prop.isPart) {
+                result.push(prop);
+            }
+        }
+        return result;
+    }
+
+    references(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = [];
+        for (let prop of this.properties) {
+            if (prop instanceof PiConceptProperty && !prop.isPart) {
+                result.push(prop);
+            }
+        }
+        return result;
+    }
+
+    allPrimProperties(): PiPrimitiveProperty[] {
+        return this.primProperties;
+    }
+
+    allParts(): PiConceptProperty[] {
+        return this.parts();
+    }
+
+    allReferences(): PiConceptProperty[] {
+        return this.references();
+    }
+
+    allProperties(): PiProperty[] {
+        let result : PiProperty[] = [];
+        result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
+        return result;
+    }
+}
+
+export class PiInterface extends PiClassifier {
+    base: PiElementReference<PiInterface>[] = [];
+
+    allPrimProperties(): PiPrimitiveProperty[] {
+        let result: PiPrimitiveProperty[] = this.primProperties;
+        for (let intf of this.base) {
+            result = result.concat(intf.referred.allPrimProperties());
+        }
+        return result;
+    }
+
+    allParts(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = this.parts();
+        for (let intf of this.base) {
+            result = result.concat(intf.referred.allParts());
+        }
+        return result;
+    }
+
+    allReferences(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = this.references();
+        for (let intf of this.base) {
+            result = result.concat(intf.referred.allParts());
+        }
+        return result;
+    }
+}
+
+export class PiConcept extends PiClassifier {
     isAbstract: boolean;
     isRoot:boolean;
-    base: PiLangClassReference;
+    base: PiElementReference<PiConcept>;
+    interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
+    // TODO the following should be moved to the editor generator
+    triggerIsRegExp: boolean;
 
-    allPrimProperties(): PiLangPrimitiveProperty[] {
-        let result: PiLangPrimitiveProperty[] = this.primProperties;
+    allPrimProperties(): PiPrimitiveProperty[] {
+        let result: PiPrimitiveProperty[] = this.primProperties;
         if (this.base !== undefined) {
-            result = result.concat(this.base.referedElement().allPrimProperties());
+            result = result.concat(this.base.referred.allPrimProperties());
         }
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allPrimProperties());
+            result = result.concat(intf.referred.allPrimProperties());
         }
         return result;
     }
 
-    allEnumProperties(): PiLangEnumProperty[] {
-        let result: PiLangEnumProperty[] = this.enumProperties;
+    allParts(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = this.parts();
         if (this.base !== undefined) {
-            result = result.concat(this.base.referedElement().allEnumProperties());
+            result = result.concat(this.base.referred.allParts());
         }
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allEnumProperties());
+            result = result.concat(intf.referred.allParts());
         }
         return result;
     }
 
-    allParts(): PiLangConceptProperty[] {
-        let result: PiLangConceptProperty[] = this.parts;
+    allReferences(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = this.references();
         if (this.base !== undefined) {
-            result = result.concat(this.base.referedElement().allParts());
+            result = result.concat(this.base.referred.allParts());
         }
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allParts());
+            result = result.concat(intf.referred.allParts());
         }
         return result;
     }
 
-    allPReferences(): PiLangConceptProperty[] {
-        let result: PiLangConceptProperty[] = this.references;
-        if (this.base !== undefined) {
-            result = result.concat(this.base.referedElement().allPReferences());
-        }
+    implementedPrimProperties(): PiPrimitiveProperty[] {
+        let result: PiPrimitiveProperty[] = this.primProperties;
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allPReferences());
+            result = result.concat(intf.referred.allPrimProperties());
         }
         return result;
     }
 
-    allProperties(): PiLangProperty[] {
-        let result : PiLangProperty[] = [];
-        result = result.concat(this.allPrimProperties()).concat(this.allEnumProperties()).concat(this.allParts()).concat(this.allPReferences());
+    implementedParts(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = this.parts();
+        for (let intf of this.interfaces) {
+            result = result.concat(intf.referred.allParts());
+        }
         return result;
     }
 
-    implementedPrimProperties(): PiLangPrimitiveProperty[] {
-        let result: PiLangPrimitiveProperty[] = this.primProperties;
+    implementedPReferences(): PiConceptProperty[] {
+        let result: PiConceptProperty[] = this.references();
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allPrimProperties());
+            result = result.concat(intf.referred.allReferences());
         }
         return result;
-    }
-    implementedEnumProperties(): PiLangEnumProperty[] {
-        let result: PiLangEnumProperty[] = this.enumProperties;
-        for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allEnumProperties());
-        }
-        return result;
-    }
-    implementedParts(): PiLangConceptProperty[] {
-        let result: PiLangConceptProperty[] = this.parts;
-        for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allParts());
-        }
-        return result;
-    }
-    implementedPReferences(): PiLangConceptProperty[] {
-        let result: PiLangConceptProperty[] = this.references;
-        for (let intf of this.interfaces) {
-            result = result.concat(intf.referedElement().allPReferences());
-        }
-        return result;
-    }
-    implementedProperties(): PiLangProperty[] {
-        let result : PiLangProperty[] = [];
-        result = result.concat(this.implementedPrimProperties()).concat(this.implementedEnumProperties()).concat(this.implementedParts()).concat(this.implementedPReferences());
-        return result;
-    }
-    allSubConceptsDirect(): PiLangClass[] {
-        return this.language.classes.filter(c => c.base?.referedElement() === this);
     }
 
-    allSubConceptsRecursive(): PiLangClass[] {
-        var result = this.language.classes.filter(c => c.base?.referedElement() === this);
-        const tmp = this.language.classes.filter(c => c.base?.referedElement() === this);
+    implementedProperties(): PiProperty[] {
+        let result : PiProperty[] = [];
+        result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedPReferences());
+        return result;
+    }
+
+    allSubConceptsDirect(): PiConcept[] {
+        return this.language.concepts.filter(c => c.base?.referred === this);
+    }
+
+    allSubConceptsRecursive(): PiConcept[] {
+        var result = this.language.concepts.filter(c => c.base?.referred === this);
+        const tmp = this.language.concepts.filter(c => c.base?.referred === this);
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
         return result;
     }
+}
 
-    getTrigger(): string {
-        const p = this.trigger;
-        return (!!p ? p : "undefined");
-    }
+export class PiExpressionConcept extends PiConcept {
+    _isPlaceHolder: boolean;
 
-    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
-    expression(): boolean {
-        return false;
-    }
-
-    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
-    binaryExpression(): boolean {
-        return false;
-    }
-
-    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
     isExpressionPlaceholder(): boolean {
-        return false;
+        return this._isPlaceHolder;
     }
 }
 
-export class PiLangInterface extends PiLangConcept {
-    base?: PiLangInterfaceReference; 
-    // isExpression: boolean;  
-    trigger: string;
-    // triggerIsRegExp: boolean;
-
-    allPrimProperties(): PiLangPrimitiveProperty[] {
-        if (this.base !== undefined) {
-            return this.primProperties.concat(this.base.referedElement().allPrimProperties());
-        } else {
-            return this.primProperties;
-        }
-    }
-
-    allEnumProperties(): PiLangEnumProperty[] {
-        if (this.base !== undefined) {
-            return this.enumProperties.concat(this.base.referedElement().allEnumProperties());
-        } else {
-            return this.enumProperties;
-        }
-    }
-
-    allParts(): PiLangConceptProperty[] {
-        if (this.base !== undefined) {
-            return this.parts.concat(this.base.referedElement().allParts());
-        } else {
-            return this.parts;
-        }
-    }
-
-    allPReferences(): PiLangConceptProperty[] {
-        if (this.base !== undefined) {
-            return this.references.concat(this.base.referedElement().allPReferences());
-        } else {
-            return this.references;
-        }
-    }
-
-    allProperties(): PiLangProperty[] {
-        let result : PiLangProperty[] = [];
-        result = result.concat(this.allPrimProperties()).concat(this.allEnumProperties()).concat(this.allParts()).concat(this.allPReferences());
-        return result;
-    } 
-
-    allSubConceptsDirect(): PiLangInterface[] {
-        return this.language.interfaces.filter(c => c.base?.referedElement() === this);
-    }
-
-    allSubConceptsRecursive(): PiLangInterface[] {
-        var result = this.language.interfaces.filter(c => c.base?.referedElement() === this);
-        const tmp = this.language.interfaces.filter(c => c.base?.referedElement() === this);
-        tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
-        return result;
-    }
-
-    getTrigger(): string {
-        const p = this.trigger;
-        return (!!p ? p : "undefined");
-    }
-
-    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
-    expression(): boolean {
-        return false;
-    }
-
-}
-
-export class PiLangEnumeration extends PiLangConcept {
-	literals: string[] = [];
-	
-	allLiterals() : string[] {
-		return this.literals;
-	}
-
-	findLiteral(name: string) {
-		return this.literals.find(l => l === name);
-	}
-}
-
-export class PiLangUnion extends PiLangConcept {
-    members: PiLangConceptReference[] = [];
-    trigger: string;
-    // triggerIsRegExp: boolean;
-
-    // returns all properties that are in all of the members
-    allProperties(): PiLangPrimitiveProperty[] {
-        // TODO check and test this code idea
-        let result : PiLangPrimitiveProperty[] = [];
-        // for (let member1 of this.members) {
-        //     for(let prop of member1.concept().allProperties()){
-        //         let notFoundInAll = false;
-        //         for (let member2 of this.members) { 
-        //             if( !member2.concept().allProperties().find(p => p.name === prop.name && p.type === prop.type)) {
-        //                 notFoundInAll = true;
-        //             }
-        //         }
-        //         if (!notFoundInAll) result.push(prop);
-        //     }
-        // }
-        return result;
-    }
-
-    getTrigger(): string {
-        const p = this.trigger;
-        return (!!p ? p : "undefined");
-    }
-
-    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
-    expression(): boolean {
-        return false;
-    }
-}
-
-export class PiLangExpressionConcept extends PiLangClass {
-    // isBinaryExpression: boolean;
-    _isExpressionPlaceHolder: boolean;
-
-    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
-    expression(): boolean {
-        return true;
-    }
-
-    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
-    binaryExpression(): boolean {
-        return false;
-    }
-
-    // TODO this function could (???) be replaced by check on instance of PiLangBinaryExpressionConcept    
-    isExpressionPlaceholder(): boolean {
-        return this._isExpressionPlaceHolder;
-    }   
-}
-
-export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
-    left: PiLangConceptReference;
-    right: PiLangConceptReference;
+export class PiBinaryExpressionConcept extends PiExpressionConcept {
+    left: PiExpressionConcept;
+    right: PiExpressionConcept;
     symbol: string;
     priority: number;
-
-    // TODO this function should be replaced by check on instance of PiLangExpressionConcept    
-    expression(): boolean {
-        return true;
-    }
-
-    // TODO this function should be replaced by check on instance of PiLangBinaryExpressionConcept    
-    binaryExpression(): boolean {
-        return true;
-    }
 
     getSymbol(): string {
         const p = this.symbol;
@@ -413,45 +216,53 @@ export class PiLangBinaryExpressionConcept extends PiLangExpressionConcept {
     }
 }
 
-export class PiLangProperty extends PiLangElement {
-	type: PiLangElementReference;
-	isList: boolean;
-    owningConcept: PiLangConcept;
+export class PiLimitedConcept extends PiConcept {
+    instances: PiInstance[];
 }
 
-export class PiLangPrimitiveProperty extends PiLangProperty {
+export class PiProperty extends PiLangElement {
+    isOptional: boolean;
+    isList: boolean;
+    isPart: boolean; // if false then it is a reference property
+    type: PiElementReference<PiConcept>; // TODO this should be PiElementReference<PiClassifier>
+    owningConcept: PiElementReference<PiConcept>;
+}
+
+export class PiConceptProperty extends PiProperty {
+    hasLimitedType: boolean; // set in checker
+}
+
+export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
 	initialValue: string;
-	// type is primitive, which is not a subtype of PiLangElementReference
-	// therefore, here we have:
     primType: string;
-    get type() : PiLangElementReference {
-        let value : PiLangElementReference = new PiLangElementReference();
+    // The inherited 'type' cannot be used, because 'this' has a primitive type,
+    // which is not a subtype of PiReference<PiClassifier>
+    // Therefore, here we have:
+    get type() : PiElementReference<PiConcept> {
+        let value : PiElementReference<PiConcept>; // = new PiElementReference<PiConcept>(this.primType, "string");
         value.name = this.primType;
         return value;
     }
 }
 
-export class PiLangEnumProperty extends PiLangProperty {
-    isStatic: boolean;
-    initialValue: string;
-    type: PiLangEnumerationReference;
+export class PiInstance extends PiLangElement {
+    concept: PiElementReference<PiConcept>; // should be a limited concept
+    props: PiPropertyInstance[];
 }
 
-export class PiLangConceptProperty extends PiLangProperty {
-    type: PiLangConceptReference;
-    isPart: boolean; // needed for parsing
-    isPartOf() : boolean {
-        return this.owningConcept.parts.includes(this);
-    }
+export class PiPropertyInstance extends PiLangElement {
+    property: PiElementReference<PiProperty>;
+    value: string;
 }
 
 // the following two classes are only used in the typer and validator definitions
-export class PiLangFunction extends PiLangElement {
-    formalparams: PiLangParameter[];
-    returnType: PiLangConceptReference;
+export class PiFunction extends PiLangElement {
+    language: PiLanguageUnit;
+    formalparams: PiParameter[];
+    returnType: PiElementReference<PiConcept>;
 }
 
-export class PiLangParameter extends PiLangElement {
-    type: PiLangConceptReference;
+export class PiParameter extends PiLangElement {
+    type: PiElementReference<PiConcept>;
 }

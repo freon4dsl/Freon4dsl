@@ -1,11 +1,10 @@
 import {
     PiLangAppliedFeatureExp,
-    PiLangBinaryExpressionConcept,
-    PiLangClassReference,
-    PiLangConcept, PiLangConceptProperty,
+    PiBinaryExpressionConcept,
+    PiConcept, PiConceptProperty,
     PiLangSelfExp,
     PiLanguageExpressionChecker,
-    PiLanguageUnit
+    PiLanguageUnit, PiElementReference
 } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
 import { DefEditorConcept } from "./DefEditorConcept";
@@ -50,15 +49,15 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         // TODO maybe use
         // this.myExpressionChecker.checkConceptReference(conceptEditor.concept);
         this.nestedCheck({
-            check: !!conceptEditor.concept.referedElement(),
+            check: !!conceptEditor.concept.referred,
             error: `Concept ${conceptEditor.concept.name} is unknown [line: ${conceptEditor.location?.start.line}, column: ${conceptEditor.location?.start.column}].`,
             whenOk: () => {
-                this.checkProjection(conceptEditor.projection, conceptEditor.concept.referedElement());
+                this.checkProjection(conceptEditor.projection, conceptEditor.concept.referred);
             },
         });
     }
 
-    private checkProjection(projection: MetaEditorProjection, cls: PiLangConcept) {
+    private checkProjection(projection: MetaEditorProjection, cls: PiConcept) {
         if (!!projection) {
 
             projection.lines.forEach((line) => {
@@ -74,16 +73,17 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
     private resolveReferences(editorDef: DefEditorLanguage) {
         for (let conceptEditor of editorDef.conceptEditors) {
             conceptEditor.languageEditor = editorDef;
-            conceptEditor.concept.language = this.language;
+            conceptEditor.concept.owner = this.language;
         }
     }
 
     private addDefaults(editor: DefEditorLanguage) {
-        for (let con of this.language.classes.filter(c => !(c instanceof PiLangBinaryExpressionConcept))) {
-            if (!editor.conceptEditors.map((ce) => ce.concept.referedElement()).includes(con)) {
+        for (let con of this.language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept))) {
+            if (!editor.conceptEditors.map((ce) => ce.concept.referred).includes(con)) {
                 console.log("=============== adding default p0rojection for "+ con.name);
                 const coneditor = new DefEditorConcept();
-                coneditor.concept = PiLangClassReference.create(con.name, this.language);
+                coneditor.concept = PiElementReference.create<PiConcept>(con.name, "PiConcept");
+                coneditor.concept.owner = this.language;
                 coneditor.languageEditor = editor;
                 coneditor.symbol = con.name;
                 coneditor.trigger = con.name;
@@ -93,7 +93,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                 for(let prop of con.allPrimProperties()){
                     const line = new MetaEditorProjectionLine();
                     line.indent = 0;
-                    line.items.push(DefEditorProjectionText.create(prop.name))
+                    line.items.push(DefEditorProjectionText.create(prop.name));
                     const exp = new PiLangSelfExp();
                     exp.sourceName = "self";
                     exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
@@ -102,18 +102,18 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                     line.items.push(sub);
                     coneditor.projection.lines.push(line);
                 }
-                for(let prop of con.allEnumProperties()){
-                    const line = new MetaEditorProjectionLine();
-                    line.indent = 0;
-                    line.items.push(DefEditorProjectionText.create(prop.name))
-                    const exp = new PiLangSelfExp();
-                    exp.sourceName = "self";
-                    exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
-                    const sub = new DefEditorSubProjection();
-                    sub.expression = exp;
-                    line.items.push(sub);
-                    coneditor.projection.lines.push(line);
-                }
+                // for(let prop of con.allEnumProperties()){
+                //     const line = new MetaEditorProjectionLine();
+                //     line.indent = 0;
+                //     line.items.push(DefEditorProjectionText.create(prop.name))
+                //     const exp = new PiLangSelfExp();
+                //     exp.sourceName = "self";
+                //     exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
+                //     const sub = new DefEditorSubProjection();
+                //     sub.expression = exp;
+                //     line.items.push(sub);
+                //     coneditor.projection.lines.push(line);
+                // }
                 for(let prop of con.allParts()){
                     if(prop.isList) {
                         this.defaultListConceptProperty(prop, coneditor);
@@ -121,7 +121,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                         this.defaultSingleConceptProperty(prop, coneditor);
                     }
                 }
-                for(let prop of con.allPReferences()){
+                for(let prop of con.allReferences()){
                     if(prop.isList) {
                         this.defaultListConceptProperty(prop, coneditor);
                     } else {
@@ -133,7 +133,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         }
     }
 
-    private defaultSingleConceptProperty(prop: PiLangConceptProperty, coneditor: DefEditorConcept) {
+    private defaultSingleConceptProperty(prop: PiConceptProperty, coneditor: DefEditorConcept) {
         const line = new MetaEditorProjectionLine();
         line.indent = 0;
         line.items.push(DefEditorProjectionText.create(prop.name));
@@ -150,7 +150,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         coneditor.projection.lines.push(line);
     }
 
-    private defaultListConceptProperty(prop: PiLangConceptProperty, coneditor: DefEditorConcept) {
+    private defaultListConceptProperty(prop: PiConceptProperty, coneditor: DefEditorConcept) {
         const line1 = new MetaEditorProjectionLine();
         const line2 = new MetaEditorProjectionLine();
         line1.indent = 0;

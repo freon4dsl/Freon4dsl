@@ -1,4 +1,9 @@
-import { PiLangConcept, PiLangEnumeration, PiLangInterface, PiLanguageUnit, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
+import {
+    PiConcept,
+    PiInterface,
+    PiLanguageUnit,
+    PiClassifier
+} from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -68,19 +73,15 @@ export class Names {
         return language.name + "Initialization";
     }
 
-    public static concept(concept: PiLangConcept): string {
+    public static concept(concept: PiConcept): string {
         return concept?.name;
     }
 
-    public static enumeration(enumeration: PiLangEnumeration): string {
-        return enumeration?.name;
+    public static classifier(concept: PiClassifier): string {
+        return concept?.name;
     }
 
-    public static union(union: PiLangUnion): string {
-        return union?.name;
-    }
-
-    public static interface(interf: PiLangInterface): string {
+    public static interface(interf: PiInterface): string {
         return interf?.name;
     }
 

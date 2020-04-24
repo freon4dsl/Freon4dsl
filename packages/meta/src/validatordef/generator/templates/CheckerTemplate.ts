@@ -1,5 +1,5 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiLangConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
 import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
@@ -27,10 +27,10 @@ export class CheckerTemplate {
             errorList: ${errorClassName}[] = [];
 
         ${validdef.conceptRules.map(ruleSet =>
-            `public execBefore${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
+            `public execBefore${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
                 ${this.createRules(ruleSet)}
             }
-            public execAfter${ruleSet.conceptRef.referedElement().name}(modelelement: ${ruleSet.conceptRef.referedElement().name}) {
+            public execAfter${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
             }`
         ).join("\n\n")}
 
@@ -41,13 +41,6 @@ export class CheckerTemplate {
             }`
         ).join("\n\n") }
         
-        ${language.enumerations.map(concept => 
-            `public execBefore${concept.name}(modelelement: ${concept.name}) {
-            }
-            public execAfter${concept.name}(modelelement: ${concept.name}) {
-            }`
-        ).join("\n" + "\n") }
-
         private isValidName(name: string) : boolean {
             if (name == null) return false;
             // cannot start with number
@@ -67,17 +60,9 @@ export class CheckerTemplate {
 
     private createImports(language: PiLanguageUnit, validdef: PiValidatorDef) : string {
         let result : string = "";
-        result = language.classes?.map(concept => `
+        result = language.concepts?.map(concept => `
                 ${concept.name}`).join(", ");
-        result = result.concat(language.classes? `,` :``);
-        result = result.concat(
-            language.enumerations?.map(concept => `
-                ${concept.name}`).join(", "));
-        result = result.concat(language.enumerations? `,` :``);
-        result = result.concat(
-            language.unions?.map(concept => `
-                ${concept.name}`).join(", "));
-        result = result.concat(language.unions? `,` :``);
+        result = result.concat(language.concepts? `,` :``);
         result = result.concat(
             language.interfaces?.map(concept => `
                 ${concept.name}`).join(", "));
@@ -111,13 +96,13 @@ export class CheckerTemplate {
     }
 
 
-    private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiLangConcept[] {
-        let withRules : PiLangConcept[] = [];
+    private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiConcept[] {
+        let withRules : PiConcept[] = [];
         for (let ruleSet of validdef.conceptRules) {
-            withRules.push(ruleSet.conceptRef.referedElement());
+            withRules.push(ruleSet.conceptRef.referred);
         }
-        let withoutRules : PiLangConcept[] = [];
-        for( let c of language.classes) {
+        let withoutRules : PiConcept[] = [];
+        for( let c of language.concepts) {
             if( !withRules.includes(c) ) withoutRules.push(c);
         }
         return withoutRules;

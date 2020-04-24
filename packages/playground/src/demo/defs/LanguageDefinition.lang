@@ -1,141 +1,140 @@
 language Demo
 
 root concept DemoModel {
-    part functions: DemoFunction[]
-    name: string
-    part entities: DemoEntity[]
+    functions: DemoFunction[];
+    name: string;
+    entities: DemoEntity[];
 }
-/*
+
 interface BaseType {
-    someProp: number
+    name: string;
 }
 
 interface Type base BaseType {
-    simpleprop: boolean
-    part int_attrs: DemoAttribute[]
-    part int_functions: DemoFunction[]
-    reference baseInterface: DemoEntity
+    simpleprop: boolean;
+    int_attr: DemoAttribute;
+    int_functions: DemoFunction[];
+    reference baseInterface: DemoEntity;
 }
-*/
-concept DemoEntity { // implements Type {
-    name: string
-    part attributes: DemoAttribute[]
-    part functions: DemoFunction[]
-    reference baseEntity: DemoEntity
+
+concept DemoEntity implements Type {
+    name: string;
+    attributes: DemoAttribute[];
+    functions: DemoFunction[];
+    reference baseEntity: DemoEntity;
 }
 
 concept DemoAttribute {
-    reference declaredType: DemoEntity
-    name: string
+    reference declaredType: DemoAttributeType;
+    name: string;
 }
 
 concept DemoFunction {
-    name: string
-    reference declaredType : DemoEntity
-    part expression: DemoExpression
-    part parameters: DemoVariable[]
+    name: string;
+    reference declaredType : DemoEntity;
+    expression: DemoExpression;
+    parameters: DemoVariable[];
 }
 
 concept DemoVariable {
-    name: string
-    reference declaredType: DemoEntity
+    name: string;
+    reference declaredType: DemoEntity;
 }
 
-abstract expression concept DemoExpression {
-    part appliedfeature: AppliedFeature
+abstract concept SomeOther {
+    extra: boolean;
 }
 
-concept AppliedFeature {
-    part appliedfeature: AppliedFeature
-    value: string
-    reference type: DemoEntity
+limited DemoAttributeType implements BaseType {
+    id: number;
+
+    String =    { name: "string", id: 4 }
+    Integer =   { name = "number", id: 3 }
+    Boolean =   { name = "bool", id: 2 }
+    ANY =       { name = "ANY", id: 0 }
 }
 
-expression placeholder concept DemoPlaceholderExpression {
-    part appliedfeature: AppliedFeature
+abstract expression expression DemoExpression {
+    appliedfeature: AppliedFeature;
 }
 
-abstract expression concept DemoLiteralExpression base DemoExpression {}
-
-concept DemoStringLiteralExpression base DemoLiteralExpression {
-    value: string
+expression AppliedFeature {
+    appliedfeature: AppliedFeature;
+    value: string;
+    reference type: DemoEntity;
 }
 
-concept DemoNumberLiteralExpression base DemoLiteralExpression {
-    value: string
+// expression placeholder DemoPlaceholderExpression {
+//    appliedfeature: AppliedFeature;
+// }
+
+abstract expression DemoLiteralExpression base DemoExpression {
+    value: string;
 }
 
-concept DemoBooleanLiteralExpression base DemoLiteralExpression {
-    value: string
+expression DemoStringLiteralExpression base DemoLiteralExpression {
 }
 
-concept DemoAbsExpression base DemoExpression {
-    part expr: DemoExpression
+expression DemoNumberLiteralExpression base DemoLiteralExpression {
 }
 
-abstract binary expression concept DemoBinaryExpression base DemoExpression {
-    part left: DemoExpression
-    part right: DemoExpression
+expression DemoBooleanLiteralExpression base DemoLiteralExpression {
 }
 
-concept DemoMultiplyExpression base DemoBinaryExpression {
-    priority = "8"
+expression DemoAbsExpression base DemoExpression {
+    expr: DemoExpression;
 }
 
-concept DemoPlusExpression base DemoBinaryExpression {
-    priority = "4"
+abstract binary expression DemoBinaryExpression base DemoExpression {
+    left: DemoExpression;
+    right: DemoExpression;
 }
 
-concept DemoDivideExpression base DemoBinaryExpression {
-    priority = "8"
+expression DemoMultiplyExpression base DemoBinaryExpression {
+    priority = 8;
 }
 
-concept DemoAndExpression base DemoBinaryExpression {
-    priority = "1"
+expression DemoPlusExpression base DemoBinaryExpression {
+    priority = 4;
 }
 
-concept DemoOrExpression base DemoBinaryExpression {
-    priority = "1"
+expression DemoDivideExpression base DemoBinaryExpression {
+    priority = 8;
 }
 
-abstract concept DemoComparisonExpression base DemoBinaryExpression {
+expression DemoAndExpression base DemoBinaryExpression {
+    priority = 1;
 }
 
-concept DemoLessThenExpression base DemoComparisonExpression {
-    priority = "10"
+expression DemoOrExpression base DemoBinaryExpression {
+    priority = 1;
 }
 
-concept DemoGreaterThenExpression base DemoComparisonExpression {
-    priority = "10"
+abstract expression DemoComparisonExpression base DemoBinaryExpression {
 }
 
-concept DemoEqualsExpression base DemoComparisonExpression {
-    priority = "10"
+expression DemoLessThenExpression base DemoComparisonExpression {
+    priority = 10;
 }
 
-concept DemoFunctionCallExpression base DemoExpression {
-    reference functionDefinition: DemoFunction
+expression DemoGreaterThenExpression base DemoComparisonExpression {
+    priority = 10;
 }
 
-concept DemoIfExpression base DemoExpression {
-    part condition: DemoExpression
-    part whenTrue: DemoExpression
-    part whenFalse: DemoExpression
+expression DemoEqualsExpression base DemoComparisonExpression {
+    priority = 10;
 }
 
-concept DemoVariableRef base DemoExpression {
-    reference variable: DemoVariable
+expression DemoFunctionCallExpression base DemoExpression {
+    reference functionDefinition: DemoFunction;
 }
 
-enumeration DemoAttributeType {
-    String
-    Integer
-    Boolean
-    ANY
+expression DemoIfExpression base DemoExpression {
+    condition: DemoExpression;
+    whenTrue: DemoExpression;
+    whenFalse: DemoExpression;
 }
 
-union DemoType {
-    DemoEntity
-    DemoAttributeType
+expression DemoVariableRef base DemoExpression {
+    reference variable: DemoVariable;
 }
-

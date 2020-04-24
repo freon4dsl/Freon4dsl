@@ -1,5 +1,5 @@
 import { Names, PathProvider, LANGUAGE_GEN_FOLDER, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
-import { PiLangConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage";
 import { langExpToTypeScript, PiLangExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage";
 import { must } from "parjs/combinators";
@@ -91,7 +91,7 @@ export class ScoperTemplate {
         let mustAddElse: boolean = false;
         for (let def of scopedef.scopeConceptDefs) {
             if (!!def.alternativeScope) {
-                this.alternativeScopeImports = ", " + def.conceptRef.referedElement().name;
+                this.alternativeScopeImports = ", " + def.conceptRef.referred.name;
                 result = result.concat(
                     `${mustAddElse? ` else ` : ``} if (modelelement instanceof ${def.conceptRef.name}) {
                             // use alternative scope '${def.alternativeScope.expression.toPiString()}'

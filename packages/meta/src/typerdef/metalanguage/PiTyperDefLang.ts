@@ -1,6 +1,6 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
+import { PiConcept, PiElementReference } from "../../languagedef/metalanguage";
 
 export class PiTypeDefinition {
     location: ParseLocation;
@@ -8,7 +8,7 @@ export class PiTypeDefinition {
     languageName: string;
     typerRules: PiTypeRule[];
     conceptRules: PiTypeConceptRule[];
-    typeroot: PiLangConceptReference;
+    typeroot: PiElementReference<PiConcept>;
 
     constructor() { 
     }
@@ -21,7 +21,7 @@ export abstract class PiTypeRule {
     }
 }
 export class PiTypeIsTypeRule extends PiTypeRule {
-    types: PiLangConceptReference[] = [];
+    types: PiElementReference<PiConcept>[] = [];
 
     toPiString(): string {
         return `isType { ${this.types.map( t => t.name ).join(", ")} }`;
@@ -37,7 +37,7 @@ export class PiTypeAnyTypeRule extends PiTypeRule {
 }
 
 export class PiTypeConceptRule extends PiTypeRule {
-    conceptRef: PiLangConceptReference;
+    conceptRef: PiElementReference<PiConcept>;
     statements: PiTypeStatement[] = [];
 
     toPiString(): string {

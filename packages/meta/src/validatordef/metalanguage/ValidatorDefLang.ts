@@ -1,6 +1,6 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
+import { PiConcept, PiElementReference } from "../../languagedef/metalanguage";
 
 export class PiValidatorDef {
     location: ParseLocation;
@@ -13,7 +13,7 @@ export class PiValidatorDef {
 
 export class ConceptRuleSet {
     location: ParseLocation;
-    conceptRef: PiLangConceptReference;
+    conceptRef: PiElementReference<PiConcept>;
     rules: ValidationRule[];
 }
 

@@ -1,6 +1,6 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
+import { PiConcept, PiElementReference } from "../metalanguage";
 
 export class LanguageExpressionTester {
     location: ParseLocation;
@@ -10,6 +10,6 @@ export class LanguageExpressionTester {
 
 export class TestExpressionsForConcept {
     location: ParseLocation;
-    conceptRef: PiLangConceptReference;
+    conceptRef: PiElementReference<PiConcept>;
     exps: PiLangExp[] = [];
 }

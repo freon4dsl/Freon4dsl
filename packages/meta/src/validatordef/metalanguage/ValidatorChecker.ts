@@ -1,10 +1,11 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiLangProperty, PiLangConcept, PiLangPrimitiveProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiProperty, PiConcept, PiPrimitiveProperty, PiClassifier } from "../../languagedef/metalanguage/PiLanguage";
 import { ConceptRuleSet, PiValidatorDef, CheckEqualsTypeRule, ValidationRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
 import { nameForSelf } from "../../languagedef/parser/ExpressionCreators";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
+import { PiElementReference } from "../../languagedef/metalanguage";
 
 const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
 const equalsTypeName = "equalsType";
@@ -44,7 +45,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     private checkConceptRule(rule: ConceptRuleSet) {
         this.myExpressionChecker.checkConceptReference(rule.conceptRef);
 
-        const enclosingConcept = rule.conceptRef.referedElement();
+        const enclosingConcept = rule.conceptRef.referred;
         if (enclosingConcept) {
             rule.rules.forEach(tr => {
                 this.checkRule(tr, enclosingConcept);
@@ -52,20 +53,20 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         }
     }
 
-    checkRule(tr: ValidationRule, enclosingConcept: PiLangConcept) {
+    checkRule(tr: ValidationRule, enclosingConcept: PiConcept) {
         if ( tr instanceof CheckEqualsTypeRule) { this.checkEqualsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof CheckConformsRule) { this.checkConformsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof NotEmptyRule) { this.checkNotEmptyRule(tr, enclosingConcept); }
         if ( tr instanceof ValidNameRule) { this.checkValidNameRule(tr, enclosingConcept); }
     }
 
-    checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiLangConcept) {
+    checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
         // check whether tr.property (if set) is a property of enclosingConcept
         // if not set, set tr.property to the 'self.name' property of the enclosingConcept
         if (!!tr.property) {
             this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
         } else {
-            let myProp: PiLangProperty;
+            let myProp: PiProperty;
             for (let i of enclosingConcept.allProperties()) {
                 if (i.name === "name") {
                     myProp = i;
@@ -77,10 +78,10 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 whenOk: () => {
                     tr.property = new PiLangSelfExp();
                     tr.property.sourceName = nameForSelf;
-                    tr.property.referedElement = enclosingConcept;
+                    tr.property.referedElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiClassifier");
                     tr.property.appliedfeature = new PiLangAppliedFeatureExp();
                     tr.property.appliedfeature.sourceName = "name";
-                    tr.property.appliedfeature.referedElement = myProp;
+                    tr.property.appliedfeature.referedElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                     tr.property.location = tr.location;
                   }
             });
@@ -88,12 +89,12 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         // check if found property is of type 'string'
         if (!!tr.property) {
             let myProp = tr.property.findRefOfLastAppliedFeature();
-            this.simpleCheck((myProp instanceof PiLangPrimitiveProperty) && myProp.primType === "string",
+            this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.primType === "string",
                 `Validname rule expression '${tr.property.toPiString()}' should have type 'string' [line: ${tr.property.location?.start.line}, column: ${tr.property.location?.start.column}].`);
         }
     }
 
-    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: PiLangConcept) {
+    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: PiConcept) {
         // check references to types
         this.nestedCheck(
             {
@@ -107,7 +108,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             })
     }
 
-    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: PiLangConcept) {
+    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: PiConcept) {
         // check references to types
         this.nestedCheck(
             {
@@ -120,10 +121,10 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             })
     }
 
-    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: PiLangConcept) {
+    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: PiConcept) {
         // check whether nr.property is a property of enclosingConcept
         // and whether it is a list
-        let myProp : PiLangProperty;
+        let myProp : PiProperty;
         if( nr.property != null ) {
             this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
             this.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,

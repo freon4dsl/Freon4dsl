@@ -13,7 +13,7 @@ langExpression = functionExpression:functionExpression  { return functionExpress
                   / expression:expression                  { return expression; }
 
 expression = sourceName:var ':' literal:var  {
-                                                return expCreate.createEnumReference ({
+                                                return expCreate.createInstanceExp ({
                                                   "sourceName": sourceName,
                                                   "appliedfeature": literal,
                                                   "location": location()

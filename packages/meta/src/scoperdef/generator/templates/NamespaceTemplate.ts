@@ -1,5 +1,5 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLangConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
@@ -26,7 +26,7 @@ export class NamespaceTemplate {
         // Template starts here
         return `
         import { ${allLangConcepts}, ${scopedef.namespaces.map(ref => `${ref.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${scopedef.namespaces.length == 0? `${language.rootConcept().name}, ` : ``}
+        import { ${scopedef.namespaces.length == 0? `${language.rootConcept.name}, ` : ``}
              ${langConceptType} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${Names.PiNamedElement}} from "${PROJECTITCORE}";
 
@@ -95,7 +95,7 @@ export class NamespaceTemplate {
                 // if-statement generated for each concept marked with @namespace annotation!
                 ${scopedef.namespaces.map(ref => `if(modelelement instanceof ${ref.name}) return true;`).join("\n")}
                 ${scopedef.namespaces.length == 0?
-                `if(modelelement instanceof ${language.rootConcept().name}) return true;` : ``}              
+                `if(modelelement instanceof ${language.rootConcept.name}) return true;` : ``}              
                 return false;
             }
         
@@ -135,8 +135,8 @@ export class NamespaceTemplate {
         let result : string = "";
         for (let ref of scopedef.namespaces) {
             result = result.concat("if (this._myElem instanceof " + ref.name + ") {")
-            for (let part of ref.referedElement().allParts() ) {
-                for (let kk of part.type.referedElement().allProperties()) {
+            for (let part of ref.referred.allParts() ) {
+                for (let kk of part.type.referred.allProperties()) {
                     if (kk.name === "name") {
                         if (part.isList) {
                             result = result.concat(
@@ -159,15 +159,15 @@ export class NamespaceTemplate {
         let result: string = '';
         for(let e of scopedef.scopeConceptDefs) {
             if(!!e.namespaceAdditions) {
-                let con = e.conceptRef.referedElement().name;
+                let con = e.conceptRef.referred.name;
                 result = result.concat(`if (this._myElem instanceof ${con}) {`);
                 for(let xx of e.namespaceAdditions.expressions) {
                     let myRef = xx.findRefOfLastAppliedFeature();
                     let loopVar: string = "yy";
                     let loopVarExtended = loopVar;
                     if(myRef.isList) {
-                        if (myRef instanceof PiLangConceptProperty) {
-                            if (!myRef.isPartOf()) {
+                        if (myRef instanceof PiConceptProperty) {
+                            if (!myRef.isPart) {
                                 loopVarExtended = loopVarExtended.concat(".referred");
                             }
                         }

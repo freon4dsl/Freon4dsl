@@ -1,14 +1,13 @@
 import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageExpressionTester";
-import { PiLangConceptReference } from "../../languagedef/metalanguage/PiLangReferences";
 import {
     PiLangSelfExp,
     PiLangAppliedFeatureExp,
-    PiLangEnumExp,
     PiLangExp,
     PiLangConceptExp,
-    PiLangFunctionCallExp
+    PiLangFunctionCallExp, PiInstanceExp
 } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiClassifier, PiElementReference, PiInstance } from "../metalanguage";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
 export const nameForSelf = "self";
@@ -43,12 +42,9 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
-export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
+export function createConceptReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
     LOGGER.log("createConceptReference " + data.name);
-    const result = new PiLangConceptReference();
-    if (!!data.name) {
-        result.name = data.name;
-    }
+    const result = PiElementReference.createNamed<PiClassifier>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
     }
@@ -65,8 +61,7 @@ export function createExpression(data: Partial<PiLangExp>): PiLangExp {
         } else {
             result = new PiLangConceptExp();
             LOGGER.log("createConceptExpression");
-            result.referedElement = new PiLangConceptReference();
-            result.referedElement.name = data.sourceName;
+            result.referedElement = PiElementReference.createNamed<PiClassifier>(data.sourceName, "PiClassifier");
             result.sourceName = data.sourceName;
         }
     }
@@ -95,11 +90,11 @@ export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>):
     return result;
 }
 
-export function createEnumReference(data: Partial<PiLangEnumExp>): PiLangEnumExp {
-    LOGGER.log("createEnumReference");
-    const result: PiLangEnumExp = new PiLangEnumExp();
+export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
+    LOGGER.log("createInstanceExp");
+    const result: PiInstanceExp = new PiInstanceExp();
     if (!!data.sourceName) {
-        result.sourceName = data.sourceName;
+        result.referedElement = PiElementReference.createNamed<PiInstance>(data.sourceName, "PiInstance");
     }
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;

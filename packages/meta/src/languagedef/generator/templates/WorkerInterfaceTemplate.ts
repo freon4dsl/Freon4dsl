@@ -1,4 +1,4 @@
-import { Names, PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
 export class WorkerInterfaceTemplate {
@@ -13,30 +13,18 @@ export class WorkerInterfaceTemplate {
 
         export interface ${Names.workerInterface(language)} {
 
-        ${language.classes.map(concept => 
+        ${language.concepts.map(concept => 
             `execBefore${concept.name}(modelelement: ${concept.name});
             execAfter${concept.name}(modelelement: ${concept.name});`
-        ).join("\n\n") }
-
-        ${language.enumerations.map(concept => 
-            `execBefore${concept.name}(modelelement: ${concept.name});
-            execAfter${concept.name}(modelelement: ${concept.name});`
-        ).join("\n\n") }
-        
+        ).join("\n\n") }       
         }`;
     }
 
     private createImports(language: PiLanguageUnit) : string {
         // sort all names alphabetically
         let tmp : string[] = [];
-        language.classes.map(c => 
+        language.concepts.map(c =>
             tmp.push(Names.concept(c))
-        );
-        language.enumerations.map(c =>
-            tmp.push(Names.enumeration(c))
-        );
-        language.unions.map(c =>
-            tmp.push(Names.union(c))
         );
         tmp = tmp.sort();
     

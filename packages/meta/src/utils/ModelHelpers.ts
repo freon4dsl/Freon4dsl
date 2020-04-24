@@ -1,4 +1,5 @@
-import { PiLangClass, PiLangElement, PiLangElementReference } from "../languagedef/metalanguage";
+import { PiLangElement, PiConcept } from "../languagedef/metalanguage";
+import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
 
 /**
  * This function sorts the list of PiClasses in such a way that
@@ -9,8 +10,8 @@ import { PiLangClass, PiLangElement, PiLangElementReference } from "../languaged
  * otherwise the unparse${concept.name} for the base class will be called.
  * @param piclasses: the list of classes to be sorted
  */
-export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
-    let newList: PiLangClass[] = [];
+export function sortClasses(piclasses: PiConcept[]): PiConcept[] {
+    let newList: PiConcept[] = [];
     for (let c of piclasses) {
         // without base must be last
         if (!c.base) {
@@ -21,7 +22,7 @@ export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
         for (let c of piclasses) {
             if (c.base) {
                 // push c before c.base
-                if (newList.includes(c.base.referedElement())) {
+                if (newList.includes(c.base.referred)) {
                     newList.unshift(c);
                 }
             }
@@ -37,15 +38,15 @@ export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
  * @param list
  * @param element
  */
-export function refListIncludes(list: PiLangElementReference[], element: PiLangElementReference | PiLangElement): boolean {
+export function refListIncludes(list: PiElementReference<PiLangElement>[], element: PiElementReference<PiLangElement> | PiLangElement): boolean {
     // TODO ??? should we add a check on the types of the list and the element?
     for (let xx of list) {
         if (element instanceof PiLangElement) {
-            if (xx.referedElement() === element) {
+            if (xx.referred === element) {
                 return true;
             }
-        } else if (element instanceof PiLangElementReference) {
-            if (xx.referedElement() === element.referedElement()) {
+        } else if (element instanceof PiElementReference) {
+            if (xx.referred === element.referred) {
                 return true;
             }
         }

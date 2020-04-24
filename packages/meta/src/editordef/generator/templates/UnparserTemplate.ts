@@ -1,5 +1,5 @@
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
-import { PiLangBinaryExpressionConcept, PiLangClass, PiLangConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiBinaryExpressionConcept, PiConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
 import {
     DefEditorConcept,
@@ -26,9 +26,7 @@ export class UnparserTemplate {
         // Template starts here 
         return `
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
-        import { ${language.enumerations.map(concept => `
+        import { ${language.concepts.map(concept => `
                 ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
@@ -44,23 +42,15 @@ export class UnparserTemplate {
         export class ${generatedClassName}  {
 
             public unparse(modelelement: ${allLangConcepts}) : string {
-                ${sortClasses(language.classes).map(concept => `
+                ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
                     //console.log("found a ${concept.name}");
-                    return this.unparse${concept.name}(modelelement);
-                }`).join("")}
-                ${language.enumerations.map(concept => `
-                if(modelelement instanceof ${concept.name}) {
                     return this.unparse${concept.name}(modelelement);
                 }`).join("")}
                 return "";
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
-            ${language.enumerations.map(concept => `
-                private unparse${concept.name}(modelelement: ${concept.name}) : string {
-                    return "";
-                }`).join("\n")}
                         
             private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
                 let result: string = "";
@@ -81,7 +71,7 @@ export class UnparserTemplate {
 
     makeConceptMethod (conceptDef: DefEditorConcept ) : string {
         // console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
-        let myConcept: PiLangConcept = conceptDef.concept.referedElement();
+        let myConcept: PiConcept = conceptDef.concept.referred;
         let name: string = myConcept.name;
         let lines: MetaEditorProjectionLine[] = conceptDef.projection?.lines;
 
@@ -91,12 +81,12 @@ export class UnparserTemplate {
                     return "${lines.map(line => `${this.makeLine(line)}` ).join("\\n")}"
                 }`
         } else {
-            if (myConcept instanceof  PiLangBinaryExpressionConcept && !!(conceptDef.symbol)) {
+            if (myConcept instanceof  PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
                 return `private unparse${name}(modelelement: ${name}) : string {
                     return this.unparse(modelelement.left) + "${conceptDef.symbol}" + this.unparse(modelelement.right);
                 }`
             }
-            if (myConcept instanceof  PiLangClass && myConcept.isAbstract) {
+            if (myConcept instanceof PiConcept && myConcept.isAbstract) {
                 return `private unparse${name}(modelelement: ${name}) : string {
                     return "'unparse' should be implemented by subclasses of ${myConcept.name}";
                 }`
@@ -121,7 +111,7 @@ export class UnparserTemplate {
             }
             if (item instanceof DefEditorSubProjection) {
                 let myElem = item.expression.findRefOfLastAppliedFeature();
-                let type = myElem.type.referedElement();
+                let type = myElem.type.referred;
                 if (!!type) {
                     if (myElem.isList) {
                         let vertical = (item.listJoin.direction === Direction.Vertical);

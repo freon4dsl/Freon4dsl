@@ -1,34 +1,30 @@
 import {
-    PiLangPrimitiveProperty,
-    PiLangConceptProperty,
+    PiPrimitiveProperty,
+    PiConceptProperty,
     PiLanguageUnit,
-    PiLangEnumeration,
-    PiLangUnion,
-    PiLangEnumProperty,
-    PiLangClass, PiLangInterface
+    PiInterface,
+    PiPropertyInstance,
+    PiInstance,
+    PiExpressionConcept,
+    PiBinaryExpressionConcept,
+    PiLimitedConcept, PiConcept, PiClassifier
 } from "../metalanguage/PiLanguage";
-import { PiLangConceptReference, PiLangEnumerationReference } from "../../languagedef/metalanguage/PiLangReferences";
-import { PiParseClass, PiParseLanguageUnit } from "./PiParseLanguage";
+import { PiElementReference } from "../metalanguage/PiElementReference";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
-export function createLanguage(data: Partial<PiParseLanguageUnit>): PiLanguageUnit {
+export function createLanguage(data: Partial<PiLanguageUnit>): PiLanguageUnit {
     // console.log("createLanguage " + data.name);
     const result = new PiLanguageUnit();
-    // // console.log("Creating language with concepts: ");
     if (!!data.name) {
         result.name = data.name;
     }
-    if (!!data.defs) {
-        for (let def of data.defs) {
-            if (def instanceof PiParseClass) {
-                result.classes.push(def);
-            } else if (def instanceof PiLangEnumeration) {
-                result.enumerations.push(def);
-            } else if (def instanceof PiLangUnion) {
-                result.unions.push(def);
-            } else if (def instanceof PiLangInterface) {
-                result.interfaces.push(def);
+    if (!!data.concepts) {
+        for(let con of data.concepts) {
+            if (con instanceof PiInterface) {
+                result.interfaces.push(con);
+            } else {
+                result.concepts.push(con);
             }
         }
     }
@@ -38,23 +34,46 @@ export function createLanguage(data: Partial<PiParseLanguageUnit>): PiLanguageUn
     return result;
 }
 
-// Because we do not yet know whether a concept is a PiLangClass, PiLangClass, or PiLangBinaryExpressionConcept,
-// we parse it and create this temporary object, which needs to be changed into the correct one.
-// The latter is done in the checker
-export function createParseClass(data: Partial<PiParseClass>): PiParseClass {
-    // console.log("createParseConcept " + data.name);
-    const result = new PiParseClass();
-
+export function createConcept(data: Partial<PiConcept>): PiConcept {
+    // console.log("createConcept " + data.name);
+    const result = new PiConcept();
     result.isRoot = !!data.isRoot;
     result.isAbstract = !!data.isAbstract;
-    result.isBinary = !!data.isBinary;
-    result.isExpression = !!data.isExpression;
-    result._isExpressionPlaceHolder = !!data._isExpressionPlaceHolder;
+    createCommonConceptProps(data, result);
+    return result;
+}
+
+export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimitedConcept {
+    // console.log("createLimitedConcept " + data.name);
+    const result = new PiLimitedConcept();
+    if (!!data.instances) {
+        result.instances = data.instances;
+    }
+    createCommonConceptProps(data, result);
+    return result;
+}
+
+export function createInterface(data: Partial<PiInterface>): PiInterface {
+    // console.log("createInterface " + data.name);
+    const result = new PiInterface();
     if (!!data.name) {
         result.name = data.name;
     }
-    if (!!data.trigger) {
-        result.trigger = data.trigger;
+    if (!!data.base) {
+        result.base = data.base;
+    }
+    if (!!data.properties) {
+        result.properties = data.properties;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: PiConcept) {
+    if (!!data.name) {
+        result.name = data.name;
     }
     if (!!data.base) {
         result.base = data.base;
@@ -63,140 +82,47 @@ export function createParseClass(data: Partial<PiParseClass>): PiParseClass {
         result.interfaces = data.interfaces;
     }
     if (!!data.properties) {
-        for (let prop of data.properties) {
-            if (prop instanceof PiLangPrimitiveProperty) {
+        for(let prop of data.properties) {
+            if (prop instanceof PiPrimitiveProperty) {
                 result.primProperties.push(prop);
-            }
-            if (prop instanceof PiLangEnumProperty) {
-                result.enumProperties.push(prop);
-            }
-            if (prop instanceof PiLangConceptProperty) {
-                if (prop.isPart) {
-                    result.parts.push(prop);
-                } else {
-                    result.references.push(prop);
-                }
-            }
-        }
-    }
-    if (!!data.priority) {
-        result.priority = data.priority;
-    }
-    // console.log("created parse class " + result.name);
-    if (!!data.location) {
-        result.location = data.location;
-    }
-    return result;
-}
-
-export function createInterface(data: Partial<PiParseClass>): PiLangInterface {
-    // console.log("createInterface " + data.name);
-    const result = new PiLangInterface();
-
-    if (!!data.name) {
-        result.name = data.name;
-    }
-    if (!!data.trigger) {
-        result.trigger = data.trigger;
-    }
-    if (!!data.base) {
-        result.base = data.base;
-    }
-    if (!!data.properties) {
-        for (let prop of data.properties) {
-            if (prop instanceof PiLangPrimitiveProperty) {
-                result.primProperties.push(prop);
-            }
-            if (prop instanceof PiLangEnumProperty) {
-                result.enumProperties.push(prop);
-            }
-            if (prop instanceof PiLangConceptProperty) {
-                if (prop.isPart) {
-                    result.parts.push(prop);
-                } else {
-                    result.references.push(prop);
-                }
+            } else {
+                result.properties.push(prop);
             }
         }
     }
     if (!!data.location) {
         result.location = data.location;
     }
+}
+
+export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionConcept>): PiBinaryExpressionConcept {
+    // console.log("createBinaryExpressionConcept " + data.name);
+    const result = new PiBinaryExpressionConcept();
+    result.isRoot = !!data.isRoot;
+    result.isAbstract = !!data.isAbstract;
+    createCommonConceptProps(data, result);
     return result;
 }
 
-export function createEnumeration(data: Partial<PiLangEnumeration>): PiLangEnumeration {
-    // console.log("createEnumeration " + data.name);
-    const result = new PiLangEnumeration();
-    if (!!data.name) {
-        result.name = data.name;
-    }
-    if (!!data.literals) {
-        result.literals = data.literals;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-    }
+export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiExpressionConcept {
+    // console.log("createExpressionConcept " + data.name);
+    const result = new PiExpressionConcept();
+    result.isRoot = !!data.isRoot;
+    result.isAbstract = !!data.isAbstract;
+    createCommonConceptProps(data, result);
     return result;
 }
 
-export function createUnion(data: Partial<PiLangUnion>): PiLangUnion {
-    // console.log("createUnion " + data.name);
-    const result = new PiLangUnion();
-    if (!!data.name) {
-        result.name = data.name;
-    }
-    if (!!data.members) {
-        result.members = data.members;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-    }
-    return result;
-}
-
-export function createPrimitiveProperty(data: Partial<PiLangPrimitiveProperty>): PiLangPrimitiveProperty {
+export function createPrimitiveProperty(data: Partial<PiPrimitiveProperty>): PiPrimitiveProperty {
     // console.log("createPrimitiveProperty " + data.name);
-    const result = new PiLangPrimitiveProperty();
+    const result = new PiPrimitiveProperty();
+    if (!!data.name) {
+        result.name = data.name;
+    }
     if (!!data.primType) {
         result.primType = data.primType;
     }
-    if (!!data.name) {
-        result.name = data.name;
-    }
-    result.isList = data.isList;
-    if (!!data.location) {
-        result.location = data.location;
-    }
-    return result;
-}
-
-export function createEnumerationProperty(data: Partial<PiLangEnumProperty>): PiLangEnumProperty {
-    // console.log("createEnumerationProperty " + data.name);
-    const result = new PiLangEnumProperty();
-    if (!!data.type) {
-        result.type = data.type;
-    }
-    if (!!data.name) {
-        result.name = data.name;
-    }
-    result.isList = data.isList;
-    if (!!data.location) {
-        result.location = data.location;
-    }
-    // // console.log("created property with name "+ result.name);
-    return result;
-}
-
-export function createPartProperty(data: Partial<PiLangConceptProperty>): PiLangConceptProperty {
-    // console.log("createPart " + data.name);
-    const result = new PiLangConceptProperty();
-    if (!!data.type) {
-        result.type = data.type;
-    }
-    if (!!data.name) {
-        result.name = data.name;
-    }
+    result.isOptional = !!data.isOptional;
     result.isList = !!data.isList;
     result.isPart = true;
     if (!!data.location) {
@@ -205,15 +131,34 @@ export function createPartProperty(data: Partial<PiLangConceptProperty>): PiLang
     return result;
 }
 
-export function createReferenceProperty(data: Partial<PiLangConceptProperty>): PiLangConceptProperty {
-    // console.log("createReference " + data.name);
-    const result = new PiLangConceptProperty();
-    if (!!data.type) {
-        result.type = data.type;
-    }
+export function createPartProperty(data: Partial<PiConceptProperty>): PiConceptProperty {
+    // console.log("createPartProperty " + data.name);
+    const result = new PiConceptProperty();
     if (!!data.name) {
         result.name = data.name;
     }
+    if (!!data.type) {
+        result.type = data.type;
+    }
+    result.isOptional = !!data.isOptional;
+    result.isList = !!data.isList;
+    result.isPart = true;
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createReferenceProperty(data: Partial<PiConceptProperty>): PiConceptProperty {
+    // console.log("createReference " + data.name);
+    const result = new PiConceptProperty();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.type) {
+        result.type = data.type;
+    }
+    result.isOptional = !!data.isOptional;
     result.isList = !!data.isList;
     result.isPart = false;
     if (!!data.location) {
@@ -222,13 +167,36 @@ export function createReferenceProperty(data: Partial<PiLangConceptProperty>): P
     return result;
 }
 
-// In the parse tree we create only PiLangConceptReferences, in the checker these are resolved
-// and changed into subclasses of PiLangConceptReference.
-export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
+export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
     // console.log("createConceptReference " + data.name);
-    const result = new PiLangConceptReference();
+    const result = PiElementReference.createNamed<PiClassifier>(data.name, "PiClassifier");
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createInstance(data: Partial<PiInstance>) : PiInstance {
+    const result = new PiInstance();
     if (!!data.name) {
         result.name = data.name;
+    }
+    if (!!data.props) {
+        result.props = data.props;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createPropDef(data: Partial<PiPropertyInstance>) : PiPropertyInstance {
+    const result = new PiPropertyInstance();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.value) {
+        result.value = data.value;
     }
     if (!!data.location) {
         result.location = data.location;

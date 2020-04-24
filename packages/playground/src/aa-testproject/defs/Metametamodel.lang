@@ -1,0 +1,80 @@
+language PiLanguage
+
+abstract concept PiLangElement {
+    // location: ParseLocation
+    name: string;
+    piMetaName: string;
+}
+root concept PiLanguageUnit base PiLangElement {
+    concepts: PiConcept[];
+    interfaces: PiInterface[];
+}
+abstract concept PiClassifier base PiLangElement {
+    reference owningLanguage: PiLanguageUnit;
+    properties: PiProperty[];
+    primProperties: PiPrimitiveProperty[];
+}
+concept PiInterface base PiClassifier {
+    reference base: PiInterface[];
+}
+concept PiConcept base PiClassifier {
+    isAbstract: boolean;
+    isRoot:boolean;
+    reference base?: PiConcept;
+    reference interfaces: PiInterface[];
+}
+concept PiExpressionConcept base PiConcept {
+    isPlaceHolder: boolean;
+}
+concept PiBinaryExpressionConcept base PiExpressionConcept {
+    left: PiExpressionConcept;
+    right: PiExpressionConcept;
+    symbol: string;
+    priority: number;
+}
+concept PiLimitedConcept base PiConcept {
+    instances: PiInstance[];
+}
+abstract concept PiProperty base PiLangElement {
+    isOptional: boolean;
+    isList: boolean;
+    isPart: boolean; // if false then it is a reference property
+    reference type: PiClassifier;
+    reference owningConcept: PiLangConcept;
+}
+concept PiConceptProperty base PiProperty {
+    hasLimitedType: boolean;
+}
+concept PiPrimitiveProperty base PiProperty {
+    isStatic: boolean;
+	initialValue: string;
+    primType: string;
+	// The inherited 'type' cannot be used, because this has a primitive type,
+	// which is not a subtype of PiReference<PiClassifier>
+	// Therefore, here we have:
+    /*
+    get type() : PiReference<PiClassifier> {
+        let value : PiReference<PiClassifier> = new PiReference<PiClassifier>();
+        value.name = this.primType;
+        return value;
+    }
+    */
+}
+concept PiInstance base PiLangElement {
+    reference concept: PiLimitedConcept;
+    propertyDefs: PiPropertyInstance[];
+}
+concept PiPropertyInstance base PiLangElement {
+    reference property: PiProperty;
+    value: string;
+}
+// the following two classes are only used in the typer and validator definitions
+concept PiFunction base PiLangElement {
+    reference language: PiLanguageUnit;
+    formalparams: PiParameter[];
+    reference returnType: PiClassifier;
+}
+
+concept PiParameter base PiLangElement {
+    reference type: PiClassifier;
+}

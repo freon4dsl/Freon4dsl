@@ -1,4 +1,3 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage";
 import {
     Direction,
     ListJoin,
@@ -15,15 +14,16 @@ import {
     DefEditorSubProjection
 } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiConcept, PiElementReference } from "../../languagedef/metalanguage";
 
 const LOGGER = new PiLogger("EditorCreators").mute();
 // Functions used to create instances of the language classes from the parsed data objects.
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
-export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
-    const result = new PiLangConceptReference();
+export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
+    let result: PiElementReference<PiConcept>;
     if (!!data.name) {
-        result.name = data.name;
+        result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
     }
     if (!!data.location) {
         result.location = data.location;
