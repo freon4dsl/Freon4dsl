@@ -50,7 +50,7 @@ concept RuleParameter {
 
 concept PercentageExpression base Expression {
     part inner : Expression 
-    priority = "2"
+    priority = 2
 }
 
 concept MoneyLiteralExp base LiteralExpression {
@@ -112,40 +112,40 @@ abstract binary expression concept BinaryExpression base Expression {
 }
 
 concept MultiplyExpression base BinaryExpression {
-    priority = "8"
+    priority = 8
 }
 
 concept PlusExpression base BinaryExpression {
-    priority = "4"
+    priority = 4
 }
 
 concept DivideExpression base BinaryExpression {
-    priority = "8"
+    priority = 8
 }
 
 concept AndExpression base BinaryExpression {
-    priority = "1"
+    priority = 1
 }
 
 concept OrExpression base BinaryExpression {
-    priority = "1"
+    priority = 1
 }
 
 abstract concept ComparisonExpression base BinaryExpression {
 }
 
 concept LessThenExpression base ComparisonExpression {
-    priority = "10"
+    priority = 10
 }
 
 concept GreaterThenExpression base ComparisonExpression {
     // symbol: string = ">"
-    priority = "10"
+    priority = 10
 }
 
 concept EqualsExpression base ComparisonExpression {
     // symbol: string = "="
-    priority = "10"
+    priority = 10
 }
 
 concept IfExpression base Expression {
