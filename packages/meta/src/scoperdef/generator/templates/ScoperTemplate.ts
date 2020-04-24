@@ -1,8 +1,7 @@
-import { Names, PathProvider, LANGUAGE_GEN_FOLDER, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
-import { PiConcept, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { Names, LANGUAGE_GEN_FOLDER, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage";
 import { langExpToTypeScript, PiLangExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage";
-import { must } from "parjs/combinators";
 
 export class ScoperTemplate {
     alternativeScopeImports: string = "";
@@ -29,14 +28,16 @@ export class ScoperTemplate {
         import { ${allLangConcepts}, ${langConceptType}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";   
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger } from "${PROJECTITCORE}"
-        ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }
+        ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";
+                                      import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";`:`` }
         
         const LOGGER = new PiLogger("${generatedClassName}");   
 
         export class ${generatedClassName} implements ${scoperInterfaceName} {
-            ${generateAlternativeScopes? `myTyper: ${typerClassName} = new ${typerClassName}();` : ``}
+            ${generateAlternativeScopes? `myTyper: ${typerClassName};` : ``}
     
             getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): PiNamedElement[] {
+                ${generateAlternativeScopes? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
                 let result : PiNamedElement[] = [];
                 if (!!modelelement) {
                 ${generateAlternativeScopes? 

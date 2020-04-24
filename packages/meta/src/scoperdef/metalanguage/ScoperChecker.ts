@@ -9,7 +9,7 @@ import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDe
 import { refListIncludes } from "../../utils/ModelHelpers";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("ScoperChecker"); // .mute();
+const LOGGER = new PiLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<PiScopeDef> {
     myExpressionChecker : PiLanguageExpressionChecker;
     myNamespaces: PiElementReference<PiConcept>[] = [];
@@ -23,9 +23,8 @@ export class ScoperChecker extends Checker<PiScopeDef> {
 
     public check(definition: PiScopeDef): void {
         LOGGER.log("Checking scope definition " + definition.scoperName);
-        if( this.language === null ) {
-            LOGGER.error(this,  `Scoper definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
-            process.exit(-1);
+        if ( this.language === null || this.language === undefined ) {
+            throw new Error(`Scoper definition checker does not known the language.`);
         }
 
         this.nestedCheck(

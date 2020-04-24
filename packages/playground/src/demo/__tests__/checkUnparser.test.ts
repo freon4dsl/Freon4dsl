@@ -8,7 +8,7 @@ import {
     DemoVariableRef,
     DemoEntity,
     DemoAttribute,
-    AllDemoConcepts,
+    DemoEveryConcept,
     DemoFunction,
     DemoVariable,
     PiElementReference

@@ -1,4 +1,4 @@
-import { DemoModel, DemoFunction, DemoEntity, AllDemoConcepts } from "../language/gen";
+import { DemoModel, DemoFunction, DemoEntity, DemoEveryConcept } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Demo Model", () => {
@@ -48,7 +48,7 @@ describe("Demo Model", () => {
     });
 });
 
-function checkFunctionDef(f1: DemoFunction, owner: AllDemoConcepts) {
+function checkFunctionDef(f1: DemoFunction, owner: DemoEveryConcept) {
     expect(f1.name).not.toBeNull;
     expect(f1.expression.container).toBe(f1);
     expect(f1.container).toBe(owner);

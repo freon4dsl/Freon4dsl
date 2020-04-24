@@ -24,8 +24,7 @@ export class ProjectItTestLanguageExpressions extends ProjectItGeneratePartActio
 
         const readTest = new LanguageExpressionParser(this.language).parse(this.testFile.value);
         if (readTest == null) {
-            LOGGER.error(this, "Expressions could not be parsed, exiting.");
-            process.exit(-1);
+            throw new Error("Expressions could not be parsed, exiting.");
         }
     }
 

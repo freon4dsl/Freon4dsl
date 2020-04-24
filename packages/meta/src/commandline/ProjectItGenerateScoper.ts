@@ -26,8 +26,7 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
 
         const scoper = new ScoperParser(this.language).parse(this.scopeFile.value);
         if (scoper == null) {
-            LOGGER.error(this, "Scoper definition could not be parsed, exiting.");
-            process.exit(-1);
+            throw new Error("Scoper definition could not be parsed, exiting.");
         }
         this.scoperGenerator.generate(scoper);
         // TODO add check on succesfullness

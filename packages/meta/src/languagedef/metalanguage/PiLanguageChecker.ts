@@ -19,7 +19,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
     public check(language: PiLanguageUnit): void {
         LOGGER.log("Checking language '" + language.name + "'");
-        this.simpleCheck(!!language.name,
+        // TODO all keywords that can occur after language should be mentioned
+        this.simpleCheck(!!language.name && language.name !== "root" && language.name !== "concept" && language.name !== "interface",
             `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
 
         // ensure all references to the language, and the owners of the references are set

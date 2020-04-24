@@ -7,7 +7,7 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 import { PiElementReference } from "../../languagedef/metalanguage";
 
-const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
+const LOGGER = new PiLogger("ValidatorChecker").mute();
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 
@@ -23,8 +23,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
         if ( this.language === null || this.language === undefined ) {
-            LOGGER.error(this, `Validator definition checker does not known the language, exiting [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
-            process.exit(-1);
+            throw new Error(`Validator definition checker does not known the language.`);
         }
 
         this.nestedCheck(

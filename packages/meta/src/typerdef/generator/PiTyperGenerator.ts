@@ -5,7 +5,7 @@ import { PiTypeDefinition } from "../metalanguage";
 import { Helpers, Names, TYPER_FOLDER, TYPER_GEN_FOLDER } from "../../utils";
 import { PiTyperTemplate } from "./templates/PiTyperTemplate";
 
-const LOGGER = new PiLogger("PiTyperGenerator"); // .mute();
+const LOGGER = new PiLogger("PiTyperGenerator").mute();
 export class PiTyperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguageUnit;

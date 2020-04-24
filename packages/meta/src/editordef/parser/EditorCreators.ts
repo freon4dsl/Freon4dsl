@@ -64,6 +64,9 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
     if (!!data.enumerations) {
         result.enumerations = data.enumerations;
     }
+    if (!!data.languageName) {
+        result.languageName = data.languageName;
+    }
 
     // Ensure all internal editor references to the editorlanguage are set.
     result.conceptEditors.forEach(concept => {

@@ -10,7 +10,6 @@ export class ScoperParser extends PiParser<PiScopeDef> {
     constructor(language : PiLanguageUnit) {
         super();
         this.parser = scoperParser;
-        this.msg = "Scoper";
         this.language = language;
         this.checker = new ScoperChecker(language);
     }

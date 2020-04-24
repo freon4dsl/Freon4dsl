@@ -19,7 +19,7 @@ import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 
-const LOGGER = new PiLogger("ProjectItGenerateAllAction"); // .mute();
+const LOGGER = new PiLogger("ProjectItGenerateAllAction"); //.mute();
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -50,16 +50,16 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     generate(): void {
         LOGGER.info(this, "Starting generation of all parts of your language as defined in " + this.defFolder.value);
-        LOGGER.log("Output will be generated in: " + this.outputFolder);
+        // LOGGER.log("Output will be generated in: " + this.outputFolder);
 
         try {
             this.findDefinitionFiles();
 
-            LOGGER.log("languageFile: " + this.languageFile);
-            LOGGER.log("editFile: " + this.editFile);
-            LOGGER.log("validFile: " + this.validFile);
-            LOGGER.log("scopeFile: " + this.scopeFile);
-            LOGGER.log("typerFile: " + this.typerFile);
+            // LOGGER.log("languageFile: " + this.languageFile);
+            // LOGGER.log("editFile: " + this.editFile);
+            // LOGGER.log("validFile: " + this.validFile);
+            // LOGGER.log("scopeFile: " + this.scopeFile);
+            // LOGGER.log("typerFile: " + this.typerFile);
 
             if (this.watch) {
                 new FileWatcher(this.languageFile, this.generateLanguage);
@@ -70,11 +70,15 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             }
 
             // generate the language
-            this.generateLanguage();
-            this.generateEditor();
-            this.generateValidator();
-            this.generateScoper();
-            this.generateTyper();
+            try {
+                this.generateLanguage();
+                this.generateEditor();
+                this.generateValidator();
+                this.generateScoper();
+                this.generateTyper();
+            } catch (e) {
+                LOGGER.error(this, "Stopping generation because of errors in the language definition: " + e.message);
+            }
             if (this.watch){
                 LOGGER.info(this, "Watching language definition files ...");
             }
@@ -86,67 +90,88 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     private generateTyper = () => {
         LOGGER.info(this, "Generating typer");
         let typer: PiTypeDefinition;
-        if (this.typerFile.length > 0) {
-            typer = new PiTyperParser(this.language).parse(this.typerFile);
-        } else {
-            LOGGER.log("Generating default typer");
+        try {
+            if (this.typerFile.length > 0) {
+                typer = new PiTyperParser(this.language).parse(this.typerFile);
+            } else {
+                LOGGER.log("Generating default typer");
+            }
+            this.typerGenerator = new PiTyperGenerator(this.language);
+            this.typerGenerator.outputfolder = this.outputFolder;
+            this.typerGenerator.generate(typer);
+        } catch (e) {
+            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message);
         }
-        this.typerGenerator = new PiTyperGenerator(this.language);
-        this.typerGenerator.outputfolder = this.outputFolder;
-        this.typerGenerator.generate(typer);
     };
 
     private generateScoper = () => {
         LOGGER.info(this, "Generating scoper");
         let scoper: PiScopeDef;
-        if (this.scopeFile.length > 0) {
-            scoper = new ScoperParser(this.language).parse(this.scopeFile);
-        } else {
-            LOGGER.log("Generating default scoper");
+        try {
+            if (this.scopeFile.length > 0) {
+                scoper = new ScoperParser(this.language).parse(this.scopeFile);
+            } else {
+                LOGGER.log("Generating default scoper");
+            }
+            this.scoperGenerator = new ScoperGenerator(this.language);
+            this.scoperGenerator.outputfolder = this.outputFolder;
+            this.scoperGenerator.generate(scoper);
+        } catch (e) {
+            LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message);
         }
-        this.scoperGenerator = new ScoperGenerator(this.language);
-        this.scoperGenerator.outputfolder = this.outputFolder;
-        this.scoperGenerator.generate(scoper);
     };
 
     private generateValidator = () => {
         LOGGER.info(this, "Generating validator");
         let validator: PiValidatorDef;
-        if (this.validFile.length > 0) {
-            validator = new ValidatorParser(this.language).parse(this.validFile);
-        } else {
-            LOGGER.log("Generating default validator");
+        try {
+            if (this.validFile.length > 0) {
+                validator = new ValidatorParser(this.language).parse(this.validFile);
+            } else {
+                LOGGER.log("Generating default validator");
+            }
+            this.validatorGenerator = new ValidatorGenerator(this.language);
+            this.validatorGenerator.outputfolder = this.outputFolder;
+            this.validatorGenerator.generate(validator);
+        } catch (e) {
+            LOGGER.error(this, "Stopping validator generation because of errors: " + e.message);
         }
-        this.validatorGenerator = new ValidatorGenerator(this.language);
-        this.validatorGenerator.outputfolder = this.outputFolder;
-        this.validatorGenerator.generate(validator);
     };
 
     private generateEditor = () => {
         LOGGER.info(this, "Generating editor");
         let editor: DefEditorLanguage;
-        if (this.editFile.length > 0) {
-            editor = new DefEditorParser(this.language).parse(this.editFile);
-        } else {
-            LOGGER.log("Generating default editor");
+        try {
+            if (this.editFile.length > 0) {
+                editor = new DefEditorParser(this.language).parse(this.editFile);
+            } else {
+                LOGGER.log("Generating default editor");
+            }
+            this.editorGenerator.outputfolder = this.outputFolder;
+            this.editorGenerator.language = this.language;
+            this.editorGenerator.generate(editor);
+        } catch (e) {
+            LOGGER.error(this, "Stopping editor generation because of errors: " + e.message);
         }
-        this.editorGenerator.outputfolder = this.outputFolder;
-        this.editorGenerator.language = this.language;
-        this.editorGenerator.generate(editor);
+    };
+
+    private generateLanguage = () => {
+        // generate the language
+        LOGGER.info(this, "Generating language structure");
+        this.language = new LanguageParser().parse(this.languageFile);
+        this.languageGenerator.outputfolder = this.outputFolder;
+        this.languageGenerator.generate(this.language);
     };
 
     private findDefinitionFiles() {
         if (!this.defFolder.value) {
-            LOGGER.error(this, "No definitions folder, exiting.");
-            process.exit(-1);
+            throw new Error("No definitions folder, exiting.");
         }
         let myFileSet: string[] = Helpers.findFiles(this.defFolder.value);
         if (myFileSet.length === 0) {
-            LOGGER.error(this, "No files found in '" + this.defFolder.value + "', exiting.");
-            process.exit(-1);
+            throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
         }
         for (let filename of myFileSet) {
-            LOGGER.info(this, "found: " + filename);
             // TODO take into account multiple files with the same extension
             if (/\.lang$/.test(filename)) {
                 this.languageFile = filename;
@@ -173,11 +198,5 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         });
     }
 
-    generateLanguage = () => {
-        // generate the language
-        LOGGER.info(this, "Generating language structure");
-        this.language = new LanguageParser().parse(this.languageFile);
-        this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.generate(this.language);
-    };
+
 }
