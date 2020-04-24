@@ -7,6 +7,7 @@ export class DefEditorLanguage {
     location: ParseLocation;
     name: string;
     language: PiLanguageUnit;
+    languageName: string;
     conceptEditors: DefEditorConcept[] = [];
     enumerations: DefEditorEnumeration[] = [];
 

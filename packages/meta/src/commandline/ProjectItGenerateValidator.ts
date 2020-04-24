@@ -27,8 +27,7 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
 
         const validator = new ValidatorParser(this.language).parse(this.validdefFile.value);
         if (validator == null) {
-            LOGGER.error(this, "Validator definition could not be parsed, exiting.");
-            process.exit(-1);
+            throw new Error("Validator definition could not be parsed, cannot generate validator.");
         }
         this.validatorGenerator.generate(validator);
         // TODO add check on succesfullness

@@ -11,7 +11,6 @@ export class DefEditorParser extends PiParser<DefEditorLanguage> {
         super();
         this.language = language;
         this.parser = editorParser;
-        this.msg = "Editor";
         this.checker = new DefEditorChecker(language);
     }
 }

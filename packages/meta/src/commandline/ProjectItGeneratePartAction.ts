@@ -26,8 +26,7 @@ export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
         // the actual generation, when needed, is done by subclasses
         this.language = new LanguageParser().parse(this.languageFile);
         if (this.language == null) {
-            LOGGER.error(this, "Language could not be parsed, exiting.");
-            process.exit(-1);
+            throw new Error("Language could not be parsed, exiting.");
         }
     }
 

@@ -11,7 +11,6 @@ export class ValidatorParser extends PiParser<PiValidatorDef> {
     constructor(language: PiLanguageUnit) {
         super();
         this.parser = validatorParser;
-        this.msg = "Validator";
         this.language = language;
         this.checker = new ValidatorChecker(language);
     }

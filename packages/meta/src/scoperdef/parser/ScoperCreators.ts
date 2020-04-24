@@ -1,7 +1,7 @@
 import { PiScopeDef, ScopeConceptDef, PiNamespaceAddition, PiAlternativeScope } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
-const LOGGER = new PiLogger("ScoperCreator"); //.mute();
+const LOGGER = new PiLogger("ScoperCreator").mute();
 
 export function createScopeDef(data: Partial<PiScopeDef>): PiScopeDef {
     LOGGER.log("createScopeDef");

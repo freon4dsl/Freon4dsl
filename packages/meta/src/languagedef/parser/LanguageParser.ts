@@ -7,7 +7,6 @@ export class LanguageParser extends PiParser<PiLanguageUnit> {
     constructor() {
         super();
         this.parser = pegjsParser;
-        this.msg = "Language";
         this.checker = new PiLanguageChecker(null);
     }
 }

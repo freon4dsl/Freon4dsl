@@ -5,7 +5,7 @@ import { createDefaultExpressionBox, KeyPressAction } from "@projectit/core";
 import { PiScoper } from "@projectit/core";
 import { PiEditor } from "@projectit/core";
 import {
-    AllDemoConcepts,
+    DemoEveryConcept,
     DemoAttribute,
     DemoAttributeType,
     DemoEntity,

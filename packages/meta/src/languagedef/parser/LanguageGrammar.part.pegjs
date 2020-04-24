@@ -92,7 +92,7 @@ implementedInterfaces = implementsKey conceptRefs:(
     { return conceptRefs; }
 
 
-priority = priorityKey ws "=" ws "\"" value:string "\"" ws {
+priority = priorityKey ws "=" ws value:string ws {
     return Number.parseInt(value);
 }  
 
