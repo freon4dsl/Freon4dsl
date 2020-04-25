@@ -109,6 +109,7 @@ export class ActionsTemplate {
                 ${flatten(language.classes.map(c => c.parts)).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referedElement();
+                    // TODO Add keyboard actions 
                     return `
                     // {
                     //     activeInBoxRoles: ["new-${part.name}"],

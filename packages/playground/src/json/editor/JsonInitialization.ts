@@ -1,11 +1,11 @@
-import { JsonFile, JsonObject } from "../language/gen";
+// import { JsonFile, JsonObject } from "../language/gen";
 
 export class JsonInitialization {
 
     initialize() {
-        const result = new JsonFile();
-        result.contents = new JsonObject();
-
-        return result;
+        // const result = new JsonFile();
+        // result.contents = new JsonObject();
+        //
+        // return result;
     }
 }
