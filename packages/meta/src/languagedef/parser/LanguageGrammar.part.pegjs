@@ -27,7 +27,7 @@ implementsKey   = ws "implements" ws
 
 langdef = c:concept { return c;} / t:limited {return t;} / i:interface {return i;} / e:expression {return e;}
 
-concept = isRoot:rootKey? abs:abstractKey? conceptKey ws name:var ws base:base? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
+concept = isRoot:rootKey? abs:abstractKey? conceptKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
     {
         return create.createConcept({
             "isRoot": (!!isRoot),
@@ -40,7 +40,7 @@ concept = isRoot:rootKey? abs:abstractKey? conceptKey ws name:var ws base:base? 
         });
     }
 
-limited = limitedKey ws name:var ws base:base? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
+limited = limitedKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
     {
         return create.createLimitedConcept({
             "name": name,
@@ -52,7 +52,7 @@ limited = limitedKey ws name:var ws base:base? ws implementedInterfaces:implemen
         });
     }
 
-interface = interfaceKey ws name:var ws base:base* curly_begin props:property* curly_end
+interface = interfaceKey ws name:var ws base:interfacebase? curly_begin props:property* curly_end
     {
         return create.createInterface({
             "name": name,
@@ -62,7 +62,7 @@ interface = interfaceKey ws name:var ws base:base* curly_begin props:property* c
         });
     }
 
-expression = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expressionKey ws name:var ws base:base? ws implementedInterfaces:implementedInterfaces?
+expression = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expressionKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
                 curly_begin props:property* priority:priority? curly_end
     {
         if (!!binary) {
@@ -93,6 +93,7 @@ property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
 // TODO add initialvalue
+// TODO make interfaces availbale as type of properties
 // partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
 partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? semicolon_separator
     {
@@ -105,7 +106,7 @@ partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var is
                 "location": location()
             });
         } else {
-            const ref = create.createClassifierReference({"name": type, "location": location()});
+            const ref = create.createConceptReference({"name": type, "location": location()});
             return create.createPartProperty({
                 "name": name,
                 "type": ref,
@@ -128,16 +129,25 @@ referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separa
     }) }
 
 conceptReference = referredName:var
-    { return create.createClassifierReference({"name": referredName, "location": location()}); }
+    { return create.createConceptReference({"name": referredName, "location": location()}); }
 
-base = baseKey conceptReference:conceptReference
+interfaceReference = referredName:var
+    { return create.createInterfaceReference({"name": referredName, "location": location()}); }
+
+conceptbase = baseKey conceptReference:conceptReference
     { return conceptReference; }
 
-implementedInterfaces = implementsKey conceptRefs:( head:conceptReference
-                                                    tail:(comma_separator v:conceptReference { return v; })*
+interfacebase = baseKey intfRefs:( head:interfaceReference
+                                   tail:(comma_separator v:interfaceReference { return v; })*
+                                   { return [head].concat(tail); }
+                                 )
+    { return intfRefs; }
+
+implementedInterfaces = implementsKey intfRefs:( head:interfaceReference
+                                                    tail:(comma_separator v:interfaceReference { return v; })*
                                                     { return [head].concat(tail); }
                                                   )
-    { return conceptRefs; }
+    { return intfRefs; }
 
 priority = priorityKey ws equals_separator ws value:string ws
     { return Number.parseInt(value); }

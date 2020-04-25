@@ -48,13 +48,13 @@ abstract concept SomeOther {
 limited DemoAttributeType implements BaseType {
     id: number;
 
-    String =    { name: "string", id: 4 }
-    Integer =   { name = "number", id: 3 }
-    Boolean =   { name = "bool", id: 2 }
-    ANY =       { name = "ANY", id: 0 }
+    String =    { "name": "string", "id": 4 }
+    Integer =   { "name": "number", "id": 3 }
+    Boolean =   { "name": "bool", "id": 2 }
+    ANY =       { "name": "ANY", "id": 0 }
 }
 
-abstract expression expression DemoExpression {
+abstract expression DemoExpression {
     appliedfeature: AppliedFeature;
 }
 

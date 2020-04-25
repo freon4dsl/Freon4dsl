@@ -54,6 +54,9 @@ export class PiLangNamespace {
             for (let z of this._myElem.interfaces) {
                 this.addIfTypeOK(z, result, metatype);
             }
+            for (let z of this._myElem.predefInstances) {
+                this.addIfTypeOK(z, result, metatype);
+            }
         }
         if (this._myElem instanceof PiClassifier) {
             for (let z of this._myElem.properties) {
@@ -111,6 +114,34 @@ export class PiLangNamespace {
 
     private addIfTypeOK(z: PiLangElement, result: PiLangElement[], metatype?: PiLangConceptType) {
         if (metatype) {
+            // TODO enlarge this to include superclasses!
+            // for now I use this hack:
+            let myTypeName = z.constructor.name;
+            if  (metatype === "PiExpressionConcept") {
+                // all subclasses also ok
+                if (myTypeName === metatype || myTypeName === "PiBinaryExpressionConcept") {
+                    result.push(z);
+                }
+            } else
+            if  (metatype === "PiConcept") {
+                // all subclasses also ok
+                if (myTypeName === metatype || myTypeName === "PiBinaryExpressionConcept" || myTypeName === "PiExpressionConcept" || myTypeName === "PiLimitedConcept") {
+                    result.push(z);
+                }
+            } else
+            if  (metatype === "PiClassifier") {
+                // all subclasses also ok
+                if (myTypeName === metatype || myTypeName === "PiBinaryExpressionConcept" || myTypeName === "PiExpressionConcept" ||
+                    myTypeName === "PiLimitedConcept" || myTypeName === "PiConcept" || myTypeName === "PiInterface") {
+                    result.push(z);
+                }
+            } else
+            if  (metatype === "PiProperty") {
+                // all subclasses also ok
+                if (myTypeName === metatype || myTypeName === "PiConceptProperty" || myTypeName === "PiPrimitiveProperty" ) {
+                    result.push(z);
+                }
+            } else
             if (z.constructor.name === metatype) {
                 result.push(z);
             }

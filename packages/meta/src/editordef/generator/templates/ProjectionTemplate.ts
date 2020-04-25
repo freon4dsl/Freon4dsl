@@ -121,13 +121,12 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}    
                 
-                ${ language.expressionPlaceHolder !== null ? `
+                ${ !!language.expressionPlaceHolder ? `
                 private get${language.expressionPlaceHolder.name}Box(element: ${Names.concept(language.expressionPlaceHolder)}) {
                     return new AliasBox(element, EXPRESSION_PLACEHOLDER, "[exp]");
                 }`
                 :"" }
       
-
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
                 
                 ${nonBinaryConceptsWithDefaultProjection.map(c => `

@@ -39,8 +39,22 @@ export class ModelCreatorTemplate {
     }
 
     private makeParams(concept: PiConcept) : string {
-        return `${concept.allProperties().map(prop => 
-            `${prop.name}: ${prop.type.name}`).join(", ")}`;
+        // TODO would like to use allProperties() here, but PrimProperties give error
+        let paramlist: string[] = [];
+        for (let prop of concept.allPrimProperties()) {
+            paramlist.push(`${prop.name}: ${prop.primType}`);
+        }
+        for (let prop of concept.allParts()) {
+            paramlist.push(`${prop.name}: ${prop.type.name}`);
+        }
+        for (let prop of concept.allReferences()) {
+            paramlist.push(`${prop.name}: ${prop.type.name}`);
+        }
+        return paramlist.join(", ");
+        // return `${concept.allParts().map(prop =>
+        //     `${prop.name}: ${prop.type.name}`).concat(`${concept.allReferences().map(prop =>
+        //     `${prop.name}: ${prop.type.name}`)}`).concat(`${concept.allPrimProperties().map(prop =>
+        //     `${prop.name}: ${prop.primType}`)}`).join(", ")}`;
     }
 
     private createImports(language: PiLanguageUnit) : string {

@@ -14,7 +14,7 @@ export class NamespaceTemplate {
             scopedef.languageName = language.name;
             scopedef.namespaces = [];
         }
-        
+
         // console.log("Creating Namespace");
         const allLangConcepts : string = Names.allConcepts(language);   
         const langConceptType : string = Names.metaType(language);     

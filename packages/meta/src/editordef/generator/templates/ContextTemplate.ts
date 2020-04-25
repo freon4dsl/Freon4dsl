@@ -46,9 +46,13 @@ export class ContextTemplate {
                     return "${Names.context(language)}";
                 }
             
+                ${ !!language.expressionPlaceHolder ? `
                 getPlaceHolderExpression(): PiExpression {
                     return new ${placeHolderConceptName}; 
-                }
+                }`
+            :`  getPlaceHolderExpression(): PiExpression {
+                    return null; 
+                }` }
             
                 @action
                 private initialize() {

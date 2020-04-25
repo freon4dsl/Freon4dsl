@@ -16,6 +16,7 @@ export class ConceptTemplate {
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
+        const isAbstract = concept.isAbstract;
         // const hasSymbol = !!concept.symbol;
         const baseExpressionName = Names.concept(concept.language.findExpressionBase());
         const isBinaryExpression = concept instanceof PiBinaryExpressionConcept;
@@ -162,7 +163,7 @@ export class ConceptTemplate {
                 `
             : ""}
 
-                ${hasName ? `
+                ${(hasName && !isAbstract) ? `
                 static create(name: string): ${concept.name} {
                     const result = new ${concept.name}();
                     result.name = name;
@@ -189,7 +190,7 @@ export class ConceptTemplate {
     generatePartProperty(property: PiConceptProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
-        const initializer = ((property.type.referred instanceof PiExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.referred.language.expressionPlaceHolder)} ${property.isList ? "]" : ""}` : "");
+        const initializer = ((property.type.referred instanceof PiExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceHolder)} ${property.isList ? "]" : ""}` : "");
         return `
             ${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer};
         `;

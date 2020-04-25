@@ -1,4 +1,4 @@
-import { Names, LANGUAGE_GEN_FOLDER, PROJECTITCORE, TYPER_GEN_FOLDER } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER, PROJECTITCORE, TYPER_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage";
 import { langExpToTypeScript, PiLangExp, PiLangFunctionCallExp } from "../../../languagedef/metalanguage";

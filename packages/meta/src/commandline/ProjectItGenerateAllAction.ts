@@ -77,7 +77,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 this.generateScoper();
                 this.generateTyper();
             } catch (e) {
-                LOGGER.error(this, "Stopping generation because of errors in the language definition: " + e.message);
+                LOGGER.error(this, "Stopping generation because of errors in the language definition: " + e.message + "\n" + e.stack);
             }
             if (this.watch){
                 LOGGER.info(this, "Watching language definition files ...");

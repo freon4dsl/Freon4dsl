@@ -57,7 +57,7 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
         let isRef: boolean = false;
         if (!!this.referedElement) {
             const ref = this.referedElement;
-            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.referred.references().some(r => r === ref);
+            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
         }
         // return this.sourceName + (isRef ? ".referred" : "") + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
@@ -116,7 +116,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
         let isRef: boolean = false;
         if (!!exp.referedElement) {
             const ref = exp.referedElement;
-            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.referred.references().some(r => r === ref);
+            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
         }
         return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
     } else {

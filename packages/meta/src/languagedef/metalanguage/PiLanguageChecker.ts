@@ -10,7 +10,7 @@ import {
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
 
-const LOGGER = new PiLogger("PiLanguageChecker").mute();
+const LOGGER = new PiLogger("PiLanguageChecker"); //.mute();
 
 // TODO add check: priority only for expression concepts
 
@@ -18,14 +18,12 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     foundRoot = false;
 
     public check(language: PiLanguageUnit): void {
-        LOGGER.log("Checking language '" + language.name + "'");
+        LOGGER.info(this, "Checking language '" + language.name + "'");
         // TODO all keywords that can occur after language should be mentioned
         this.simpleCheck(!!language.name && language.name !== "root" && language.name !== "concept" && language.name !== "interface",
             `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
 
-        // ensure all references to the language, and the owners of the references are set
         this.language = language;
-        this.setReferenceOwners(language);    
 
         // now check the whole language
         // TODO check that all concepts and interfaces have unique names
@@ -34,35 +32,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
         this.simpleCheck(!!language.concepts.find(c => c.isRoot),
             `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
-    }
-
-    /**
-     * This function sets the owners of all PiElementReferences in the model.
-     * This is necessary because otherwise the reference can not be resolved.
-     * @param language: this model unit
-     */
-    private setReferenceOwners(language: PiLanguageUnit) {
-        language.concepts.forEach(concept => {
-            concept.language = language;
-            concept.references().forEach(ref => ref.type.owner = concept);
-            concept.parts().forEach(part => part.type.owner = concept);
-            if (!!concept.base) {
-                concept.base.owner = concept;
-            }
-            for (let i of concept.interfaces) {
-                i.owner = concept;
-            }
-        });
-
-        language.interfaces.forEach(intf => {
-            intf.language = language;
-            intf.references().forEach(ref => ref.type.owner = intf);
-            intf.parts().forEach(part => part.type.owner = intf);
-
-            for (let i of intf.base) {
-                i.owner = intf;
-            }
-        });
+        LOGGER.info(this, "Language '" + language.name + "' checked");
     }
 
     private checkConcept(piClass: PiConcept): void {
@@ -74,6 +44,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.simpleCheck(!this.foundRoot,
                 `There may be only one root class in the language definition [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
             this.foundRoot = true;
+            piClass.language.rootConcept = piClass;
         }
 
         if(!!piClass.base) {
@@ -188,7 +159,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
                 whenOk: () => this.nestedCheck(
                     {
-                        check: reference.referred !== undefined,
+                        check: !!(reference.referred),
                         error: `Reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
                     })
             })

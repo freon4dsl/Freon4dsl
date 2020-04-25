@@ -69,7 +69,7 @@ export class ActionsTemplate {
             
             export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
                 ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
-                    const parentConcept = part.owningConcept.referred;
+                    const parentConcept = part.owningConcept;
                     const partConcept = part.type.referred;
                     return `
                         {
@@ -86,7 +86,7 @@ export class ActionsTemplate {
                 `}).join(",")}
                 ,
                 ${flatten(language.concepts.map(c => c.references())).filter(p => p.isList).map(reference => {
-                    const parentConcept = reference.owningConcept.referred;
+                    const parentConcept = reference.owningConcept;
                     const partConcept = reference.type.referred;
                     return `
                         {
@@ -105,7 +105,7 @@ export class ActionsTemplate {
             
             export const KEYBOARD: KeyboardShortcutBehavior[] = [
                 ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
-                    const parentConcept = part.owningConcept.referred;
+                    const parentConcept = part.owningConcept;
                     const partConcept = part.type.referred;
                     return `
                     {
