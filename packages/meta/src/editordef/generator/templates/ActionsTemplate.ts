@@ -76,7 +76,7 @@ export class ActionsTemplate {
                             activeInBoxRoles: ["new-${part.name}"],
                             trigger: "${!!editorDef.findConceptEditor(part.type.referred).trigger ? `${editorDef.findConceptEditor(part.type.referred).trigger}` : part.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                                var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                                var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
                                 const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
                                 parent.${part.name}.push(new${part.name});
                                 return new${part.name};
@@ -93,7 +93,7 @@ export class ActionsTemplate {
                             activeInBoxRoles: ["new-${reference.name}"],
                             trigger: "${!!editorDef.findConceptEditor(reference.type.referred).trigger ? `${editorDef.findConceptEditor(reference.type.referred).trigger}` : reference.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                                var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                                var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
                                 const newBase: PiElementReference< ${Names.concept(reference.type.referred)}> = PiElementReference.createNamed("", null);
                                 parent.${reference.name}.push(newBase);
                                 return null;
@@ -112,7 +112,7 @@ export class ActionsTemplate {
                         activeInBoxRoles: ["new-${part.name}"],
                         trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
-                            var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                            var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
                             const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
                             parent.${part.name}.push(new${part.name});
                             return Promise.resolve(new${part.name});
