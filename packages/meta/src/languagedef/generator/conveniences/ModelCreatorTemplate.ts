@@ -58,6 +58,9 @@ export class ModelCreatorTemplate {
         language.unions.map(c =>
             tmp.push(Names.union(c))
         );
+        language.interfaces.map(c =>
+            tmp.push(Names.interface(c))
+        );
         tmp = tmp.sort();
     
         // the template starts here

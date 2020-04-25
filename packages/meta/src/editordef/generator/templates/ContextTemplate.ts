@@ -16,7 +16,7 @@ export class ContextTemplate {
             import { action, observable } from "mobx";
             import { ${Names.PiContext}, ${Names.PiExpression} } from "${PROJECTITCORE}";
             import { ${initializationName} } from "../${initializationName}";
-            import { ${rootConceptName}, ${placeHolderConceptName} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${rootConceptName} ${(placeHolderConceptName === "" ? "" : ", " + placeHolderConceptName)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             
             export class ${Names.context(language)} implements PiContext {
                 @observable private _rootElement: ${rootConceptName};
@@ -47,7 +47,7 @@ export class ContextTemplate {
                 }
             
                 getPlaceHolderExpression(): PiExpression {
-                    return new ${placeHolderConceptName}; 
+                    return ${(placeHolderConceptName === "" ? "null " : "new " + placeHolderConceptName + "()")} ; 
                 }
             
                 @action

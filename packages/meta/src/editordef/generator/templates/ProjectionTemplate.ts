@@ -117,7 +117,7 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}    
                 
-                ${ language.expressionPlaceholder() !== null ? `
+                ${ !!language.expressionPlaceholder()? `
                 private get${language.expressionPlaceholder().name}Box(element: ${Names.concept(language.expressionPlaceholder())}) {
                     return new AliasBox(element, EXPRESSION_PLACEHOLDER, "[exp]");
                 }`
@@ -164,7 +164,7 @@ export class ProjectionTemplate {
                                 style: ${Names.styles}.propertykeyword,
                                 selectable: false
                              }),
-                            this.rootProjection.getBox(element.${part.name})
+                            ((!!element.${part.name}) ? this.rootProjection.getBox(element.${part.name}) : new AliasBox(element, "${part.name}", "${part.name}" ))
                             ], { selectable: false })                            
                         ` }`  )).concat(
 // Map all references

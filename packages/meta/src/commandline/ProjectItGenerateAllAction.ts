@@ -101,6 +101,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.typerGenerator.generate(typer);
         } catch (e) {
             LOGGER.error(this, "Stopping typer generation because of errors: " + e.message);
+            LOGGER.error(this, e.stack)
         }
     };
 
@@ -152,6 +153,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.editorGenerator.generate(editor);
         } catch (e) {
             LOGGER.error(this, "Stopping editor generation because of errors: " + e.message);
+            LOGGER.error(this, e.stack)
         }
     };
 

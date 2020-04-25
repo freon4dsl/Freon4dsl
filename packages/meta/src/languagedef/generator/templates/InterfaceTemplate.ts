@@ -16,7 +16,7 @@ export class InterfaceTemplate {
     generateInterface(concept: PiLangInterface, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? "extends " + Names.concept(concept.base.referedElement()) : "";
+        const extendsClass = hasSuper ? `extends ${Names.concept(concept.base.referedElement())}, PiElement ` : "extends PiElement";
         const hasName = concept.primProperties.some(p => p.name === "name");
         // const abstract = (concept.isAbstract ? "abstract" : "");
         const abstract = '';
@@ -37,6 +37,7 @@ export class InterfaceTemplate {
 
         // Template starts here
         const result = `
+            import { ${Names.PiElement} } from "@projectit/core";
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
             

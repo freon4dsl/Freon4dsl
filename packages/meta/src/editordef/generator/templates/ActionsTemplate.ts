@@ -2,6 +2,7 @@ import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiLangBinaryExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
+import { LangUtil } from "./LangUtil";
 
 export class ActionsTemplate {
     constructor() {
@@ -72,18 +73,18 @@ export class ActionsTemplate {
                 ${flatten(language.classes.map(c => c.parts)).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referedElement();
-                    return `
-                        {
+                    return `${LangUtil.subClasses(partConcept).filter(cls => !cls.isAbstract).map(subClass => 
+                        `{
                             activeInBoxRoles: ["new-${part.name}"],
-                            trigger: "${!!part.type.referedElement().trigger ? part.type.referedElement().getTrigger() : part.name}",
+                            trigger: "${!!editorDef.findConceptEditor(subClass)?.trigger ? editorDef.findConceptEditor(subClass)?.trigger : subClass.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                 var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
-                                const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                                const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}();
                                 parent.${part.name}.push(new${part.name});
                                 return new${part.name};
                             },
                             boxRoleToSelect: "${part.name}-name"
-                        }
+                        }`).join(",\n")}
                 `}).join(",")}
                 ,
                 ${flatten(language.classes.map(c => c.references)).filter(p => p.isList).map(reference => {
@@ -109,17 +110,17 @@ export class ActionsTemplate {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referedElement();
                     return `
-                    {
-                        activeInBoxRoles: ["new-${part.name}"],
-                        trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
-                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
-                            var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
-                            const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
-                            parent.${part.name}.push(new${part.name});
-                            return Promise.resolve(new${part.name});
-                        },
-                        boxRoleToSelect: "${part.name}-name"
-                    }`;
+                    // {
+                    //     activeInBoxRoles: ["new-${part.name}"],
+                    //     trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
+                    //     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
+                    //         var parent: ${Names.concept(parentConcept)} = box.element as ${Names.concept(parentConcept)};
+                    //         const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                    //         parent.${part.name}.push(new${part.name});
+                    //         return Promise.resolve(new${part.name});
+                    //     },
+                    //     boxRoleToSelect: "${part.name}-name"
+                    // }`;
                  }).join(",")}
             ];
             `;
