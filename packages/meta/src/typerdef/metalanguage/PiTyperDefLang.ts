@@ -1,11 +1,14 @@
 import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
-import { PiConcept, PiElementReference } from "../../languagedef/metalanguage";
+import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiConcept, PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangElement } from "../../languagedef/metalanguage/PiLangElement";
 
 export class PiTypeDefinition {
     location: ParseLocation;
     name: string;
     languageName: string;
+    language: PiLanguageUnit;
     typerRules: PiTypeRule[];
     conceptRules: PiTypeConceptRule[];
     typeroot: PiElementReference<PiConcept>;
@@ -14,7 +17,7 @@ export class PiTypeDefinition {
     }
 }
 
-export abstract class PiTypeRule {
+export abstract class PiTypeRule extends PiLangElement {
     location: ParseLocation;
     toPiString() : string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PiTyperDefLang.PiTypeRule'";

@@ -1,4 +1,5 @@
-import { PiLangElement, PiConcept } from "../languagedef/metalanguage";
+import { PiLangElement } from "../languagedef/metalanguage/PiLangElement";
+import { PiConcept } from "../languagedef/metalanguage/PiLanguage";
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
 
 /**

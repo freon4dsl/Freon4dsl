@@ -1,19 +1,20 @@
 import {
     PiConcept,
     PiConceptProperty,
-    PiLangElement,
     PiFunction,
-    PiProperty, PiElementReference, PiInstance
+    PiProperty, PiElementReference, PiInstance, PiLanguageUnit
 } from ".";
 import { ParseLocation } from "../../utils";
+import { PiLangElement } from "./PiLangElement";
 
 // Expressions over the PiLanguage structure
 
-export abstract class PiLangExp {
+export abstract class PiLangExp extends PiLangElement {
     sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
     appliedfeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
     referedElement: PiElementReference<PiLangElement>;  // refers to the element called 'sourceName'
     location: ParseLocation;                            // holds start and end in the parsed file
+    language: PiLanguageUnit;                           // the language for which this expression is defined
 
     // returns the element to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
     findRefOfLastAppliedFeature(): PiProperty {
@@ -51,6 +52,7 @@ export class PiLangConceptExp extends PiLangExp {
 }
 
 export class PiLangAppliedFeatureExp extends PiLangExp {
+    sourceExp: PiLangExp;
     referedElement: PiElementReference<PiProperty>;
 
     toPiString(): string {
@@ -76,6 +78,7 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
     static create(name: string, referred: PiProperty): PiLangAppliedFeatureExp {
         const result = new PiLangAppliedFeatureExp();
         result.referedElement = PiElementReference.create<PiProperty>(referred, "PiProperty");
+        result.referedElement.owner = result;
         result.sourceName = name;
         return result;
     }

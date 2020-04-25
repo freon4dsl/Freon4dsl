@@ -3,11 +3,13 @@ import {
     PiLangSelfExp,
     PiLangAppliedFeatureExp,
     PiLangExp,
-    PiLangConceptExp,
-    PiLangFunctionCallExp, PiInstanceExp
+    PiLangFunctionCallExp,
+    PiInstanceExp,
+    PiLangConceptExp
 } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiClassifier, PiElementReference, PiInstance } from "../metalanguage";
+import { PiClassifier } from "../metalanguage/PiLanguage";
+import { PiElementReference } from "../metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
 export const nameForSelf = "self";
@@ -32,6 +34,7 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     const result = new TestExpressionsForConcept();
     if (!!data.conceptRef) {
         result.conceptRef = data.conceptRef;
+        result.conceptRef.owner = result;
     }
     if (!!data.exps) {
         result.exps = data.exps;
@@ -61,12 +64,12 @@ export function createExpression(data: Partial<PiLangExp>): PiLangExp {
         } else {
             result = new PiLangConceptExp();
             LOGGER.log("createConceptExpression");
-            result.referedElement = PiElementReference.createNamed<PiClassifier>(data.sourceName, "PiClassifier");
             result.sourceName = data.sourceName;
         }
     }
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
+        result.appliedfeature.sourceExp = result;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -83,6 +86,7 @@ export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>):
     }
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
+        result.appliedfeature.sourceExp = result;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -94,7 +98,7 @@ export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
     LOGGER.log("createInstanceExp");
     const result: PiInstanceExp = new PiInstanceExp();
     if (!!data.sourceName) {
-        result.referedElement = PiElementReference.createNamed<PiInstance>(data.sourceName, "PiInstance");
+        result.sourceName = data.sourceName;
     }
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;

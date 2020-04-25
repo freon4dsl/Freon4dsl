@@ -5,7 +5,6 @@ import {
     PiExpressionConcept,
     PiInstance,
     PiInterface,
-    PiLangElement,
     PiFunction,
     PiParameter,
     PiLanguageUnit,
@@ -15,6 +14,7 @@ import {
     PiPropertyInstance,
     PiClassifier
 } from "./PiLanguage";
+import { PiLangElement } from "./PiLangElement";
 
 export type PiLangEveryConcept =
     | PiLangElement

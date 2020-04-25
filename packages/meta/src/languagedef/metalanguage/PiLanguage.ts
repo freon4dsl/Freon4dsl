@@ -1,13 +1,7 @@
-import { ParseLocation } from "../../utils";
 import { PiElementReference } from "./PiElementReference";
+import { PiLangElement } from "./PiLangElement";
 
 const primitiveTypeName = "PiPrimitiveType";
-
-// root of the inheritance structure
-export abstract class PiLangElement {
-    location: ParseLocation;
-    name: string;
-}
 
 export class PiLanguageUnit extends PiLangElement {
     concepts: PiConcept[] = [];
@@ -36,11 +30,11 @@ export class PiLanguageUnit extends PiLangElement {
         return result;
     }
 
-    findExpressionBase(): PiConcept {
+    findExpressionBase(): PiExpressionConcept {
         const result = this.concepts.find(c => {
             return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
         });
-        return result;
+        return result as PiExpressionConcept;
     }
 
     private addPredefinedElements() {
@@ -151,7 +145,7 @@ export class PiConcept extends PiClassifier {
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.primProperties;
-        if (this.base !== undefined) {
+        if (!!this.base) {
             result = result.concat(this.base.referred.allPrimProperties());
         }
         for (let intf of this.interfaces) {
@@ -162,7 +156,7 @@ export class PiConcept extends PiClassifier {
 
     allParts(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.parts();
-        if (this.base !== undefined) {
+        if (!!this.base) {
             result = result.concat(this.base.referred.allParts());
         }
         for (let intf of this.interfaces) {
@@ -173,7 +167,7 @@ export class PiConcept extends PiClassifier {
 
     allReferences(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.references();
-        if (this.base !== undefined) {
+        if (!!this.base) {
             result = result.concat(this.base.referred.allReferences());
         }
         for (let intf of this.interfaces) {

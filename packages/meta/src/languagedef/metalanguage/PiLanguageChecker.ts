@@ -10,7 +10,7 @@ import {
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
 
-const LOGGER = new PiLogger("PiLanguageChecker"); //.mute();
+const LOGGER = new PiLogger("PiLanguageChecker").mute();
 
 // TODO add check: priority only for expression concepts
 
@@ -30,9 +30,21 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.concepts.forEach(concept => this.checkConcept(concept));
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
+        // create and add expressionPlaceHolder
+        let xx = language.findExpressionBase();
+        if (!!xx){
+            let expressionPlaceHolder = new PiExpressionConcept();
+            expressionPlaceHolder.name = "PlaceholderExpression";
+            expressionPlaceHolder.base = PiElementReference.create<PiExpressionConcept>(xx, "PiExpressionConcept");
+            expressionPlaceHolder.base.owner = expressionPlaceHolder;
+            expressionPlaceHolder.language = language;
+            language.concepts.push(expressionPlaceHolder);
+            language.expressionPlaceHolder = expressionPlaceHolder;
+        }
+
         this.simpleCheck(!!language.concepts.find(c => c.isRoot),
             `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
-        LOGGER.info(this, "Language '" + language.name + "' checked");
+        LOGGER.error(this, "Language '" + language.name + "' checked");
     }
 
     private checkConcept(piClass: PiConcept): void {

@@ -1,6 +1,8 @@
 import { PiLangEveryConcept } from "../metalanguage/PiLangEveryConcept";
 import { PiLangConceptType } from "../metalanguage/PiLangConceptType";
-import { PiClassifier, PiFunction, PiLangElement, PiLanguageUnit, PiProperty } from "../metalanguage";
+import { PiClassifier, PiFunction, PiLanguageUnit, PiProperty } from "../metalanguage";
+import { PiTypeDefinition } from "../../typerdef/metalanguage";
+import { PiLangElement } from "../metalanguage/PiLangElement";
 
 export class PiLangNamespace {
     _myElem: PiLangEveryConcept; // any element in the model
@@ -153,19 +155,18 @@ export class PiLangNamespace {
     private addExtras(metatype?: PiLangConceptType, excludeSurrounding?: boolean): PiLangElement[] {
         let result: PiLangElement[] = [];
         // add names from other parts of the namespace definition
-        // if (this._myElem instanceof DemoEntity) {
-        //     // generated based on 'self.baseEntity'
-        //     if (!!this._myElem.baseEntity) {
-        //         if (!this._searched.includes(this._myElem.baseEntity.referred)) {
-        //             if (this.isNameSpace(this._myElem.baseEntity.referred)) {
-        //                 // wrap the found element
-        //                 let extraNamespace = new PiLangNamespace(this._myElem.baseEntity.referred, this._searched);
-        //                 result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
-        //                 this._searched.push(this._myElem.baseEntity.referred);
-        //             }
-        //         }
-        //     }
-        // }
+        if (this._myElem instanceof PiTypeDefinition) {
+            if (!!this._myElem.language) {
+                if (!this._searched.includes(this._myElem.language)) {
+                    if (this.isNameSpace(this._myElem.language)) {
+                        // wrap the found element
+                        let extraNamespace = new PiLangNamespace(this._myElem.language, this._searched);
+                        result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+                        this._searched.push(this._myElem.language);
+                    }
+                }
+            }
+        }
         return result;
     }
 }

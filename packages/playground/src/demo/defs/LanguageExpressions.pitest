@@ -9,7 +9,7 @@ DemoModel {
 DemoEntity {
     self.attrutes;
     self.functions;
-    DemoAttributeType:Inter;
+    //DemoAttributeType:Inter;
     container;
     typeof ( self.attributes );
     typeof ( container );
@@ -29,7 +29,7 @@ DemoFunction {
 DemoVariable {
     
 }
-
+/*
 DemoAbsExpression {
     equalsType( self.expr, DemoAttributeType:Integer ) ;
 }
@@ -68,3 +68,4 @@ DemoIfExpression {
     equalsType( self.condition, DemoAttributeType:Boolean );
     conformsTo( self.whenTrue, self.whenFalse );
 }
+*/

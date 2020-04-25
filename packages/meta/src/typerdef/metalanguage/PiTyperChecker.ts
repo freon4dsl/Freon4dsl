@@ -32,6 +32,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
                 error:  `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' `+
                     `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
                 whenOk: () => {
+                    definition.language = this.language;
                     // sort out the different types of rules
                     this.sortRules(definition);
                     definition.typerRules.forEach(rule => {

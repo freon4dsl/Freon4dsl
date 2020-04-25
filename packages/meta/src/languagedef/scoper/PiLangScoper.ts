@@ -2,7 +2,9 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLangConceptType } from "../metalanguage/PiLangConceptType";
 import { PiLangEveryConcept } from "../metalanguage/PiLangEveryConcept";
 import { PiLangNamespace } from "./PiLangNamespace";
-import { PiLangElement } from "../metalanguage";
+import { PiLangElement } from "../metalanguage/PiLangElement";
+import { PiLangAppliedFeatureExp, PiLangExp } from "../metalanguage";
+import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester";
 
 const LOGGER = new PiLogger("PiLangScoper");
 
@@ -11,11 +13,23 @@ export class PiLangScoper {
     getVisibleElements(modelelement: PiLangEveryConcept, metatype?: PiLangConceptType, excludeSurrounding?: boolean): PiLangElement[] {
         let result: PiLangElement[] = [];
         if (!!modelelement) {
-            let ns = new PiLangNamespace(modelelement);
-            result = ns.getVisibleElements(metatype, excludeSurrounding); // true means that we are excluding names from parent namespaces
+            if (modelelement instanceof PiLangAppliedFeatureExp) {
+                // use alternative scope 'sourceExp.referred'
+                LOGGER.log("searching in " + modelelement.toPiString() + " alternativescope: " + modelelement.sourceExp.referedElement?.referred?.name);
+                let ns = new PiLangNamespace(modelelement.sourceExp.referedElement.referred);
+                result = ns.getVisibleElements(metatype, true); // true means that we are excluding names from parent namespaces
+            } else if (modelelement instanceof PiLangExp || modelelement instanceof TestExpressionsForConcept || modelelement instanceof LanguageExpressionTester) {
+                // use alternative scope 'modelelement.language'
+                let ns = new PiLangNamespace(modelelement.language);
+                result = ns.getVisibleElements(metatype, true); // true means that we are excluding names from parent namespaces
+            } else {
+                let ns = new PiLangNamespace(modelelement);
+                result = ns.getVisibleElements(metatype, excludeSurrounding); // true means that we are excluding names from parent namespaces
+            }
             return result;
         } else {
             LOGGER.error(this, "getVisibleElements: modelelement is null");
+            throw new Error("getVisibleElements: modelelement is null");
             return result;
         }
     }

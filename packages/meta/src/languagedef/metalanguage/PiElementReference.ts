@@ -1,6 +1,6 @@
 import { computed, observable } from "mobx";
 import { PiLangScoper } from "../scoper/PiLangScoper";
-import { PiLangElement } from "./PiLanguage";
+import { PiLangElement } from "./PiLangElement";
 import { PiLangConceptType } from "./PiLangConceptType";
 import { ParseLocation } from "../../utils";
 /**
@@ -36,11 +36,13 @@ export class PiElementReference<T extends PiLangElement>  {
         if (!!this._PI_referred) {
             return this.referred.name;
         } else {
+            console.log("Trying to find: " + this._PI_name + " (" + this.typeName +") in " + this.owner?.name);
             this._PI_referred = this.scoper.getFromVisibleElements(
                 this.owner,
                 this._PI_name,
                 this.typeName
             ) as T;
+            console.log("Found: " + this._PI_referred.name);
         }
         return this._PI_name;
     }

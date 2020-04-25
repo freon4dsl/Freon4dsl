@@ -19,8 +19,6 @@ export class ProjectItTestLanguageExpressions extends ProjectItGeneratePartActio
     generate(): void {
         LOGGER.log("Starting test of language expressions ...");
         super.generate();
-        // this.typerGenerator = new PiTyperGenerator(this.language);
-        // this.typerGenerator.outputfolder = this.outputFolder;
 
         const readTest = new LanguageExpressionParser(this.language).parse(this.testFile.value);
         if (readTest == null) {
