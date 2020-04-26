@@ -3,7 +3,6 @@ import { PiConceptProperty, PiLanguageUnit } from "../../../languagedef/metalang
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
-
 export class NamespaceTemplate {
     constructor() {
     }
