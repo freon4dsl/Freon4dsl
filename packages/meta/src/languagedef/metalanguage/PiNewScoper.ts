@@ -5,7 +5,7 @@ import { PiLangAppliedFeatureExp } from "./PiLangExpressions";
 export class PiNewScoper {
     public language: PiLanguageUnit;
 
-    getFromVisibleElements(owner: PiLangElement, name: string, typeName: string) : PiLangElement {
+    public getFromVisibleElements(owner: PiLangElement, name: string, typeName: string) : PiLangElement {
         let result: PiLangElement;
         if (typeName === "PiConcept" || typeName === "PiExpressionConcept" || typeName === "PiBinaryExpressionConcept") {
             result = this.language.findConcept(name);
