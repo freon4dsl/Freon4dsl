@@ -1,8 +1,9 @@
 import { computed, observable } from "mobx";
-import { PiLangScoper } from "../scoper/PiLangScoper";
+// import { PiLangScoper } from "../scoper/PiLangScoper";
 import { PiLangElement } from "./PiLangElement";
 import { PiLangConceptType } from "./PiLangConceptType";
 import { ParseLocation } from "../../utils";
+import { PiLanguageScoper } from "../scoper/PiLanguageScoper";
 /**
  * Implementation for a (named) reference in ProjectIt.
  * Reference can be set with either a referred object, or with a name.
@@ -18,7 +19,7 @@ export class PiElementReference<T extends PiLangElement>  {
 
     // Need for the scoper to work
     private typeName: PiLangConceptType;
-    private scoper = new PiLangScoper();
+    private scoper = new PiLanguageScoper();
 
     public constructor(referredElement: T, typeName: PiLangConceptType) {
         // super();
