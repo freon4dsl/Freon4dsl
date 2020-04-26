@@ -227,8 +227,8 @@ export class PiExpressionConcept extends PiConcept {
 }
 
 export class PiBinaryExpressionConcept extends PiExpressionConcept {
-    left: PiExpressionConcept;
-    right: PiExpressionConcept;
+    // left: PiExpressionConcept;
+    // right: PiExpressionConcept;
     // TODO move to editor
     symbol: string;
     priority: number;

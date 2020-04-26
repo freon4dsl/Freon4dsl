@@ -101,6 +101,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         }
     }
 
+    // TODO change this into a check on LimitedConcept
     // checkEnumProperty(prop: PiLangEnumProperty) {
     //     LOGGER.log(`Checking enum property '${prop.name}' [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}]`);
     //     // this.simpleCheck(prop.owningConcept !== null,
@@ -133,10 +134,11 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 error: `Element '${element.name}' should have a type [line: ${element.location?.start.line}, column: ${element.location?.start.column}].`,
                 whenOk: () => {
                     this.checkConceptReference(element.type);
+                    // TODO see if we need to add this check??
                     // if (!!element.type.referred) { // error message taken care of by checkConceptReference
                     //     this.nestedCheck({
                     //         check: !(element.type.referred instanceof PiLangEnumeration),
-                    //         error:  `Part or reference property '${element.name}' may not have an enumeration concept as type `+
+                    //         error:  `Reference property '${element.name}' may not have an enumeration concept as type `+
                     //                 `[line: ${element.location?.start.line}, column: ${element.location?.start.column}].`,
                     //         whenOk: () => {
                     //             element.type = this.morfConceptReferenceIntoSubClass(element.type);
@@ -198,28 +200,5 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         piInterface.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         piInterface.properties.forEach(part => this.checkConceptProperty(part));
     }
-
-    // /**
-    //  * This method changes the input into one of its subconcepts based on its referedElement.
-    //  * The return type is PiLangConceptReference, but what is actually returned, is one of its subconcepts.
-    //  */
-    // private morfConceptReferenceIntoSubClass(ref: PiLangConceptReference): PiLangConceptReference {
-    //     let result : PiLangConceptReference = ref;
-    //     if (ref.referred instanceof PiConcept)  {
-    //         result = new PiElementReference<PIConcept>();
-    //     } else if (ref.referred instanceof PiInterface) {
-    //         result = new PiElementReference<PiInterface>();
-    //     } else if (ref.referred instanceof PiLangEnumeration) {
-    //         result = new PiLangEnumerationReference();
-    //     } else if (ref.referred instanceof PiLangUnion) {
-    //         result = new PiLangUnionReference();
-    //     }
-    //     if (result !== ref) {
-    //         result.language = ref.language;
-    //         result.location = ref.location;
-    //         result.name = ref.name;
-    //     }
-    //     return result;
-    // }
 }
 

@@ -1,6 +1,6 @@
 import { PiLangEveryConcept } from "../metalanguage/PiLangEveryConcept";
 import { PiLangConceptType } from "../metalanguage/PiLangConceptType";
-import { PiClassifier, PiFunction, PiLanguageUnit, PiProperty } from "../metalanguage";
+import { PiClassifier, PiConcept, PiFunction, PiInterface, PiLanguageUnit, PiProperty } from "../metalanguage";
 import { PiTypeDefinition } from "../../typerdef/metalanguage";
 import { PiLangElement } from "../metalanguage/PiLangElement";
 
@@ -37,6 +37,9 @@ export class PiLangNamespace {
                     ns.internalVis(metatype).forEach((elem) => {
                         // shadow name in outer namespace if it is already present
                         if (!result.includes(elem)) result.push(elem);
+                        this._searched.push(ns._myElem);
+                        // add extra namespaces from the scope definition
+                        result = result.concat(ns.addExtras(metatype, excludeSurrounding));
                     });
                 }
                 // skip modelelements between parent and the modelelement that is its surrounding namespace
@@ -46,7 +49,7 @@ export class PiLangNamespace {
         return result;
     }
 
-    private internalVis(metatype?: PiLangConceptType): PiLangElement[] {
+    private internalVis(metatype?: PiLangConceptType, excludeBaseType?: boolean): PiLangElement[] {
         let result: PiLangElement[] = [];
 
         if (this._myElem instanceof PiLanguageUnit) {
@@ -155,18 +158,33 @@ export class PiLangNamespace {
     private addExtras(metatype?: PiLangConceptType, excludeSurrounding?: boolean): PiLangElement[] {
         let result: PiLangElement[] = [];
         // add names from other parts of the namespace definition
-        if (this._myElem instanceof PiTypeDefinition) {
-            if (!!this._myElem.language) {
-                if (!this._searched.includes(this._myElem.language)) {
-                    if (this.isNameSpace(this._myElem.language)) {
-                        // wrap the found element
-                        let extraNamespace = new PiLangNamespace(this._myElem.language, this._searched);
-                        result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
-                        this._searched.push(this._myElem.language);
-                    }
-                }
-            }
-        }
+        // add 'self.base' for PiConcept
+        // if (this._myElem instanceof PiConcept) {
+        //     if (!!this._myElem.base?.referred && !!this._myElem.base.referred) {
+        //         if (!this._searched.includes(this._myElem.base.referred)) {
+        //             if (this.isNameSpace(this._myElem.base.referred)) {
+        //                 // wrap the found element
+        //                 let extraNamespace = new PiLangNamespace(this._myElem.base.referred, this._searched);
+        //                 result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+        //                 this._searched.push(this._myElem.base.referred);
+        //             }
+        //         }
+        //     }
+        // }
+        // // add 'self.base' for PiInterface
+        // if (this._myElem instanceof PiInterface) {
+        //     for (let interfaceRef of this._myElem.base) {
+        //         let interf = interfaceRef.referred;
+        //         if (!this._searched.includes(interf)) {
+        //             if (this.isNameSpace(interf)) {
+        //                 // wrap the found element
+        //                 let extraNamespace = new PiLangNamespace(interf, this._searched);
+        //                 result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
+        //                 this._searched.push(interf);
+        //             }
+        //         }
+        //     }
+        // }
         return result;
     }
 }

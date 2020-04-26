@@ -1,7 +1,14 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty, PiPrimitiveProperty } from "./PiLanguage";
+import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty, PiPrimitiveProperty, PiLimitedConcept } from "./PiLanguage";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
-import { PiLangExp, PiLangSelfExp, PiLangAppliedFeatureExp, PiLangConceptExp, PiLangFunctionCallExp } from "./PiLangExpressions";
+import {
+    PiLangExp,
+    PiLangSelfExp,
+    PiLangAppliedFeatureExp,
+    PiLangConceptExp,
+    PiLangFunctionCallExp,
+    PiInstanceExp
+} from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
 
@@ -74,9 +81,9 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     // exp
     public checkLangExp(langExp: PiLangExp, enclosingConcept:PiConcept) {
         LOGGER.log("checkLangExp " + langExp.toPiString() );
-        // if (langRef instanceof PiLangEnumExp) {
-        //     this.checkEnumRefExpression(langRef, enclosingConcept);
-        // } else
+        if (langExp instanceof PiInstanceExp) {
+            this.checkInstanceExpression(langExp, enclosingConcept);
+        } else
         if (langExp instanceof PiLangSelfExp) {
             this.checkSelfExpression(langExp, enclosingConcept);
         } else if (langExp instanceof PiLangConceptExp) {
@@ -107,6 +114,36 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
     //         }
     //     });
     // }
+
+    // LimitedConcept:instanceName
+    public checkInstanceExpression(langExp: PiInstanceExp, enclosingConcept: PiConcept) {
+        LOGGER.log("checkInstanceExpression " + langExp?.toPiString());
+        let myLimitedConcept = this.language.findConcept(langExp.sourceName);
+
+        this.nestedCheck( {
+            check: !!myLimitedConcept,
+            error: `Cannot find limited concept ${langExp.sourceName} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+            whenOk: () => {
+                this.nestedCheck( {
+                    check: myLimitedConcept instanceof PiLimitedConcept,
+                    error: `Concept ${langExp.sourceName} does not defined any instances [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                    whenOk: () => {
+                        this.nestedCheck( {
+                            check: !!langExp.appliedfeature,
+                            error: `A limited concept expression should have an instance name [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                            whenOk: () => {
+                                let foundInstance = (myLimitedConcept as PiLimitedConcept).instances.find(l => l.name === langExp.appliedfeature.sourceName);
+                                this.simpleCheck(!!foundInstance,
+                                    `${langExp.appliedfeature.sourceName} is not a predefined instance of ${myLimitedConcept.name} `+
+                                            `[line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`
+                                );
+                            }
+                        })
+                    }
+                })
+            }
+        });
+    }
 
     // self.XXX
     private checkSelfExpression(langExp: PiLangSelfExp, enclosingConcept:PiConcept) {
@@ -198,4 +235,6 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
             }
         });
     }
+
+
 }

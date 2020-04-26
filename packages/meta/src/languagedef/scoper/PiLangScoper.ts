@@ -3,7 +3,7 @@ import { PiLangConceptType } from "../metalanguage/PiLangConceptType";
 import { PiLangEveryConcept } from "../metalanguage/PiLangEveryConcept";
 import { PiLangNamespace } from "./PiLangNamespace";
 import { PiLangElement } from "../metalanguage/PiLangElement";
-import { PiLangAppliedFeatureExp, PiLangExp } from "../metalanguage";
+import { PiConcept, PiLangAppliedFeatureExp, PiLangExp } from "../metalanguage";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester";
 
 const LOGGER = new PiLogger("PiLangScoper");
@@ -15,9 +15,22 @@ export class PiLangScoper {
         if (!!modelelement) {
             if (modelelement instanceof PiLangAppliedFeatureExp) {
                 // use alternative scope 'sourceExp.referred'
-                LOGGER.log("searching in " + modelelement.toPiString() + " alternativescope: " + modelelement.sourceExp.referedElement?.referred?.name);
-                let ns = new PiLangNamespace(modelelement.sourceExp.referedElement.referred);
-                result = ns.getVisibleElements(metatype, true); // true means that we are excluding names from parent namespaces
+                let item = modelelement.sourceExp.referedElement.referred;
+                if (!!item) {
+                    LOGGER.log("searching for '" + modelelement.toPiString() + "' in alternativescope: " + item?.name);
+                    let ns = new PiLangNamespace(item);
+                    result = ns.getVisibleElements(metatype, true); // true means that we are excluding names from parent namespaces
+                    if (item instanceof PiConcept && !!item.base) {
+                        let base_ns = new PiLangNamespace(item.base.referred);
+                        result = result.concat(base_ns.getVisibleElements(metatype, true)); // true means that we are excluding names from parent namespaces
+                    }
+                    if (item instanceof PiConcept && item.interfaces.length >0) {
+                        for (let i of item.interfaces){
+                            let intf_ns = new PiLangNamespace(i.referred);
+                            result = result.concat(intf_ns.getVisibleElements(metatype, true)); // true means that we are excluding names from parent namespaces
+                        }
+                    }
+                }
             } else if (modelelement instanceof PiLangExp || modelelement instanceof TestExpressionsForConcept || modelelement instanceof LanguageExpressionTester) {
                 // use alternative scope 'modelelement.language'
                 let ns = new PiLangNamespace(modelelement.language);

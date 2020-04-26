@@ -7,6 +7,9 @@ DemoModel {
 }
 
 DemoEntity {
+    self.simpleprop;
+    self.int_attr;
+    self.int_functions;
     self.attrutes;
     self.functions;
     //DemoAttributeType:Inter;
@@ -17,7 +20,7 @@ DemoEntity {
 }
 
 DemoAttribute {
-     DemoVariable;
+     DemoVariable.fgg;
 }
 
 DemoFunction {
@@ -27,13 +30,17 @@ DemoFunction {
 }
 
 DemoVariable {
-    
+    self.extra;
 }
-/*
+
 DemoAbsExpression {
     equalsType( self.expr, DemoAttributeType:Integer ) ;
 }
 
+DemoBinaryExpression {
+    equalsType( self.left, DemoAttributeType:Integer );
+    equalsType( self.right, DemoAttributeType:Integer );
+}
 DemoMultiplyExpression {
     equalsType( self.left, DemoAttributeType:Integer );
     equalsType( self.right, DemoAttributeType:Integer );
@@ -68,4 +75,4 @@ DemoIfExpression {
     equalsType( self.condition, DemoAttributeType:Boolean );
     conformsTo( self.whenTrue, self.whenFalse );
 }
-*/
+
