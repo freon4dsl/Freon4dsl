@@ -3,27 +3,27 @@ validator Demo for language Demo
 DemoModel {
     notEmpty self.entities
     notEmpty self.functions
-    validName // default Identifier
+    validIdentifier // default Identifier
 }
 
 DemoEntity {
     notEmpty self.attributes
     notEmpty self.functions
-    validName
+    validIdentifier
 }
 
 DemoAttribute {
-    validName self.name
+    validIdentifier self.name
 }
 
 DemoFunction {
     typecheck conformsTo (self.expression, self.declaredType)
     notEmpty self.parameters
-    validName 
+    validIdentifier 
 }
 
 DemoVariable {
-    validName 
+    validIdentifier 
 }
 
 DemoAbsExpression {

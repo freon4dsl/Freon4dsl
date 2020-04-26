@@ -10,7 +10,6 @@ export class LanguageExpressionParser extends PiParser<LanguageExpressionTester>
     constructor(language: PiLanguageUnit) {
         super();
         this.parser = pegjsParser;
-        this.msg = "Language Expressions";
         this.language = language;
         this.checker = new PiLanguageExpressionChecker(this.language);
     }

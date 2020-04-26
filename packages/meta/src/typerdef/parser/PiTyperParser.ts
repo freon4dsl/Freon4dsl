@@ -11,7 +11,6 @@ export class PiTyperParser extends PiParser<PiTypeDefinition> {
     constructor(language: PiLanguageUnit) {
         super();
         this.parser = typerParser;
-        this.msg = "Typer";
         this.language = language;
         this.checker = new PiTyperChecker(language);
     }

@@ -64,6 +64,9 @@ export class NamespaceTemplate {
                                 // shadow name in outer namespace if it is already present
                                 if(!result.includes(elem)) result.push(elem);
                             });
+                            // add extra namespaces from the scope definition
+                            this._searched.push(ns._myElem);
+                            result = result.concat(ns.addExtras(metatype, excludeSurrounding));
                         }
                         // skip modelelements between parent and the modelelement that is its surrounding namespace
                         parent = this.getParent(ns._myElem);

@@ -184,7 +184,7 @@ export class ProjectionTemplate {
                                     style: ${Names.styles}.propertykeyword,
                                     selectable: false
                                 }),
-                                ${this.conceptReferenceProjection(ref)},
+                                ${this.conceptReferenceProjection(language, ref)},
                             ], { selectable: false })`
                         }`  )
                 ).join(",")}
@@ -258,7 +258,7 @@ export class ProjectionTemplate {
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
                                 result += this.conceptReferenceListProjection(direction, appliedFeature) + ",";
                             }else {
-                                result += this.conceptReferenceProjection(appliedFeature) + ", ";
+                                result += this.conceptReferenceProjection(language, appliedFeature) + ", ";
                             }
                         }
                     } else {
@@ -311,7 +311,7 @@ export class ProjectionTemplate {
             )`;
     }
 
-    conceptReferenceProjection(appliedFeature: PiLangConceptProperty) {
+    conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiLangConceptProperty) {
         const featureType = appliedFeature.type.name;
         return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}", "< select ${appliedFeature.name}>", "${featureType}",
                     () => {
@@ -322,7 +322,7 @@ export class ProjectionTemplate {
                         }
                     },
                     (option: SelectOption) => {
-                        element.${appliedFeature.name} = new PiElementReference<${featureType}>(${Names.environment(appliedFeature.owningConcept.language)}.getInstance().scoper.getFromVisibleElements(
+                        element.${appliedFeature.name} = new PiElementReference<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                             element,
                             option.label,
                             "${featureType}"

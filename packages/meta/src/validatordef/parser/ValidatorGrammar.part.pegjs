@@ -14,7 +14,7 @@ Validator_Definition
         });
     } 
 
-validnameKey = "validName" ws
+validnameKey = "validIdentifier" ws
 typecheckKey = "typecheck" ws
 notEmptyKey = "notEmpty" ws
 thisKey = "this" ws

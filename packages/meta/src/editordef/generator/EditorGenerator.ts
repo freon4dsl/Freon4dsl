@@ -14,7 +14,7 @@ import {
     UnparserTemplate
 } from "./templates";
 
-const LOGGER = new PiLogger("EditorGenerator"); // .mute();
+const LOGGER = new PiLogger("EditorGenerator").mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";
@@ -36,8 +36,10 @@ export class EditorGenerator {
         if (editDef === null || editDef === undefined) {
             editDef = new DefEditorLanguage();
         }
+        // TODO editDef.language moet veel eerder gezet worden, want anders werken de checks niet, b.v. op concept references
+        // waarom wordt dit hier gezet, terwijl in Checker al resolveReferences wordt gebruikt?????
         editDef.language = this.language;
-        // fill default valuies if they are not there
+        // fill default values if they are not there
         editDef.addDefaults();
 
         const actions = new ActionsTemplate();

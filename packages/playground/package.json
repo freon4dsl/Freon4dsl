@@ -26,7 +26,9 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "test": "jest"
+    "test": "jest",
+    "calculator": "ts-node ../meta/src/commandline/projectit -v all -d src/calculator/defs -o src/calculator",
+    "expressions": "ts-node ../meta/src/commandline/projectit -v all -d src/expressions/defs -o src/expressions"
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.9",
