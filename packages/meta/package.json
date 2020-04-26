@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/meta",
-  "version": "0.0.5",
+  "version": "0.0.4",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,44 +9,18 @@
     "type": "git",
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
-  "bin": {
-    "projectit": "dist/bin/projectit-generate-editor.js"
-  },
   "scripts": {
-    "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
-    "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
-    "edit-parser": "pegjs src/editordef/parser/EditorGrammar.pegjs",
-    "valid-parser": "pegjs src/validatordef/parser/ValidatorGrammar.pegjs",
-    "type-parser": "pegjs src/typerdef/parser/PiTyperGrammar.pegjs", 
-    "lang-exp-parser": "pegjs src/languagedef/parser/ExpressionGrammar.pegjs",
-    "start": "echo Starting meta",
-    "pegjs-concat-language": "cd src/languagedef/parser && bash ./concat.sh",
-    "pegjs-concat-editor": "cd src/editordef/parser && bash ./concat.sh",
-    "pegjs-concat-scoper": "cd src/scoperdef/parser && bash ./concat.sh",
-    "pegjs-concat-typer": "cd src/typerdef/parser && bash ./concat.sh",
-    "pegjs-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
-    "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-typer && yarn pegjs-concat-scoper",
-    "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc ",
+    "start": "tsc -w",
+    "build": "tsc && yarn run copy-scss1 && yarn run copy-scss2",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-scss1": "cp src/editordef/styles/*.scss ./dist/styles",
-    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
-    "publish-local": "npm publish --registry http://localhost:4873",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
-  },
-  "devDependencies": {
-    "@types/pegjs": "^0.10.1",
-    "parjs": "0.12.0",
-    "pegjs": "^0.10.0",
-    "ts-pegjs": "^0.2.6",
-    "prettier": "^2.0.4",
-    "typescript": "^3.8.3"
+    "copy-scss1": "cp ./src/styles/*.scss ./dist/styles",
+    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor"
   },
   "dependencies": {
-    "@microsoft/ts-command-line": "4.3.10",
-    "@types/lodash": "4.14.73",
-    "axios": "0.18.1",
-    "global": "^4.4.0",
-    "pegjs": "^0.10.0"
+    "@projectit/core": "^0.0.4",
+    "@projectit/model": "^0.0.4",
+    "axios": "0.19.0",
+    "prettier": "^1.15.3"
   },
   "publishConfig": {
     "access": "public"
