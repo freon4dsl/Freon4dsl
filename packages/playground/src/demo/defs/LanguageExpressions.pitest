@@ -32,7 +32,7 @@ DemoFunction {
 DemoVariable {
     self.extra;
 }
-
+/*
 DemoAbsExpression {
     equalsType( self.expr, DemoAttributeType:Integer ) ;
 }
@@ -76,3 +76,4 @@ DemoIfExpression {
     conformsTo( self.whenTrue, self.whenFalse );
 }
 
+*/

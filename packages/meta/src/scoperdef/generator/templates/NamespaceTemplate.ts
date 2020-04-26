@@ -3,6 +3,7 @@ import { PiConceptProperty, PiLanguageUnit } from "../../../languagedef/metalang
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
 import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
+
 export class NamespaceTemplate {
     constructor() {
     }
@@ -177,12 +178,12 @@ export class NamespaceTemplate {
                         result = result.concat(`
                         // generated based on '${xx.toPiString()}'
                         for (let ${loopVar} of this._myElem.${xx.appliedfeature.toPiString()}) {
-                            if (!this._searched.includes(this._myElem.${langExpToTypeScript(xx.appliedfeature)}) ) {
+                            if (!this._searched.includes(${loopVarExtended}.${langExpToTypeScript(xx.appliedfeature)}) ) {
                                 if (this.isNameSpace(${loopVarExtended})) {
                                     // wrap the found element
                                     let extraNamespace = new ${generatedClassName}(${loopVarExtended}, this._searched);
                                     result = result.concat(extraNamespace.getVisibleElements(metatype, excludeSurrounding));
-                                    this._searched.push(this._myElem.${langExpToTypeScript(xx.appliedfeature)});
+                                    this._searched.push(${loopVarExtended}.${langExpToTypeScript(xx.appliedfeature)});
                                 }
                             }
                         }`);

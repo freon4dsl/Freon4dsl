@@ -6,7 +6,7 @@ import { PiScopeDef } from "../metalanguage";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
 
-const LOGGER = new PiLogger("ScoperGenerator").mute();
+const LOGGER = new PiLogger("ScoperGenerator"); //.mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguageUnit;

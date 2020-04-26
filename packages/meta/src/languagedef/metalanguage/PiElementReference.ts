@@ -1,17 +1,13 @@
-import { computed, observable } from "mobx";
-// import { PiLangScoper } from "../scoper/PiLangScoper";
 import { PiLangElement } from "./PiLangElement";
 import { PiLangConceptType } from "./PiLangConceptType";
 import { ParseLocation } from "../../utils";
-import { PiLanguageScoper } from "../scoper/PiLanguageScoper";
+import { PiMetaEnvironment } from "./PiMetaEnvironment";
 /**
  * Implementation for a (named) reference in ProjectIt.
  * Reference can be set with either a referred object, or with a name.
  */
 export class PiElementReference<T extends PiLangElement>  {
-    @observable
     private _PI_name: string = "";
-    @observable
     private _PI_referred: T = null;
 
     public owner: PiLangElement;
@@ -19,7 +15,7 @@ export class PiElementReference<T extends PiLangElement>  {
 
     // Need for the scoper to work
     private typeName: PiLangConceptType;
-    private scoper = new PiLanguageScoper();
+    private scoper = PiMetaEnvironment.metascoper;
 
     public constructor(referredElement: T, typeName: PiLangConceptType) {
         // super();
@@ -32,18 +28,17 @@ export class PiElementReference<T extends PiLangElement>  {
         this._PI_referred = null;
     }
 
-    @computed
     get name(): string {
         if (!!this._PI_referred) {
             return this.referred.name;
         } else {
-            console.log("Trying to find: " + this._PI_name + " (" + this.typeName +") in " + this.owner?.name);
+            // console.log("Trying to find: " + this._PI_name + " (" + this.typeName +") in " + this.owner?.name);
             this._PI_referred = this.scoper.getFromVisibleElements(
                 this.owner,
                 this._PI_name,
                 this.typeName
             ) as T;
-            console.log("Found: " + this._PI_referred.name);
+            // console.log("Found: " + this._PI_referred?.name);
         }
         return this._PI_name;
     }

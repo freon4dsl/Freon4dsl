@@ -133,6 +133,12 @@ export class PiInterface extends PiClassifier {
         }
         return result;
     }
+
+    allProperties(): PiProperty[] {
+        let result : PiProperty[] = [];
+        result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
+        return result;
+    }
 }
 
 export class PiConcept extends PiClassifier {
@@ -173,6 +179,12 @@ export class PiConcept extends PiClassifier {
         for (let intf of this.interfaces) {
             result = result.concat(intf.referred.allReferences());
         }
+        return result;
+    }
+
+    allProperties(): PiProperty[] {
+        let result : PiProperty[] = [];
+        result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
 

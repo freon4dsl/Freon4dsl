@@ -50,7 +50,8 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     if (!!data.instances) {
         result.instances = data.instances;
         for (let inst of result.instances) {
-            inst.concept = PiElementReference.create<PiConcept>(result, "PiConcept");
+            inst.concept = PiElementReference.create<PiLimitedConcept>(result, "PiLimitedConcept");
+            inst.concept.owner = inst;
         }
     }
     createCommonConceptProps(data, result);

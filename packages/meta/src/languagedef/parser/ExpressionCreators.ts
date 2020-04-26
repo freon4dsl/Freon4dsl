@@ -32,6 +32,7 @@ export function createTest(data: Partial<LanguageExpressionTester>): LanguageExp
 export function createConceptExps(data: Partial<TestExpressionsForConcept>): TestExpressionsForConcept {
     LOGGER.log("createConceptExps");
     const result = new TestExpressionsForConcept();
+    result.name = data.conceptRef.name + "ExpressionSet";
     if (!!data.conceptRef) {
         result.conceptRef = data.conceptRef;
         result.conceptRef.owner = result;

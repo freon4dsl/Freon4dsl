@@ -1,6 +1,5 @@
 import { Checker } from "../../utils";
 import {
-    PiConceptProperty,
     PiLanguageUnit,
     PiBinaryExpressionConcept,
     PiExpressionConcept,
@@ -9,6 +8,7 @@ import {
 } from "./PiLanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
+import { PiMetaEnvironment } from "./PiMetaEnvironment";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
 
@@ -24,6 +24,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
 
         this.language = language;
+        // Note: this should be done first, otherwise the references will not be resolved
+        PiMetaEnvironment.metascoper.language = language;
 
         // now check the whole language
         // TODO check that all concepts and interfaces have unique names
@@ -44,7 +46,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
         this.simpleCheck(!!language.concepts.find(c => c.isRoot),
             `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
-        LOGGER.error(this, "Language '" + language.name + "' checked");
+        LOGGER.info(this, "Language '" + language.name + "' checked");
     }
 
     private checkConcept(piClass: PiConcept): void {
@@ -52,14 +54,18 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         // TODO check that all properties have unique names
         this.simpleCheck(!!piClass.name, `Concept should have a name [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
 
-        if( piClass.isRoot ) {
-            this.simpleCheck(!this.foundRoot,
-                `There may be only one root class in the language definition [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
-            this.foundRoot = true;
-            piClass.language.rootConcept = piClass;
+        if ( piClass.isRoot ) {
+            this.nestedCheck({
+                check:!this.foundRoot,
+                error: `There may be only one root class in the language definition [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`,
+                whenOk: () => {
+                    this.foundRoot = true;
+                    piClass.language.rootConcept = piClass;
+                }
+            });
         }
 
-        if(!!piClass.base) {
+        if (!!piClass.base) {
             this.checkConceptReference(piClass.base);
             if (!!piClass.base.referred) { // error message taken care of by checkConceptReference
                 this.simpleCheck(piClass.base.referred instanceof PiConcept, `Base concept '${piClass.base.name}' must be a class concept `+
@@ -74,6 +80,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             if (!!intf.referred) { // error message taken care of by checkConceptReference
                 this.simpleCheck(intf.referred instanceof PiInterface, `'${intf.name}' is not an interface concept `+
                         `[line: ${intf.location?.start.line}, column: ${intf.location?.start.column}].`,);
+                // add to the list
+                newInterfaces.push(intf);
             }
         }
         piClass.interfaces = newInterfaces;
