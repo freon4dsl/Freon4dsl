@@ -1,9 +1,9 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses, langExpToTypeScript } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiLangExp,
     PiLangFunctionCallExp,
-    langExpToTypeScript, PiLangSelfExp, PiInstanceExp
+    PiLangSelfExp, PiInstanceExp
 } from "../../../languagedef/metalanguage/PiLangExpressions";
 import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeRule } from "../../metalanguage/PiTyperDefLang";
 

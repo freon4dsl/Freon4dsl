@@ -12,7 +12,7 @@ import {
     ListJoinType,
     MetaEditorProjectionLine
 } from "../../metalanguage";
-import { langExpToTypeScript } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../utils";
 
 export class UnparserTemplate {
     constructor() {

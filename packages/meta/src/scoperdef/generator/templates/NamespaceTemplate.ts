@@ -1,7 +1,7 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiScopeDef } from "../../metalanguage/PiScopeDefLang";
-import { langExpToTypeScript } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../utils";
 
 export class NamespaceTemplate {
     constructor() {

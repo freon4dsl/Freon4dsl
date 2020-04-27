@@ -1,11 +1,14 @@
 import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit, PiProperty, PiConcept, PiPrimitiveProperty, PiClassifier } from "../../languagedef/metalanguage/PiLanguage";
 import { ConceptRuleSet, PiValidatorDef, CheckEqualsTypeRule, ValidationRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
-import { nameForSelf } from "../../languagedef/parser/ExpressionCreators";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
-import { PiElementReference } from "../../languagedef/metalanguage";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
+import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("ValidatorChecker").mute();
 const equalsTypeName = "equalsType";
@@ -75,12 +78,10 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check:!!myProp,
                 error: `Cannot find property 'name' in ${enclosingConcept.name} [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
-                    tr.property = new PiLangSelfExp();
-                    tr.property.sourceName = nameForSelf;
-                    tr.property.referedElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiClassifier");
-                    tr.property.appliedfeature = new PiLangAppliedFeatureExp();
-                    tr.property.appliedfeature.sourceName = "name";
-                    tr.property.appliedfeature.referedElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                    tr.property = PiLangSelfExp.create(enclosingConcept);
+                    tr.property.appliedfeature = PiLangAppliedFeatureExp.create(tr.property,"name", myProp);
+                    // tr.property.appliedfeature.sourceName = "name";
+                    // tr.property.appliedfeature.referedElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                     tr.property.location = tr.location;
                   }
             });

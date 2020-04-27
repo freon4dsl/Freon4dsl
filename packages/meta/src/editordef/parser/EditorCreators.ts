@@ -14,7 +14,12 @@ import {
     DefEditorSubProjection
 } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiConcept, PiElementReference } from "../../languagedef/metalanguage";
+import { PiConcept } from "../../languagedef/metalanguage";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
+import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("EditorCreators").mute();
 // Functions used to create instances of the language classes from the parsed data objects.

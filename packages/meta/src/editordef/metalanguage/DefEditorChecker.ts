@@ -4,7 +4,7 @@ import {
     PiConcept, PiConceptProperty,
     PiLangSelfExp,
     PiLanguageExpressionChecker,
-    PiLanguageUnit, PiElementReference
+    PiLanguageUnit
 } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
 import { DefEditorConcept } from "./DefEditorConcept";
@@ -19,6 +19,11 @@ import {
     MetaEditorProjectionLine
 } from "./MetaEditorProjection";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
+import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
 
@@ -109,9 +114,8 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                     const line = new MetaEditorProjectionLine();
                     line.indent = 0;
                     line.items.push(DefEditorProjectionText.create(prop.name));
-                    const exp = new PiLangSelfExp();
-                    exp.sourceName = "self";
-                    exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
+                    const exp = PiLangSelfExp.create(con);
+                    exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
                     const sub = new DefEditorSubProjection();
                     sub.expression = exp;
                     line.items.push(sub);
@@ -121,9 +125,8 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                 //     const line = new MetaEditorProjectionLine();
                 //     line.indent = 0;
                 //     line.items.push(DefEditorProjectionText.create(prop.name))
-                //     const exp = new PiLangSelfExp();
-                //     exp.sourceName = "self";
-                //     exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
+                //     const exp = new PiLangSelfExp.create(con);
+                //     exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
                 //     const sub = new DefEditorSubProjection();
                 //     sub.expression = exp;
                 //     line.items.push(sub);
@@ -131,16 +134,16 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                 // }
                 for(let prop of con.allParts()){
                     if(prop.isList) {
-                        this.defaultListConceptProperty(prop, coneditor);
+                        this.defaultListConceptProperty(con, prop, coneditor);
                     } else {
-                        this.defaultSingleConceptProperty(prop, coneditor);
+                        this.defaultSingleConceptProperty(con, prop, coneditor);
                     }
                 }
                 for(let prop of con.allReferences()){
                     if(prop.isList) {
-                        this.defaultListConceptProperty(prop, coneditor);
+                        this.defaultListConceptProperty(con, prop, coneditor);
                     } else {
-                        this.defaultSingleConceptProperty(prop,coneditor);
+                        this.defaultSingleConceptProperty(con, prop,coneditor);
                     }
                 }
                 editor.conceptEditors.push(coneditor);
@@ -148,13 +151,12 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         }
     }
 
-    private defaultSingleConceptProperty(prop: PiConceptProperty, coneditor: DefEditorConcept) {
+    private defaultSingleConceptProperty(concept: PiConcept, prop: PiConceptProperty, coneditor: DefEditorConcept) {
         const line = new MetaEditorProjectionLine();
         line.indent = 0;
         line.items.push(DefEditorProjectionText.create(prop.name));
-        const exp = new PiLangSelfExp();
-        exp.sourceName = "self";
-        exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
+        const exp = PiLangSelfExp.create(concept);
+        exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
         const sub = new DefEditorSubProjection();
         sub.expression = exp;
         sub.listJoin = new ListJoin();
@@ -165,15 +167,14 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         coneditor.projection.lines.push(line);
     }
 
-    private defaultListConceptProperty(prop: PiConceptProperty, coneditor: DefEditorConcept) {
+    private defaultListConceptProperty(concept: PiConcept, prop: PiConceptProperty, coneditor: DefEditorConcept) {
         const line1 = new MetaEditorProjectionLine();
         const line2 = new MetaEditorProjectionLine();
         line1.indent = 0;
         line1.items.push(DefEditorProjectionText.create(prop.name));
         line2.indent = 4;
-        const exp = new PiLangSelfExp();
-        exp.sourceName = "self";
-        exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
+        const exp = PiLangSelfExp.create(concept);
+        exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
         const sub = new DefEditorSubProjection();
         sub.expression = exp;
         sub.listJoin = new ListJoin();

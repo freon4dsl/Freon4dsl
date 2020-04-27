@@ -2,12 +2,16 @@ import { Checker } from "../../utils/Checker";
 import {
     PiConcept,
     PiLanguageUnit,
-    PiLanguageExpressionChecker,
-    PiPrimitiveProperty, PiProperty, PiElementReference
+    PiLanguageExpressionChecker, PiProperty
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
 import { refListIncludes } from "../../utils/ModelHelpers";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
+import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<PiScopeDef> {
@@ -59,12 +63,13 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-                    if (!!exp.findRefOfLastAppliedFeature()) {
+                    let xx : PiProperty = exp.findRefOfLastAppliedFeature();
+                    if (!!xx) {
                         this.nestedCheck({
-                            check: (exp.findRefOfLastAppliedFeature().type.referred instanceof PiConcept),
+                            check: (!!xx.type.referred && xx.type.referred instanceof PiConcept),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
-                                this.simpleCheck(refListIncludes(this.myNamespaces, exp.findRefOfLastAppliedFeature().type),
+                                this.simpleCheck(refListIncludes(this.myNamespaces, xx.type),
                                     `A namespace addition should refer to a namespace concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`);
                             }
                         })

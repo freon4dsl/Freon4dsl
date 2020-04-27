@@ -1,6 +1,6 @@
-import { PiNewScoper } from "./PiNewScoper";
+import { PiLangScoper } from "./PiLangScoper";
 
 export class PiMetaEnvironment {
-    static metascoper = new PiNewScoper();
+    static metascoper = new PiLangScoper();
 
 }

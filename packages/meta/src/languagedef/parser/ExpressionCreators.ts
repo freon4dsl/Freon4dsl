@@ -9,6 +9,10 @@ import {
 } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiClassifier } from "../metalanguage/PiLanguage";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
@@ -103,6 +107,7 @@ export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
     }
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
+        result.appliedfeature.sourceExp = result;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -118,6 +123,7 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>): PiLang
     }
     if (!!data.appliedfeature) {
         result.appliedfeature = data.appliedfeature;
+        result.appliedfeature.sourceExp = result;
     }
     if (!!data.actualparams) {
         result.actualparams = data.actualparams;

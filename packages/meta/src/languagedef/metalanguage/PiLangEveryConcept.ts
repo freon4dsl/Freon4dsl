@@ -14,7 +14,7 @@ import {
     PiPropertyInstance,
     PiClassifier
 } from "./PiLanguage";
-import { PiLangElement } from "./PiLangElement";
+import { PiLangElement } from "./PiLanguage";
 
 export type PiLangEveryConcept =
     | PiLangElement

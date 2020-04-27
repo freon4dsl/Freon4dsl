@@ -1,4 +1,4 @@
-import { PiLangElement } from "./PiLangElement";
+import { PiLangElement } from "./PiLanguage";
 import { PiLangConceptType } from "./PiLangConceptType";
 import { ParseLocation } from "../../utils";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";

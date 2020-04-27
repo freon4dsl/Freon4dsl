@@ -1,7 +1,6 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript } from "../../../utils";
 import { PiLanguageUnit, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
-import { langExpToTypeScript } from "../../../languagedef/metalanguage";
 
 export class CheckerTemplate {
     constructor() {

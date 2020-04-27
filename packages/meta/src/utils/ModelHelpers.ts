@@ -1,5 +1,6 @@
-import { PiLangElement } from "../languagedef/metalanguage/PiLangElement";
-import { PiConcept } from "../languagedef/metalanguage/PiLanguage";
+import { PiLangElement } from "../languagedef/metalanguage/";
+import { PiConcept, PiConceptProperty } from "../languagedef/metalanguage/";
+import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp } from "../languagedef/metalanguage";
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
 
 /**
@@ -62,4 +63,28 @@ export function refListIncludes(list: PiElementReference<PiLangElement>[], eleme
  */
 export function isPrimitiveType(type: PiLangElement): boolean {
     return type.name === "string" || type.name === "number" || type.name === "boolean";
+}
+
+export function langExpToTypeScript(exp: PiLangExp): string {
+    // if (exp instanceof PiLangEnumExp) {
+    //     return `${exp.sourceName}.${exp.appliedfeature}`;
+    // } else
+    if (exp instanceof PiLangSelfExp) {
+        return `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
+    } else if (exp instanceof PiLangFunctionCallExp) {
+        return `this.${exp.sourceName} (${exp.actualparams.map(
+            param => `${this.makeTypeExp(param)}`
+        ).join(", ")})`;
+    } else if (exp instanceof PiLangAppliedFeatureExp) {
+        let isRef: boolean = false;
+        if (!!exp.referedElement) {
+            const ref = exp.referedElement;
+            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
+        }
+        return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
+    } else if (exp instanceof PiInstanceExp) {
+        return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`;
+    } else {
+        return exp?.toPiString();
+    }
 }

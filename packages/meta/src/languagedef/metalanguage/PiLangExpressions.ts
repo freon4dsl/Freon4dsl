@@ -1,11 +1,13 @@
-import {
-    PiConcept,
-    PiConceptProperty,
-    PiFunction,
-    PiProperty, PiElementReference, PiInstance, PiLanguageUnit
-} from ".";
+import { PiConcept, PiConceptProperty, PiFunction, PiInstance, PiLanguageUnit, PiProperty } from ".";
 import { ParseLocation } from "../../utils";
-import { PiLangElement } from "./PiLangElement";
+import { PiLangElement } from "./PiLanguage";
+import { nameForSelf } from "../../languagedef/parser/ExpressionCreators";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
+import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+
 
 // Expressions over the PiLanguage structure
 
@@ -33,6 +35,14 @@ export class PiLangSelfExp extends PiLangExp {
     toPiString(): string {
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
     }
+
+    static create(referred: PiConcept): PiLangSelfExp {
+        const result = new PiLangSelfExp();
+        result.referedElement = PiElementReference.create<PiConcept>(referred, "PiConcept");
+        result.referedElement.owner = result;
+        result.sourceName = nameForSelf;
+        return result;
+    }
 }
 
 export class PiInstanceExp extends PiLangExp {
@@ -58,7 +68,7 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
     toPiString(): string {
         let isRef: boolean = false;
         if (!!this.referedElement) {
-            const ref = this.referedElement;
+            const ref = this.referedElement.referred;
             isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
         }
         // return this.sourceName + (isRef ? ".referred" : "") + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
@@ -75,11 +85,12 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
         }
     }
 
-    static create(name: string, referred: PiProperty): PiLangAppliedFeatureExp {
+    static create(owner: PiLangExp, name: string, referred: PiProperty): PiLangAppliedFeatureExp {
         const result = new PiLangAppliedFeatureExp();
         result.referedElement = PiElementReference.create<PiProperty>(referred, "PiProperty");
         result.referedElement.owner = result;
         result.sourceName = name;
+        result.sourceExp = owner;
         return result;
     }
 }
@@ -105,26 +116,3 @@ export class PiLangFunctionCallExp extends PiLangExp {
     }
 }
 
-export function langExpToTypeScript(exp: PiLangExp): string {
-    // if (exp instanceof PiLangEnumExp) {
-    //     return `${exp.sourceName}.${exp.appliedfeature}`;
-    // } else
-    if (exp instanceof PiLangSelfExp) {
-        return `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
-    } else if (exp instanceof PiLangFunctionCallExp) {
-        return `this.${exp.sourceName} (${exp.actualparams.map(
-            param => `${this.makeTypeExp(param)}`
-        ).join(", ")})`
-    } else if (exp instanceof PiLangAppliedFeatureExp) {
-        let isRef: boolean = false;
-        if (!!exp.referedElement) {
-            const ref = exp.referedElement;
-            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
-        }
-        return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
-    } else if (exp instanceof PiInstanceExp) {
-        return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`
-    } else {
-        return exp?.toPiString();
-    }
-}
