@@ -3,11 +3,9 @@ import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiLangExp,
     PiLangFunctionCallExp,
-    langExpToTypeScript, PiLangSelfExp
+    langExpToTypeScript, PiLangSelfExp, PiInstanceExp
 } from "../../../languagedef/metalanguage/PiLangExpressions";
 import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeRule } from "../../metalanguage/PiTyperDefLang";
-import { PiLimitedExp } from "@projectit/playground/src/aa-testproject/language/gen";
-
 
 export class PiTyperTemplate {
     typerdef: PiTypeDefinition;
@@ -258,7 +256,7 @@ export class PiTyperTemplate {
             return `this.${exp.sourceName} (${exp.actualparams.map(
                 param => `${this.makeTypeExp(param)}`
             ).join(", ")})`
-        } else if (exp instanceof PiLimitedExp) {
+        } else if (exp instanceof PiInstanceExp) {
             return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`
         } else{
             return exp?.toPiString();
