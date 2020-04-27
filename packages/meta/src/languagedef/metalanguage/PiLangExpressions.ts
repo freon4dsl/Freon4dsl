@@ -6,7 +6,6 @@ import {
 } from ".";
 import { ParseLocation } from "../../utils";
 import { PiLangElement } from "./PiLangElement";
-import { PiLimitedExp } from "@projectit/playground/src/aa-testproject/language/gen";
 
 // Expressions over the PiLanguage structure
 
@@ -123,7 +122,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
             isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
         }
         return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
-    } else if (exp instanceof PiLimitedExp) {
+    } else if (exp instanceof PiInstanceExp) {
         return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`
     } else {
         return exp?.toPiString();
