@@ -66,9 +66,6 @@ export function isPrimitiveType(type: PiLangElement): boolean {
 }
 
 export function langExpToTypeScript(exp: PiLangExp): string {
-    // if (exp instanceof PiLangEnumExp) {
-    //     return `${exp.sourceName}.${exp.appliedfeature}`;
-    // } else
     if (exp instanceof PiLangSelfExp) {
         return `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
@@ -76,9 +73,11 @@ export function langExpToTypeScript(exp: PiLangExp): string {
             param => `${this.makeTypeExp(param)}`
         ).join(", ")})`;
     } else if (exp instanceof PiLangAppliedFeatureExp) {
+        // TODO this should be replaced by special getters and setters for reference properties
         let isRef: boolean = false;
-        if (!!exp.referedElement) {
-            const ref = exp.referedElement;
+        if (!!exp.referedElement && !!exp.referedElement.referred) { // should be present, otherwise it is an incorrect model
+            // now see whether it is marked in the .lang file as 'reference'
+            const ref = exp.referedElement.referred;
             isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
         }
         return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");

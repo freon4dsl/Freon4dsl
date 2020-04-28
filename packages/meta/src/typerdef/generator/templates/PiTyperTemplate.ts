@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses, langExpToTypeScript } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiClassifier, PiInterface, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiLangExp,
     PiLangFunctionCallExp,
@@ -31,13 +31,15 @@ export class PiTyperTemplate {
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
                 ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";       
+        import { ${language.interfaces.map(intf => `
+                ${intf.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";       
 
         export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType : ${rootType} = ${defaultType};
 
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
                 ${this.makeEqualsStatement()}
-                if ( this.inferType(elem1).$id === this.inferType(elem2).$id) return true;
+                if ( this.inferType(elem1) === this.inferType(elem2)) return true;
                 return false;
             }
         
@@ -158,11 +160,31 @@ export class PiTyperTemplate {
 
         for ( let tr of this.typerdef.typerRules) {
             if (tr instanceof PiTypeIsTypeRule) {
+                let typesAdded: PiClassifier[] = [];
                 for (let type of tr.types) {
-                    let myConceptName = type.name;
-                    result = result.concat(`if (modelelement instanceof ${myConceptName}) {
-                            return modelelement;
-                        }`);
+                    // TODO type.referred should not be of type PiConcept but of type PiClassifier
+                    // TODO create a separate method to find all concepts that are marked'isType' , this if-statement is also used in makeIsType
+                    let realType = type.referred;
+                    if (!!realType && (realType instanceof PiInterface)) {
+                        let yy = realType as PiInterface;
+                        // add a statement for all concepts that implement this interface
+                        this.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === yy )).map (implementor => {
+                            if (!!typesAdded.includes(implementor)) {
+                                result = result.concat(`if (modelelement instanceof ${implementor.name}) {
+                                    return modelelement;
+                                }`)
+                                typesAdded.push(implementor);
+                            }
+                        });
+                    } else {
+                        if (!!typesAdded.includes(realType)) {
+                            let myConceptName = realType.name;
+                            result = result.concat(`if (modelelement instanceof ${myConceptName}) {
+                                return modelelement;
+                            }`);
+                            typesAdded.push(realType);
+                        }
+                    }
                 }
             }
             // TODO check what to do with PiTypeAnyTypeRule
@@ -207,10 +229,29 @@ export class PiTyperTemplate {
         let result : string = "";
         for ( let tr of this.typerdef.typerRules ) {
             if (tr instanceof PiTypeIsTypeRule) {
+                let typesAdded: PiClassifier[] = [];
                 for ( let type of tr.types  ) {
-                    result = result.concat(`if (elem instanceof ${type.name}) {
-                            return true;
-                        }`);
+                    let realType = type.referred;
+                    if (!!realType && (realType instanceof PiInterface)) {
+                        let yy = realType as PiInterface;
+                        // add a statement for all concepts that implement this interface
+                        this.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === yy )).map (implementor => {
+                            if (!!typesAdded.includes(implementor)) {
+                                result = result.concat(`if (elem instanceof ${implementor.name}) {
+                                    return true;
+                                }`)
+                                typesAdded.push(implementor);
+                            }
+                        });
+                    } else {
+                        if (!!typesAdded.includes(realType)) {
+                            let myConceptName = realType.name;
+                            result = result.concat(`if (elem instanceof ${myConceptName}) {
+                                return true;
+                            }`);
+                            typesAdded.push(realType);
+                        }
+                    }
                 }
             }
         }

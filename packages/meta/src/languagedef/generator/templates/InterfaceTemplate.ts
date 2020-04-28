@@ -5,6 +5,7 @@ import {
     PiExpressionConcept,
     PiInterface
 } from "../../metalanguage/PiLanguage";
+import { PROJECTITCORE } from "../../../utils";
 
 export class InterfaceTemplate {
     constructor() {
@@ -32,10 +33,11 @@ export class InterfaceTemplate {
         // Template starts here
         const result = `
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
+            import { ${Names.PiElement} } from "${PROJECTITCORE}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
             
             export ${abstract} interface ${Names.interface(intf)} 
-                ${extendsInterfaces.length>0? `extends ${extendsInterfaces.map(int => `${int}`).join(", ")}`: ``} 
+                extends ${extendsInterfaces.length>0? `${extendsInterfaces.map(int => `${int}`).join(", ")}`: `${Names.PiElement}`} 
             {               
                 ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("")}
                 ${intf.parts().map(p => this.generatePartProperty(p)).join("")}

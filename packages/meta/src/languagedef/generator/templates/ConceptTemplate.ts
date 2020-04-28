@@ -31,7 +31,8 @@ export class ConceptTemplate {
             )
         );
 
-        const predefInstances = (concept instanceof PiLimitedConcept ? this.createInstances(concept as PiLimitedConcept) : ``);
+        const predefInstances = (concept instanceof PiLimitedConcept ? this.createInstances(concept) : ``);
+        const extrasForLimitedConcept = (concept instanceof PiLimitedConcept ? this.createLimitedExtras(concept) : ``);
 
         const binExpConcept: PiBinaryExpressionConcept = isBinaryExpression ? concept as PiBinaryExpressionConcept : null;
         // const expConcept : PiExpressionConcept = isExpression ? concept as PiExpressionConcept : null;
@@ -51,9 +52,6 @@ export class ConceptTemplate {
         );
 
         const mobxImports: string[] = ["model"];
-        // if( element.references.length > 0) {
-        //     mobxImports.push("observable")
-        // }
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }
@@ -86,13 +84,14 @@ export class ConceptTemplate {
 
         // Template starts here
         const result = `
-            ${(concept.primProperties.length > 0 ) ? `import { observable } from "mobx";` : ""}
+            ${(concept.implementedPrimProperties().length > 0 ) ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
             import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PROJECTITCORE}";
             import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
+            
             @model
             export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
@@ -120,6 +119,8 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
                 ${concept.implementedPReferences().map(p => this.generateReferenceProperty(p)).join("")}
 
+                ${extrasForLimitedConcept}
+                
                 piLanguageConcept(): ${language.name}ConceptType {
                     return this.$typename;
                 }
@@ -212,9 +213,35 @@ export class ConceptTemplate {
         // TODO should take into account all properties that are set in the .lang file
         let conceptName = limitedConcept.name;
         return `${limitedConcept.instances.map(predef =>
-                `static ${predef.name}: ${conceptName} = ${conceptName}.create("${predef.name}")` ).join(";")}
-            static $piANY : ${conceptName} = ${conceptName}.create("$piANY");
+                `static ${predef.name}: ${conceptName} = ${conceptName}.fromString("${predef.name}")` ).join(";")}
+            static $piANY : ${conceptName} = ${conceptName}.fromString("$piANY");
 
            static values = [${limitedConcept.instances.map(l => `${conceptName}.${l.name}`).join(", ")}]`
+    }
+
+    private createLimitedExtras(limitedConcept: PiLimitedConcept): string {
+        let conceptName = limitedConcept.name;
+        return `
+        public asString(): string {
+                return this.name;
+            }
+
+            static fromString(v: string): ${conceptName} {
+                switch(v) {
+                    ${limitedConcept.instances.map(predef => `case "${predef.name}":
+                    if (this.${predef.name} !== null) {
+                        return new ${conceptName}("${predef.name}");
+                    } else {
+                        return ${conceptName}.${predef.name};
+                    }`
+        ).join(";")}
+                    default:
+                    if (this.$piANY !== null) {
+                        return new ${conceptName}("$piANY");
+                    } else {
+                        return ${conceptName}.$piANY;
+                    }
+                }
+        }`;
     }
 }

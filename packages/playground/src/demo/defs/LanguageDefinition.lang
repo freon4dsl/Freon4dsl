@@ -18,7 +18,6 @@ interface Type base BaseType {
 }
 
 concept DemoEntity implements Type {
-    name: string;
     attributes: DemoAttribute[];
     functions: DemoFunction[];
     reference baseEntity: DemoEntity;
@@ -36,30 +35,35 @@ concept DemoFunction {
     parameters: DemoVariable[];
 }
 
-concept DemoVariable base SomeOther {
+concept DemoVariable { // base SomeOther {
     name: string;
     reference declaredType: DemoEntity;
 }
-
+/*
 abstract concept SomeOther {
+//TODO editor should also be able to show booleans
     extra: boolean;
 }
-
+*/
 limited DemoAttributeType implements BaseType {
-    id: number;
-
-    String =    { "name": "string", "id": 4 }
-    Integer =   { "name": "number", "id": 3 }
-    Boolean =   { "name": "bool", "id": 2 }
-    ANY =       { "name": "ANY", "id": 0 }
+// TODO editor should be capable to show numbers
+//    id: number;
+//    String =    { "name": "string", "id": 4 }
+//    Integer =   { "name": "number", "id": 3 }
+//    Boolean =   { "name": "bool", "id": 2 }
+//    ANY =       { "name": "ANY", "id": 0 }
+    String =    { "name": "string" }
+    Integer =   { "name": "number" }
+    Boolean =   { "name": "bool" }
+    ANY =       { "name": "ANY" }
 }
 
 abstract expression DemoExpression {
-    appliedfeature: AppliedFeature;
+//    appliedfeature: AppliedFeature;
 }
 
 expression AppliedFeature {
-    appliedfeature: AppliedFeature;
+//    appliedfeature: AppliedFeature;
     value: string;
     reference type: DemoEntity;
 }

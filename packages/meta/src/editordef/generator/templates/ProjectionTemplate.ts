@@ -283,6 +283,7 @@ export class ProjectionTemplate {
                 }`;
     }
 
+    // TODO change this to be used with PiLimitedConcept
     // enumPropertyProjection(p: PiLangEnumProperty) {
     //     return `
     //         this.helpers.enumSelectFor${p.type.name}(element,

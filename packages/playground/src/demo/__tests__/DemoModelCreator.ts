@@ -37,10 +37,10 @@ export class DemoModelCreator {
         let xx: AppliedFeature = new AppliedFeature();
         xx.value = "myfirstAppliedFeature";
         xx.type = new PiElementReference<DemoEntity>(result.entities[1], "DemoEntity"); // Company
-        expression.appliedfeature = xx;
+        // expression.appliedfeature = xx;
         let yy: AppliedFeature = new AppliedFeature();
         yy.value = "mysecondAppliedFeature";
-        xx.appliedfeature = yy;
+        // xx.appliedfeature = yy;
         length.expression = expression;
         return result;
     }

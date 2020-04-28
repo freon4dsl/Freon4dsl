@@ -19,7 +19,7 @@ export class PiLanguageUnit extends PiLangElement {
 
     constructor() {
         super();
-        this.addPredefinedElements();
+        // this.addPredefinedElements();
     }
 
     findConcept(name: string): PiConcept {
