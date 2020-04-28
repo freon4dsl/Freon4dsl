@@ -3,7 +3,6 @@ import {
     DemoNumberLiteralExpression,
     DemoBooleanLiteralExpression,
     DemoStringLiteralExpression,
-    DemoPlaceholderExpression,
     DemoComparisonExpression,
     DemoBinaryExpression,
     DemoLessThenExpression,
@@ -12,11 +11,11 @@ import {
     DemoMultiplyExpression,
     DemoPlusExpression,
     DemoDivideExpression,
-    DemoExpression
+    DemoExpression, PlaceholderExpression
 } from "../language/gen";
 
-export function makeLiteralExp(incoming: any): DemoLiteralExpression {
-    let mine: DemoLiteralExpression;
+export function makeLiteralExp(incoming: any): DemoExpression {
+    let mine: DemoExpression;
     if (typeof incoming === "string" && /[0-9]+/.test(incoming)) {
         mine = new DemoNumberLiteralExpression();
         (mine as DemoNumberLiteralExpression).value = incoming;
@@ -28,7 +27,7 @@ export function makeLiteralExp(incoming: any): DemoLiteralExpression {
         (mine as DemoStringLiteralExpression).value = incoming;
     } else {
         // When no expression can be created, return a place holder expression.
-        mine = new DemoPlaceholderExpression();
+        mine = new PlaceholderExpression();
     }
     return mine;
 }
