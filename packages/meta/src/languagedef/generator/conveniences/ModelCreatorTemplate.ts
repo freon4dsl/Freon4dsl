@@ -42,13 +42,16 @@ export class ModelCreatorTemplate {
         // TODO would like to use allProperties() here, but PrimProperties give error
         let paramlist: string[] = [];
         for (let prop of concept.allPrimProperties()) {
-            paramlist.push(`${prop.name}: ${prop.primType}`);
+            let questionmark = (prop.isOptional ? `?` : ``);
+            paramlist.push(`${prop.name}${questionmark}: ${prop.primType}`);
         }
         for (let prop of concept.allParts()) {
-            paramlist.push(`${prop.name}: ${prop.type.name}`);
+            let questionmark = (prop.isOptional ? `?` : ``);
+            paramlist.push(`${prop.name}${questionmark}: ${prop.type.name}`);
         }
         for (let prop of concept.allReferences()) {
-            paramlist.push(`${prop.name}: ${prop.type.name}`);
+            let questionmark = (prop.isOptional ? `?` : ``);
+            paramlist.push(`${prop.name}${questionmark}: ${prop.type.name}`);
         }
         return paramlist.join(", ");
         // return `${concept.allParts().map(prop =>

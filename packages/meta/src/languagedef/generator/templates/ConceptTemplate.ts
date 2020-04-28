@@ -4,7 +4,7 @@ import {
     PiConceptProperty,
     PiPrimitiveProperty,
     PiBinaryExpressionConcept,
-    PiExpressionConcept, PiConcept
+    PiExpressionConcept, PiConcept, PiLimitedConcept
 } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
@@ -30,6 +30,8 @@ export class ConceptTemplate {
                 concept.interfaces.map(i => Names.interface(i.referred))
             )
         );
+
+        const predefInstances = (concept instanceof PiLimitedConcept ? this.createInstances(concept as PiLimitedConcept) : ``);
 
         const binExpConcept: PiBinaryExpressionConcept = isBinaryExpression ? concept as PiBinaryExpressionConcept : null;
         // const expConcept : PiExpressionConcept = isExpression ? concept as PiExpressionConcept : null;
@@ -113,6 +115,7 @@ export class ConceptTemplate {
         }
                 }
                 
+                ${predefInstances}
                 ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("")}
                 ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
                 ${concept.implementedPReferences().map(p => this.generateReferenceProperty(p)).join("")}
@@ -203,5 +206,15 @@ export class ConceptTemplate {
         return `
             ${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType};
         `;
+    }
+
+    private createInstances(limitedConcept: PiLimitedConcept) {
+        // TODO should take into account all properties that are set in the .lang file
+        let conceptName = limitedConcept.name;
+        return `${limitedConcept.instances.map(predef =>
+                `static ${predef.name}: ${conceptName} = ${conceptName}.create("${predef.name}")` ).join(";")}
+            static $piANY : ${conceptName} = ${conceptName}.create("$piANY");
+
+           static values = [${limitedConcept.instances.map(l => `${conceptName}.${l.name}`).join(", ")}]`
     }
 }

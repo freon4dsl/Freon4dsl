@@ -54,7 +54,6 @@ expression PercentageExpression base Expression {
 }
 
 expression MoneyLiteralExp base LiteralExpression {
-    value : string;
 }
 
 concept TaxRuleCall {//base FunctionCallExpression {
@@ -87,15 +86,16 @@ limited TaxPayerType {
 
 // import Expression lib
 abstract expression Expression {
-    appliedfeature: AppliedFeature;
+    //appliedfeature?: AppliedFeature;
 }
-
+/*
+TODO add appliedFeature when the editor is capable of working with placeholders in general
 expression AppliedFeature {
     appliedfeature: AppliedFeature;
     value: string;
     // reference type: Entity;
 }
-
+*/
 // expression placeholder PlaceholderExpression {
 //    appliedfeature: AppliedFeature;
 // }

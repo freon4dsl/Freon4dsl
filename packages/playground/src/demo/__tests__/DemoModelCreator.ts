@@ -12,7 +12,6 @@ import {
     DemoStringLiteralExpression,
     DemoAndExpression,
     DemoPlusExpression,
-    DemoPlaceholderExpression,
     DemoModel,
     DemoAttributeType,
     DemoExpression,
@@ -24,7 +23,7 @@ import {
     DemoGreaterThenExpression,
     DemoEqualsExpression,
     DemoLiteralExpression,
-    AppliedFeature
+    AppliedFeature, PlaceholderExpression
 } from "../language/gen";
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import { DemoUnparser } from "../unparser/DemoUnparser";
@@ -139,7 +138,7 @@ export class DemoModelCreator {
         const another = DemoFunction.create("another");
         const NOOT = DemoVariable.create("NOOT");
         another.parameters.push(NOOT);
-        another.expression = this.addComplexExpression2(companyName);
+        another.expression = this.addComplexExpression2(NOOT);
         // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         companyEnt.functions.push(another);
@@ -148,9 +147,9 @@ export class DemoModelCreator {
         correctModel.entities.push(personEnt);
         correctModel.entities.push(companyEnt);
 
-        this.addEntityTypes(
-            companyEnt,
-            personEnt,
+        this.addSimpleTypes(
+            // companyEnt,
+            // personEnt,
             personName,
             companyName,
             age,
@@ -219,20 +218,20 @@ export class DemoModelCreator {
         AAP: DemoVariable,
         NOOT: DemoVariable
     ) {
-        personName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
-        companyName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
-        age.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
-        VAT_Number.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
-        length.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
-        first.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        last.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        determine.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        another.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        Variable1.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        VariableNumber2.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        Resultvar.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        AAP.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
-        NOOT.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        // personName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        // companyName.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        // age.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        // VAT_Number.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        // length.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
+        // first.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // last.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // determine.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // another.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // Variable1.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // VariableNumber2.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // Resultvar.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // AAP.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        // NOOT.declaredType = new PiElementReference<DemoEntity>(companyEnt, "DemoEntity");
     }
 
     private addComplexExpression1(): DemoExpression {
@@ -249,12 +248,12 @@ export class DemoModelCreator {
         return plusExpression;
     }
 
-    private addComplexExpression2(attr: DemoAttribute): DemoExpression {
+    private addComplexExpression2(attr: DemoVariable): DemoExpression {
         // ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         const varRef = new DemoVariableRef();
         // varRef.referredName = "Variable1";
-        varRef.variable = new PiElementReference<DemoAttribute>(attr, "DemoAttribute");
+        varRef.variable = PiElementReference.create<DemoVariable>(attr, "DemoAttribute");
 
         const equals: DemoBinaryExpression = MakeEqualsExp("No", varRef); // ("=");
         // equals : "No" = Variable1
@@ -283,7 +282,7 @@ export class DemoModelCreator {
         const divideExpression = MakePlusExp("1", "2");
         // divideExpression : (1/2)
 
-        const multiplyExpression = MakeMultiplyExp(divideExpression, new DemoPlaceholderExpression());
+        const multiplyExpression = MakeMultiplyExp(divideExpression, new PlaceholderExpression());
         // multiplyExpression : (1/2) * ...
 
         const plusExpression = MakePlusExp(thenExpression, multiplyExpression);

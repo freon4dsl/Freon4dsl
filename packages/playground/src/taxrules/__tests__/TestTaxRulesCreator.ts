@@ -46,8 +46,8 @@ export class TestTaxRulesCreator extends TaxRulesCreator {
 
     private addRulesToSet(ruleset: TaxRuleSet) {
         let condition = this.createEqualsExpression(
-            this.createStringLiteralExpression("incomePart.souceType"),
-            this.createStringLiteralExpression("SouceType.Company")
+            this.createStringLiteralExpression("incomePart.souceType" ),
+            this.createStringLiteralExpression("SouceType.Company" )
         );
         let exp = this.createMultiplyExpression(
             this.createPercentageExpression(this.createNumberLiteralExpression("40")),

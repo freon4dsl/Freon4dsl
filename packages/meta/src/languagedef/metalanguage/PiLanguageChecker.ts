@@ -33,6 +33,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
         // create and add expressionPlaceHolder
+        // TODO remove the addition of a placeholder as soon as the editor is capable of working with placeholders in general
         let xx = language.findExpressionBase();
         if (!!xx){
             let expressionPlaceHolder = new PiExpressionConcept();
@@ -40,6 +41,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             expressionPlaceHolder.base = PiElementReference.create<PiExpressionConcept>(xx, "PiExpressionConcept");
             expressionPlaceHolder.base.owner = expressionPlaceHolder;
             expressionPlaceHolder.language = language;
+            expressionPlaceHolder._isPlaceHolder = true;
             language.concepts.push(expressionPlaceHolder);
             language.expressionPlaceHolder = expressionPlaceHolder;
         }
