@@ -162,34 +162,25 @@ export class PiConcept extends PiClassifier {
     triggerIsRegExp: boolean;
 
     allPrimProperties(): PiPrimitiveProperty[] {
-        let result: PiPrimitiveProperty[] = this.primProperties;
+        let result: PiPrimitiveProperty[] = this.implementedPrimProperties();
         if (!!this.base) {
             result = result.concat(this.base.referred.allPrimProperties());
-        }
-        for (let intf of this.interfaces) {
-            result = result.concat(intf.referred.allPrimProperties());
         }
         return result;
     }
 
     allParts(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.parts();
+        let result: PiConceptProperty[] = this.implementedParts();
         if (!!this.base) {
             result = result.concat(this.base.referred.allParts());
-        }
-        for (let intf of this.interfaces) {
-            result = result.concat(intf.referred.allParts());
         }
         return result;
     }
 
     allReferences(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = this.references();
+        let result: PiConceptProperty[] = this.implementedReferences();
         if (!!this.base) {
             result = result.concat(this.base.referred.allReferences());
-        }
-        for (let intf of this.interfaces) {
-            result = result.concat(intf.referred.allReferences());
         }
         return result;
     }
@@ -203,7 +194,16 @@ export class PiConcept extends PiClassifier {
     implementedPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.primProperties;
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referred.allPrimProperties());
+            for (let intfProp of intf.referred.allPrimProperties()) {
+                let includes = false;
+                // if the prop from the interface is present in this concept, do not include
+                includes = this.primProperties.some(p => p.name === intfProp.name );
+                // if the prop from the interface is present in the base of this concept, do not include
+                if (!includes && !!this.base && !!this.base.referred) includes = this.base.referred.allPrimProperties().some(p => p.name === intfProp.name );
+                if (!includes) {
+                    result = result.concat(intfProp);
+                }
+            }
         }
         return result;
     }
@@ -211,22 +211,40 @@ export class PiConcept extends PiClassifier {
     implementedParts(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.parts();
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referred.allParts());
+            for (let intfProp of intf.referred.allParts()) {
+                let includes = false;
+                // if the prop from the interface is present in this concept, do not include
+                includes = this.parts().some(p => p.name === intfProp.name);
+                // if the prop from the interface is present in the base of this concept, do not include
+                if (!includes && !!this.base && !!this.base.referred) includes = this.base.referred.allParts().some(p => p.name === intfProp.name);
+                if (!includes) {
+                    result = result.concat(intfProp);
+                }
+            }
         }
         return result;
     }
 
-    implementedPReferences(): PiConceptProperty[] {
+    implementedReferences(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.references();
         for (let intf of this.interfaces) {
-            result = result.concat(intf.referred.allReferences());
+            for (let intfProp of intf.referred.allReferences()) {
+                let includes = false;
+                // if the prop from the interface is present in this concept, do not include
+                includes = this.references().some(p => p.name === intfProp.name);
+                // if the prop from the interface is present in the base of this concept, do not include
+                if (!includes && !!this.base && !!this.base.referred) includes = this.base.referred.allReferences().some(p => p.name === intfProp.name);
+                if (!includes) {
+                    result = result.concat(intfProp);
+                }
+            }
         }
         return result;
     }
 
     implementedProperties(): PiProperty[] {
         let result : PiProperty[] = [];
-        result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedPReferences());
+        result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedReferences());
         return result;
     }
 

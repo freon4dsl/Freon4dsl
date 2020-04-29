@@ -117,7 +117,7 @@ export class ConceptTemplate {
                 ${predefInstances}
                 ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("")}
                 ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
-                ${concept.implementedPReferences().map(p => this.generateReferenceProperty(p)).join("")}
+                ${concept.implementedReferences().map(p => this.generateReferenceProperty(p)).join("")}
 
                 ${extrasForLimitedConcept}
                 
