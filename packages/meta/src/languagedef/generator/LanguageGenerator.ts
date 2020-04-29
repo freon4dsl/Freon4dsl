@@ -74,7 +74,7 @@ export class LanguageGenerator {
         // });
 
         language.interfaces.forEach(piInterface => {
-            LOGGER.log("Generating union: " + piInterface.name);
+            LOGGER.log("Generating interface: " + piInterface.name);
             var generated = Helpers.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(piInterface)}.ts`, generated);
         });

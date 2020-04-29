@@ -181,8 +181,6 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         sub.listJoin.direction = Direction.Vertical;
         sub.listJoin.joinType = ListJoinType.Separator;
         sub.listJoin.joinText = "";
-        line2.items.push(sub);
-        coneditor.projection.lines.push(line1);
-        coneditor.projection.lines.push(line2);
+        return sub;
     }
 }

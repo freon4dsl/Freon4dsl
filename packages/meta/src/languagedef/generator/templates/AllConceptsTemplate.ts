@@ -14,6 +14,10 @@ export class AllConceptsTemplate {
         language.interfaces.map(c =>
             tmp.push(Names.interface(c))
         );
+        language.interfaces.map(c =>
+            tmp.push(Names.interface(c))
+        );
+
         tmp = tmp.sort();
 
         // the template starts here

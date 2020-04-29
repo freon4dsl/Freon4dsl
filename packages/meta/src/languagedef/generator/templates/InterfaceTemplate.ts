@@ -16,6 +16,7 @@ export class InterfaceTemplate {
         const hasSuper = intf.base.length > 0;
         const extendsInterfaces: string[] = Array.from (
             new Set (intf.base.map ( elem => Names.interface(elem.referred) )));
+        // const extendsClass = hasSuper ? `extends ${Names.concept(intf.base.referred)}, PiElement ` : "extends PiElement";
         const hasName = intf.primProperties.some(p => p.name === "name");
         // const abstract = (concept.isAbstract ? "abstract" : "");
         const abstract = '';

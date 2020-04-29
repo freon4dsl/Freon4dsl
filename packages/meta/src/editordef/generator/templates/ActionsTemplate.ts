@@ -2,6 +2,7 @@ import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
+import { LangUtil } from "./LangUtil";
 
 export class ActionsTemplate {
     constructor() {
@@ -71,18 +72,18 @@ export class ActionsTemplate {
                 ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referred;
-                    return `
-                        {
+                    return `${LangUtil.subClasses(partConcept).filter(cls => !cls.isAbstract).map(subClass => 
+                        `{
                             activeInBoxRoles: ["new-${part.name}"],
-                            trigger: "${!!editorDef.findConceptEditor(part.type.referred).trigger ? `${editorDef.findConceptEditor(part.type.referred).trigger}` : part.name}",
+                            trigger: "${!!editorDef.findConceptEditor(subClass)?.trigger ? editorDef.findConceptEditor(subClass)?.trigger : subClass.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                 var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
-                                const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                                const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}();
                                 parent.${part.name}.push(new${part.name});
                                 return new${part.name};
                             },
                             boxRoleToSelect: "${part.name}-name"
-                        }
+                        }`).join(",\n")}
                 `}).join(",")}
                 ,
                 ${flatten(language.concepts.map(c => c.references())).filter(p => p.isList).map(reference => {
@@ -107,18 +108,19 @@ export class ActionsTemplate {
                 ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referred;
+                    // TODO add keyboartd shortcut
                     return `
-                    {
-                        activeInBoxRoles: ["new-${part.name}"],
-                        trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
-                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
-                            var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
-                            const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
-                            parent.${part.name}.push(new${part.name});
-                            return Promise.resolve(new${part.name});
-                        },
-                        boxRoleToSelect: "${part.name}-name"
-                    }`;
+                    // {
+                    //     activeInBoxRoles: ["new-${part.name}"],
+                    //     trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
+                    //     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
+                    //         var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
+                    //         const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                    //         parent.${part.name}.push(new${part.name});
+                    //         return Promise.resolve(new${part.name});
+                    //     },
+                    //     boxRoleToSelect: "${part.name}-name"
+                    // }`;
                  }).join(",")}
             ];
             `;
