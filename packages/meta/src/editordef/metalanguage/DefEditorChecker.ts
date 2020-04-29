@@ -2,7 +2,7 @@ import {
     PiLangAppliedFeatureExp,
     PiLangBinaryExpressionConcept,
     PiLangClassReference,
-    PiLangConcept, PiLangConceptProperty,
+    PiLangConcept, PiLangConceptProperty, PiLangPrimitiveProperty, PiLangProperty,
     PiLangSelfExp,
     PiLanguageExpressionChecker,
     PiLanguageUnit
@@ -106,28 +106,10 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                 coneditor.projection.name = "default";
                 coneditor.projection.conceptEditor = coneditor;
                 for(let prop of con.allPrimProperties()){
-                    const line = new MetaEditorProjectionLine();
-                    line.indent = 0;
-                    line.items.push(DefEditorProjectionText.create(prop.name))
-                    const exp = new PiLangSelfExp();
-                    exp.sourceName = "self";
-                    exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
-                    const sub = new DefEditorSubProjection();
-                    sub.expression = exp;
-                    line.items.push(sub);
-                    coneditor.projection.lines.push(line);
+                    this.defaultSingleProperty(prop, coneditor);
                 }
                 for(let prop of con.allEnumProperties()){
-                    const line = new MetaEditorProjectionLine();
-                    line.indent = 0;
-                    line.items.push(DefEditorProjectionText.create(prop.name))
-                    const exp = new PiLangSelfExp();
-                    exp.sourceName = "self";
-                    exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
-                    const sub = new DefEditorSubProjection();
-                    sub.expression = exp;
-                    line.items.push(sub);
-                    coneditor.projection.lines.push(line);
+                    this.defaultSingleProperty(prop, coneditor)
                 }
                 for(let prop of con.allParts()){
                     if(prop.isList) {
@@ -148,7 +130,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         }
     }
 
-    private defaultSingleConceptProperty(prop: PiLangConceptProperty, coneditor: DefEditorConcept) {
+    private defaultSingleProperty(prop: PiLangProperty, coneditor: DefEditorConcept) {
         const line = new MetaEditorProjectionLine();
         line.indent = 0;
         line.items.push(DefEditorProjectionText.create(prop.name));
@@ -157,10 +139,15 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
         const sub = new DefEditorSubProjection();
         sub.expression = exp;
-        sub.listJoin = new ListJoin();
-        sub.listJoin.direction = Direction.Vertical;
-        sub.listJoin.joinType = ListJoinType.Separator;
-        sub.listJoin.joinText = "";
+        line.items.push(sub);
+        coneditor.projection.lines.push(line);
+    }
+
+    private defaultSingleConceptProperty(prop: PiLangConceptProperty, coneditor: DefEditorConcept) {
+        const line = new MetaEditorProjectionLine();
+        line.indent = 0;
+        line.items.push(DefEditorProjectionText.create(prop.name));
+        const sub = this.defaultSubProjection(prop);
         line.items.push(sub);
         coneditor.projection.lines.push(line);
     }
@@ -171,6 +158,13 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         line1.indent = 0;
         line1.items.push(DefEditorProjectionText.create(prop.name));
         line2.indent = 4;
+        const sub = this.defaultSubProjection(prop);
+        line2.items.push(sub);
+        coneditor.projection.lines.push(line1);
+        coneditor.projection.lines.push(line2);
+    }
+
+    private defaultSubProjection(prop: PiLangConceptProperty) {
         const exp = new PiLangSelfExp();
         exp.sourceName = "self";
         exp.appliedfeature = PiLangAppliedFeatureExp.create(prop.name, prop);
@@ -180,8 +174,6 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         sub.listJoin.direction = Direction.Vertical;
         sub.listJoin.joinType = ListJoinType.Separator;
         sub.listJoin.joinText = "";
-        line2.items.push(sub);
-        coneditor.projection.lines.push(line1);
-        coneditor.projection.lines.push(line2);
+        return sub;
     }
 }
