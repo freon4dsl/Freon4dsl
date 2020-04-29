@@ -17,7 +17,7 @@ export class PiElementReference<T extends PiLangElement>  {
     private typeName: PiLangConceptType;
     private scoper = PiMetaEnvironment.metascoper;
 
-    public constructor(referredElement: T, typeName: PiLangConceptType) {
+    private constructor(referredElement: T, typeName: PiLangConceptType) {
         // super();
         this.referred = referredElement;
         this.typeName = typeName;
