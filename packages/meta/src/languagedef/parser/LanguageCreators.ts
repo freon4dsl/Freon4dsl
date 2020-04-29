@@ -120,6 +120,9 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
     const result = new PiBinaryExpressionConcept();
     result.isRoot = !!data.isRoot;
     result.isAbstract = !!data.isAbstract;
+    if( !!data.priority ) {
+        result.priority = data.priority;
+    }
     createCommonConceptProps(data, result);
     return result;
 }

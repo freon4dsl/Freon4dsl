@@ -92,9 +92,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         piClass.properties.forEach(part => this.checkConceptProperty(part));
 
         if (piClass instanceof PiBinaryExpressionConcept && !(piClass.isAbstract)) {
-            const binExpConcept = piClass as PiBinaryExpressionConcept;
             // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
-            this.simpleCheck(binExpConcept.getPriority() !== -1,
+            this.simpleCheck(piClass.getPriority() !== -1,
                 `Concept ${piClass.name} should have a priority [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
 
             const left = piClass.allParts().find(part => part.name === "left");
