@@ -22,6 +22,11 @@ export class PiLanguageUnit extends PiLangElement {
         // this.addPredefinedElements();
     }
 
+    conceptsAndInterfaces(): PiClassifier[] {
+        const result: PiClassifier[] = this.concepts;
+        return result.concat(this.interfaces);
+    }
+
     findConcept(name: string): PiConcept {
         return this.concepts.find(con => con.name === name);
     }

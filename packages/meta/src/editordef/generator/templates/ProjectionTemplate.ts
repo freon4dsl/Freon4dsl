@@ -278,6 +278,7 @@ export class ProjectionTemplate {
                 ]);
             `;
         }
+        if( result === "" ){ result = "null"}
         return `public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     return ${result};
                 }`;

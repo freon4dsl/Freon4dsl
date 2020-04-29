@@ -63,7 +63,10 @@ interface = interfaceKey ws name:var ws base:interfacebase? curly_begin props:pr
     }
 
 expression = isRoot:rootKey? abs:abstractKey? binary:binaryKey? expressionKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
-                curly_begin props:property* priority:priority? curly_end
+                curly_begin
+                    props:property*
+                    priority:priority?
+                curly_end
     {
         if (!!binary) {
             return create.createBinaryExpressionConcept({
