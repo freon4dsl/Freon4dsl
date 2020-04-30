@@ -77,12 +77,13 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 this.generateScoper();
                 this.generateTyper();
             } catch (e) {
-                LOGGER.error(this, "Stopping generation because of errors in the language definition: " + e.message);
+                LOGGER.error(this, "Stopping generation because of errors in the language definition: " + e.message + "\n");
             }
             if (this.watch){
                 LOGGER.info(this, "Watching language definition files ...");
             }
         } catch (e) {
+            // TODO this catch is here for debugging purposes, should be removed
             LOGGER.error(this, e.stack);
         }
     }
@@ -100,7 +101,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
-            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
         }
     };
 
@@ -117,7 +118,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e) {
-            LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
         }
     };
 
@@ -134,7 +135,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {
-            LOGGER.error(this, "Stopping validator generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
         }
     };
 
@@ -151,7 +152,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.editorGenerator.language = this.language;
             this.editorGenerator.generate(editor);
         } catch (e) {
-            LOGGER.error(this, "Stopping editor generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping editor generation because of errors: " + e.message + "\n" + e.stack);
         }
     };
 

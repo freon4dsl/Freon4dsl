@@ -1,5 +1,5 @@
-import { Names, PathProvider, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiLangClass } from "../../metalanguage/PiLanguage";
+import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
 
 export class WalkerTemplate {
@@ -13,10 +13,8 @@ export class WalkerTemplate {
         // Template starts here 
         return `
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${language.classes.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
-        import { ${language.enumerations.map(concept => `
-            ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
+        import { ${language.concepts.map(concept => `
+                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
 
             // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
@@ -28,13 +26,13 @@ export class WalkerTemplate {
             myWorker : ${Names.workerInterface(language)};
 
             public walk(modelelement: ${allLangConcepts}, includeChildren?: boolean) {
-                ${sortClasses(language.classes).map(concept => `
+                ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
                     return this.walk${concept.name}(modelelement, includeChildren );
                 }`).join("")}
             }
 
-            ${language.classes.map(concept => `
+            ${language.concepts.map(concept => `
                 public walk${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) {
                     if(!!this.myWorker) {
 
@@ -59,14 +57,6 @@ export class WalkerTemplate {
                 } else {
                     LOGGER.error(this, "No worker found.");
                     return;
-                }
-            }`).join("\n")}
-
-            ${language.enumerations.map(concept => `
-            public walk${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) {
-                if(!!this.myWorker) {
-                    this.myWorker.execBefore${concept.name}(modelelement);
-                    this.myWorker.execAfter${concept.name}(modelelement);
                 }
             }`).join("\n")}
         }`;

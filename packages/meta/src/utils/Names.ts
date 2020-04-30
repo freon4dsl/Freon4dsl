@@ -1,4 +1,7 @@
-import { PiLangConcept, PiLangEnumeration, PiLangInterface, PiLanguageUnit, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
+import {
+    PiClassifier, PiConcept, PiInterface,
+    PiLanguageUnit
+} from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -70,19 +73,15 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Initialization";
     }
 
-    public static concept(concept: PiLangConcept): string {
+    public static concept(concept: PiConcept): string {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static enumeration(enumeration: PiLangEnumeration): string {
-        return this.startWithUpperCase(enumeration?.name);
+    public static classifier(concept: PiClassifier): string {
+        return this.startWithUpperCase(concept?.name);
     }
 
-    public static union(union: PiLangUnion): string {
-        return this.startWithUpperCase(union?.name);
-    }
-
-    public static interface(interf: PiLangInterface): string {
+    public static interface(interf: PiInterface): string {
         return this.startWithUpperCase(interf?.name);
     }
 
@@ -103,11 +102,11 @@ export class Names {
     }
 
     public static validator(language: PiLanguageUnit): string {
-        return this.startWithUpperCase(language?.name) + "Validator"; 
+        return this.startWithUpperCase(language?.name) + "Validator";
     }
 
     public static checker(language: PiLanguageUnit): string {
-        return this.startWithUpperCase(language?.name) + "Checker"; 
+        return this.startWithUpperCase(language?.name) + "Checker";
     }
 
     public static typer(language: PiLanguageUnit): string {
@@ -115,7 +114,7 @@ export class Names {
     }
 
     public static unparser(language: PiLanguageUnit): string {
-        return this.startWithUpperCase(language?.name) + "Unparser"; 
+        return this.startWithUpperCase(language?.name) + "Unparser";
     }
 
     public static walker(language: PiLanguageUnit): string {

@@ -2,7 +2,6 @@ import * as React from "react";
 import { Link } from "@fluentui/react";
 import { Grid, Segment, Flex, Text, Image, Header } from "@fluentui/react-northstar";
 import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
-import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
 import Menubar from "./Menubar";
 import { EditorArea } from "./EditorArea";
 const Logo = require("../images/inverse-colors.png");

@@ -12,13 +12,17 @@ conceptRef = name:var { return expCreate.createConceptReference( { "name": name,
 langExpression = functionExpression:functionExpression  { return functionExpression; }
                   / expression:expression                  { return expression; }
 
-expression = sourceName:var ':' literal:var  {
-                                                return expCreate.createEnumReference ({
-                                                  "sourceName": sourceName,
-                                                  "appliedfeature": literal,
-                                                  "location": location()
-                                                })
-                                              }
+expression = sourceName:var ':' applied:(literal:var {return expCreate.createAppliedFeatureExp ({
+                                                        "sourceName": literal,
+                                                        "location": location()
+                                                      }) })
+    {
+        return expCreate.createInstanceExp ({
+            "sourceName": sourceName,
+            "appliedfeature": applied,
+            "location": location()
+        })
+    }
             / sourceName:var appliedfeature:dotExpression
             {
                 return expCreate.createExpression ({

@@ -8,15 +8,15 @@ export class ContextTemplate {
     }
 
     generateContext(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
-        const rootConceptName = Names.concept(language.rootConcept());
-        const placeHolderConceptName = Names.concept(language.expressionPlaceholder());
+        const rootConceptName = Names.concept(language.rootConcept);
+        const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
         const initializationName = Names.initialization(language);
 
         return `
             import { action, observable } from "mobx";
             import { ${Names.PiContext}, ${Names.PiExpression} } from "${PROJECTITCORE}";
             import { ${initializationName} } from "../${initializationName}";
-            import { ${rootConceptName}, ${placeHolderConceptName} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${rootConceptName} ${(placeHolderConceptName === "" ? "" : ", " + placeHolderConceptName)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             
             export class ${Names.context(language)} implements PiContext {
                 @observable private _rootElement: ${rootConceptName};
@@ -46,9 +46,13 @@ export class ContextTemplate {
                     return "${Names.context(language)}";
                 }
             
+                ${ !!language.expressionPlaceHolder ? `
                 getPlaceHolderExpression(): PiExpression {
                     return new ${placeHolderConceptName}; 
-                }
+                }`
+            :`  getPlaceHolderExpression(): PiExpression {
+                    return null; 
+                }` }
             
                 @action
                 private initialize() {

@@ -1,4 +1,3 @@
-import { PiLangConceptReference } from "../../languagedef/metalanguage";
 import {
     Direction,
     ListJoin,
@@ -15,15 +14,21 @@ import {
     DefEditorSubProjection
 } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiConcept } from "../../languagedef/metalanguage";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
+import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("EditorCreators").mute();
 // Functions used to create instances of the language classes from the parsed data objects.
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
-export function createConceptReference(data: Partial<PiLangConceptReference>): PiLangConceptReference {
-    const result = new PiLangConceptReference();
+export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
+    let result: PiElementReference<PiConcept>;
     if (!!data.name) {
-        result.name = data.name;
+        result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
     }
     if (!!data.location) {
         result.location = data.location;

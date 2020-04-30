@@ -21,7 +21,7 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
         // this._PI_referred = TestScoper.getInstance().getFromVisibleElements(value) as T;
     }
 
-    // @computed
+    @computed
     get name(): string {
         if (!!this._PI_referred) {
             this._PI_name = this._PI_referred.name;
@@ -31,7 +31,7 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
         return this._PI_name;
     }
 
-    // @computed
+    @computed
     get referred(): T {
         if (!!this._PI_referred) {
             return this._PI_referred;

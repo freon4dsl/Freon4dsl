@@ -12,39 +12,39 @@ export class SelectionHelpers {
         import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
-        import { ${language.enumerations.map(en =>
-            ` ${Names.enumeration(en)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-
         export class ${Names.selectionHelpers(language)} {
-        ${language.enumerations.map(en =>
-            `
-            public enumSelectFor${en.name}(elem: PiElement, role: string, getAction: () => 
-                SelectOption, setAction: (o: SelectOption) => void) {
-                return new SelectBox(
-                    elem,
-                    role,
-                    "<" + "select>",
-                    () => {
-                        return ${Names.enumeration(en)}.values.map(v =>
-                            ({
-                                id: v.asString(),
-                                label: v.asString()
-                            }
-                        ))
-                    },
-                    () => getAction(),
-                    (option: SelectOption) => {
-                        setAction(option);
-                    },
-                    { style: ${Names.styles}.function }
-                );
-            }
-        `
-        ).join(" ")}
+
         
         ${this.generateRefs(language)}
         }`
     }
+
+    // removed:
+//     ${language.enumerations.map(en =>
+//         `
+//         public enumSelectFor${en.name}(elem: PiElement, role: string, getAction: () =>
+//         SelectOption, setAction: (o: SelectOption) => void) {
+//     return new SelectBox(
+//         elem,
+//         role,
+//     "<" + "select>",
+// () => {
+//     return ${Names.enumeration(en)}.values.map(v =>
+// ({
+//     id: v.asString(),
+//     label: v.asString()
+// }
+// ))
+// },
+// () => getAction(),
+//     (option: SelectOption) => {
+//         setAction(option);
+//     },
+//     { style: ${Names.styles}.function }
+// );
+// }
+// `
+//         ).join(" ")}
 
     generateRefs(language: PiLanguageUnit): string {
         return `

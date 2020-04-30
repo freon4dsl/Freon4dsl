@@ -1,7 +1,7 @@
 typer Demo for language Demo
 
 // for now: first is considered to be the root of the type hierarchy
-istype {DemoType, DemoEntity, DemoAttributeType }
+istype {BaseType }
 
 anytype {
     // conformsto self.base

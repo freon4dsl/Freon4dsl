@@ -207,7 +207,7 @@ describe("testing Scoper", () => {
         test("isInscope 'first'", () => {
             // first is Function of Person in DemoModel_1
             let nameTotest: string = "first";
-            expect(scoper.isInScope(model, nameTotest)).toBe(false);
+            expect(scoper.isInScope(model, nameTotest, "DemoFunction")).toBe(false);
             // test if nameTotest is known in model functions
             model.functions.forEach(fun => {
                 expect(scoper.isInScope(fun, nameTotest)).toBe(false);

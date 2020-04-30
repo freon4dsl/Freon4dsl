@@ -6,13 +6,11 @@ import { PiLanguageUnit } from "../metalanguage/PiLanguage";
 import {
     AllConceptsTemplate,
     ConceptTemplate,
-    EnumerationTemplate,
     EnvironmentTemplate,
     IndexTemplate,
     LanguageTemplate,
     MetaTypeTemplate,
     PiReferenceTemplate,
-    UnionTemplate,
     WalkerTemplate,
     WorkerInterfaceTemplate
 } from "./templates";
@@ -36,8 +34,6 @@ export class LanguageGenerator {
         const conceptTemplate = new ConceptTemplate();
         const languageTemplate = new LanguageTemplate();
         const metaTypeTemplate = new MetaTypeTemplate();
-        const enumerationTemplate = new EnumerationTemplate();
-        const unionTemplate = new UnionTemplate();
         const interfaceTemplate = new InterfaceTemplate();
         const languageIndexTemplate = new IndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
@@ -59,26 +55,26 @@ export class LanguageGenerator {
         let relativePath = "../";
 
         //  Generate it
-        language.classes.forEach(concept => {
+        language.concepts.forEach(concept => {
             LOGGER.log("Generating concept: " + concept.name);
             var generated = Helpers.pretty(conceptTemplate.generateConcept(concept, relativePath), "concept " + concept.name);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.concept(concept)}.ts`, generated);
         });
 
-        language.enumerations.forEach(enumeration => {
-            LOGGER.log("Generating enumeration: " + enumeration.name);
-            var generated = Helpers.pretty(enumerationTemplate.generateEnumeration(enumeration, relativePath), "enumeration " + enumeration.name);
-            fs.writeFileSync(`${this.languageGenFolder}/${Names.enumeration(enumeration)}.ts`, generated);
-        });
-
-        language.unions.forEach(union => {
-            LOGGER.log("Generating union: " + union.name);
-            var generated = Helpers.pretty(unionTemplate.generateUnion(union, relativePath), "union " + union.name);
-            fs.writeFileSync(`${this.languageGenFolder}/${Names.union(union)}.ts`, generated);
-        });
+        // language.enumerations.forEach(enumeration => {
+        //     LOGGER.log("Generating enumeration: " + enumeration.name);
+        //     var generated = Helpers.pretty(enumerationTemplate.generateEnumeration(enumeration, relativePath), "enumeration " + enumeration.name);
+        //     fs.writeFileSync(`${this.languageGenFolder}/${Names.enumeration(enumeration)}.ts`, generated);
+        // });
+        //
+        // language.unions.forEach(union => {
+        //     LOGGER.log("Generating union: " + union.name);
+        //     var generated = Helpers.pretty(unionTemplate.generateUnion(union, relativePath), "union " + union.name);
+        //     fs.writeFileSync(`${this.languageGenFolder}/${Names.union(union)}.ts`, generated);
+        // });
 
         language.interfaces.forEach(piInterface => {
-            LOGGER.log("Generating union: " + piInterface.name);
+            LOGGER.log("Generating interface: " + piInterface.name);
             var generated = Helpers.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(piInterface)}.ts`, generated);
         });

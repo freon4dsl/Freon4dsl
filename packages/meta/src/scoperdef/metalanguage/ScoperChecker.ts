@@ -1,19 +1,22 @@
 import { Checker } from "../../utils/Checker";
 import {
-    PiLangConcept,
+    PiConcept,
     PiLanguageUnit,
-    PiLangConceptReference,
-    PiLanguageExpressionChecker,
-    PiLangPrimitiveProperty, PiLangProperty
+    PiLanguageExpressionChecker, PiProperty
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
 import { refListIncludes } from "../../utils/ModelHelpers";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+// The next import should be separate and the last of the imports.
+// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
+// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
+// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
+import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<PiScopeDef> {
     myExpressionChecker : PiLanguageExpressionChecker;
-    myNamespaces: PiLangConceptReference[] = [];
+    myNamespaces: PiElementReference<PiConcept>[] = [];
 
     constructor(language: PiLanguageUnit) {
         super(language);
@@ -40,19 +43,19 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             this.myNamespaces = definition.namespaces;
             definition.scopeConceptDefs.forEach(def => {
                 this.myExpressionChecker.checkConceptReference(def.conceptRef);
-                if (!!def.conceptRef.referedElement()) {
+                if (!!def.conceptRef.referred) {
                     if (!!def.namespaceAdditions) {
-                        this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referedElement());
+                        this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
                     }
                     if (!!def.alternativeScope) {
-                        this.checkAlternativeScope(def.alternativeScope, def.conceptRef.referedElement());
+                        this.checkAlternativeScope(def.alternativeScope, def.conceptRef.referred);
                     }
                 }
             });
             this.errors = this.errors.concat(this.myExpressionChecker.errors);
         }
 
-    private checkNamespaceAdditions(namespaceAddition: PiNamespaceAddition, enclosingConcept: PiLangConcept) {
+    private checkNamespaceAdditions(namespaceAddition: PiNamespaceAddition, enclosingConcept: PiConcept) {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
         this.nestedCheck({
             check: refListIncludes(this.myNamespaces, enclosingConcept),
@@ -60,12 +63,13 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-                    if (!!exp.findRefOfLastAppliedFeature()) {
+                    let xx : PiProperty = exp.findRefOfLastAppliedFeature();
+                    if (!!xx) {
                         this.nestedCheck({
-                            check: (exp.findRefOfLastAppliedFeature().type instanceof PiLangConceptReference),
+                            check: (!!xx.type.referred && xx.type.referred instanceof PiConcept),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
-                                this.simpleCheck(refListIncludes(this.myNamespaces, exp.findRefOfLastAppliedFeature().type),
+                                this.simpleCheck(refListIncludes(this.myNamespaces, xx.type),
                                     `A namespace addition should refer to a namespace concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`);
                             }
                         })
@@ -75,7 +79,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         });
     }
 
-    private checkAlternativeScope(alternativeScope: PiAlternativeScope, enclosingConcept: PiLangConcept) {
+    private checkAlternativeScope(alternativeScope: PiAlternativeScope, enclosingConcept: PiConcept) {
         LOGGER.log("Checking alternative scope definition for " + enclosingConcept?.name);
         this.myExpressionChecker.checkLangExp(alternativeScope.expression, enclosingConcept);
     }
