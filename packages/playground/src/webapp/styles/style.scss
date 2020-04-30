@@ -22,6 +22,10 @@
     font-weight: normal;
     color: blue;
 }
+.conceptkeyword {
+    font-weight: bold;
+    color: darkblue;
+}
 // end::StyleKeyword[]
 
 .mygrid {
@@ -57,4 +61,11 @@
     background: lightblue;
     color: black;
     border-radius: 2px;
+}
+
+.borderLeft {
+    border-left: 2px;
+    border-style: solid;
+    border-top-style: none;
+    border-top: none;
 }

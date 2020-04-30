@@ -4,6 +4,7 @@ export const projectitStyles: {
     member: string;
     keyword: string;
     propertykeyword: string;
+    conceptkeyword: string;
     indentedplaceholdertext: string;
     numeric: string;
     stringLiteral: string;
@@ -23,4 +24,5 @@ export const projectitStyles: {
     indent: string;
     indent2: string;
     myButton: string;
+    borderLeft: string;
 } = require("./style.scss");
