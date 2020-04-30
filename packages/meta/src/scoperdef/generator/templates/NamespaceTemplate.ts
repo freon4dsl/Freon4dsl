@@ -69,7 +69,7 @@ export class NamespaceTemplate {
                             result = result.concat(ns.addExtras(metatype, excludeSurrounding));
                         }
                         // skip modelelements between parent and the modelelement that is its surrounding namespace
-                        parent = this.getParent(ns._myElem);
+                        parent = this.getParent(parent);
                     }
                 }
                 return result;

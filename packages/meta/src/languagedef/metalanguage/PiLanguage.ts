@@ -151,6 +151,18 @@ export class PiInterface extends PiClassifier {
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
+
+    allBaseInterfaces(): PiInterface[] {
+        let result : PiInterface[] = [];
+        for (let base of this.base) {
+            let realbase = base.referred;
+            if (!!realbase) {
+                result.push(realbase);
+                result = result.concat(realbase.allBaseInterfaces());
+            }
+        }
+        return result;
+    }
 }
 
 export class PiConcept extends PiClassifier {
@@ -245,6 +257,18 @@ export class PiConcept extends PiClassifier {
     implementedProperties(): PiProperty[] {
         let result : PiProperty[] = [];
         result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedReferences());
+        return result;
+    }
+
+    allInterfaces() : PiInterface[] {
+        let result: PiInterface[] = [];
+        for (let intf of this.interfaces) {
+            let realintf = intf.referred;
+            if (!!realintf) {
+                result.push(realintf);
+                result = result.concat(realintf.allBaseInterfaces());
+            }
+        }
         return result;
     }
 

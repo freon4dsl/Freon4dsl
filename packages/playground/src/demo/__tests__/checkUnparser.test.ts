@@ -68,10 +68,10 @@ describe("Testing Unparser", () => {
         test.skip("(1 + 2) * 'Person'", () => {
             let result: string = "";
             const variableExpression = new DemoVariableRef();
-            const attribute = new DemoAttribute();
-            attribute.name = "Person";
-            // attribute.declaredType = DemoAttributeType.String;
-            variableExpression.variable = new PiElementReference<DemoAttribute>(attribute, "DemoAttribute");
+            const variable = new DemoVariable();
+            variable.name = "Person";
+            // variable.declaredType = DemoAttributeType.String;
+            variableExpression.variable = new PiElementReference<DemoVariable>(variable, "DemoVariable");
 
             // variableExpression.referredName = "Person";
             // variableExpression.attribute = new DemoAttribute();

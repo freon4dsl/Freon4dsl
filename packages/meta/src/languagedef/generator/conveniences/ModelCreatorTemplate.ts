@@ -28,7 +28,7 @@ export class ModelCreatorTemplate {
                     `_result.${prop.name} = ${prop.name};`}`
                 ).join("\n")}
                 ${concept.allReferences().map(prop => 
-                `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(new ${Names.PiElementReference}(${prop.name}, "${prop.type.name}"));` 
+                `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(${Names.PiElementReference}.create<${prop.type.name}>(${prop.name}, "${prop.type.name}"));` 
                     : 
                     `_result.${prop.name} = new ${Names.PiElementReference}(${prop.name}, "${prop.type.name}");`}`
                 ).join("\n")}

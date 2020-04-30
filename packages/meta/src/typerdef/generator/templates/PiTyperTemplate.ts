@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses, langExpToTypeScript } from "../../../utils";
-import { PiClassifier, PiInterface, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiClassifier, PiConcept, PiInterface, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiLangExp,
     PiLangFunctionCallExp,
@@ -163,21 +163,21 @@ export class PiTyperTemplate {
                 let typesAdded: PiClassifier[] = [];
                 for (let type of tr.types) {
                     // TODO type.referred should not be of type PiConcept but of type PiClassifier
-                    // TODO create a separate method to find all concepts that are marked'isType' , this if-statement is also used in makeIsType
+                    // TODO create a separate method to find all concepts that are marked'isType', this if-statement is also used in makeIsType
                     let realType = type.referred;
                     if (!!realType && (realType instanceof PiInterface)) {
                         let yy = realType as PiInterface;
                         // add a statement for all concepts that implement this interface
-                        this.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === yy )).map (implementor => {
-                            if (!!typesAdded.includes(implementor)) {
+                        this.language.concepts.filter(con => con.allInterfaces().some(intf => intf === yy)).map(implementor => {
+                            if (!typesAdded.includes(implementor)) {
                                 result = result.concat(`if (modelelement instanceof ${implementor.name}) {
                                     return modelelement;
-                                }`)
+                                }`);
                                 typesAdded.push(implementor);
                             }
                         });
-                    } else {
-                        if (!!typesAdded.includes(realType)) {
+                    } else if (!!realType && (realType instanceof PiConcept)) {
+                         if (!typesAdded.includes(realType)) {
                             let myConceptName = realType.name;
                             result = result.concat(`if (modelelement instanceof ${myConceptName}) {
                                 return modelelement;
@@ -235,16 +235,16 @@ export class PiTyperTemplate {
                     if (!!realType && (realType instanceof PiInterface)) {
                         let yy = realType as PiInterface;
                         // add a statement for all concepts that implement this interface
-                        this.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === yy )).map (implementor => {
-                            if (!!typesAdded.includes(implementor)) {
+                        this.language.concepts.filter(con => con.allInterfaces().some(intf => intf === yy )).map (implementor => {
+                            if (!typesAdded.includes(implementor)) {
                                 result = result.concat(`if (elem instanceof ${implementor.name}) {
                                     return true;
                                 }`)
                                 typesAdded.push(implementor);
                             }
                         });
-                    } else {
-                        if (!!typesAdded.includes(realType)) {
+                    } else if (!!realType && (realType instanceof PiConcept)){
+                        if (!typesAdded.includes(realType)) {
                             let myConceptName = realType.name;
                             result = result.concat(`if (elem instanceof ${myConceptName}) {
                                 return true;

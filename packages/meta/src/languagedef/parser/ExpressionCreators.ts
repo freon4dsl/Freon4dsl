@@ -63,6 +63,7 @@ export function createExpression(data: Partial<PiLangExp>): PiLangExp {
     let result: PiLangExp;
     if (!!data.sourceName) {
         if (data.sourceName === nameForSelf) {
+            // cannot use PiLangSelfExp.create() because referedElement is not yet known
             result = new PiLangSelfExp();
             LOGGER.log("createSelfExpression");
             result.sourceName = data.sourceName;
@@ -84,6 +85,7 @@ export function createExpression(data: Partial<PiLangExp>): PiLangExp {
 
 export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>): PiLangAppliedFeatureExp {
     LOGGER.log("createAppliedFeatureExp");
+    // cannot use PiLangAppliedFeatureExp.create because the owner and referred element are not known here
     const result = new PiLangAppliedFeatureExp();
 
     if (!!data.sourceName) {

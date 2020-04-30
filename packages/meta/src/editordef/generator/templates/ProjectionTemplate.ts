@@ -318,7 +318,7 @@ export class ProjectionTemplate {
                         }
                     },
                     (option: SelectOption) => {
-                        element.${appliedFeature.name} = new PiElementReference<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
+                        element.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                             element,
                             option.label,
                             "${featureType}"
