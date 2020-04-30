@@ -111,8 +111,8 @@ describe("Testing Validator", () => {
             });
         });
 
-        // TODO this is not working because the scoper needs to be extended to include instances of limited concepts
-        test.skip('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 3 errors', () => {
+        // TODO error in reference
+        test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 3 errors', () => {
             let errors: PiError[] = [];
             const determine = DemoFunction.create("determine");
             const AAP = DemoVariable.create("AAP");
@@ -129,8 +129,8 @@ describe("Testing Validator", () => {
             expect(errors.length).toBe(3);
         });
 
-        // TODO this is not working because the scoper needs to be extended to include instances of limited concepts
-        test.skip("Person { name, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
+        // TODO error in reference
+        test("Person { name, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
             let errors: PiError[] = [];
             const personEnt = DemoEntity.create("Person");
             const age = DemoAttribute.create("age");

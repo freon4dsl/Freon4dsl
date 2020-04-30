@@ -100,7 +100,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
     private addDefaults(editor: DefEditorLanguage) {
         for (let con of this.language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept))) {
             if (!editor.conceptEditors.map((ce) => ce.concept.referred).includes(con)) {
-                console.log("=============== adding default p0rojection for "+ con.name);
+                // console.log("=============== adding default p0rojection for "+ con.name);
                 const coneditor = new DefEditorConcept();
                 coneditor.concept = PiElementReference.create<PiConcept>(con.name, "PiConcept");
                 coneditor.concept.owner = this.language;

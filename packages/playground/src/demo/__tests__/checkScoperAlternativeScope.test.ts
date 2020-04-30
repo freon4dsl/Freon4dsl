@@ -80,69 +80,77 @@ describe("testing Alternative Scopes", () => {
             expect(scoper.isInScope(appliedFeature, "NOOT")).toBe(false);
         });
 
-        // TODO the rest of the test do not work, because the scoper does not yet function with instances of limited concepts
-        test.skip("isInscope 'name' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        // TODO error in reference
+        test("isInscope 'name' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
+            expect(model.functions[0].name).toBe("length");
+            expect(model.functions[0].expression.appliedfeature.value).toBe("myfirstAppliedFeature");
+            expect(model.functions[0].expression.appliedfeature.type.name).toBe("Company");
+            expect(model.functions[0].expression.appliedfeature.type.referred).not.toBeNull;
             expect(model.functions[0].expression.appliedfeature.type.referred.name).toBe("Company");
+            expect(model.functions[0].expression.appliedfeature.appliedfeature.value).toBe("mysecondAppliedFeature");
+            expect(model.functions[0].expression.appliedfeature.appliedfeature.type.name).toBe("Person");
+            expect(model.functions[0].expression.appliedfeature.appliedfeature.type.referred).not.toBeNull;
+            expect(model.functions[0].expression.appliedfeature.appliedfeature.type.referred.name).toBe("Person");
             expect(scoper.isInScope(appliedFeature, "name")).toBe(true);
         });
 
-        test.skip("isInscope 'Person' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'Person' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "Person")).toBe(false);
         });
 
-        test.skip("isInscope 'Company' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'Company' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "Company")).toBe(false);
         });
 
-        test.skip("isInscope 'VAT_Number' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'VAT_Number' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "VAT_Number")).toBe(true);
         });
 
-        test.skip("isInscope 'length' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'length' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "length")).toBe(false);
         });
 
-        test.skip("isInscope 'first' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'first' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "first")).toBe(false);
         });
 
-        test.skip("isInscope 'last' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'last' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "last")).toBe(false);
         });
 
-        test.skip("isInscope 'determine' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'determine' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "determine")).toBe(false);
         });
 
-        test.skip("isInscope 'another' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'another' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "another")).toBe(true);
         });
 
-        test.skip("isInscope 'Variable1' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'Variable1' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "Variable1")).toBe(false);
         });
 
-        test.skip("isInscope 'VariableNumber2' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'VariableNumber2' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "VariableNumber2")).toBe(false);
         });
 
-        test.skip("isInscope 'AAP' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'AAP' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "AAP")).toBe(false);
         });
 
-        test.skip("isInscope 'NOOT' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
+        test("isInscope 'NOOT' of 'Variable1.myfirstAppliedFeature.mysecondAppliedFeature', myfirstAppliedFeature: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "NOOT")).toBe(false);
         });

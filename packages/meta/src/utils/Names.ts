@@ -15,6 +15,7 @@ export class Names {
     public static PiScoper = "PiScoper";
     public static PiTyper = "PiTyper";
     public static PiValidator = "PiValidator";
+    public static PiStdlib = "PiStdlib";
     public static PiError = "PiError"; 
     public static PiContext = "PiContext";
     public static PiActions = "PiActions";
@@ -30,6 +31,7 @@ export class Names {
 
     // because the below Names are used to generate TypeScript classes
     // they all have to start with an uppercase character
+
     public static environment(language: PiLanguageUnit) {
         return this.startWithUpperCase(language?.name) + "Environment";
     }
@@ -113,6 +115,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Typer";
     }
 
+    public static stdlib(language: PiLanguageUnit): string {
+        return this.startWithUpperCase(language?.name) + "Stdlib";
+    }
+
     public static unparser(language: PiLanguageUnit): string {
         return this.startWithUpperCase(language?.name) + "Unparser";
     }
@@ -129,5 +135,6 @@ export class Names {
         if (!!word) return word[0].toUpperCase() + word.substr(1);
         return '';
     }
+
 
 }

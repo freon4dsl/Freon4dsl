@@ -29,18 +29,20 @@ import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMult
 import { DemoUnparser } from "../unparser/DemoUnparser";
 
 export class DemoModelCreator {
+    // model.functions[0].expression.appliedfeature.type.referred.name).toBe("Company")
     public createModelWithAppliedfeature(): DemoModel {
         let result = this.createCorrectModel();
         let length = result.functions[0];
         let expression: DemoVariableRef = new DemoVariableRef();
         expression.variable = PiElementReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1 : Person
-        let xx: AppliedFeature = new AppliedFeature();
-        xx.value = "myfirstAppliedFeature";
-        xx.type = PiElementReference.create<DemoEntity>(result.entities[1], "DemoEntity"); // Company
-        expression.appliedfeature = xx;
-        let yy: AppliedFeature = new AppliedFeature();
-        yy.value = "mysecondAppliedFeature";
-        xx.appliedfeature = yy;
+        let firstFeature: AppliedFeature = new AppliedFeature();
+        firstFeature.value = "myfirstAppliedFeature";
+        firstFeature.type = PiElementReference.create<DemoEntity>(result.entities[1], "DemoEntity"); // Company
+        expression.appliedfeature = firstFeature;
+        let secondFeature: AppliedFeature = new AppliedFeature();
+        secondFeature.value = "mysecondAppliedFeature";
+        secondFeature.type = PiElementReference.create<DemoEntity>(result.entities[0], "DemoEntity"); // Person
+        firstFeature.appliedfeature = secondFeature;
         length.expression = expression;
         return result;
     }

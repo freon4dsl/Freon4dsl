@@ -15,6 +15,7 @@ export const VALIDATOR_FOLDER = "validator";
 export const VALIDATOR_GEN_FOLDER = "validator/gen";
 export const TYPER_FOLDER = "typer";
 export const TYPER_GEN_FOLDER = "typer/gen";
+export const STDLIB_GEN_FOLDER = "stdlib/gen";
 export const WEBAPP_FOLDER = "../webapp";
 export const APP_FOLDER = "../webapp/app";
 export const ASSETS_FOLDER = "../webapp/assets";

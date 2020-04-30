@@ -27,12 +27,12 @@ describe("Testing Typer", () => {
             });
         });
 
-        test.skip("all attributes should have a valid type", () => {
+        test("all attributes should have a valid type", () => {
             model.entities.forEach(ent => {
                 ent.attributes.forEach(att => {
                     expect(att.declaredType?.referred).not.toBeNull;
                     expect(att.declaredType?.referred).not.toBeUndefined;
-                    // TODO this is not working because the scoper needs to be extended to include instances of limited concepts
+                    // TODO error in reference
                     console.log("FOUND type " + att.declaredType?.referred?.name + " for " + ent.name + "." + att.name);
                     expect(typer.isType(att.declaredType.referred)).toBe(true);
                 });
