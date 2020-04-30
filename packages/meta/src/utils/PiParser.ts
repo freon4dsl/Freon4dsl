@@ -36,7 +36,7 @@ export class PiParser<DEFINITION> {
         // Parse Language file
         let model: DEFINITION = null;
         try {
-            model = this.parser["parse"](langSpec);
+            model = this.parser.parse(langSpec);
         } catch (e) {
             // syntax error
             let errorstr = `${e} ${e.location && e.location.start ? `[line ${e.location.start.line}, column ${e.location.start.column}]` : ``}`;
