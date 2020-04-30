@@ -80,7 +80,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
             const ref = exp.referedElement.referred;
             isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
         }
-        return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
+        return exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
     } else if (exp instanceof PiInstanceExp) {
         return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`;
     } else {

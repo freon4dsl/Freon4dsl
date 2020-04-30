@@ -23,23 +23,4 @@ export class DefEditorLanguage {
         // console.log("Finding editor for "+ cls.name + " is [" + result +  "]");
         return result;
     }
-
-    addDefaults() {
-        this.language.concepts.forEach(cls => {
-            let conceptEditor = this.findConceptEditor(cls);
-            if (conceptEditor === null || conceptEditor === undefined) {
-                // console.log("Adding editor for " + cls.name);
-                conceptEditor = new DefEditorConcept();
-                conceptEditor.concept = PiElementReference.create<PiConcept>(cls, "PiConcept");
-                conceptEditor.concept.owner = this.language;
-                this.conceptEditors.push(conceptEditor);
-            }
-            if (conceptEditor.trigger === null) {
-                conceptEditor.trigger = cls.name;
-            }
-            if (conceptEditor.symbol === null) {
-                conceptEditor.symbol = cls.name;
-            }
-        });
-    }
 }

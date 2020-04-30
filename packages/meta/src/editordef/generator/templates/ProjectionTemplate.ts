@@ -86,6 +86,7 @@ export class ProjectionTemplate {
             
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }/${Names.PiElementReference}";
             import { ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${language.interfaces.map(c => `${Names.interface(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
@@ -227,17 +228,17 @@ export class ProjectionTemplate {
             }
             line.items.forEach((item, itemIndex) => {
                 if ( item instanceof DefEditorProjectionText ){
-                    result += `
-                        new LabelBox(element, "${c.name}-name-${index}-${itemIndex}", "${item.text}", {
-                            style: projectitStyles.propertykeyword,
+                    result += ` new LabelBox(element, "${c.name}-name-${index}-${itemIndex}", "${item.text}", {
+                            style: projectitStyles.${item.style},
                             selectable: false
-                        }),`
+                        })  `
+                    if( itemIndex < line.items.length-1 ){
+                        result += ",";
+                    }
                 } else if( item instanceof DefEditorSubProjection){
                     const appliedFeature: PiProperty = item.expression.appliedfeature.referedElement.referred;
                     if (appliedFeature instanceof PiPrimitiveProperty){
                         result += this.primitivePropertyProjection(appliedFeature) + ", ";
-                    // } else if( appliedFeature instanceof PiLangEnumProperty) {
-                    //     result += this.enumPropertyProjection(appliedFeature) + ", ";
                     } else if( appliedFeature instanceof PiConceptProperty) {
                         if (appliedFeature.isPart) {
                             if (appliedFeature.isList) {
@@ -245,7 +246,7 @@ export class ProjectionTemplate {
                                 result += this.conceptPartListProjection(direction, appliedFeature)+ ",";
 
                             } else {
-                                result += `this.rootProjection.getBox(element.${appliedFeature.name}),`
+                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "add ${appliedFeature.name}" )),`
                             }
                         } else { // reference
                             if( appliedFeature.isList){
@@ -360,13 +361,34 @@ export class ProjectionTemplate {
             `
     }
 
-    primitivePropertyProjection(appliedFeature: PiPrimitiveProperty) {
+    primitivePropertyProjection(property: PiPrimitiveProperty) {
         // TODO This now only works for strings
-        return `new TextBox(element, "element-${appliedFeature.name}-text", () => element.${appliedFeature.name}, (c: string) => (element.${appliedFeature.name} = c as ${"string"}),
+        switch(property.primType) {
+            case "string":
+                return `new TextBox(element, "element-${property.name}-text", () => element.${property.name}, (c: string) => (element.${property.name} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
-                })`
+                })`;
+            case "number":
+                return `new TextBox(element, "element-${property.name}-text", () => "" + element.${property.name}, (c: string) => (element.${property.name} = Number.parseInt(c)) ,
+                {
+                    placeHolder: "text",
+                    style: ${Names.styles}.placeholdertext
+                })`;
+            case "boolean":
+                return `new TextBox(element, "element-${property.name}-text", () => "" + element.${property.name}, (c: string) => (element.${property.name} = (c === "true" ? true : false)),
+                {
+                    placeHolder: "text",
+                    style: ${Names.styles}.placeholdertext
+                })`;
+            default:
+                return `new TextBox(element, "element-${property.name}-text", () => element.${property.name}, (c: string) => (element.${property.name} = c as ${"string"}),
+                {
+                    placeHolder: "text",
+                    style: ${Names.styles}.placeholdertext
+                })`;
+        }
     }
 
 }

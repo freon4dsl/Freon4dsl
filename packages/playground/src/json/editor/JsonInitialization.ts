@@ -12,5 +12,6 @@ export class JsonInitialization {
         // pair.value = new JsonArray()
         //
         // return result;
+        return null;
     }
 }

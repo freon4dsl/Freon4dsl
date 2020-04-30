@@ -1,39 +1,52 @@
 language Json
 
 concept JsonObject  implements IJsonValue {
-	part pairs: JsonPair[]
+
+	pairs: JsonPair[];
 }
 
 interface IJsonValue {
+
+
 }
 
 concept JsonArray  implements IJsonValue {
-	part items: IJsonValue[]
+
+	items: IJsonValue[];
 }
 
-root concept JsonFile  {
-	part contents: IJsonValue
+root concept JsonFile  implements INamedConcept {
+
+	contents: IJsonValue;
 }
 
 concept JsonNumber  implements IJsonValue {
-	value: string
+	value: string;
+
 }
 
 concept JsonString  implements IJsonValue {
-	value: string
+	value: string;
+
 }
 
 concept JsonNull  implements IJsonValue {
-    value: string
+
+
 }
 
-concept JsonPair  {
-    name: string
-	part value: IJsonValue
+concept JsonPair  implements INamedConcept {
+
+	value: IJsonValue;
 }
 
 concept JsonBoolean  implements IJsonValue {
-	value: string
+	value: boolean;
+
+}
+
+interface INamedConcept {
+	name: string;
 
 }
 

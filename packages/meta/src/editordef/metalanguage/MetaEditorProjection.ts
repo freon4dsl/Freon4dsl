@@ -33,6 +33,7 @@ export class DefEditorProjectionIndent {
 export class DefEditorProjectionText {
     location: ParseLocation;
     text: string = "";
+    style: string = "propertykeyword";
 
     public static create(text: string): DefEditorProjectionText {
         const result = new DefEditorProjectionText();

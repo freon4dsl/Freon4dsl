@@ -141,7 +141,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateEditor = () => {
         LOGGER.info(this, "Generating editor");
-        let editor: DefEditorLanguage;
+        let editor: DefEditorLanguage = null;
         try {
             if (this.editFile.length > 0) {
                 editor = new DefEditorParser(this.language).parse(this.editFile);
