@@ -1,6 +1,12 @@
-import { PiLangConceptProperty, PiLangEnumProperty, PiLangPrimitiveProperty, PiLangProperty, PiLangSelfExp } from "../../../languagedef/metalanguage";
-import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
-import { PiLangClass, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import {
+    PiBinaryExpressionConcept, PiConcept,
+    PiConceptProperty,
+    PiExpressionConcept,
+    PiPrimitiveProperty,
+    PiProperty
+} from "../../../languagedef/metalanguage";
+import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     DefEditorConcept,
     DefEditorLanguage,
@@ -30,17 +36,17 @@ export class ProjectionTemplate {
     }
 
     generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
-        const binaryConceptsWithDefaultProjection = language.classes.filter(c => c.binaryExpression())
+        const binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
         })
         ;
-        const nonBinaryConceptsWithDefaultProjection = language.classes.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).filter(c => {
+        const nonBinaryConceptsWithDefaultProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiExpressionConcept && c.isExpressionPlaceholder())).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
         });
-        const nonBinaryConceptsWithProjection = language.classes.filter(c => !c.binaryExpression() && !c.isExpressionPlaceholder()).filter(c => {
+        const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiExpressionConcept && c.isExpressionPlaceholder())).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return !!editor && !!editor.projection;
         });
@@ -79,9 +85,7 @@ export class ProjectionTemplate {
             } from "${PROJECTITCORE}";
             
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }/${Names.PiElementReference}";
-            import { ${language.classes.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${language.enumerations.map(c => `${Names.enumeration(c)}`).join(", ") } } 
-                    from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
@@ -103,7 +107,7 @@ export class ProjectionTemplate {
                     }
 
                     switch( exp.piLanguageConcept() ) { 
-                        ${language.classes.map(c => `
+                        ${language.concepts.map(c => `
                         case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
                         ).join("  ")}
                     }
@@ -117,18 +121,17 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}    
                 
-                ${ language.expressionPlaceholder() !== null ? `
-                private get${language.expressionPlaceholder().name}Box(element: ${Names.concept(language.expressionPlaceholder())}) {
+                ${ !!language.expressionPlaceHolder ? `
+                private get${language.expressionPlaceHolder.name}Box(element: ${Names.concept(language.expressionPlaceHolder)}) {
                     return new AliasBox(element, EXPRESSION_PLACEHOLDER, "[exp]");
                 }`
                 :"" }
       
-
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
                 
                 ${nonBinaryConceptsWithDefaultProjection.map(c => `
                 public get${c.name}Box(element: ${Names.concept(c)}): Box {
-                    ${c.expression() ? `return createDefaultExpressionBox(element, "getDemoFunctionCallExpressionBox", [` : 
+                    ${c instanceof PiExpressionConcept ? `return createDefaultExpressionBox(element, "getDemoFunctionCallExpressionBox", [` : 
                     `return `} new VerticalListBox(element, "element", [
                         ${c.primProperties.map(p => `
                             new HorizontalListBox(element, "element-${p.name}-list", [
@@ -139,15 +142,6 @@ export class ProjectionTemplate {
                                 ${this.primitivePropertyProjection(p)},
                             ], { selectable: false })`
                         ).concat(
-                        c.enumProperties.map(p => `
-                            new HorizontalListBox(element, "element-${p.name}-list", [
-                                new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                                    style: ${Names.styles}.propertykeyword,
-                                    selectable: false
-                                }),
-                                ${this.enumPropertyProjection(p)},
-                            ], { selectable: false })`
-                        )).concat(
 //  Map all parts
                         c.allParts().map(part => `
                         ${ part.isList ? `
@@ -164,11 +158,11 @@ export class ProjectionTemplate {
                                 style: ${Names.styles}.propertykeyword,
                                 selectable: false
                              }),
-                            this.rootProjection.getBox(element.${part.name})
+                            ((!!element.${part.name}) ? this.rootProjection.getBox(element.${part.name}) : new AliasBox(element, "${part.name}", "${part.name}" ))
                             ], { selectable: false })                            
                         ` }`  )).concat(
 // Map all references
-                        c.allPReferences().map(ref => `
+                        c.allReferences().map(ref => `
                         ${ ref.isList ? `
                             new LabelBox(element, "element-${ref.name}-label", "${ref.name}", { 
                                 style: ${Names.styles}.keyword,
@@ -189,7 +183,7 @@ export class ProjectionTemplate {
                         }`  )
                 ).join(",")}
                     ])
-                ${c.expression() ? `])`: ""}
+                ${(c instanceof PiExpressionConcept) ? `])`: ""}
                 }                
                 `).join("\n")}          
                   
@@ -214,7 +208,7 @@ export class ProjectionTemplate {
         `;
     }
 
-    private generateUserProjection(language: PiLanguageUnit, c: PiLangClass, editor: DefEditorConcept) {
+    private generateUserProjection(language: PiLanguageUnit, c: PiConcept, editor: DefEditorConcept) {
         let result: string = "";
         const projection: MetaEditorProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
@@ -239,13 +233,13 @@ export class ProjectionTemplate {
                             selectable: false
                         }),`
                 } else if( item instanceof DefEditorSubProjection){
-                    const appliedFeature: PiLangProperty = item.expression.appliedfeature.referedElement;
-                    if( appliedFeature instanceof PiLangPrimitiveProperty){
+                    const appliedFeature: PiProperty = item.expression.appliedfeature.referedElement.referred;
+                    if (appliedFeature instanceof PiPrimitiveProperty){
                         result += this.primitivePropertyProjection(appliedFeature) + ", ";
-                    } else if( appliedFeature instanceof PiLangEnumProperty) {
-                        result += this.enumPropertyProjection(appliedFeature) + ", ";
-                    } else if( appliedFeature instanceof PiLangConceptProperty) {
-                        if( appliedFeature.isPartOf()) {
+                    // } else if( appliedFeature instanceof PiLangEnumProperty) {
+                    //     result += this.enumPropertyProjection(appliedFeature) + ", ";
+                    } else if( appliedFeature instanceof PiConceptProperty) {
+                        if (appliedFeature.isPart) {
                             if (appliedFeature.isList) {
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
                                 result += this.conceptPartListProjection(direction, appliedFeature)+ ",";
@@ -284,21 +278,23 @@ export class ProjectionTemplate {
                 ]);
             `;
         }
+        if( result === "" ){ result = "null"}
         return `public get${c.name}Box(element: ${Names.concept(c)}): Box {
                     return ${result};
                 }`;
     }
 
-    enumPropertyProjection(p: PiLangEnumProperty) {
-        return `
-            this.helpers.enumSelectFor${p.type.name}(element, 
-                "${p.name}-type",
-                () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
-                (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referedElement())}.fromString(o.id)
-            )
-        `;
-    }
-    conceptPartListProjection(direction: string, propertyConcept: PiLangConceptProperty) {
+    // TODO change this to be used with PiLimitedConcept
+    // enumPropertyProjection(p: PiLangEnumProperty) {
+    //     return `
+    //         this.helpers.enumSelectFor${p.type.name}(element,
+    //             "${p.name}-type",
+    //             () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
+    //             (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referedElement())}.fromString(o.id)
+    //         )
+    //     `;
+    // }
+    conceptPartListProjection(direction: string, propertyConcept: PiConceptProperty) {
         return `
             new ${direction}ListBox(element, "element-${propertyConcept.name}-list", 
                 element.${propertyConcept.name}.map(feature => {
@@ -311,7 +307,7 @@ export class ProjectionTemplate {
             )`;
     }
 
-    conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiLangConceptProperty) {
+    conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiConceptProperty) {
         const featureType = appliedFeature.type.name;
         return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}", "< select ${appliedFeature.name}>", "${featureType}",
                     () => {
@@ -322,7 +318,7 @@ export class ProjectionTemplate {
                         }
                     },
                     (option: SelectOption) => {
-                        element.${appliedFeature.name} = new PiElementReference<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
+                        element.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                             element,
                             option.label,
                             "${featureType}"
@@ -332,7 +328,7 @@ export class ProjectionTemplate {
             `
     }
 
-    conceptReferenceProjectionInList(appliedFeature: PiLangConceptProperty) {
+    conceptReferenceProjectionInList(appliedFeature: PiConceptProperty) {
         const featureType = appliedFeature.type.name;
         return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}-" + index, "< select ${appliedFeature.name}>", "${featureType}",
                     () => {
@@ -350,7 +346,7 @@ export class ProjectionTemplate {
     }
 
 
-    conceptReferenceListProjection(direction: string, reference: PiLangConceptProperty) {
+    conceptReferenceListProjection(direction: string, reference: PiConceptProperty) {
         return `new ${direction}ListBox(
                     element,
                     "${reference.name}-list",
@@ -364,7 +360,7 @@ export class ProjectionTemplate {
             `
     }
 
-    primitivePropertyProjection(appliedFeature: PiLangPrimitiveProperty) {
+    primitivePropertyProjection(appliedFeature: PiPrimitiveProperty) {
         // TODO This now only works for strings
         return `new TextBox(element, "element-${appliedFeature.name}-text", () => element.${appliedFeature.name}, (c: string) => (element.${appliedFeature.name} = c as ${"string"}),
                 {

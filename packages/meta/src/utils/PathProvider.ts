@@ -1,4 +1,4 @@
-import { PiLanguageUnit, PiLangConcept, PiLangEnumeration, PiLangUnion } from "../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiConcept } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
 
 // files need to be generated into folders ...
@@ -60,17 +60,17 @@ export class PathProvider {
     }
 
     // the generated classes that implement the language can be found in ...
-    public static concept(concept: PiLangConcept): string {
+    public static concept(concept: PiConcept): string {
         return LANGUAGE_GEN_FOLDER + "/" + Names.concept(concept);
     }
 
-    public static enumeration(enumeration: PiLangEnumeration): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.enumeration(enumeration);
-    }
-
-    public static union(union: PiLangUnion): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.union(union);
-    }
+    // public static enumeration(enumeration: PiLangEnumeration): string {
+    //     return LANGUAGE_GEN_FOLDER + "/" + Names.enumeration(enumeration);
+    // }
+    //
+    // public static union(union: PiLangUnion): string {
+    //     return LANGUAGE_GEN_FOLDER + "/" + Names.union(union);
+    // }
 
     public static languageConceptType(language: PiLanguageUnit): string {
         return LANGUAGE_GEN_FOLDER + "/" + Names.metaType(language);

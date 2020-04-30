@@ -1,4 +1,7 @@
-import { PiLangClass, PiLangElement, PiLangElementReference } from "../languagedef/metalanguage";
+import { PiLangElement } from "../languagedef/metalanguage/";
+import { PiConcept, PiConceptProperty } from "../languagedef/metalanguage/";
+import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp } from "../languagedef/metalanguage";
+import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
 
 /**
  * This function sorts the list of PiClasses in such a way that
@@ -9,8 +12,8 @@ import { PiLangClass, PiLangElement, PiLangElementReference } from "../languaged
  * otherwise the unparse${concept.name} for the base class will be called.
  * @param piclasses: the list of classes to be sorted
  */
-export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
-    let newList: PiLangClass[] = [];
+export function sortClasses(piclasses: PiConcept[]): PiConcept[] {
+    let newList: PiConcept[] = [];
     for (let c of piclasses) {
         // without base must be last
         if (!c.base) {
@@ -21,7 +24,7 @@ export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
         for (let c of piclasses) {
             if (c.base) {
                 // push c before c.base
-                if (newList.includes(c.base.referedElement())) {
+                if (newList.includes(c.base.referred)) {
                     newList.unshift(c);
                 }
             }
@@ -37,15 +40,15 @@ export function sortClasses(piclasses: PiLangClass[]): PiLangClass[] {
  * @param list
  * @param element
  */
-export function refListIncludes(list: PiLangElementReference[], element: PiLangElementReference | PiLangElement): boolean {
+export function refListIncludes(list: PiElementReference<PiLangElement>[], element: PiElementReference<PiLangElement> | PiLangElement): boolean {
     // TODO ??? should we add a check on the types of the list and the element?
     for (let xx of list) {
         if (element instanceof PiLangElement) {
-            if (xx.referedElement() === element) {
+            if (xx.referred === element) {
                 return true;
             }
-        } else if (element instanceof PiLangElementReference) {
-            if (xx.referedElement() === element.referedElement()) {
+        } else if (element instanceof PiElementReference) {
+            if (xx.referred === element.referred) {
                 return true;
             }
         }
@@ -60,4 +63,27 @@ export function refListIncludes(list: PiLangElementReference[], element: PiLangE
  */
 export function isPrimitiveType(type: PiLangElement): boolean {
     return type.name === "string" || type.name === "number" || type.name === "boolean";
+}
+
+export function langExpToTypeScript(exp: PiLangExp): string {
+    if (exp instanceof PiLangSelfExp) {
+        return `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
+    } else if (exp instanceof PiLangFunctionCallExp) {
+        return `this.${exp.sourceName} (${exp.actualparams.map(
+            param => `${this.makeTypeExp(param)}`
+        ).join(", ")})`;
+    } else if (exp instanceof PiLangAppliedFeatureExp) {
+        // TODO this should be replaced by special getters and setters for reference properties
+        let isRef: boolean = false;
+        if (!!exp.referedElement && !!exp.referedElement.referred) { // should be present, otherwise it is an incorrect model
+            // now see whether it is marked in the .lang file as 'reference'
+            const ref = exp.referedElement.referred;
+            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
+        }
+        return exp.sourceName + (isRef ? ".referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
+    } else if (exp instanceof PiInstanceExp) {
+        return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`;
+    } else {
+        return exp?.toPiString();
+    }
 }

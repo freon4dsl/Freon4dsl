@@ -140,24 +140,24 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
 
     const getter = function(this: any) {
         const storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
-        let result: any = storedObserver ? storedObserver.get() : undefined;
-        if (result === undefined) {
-            result = null;
-            this[privatePropertyKey] = observable.box(result);
+        if(!!storedObserver) {
+            return storedObserver.get();
+        } else {
+            this[privatePropertyKey] = observable.box(null);
+            return this[privatePropertyKey].get();
         }
-        return result;
     };
 
     const setter = function(this: any, val: DecoratedModelElement) {
         let storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
         const storedValue = storedObserver ? storedObserver.get() : null;
         // Clean container of current part
-        if (storedValue) {
+        if (!!storedValue) {
             storedValue.container = null;
             storedValue.propertyName = "";
             storedValue.propertyIndex = undefined;
         }
-        if (storedObserver) {
+        if (!!storedObserver) {
             storedObserver.set(val);
         } else {
             this[privatePropertyKey] = observable.box(val);

@@ -23,12 +23,16 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
         super.generate();
         this.typerGenerator = new PiTyperGenerator(this.language);
         this.typerGenerator.outputfolder = this.outputFolder;
+        try {
+            const typer = new PiTyperParser(this.language).parse(this.typerdefFile.value);
 
-        const typer = new PiTyperParser(this.language).parse(this.typerdefFile.value);
-        if (typer == null) {
-            throw new Error("Typer definition could not be parsed, exiting.");
+            if (typer == null) {
+                throw new Error("Typer definition could not be parsed, exiting.");
+            }
+            this.typerGenerator.generate(typer);
+        } catch (e) {
+            LOGGER.log(e.stack);
         }
-        this.typerGenerator.generate(typer);
         // TODO add check on succesfullness
     }
 

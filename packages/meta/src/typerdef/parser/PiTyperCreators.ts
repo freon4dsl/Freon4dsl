@@ -25,6 +25,9 @@ export function createIsType(data: Partial<PiTypeIsTypeRule>): PiTypeIsTypeRule 
 
     if (!!data.types) {
         result.types = data.types;
+        // for (let t of result.types) {
+        //     t.owner = result;
+        // }
     }
     if (!!data.location) {
         result.location = data.location;
@@ -49,6 +52,7 @@ export function createConceptRule(data: Partial<PiTypeConceptRule>): PiTypeConce
 
     if (!!data.conceptRef) {
         result.conceptRef = data.conceptRef;
+        // result.conceptRef.owner = result;
     }
     if (!!data.statements) {
         result.statements = data.statements;

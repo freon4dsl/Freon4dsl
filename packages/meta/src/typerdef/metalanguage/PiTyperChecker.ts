@@ -1,9 +1,8 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiLangConcept, PiLangProperty, PiLangClass } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiConcept, PiProperty } from "../../languagedef/metalanguage/PiLanguage";
 import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeConceptRule, PiTypeStatement } from "./PiTyperDefLang";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiLangConceptReference } from "../../languagedef/metalanguage";
 
 const LOGGER = new PiLogger("PiTyperChecker").mute();
 const infertypeName = "infertype";
@@ -11,8 +10,8 @@ const infertypeName = "infertype";
 export class PiTyperChecker extends Checker<PiTypeDefinition> {
     definition: PiTypeDefinition;
     myExpressionChecker : PiLanguageExpressionChecker;
-    typeConcepts: PiLangConcept[] = [];         // all concepts marked as 'isType'
-    conceptsWithRules: PiLangConcept[] = [];    // all concepts for which a rule is found. Used to check whether there are two rules for the same concept.
+    typeConcepts: PiConcept[] = [];         // all concepts marked as 'isType'
+    conceptsWithRules: PiConcept[] = [];    // all concepts for which a rule is found. Used to check whether there are two rules for the same concept.
     
     constructor(language: PiLanguageUnit) {
         super(language);
@@ -33,6 +32,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
                 error:  `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' `+
                     `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
                 whenOk: () => {
+                    definition.language = this.language;
                     // sort out the different types of rules
                     this.sortRules(definition);
                     definition.typerRules.forEach(rule => {
@@ -62,8 +62,8 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     private checkConceptRule(rule: PiTypeConceptRule) {
         LOGGER.log("Checking checkConceptRule '" + rule.toPiString() + "'");
         this.myExpressionChecker.checkConceptReference(rule.conceptRef);
-        if (!!rule.conceptRef.referedElement()) { // error messages done by myExpressionChecker
-            let myConcept = rule.conceptRef.referedElement();
+        if (!!rule.conceptRef.referred) { // error messages done by myExpressionChecker
+            let myConcept = rule.conceptRef.referred;
 
             this.nestedCheck({
                 check: !this.conceptsWithRules.includes(myConcept),
@@ -83,7 +83,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         let first = true;
         for (let t of rule.types) {
             this.myExpressionChecker.checkConceptReference(t);
-            this.typeConcepts.push(t.referedElement());
+            this.typeConcepts.push(t.referred);
             if (first) {
                 this.definition.typeroot = t;
                 first = false;
@@ -93,17 +93,17 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
 
     private checkAnyTypeRule(rule: PiTypeAnyTypeRule) {
         LOGGER.log("Checking checkAnyTypeRule '" + rule.toPiString() + "'");
-        let myTypes : PiLangConcept[] = [];
+        let myTypes : PiConcept[] = [];
         for (let r of this.definition.typerRules) {
             if ( r instanceof PiTypeIsTypeRule ) {
                 for ( let t of r.types ) {
-                    myTypes.push( t.referedElement() );
+                    myTypes.push( t.referred );
                 }
             }
         }
     }
 
-    private checkStatement(stat: PiTypeStatement, enclosingConcept: PiLangConcept, predefined?: PiLangProperty[]) {
+    private checkStatement(stat: PiTypeStatement, enclosingConcept: PiConcept, predefined?: PiProperty[]) {
         LOGGER.log("Checking checkStatement '" + stat.toPiString() + "'");
         if (stat.isAbstract) {
             this.simpleCheck(stat.exp == null,

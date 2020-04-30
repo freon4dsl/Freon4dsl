@@ -32,7 +32,7 @@ describe("testing Scoper", () => {
         // }
     }
 
-    test("inheritance on loop", () => {
+    test.skip("inheritance on loop", () => {
         modelCreator.createInheritanceWithLoop().entities.forEach(ent => {
             let vis = scoper.getVisibleNames(ent);
             expect(vis).toContain(ent.name);
@@ -47,7 +47,7 @@ describe("testing Scoper", () => {
         });
     });
 
-    test("inheritance", () => {
+    test.skip("inheritance", () => {
         inheritanceModel.entities.forEach(ent => {
             let vis = scoper.getVisibleNames(ent);
             expect(vis).toContain(ent.name);

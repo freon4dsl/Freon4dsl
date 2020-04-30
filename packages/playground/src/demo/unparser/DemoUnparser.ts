@@ -7,7 +7,6 @@ import {
     DemoFunction,
     DemoVariable,
     DemoExpression,
-    DemoPlaceholderExpression,
     DemoLiteralExpression,
     DemoStringLiteralExpression,
     DemoNumberLiteralExpression,
@@ -48,9 +47,6 @@ export class DemoUnparser {
         if (modelelement instanceof DemoExpression) {
             return this.unparseDemoExpression(modelelement, includeChildren);
         }
-        if (modelelement instanceof DemoPlaceholderExpression) {
-            return this.unparseDemoPlaceholderExpression(modelelement, includeChildren);
-        }
         if (modelelement instanceof DemoLiteralExpression) {
             return this.unparseDemoLiteralExpression(modelelement, includeChildren);
         }
@@ -81,15 +77,15 @@ export class DemoUnparser {
         if (modelelement instanceof DemoAttributeType) {
             return this.unparseDemoAttributeType(modelelement, includeChildren);
         }
-        if (modelelement instanceof AppliedFeature) {
-            return this.unparseAppliedFeature(modelelement, includeChildren);
-        }
+        // if (modelelement instanceof AppliedFeature) {
+        //     return this.unparseAppliedFeature(modelelement, includeChildren);
+        // }
         return "";
     }
 
-    public unparseAppliedFeature(modelelement: AppliedFeature, includeChildren?: boolean): string {
-        return "." + modelelement.value + (!!modelelement.appliedfeature ? this.unparse(modelelement.appliedfeature) : "");
-    }
+    // public unparseAppliedFeature(modelelement: AppliedFeature, includeChildren?: boolean): string {
+    //     return "." + modelelement.value + (!!modelelement.appliedfeature ? this.unparse(modelelement.appliedfeature) : "");
+    // }
 
     public unparseDemoModel(modelelement: DemoModel, includeChildren?: boolean): string {
         let result: string = modelelement.name + "{ ";
@@ -162,9 +158,6 @@ export class DemoUnparser {
 
     public unparseDemoExpression(modelelement: DemoExpression, includeChildren?: boolean): string {
         let result = "";
-        if (modelelement instanceof DemoPlaceholderExpression) {
-            result = result + result.concat(this.unparseDemoPlaceholderExpression(modelelement, includeChildren));
-        }
         if (modelelement instanceof DemoLiteralExpression) {
             result = result + result.concat(this.unparseDemoLiteralExpression(modelelement, includeChildren));
         }
@@ -183,14 +176,10 @@ export class DemoUnparser {
         if (modelelement instanceof DemoVariableRef) {
             result = result + result.concat(this.unparseDemoVariableRef(modelelement, includeChildren));
         }
-        if (!!modelelement.appliedfeature) {
-            result = result + result.concat(this.unparse(modelelement.appliedfeature));
-        }
+        // if (!!modelelement.appliedfeature) {
+        //     result = result + result.concat(this.unparse(modelelement.appliedfeature));
+        // }
         return result;
-    }
-
-    public unparseDemoPlaceholderExpression(modelelement: DemoPlaceholderExpression, includeChildren?: boolean): string {
-        return "placeHolderExpression";
     }
 
     public unparseDemoLiteralExpression(modelelement: DemoLiteralExpression, includeChildren?: boolean): string {

@@ -6,11 +6,10 @@ export class MetaTypeTemplate {
     }
 
     generateMetaType(language: PiLanguageUnit): string {
-
+        // TODO should interfaces be add to MetaType?
         return `
         export type ${Names.metaType(language)} = 
-        ${language.enumerations.length > 0 ? `${language.enumerations.map(c => `"${c.name}"`).join(" | ")} |` : ""}
-        ${language.classes.map(c => `"${c.name}"`).join(" | ")}
+        ${language.concepts.map(c => `"${c.name}"`).join(" | ")}
         `;
     }
 

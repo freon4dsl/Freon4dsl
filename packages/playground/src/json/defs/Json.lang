@@ -1,0 +1,39 @@
+language Json
+
+concept JsonObject  implements IJsonValue {
+	part pairs: JsonPair[]
+}
+
+interface IJsonValue {
+}
+
+concept JsonArray  implements IJsonValue {
+	part items: IJsonValue[]
+}
+
+root concept JsonFile  {
+	part contents: IJsonValue
+}
+
+concept JsonNumber  implements IJsonValue {
+	value: string
+}
+
+concept JsonString  implements IJsonValue {
+	value: string
+}
+
+concept JsonNull  implements IJsonValue {
+    value: string
+}
+
+concept JsonPair  {
+    name: string
+	part value: IJsonValue
+}
+
+concept JsonBoolean  implements IJsonValue {
+	value: string
+
+}
+

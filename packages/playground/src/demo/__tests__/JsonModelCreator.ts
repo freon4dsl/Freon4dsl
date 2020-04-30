@@ -12,11 +12,11 @@ export class JsonModelCreator {
 
         const personEnt = DemoEntity.create("Person");
         const age = DemoAttribute.create("age");
-        // age.declaredType = DemoAttributeType.Integer;
-        age.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        // age.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
         const personName = DemoAttribute.create("name");
-        // personName.declaredType = DemoAttributeType.String;
-        personName.declaredType = new PiElementReference<DemoEntity>(personEnt, "DemoEntity");
+        personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        // personName.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
         personEnt.attributes.push(age);
         personEnt.attributes.push(personName);
 
