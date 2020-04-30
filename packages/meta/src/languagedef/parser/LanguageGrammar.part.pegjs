@@ -109,7 +109,7 @@ partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var is
                 "location": location()
             });
         } else {
-            const ref = create.createConceptReference({"name": type, "location": location()});
+            const ref = create.createClassifierReference({"name": type, "location": location()});
             return create.createPartProperty({
                 "name": name,
                 "type": ref,
@@ -122,7 +122,7 @@ partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var is
 
 // TODO add initialvalue
 // referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separator ws type:conceptReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
-referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separator ws type:conceptReference isList:"[]"? semicolon_separator
+referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? semicolon_separator
     { return create.createReferenceProperty({
         "name": name,
         "type": type,
@@ -133,6 +133,9 @@ referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separa
 
 conceptReference = referredName:var
     { return create.createConceptReference({"name": referredName, "location": location()}); }
+
+classifierReference = referredName:var
+    { return create.createClassifierReference({"name": referredName, "location": location()}); }
 
 interfaceReference = referredName:var
     { return create.createInterfaceReference({"name": referredName, "location": location()}); }

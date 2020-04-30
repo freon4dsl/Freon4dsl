@@ -191,6 +191,15 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
     return result;
 }
 
+export function createClassifierReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
+    // console.log("createConceptReference " + data.name);
+    const result = PiElementReference.createNamed<PiConcept>(data.name, "PiClassifier");
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
 export function createInterfaceReference(data: Partial<PiElementReference<PiInterface>>): PiElementReference<PiInterface> {
     // console.log("createConceptReference " + data.name);
     const result = PiElementReference.createNamed<PiInterface>(data.name, "PiInterface");

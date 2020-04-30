@@ -44,8 +44,9 @@ export class ConceptTemplate {
                     .concat(concept.interfaces.map(i => Names.interface(i.referred)))
                     .concat(Names.concept(language.expressionPlaceHolder))
                     .concat([baseExpressionName])
+                    .concat(concept.allParts().map(part => part.type.name))
+                    .concat(concept.allReferences().map(part => part.type.name))
                     .filter(name => !(name === concept.name))
-                    // .concat(element.properties.map(p => p.type).filter(t => language.enumerations.some(e => e.name === t)))
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
                     .filter(r => r !== null)
             )
@@ -55,7 +56,7 @@ export class ConceptTemplate {
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }
-        if (concept.parts().some(part => part.isList)) {
+        if (concept.allParts().some(part => part.isList) || concept.references().some(part => part.isList)) {
             mobxImports.push("observablelistpart");
         }
         if (concept.parts().some(part => !part.isList)) {

@@ -1,3 +1,4 @@
+import { Box, LabelBox } from "@projectit/core";
 import { PiElementReference } from "./PiElementReference";
 // import { PiLangElement } from "./PiLangElement";
 import { ParseLocation } from "../../utils";
@@ -359,4 +360,16 @@ export class PiFunction extends PiLangElement {
 
 export class PiParameter extends PiLangElement {
     type: PiElementReference<PiConcept>;
+}
+
+export function isBinaryExpression(elem: PiLangElement): elem is PiBinaryExpressionConcept {
+    return elem instanceof PiBinaryExpressionConcept;
+}
+
+export function isExpression(elem: PiLangElement): elem is PiExpressionConcept {
+    return elem instanceof PiExpressionConcept;
+}
+
+export function isLimited(elem: PiLangElement): elem is PiLimitedConcept {
+    return elem instanceof PiLimitedConcept;
 }
