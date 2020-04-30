@@ -25,6 +25,7 @@ export class UnparserTemplate {
 
         // Template starts here 
         return `
+        import { PiNamedElement } from "@projectit/core";
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
                 ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
@@ -63,6 +64,21 @@ export class UnparserTemplate {
                         result = result.concat(sepText);
                     }
                     if (vertical) result = result.concat("\\n");
+                });
+                return result;
+            }
+
+            private showReferenceList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
+                let result: string = "";
+                list.forEach(listElem => {
+                    result = result.concat((listElem as PiNamedElement)?.name);
+                    if (sepType === SeparatorType.Separator) {
+                        if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
+                    }
+                    if (sepType === SeparatorType.Terminator) {
+                        result = result.concat(sepText);
+                    }
+                    if (vertical) result = result.concat("\\\\n");
                 });
                 return result;
             }
@@ -134,9 +150,17 @@ export class UnparserTemplate {
                             if (item.listJoin.joinType === ListJoinType.Terminator) {
                                 joinType = "SeparatorType.Terminator";
                             }
-                            result = result + `\" + this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
+                            if(myElem.isPart) {
+                                result = result + `\" + this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
+                            } else {
+                                result = result + `\" + this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
+                            }
                         } else {
-                            result = result + `\" + this.unparse(${langExpToTypeScript(item.expression)}) + \"`;
+                            if(myElem.isPart) {
+                                result = result + `\" + this.unparse(${langExpToTypeScript(item.expression)}) + \"`;
+                            } else {
+                                result = result + `\" + ${langExpToTypeScript(item.expression)}?.name + \"`;
+                            }
                         }
                     }
                 }
