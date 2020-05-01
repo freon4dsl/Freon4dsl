@@ -80,7 +80,6 @@ export class PiReferenceTemplate {
                     result.name = name;
                 } else if( typeof name === "object" ){
                     result.referred = name;
-                    result.name = result.referred.name;
                 }
                 result.typeName = typeName;
                 return result;
