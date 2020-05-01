@@ -23,7 +23,7 @@ import {
     DemoGreaterThenExpression,
     DemoEqualsExpression,
     DemoLiteralExpression,
-    AppliedFeature, PlaceholderExpression
+    AppliedFeature, PlaceholderExpression, DemoAttributeRef, DemoAttributeWithEntityType
 } from "../language/gen";
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import { DemoUnparser } from "../unparser/DemoUnparser";
@@ -32,17 +32,37 @@ export class DemoModelCreator {
     // model.functions[0].expression.appliedfeature.type.referred.name).toBe("Company")
     public createModelWithAppliedfeature(): DemoModel {
         let result = this.createCorrectModel();
+        // add new attribute to Person entity
+        let personent = result.entities[0]; // Person
+        let personattr = new DemoAttributeWithEntityType();
+        personattr.name = "attrFromPerson";
+        personattr.declaredType = PiElementReference.create<DemoEntity>(result.entities[1], "DemoEntity"); // Company
+        personent.entAttributes.push(personattr);
+
+        // add new attribute to Company entity
+        let companyent = result.entities[1]; // Company
+        let compattr = new DemoAttributeWithEntityType();
+        compattr.name = "attrFromCompany";
+        compattr.declaredType = PiElementReference.create<DemoEntity>(result.entities[0], "DemoEntity"); // Person
+        companyent.entAttributes.push(compattr);
+
+        // find the function to be changed
         let length = result.functions[0];
+
+        // create an expression that includes applied features
         let expression: DemoVariableRef = new DemoVariableRef();
-        expression.variable = PiElementReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1 : Person
-        let firstFeature: AppliedFeature = new AppliedFeature();
-        firstFeature.value = "myfirstAppliedFeature";
-        firstFeature.type = PiElementReference.create<DemoEntity>(result.entities[1], "DemoEntity"); // Company
+        expression.variable = PiElementReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1: Person
+        // add an applied feature to the variable reference
+        let firstFeature: DemoAttributeRef = new DemoAttributeRef();
+        firstFeature.attribute = PiElementReference.create<DemoAttributeWithEntityType>(personattr, "DemoAttributeWithEntityType"); // Person.attrFromPerson: Company
         expression.appliedfeature = firstFeature;
-        let secondFeature: AppliedFeature = new AppliedFeature();
-        secondFeature.value = "mysecondAppliedFeature";
-        secondFeature.type = PiElementReference.create<DemoEntity>(result.entities[0], "DemoEntity"); // Person
+        // add a second applied feature to the attribute reference
+        let secondFeature: DemoAttributeRef = new DemoAttributeRef();
+        secondFeature.attribute = PiElementReference.create<DemoAttributeWithEntityType>(compattr, "DemoAttributeWithEntityType"); // Company.attrFromCompany: Person
         firstFeature.appliedfeature = secondFeature;
+
+        // change the expression of function model.length to the newly created expression
+
         length.expression = expression;
         return result;
     }
