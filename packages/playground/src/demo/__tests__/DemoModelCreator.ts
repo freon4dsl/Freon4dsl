@@ -68,32 +68,32 @@ export class DemoModelCreator {
     }
 
     public createInheritanceModel(): DemoModel {
-        let inheritanceModel: DemoModel = DemoModel.create("DemoModel_with_inheritance");
-        const vehicleEnt = DemoEntity.create("Vehicle");
-        const brand = DemoAttribute.create("brand");
-        const vehicleName = DemoAttribute.create("name");
+        let inheritanceModel: DemoModel = DemoModel.create({name: "DemoModel_with_inheritance"});
+        const vehicleEnt = DemoEntity.create({name: "Vehicle"});
+        const brand = DemoAttribute.create({name: "brand"});
+        const vehicleName = DemoAttribute.create({name: "name"});
         vehicleEnt.attributes.push(brand);
         vehicleEnt.attributes.push(vehicleName);
 
-        const carEnt = DemoEntity.create("Car");
-        const numberplate = DemoAttribute.create("numberplate");
-        const carType = DemoAttribute.create("make");
+        const carEnt = DemoEntity.create({name: "Car"});
+        const numberplate = DemoAttribute.create({name: "numberplate"});
+        const carType = DemoAttribute.create({name: "make"});
         // carEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
         carEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         carEnt.attributes.push(numberplate);
         carEnt.attributes.push(carType);
 
-        const bikeEnt = DemoEntity.create("Bike");
-        const backseat = DemoAttribute.create("backseat");
-        const gears = DemoAttribute.create("gears");
+        const bikeEnt = DemoEntity.create({name: "Bike"});
+        const backseat = DemoAttribute.create({name: "backseat"});
+        const gears = DemoAttribute.create({name: "gears"});
         // bikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
         bikeEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         bikeEnt.attributes.push(backseat);
         bikeEnt.attributes.push(gears);
 
-        const racebikeEnt = DemoEntity.create("RaceBike");
-        const color = DemoAttribute.create("color");
-        const wheelsize = DemoAttribute.create("wheelsize");
+        const racebikeEnt = DemoEntity.create({name: "RaceBike"});
+        const color = DemoAttribute.create({name: "color"});
+        const wheelsize = DemoAttribute.create({name: "wheelsize"});
         // racebikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity"));
         racebikeEnt.baseEntity = PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity");
         racebikeEnt.attributes.push(color);
@@ -115,23 +115,23 @@ export class DemoModelCreator {
     }
 
     public createCorrectModel(): DemoModel {
-        let correctModel: DemoModel = DemoModel.create("DemoModel_1");
+        let correctModel: DemoModel = DemoModel.create({name: "DemoModel_1"});
 
-        const length = DemoFunction.create("length");
-        const Variable1 = DemoVariable.create("Variable1");
-        const VariableNumber2 = DemoVariable.create("VariableNumber2");
+        const length = DemoFunction.create({name: "length"});
+        const Variable1 = DemoVariable.create({name: "Variable1"});
+        const VariableNumber2 = DemoVariable.create({name: "VariableNumber2"});
         length.parameters.push(Variable1);
         length.parameters.push(VariableNumber2);
         length.expression = this.addComplexExpression1();
         // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
-        const determine = DemoFunction.create("determine");
-        const AAP = DemoVariable.create("AAP");
+        const determine = DemoFunction.create({name: "determine"});
+        const AAP = DemoVariable.create({name: "AAP"});
         determine.parameters.push(AAP);
         determine.expression = MakePlusExp("Hello Demo", "Goodbye");
         // determine(AAP) = "Hello Demo" + "Goodbye"
 
-        const last = DemoFunction.create("last");
+        const last = DemoFunction.create({name: "last"});
         last.expression = MakePlusExp("5", "woord");
         // last() = 5 + "woord"
 
@@ -139,26 +139,26 @@ export class DemoModelCreator {
         correctModel.functions.push(determine);
         correctModel.functions.push(last);
 
-        const personEnt = DemoEntity.create("Person");
-        const age = DemoAttribute.create("age");
-        const personName = DemoAttribute.create("name");
+        const personEnt = DemoEntity.create({name: "Person"});
+        const age = DemoAttribute.create({name: "age"});
+        const personName = DemoAttribute.create({name: "name"});
         personEnt.attributes.push(age);
         personEnt.attributes.push(personName);
-        const first = DemoFunction.create("first");
-        const Resultvar = DemoVariable.create("Resultvar");
+        const first = DemoFunction.create({name: "first"});
+        const Resultvar = DemoVariable.create({name: "Resultvar"});
         first.parameters.push(Resultvar);
         first.expression = MakePlusExp("5", "24");
         personEnt.functions.push(first);
         // Person { age, first(Resultvar) = 5 + 24 }
 
-        const companyEnt = DemoEntity.create("Company");
-        const companyName = DemoAttribute.create("name");
-        const VAT_Number = DemoAttribute.create("VAT_Number");
+        const companyEnt = DemoEntity.create({name: "Company"});
+        const companyName = DemoAttribute.create({name: "name"});
+        const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
 
-        const another = DemoFunction.create("another");
-        const NOOT = DemoVariable.create("NOOT");
+        const another = DemoFunction.create({name: "another"});
+        const NOOT = DemoVariable.create({name: "NOOT"});
         another.parameters.push(NOOT);
         another.expression = this.addComplexExpression2(NOOT);
         // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...

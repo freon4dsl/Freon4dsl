@@ -14,5 +14,10 @@ export class DemoStdlib implements PiStdlib {
 
     elements: PiNamedElement[] = [];
 
-    constructor() {}
+    constructor() {
+        this.elements.push(DemoAttributeType.String);
+        this.elements.push(DemoAttributeType.Integer);
+        this.elements.push(DemoAttributeType.Boolean);
+        this.elements.push(DemoAttributeType.ANY);
+    }
 }

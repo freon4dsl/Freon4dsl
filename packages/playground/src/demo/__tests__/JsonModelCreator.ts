@@ -8,21 +8,21 @@ export class JsonModelCreator {
     }
 
     public createCorrectModel(): DemoModel {
-        let correctModel: DemoModel = DemoModel.create("DemoModel_1");
+        let correctModel: DemoModel = DemoModel.create({name: "DemoModel_1"});
 
-        const personEnt = DemoEntity.create("Person");
-        const age = DemoAttribute.create("age");
+        const personEnt = DemoEntity.create({name: "Person"});
+        const age = DemoAttribute.create({name: "age"});
         age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         // age.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-        const personName = DemoAttribute.create("name");
+        const personName = DemoAttribute.create({name: "name"});
         personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         // personName.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
         personEnt.attributes.push(age);
         personEnt.attributes.push(personName);
 
-        const companyEnt = DemoEntity.create("Company");
-        const companyName = DemoAttribute.create("name");
-        const VAT_Number = DemoAttribute.create("VAT_Number");
+        const companyEnt = DemoEntity.create({name: "Company"});
+        const companyName = DemoAttribute.create({name: "name"});
+        const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
 

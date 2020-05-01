@@ -15,7 +15,7 @@ describe("Demo Model", () => {
         });
 
         test("model name should be set", () => {
-            expect(initialModel.name).not.toBeNull;
+            expect(initialModel.name).not.toBeNull();
             const serial = new GenericModelSerializer();
             const jsonOut = serial.convertToJSON(initialModel);
             // console.log(JSON.stringify(jsonOut));
@@ -32,7 +32,7 @@ describe("Demo Model", () => {
             expect(inModel.entities.length).toBe(2);
             const e1: DemoEntity = inModel.entities[0];
             // expect(e1.container).toBe(inModel);
-            expect(e1.name).not.toBeNull;
+            expect(e1.name).not.toBeNull();
             expect(e1.name).toBe("Person");
             // expect(e1.functions.length).toBe(1);
             // expect(inModel.functions.length).toBe(3);

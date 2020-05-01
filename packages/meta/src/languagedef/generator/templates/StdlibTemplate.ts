@@ -3,7 +3,7 @@ import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];
-    constructorText: string;
+    constructorText: string = "";
 
     generateStdlibClass(language: PiLanguageUnit, relativePath: string): string {
         this.makeTexts(language);
@@ -33,9 +33,7 @@ export class StdlibTemplate {
     private makeTexts(language) {
         language.concepts.filter(con => con instanceof PiLimitedConcept).map(limitedConcept => {
             this.limitedConceptNames.push(limitedConcept.name);
-            this.constructorText = `${limitedConcept.instances.map(x => {
-                `this.elements.push(${limitedConcept.name}.${x.name});`
-            }).join("\n")}`;
+            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x => `this.elements.push(${limitedConcept.name}.${x.name});`).join("\n ")}`);
         });
     }
 }

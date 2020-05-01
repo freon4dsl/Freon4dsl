@@ -69,9 +69,14 @@ describe("Testing Validator", () => {
             });
         });
 
-        test("list is not empty", () => {
+        test("'self.entities' and 'self.functions' may not empty and model name should be valid", () => {
             let errors: PiError[] = [];
             errors = validator.validate(new DemoModel());
+            // let text = "";
+            // for (let e of errors) {
+            //     text = text.concat(e.message + "\n");
+            // }
+            // console.log(text);
             expect(errors.length).toBe(3);
         });
 
@@ -86,8 +91,8 @@ describe("Testing Validator", () => {
         test("(1 + 2) * 'Person' should give type error", () => {
             let errors: PiError[] = [];
             const variableExpression = new DemoVariableRef();
-            const variable = DemoVariable.create("PersonVar");
-            const personEnt = DemoEntity.create("Person");
+            const variable = DemoVariable.create({name: "PersonVar"});
+            const personEnt = DemoEntity.create({name: "Person"});
             variable.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
             variableExpression.variable = PiElementReference.create<DemoVariable>(variable, "DemoVariable");
 
@@ -114,11 +119,11 @@ describe("Testing Validator", () => {
         // TODO error in reference
         test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 3 errors', () => {
             let errors: PiError[] = [];
-            const determine = DemoFunction.create("determine");
-            const AAP = DemoVariable.create("AAP");
+            const determine = DemoFunction.create({name: "determine"});
+            const AAP = DemoVariable.create({name: "AAP"});
             determine.parameters.push(AAP);
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-            const personEnt = DemoEntity.create("Person");
+            const personEnt = DemoEntity.create({name: "Person"});
             determine.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             errors = validator.validate(determine, true);
@@ -132,13 +137,13 @@ describe("Testing Validator", () => {
         // TODO error in reference
         test("Person { name, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
             let errors: PiError[] = [];
-            const personEnt = DemoEntity.create("Person");
-            const age = DemoAttribute.create("age");
-            const personName = DemoAttribute.create("name");
+            const personEnt = DemoEntity.create({name: "Person"});
+            const age = DemoAttribute.create({name: "age"});
+            const personName = DemoAttribute.create({name: "name"});
             personEnt.attributes.push(age);
             personEnt.attributes.push(personName);
-            const first = DemoFunction.create("first");
-            const Resultvar = DemoVariable.create("Resultvar");
+            const first = DemoFunction.create({name: "first"});
+            const Resultvar = DemoVariable.create({name: "Resultvar"});
             first.parameters.push(Resultvar);
             first.expression = MakePlusExp("5", "24");
             personEnt.functions.push(first);

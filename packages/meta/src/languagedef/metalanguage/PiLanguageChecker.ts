@@ -4,7 +4,7 @@ import {
     PiBinaryExpressionConcept,
     PiExpressionConcept,
     PiPrimitiveProperty,
-    PiInterface, PiConcept, PiProperty, PiClassifier
+    PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance
 } from "./PiLanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
@@ -108,32 +108,50 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.simpleCheck(!!right && right.type.referred instanceof PiExpressionConcept,
                 `Concept ${piClass.name}.right should be an expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
         }
+
+        if (piClass instanceof  PiLimitedConcept) {
+            this.checkLimitedConcept(piClass);
+        }
     }
 
     // TODO change this into a check on LimitedConcept
-    // checkEnumProperty(prop: PiLangEnumProperty) {
-    //     LOGGER.log(`Checking enum property '${prop.name}' [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}]`);
-    //     // this.simpleCheck(prop.owningConcept !== null,
-    //     //     `Property '${prop.name}' should belong to a concept [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`);
-    //     this.nestedCheck(
-    //         {
-    //             check: !!prop.type,
-    //             error: `Property '${prop.name}' should have a type [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`,
-    //             whenOk: () => {
-    //                 this.checkConceptReference(prop.type);
-    //                 if (!!prop.type.referred){ // error message taken care of by checkConceptReference
-    //                     this.nestedCheck({
-    //                         check: prop.type.referred instanceof PiLangEnumeration,
-    //                         error:  `Enum property '${prop.name}' should have an enumeration concept as type `+
-    //                                 `[line: ${prop.type.location?.start.line}, column: ${prop.type.location?.start.column}]. (Maybe use prefix 'part' or 'reference'?)`,
-    //                         whenOk: () => {
-    //                             prop.type = this.morfConceptReferenceIntoSubClass(prop.type) as PiLangEnumerationReference;
-    //                         }
-    //                     });
-    //                 }
-    //             }
-    //         });
-    // }
+    checkLimitedConcept(prop: PiLimitedConcept) {
+        LOGGER.log(`Checking limited concept '${prop.name}' [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}]`);
+        // checking only the predefined instances, all other stuff is done in this.checkConcept
+        prop.instances.forEach(inst => this.checkInstance(inst));
+    }
+
+    checkInstance(piInstance: PiInstance) {
+        this.checkConceptReference(piInstance.concept);
+        this.nestedCheck({
+            check: piInstance.concept.referred !== null,
+            error: `Predefined instance '${piInstance.name}' should belong to a concept [line: ${piInstance.location?.start.line}, column: ${piInstance.location?.start.column}].`,
+            whenOk: () => {
+                piInstance.props.forEach(p => this.checkInstanceProperty(p, piInstance.concept.referred));
+            }
+        });
+    }
+
+    checkInstanceProperty(piPropertyInstance: PiPropertyInstance, enclosingConcept: PiConcept) {
+        let myInstance = piPropertyInstance.owningInstance.referred;
+        this.nestedCheck(
+            {
+                check: !!myInstance,
+                error: `Property '${piPropertyInstance.name}' should belong to a predefined instance [line: ${piPropertyInstance.location?.start.line}, column: ${piPropertyInstance.location?.start.column}].`,
+                whenOk: () => {
+                    // find the property to which this piPropertyInstance refers
+                    let myProp = myInstance.concept.referred.allPrimProperties().find(p => p.name === piPropertyInstance.name);
+                    this.nestedCheck({
+                        check: myProp instanceof PiPrimitiveProperty,
+                        error: `Predefined property '${piPropertyInstance.name}' should have a primitive type `+
+                            `[line: ${piPropertyInstance.location?.start.line}, column: ${piPropertyInstance.location?.start.column}].`,
+                        whenOk: () => {
+                            piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                        }
+                    });
+                }
+            });
+    }
 
     checkConceptProperty(element: PiProperty): void {
         LOGGER.log("Checking concept property '" + element.name + "'");
