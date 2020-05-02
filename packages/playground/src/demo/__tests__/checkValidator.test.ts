@@ -25,7 +25,7 @@ describe("Testing Validator", () => {
     describe("Validate DemoModel Instance", () => {
         const model: DemoModel = new DemoModelCreator().createCorrectModel();
         const validator = new DemoValidator();
-        validator.myTyper = new DemoTyper();
+        // validator.myTyper = new DemoTyper();
 
         beforeEach(done => {
             done();
@@ -117,7 +117,6 @@ describe("Testing Validator", () => {
             });
         });
 
-        // TODO error in reference
         test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 3 errors', () => {
             let errors: PiError[] = [];
             const determine = DemoFunction.create({name: "determine"});
@@ -135,7 +134,6 @@ describe("Testing Validator", () => {
             expect(errors.length).toBe(3);
         });
 
-        // TODO error in reference
         test("Person { name, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
             let errors: PiError[] = [];
             const personEnt = DemoEntity.create({name: "Person"});
