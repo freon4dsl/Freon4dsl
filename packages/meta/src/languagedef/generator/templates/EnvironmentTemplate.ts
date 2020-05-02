@@ -6,7 +6,7 @@ import {
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
     EDITOR_FOLDER,
-    EDITOR_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER
+    EDITOR_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, UNPARSER_GEN_FOLDER
 } from "../../../utils/";
 import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
@@ -16,7 +16,8 @@ export class EnvironmentTemplate {
 
     generateEnvironment(language: PiLanguageUnit, relativePath: string): string {
         return `
-        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib} } from "${PROJECTITCORE}";
+        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, 
+                        ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, ${Names.PiUnparser} } from "${PROJECTITCORE}";
         import { ${Names.ProjectionalEditor} } from "@projectit/core";
         import * as React from "react";
         import { ${Names.actions(language)}, ${Names.context(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
@@ -26,6 +27,7 @@ export class EnvironmentTemplate {
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
         import { ${Names.projection(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.projection(language)}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
+        import { ${Names.unparser(language)}  } from "${relativePath}${UNPARSER_GEN_FOLDER}/${Names.unparser(language)}";
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
         
         export class ${Names.environment(language)} implements ${Names.PiEnvironment} {       
@@ -67,6 +69,7 @@ export class EnvironmentTemplate {
             typer: ${Names.PiTyper} = new ${Names.typer(language)}();
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
+            unparser: ${Names.PiUnparser} = new ${Names.unparser(language)}();
             private _projectionalEditorComponent : ${Names.ProjectionalEditor} = null;
         }`;
     }
