@@ -41,9 +41,9 @@ templateSpace = s:[ ]+
                     return creator.createIndent( { "indent": s.join(""), "location": location() });
                 }
 
-sub_projection = "[[" ws exp:expression ws
-                        join:listJoin?
-                 "]]"
+sub_projection = subProjectionStart ws
+                     exp:expression ws join:listJoin? ws
+                 subProjectionEnd
             {
                 return creator.createSubProjection( {  "expression": exp, "listJoin": join, "location": location() });
             }
@@ -86,10 +86,14 @@ listJoinType = joinType:("@separator" / "@terminator") ws
                     return creator.createJoinType( {"type": joinType, "location": location() } );
                 }
 
-projectionexpression  = "${" t:var "}"
-                {
-                    return creator.createPropertyRef( { "propertyName": t, "location": location() });
-                }
+//projectionexpression  = "${" t:var "}"
+//                {
+//                    return creator.createPropertyRef( { "propertyName": t, "location": location() });
+//                }
+
+subProjectionStart = "${"
+subProjectionEnd = "}"
+
 text        = chars:anythingBut+
             {
                 return creator.createText( chars.join("") );
@@ -112,7 +116,7 @@ newline     = "\r"? "\n"
                     return creator.createNewline();
                 }
 
-line        = items:(s:templateSpace / t:text / p:sub_projection / e:projectionexpression / w:newline )+
+line        = items:(s:templateSpace / t:text / p:sub_projection / w:newline )+
                 {
                     return creator.createLine( {"items": items} );
                 }

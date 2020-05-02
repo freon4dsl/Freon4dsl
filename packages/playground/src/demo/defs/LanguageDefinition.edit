@@ -1,13 +1,13 @@
 editor StartEditor for language Demo
 
 DemoAttribute {
-    @projection attribuut [ [[self.name]] : [[self.declaredType]] ]
+    @projection attribuut [ ${self.name} : ${self.declaredType} ]
 }
 
 DemoStringLiteralExpression {
     @projection DemoStringLiteralExpression
         [
-		'[[self.value]]'
+		'${self.value}'
         ]
     @trigger "'"
 }
@@ -15,21 +15,22 @@ DemoStringLiteralExpression {
 DemoIfExpression {
     @projection DemoIfExpression
         [
-        if ([[ self.condition ]]) then
-                  [[ self.whenTrue ]]
+        if (${self.condition}) then
+                  ${self.whenTrue}
         else
-           [[self.whenFalse]]
+           ${self.whenFalse}
         endif
         ]
 
     @trigger "if"
     @symbol "if"
 }
+
 /*
 DemoIfExpression {
     @projection DemoIfExpression
         [
-        ([[ self.condition ]] ? [[ self.whenTrue ]] : [[self.whenFalse]] )
+        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
         ]
 
     @trigger "if"
@@ -62,16 +63,16 @@ DemoEntity {
 DemoFunctionCallExpression {
     @projection gewoon
         [
-        [[self.name]] (  )
+        ${self.name} (  )
         ]
-    @trigger "function"
+    @trigger "function2"
 }
 */
 
 DemoFunctionCallExpression {
     @projection DemoFunctionCallExpression
         [
-        CALL [[self.functionDefinition]] (  )
+        CALL ${self.functionDefinition} (  )
         ]
     @trigger "function"
 }
@@ -79,14 +80,28 @@ DemoFunctionCallExpression {
 DemoModel {
     @projection DemoModel
         [
-        model [[self.name]] {
+        model ${self.name} {
         entities:
-            [[self.entities
+            ${self.entities
                 @vertical
                 @terminator [\n\n]
-            ]]
+            }
         model wide functions:
-            [[self.functions @horizontal @separator [\n] ]]
+            ${self.functions @horizontal @separator [\n] }
+        }
+        ]
+}
+DemoModel {
+    @projection DemoModel
+        [
+        model ${self.name} {
+        entities:
+            ${self.entities
+                @vertical
+                @terminator [\n\n]
+            }
+        model wide functions:
+            ${self.functions @horizontal @separator [\n] }
         }
         ]
 }
