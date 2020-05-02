@@ -96,7 +96,7 @@ property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
 // TODO add initialvalue
-// TODO make interfaces availbale as type of properties
+// TODO make interfaces available as type of properties
 // partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
 partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? semicolon_separator
     {
@@ -164,7 +164,10 @@ instance = name:var equals_separator curly_begin props:propDefList curly_end
 propDefList = head:propDef tail:(comma_separator v:propDef { return v; })*
     { return [head].concat(tail); }
 
+// the name may or may ot be surrounded by quotes
 propDef = "\"" name:var "\"" name_separator value:propValue
+    { return create.createPropDef( {"name": name, "value": value, "location": location() } ); }
+    / name:var name_separator value:propValue
     { return create.createPropDef( {"name": name, "value": value, "location": location() } ); }
 
 propValue = "\"" value:string "\""  { return value; }
