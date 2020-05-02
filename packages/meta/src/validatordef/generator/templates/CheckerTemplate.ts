@@ -23,7 +23,7 @@ export class CheckerTemplate {
 
         export class ${checkerClassName} implements ${workerInterfaceName} {
             myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
-            typer: ${typerInterfaceName};
+            typer: ${typerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).typer;
             errorList: ${errorClassName}[] = [];
 
         ${validdef.conceptRules.map(ruleSet =>

@@ -26,7 +26,6 @@ import {
     AppliedFeature, PlaceholderExpression, DemoAttributeRef, DemoAttributeWithEntityType
 } from "../language/gen";
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
-import { DemoUnparser } from "../unparser/DemoUnparser";
 
 export class DemoModelCreator {
     // model.functions[0].expression.appliedfeature.type.referred.name).toBe("Company")

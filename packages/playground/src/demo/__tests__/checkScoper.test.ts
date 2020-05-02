@@ -1,7 +1,7 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, DemoFunction } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoUnparser } from "../unparser/DemoUnparser";
+import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleElements from DemoModel Instance", () => {

@@ -16,7 +16,6 @@ import {
     DemoLiteralExpression,
     DemoBooleanLiteralExpression
 } from "../language/gen";
-import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
@@ -25,7 +24,6 @@ describe("Testing Validator", () => {
     describe("Validate DemoModel Instance", () => {
         const model: DemoModel = new DemoModelCreator().createCorrectModel();
         const validator = new DemoValidator();
-        // validator.myTyper = new DemoTyper();
 
         beforeEach(done => {
             done();

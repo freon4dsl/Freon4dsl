@@ -33,8 +33,7 @@ export class ValidatorTemplate {
                 let myChecker = new ${checkerClassName}();
                 let errorlist : ${this.errorClassName}[] = [];
                 myChecker.errorList = errorlist;
-                myChecker.typer = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).typer;
-
+ 
                 let myWalker = new ${walkerClassName}();
                 myWalker.myWorker = myChecker;
                 myWalker.walk(modelelement, includeChildren );
