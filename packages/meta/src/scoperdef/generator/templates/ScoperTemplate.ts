@@ -62,7 +62,7 @@ export class ScoperTemplate {
                         nearestNamespace = this.findNearestNamespace(modelelement);
                     }
                     // second, get the element from the found namespace
-                    if (!!nearestNamespace) result = nearestNamespace.getVisibleElements(metatype);
+                    if (!!nearestNamespace) result = result.concat(nearestNamespace.getVisibleElements(metatype));
             
                     // third, get the elements from any surrounding namespaces
                     let parentElement = this.getParent(modelelement);
