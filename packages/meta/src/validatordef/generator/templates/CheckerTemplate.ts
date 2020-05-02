@@ -41,7 +41,7 @@ export class CheckerTemplate {
         ).join("\n\n") }
         
         private isValidName(name: string) : boolean {
-            if (name == null) return false;
+            if (!(!!name)) return false;
             // cannot start with number
             if (/[0-9]/.test( name[0]) ) return false; 
             // may contain letters, numbers, '$', and '_', but no other characters

@@ -72,13 +72,12 @@ describe("Testing Validator", () => {
         test("'self.entities' and 'self.functions' may not empty and model name should be valid", () => {
             let errors: PiError[] = [];
             errors = validator.validate(new DemoModel());
-            let text = "";
-            for (let e of errors) {
-                text = text.concat(e.message + "\n");
-            }
-            console.log(text);
-            // TODO this number should be 3 instead of 2, error on valid name is faulty
-            expect(errors.length).toBe(2);
+            // let text = "";
+            // for (let e of errors) {
+            //     text = text.concat(e.message + "\n");
+            // }
+            // console.log(text);
+            expect(errors.length).toBe(3);
         });
 
         test("incorrect name of DemoModel: YY\\XX", () => {
