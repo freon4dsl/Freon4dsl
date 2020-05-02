@@ -1,6 +1,6 @@
 import { PiConceptProperty, PiLangExp, PiLanguageUnit } from "../../../languagedef/metalanguage";
 import { PiScopeDef } from "../../metalanguage";
-import { langExpToTypeScript, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
+import { langExpToTypeScript, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, sortClasses } from "../../../utils";
 
 export class NamespaceTemplate {
     hasAdditionalNamespacetext = '';
@@ -103,15 +103,22 @@ export class NamespaceTemplate {
                 ${myIfStatement}       
                 return result;
             }
-        
-            private addIfTypeOK(z: ${piNamedElementClassName}, result: ${piNamedElementClassName}[], metatype?: ${langConceptType}) {
+            
+            /**
+             * Checks whether 'namedElement' is an instance of 'metatype', if so 'namedElement' is added to 'result'.
+             * 
+             * @param namedElement
+             * @param result
+             * @param metatype
+             */
+            private addIfTypeOK(namedElement: ${piNamedElementClassName}, result: ${piNamedElementClassName}[], metatype?: ${langConceptType}) {
                 if (metatype) {
                     // TODO add support for inheritance
-                    if (z.piLanguageConcept() === metatype) {
-                        result.push(z);
+                    if (namedElement.piLanguageConcept() === metatype) {
+                        result.push(namedElement);
                     }
                 } else {
-                    result.push(z);
+                    result.push(namedElement);
                 }
             }
         
@@ -167,11 +174,14 @@ export class NamespaceTemplate {
 
     private createIfStatement(scopedef: PiScopeDef) : string {
         let result : string = "";
-        for (let ref of scopedef.namespaces) {
-            result = result.concat("if (this._myElem instanceof " + ref.name + ") {")
-            for (let part of ref.referred.allParts() ) {
-                for (let kk of part.type.referred.allProperties()) {
-                    if (kk.name === "name") {
+        // sort the namespaces such that subclasses are always before their supers
+        let sortedList = sortClasses(scopedef.namespaces);
+        // then create the if-statement for each namespace
+        for (let piConcept of sortedList) {
+            result = result.concat("if (this._myElem instanceof " + piConcept.name + ") {");
+            for (let part of piConcept.allParts() ) {
+                for (let allProperty of part.type.referred.allProperties()) {
+                    if (allProperty.name === "name") {
                         if (part.isList) {
                             result = result.concat(
                                 "for (let z of this._myElem." + part.name + ") { this.addIfTypeOK(z, result, metatype);  }"
