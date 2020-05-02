@@ -35,7 +35,7 @@ describe("Testing Typer", () => {
                     expect(att.declaredType.referred).not.toBeNull();
                     expect(att.declaredType.referred).not.toBeUndefined();
                     // TODO there is a mobx error that causes the name property to be undefined in the following
-                    // console.log("FOUND type " + att.declaredType.referred.name + ", " + att.declaredType.referred.extra + " for " + ent.name + "." + att.name);
+                    console.log("FOUND type " + att.declaredType.referred.name + ", " + att.declaredType.referred.extra + " for " + ent.name + "." + att.name);
                     expect(typer.isType(att.declaredType.referred)).toBe(true);
                 });
             });
