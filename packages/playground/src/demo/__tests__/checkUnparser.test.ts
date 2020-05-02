@@ -14,7 +14,7 @@ import {
     PiElementReference
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoUnparser } from "../unparser/DemoUnparser";
+import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import * as fs from "fs";
 

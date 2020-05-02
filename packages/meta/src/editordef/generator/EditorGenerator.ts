@@ -1,7 +1,7 @@
 import { DefEditorChecker, DefEditorLanguage } from "../metalanguage";
 import { PiLanguageUnit } from "../../languagedef/metalanguage";
 import * as fs from "fs";
-import { Names, Helpers, EDITOR_GEN_FOLDER, EDITOR_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../utils";
+import { Names, Helpers, EDITOR_GEN_FOLDER, EDITOR_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, UNPARSER_GEN_FOLDER } from "../../utils";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { DefEditorDefaults } from "../metalanguage/DefEditorDefaults";
 import {
@@ -23,7 +23,7 @@ const LOGGER = new PiLogger("EditorGenerator").mute();
 export class EditorGenerator {
     public outputfolder: string = ".";
     protected editorGenFolder: string;
-    protected utilsGenFolder: string;
+    protected unparserGenFolder: string;
 
     protected editorFolder: string;
     language: PiLanguageUnit;
@@ -34,7 +34,7 @@ export class EditorGenerator {
     generate(editDef: DefEditorLanguage): void {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
-        this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
+        this.unparserGenFolder = this.outputfolder + "/" + UNPARSER_GEN_FOLDER;
         let name = editDef ? editDef.name : "";
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder + " for language " + this.language?.name);
 
@@ -64,6 +64,8 @@ export class EditorGenerator {
         Helpers.createDirIfNotExisting(this.editorFolder);
         Helpers.createDirIfNotExisting(this.editorGenFolder);
         Helpers.deleteFilesInDir(this.editorGenFolder);
+        Helpers.createDirIfNotExisting(this.unparserGenFolder);
+        Helpers.deleteFilesInDir(this.unparserGenFolder);
 
         // set relative path to get the imports right
         let relativePath = "../../";
@@ -116,7 +118,7 @@ export class EditorGenerator {
         LOGGER.log(`Generating language unparser: ${Names.unparser(this.language)}.ts`);
         var unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(this.language, editDef, relativePath), "Unparser Class");
         // var unparserFile = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
-        fs.writeFileSync(`${this.utilsGenFolder}/${Names.unparser(this.language)}.ts`, unparserFile);
+        fs.writeFileSync(`${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`, unparserFile);
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
         var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef), "Editor Gen Index");

@@ -1,4 +1,4 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript } from "../../../utils";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
 
@@ -11,18 +11,19 @@ export class CheckerTemplate {
         const errorClassName : string = Names.PiError;
         const checkerClassName : string = Names.checker(language);
         const typerInterfaceName: string = Names.PiTyper;
-        const unparserClassName: string = Names.unparser(language);
-        
+        const unparserInterfaceName: string = Names.PiUnparser;
+
         // the template starts here
         return `
-        import { ${errorClassName}, ${typerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${typerInterfaceName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language, validdef)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${unparserClassName} } from "${relativePath}${PathProvider.unparser(language)}";    
+        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";
+        
 
         export class ${checkerClassName} implements ${workerInterfaceName} {
-            myUnparser = new ${unparserClassName}();
-            typer: ${typerInterfaceName};
+            myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
+            typer: ${typerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).typer;
             errorList: ${errorClassName}[] = [];
 
         ${validdef.conceptRules.map(ruleSet =>
@@ -41,7 +42,7 @@ export class CheckerTemplate {
         ).join("\n\n") }
         
         private isValidName(name: string) : boolean {
-            if (name == null) return false;
+            if (!(!!name)) return false;
             // cannot start with number
             if (/[0-9]/.test( name[0]) ) return false; 
             // may contain letters, numbers, '$', and '_', but no other characters

@@ -10,27 +10,63 @@ import { PiElementReference } from "../languagedef/metalanguage/PiElementReferen
  * condition is the type of the object, for instance in the unparser.
  * An entry for a subclass must precede an entry for its base class,
  * otherwise the unparse${concept.name} for the base class will be called.
+ *
  * @param piclasses: the list of classes to be sorted
  */
-export function sortClasses(piclasses: PiConcept[]): PiConcept[] {
+export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcept>[]): PiConcept[] {
     let newList: PiConcept[] = [];
     for (let c of piclasses) {
         // without base must be last
-        if (!c.base) {
-            newList.push(c);
+        let concept: PiConcept;
+        if (c instanceof PiConcept) {
+            concept = c;
+        } else if (c instanceof PiElementReference) {
+            concept = c.referred;
+        }
+        if (!concept.base) {
+            newList.push(concept);
         }
     }
     while (newList.length < piclasses.length) {
         for (let c of piclasses) {
-            if (c.base) {
-                // push c before c.base
-                if (newList.includes(c.base.referred)) {
-                    newList.unshift(c);
+            let concept: PiConcept;
+            if (c instanceof PiConcept) {
+                concept = c;
+            } else if (c instanceof PiElementReference) {
+                concept = c.referred;
+            }
+            if (concept.base) {
+                // see whether the base, or the base of the base recursively, is in the new list
+                // if so, push concept before concept.base, else push concept as first
+                let index = indexOfBaseInList(newList, concept);
+                if (index !== -1) { // no base found in 'newList'
+                    newList.splice(index, 0, concept);
+                } else {
+                    newList.unshift(concept);
                 }
             }
         }
     }
     return newList;
+}
+
+/**
+ * Returns the index of the base of 'concept' in 'newList'.
+ * If the direct base is not present, the function will search for parents of
+ * the direct base recursively.
+ * Returns -1 if no of the base concepts of 'concept' is present.
+ *
+ * @param newList
+ * @param concept
+ */
+function indexOfBaseInList(newList: PiConcept[], concept: PiConcept): number {
+    let myBase = concept.base?.referred;
+    let index = -1;
+    while (!!myBase || index > 0) {
+        index = newList.indexOf(myBase);
+        myBase = myBase?.base?.referred;
+    }
+    return index;
 }
 
 /**
@@ -67,9 +103,6 @@ export function isPrimitiveType(type: PiLangElement): boolean {
 
 export function langExpToTypeScript(exp: PiLangExp): string {
     let result : string = '';
-
-
-
     if (exp instanceof PiLangSelfExp) {
         result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
