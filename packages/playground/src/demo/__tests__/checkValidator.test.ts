@@ -129,8 +129,8 @@ describe("Testing Validator", () => {
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             errors = validator.validate(determine, true);
             errors.forEach(e => {
-                console.log(e.message);
-                // expect(e.reportedOn === determine);
+                // console.log(e.message);
+                expect(e.reportedOn === determine);
             });
             expect(errors.length).toBe(3);
         });
@@ -163,8 +163,8 @@ describe("Testing Validator", () => {
 
             errors = validator.validate(personEnt, true);
             errors.forEach(e => {
-                console.log(e.message)
-                // expect(e.reportedOn === personEnt);
+                // console.log(e.message);
+                expect(e.reportedOn === personEnt);
             });
             expect(errors.length).toBe(1);
         });
