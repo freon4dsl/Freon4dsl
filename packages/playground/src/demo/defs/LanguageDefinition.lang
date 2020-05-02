@@ -19,12 +19,18 @@ interface Type base BaseType {
 
 concept DemoEntity implements Type {
     attributes: DemoAttribute[];
+    entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
     reference baseEntity: DemoEntity;
 }
 
 concept DemoAttribute {
     reference declaredType: DemoAttributeType;
+    name: string;
+}
+
+concept DemoAttributeWithEntityType {
+    reference declaredType: DemoEntity;
     name: string;
 }
 
@@ -44,15 +50,26 @@ abstract expression DemoExpression {
     appliedfeature: AppliedFeature;
 }
 
-concept AppliedFeature {
+abstract concept AppliedFeature {
     appliedfeature: AppliedFeature;
-    value: string;
-    reference type: DemoEntity;
 }
 
-//expression placeholder DemoPlaceholderExpression {
-//    appliedfeature: AppliedFeature;
-//}
+concept DemoAttributeRef base AppliedFeature {
+    reference attribute: DemoAttributeWithEntityType;
+}
+
+expression DemoVariableRef base DemoExpression {
+    reference variable: DemoVariable;
+}
+
+limited DemoAttributeType implements BaseType {
+    name: string;
+    extra: number;
+    String = { "name": "String", "extra": "199"}
+    Integer = { "name": "Integer", "extra": "240261"}
+    Boolean = { "name": "Boolean", "extra": "5479"}
+    ANY = { "name": "ANY", "extra": "456"}
+}
 
 abstract expression DemoLiteralExpression base DemoExpression {}
 
@@ -120,17 +137,5 @@ expression DemoIfExpression base DemoExpression {
     condition: DemoExpression;
     whenTrue: DemoExpression;
     whenFalse: DemoExpression;
-}
-
-expression DemoVariableRef base DemoExpression {
-    reference variable: DemoVariable;
-}
-
-limited DemoAttributeType implements BaseType {
-    name: string;
-    String = { "name": "String"}
-    Integer = { "name": "Integer"}
-    Boolean = { "name": "Boolean"}
-    ANY = { "name": "ANY"}
 }
 

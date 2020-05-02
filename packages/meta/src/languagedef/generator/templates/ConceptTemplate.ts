@@ -4,7 +4,7 @@ import {
     PiConceptProperty,
     PiPrimitiveProperty,
     PiBinaryExpressionConcept,
-    PiExpressionConcept, PiConcept, PiLimitedConcept
+    PiExpressionConcept, PiConcept, PiLimitedConcept, PiProperty, PiInstance, PiPropertyInstance
 } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
@@ -32,7 +32,7 @@ export class ConceptTemplate {
         );
 
         const predefInstances = (concept instanceof PiLimitedConcept ? this.createInstances(concept) : ``);
-        const extrasForLimitedConcept = (concept instanceof PiLimitedConcept ? this.createLimitedExtras(concept) : ``);
+        // const extrasForLimitedConcept = (concept instanceof PiLimitedConcept ? this.createLimitedExtras(concept) : ``);
 
         const binExpConcept: PiBinaryExpressionConcept = isBinaryExpression ? concept as PiBinaryExpressionConcept : null;
         // const expConcept : PiExpressionConcept = isExpression ? concept as PiExpressionConcept : null;
@@ -72,16 +72,6 @@ export class ConceptTemplate {
                 mobxImports.push("observablepart");
             }
         }
-        // if (concept.enumProperties.some(ref => ref.isList)) {
-        //     if (!mobxImports.some(im => im === "observablelistreference")) {
-        //         mobxImports.push("observablelistreference");
-        //     }
-        // }
-        // if (concept.enumProperties.some(ref => !ref.isList)) {
-        //     if (!mobxImports.some(im => im === "observablereference")) {
-        //         mobxImports.push("observablereference");
-        //     }
-        // }
 
         // Template starts here
         const result = `
@@ -98,7 +88,10 @@ export class ConceptTemplate {
             {
                 readonly $typename: ${language.name}ConceptType = "${concept.name}";
                 ${!hasSuper ? "$id: string;" : ""}
-                    
+                ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("")}
+                ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
+                ${concept.implementedReferences().map(p => this.generateReferenceProperty(p)).join("")}     
+                              
                 constructor(id?: string) {
                     ${!hasSuper ? "super();" : "super(id);"}
                     ${!hasSuper ? `
@@ -107,21 +100,14 @@ export class ConceptTemplate {
                         } else {
                             this.$id = uuid.v4();
                         }` : ""
-        }
+                    }
                     ${concept instanceof PiBinaryExpressionConcept ? `
                     this.left = new ${Names.concept(language.expressionPlaceHolder)};
                     this.right = new ${Names.concept(language.expressionPlaceHolder)};
                     ` : ""
-        }
+                    }
                 }
-                
-                ${predefInstances}
-                ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("")}
-                ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
-                ${concept.implementedReferences().map(p => this.generateReferenceProperty(p)).join("")}
-
-                ${extrasForLimitedConcept}
-                
+               
                 piLanguageConcept(): ${language.name}ConceptType {
                     return this.$typename;
                 }
@@ -169,22 +155,37 @@ export class ConceptTemplate {
                 `
             : ""}
 
-                ${(hasName && !isAbstract) ? `
-                static create(name: string): ${concept.name} {
+                ${(!isAbstract) ? `
+                static create(data: Partial<${concept.name}>): ${concept.name} {
                     const result = new ${concept.name}();
-                    result.name = name;
+                    ${concept.implementedProperties().map(p => this.generatePartialCreate(p)).join("\n")}
                     return result;
                 }`
             : ""}
-                
+                 
+                ${predefInstances}               
             }`;
         return result;
     }
 
-    generatePrimitiveProperty(property: PiPrimitiveProperty): string {
+    private generatePartialCreate(property: PiProperty): string {
+        return `if (data.${property.name}) result.${property.name} = data.${property.name};`;
+    }
+
+    private generatePrimitiveProperty(property: PiPrimitiveProperty): string {
+        // TODO check the decorator to be used here
+        const decorator = property.isList ? "@observablelistpart" : "@observable";
+        const arrayType = property.isList ? "[]" : "";
+        let initializer = "";
+        if (property.primType === "string") initializer = "\"\"";
+        if (property.primType === "number") initializer = "-1";
+        if (property.primType === "boolean") initializer = "false";
         return `
-            @observable ${property.name}: ${property.primType} ${property.isList ? "[]" : ""};
+            ${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer};
         `;
+        // return `
+        //     @observable ${property.name}: ${property.primType} ${property.isList ? "[]" : ""};
+        // `;
     }
 
     // generateEnumerationProperty(property: PiLangEnumProperty): string {
@@ -193,7 +194,7 @@ export class ConceptTemplate {
     //     `;
     // }
 
-    generatePartProperty(property: PiConceptProperty): string {
+    private generatePartProperty(property: PiConceptProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         const initializer = ((property.type.referred instanceof PiExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceHolder)} ${property.isList ? "]" : ""}` : "");
@@ -202,7 +203,7 @@ export class ConceptTemplate {
         `;
     }
 
-    generateReferenceProperty(property: PiConceptProperty): string {
+    private generateReferenceProperty(property: PiConceptProperty): string {
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         return `
@@ -210,43 +211,28 @@ export class ConceptTemplate {
         `;
     }
 
-    private createInstances(limitedConcept: PiLimitedConcept) {
+    private createInstances(limitedConcept: PiLimitedConcept): string {
         // TODO should take into account all properties that are set in the .lang file
         let conceptName = limitedConcept.name;
         return `${limitedConcept.instances.map(predef =>
-                `static ${predef.name}: ${conceptName} = ${conceptName}.fromString("${predef.name}")` ).join(";")}
-            static $piANY : ${conceptName} = ${conceptName}.fromString("$piANY");
-
-           static values = [${limitedConcept.instances.map(l => `${conceptName}.${l.name}`).join(", ")}]`
+                `static ${predef.name}: ${conceptName} = ${conceptName}.create(${this.createInstanceProperties(predef)})` ).join(";")}
+                 static $piANY : ${conceptName} = ${conceptName}.create({name:"$piANY"});`
     }
 
-    private createLimitedExtras(limitedConcept: PiLimitedConcept): string {
-        let conceptName = limitedConcept.name;
-        return `
-        public asString(): string {
-                return this.name;
-            }
+    private createInstanceProperties(instance: PiInstance) : string {
+        return `{${instance.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}}`;
+    }
 
-            static fromString(v: string): ${conceptName} {
-                switch(v) {
-                    ${limitedConcept.instances.map(predef => `case "${predef.name}":
-                    if (this.${predef.name} !== null) {
-                        let predef = new ${conceptName}();                  
-                        predef.name = "${predef.name}";
-                        return predef;
-                    } else {
-                        return ${conceptName}.${predef.name};
-                    }`
-        ).join(";")}
-                    default:
-                    if (this.$piANY !== null) {
-                        let predef = new ${conceptName}();                  
-                        predef.name = "$piANY";
-                        return predef;
-                    } else {
-                        return ${conceptName}.$piANY;
-                    }
-                }
-        }`;
+    private createInstancePropValue(property: PiPropertyInstance): string {
+        let refProperty = property.property?.referred;
+        console.log("refProperty: " + property.property.name + ", " + refProperty);
+        if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
+            if (refProperty.primType === "string") {
+                return `"${property.value}"`;
+            } else {
+                return `${property.value}`;
+            }
+        }
+        return ``;
     }
 }

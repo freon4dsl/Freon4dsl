@@ -126,7 +126,7 @@ export class DemoUnparser {
     }
 
     public unparseDemoAttributeType(modelelement: DemoAttributeType, includeChildren?: boolean): string {
-        let result: string = modelelement.asString();
+        let result: string = modelelement.name;
         return result;
     }
 

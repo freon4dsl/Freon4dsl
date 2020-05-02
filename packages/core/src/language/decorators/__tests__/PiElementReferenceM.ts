@@ -63,7 +63,6 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
             result.name = name;
         } else if (typeof name === "object") {
             result.referred = name;
-            result.name = result.referred.name;
         }
         result.typeName = typeName;
         return result;

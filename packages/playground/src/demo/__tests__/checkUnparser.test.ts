@@ -86,8 +86,8 @@ describe("Testing Unparser", () => {
 
         test.skip('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
             let result: string = "";
-            const determine = DemoFunction.create("determine");
-            const AAP = DemoVariable.create("AAP");
+            const determine = DemoFunction.create({name: "determine"});
+            const AAP = DemoVariable.create({name: "AAP"});
             determine.parameters.push(AAP);
             // AAP.declaredType = DemoAttributeType.Integer;
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
@@ -99,14 +99,14 @@ describe("Testing Unparser", () => {
 
         test.skip("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
-            const personEnt = DemoEntity.create("Person");
-            const age = DemoAttribute.create("age");
+            const personEnt = DemoEntity.create({name: "Person"});
+            const age = DemoAttribute.create({name: "age"});
 
-            const personName = DemoAttribute.create("name");
+            const personName = DemoAttribute.create({name: "name"});
             personEnt.attributes.push(age);
             personEnt.attributes.push(personName);
-            const first = DemoFunction.create("first");
-            const Resultvar = DemoVariable.create("Resultvar");
+            const first = DemoFunction.create({name: "first"});
+            const Resultvar = DemoVariable.create({name: "Resultvar"});
             first.parameters.push(Resultvar);
             first.expression = MakePlusExp("5", "24");
             personEnt.functions.push(first);

@@ -38,8 +38,8 @@ export class ScoperTemplate {
         import { ${allLangConcepts}, ${langConceptType}, ${scopedef.namespaces.map(ref => `${ref.name}`).join(", ")}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger } from "${PROJECTITCORE}"
-        ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";
-                                      import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";`:`` }  
+        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }  
         ${scopedef.namespaces.length == 0?
             `import { ${language.rootConcept.name} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}              
                                    
@@ -47,9 +47,9 @@ export class ScoperTemplate {
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             ${generateAlternativeScopes? `myTyper: ${typerClassName};` : ``}
     
-            getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): PiNamedElement[] {
+            getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): ${Names.PiNamedElement}[] {
                 ${generateAlternativeScopes? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
-                let result: PiNamedElement[] = [];
+                let result: ${Names.PiNamedElement}[] = this.getElementsFromStdlib(metatype);
                 if (!!modelelement) {
                     let doSurrouding: boolean = !(!(excludeSurrounding === undefined) && excludeSurrounding);
                     let nearestNamespace: ${namespaceClassName};
@@ -83,7 +83,7 @@ export class ScoperTemplate {
                 return result;
             }
         
-            getFromVisibleElements(modelelement: ${allLangConcepts}, name : string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : PiNamedElement {
+            getFromVisibleElements(modelelement: ${allLangConcepts}, name : string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : ${Names.PiNamedElement} {
                 let vis = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
                 if (vis !== null) {
                     for (let e of vis) {
@@ -168,12 +168,24 @@ export class ScoperTemplate {
             }
         
              /**
-             * returns true if there is an alternative scope defined for this modelelement
+             * returns true if there is an alternative scope defined for this 'modelelement'
              * @param modelelement
              */
-            private hasAlternativeScope(modelelement: ${allLangConcepts}) {
+            private hasAlternativeScope(modelelement: ${allLangConcepts}): boolean {
                 ${this.hasAlternativeScopeText}
                 return false;
+            }
+            
+             /**
+             * returns all elements that are in the standard library, which types equal 'metatype'
+             * @param metatype
+             */           
+            private getElementsFromStdlib(metatype?: ${langConceptType}): ${Names.PiNamedElement}[] {
+                if (!!metatype) {
+                    return ${Names.environment(language)}.getInstance().stdlib.elements.filter(elem => elem.piLanguageConcept() === metatype);
+                } else {
+                    return ${Names.environment(language)}.getInstance().stdlib.elements;
+                }
             }
         }`;
 

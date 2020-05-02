@@ -49,7 +49,7 @@ export class TextBox extends Box {
     /** @internal
      */
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
-        console.log("TEXTBOX SETCARET EMPTY");
+        // console.log("TEXTBOX SETCARET EMPTY");
         /* To be overwritten by `TextComponent` */
         switch (caret.position) {
             case PiCaretPosition.RIGHT_MOST:

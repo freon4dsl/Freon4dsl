@@ -66,24 +66,36 @@ export function isPrimitiveType(type: PiLangElement): boolean {
 }
 
 export function langExpToTypeScript(exp: PiLangExp): string {
+    let result : string = '';
+
+
+
     if (exp instanceof PiLangSelfExp) {
-        return `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
+        result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
-        return `this.${exp.sourceName} (${exp.actualparams.map(
+        result = `this.${exp.sourceName} (${exp.actualparams.map(
             param => `${this.makeTypeExp(param)}`
         ).join(", ")})`;
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
-        let isRef: boolean = false;
-        if (!!exp.referedElement && !!exp.referedElement.referred) { // should be present, otherwise it is an incorrect model
-            // now see whether it is marked in the .lang file as 'reference'
-            const ref = exp.referedElement.referred;
-            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
-        }
-        return exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? ("." + this.langRefToTypeScript(exp.appliedfeature)) : "");
+        let isRef = isReferenceProperty(exp);
+        result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
-        return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`;
+        result = `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`;
     } else {
-        return exp?.toPiString();
+        result = exp?.toPiString();
     }
+    return result;
+}
+
+function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
+    let isRef: boolean = false;
+    if (!!exp.referedElement && !!exp.referedElement.referred) { // should be present, otherwise it is an incorrect model
+        // now see whether it is marked in the .lang file as 'reference'
+        const ref = exp.referedElement.referred;
+        isRef = (ref instanceof PiConceptProperty) && !ref.isPart;
+
+        // isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
+    }
+    return isRef;
 }

@@ -24,9 +24,6 @@ DemoFunction {
 DemoExpression {
     abstract infertype 
 }
-AppliedFeature {
-    infertype self.type
-}
 DemoStringLiteralExpression {
     infertype DemoAttributeType:String
 }
@@ -61,6 +58,9 @@ DemoVariable {
     infertype self.declaredType
 }
 DemoVariableRef   {
-    infertype self.variable
+    infertype self.variable.declaredType
+}
+DemoAttributeRef   {
+    infertype self.attribute.declaredType
 }
 

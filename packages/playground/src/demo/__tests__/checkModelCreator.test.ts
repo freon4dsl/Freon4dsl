@@ -10,7 +10,7 @@ describe("Demo Model", () => {
         });
 
         test("model name should be set", () => {
-            expect(model.name).not.toBeNull;
+            expect(model.name).not.toBeNull();
         });
 
         test("model functions should be set correctly", () => {
@@ -25,7 +25,7 @@ describe("Demo Model", () => {
 
             const f1: DemoEntity = model.entities[0];
             expect(f1.container).toBe(model);
-            expect(f1.name).not.toBeNull;
+            expect(f1.name).not.toBeNull();
         });
 
         test("entity functions should be set correctly", () => {
@@ -40,7 +40,7 @@ describe("Demo Model", () => {
         test("entity attributes should be set correctly", () => {
             for (let i of model.entities) {
                 for (let a of i.attributes) {
-                    expect(a.name).not.toBeNull;
+                    expect(a.name).not.toBeNull();
                     expect(a.container).toBe(i);
                 }
             }
@@ -49,7 +49,7 @@ describe("Demo Model", () => {
 });
 
 function checkFunctionDef(f1: DemoFunction, owner: DemoEveryConcept) {
-    expect(f1.name).not.toBeNull;
+    expect(f1.name).not.toBeNull();
     expect(f1.expression.container).toBe(f1);
     expect(f1.container).toBe(owner);
     expect((f1.expression as any).container).toBeTruthy();
