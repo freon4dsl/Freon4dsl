@@ -19,33 +19,6 @@ export class SelectionHelpers {
         }`
     }
 
-    // removed:
-//     ${language.enumerations.map(en =>
-//         `
-//         public enumSelectFor${en.name}(elem: PiElement, role: string, getAction: () =>
-//         SelectOption, setAction: (o: SelectOption) => void) {
-//     return new SelectBox(
-//         elem,
-//         role,
-//     "<" + "select>",
-// () => {
-//     return ${Names.enumeration(en)}.values.map(v =>
-// ({
-//     id: v.asString(),
-//     label: v.asString()
-// }
-// ))
-// },
-// () => getAction(),
-//     (option: SelectOption) => {
-//         setAction(option);
-//     },
-//     { style: ${Names.styles}.function }
-// );
-// }
-// `
-//         ).join(" ")}
-
     generateRefs(language: PiLanguageUnit): string {
         return `
         public getReferenceBox(

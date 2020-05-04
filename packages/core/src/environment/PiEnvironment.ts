@@ -4,6 +4,7 @@ import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
 import { PiTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
+import { PiUnparser } from "../unparser";
 
 export interface PiEnvironment {
     scoper: PiScoper;
@@ -11,6 +12,7 @@ export interface PiEnvironment {
     validator: PiValidator;
     editor: PiEditor;
     stdlib: PiStdlib;
+    unparser: PiUnparser;
 
     projection: PiProjection;
     projectionalEditorComponent: ProjectionalEditor;

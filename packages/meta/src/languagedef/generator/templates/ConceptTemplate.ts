@@ -31,15 +31,15 @@ export class ConceptTemplate {
             )
         );
 
-        const predefInstances = (concept instanceof PiLimitedConcept ? this.createInstances(concept) : ``);
-        // const extrasForLimitedConcept = (concept instanceof PiLimitedConcept ? this.createLimitedExtras(concept) : ``);
+        const predefInstanceDefinitions = (concept instanceof PiLimitedConcept ? this.createInstanceDefinitions(concept) : ``);
+        const predefInstanceInitialisations = (concept instanceof PiLimitedConcept ? this.createInstanceInitialisations(concept) : ``);
 
         const binExpConcept: PiBinaryExpressionConcept = isBinaryExpression ? concept as PiBinaryExpressionConcept : null;
-        // const expConcept : PiExpressionConcept = isExpression ? concept as PiExpressionConcept : null;
 
         const imports = Array.from(
             new Set(
                 concept.parts().map(p => Names.classifier(p.type.referred))
+
                     .concat(concept.references().map(r => Names.classifier(r.type.referred)))
                     .concat(concept.interfaces.map(i => Names.interface(i.referred)))
                     .concat(Names.concept(language.expressionPlaceHolder))
@@ -163,8 +163,13 @@ export class ConceptTemplate {
                 }`
             : ""}
                  
-                ${predefInstances}               
-            }`;
+                ${predefInstanceDefinitions}               
+            }
+            
+            // Because of mobx we need to generate the initialisations outside of the class,
+            // otherwise the state of properties with primitive type will not be kept correctly. 
+            ${predefInstanceInitialisations}
+            `;
         return result;
     }
 
@@ -183,9 +188,6 @@ export class ConceptTemplate {
         return `
             ${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer};
         `;
-        // return `
-        //     @observable ${property.name}: ${property.primType} ${property.isList ? "[]" : ""};
-        // `;
     }
 
     // generateEnumerationProperty(property: PiLangEnumProperty): string {
@@ -211,21 +213,27 @@ export class ConceptTemplate {
         `;
     }
 
-    private createInstances(limitedConcept: PiLimitedConcept): string {
-        // TODO should take into account all properties that are set in the .lang file
+    private createInstanceDefinitions(limitedConcept: PiLimitedConcept): string {
         let conceptName = limitedConcept.name;
         return `${limitedConcept.instances.map(predef =>
-                `static ${predef.name}: ${conceptName} = ${conceptName}.create(${this.createInstanceProperties(predef)})` ).join(";")}
-                 static $piANY : ${conceptName} = ${conceptName}.create({name:"$piANY"});`
+            `static ${predef.name}: ${conceptName}`).join(";")}
+             static $piANY : ${conceptName};`
+    }
+
+    private createInstanceInitialisations(limitedConcept: PiLimitedConcept): string {
+        let conceptName = limitedConcept.name;
+        return `${limitedConcept.instances.map(predef =>
+            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)})` ).join(";")}
+             ${conceptName}.$piANY = ${conceptName}.create({name:"$piANY"});`
     }
 
     private createInstanceProperties(instance: PiInstance) : string {
+
         return `{${instance.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}}`;
     }
 
     private createInstancePropValue(property: PiPropertyInstance): string {
         let refProperty = property.property?.referred;
-        console.log("refProperty: " + property.property.name + ", " + refProperty);
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
             if (refProperty.primType === "string") {
                 return `"${property.value}"`;
