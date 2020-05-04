@@ -1,17 +1,15 @@
 scoper Demo for language Demo
 
-isnamespace { DemoModel DemoEntity DemoFunction }
+isnamespace { DemoModel DemoFunction Type BaseType }
 
 // Inheritance scope
 DemoEntity {
     namespace_addition = self.baseEntity
-
 }
-/* to be added when interfaces are supported
-DemoEntityInterface {
+
+Type {
     namespace_addition = self.baseInterface
 }
-*/
 
 AppliedFeature {
 	scope = typeof( container )
