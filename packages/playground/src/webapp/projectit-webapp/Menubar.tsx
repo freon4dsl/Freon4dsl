@@ -1,7 +1,9 @@
+import { CompositeProjection } from "@projectit/core";
 import * as React from "react";
 import { Menu, Tooltip, Icon, Flex, Text, Input } from "@fluentui/react-northstar";
 import { Link } from "@fluentui/react";
 import { EditorEnvironment } from "../gateway-to-projectit/EditorEnvironment";
+import { environment } from "../gateway-to-projectit/Environment";
 import { ServerCommunication } from "../gateway-to-projectit/ServerCommunication";
 import { App } from "./App";
 import { Navigator } from "./Navigator";
@@ -163,6 +165,33 @@ export default class Menubar extends React.Component {
                         onClick: () => this.about()
                     }
                 ]
+            }
+        },
+        // Show a menu where one can choose between all defined projections
+        {
+            key: "projection",
+            content: "Projection",
+            menu: {
+                items:
+                    (!!(environment.projection as CompositeProjection) ?
+                        (environment.projection as CompositeProjection).projectionNames().map(name => {
+                             return {
+                                key: name,
+                                content: name,
+                                tooltip: "Show default projection",
+                                 children: (Component, props) => {
+                                     /* ☝️ `tooltip` comes from shorthand object */
+                                     const { tooltip, ...rest } = props;
+                                     return <Tooltip key={"projection"+name} content={tooltip} trigger={<Component {...props} />} />;
+                                 },
+                                onClick: () => {
+                                    (environment.projection as CompositeProjection).projectiontoFront(name);
+                                }
+                            }
+                        })
+                    : null
+                    )
+
             }
         }
     ];

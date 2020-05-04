@@ -60,9 +60,18 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
                     for (let conceptEditor of editor.conceptEditors) {
                         this.checkConceptEditor(conceptEditor);
                     }
+                    this.checkEditor(editor);
                     this.errors = this.errors.concat(this.myExpressionChecker.errors);
                 }
             });
+    }
+
+    private checkEditor(editor: DefEditorLanguage) {
+        const conceptEditorsDoubles = this.unique(editor.conceptEditors);
+        conceptEditorsDoubles.forEach(ced => {
+                this.errors.push(`Editor definition for concept ${ced.concept.name} is already defined earlier [line: ${ced.location?.start.line}, column: ${ced.location?.start.column}].`);
+            }
+        );
     }
 
     private checkConceptEditor(conceptEditor: DefEditorConcept) {
@@ -94,6 +103,18 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
             conceptEditor.languageEditor = editorDef;
             conceptEditor.concept.owner = this.language;
         }
+    }
+
+    private unique(array: DefEditorConcept[]): DefEditorConcept[] {
+        var seen = new Set;
+        return array.filter(function(item) {
+            if (!seen.has(item.concept.referred)) {
+                seen.add(item.concept.referred);
+                return false;
+            } else {
+                return true;
+            }
+        });
     }
 
 }

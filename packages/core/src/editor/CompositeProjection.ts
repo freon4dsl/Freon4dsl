@@ -1,10 +1,11 @@
+import { observable } from "mobx";
 import { PiElement } from "../language";
 import { Box, LabelBox } from "./boxes";
 import { OrderedList } from "./OrderedList";
 import { PiProjection } from "./PiProjection";
 
 export class CompositeProjection implements PiProjection {
-    private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
+    @observable private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
     private _rootProjection: PiProjection | null = null;
 
     set rootProjection(p: CompositeProjection) {
@@ -36,5 +37,9 @@ export class CompositeProjection implements PiProjection {
 
     projectionToBack(name: string) {
         this.projections.toBack(name);
+    }
+
+    projectionNames(): string[] {
+        return this.projections.toArray().map(p => p.name);
     }
 }
