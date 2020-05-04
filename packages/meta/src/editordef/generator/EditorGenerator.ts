@@ -14,7 +14,7 @@ import {
     SelectionHelpers,
     UnparserTemplate
 } from "./templates";
-import { DeafultActionsTemplate } from "./templates/DeafultActionsTemplate";
+import { DefaultActionsTemplate } from "./templates/DefaultActionsTemplate";
 import { InitalizationTemplate } from "./templates/InitializationTemplate";
 import { ManualActionsTemplate } from "./templates/ManualActionsTemplate";
 
@@ -47,7 +47,7 @@ export class EditorGenerator {
         // fill default values if they are not there
         DefEditorDefaults.addDefaults(editDef);
 
-        const defaultActions = new DeafultActionsTemplate();
+        const defaultActions = new DefaultActionsTemplate();
         const manualActions = new ManualActionsTemplate();
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();

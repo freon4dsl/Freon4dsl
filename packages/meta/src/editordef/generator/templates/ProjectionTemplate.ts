@@ -46,6 +46,9 @@ export class ProjectionTemplate {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
         });
+        if (nonBinaryConceptsWithDefaultProjection.length>0){
+            console.error("Projection generator: there are elements without projections "+ nonBinaryConceptsWithDefaultProjection.map(c => c.name));
+        }
         const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiExpressionConcept && c.isExpressionPlaceholder())).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return !!editor && !!editor.projection;
@@ -130,64 +133,6 @@ export class ProjectionTemplate {
       
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
                 
-                ${nonBinaryConceptsWithDefaultProjection.map(c => `
-                public get${c.name}Box(element: ${Names.concept(c)}): Box {
-                    ${c instanceof PiExpressionConcept ? `return createDefaultExpressionBox(element, "getDemoFunctionCallExpressionBox", [` : 
-                    `return `} new VerticalListBox(element, "element", [
-                        ${c.primProperties.map(p => `
-                            new HorizontalListBox(element, "element-${p.name}-list", [
-                                new LabelBox(element, "element-${p.name}-label", "${p.name}", {
-                                    style: ${Names.styles}.propertykeyword,
-                                    selectable: false
-                                }),
-                                ${this.primitivePropertyProjection(p)},
-                            ], { selectable: false })`
-                        ).concat(
-//  Map all parts
-                        c.allParts().map(part => `
-                        ${ part.isList ? `
-                            new LabelBox(element, "element-${part.name}-label", "${part.name}", { 
-                                style: ${Names.styles}.keyword,
-                                selectable: false
-                            }),
-                            new IndentBox(element, "indent-part-${part.name}", 4, 
-                                ${this.conceptPartListProjection("Vertical", part)}
-                            ),
-                        ` :
-                            `new HorizontalListBox(element, "element-${part.name}", [
-                            new LabelBox(element, "element-${part.name}-label", "${part.name}", {
-                                style: ${Names.styles}.propertykeyword,
-                                selectable: false
-                             }),
-                            ((!!element.${part.name}) ? this.rootProjection.getBox(element.${part.name}) : new AliasBox(element, "${part.name}", "${part.name}" ))
-                            ], { selectable: false })                            
-                        ` }`  )).concat(
-// Map all references
-                        c.allReferences().map(ref => `
-                        ${ ref.isList ? `
-                            new LabelBox(element, "element-${ref.name}-label", "${ref.name}", { 
-                                style: ${Names.styles}.keyword,
-                                selectable: false
-                            }),
-                            ${this.conceptReferenceListProjection("Vertical", ref)},
-                            new AliasBox(element, "new-${ref.name}", "add ${ref.name}", {
-                                style: ${Names.styles}.indentedplaceholdertext
-                            })
-                        ` :
-                            `new HorizontalListBox(element, "element-${ref.name}-list", [
-                                new LabelBox(element, "element-${ref.name}-label", "${ref.name}", {
-                                    style: ${Names.styles}.propertykeyword,
-                                    selectable: false
-                                }),
-                                ${this.conceptReferenceProjection(language, ref)},
-                            ], { selectable: false })`
-                        }`  )
-                ).join(",")}
-                    ])
-                ${(c instanceof PiExpressionConcept) ? `])`: ""}
-                }                
-                `).join("\n")}          
-                  
                 private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
                     let binBox = createDefaultBinaryBox(this, exp, symbol);
                     if (
@@ -246,7 +191,7 @@ export class ProjectionTemplate {
                                 result += this.conceptPartListProjection(direction, appliedFeature)+ ",";
 
                             } else {
-                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "add ${appliedFeature.name}" )),`
+                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "+" /* ${appliedFeature.name} */ )),`
                             }
                         } else { // reference
                             if( appliedFeature.isList){
@@ -301,7 +246,7 @@ export class ProjectionTemplate {
                 element.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
                 }).concat(
-                    new AliasBox(element, "new-${propertyConcept.name}", "ADD ${propertyConcept.name}", {
+                    new AliasBox(element, "new-${propertyConcept.name}", "+" , { //  add ${propertyConcept.name}
                         style: ${Names.styles}.placeholdertext
                     })
                 )

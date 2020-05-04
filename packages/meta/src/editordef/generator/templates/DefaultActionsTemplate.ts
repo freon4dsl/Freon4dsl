@@ -4,7 +4,7 @@ import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "
 import { DefEditorLanguage } from "../../metalanguage";
 import { LangUtil } from "./LangUtil";
 
-export class DeafultActionsTemplate {
+export class DefaultActionsTemplate {
     constructor() {
     }
 
@@ -77,7 +77,7 @@ export class DeafultActionsTemplate {
                             activeInBoxRoles: ["new-${part.name}"],
                             trigger: "${!!editorDef.findConceptEditor(subClass)?.trigger ? editorDef.findConceptEditor(subClass)?.trigger : subClass.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                                var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
+                                const parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
                                 const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}();
                                 ${part.isList ? `parent.${part.name}.push(new${part.name});` : `parent.${part.name}= new${part.name};`}
                                 return new${part.name};
@@ -94,7 +94,7 @@ export class DeafultActionsTemplate {
                             activeInBoxRoles: ["new-${reference.name}"],
                             trigger: "${!!editorDef.findConceptEditor(reference.type.referred).trigger ? `${editorDef.findConceptEditor(reference.type.referred).trigger}` : reference.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                                var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
+                                const parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
                                 const newBase: PiElementReference< ${Names.concept(reference.type.referred)}> = PiElementReference.createNamed("", null);
                                 parent.${reference.name}.push(newBase);
                                 return null;

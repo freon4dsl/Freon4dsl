@@ -1,12 +1,15 @@
+import { observable } from "mobx";
+
 export interface NamedElement<T> {
     name: string;
     element: T;
 }
 
-export class OrderedList<T> {
-    private elements: NamedElement<T>[] = [];
+export class OrderedList<T> implements Iterable<T> {
+    @observable protected elements: NamedElement<T>[] = [];
 
-    constructor() {}
+    constructor() {
+    }
 
     toArray(): NamedElement<T>[] {
         return this.elements;
@@ -14,6 +17,10 @@ export class OrderedList<T> {
 
     add(name: string, p: T) {
         this.elements.push({ name: name, element: p });
+    }
+
+    length(): number {
+        return this.elements.length;
     }
 
     toFront(name: string) {
@@ -40,4 +47,32 @@ export class OrderedList<T> {
         }
         this.elements[0] = tobeMoved;
     }
+
+    get(index: number): NamedElement<T> {
+        return this.elements[index];
+    }
+
+    [Symbol.iterator](): Iterator<T> {
+        return new OrderedListIterator<T>(this);
+    }
+
+}
+
+export class OrderedListIterator<T> implements Iterator<T> {
+    private index = 0;
+    private list: OrderedList<T>;
+
+    constructor(list: OrderedList<T>) {
+        this.list = list;
+    }
+
+    next(value?: any): IteratorResult<T> {
+        const l = this.list.length();
+        if (this.index < l) {
+            return { done: false, value: this.list.get(this.index++).element };
+        } else {
+            return { done: true, value: undefined };
+        }
+    }
+
 }
