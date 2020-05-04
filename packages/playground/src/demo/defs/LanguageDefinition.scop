@@ -5,14 +5,12 @@ isnamespace { DemoModel DemoEntity DemoFunction }
 // Inheritance scope
 DemoEntity {
     namespace_addition = self.baseEntity
-
 }
-/* to be added when interfaces are supported
-DemoEntityInterface {
+/*
+Type {
     namespace_addition = self.baseInterface
 }
 */
-
 AppliedFeature {
 	scope = typeof( container )
 }

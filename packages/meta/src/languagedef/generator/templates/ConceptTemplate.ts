@@ -56,18 +56,18 @@ export class ConceptTemplate {
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }
-        if (concept.allParts().some(part => part.isList) || concept.references().some(part => part.isList)) {
+        if (concept.implementedParts().some(part => part.isList) || concept.references().some(part => part.isList)) {
             mobxImports.push("observablelistpart");
         }
-        if (concept.parts().some(part => !part.isList)) {
+        if (concept.implementedParts().some(part => !part.isList)) {
             mobxImports.push("observablepart");
         }
-        if (concept.references().some(ref => ref.isList)) {
+        if (concept.implementedReferences().some(ref => ref.isList)) {
             if (!mobxImports.some(im => im === "observablelistpart")) {
                 mobxImports.push("observablelistpart");
             }
         }
-        if (concept.references().some(ref => !ref.isList)) {
+        if (concept.implementedReferences().some(ref => !ref.isList)) {
             if (!mobxImports.some(im => im === "observablepart")) {
                 mobxImports.push("observablepart");
             }

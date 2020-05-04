@@ -8,10 +8,11 @@ root concept DemoModel {
 
 interface BaseType {
     name: string;
+    baseInterface_attr: number;
 }
 
 interface Type base BaseType {
-    simpleprop: string; // TODO number
+    simpleprop: string;
     int_attrs: DemoAttribute[];
     int_functions: DemoFunction[];
     reference baseInterface: DemoEntity;
@@ -62,7 +63,7 @@ expression DemoVariableRef base DemoExpression {
     reference variable: DemoVariable;
 }
 
-limited DemoAttributeType implements BaseType {
+limited DemoAttributeType implements Type {
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}

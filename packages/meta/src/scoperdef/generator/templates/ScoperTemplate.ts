@@ -1,6 +1,15 @@
-import { PiLangExp, PiLangFunctionCallExp, PiLanguageUnit } from "../../../languagedef/metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER, PROJECTITCORE, TYPER_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, langExpToTypeScript } from "../../../utils";
+import { PiConcept, PiLangExp, PiLangFunctionCallExp, PiLanguageUnit } from "../../../languagedef/metalanguage";
+import {
+    Names,
+    LANGUAGE_GEN_FOLDER,
+    PROJECTITCORE,
+    TYPER_GEN_FOLDER,
+    ENVIRONMENT_GEN_FOLDER,
+    langExpToTypeScript,
+    replaceInterfacesWithImplementors
+} from "../../../utils";
 import { PiScopeDef } from "../../metalanguage";
+import { PiElementReference } from "../../../languagedef/metalanguage/PiElementReference";
 
 export class ScoperTemplate {
     hasAlternativeScopeText: string = '';
@@ -31,17 +40,16 @@ export class ScoperTemplate {
             scopedef = new PiScopeDef();
             scopedef.languageName = language.name;
             scopedef.namespaces = [];
+            scopedef.namespaces.push(PiElementReference.create<PiConcept>(language.rootConcept, "PiConcept"));
         }
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${langConceptType}, ${scopedef.namespaces.map(ref => `${ref.name}`).join(", ")}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${allLangConcepts}, ${langConceptType}, ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref => `${ref.name}`).join(", ")}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger } from "${PROJECTITCORE}"
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-        ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }  
-        ${scopedef.namespaces.length == 0?
-            `import { ${language.rootConcept.name} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}              
+        ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }          
                                    
         const LOGGER = new PiLogger("${generatedClassName}");        
         export class ${generatedClassName} implements ${scoperInterfaceName} {
@@ -61,7 +69,7 @@ export class ScoperTemplate {
                     } else {
                         nearestNamespace = this.findNearestNamespace(modelelement);
                     }
-                    // second, get the element from the found namespace
+                    // second, get the elements from the found namespace
                     if (!!nearestNamespace) result = result.concat(nearestNamespace.getVisibleElements(metatype));
             
                     // third, get the elements from any surrounding namespaces
@@ -130,15 +138,12 @@ export class ScoperTemplate {
             }
         
             /**
-             * returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition
+             * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition
+             * or if 'modelelement' is the model root if there are no namespaces defined in the scoper definition.
              * @param modelelement
              */
             private isNameSpace(modelelement: ${allLangConcepts}): boolean {
-                // if-statement generated for each concept marked with @namespace annotation
-                // or for the model root if there are no namespaces defined in the scoper definition
-                ${scopedef.namespaces.map(ref => `if(modelelement instanceof ${ref.name}) return true;`).join("\n")}
-                ${scopedef.namespaces.length == 0?
-                    `if(modelelement instanceof ${language.rootConcept.name}) return true;` : ``}              
+                ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref => `if(modelelement instanceof ${ref.name}) return true;`).join("\n")}      
                 return false;
             }
         
@@ -241,4 +246,6 @@ export class ScoperTemplate {
         }
         return result;
     }
+
+
 }
