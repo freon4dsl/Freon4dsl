@@ -191,7 +191,7 @@ export class ProjectionTemplate {
                                 result += this.conceptPartListProjection(direction, appliedFeature)+ ",";
 
                             } else {
-                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "+" /* ${appliedFeature.name} */ )),`
+                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "[add]" /* ${appliedFeature.name} */ )),`
                             }
                         } else { // reference
                             if( appliedFeature.isList){
@@ -246,7 +246,7 @@ export class ProjectionTemplate {
                 element.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
                 }).concat(
-                    new AliasBox(element, "new-${propertyConcept.name}", "+" , { //  add ${propertyConcept.name}
+                    new AliasBox(element, "new-${propertyConcept.name}", "<+>" , { //  add ${propertyConcept.name}
                         style: ${Names.styles}.placeholdertext
                     })
                 )
@@ -255,7 +255,7 @@ export class ProjectionTemplate {
 
     conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiConceptProperty) {
         const featureType = appliedFeature.type.name;
-        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}", "< select ${appliedFeature.name}>", "${featureType}",
+        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}", "<select ${appliedFeature.name}>", "${featureType}",
                     () => {
                         if (!!element.${appliedFeature.name}) {
                             return { id: element.${appliedFeature.name}.name, label: element.${appliedFeature.name}.name };
@@ -276,7 +276,7 @@ export class ProjectionTemplate {
 
     conceptReferenceProjectionInList(appliedFeature: PiConceptProperty) {
         const featureType = appliedFeature.type.name;
-        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}-" + index, "< select ${appliedFeature.name}>", "${featureType}",
+        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}-" + index, "<select ${appliedFeature.name}>", "${featureType}",
                     () => {
                         if (!!element.${appliedFeature.name}) {
                             return { id: ent.name, label: ent.name };

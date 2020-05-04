@@ -77,20 +77,7 @@ DemoFunctionCallExpression {
     @trigger "function"
 }
 
-DemoModel {
-    @projection DemoModel
-        [
-        model ${self.name} {
-        entities:
-            ${self.entities
-                @vertical
-                @terminator [\n\n]
-            }
-        model wide functions:
-            ${self.functions @horizontal @separator [\n] }
-        }
-        ]
-}
+
 DemoModel {
     @projection DemoModel
         [
