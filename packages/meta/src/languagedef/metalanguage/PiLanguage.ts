@@ -273,10 +273,16 @@ export class PiConcept extends PiClassifier {
         return result;
     }
 
+    /**
+     * returns all subconcepts, but not their subconcepts
+     */
     allSubConceptsDirect(): PiConcept[] {
         return this.language.concepts.filter(c => c.base?.referred === this);
     }
 
+    /**
+     * returns all subconcepts and subconcepts of the subconcepts
+     */
     allSubConceptsRecursive(): PiConcept[] {
         var result = this.language.concepts.filter(c => c.base?.referred === this);
         const tmp = this.language.concepts.filter(c => c.base?.referred === this);
