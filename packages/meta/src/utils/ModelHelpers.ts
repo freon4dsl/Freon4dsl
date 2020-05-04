@@ -160,3 +160,41 @@ export function  findImplementors(piInterface: PiInterface | PiElementReference<
     let myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
     return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
 }
+
+/**
+ * Takes a classifier (either a concept or an interface) and returns a list of all subconcepts -resursive-,
+ * all concepts that implement one of the interfaces or a sub-interface -resursive-, and their subconcepts -resursive-.
+ * The 'classifier' itself is also included.
+ *
+ * @param classifier
+ */
+export function findAllImplementorsAndSubs(classifier: PiElementReference<PiClassifier> | PiClassifier): PiClassifier[] {
+    let result: PiClassifier[] = [];
+    let myClassifier = (classifier instanceof PiElementReference ? classifier.referred : classifier);
+    if (!!myClassifier) {
+        result.push(myClassifier);
+        if (myClassifier instanceof  PiConcept) { // find all subclasses and mark them as namespace
+            result = result.concat(myClassifier.allSubConceptsRecursive());
+        } else if (myClassifier instanceof  PiInterface) { // find all implementors and their subclasses and mark them as namespace
+            for (let implementor of findImplementors(myClassifier)) {
+                if (!result.includes(implementor)) {
+                    result.push(implementor);
+                    result = result.concat(implementor.allSubConceptsRecursive());
+                }
+            }
+            // find all subinterfaces and add their implementors as well
+            for (let subInterface of myClassifier.allSubInterfacesRecursive()) {
+                if (!result.includes(subInterface)) {
+                    result.push(subInterface);
+                    for (let implementor of findImplementors(subInterface)) {
+                        if (!result.includes(implementor)) {
+                            result.push(implementor);
+                            result = result.concat(implementor.allSubConceptsRecursive());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}

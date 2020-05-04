@@ -164,6 +164,23 @@ export class PiInterface extends PiClassifier {
         }
         return result;
     }
+
+    /**
+     * returns all subinterfaces, but not their subinterfaces
+     */
+    allSubInterfacesDirect(): PiInterface[] {
+        return this.language.interfaces.filter(c => c.base?.find(b => b.referred === this) !== undefined);
+    }
+
+    /**
+     * returns all subinterfaces and subinterfaces of the subinterfaces
+     */
+    allSubInterfacesRecursive(): PiInterface[] {
+        var result = this.allSubInterfacesDirect();
+        const tmp = this.allSubInterfacesDirect();
+        tmp.forEach(concept => result = result.concat(concept.allSubInterfacesRecursive()));
+        return result;
+    }
 }
 
 export class PiConcept extends PiClassifier {
@@ -284,8 +301,8 @@ export class PiConcept extends PiClassifier {
      * returns all subconcepts and subconcepts of the subconcepts
      */
     allSubConceptsRecursive(): PiConcept[] {
-        var result = this.language.concepts.filter(c => c.base?.referred === this);
-        const tmp = this.language.concepts.filter(c => c.base?.referred === this);
+        var result = this.allSubConceptsDirect();
+        const tmp = this.allSubConceptsDirect();
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
         return result;
     }

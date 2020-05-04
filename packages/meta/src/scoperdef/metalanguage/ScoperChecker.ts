@@ -5,7 +5,7 @@ import {
     PiLanguageExpressionChecker, PiProperty, PiClassifier, PiInterface
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
-import { findImplementors, refListIncludes } from "../../utils/ModelHelpers";
+import { findAllImplementorsAndSubs } from "../../utils/ModelHelpers";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -90,15 +90,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             this.myExpressionChecker.checkConceptReference(ref);
             let myClassifier = ref.referred;
             if (!!myClassifier) { // error message handled by checkConceptReference()
-                result.push(myClassifier);
-                if (myClassifier instanceof  PiConcept) { // find all subclasses and mark them as namespace
-                    result = result.concat(myClassifier.allSubConceptsRecursive());
-                } else if (myClassifier instanceof  PiInterface) { // find all implementors and their subclasses and mark them as namespace
-                    for (let implementor of findImplementors(myClassifier)) {
-                        result.push(implementor);
-                        result = result.concat(implementor.allSubConceptsRecursive());
-                    }
-                }
+                result = result.concat(findAllImplementorsAndSubs(myClassifier));
             }
         });
         return result;
