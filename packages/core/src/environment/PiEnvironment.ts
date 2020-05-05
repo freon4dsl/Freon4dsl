@@ -14,6 +14,5 @@ export interface PiEnvironment {
     stdlib: PiStdlib;
     unparser: PiUnparser;
 
-    projection: PiCompositeProjection;
     projectionalEditorComponent: ProjectionalEditor;
 }

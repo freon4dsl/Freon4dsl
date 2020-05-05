@@ -48,10 +48,7 @@ export class EnvironmentTemplate {
                 rootProjection.addProjection(projectionManual);
                 rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(context, rootProjection, actions);
-                projectionDefault.setEditor(this.editor);
         
-                this.projection = rootProjection;
-                
                 initializeLanguage();
             }
             
@@ -63,7 +60,6 @@ export class EnvironmentTemplate {
             }    
                 
             editor: ${Names.PiEditor};
-            projection: ${Names.CompositeProjection};
             scoper: ${Names.PiScoper} = new ${Names.scoper(language)}();
             typer: ${Names.PiTyper} = new ${Names.typer(language)}();
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();

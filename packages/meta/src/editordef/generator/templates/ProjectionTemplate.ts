@@ -78,7 +78,6 @@ export class ProjectionTemplate {
                 SelectBox,
                 KeyPressAction,
                 LabelBox,
-                ${Names.PiEditor},
                 ${Names.PiElement},
                 ${Names.PiProjection},
                 TextBox,
@@ -102,7 +101,6 @@ export class ProjectionTemplate {
 
             export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
                 private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};
-                private editor: ${Names.PiEditor};
                 rootProjection: ${Names.PiProjection};
                 @observable showBrackets: boolean = false;
                 name: string = "${editorDef.name}";
@@ -112,11 +110,7 @@ export class ProjectionTemplate {
                         this.name = name;
                     }
                 }
-            
-                setEditor(e: ${Names.PiEditor}) {
-                    this.editor = e;
-                }
-            
+          
                 getBox(exp: ${Names.PiElement}): Box {
                     if( exp === null ) {
                         return null;
