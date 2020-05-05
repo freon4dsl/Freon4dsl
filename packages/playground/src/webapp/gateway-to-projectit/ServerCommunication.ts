@@ -11,7 +11,7 @@ export class ServerCommunication {
     // TODO give model as parameter instead of asking environment
     static async putModel(modelName: string) {
         if (modelName !== "" && modelName.match(/^[a-z,A-Z]+$/)) {
-            const model = ServerCommunication.serial.convertToJSON(environment.editor.context.rootElement);
+            const model = ServerCommunication.serial.convertToJSON(environment.editor.rootElement);
             try {
                 const res = await axios.put(`${SERVER_URL}putModel?name=${modelName}`, model);
             } catch (e) {
@@ -26,7 +26,7 @@ export class ServerCommunication {
         if (modelName !== "") {
             const modelJSON = await ServerCommunication.getModel(modelName);
             const model = ServerCommunication.serial.toTypeScriptInstance(modelJSON);
-            environment.editor.context.rootElement = model as PiElement;
+            environment.editor.rootElement = model as PiElement;
         }
     }
 

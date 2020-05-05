@@ -6,7 +6,6 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { DefEditorDefaults } from "../metalanguage/DefEditorDefaults";
 import {
     ActionsTemplate,
-    ContextTemplate,
     EditorIndexTemplate,
     ProjectionTemplate,
     SelectionHelpers,
@@ -51,7 +50,6 @@ export class EditorGenerator {
         const projection = new ProjectionTemplate();
 
         const enumProjection = new SelectionHelpers();
-        const contextTemplate = new ContextTemplate();
         const editorIndexTemplate = new EditorIndexTemplate();
         const unparserTemplate = new UnparserTemplate();
         const initializationTemplate = new InitalizationTemplate();
@@ -79,11 +77,7 @@ export class EditorGenerator {
         var defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
 
-        LOGGER.log(`Generating context: ${Names.context(this.language)}.ts`);
-        var contextFile = Helpers.pretty(contextTemplate.generateContext(this.language, editDef, relativePath), "Context");
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.context(this.language)}.ts`, contextFile);
-
-        LOGGER.log(`Generating ProjectionalEditorManual: ${Names.projection(this.language)}.ts`);
+        LOGGER.log(`Generating CustomProjectionalEditor: ${Names.projection(this.language)}.ts`);
         var projectionalEditorManualFile = Helpers.pretty(projection.generateProjection(this.language, editDef, relativePath), "ProjectionalEditorManual");
         Helpers.generateManualFile(`${this.editorFolder}/${Names.projection(this.language)}.ts`, projectionalEditorManualFile, "ManualProjections");
 

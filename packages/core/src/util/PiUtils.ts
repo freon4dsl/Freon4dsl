@@ -15,7 +15,7 @@ export const NBSP: string = "".concat("\u00A0");
 const LOGGER = new PiLogger("PiUtils"); //.mute();
 
 export class PiUtils {
-    /** Iniyialize an object with a JSON object
+    /** Initialize an object with a JSON object
      */
     static initializeObject<TTarget, TSource>(target: TTarget, source: TSource) {
         if (!(target && source)) {
@@ -43,7 +43,7 @@ export class PiUtils {
                 piContainer.container[piContainer.propertyName][piContainer.propertyIndex] = exp;
             }
         } else {
-            editor.context.rootElement = exp;
+            editor.rootElement = exp;
         }
     }
 

@@ -10,8 +10,8 @@ import { DemoProjection, getModelList } from "../../editor";
 
 export class DemoEditor extends PiEditorWithToolbar {
 
-    constructor(context: PiContext, projection: PiProjection, actions?: PiActions) {
-        super(context, projection, actions)
+    constructor(projection: PiProjection, actions?: PiActions) {
+        super(projection, actions)
     }
 
     mytoolbarItems: MyToolbarItem[] = [

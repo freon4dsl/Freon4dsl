@@ -15,12 +15,13 @@ export class EnvironmentTemplate {
     }
 
     generateEnvironment(language: PiLanguageUnit, relativePath: string): string {
+        const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
         return `
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, 
                         ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, ${Names.PiUnparser} } from "${PROJECTITCORE}";
         import { ${Names.ProjectionalEditor} } from "@projectit/core";
         import * as React from "react";
-        import { ${Names.actions(language)}, ${Names.context(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
+        import { ${Names.actions(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
@@ -28,6 +29,7 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.unparser(language)}  } from "${relativePath}${UNPARSER_GEN_FOLDER}/${Names.unparser(language)}";
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
+        ${(placeHolderConceptName === "" ? "" : `import { ${placeHolderConceptName} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";`)}
         
         export class ${Names.environment(language)} implements ${Names.PiEnvironment} {       
             private static environment: ${Names.PiEnvironment} ;
@@ -40,15 +42,17 @@ export class EnvironmentTemplate {
             }
                
             constructor() {
-                const context = new ${Names.context(language)}();
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
                 const projectionManual = new ${Names.projection(language)}("manual");
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");
                 rootProjection.addProjection(projectionManual);
                 rootProjection.addProjection(projectionDefault);
-                this.editor = new PiEditor(context, rootProjection, actions);
-        
+                this.editor = new PiEditor(rootProjection, actions);
+                this.editor.getPlaceHolderExpression = () => {
+                    return new ${placeHolderConceptName}();
+                }
+
                 initializeLanguage();
             }
             

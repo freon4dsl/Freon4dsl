@@ -1,6 +1,7 @@
 import { observable, computed, action } from "mobx";
+import { MobxModelElementImpl } from "../language/decorators";
 
-import { PiContainerDescriptor } from "../language/PiModel";
+import { PiContainerDescriptor, PiExpression } from "../language/PiModel";
 import { InternalBehavior, InternalBinaryBehavior, InternalCustomBehavior, InternalExpressionBehavior } from "./InternalBehavior";
 import { PiCaret } from "../util/BehaviorUtils";
 import { PiElement, isPiExpression } from "../language/PiModel";
@@ -17,11 +18,14 @@ import { PiUtils, wait } from "../util/PiUtils";
 const LOGGER = new PiLogger("PiEditor");
 
 export class PiEditor {
+    @observable private _rootElement: PiElement;
     readonly actions?: PiActions;
-    readonly context: PiContext;
     readonly projection: PiProjection;
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
+
+    // TODO Should be removed completely, is only use here
+    getPlaceHolderExpression: () => PiExpression;
 
     // @observable private $rootBox: Box | null;
     @observable private $selectedBox: Box | null;
@@ -31,9 +35,8 @@ export class PiEditor {
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
     private selectedRole: string = null;
 
-    constructor(context: PiContext, projection: PiProjection, actions?: PiActions) {
+    constructor(projection: PiProjection, actions?: PiActions) {
         this.actions = actions;
-        this.context = context;
         this.projection = projection;
         this.initializeAliases(actions);
     }
@@ -116,8 +119,8 @@ export class PiEditor {
 
     @computed
     get rootBox(): Box {
-        LOGGER.info(this, "RECALCULATING ROOT [" + this.context.rootElement + "]");
-        return this.projection.getBox(this.context.rootElement);
+        LOGGER.info(this, "RECALCULATING ROOT [" + this.rootElement + "]");
+        return this.projection.getBox(this.rootElement);
         // return this.$rootBox;
     }
 
@@ -171,7 +174,7 @@ export class PiEditor {
         const exp: PiElement = box.element;
         const container: PiContainerDescriptor = exp.piContainer();
         if (isPiExpression(exp)) {
-            const newExp = this.context.getPlaceHolderExpression();
+            const newExp = this.getPlaceHolderExpression();
             PiUtils.replaceExpression(exp, newExp, this);
             await this.selectElement(newExp);
         } else {
@@ -204,4 +207,20 @@ export class PiEditor {
             this.selectBox(first);
         }
     }
+
+    set rootElement(exp: PiElement) {
+        this._rootElement = exp;
+        if (exp instanceof MobxModelElementImpl) {
+            exp.container = this;
+            exp.propertyIndex = undefined;
+            exp.propertyName = "rootElement";
+            // not a PiElement , therefore no root.
+            exp.container = null;
+        }
+    }
+
+    get rootElement(): PiElement {
+        return this._rootElement;
+    }
+
 }
