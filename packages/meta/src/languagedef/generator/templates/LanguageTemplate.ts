@@ -15,7 +15,10 @@ export class LanguageTemplate {
             ).join("\n")}
             import { PiElementReference } from "./PiElementReference";
     
-            export function initializeLanguage() {
+            /**
+             * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.
+             */
+             export function initializeLanguage() {
                 ${language.concepts.map(concept =>
                     `Language.getInstance().addConcept(describe${Names.concept(concept)}());`
                 ).join("\n")}

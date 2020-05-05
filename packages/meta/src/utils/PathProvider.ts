@@ -111,10 +111,6 @@ export class PathProvider {
         return EDITOR_GEN_FOLDER + "/" + Names.projection(language);
     }
 
-    public static editor(language: PiLanguageUnit): string {
-        return EDITOR_GEN_FOLDER + "/" + Names.editor(language);
-    }
-
     public static mainProjectionalEditor(language: PiLanguageUnit): string {
         return EDITOR_GEN_FOLDER + "/" + Names.mainProjectionalEditor;
     }

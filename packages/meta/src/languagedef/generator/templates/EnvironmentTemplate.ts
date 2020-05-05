@@ -21,7 +21,6 @@ export class EnvironmentTemplate {
         import { ${Names.ProjectionalEditor} } from "@projectit/core";
         import * as React from "react";
         import { ${Names.actions(language)}, ${Names.context(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
-        import { ${Names.editor(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}/${Names.editor(language)}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
@@ -48,7 +47,7 @@ export class EnvironmentTemplate {
                 const projectionDefault = new ${Names.projectionDefault(language)}();
                 rootProjection.addProjection("manual", projectionManual);
                 rootProjection.addProjection("default", projectionDefault);
-                this.editor = new ${Names.editor(language)}(context, rootProjection, actions);
+                this.editor = new PiEditor(context, rootProjection, actions);
                 projectionDefault.setEditor(this.editor);
         
                 this.projection = rootProjection;

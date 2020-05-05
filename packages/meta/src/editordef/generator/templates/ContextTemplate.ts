@@ -14,31 +14,29 @@ export class ContextTemplate {
 
         return `
             import { action, observable } from "mobx";
-            import { ${Names.PiContext}, ${Names.PiExpression} } from "${PROJECTITCORE}";
+            import { ${Names.PiContext}, ${Names.PiExpression}, ${Names.PiElement}, MobxModelElementImpl } from "${PROJECTITCORE}";
             import { ${initializationName} } from "../${initializationName}";
             import { ${rootConceptName} ${(placeHolderConceptName === "" ? "" : ", " + placeHolderConceptName)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            
+
             export class ${Names.context(language)} implements PiContext {
-                @observable private _rootElement: ${rootConceptName};
+                @observable private _rootElement: PiElement;
             
-                model: ${rootConceptName} = new ${rootConceptName}();
-            
-                constructor(initialExpression?: ${rootConceptName}) {
-                    this.rootElement = initialExpression ? initialExpression : this.model;
+                constructor() {
                     this.initialize();
                 }
             
-                set rootElement(exp: ${rootConceptName}) {
+                set rootElement(exp: PiElement) {
                     this._rootElement = exp;
-                    this._rootElement.container = null;
-                    exp.container = this;
-                    exp.propertyIndex = undefined;
-                    exp.propertyName = "rootElement";
-                    // not a PiElement , therefore no root.
-                    exp.container = null;
+                    if( exp instanceof MobxModelElementImpl) {
+                        exp.container = this;
+                        exp.propertyIndex = undefined;
+                        exp.propertyName = "rootElement";
+                        // not a PiElement , therefore no root.
+                        exp.container = null;
+                    }
                 }
             
-                get rootElement(): ${rootConceptName} {
+                get rootElement(): PiElement {
                     return this._rootElement;
                 }
             

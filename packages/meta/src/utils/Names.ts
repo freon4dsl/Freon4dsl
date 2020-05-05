@@ -68,10 +68,6 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Language";
     }
 
-    public static editor(language: PiLanguageUnit): string {
-        return this.startWithUpperCase(language?.name) + "Editor";
-    }
-
     public static initialization(language: PiLanguageUnit) {
         return this.startWithUpperCase(language?.name) + "Initialization";
     }

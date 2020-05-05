@@ -8,7 +8,6 @@ import {
     ActionsTemplate,
     ContextTemplate,
     EditorIndexTemplate,
-    EditorTemplate,
     ProjectionTemplate,
     SelectionHelpers,
     UnparserTemplate
@@ -53,7 +52,6 @@ export class EditorGenerator {
 
         const enumProjection = new SelectionHelpers();
         const contextTemplate = new ContextTemplate();
-        const editorTemplate = new EditorTemplate();
         const editorIndexTemplate = new EditorIndexTemplate();
         const unparserTemplate = new UnparserTemplate();
         const initializationTemplate = new InitalizationTemplate();
@@ -88,10 +86,6 @@ export class EditorGenerator {
         LOGGER.log(`Generating ProjectionalEditorManual: ${Names.projection(this.language)}.ts`);
         var projectionalEditorManualFile = Helpers.pretty(projection.generateProjection(this.language, editDef, relativePath), "ProjectionalEditorManual");
         Helpers.generateManualFile(`${this.editorFolder}/${Names.projection(this.language)}.ts`, projectionalEditorManualFile, "ManualProjections");
-
-        LOGGER.log(`Generating Editor: ${Names.editor(this.language)}.ts`);
-        var editorFile = Helpers.pretty(editorTemplate.generateEditor(this.language, editDef, relativePath), "Editor");
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.editor(this.language)}.ts`, editorFile);
 
         // the following do not need the relativePath for imports
         LOGGER.log(`Generating manual actions: ${Names.manualActions(this.language)}.ts`);

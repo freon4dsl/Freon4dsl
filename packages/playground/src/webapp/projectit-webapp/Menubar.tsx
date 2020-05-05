@@ -223,6 +223,8 @@ export default class Menubar extends React.Component {
         App.setDialogSubText("");
         App.setDialogContent(<Navigator />);
         App.showDialog();
+        // TODO Ask model name from user
+        // TODO Go through EditorEnvironment
         ServerCommunication.loadModel("testjea");
     }
 
