@@ -33,6 +33,9 @@ export class Names {
     // because the below Names are used to generate TypeScript classes
     // they all have to start with an uppercase character
 
+    public static configuration(language: PiLanguageUnit) {
+        return "ProjectitConfiguration";
+    }
     public static environment(language: PiLanguageUnit) {
         return this.startWithUpperCase(language?.name) + "Environment";
     }
@@ -48,8 +51,8 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "DefaultActions";
     }
 
-    public static manualActions(language: PiLanguageUnit): string {
-        return this.startWithUpperCase(language?.name) + "ManualActions";
+    public static customActions(language: PiLanguageUnit): string {
+        return "Custom" + this.actions(language);
     }
 
     public static projectionDefault(language: PiLanguageUnit): string {
@@ -60,8 +63,8 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "SelectionHelpers";
     }
 
-    public static projection(language: PiLanguageUnit): string {
-        return this.startWithUpperCase(language?.name) + "Projection";
+    public static customProjection(language: PiLanguageUnit): string {
+        return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
     }
 
     public static language(language: PiLanguageUnit): string {

@@ -41,7 +41,7 @@ export class LoadComponent extends React.Component<LoadProps, {}> {
         if (this.selectedModel !== "") {
             const modelJSON = await getModel(this.selectedModel);
             const model = this.serial.toTypeScriptInstance(modelJSON);
-            this.props.editor.context.rootElement = model as PiElement;
+            this.props.editor.rootElement = model as PiElement;
         }
     };
 

@@ -1,3 +1,4 @@
+import { DemoPlaceholderExpression } from "../../model/expressions/DemoPlaceholderExpression";
 import * as React from "react";
 import { mount, ReactWrapper } from "enzyme";
 import mountToJson, { Json } from "enzyme-to-json";
@@ -18,8 +19,13 @@ describe("ProjectionalEditor", () => {
         context = new DemoContext(DemoNumberLiteralExpression.create("1"));
         const action = new DemoActions();
         const projection = new DemoProjection();
-        editor = new PiEditor(context, projection, action);
-        const rootBox = projection.getBox(context.rootElement);
+        editor = new PiEditor(projection, action);
+        editor.rootElement = context.rootElement;
+        editor.getPlaceHolderExpression = () => {
+            return new DemoPlaceholderExpression();
+        };
+
+        const rootBox = projection.getBox(editor.rootElement);
         props = {
             editor: editor
         };

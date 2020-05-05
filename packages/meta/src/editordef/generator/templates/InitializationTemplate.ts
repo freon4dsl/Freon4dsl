@@ -7,11 +7,13 @@ export class InitalizationTemplate {
 
     generate(language: PiLanguageUnit): string {
         return `
+            import { ${Names.concept(language.rootConcept)} } from "../language/gen";
+        
             export class ${Names.initialization(language)} {
             
                 initialize() {
                     // Add you initial model here            
-                    return null;
+                    return new ${Names.concept(language.rootConcept)}();
                 }
             }
         `;

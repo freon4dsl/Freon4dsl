@@ -20,7 +20,12 @@ describe("TextComponent", () => {
         const context = new DemoContext(new DemoPlaceholderExpression());
         const action = new DemoActions();
         const projection = new DemoProjection();
-        editor = new PiEditor(context, projection, action);
+        editor = new PiEditor(projection, action);
+        editor.rootElement = context.rootElement;
+        editor.getPlaceHolderExpression = () => {
+            return new DemoPlaceholderExpression();
+        };
+
         nextLeaf = new AliasBox(context.rootElement, "", "");
         textbox = new TextBox(
             context.rootElement,

@@ -1,3 +1,4 @@
+import { DemoPlaceholderExpression } from "@projectit/demo";
 import { observer } from "mobx-react";
 import * as React from "react";
 
@@ -45,7 +46,12 @@ export class MainProjectionalEditor extends React.Component<MainProjectionalEdit
         const demoCtx = new DemoContext();
         const demoActions = new DemoActions();
         const demoProjection = new TutorialProjection();
-        this.demoEditor = new DemoEditor(demoCtx, demoProjection, demoActions);
+        this.demoEditor = new DemoEditor(demoProjection, demoActions);
+        this.demoEditor.rootElement = demoCtx.rootElement;
+        this.demoEditor.getPlaceHolderExpression = () => {
+            return new DemoPlaceholderExpression();
+        };
+
         demoProjection.setEditor(this.demoEditor);
         // finally, it should be done like this:
         // connect the editor to the Typer and let the editor use the Typer API to get scoping info

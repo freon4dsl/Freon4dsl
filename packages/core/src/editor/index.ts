@@ -1,5 +1,5 @@
 export * from "./PiAction";
-export * from "./PiContext";
+export * from "./PiModelInitialization";
 export * from "./PiEditor";
 export * from "./PiProjection";
 export * from "./PiCompositeProjection";

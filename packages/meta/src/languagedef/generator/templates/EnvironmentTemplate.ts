@@ -17,6 +17,7 @@ export class EnvironmentTemplate {
     generateEnvironment(language: PiLanguageUnit, relativePath: string): string {
         const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
         return `
+        import { projectitConfiguration } from "../../projectit/ProjectitConfiguration";
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, 
                         ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, ${Names.PiUnparser} } from "${PROJECTITCORE}";
         import { ${Names.ProjectionalEditor} } from "@projectit/core";
@@ -25,7 +26,7 @@ export class EnvironmentTemplate {
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
-        import { ${Names.projection(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.projection(language)}";
+        import { ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.customProjection(language)}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.unparser(language)}  } from "${relativePath}${UNPARSER_GEN_FOLDER}/${Names.unparser(language)}";
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
@@ -44,7 +45,7 @@ export class EnvironmentTemplate {
             constructor() {
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
-                const projectionManual = new ${Names.projection(language)}("manual");
+                const projectionManual = new ${Names.customProjection(language)}("manual");
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");
                 rootProjection.addProjection(projectionManual);
                 rootProjection.addProjection(projectionDefault);
@@ -52,7 +53,7 @@ export class EnvironmentTemplate {
                 this.editor.getPlaceHolderExpression = () => {
                     return new ${placeHolderConceptName}();
                 }
-
+                this.editor.rootElement = projectitConfiguration.customInitialization.initialize();
                 initializeLanguage();
             }
             

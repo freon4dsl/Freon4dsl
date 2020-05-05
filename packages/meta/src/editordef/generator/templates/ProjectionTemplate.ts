@@ -20,28 +20,6 @@ export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjection(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
-        return `
-            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PROJECTITCORE}";
-        
-            export class ${Names.projection(language)} implements ${Names.PiProjection} {
-                rootProjection: ${Names.PiProjection};
-                name: string = "manual";
-                
-                constructor(name?: string) {
-                    if (!!name) {
-                        this.name = name;
-                    }
-                }
-                
-                getBox(element: ${Names.PiElement}) : Box {
-                    // Add any handmade projections of your own before next statement 
-                    return null;
-                }            
-            }
-        `;
-    }
-
     generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
         const binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {

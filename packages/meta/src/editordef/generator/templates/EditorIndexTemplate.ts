@@ -17,8 +17,9 @@ export class EditorIndexTemplate {
     generateIndex(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
         return `
         export * from "./gen";
-        export * from "./${Names.projection(language)}";
-        export * from "./${Names.manualActions(language)}";
+        export * from "./${Names.customProjection(language)}";
+        export * from "./${Names.customActions(language)}";
+        export * from "./${Names.initialization(language)}";
         `;
     }
 

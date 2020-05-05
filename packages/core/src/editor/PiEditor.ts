@@ -11,7 +11,6 @@ import { isSelectBox } from "./boxes/SelectBox";
 import { isTextBox } from "./boxes/TextBox";
 import { Box } from "./boxes/Box";
 import { KeyboardShortcutBehavior, PiActions } from "./PiAction";
-import { PiContext } from "./PiContext";
 import { PiLogger } from "../util/PiLogging";
 import { PiUtils, wait } from "../util/PiUtils";
 

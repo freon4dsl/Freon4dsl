@@ -1,4 +1,4 @@
-import { PiActions, PiContext, PiEditor } from "@projectit/core";
+import { PiActions, PiEditor } from "@projectit/core";
 import { PiProjection } from "@projectit/core";
 import { PiEditorWithToolbar } from "../../application/app/toolbars/ToolBarDefinition";
 

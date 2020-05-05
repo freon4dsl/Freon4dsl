@@ -29,7 +29,7 @@ export const validatorInterface = PROJECTITCORE;
 export const errorClass = PROJECTITCORE;
 export const piNamedElement = PROJECTITCORE;
 export const EDITORSTYLES = STYLES_FOLDER + "/styles";
-
+export const CONFIGURATION_FOLDER = "projectit";
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical
  * at each usage.
@@ -95,8 +95,8 @@ export class PathProvider {
         return EDITOR_GEN_FOLDER + "/" + Names.defaultActions(language);
     }
 
-    public static manualActions(language: PiLanguageUnit): string {
-        return EDITOR_GEN_FOLDER + "/" + Names.manualActions(language);
+    public static customActions(language: PiLanguageUnit): string {
+        return EDITOR_FOLDER + "/" + Names.customActions(language);
     }
 
     public static projectionDefault(language: PiLanguageUnit): string {
@@ -108,7 +108,7 @@ export class PathProvider {
     }
 
     public static projection(language: PiLanguageUnit): string {
-        return EDITOR_GEN_FOLDER + "/" + Names.projection(language);
+        return EDITOR_GEN_FOLDER + "/" + Names.customProjection(language);
     }
 
     public static mainProjectionalEditor(language: PiLanguageUnit): string {
