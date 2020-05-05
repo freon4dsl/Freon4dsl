@@ -23,8 +23,8 @@ DemoIfExpression {
         [
         if (${self.condition}) then
                   ${self.whenTrue}
-        [?else
-           ${self.whenFalse}]
+        else
+           ${self.whenFalse}
         endif
         ]
 

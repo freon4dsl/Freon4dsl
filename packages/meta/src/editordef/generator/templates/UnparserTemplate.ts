@@ -1,4 +1,4 @@
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 import {
     PiBinaryExpressionConcept,
     PiConcept,
@@ -31,8 +31,8 @@ export class UnparserTemplate {
 
         // Template starts here 
         return `
-        import { PiNamedElement } from "@projectit/core";
-        import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import { ${allLangConcepts}, ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
                 ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         // TODO change import to @project/core
@@ -73,10 +73,10 @@ export class UnparserTemplate {
                 return result;
             }
 
-            private showReferenceList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
+            private showReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
-                    result = result.concat((listElem as PiNamedElement)?.name);
+                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}));
                     if (sepType === SeparatorType.Separator) {
                         if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
                     }

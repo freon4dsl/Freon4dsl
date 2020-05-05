@@ -65,7 +65,7 @@ describe("Testing Unparser", () => {
             expect(result).toBe("3 / 4 * 'temp'");
         });
 
-        test("(1 + 2) * 'Person'", () => {
+        test.skip("(1 + 2) * 'Person'", () => {
             let result: string = "";
             const variableExpression = new DemoVariableRef();
             const variable = new DemoVariable();
@@ -84,7 +84,7 @@ describe("Testing Unparser", () => {
             expect(result).toBe("1 + 2 * Person");
         });
 
-        test('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
+        test.skip('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
             let result: string = "";
             const determine = DemoFunction.create({name: "determine"});
             const AAP = DemoVariable.create({name: "AAP"});
@@ -97,7 +97,7 @@ describe("Testing Unparser", () => {
             expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
         });
 
-        test("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
+        test.skip("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
             const personEnt = DemoEntity.create({name: "Person"});
             const age = DemoAttribute.create({name: "age"});
@@ -122,7 +122,7 @@ describe("Testing Unparser", () => {
             expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
 
-        test("complete example model with simple attribute types", () => {
+        test.skip("complete example model with simple attribute types", () => {
             let result: string = "";
             result = unparser.unparse(model);
             let path: string = "./handmade/unparsedDemoModel.txt";

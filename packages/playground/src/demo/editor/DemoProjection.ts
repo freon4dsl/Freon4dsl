@@ -146,7 +146,7 @@ export class DemoProjection implements PiProjection {
                 },
                 (option: SelectOption) => {
                     // TODO PiElementReference
-                    element.functionDefinition = new PiElementReference<DemoFunction>(
+                    element.functionDefinition = PiElementReference.create<DemoFunction>(
                         DemoEnvironment.getInstance().scoper.getFromVisibleElements(element, option.label, "DemoFunction") as DemoFunction,
                         "DemoFunction"
                     );

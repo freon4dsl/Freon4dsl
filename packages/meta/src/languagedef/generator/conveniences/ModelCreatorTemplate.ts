@@ -30,7 +30,7 @@ export class ModelCreatorTemplate {
                 ${concept.allReferences().map(prop => 
                 `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(${Names.PiElementReference}.create<${prop.type.name}>(${prop.name}, "${prop.type.name}"));` 
                     : 
-                    `_result.${prop.name} = new ${Names.PiElementReference}(${prop.name}, "${prop.type.name}");`}`
+                    `_result.${prop.name} = ${Names.PiElementReference}.create<${prop.type.name}>(${prop.name}, "${prop.type.name}");`}`
                 ).join("\n")}
                 return _result;
             }`
@@ -41,23 +41,30 @@ export class ModelCreatorTemplate {
     private makeParams(concept: PiConcept) : string {
         // TODO would like to use allProperties() here, but PrimProperties give error
         let paramlist: string[] = [];
+        let optionalParamList: string[] = [];
+        let questionmark = `?`;
         for (let prop of concept.allPrimProperties()) {
-            let questionmark = (prop.isOptional ? `?` : ``);
-            paramlist.push(`${prop.name}${questionmark}: ${prop.primType}`);
+            if (prop.isOptional) {
+                optionalParamList.push(`${prop.name}${questionmark}: ${prop.primType}`);
+            } else {
+                paramlist.push(`${prop.name}: ${prop.primType}`);
+            }
         }
         for (let prop of concept.allParts()) {
-            let questionmark = (prop.isOptional ? `?` : ``);
-            paramlist.push(`${prop.name}${questionmark}: ${prop.type.name}`);
+            if (prop.isOptional) {
+                optionalParamList.push(`${prop.name}${questionmark}: ${prop.type.name}`);
+            } else {
+                paramlist.push(`${prop.name}: ${prop.type.name}`);
+            }
         }
         for (let prop of concept.allReferences()) {
-            let questionmark = (prop.isOptional ? `?` : ``);
-            paramlist.push(`${prop.name}${questionmark}: ${prop.type.name}`);
+            if (prop.isOptional) {
+                optionalParamList.push(`${prop.name}${questionmark}: ${prop.type.name}`);
+            } else {
+                paramlist.push(`${prop.name}: ${prop.type.name}`);
+            }
         }
-        return paramlist.join(", ");
-        // return `${concept.allParts().map(prop =>
-        //     `${prop.name}: ${prop.type.name}`).concat(`${concept.allReferences().map(prop =>
-        //     `${prop.name}: ${prop.type.name}`)}`).concat(`${concept.allPrimProperties().map(prop =>
-        //     `${prop.name}: ${prop.primType}`)}`).join(", ")}`;
+        return paramlist.concat(optionalParamList).join(", ");
     }
 
     private createImports(language: PiLanguageUnit) : string {
