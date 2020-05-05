@@ -63,7 +63,7 @@ export class EnvironmentTemplate {
             }    
                 
             editor: ${Names.PiEditor};
-            projection: ${Names.PiProjection};
+            projection: ${Names.CompositeProjection};
             scoper: ${Names.PiScoper} = new ${Names.scoper(language)}();
             typer: ${Names.PiTyper} = new ${Names.typer(language)}();
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();

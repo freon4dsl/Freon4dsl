@@ -25,7 +25,7 @@ export class Names {
     public static Box = "Box";
     public static PiElementReference = "PiElementReference";
     public static PiEnvironment = "PiEnvironment";
-    public static CompositeProjection = "CompositeProjection";
+    public static CompositeProjection = "PiCompositeProjection";
     public static ProjectionalEditor = "ProjectionalEditor";
     public static mainProjectionalEditor = "MainProjectionalEditor";
     public static styles = "projectitStyles";

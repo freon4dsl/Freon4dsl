@@ -1,5 +1,6 @@
 // This file contains all the stuff that needs to connect to the projectIt generated langauge environment
-import { ProjectionalEditor } from "@projectit/core";
+import { Tooltip } from "@fluentui/react-northstar";
+import { PiCompositeProjection, ProjectionalEditor } from "@projectit/core";
 import * as React from "react";
 
 import { environment } from "./Environment";
@@ -128,4 +129,12 @@ export class EditorEnvironment {
     }
     // END OF: the following sets the content of the errorlist items and can be removed when the errors are observable
     // END OF: for the communication with the error list
+
+    static getProjectionNames(): string[] {
+        return environment.projection.projectionNames();
+    }
+
+    static setProjection(name: string): void {
+        environment.projection.projectiontoFront(name);
+    }
 }

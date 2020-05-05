@@ -4,11 +4,11 @@ import { Box, LabelBox } from "./boxes";
 import { OrderedList } from "./OrderedList";
 import { PiProjection } from "./PiProjection";
 
-export class CompositeProjection implements PiProjection {
+export class PiCompositeProjection implements PiProjection {
     @observable private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
     private _rootProjection: PiProjection | null = null;
 
-    set rootProjection(p: CompositeProjection) {
+    set rootProjection(p: PiCompositeProjection) {
         this._rootProjection = p;
         this.projections.toArray().forEach(child => (child.element.rootProjection = p));
     }
