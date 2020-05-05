@@ -13,7 +13,7 @@ DemoAttribute {
 DemoStringLiteralExpression {
     @projection DemoStringLiteralExpression
         [
-		'${self.value}'
+        '${self.value}'
         ]
     @trigger "'"
 }
@@ -23,8 +23,8 @@ DemoIfExpression {
         [
         if (${self.condition}) then
                   ${self.whenTrue}
-        else
-           ${self.whenFalse}
+        [?else
+           ${self.whenFalse}]
         endif
         ]
 
