@@ -1,5 +1,11 @@
 editor StartEditor for language Demo
 
+DemoNumberLiteralExpression {
+    @projection normal
+        [${self.value}]
+}
+
+
 DemoAttribute {
     @projection attribuut [ ${self.name} : ${self.declaredType} ]
 }
@@ -7,7 +13,7 @@ DemoAttribute {
 DemoStringLiteralExpression {
     @projection DemoStringLiteralExpression
         [
-		'${self.value}'
+        '${self.value}'
         ]
     @trigger "'"
 }
@@ -54,6 +60,8 @@ DemoLessThenExpression {
 DemoOrExpression {
     @symbol "or"
 }
+
+
 
 DemoEntity {
     @trigger "entity"

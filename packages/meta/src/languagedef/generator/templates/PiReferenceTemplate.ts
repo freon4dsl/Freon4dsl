@@ -25,7 +25,7 @@ export class PiReferenceTemplate {
             // Need for the scoper to work
             private typeName: string;
         
-            public constructor(referredElement: T, typeName: string) {
+            private constructor(referredElement: T, typeName: string) {
                 super();
                 this.referred = referredElement;
                 this.typeName = typeName;

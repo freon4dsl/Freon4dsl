@@ -48,11 +48,11 @@ concept DemoVariable {
 }
 
 abstract expression DemoExpression {
-    appliedfeature: AppliedFeature;
+    appliedfeature?: AppliedFeature;
 }
 
 abstract concept AppliedFeature {
-    appliedfeature: AppliedFeature;
+    appliedfeature?: AppliedFeature;
 }
 
 concept DemoAttributeRef base AppliedFeature {

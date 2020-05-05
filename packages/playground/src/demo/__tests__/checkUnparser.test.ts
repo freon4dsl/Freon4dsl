@@ -1,14 +1,11 @@
 import {
     DemoModel,
-    DemoAttributeType,
     DemoMultiplyExpression,
     DemoNumberLiteralExpression,
-    DemoStringLiteralExpression,
     DemoDivideExpression,
     DemoVariableRef,
     DemoEntity,
     DemoAttribute,
-    DemoEveryConcept,
     DemoFunction,
     DemoVariable,
     PiElementReference
@@ -27,7 +24,7 @@ describe("Testing Unparser", () => {
             done();
         });
 
-        test.skip("3", () => {
+        test("3", () => {
             let result: string = "";
             let left = new DemoNumberLiteralExpression();
             left.value = "3";
@@ -35,25 +32,25 @@ describe("Testing Unparser", () => {
             expect(result).toBe("3");
         });
 
-        test.skip("multiplication 3 * 10", () => {
+        test("multiplication 3 * 10", () => {
             let result: string = "";
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
             result = unparser.unparse(mult);
-            expect(result).toBe("3*10");
+            expect(result).toBe("3 * 10");
         });
 
-        test.skip("multiplication 3 * 'temp'", () => {
+        test("multiplication 3 * 'temp'", () => {
             let result: string = "";
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3* 'temp'");
+            expect(result).toBe("3 * ' temp '");
         });
 
-        test.skip("multiplication (3/4) * 'temp'", () => {
+        test("multiplication (3 / 4) * 'temp'", () => {
             let result: string = "";
             let div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
@@ -62,7 +59,7 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3/4* 'temp'");
+            expect(result).toBe("3 / 4 * ' temp '");
         });
 
         test.skip("(1 + 2) * 'Person'", () => {
@@ -71,7 +68,7 @@ describe("Testing Unparser", () => {
             const variable = new DemoVariable();
             variable.name = "Person";
             // variable.declaredType = DemoAttributeType.String;
-            variableExpression.variable = new PiElementReference<DemoVariable>(variable, "DemoVariable");
+            variableExpression.variable = PiElementReference.createNamed<DemoVariable>(variable.name, "DemoVariable");
 
             // variableExpression.referredName = "Person";
             // variableExpression.attribute = new DemoAttribute();
@@ -81,7 +78,7 @@ describe("Testing Unparser", () => {
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.unparse(multiplyExpression);
-            expect(result).toBe("1+2*Person");
+            expect(result).toBe("1 + 2 * Person");
         });
 
         test.skip('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
@@ -119,7 +116,7 @@ describe("Testing Unparser", () => {
             // Person { name, age, first(Resultvar) = 5 + 24 }
 
             result = unparser.unparse(personEnt);
-            expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = 5+24}");
+            expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
 
         test.skip("complete example model with simple attribute types", () => {
