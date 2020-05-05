@@ -1,14 +1,11 @@
 import {
     DemoModel,
-    DemoAttributeType,
     DemoMultiplyExpression,
     DemoNumberLiteralExpression,
-    DemoStringLiteralExpression,
     DemoDivideExpression,
     DemoVariableRef,
     DemoEntity,
     DemoAttribute,
-    DemoEveryConcept,
     DemoFunction,
     DemoVariable,
     PiElementReference
@@ -50,7 +47,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3 * 'temp'");
+            expect(result).toBe("3 * ' temp '");
         });
 
         test("multiplication (3 / 4) * 'temp'", () => {
@@ -62,7 +59,7 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3 / 4 * 'temp'");
+            expect(result).toBe("3 / 4 * ' temp '");
         });
 
         test.skip("(1 + 2) * 'Person'", () => {
@@ -71,7 +68,7 @@ describe("Testing Unparser", () => {
             const variable = new DemoVariable();
             variable.name = "Person";
             // variable.declaredType = DemoAttributeType.String;
-            variableExpression.variable = new PiElementReference<DemoVariable>(variable, "DemoVariable");
+            variableExpression.variable = PiElementReference.createNamed<DemoVariable>(variable.name, "DemoVariable");
 
             // variableExpression.referredName = "Person";
             // variableExpression.attribute = new DemoAttribute();
