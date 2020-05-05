@@ -2,7 +2,18 @@ import { PiBehavior, PiTriggerType } from "../editor/PiAction";
 import { PiKey } from "./Keys";
 import { remove, union } from "lodash";
 
+/**
+ * Utility functions to combine two PiAction objects.
+ */
 export class PiActionsUtil {
+
+    /**
+     * Join the actions, ensuring no duplicare triggers are in the result.
+     * If there is a duplicate trigger, the one in `newActions` will be used.
+     *
+     * @param defaultActions The first PiActions to join.
+     * @param newActions The ssecond PiActions to join.
+     */
     static join(defaultActions: PiBehavior[], newActions: PiBehavior[]) {
         newActions.forEach(newA => this.remove(defaultActions, newA));
         return union(defaultActions, newActions);
