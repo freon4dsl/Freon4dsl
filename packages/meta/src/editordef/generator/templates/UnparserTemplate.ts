@@ -119,6 +119,8 @@ export class UnparserTemplate {
     private makeLine (line : MetaEditorProjectionLine) : string {
         // the result should be text or should end in a quote
         let result: string = "";
+        // TODO indents are not correct because tabs are not yet recognised by the .edit parser
+        // TODO indents should be aware of the indent of surrounding elements
         for (var _i = 0; _i < line.indent; _i++) {
             result += " ";
         }
@@ -128,7 +130,6 @@ export class UnparserTemplate {
                 result += `${item.text}`;
             }
             if (item instanceof DefEditorSubProjection) {
-                // TODO take optionality into account
                 let myElem = item.expression.findRefOfLastAppliedFeature();
                 if (myElem instanceof PiPrimitiveProperty) {
                     result = this.makeItemWithPrimitiveType(myElem, result, item);
@@ -138,7 +139,6 @@ export class UnparserTemplate {
             }
             if (item instanceof DefEditorProjectionExpression) {
                 // TODO implement this
-                // console.log(item)
             }
             if (item instanceof DefEditorProjectionIndent) {
                 // TODO implement this

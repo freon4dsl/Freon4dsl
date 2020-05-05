@@ -53,7 +53,7 @@ describe("Testing Unparser", () => {
             expect(result).toBe("3 * 'temp'");
         });
 
-        test("multiplication (3/4) * 'temp'", () => {
+        test("multiplication (3 / 4) * 'temp'", () => {
             let result: string = "";
             let div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
