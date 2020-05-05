@@ -27,7 +27,7 @@ describe("Testing Unparser", () => {
             done();
         });
 
-        test.skip("3", () => {
+        test("3", () => {
             let result: string = "";
             let left = new DemoNumberLiteralExpression();
             left.value = "3";
@@ -35,25 +35,25 @@ describe("Testing Unparser", () => {
             expect(result).toBe("3");
         });
 
-        test.skip("multiplication 3 * 10", () => {
+        test("multiplication 3 * 10", () => {
             let result: string = "";
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
             result = unparser.unparse(mult);
-            expect(result).toBe("3*10");
+            expect(result).toBe("3 * 10");
         });
 
-        test.skip("multiplication 3 * 'temp'", () => {
+        test("multiplication 3 * 'temp'", () => {
             let result: string = "";
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3* 'temp'");
+            expect(result).toBe("3 * 'temp'");
         });
 
-        test.skip("multiplication (3/4) * 'temp'", () => {
+        test("multiplication (3/4) * 'temp'", () => {
             let result: string = "";
             let div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
@@ -62,10 +62,10 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult);
-            expect(result).toBe("3/4* 'temp'");
+            expect(result).toBe("3 / 4 * 'temp'");
         });
 
-        test.skip("(1 + 2) * 'Person'", () => {
+        test("(1 + 2) * 'Person'", () => {
             let result: string = "";
             const variableExpression = new DemoVariableRef();
             const variable = new DemoVariable();
@@ -81,10 +81,10 @@ describe("Testing Unparser", () => {
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.unparse(multiplyExpression);
-            expect(result).toBe("1+2*Person");
+            expect(result).toBe("1 + 2 * Person");
         });
 
-        test.skip('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
+        test('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
             let result: string = "";
             const determine = DemoFunction.create({name: "determine"});
             const AAP = DemoVariable.create({name: "AAP"});
@@ -97,7 +97,7 @@ describe("Testing Unparser", () => {
             expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
         });
 
-        test.skip("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
+        test("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
             const personEnt = DemoEntity.create({name: "Person"});
             const age = DemoAttribute.create({name: "age"});
@@ -119,10 +119,10 @@ describe("Testing Unparser", () => {
             // Person { name, age, first(Resultvar) = 5 + 24 }
 
             result = unparser.unparse(personEnt);
-            expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = 5+24}");
+            expect(result).toBe("Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
 
-        test.skip("complete example model with simple attribute types", () => {
+        test("complete example model with simple attribute types", () => {
             let result: string = "";
             result = unparser.unparse(model);
             let path: string = "./handmade/unparsedDemoModel.txt";
