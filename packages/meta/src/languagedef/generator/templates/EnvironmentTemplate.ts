@@ -42,11 +42,11 @@ export class EnvironmentTemplate {
             constructor() {
                 const context = new ${Names.context(language)}();
                 const actions = new ${Names.actions(language)}();
-                const rootProjection = new ${Names.CompositeProjection}();
-                const projectionManual = new ${Names.projection(language)}();
-                const projectionDefault = new ${Names.projectionDefault(language)}();
-                rootProjection.addProjection("manual", projectionManual);
-                rootProjection.addProjection("default", projectionDefault);
+                const rootProjection = new ${Names.CompositeProjection}("root");
+                const projectionManual = new ${Names.projection(language)}("manual");
+                const projectionDefault = new ${Names.projectionDefault(language)}("default");
+                rootProjection.addProjection(projectionManual);
+                rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(context, rootProjection, actions);
                 projectionDefault.setEditor(this.editor);
         

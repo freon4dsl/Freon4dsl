@@ -62,6 +62,7 @@ export class TutorialProjection implements PiProjection {
     rootProjection: PiProjection;
     @observable projectionType: MetaProjectionType1 = "text";
     @observable showBrackets: boolean = false;
+    name: string;
 
     constructor() {
     }

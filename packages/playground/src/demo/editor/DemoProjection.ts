@@ -23,6 +23,11 @@ import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 export class DemoProjection implements PiProjection {
     rootProjection: PiProjection;
     helpers = new DemoSelectionHelpers();
+    name: string = "";
+
+    constructor(name: string) {
+        this.name = name;
+    }
 
     getBox(element: PiElement): Box {
         // if (element instanceof DemoFunctionCallExpression) {

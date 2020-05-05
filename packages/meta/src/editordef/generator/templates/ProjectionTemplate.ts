@@ -26,6 +26,13 @@ export class ProjectionTemplate {
         
             export class ${Names.projection(language)} implements ${Names.PiProjection} {
                 rootProjection: ${Names.PiProjection};
+                name: string = "manual";
+                
+                constructor(name?: string) {
+                    if (!!name) {
+                        this.name = name;
+                    }
+                }
                 
                 getBox(element: ${Names.PiElement}) : Box {
                     // Add any handmade projections of your own before next statement 
@@ -98,8 +105,13 @@ export class ProjectionTemplate {
                 private editor: ${Names.PiEditor};
                 rootProjection: ${Names.PiProjection};
                 @observable showBrackets: boolean = false;
-            
-                constructor() {}
+                name: string = "${editorDef.name}";
+                
+                constructor(name?: string) {
+                    if (!!name) {
+                        this.name = name;
+                    }
+                }
             
                 setEditor(e: ${Names.PiEditor}) {
                     this.editor = e;
@@ -183,27 +195,30 @@ export class ProjectionTemplate {
                 } else if( item instanceof DefEditorSubProjection){
                     const appliedFeature: PiProperty = item.expression.appliedfeature.referedElement.referred;
                     if (appliedFeature instanceof PiPrimitiveProperty){
-                        result += this.primitivePropertyProjection(appliedFeature) + ", ";
+                        result += this.primitivePropertyProjection(appliedFeature);
                     } else if( appliedFeature instanceof PiConceptProperty) {
                         if (appliedFeature.isPart) {
                             if (appliedFeature.isList) {
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
-                                result += this.conceptPartListProjection(direction, appliedFeature)+ ",";
+                                result += this.conceptPartListProjection(direction, appliedFeature);
 
                             } else {
-                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "[add]" /* ${appliedFeature.name} */ )),`
+                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "[add]" /* ${appliedFeature.name} */ ))`
                             }
                         } else { // reference
                             if( appliedFeature.isList){
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
-                                result += this.conceptReferenceListProjection(direction, appliedFeature) + ",";
+                                result += this.conceptReferenceListProjection(direction, appliedFeature);
                             }else {
-                                result += this.conceptReferenceProjection(language, appliedFeature) + ", ";
+                                result += this.conceptReferenceProjection(language, appliedFeature) ;
                             }
                         }
                     } else {
                         result += `// ERROR unknown property box here for ${appliedFeature.name}
                         `;
+                    }
+                    if(itemIndex !== line.items.length -1 ){
+                        result += ", "
                     }
                 }
             });
