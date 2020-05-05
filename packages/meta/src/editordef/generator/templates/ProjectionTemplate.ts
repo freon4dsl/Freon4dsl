@@ -214,8 +214,7 @@ export class ProjectionTemplate {
                             }
                         }
                     } else {
-                        result += `// ERROR unknown property box here for ${appliedFeature.name}
-                        `;
+                        result += `/* ERROR unknown property box here for ${appliedFeature.name} */ `;
                     }
                     if(itemIndex !== line.items.length -1 ){
                         result += ", "
