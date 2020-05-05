@@ -3,7 +3,7 @@ import * as React from "react";
 import { PiEditor, PiComponent, PiComponentProps, PiLogger } from "@projectit/core";
 
 import { DemoActions, DemoContext, DemoProjection } from "../../../editor";
-import { DemoExpression, DemoNumberLiteralExpression } from "../../../model/index";
+import { DemoExpression, DemoNumberLiteralExpression, DemoPlaceholderExpression } from "../../../model/index";
 
 describe("PiEditor", () => {
     let editor: PiEditor;
@@ -18,7 +18,11 @@ describe("PiEditor", () => {
         context = new DemoContext(expression);
         const action = new DemoActions();
         const projection = new DemoProjection();
-        editor = new PiEditor(context, projection, action);
+        editor = new PiEditor(projection, action);
+        editor.rootElement = context.rootElement;
+        editor.getPlaceHolderExpression = () => {
+            return new DemoPlaceholderExpression();
+        };
         projectedProps = { editor: editor };
     });
 

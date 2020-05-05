@@ -1,5 +1,5 @@
 import { action, observable } from "mobx";
-import { PiBinaryExpression, PiContext, PiExpression } from "@projectit/core";
+import { PiBinaryExpression, PiExpression } from "@projectit/core";
 // tslint:disable-next-line:no-unused-variable
 import * as expressionExtensions from "./DemoExpression"; // Workaround to compile the tests
 import {
@@ -24,7 +24,7 @@ import { DemoBinaryExpressionPlaceholder } from "../model/expressions/DemoBinary
 
 require("./DemoExpression");
 
-export class DemoContext implements PiContext {
+export class DemoContext {
     @observable private _rootElement: DemoModelElement;
 
     model: DemoModel = DemoModel.create("DemoModel");

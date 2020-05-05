@@ -20,21 +20,6 @@ export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjection(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
-        return `
-            import { ${Names.PiProjection}, ${Names.PiElement}, ${Names.Box} } from "${PROJECTITCORE}";
-        
-            export class ${Names.projection(language)} implements ${Names.PiProjection} {
-                rootProjection: ${Names.PiProjection};
-                
-                getBox(element: ${Names.PiElement}) : Box {
-                    // Add any handmade projections of your own before next statement 
-                    return null;
-                }            
-            }
-        `;
-    }
-
     generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
         const binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
@@ -71,7 +56,6 @@ export class ProjectionTemplate {
                 SelectBox,
                 KeyPressAction,
                 LabelBox,
-                ${Names.PiEditor},
                 ${Names.PiElement},
                 ${Names.PiProjection},
                 TextBox,
@@ -95,16 +79,16 @@ export class ProjectionTemplate {
 
             export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
                 private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};
-                private editor: ${Names.PiEditor};
                 rootProjection: ${Names.PiProjection};
                 @observable showBrackets: boolean = false;
-            
-                constructor() {}
-            
-                setEditor(e: ${Names.PiEditor}) {
-                    this.editor = e;
+                name: string = "${editorDef.name}";
+                
+                constructor(name?: string) {
+                    if (!!name) {
+                        this.name = name;
+                    }
                 }
-            
+          
                 getBox(exp: ${Names.PiElement}): Box {
                     if( exp === null ) {
                         return null;

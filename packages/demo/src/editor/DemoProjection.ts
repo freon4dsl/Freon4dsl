@@ -58,6 +58,7 @@ export type MetaProjectionType = "text" | "orboxed" | "tree";
 var TMP: Object = {};
 
 export class DemoProjection implements PiProjection {
+    name: string = "";
     private editor: PiEditor;
     rootProjection: PiProjection;
     @observable projectionType: MetaProjectionType = "text";

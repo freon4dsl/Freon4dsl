@@ -1,8 +1,8 @@
-import { PROJECTITCORE } from "../../../utils";
+import { Names, PROJECTITCORE } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
 
-export class ManualActionsTemplate {
+export class CustomActionsTemplate {
     constructor() {
     }
 
@@ -12,9 +12,17 @@ export class ManualActionsTemplate {
                 KeyboardShortcutBehavior,
                 PiBinaryExpressionCreator,
                 PiCustomBehavior,
-                PiExpressionCreator
+                PiExpressionCreator,
+                PiActions
             } from "${PROJECTITCORE}";
             
+            export class ${Names.customActions(language)} implements PiActions {
+                binaryExpressionCreators: PiBinaryExpressionCreator[] = MANUAL_BINARY_EXPRESSION_CREATORS;
+                customBehaviors: PiCustomBehavior[] = MANUAL_CUSTOM_BEHAVIORS;
+                expressionCreators: PiExpressionCreator[] = MANUAL_EXPRESSION_CREATORS;
+                keyboardActions: KeyboardShortcutBehavior[] = MANUAL_KEYBOARD;
+            }
+
             export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 // Add your own custom expression creators here
             ];

@@ -38,7 +38,7 @@ export class SaveComponent extends React.Component<SaveProps, {}> {
     onClick = async event => {
         if (this.modelName !== "" && this.modelName.match(/^[a-z,A-Z]+$/)) {
             const serial: any = new ModelSerializer(ModelInfo.Constructors1);
-            const model = serial.toSerializableJSON(this.props.editor.context.rootElement);
+            const model = serial.toSerializableJSON(this.props.editor.rootElement);
             await putModel(this.modelName, model);
         }
     };

@@ -1,20 +1,14 @@
-import { DefEditorChecker, DefEditorLanguage } from "../metalanguage";
-import { PiLanguageUnit } from "../../languagedef/metalanguage";
 import * as fs from "fs";
-import { Names, Helpers, EDITOR_GEN_FOLDER, EDITOR_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, UNPARSER_GEN_FOLDER } from "../../utils";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, Helpers, Names, UNPARSER_GEN_FOLDER } from "../../utils";
+import { DefEditorLanguage } from "../metalanguage";
 import { DefEditorDefaults } from "../metalanguage/DefEditorDefaults";
-import {
-    ActionsTemplate,
-    ContextTemplate,
-    EditorIndexTemplate,
-    ProjectionTemplate,
-    SelectionHelpers,
-    UnparserTemplate
-} from "./templates";
+import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers, UnparserTemplate } from "./templates";
+import { CustomActionsTemplate } from "./templates/CustomActionsTemplate";
+import { CustomProjectionTemplate } from "./templates/CustomProjectionTemplate";
 import { DefaultActionsTemplate } from "./templates/DefaultActionsTemplate";
 import { InitalizationTemplate } from "./templates/InitializationTemplate";
-import { ManualActionsTemplate } from "./templates/ManualActionsTemplate";
 
 const LOGGER = new PiLogger("EditorGenerator").mute();
 
@@ -46,12 +40,12 @@ export class EditorGenerator {
         DefEditorDefaults.addDefaults(editDef);
 
         const defaultActions = new DefaultActionsTemplate();
-        const manualActions = new ManualActionsTemplate();
+        const customActions = new CustomActionsTemplate();
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
+        const customProjectiontemplate = new CustomProjectionTemplate();
 
         const enumProjection = new SelectionHelpers();
-        const contextTemplate = new ContextTemplate();
         const editorIndexTemplate = new EditorIndexTemplate();
         const unparserTemplate = new UnparserTemplate();
         const initializationTemplate = new InitalizationTemplate();
@@ -79,22 +73,18 @@ export class EditorGenerator {
         var defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions");
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
 
-        LOGGER.log(`Generating context: ${Names.context(this.language)}.ts`);
-        var contextFile = Helpers.pretty(contextTemplate.generateContext(this.language, editDef, relativePath), "Context");
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.context(this.language)}.ts`, contextFile);
-
-        LOGGER.log(`Generating ProjectionalEditorManual: ${Names.projection(this.language)}.ts`);
-        var projectionalEditorManualFile = Helpers.pretty(projection.generateProjection(this.language, editDef, relativePath), "ProjectionalEditorManual");
-        Helpers.generateManualFile(`${this.editorFolder}/${Names.projection(this.language)}.ts`, projectionalEditorManualFile, "ManualProjections");
-
         // the following do not need the relativePath for imports
-        LOGGER.log(`Generating manual actions: ${Names.manualActions(this.language)}.ts`);
-        var manualActionsFile = Helpers.pretty(manualActions.generate(this.language, editDef), "ManualActions");
-        Helpers.generateManualFile(`${this.editorFolder}/${Names.manualActions(this.language)}.ts`, manualActionsFile, "ManualActions");
+        LOGGER.log(`Generating manual actions: ${Names.customActions(this.language)}.ts`);
+        var customActionsFile = Helpers.pretty(customActions.generate(this.language, editDef), "CustomActions");
+        Helpers.generateManualFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`, customActionsFile, "CustomActions");
 
         LOGGER.log(`Generating initialization: ${Names.initialization(this.language)}.ts`);
         var initializationFile = Helpers.pretty(initializationTemplate.generate(this.language), "Initialization");
         Helpers.generateManualFile(`${this.editorFolder}/${Names.initialization(this.language)}.ts`, initializationFile, "Initialization");
+
+        LOGGER.log(`Generating custom projection: ${Names.customProjection(this.language)}.ts`);
+        var customProjectionFile = Helpers.pretty(customProjectiontemplate.generate(this.language), "Custom Projection");
+        Helpers.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`, customProjectionFile, "Custom Projection");
 
         LOGGER.log(`Generating actions: ${Names.actions(this.language)}.ts`);
         var actionsFile = Helpers.pretty(actions.generate(this.language, editDef), "Actions");

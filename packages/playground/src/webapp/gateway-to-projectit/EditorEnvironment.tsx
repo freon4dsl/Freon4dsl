@@ -1,5 +1,6 @@
 // This file contains all the stuff that needs to connect to the projectIt generated langauge environment
-import { ProjectionalEditor } from "@projectit/core";
+import { Tooltip } from "@fluentui/react-northstar";
+import { PiCompositeProjection, ProjectionalEditor } from "@projectit/core";
 import * as React from "react";
 
 import { environment } from "./Environment";
@@ -46,6 +47,7 @@ export class EditorEnvironment {
     static undo() {
         return undefined;
     }
+
     // END OF: for the communication with the menubar
 
     // for the communication with the navigator:
@@ -89,6 +91,7 @@ export class EditorEnvironment {
         }
         return myList;
     }
+
     // END OF: for the communication with the navigator
 
     // for the communication with the error list:
@@ -126,6 +129,19 @@ export class EditorEnvironment {
         this.loremIndex = startIndex + wordCount;
         return this.LOREM_IPSUM.slice(startIndex, this.loremIndex).join(" ");
     }
+
     // END OF: the following sets the content of the errorlist items and can be removed when the errors are observable
     // END OF: for the communication with the error list
+
+    static getProjectionNames(): string[] {
+        const proj = environment.editor.projection;
+        return (proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name]);
+    }
+
+    static setProjection(name: string): void {
+        const proj = environment.editor.projection;
+        if (proj instanceof PiCompositeProjection) {
+            proj.projectiontoFront(name);
+        }
+    }
 }

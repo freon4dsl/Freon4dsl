@@ -10,7 +10,6 @@ export class EditorIndexTemplate {
         return `
         export * from "./${Names.actions(language)}";
         export * from "./${Names.defaultActions(language)}";
-        export * from "./${Names.context(language)}";
         export * from "./${Names.projectionDefault(language)}";
         `;
     }
@@ -18,8 +17,9 @@ export class EditorIndexTemplate {
     generateIndex(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
         return `
         export * from "./gen";
-        export * from "./${Names.projection(language)}";
-        export * from "./${Names.manualActions(language)}";
+        export * from "./${Names.customProjection(language)}";
+        export * from "./${Names.customActions(language)}";
+        export * from "./${Names.initialization(language)}";
         `;
     }
 
