@@ -1,25 +1,26 @@
 import { GenericModelSerializer, PiLogger } from "@projectit/core";
 import axios from "axios";
 import { PiElement } from "@projectit/core";
-import { environment } from "./Environment";
+import { environment, SERVER_URL } from "./Environment";
 
 const LOGGER = new PiLogger("ServerCommunication");
-const url = "http://127.0.0.1:3001/";
 
 export class ServerCommunication {
     static serial: GenericModelSerializer = new GenericModelSerializer();
 
+    // TODO give model as parameter instead of asking environment
     static async putModel(modelName: string) {
         if (modelName !== "" && modelName.match(/^[a-z,A-Z]+$/)) {
             const model = ServerCommunication.serial.convertToJSON(environment.editor.context.rootElement);
             try {
-                const res = await axios.put(`${url}putModel?name=${modelName}`, model);
+                const res = await axios.put(`${SERVER_URL}putModel?name=${modelName}`, model);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }
         }
     }
 
+    // Should get callback parameter and not use environment directly.
     static async loadModel(modelName: string) {
         modelName = "qaz";
         if (modelName !== "") {
@@ -29,9 +30,9 @@ export class ServerCommunication {
         }
     }
 
-    static async getModel(name: string): Promise<Object> {
+    private static async getModel(name: string): Promise<Object> {
         try {
-            const res = await axios.get(`${url}getModel?name=${name}`);
+            const res = await axios.get(`${SERVER_URL}getModel?name=${name}`);
             return res.data;
         } catch (e) {
             LOGGER.error(this, e.toString());
@@ -41,7 +42,7 @@ export class ServerCommunication {
 
     static async getModelList(): Promise<Object> {
         try {
-            const res = await axios.get(`${url}getModelList`);
+            const res = await axios.get(`${SERVER_URL}getModelList`);
             return res;
         } catch (e) {
             LOGGER.error(this, e.toString());
