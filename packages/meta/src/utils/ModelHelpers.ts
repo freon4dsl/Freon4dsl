@@ -117,9 +117,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
     if (!!exp.referedElement && !!exp.referedElement.referred) { // should be present, otherwise it is an incorrect model
         // now see whether it is marked in the .lang file as 'reference'
         const ref = exp.referedElement.referred;
-        isRef = (ref instanceof PiConceptProperty) && !ref.isPart;
-
-        // isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
+        isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
     }
     return isRef;
 }

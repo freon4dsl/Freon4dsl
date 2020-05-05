@@ -37,23 +37,35 @@ export class PiTyperTemplate {
         export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType : ${rootType} = ${defaultType};
 
+            /**
+             * See interface 
+             */
             public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
                 ${this.makeEqualsStatement()}
                 if ( this.inferType(elem1) === this.inferType(elem2)) return true;
                 return false;
             }
-        
+            
+            /**
+             * See interface 
+             */        
             public inferType(modelelement: ${allLangConcepts}): ${rootType} {
                 ${this.makeInferenceStatements()}
                 return this.defaultType;
             }
-
+            
+            /**
+             * See interface 
+             */
             public conformsTo(elem1: ${rootType}, elem2: ${rootType}): boolean {
                 ${this.makeConformsStatements()}
                 if ( this.equalsType(elem1, elem2) ) return true;
                 return false;
             }
-
+            
+            /**
+             * See interface 
+             */
             public conformList(typelist1: ${rootType}[], typelist2: ${rootType}[]): boolean {
                 if (typelist1.length !== typelist2.length) return false;
                 let result : boolean = true;
@@ -63,7 +75,10 @@ export class PiTyperTemplate {
                 }
                 return result;
             }
-        
+
+            /**
+             * See interface 
+             */        
             public isType(elem: ${allLangConcepts}): boolean { // entries for all types marked as @isType
                 ${this.makeIsType()}
                 return false;

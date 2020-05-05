@@ -166,9 +166,10 @@ export class ConceptTemplate {
                 ${predefInstanceDefinitions}               
             }
             
+            ${predefInstanceInitialisations.length>0 ? `
             // Because of mobx we need to generate the initialisations outside of the class,
             // otherwise the state of properties with primitive type will not be kept correctly. 
-            ${predefInstanceInitialisations}
+            ${predefInstanceInitialisations}` : ``}
             `;
         return result;
     }

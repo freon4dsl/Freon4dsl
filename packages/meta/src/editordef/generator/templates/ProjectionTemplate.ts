@@ -194,7 +194,7 @@ export class ProjectionTemplate {
                 }
             });
             if( line.items.length > 1) {
-                // TODO Too many thigs are now selectable, but if fasle, you cannot select e.g. an attribute
+                // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
                 result += ` ], { selectable: true } ) `
             }
             if( line.indent > 0 ){
