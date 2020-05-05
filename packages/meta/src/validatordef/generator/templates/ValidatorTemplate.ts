@@ -1,4 +1,4 @@
-import { Names, PathProvider, PROJECTITCORE } from "../../../utils";
+import { ENVIRONMENT_GEN_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
 
@@ -25,16 +25,15 @@ export class ValidatorTemplate {
         import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
         import { ${checkerClassName} } from "${relativePath}${PathProvider.checker(language)}";
         import { ${walkerClassName} } from "${relativePath}${PathProvider.walker(language)}"; 
+        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
         export class ${generatedClassName} implements ${this.validatorInterfaceName} {
-            myTyper : ${this.typerInterfaceName};
 
             public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${this.errorClassName}[]{
                 let myChecker = new ${checkerClassName}();
                 let errorlist : ${this.errorClassName}[] = [];
                 myChecker.errorList = errorlist;
-                myChecker.typer = this.myTyper;
-
+ 
                 let myWalker = new ${walkerClassName}();
                 myWalker.myWorker = myChecker;
                 myWalker.walk(modelelement, includeChildren );

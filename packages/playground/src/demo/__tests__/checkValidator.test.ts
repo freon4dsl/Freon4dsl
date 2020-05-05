@@ -16,7 +16,6 @@ import {
     DemoLiteralExpression,
     DemoBooleanLiteralExpression
 } from "../language/gen";
-import { DemoTyper } from "../typer/gen/DemoTyper";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
@@ -25,7 +24,6 @@ describe("Testing Validator", () => {
     describe("Validate DemoModel Instance", () => {
         const model: DemoModel = new DemoModelCreator().createCorrectModel();
         const validator = new DemoValidator();
-        validator.myTyper = new DemoTyper();
 
         beforeEach(done => {
             done();
@@ -77,8 +75,7 @@ describe("Testing Validator", () => {
             //     text = text.concat(e.message + "\n");
             // }
             // console.log(text);
-            // TODO this number should be 3 instead of 2, error on valid name is faulty
-            expect(errors.length).toBe(2);
+            expect(errors.length).toBe(3);
         });
 
         test("incorrect name of DemoModel: YY\\XX", () => {
@@ -117,7 +114,6 @@ describe("Testing Validator", () => {
             });
         });
 
-        // TODO error in reference
         test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 3 errors', () => {
             let errors: PiError[] = [];
             const determine = DemoFunction.create({name: "determine"});
@@ -135,7 +131,6 @@ describe("Testing Validator", () => {
             expect(errors.length).toBe(3);
         });
 
-        // TODO error in reference
         test("Person { name, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
             let errors: PiError[] = [];
             const personEnt = DemoEntity.create({name: "Person"});

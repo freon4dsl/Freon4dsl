@@ -5,7 +5,7 @@ import { PiLogger } from "../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiParser").mute();
 
-// the following two type are used to store the location information from the parser
+// the following two types are used to store the location information from the parser
 export type ParseLocation = {
     start: Location;
     end: Location;
@@ -39,14 +39,14 @@ export class PiParser<DEFINITION> {
             model = this.parser.parse(langSpec);
         } catch (e) {
             // syntax error
-            let errorstr = `${e} ${e.location && e.location.start ? `[line ${e.location.start.line}, column ${e.location.start.column}]` : ``}`;
+            let errorstr = `${definitionFile}: ${e} ${e.location && e.location.start ? `[line ${e.location.start.line}, column ${e.location.start.column}]` : ``}`;
             LOGGER.error(this, errorstr);
             throw new Error("syntax error.");
         }
         if (model !== null) {
             this.checker.check(model);
             if (this.checker.hasErrors()) {
-                this.checker.errors.forEach(error => LOGGER.error(this, error));
+                this.checker.errors.forEach(error => LOGGER.error(this, `${definitionFile}: ${error}`));
                 throw new Error("checking errors."); // error message
             }
             return model;

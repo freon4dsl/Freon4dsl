@@ -2,10 +2,10 @@ import { Checker } from "../../utils/Checker";
 import {
     PiConcept,
     PiLanguageUnit,
-    PiLanguageExpressionChecker, PiProperty
+    PiLanguageExpressionChecker, PiProperty, PiClassifier, PiInterface
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
-import { refListIncludes } from "../../utils/ModelHelpers";
+import { findAllImplementorsAndSubs } from "../../utils/ModelHelpers";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -16,7 +16,7 @@ import { PiElementReference} from "../../languagedef/metalanguage/PiElementRefer
 const LOGGER = new PiLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<PiScopeDef> {
     myExpressionChecker : PiLanguageExpressionChecker;
-    myNamespaces: PiElementReference<PiConcept>[] = [];
+    myNamespaces: PiClassifier[] = [];
 
     constructor(language: PiLanguageUnit) {
         super(language);
@@ -37,10 +37,10 @@ export class ScoperChecker extends Checker<PiScopeDef> {
                 error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' `+
                         `does not match language '${this.language.name}' [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
             });
-            definition.namespaces.forEach(ref => {
-                    this.myExpressionChecker.checkConceptReference(ref);
-            });
-            this.myNamespaces = definition.namespaces;
+
+            // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
+            this.myNamespaces = this.findAllNamespaces(definition.namespaces);
+
             definition.scopeConceptDefs.forEach(def => {
                 this.myExpressionChecker.checkConceptReference(def.conceptRef);
                 if (!!def.conceptRef.referred) {
@@ -58,7 +58,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
     private checkNamespaceAdditions(namespaceAddition: PiNamespaceAddition, enclosingConcept: PiConcept) {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
         this.nestedCheck({
-            check: refListIncludes(this.myNamespaces, enclosingConcept),
+            check: this.myNamespaces.includes(enclosingConcept),
             error: `Cannot add namespaces to a concept that is not a namespace itself [line: ${namespaceAddition.location?.start.line}, column: ${namespaceAddition.location?.start.column}].`,
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
@@ -69,7 +69,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
                             check: (!!xx.type.referred && xx.type.referred instanceof PiConcept),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
-                                this.simpleCheck(refListIncludes(this.myNamespaces, xx.type),
+                                this.simpleCheck(this.myNamespaces.includes(xx.type.referred),
                                     `A namespace addition should refer to a namespace concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`);
                             }
                         })
@@ -82,6 +82,18 @@ export class ScoperChecker extends Checker<PiScopeDef> {
     private checkAlternativeScope(alternativeScope: PiAlternativeScope, enclosingConcept: PiConcept) {
         LOGGER.log("Checking alternative scope definition for " + enclosingConcept?.name);
         this.myExpressionChecker.checkLangExp(alternativeScope.expression, enclosingConcept);
+    }
+
+    private findAllNamespaces(namespaces: PiElementReference<PiClassifier>[]): PiClassifier[] {
+        let result: PiClassifier[] = [];
+        namespaces.forEach(ref => {
+            this.myExpressionChecker.checkConceptReference(ref);
+            let myClassifier = ref.referred;
+            if (!!myClassifier) { // error message handled by checkConceptReference()
+                result = result.concat(findAllImplementorsAndSubs(myClassifier));
+            }
+        });
+        return result;
     }
 }
 
