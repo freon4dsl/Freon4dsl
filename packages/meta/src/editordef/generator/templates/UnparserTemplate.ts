@@ -1,5 +1,11 @@
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
-import { PiBinaryExpressionConcept, PiConcept, PiLanguageUnit, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import {
+    PiBinaryExpressionConcept,
+    PiConcept,
+    PiLanguageUnit,
+    PiPrimitiveProperty,
+    PiProperty
+} from "../../../languagedef/metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
 import {
     DefEditorConcept,
@@ -45,7 +51,6 @@ export class UnparserTemplate {
             public unparse(modelelement: ${allLangConcepts}) : string {
                 ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    //console.log("found a ${concept.name}");
                     return this.unparse${concept.name}(modelelement);
                 }`).join("")}
                 return "";
@@ -85,7 +90,7 @@ export class UnparserTemplate {
         } `;
     }
 
-    makeConceptMethod (conceptDef: DefEditorConcept ) : string {
+    private makeConceptMethod (conceptDef: DefEditorConcept ) : string {
         // console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
         let myConcept: PiConcept = conceptDef.concept.referred;
         let name: string = myConcept.name;
@@ -94,24 +99,20 @@ export class UnparserTemplate {
         if (!!lines) {
             return `
                 private unparse${name}(modelelement: ${name}) : string {
-                    return "${lines.map(line => `${this.makeLine(line)}` ).join("\\n")}"
-                }`
+                    return \`${lines.map(line => `${this.makeLine(line)}` ).join("\\n")}\`
+                }`;
         } else {
             if (myConcept instanceof  PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
                 return `private unparse${name}(modelelement: ${name}) : string {
-                    return this.unparse(modelelement.left) + "${conceptDef.symbol}" + this.unparse(modelelement.right);
-                }`
+                    return \`\$\{this.unparse(modelelement.left)\} ${conceptDef.symbol} \$\{this.unparse(modelelement.right)\}\`;
+                }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
                 return `private unparse${name}(modelelement: ${name}) : string {
-                    return "'unparse' should be implemented by subclasses of ${myConcept.name}";
-                }`
+                    return \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
+                }`;
             }
-            // for now an empty method, when the default editDef contains a projection
-            // for every concept, this will no longer be used
-            return `private unparse${name}(modelelement: ${name}) : string {
-                    return "";
-                }`
+            return '';
         }
     }
 
@@ -119,50 +120,20 @@ export class UnparserTemplate {
         // the result should be text or should end in a quote
         let result: string = "";
         for (var _i = 0; _i < line.indent; _i++) {
-            result = result + " ";
+            result += " ";
         }
-        for (let item of line.items) {
+        line.items.forEach((item, index) => {
             if (item instanceof DefEditorProjectionText) {
-                result = result + `${item.text}`;
+                // TODO escape all quotes in the text string
+                result += `${item.text}`;
             }
             if (item instanceof DefEditorSubProjection) {
                 // TODO take optionality into account
                 let myElem = item.expression.findRefOfLastAppliedFeature();
                 if (myElem instanceof PiPrimitiveProperty) {
-                    // the expression is of primitive type
-                    if (myElem.isList) {
-                        result = result + `\" + ${langExpToTypeScript(item.expression)}.map(listElem => {
-                                    ${langExpToTypeScript(item.expression)}
-                                }) + \"`;
-                    } else {
-                        result = result + `\" + ${langExpToTypeScript(item.expression)} + \"`;
-                    }
+                    result = this.makeItemWithPrimitiveType(myElem, result, item);
                 } else {
-                    // the expression has a concept as type, thus we need to call its unparse method
-                    let type = myElem.type.referred;
-                    if (!!type) {
-                        if (myElem.isList) {
-                            let vertical = (item.listJoin.direction === Direction.Vertical);
-                            let joinType: string = "";
-                            if (item.listJoin.joinType === ListJoinType.Separator) {
-                                joinType = "SeparatorType.Separator";
-                            }
-                            if (item.listJoin.joinType === ListJoinType.Terminator) {
-                                joinType = "SeparatorType.Terminator";
-                            }
-                            if(myElem.isPart) {
-                                result = result + `\" + this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
-                            } else {
-                                result = result + `\" + this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}) + \"`;
-                            }
-                        } else {
-                            if(myElem.isPart) {
-                                result = result + `\" + this.unparse(${langExpToTypeScript(item.expression)}) + \"`;
-                            } else {
-                                result = result + `\" + ${langExpToTypeScript(item.expression)}?.name + \"`;
-                            }
-                        }
-                    }
+                    result = this.makeItemWithConceptType(myElem, item, result);
                 }
             }
             if (item instanceof DefEditorProjectionExpression) {
@@ -171,6 +142,60 @@ export class UnparserTemplate {
             }
             if (item instanceof DefEditorProjectionIndent) {
                 // TODO implement this
+            }
+            if (index < line.items.length - 1) result += ' '; // add a space between each item on a line
+        });
+        return result;
+    }
+
+    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, result: string, item: DefEditorSubProjection) {
+        // the expression is of primitive type
+        if (myElem.isList) {
+            result += `\$\{${langExpToTypeScript(item.expression)}.map(listElem => {
+                                    ${langExpToTypeScript(item.expression)}
+                                })\}`;
+        } else {
+            if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
+                result += `\$\{${langExpToTypeScript(item.expression)} ? \``;
+            }
+            result += `\$\{${langExpToTypeScript(item.expression)}\}`;
+            if (myElem.isOptional) { // end the if-statement
+                result += `\` : \`none\` \}`;
+            }
+        }
+        return result;
+    }
+
+    private makeItemWithConceptType(myElem: PiProperty, item: DefEditorSubProjection, result: string) {
+        // the expression has a concept as type, thus we need to call its unparse method
+        let type = myElem.type.referred;
+        if (!!type) {
+            if (myElem.isList) {
+                let vertical = (item.listJoin.direction === Direction.Vertical);
+                let joinType: string = "";
+                if (item.listJoin.joinType === ListJoinType.Separator) {
+                    joinType = "SeparatorType.Separator";
+                }
+                if (item.listJoin.joinType === ListJoinType.Terminator) {
+                    joinType = "SeparatorType.Terminator";
+                }
+                if (myElem.isPart) {
+                    result += `\$\{this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
+                } else {
+                    result += `\$\{this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
+                }
+            } else {
+                if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
+                    result += `\$\{${langExpToTypeScript(item.expression)} ? \``;
+                }
+                if (myElem.isPart) {
+                    result += `\$\{this.unparse(${langExpToTypeScript(item.expression)})\}`;
+                } else {
+                    result += `\$\{${langExpToTypeScript(item.expression)}?.name\}`;
+                }
+                if (myElem.isOptional) { // end the if-statement
+                    result += `\` : \`none\` \}`;
+                }
             }
         }
         return result;
