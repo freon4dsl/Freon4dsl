@@ -1,7 +1,6 @@
 // This file contains all methods to connect to the projectIt generated language editorEnvironment
-import { PiElement, PiCompositeProjection, ProjectionalEditor } from "@projectit/core";
-
-import { editorEnvironment, initializer, languageName } from "./WebappConfiguration";
+import { PiElement, PiNamedElement, PiCompositeProjection, ProjectionalEditor, PiError } from "@projectit/core";
+import { editorEnvironment, initializer } from "./WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
 
 // TODO this interface is not used
@@ -14,12 +13,15 @@ export interface IModelUnit {
 }
 
 export interface IErrorItem {
-    key: number | string;
+    key: number;
     errormessage: string;
     errorlocation: string;
 }
 
 export class EditorCommunication {
+    static currentModelName = '';
+    static currentErrorList: PiError[] = [];
+
     // used from the editor area
     static getEditor(): ProjectionalEditor {
         return editorEnvironment.projectionalEditorComponent;
@@ -30,13 +32,13 @@ export class EditorCommunication {
         console.log("EditorCommunication new called");
         // TODO save previous model
         editorEnvironment.editor.rootElement = initializer.initialize();
+        this.currentModelName = "";
     }
 
     static open(name: string) {
         console.log("Open model unit '" + name + "'");
         // TODO save previous model
-        // TODO get model name from navigator
-        this.currentModelName = "default";
+        this.currentModelName = name;
         ServerCommunication.loadModel(name, this.loadModelInEditor);
     }
 
@@ -44,7 +46,6 @@ export class EditorCommunication {
         editorEnvironment.editor.rootElement = model as PiElement;
     }
 
-    static currentModelName = '';
     static save() {
         console.log("EditorCommunication save called");
         if (!!editorEnvironment.editor.rootElement) {
@@ -83,34 +84,22 @@ export class EditorCommunication {
     static getErrors(): IErrorItem[] {
         let myList: IErrorItem[] = [];
         myList.push({
-            key: 0,
+            key: -1,
             errormessage: "This is an error from ProjectIt",
-            errorlocation: "somewhere in the editor"
+            errorlocation: "somewhere"
         });
-        for (let i = 1; i < 25; i++) {
+        this.currentErrorList = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
+        this.currentErrorList.forEach((err:PiError, index: number) => {
             myList.push({
-                key: i,
-                errormessage: EditorCommunication.mockErrors(),
-                errorlocation: EditorCommunication.mockErrors()
-            });
-        }
+                key: index,
+                errormessage: err.message,
+                errorlocation: "ergens"
+            })
+        });
+        // TODO get the errorlocation right
         return myList;
     }
 
-    // the following sets the content of the errorlist items and can be removed when the errors are observable
-    static LOREM_IPSUM = (
-        "lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut " +
-        "labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut "
-    ).split(" ");
-    static loremIndex = 0;
-
-    static mockErrors(): string {
-        let wordCount = 4;
-        const startIndex = this.loremIndex + wordCount > this.LOREM_IPSUM.length ? 0 : this.loremIndex;
-        this.loremIndex = startIndex + wordCount;
-        return this.LOREM_IPSUM.slice(startIndex, this.loremIndex).join(" ");
-    }
-    // END OF: the following sets the content of the errorlist items and can be removed when the errors are observable
     // END OF: for the communication with the error list
 
     static getProjectionNames(): string[] {
@@ -126,10 +115,12 @@ export class EditorCommunication {
     }
 
     static redo() {
+        // TODO implement redo()
         return undefined;
     }
 
     static undo() {
+        // TODO implement undo()
         return undefined;
     }
 }
