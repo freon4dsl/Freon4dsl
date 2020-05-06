@@ -116,6 +116,29 @@ export default class Menubar extends React.Component {
                 ]
             }
         },
+        // Show a menu where one can choose between all defined projections
+        {
+            key: "projection",
+            content: "Projection",
+            menu: {
+                items:
+                    EditorCommunication.getProjectionNames().map(name => {
+                        return {
+                            key: name,
+                            content: name,
+                            tooltip: "Show default projection",
+                            children: (Component, props) => {
+                                const { tooltip, ...rest } = props;
+                                return <Tooltip key={"projection" + name} content={tooltip} trigger={<Component {...props} />}/>;
+                            },
+                            onClick: () => {
+                                EditorCommunication.setProjection(name);
+                            }
+                        };
+                    })
+            }
+        },
+        // show the help menu
         {
             key: "help",
             content: "Help",
@@ -158,28 +181,6 @@ export default class Menubar extends React.Component {
                         onClick: () => this.about()
                     }
                 ]
-            }
-        },
-        // Show a menu where one can choose between all defined projections
-        {
-            key: "projection",
-            content: "Projection",
-            menu: {
-                items:
-                    EditorCommunication.getProjectionNames().map(name => {
-                        return {
-                            key: name,
-                            content: name,
-                            tooltip: "Show default projection",
-                            children: (Component, props) => {
-                                const { tooltip, ...rest } = props;
-                                return <Tooltip key={"projection" + name} content={tooltip} trigger={<Component {...props} />}/>;
-                            },
-                            onClick: () => {
-                                EditorCommunication.setProjection(name);
-                            }
-                        };
-                    })
             }
         }
     ];
