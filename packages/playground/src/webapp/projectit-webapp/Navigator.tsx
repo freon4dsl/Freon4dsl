@@ -3,17 +3,15 @@ import { Selection } from "office-ui-fabric-react/lib/DetailsList";
 import { Icon, Tree, Box } from "@fluentui/react-northstar";
 import { ComponentEventHandler } from "@fluentui/react-northstar/dist/es/types";
 import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selection";
-import { EditorEnvironment, IModelUnit } from "../gateway-to-projectit/EditorEnvironment";
+import { EditorCommunication, IModelUnit } from "../gateway-to-projectit/EditorCommunication";
+import { languageName } from "../gateway-to-projectit/WebappConfiguration";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
+import { App } from "./App";
 
 // This component holds the navigator, which shows all available models sorted by language
 
 // TODO language should be removed, instead model and model-units should be used
-
-export interface IModelListState {
-    // is this needed???? TODO find out how to address state
-    items: IModelUnit[];
-    activeBranche: string;
-}
 
 // The type of an element in the navigation tree
 type TreeElement = {
@@ -32,33 +30,25 @@ const titleRenderer = (Component, { content, open, hasSubtree, ...restProps }) =
     </Component>
 );
 
-export class Navigator extends React.Component<{}, IModelListState> {
+@observer
+export class Navigator extends React.Component<{}, {}> {
     // TODO keep current selection
     private _selection: Selection;
-    private _allModels: IModelUnit[]; // should be observable!
-    private _tree: TreeElement[];
-    private _activeItemId: string;
+    @observable private _allModels: IModelUnit[] = [];
+    @observable private _activeItemId: string = "";
 
     constructor(props: {}) {
         super(props);
 
         this._selection = new Selection();
-        this._allModels = EditorEnvironment.getModelUnits();
-        this._tree = this.buildTree();
-        this.state = {
-            items: this._allModels,
-            activeBranche: this._activeItemId
-        };
+        EditorCommunication.getModelUnits(this.modelListCallBack);
     }
 
     private buildTree(): TreeElement[] {
         let tree: TreeElement[] = [];
         for (let lang of this.findlanguages()) {
-            if (!!!this._activeItemId) {
-                this._activeItemId = lang;
-            }
             let group: TreeElement = {
-                id: lang,
+                id: "-1",
                 title: lang,
                 items: [],
                 onTitleClick: this._onTitleClick,
@@ -91,10 +81,12 @@ export class Navigator extends React.Component<{}, IModelListState> {
         return result;
     }
 
-    private _onTitleClick(ev: React.MouseEvent<HTMLElement>, item?: TreeElement) {
+    private _onTitleClick = (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
         if (parseInt(item.id) >= 0) {
-            EditorEnvironment.changeToModelUnit(parseInt(item.id));
+            EditorCommunication.open(item.title);
             // TODO show selection with grey background (or something)
+            // close the dialog
+            App.closeDialog();
         }
     }
 
@@ -113,7 +105,7 @@ export class Navigator extends React.Component<{}, IModelListState> {
             >
                 {/*<SelectionZone selection={this._selection} selectionMode={SelectionMode.single}>*/}
                 <Tree
-                    items={this._tree}
+                    items={this.buildTree()}
                     title="Model Units"
                     renderItemTitle={titleRenderer}
                     aria-label="Initially open"
@@ -123,4 +115,24 @@ export class Navigator extends React.Component<{}, IModelListState> {
             </Box>
         );
     }
+
+    private modelListCallBack = (names: string[]) => {
+        let models: IModelUnit[] = [];
+        names.forEach((name, itemIndex) => {
+            models.push({id:itemIndex, name:name, language:languageName});
+            this._allModels.push({id:itemIndex, name:name, language:languageName});
+        });
+        if (!!!this._activeItemId) {
+            this._activeItemId = languageName;
+        }
+        // let text: string = "";
+        // for (let m of models) {
+        //     text += m.name + ", ";
+        // }
+        // console.log("models: " + text);
+    }
+}
+
+function randomIntFromInterval(min, max) { // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }

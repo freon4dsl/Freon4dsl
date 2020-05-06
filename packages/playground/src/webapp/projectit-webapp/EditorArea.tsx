@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Flex, Image, Box, Grid } from "@fluentui/react-northstar";
-import { EditorEnvironment } from "../gateway-to-projectit/EditorEnvironment";
+import { Box, Grid } from "@fluentui/react-northstar";
+import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
 import { Navigator } from "./Navigator";
 import { ErrorList } from "./ErrorList";
 
@@ -35,7 +35,7 @@ export const EditorArea: React.FunctionComponent = () => {
                         overflowX: "auto"
                     }}
                 >
-                    {EditorEnvironment.getEditor()}
+                    {EditorCommunication.getEditor()}
                 </Box>
                 <Box
                     // content="errorList"

@@ -1,14 +1,13 @@
-import { Box, Grid } from "@fluentui/react-northstar";
+import { Box } from "@fluentui/react-northstar";
 import * as React from "react";
 import { DetailsList, DetailsListLayoutMode, IDetailsHeaderProps, Selection, IColumn, ConstrainMode } from "office-ui-fabric-react/lib/DetailsList";
 import { IRenderFunction } from "office-ui-fabric-react/lib/Utilities";
 import { TooltipHost } from "office-ui-fabric-react/lib/Tooltip";
-import { ScrollablePane, ScrollbarVisibility } from "office-ui-fabric-react/lib/ScrollablePane";
 import { Sticky, StickyPositionType } from "office-ui-fabric-react/lib/Sticky";
 import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { IDetailsColumnRenderTooltipProps } from "office-ui-fabric-react/lib/DetailsList";
 import { SelectionMode } from "office-ui-fabric-react/lib/Selection";
-import { EditorEnvironment, IErrorItem } from "../gateway-to-projectit/EditorEnvironment";
+import { EditorCommunication, IErrorItem } from "../gateway-to-projectit/EditorCommunication";
 
 // This component holds the errorlist
 
@@ -54,7 +53,7 @@ export class ErrorList extends React.Component<{}, IErrorListState> {
     }
 
     private getErrors() {
-        for (let error of EditorEnvironment.getErrors()) {
+        for (let error of EditorCommunication.getErrors()) {
             this._allItems.push({
                 key: error.key,
                 errormessage: error.errormessage,
@@ -128,7 +127,7 @@ function _onItemInvoked(item: IErrorItem): void {
 
 function _onActiveItemChanged(item: IErrorItem): void {
     // give signal to EditorEnvironment
-    EditorEnvironment.errorSelected(item);
+    EditorCommunication.errorSelected(item);
 }
 
 const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defaultRender) => {

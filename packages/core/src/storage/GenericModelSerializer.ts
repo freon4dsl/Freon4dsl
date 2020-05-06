@@ -35,6 +35,10 @@ export class GenericModelSerializer {
      */
     private toTypeScriptInstanceInternal(jsonObject: Object): any {
         const type: string = jsonObject["$typename"];
+        if (!(!!type)) {
+            console.log("type is not found");
+            return null;
+        }
 
         const result = this.language.createConcept(type);
         // console.log("Object created with [" + type + "]");
@@ -44,7 +48,7 @@ export class GenericModelSerializer {
             if (value === undefined) {
                 continue;
             }
-            // console.log(">> creating property "+ property.name + "  of type " + property.propertyType + " isLis " + property.isList);
+            // console.log(">> creating property "+ property.name + "  of type " + property.propertyType + " isList " + property.isList);
             switch (property.propertyType) {
                 case "primitive":
                     if (property.isList) {
@@ -81,7 +85,10 @@ export class GenericModelSerializer {
                             result[property.name].push(this.toTypeScriptInstance(value[item]));
                         }
                     } else {
-                        result[property.name] = this.toTypeScriptInstance(value);
+                        // console.log("    no list property  " + value);
+                        if (!!value) {
+                            result[property.name] = this.toTypeScriptInstance(value);
+                        }
                     }
                     break;
                 case "reference":
@@ -90,7 +97,7 @@ export class GenericModelSerializer {
                             result[property.name].push(this.language.referenceCreator(value[item], property.type));
                         }
                     } else {
-                        // console.log("Serializer creating property " + property.name + "  reference [" + value + "] to a [" + property.type+ "]")
+                        console.log("Serializer creating property " + property.name + "  reference [" + value + "] to a [" + property.type+ "]")
                         result[property.name] = this.language.referenceCreator(value, property.type);
                     }
                     break;
@@ -120,7 +127,7 @@ export class GenericModelSerializer {
                         }
                     } else {
                         // single value
-                        result[p.name] = this.convertToJSON(value as PiElement);
+                        result[p.name] = !!value ? this.convertToJSON(value as PiElement) : null;
                     }
                     break;
                 case "reference":
