@@ -1,89 +1,20 @@
 {
-   "_PI__SERIAL_ID": 1,
-   "$id": "projectit-demo-1",
-   "$typename": "DemoModel",
-   "name": "Demo model",
-   "entities": [
+   "$typename": "RevenueService",
+   "rules": {
+      "$typename": "TaxRuleSet",
+      "year": "2018",
+      "taxrules": []
+   },
+   "payers": [
       {
-         "_PI__SERIAL_ID": 2,
-         "$id": "projectit-demo-2",
-         "$typename": "DemoEntity",
-         "name": "Person",
-         "attributes": [
-            {
-               "_PI__SERIAL_ID": 3,
-               "$id": "projectit-demo-3",
-               "$typename": "DemoAttribute",
-               "name": "name",
-               "type": "String"
-            },
-            {
-               "_PI__SERIAL_ID": 4,
-               "$id": "projectit-demo-4",
-               "$typename": "DemoAttribute",
-               "name": "age",
-               "type": "String"
-            }
-         ]
-      },
-      {
-         "_PI__SERIAL_ID": 5,
-         "$id": "projectit-demo-5",
-         "$typename": "DemoEntity",
-         "name": "Company",
-         "attributes": [
-            {
-               "_PI__SERIAL_ID": 6,
-               "$id": "projectit-demo-6",
-               "$typename": "DemoAttribute",
-               "name": "name",
-               "type": "String"
-            },
-            {
-               "_PI__SERIAL_ID": 7,
-               "$id": "projectit-demo-7",
-               "$typename": "DemoAttribute",
-               "name": "VAT_Number",
-               "type": "String"
-            }
-         ]
-      }
-   ],
-   "functions": [
-      {
-         "_PI__SERIAL_ID": 8,
-         "$id": "projectit-demo-8",
-         "$typename": "DemoFunction",
-         "name": "length",
-         "expression": {
-            "_PI__SERIAL_ID": 9,
-            "$id": "projectit-demo-60",
-            "left": {
-               "_PI__SERIAL_ID": 10,
-               "$id": "projectit-demo-58",
-               "$typename": "DemoStringLiteralExpression",
-               "value": "Hello Demo"
-            },
-            "right": {
-               "_PI__SERIAL_ID": 11,
-               "$id": "projectit-demo-59",
-               "$typename": "DemoStringLiteralExpression",
-               "value": "Goodbye"
-            },
-            "$typename": "DemoPlusExpression"
-         }
-      },
-      {
-         "_PI__SERIAL_ID": 12,
-         "$id": "projectit-demo-9",
-         "$typename": "DemoFunction",
-         "name": "first"
-      },
-      {
-         "_PI__SERIAL_ID": 13,
-         "$id": "projectit-demo-10",
-         "$typename": "DemoFunction",
-         "name": "last"
+         "$typename": "TaxPayer",
+         "name": "MADAM TUSSEAU",
+         "address": "",
+         "payerType": null,
+         "taxId": null,
+         "incomeParts": [],
+         "totalIncome": null,
+         "totalTaxes": null
       }
    ]
 }

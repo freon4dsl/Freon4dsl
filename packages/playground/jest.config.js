@@ -127,7 +127,7 @@ module.exports = {
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
 
-  // The paths to modules that run some code to configure or set up the testing environment before each test
+  // The paths to modules that run some code to configure or set up the testing editorEnvironment before each test
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
@@ -136,7 +136,7 @@ module.exports = {
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
 
-  // The test environment that will be used for testing
+  // The test editorEnvironment that will be used for testing
   testEnvironment: "jsdom",
 
   // Options that will be passed to the testEnvironment
@@ -164,7 +164,7 @@ module.exports = {
   // This option allows use of a custom test runner
   // testRunner: "jasmine2",
 
-  // This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
+  // This option sets the URL for the jsdom editorEnvironment. It is reflected in properties such as location.href
   // testURL: "http://localhost",
 
   // Setting this value to "fake" allows the use of fake timers for functions such as "setTimeout"

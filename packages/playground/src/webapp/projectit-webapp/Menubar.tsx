@@ -1,11 +1,9 @@
 import * as React from "react";
 import { Menu, Tooltip, Icon, Flex, Text, Input } from "@fluentui/react-northstar";
 import { Link } from "@fluentui/react";
-import { EditorEnvironment } from "../gateway-to-projectit/EditorEnvironment";
-import { ServerCommunication } from "../gateway-to-projectit/ServerCommunication";
+import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
 import { App } from "./App";
 import { Navigator } from "./Navigator";
-import { TextField } from "@fluentui/react";
 
 const versionNumber = "0.0.5";
 
@@ -26,7 +24,7 @@ export default class Menubar extends React.Component {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="newtip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => EditorEnvironment.new()
+                        onClick: () => EditorCommunication.new()
                     },
                     {
                         key: "fileopen",
@@ -34,7 +32,6 @@ export default class Menubar extends React.Component {
                         icon: "download",
                         tooltip: "Open an existing model unit",
                         children: (Component, props) => {
-                            /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="opentip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
@@ -46,11 +43,10 @@ export default class Menubar extends React.Component {
                         icon: "open-outside",
                         tooltip: "Save the current model unit on the server",
                         children: (Component, props) => {
-                            /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="savetip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => EditorEnvironment.save()
+                        onClick: () => EditorCommunication.save()
                     },
                     {
                         key: "filesaveas",
@@ -58,7 +54,6 @@ export default class Menubar extends React.Component {
                         icon: "files-txt",
                         tooltip: "Save the current model unit with a different name",
                         children: (Component, props) => {
-                            /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
@@ -83,7 +78,7 @@ export default class Menubar extends React.Component {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="undotip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => EditorEnvironment.undo()
+                        onClick: () => EditorCommunication.undo()
                     },
                     {
                         key: "editredo",
@@ -96,7 +91,7 @@ export default class Menubar extends React.Component {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="redotip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => EditorEnvironment.redo()
+                        onClick: () => EditorCommunication.redo()
                     }
                 ]
             }
@@ -121,6 +116,29 @@ export default class Menubar extends React.Component {
                 ]
             }
         },
+        // Show a menu where one can choose between all defined projections
+        {
+            key: "projection",
+            content: "Projection",
+            menu: {
+                items:
+                    EditorCommunication.getProjectionNames().map(name => {
+                        return {
+                            key: name,
+                            content: name,
+                            tooltip: "Show default projection",
+                            children: (Component, props) => {
+                                const { tooltip, ...rest } = props;
+                                return <Tooltip key={"projection" + name} content={tooltip} trigger={<Component {...props} />}/>;
+                            },
+                            onClick: () => {
+                                EditorCommunication.setProjection(name);
+                            }
+                        };
+                    })
+            }
+        },
+        // show the help menu
         {
             key: "help",
             content: "Help",
@@ -164,28 +182,6 @@ export default class Menubar extends React.Component {
                     }
                 ]
             }
-        },
-        // Show a menu where one can choose between all defined projections
-        {
-            key: "projection",
-            content: "Projection",
-            menu: {
-                items:
-                    EditorEnvironment.getProjectionNames().map(name => {
-                        return {
-                            key: name,
-                            content: name,
-                            tooltip: "Show default projection",
-                            children: (Component, props) => {
-                                const { tooltip, ...rest } = props;
-                                return <Tooltip key={"projection" + name} content={tooltip} trigger={<Component {...props} />}/>;
-                            },
-                            onClick: () => {
-                                EditorEnvironment.setProjection(name);
-                            }
-                        };
-                    })
-            }
         }
     ];
 
@@ -214,11 +210,11 @@ export default class Menubar extends React.Component {
     openModel() {
         App.setDialogTitle("Open Model");
         App.setDialogSubText("");
-        App.setDialogContent(<Navigator/>);
+        App.setDialogContent(<Navigator />);
+        // App.setDialogContent(<Input inputRef={this.setInput} />);
         App.showDialog();
         // TODO Ask model name from user
-        // TODO Go through EditorEnvironment
-        ServerCommunication.loadModel("testjea");
+        // EditorCommunication.open(10);
     }
 
     saveAs() {
@@ -237,7 +233,7 @@ export default class Menubar extends React.Component {
     saveAsClosed = () => {
         const saveName = this.input.value;
         if (!!saveName) {
-            EditorEnvironment.saveAs(saveName);
+            EditorCommunication.saveAs(saveName);
         }
     };
 

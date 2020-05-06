@@ -102,7 +102,7 @@ export class LanguageGenerator {
         var referenceFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language");
         fs.writeFileSync(`${this.languageGenFolder}/${language.name}Language.ts`, referenceFile);
 
-        LOGGER.log("Generating environment");
+        LOGGER.log("Generating editorEnvironment");
         var environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment");
         fs.writeFileSync(`${this.environmentGenFolder}/${Names.environment(language)}.tsx`, environmentFile);
 

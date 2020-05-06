@@ -1,4 +1,4 @@
-// This file contains all the stuff that needs to connect to the projectIt generated langauge environment
+// This file contains all the stuff that needs to connect to the projectIt generated langauge editorEnvironment
 
 import { Image } from "@fluentui/react-northstar";
 import * as React from "react";

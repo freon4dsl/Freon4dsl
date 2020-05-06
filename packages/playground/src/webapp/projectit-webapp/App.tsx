@@ -1,7 +1,4 @@
 import * as React from "react";
-// import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
-// import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
-// import { ContextualMenu } from 'office-ui-fabric-react/lib/ContextualMenu';
 import { Dialog, DialogType, DialogFooter, Link } from "@fluentui/react";
 import { PrimaryButton, DefaultButton } from "@fluentui/react";
 import { ContextualMenu } from "@fluentui/react";
