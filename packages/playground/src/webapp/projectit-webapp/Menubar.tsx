@@ -213,8 +213,6 @@ export default class Menubar extends React.Component {
         App.setDialogContent(<Navigator />);
         // App.setDialogContent(<Input inputRef={this.setInput} />);
         App.showDialog();
-        // TODO Ask model name from user
-        // EditorCommunication.open(10);
     }
 
     saveAs() {

@@ -1,7 +1,9 @@
 // This file contains all methods to connect to the projectIt generated language editorEnvironment
 import { PiElement, PiNamedElement, PiCompositeProjection, ProjectionalEditor, PiError } from "@projectit/core";
-import { editorEnvironment, initializer } from "./WebappConfiguration";
+import { editorEnvironment, initializer, languageName } from "./WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
+import { Navigator } from "../projectit-webapp/Navigator";
+import { ErrorList, IErrorItem } from "../projectit-webapp/ErrorList";
 
 // TODO this interface is not used
 export interface IModelUnit {
@@ -12,15 +14,12 @@ export interface IModelUnit {
     url?: string;
 }
 
-export interface IErrorItem {
-    key: number;
-    errormessage: string;
-    errorlocation: string;
-}
+// TODO make this a singleton, no static methods
 
 export class EditorCommunication {
     static currentModelName = '';
-    static currentErrorList: PiError[] = [];
+    static navigator: Navigator;
+    static errorlist: ErrorList;
 
     // used from the editor area
     static getEditor(): ProjectionalEditor {
@@ -43,7 +42,11 @@ export class EditorCommunication {
     }
 
     static loadModelInEditor(model: PiElement) {
+        console.log("loadModelInEditor");
         editorEnvironment.editor.rootElement = model as PiElement;
+        EditorCommunication.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
+        // TODO remove the next statement
+        EditorCommunication.errorlist.allItems.push(new PiError("new message" + randomIntFromInterval(10, 100), null))
     }
 
     static save() {
@@ -63,7 +66,7 @@ export class EditorCommunication {
         console.log("EditorCommunication save as called, new name: " + newName);
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.putModel(newName, editorEnvironment.editor.rootElement);
-            // TODO add name to navigator pane
+            this.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: newName, language: languageName, url: "100.100.100.100"})
         } else {
             console.log("NO rootElement in editor");
         }
@@ -81,23 +84,8 @@ export class EditorCommunication {
         console.log("Error selected: '" + error.errormessage + "', location:  '" + error.errorlocation + "'");
     }
 
-    static getErrors(): IErrorItem[] {
-        let myList: IErrorItem[] = [];
-        myList.push({
-            key: -1,
-            errormessage: "This is an error from ProjectIt",
-            errorlocation: "somewhere"
-        });
-        this.currentErrorList = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
-        this.currentErrorList.forEach((err:PiError, index: number) => {
-            myList.push({
-                key: index,
-                errormessage: err.message,
-                errorlocation: "ergens"
-            })
-        });
-        // TODO get the errorlocation right
-        return myList;
+    static getErrors(): PiError[] {
+        return editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
     }
 
     // END OF: for the communication with the error list

@@ -15,7 +15,6 @@ export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance(
 
 // the following two should be moved to editorEnvironment
 export const initializer = projectitConfiguration.customInitialization;
-
 export const languageName: string = "TaxRules";
 
 export const SERVER_URL = "http://127.0.0.1:3001/";

@@ -15,7 +15,7 @@ export class ServerCommunication {
      * @param piModel
      */
     static async putModel(modelName: string, piModel: PiElement) {
-        console.log("putModel " + modelName);
+        console.log("ServerCommunication.putModel " + modelName);
         if (modelName !== "" && modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
             try {
@@ -35,7 +35,7 @@ export class ServerCommunication {
      * @param loadCallback
      */
     static async loadModel(modelName: string, loadCallback: (piModel: PiElement) => void) {
-        console.log("loadModel " + modelName);
+        console.log("ServerCommunication.loadModel " + modelName);
         if (modelName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}getModel?name=${modelName}`);
@@ -52,7 +52,7 @@ export class ServerCommunication {
      * @param modelListCallback
      */
     static async loadModelList(modelListCallback: (names: string[]) => void) {
-        console.log("loadModelList ");
+        console.log("ServerCommunication.loadModelList ");
         try {
             const res = await axios.get(`${SERVER_URL}getModelList`);
             if (!!res) {

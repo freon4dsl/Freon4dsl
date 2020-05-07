@@ -7,7 +7,10 @@ import { Sticky, StickyPositionType } from "office-ui-fabric-react/lib/Sticky";
 import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { IDetailsColumnRenderTooltipProps } from "office-ui-fabric-react/lib/DetailsList";
 import { SelectionMode } from "office-ui-fabric-react/lib/Selection";
-import { EditorCommunication, IErrorItem } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import { PiError } from "@projectit/core";
 
 // This component holds the errorlist
 
@@ -30,36 +33,40 @@ const classNames = mergeStyleSets({
     }
 });
 
-export interface IErrorListState {
-    items: IErrorItem[];
+export interface IErrorItem {
+    key: number;
+    errormessage: string;
+    errorlocation: string;
 }
 
-export class ErrorList extends React.Component<{}, IErrorListState> {
-    private _selection: Selection;
-    private _allItems: IErrorItem[]; // should be observable!
+@observer
+export class ErrorList extends React.Component<{}, {}> {
+    @observable allItems: PiError[];
     private _columns: IColumn[];
 
     constructor(props: {}) {
         super(props);
 
-        this._selection = new Selection();
-        this._allItems = [];
-        this.getErrors();
+        this.allItems = EditorCommunication.getErrors();
         this.makeColumns(props);
-        // must be done after getErrors
-        this.state = {
-            items: this._allItems
-        };
+        EditorCommunication.errorlist = this;
     }
 
-    private getErrors() {
-        for (let error of EditorCommunication.getErrors()) {
-            this._allItems.push({
-                key: error.key,
-                errormessage: error.errormessage,
-                errorlocation: error.errorlocation
-            });
-        }
+    @computed get getErrors(): IErrorItem[] {
+        let myList: IErrorItem[] = [];
+        myList.push({
+            key: -1,
+            errormessage: "This is an error from ProjectIt",
+            errorlocation: "somewhere"
+        });
+        this.allItems.forEach((err: PiError, index: number) => {
+            myList.push({
+                key: index,
+                errormessage: err.message,
+                errorlocation: "ergens"
+            })
+        });
+        return myList;
     }
 
     private makeColumns(props: {}) {
@@ -83,8 +90,6 @@ export class ErrorList extends React.Component<{}, IErrorListState> {
     }
 
     public render(): JSX.Element {
-        const { items } = this.state;
-
         return (
             <div className={classNames.wrapper}>
                 {/*<ScrollablePane scrollbarVisibility={ScrollbarVisibility.auto}>*/}
@@ -100,13 +105,12 @@ export class ErrorList extends React.Component<{}, IErrorListState> {
                 >
                     <DetailsList
                         compact={true}
-                        items={items}
+                        items={this.getErrors}
                         columns={this._columns}
                         setKey="set"
                         layoutMode={DetailsListLayoutMode.fixedColumns}
                         constrainMode={ConstrainMode.unconstrained}
                         onRenderDetailsHeader={onRenderDetailsHeader}
-                        selection={this._selection}
                         selectionMode={SelectionMode.single}
                         selectionPreservedOnEmptyClick={true}
                         ariaLabelForSelectionColumn="Toggle selection"
