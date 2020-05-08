@@ -4,13 +4,15 @@ import { editorEnvironment, initializer, languageName } from "./WebappConfigurat
 import { ServerCommunication } from "./ServerCommunication";
 import { IErrorItem } from "../projectit-webapp/ErrorList";
 import { EditorArea } from "../projectit-webapp/EditorArea";
+import { App } from "../projectit-webapp/App";
+import { Input } from "@fluentui/react-northstar";
+import * as React from "react";
 
 // TODO rethink this interface
 export interface IModelUnit {
     id: number;
     name: string;
     language: string;
-    // TODO check whether the url is useful
     url?: string;
 }
 
@@ -28,16 +30,61 @@ export class EditorCommunication {
     // used from the menubar
     static new() {
         console.log("EditorCommunication new called");
-        // TODO save previous model
-        editorEnvironment.editor.rootElement = initializer.initialize();
-        EditorCommunication.currentModelName = "";
+        if (!!editorEnvironment.editor.rootElement) {
+            EditorCommunication.savePrevious();
+        } else {
+            editorEnvironment.editor.rootElement = initializer.initialize();
+            EditorCommunication.currentModelName = "";
+        }
+    }
+
+    private static input: HTMLInputElement = null;
+    private static setInput = (element: any | null) => {
+        EditorCommunication.input = element;
+    };
+
+    private static savePrevious(newModelName?: string) {
+        // TODO this works for new but not for open
+        if (!!editorEnvironment.editor.rootElement) {
+            // set up the dialog and show it
+            App.setDialogTitle("Changing to model '" + (!!newModelName? newModelName : "new") + "'");
+            App.setDialogSubText("Should the previous model be saved? If so, please, enter its name. ");
+            App.useDefaultButton();
+            App.setDialogContent(<Input placeholder={EditorCommunication.currentModelName} inputRef={this.setInput}/>);
+            App.showDialogWithCallback(() => {
+                // user has pushed OK and may have entered a new name
+                const saveName = EditorCommunication.input?.value;
+                if (saveName !== EditorCommunication.currentModelName) {
+                    ServerCommunication.putModel(languageName, saveName, editorEnvironment.editor.rootElement);
+                    EditorCommunication.editorArea.navigator._allModels.push({
+                        id: randomIntFromInterval(0, 10000),
+                        name: saveName,
+                        language: languageName,
+                        url: "100.100.100.100"
+                    });
+                } else {
+                    ServerCommunication.putModel(languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
+                }
+                // now we can finally switch to the new model
+                if(!!newModelName) {
+                    ServerCommunication.loadModel(languageName, newModelName, EditorCommunication.loadModelInEditor);
+                    EditorCommunication.currentModelName = newModelName;
+                } else {
+                    editorEnvironment.editor.rootElement = initializer.initialize();
+                    EditorCommunication.currentModelName = "";
+                }
+            });
+        }
     }
 
     static open(name: string) {
         console.log("Open model unit '" + name + "'");
-        // TODO save previous model
-        EditorCommunication.currentModelName = name;
-        ServerCommunication.loadModel(languageName, name, EditorCommunication.loadModelInEditor);
+        if (!!editorEnvironment.editor.rootElement) {
+            EditorCommunication.savePrevious(name);
+        } else {
+            ServerCommunication.loadModel(languageName, name, EditorCommunication.loadModelInEditor);
+            EditorCommunication.currentModelName = name;
+        }
     }
 
     static loadModelInEditor(model: PiElement) {
@@ -52,10 +99,21 @@ export class EditorCommunication {
         console.log("EditorCommunication save called");
         if (!!editorEnvironment.editor.rootElement) {
             if (EditorCommunication.currentModelName.length === 0) {
-                // TODO get name from user
-                EditorCommunication.currentModelName = "modelUnit" + randomIntFromInterval(10, 100);
+                // no name, so get name from user
+                App.setDialogTitle("Saving model");
+                App.setDialogSubText("Please, enter a name. ");
+                App.useDefaultButton();
+                App.setDialogContent(<Input placeholder={"modelUnit" + randomIntFromInterval(10, 100)} inputRef={this.setInput}/>);
+                App.showDialogWithCallback(() => {
+                    // user has pushed OK and may have entered a new name
+                    const saveName = EditorCommunication.input?.value;
+                    EditorCommunication.currentModelName = saveName;
+                    ServerCommunication.putModel(languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
+                    EditorCommunication.editorArea.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: EditorCommunication.currentModelName, language: languageName, url: "100.100.100.100"})
+                });
+            } else {
+                ServerCommunication.putModel(languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
             }
-            ServerCommunication.putModel(languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
         } else {
             console.log("NO rootElement in editor");
         }
