@@ -125,21 +125,18 @@ export class Navigator extends React.Component<{}, {}> {
     }
 
     private modelListCallBack = (names: string[]) => {
-        let models: IModelUnit[] = [];
-        names.forEach((name, itemIndex) => {
-            models.push({id:itemIndex, name:name, language:languageName});
-            this._allModels.push({id:itemIndex, name:name, language:languageName});
+        if (!!names && names.length > 0) {
+            names.forEach((name, itemIndex) => {
+                this._allModels.push({ id: itemIndex, name: name, language: languageName });
 
-        });
-        // this.buildTree();
-        if (!!!this._activeItemId) {
-            this._activeItemId = languageName;
+            });
+            if (!!!this._activeItemId) {
+                this._activeItemId = languageName;
+            }
+        } else {
+            // push a dummy element on the list, to show something
+            this._allModels.push({id: -2, name: name, language: languageName });
         }
-        // let text: string = "";
-        // for (let m of models) {
-        //     text += m.name + ", ";
-        // }
-        // console.log("models: " + text);
     }
 }
 
