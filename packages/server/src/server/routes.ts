@@ -38,4 +38,17 @@ router.put("/putModel", async (ctx: Router.IRouterContext) => {
     ctx.body = { massage: (ctx.request as any).body };
 });
 
+router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
+    const name = ctx.query["name"];
+    console.log("DeleteModel: " + name);
+    if (!!name) {
+        ModelRequests.deleteModel(name, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'name'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+
 export const routes = router.routes();

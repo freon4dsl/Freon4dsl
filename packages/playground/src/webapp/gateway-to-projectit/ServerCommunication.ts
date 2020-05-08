@@ -62,6 +62,17 @@ export class ServerCommunication {
             console.log(e.message);
             LOGGER.error(this, e.toString());
         }
-        return {};
+        return [];
+    }
+
+    static async deleteModel(modelName: string) {
+        console.log("ServerCommunication.deleteModel " + modelName);
+        if (modelName !== "") {
+            try {
+                const res = await axios.get(`${SERVER_URL}deleteModel?name=${modelName}`);
+            } catch (e) {
+                LOGGER.error(this, e.toString());
+            }
+        }
     }
 }

@@ -31,14 +31,14 @@ export class EditorCommunication {
         console.log("EditorCommunication new called");
         // TODO save previous model
         editorEnvironment.editor.rootElement = initializer.initialize();
-        this.currentModelName = "";
+        EditorCommunication.currentModelName = "";
     }
 
     static open(name: string) {
         console.log("Open model unit '" + name + "'");
         // TODO save previous model
-        this.currentModelName = name;
-        ServerCommunication.loadModel(name, this.loadModelInEditor);
+        EditorCommunication.currentModelName = name;
+        ServerCommunication.loadModel(name, EditorCommunication.loadModelInEditor);
     }
 
     static loadModelInEditor(model: PiElement) {
@@ -52,11 +52,11 @@ export class EditorCommunication {
     static save() {
         console.log("EditorCommunication save called");
         if (!!editorEnvironment.editor.rootElement) {
-            if (this.currentModelName.length === 0) {
+            if (EditorCommunication.currentModelName.length === 0) {
                 // TODO get name from user
-                this.currentModelName = "modelUnit" + randomIntFromInterval(10, 100);
+                EditorCommunication.currentModelName = "modelUnit" + randomIntFromInterval(10, 100);
             }
-            ServerCommunication.putModel(this.currentModelName, editorEnvironment.editor.rootElement);
+            ServerCommunication.putModel(EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
         } else {
             console.log("NO rootElement in editor");
         }
@@ -66,7 +66,18 @@ export class EditorCommunication {
         console.log("EditorCommunication save as called, new name: " + newName);
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.putModel(newName, editorEnvironment.editor.rootElement);
-            this.editorArea.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: newName, language: languageName, url: "100.100.100.100"})
+            EditorCommunication.editorArea.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: newName, language: languageName, url: "100.100.100.100"})
+        } else {
+            console.log("NO rootElement in editor");
+        }
+    }
+
+    static deleteCurrentModel() {
+        console.log("EditorCommunication delete called, current model: " + EditorCommunication.currentModelName);
+        if (!!editorEnvironment.editor.rootElement) {
+            ServerCommunication.deleteModel(EditorCommunication.currentModelName);
+            editorEnvironment.editor.rootElement = initializer.initialize();
+            EditorCommunication.currentModelName = "";
         } else {
             console.log("NO rootElement in editor");
         }
@@ -111,6 +122,7 @@ export class EditorCommunication {
         // TODO implement undo()
         return undefined;
     }
+
 }
 
 function randomIntFromInterval(min, max) { // min and max included

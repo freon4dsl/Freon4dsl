@@ -20,4 +20,8 @@ export class ModelRequests {
             .map(f => f.substring(0, f.length - 5));
         ctx.response.body = dir;
     }
+
+    public static async deleteModel(name: string, ctx: IRouterContext) {
+        ctx.request.body = fs.unlinkSync(`${modelfolder}/${name}.json`);
+    }
 }

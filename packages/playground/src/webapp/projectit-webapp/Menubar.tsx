@@ -58,6 +58,17 @@ export default class Menubar extends React.Component {
                             return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
                         onClick: () => this.saveAs()
+                    },
+                    {
+                        key: "filedelete",
+                        content: "delete",
+                        icon: "files-txt",
+                        tooltip: "Delete the current model unit",
+                        children: (Component, props) => {
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="deleteastip" content={tooltip} trigger={<Component {...props} />}/>;
+                        },
+                        onClick: () => this.delete()
                     }
                 ]
             }
@@ -207,6 +218,21 @@ export default class Menubar extends React.Component {
         return <Menu defaultActiveIndex={0} items={this.menuItems}/>;
     }
 
+    delete() {
+        App.setDialogTitle("Delete Model");
+        if (EditorCommunication.currentModelName.length > 0) {
+            App.setDialogSubText("Are you sure you want to delete the current model?");
+            App.setDialogContent(<Text content={EditorCommunication.currentModelName}/>);
+            App.useDefaultButton();
+            App.showDialogWithCallback(() => {
+                EditorCommunication.deleteCurrentModel();
+            });
+        } else {
+            App.setDialogSubText("There is no model selected.");
+            App.showDialog();
+        }
+    }
+
     openModel() {
         App.setDialogTitle("Open Model");
         App.setDialogSubText("");
@@ -220,7 +246,7 @@ export default class Menubar extends React.Component {
         App.setDialogSubText("");
         App.useDefaultButton();
         App.setDialogContent(<Input inputRef={this.setInput}/>);
-        App.showSaveDialog(this.saveAsClosed);
+        App.showDialogWithCallback(this.saveAsClosed);
     }
 
     private input: HTMLInputElement = null;

@@ -113,21 +113,21 @@ export class App extends React.Component<{}, IDialogState> {
     private _dismissDialog = (): void => {
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
-        App.onSave = null;
+        App.callBack = null;
     };
 
     private _okDialog = (): void => {
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
-        if (!!App.onSave) {
-            console.log("Calling onSave");
-            App.onSave();
-            App.onSave = null;
+        if (!!App.callBack) {
+            console.log("Calling callBack");
+            App.callBack();
+            App.callBack = null;
         }
     };
 
     private _cancelDialog = (): void => {
-        App.onSave = null;
+        App.callBack = null;
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
     };
@@ -139,10 +139,10 @@ export class App extends React.Component<{}, IDialogState> {
     // set of statics to enable the calling of the dialog from elsewhere in the application
     static thisApp: App;
     // set when a save dialog is opened.
-    static onSave: () => void;
+    static callBack: () => void;
 
-    public static showSaveDialog(onSave: () => void) {
-        this.onSave = onSave;
+    public static showDialogWithCallback(onSave: () => void) {
+        this.callBack = onSave;
         !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
     }
 
