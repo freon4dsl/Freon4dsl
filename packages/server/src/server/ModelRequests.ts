@@ -18,6 +18,9 @@ export class ModelRequests {
     }
 
     public static async getModelList(foldername: string, ctx: IRouterContext) {
+        if (!fs.existsSync(path.join(`${modelfolder}`, foldername))) {
+            fs.mkdirSync(path.join(`${modelfolder}`, foldername));
+        }
         const dir = fs
             .readdirSync(path.join(`${modelfolder}`, foldername))
             .filter(f => f.endsWith(".json"))
