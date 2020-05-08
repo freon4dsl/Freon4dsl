@@ -82,6 +82,13 @@ export class Navigator extends React.Component<{}, {}> {
         return result;
     }
 
+    public removeName(name: string) {
+        // TODO this method is not functioning correctly yet
+        const index = this._allModels.findIndex(elem  => elem.name = name);
+        console.log(`length: ${this._allModels.length}, index: ${index}`);
+        this._allModels.splice(index-1 , 1);
+    }
+
     private _onTitleClick = (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
         if (parseInt(item.id) >= 0) {
             EditorCommunication.open(item.title);

@@ -7,9 +7,9 @@ const prettier = require("prettier/standalone");
 var path = require("path");
 
 export class Helpers {
-    public static generateManualFile(path: string, contents: string, message: string) {
-        if (!fs.existsSync(path)) {
-            fs.writeFileSync(path, contents);
+    public static generateManualFile(pathName: string, contents: string, message: string) {
+        if (!fs.existsSync(pathName)) {
+            fs.writeFileSync(pathName, contents);
         } else {
             LOGGER.info(this, "projectit-generate-editor: user file " + message + " already exists, skipping it.");
         }

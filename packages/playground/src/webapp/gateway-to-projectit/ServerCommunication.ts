@@ -14,12 +14,12 @@ export class ServerCommunication {
      * @param modelName
      * @param piModel
      */
-    static async putModel(modelName: string, piModel: PiElement) {
+    static async putModel(folderName: string, modelName: string, piModel: PiElement) {
         console.log("ServerCommunication.putModel " + modelName);
         if (modelName !== "" && modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
             try {
-                const res = await axios.put(`${SERVER_URL}putModel?name=${modelName}`, model);
+                const res = await axios.put(`${SERVER_URL}putModel?folder=${folderName}&name=${modelName}`, model);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }
@@ -34,11 +34,11 @@ export class ServerCommunication {
      * @param modelName
      * @param loadCallback
      */
-    static async loadModel(modelName: string, loadCallback: (piModel: PiElement) => void) {
+    static async loadModel(folderName: string, modelName: string, loadCallback: (piModel: PiElement) => void) {
         console.log("ServerCommunication.loadModel " + modelName);
         if (modelName !== "") {
             try {
-                const res = await axios.get(`${SERVER_URL}getModel?name=${modelName}`);
+                const res = await axios.get(`${SERVER_URL}getModel?folder=${folderName}&name=${modelName}`);
                 const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
                 loadCallback(model);
             } catch (e) {
@@ -51,10 +51,10 @@ export class ServerCommunication {
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
-    static async loadModelList(modelListCallback: (names: string[]) => void) {
+    static async loadModelList(folderName: string, modelListCallback: (names: string[]) => void) {
         console.log("ServerCommunication.loadModelList ");
         try {
-            const res = await axios.get(`${SERVER_URL}getModelList`);
+            const res = await axios.get(`${SERVER_URL}getModelList?folder=${folderName}`);
             if (!!res) {
                 modelListCallback(res.data);
             }
@@ -65,11 +65,11 @@ export class ServerCommunication {
         return [];
     }
 
-    static async deleteModel(modelName: string) {
+    static async deleteModel(folderName: string, modelName: string) {
         console.log("ServerCommunication.deleteModel " + modelName);
         if (modelName !== "") {
             try {
-                const res = await axios.get(`${SERVER_URL}deleteModel?name=${modelName}`);
+                const res = await axios.get(`${SERVER_URL}deleteModel?folder=${folderName}&name=${modelName}`);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }

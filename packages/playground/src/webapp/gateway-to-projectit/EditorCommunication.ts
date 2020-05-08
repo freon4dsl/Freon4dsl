@@ -1,12 +1,11 @@
-// This file contains all methods to connect to the projectIt generated language editorEnvironment
-import { PiElement, PiNamedElement, PiCompositeProjection, ProjectionalEditor, PiError } from "@projectit/core";
+// This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
+import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError } from "@projectit/core";
 import { editorEnvironment, initializer, languageName } from "./WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
-import { Navigator } from "../projectit-webapp/Navigator";
-import { ErrorList, IErrorItem } from "../projectit-webapp/ErrorList";
+import { IErrorItem } from "../projectit-webapp/ErrorList";
 import { EditorArea } from "../projectit-webapp/EditorArea";
 
-// TODO this interface is not used
+// TODO rethink this interface
 export interface IModelUnit {
     id: number;
     name: string;
@@ -38,14 +37,14 @@ export class EditorCommunication {
         console.log("Open model unit '" + name + "'");
         // TODO save previous model
         EditorCommunication.currentModelName = name;
-        ServerCommunication.loadModel(name, EditorCommunication.loadModelInEditor);
+        ServerCommunication.loadModel(languageName, name, EditorCommunication.loadModelInEditor);
     }
 
     static loadModelInEditor(model: PiElement) {
         console.log("loadModelInEditor");
         editorEnvironment.editor.rootElement = model as PiElement;
         EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
-        // TODO remove the next statement
+        // TODO remove the next statement, only used for debugging
         EditorCommunication.editorArea.errorlist.allItems.push(new PiError("new message" + randomIntFromInterval(10, 100), null))
     }
 
@@ -56,7 +55,7 @@ export class EditorCommunication {
                 // TODO get name from user
                 EditorCommunication.currentModelName = "modelUnit" + randomIntFromInterval(10, 100);
             }
-            ServerCommunication.putModel(EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
+            ServerCommunication.putModel(languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
         } else {
             console.log("NO rootElement in editor");
         }
@@ -65,7 +64,7 @@ export class EditorCommunication {
     static saveAs(newName: string) {
         console.log("EditorCommunication save as called, new name: " + newName);
         if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.putModel(newName, editorEnvironment.editor.rootElement);
+            ServerCommunication.putModel(languageName, newName, editorEnvironment.editor.rootElement);
             EditorCommunication.editorArea.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: newName, language: languageName, url: "100.100.100.100"})
         } else {
             console.log("NO rootElement in editor");
@@ -75,8 +74,9 @@ export class EditorCommunication {
     static deleteCurrentModel() {
         console.log("EditorCommunication delete called, current model: " + EditorCommunication.currentModelName);
         if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.deleteModel(EditorCommunication.currentModelName);
+            ServerCommunication.deleteModel(languageName, EditorCommunication.currentModelName);
             editorEnvironment.editor.rootElement = initializer.initialize();
+            EditorCommunication.editorArea.navigator.removeName(EditorCommunication.currentModelName);
             EditorCommunication.currentModelName = "";
         } else {
             console.log("NO rootElement in editor");
@@ -85,7 +85,7 @@ export class EditorCommunication {
 
     // used from the navigator:
     static getModelUnits(modelListCallback: (names: string[]) => void) {
-        ServerCommunication.loadModelList(modelListCallback);
+        ServerCommunication.loadModelList(languageName, modelListCallback);
     }
 
     // END OF: for the communication with the navigator
@@ -93,6 +93,7 @@ export class EditorCommunication {
     // for the communication with the error list:
     static errorSelected(error: IErrorItem) {
         console.log("Error selected: '" + error.errormessage + "', location:  '" + error.errorlocation + "'");
+        // TODO implement errorSelected()
     }
 
     static getErrors(): PiError[] {

@@ -9,44 +9,54 @@ router.get("/", async (ctx: Router.IRouterContext) => {
 });
 
 router.get("/getModel", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
     const name = ctx.query["name"];
-    console.log("GetModel: " + name);
-    if (!!name) {
-        ModelRequests.getModel(name, ctx);
+    console.log("GetModel: " + folder + "/" + name);
+    if (!!name || folder) {
+        ModelRequests.getModel(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name'";
+        ctx.message = "Missing query parameter 'name' or 'folder'";
     }
 });
 
 router.get("/getModelList", async (ctx: Router.IRouterContext) => {
-    ModelRequests.getModelList(ctx);
-    ctx.status = 201;
-});
-
-router.put("/putModel", async (ctx: Router.IRouterContext) => {
-    const name = ctx.query["name"];
-    console.log("PutModel: " + name);
-    if (!!name) {
-        ModelRequests.putModel(name, ctx);
+    const folder = ctx.query["folder"];
+    console.log("getModelList: " + folder);
+    if (!!folder) {
+        ModelRequests.getModelList(folder, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name'";
+        ctx.message = "Missing query parameter 'folder'";
+    }
+});
+
+router.put("/putModel", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
+    const name = ctx.query["name"];
+    console.log("PutModel: " + folder + "/" + name);
+    if (!!name || !!folder) {
+        ModelRequests.putModel(folder, name, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'name' or 'folder'";
     }
     ctx.body = { massage: (ctx.request as any).body };
 });
 
 router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
     const name = ctx.query["name"];
-    console.log("DeleteModel: " + name);
-    if (!!name) {
-        ModelRequests.deleteModel(name, ctx);
+    console.log("DeleteModel: " + folder + "/" + name);
+    if (!!name || !! folder) {
+        ModelRequests.deleteModel(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name'";
+        ctx.message = "Missing query parameter 'name' or 'folder'";
     }
     ctx.body = { massage: (ctx.request as any).body };
 });
