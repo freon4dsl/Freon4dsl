@@ -41,7 +41,7 @@ export class Navigator extends React.Component<{}, {}> {
         super(props);
 
         this._selection = new Selection();
-        EditorCommunication.navigator = this;
+        EditorCommunication.editorArea.navigator = this;
         EditorCommunication.getModelUnits(this.modelListCallBack);
     }
 

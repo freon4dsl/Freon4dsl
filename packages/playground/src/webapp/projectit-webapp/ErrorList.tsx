@@ -49,7 +49,7 @@ export class ErrorList extends React.Component<{}, {}> {
 
         this.allItems = EditorCommunication.getErrors();
         this.makeColumns(props);
-        EditorCommunication.errorlist = this;
+        EditorCommunication.editorArea.errorlist = this;
     }
 
     @computed get getErrors(): IErrorItem[] {

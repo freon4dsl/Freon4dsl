@@ -78,7 +78,7 @@ export class SelectableComponent extends React.Component<SelectableComponentProp
     };
 
     private onClick = async (event: React.MouseEvent<HTMLDivElement>) => {
-        EVENT_LOG.info(this, "===> onClick (" + this.props.box.actualX + ", " + this.props.box.actualY + ") width " + this.props.box.actualWidth);
+        EVENT_LOG.info(this, "===> changeShowNavigator (" + this.props.box.actualX + ", " + this.props.box.actualY + ") width " + this.props.box.actualWidth);
         if (this.props.box.selectable) {
             EVENT_LOG.info(this, "===> selected box " + this.props.box.role);
             this.props.editor.selectedBox = this.props.box;

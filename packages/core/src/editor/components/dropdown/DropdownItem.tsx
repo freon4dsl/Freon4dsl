@@ -38,8 +38,8 @@ export class DropdownItem extends React.Component<DropdownItemProps, {}> {
         }
     };
 
-    // NB: onnMouseDown is used instead of onClick to avpid a blur event happening firrst on the
-    // container component, which then closes the dropdown and the onClick is then ignored.
+    // NB: onnMouseDown is used instead of changeShowNavigator to avpid a blur event happening firrst on the
+    // container component, which then closes the dropdown and the changeShowNavigator is then ignored.
     // See: https://stackoverflow.com/questions/10652852/jquery-fire-click-before-blur-event
     // Solution 2 implemeneted here.
     private onMouseDown = (e: React.MouseEvent<any>) => {

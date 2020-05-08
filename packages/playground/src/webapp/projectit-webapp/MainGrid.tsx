@@ -3,6 +3,7 @@ import { Flex, Image, Header } from "@fluentui/react-northstar";
 import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import Menubar from "./Menubar";
 import { EditorArea } from "./EditorArea";
+import { PiToolbar } from "./PiToolbar";
 const Logo = require("../images/inverse-colors.png");
 // this component holds the header, the toolbar, the editor area, and the footer
 
@@ -23,6 +24,8 @@ const classNames = mergeStyleSets({
     }
 });
 
+const headerHeight = "50px";
+
 export const MainGrid: React.FunctionComponent = () => {
     return (
         // Grid has 6 columns
@@ -34,7 +37,7 @@ export const MainGrid: React.FunctionComponent = () => {
         <div>
             <div
                 style={{
-                    height: "60px",
+                    height: headerHeight,
                     backgroundColor: "darkblue"
                 }}
             >
@@ -43,7 +46,7 @@ export const MainGrid: React.FunctionComponent = () => {
                     padding="padding.medium"
                     hAlign="stretch"
                     styles={{
-                        height: "60px",
+                        height: headerHeight,
                         gridColumn: "span 6",
                         backgroundColor: "darkblue"
                     }}
@@ -56,7 +59,7 @@ export const MainGrid: React.FunctionComponent = () => {
                             src={Logo}
                             alt={"ProjectIt"}
                             styles={{
-                                maxHeight: "60px",
+                                maxHeight: headerHeight,
                                 maxWidth: "80px"
                             }}
                         />
@@ -65,6 +68,8 @@ export const MainGrid: React.FunctionComponent = () => {
             </div>
             {/* "menubar" */}
             <Menubar />
+            {/* "toolbar" */}
+            <PiToolbar />
             {/* editor area */}
             <EditorArea />
             {/*{DemoEnvironment.getInstance().projectionalEditorComponent}*/}

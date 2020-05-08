@@ -4,6 +4,7 @@ import { editorEnvironment, initializer, languageName } from "./WebappConfigurat
 import { ServerCommunication } from "./ServerCommunication";
 import { Navigator } from "../projectit-webapp/Navigator";
 import { ErrorList, IErrorItem } from "../projectit-webapp/ErrorList";
+import { EditorArea } from "../projectit-webapp/EditorArea";
 
 // TODO this interface is not used
 export interface IModelUnit {
@@ -18,8 +19,7 @@ export interface IModelUnit {
 
 export class EditorCommunication {
     static currentModelName = '';
-    static navigator: Navigator;
-    static errorlist: ErrorList;
+    static editorArea: EditorArea;
 
     // used from the editor area
     static getEditor(): ProjectionalEditor {
@@ -44,9 +44,9 @@ export class EditorCommunication {
     static loadModelInEditor(model: PiElement) {
         console.log("loadModelInEditor");
         editorEnvironment.editor.rootElement = model as PiElement;
-        EditorCommunication.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
+        EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
         // TODO remove the next statement
-        EditorCommunication.errorlist.allItems.push(new PiError("new message" + randomIntFromInterval(10, 100), null))
+        EditorCommunication.editorArea.errorlist.allItems.push(new PiError("new message" + randomIntFromInterval(10, 100), null))
     }
 
     static save() {
@@ -66,7 +66,7 @@ export class EditorCommunication {
         console.log("EditorCommunication save as called, new name: " + newName);
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.putModel(newName, editorEnvironment.editor.rootElement);
-            this.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: newName, language: languageName, url: "100.100.100.100"})
+            this.editorArea.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: newName, language: languageName, url: "100.100.100.100"})
         } else {
             console.log("NO rootElement in editor");
         }
