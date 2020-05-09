@@ -1,5 +1,5 @@
 import { PiEnvironment } from "@projectit/core";
-import { DemoEnvironment } from "../../demo/editorEnvironment/gen/DemoEnvironment";
+import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
 import { projectitConfiguration } from "../../demo/projectit/ProjectitConfiguration";
 
 // import { TaxRulesEnvironment } from "../../taxrules/environment/gen/TaxRulesEnvironment";
