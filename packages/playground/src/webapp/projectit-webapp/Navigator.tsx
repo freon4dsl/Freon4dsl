@@ -5,7 +5,7 @@ import { ComponentEventHandler } from "@fluentui/react-northstar/dist/es/types";
 import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selection";
 import { EditorCommunication, IModelUnit } from "../gateway-to-projectit/EditorCommunication";
 import { languageName } from "../gateway-to-projectit/WebappConfiguration";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { App } from "./App";
 
@@ -34,17 +34,18 @@ const titleRenderer = (Component, { content, open, hasSubtree, ...restProps }) =
 export class Navigator extends React.Component<{}, {}> {
     // TODO keep current selection
     private _selection: Selection;
-    @observable private _allModels: IModelUnit[] = [];
-    @observable private _activeItemId: string = "";
+    @observable _allModels: IModelUnit[] = [];
+    private _activeItemId: string = "-1";
 
     constructor(props: {}) {
         super(props);
 
         this._selection = new Selection();
+        EditorCommunication.editorArea.navigator = this;
         EditorCommunication.getModelUnits(this.modelListCallBack);
     }
 
-    private buildTree(): TreeElement[] {
+    @computed get buildTree(): TreeElement[] {
         let tree: TreeElement[] = [];
         for (let lang of this.findlanguages()) {
             let group: TreeElement = {
@@ -81,6 +82,13 @@ export class Navigator extends React.Component<{}, {}> {
         return result;
     }
 
+    public removeName(name: string) {
+        // TODO this method is not functioning correctly yet
+        const index = this._allModels.findIndex(elem  => elem.name = name);
+        console.log(`length: ${this._allModels.length}, index: ${index}`);
+        this._allModels.splice(index-1 , 1);
+    }
+
     private _onTitleClick = (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
         if (parseInt(item.id) >= 0) {
             EditorCommunication.open(item.title);
@@ -105,7 +113,7 @@ export class Navigator extends React.Component<{}, {}> {
             >
                 {/*<SelectionZone selection={this._selection} selectionMode={SelectionMode.single}>*/}
                 <Tree
-                    items={this.buildTree()}
+                    items={this.buildTree}
                     title="Model Units"
                     renderItemTitle={titleRenderer}
                     aria-label="Initially open"
@@ -117,19 +125,18 @@ export class Navigator extends React.Component<{}, {}> {
     }
 
     private modelListCallBack = (names: string[]) => {
-        let models: IModelUnit[] = [];
-        names.forEach((name, itemIndex) => {
-            models.push({id:itemIndex, name:name, language:languageName});
-            this._allModels.push({id:itemIndex, name:name, language:languageName});
-        });
-        if (!!!this._activeItemId) {
-            this._activeItemId = languageName;
+        if (!!names && names.length > 0) {
+            names.forEach((name, itemIndex) => {
+                this._allModels.push({ id: itemIndex, name: name, language: languageName });
+
+            });
+            if (!!!this._activeItemId) {
+                this._activeItemId = languageName;
+            }
+        } else {
+            // push a dummy element on the list, to show something
+            this._allModels.push({id: -2, name: name, language: languageName });
         }
-        // let text: string = "";
-        // for (let m of models) {
-        //     text += m.name + ", ";
-        // }
-        // console.log("models: " + text);
     }
 }
 

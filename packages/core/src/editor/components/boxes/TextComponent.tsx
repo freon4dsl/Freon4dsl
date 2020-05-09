@@ -100,7 +100,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
     };
 
     private onClick = () => {
-        EVENT_LOG.info(this, "onClick: " + this.props.box.getText());
+        EVENT_LOG.info(this, "changeShowNavigator: " + this.props.box.getText());
         this.startEditing();
         this.props.box.caretPosition = this.getCaretPosition();
     };
