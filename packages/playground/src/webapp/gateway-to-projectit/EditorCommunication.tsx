@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError } from "@projectit/core";
+import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError, PiCaret } from "@projectit/core";
 import { editorEnvironment, initializer, languageName } from "./WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
 import { IErrorItem } from "../projectit-webapp/ErrorList";
@@ -149,9 +149,13 @@ export class EditorCommunication {
     // END OF: for the communication with the navigator
 
     // for the communication with the error list:
-    static errorSelected(error: IErrorItem) {
-        console.log("Error selected: '" + error.errormessage + "', location:  '" + error.errorlocation + "'");
-        // TODO implement errorSelected()
+    static errorSelected(error: PiError) {
+        console.log("Error selected: '" + error.message + "', location:  '" + error.reportedOn + "'");
+        if (Array.isArray(error.reportedOn)) {
+            editorEnvironment.editor.selectElement(error.reportedOn[0]);
+        } else {
+            editorEnvironment.editor.selectElement(error.reportedOn);
+        }
     }
 
     static getErrors() {
