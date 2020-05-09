@@ -17,7 +17,6 @@ export interface IDialogState {
 
 export class App extends React.Component<{}, IDialogState> {
     useDefaultButton: boolean = false;
-    // TODO use mobx state
     state: IDialogState = {
         hideDialog: true,
         title: "ProjectIt Dialog",

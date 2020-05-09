@@ -154,8 +154,9 @@ export class EditorCommunication {
         // TODO implement errorSelected()
     }
 
-    static getErrors(): PiError[] {
-        return editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
+    static getErrors() {
+        console.log("EditorCommunication.getErrors() for " + editorEnvironment.editor.rootElement.piLanguageConcept());
+        EditorCommunication.editorArea.errorlist.allItems =  editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
     }
 
     // END OF: for the communication with the error list

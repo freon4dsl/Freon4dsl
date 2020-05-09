@@ -55,6 +55,19 @@ export class PiToolbar extends React.Component<{}, {}> {
                     fitted: 'horizontally',
                     title: "Show/hide error list",
                 },
+                {
+                    key: 'validate-button',
+                    kind: 'custom',
+                    content:     <DefaultButton
+                        text={'Validate model'}
+                        iconProps={{ iconName: 'Home' }}
+                        onClick={this.validateModel}
+                        allowDisabledFocus
+                        disabled={this.disabled}
+                    />,
+                    fitted: 'horizontally',
+                    title: "Validate model",
+                },
             ]}
         />;
     }
@@ -65,10 +78,15 @@ export class PiToolbar extends React.Component<{}, {}> {
         EditorCommunication.editorArea.showNavigator = this.showNavigator;
     };
 
-    changeShowErrorlist= () => {
+    changeShowErrorlist = () => {
         // console.log("setting showErrorlist to " + !this.showErrorlist);
         this.showErrorlist = !this.showErrorlist;
         EditorCommunication.editorArea.showErrorlist = this.showErrorlist;
+    }
+
+    validateModel = () => {
+        console.log("validate model");
+        EditorCommunication.getErrors();
     }
 }
 

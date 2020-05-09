@@ -47,9 +47,11 @@ export class ErrorList extends React.Component<{}, {}> {
     constructor(props: {}) {
         super(props);
 
-        this.allItems = EditorCommunication.getErrors();
-        this.makeColumns(props);
         EditorCommunication.editorArea.errorlist = this;
+        this.makeColumns(props);
+        // the next statement must always occur after setting
+        // EditorCommunication.editorArea.errorlist
+        EditorCommunication.getErrors();
     }
 
     @computed get getErrors(): IErrorItem[] {
