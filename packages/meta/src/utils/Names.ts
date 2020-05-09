@@ -22,6 +22,7 @@ export class Names {
     public static PiActions = "PiActions";
     public static PiEditor = "PiEditor";
     public static PiProjection = "PiProjection";
+    public static PiModelInitialization = "PiModelInitialization";
     public static Box = "Box";
     public static PiElementReference = "PiElementReference";
     public static PiEnvironment = "PiEnvironment";

@@ -62,7 +62,7 @@ export class ErrorList extends React.Component<{}, {}> {
                 key: index,
                 error: err,
                 errormessage: err.message,
-                errorlocation: err.reportedOnName,
+                errorlocation: "ergens", // TODO set location
             })
         });
         return myList;
@@ -125,7 +125,7 @@ export class ErrorList extends React.Component<{}, {}> {
 }
 
 function _onItemInvoked(item: IErrorItem): void {
-    // give signal to EditorEnvironment
+    // give signal to editor
     EditorCommunication.errorSelected(item.error);
 }
 
