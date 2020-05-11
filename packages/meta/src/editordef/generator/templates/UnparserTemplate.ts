@@ -41,6 +41,12 @@ export class UnparserTemplate {
                 
         const LOGGER = new PiLogger("${generatedClassName}");
         
+        /**
+         * Used to unparse lists.
+         * NONE means only space(s) between the elements.
+         * Terminator means that every element is terminated with a certain string.
+         * Separator means that in between elements a certain string is placed.
+         */
         enum SeparatorType {
             NONE = "NONE",
             Terminator = "Terminator",
@@ -49,6 +55,13 @@ export class UnparserTemplate {
 
         export class ${generatedClassName}  {
 
+            /**
+             * Returns a string representation of 'modelelement'.
+             * If 'short' is present and false, then a multi-line result will be given.
+             * Otherwise, the result is always a single-line string.
+             * @param modelelement
+             * @param short
+             */
             public unparse(modelelement: ${allLangConcepts}, short?: boolean) : string {
                 // set default for optional parameter
                 if (short === undefined) short = true;
@@ -60,7 +73,17 @@ export class UnparserTemplate {
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
-                        
+               
+            /**
+             * Returns a string representation of 'list', using 'sepText' , and 'sepType' to include either a separator string 
+             * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
+             * If 'short' is false, then a multi-line result will be given. Otherwise, the result is always a single-line string.
+             * @param list
+             * @param sepText
+             * @param sepType
+             * @param vertical
+             * @param short
+             */         
             private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, short: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
@@ -76,10 +99,19 @@ export class UnparserTemplate {
                 return result;
             }
 
-            private showReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, short: boolean) : string {
+            /**
+             * Returns a string representation of a list of references, where every reference
+             * is replaced by a single-line representation of its referred element. The use of params 
+             * 'sepText' and 'SepType' are equals to those in the private method unparseList.
+             * @param list
+             * @param sepText
+             * @param sepType
+             * @param vertical
+             */
+            private showReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
-                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}, short));
+                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}, true));
                     if (sepType === SeparatorType.Separator) {
                         if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
                     }
@@ -98,10 +130,14 @@ export class UnparserTemplate {
         let myConcept: PiConcept = conceptDef.concept.referred;
         let name: string = myConcept.name;
         let lines: MetaEditorProjectionLine[] = conceptDef.projection?.lines;
+        const comment =   `/**
+                            * See the public unparse method.
+                            */`;
 
         if (!!lines) {
             if (lines.length > 1) {
                 return `
+                ${comment}
                 private unparse${name}(modelelement: ${name}, short: boolean) : string {
                     if (short) {
                         return \`${this.makeLine(lines[0])}\`
@@ -111,18 +147,21 @@ export class UnparserTemplate {
                 }`;
             } else {
                 return `
+                ${comment}
                 private unparse${name}(modelelement: ${name}, short: boolean) : string {
                     return \`${this.makeLine(lines[0])}\`
                 }`;
             }
         } else {
             if (myConcept instanceof  PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
-                return `private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                return `${comment}
+                    private unparse${name}(modelelement: ${name}, short: boolean) : string {
                     return \`\$\{this.unparse(modelelement.left, short)\} ${conceptDef.symbol} \$\{this.unparse(modelelement.right, short)\}\`;
                 }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
-                return `private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                return `${comment}
+                    private unparse${name}(modelelement: ${name}, short: boolean) : string {
                     return \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
@@ -196,7 +235,7 @@ export class UnparserTemplate {
                 if (myElem.isPart) {
                     result += `\$\{this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, short)\}`;
                 } else {
-                    result += `\$\{this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, short)\}`;
+                    result += `\$\{this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
                 }
             } else {
                 if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
