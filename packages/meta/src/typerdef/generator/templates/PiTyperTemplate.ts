@@ -103,19 +103,34 @@ export class PiTyperTemplate {
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            inferType(modelelement: ${allLangConcepts}): ${allLangConcepts} {
+            /**
+             * See interface 
+             */
+            public inferType(modelelement: ${allLangConcepts}): ${allLangConcepts} {
                 return null;
             }
-            equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
+            /**
+             * See interface 
+             */
+            public equalsType(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
                 return true;
             }
-            conformsTo(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
+            /**
+             * See interface 
+             */
+            public conformsTo(elem1: ${allLangConcepts}, elem2: ${allLangConcepts}): boolean {
                 return true;
             }
-            conformList(typelist1: ${allLangConcepts}[], typelist2: ${allLangConcepts}[]): boolean {
+            /**
+             * See interface 
+             */
+            public conformList(typelist1: ${allLangConcepts}[], typelist2: ${allLangConcepts}[]): boolean {
                 return true;
             }
-            isType(elem: ${allLangConcepts}): boolean {
+            /**
+             * See interface 
+             */
+            public isType(elem: ${allLangConcepts}): boolean {
                 return false;
             }      
         }`;
@@ -275,7 +290,7 @@ export class PiTyperTemplate {
 
     private makeEqualsStatement() : string {
         for ( let rule of this.typerdef.typerRules ) {
-
+            // TODO makeEqualsStatement
         // case: two enum refs
         // if (!!rule.type1.enumRef && !!rule.type2.enumRef) {
         //     return `

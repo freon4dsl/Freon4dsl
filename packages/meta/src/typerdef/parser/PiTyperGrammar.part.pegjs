@@ -58,31 +58,31 @@ otherRule = conceptRef:conceptRef curly_begin statements:statement* curly_end
   })
 }
 
-statement = conformsKey:conformsKey exp:langExpression
-{
-  return create.createStatement({
-    "statementtype": "conformsto",
-    "exp": exp,
-    "isAbstract": false,
-    "location": location()
-  })
-}            
-            / equalsKey:equalsKey exp:langExpression
-{
-  return create.createStatement({
-    "statementtype":"equalsto",
-    "exp": exp,
-    "isAbstract": false,
-    "location": location()
-  })
-}            
-            / abs:abstractKey? inferenceKey:inferenceKey exp:langExpression?
-{
-  return create.createStatement({
-    "statementtype":"infertype",
-    "exp": exp,
-    "isAbstract": (!!abs),
-    "location": location()
-  })
-}            
+statement = conformsKey:conformsKey exp:langExpression semicolon_separator
+    {
+      return create.createStatement({
+        "statementtype": "conformsto",
+        "exp": exp,
+        "isAbstract": false,
+        "location": location()
+      })
+    }
+/ equalsKey:equalsKey exp:langExpression semicolon_separator
+    {
+      return create.createStatement({
+        "statementtype":"equalsto",
+        "exp": exp,
+        "isAbstract": false,
+        "location": location()
+      })
+    }
+/ abs:abstractKey? inferenceKey:inferenceKey exp:langExpression? semicolon_separator
+    {
+      return create.createStatement({
+        "statementtype":"infertype",
+        "exp": exp,
+        "isAbstract": (!!abs),
+        "location": location()
+      })
+    }
 

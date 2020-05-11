@@ -28,10 +28,10 @@ conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end
         }); 
     }
 
-rule =  rule1: typeEqualsRule   { return rule1; }
-      / rule2: typeConformsRule { return rule2; }
-      / rule3: notEmptyRule     { return rule3; }
-      / rule4: validNameRule    { return rule4; }
+rule =  rule1: typeEqualsRule   semicolon_separator { return rule1; }
+      / rule2: typeConformsRule semicolon_separator { return rule2; }
+      / rule3: notEmptyRule     semicolon_separator { return rule3; }
+      / rule4: validNameRule    semicolon_separator { return rule4; }
 
 validNameRule = validnameKey property:langExpression? ws {
   return create.createValidNameRule( {

@@ -1,10 +1,10 @@
 scoper Demo for language Demo
 
-isnamespace { DemoModel DemoEntity DemoFunction }
+isnamespace { DemoModel, DemoEntity, DemoFunction }
 
 // Inheritance scope
 DemoEntity {
-    namespace_addition = self.baseEntity
+    namespace_addition = self.baseEntity;
 }
 /*
 Type {
@@ -12,7 +12,7 @@ Type {
 }
 */
 AppliedFeature {
-	scope = typeof( container )
+	scope = typeof( container );
 }
 
 //    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'
