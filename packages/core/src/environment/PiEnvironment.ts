@@ -1,4 +1,4 @@
-import { PiCompositeProjection, PiEditor, PiProjection } from "../editor";
+import { PiEditor, PiModelInitialization } from "../editor";
 import { ProjectionalEditor } from "../editor/components";
 import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
@@ -15,4 +15,6 @@ export interface PiEnvironment {
     unparser: PiUnparser;
 
     projectionalEditorComponent: ProjectionalEditor;
+    initializer: PiModelInitialization;
+    languageName: string;
 }

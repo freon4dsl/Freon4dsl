@@ -35,6 +35,7 @@ const classNames = mergeStyleSets({
 
 export interface IErrorItem {
     key: number;
+    error: PiError;
     errormessage: string;
     errorlocation: string;
 }
@@ -47,23 +48,21 @@ export class ErrorList extends React.Component<{}, {}> {
     constructor(props: {}) {
         super(props);
 
-        this.allItems = EditorCommunication.getErrors();
-        this.makeColumns(props);
         EditorCommunication.editorArea.errorlist = this;
+        this.makeColumns(props);
+        // the next statement must always occur after setting
+        // EditorCommunication.editorArea.errorlist
+        EditorCommunication.getErrors();
     }
 
     @computed get getErrors(): IErrorItem[] {
         let myList: IErrorItem[] = [];
-        myList.push({
-            key: -1,
-            errormessage: "This is an error from ProjectIt",
-            errorlocation: "somewhere"
-        });
         this.allItems.forEach((err: PiError, index: number) => {
             myList.push({
                 key: index,
+                error: err,
                 errormessage: err.message,
-                errorlocation: "ergens"
+                errorlocation: "ergens", // TODO set location
             })
         });
         return myList;
@@ -126,12 +125,12 @@ export class ErrorList extends React.Component<{}, {}> {
 }
 
 function _onItemInvoked(item: IErrorItem): void {
-    alert("Item invoked: " + item.errormessage);
+    // give signal to editor
+    EditorCommunication.errorSelected(item.error);
 }
 
 function _onActiveItemChanged(item: IErrorItem): void {
-    // give signal to EditorEnvironment
-    EditorCommunication.errorSelected(item);
+    // TODO what should the activity be onActiveItemChanged?
 }
 
 const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (props, defaultRender) => {

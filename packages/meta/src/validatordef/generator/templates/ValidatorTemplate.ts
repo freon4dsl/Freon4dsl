@@ -33,6 +33,10 @@ export class ValidatorTemplate {
                 let myChecker = new ${checkerClassName}();
                 let errorlist : ${this.errorClassName}[] = [];
                 myChecker.errorList = errorlist;
+                
+                if (!(!!includeChildren)) {
+                    includeChildren = true;
+                }
  
                 let myWalker = new ${walkerClassName}();
                 myWalker.myWorker = myChecker;
