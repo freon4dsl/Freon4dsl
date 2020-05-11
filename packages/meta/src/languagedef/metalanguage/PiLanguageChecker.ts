@@ -153,25 +153,21 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             });
     }
 
-    checkConceptProperty(element: PiProperty): void {
-        LOGGER.log("Checking concept property '" + element.name + "'");
+    checkConceptProperty(piProperty: PiProperty): void {
+        LOGGER.log("Checking concept property '" + piProperty.name + "'");
         this.nestedCheck(
             {
-                check: !!element.type,
-                error: `Element '${element.name}' should have a type [line: ${element.location?.start.line}, column: ${element.location?.start.column}].`,
+                check: !!piProperty.type,
+                error: `Element '${piProperty.name}' should have a type [line: ${piProperty.location?.start.line}, column: ${piProperty.location?.start.column}].`,
                 whenOk: () => {
-                    this.checkConceptReference(element.type);
-                    // TODO see if we need to add this check??
-                    // if (!!element.type.referred) { // error message taken care of by checkConceptReference
-                    //     this.nestedCheck({
-                    //         check: !(element.type.referred instanceof PiLangEnumeration),
-                    //         error:  `Reference property '${element.name}' may not have an enumeration concept as type `+
-                    //                 `[line: ${element.location?.start.line}, column: ${element.location?.start.column}].`,
-                    //         whenOk: () => {
-                    //             element.type = this.morfConceptReferenceIntoSubClass(element.type);
-                    //         }
-                    //     });
-                    // }
+                    this.checkConceptReference(piProperty.type);
+                    if (!!piProperty.type.referred) { // error message taken care of by checkConceptReference
+                        if(piProperty.type.referred instanceof PiLimitedConcept) {
+                            // this situation is OK, but property with limited concept as type should always be a reference property
+                            // the property should refer to one of the predefined instances of the limited concept
+                            piProperty.isPart = false;
+                        }
+                    }
                 }
             });
     }
