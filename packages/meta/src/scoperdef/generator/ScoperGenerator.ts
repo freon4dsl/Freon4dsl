@@ -35,15 +35,15 @@ export class ScoperGenerator {
         let relativePath = "../../";
 
         //  Generate it
-        LOGGER.log("Generating Namespace");
+        LOGGER.log(`Generating namespace: ${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`);
         var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef, relativePath), "Namespace Class");
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`, namespaceFile);
 
-        LOGGER.log("Generating Scoper");
+        LOGGER.log(`Generating scoper: ${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`);
         var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class");
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
-        LOGGER.log("Generating Scoper Gen Index");
+        LOGGER.log(`Generating scoper gen index: ${this.scoperGenFolder}/index.ts`);
         var scoperIndexFile = Helpers.pretty(scoper.generateIndex(this.language), "Scoper Gen Index");
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 

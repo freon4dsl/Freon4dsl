@@ -5,7 +5,7 @@ import { PiTypeDefinition } from "../metalanguage";
 import { Helpers, Names, TYPER_FOLDER, TYPER_GEN_FOLDER } from "../../utils";
 import { PiTyperTemplate } from "./templates/PiTyperTemplate";
 
-const LOGGER = new PiLogger("PiTyperGenerator").mute();
+const LOGGER = new PiLogger("PiTyperGenerator"); //.mute();
 export class PiTyperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguageUnit;
@@ -33,11 +33,11 @@ export class PiTyperGenerator {
         let relativePath = "../../";
 
         //  Generate typer
-        LOGGER.log("Generating typer class");
+        LOGGER.log(`Generating typer: ${this.typerGenFolder}/${Names.typer(this.language)}.ts`);
         var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class");
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
-        LOGGER.log("Generating typer gen index");
+        LOGGER.log(`Generating typer gen index: ${this.typerGenFolder}/index.ts`);
         var typerIndexGenFile = Helpers.pretty(typer.generateGenIndex(this.language), "Typer Gen Index");
         fs.writeFileSync(`${this.typerGenFolder}/index.ts`, typerIndexGenFile);
 

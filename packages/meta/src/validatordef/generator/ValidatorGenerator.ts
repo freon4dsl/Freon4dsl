@@ -6,7 +6,7 @@ import { PiValidatorDef } from "../metalanguage";
 import { CheckerTemplate } from "./templates/CheckerTemplate";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate";
 
-const LOGGER = new PiLogger("ValidatorGenerator").mute();
+const LOGGER = new PiLogger("ValidatorGenerator"); //.mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: PiLanguageUnit;
@@ -35,18 +35,18 @@ export class ValidatorGenerator {
         let relativePath = "../../";
 
         //  Generate validator
-        LOGGER.log("Generating validator class");
+        LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);
         var validatorFile = Helpers.pretty(validator.generateValidator(this.language, validdef, relativePath), "Validator Class");
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         //  Generate checker
         if (validdef !== null && validdef !== undefined) {
-            LOGGER.log("Generating checker class");
+            LOGGER.log(`Generating checker: ${this.validatorGenFolder}/${Names.checker(this.language)}.ts`);
             var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class");
             fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);
         }
 
-        LOGGER.log("Generating validator index class");
+        LOGGER.log(`Generating validator gen index: ${this.validatorGenFolder}/index.ts`);
         var indexFile = Helpers.pretty(validator.generateIndex(this.language, validdef), "Index Class");
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
 
