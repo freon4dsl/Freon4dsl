@@ -12,14 +12,27 @@ export class CheckerTemplate {
         const checkerClassName : string = Names.checker(language);
         const typerInterfaceName: string = Names.PiTyper;
         const unparserInterfaceName: string = Names.PiUnparser;
+        const commentBefore =   `/**
+                                 * Checks 'modelelement' before checking its children.
+                                 * Found errors are pushed onto 'errorlist'.
+                                 * @param modelelement
+                                 */`;
+        const commentAfter =    `/**
+                                 * Checks 'modelelement' after checking its children.
+                                 * Found errors are pushed onto 'errorlist'.
+                                 * @param modelelement
+                                 */`;
+        const commentNoRule =   `/**
+                                 * No checks are implemented for this 'modelelement'.
+                                 * @param modelelement
+                                 */`;
 
         // the template starts here
         return `
         import { ${errorClassName}, ${typerInterfaceName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language, validdef)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-        import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";
-        
+        import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";     
 
         export class ${checkerClassName} implements ${workerInterfaceName} {
             myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
@@ -27,20 +40,30 @@ export class CheckerTemplate {
             errorList: ${errorClassName}[] = [];
 
         ${validdef.conceptRules.map(ruleSet =>
-            `public execBefore${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
+            `${commentBefore}
+            public execBefore${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
                 ${this.createRules(ruleSet)}
             }
+            
+            ${commentAfter}
             public execAfter${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
             }`
         ).join("\n\n")}
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
-            `public execBefore${concept.name}(modelelement: ${concept.name}) {
+            `${commentNoRule}
+            public execBefore${concept.name}(modelelement: ${concept.name}) {
             }
+            
+            ${commentNoRule}
             public execAfter${concept.name}(modelelement: ${concept.name}) {
             }`
         ).join("\n\n") }
         
+        /**
+         * Returns true if 'name' is a valid identifier
+         * @param name
+         */
         private isValidName(name: string) : boolean {
             if (!(!!name)) return false;
             // cannot start with number
@@ -55,7 +78,8 @@ export class CheckerTemplate {
             // TODO implement this
             return true;
             }
-        }`;
+        }    
+        `;
     }
 
     private createImports(language: PiLanguageUnit, validdef: PiValidatorDef) : string {
@@ -85,7 +109,7 @@ export class CheckerTemplate {
                     }`           
                 : (r instanceof NotEmptyRule ?
                     `if(${langExpToTypeScript(r.property)}.length == 0) {
-                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", ${langExpToTypeScript(r.property)}));
+                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", modelelement));
                     }`
                 : (r instanceof ValidNameRule ?
                     `if(!this.isValidName(${langExpToTypeScript(r.property)})) {
