@@ -27,7 +27,8 @@ export class UnparserTemplate {
     generateUnparser(language: PiLanguageUnit, editDef: DefEditorLanguage, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : String = Names.unparser(language);
-        // TODO change comment before class
+
+        language.concepts.filter(elem => elem.implementedPrimProperties().some(p => p.name === "name"));
 
         // Template starts here 
         return `
@@ -48,20 +49,22 @@ export class UnparserTemplate {
 
         export class ${generatedClassName}  {
 
-            public unparse(modelelement: ${allLangConcepts}) : string {
+            public unparse(modelelement: ${allLangConcepts}, short?: boolean) : string {
+                // set default for optional parameter
+                if (short === undefined) short = true;
                 ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    return this.unparse${concept.name}(modelelement);
+                    return this.unparse${concept.name}(modelelement, short);
                 }`).join("")}
                 return "";
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
                         
-            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
+            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, short: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
-                    result = result.concat(this.unparse(listElem));
+                    result = result.concat(this.unparse(listElem, short));
                     if (sepType === SeparatorType.Separator) {
                         if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
                     }
@@ -73,10 +76,10 @@ export class UnparserTemplate {
                 return result;
             }
 
-            private showReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
+            private showReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, short: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
-                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}));
+                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}, short));
                     if (sepType === SeparatorType.Separator) {
                         if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
                     }
@@ -97,18 +100,29 @@ export class UnparserTemplate {
         let lines: MetaEditorProjectionLine[] = conceptDef.projection?.lines;
 
         if (!!lines) {
-            return `
-                private unparse${name}(modelelement: ${name}) : string {
-                    return \`${lines.map(line => `${this.makeLine(line)}` ).join("\\n")}\`
+            if (lines.length > 1) {
+                return `
+                private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                    if (short) {
+                        return \`${this.makeLine(lines[0])}\`
+                    } else {
+                        return \`${lines.map(line => `${this.makeLine(line)}`).join("\\n")}\`
+                    }
                 }`;
+            } else {
+                return `
+                private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                    return \`${this.makeLine(lines[0])}\`
+                }`;
+            }
         } else {
             if (myConcept instanceof  PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
-                return `private unparse${name}(modelelement: ${name}) : string {
-                    return \`\$\{this.unparse(modelelement.left)\} ${conceptDef.symbol} \$\{this.unparse(modelelement.right)\}\`;
+                return `private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                    return \`\$\{this.unparse(modelelement.left, short)\} ${conceptDef.symbol} \$\{this.unparse(modelelement.right, short)\}\`;
                 }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
-                return `private unparse${name}(modelelement: ${name}) : string {
+                return `private unparse${name}(modelelement: ${name}, short: boolean) : string {
                     return \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
@@ -180,16 +194,16 @@ export class UnparserTemplate {
                     joinType = "SeparatorType.Terminator";
                 }
                 if (myElem.isPart) {
-                    result += `\$\{this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
+                    result += `\$\{this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, short)\}`;
                 } else {
-                    result += `\$\{this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
+                    result += `\$\{this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, short)\}`;
                 }
             } else {
                 if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
                     result += `\$\{${langExpToTypeScript(item.expression)} ? \``;
                 }
                 if (myElem.isPart) {
-                    result += `\$\{this.unparse(${langExpToTypeScript(item.expression)})\}`;
+                    result += `\$\{this.unparse(${langExpToTypeScript(item.expression)}, short)\}`;
                 } else {
                     result += `\$\{${langExpToTypeScript(item.expression)}?.name\}`;
                 }
