@@ -44,7 +44,6 @@ export class ServerCommunication implements IServerCommunication {
      * @param loadCallback
      */
     async loadModel(folderName: string, modelName: string, loadCallback: (piModel: PiElement) => void) {
-        // TODO move callback to EditorCommunication
         console.log("ServerCommunication.loadModel " + modelName);
         if (modelName !== "") {
             try {
@@ -63,7 +62,6 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadModelList(folderName: string, modelListCallback: (names: string[]) => void) {
         console.log("ServerCommunication.loadModelList ");
-        // TODO move callback to EditorCommunication
         try {
             const res = await axios.get(`${SERVER_URL}getModelList?folder=${folderName}`);
             if (!!res) {
