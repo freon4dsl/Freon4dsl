@@ -14,4 +14,7 @@ export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
 // export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
 
+/**
+ * The one and only reference to the server on which the models are stored
+ */
 export const SERVER_URL = "http://127.0.0.1:3001/";
