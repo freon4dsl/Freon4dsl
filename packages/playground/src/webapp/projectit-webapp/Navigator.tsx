@@ -6,9 +6,10 @@ import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selecti
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { App } from "./App";
-// TODO try to make deoendence of gateway-to-projectit as small as possible
+// TODO try to make dependence of gateway-to-projectit as small as possible
 import { editorEnvironment } from "../gateway-to-projectit/WebappConfiguration";
-import { EditorCommunication, IModelUnit } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { IModelUnit } from "../gateway-to-projectit/IEditorCommunication";
 
 // This component holds the navigator, which shows all available models sorted by language
 

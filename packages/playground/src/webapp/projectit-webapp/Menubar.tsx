@@ -24,7 +24,7 @@ export default class Menubar extends React.Component {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="newtip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => EditorCommunication.new()
+                        onClick: () => EditorCommunication.newModel()
                     },
                     {
                         key: "fileopen",

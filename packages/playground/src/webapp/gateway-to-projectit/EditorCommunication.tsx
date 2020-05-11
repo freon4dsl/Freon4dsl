@@ -1,24 +1,11 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError, PiCaret } from "@projectit/core";
+import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError } from "@projectit/core";
 import { editorEnvironment } from "./WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
 import { EditorArea } from "../projectit-webapp/EditorArea";
 import { App } from "../projectit-webapp/App";
 import { Input } from "@fluentui/react-northstar";
 import * as React from "react";
-import { MaskedTextField } from "@fluentui/react";
-
-const maskFormat: { [key: string]: RegExp } = {
-    '*': /^[a-z,A-Z][a-z,A-Z,0-9]*$/,
-};
-
-// TODO rethink this interface
-export interface IModelUnit {
-    id: number;
-    name: string;
-    language: string;
-    url?: string;
-}
 
 // TODO make this a singleton, no static methods
 
@@ -32,7 +19,7 @@ export class EditorCommunication {
     }
 
     // used from the menubar
-    static new() {
+    static newModel() {
         console.log("EditorCommunication new called");
         if (!!editorEnvironment.editor.rootElement) {
             EditorCommunication.savePrevious();
