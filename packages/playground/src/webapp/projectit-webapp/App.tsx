@@ -6,6 +6,7 @@ import { Text, Flex, Box } from "@fluentui/react-northstar";
 import { MainGrid } from "./MainGrid";
 
 // This component holds the MainGrid and the Dialog
+const footerheight = "25px";
 // TODO states should be implemented differently: using mobx
 
 export interface IDialogState {
@@ -60,47 +61,47 @@ export class App extends React.Component<{}, IDialogState> {
                         >
                             <MainGrid />
                         </div>
-                    </div>
-                    <div
-                        style={{
-                            height: "50px",
-                            marginTop: "-50px",
-                            backgroundColor: "darkblue",
-                            color: "rgba(211, 227, 253, 255)"
-                        }}
-                    >
-                        {/*"footer"*/}
-                        <Flex gap="gap.small" padding="padding.medium" hAlign="center">
+
+                    {/*"footer"*/}
+                    <Flex gap="gap.small" padding="padding.medium" hAlign="center" vAlign="center"
+                          style={{
+                              height: footerheight,
+                              marginTop: "-50px",
+                              backgroundColor: "darkblue",
+                              color: "rgba(211, 227, 253, 255)"
+                          }}>
+                        <div>
                             <Text content="Created by ProjectIt " size="medium" />
                             <Link href="http://www.projectit.org/" target="_blank">
                                 <Text content="(www.projectit.org)." />
                             </Link>
-                        </Flex>
-                        {/*Global dialog needs to be on the main page*/}
-                        <Dialog
-                            hidden={hideDialog}
-                            onDismiss={this._dismissDialog}
-                            dialogContentProps={{
-                                type: DialogType.largeHeader,
-                                title: title,
-                                closeButtonAriaLabel: "Close",
-                                subText: subText
-                            }}
-                            modalProps={{
-                                // titleAriaId: this._labelId,
-                                // subtitleAriaId: this._subTextId,
-                                isBlocking: false,
-                                styles: { main: { maxWidth: 450 } },
-                                dragOptions: this._dragOptions
-                            }}
-                        >
-                            {content}
-                            <DialogFooter>
-                                <PrimaryButton onClick={this._okDialog} text="Ok" />
-                                {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel" /> : null}
-                            </DialogFooter>
-                        </Dialog>
+                        </div>
+                    </Flex>
                     </div>
+                    {/*Global dialog needs to be on the main page*/}
+                    <Dialog
+                        hidden={hideDialog}
+                        onDismiss={this._dismissDialog}
+                        dialogContentProps={{
+                            type: DialogType.largeHeader,
+                            title: title,
+                            closeButtonAriaLabel: "Close",
+                            subText: subText
+                        }}
+                        modalProps={{
+                            // titleAriaId: this._labelId,
+                            // subtitleAriaId: this._subTextId,
+                            isBlocking: false,
+                            styles: { main: { maxWidth: 450 } },
+                            dragOptions: this._dragOptions
+                        }}
+                    >
+                        {content}
+                        <DialogFooter>
+                            <PrimaryButton onClick={this._okDialog} text="Ok" />
+                            {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel" /> : null}
+                        </DialogFooter>
+                    </Dialog>
                 </div>
             </div>
         );
