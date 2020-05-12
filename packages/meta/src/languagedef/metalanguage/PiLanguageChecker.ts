@@ -11,16 +11,16 @@ import { PiElementReference } from "./PiElementReference";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
+const reservedWords = ["root", "abstract", "limited", "interface", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
 
-// TODO add check: priority only for expression concepts
+// TODO add check: priority error from parser into checker => only for expression concepts
 
 export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     foundRoot = false;
 
     public check(language: PiLanguageUnit): void {
         LOGGER.info(this, "Checking language '" + language.name + "'");
-        // TODO all keywords that can occur after language should be mentioned
-        this.simpleCheck(!!language.name && language.name !== "root" && language.name !== "concept" && language.name !== "interface",
+        this.simpleCheck(!!language.name && !reservedWords.includes(language.name) ,
             `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
 
         this.language = language;
@@ -28,32 +28,70 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         PiMetaEnvironment.metascoper.language = language;
 
         // now check the whole language
-        // TODO check that all concepts and interfaces have unique names
         language.concepts.forEach(concept => this.checkConcept(concept));
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
         // create and add expressionPlaceHolder
         // TODO remove the addition of a placeholder as soon as the editor is capable of working with placeholders in general
+        let expressionPlaceHolder = new PiExpressionConcept();
+        expressionPlaceHolder.name = "PlaceholderExpression";
+        expressionPlaceHolder.language = language;
+        expressionPlaceHolder._isPlaceHolder = true;
         let xx = language.findExpressionBase();
         if (!!xx){
-            let expressionPlaceHolder = new PiExpressionConcept();
-            expressionPlaceHolder.name = "PlaceholderExpression";
             expressionPlaceHolder.base = PiElementReference.create<PiExpressionConcept>(xx, "PiExpressionConcept");
             expressionPlaceHolder.base.owner = expressionPlaceHolder;
-            expressionPlaceHolder.language = language;
-            expressionPlaceHolder._isPlaceHolder = true;
-            language.concepts.push(expressionPlaceHolder);
-            language.expressionPlaceHolder = expressionPlaceHolder;
         }
+        language.concepts.push(expressionPlaceHolder);
+        language.expressionPlaceHolder = expressionPlaceHolder;
 
         this.simpleCheck(!!language.concepts.find(c => c.isRoot),
             `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
         LOGGER.info(this, "Language '" + language.name + "' checked");
+
+        // now everything has been resolved, check that all concepts and interfaces have
+        // unique names, and that all their properties have unique names
+        let names: string[] = [];
+        language.concepts.forEach((con, index) => {
+            console.log(`checking duplicate concept name: ${con.name}`);
+            if (names.includes(con.name)) {
+                this.simpleCheck(false,
+                    `Concept with name '${con.name} already exists [line: ${con.location?.start.line}, column: ${con.location?.start.column}].`);
+            } else {
+                names.push(con.name);
+            }
+            // check that all properties have unique names
+            this.checkPropertyUniqueNames(con);
+        });
+        language.interfaces.forEach((intf, index) => {
+            console.log(`checking duplicate interface name: ${intf.name}`);
+            if (names.includes(intf.name)) {
+                this.simpleCheck(false,
+                    `Concept or interface with name '${intf.name} already exists [line: ${intf.location?.start.line}, column: ${intf.location?.start.column}].`);
+            } else {
+                names.push(intf.name);
+            }
+            // check that all properties have unique names
+            this.checkPropertyUniqueNames(intf);
+        });
+    }
+
+    private checkPropertyUniqueNames(con: PiClassifier) {
+        let propnames: string[] = [];
+        con.allProperties().forEach(prop => {
+            // TODO allProperties() filters out names from implemented interfaces, but there should be a test that
+            // this filtering is ok, i.e. the type of both properties should be the same
+            if (propnames.includes(prop.name)) {
+                this.simpleCheck(false,
+                    `Property with name '${prop.name}' already exists in ${con.name} [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`);
+            } else {
+                propnames.push(prop.name);
+            }
+        });
     }
 
     private checkConcept(piClass: PiConcept): void {
         LOGGER.log("Checking concept '" + piClass.name + "'");
-        // TODO check that all properties have unique names
         this.simpleCheck(!!piClass.name, `Concept should have a name [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
 
         if ( piClass.isRoot ) {
@@ -91,6 +129,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         piClass.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         piClass.properties.forEach(part => this.checkConceptProperty(part));
 
+
+
         if (piClass instanceof PiBinaryExpressionConcept && !(piClass.isAbstract)) {
             // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
             this.simpleCheck(piClass.getPriority() !== -1,
@@ -98,15 +138,15 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
             const left = piClass.allParts().find(part => part.name === "left");
             this.simpleCheck(!!left,
-                `Concept ${piClass.name} should have a left part, because it is a binary expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
+                `Binary expression concept ${piClass.name} should have a left part [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
             this.simpleCheck(!!left && left.type.referred instanceof PiExpressionConcept,
-                `Concept ${piClass.name}.left should be an expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
+                `Concept ${piClass.name}.left should be an expression concept [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
 
             const right = piClass.allParts().find(part => part.name === "right");
             this.simpleCheck(!!right,
-                `Concept ${piClass.name} should have a right part, because it is a binary expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
+                `Binary expression concept ${piClass.name} should have a right part [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
             this.simpleCheck(!!right && right.type.referred instanceof PiExpressionConcept,
-                `Concept ${piClass.name}.right should be an expression [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
+                `Concept ${piClass.name}.right should be an expression concept [line: ${piClass.location?.start.line}, column: ${piClass.location?.start.column}].`);
         }
 
         if (piClass instanceof  PiLimitedConcept) {
@@ -114,7 +154,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         }
     }
 
-    // TODO change this into a check on LimitedConcept
     checkLimitedConcept(prop: PiLimitedConcept) {
         LOGGER.log(`Checking limited concept '${prop.name}' [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}]`);
         // checking only the predefined instances, all other stuff is done in this.checkConcept

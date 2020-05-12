@@ -15,7 +15,7 @@ export class PiLanguageUnit extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
     predefInstances: PiInstance[] = [];
-    expressionPlaceHolder: PiExpressionConcept; // set by checker??
+    expressionPlaceHolder: PiExpressionConcept; // set by checker
     rootConcept: PiConcept; // set by the checker TODO: check this
 
     constructor() {

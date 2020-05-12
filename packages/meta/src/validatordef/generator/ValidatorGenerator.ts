@@ -18,6 +18,7 @@ export class ValidatorGenerator {
     }
 
     generate(validdef: PiValidatorDef): void {
+        let numberOfErrors = 0;
         this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
         this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
         let name = validdef ? validdef.validatorName + " " : "";
@@ -29,27 +30,31 @@ export class ValidatorGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.validatorFolder);
         Helpers.createDirIfNotExisting(this.validatorGenFolder);
-        Helpers.deleteFilesInDir(this.validatorGenFolder);
+        Helpers.deleteFilesInDir(this.validatorGenFolder, numberOfErrors);
 
         // set relative path to get the imports right
         let relativePath = "../../";
 
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);
-        var validatorFile = Helpers.pretty(validator.generateValidator(this.language, validdef, relativePath), "Validator Class");
+        var validatorFile = Helpers.pretty(validator.generateValidator(this.language, validdef, relativePath), "Validator Class", numberOfErrors);
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         //  Generate checker
         if (validdef !== null && validdef !== undefined) {
             LOGGER.log(`Generating checker: ${this.validatorGenFolder}/${Names.checker(this.language)}.ts`);
-            var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class");
+            var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class", numberOfErrors);
             fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);
         }
 
         LOGGER.log(`Generating validator gen index: ${this.validatorGenFolder}/index.ts`);
-        var indexFile = Helpers.pretty(validator.generateIndex(this.language, validdef), "Index Class");
+        var indexFile = Helpers.pretty(validator.generateIndex(this.language, validdef), "Index Class", numberOfErrors);
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
 
-        LOGGER.log("Succesfully generated validator: " + name);
+        if (numberOfErrors > 0) {
+            LOGGER.info(this, `Generated validator '${name}' with ${numberOfErrors} errors.`);
+        } else {
+            LOGGER.info(this, `Succesfully generated validator ${name}`);
+        }
     }
 }

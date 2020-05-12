@@ -17,6 +17,7 @@ export class PiTyperGenerator {
     }
 
     generate(typerdef: PiTypeDefinition): void {
+        let numberOfErrors = 0;
         this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
         this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
         let name = typerdef ? typerdef.name + " " : "";
@@ -27,20 +28,24 @@ export class PiTyperGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.typerFolder);
         Helpers.createDirIfNotExisting(this.typerGenFolder);
-        Helpers.deleteFilesInDir(this.typerGenFolder);
+        Helpers.deleteFilesInDir(this.typerGenFolder, numberOfErrors);
 
         // set relative path to get the imports right
         let relativePath = "../../";
 
         //  Generate typer
         LOGGER.log(`Generating typer: ${this.typerGenFolder}/${Names.typer(this.language)}.ts`);
-        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class");
+        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class", numberOfErrors);
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
         LOGGER.log(`Generating typer gen index: ${this.typerGenFolder}/index.ts`);
-        var typerIndexGenFile = Helpers.pretty(typer.generateGenIndex(this.language), "Typer Gen Index");
+        var typerIndexGenFile = Helpers.pretty(typer.generateGenIndex(this.language), "Typer Gen Index", numberOfErrors);
         fs.writeFileSync(`${this.typerGenFolder}/index.ts`, typerIndexGenFile);
 
-        LOGGER.log("Succesfully generated typer: " + name);
+        if (numberOfErrors > 0) {
+            LOGGER.info(this, `Generated typer '${name}' with ${numberOfErrors} errors.`);
+        } else {
+            LOGGER.info(this, `Succesfully generated typer ${name}`);
+        }
     }
 }

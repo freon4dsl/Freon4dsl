@@ -168,7 +168,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         if (!this.defFolder.value) {
             throw new Error("No definitions folder, exiting.");
         }
-        let myFileSet: string[] = Helpers.findFiles(this.defFolder.value);
+        let numberOfErrors = 0;
+        let myFileSet: string[] = Helpers.findFiles(this.defFolder.value, numberOfErrors);
         if (myFileSet.length === 0) {
             throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
         }

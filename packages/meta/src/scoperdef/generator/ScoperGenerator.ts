@@ -18,6 +18,7 @@ export class ScoperGenerator {
     }
 
     generate(scopedef: PiScopeDef): void {
+        let numberOfErrors = 0;
         this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
         this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
         let name = scopedef ? scopedef.scoperName + " " : "";
@@ -29,24 +30,28 @@ export class ScoperGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.scoperFolder);
         Helpers.createDirIfNotExisting(this.scoperGenFolder);
-        Helpers.deleteFilesInDir(this.scoperGenFolder);
+        Helpers.deleteFilesInDir(this.scoperGenFolder, numberOfErrors);
 
         // set relative path to get the imports right
         let relativePath = "../../";
 
         //  Generate it
         LOGGER.log(`Generating namespace: ${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`);
-        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef, relativePath), "Namespace Class");
+        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef, relativePath), "Namespace Class" , numberOfErrors);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`, namespaceFile);
 
         LOGGER.log(`Generating scoper: ${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`);
-        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class");
+        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class" , numberOfErrors);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
         LOGGER.log(`Generating scoper gen index: ${this.scoperGenFolder}/index.ts`);
-        var scoperIndexFile = Helpers.pretty(scoper.generateIndex(this.language), "Scoper Gen Index");
+        var scoperIndexFile = Helpers.pretty(scoper.generateIndex(this.language), "Scoper Gen Index", numberOfErrors);
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
-        LOGGER.log("Succesfully generated scoper: " + name);
+        if (numberOfErrors > 0) {
+            LOGGER.log(`Generated scoper '${name}' with ${numberOfErrors} errors.`);
+        } else {
+            LOGGER.log(`Succesfully generated scoper ${name}`);
+        }
     }
 }
