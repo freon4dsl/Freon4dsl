@@ -129,8 +129,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         piClass.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         piClass.properties.forEach(part => this.checkConceptProperty(part));
 
-
-
         if (piClass instanceof PiBinaryExpressionConcept && !(piClass.isAbstract)) {
             // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
             this.simpleCheck(piClass.getPriority() !== -1,
@@ -223,10 +221,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             });
     }
 
-    /**
-     * After this method is called, 'morfConceptReferenceIntoSubClass' should be called to change the reference into the correct subclass
-     * of PiLangConceptReference
-     */
     checkConceptReference(reference: PiElementReference<PiClassifier>): void {
         LOGGER.log("Checking concept reference '" + reference.name + "'");
         this.nestedCheck(

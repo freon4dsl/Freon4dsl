@@ -96,7 +96,6 @@ property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
 // TODO add initialvalue
-// TODO make interfaces available as type of properties
 // partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
 partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? semicolon_separator
     {
@@ -155,7 +154,7 @@ implementedInterfaces = implementsKey intfRefs:( head:interfaceReference
                                                   )
     { return intfRefs; }
 
-priority = priorityKey ws equals_separator ws value:string ws
+priority = priorityKey ws equals_separator ws value:number ws
     { return Number.parseInt(value); }
 
 instance = name:var equals_separator curly_begin props:propDefList curly_end
@@ -171,10 +170,10 @@ propDef = "\"" name:var "\"" name_separator value:propValue
     { return create.createPropDef( {"name": name, "value": value, "location": location() } ); }
 
 propValue = "\"" value:string "\""  { return value; }
-          / number:string           { return Number.parseInt(number); }
           / "false"                 { return "false"; }
           / "true"                  { return "true"; }
           / "[]"                    { return "[]"; }
+          / number:number           { return Number.parseInt(number); }
 
 initialvalue = equals_separator value:propValue
     { return value; }
