@@ -45,9 +45,10 @@ export class EnvironmentTemplate {
             constructor() {
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
-                const projectionManual = new ${Names.customProjection(language)}("manual");
+                for(let p of projectitConfiguration.customProjection){
+                    rootProjection.addProjection(p);
+                }
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");
-                rootProjection.addProjection(projectionManual);
                 rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(rootProjection, actions);
                 this.editor.getPlaceHolderExpression = () => {
