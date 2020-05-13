@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageUnit } from "../../languagedef/metalanguage";
-import { Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
+import { GenerationStatus, Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
@@ -18,7 +18,7 @@ export class ScoperGenerator {
     }
 
     generate(scopedef: PiScopeDef): void {
-        let numberOfErrors = 0;
+        let generationStatus = new GenerationStatus();
         this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
         this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
         let name = scopedef ? scopedef.scoperName + " " : "";
@@ -30,26 +30,26 @@ export class ScoperGenerator {
         //Prepare folders
         Helpers.createDirIfNotExisting(this.scoperFolder);
         Helpers.createDirIfNotExisting(this.scoperGenFolder);
-        Helpers.deleteFilesInDir(this.scoperGenFolder, numberOfErrors);
+        Helpers.deleteFilesInDir(this.scoperGenFolder, generationStatus);
 
         // set relative path to get the imports right
         let relativePath = "../../";
 
         //  Generate it
         LOGGER.log(`Generating namespace: ${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`);
-        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef, relativePath), "Namespace Class" , numberOfErrors);
+        var namespaceFile = Helpers.pretty(namespace.generateNamespace(this.language, scopedef, relativePath), "Namespace Class" , generationStatus);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.namespace(this.language)}.ts`, namespaceFile);
 
         LOGGER.log(`Generating scoper: ${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`);
-        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class" , numberOfErrors);
+        var scoperFile = Helpers.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class" , generationStatus);
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
         LOGGER.log(`Generating scoper gen index: ${this.scoperGenFolder}/index.ts`);
-        var scoperIndexFile = Helpers.pretty(scoper.generateIndex(this.language), "Scoper Gen Index", numberOfErrors);
+        var scoperIndexFile = Helpers.pretty(scoper.generateIndex(this.language), "Scoper Gen Index", generationStatus);
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
-        if (numberOfErrors > 0) {
-            LOGGER.log(`Generated scoper '${name}' with ${numberOfErrors} errors.`);
+        if (generationStatus.numberOfErrors > 0) {
+            LOGGER.log(`Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.log(`Succesfully generated scoper ${name}`);
         }

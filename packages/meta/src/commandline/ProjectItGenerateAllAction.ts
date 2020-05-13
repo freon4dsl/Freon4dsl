@@ -14,7 +14,7 @@ import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { PiLogger } from "../../../core/src/util/PiLogging";
-import { Helpers } from "../utils/Helpers";
+import { GenerationStatus, Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
@@ -168,8 +168,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         if (!this.defFolder.value) {
             throw new Error("No definitions folder, exiting.");
         }
-        let numberOfErrors = 0;
-        let myFileSet: string[] = Helpers.findFiles(this.defFolder.value, numberOfErrors);
+        let generationStatus = new GenerationStatus();
+        let myFileSet: string[] = Helpers.findFiles(this.defFolder.value, generationStatus);
         if (myFileSet.length === 0) {
             throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
         }

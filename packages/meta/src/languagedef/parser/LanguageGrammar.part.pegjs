@@ -154,7 +154,7 @@ implementedInterfaces = implementsKey intfRefs:( head:interfaceReference
                                                   )
     { return intfRefs; }
 
-priority = priorityKey ws equals_separator ws value:number ws
+priority = priorityKey ws equals_separator ws value:number ws semicolon_separator
     { return Number.parseInt(value); }
 
 instance = name:var equals_separator curly_begin props:propDefList curly_end
