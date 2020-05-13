@@ -3,11 +3,13 @@ import { Selection } from "office-ui-fabric-react/lib/DetailsList";
 import { Icon, Tree, Box } from "@fluentui/react-northstar";
 import { ComponentEventHandler } from "@fluentui/react-northstar/dist/es/types";
 import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selection";
-import { EditorCommunication, IModelUnit } from "../gateway-to-projectit/EditorCommunication";
-import { languageName } from "../gateway-to-projectit/WebappConfiguration";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { App } from "./App";
+// TODO try to make dependence of gateway-to-projectit as small as possible
+import { editorEnvironment } from "../gateway-to-projectit/WebappConfiguration";
+import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { IModelUnit } from "../gateway-to-projectit/IEditorCommunication";
 
 // This component holds the navigator, which shows all available models sorted by language
 
@@ -127,15 +129,15 @@ export class Navigator extends React.Component<{}, {}> {
     private modelListCallBack = (names: string[]) => {
         if (!!names && names.length > 0) {
             names.forEach((name, itemIndex) => {
-                this._allModels.push({ id: itemIndex, name: name, language: languageName });
+                this._allModels.push({ id: itemIndex, name: name, language: editorEnvironment.languageName });
 
             });
             if (!!!this._activeItemId) {
-                this._activeItemId = languageName;
+                this._activeItemId = editorEnvironment.languageName;
             }
         } else {
             // push a dummy element on the list, to show something
-            this._allModels.push({id: -2, name: name, language: languageName });
+            this._allModels.push({id: -2, name: name, language: editorEnvironment.languageName });
         }
     }
 }

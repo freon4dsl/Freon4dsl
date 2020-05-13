@@ -2,11 +2,20 @@ import { GenericModelSerializer, PiLogger } from "@projectit/core";
 import axios from "axios";
 import { PiElement } from "@projectit/core";
 import { SERVER_URL } from "./WebappConfiguration";
+import { IServerCommunication } from "./IServerCommunication";
 
-const LOGGER = new PiLogger("ServerCommunication");
+const LOGGER = new PiLogger("ServerCommunication"); // TODO show errors to user
 
-export class ServerCommunication {
+export class ServerCommunication implements IServerCommunication {
     static serial: GenericModelSerializer = new GenericModelSerializer();
+    static instance: ServerCommunication;
+
+    static getInstance() : ServerCommunication {
+        if (!(!!ServerCommunication.instance)) {
+            ServerCommunication.instance = new ServerCommunication();
+        }
+        return ServerCommunication.instance;
+    }
 
     /**
      * Takes 'piModel' and stores it under 'modelName' on the server at SERVER_URL.
@@ -14,7 +23,7 @@ export class ServerCommunication {
      * @param modelName
      * @param piModel
      */
-    static async putModel(folderName: string, modelName: string, piModel: PiElement) {
+    async putModel(folderName: string, modelName: string, piModel: PiElement) {
         console.log("ServerCommunication.putModel " + modelName);
         if (modelName !== "" && modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
@@ -34,7 +43,7 @@ export class ServerCommunication {
      * @param modelName
      * @param loadCallback
      */
-    static async loadModel(folderName: string, modelName: string, loadCallback: (piModel: PiElement) => void) {
+    async loadModel(folderName: string, modelName: string, loadCallback: (piModel: PiElement) => void) {
         console.log("ServerCommunication.loadModel " + modelName);
         if (modelName !== "") {
             try {
@@ -51,7 +60,7 @@ export class ServerCommunication {
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
-    static async loadModelList(folderName: string, modelListCallback: (names: string[]) => void) {
+    async loadModelList(folderName: string, modelListCallback: (names: string[]) => void) {
         console.log("ServerCommunication.loadModelList ");
         try {
             const res = await axios.get(`${SERVER_URL}getModelList?folder=${folderName}`);
@@ -65,7 +74,7 @@ export class ServerCommunication {
         return [];
     }
 
-    static async deleteModel(folderName: string, modelName: string) {
+    async deleteModel(folderName: string, modelName: string) {
         console.log("ServerCommunication.deleteModel " + modelName);
         if (modelName !== "") {
             try {
