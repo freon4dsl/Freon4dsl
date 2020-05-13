@@ -34,9 +34,18 @@ export class CheckerTemplate {
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";     
 
+        /**
+         * Class ${checkerClassName} is part of the implementation of the validator generated from, if present, 
+         * the validator definition, using the visitor pattern. 
+         * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements 
+         * the actual checking of each node in the tree.
+         */
         export class ${checkerClassName} implements ${workerInterfaceName} {
+            // 'myUnparser' is used to provide error messages on the nodes in the model tree
             myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
+            // 'typer' is used to implment the 'typecheck' rules in the validator definition 
             typer: ${typerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).typer;
+            // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
         ${validdef.conceptRules.map(ruleSet =>

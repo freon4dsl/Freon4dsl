@@ -37,9 +37,11 @@ export class Names {
     public static configuration(language: PiLanguageUnit) {
         return "ProjectitConfiguration";
     }
+
     public static environment(language: PiLanguageUnit) {
         return this.startWithUpperCase(language?.name) + "Environment";
     }
+
     public static context(language: PiLanguageUnit): string {
         return this.startWithUpperCase(language?.name) + "Context";
     }

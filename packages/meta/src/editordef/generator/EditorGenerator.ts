@@ -80,7 +80,7 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
 
         LOGGER.log(`Generating manual actions: ${this.editorFolder}${Names.customActions(this.language)}.ts`);
-        var customActionsFile = Helpers.pretty(customActions.generate(this.language, editDef), "CustomActions", numberOfErrors);
+        var customActionsFile = Helpers.pretty(customActions.generate(this.language), "CustomActions", numberOfErrors);
         Helpers.generateManualFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`, customActionsFile, "CustomActions");
 
         LOGGER.log(`Generating initialization: ${this.editorFolder}${Names.initialization(this.language)}.ts`);

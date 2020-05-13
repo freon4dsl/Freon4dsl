@@ -42,7 +42,7 @@ export class UnparserTemplate {
         const LOGGER = new PiLogger("${generatedClassName}");
         
         /**
-         * Used to unparse lists.
+         * SeparatorType is used to unparse lists.
          * NONE means only space(s) between the elements.
          * Terminator means that every element is terminated with a certain string.
          * Separator means that in between elements a certain string is placed.
@@ -53,6 +53,11 @@ export class UnparserTemplate {
             Separator = "Separator"
         }
 
+        /**
+         * Class ${generatedClassName} provides methods to return a string representation of an instance of
+         * elements of language ${language.name}.
+         * It is, amongst others, used to create error messages in the validator.
+         */
         export class ${generatedClassName}  {
 
             /**

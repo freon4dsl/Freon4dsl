@@ -25,6 +25,12 @@ export class AllConceptsTemplate {
             ).join(", ")}
         } from "./index";
 
+        /**
+         * Type ${Names.allConcepts(language)} is a union of all concepts and interfaces that are defined for language ${language.name}.
+         * This type is used instead of the more general PiElement interface or the MobxModelElementImpl class,
+         * or even the type Object, to ensure that parts of the language environment work on the same set 
+         * of instances. 
+         */
         export type ${Names.allConcepts(language)} =
         ${tmp.map(c => 
             `${c}`

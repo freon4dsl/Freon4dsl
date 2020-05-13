@@ -1,22 +1,20 @@
-import { Box, LabelBox } from "@projectit/core";
 import { PiElementReference } from "./PiElementReference";
-// import { PiLangElement } from "./PiLangElement";
 import { ParseLocation } from "../../utils";
 
-// root of the inheritance structure of all language elements
+const primitiveTypeName = "PiPrimitiveType";
 
+// root of the inheritance structure of all language elements
 export abstract class PiLangElement {
     location: ParseLocation;
-    name: string; // TODO move name to PiLanguage.ts
+    name: string;
 }
-const primitiveTypeName = "PiPrimitiveType";
 
 export class PiLanguageUnit extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
     predefInstances: PiInstance[] = [];
     expressionPlaceHolder: PiExpressionConcept; // set by checker
-    rootConcept: PiConcept; // set by the checker TODO: check this
+    rootConcept: PiConcept; // set by the checker
 
     constructor() {
         super();
@@ -355,7 +353,7 @@ export class PiPrimitiveProperty extends PiProperty {
 	initialValue: string;
     primType: string;
     // The inherited 'type' cannot be used, because 'this' has a primitive type,
-    // which is not a subtype of PiReference<PiConcept>
+    // which is not a subtype of PiElementReference<PiConcept>
     // Therefore, here we have:
     // TODO dit moet beter worden!!!
     get type() : PiElementReference<PiConcept> {

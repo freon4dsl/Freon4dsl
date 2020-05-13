@@ -34,6 +34,10 @@ export class PiTyperTemplate {
         import { ${language.interfaces.map(intf => `
                 ${intf.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";       
 
+        /**
+         * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
+         * otherwise this class implements the default typer.
+         */
         export class ${generatedClassName} implements ${typerInterfaceName} {
             defaultType : ${rootType} = ${defaultType};
 
