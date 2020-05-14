@@ -101,6 +101,11 @@ export class LanguageGenerator {
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/index.ts`, languageIndexFile);
 
+        // Generate projectit configuration if it isn't there
+        LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration(language)}.ts`);
+        var configurationFile = Helpers.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
+        Helpers.generateManualFile(`${this.configurationFolder}/${Names.configuration(language)}.ts`, configurationFile, "Configuration");
+
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
 
@@ -133,11 +138,6 @@ export class LanguageGenerator {
         LOGGER.log(`Generating convenience model creator: ${this.utilsGenFolder}/${language.name}Creator.ts`);
         var creatorFile = Helpers.pretty(modelcreatorTemplate.generateModelCreator(language, relativePath), "Model Creator Class", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${language.name}Creator.ts`, creatorFile);
-
-        // Generate projectit configuration if it isn't there
-        LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration(language)}.ts`);
-        var configurationFile = Helpers.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
-        Helpers.generateManualFile(`${this.configurationFolder}/${Names.configuration(language)}.ts`, configurationFile, "Configuration");
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(this, `Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
