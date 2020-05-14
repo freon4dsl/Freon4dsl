@@ -2,12 +2,13 @@ import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
-import { LangUtil } from "./LangUtil";
+import { LangUtil } from "../../../languagedef/metalanguage/LangUtil";
 
 export class DefaultActionsTemplate {
     constructor() {
     }
 
+    // TODO generate the correct class comment for DefaultActions
     generate(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
         return `
             import * as Keys from "${PROJECTITCORE}";
@@ -35,6 +36,14 @@ export class DefaultActionsTemplate {
             
             import { PiElementReference, ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
+             /**
+             * This module implements ... TODO.
+             * These custom build additions are merged with the default and definition-based editor parts 
+             * in a three-way manner. For each modelelement, 
+             * (1) if a custom build creator/behavior is present, this is used,
+             * (2) if a creator/behavior based on the editor definition is present, this is used,
+             * (3) if neither (1) nor (2) yields a result, the default is used.  
+             */ 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c instanceof PiExpressionConcept && !(c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
             `{
@@ -108,7 +117,7 @@ export class DefaultActionsTemplate {
                 ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referred;
-                    // TODO add keyboartd shortcut
+                    // TODO add keyboard shortcut
                     return `
                     // {
                     //     activeInBoxRoles: ["new-${part.name}"],

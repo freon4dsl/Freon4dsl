@@ -27,16 +27,32 @@ export class ValidatorTemplate {
         import { ${walkerClassName} } from "${relativePath}${PathProvider.walker(language)}"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
+        /**
+         * Class ${generatedClassName} implements the validator generated from, if present, the validator definition,
+         * otherwise this class implements the default validator.
+         * The implementation uses the visitor pattern to traverse the tree. Class ${walkerClassName} implements 
+         * the actual checking of each node in the tree.
+         */
         export class ${generatedClassName} implements ${this.validatorInterfaceName} {
 
+            /**
+             * Returns the list of errors found in 'modelelement'.
+             * This method uses the visitor pattern to traverse the tree with 'modelelement'  as top node, 
+             * where class ${walkerClassName} implements the actual checking of each node in the tree.
+             *
+             * @param modelelement
+             * @param includeChildren if true, the children of 'modelelement' are also checked.
+             * The default for 'includeChildren' is true.
+             */
             public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${this.errorClassName}[]{
-                let myChecker = new ${checkerClassName}();
-                let errorlist : ${this.errorClassName}[] = [];
-                myChecker.errorList = errorlist;
-                
+                // set the default such that children are included 
                 if (!(!!includeChildren)) {
                     includeChildren = true;
                 }
+                               
+                let errorlist : ${this.errorClassName}[] = [];
+                let myChecker = new ${checkerClassName}();
+                myChecker.errorList = errorlist;
  
                 let myWalker = new ${walkerClassName}();
                 myWalker.myWorker = myChecker;

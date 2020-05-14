@@ -5,6 +5,7 @@ export class PiReferenceTemplate {
     constructor() {
     }
 
+    // TODO why create with param "name: string | T" and createNamed with param "name: string" both? Clearer to have create(elem: T, ...)
     generatePiReference(language: PiLanguageUnit, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";
@@ -13,18 +14,24 @@ export class PiReferenceTemplate {
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         
         /**
-         * Implementation for a (named) reference in ProjectIt.
-         * Reference can be set with either a referred object, or with a name.
+         * Class ${Names.PiElementReference} provides the implementation for a (named) reference in ProjectIt.
+         * References can be set with either a referred object, or with a name.
          */
-        export class PiElementReference< T extends PiNamedElement> extends MobxModelElementImpl {
+        export class ${Names.PiElementReference}< T extends ${Names.PiNamedElement}> extends MobxModelElementImpl {
             @observable
             private _PI_name: string = "";
             @observable
             private _PI_referred: T = null;
         
-            // Need for the scoper to work
+            // Needed for the scoper to work
             private typeName: string;
-        
+ 
+             /**
+             * The constructor is private, use either the create() or the createNamed() methods
+             * to make a new instance.
+             * @param referredElement
+             * @param typeName
+             */       
             private constructor(referredElement: T, typeName: string) {
                 super();
                 this.referred = referredElement;
@@ -34,7 +41,6 @@ export class PiReferenceTemplate {
             set name(value: string) {
                 this._PI_name = value;
                 this._PI_referred = null;
-                // this._PI_referred = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
             }
         
             @computed
@@ -66,16 +72,29 @@ export class PiReferenceTemplate {
                 }
                 this._PI_referred = referredElement;
             }
-        
-            public static createNamed< T extends PiNamedElement>(name: string, typeName: string): PiElementReference<T> {
-                const result = new PiElementReference(null, typeName);
+
+            /**
+             * Returns a new instance which refers to an element named 'name' of type T.
+             * Param 'typeName' should be equal to T.constructor.name.
+             * @param name
+             * @param typeName
+             */        
+            public static createNamed< T extends ${Names.PiNamedElement}>(name: string, typeName: string): ${Names.PiElementReference}<T> {
+                const result = new ${Names.PiElementReference}(null, typeName);
                 result.name = name;
                 result.typeName = typeName;
                 return result;
             }
         
-            public static create< T extends PiNamedElement>(name: string | T, typeName: string): PiElementReference<T> {
-                const result = new PiElementReference(null, typeName);
+            /**
+             * Returns a new instance which refers to an element named 'name' of type T, or
+             * to the element 'name' itself.
+             * Param 'typeName' should be equal to T.constructor.name.
+             * @param name
+             * @param typeName
+             */
+            public static create< T extends ${Names.PiNamedElement}>(name: string | T, typeName: string): ${Names.PiElementReference}<T> {
+                const result = new ${Names.PiElementReference}(null, typeName);
                 if( typeof name === "string" ) {
                     result.name = name;
                 } else if( typeof name === "object" ){

@@ -34,10 +34,10 @@ export class TestTaxRulesCreator extends TaxRulesCreator {
         let ruleset: TaxRuleSet = this.createTaxRuleSet("2020", companyTax);
         this.addRulesToSet(ruleset);
 
-        let usGov: TaxPayer = this.createTaxPayer("USA Goverment", "Washington", TaxPayerType.Goverment, this.createTaxID("4444"), null, null, null);
+        let usGov: TaxPayer = this.createTaxPayer("USA Goverment", "Washington", this.createTaxID("4444"), null, null, null, TaxPayerType.Goverment);
 
-        let income: IncomePart = this.createIncomePart(IncomeType.Salary, this.createMoney("0"), this.createMoney("5000000"), usGov);
-        let trump: TaxPayer = this.createTaxPayer("Donald Trump", "Mar-a-Lago", TaxPayerType.Person, this.createTaxID("987654321"), income, null, null);
+        let income: IncomePart = this.createIncomePart(this.createMoney("0"), this.createMoney("5000000"), IncomeType.Salary, usGov);
+        let trump: TaxPayer = this.createTaxPayer("Donald Trump", "Mar-a-Lago", this.createTaxID("987654321"), income, null, null, TaxPayerType.Person);
 
         let rs = this.createRevenueService(ruleset, trump);
         rs.payers.push(usGov);

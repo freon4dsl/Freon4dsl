@@ -14,7 +14,7 @@ export class ConceptTemplate {
     generateConcept(concept: PiConcept, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        if(hasSuper && !(!!concept.base.referred)) console.log("ERROR in " + concept.name);
+        // if(hasSuper && !(!!concept.base.referred)) console.log("ERROR in " + concept.name);
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const isAbstract = concept.isAbstract;
@@ -82,15 +82,20 @@ export class ConceptTemplate {
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
-            
+
+            /**
+             * Class ${Names.concept(concept)} is the implementation of the concept with the same name in the language definition file.
+             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
+             * to changes in the state of its properties.
+             */            
             @model
-            export ${abstract}  class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
+            export ${abstract} class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
-                readonly $typename: ${language.name}ConceptType = "${concept.name}";
-                ${!hasSuper ? "$id: string;" : ""}
-                ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("")}
-                ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("")}
-                ${concept.implementedReferences().map(p => this.generateReferenceProperty(p)).join("")}     
+                readonly $typename: ${Names.metaType(language)} = "${concept.name}";    // holds the metatype in the form of a string
+                ${!hasSuper ? "$id: string;" : ""}                                      // a unique identifier
+                ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("\n")}
+                ${concept.implementedReferences().map(p => this.generateReferenceProperty(p)).join("\n")}     
                               
                 constructor(id?: string) {
                     ${!hasSuper ? "super();" : "super(id);"}
@@ -107,48 +112,79 @@ export class ConceptTemplate {
                     ` : ""
                     }
                 }
-               
-                piLanguageConcept(): ${language.name}ConceptType {
+            
+                /**
+                 * Returns the metatype of this instance in the form of a string.
+                 */               
+                piLanguageConcept(): ${Names.metaType(language)} {
                     return this.$typename;
                 }
 
                 ${!concept.base ? `
-                piId(): string {
+                /**
+                 * Returns the unique identifier of this instance.
+                 */                
+                 piId(): string {
                     return this.$id;
                 }`
             : ""}
-                
+
+                /**
+                 * Returns true if this instance is an expression concept.
+                 */                 
                 piIsExpression(): boolean {
                     return ${isExpression || isBinaryExpression};
                 }
-                
+
+                /**
+                 * Returns true if this instance is a binary expression concept.
+                 */                 
                 piIsBinaryExpression(): boolean {
                     return ${isBinaryExpression};
                 }
                 
                 ${isExpression || isBinaryExpression ? `
+                /**
+                 * Returns true if this instance is the generated place holder for expressions.
+                 */ 
                 piIsExpressionPlaceHolder(): boolean {
                     return ${concept instanceof PiExpressionConcept && concept.isExpressionPlaceholder()};
                 }`
             : ""}
                 
                 ${isBinaryExpression && binExpConcept != null ? `
+                /**
+                 * Returns the priority of this expression instance.
+                 * Used to balance the expression tree.
+                 */ 
                 piPriority(): number {
                     return ${binExpConcept.getPriority() ? binExpConcept.getPriority() : "-1"};
                 }
                 
+                /**
+                 * Returns the left element of this binary expression.
+                 */ 
                 public piLeft(): ${baseExpressionName} {
                     return this.left;
                 }
-                
+
+                /**
+                 * Returns the right element of this binary expression.
+                 */                 
                 public piRight(): ${baseExpressionName} {
                     return this.right;
                 }
-                
+
+                /**
+                 * Sets the left element of this binary expression.
+                 */                 
                 public piSetLeft(value: ${baseExpressionName}): void {
                     this.left = value;
                 }
-                
+
+                /**
+                 * Sets the right element of this binary expression.
+                 */                 
                 public piSetRight(value: ${baseExpressionName}): void {
                     this.right = value;
                 }
@@ -156,6 +192,11 @@ export class ConceptTemplate {
             : ""}
 
                 ${(!isAbstract) ? `
+                 /**
+                 * A convenience method that creates an instance of this class
+                 * based on the properties defined in 'data'.
+                 * @param data
+                 */
                 static create(data: Partial<${concept.name}>): ${concept.name} {
                     const result = new ${concept.name}();
                     ${concept.implementedProperties().map(p => this.generatePartialCreate(p)).join("\n")}
@@ -179,46 +220,36 @@ export class ConceptTemplate {
     }
 
     private generatePrimitiveProperty(property: PiPrimitiveProperty): string {
-        // TODO check the decorator to be used here
+        const comment = "// implementation of " + property.name;
         const decorator = property.isList ? "@observablelistpart" : "@observable";
         const arrayType = property.isList ? "[]" : "";
         let initializer = "";
         if (property.primType === "string") initializer = "\"\"";
         if (property.primType === "number") initializer = "-1";
         if (property.primType === "boolean") initializer = "false";
-        return `
-            ${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer};
-        `;
+        return `${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer}; ${comment}`;
     }
 
-    // generateEnumerationProperty(property: PiLangEnumProperty): string {
-    //     return `
-    //         @observable ${property.name}: ${Names.enumeration((property.type.referred))} ${property.isList ? "[]" : `= ${Names.enumeration((property.type.referred))}.$piANY;`};
-    //     `;
-    // }
-
     private generatePartProperty(property: PiConceptProperty): string {
+        const comment = "// implementation of " + property.name;
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
         const initializer = ((property.type.referred instanceof PiExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceHolder)} ${property.isList ? "]" : ""}` : "");
-        return `
-            ${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer};
-        `;
+        return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
     }
 
     private generateReferenceProperty(property: PiConceptProperty): string {
+        const comment = "// implementation of " + property.name;
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
-        return `
-            ${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType};
-        `;
+        return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
     }
 
     private createInstanceDefinitions(limitedConcept: PiLimitedConcept): string {
         let conceptName = limitedConcept.name;
         return `${limitedConcept.instances.map(predef =>
-            `static ${predef.name}: ${conceptName}`).join(";")}
-             static $piANY : ${conceptName};`
+            `static ${predef.name}: ${conceptName}; // implementation of instance ${predef.name}`).join("\n")}
+             static $piANY : ${conceptName}; // default predefined instance`
     }
 
     private createInstanceInitialisations(limitedConcept: PiLimitedConcept): string {

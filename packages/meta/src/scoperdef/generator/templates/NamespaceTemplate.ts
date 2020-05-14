@@ -43,6 +43,10 @@ export class NamespaceTemplate {
               
         const anymetatype = "_$anymetatype";
 
+        /**
+         * Class ${generatedClassName} is a wrapper for a model element that is a namespace (as defined in the scoper definition).
+         * It provides the implementation of the algorithm used to search for all names that are visible in the namespace.
+         */
         export class ${generatedClassName} {
             private static allNamespaces: Map<${allLangConcepts}, ${generatedClassName}> = new Map();
         
@@ -51,8 +55,8 @@ export class NamespaceTemplate {
             }
             
             /**
-             * this method ensures that every element in the model has one and only one associated namespace object.
-             * the type of element 'elem' should be marked as namespace in the scoper definition
+             * This method ensures that every element in the model has one and only one associated namespace object.
+             * The type of element 'elem' should be marked as namespace in the scoper definition.
              * @param elem
              */
             public static create(elem: ${allLangConcepts}): ${generatedClassName} {
@@ -66,8 +70,8 @@ export class NamespaceTemplate {
             }
             
             /**
-             * a convenience method that merges 'list' and 'result', where if an element is present in both,
-             * the element in 'list' is discarded
+             * This convenience method merges 'list' and 'result', where if an element is present in both,
+             * the element in 'list' is discarded, thus shadowing names from 'list'.
              * @param list
              * @param result
              */
@@ -82,6 +86,11 @@ export class NamespaceTemplate {
         
             private _myElem: ${allLangConcepts};
             private searchList: string[] = [];
+            
+            /**
+             * Returns all elements that are visible in this namespace, including those from additional namespaces
+             * as defined in the scoper definition.
+             */
             public getVisibleElements(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
                 let result: ${piNamedElementClassName}[] = [];
         
@@ -103,7 +112,7 @@ export class NamespaceTemplate {
             }
  
             /**
-             * returns the elements that are visible in this namespace only, without regard for additional namespaces
+             * Returns the elements that are visible in this namespace only, without regard for additional namespaces
              * @param metatype
              */       
             private getInternalVisibleElements(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
@@ -132,7 +141,7 @@ export class NamespaceTemplate {
             }
         
             /**
-             * returns true if there are additional namespaces defined for 'this._myElem' in the scoper definition
+             * Returns true if there are additional namespaces defined for 'this._myElem' in the scoper definition
              */
             private hasAdditionalNamespace() {
                 ${this.hasAdditionalNamespacetext}
@@ -140,7 +149,7 @@ export class NamespaceTemplate {
             }
             
             /**
-             * adds the results of the search in additional namespaces as defined in the scoper definition
+             * Adds the results of the search in additional namespaces as defined in the scoper definition
              * @param metatype
              */
             private addAdditionalNamespaces(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
@@ -150,7 +159,7 @@ export class NamespaceTemplate {
             }
             
             /**
-             * returns true if a search in this namespace is already in progress for 'metatype'
+             * Returns true if a search in this namespace is already in progress for 'metatype'
              * @param metatype
              */
             private searchingFor(metatype?: ${langConceptType}): boolean {
@@ -164,7 +173,7 @@ export class NamespaceTemplate {
             }
         
              /**
-             * removes the 'metatype' from the list of searches that are in progress  
+             * Removes the 'metatype' from the list of searches that are in progress  
              * @param metatype
              */
             private cleanSearchList(metatype?: ${langConceptType}) {

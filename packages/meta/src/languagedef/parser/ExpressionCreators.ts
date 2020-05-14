@@ -5,7 +5,7 @@ import {
     PiLangExp,
     PiLangFunctionCallExp,
     PiInstanceExp,
-    PiLangConceptExp
+    PiLangConceptExp, PiLangSimpleExp
 } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiClassifier } from "../metalanguage/PiLanguage";
@@ -132,6 +132,15 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>): PiLang
     }
     if (!!data.location) {
         result.location = data.location;
+    }
+    return result;
+}
+
+export function createSimpleExpression(data: Partial<PiLangSimpleExp>): PiLangSimpleExp {
+    LOGGER.log("createSimpleExpression");
+    const result: PiLangSimpleExp = new PiLangSimpleExp();
+    if (!!data.value) {
+        result.value = data.value;
     }
     return result;
 }

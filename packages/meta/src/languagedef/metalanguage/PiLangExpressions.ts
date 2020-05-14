@@ -8,7 +8,6 @@ import { nameForSelf } from "../../languagedef/parser/ExpressionCreators";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 
-
 // Expressions over the PiLanguage structure
 
 export abstract class PiLangExp extends PiLangElement {
@@ -26,7 +25,14 @@ export abstract class PiLangExp extends PiLangElement {
     toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PiLangExpressions.PiLangExp'";
     }
+}
 
+export class PiLangSimpleExp extends PiLangExp {
+    value: number;
+
+    toPiString(): string {
+        return this.value?.toString();
+    }
 }
 
 export class PiLangSelfExp extends PiLangExp {

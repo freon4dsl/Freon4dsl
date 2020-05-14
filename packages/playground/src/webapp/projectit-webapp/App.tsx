@@ -1,11 +1,12 @@
 import * as React from "react";
-import { Dialog, DialogType, DialogFooter, Link } from "@fluentui/react";
+import { Dialog, DialogType, DialogFooter, Link, createTheme, loadTheme } from "@fluentui/react";
 import { PrimaryButton, DefaultButton } from "@fluentui/react";
 import { ContextualMenu } from "@fluentui/react";
 import { Text, Flex, Box } from "@fluentui/react-northstar";
 import { MainGrid } from "./MainGrid";
 
 // This component holds the MainGrid and the Dialog
+const footerheight = "25px";
 // TODO states should be implemented differently: using mobx
 
 export interface IDialogState {
@@ -14,6 +15,35 @@ export interface IDialogState {
     subText: string;
     content: JSX.Element;
 }
+
+// This theme is based on the ProjectIt colors
+const myTheme = createTheme({
+    palette: {
+        themePrimary: '#00008b',
+        themeLighterAlt: '#f0f0fa',
+        themeLighter: '#c7c7ed',
+        themeLight: '#9a9add',
+        themeTertiary: '#4a4aba',
+        themeSecondary: '#12129a',
+        themeDarkAlt: '#00007e',
+        themeDark: '#00006b',
+        themeDarker: '#00004f',
+        neutralLighterAlt: '#faf9f8',
+        neutralLighter: '#f3f2f1',
+        neutralLight: '#edebe9',
+        neutralQuaternaryAlt: '#e1dfdd',
+        neutralQuaternary: '#d0d0d0',
+        neutralTertiaryAlt: '#c8c6c4',
+        neutralTertiary: '#a19f9d',
+        neutralSecondary: '#605e5c',
+        neutralPrimaryAlt: '#3b3a39',
+        neutralPrimary: '#323130',
+        neutralDark: '#201f1e',
+        black: '#000000',
+        white: '#ffffff',
+    }});
+
+loadTheme(myTheme);
 
 export class App extends React.Component<{}, IDialogState> {
     useDefaultButton: boolean = false;
@@ -60,47 +90,47 @@ export class App extends React.Component<{}, IDialogState> {
                         >
                             <MainGrid />
                         </div>
-                    </div>
-                    <div
-                        style={{
-                            height: "50px",
-                            marginTop: "-50px",
-                            backgroundColor: "darkblue",
-                            color: "rgba(211, 227, 253, 255)"
-                        }}
-                    >
-                        {/*"footer"*/}
-                        <Flex gap="gap.small" padding="padding.medium" hAlign="center">
+
+                    {/*"footer"*/}
+                    <Flex gap="gap.small" padding="padding.medium" hAlign="center" vAlign="center"
+                          style={{
+                              height: footerheight,
+                              marginTop: "-50px",
+                              backgroundColor: "darkblue",
+                              color: "rgba(211, 227, 253, 255)"
+                          }}>
+                        <div>
                             <Text content="Created by ProjectIt " size="medium" />
                             <Link href="http://www.projectit.org/" target="_blank">
                                 <Text content="(www.projectit.org)." />
                             </Link>
-                        </Flex>
-                        {/*Global dialog needs to be on the main page*/}
-                        <Dialog
-                            hidden={hideDialog}
-                            onDismiss={this._dismissDialog}
-                            dialogContentProps={{
-                                type: DialogType.largeHeader,
-                                title: title,
-                                closeButtonAriaLabel: "Close",
-                                subText: subText
-                            }}
-                            modalProps={{
-                                // titleAriaId: this._labelId,
-                                // subtitleAriaId: this._subTextId,
-                                isBlocking: false,
-                                styles: { main: { maxWidth: 450 } },
-                                dragOptions: this._dragOptions
-                            }}
-                        >
-                            {content}
-                            <DialogFooter>
-                                <PrimaryButton onClick={this._okDialog} text="Ok" />
-                                {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel" /> : null}
-                            </DialogFooter>
-                        </Dialog>
+                        </div>
+                    </Flex>
                     </div>
+                    {/*Global dialog needs to be on the main page*/}
+                    <Dialog
+                        hidden={hideDialog}
+                        onDismiss={this._dismissDialog}
+                        dialogContentProps={{
+                            type: DialogType.largeHeader,
+                            title: title,
+                            closeButtonAriaLabel: "Close",
+                            subText: subText
+                        }}
+                        modalProps={{
+                            // titleAriaId: this._labelId,
+                            // subtitleAriaId: this._subTextId,
+                            isBlocking: false,
+                            styles: { main: { maxWidth: 450 } },
+                            dragOptions: this._dragOptions
+                        }}
+                    >
+                        {content}
+                        <DialogFooter>
+                            <PrimaryButton onClick={this._okDialog} text="Ok" />
+                            {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel" /> : null}
+                        </DialogFooter>
+                    </Dialog>
                 </div>
             </div>
         );

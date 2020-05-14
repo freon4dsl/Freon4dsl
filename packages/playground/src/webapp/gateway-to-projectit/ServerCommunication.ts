@@ -25,7 +25,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async putModel(folderName: string, modelName: string, piModel: PiElement) {
         console.log("ServerCommunication.putModel " + modelName);
-        if (modelName !== "" && modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
+        if (!!modelName && modelName !== "" && modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
             try {
                 const res = await axios.put(`${SERVER_URL}putModel?folder=${folderName}&name=${modelName}`, model);
@@ -45,7 +45,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadModel(folderName: string, modelName: string, loadCallback: (piModel: PiElement) => void) {
         console.log("ServerCommunication.loadModel " + modelName);
-        if (modelName !== "") {
+        if (!!modelName && modelName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}getModel?folder=${folderName}&name=${modelName}`);
                 const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
@@ -76,7 +76,7 @@ export class ServerCommunication implements IServerCommunication {
 
     async deleteModel(folderName: string, modelName: string) {
         console.log("ServerCommunication.deleteModel " + modelName);
-        if (modelName !== "") {
+        if (!!modelName && modelName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}deleteModel?folder=${folderName}&name=${modelName}`);
             } catch (e) {

@@ -1,12 +1,11 @@
 import { Names, PROJECTITCORE } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
-import { DefEditorLanguage } from "../../metalanguage";
 
 export class CustomActionsTemplate {
     constructor() {
     }
 
-    generate(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+    generate(language: PiLanguageUnit): string {
         return `
             import {
                 KeyboardShortcutBehavior,
@@ -15,7 +14,16 @@ export class CustomActionsTemplate {
                 PiExpressionCreator,
                 PiActions
             } from "${PROJECTITCORE}";
-            
+ 
+             /**
+             * Class ${Names.customActions(language)} provides an entry point for the language engineer to
+             * define custom build additions to the editor.
+             * These custom build additions are merged with the default and definition-based editor parts 
+             * in a three-way manner. For each modelelement, 
+             * (1) if a custom build creator/behavior is present, this is used,
+             * (2) if a creator/behavior based on the editor definition is present, this is used,
+             * (3) if neither (1) nor (2) yields a result, the default is used.  
+             */           
             export class ${Names.customActions(language)} implements PiActions {
                 binaryExpressionCreators: PiBinaryExpressionCreator[] = MANUAL_BINARY_EXPRESSION_CREATORS;
                 customBehaviors: PiCustomBehavior[] = MANUAL_CUSTOM_BEHAVIORS;

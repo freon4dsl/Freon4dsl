@@ -1,66 +1,67 @@
 validator Demo for language Demo
 
 DemoModel {
-    notEmpty self.entities
-    notEmpty self.functions
-    validIdentifier // default Identifier
+    notEmpty self.entities;
+    notEmpty self.functions;
+    validIdentifier; // default Identifier
 }
 
 DemoEntity {
-    notEmpty self.attributes
-    notEmpty self.functions
-    validIdentifier
+    notEmpty self.attributes;
+    notEmpty self.functions;
+    validIdentifier;
 }
 
 DemoAttribute {
-    validIdentifier self.name
+    validIdentifier self.name;
 }
 
 DemoFunction {
-    typecheck conformsTo (self.expression, self.declaredType)
-    notEmpty self.parameters
-    validIdentifier 
+    typecheck conformsTo (self.expression, self.declaredType);
+    notEmpty self.parameters;
+    validIdentifier ;
 }
 
 DemoVariable {
-    validIdentifier 
+    validIdentifier ;
 }
 
 DemoAbsExpression {
-    typecheck equalsType( self.expr, DemoAttributeType:Integer )
+    typecheck equalsType( self.expr, DemoAttributeType:Integer );
 }
 
 DemoMultiplyExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Integer )
-    typecheck equalsType( self.right, DemoAttributeType:Integer )
+    typecheck equalsType( self.left, DemoAttributeType:Integer );
+    typecheck equalsType( self.right, DemoAttributeType:Integer );
 }
 
 DemoPlusExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Integer )
-    typecheck equalsType( self.right, DemoAttributeType:Integer )
-    typecheck conformsTo( self.left, self.right )
+    typecheck equalsType( self.left, DemoAttributeType:Integer );
+    typecheck equalsType( self.right, DemoAttributeType:Integer );
+    typecheck conformsTo( self.left, self.right );
 }
 
 DemoDivideExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Integer )
-    typecheck equalsType( self.right, DemoAttributeType:Integer )
+    typecheck equalsType( self.left, DemoAttributeType:Integer );
+    typecheck equalsType( self.right, DemoAttributeType:Integer );
 }
 
 DemoAndExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Boolean )
-    typecheck equalsType( self.right, DemoAttributeType:Boolean )
+    typecheck equalsType( self.left, DemoAttributeType:Boolean );
+    typecheck equalsType( self.right, DemoAttributeType:Boolean );
 }
 
 DemoOrExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Boolean )
-    typecheck equalsType( self.right, DemoAttributeType:Boolean )
+    typecheck equalsType( self.left, DemoAttributeType:Boolean );
+    typecheck equalsType( self.right, DemoAttributeType:Boolean );
 }
 
 DemoComparisonExpression {
-    typecheck equalsType( self.left, self.right )
+    typecheck equalsType( self.left, self.right );
 }
 
 DemoIfExpression {
-    typecheck equalsType( self.condition, DemoAttributeType:Boolean )
-    typecheck conformsTo( self.whenTrue, self.whenFalse )
+    typecheck equalsType( self.condition, DemoAttributeType:Boolean );
+    typecheck conformsTo( self.whenTrue, self.whenFalse );
 }
+

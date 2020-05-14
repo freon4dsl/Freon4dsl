@@ -2,18 +2,19 @@ import { Names } from "../../../utils/Names";
 import {
     PiLanguageUnit
 } from "../../metalanguage/PiLanguage";
+import { PROJECTITCORE } from "../../../utils";
 
 export class LanguageTemplate {
     constructor() {
     }
 
     generateLanguage(language: PiLanguageUnit, relativePath: string): string {
-        return `import { Language, Property, Concept, Enumeration } from "@projectit/core";
+        return `import { Language, Property, Concept, Enumeration } from "${PROJECTITCORE}";
         
             ${language.concepts.map(concept =>
                 `import { ${Names.concept(concept)} } from "./${Names.concept(concept)}";`
             ).join("\n")}
-            import { PiElementReference } from "./PiElementReference";
+            import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
     
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.

@@ -1,30 +1,14 @@
 import * as React from "react";
 import { Flex, Image, Header } from "@fluentui/react-northstar";
-import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import Menubar from "./Menubar";
 import { EditorArea } from "./EditorArea";
 import { PiToolbar } from "./PiToolbar";
+import { editorEnvironment } from "../gateway-to-projectit/WebappConfiguration";
 const Logo = require("../images/inverse-colors.png");
+const headerText = "ProjectIt Language Environment for " + editorEnvironment.languageName;
+export const headerHeight = "40px";
+export const iconHeight = "36px";
 // this component holds the header, the toolbar, the editor area, and the footer
-
-// TODO use themes or get rid of this:
-const theme = getTheme();
-const classNames = mergeStyleSets({
-    wrapper: {
-        height: "40vh",
-        position: "relative",
-        maxHeight: "inherit"
-    },
-    pane: {
-        maxWidth: 400,
-        border: "1px solid " + theme.palette.neutralLight
-    },
-    textContent: {
-        padding: "15px 10px"
-    }
-});
-
-const headerHeight = "50px";
 
 export const MainGrid: React.FunctionComponent = () => {
     return (
@@ -52,14 +36,14 @@ export const MainGrid: React.FunctionComponent = () => {
                     }}
                 >
                     <Flex.Item align="center" grow>
-                        <Header as="h3" content="ProjectIt Language Environment" color="white" />
+                        <Header as="h3" content={headerText} color="white" />
                     </Flex.Item>
                     <Flex.Item align="center" size="size.small">
                         <Image
                             src={Logo}
                             alt={"ProjectIt"}
                             styles={{
-                                maxHeight: headerHeight,
+                                maxHeight: iconHeight,
                                 maxWidth: "80px"
                             }}
                         />
@@ -72,7 +56,6 @@ export const MainGrid: React.FunctionComponent = () => {
             <PiToolbar />
             {/* editor area */}
             <EditorArea />
-            {/*{DemoEnvironment.getInstance().projectionalEditorComponent}*/}
         </div>
     );
 };

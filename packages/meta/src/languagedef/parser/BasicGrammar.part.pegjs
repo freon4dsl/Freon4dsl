@@ -19,8 +19,11 @@ var "var"
 string           = chars:anyChar* { return chars.join(""); }
 
 varLetter           = [a-zA-Z]
-identifierChar      = [a-zA-Z0-9_$] // anychar but not /.,!?@~%^&*-=+(){}"':;<>?[]\/
-anyChar             = [*a-zA-Z0-9'/\-[\]+<>=#$_.,!?@~%^&*-=+(){}:;<>?]
+identifierChar      = [a-zA-Z0-9_$] // any char but not /.,!?@~%^&*-=+(){}"':;<>?[]\/
+anyChar             = [*a-zA-Z0-9' /\-[\]+<>=#$_.,!?@~%^&*-=+(){}:;<>?]
+number              = [0-9]
+
+numberliteral     = nums:number+ { return nums.join(""); }
 
 // van javascript example
 SingleLineComment

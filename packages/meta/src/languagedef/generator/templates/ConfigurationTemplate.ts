@@ -14,20 +14,24 @@ export class ConfigurationTemplate {
     constructor() {
     }
 
-    generate(language: PiLanguageUnit): string {
+    generate(language: PiLanguageUnit, relativePath: string): string {
         const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
+        const configurationName = Names.configuration(language);
         return `
-            import { PiProjection, PiActions, PiModelInitialization } from "@projectit/core";
-            import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "../editor";
-            import { ${Names.initialization(language)} } from "../editor/${Names.initialization(language)}";
+            import { ${Names.PiProjection}, ${Names.PiActions}, ${Names.PiModelInitialization} } from "${PROJECTITCORE}";
+            import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";
+            import { ${Names.initialization(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.initialization(language)}";
             
-            class ProjectitConfiguration {
-                customProjection: PiProjection[] = [new ${Names.customProjection(language)}("manual")];
-                customActions: PiActions[] = [new ${Names.customActions(language)}()];
-                customInitialization: PiModelInitialization = new ${Names.initialization(language)}();
+            /**
+             * Class ${configurationName} is TODO add comment
+             */
+            class ${configurationName} {
+                customProjection: ${Names.PiProjection}[] = [new ${Names.customProjection(language)}("manual")];
+                customActions: ${Names.PiActions}[] = [new ${Names.customActions(language)}()];
+                customInitialization: ${Names.PiModelInitialization} = new ${Names.initialization(language)}();
             }
             
-            export const projectitConfiguration = new ProjectitConfiguration();
+            export const projectitConfiguration = new ${configurationName}();
         `;
     }
 }
