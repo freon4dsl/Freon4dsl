@@ -29,7 +29,7 @@ conceptEditor =
     });
 }
 
-projection = "@projection" ws name:var projection_begin
+projection = "@projection" ws name:var? projection_begin
                    lines:line*
               projection_end
               {

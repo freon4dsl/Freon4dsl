@@ -27,7 +27,8 @@ export class UnparserTemplate {
     generateUnparser(language: PiLanguageUnit, editDef: DefEditorLanguage, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : String = Names.unparser(language);
-        // TODO change comment before class
+
+        language.concepts.filter(elem => elem.implementedPrimProperties().some(p => p.name === "name"));
 
         // Template starts here 
         return `
@@ -40,28 +41,58 @@ export class UnparserTemplate {
                 
         const LOGGER = new PiLogger("${generatedClassName}");
         
+        /**
+         * SeparatorType is used to unparse lists.
+         * NONE means only space(s) between the elements.
+         * Terminator means that every element is terminated with a certain string.
+         * Separator means that in between elements a certain string is placed.
+         */
         enum SeparatorType {
             NONE = "NONE",
             Terminator = "Terminator",
             Separator = "Separator"
         }
 
+        /**
+         * Class ${generatedClassName} provides methods to return a string representation of an instance of
+         * elements of language ${language.name}.
+         * It is, amongst others, used to create error messages in the validator.
+         */
         export class ${generatedClassName}  {
 
-            public unparse(modelelement: ${allLangConcepts}) : string {
+            /**
+             * Returns a string representation of 'modelelement'.
+             * If 'short' is present and false, then a multi-line result will be given.
+             * Otherwise, the result is always a single-line string.
+             * @param modelelement
+             * @param short
+             */
+            public unparse(modelelement: ${allLangConcepts}, short?: boolean) : string {
+                // set default for optional parameter
+                if (short === undefined) short = true;
                 ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
-                    return this.unparse${concept.name}(modelelement);
+                    return this.unparse${concept.name}(modelelement, short);
                 }`).join("")}
                 return "";
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
-                        
-            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
+               
+            /**
+             * Returns a string representation of 'list', using 'sepText' , and 'sepType' to include either a separator string 
+             * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
+             * If 'short' is false, then a multi-line result will be given. Otherwise, the result is always a single-line string.
+             * @param list
+             * @param sepText
+             * @param sepType
+             * @param vertical
+             * @param short
+             */         
+            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, short: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
-                    result = result.concat(this.unparse(listElem));
+                    result = result.concat(this.unparse(listElem, short));
                     if (sepType === SeparatorType.Separator) {
                         if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
                     }
@@ -73,10 +104,19 @@ export class UnparserTemplate {
                 return result;
             }
 
+            /**
+             * Returns a string representation of a list of references, where every reference
+             * is replaced by a single-line representation of its referred element. The use of params 
+             * 'sepText' and 'SepType' are equals to those in the private method unparseList.
+             * @param list
+             * @param sepText
+             * @param sepType
+             * @param vertical
+             */
             private showReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
                 let result: string = "";
                 list.forEach(listElem => {
-                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}));
+                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}, true));
                     if (sepType === SeparatorType.Separator) {
                         if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
                     }
@@ -95,20 +135,38 @@ export class UnparserTemplate {
         let myConcept: PiConcept = conceptDef.concept.referred;
         let name: string = myConcept.name;
         let lines: MetaEditorProjectionLine[] = conceptDef.projection?.lines;
+        const comment =   `/**
+                            * See the public unparse method.
+                            */`;
 
         if (!!lines) {
-            return `
-                private unparse${name}(modelelement: ${name}) : string {
-                    return \`${lines.map(line => `${this.makeLine(line)}` ).join("\\n")}\`
+            if (lines.length > 1) {
+                return `
+                ${comment}
+                private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                    if (short) {
+                        return \`${this.makeLine(lines[0])}\`
+                    } else {
+                        return \`${lines.map(line => `${this.makeLine(line)}`).join("\\n")}\`
+                    }
                 }`;
+            } else {
+                return `
+                ${comment}
+                private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                    return \`${this.makeLine(lines[0])}\`
+                }`;
+            }
         } else {
             if (myConcept instanceof  PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
-                return `private unparse${name}(modelelement: ${name}) : string {
-                    return \`\$\{this.unparse(modelelement.left)\} ${conceptDef.symbol} \$\{this.unparse(modelelement.right)\}\`;
+                return `${comment}
+                    private unparse${name}(modelelement: ${name}, short: boolean) : string {
+                    return \`\$\{this.unparse(modelelement.left, short)\} ${conceptDef.symbol} \$\{this.unparse(modelelement.right, short)\}\`;
                 }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
-                return `private unparse${name}(modelelement: ${name}) : string {
+                return `${comment}
+                    private unparse${name}(modelelement: ${name}, short: boolean) : string {
                     return \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
@@ -180,7 +238,7 @@ export class UnparserTemplate {
                     joinType = "SeparatorType.Terminator";
                 }
                 if (myElem.isPart) {
-                    result += `\$\{this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
+                    result += `\$\{this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, short)\}`;
                 } else {
                     result += `\$\{this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
                 }
@@ -189,7 +247,7 @@ export class UnparserTemplate {
                     result += `\$\{${langExpToTypeScript(item.expression)} ? \``;
                 }
                 if (myElem.isPart) {
-                    result += `\$\{this.unparse(${langExpToTypeScript(item.expression)})\}`;
+                    result += `\$\{this.unparse(${langExpToTypeScript(item.expression)}, short)\}`;
                 } else {
                     result += `\$\{${langExpToTypeScript(item.expression)}?.name\}`;
                 }

@@ -18,6 +18,7 @@ validnameKey = "validIdentifier" ws
 typecheckKey = "typecheck" ws
 notEmptyKey = "notEmpty" ws
 thisKey = "this" ws
+comparator = "<=" / "=" / ">=" / ">" / "<"
 
 conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end 
     { 
@@ -28,10 +29,11 @@ conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end
         }); 
     }
 
-rule =  rule1: typeEqualsRule   { return rule1; }
-      / rule2: typeConformsRule { return rule2; }
-      / rule3: notEmptyRule     { return rule3; }
-      / rule4: validNameRule    { return rule4; }
+rule =  rule1: typeEqualsRule   semicolon_separator { return rule1; }
+      / rule2: typeConformsRule semicolon_separator { return rule2; }
+      / rule3: notEmptyRule     semicolon_separator { return rule3; }
+      / rule4: validNameRule    semicolon_separator { return rule4; }
+      / rule5: expressionRule   semicolon_separator { return rule5; }
 
 validNameRule = validnameKey property:langExpression? ws {
   return create.createValidNameRule( {
@@ -59,6 +61,15 @@ typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langExpress
   return create.createTypeConformsRule( {
     "type1": type1,
     "type2": type2,
+    "location": location()
+  });
+}
+
+expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpression {
+  return create.createExpressionRule( {
+    "exp1": exp1,
+    "exp2": exp2,
+    "comparator": comparator,
     "location": location()
   });
 }

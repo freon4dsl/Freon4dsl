@@ -51,11 +51,19 @@ export class ScoperTemplate {
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }          
                                    
-        const LOGGER = new PiLogger("${generatedClassName}");        
+        const LOGGER = new PiLogger("${generatedClassName}");  
+        
+        /**
+         * Class ${generatedClassName} implements the scoper generated from, if present, the scoper definition,
+         * otherwise this class implements the default scoper. 
+         */      
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             ${generateAlternativeScopes? `myTyper: ${typerClassName};` : ``}
     
-            getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): ${Names.PiNamedElement}[] {
+            /**
+             * See ${scoperInterfaceName}.
+             */
+            public getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): ${Names.PiNamedElement}[] {
                 ${generateAlternativeScopes? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
                 let result: ${Names.PiNamedElement}[] = this.getElementsFromStdlib(metatype);
                 if (!!modelelement) {
@@ -91,7 +99,10 @@ export class ScoperTemplate {
                 return result;
             }
         
-            getFromVisibleElements(modelelement: ${allLangConcepts}, name : string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : ${Names.PiNamedElement} {
+            /**
+             * See ${scoperInterfaceName}.
+             */
+            public getFromVisibleElements(modelelement: ${allLangConcepts}, name : string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : ${Names.PiNamedElement} {
                 let vis = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
                 if (vis !== null) {
                     for (let e of vis) {
@@ -104,7 +115,10 @@ export class ScoperTemplate {
                 return null;
             }
             
-            getVisibleNames(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : string[] {
+            /**
+             * See ${scoperInterfaceName}.
+             */
+            public getVisibleNames(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : string[] {
                 let result: string[] = [];
                 let vis = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
                 for (let e of vis) {
@@ -114,7 +128,10 @@ export class ScoperTemplate {
                 return result;
             }
             
-            isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
+            /**
+             * See ${scoperInterfaceName}.
+             */
+            public isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
                 if (this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null) {
                     return true;
                 } else {
@@ -123,7 +140,7 @@ export class ScoperTemplate {
             }
             
              /**
-             * returns the enclosing namespace for 'modelelement'
+             * Returns the enclosing namespace for 'modelelement'.
              * @param modelelement
              */
             private findNearestNamespace(modelelement: ${allLangConcepts}): ${namespaceClassName} {
@@ -138,8 +155,9 @@ export class ScoperTemplate {
             }
         
             /**
-             * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition
-             * or if 'modelelement' is the model root if there are no namespaces defined in the scoper definition.
+             * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition.
+             * When no namespaces are defined in the scoper definition, this method returns true if
+             * 'modelelement' is the model root. 
              * @param modelelement
              */
             private isNameSpace(modelelement: ${allLangConcepts}): boolean {
@@ -148,7 +166,7 @@ export class ScoperTemplate {
             }
         
             /**
-             * returns the element in the abstract syntax tree that contains 'modelelement'
+             * Returns the element in the abstract syntax tree that contains 'modelelement'.
              * @param modelelement
              */
             private getParent(modelelement: ${allLangConcepts}): ${allLangConcepts} {
@@ -164,7 +182,7 @@ export class ScoperTemplate {
             }
         
              /**
-             *  returns the namespace to be used as alternative scope for 'modelelement'
+             * Returns the namespace to be used as alternative scope for 'modelelement'.
              * @param modelelement
              */
             private getAlternativeScope(modelelement: ${allLangConcepts}): ${namespaceClassName} {
@@ -173,7 +191,7 @@ export class ScoperTemplate {
             }
         
              /**
-             * returns true if there is an alternative scope defined for this 'modelelement'
+             * Returns true if there is an alternative scope defined for this 'modelelement'.
              * @param modelelement
              */
             private hasAlternativeScope(modelelement: ${allLangConcepts}): boolean {
@@ -182,7 +200,7 @@ export class ScoperTemplate {
             }
             
              /**
-             * returns all elements that are in the standard library, which types equal 'metatype'
+             * Returns all elements that are in the standard library, which types equal 'metatype'.
              * @param metatype
              */           
             private getElementsFromStdlib(metatype?: ${langConceptType}): ${Names.PiNamedElement}[] {

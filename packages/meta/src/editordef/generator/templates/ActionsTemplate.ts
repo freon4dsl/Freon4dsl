@@ -2,12 +2,13 @@ import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
-import { LangUtil } from "./LangUtil";
+import { LangUtil } from "../../../languagedef/metalanguage/LangUtil";
 
 export class ActionsTemplate {
     constructor() {
     }
 
+    // TODO generate the correct class comment for Actions
     generate(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
         return `
             import {
@@ -22,6 +23,14 @@ export class ActionsTemplate {
             import { EXPRESSION_CREATORS, BINARY_EXPRESSION_CREATORS, CUSTOM_BEHAVIORS, KEYBOARD } from "./${Names.defaultActions(language)}";
             import { MANUAL_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS, MANUAL_CUSTOM_BEHAVIORS, MANUAL_KEYBOARD } from "../${Names.customActions(language)}";
 
+             /**
+             * Class ${Names.actions(language)} implements ... TODO.
+             * These custom build additions are merged with the default and definition-based editor parts 
+             * in a three-way manner. For each modelelement, 
+             * (1) if a custom build creator/behavior is present, this is used,
+             * (2) if a creator/behavior based on the editor definition is present, this is used,
+             * (3) if neither (1) nor (2) yields a result, the default is used.  
+             */  
             export class ${Names.actions(language)} implements ${Names.PiActions} {
                 // Combine generated and manually written actions, where manual actions may override the generated ones
                 expressionCreators: PiExpressionCreator[] = PiActionsUtil.join(EXPRESSION_CREATORS, MANUAL_EXPRESSION_CREATORS) as PiExpressionCreator[];

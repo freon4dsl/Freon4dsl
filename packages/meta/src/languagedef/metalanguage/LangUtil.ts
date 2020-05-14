@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiInterface } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiInterface } from "./index";
 
 export class LangUtil {
     public static superClasses(self: PiClassifier): PiConcept[] {

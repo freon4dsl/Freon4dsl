@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Menu, Tooltip, Icon, Flex, Text, Input } from "@fluentui/react-northstar";
+import { Menu, Tooltip, Icon, Flex, Text, Input, Segment } from "@fluentui/react-northstar";
 import { Link } from "@fluentui/react";
 import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
 import { App } from "./App";
@@ -198,19 +198,25 @@ export default class Menubar extends React.Component {
 
     aboutContent = (
         <Flex gap="gap.small" padding="padding.medium" column={true}>
-            <Text align="center" content={"ProjectIt version " + versionNumber}/>
-            <Text align="center" content={"ProjectIt is an open source project which can be found at"}/>
-            <Text align="center">
+            <Segment color={"darkblue"}>
+                <Text >
+                ProjectIt is an open source project which can be found at:
+                    <br/>
                 <Link align="center" href="http://projectit.org/" target="_blank">
                     www.projectit.org.
                 </Link>
-            </Text>
-            <Text align="center" content={"Created by"}/>
-            <Text align="center">
+                </Text>
+            </Segment>
+
+            <Segment content={"Version: " + versionNumber} color={"darkblue"}/>
+
+            <Segment color={"darkblue"}>
+                <Text content={"Created by: "}/>
                 <Link align="center" href="http://openmodeling.nl/" target="_blank">
                     www.openmodeling.nl.
                 </Link>
-            </Text>
+            </Segment>
+
         </Flex>
     );
 

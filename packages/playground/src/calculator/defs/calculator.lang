@@ -1,0 +1,52 @@
+language calculator // jetbrains.mps.calculator
+
+root concept Calculator  implements INamedConcept {
+	inputFields: InputField[];
+	outputFields: OutputField[];
+}
+
+concept InputField  implements INamedConcept {
+}
+
+concept OutputField  {
+	expression: Expression;
+}
+
+expression InputFieldReference base Expression {
+	reference field: InputField;
+}
+
+interface INamedConcept {
+	name: string;
+}
+
+// add Simple Numeric Expression from library
+abstract expression Expression {}
+
+abstract expression LiteralExpression base Expression {}
+
+expression NumberLiteralExpression base LiteralExpression {
+    value: string;
+}
+
+abstract binary expression BinaryExpression base Expression {
+    left: Expression;
+    right: Expression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression PlusExpression base BinaryExpression {
+     priority = 4;
+}
+
+binary expression MinusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+

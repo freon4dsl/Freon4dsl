@@ -1,4 +1,11 @@
-import { CheckConformsRule, CheckEqualsTypeRule, ConceptRuleSet, NotEmptyRule, PiValidatorDef, ValidNameRule } from "../metalanguage/ValidatorDefLang";
+import {
+    CheckConformsRule,
+    CheckEqualsTypeRule,
+    ConceptRuleSet, ExpressionRule,
+    NotEmptyRule,
+    PiValidatorDef,
+    ValidNameRule
+} from "../metalanguage/ValidatorDefLang";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang) from the parsed data objects (from ValidatorGrammar.pegjs).
 
@@ -80,6 +87,24 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
     }
     if (!!data.type2) {
         result.type2 = data.type2;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionRule {
+    const result = new ExpressionRule();
+
+    if (!!data.exp1) {
+        result.exp1 = data.exp1;
+    }
+    if (!!data.exp2) {
+        result.exp2 = data.exp2;
+    }
+    if (!!data.comparator) {
+        result.comparator = data.comparator;
     }
     if (!!data.location) {
         result.location = data.location;

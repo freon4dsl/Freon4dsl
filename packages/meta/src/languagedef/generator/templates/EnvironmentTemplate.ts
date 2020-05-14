@@ -33,17 +33,30 @@ export class EnvironmentTemplate {
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
         ${(placeHolderConceptName === "" ? "" : `import { ${placeHolderConceptName} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";`)}
         
+        /**
+         * Class ${Names.environment(language)} provides the link between all parts of the language environment.
+         * It holds the currently used editor, scoper, typer, etc, thus providing an entry point for
+         * for instance, the editor to find the right scoper, or for the validator to find the typer
+         * to use.
+         * This class uses the singleton pattern to ensure that only one instance of the class is present.
+         */
         export class ${Names.environment(language)} implements ${Names.PiEnvironment} {       
-            private static environment: ${Names.PiEnvironment} ;
+            private static environment: ${Names.PiEnvironment}; // the only instance of this class
         
+            /**
+             * This method implements the singleton pattern
+             */
             public static getInstance(): ${Names.PiEnvironment}  {
                 if (this.environment === undefined || this.environment === null) {
                     this.environment = new ${Names.environment(language)}();
                 }
                 return this.environment;
             }
-               
-            constructor() {
+             
+            /**
+             * A private constructor, as demanded by the singleton pattern.
+             */  
+            private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
                 for(let p of projectitConfiguration.customProjection){
@@ -59,13 +72,19 @@ export class EnvironmentTemplate {
                 initializeLanguage();
             }
             
+            /**
+             * Because the actual editor is an instance of a class from the ProjectIt core package,
+             * this method provides an entry point to the content of the editor.
+             * TODO improve comment
+             */
             get projectionalEditorComponent() : ${Names.ProjectionalEditor} {
                 if( this._projectionalEditorComponent === null ){
                     this._projectionalEditorComponent = \< ${Names.ProjectionalEditor} editor={this.editor} /\> as any as ${Names.ProjectionalEditor};
                 }
                 return this._projectionalEditorComponent;
             }    
-                
+            
+            // the parts of the language environment              
             editor: ${Names.PiEditor};
             scoper: ${Names.PiScoper} = new ${Names.scoper(language)}();
             typer: ${Names.PiTyper} = new ${Names.typer(language)}();

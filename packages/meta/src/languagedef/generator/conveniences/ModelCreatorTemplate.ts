@@ -2,6 +2,7 @@ import { Names } from "../../../utils/Names";
 import { LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiConcept, PiLanguageUnit } from "../../metalanguage/PiLanguage";
 
+// TODO decide whether to keep generator 'ModelCreatorTemplate'
 export class ModelCreatorTemplate {
     constructor() {
     }

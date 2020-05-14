@@ -1,8 +1,5 @@
 import {
-    PiLangAppliedFeatureExp,
-    PiBinaryExpressionConcept,
-    PiConcept, PiConceptProperty,
-    PiLangSelfExp,
+    PiConcept,
     PiLanguageExpressionChecker,
     PiLanguageUnit
 } from "../../languagedef/metalanguage";
@@ -19,11 +16,6 @@ import {
     MetaEditorProjectionLine
 } from "./MetaEditorProjection";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
 
@@ -66,14 +58,6 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
             });
     }
 
-    private checkEditor(editor: DefEditorLanguage) {
-        const conceptEditorsDoubles = this.unique(editor.conceptEditors);
-        conceptEditorsDoubles.forEach(ced => {
-                this.errors.push(`Editor definition for concept ${ced.concept.name} is already defined earlier [line: ${ced.location?.start.line}, column: ${ced.location?.start.column}].`);
-            }
-        );
-    }
-
     private checkConceptEditor(conceptEditor: DefEditorConcept) {
         // TODO maybe use
         // this.myExpressionChecker.checkConceptReference(conceptEditor.concept);
@@ -86,16 +70,46 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         });
     }
 
+    private checkEditor(editor: DefEditorLanguage) {
+        const conceptEditorsDoubles = this.unique(editor.conceptEditors);
+        conceptEditorsDoubles.forEach(ced => {
+                this.errors.push(`Editor definition for concept ${ced.concept.name} is already defined earlier [line: ${ced.location?.start.line}, column: ${ced.location?.start.column}].`);
+            }
+        );
+    }
+
     private checkProjection(projection: MetaEditorProjection, cls: PiConcept) {
         if (!!projection) {
             projection.lines.forEach((line) => {
                 line.items.forEach((item) => {
                     if (item instanceof DefEditorSubProjection) {
-                        this.myExpressionChecker.checkLangExp(item.expression, cls);
+                        this.checkSubProjection(item, cls);
                     }
                 });
             });
         }
+    }
+
+    private checkSubProjection(projection: DefEditorSubProjection, cls: PiConcept) {
+        this.myExpressionChecker.checkLangExp(projection.expression, cls);
+        let myprop = projection.expression.findRefOfLastAppliedFeature();
+        this.nestedCheck({ // TODO this check is done by myExpressionChecker, remove
+            check: !!myprop,
+            error: `No property '${projection.expression.toPiString()}' found in ${cls.name} [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`,
+            whenOk: () => {
+                if (!myprop.isList) {
+                    this.simpleCheck(!(!!projection.listJoin),
+                        `Projection for property '${myprop.name}' should not define a terminator or separator [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`);
+                } else {
+                    // create default listJoin if not present
+                    if (!(!!projection.listJoin)) {
+                        projection.listJoin = new ListJoin();
+                        projection.listJoin.joinType = ListJoinType.Separator;
+                        projection.listJoin.joinText = ", ";
+                    }
+                }
+            }
+        });
     }
 
     private resolveReferences(editorDef: DefEditorLanguage) {
