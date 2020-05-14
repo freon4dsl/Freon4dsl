@@ -104,13 +104,13 @@ export class LanguageGenerator {
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
 
-        LOGGER.log(`Generating PiElementReference: ${this.languageGenFolder}/PiElementReference.ts`);
+        LOGGER.log(`Generating PiElementReference: ${this.languageGenFolder}/${Names.PiElementReference}.ts`);
         var referenceFile = Helpers.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "PiElementReference", generationStatus);
-        fs.writeFileSync(`${this.languageGenFolder}/PiElementReference.ts`, referenceFile);
+        fs.writeFileSync(`${this.languageGenFolder}/${Names.PiElementReference}.ts`, referenceFile);
 
-        LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${language.name}Language.ts`);
-        var referenceFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language", generationStatus);
-        fs.writeFileSync(`${this.languageGenFolder}/${language.name}Language.ts`, referenceFile);
+        LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language}.ts`);
+        var referenceFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language Structure", generationStatus);
+        fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, referenceFile);
 
         LOGGER.log(`Generating language environment: ${this.environmentGenFolder}/${Names.environment(language)}.tsx`);
         var environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment", generationStatus);
@@ -136,7 +136,7 @@ export class LanguageGenerator {
 
         // Generate projectit configuration if it isn't there
         LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration(language)}.ts`);
-        var configurationFile = Helpers.pretty(configurationTemplate.generate(language), "Configuration", generationStatus);
+        var configurationFile = Helpers.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
         Helpers.generateManualFile(`${this.configurationFolder}/${Names.configuration(language)}.ts`, configurationFile, "Configuration");
 
         if (generationStatus.numberOfErrors > 0) {

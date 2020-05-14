@@ -53,7 +53,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         // unique names, and that all their properties have unique names
         let names: string[] = [];
         language.concepts.forEach((con, index) => {
-            console.log(`checking duplicate concept name: ${con.name}`);
             if (names.includes(con.name)) {
                 this.simpleCheck(false,
                     `Concept with name '${con.name} already exists [line: ${con.location?.start.line}, column: ${con.location?.start.column}].`);
@@ -64,7 +63,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             this.checkPropertyUniqueNames(con);
         });
         language.interfaces.forEach((intf, index) => {
-            console.log(`checking duplicate interface name: ${intf.name}`);
             if (names.includes(intf.name)) {
                 this.simpleCheck(false,
                     `Concept or interface with name '${intf.name} already exists [line: ${intf.location?.start.line}, column: ${intf.location?.start.column}].`);

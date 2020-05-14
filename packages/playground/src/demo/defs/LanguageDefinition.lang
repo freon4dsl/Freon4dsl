@@ -79,11 +79,11 @@ expression DemoStringLiteralExpression base DemoLiteralExpression {
 }
 
 expression DemoNumberLiteralExpression base DemoLiteralExpression {
-    value: string;
+    value: string; // TODO should be changed to type number
 }
 
 expression DemoBooleanLiteralExpression base DemoLiteralExpression {
-    value: string;
+    value: string; // TODO should be changed to type boolean
 }
 
 expression DemoAbsExpression base DemoExpression {

@@ -14,13 +14,13 @@ export class ConfigurationTemplate {
     constructor() {
     }
 
-    generate(language: PiLanguageUnit): string {
+    generate(language: PiLanguageUnit, relativePath: string): string {
         const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
         const configurationName = Names.configuration(language);
         return `
             import { ${Names.PiProjection}, ${Names.PiActions}, ${Names.PiModelInitialization} } from "${PROJECTITCORE}";
-            import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${EDITOR_FOLDER}";
-            import { ${Names.initialization(language)} } from "${EDITOR_FOLDER}/${Names.initialization(language)}";
+            import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";
+            import { ${Names.initialization(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.initialization(language)}";
             
             /**
              * Class ${configurationName} is TODO add comment
