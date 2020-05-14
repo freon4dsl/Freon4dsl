@@ -3,14 +3,14 @@ validator heat for language heat // long name: jetbrains.mps.samples.heating
 HeatingPlan {
 	dailyPlans: DailyPlan[];
 }
-
+*/
 DailyPlan {
 	displayName: string;
 	items: Slot[];
 	applicability: Applicability;
 	reference customizes: DailyPlan;
 }
-*/
+
 ChangeEvent  {
 	self.temperature >= 12;
 	self.temperature <= 30;
@@ -36,12 +36,12 @@ DayRange base Applicability {
 	start: DayDataType;
 	end: DayDataType;
 }
-
+*/
 Slot  {
-	start: number;
-	event: ChangeEvent;
+	self.start >= 0;
+	self.start <= 24;
 }
-
+/*
 interface INamedConcept {
 	name: string;
 }

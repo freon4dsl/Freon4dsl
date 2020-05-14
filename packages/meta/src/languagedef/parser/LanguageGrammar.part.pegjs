@@ -154,7 +154,7 @@ implementedInterfaces = implementsKey intfRefs:( head:interfaceReference
                                                   )
     { return intfRefs; }
 
-priority = priorityKey ws equals_separator ws value:number ws semicolon_separator
+priority = priorityKey ws equals_separator ws value:numberliteral ws semicolon_separator
     { return Number.parseInt(value); }
 
 instance = name:var equals_separator curly_begin props:propDefList curly_end
@@ -173,7 +173,7 @@ propValue = "\"" value:string "\""  { return value; }
           / "false"                 { return "false"; }
           / "true"                  { return "true"; }
           / "[]"                    { return "[]"; }
-          / number:number           { return Number.parseInt(number); }
+          / number:numberliteral    { return Number.parseInt(number); }
 
 initialvalue = equals_separator value:propValue
     { return value; }
