@@ -66,9 +66,9 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
     if (!!data.conceptEditors) {
         result.conceptEditors = data.conceptEditors;
     }
-    if (!!data.enumerations) {
-        result.enumerations = data.enumerations;
-    }
+    // if (!!data.enumerations) {
+    //     result.enumerations = data.enumerations;
+    // }
     if (!!data.languageName) {
         result.languageName = data.languageName;
     }
@@ -77,9 +77,9 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
     result.conceptEditors.forEach(concept => {
         concept.languageEditor = result;
     });
-    result.enumerations.forEach(enumeration => {
-        enumeration.languageEditor = result;
-    });
+    // result.enumerations.forEach(enumeration => {
+    //     enumeration.languageEditor = result;
+    // });
     if (!!data.location) {
         result.location = data.location;
     }
@@ -93,6 +93,9 @@ export function createProjection(data: Partial<MetaEditorProjection>): MetaEdito
     }
     if (!!data.name) {
         result.name = data.name;
+    } else {
+        // create default
+        result.name = "normal";
     }
     // Now cleanup the parsed projection
     result.normalize();
@@ -197,10 +200,10 @@ export function createNewline(): DefEditorNewline {
     return new DefEditorNewline();
 }
 
-export function createEnumeration(data: Partial<DefEditorEnumeration>): DefEditorEnumeration {
-    const result = new DefEditorEnumeration();
-    if (!!data.location) {
-        result.location = data.location;
-    }
-    return result;
-}
+// export function createEnumeration(data: Partial<DefEditorEnumeration>): DefEditorEnumeration {
+//     const result = new DefEditorEnumeration();
+//     if (!!data.location) {
+//         result.location = data.location;
+//     }
+//     return result;
+// }

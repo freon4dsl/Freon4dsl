@@ -10,7 +10,8 @@
 conceptRef = name:var { return expCreate.createConceptReference( { "name": name, "location":location()}); }
 
 langExpression = functionExpression:functionExpression  { return functionExpression; }
-                  / expression:expression                  { return expression; }
+               / expression:expression                  { return expression; }
+               / simple:simpleExpression                { return simple; }
 
 expression = sourceName:var ':' applied:(literal:var {return expCreate.createAppliedFeatureExp ({
                                                         "sourceName": literal,
@@ -57,6 +58,14 @@ functionExpression = sourceName:var round_begin actualparams:(
   return expCreate.createFunctionCall ({
     "sourceName": sourceName,
     "actualparams": actualparams,
+    "location": location()
+  })
+}
+
+simpleExpression = number:numberliteral {
+    return expCreate.createSimpleExpression
+( {
+    "value": Number.parseInt(number),
     "location": location()
   })
 }

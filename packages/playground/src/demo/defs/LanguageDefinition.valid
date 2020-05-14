@@ -64,3 +64,4 @@ DemoIfExpression {
     typecheck equalsType( self.condition, DemoAttributeType:Boolean );
     typecheck conformsTo( self.whenTrue, self.whenFalse );
 }
+

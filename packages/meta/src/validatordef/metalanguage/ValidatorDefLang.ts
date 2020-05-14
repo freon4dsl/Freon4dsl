@@ -47,6 +47,16 @@ export class CheckConformsRule extends ValidationRule {
     }
 }
 
+export class ExpressionRule extends ValidationRule {
+    exp1: PiLangExp;
+    exp2: PiLangExp;
+    comparator: PiComparator;
+
+    toPiString(): string {
+        return `( ${this.exp1.toPiString()} ${this.comparator} ${this.exp2.toPiString()} )`;
+    }
+}
+
 export class NotEmptyRule extends ValidationRule {
     property: PiLangExp;
 
@@ -60,4 +70,12 @@ export class ValidNameRule extends ValidationRule {
     toPiString(): string {
         return `@validName ${this.property.toPiString()}`;
     }
+}
+
+export enum PiComparator {
+    Equals = "=",
+    LargerThen = ">",
+    LargerIncluding = ">=",
+    SmallerThen = "<",
+    SmallerIncluding = "<="
 }

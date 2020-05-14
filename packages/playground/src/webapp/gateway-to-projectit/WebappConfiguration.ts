@@ -1,5 +1,7 @@
 import { PiEnvironment } from "@projectit/core";
-import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
+// import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
+// import { CalculatorEnvironment } from "../../calculator/environment/gen/CalculatorEnvironment";
+import { HeatEnvironment } from "../../heating/environment/gen/HeatEnvironment";
 
 // import { TaxRulesEnvironment } from "../../taxrules/environment/gen/TaxRulesEnvironment";
 // import { CalculatorEnvironment } from "../../calculator/editorEnvironment/gen/CalculatorEnvironment";
@@ -8,7 +10,9 @@ import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
+// export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
+// export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
+export const editorEnvironment: PiEnvironment = HeatEnvironment.getInstance();
 
 // export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance();
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();

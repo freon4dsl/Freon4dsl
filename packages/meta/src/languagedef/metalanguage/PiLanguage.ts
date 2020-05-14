@@ -50,7 +50,7 @@ export class PiLanguageUnit extends PiLangElement {
 
     private addPredefinedElements() {
         // make the primitive types
-        let primitiveTypeConcept = new PiConcept();
+        let primitiveTypeConcept = new PiLimitedConcept();
         primitiveTypeConcept.name = "PiPrimitiveType";
         primitiveTypeConcept.language = this;
         this.concepts.push(primitiveTypeConcept);

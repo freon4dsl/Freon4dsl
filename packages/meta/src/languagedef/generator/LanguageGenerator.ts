@@ -113,7 +113,7 @@ export class LanguageGenerator {
         var referenceFile = Helpers.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "PiElementReference", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.PiElementReference}.ts`, referenceFile);
 
-        LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language}.ts`);
+        LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`);
         var referenceFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language Structure", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, referenceFile);
 

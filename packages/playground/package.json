@@ -20,7 +20,8 @@
     "validate-it": 	"ts-node ../meta/src/commandline/projectit -v validate-it -l src/demo/defs/LanguageDefinition.lang -c src/demo/defs/LanguageDefinition.valid -o src/demo",
     "taxrules": 	"ts-node ../meta/src/commandline/projectit all -d src/taxrules/defs -o src/taxrules",
     "testproject": "ts-node ../meta/src/commandline/projectit meta-it -l src/testproject/defs/Incorrect.lang -o src/testproject",
-    "metameta": 	"ts-node ../meta/src/commandline/projectit -v all -d src/aa-testproject/defs -o src/aa-testproject && tsc",
+    "metalang": 	"ts-node ../meta/src/commandline/projectit -v all -d src/pi-language-definition-language/defs -o src/pi-language-definition-language && tsc",
+    "metaedit": 	"ts-node ../meta/src/commandline/projectit -v all -d src/pi-editor-definition-language/defs -o src/pi-editor-definition-language",
     "json": 	"ts-node ../meta/src/commandline/projectit all -d src/json/defs -o src/json",
     "type-it": 	"ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
@@ -30,7 +31,8 @@
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "test": "jest",
-    "calculator": "ts-node ../meta/src/commandline/projectit -v all -d src/calculator/defs -o src/calculator",
+    "calculator": "ts-node ../meta/src/commandline/projectit all -d src/calculator/defs -o src/calculator",
+    "heating": "ts-node ../meta/src/commandline/projectit all -d src/heating/defs -o src/heating",
     "expressions": "ts-node ../meta/src/commandline/projectit -v all -d src/expressions/defs -o src/expressions"
   },
   "devDependencies": {

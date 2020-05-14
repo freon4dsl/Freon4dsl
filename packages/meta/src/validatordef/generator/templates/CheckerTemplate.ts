@@ -1,6 +1,14 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiValidatorDef, CheckEqualsTypeRule, CheckConformsRule, NotEmptyRule, ValidNameRule, ConceptRuleSet } from "../../metalanguage/ValidatorDefLang";
+import {
+    PiValidatorDef,
+    CheckEqualsTypeRule,
+    CheckConformsRule,
+    NotEmptyRule,
+    ValidNameRule,
+    ConceptRuleSet,
+    ExpressionRule
+} from "../../metalanguage/ValidatorDefLang";
 
 export class CheckerTemplate {
     constructor() {
@@ -123,8 +131,12 @@ export class CheckerTemplate {
                 : (r instanceof ValidNameRule ?
                     `if(!this.isValidName(${langExpToTypeScript(r.property)})) {
                         this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
-                    }`
-                : ""))))}`
+                    }` 
+                : (r instanceof ExpressionRule ?
+                    `if(!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
+                        this.errorList.push(new PiError("'${r.toPiString()}' is false", modelelement));
+                    }`                                
+                : "")))))}`
             ).join("\n")}`;
     }
 

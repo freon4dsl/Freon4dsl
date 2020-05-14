@@ -7,7 +7,7 @@ import {
     PiLangAppliedFeatureExp,
     PiLangConceptExp,
     PiLangFunctionCallExp,
-    PiInstanceExp
+    PiInstanceExp, PiLangSimpleExp
 } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
@@ -96,28 +96,10 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
             this.checkFunctionCallExpression(langExp, enclosingConcept);
         } else if (langExp instanceof PiLangAppliedFeatureExp) {
             this.checkAppliedFeatureExp(langExp, enclosingConcept);
+        } else if (langExp instanceof PiLangSimpleExp) {
+            // this.checkSimpleExp(langExp, enclosingConcept);
         }
     }
-
-    // EnumType:literal
-    // private checkEnumRefExpression(langExp: PiLangEnumExp, enclosingConcept:PiConcept) {
-    //     LOGGER.log("checkEnumRefExpression " + langExp?.toPiString());
-    //     let myEnumType = this.language.findEnumeration(langExp.sourceName);
-    //     langExp.referedElement = myEnumType;
-    //     this.nestedCheck({
-    //         check: !!myEnumType,
-    //         error: `Cannot find enumeration ${langExp.sourceName} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
-    //         whenOk: () => {
-    //             if (!!langExp.appliedfeature) { // if an appliedfeature is present, it should refer to one of the literals
-    //                 // find literal in enum
-    //                 let foundLiteral = myEnumType.literals.find(l => l === langExp.appliedfeature.sourceName);
-    //                 this.simpleCheck(langExp.appliedfeature.sourceName === foundLiteral,
-    //                     `${langExp.appliedfeature.sourceName} is not a literal of ${myEnumType.name} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`
-    //                 );
-    //             }
-    //         }
-    //     });
-    // }
 
     // LimitedConcept:instanceName
     public checkInstanceExpression(langExp: PiInstanceExp, enclosingConcept: PiConcept) {
@@ -234,6 +216,8 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
                 ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}].`,
             whenOk: () => {
                 if (feat.appliedfeature != null) {
+                    this.simpleCheck(!feat.referedElement.referred.isList, `List property '${feat.referedElement.name}' should not have an applied expression (.${feat.appliedfeature.toPiString()})` +
+                        ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}].`);
                     feat.appliedfeature.language = feat.language;
                     this.checkAppliedFeatureExp(feat.appliedfeature, feat.referedElement.referred.type.referred);
                 }

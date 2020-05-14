@@ -1,7 +1,16 @@
 import { Checker } from "../../utils/Checker";
 import { PiLanguageUnit, PiProperty, PiConcept, PiPrimitiveProperty, PiClassifier } from "../../languagedef/metalanguage/PiLanguage";
-import { ConceptRuleSet, PiValidatorDef, CheckEqualsTypeRule, ValidationRule, CheckConformsRule, NotEmptyRule, ValidNameRule } from "./ValidatorDefLang";
-import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage/PiLangExpressions";
+import {
+    ConceptRuleSet,
+    PiValidatorDef,
+    CheckEqualsTypeRule,
+    ValidationRule,
+    CheckConformsRule,
+    NotEmptyRule,
+    ValidNameRule,
+    ExpressionRule
+} from "./ValidatorDefLang";
+import { PiLangAppliedFeatureExp, PiLangSelfExp, PiLangSimpleExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 // The next import should be separate and the last of the imports.
@@ -60,6 +69,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if ( tr instanceof CheckConformsRule) { this.checkConformsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof NotEmptyRule) { this.checkNotEmptyRule(tr, enclosingConcept); }
         if ( tr instanceof ValidNameRule) { this.checkValidNameRule(tr, enclosingConcept); }
+        if ( tr instanceof ExpressionRule) { this.checkExpressionRule(tr, enclosingConcept); }
     }
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
@@ -98,7 +108,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         // check references to types
         this.nestedCheck(
             {
-                check: tr.type1 != null || tr.type2 != null,
+                check: tr.type1 != null && tr.type2 != null,
                 error: `Typecheck '${equalsTypeName}' should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
                     // LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
@@ -116,7 +126,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 error: `Typecheck "${conformsToName}" should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
                 whenOk: () => {
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
-                    this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept)  
+                    this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept);
                 }
             })
     }
@@ -130,6 +140,35 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             this.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,
                 `NotEmpty rule '${nr.property.toPiString()}' should refer to a list [line: ${nr.location?.start.line}, column: ${nr.location?.start.column}].`)
         }
+    }
+
+    private checkExpressionRule(tr: ExpressionRule, enclosingConcept: PiConcept) {
+
+        this.nestedCheck(
+            {
+                check: tr.exp1 != null && tr.exp2 != null,
+                error: `Expression rule '${tr.toPiString()}' should have two types to compare [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                whenOk: () => {
+                    // exp1 and exp2 should refer to valid properties or be simple expressions
+                    this.myExpressionChecker.checkLangExp(tr.exp1, enclosingConcept);
+                    this.myExpressionChecker.checkLangExp(tr.exp2, enclosingConcept);
+                    // types of exp1 and exp2 should be equal
+                    if (tr.exp1 instanceof PiLangSimpleExp) {
+                        // test if type2 is a number
+                    } else if (tr.exp2 instanceof PiLangSimpleExp) {
+                        // test if type1 is a number
+                    } else {
+                        // compare both types
+                        let type1 = tr.exp1.findRefOfLastAppliedFeature()?.type.referred;
+                        this.simpleCheck(type1 != null, `Cannot find the type of ${tr.exp1.toPiString()} [line: ${tr.exp1.location?.start.line}, column: ${tr.exp1.location?.start.column}].`)
+                        let type2 = tr.exp2.findRefOfLastAppliedFeature()?.type.referred;
+                        this.simpleCheck(type2 != null, `Cannot find the type of ${tr.exp2.toPiString()} [line: ${tr.exp2.location?.start.line}, column: ${tr.exp2.location?.start.column}].`)
+                        if (type1 != null && type2 != null) {
+                            this.simpleCheck(type1 === type2, `Types of expression rule '${tr.toPiString()}' should be equal [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`)
+                        }
+                    }
+                }
+            });
     }
 }
 
