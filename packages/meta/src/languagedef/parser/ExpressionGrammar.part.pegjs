@@ -65,9 +65,10 @@ functionExpression = sourceName:var round_begin actualparams:(
 simpleExpression = number:numberliteral {
     return expCreate.createSimpleExpression
 ( {
-    "value": Number.parseInt(number),
+    "value": !isNaN(parseInt(number, 10)) ? parseInt(number, 10) : 0, // the default for parseInt is not (!) the decimal system
     "location": location()
   })
 }
+
 
 

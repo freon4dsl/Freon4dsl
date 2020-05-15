@@ -1,11 +1,12 @@
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
-    ConceptRuleSet, ExpressionRule,
+    ConceptRuleSet, ExpressionRule, IsuniqueRule,
     NotEmptyRule,
     PiValidatorDef,
     ValidNameRule
 } from "../metalanguage/ValidatorDefLang";
+import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang) from the parsed data objects (from ValidatorGrammar.pegjs).
 
@@ -105,6 +106,31 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
     }
     if (!!data.comparator) {
         result.comparator = data.comparator;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
+    const result = new IsuniqueRule();
+
+    if (!!data.list) {
+        result.list = data.list;
+    }
+    if (!!data.listproperty) {
+        // the expression parser/creator returns a PiLangConceptExp
+        // but we need a PiLangSelfExp where 'self' refers to an element of result.list
+        // therefore we change the received 'listproperty'.
+        result.listproperty = new PiLangSelfExp();
+        // result.listproperty.sourceName = "list";
+        result.listproperty.location = data.listproperty.location;
+        result.listproperty.appliedfeature = new PiLangAppliedFeatureExp();
+        result.listproperty.appliedfeature.sourceName = data.listproperty.sourceName;
+        result.listproperty.appliedfeature.location = data.listproperty.location;
+        result.listproperty.appliedfeature.appliedfeature = data.listproperty.appliedfeature;
+        result.listproperty.appliedfeature.sourceExp = result.listproperty;
     }
     if (!!data.location) {
         result.location = data.location;

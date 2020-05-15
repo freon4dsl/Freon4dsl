@@ -53,7 +53,17 @@ export class ExpressionRule extends ValidationRule {
     comparator: PiComparator;
 
     toPiString(): string {
-        return `( ${this.exp1.toPiString()} ${this.comparator} ${this.exp2.toPiString()} )`;
+        return `${this.exp1.toPiString()} ${this.comparator} ${this.exp2.toPiString()}`;
+    }
+}
+
+export class IsuniqueRule extends ValidationRule {
+    list: PiLangExp;
+    listproperty: PiLangExp;
+    comparator: PiComparator;
+
+    toPiString(): string {
+        return `isunique ${this.listproperty.toPiString()} in ${this.list.toPiString()}`;
     }
 }
 

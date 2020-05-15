@@ -2,13 +2,17 @@ validator Demo for language Demo
 
 DemoModel {
     notEmpty self.entities;
+    isunique name in self.entities;
     notEmpty self.functions;
-    validIdentifier; // default Identifier
+    isunique name in self.functions;
+    validIdentifier; // default is 'name'
 }
 
 DemoEntity {
     notEmpty self.attributes;
+    isunique name in self.attributes;
     notEmpty self.functions;
+    isunique name in self.functions;
     validIdentifier;
 }
 
@@ -18,7 +22,7 @@ DemoAttribute {
 
 DemoFunction {
     typecheck conformsTo (self.expression, self.declaredType);
-    notEmpty self.parameters;
+    isunique name in self.parameters;
     validIdentifier ;
 }
 
