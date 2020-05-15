@@ -134,7 +134,7 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Worker";
     }
 
-    private static startWithUpperCase(word: string): string {
+    public static startWithUpperCase(word: string): string {
         if (!!word) return word[0].toUpperCase() + word.substr(1);
         return '';
     }

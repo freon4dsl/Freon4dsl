@@ -1,5 +1,5 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiValidatorDef,
     CheckEqualsTypeRule,
@@ -7,7 +7,7 @@ import {
     NotEmptyRule,
     ValidNameRule,
     ConceptRuleSet,
-    ExpressionRule
+    ExpressionRule, IsuniqueRule
 } from "../../metalanguage/ValidatorDefLang";
 
 export class CheckerTemplate {
@@ -135,12 +135,29 @@ export class CheckerTemplate {
                 : (r instanceof ExpressionRule ?
                     `if(!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
                         this.errorList.push(new PiError("'${r.toPiString()}' is false", modelelement));
-                    }`                                
-                : "")))))}`
+                    }`
+                : (r instanceof IsuniqueRule ?
+                    `${this.makeIsuniqueRule(r)}`
+                : ""))))))}`
             ).join("\n")}`;
     }
 
-
+    private makeIsuniqueRule(rule: IsuniqueRule): string {
+        const listpropertyName = rule.listproperty.appliedfeature.toPiString();
+        const listName = rule.list.appliedfeature.toPiString();
+        const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
+        const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
+        const listpropertyTypeName = (referredListproperty instanceof PiPrimitiveProperty) ? referredListproperty.primType :referredListproperty.type.referred.name;
+        const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
+        return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
+        ${langExpToTypeScript(rule.list)}.forEach((elem, index) => {
+            if (!${uniquelistName}.includes(elem.${listpropertyTypescript})){
+                ${uniquelistName}.push(elem.${listpropertyTypescript});
+            } else {
+                this.errorList.push(new PiError("The value of property '${listpropertyName}' is not unique in list '${listName}'", ${langExpToTypeScript(rule.list)}[index]));
+            }
+        });`;
+    }
     private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiConcept[] {
         let withRules : PiConcept[] = [];
         for (let ruleSet of validdef.conceptRules) {

@@ -8,7 +8,7 @@ import {
     CheckConformsRule,
     NotEmptyRule,
     ValidNameRule,
-    ExpressionRule
+    ExpressionRule, IsuniqueRule
 } from "./ValidatorDefLang";
 import { PiLangAppliedFeatureExp, PiLangSelfExp, PiLangSimpleExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
@@ -70,6 +70,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if ( tr instanceof NotEmptyRule) { this.checkNotEmptyRule(tr, enclosingConcept); }
         if ( tr instanceof ValidNameRule) { this.checkValidNameRule(tr, enclosingConcept); }
         if ( tr instanceof ExpressionRule) { this.checkExpressionRule(tr, enclosingConcept); }
+        if ( tr instanceof IsuniqueRule) { this.checkIsuniqueRule(tr, enclosingConcept); }
     }
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
@@ -143,7 +144,6 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkExpressionRule(tr: ExpressionRule, enclosingConcept: PiConcept) {
-
         this.nestedCheck(
             {
                 check: tr.exp1 != null && tr.exp2 != null,
@@ -166,6 +166,49 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                         if (type1 != null && type2 != null) {
                             this.simpleCheck(type1 === type2, `Types of expression rule '${tr.toPiString()}' should be equal [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`)
                         }
+                    }
+                }
+            });
+    }
+
+    private checkIsuniqueRule(tr: IsuniqueRule, enclosingConcept: PiConcept) {
+        this.nestedCheck(
+            {
+                check: tr.list != null && tr.listproperty != null,
+                error: `Isunique rule '${tr.toPiString()}' should have a list and a property of that list to compare the elements [line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                whenOk: () => {
+                    // list should refer to a valid property of enclosingConcept
+                    this.myExpressionChecker.checkLangExp(tr.list, enclosingConcept);
+                    let myProp = tr.list.findRefOfLastAppliedFeature();
+                    if (!!myProp) { // error message provided by checkLangExp
+                        this.nestedCheck(
+                            {
+                                check: myProp.isList,
+                                error: `Isunique rule cannot be applied to a property that is not a list (${myProp.name}) [line: ${tr.list.location?.start.line}, column: ${tr.list.location?.start.column}].`,
+                                whenOk: () => {
+                                    let myType = myProp.type?.referred;
+                                    this.nestedCheck(
+                                        {
+                                            check: !!myType,
+                                            error: `List ${myProp.name} does not have a valid type [line: ${tr.list.location?.start.line}, column: ${tr.list.location?.start.column}].`,
+                                            whenOk: () => {
+                                                // now check the property of the list against the type of the elements in the list
+                                                this.myExpressionChecker.checkLangExp(tr.listproperty, myType);
+                                                // let myListProperty = tr.listproperty.findRefOfLastAppliedFeature();
+                                                // if (!!myListProperty) {
+                                                //     console.log(`my list property: ${myListProperty.name}, type: ${myListProperty.type}, primType: ${(myListProperty instanceof PiPrimitiveProperty)? (myListProperty as PiPrimitiveProperty).primType : ""}`);
+                                                //     if (myListProperty instanceof PiPrimitiveProperty) {
+                                                //         let t = myListProperty.type;
+                                                //         console.log("class of type: " + t.constructor.name +", referred: " + t.referred?.name);
+                                                //     } else {
+                                                //         this.simpleCheck(!!myListProperty.type?.referred, `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()} (${tr.listproperty.appliedfeature.referedElement.referred.name})` +
+                                                //             `[line: ${tr.listproperty.location?.start.line}, column: ${tr.listproperty.location?.start.column}].`);
+                                                //     }
+                                                // }
+                                            }
+                                        });
+                                }
+                            });
                     }
                 }
             });

@@ -30,6 +30,10 @@ export abstract class PiLangExp extends PiLangElement {
 export class PiLangSimpleExp extends PiLangExp {
     value: number;
 
+    findRefOfLastAppliedFeature(): PiProperty {
+        return null;
+    }
+
     toPiString(): string {
         return this.value?.toString();
     }
@@ -39,7 +43,11 @@ export class PiLangSelfExp extends PiLangExp {
     referedElement: PiElementReference<PiConcept>; // is not needed, can be determined based on its parent
 
     toPiString(): string {
-        return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+        if (!!this.sourceName) {
+            return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
+        } else { // e.g. in isunique validation rules
+            return this.appliedfeature ? this.appliedfeature.toPiString() : "";
+        }
     }
 
     static create(referred: PiConcept): PiLangSelfExp {
@@ -86,8 +94,8 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
             // console.log(" last of: " + this.appliedfeature.sourceName);
             return this.appliedfeature.findRefOfLastAppliedFeature();
         } else {
-            // console.log("found reference: " + this.referedElement?.name);
-            return this.referedElement.referred;
+            // console.log("found reference: " + this.referedElement?.referred?.name);
+            return this.referedElement?.referred;
         }
     }
 

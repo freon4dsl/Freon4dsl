@@ -16,9 +16,10 @@ Validator_Definition
 
 validnameKey = "validIdentifier" ws
 typecheckKey = "typecheck" ws
-notEmptyKey = "notEmpty" ws
-thisKey = "this" ws
-comparator = "<=" / "=" / ">=" / ">" / "<"
+notEmptyKey  = "notEmpty" ws
+isuniqueKey  = "isunique" ws
+inKey        = "in" ws
+comparator   = "<=" / "=" / ">=" / ">" / "<"
 
 conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end 
     { 
@@ -34,6 +35,7 @@ rule =  rule1: typeEqualsRule   semicolon_separator { return rule1; }
       / rule3: notEmptyRule     semicolon_separator { return rule3; }
       / rule4: validNameRule    semicolon_separator { return rule4; }
       / rule5: expressionRule   semicolon_separator { return rule5; }
+      / rule6: isuniqueRule     semicolon_separator { return rule6; }
 
 validNameRule = validnameKey property:langExpression? ws {
   return create.createValidNameRule( {
@@ -74,3 +76,10 @@ expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpres
   });
 }
 
+isuniqueRule = isuniqueKey exp1:langExpression inKey exp2:langExpression {
+  return create.createIsuniqueRule( {
+    "listproperty": exp1,
+    "list": exp2,
+    "location": location()
+  });
+}

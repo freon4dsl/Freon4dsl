@@ -28,9 +28,41 @@ import {
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
 export class DemoModelCreator {
+    public createModelWithIsUniqueError(): DemoModel {
+        let result = this.createCorrectModel();
+
+        const companyEnt = DemoEntity.create({name: "Company"}); // another one with the same name
+        const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
+        const VAT_Number2 = DemoAttribute.create({name: "VAT_Number"});
+        companyEnt.attributes.push(VAT_Number2);
+        companyEnt.attributes.push(VAT_Number);
+        result.entities.push(companyEnt);
+
+        const ifFunction = DemoFunction.create({name: "compare"});
+        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        const ifExpression = new DemoIfExpression();
+        ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
+        ifExpression.whenTrue = makeLiteralExp("87");
+        ifExpression.whenFalse = makeLiteralExp("1345");
+        const divideExpression = MakeDivideExp("678", "9990");
+
+        companyEnt.functions.push(ifFunction);
+
+        const double = DemoFunction.create({name: "compare"}); // another one with the same name
+        const extra = DemoVariable.create({name: "Extra"});
+        const extra2 = DemoVariable.create({name: "Extra"});
+        double.parameters.push(extra);
+        double.parameters.push(extra2);
+        double.expression = MakePlusExp("24", "2020");
+        // compare(Extra, Extra) = "24" + "2020"
+
+        result.functions.push(double);
+        return result;
+    }
+
     // model.functions[0].expression.appliedfeature.type.referred.name).toBe("Company")
     public createModelWithAppliedfeature(): DemoModel {
-        let result = this.createCorrectModel();
+        let result = this.createIncorrectModel();
         // add new attribute to Person entity
         let personent = result.entities[0]; // Person
         let personattr = new DemoAttributeWithEntityType();
@@ -113,8 +145,8 @@ export class DemoModelCreator {
         return result;
     }
 
-    public createCorrectModel(): DemoModel {
-        let correctModel: DemoModel = DemoModel.create({name: "DemoModel_1"});
+    public createIncorrectModel(): DemoModel {
+        let model: DemoModel = DemoModel.create({name: "DemoModel_1"});
 
         const length = DemoFunction.create({name: "length"});
         const Variable1 = DemoVariable.create({name: "Variable1"});
@@ -134,9 +166,9 @@ export class DemoModelCreator {
         last.expression = MakePlusExp("5", "woord");
         // last() = 5 + "woord"
 
-        correctModel.functions.push(length);
-        correctModel.functions.push(determine);
-        correctModel.functions.push(last);
+        model.functions.push(length);
+        model.functions.push(determine);
+        model.functions.push(last);
 
         const personEnt = DemoEntity.create({name: "Person"});
         const age = DemoAttribute.create({name: "age"});
@@ -165,8 +197,8 @@ export class DemoModelCreator {
         companyEnt.functions.push(another);
         // Company { name, VAT_Number, another(NOOT) = ... }
 
-        correctModel.entities.push(personEnt);
-        correctModel.entities.push(companyEnt);
+        model.entities.push(personEnt);
+        model.entities.push(companyEnt);
 
         this.addEntityTypes(
             companyEnt,
@@ -186,7 +218,69 @@ export class DemoModelCreator {
             AAP,
             NOOT
         );
-        return correctModel;
+        return model;
+    }
+
+    public createCorrectModel(): DemoModel {
+        let model: DemoModel = DemoModel.create({name: "CorrectModel"});
+
+        const ifFunction = DemoFunction.create({name: "compare"});
+        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        const ifExpression = new DemoIfExpression();
+        ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
+        ifExpression.whenTrue = makeLiteralExp("1");
+        ifExpression.whenFalse = makeLiteralExp("5");
+        const divideExpression = MakeDivideExp("1", "2");
+        ifFunction.expression = ifExpression;
+        // compare(Variable1, Variable2): IF (2 < 5) THEN 1 ELSE 5 ENDIF
+
+        const helloFunction = DemoFunction.create({name: "helloString"});
+        helloFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        helloFunction.expression = makeLiteralExp("Hello Demo");
+        // helloString() = "Hello Demo"
+
+        model.functions.push(ifFunction);
+        model.functions.push(helloFunction);
+
+        const companyEnt = DemoEntity.create({name: "Company"});
+        const companyName = DemoAttribute.create({name: "name"});
+        companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
+        VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        companyEnt.attributes.push(companyName);
+        companyEnt.attributes.push(VAT_Number);
+        const work = DemoFunction.create({name: "doClean"});
+        const param = DemoVariable.create({name: "at"});
+        work.parameters.push(param);
+        work.expression = MakePlusExp("5", "24");
+        work.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+
+        companyEnt.functions.push(work);
+        // Company { VAT_Number: Integer, name: String, doClean(at: School) = 5 + 24 }
+
+        const schoolEntity = DemoEntity.create({name: "School"});
+
+        const founded = DemoAttribute.create({name: "foundedIn"});
+        founded.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        const schoolName = DemoAttribute.create({name: "name"});
+        schoolName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        schoolEntity.attributes.push(founded);
+        schoolEntity.attributes.push(schoolName);
+        const clean = DemoFunction.create({name: "requestClean"});
+        const variable = DemoVariable.create({name: "cleaningCompany"});
+        variable.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        clean.parameters.push(variable);
+        clean.expression = MakePlusExp("5", "24");
+        clean.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        schoolEntity.functions.push(clean);
+        // School { foundedIn: Integer, name: String, requestClean(cleaningCompany: Company) = 5 + 24 }
+
+        param.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+
+        model.entities.push(schoolEntity);
+        model.entities.push(companyEnt);
+
+        return model;
     }
 
     private addSimpleTypes(
