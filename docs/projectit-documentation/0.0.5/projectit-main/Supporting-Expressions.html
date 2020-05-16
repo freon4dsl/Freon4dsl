@@ -133,7 +133,7 @@
     <li class="crumb"><a href="Supporting-Expressions.html">Support for Expressions</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Supporting-Expressions.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-main/pages/Supporting-Expressions.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>Support for Adding Expressions to your Language</h1>
@@ -160,13 +160,15 @@
 <div class="title">As written in <a href="https://www.voelter.de/data/pub/fse2016-projEditing.pdf">Efficiency of Projectional Editing: A Controlled Experiment</a>:</div>
 <blockquote>
 <div class="paragraph">
-<p>Editing expressions with their fine-grained tree structure is one of the major challenges in a projectional editor.  The inability to insert and remove parentheses in arbitrary places (and then refactor the treestructure according to the precedence expressed by the paren-theses) is an example.  We suggest that future research should focus on making expression editing more efficient.</p>
+<p><strong>Improving Expression Editing.</strong>
+Editing expressions with their fine-grained tree structure is one of the major challenges in a projectional editor. The inability to insert and remove parentheses in arbitrary places (and then refactor the treestructure according to the precedence expressed by the parentheses) is an example.  We suggest that future research should focus on making expression editing more efficient.</p>
 </div>
 <div class="paragraph">
-<p>Hybrid editors are one possible approach to address this challenge:they rely on on-demand linearization of (expression) treestructures.   Complex-structured  nodes  inside  expressions(e.g., tables) retain their structure and editor.  After editing the linear structure,  it is reparsed to reassemble the tree.The MPS team has experimented with this approach, but itis not yet clear what the trade-offs are regarding languagecomposability, notational freedom, and editing efficiency.</p>
+<p>&#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p>References.References are based on pointers to the targetnode’s ID. Despite some advantages (e.g., robust refactorings)of this approach, we observe problems with the tradeoff that the reference target has to exist at the time the reference iscreated.  A more robust and intuitive handling of references is desirable.  While some problems can be solved by language developers (e.g., quick fixes to create reference targets), there should be a better way to support references by the IDE itself.</p>
+<p><strong>References.</strong>
+References are based on pointers to the targetnode’s ID. Despite some advantages (e.g., robust refactorings) of this approach, we observe problems with the tradeoff that the reference target has to exist at the time the reference is created.  A more robust and intuitive handling of references is desirable.  While some problems can be solved by language developers (e.g., quick fixes to create reference targets), there should be a better way to support references by the IDE itself.</p>
 </div>
 </blockquote>
 </div>

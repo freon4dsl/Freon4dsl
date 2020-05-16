@@ -1,4 +1,4 @@
-import { PiNamedElement } from "@projectit/core";
+import { PiNamedElement } from "../language";
 
 export interface PiStdlib {
     elements: PiNamedElement[];

@@ -1,1 +1,0 @@
-import "./application/app/app";

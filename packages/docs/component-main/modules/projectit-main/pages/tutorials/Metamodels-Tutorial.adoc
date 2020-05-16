@@ -1,5 +1,5 @@
 :imagesdir: ../assets/images/
-:src-dir: ../../../../..
+:src-dir: ../../../../../meta/src
 :projectitdir: ../../../../../core
 :source-language: javascript
 
@@ -19,7 +19,7 @@ Below you will find a part of the Language definition for the Demo Project. In t
 .Language Definition for the Demo project
 [source]
 ----
-include::{src-dir}/meta/src/language2/LanguageDefinition.lang[tag=MetaModel]
+//include::{src-dir}/language2/LanguageDefinition.lang[tag=MetaModel]
 ----
 
 == Step by Step

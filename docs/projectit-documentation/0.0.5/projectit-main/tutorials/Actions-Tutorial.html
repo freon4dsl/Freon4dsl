@@ -137,7 +137,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the <a href="Projection-Tutorial.html" class="page">Projection Tutorial</a> we started out by creating a projection of the DemoModel.
+<p>In the <a href="Projection-Tutorial.html" class="page">Projection Tutorial</a> we started out by creating a projection of the CoreTestModel.
 In this tutorial we will add actions to the editor,
 to enable the user to change the model and add elements to it.</p>
 </div>
@@ -176,7 +176,7 @@ Note the role of the box: "end-of-entity-list"</p>
 <div class="listingblock">
 <div class="title">Code Sample 1. AliasBox</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: DemoModel): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: CoreTestModel): Box {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "model-3", {
@@ -219,8 +219,8 @@ Note the role of the box: "end-of-entity-list"</p>
         activeInBoxRoles: ["end-of-entity-list"],                                       <i class="conum" data-value="1"></i><b>(1)</b>
         trigger: "entity",                                                              <i class="conum" data-value="2"></i><b>(2)</b>
         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null =&gt; { <i class="conum" data-value="3"></i><b>(3)</b>
-            var model: DemoModel = box.element as DemoModel;
-            const entity: DemoEntity = new DemoEntity();
+            var model: CoreTestModel = box.element as CoreTestModel;
+            const entity: CoreTestEntity = new CoreTestEntity();
             model.entities.push(entity);
             return entity;
         },
@@ -242,7 +242,7 @@ This means that the action can be triggered in the <code>AliasBox</code> we defi
 </table>
 </div>
 <div class="paragraph">
-<p>At &lt;3&gt; we define the executable code for the action. It creates a new <code>DemoEntity</code> and attaches is to the <code>DemoModel</code></p>
+<p>At &lt;3&gt; we define the executable code for the action. It creates a new <code>CoreTestEntity</code> and attaches is to the <code>CoreTestModel</code></p>
 </div>
 <div class="paragraph">
 <p>At &lt;4&gt; we define the focus of the editor. The <code>Box</code>  with the role <code>"entity-name"</code>
@@ -255,7 +255,7 @@ This ensures that the user can immediately start typing the name of the entity a
 <h2 id="_step_2_create_new_attributes"><a class="anchor" href="#_step_2_create_new_attributes"></a>Step 2 Create new Attributes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Enable the creation of a new <code>DemoAttribute</code> is done similar to the creation of a new <code>DemoEntity</code>.</p>
+<p>Enable the creation of a new <code>CoreTestAttribute</code> is done similar to the creation of a new <code>CoreTestEntity</code>.</p>
 </div>
 <div class="paragraph">
 <p>First we add an <code>AliasBox</code> to the projection of the attribute list:</p>
@@ -281,8 +281,8 @@ This ensures that the user can immediately start typing the name of the entity a
         trigger: "attribute",
         activeInBoxRoles: ["end-of-attribute-list"],
         action: (box: Box, trigger: PiTriggerType, editor: PiEditor): PiElement | null =&gt; {
-            var entity: DemoEntity = box.element as DemoEntity;
-            const attribute: DemoAttribute = new DemoAttribute();
+            var entity: CoreTestEntity = box.element as CoreTestEntity;
+            const attribute: CoreTestAttribute = new CoreTestAttribute();
             entity.attributes.push(attribute);
             return attribute;
         },

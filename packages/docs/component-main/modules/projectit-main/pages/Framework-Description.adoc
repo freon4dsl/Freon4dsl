@@ -1,5 +1,5 @@
 :imagesdir: ../assets/images/
-:src-dir: ../../../../..
+:src-dir: ../../../../../core/src
 :projectitdir: ../../../../../core
 :source-language: javascript
 :listing-caption: Code Sample
@@ -37,7 +37,7 @@ Given  that `literal` is the `StringLiteral` object:
 
 [source]
 ----
-include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
+include::{src-dir}/test/testeditor/CoreTestProjection.ts[tag=StringLiteral]
 ----
 <1> The overall horizontal list box to group everything
 <2> The first label box for the start quote
@@ -71,7 +71,7 @@ This interface is kept as small as possible, to allow ProjectIt to be used for a
 
 [source]
 ----
-include::{src-dir}/core/src/language/PiModel.ts[tag=PiElement]
+include::{src-dir}/language/PiModel.ts[tag=PiElement]
 ----
 
 The main two elements in this interface are:
@@ -94,7 +94,7 @@ _PiProjection_ interface:
 
 [source]
 ----
-include::{src-dir}/core/src/language/PiProjection.ts[tag=PiProjection]
+include::{src-dir}/editor/PiProjection.ts[tag=PiProjection]
 ----
 
 Implementing this interface should return a _Box_ for each `element` in the AST.

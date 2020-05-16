@@ -134,7 +134,7 @@
     <li class="crumb"><a href="Defining-Actions.html">Defining Actions</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Defining-Actions.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-main/pages/Defining-Actions.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>Editor Actions</h1>
@@ -169,18 +169,19 @@
 <div class="listingblock">
 <div class="title">Code Sample 1. Add AliasBox</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: DemoModel): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: CoreTestModel): Box {
+        LOGGER.log("createModelBox4 [" + model + "]");
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
-                new LabelBox(model, "model-keyword", "DemoModel", {
-                    style: demoStyles.keyword
+                new LabelBox(model, "model-keyword", "CoreTestModel", {
+                    style: projectitStyles.keyword
                 }),
                 new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
                     placeHolder: "&lt;name&gt;"
                 })
             ]),
             new LabelBox(model, "entity-list", "Entities", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             new VerticalListBox(
                 model,
@@ -188,8 +189,22 @@
                 model.entities.map(ent =&gt; {
                     return this.createEntityBox3(ent);
                 })
+
             ).addChild(new AliasBox(model, "end-of-entity-list",
-                "add entity", { style: demoStyles.indent }))        <i class="conum" data-value="1"></i><b>(1)</b>
+                "add entity", { style: projectitStyles.indent })),        <i class="conum" data-value="1"></i><b>(1)</b>
+            new LabelBox(model, "functions-list", "Functions", {
+                style: projectitStyles.keyword
+            }),
+            new VerticalListBox(
+                model,
+                "functions",
+                model.functions.map(fun =&gt; {
+                    return this.createFunctionBox(fun);
+                })
+
+            )
+                // .addChild(new AliasBox(model, "end-of-function-list",
+                // "add function", { style: projectitStyles.indent }))
         ]);
     }</code></pre>
 </div>
@@ -204,8 +219,8 @@
         activeInBoxRoles: ["end-of-entity-list"],                                       <i class="conum" data-value="1"></i><b>(1)</b>
         trigger: "entity",                                                              <i class="conum" data-value="2"></i><b>(2)</b>
         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null =&gt; { <i class="conum" data-value="3"></i><b>(3)</b>
-            var model: DemoModel = box.element as DemoModel;
-            const entity: DemoEntity = new DemoEntity();
+            var model: CoreTestModel = box.element as CoreTestModel;
+            const entity: CoreTestEntity = new CoreTestEntity();
             model.entities.push(entity);
             return entity;
         },
@@ -226,7 +241,7 @@ This means that the action can be triggered in the <code>AliasBox</code> we defi
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>We define the executable code for the action. It creates a new <code>DemoEntity</code> and attaches is to the <code>DemoModel</code></td>
+<td>We define the executable code for the action. It creates a new <code>CoreTestEntity</code> and attaches is to the <code>CoreTestModel</code></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -240,7 +255,7 @@ This ensures that the user can immediately start typing the name of the entity a
 <div class="sect2">
 <h3 id="_actions_for_creating_new_attributes"><a class="anchor" href="#_actions_for_creating_new_attributes"></a>Actions for Creating New Attributes</h3>
 <div class="paragraph">
-<p>Building the action to enable the creation of a new <code>DemoAttribute</code>, a model element with <em>PrimitiveType</em> is done similar to the creation of a new <code>DemoEntity</code>.</p>
+<p>Building the action to enable the creation of a new <code>CoreTestAttribute</code>, a model element with <em>PrimitiveType</em> is done similar to the creation of a new <code>CoreTestEntity</code>.</p>
 </div>
 <div class="paragraph">
 <p>First we add an <code>AliasBox</code> to the projection of the attribute list:</p>
@@ -248,12 +263,18 @@ This ensures that the user can immediately start typing the name of the entity a
 <div class="listingblock">
 <div class="title">Code Sample 3. Add AliasBox to Attribute List</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">                new VerticalListBox(entity,"attributes",
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">                new VerticalListBox(entity, "attributes",
                     entity.attributes.map(att =&gt; {
                         return this.createAttributeBox(att);
                     })
                 ).addChild(new AliasBox(entity, "end-of-attribute-list",
-                    "add attribute", { style: demoStyles.indent }))</code></pre>
+                    "add attribute", { style: projectitStyles.indent }))
+                new VerticalListBox(fun, "parameters",
+                    fun.parameters.map(att =&gt; {
+                        return this.createParameterBox(att);
+                    })
+                ).addChild(new AliasBox(fun, "end-of-parameter-list",
+                    "add parameter", { style: projectitStyles.indent }))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -266,8 +287,8 @@ This ensures that the user can immediately start typing the name of the entity a
         trigger: "attribute",
         activeInBoxRoles: ["end-of-attribute-list"],
         action: (box: Box, trigger: PiTriggerType, editor: PiEditor): PiElement | null =&gt; {
-            var entity: DemoEntity = box.element as DemoEntity;
-            const attribute: DemoAttribute = new DemoAttribute();
+            var entity: CoreTestEntity = box.element as CoreTestEntity;
+            const attribute: CoreTestAttribute = new CoreTestAttribute();
             entity.attributes.push(attribute);
             return attribute;
         },

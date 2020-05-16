@@ -2,9 +2,10 @@ import { BinExpression, Expression, ModelContext } from "./Model";
 import { observe, reaction } from "mobx";
 import {} from "jasmine";
 
+// TODO remove or improve this test
 describe("Model", () => {
     describe("dummy", () => {
-        console.log("Dummy");
+        // console.log("Dummy");
 
         it("dummy", () => {
             expect(1 + 1).toBe(2);

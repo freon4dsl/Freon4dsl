@@ -42,7 +42,7 @@ describe("Mobx Model", () => {
                 },
                 element => {
                     reaktion++;
-                    console.log("React " + reaktion + " on " + (!!element ? element["name"] : "element is null"));
+                    // console.log("React " + reaktion + " on " + (!!element ? element["name"] : "element is null"));
                 }
             );
             reaktion = 0;

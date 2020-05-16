@@ -14,7 +14,7 @@ import { KeyboardShortcutBehavior, PiActions } from "./PiAction";
 import { PiLogger } from "../util/PiLogging";
 import { PiUtils, wait } from "../util/PiUtils";
 
-const LOGGER = new PiLogger("PiEditor");
+const LOGGER = new PiLogger("PiEditor").mute();
 
 export class PiEditor {
     @observable private _rootElement: PiElement;
