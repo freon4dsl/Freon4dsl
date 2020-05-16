@@ -1,6 +1,7 @@
 import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { Roles } from "../../../utils/Roles";
 import { DefEditorLanguage } from "../../metalanguage";
 import { LangUtil } from "../../../languagedef/metalanguage/LangUtil";
 
@@ -83,28 +84,31 @@ export class DefaultActionsTemplate {
                     const partConcept = part.type.referred;
                     return `${LangUtil.subClasses(partConcept).filter(cls => !cls.isAbstract).map(subClass => 
                         `{
-                            activeInBoxRoles: ["new-${part.name}"],
+                            activeInBoxRoles: ["${Roles.newPart(part)}"],
                             trigger: "${!!editorDef.findConceptEditor(subClass)?.trigger ? editorDef.findConceptEditor(subClass)?.trigger : subClass.name}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                 const parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
                                 const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}();
                                 ${part.isList ? `parent.${part.name}.push(new${part.name});` : `parent.${part.name}= new${part.name};`}
-                                return new${part.name};
-                            },
-                            boxRoleToSelect: "${part.name}-name"
+                                ed.selectElement(new${part.name});
+                                ed.selectFirstLeafChildBox();
+                                return null;
+                            }
                         }`).join(",\n")}
                 `}).join(",")}
                 ,
                 ${flatten(language.concepts.map(c => c.references())).filter(p => p.isList).map(reference => {
                     const parentConcept = reference.owningConcept;
-                    const partConcept = reference.type.referred;
+                    const referredConcept = reference.type.referred;
+                    const conceptEditor = editorDef.findConceptEditor(referredConcept);
+                    const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : reference.name
                     return `
                         {
-                            activeInBoxRoles: ["new-${reference.name}"],
-                            trigger: "${!!editorDef.findConceptEditor(reference.type.referred).trigger ? `${editorDef.findConceptEditor(reference.type.referred).trigger}` : reference.name}",
+                            activeInBoxRoles: ["${Roles.newPart(reference)}"],
+                            trigger: "${trigger}",
                             action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                 const parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
-                                const newBase: PiElementReference< ${Names.concept(reference.type.referred)}> = PiElementReference.createNamed("", null);
+                                const newBase: PiElementReference< ${Names.concept(referredConcept)}> = PiElementReference.createNamed("", null);
                                 parent.${reference.name}.push(newBase);
                                 return null;
                             },

@@ -7,6 +7,7 @@ import {
 } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { Roles } from "../../../utils/Roles";
 import {
     DefEditorConcept,
     DefEditorLanguage,
@@ -149,24 +150,25 @@ export class ProjectionTemplate {
 
     private generateUserProjection(language: PiLanguageUnit, c: PiConcept, editor: DefEditorConcept) {
         let result: string = "";
+        const element = Roles.elementName(c);
         const projection: MetaEditorProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if(multiLine){
-            result += `new VerticalListBox(element, "${c.name}-overall", [
+            result += `new VerticalListBox(${element}, "${c.name}-overall", [
             `;
         }
 
         let indentNr = 0;
         projection.lines.forEach( (line, index) => {
             if( line.indent > 0) {
-                result += `new IndentBox(element, "${"indent-" + indentNr++}", ${line.indent}, `
+                result += `new IndentBox(${element}, "${c.name}-indent-${indentNr++}", ${line.indent}, `
             }
             if( line.items.length > 1) {
-                result += `new HorizontalListBox(element, "${c.name}-line-${index}", [ `;
+                result += `new HorizontalListBox(${element}, "${c.name}-line-${index}", [ `;
             }
             line.items.forEach((item, itemIndex) => {
                 if ( item instanceof DefEditorProjectionText ){
-                    result += ` new LabelBox(element, "${c.name}-name-${index}-${itemIndex}", "${item.text}", {
+                    result += ` new LabelBox(${element}, "${element}-name-${index}-${itemIndex}", "${item.text}", {
                             style: projectitStyles.${item.style},
                             selectable: false
                         })  `
@@ -176,22 +178,22 @@ export class ProjectionTemplate {
                 } else if( item instanceof DefEditorSubProjection){
                     const appliedFeature: PiProperty = item.expression.appliedfeature.referedElement.referred;
                     if (appliedFeature instanceof PiPrimitiveProperty){
-                        result += this.primitivePropertyProjection(appliedFeature);
+                        result += this.primitivePropertyProjection(appliedFeature, element);
                     } else if( appliedFeature instanceof PiConceptProperty) {
                         if (appliedFeature.isPart) {
                             if (appliedFeature.isList) {
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
-                                result += this.conceptPartListProjection(direction, appliedFeature);
+                                result += this.conceptPartListProjection(direction, appliedFeature, element);
 
                             } else {
-                                result += `((!!element.${appliedFeature.name}) ? this.rootProjection.getBox(element.${appliedFeature.name}) : new AliasBox(element, "new-${appliedFeature.name}", "[add]" /* ${appliedFeature.name} */ ))`
+                                result += `((!!${element}.${appliedFeature.name}) ? this.rootProjection.getBox(${element}.${appliedFeature.name}) : new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]" /* ${appliedFeature.name} */ ))`
                             }
                         } else { // reference
                             if( appliedFeature.isList){
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
-                                result += this.conceptReferenceListProjection(direction, appliedFeature);
+                                result += this.conceptReferenceListProjection(direction, appliedFeature, element);
                             }else {
-                                result += this.conceptReferenceProjection(language, appliedFeature) ;
+                                result += this.conceptReferenceProjection(language, appliedFeature, element) ;
                             }
                         }
                     } else {
@@ -220,7 +222,7 @@ export class ProjectionTemplate {
             `;
         }
         if( result === "" ){ result = "null"}
-        return `public get${c.name}Box(element: ${Names.concept(c)}): Box {
+        return `public get${Names.concept(c)}Box(${element}: ${Names.concept(c)}): Box {
                     return ${result};
                 }`;
     }
@@ -235,32 +237,39 @@ export class ProjectionTemplate {
     //         )
     //     `;
     // }
-    conceptPartListProjection(direction: string, propertyConcept: PiConceptProperty) {
+    /**
+     * generate the part list
+     *
+     * @param direction         Horizontal or Vertical.
+     * @param propertyConcept   The property for whioch the projection is generated.
+     * @param element           The name of the element parameter of the getBox projection method.
+     */
+    conceptPartListProjection(direction: string, propertyConcept: PiConceptProperty, element: string) {
         return `
-            new ${direction}ListBox(element, "element-${propertyConcept.name}-list", 
-                element.${propertyConcept.name}.map(feature => {
+            new ${direction}ListBox(${element}, "${Roles.property(propertyConcept)}", 
+                ${element}.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
                 }).concat(
-                    new AliasBox(element, "new-${propertyConcept.name}", "<+>" , { //  add ${propertyConcept.name}
+                    new AliasBox(${element}, "${Roles.newPart(propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
                         style: ${Names.styles}.placeholdertext
                     })
                 )
             )`;
     }
 
-    conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiConceptProperty) {
+    conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiConceptProperty, element: string) {
         const featureType = appliedFeature.type.name;
-        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}", "<select ${appliedFeature.name}>", "${featureType}",
+        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}", "<select ${appliedFeature.name}>", "${featureType}",
                     () => {
-                        if (!!element.${appliedFeature.name}) {
-                            return { id: element.${appliedFeature.name}.name, label: element.${appliedFeature.name}.name };
+                        if (!!${element}.${appliedFeature.name}) {
+                            return { id: ${element}.${appliedFeature.name}.name, label: ${element}.${appliedFeature.name}.name };
                         } else {
                             return null;
                         }
                     },
                     (option: SelectOption) => {
-                        element.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                            element,
+                        ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
+                            ${element},
                             option.label,
                             "${featureType}"
                         ) as ${featureType}, "${featureType}");
@@ -269,11 +278,11 @@ export class ProjectionTemplate {
             `
     }
 
-    conceptReferenceProjectionInList(appliedFeature: PiConceptProperty) {
+    conceptReferenceProjectionInList(appliedFeature: PiConceptProperty, element: string) {
         const featureType = appliedFeature.type.name;
-        return ` this.helpers.getReferenceBox(element, "${appliedFeature.name}-" + index, "<select ${appliedFeature.name}>", "${featureType}",
+        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}-index", "< select ${appliedFeature.name}>", "${featureType}",
                     () => {
-                        if (!!element.${appliedFeature.name}) {
+                        if (!!${element}.${appliedFeature.name}) {
                             return { id: ent.name, label: ent.name };
                         } else {
                             return null;
@@ -287,12 +296,12 @@ export class ProjectionTemplate {
     }
 
 
-    conceptReferenceListProjection(direction: string, reference: PiConceptProperty) {
+    conceptReferenceListProjection(direction: string, reference: PiConceptProperty, element: string) {
         return `new ${direction}ListBox(
-                    element,
-                    "${reference.name}-list",
-                    element.${reference.name}.map((ent, index) => {
-                        return ${this.conceptReferenceProjectionInList(reference) }
+                    ${element},
+                    "${Roles.property(reference)}",
+                    ${element}.${reference.name}.map((ent, index) => {
+                        return ${this.conceptReferenceProjectionInList(reference, element) }
                     }), //  this one?
                     {
                         style: ${Names.styles}.indent
@@ -301,29 +310,29 @@ export class ProjectionTemplate {
             `
     }
 
-    primitivePropertyProjection(property: PiPrimitiveProperty) {
+    primitivePropertyProjection(property: PiPrimitiveProperty, element: string) {
         // TODO This now only works for strings
         switch(property.primType) {
             case "string":
-                return `new TextBox(element, "element-${property.name}-text", () => element.${property.name}, (c: string) => (element.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}-text", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "number":
-                return `new TextBox(element, "element-${property.name}-text", () => "" + element.${property.name}, (c: string) => (element.${property.name} = Number.parseInt(c)) ,
+                return `new TextBox(${element}, "${Roles.property(property)}-text", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = Number.parseInt(c)) ,
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "boolean":
-                return `new TextBox(element, "element-${property.name}-text", () => "" + element.${property.name}, (c: string) => (element.${property.name} = (c === "true" ? true : false)),
+                return `new TextBox(${element}, "${Roles.property(property)}-text", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = (c === "true" ? true : false)),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             default:
-                return `new TextBox(element, "element-${property.name}-text", () => element.${property.name}, (c: string) => (element.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}-text", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
