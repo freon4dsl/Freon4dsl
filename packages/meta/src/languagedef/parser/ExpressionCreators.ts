@@ -139,8 +139,9 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>): PiLang
 export function createSimpleExpression(data: Partial<PiLangSimpleExp>): PiLangSimpleExp {
     LOGGER.log("createSimpleExpression");
     const result: PiLangSimpleExp = new PiLangSimpleExp();
-    if (!!data.value) {
+    // when the normal check is present, a value of 0 will not be passed to result
+    // if (!!data.value) {
         result.value = data.value;
-    }
+    // }
     return result;
 }

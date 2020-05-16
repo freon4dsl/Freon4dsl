@@ -5,10 +5,7 @@ HeatingPlan {
 }
 */
 DailyPlan {
-	displayName: string;
-	items: Slot[];
-	applicability: Applicability;
-	reference customizes: DailyPlan;
+	isunique start in self.items;
 }
 
 ChangeEvent  {

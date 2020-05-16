@@ -22,7 +22,7 @@ import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions"
 
 describe("Testing Validator", () => {
     describe("Validate DemoModel Instance", () => {
-        const model: DemoModel = new DemoModelCreator().createCorrectModel();
+        const model: DemoModel = new DemoModelCreator().createIncorrectModel();
         const validator = new DemoValidator();
 
         beforeEach(done => {
@@ -164,13 +164,34 @@ describe("Testing Validator", () => {
             expect(errors.length).toBe(1);
         });
 
-        test("complete example model with simple attribute types", () => {
+        test ("test isUnique rule for model entities", () => {
+            let model1 = new DemoModelCreator().createModelWithIsUniqueError();
+            let errors: PiError[] = [];
+            errors = validator.validate(model1, true);
+            // errors.forEach(e =>
+            //     console.log(e.message)
+            // );
+            // TODO check result "Type of 'PlaceholderExpression' does not conform to (the type of) 'DemoAttributeType Integer'"
+            expect(errors.length).toBe(5);
+        });
+
+        test ("test correct model", () => {
+            let correctModel = new DemoModelCreator().createCorrectModel();
+            let errors: PiError[] = [];
+            errors = validator.validate(correctModel, true);
+            // errors.forEach(e =>
+            //     console.log(e.message)
+            // );
+            expect(errors.length).toBe(0);
+        });
+
+        test("complete example model", () => {
             let errors: PiError[] = [];
             errors = validator.validate(model, true);
             // errors.forEach(e =>
             //     console.log(e.message)
             // );
-            expect(errors.length).toBe(17);
+            expect(errors.length).toBe(16);
         });
     });
 });
