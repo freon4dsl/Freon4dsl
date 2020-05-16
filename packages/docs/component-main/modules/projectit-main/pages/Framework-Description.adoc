@@ -37,7 +37,7 @@ Given  that `literal` is the `StringLiteral` object:
 
 [source]
 ----
-include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
+include::{src-dir}/demo/src/editor/CoreTestProjection.ts[tag=StringLiteral]
 ----
 <1> The overall horizontal list box to group everything
 <2> The first label box for the start quote

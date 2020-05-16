@@ -67,7 +67,7 @@ An example of using a `HorizontalListBox` is the following that represents the
 projection of a StringLiteral.
 [source]
 ----
-include::{src-dir}/demo/src/editor/DemoProjection.ts[tag=StringLiteral]
+include::{src-dir}/demo/src/editor/CoreTestProjection.ts[tag=StringLiteral]
 ----
 
 === VerticalListBox

@@ -23,13 +23,13 @@ We start with building the projection for a simple attribute of type string:
 the name of the model in our DemoLanguage. In the metamodel this is represented by the value of 
 the attribute _name_ of class _DemoModel_
 
-.DemoModel Element
+.CoreTestModel Element
 [source]
 ----
-include::{src-dir}/demo/src/model/DemoModel.ts[tag=DemoModel]
+include::{src-dir}/demo/src/model/CoreTestModel.ts[tag=CoreTestModel]
 ----
 
-An obivous choice for the projection of this attribute is a `HorizontalListBox` which holds a `LabelBox` with the name of the class, followed by the value stored in the variable _model.name_. In the tutorial example this value is "DemoModel". When we start the editor based on this projection, we see the following:
+An obivous choice for the projection of this attribute is a `HorizontalListBox` which holds a `LabelBox` with the name of the class, followed by the value stored in the variable _model.name_. In the tutorial example this value is "CoreTestModel". When we start the editor based on this projection, we see the following:
 
 image::demomodel-name.png[align="left"]
 
@@ -72,12 +72,12 @@ include::{src-dir}/demo/src/styles/style.scss[tag=StyleKeyword]
 ----
 
 == Step 2 - Projecting a List Attribute
-Next we will add the `entities` attribute owned by the `DemoModel` to the projection. Let's again look at the definition in the metamodel.
+Next we will add the `entities` attribute owned by the `CoreTestModel` to the projection. Let's again look at the definition in the metamodel.
 
-.DemoModel Element
+.CoreTestModel Element
 [source]
 ----
-include::{src-dir}/demo/src/model/DemoModel.ts[tag=DemoModel]
+include::{src-dir}/demo/src/model/CoreTestModel.ts[tag=CoreTestModel]
 ----
 
 We see that the `entities` attribute is a list of `DemoEntities`. Now take a look at the projection.
@@ -90,31 +90,31 @@ include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=ModelBox3]
 
 The `entities` attribute is to be shown as a vertical list, therefore we use a _VerticalListBox_. The first element of this list is a label, like the `LabelBox` in the previous step, styled as a keyword. The entities themselves are projected in another `VerticalListBox`.
 
-The projection of a single `DemoEntity` is defined in a separate function, thus building a hierarchy of boxes.
+The projection of a single `CoreTestEntity` is defined in a separate function, thus building a hierarchy of boxes.
 
-.DemoEntity Element
+.CoreTestEntity Element
 [source]
 ----
-include::{src-dir}/demo/src/model/DemoEntity.ts[tag=DemoEntity]
+include::{src-dir}/demo/src/model/CoreTestEntity.ts[tag=CoreTestEntity]
 ----
 
-.Projection of DemoEntity
+.Projection of CoreTestEntity
 [source]
 ----
 include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=EntityBox]
 ----
-The projection function is very similar to the projection of the `DemoModel`,
+The projection function is very similar to the projection of the `CoreTestModel`,
 showing the keyword _Entity_ followed by its name and below all attributes of the
 entity in a `VerticalListBox`.
 
 Once again, the projection of an attribute is defined in its own function.
 
-.DemoAttribute Element
+.CoreTestAttribute Element
 [source]
 ----
-include::{src-dir}/demo/src/model/DemoAttribute.ts[tag=DemoAttribute]
+include::{src-dir}/demo/src/model/CoreTestAttribute.ts[tag=CoreTestAttribute]
 ----
-.Projection of DemoAttribute
+.Projection of CoreTestAttribute
 [source]
 ----
 include::{src-dir}/demo/src/editor/TutorialProjection.ts[tag=AttributeBox]
@@ -145,13 +145,13 @@ Then we create the actual action and attach it to the role of the `AliasBox`.
 .Attach Create Attribute Action to AliasBox
 [source]
 ----
-include::{src-dir}/demo/src/editor/DemoActions.ts[tag=CreateAttributeAction]
+include::{src-dir}/demo/src/editor/CoreTestActions.ts[tag=CreateAttributeAction]
 ----
 <1> The action is attached to each box with the role "end-of-entity-list".
 
 <2> The action will be triggered when the user types `"entity"` inside the.alias box.
 
-<3> The executable code for the action. It creates a new `DemoEntity` and attaches is to the `DemoModel`
+<3> The executable code for the action. It creates a new `CoreTestEntity` and attaches is to the `CoreTestModel`
 
 <4> The focus of the editor is returned to the `Box` with the role `"entity-name"`
 within the entity. This ensures that the user can immediately start typing the name of the entity after it has been created.

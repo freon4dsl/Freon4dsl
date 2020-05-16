@@ -169,10 +169,10 @@
 <div class="listingblock">
 <div class="title">Code Sample 1. Add AliasBox</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: DemoModel): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: CoreTestModel): Box {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
-                new LabelBox(model, "model-keyword", "DemoModel", {
+                new LabelBox(model, "model-keyword", "CoreTestModel", {
                     style: demoStyles.keyword
                 }),
                 new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
@@ -204,8 +204,8 @@
         activeInBoxRoles: ["end-of-entity-list"],                                       <i class="conum" data-value="1"></i><b>(1)</b>
         trigger: "entity",                                                              <i class="conum" data-value="2"></i><b>(2)</b>
         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null =&gt; { <i class="conum" data-value="3"></i><b>(3)</b>
-            var model: DemoModel = box.element as DemoModel;
-            const entity: DemoEntity = new DemoEntity();
+            var model: CoreTestModel = box.element as CoreTestModel;
+            const entity: CoreTestEntity = new CoreTestEntity();
             model.entities.push(entity);
             return entity;
         },
@@ -226,7 +226,7 @@ This means that the action can be triggered in the <code>AliasBox</code> we defi
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>We define the executable code for the action. It creates a new <code>DemoEntity</code> and attaches is to the <code>DemoModel</code></td>
+<td>We define the executable code for the action. It creates a new <code>CoreTestEntity</code> and attaches is to the <code>CoreTestModel</code></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
@@ -240,7 +240,7 @@ This ensures that the user can immediately start typing the name of the entity a
 <div class="sect2">
 <h3 id="_actions_for_creating_new_attributes"><a class="anchor" href="#_actions_for_creating_new_attributes"></a>Actions for Creating New Attributes</h3>
 <div class="paragraph">
-<p>Building the action to enable the creation of a new <code>DemoAttribute</code>, a model element with <em>PrimitiveType</em> is done similar to the creation of a new <code>DemoEntity</code>.</p>
+<p>Building the action to enable the creation of a new <code>CoreTestAttribute</code>, a model element with <em>PrimitiveType</em> is done similar to the creation of a new <code>CoreTestEntity</code>.</p>
 </div>
 <div class="paragraph">
 <p>First we add an <code>AliasBox</code> to the projection of the attribute list:</p>
@@ -266,8 +266,8 @@ This ensures that the user can immediately start typing the name of the entity a
         trigger: "attribute",
         activeInBoxRoles: ["end-of-attribute-list"],
         action: (box: Box, trigger: PiTriggerType, editor: PiEditor): PiElement | null =&gt; {
-            var entity: DemoEntity = box.element as DemoEntity;
-            const attribute: DemoAttribute = new DemoAttribute();
+            var entity: CoreTestEntity = box.element as CoreTestEntity;
+            const attribute: CoreTestAttribute = new CoreTestAttribute();
             entity.attributes.push(attribute);
             return attribute;
         },

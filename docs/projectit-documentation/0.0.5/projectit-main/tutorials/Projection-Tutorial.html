@@ -156,13 +156,13 @@ This model is defined in TypeScript in the folder <code>packages/demo/src/model<
 <h2 id="_step_1_project_the_model_name"><a class="anchor" href="#_step_1_project_the_model_name"></a>Step 1: Project the Model Name</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We start with projecting the DemoModel:</p>
+<p>We start with projecting the CoreTestModel:</p>
 </div>
 <div class="listingblock">
 <div class="title">Code Sample 1. Model Element</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class DemoModel extends DemoModelElement {
-    @observablelistpart entities: DemoEntity[];
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestModel extends DemoModelElement {
+    @observablelistpart entities: CoreTestEntity[];
     @observable name: string;
 }</code></pre>
 </div>
@@ -173,7 +173,7 @@ This model is defined in TypeScript in the folder <code>packages/demo/src/model<
 <div class="listingblock">
 <div class="title">Code Sample 2. Simple Projection</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox(model: DemoModel): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox(model: CoreTestModel): Box {
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "Model"),
             new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c))
@@ -182,12 +182,12 @@ This model is defined in TypeScript in the folder <code>packages/demo/src/model<
 </div>
 </div>
 <div class="paragraph">
-<p>The projection is a <code>HorizontalListBox</code> of a label "Model", followed by the name of the model which is stored in the variable model.name. In the tutorial example the name is "DemoModel".
+<p>The projection is a <code>HorizontalListBox</code> of a label "Model", followed by the name of the model which is stored in the variable model.name. In the tutorial example the name is "CoreTestModel".
 When we start the editor based on this projection, we see the following:</p>
 </div>
 <div class="paragraph">
 <p>The first <em>Model</em> is the label,  when it is selected, you cannot edit it.
-The text <em>DemoModel</em> can be edited, changing the name of the model.</p>
+The text <em>CoreTestModel</em> can be edited, changing the name of the model.</p>
 </div>
 <div class="paragraph">
 <p>It doesn&#8217;t look very nice currently:</p>
@@ -211,7 +211,7 @@ add a name.</p>
 <div class="listingblock">
 <div class="title">Code Sample 3. Projection with Style</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox2(model: DemoModel): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox2(model: CoreTestModel): Box {
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "Model", {
                 style: demoStyles.keyword
@@ -252,12 +252,12 @@ In principle all CSS style can be used here.</p>
 <h2 id="_step_3_showing_contained_elements"><a class="anchor" href="#_step_3_showing_contained_elements"></a>Step 3 - Showing Contained Elements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We will add the entities owned by the <code>DemoModel</code> to the projection.</p>
+<p>We will add the entities owned by the <code>CoreTestModel</code> to the projection.</p>
 </div>
 <div class="listingblock">
 <div class="title">Code Sample 5. Projection of Child Elements</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox3(model: DemoModel): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox3(model: CoreTestModel): Box {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "Model", {
@@ -291,7 +291,7 @@ The projection of an entity is defined in a separate function:</p>
 <div class="listingblock">
 <div class="title">Code Sample 6. Projection of Entity</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createEntityBox(entity: DemoEntity): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createEntityBox(entity: CoreTestEntity): Box {
         return new VerticalListBox(entity,"entity",
             [
                 new HorizontalListBox(entity, "entity-info", [
@@ -324,7 +324,7 @@ entity in a <code>VerticalListBox</code>.</p>
 <div class="listingblock">
 <div class="title">Code Sample 7. Projection of Attribute</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createAttributeBox(att: DemoAttribute): Box {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createAttributeBox(att: CoreTestAttribute): Box {
         return new HorizontalListBox(
             att,
             "attribute",
@@ -336,7 +336,7 @@ entity in a <code>VerticalListBox</code>.</p>
                 new LabelBox(att, "colon", ":"),
                 new TextBox(att,"attribute-type",
                     () =&gt; { return att.type; },
-                    (v: string) =&gt; { att.type = v as DemoAttributeType; }
+                    (v: string) =&gt; { att.type = v as CoreTestAttributeType; }
                 )
             ],
             { style: demoStyles.indent }

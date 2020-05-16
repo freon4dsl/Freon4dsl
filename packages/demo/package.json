@@ -10,9 +10,6 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
-    "build": "tsc && webpack -p --progress --colors",
-    "test": "jest --config ./jest.config.js",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "devDependencies": {
     "prettier": "^2.0.4"
@@ -20,7 +17,6 @@
 },
   "dependencies": {
     "@projectit/core": "^0.0.5",
-    "@projectit/meta": "^0.0.5",
     "axios": "0.18.1",
     "classnames": "^2.2.5",
     "mobx": "5.14.0",
