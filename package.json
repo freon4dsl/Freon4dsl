@@ -79,7 +79,6 @@
   "workspaces": [
     "packages/core",
     "packages/meta",
-    "packages/demo",
     "packages/playground",
     "packages/server"
   ],

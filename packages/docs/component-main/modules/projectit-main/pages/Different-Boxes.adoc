@@ -1,5 +1,5 @@
 :imagesdir: ../assets/images/
-:src-dir: ../../../../..
+:src-dir: ../../../../../core/src/test
 :projectitdir: ../../../../../core
 :source-language: javascript
 
@@ -67,7 +67,7 @@ An example of using a `HorizontalListBox` is the following that represents the
 projection of a StringLiteral.
 [source]
 ----
-include::{src-dir}/demo/src/editor/CoreTestProjection.ts[tag=StringLiteral]
+include::{src-dir}/testeditor/CoreTestProjection.ts[tag=StringLiteral]
 ----
 
 === VerticalListBox

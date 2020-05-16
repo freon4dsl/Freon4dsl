@@ -65,9 +65,14 @@ export class AsciidocFile {
             const source = this.directory + this.attributes.get(inc.attribute) + inc.path;
             // const target = this.directory + "../examples" + inc.path;
             const target = exampleDirectory + inc.path;
-            console.log("Copy from [" + source + "] to [" + target + "]");
+            // console.log("Copy from [" + source + "] to [" + target + "]");
             this.createDirIfNotExisting(target);
-            fs.copyFileSync(source, target);
+            try {
+                fs.copyFileSync(source, target);
+            } catch (e) {
+                console.log(e.message);
+            };
+
         });
     }
 

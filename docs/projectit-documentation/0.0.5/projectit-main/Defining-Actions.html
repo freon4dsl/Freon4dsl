@@ -134,7 +134,7 @@
     <li class="crumb"><a href="Defining-Actions.html">Defining Actions</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Defining-Actions.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-main/pages/Defining-Actions.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>Editor Actions</h1>
@@ -170,17 +170,18 @@
 <div class="title">Code Sample 1. Add AliasBox</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox4(model: CoreTestModel): Box {
+        LOGGER.log("createModelBox4 [" + model + "]");
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "CoreTestModel", {
-                    style: demoStyles.keyword
+                    style: projectitStyles.keyword
                 }),
                 new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
                     placeHolder: "&lt;name&gt;"
                 })
             ]),
             new LabelBox(model, "entity-list", "Entities", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             new VerticalListBox(
                 model,
@@ -188,8 +189,22 @@
                 model.entities.map(ent =&gt; {
                     return this.createEntityBox3(ent);
                 })
+
             ).addChild(new AliasBox(model, "end-of-entity-list",
-                "add entity", { style: demoStyles.indent }))        <i class="conum" data-value="1"></i><b>(1)</b>
+                "add entity", { style: projectitStyles.indent })),        <i class="conum" data-value="1"></i><b>(1)</b>
+            new LabelBox(model, "functions-list", "Functions", {
+                style: projectitStyles.keyword
+            }),
+            new VerticalListBox(
+                model,
+                "functions",
+                model.functions.map(fun =&gt; {
+                    return this.createFunctionBox(fun);
+                })
+
+            )
+                // .addChild(new AliasBox(model, "end-of-function-list",
+                // "add function", { style: projectitStyles.indent }))
         ]);
     }</code></pre>
 </div>
@@ -248,12 +263,18 @@ This ensures that the user can immediately start typing the name of the entity a
 <div class="listingblock">
 <div class="title">Code Sample 3. Add AliasBox to Attribute List</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">                new VerticalListBox(entity,"attributes",
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">                new VerticalListBox(entity, "attributes",
                     entity.attributes.map(att =&gt; {
                         return this.createAttributeBox(att);
                     })
                 ).addChild(new AliasBox(entity, "end-of-attribute-list",
-                    "add attribute", { style: demoStyles.indent }))</code></pre>
+                    "add attribute", { style: projectitStyles.indent }))
+                new VerticalListBox(fun, "parameters",
+                    fun.parameters.map(att =&gt; {
+                        return this.createParameterBox(att);
+                    })
+                ).addChild(new AliasBox(fun, "end-of-parameter-list",
+                    "add parameter", { style: projectitStyles.indent }))</code></pre>
 </div>
 </div>
 <div class="paragraph">

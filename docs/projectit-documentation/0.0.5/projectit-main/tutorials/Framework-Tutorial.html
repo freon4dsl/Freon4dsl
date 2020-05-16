@@ -134,7 +134,7 @@
     <li class="crumb"><a href="Framework-Tutorial.html">How to Use the Framework</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>Tutorial: How to Use the ProjectIt Framework</h1>
@@ -165,19 +165,19 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>The example language that we use is the <a href="../DemoLanguage-Example.html" class="page">DemoLanguage</a>, a simple language where a model has entities, and entities have attributes. The projections in this tutorial are all available in <code>packages/demo/src/editor/TutorialProjection.ts</code>.</p>
+<p>The example language that we use is the <a href="../DemoLanguage-Example.html" class="page">DemoLanguage</a>, a simple language where a model has entities, and entities have attributes. The projections in this tutorial are all available in <code>packages/core/test/testeditor/TutorialProjection.ts</code>.</p>
 </div>
 <div class="sect2">
 <h3 id="_step_1_projecting_a_simple_attribute"><a class="anchor" href="#_step_1_projecting_a_simple_attribute"></a>Step 1 - Projecting a Simple Attribute</h3>
 <div class="paragraph">
 <p>We start with building the projection for a simple attribute of type string:
 the name of the model in our DemoLanguage. In the metamodel this is represented by the value of
-the attribute <em>name</em> of class <em>CoreTestModel</em></p>
+the attribute <em>name</em> of class <em>DemoModel</em></p>
 </div>
 <div class="listingblock">
 <div class="title">CoreTestModel Element</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestModel extends DemoModelElement {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestModel extends CoreTestModelElement {
     @observable name: string;
     @observablelistpart entities: CoreTestEntity[];
 }</code></pre>
@@ -230,7 +230,7 @@ the attribute <em>name</em> of class <em>CoreTestModel</em></p>
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox2(model: CoreTestModel): Box {
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "Model", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             new TextBox(model, "model-name", () =&gt; model.name, (c: string) =&gt; (model.name = c), {
                 placeHolder: "&lt;name&gt;"
@@ -278,7 +278,7 @@ is empty, giving the user a visual clue that a name could be entered.</p>
 <div class="listingblock">
 <div class="title">CoreTestModel Element</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestModel extends DemoModelElement {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestModel extends CoreTestModelElement {
     @observable name: string;
     @observablelistpart entities: CoreTestEntity[];
 }</code></pre>
@@ -293,7 +293,7 @@ is empty, giving the user a visual clue that a name could be entered.</p>
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createModelBox3(model: CoreTestModel): Box {
         return new VerticalListBox(model, "model", [
             new LabelBox(model, "entity-keyword", "Entities", {
-                style: demoStyles.keyword
+                style: projectitStyles.keyword
             }),
             new VerticalListBox(
                 model,
@@ -315,30 +315,32 @@ is empty, giving the user a visual clue that a name could be entered.</p>
 <div class="listingblock">
 <div class="title">CoreTestEntity Element</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">Unresolved include directive in modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc - include::example$/demo/src/model/CoreTestEntity.ts[]</code></pre>
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestEntity extends CoreTestModelElement {
+    @observable name: string;
+    @observablelistpart attributes: CoreTestAttribute[];</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Projection of CoreTestEntity</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">    private createEntityBox(entity: CoreTestEntity): Box {
-        return new VerticalListBox(entity,"entity",
+        return new VerticalListBox(entity, "entity",
             [
                 new HorizontalListBox(entity, "entity-info", [
                     new LabelBox(entity, "entity-keyword", "Entity", {
-                        style: demoStyles.keyword
+                        style: projectitStyles.keyword
                     }),
                     new TextBox(entity, "entity-name", () =&gt; entity.name, (c: string) =&gt; (entity.name = c), {
                         placeHolder: "&lt;name&gt;"
                     })
                 ]),
-                new VerticalListBox( entity, "attribute-list",
+                new VerticalListBox(entity, "attribute-list",
                     entity.attributes.map(att =&gt; {
                         return this.createAttributeBox(att);
                     })
                 )
             ],
-            { style: demoStyles.indent }
+            { style: projectitStyles.indent }
         );
     }</code></pre>
 </div>
@@ -354,7 +356,29 @@ entity in a <code>VerticalListBox</code>.</p>
 <div class="listingblock">
 <div class="title">CoreTestAttribute Element</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">Unresolved include directive in modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc - include::example$/demo/src/model/CoreTestAttribute.ts[]</code></pre>
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestAttribute extends CoreTestModelElement {
+    @observable name: string = "";
+    @observable type: CoreTestAttributeType = CoreTestAttributeType.String;
+    $typename: string = "CoreTestAttribute";
+
+    constructor() {
+        super();
+    }
+
+    toString(): string {
+        return "attribute " + this.name + " : " + this.type;
+    }
+
+    asString(): string {
+        return this.toString();
+    }
+
+    static create(name: string): CoreTestAttribute {
+        const result = new CoreTestAttribute();
+        result.name = name;
+        return result;
+    }
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -365,17 +389,25 @@ entity in a <code>VerticalListBox</code>.</p>
             att,
             "attribute",
             [
-                new TextBox(att,"attribute-name",
-                    () =&gt; { return att.name; },
-                    (v: string) =&gt; { att.name = v; }
+                new TextBox(att, "attribute-name",
+                    () =&gt; {
+                        return att.name;
+                    },
+                    (v: string) =&gt; {
+                        att.name = v;
+                    }
                 ),
                 new LabelBox(att, "colon", ":"),
-                new TextBox(att,"attribute-type",
-                    () =&gt; { return att.type; },
-                    (v: string) =&gt; { att.type = v as CoreTestAttributeType; }
+                new TextBox(att, "attribute-type",
+                    () =&gt; {
+                        return att.type.asString();
+                    },
+                    (v: string) =&gt; {
+                        att.type = CoreTestAttributeType.fromString(v);
+                    }
                 )
             ],
-            { style: demoStyles.indent }
+            { style: projectitStyles.indent }
         );
     }</code></pre>
 </div>
@@ -416,12 +448,18 @@ entity in a <code>VerticalListBox</code>.</p>
 <div class="listingblock">
 <div class="title">Add AliasBox to Attribute List</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">                new VerticalListBox(entity,"attributes",
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">                new VerticalListBox(entity, "attributes",
                     entity.attributes.map(att =&gt; {
                         return this.createAttributeBox(att);
                     })
                 ).addChild(new AliasBox(entity, "end-of-attribute-list",
-                    "add attribute", { style: demoStyles.indent }))</code></pre>
+                    "add attribute", { style: projectitStyles.indent }))
+                new VerticalListBox(fun, "parameters",
+                    fun.parameters.map(att =&gt; {
+                        return this.createParameterBox(att);
+                    })
+                ).addChild(new AliasBox(fun, "end-of-parameter-list",
+                    "add parameter", { style: projectitStyles.indent }))</code></pre>
 </div>
 </div>
 <div class="paragraph">

@@ -2,7 +2,7 @@ import { AsciidocFile } from "./AsciidocFile";
 import * as program from "commander";
 import * as fs from "fs";
 
-console.log("Args: " + process.argv);
+// console.log("Args: " + process.argv);
 
 const cli = program
     .version("1.0.0")
@@ -14,11 +14,11 @@ const dirName = cli.directory;
 const exampleDir = dirName + "../examples";
 
 function copyDir(dirName: string) {
-    console.log("copyDir " + dirName);
+    // console.log("copyDir " + dirName);
 
     const dir: fs.Dirent[] = fs.readdirSync(dirName, {encoding: "utf8", withFileTypes: true});
     for (let file of dir) {
-        console.log("================================== file " + file.name);
+        console.log("================================== fixing " + file.name);
 
         if (file.isFile()) {
             const adf = new AsciidocFile(file.name);

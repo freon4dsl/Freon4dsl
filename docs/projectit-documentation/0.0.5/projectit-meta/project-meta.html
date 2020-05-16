@@ -133,17 +133,96 @@
     <li class="crumb"><a href="project-meta.html">ProjectIt MetaModel</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-meta/pages/project-meta.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-meta/pages/project-meta.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>ProjectIt MetaModel</h1>
 <div class="paragraph">
 <p>ProjectIt is designed to be an editor only, not a complete language workbench.
-Defining the structure of your language is done outside ProjectIt.</p>
+Defining the structure of your language is assumed to be done outside ProjectIt.</p>
 </div>
 <div class="paragraph">
-<p>This Meta module is a helper module that supports users to specify the language
-structure for a TypeScript implementation.</p>
+<p>Although this ensure that ProjectIt can be use almost everywhere,  it also means that setting up a first
+version of an editor can be very time consuming.
+The main steps when starting with ProjectIt are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a React-typescript project.</p>
+</li>
+<li>
+<p>Create a TypeScript implementation of your language structure.</p>
+</li>
+<li>
+<p>Create a projection for your language.</p>
+</li>
+<li>
+<p>Create actions for your language.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>However, even creating a typescript implementation of your language can be time consuming.
+And then creating a first ProjectIt editor in TypeScript is also a serious amount of work.</p>
+</div>
+<div class="paragraph">
+<p>To speedup the development of a ProjectIt editor, there now is an <strong>editor generator</strong>.
+This generator automates all of the above workflow.
+All you need to do is to provide the meta-model of your language and both the
+language implementation and a ProjectIt editor is generated.</p>
+</div>
+<div class="paragraph">
+<p>Then generated editor used default projections and actions, and these can be overridden
+afterwards to get an optimal editor.
+Of course you can always regenerate while keeping your tuned code.
+This way,  you can immediately start with a default editor and improve it incrementally.</p>
+</div>
+<div class="paragraph">
+<p>To further support development, the language definition can be annotated with <em>@editor</em>
+annotations to tune the generated editor.</p>
+</div>
+<div class="paragraph">
+<p>The flow of developing is now changed to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Clone the default ProjectIt template project.</p>
+</li>
+<li>
+<p>Provide the meta-model of you language and <strong>generate</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>The language implementation in TypeScript</p>
+</li>
+<li>
+<p>The default projection for the language</p>
+</li>
+<li>
+<p>The default actions for the editor</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Try out the generated editor and</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Tune the projections (one-buy-one)</p>
+</li>
+<li>
+<p>Tune the actions (one-by-one)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The tuning is typically done iteratively.</p>
 </div>
 </article>
   </main>

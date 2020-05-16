@@ -134,7 +134,7 @@
     <li class="crumb"><a href="Implementing-PiProjection.html">Implementing PiProjection</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-meta/pages/Implementing-PiProjection.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-meta/pages/Implementing-PiProjection.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <div class="sect1">
@@ -200,6 +200,8 @@ This interface is kept as small as possible, to allow ProjectIt to be used for a
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export interface PiElement {
     piId(): string;
+
+    piLanguageConcept(): string;
 
     piContainer(): PiContainerDescriptor;
 
