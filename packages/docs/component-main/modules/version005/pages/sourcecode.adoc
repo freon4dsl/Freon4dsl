@@ -1,0 +1,73 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../../core/src/test
+:projectitdir: ../../../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+
+= Deeper in the Source Code
+== The Philosophy of ProjectIt
+The main idea behind ProjectIt is to build a minimal viable product which supports the
+language engineer in creating a work environment for a mini-language. A key principle
+is the Pareto principle (or 80%-20% rule), which states that for many events, roughly
+80% of the effects come from 20% of the causes. For example, it is an axiom of business
+management that "80% of sales come from 20% of clients".
+
+In language development the Pareto principle translates to “80% of the development
+effort is spend on 20% of the application”, this 20% being the more complex parts.
+Still the other 80% of the application needs to be created as well. ProjectIt aims to
+make the latter as simple as possible, while keeping the generated code open for the
+language engineer to code the more complex parts by hand. One of our use cases is the
+creation of a prototype language in a day or in a couple of days at most.
+
+Other guidelines have been ease of use, and flexibility. ProjectIt may not (yet :-)) do
+everything you need, but what it does, should be very easy to get into. Furthermore,
+ProjectIt is designed to be extendable, and easy to integrate with other tooling. Every
+part of the work environment that is generated, can be taken out and, provided the right
+interface is implemented, be exchanged for one that suits the language engineer better.
+Every part of the work environment is made by its own generator, so you can adjust which
+parts you do and do not want to generate. With our choice for TypeScript as base language,
+we believe that it will be possible for the different parts of the work environment to run
+ on either the server or the client. Thus making deployment more flexible.
+
+With these principles in mind, we have started of small and simple. Every definition language,
+from the language structure to the validation rules, is kept minimal. Over time, in an agile
+fashion, these will be extended whenever the need arises. Furthermore, we want to use bootstrapping
+to create editors for every one of the definition languages. If you are interested, you can
+check out our wish list of features to be developed in the future.
+
+== The ProjectIt Editor Framework
+Include existing documentation
+
+== Support For Expressions
+TODO: why and how
+
+== Structure of the Generated Code
+*	Environment
+*	Language
+*	Editor
+*	Scoper
+*	Typer
+*	Validator
+
+== Name Based References
+TODO: why and how
+
+== The ProjectIt Interfaces
+Explain the interfaces for the editor, scoper, typer, and validator.
+
+== Wish List for Future Developments
+In the future we want to extend ProjectIt with the following features. There is no order
+in this list, nor is there any guarantee that the features will be build. We take on a
+task at the moment the need for it arises.
+
+*	Add the possibility in the validator definition for language engineers to state
+their own error messages with each rule, instead of using the predefined messages.
+*	Support models that can be split into separate units using a reference and import/export
+mechanism. This will make it easier for multiple users to work on a model simultaneously.
+Standard version control systems can be used for storage of the models.
+*	Support multiple definition files for one element of the work environment, e.g. for
+defining the language structure.
+*	Support libraries for language development, like a library with definitions for expressions.
+*	Have a dedicated error pane where a single click gets your user to the faulty part of his/her model.
+*	Create an interpreter generator.
+

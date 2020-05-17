@@ -1,0 +1,5 @@
+//* ProjectIt new doc
+* xref:intro.adoc[The ProjectIt NEW Intro]
+* xref:installing.adoc[The ProjectIt NEW Installing]
+* xref:tutorials.adoc[The ProjectIt NEW Tutorials]
+* xref:sourcecode.adoc[The ProjectIt NEW Source Code Documentation]

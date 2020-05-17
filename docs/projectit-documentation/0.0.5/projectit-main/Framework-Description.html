@@ -133,7 +133,7 @@
     <li class="crumb"><a href="Framework-Description.html">The ProjectIt Framework</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-main/pages/Framework-Description.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/Framework-Description.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>The ProjectIt Framework</h1>
@@ -227,7 +227,9 @@ Given  that <code>literal</code> is the <code>StringLiteral</code> object:</p>
 </div>
 </div>
 </div>
-<h1 id="_editor_behavior_based_on_actions" class="sect0"><a class="anchor" href="#_editor_behavior_based_on_actions"></a>Editor Behavior Based on Actions</h1>
+<div class="sect1">
+<h2 id="_editor_behavior_based_on_actions"><a class="anchor" href="#_editor_behavior_based_on_actions"></a>Editor Behavior Based on Actions</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The behavior of the editor is tightly coupled to the boxes in the projection because
 the focus in the editor is always on a <em>Box</em>. To be able to couple behavior to boxes,
@@ -257,7 +259,11 @@ behavior is being triggered.</p>
 <div class="paragraph">
 <p>Actions are further described in <a href="Defining-Actions.html" class="page">Actions</a>.</p>
 </div>
-<h1 id="_ast_access" class="sect0"><a class="anchor" href="#_ast_access"></a>AST Access</h1>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ast_access"><a class="anchor" href="#_ast_access"></a>AST Access</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>As ProjectIt uses the AST for projections and behavior, it needs to know about the type of elements in the AST.
 To allow ProjectIt to work, each element type that occurrs in the AST needs to implement the <code>PiElement</code> interface.
@@ -301,6 +307,8 @@ As a default, these functions can be defined to simply return <code>false</code>
 No need to know the availale element type, nor the properties of en element type, nor anything else.
 This is by design, as ProjectIt is not meant to be a full Language Workbench,
 but instead meant to be used with multiple language workbenches, or none.</p>
+</div>
+</div>
 </div>
 <div class="sect1">
 <h2 id="_projection"><a class="anchor" href="#_projection"></a>Projection</h2>

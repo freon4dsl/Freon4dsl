@@ -1,0 +1,36 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../../../core/src/test
+:projectitdir: ../../../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+
+= Installing and Using ProjectIt
+For now (release candidate 0.05), if you want to use ProjectIt, you have to check out the release candidate branch from github.
+
+*	Add github address
+*	Describe any commands to install the support tools used
+*	Source organization (do have a look at the definition files in packages/playground/demo/defs)
+*	Commands to run Demo example (yarn projectIt, yarn start)
+*	How do you use the generated editor (keybindings, etc)
+
+== ProjectIt commandline
+ProjectIt will be released as a commandline tool. If you look at the package.json file in packages/playground/ you can find the commands that were used to run the Demo example.
+[#img-package-json]
+.Screenshot of package.json
+image::package-json.jpg[projectit-package-json]
+
+Go to folder ‘packages/playground’ and type ‘ts-node ../meta/src/commandline/projectit’ to find out the different arguments that can be used.
+[#img-commands]
+.Screenshot of commandline options
+image::commands.jpg[projectit-commandline-options]
+
+== Creating Your Own Language
+Naturally, you will want to create your own language definitions. To do so, follows these steps.
+
+*	Add a new folder for your language in packages/playground, create a ‘defs’ folder within it, and (copy and) adjust the scripts in playground’s package.json. (screenshot of example for TaxRules)
+*	Create a (set of) language definition(s). To start with you only need to define the language structure, defaults will be generated for the editor, scoper, typer, and validator. See the tutorials to find out how to write definitions for each of them.
+*	Generate the code using the adjusted scripts in package.json. (yarn projectIt or the command for TaxRules)
+*	Try it out (yarn start)
+*	If you like, add other definitions or change the existing ones, and generate again (again, see ‘tutorials’ to find out more about the definitions). Careful, all files in any ‘gen’ folder will be deleted.
+*	If you like, have a look at the generated code (see ‘structure of the generated code’).
+*	If you like, add handwritten code to improve the result (see ‘editor framework’).

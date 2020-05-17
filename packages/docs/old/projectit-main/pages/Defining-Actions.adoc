@@ -14,7 +14,7 @@ First of all take a look at the built-in default behavior of the editor:
 - Using _Ctrl-Arrow_ the user can navigate up and down the model/AST.
 - When an element is selected, it can be deleted with the _DEL_ key.
 
-=== Actions for Adding an Element to a List
+== Actions for Adding an Element to a List
 Certainly the user must be able to add a new entity to the model, for instance to add an element to the end of a list. For this we add an `AliasBox` at the end of the vertical list of entities. An `AliasBox` is a predefined box where the user can type text (printable characters), which is used as an alias for some action. Note the role of the box: [green]#end-of-entity-list#
 
 .Add AliasBox
@@ -41,7 +41,7 @@ This means that the action can be triggered in the `AliasBox` we defined in the 
 within the entity as returned from the `action` code will get the editor focus.
 This ensures that the user can immediately start typing the name of the entity after it has been created.
 
-=== Actions for Creating New Attributes
+== Actions for Creating New Attributes
 Building the action to enable the creation of a new `CoreTestAttribute`, a model element with _PrimitiveType_ is done similar to the creation of a new `CoreTestEntity`.
 
 First we add an `AliasBox` to the projection of the attribute list:
