@@ -1,5 +1,5 @@
 :imagesdir: ../assets/images/
-:src-dir: ../../../../../core/src/test
+:src-dir: ../../../../../packages/core/src/test
 :projectitdir: ../../../../../core
 :source-language: javascript
 :listing-caption: Code Sample

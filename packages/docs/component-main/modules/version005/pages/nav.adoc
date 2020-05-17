@@ -1,5 +1,27 @@
-//* ProjectIt new doc
-* xref:intro.adoc[The ProjectIt NEW Intro]
-* xref:installing.adoc[The ProjectIt NEW Installing]
-* xref:tutorials.adoc[The ProjectIt NEW Tutorials]
-* xref:sourcecode.adoc[The ProjectIt NEW Source Code Documentation]
+//* ProjectIt 0.0.5 documentation
+* xref:intro.adoc[Introduction to ProjectIt]
+** xref:projectional-editing.adoc[Projectional Editing]
+
+* xref:installing.adoc[Installing ProjectIt]
+** xref:installing.adoc#installation[Installation]
+** xref:installing.adoc#Create[Create Your Own Language]
+** xref:installing.adoc#UseProjectit[Commandline Usage]
+** xref:installing.adoc#Source-code[Source Code Organisation]
+
+* xref:tutorials.adoc[Tutorials]
+** xref:tutorials.adoc#langdef[Language Structure]
+** xref:tutorials.adoc#editdef[Editor]
+** xref:tutorials.adoc#scopedef[Scope]
+** xref:tutorials.adoc#typedef[Types]
+** xref:tutorials.adoc#validdef[Validation Rules]
+** xref:framework-tutorial.adoc[How to Use the ProjectIt Framework]
+
+* xref:sourcecode.adoc[ProjectIt Code and Design]
+** xref:sourcecode.adoc#philosophy[ProjectIt Design Philosophy]
+** xref:meta-documentation/editor-framework.adoc[Projectional Editing Framework]
+** xref:meta-documentation/defining_actions.adoc[Custom Projections and Actions]
+** xref:meta-documentation/expressions.adoc[Build-in Support for Expressions]
+** xref:meta-documentation/name-based-references.adoc[Name Based References]
+** xref:meta-documentation/interfaces.adoc[ProjectIt Interfaces]
+** xref:meta-documentation/code-documentation.adoc[Code Documentation]
+** xref:meta-documentation/wish-list.adoc[Wish List]

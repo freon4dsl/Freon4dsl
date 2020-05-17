@@ -4,6 +4,7 @@
 :source-language: javascript
 
 = The DemoLanguage Example
+
 Every ProjectIt editor, whether hand-build or generated, is basically a web page that can be used in different contexts. In the DemoLanguage example a boilerplate context is provided to be able to preview the generated editor.
 
 TODO: https://github.com/mobxjs/mobx-react-typescript-boilerplate

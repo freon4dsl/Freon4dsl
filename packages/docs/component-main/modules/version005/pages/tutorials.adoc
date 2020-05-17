@@ -1,141 +1,214 @@
 :imagesdir: ../assets/images/
-:src-dir: ../../../../../core/src/test
+:src-dir: ../../../../../playground/src/tutorial-language/defs
 :projectitdir: ../../../../../core
 :source-language: javascript
 :listing-caption: Code Sample
 
 = Tutorials
-In all tutorials we will be using the Entity Language as example. The gist of the Entity Language is that it defines a Model, which holds Entities and Functions. Entities can hold Properties and also hold Functions. Every Function has a list of Parameters and an Expression.
-[source] UML diagram of Entity Language
-We have a few other examples, for instance TaxRules, and … You can find them [address].
 
+In all tutorials we will be using the _Demo_ Entity language as example. The gist of the _Demo_ language is that it defines
+a `Model`, which holds `Entities` and `Functions`. `Entities` can hold `Properties` and also hold `Functions`. Every `Function`
+has a list of `Parameters` and an `Expression`.
+
+====
+[#img-package-json]
+.UML diagram of Demo Language
+image::demo-uml.png[uml-diagram-of-demo-language]
+====
+
+We have a few other examples, for instance _TaxRules_, and _Heating_. You can find them in `/playground/src/`.
+
+[#langdef]
 == The Language Structure Definition
-The ProjectIt language structure consists of a list of Concepts, Expression Concepts, Limited Concepts and/or Interfaces.
+The ProjectIt language structure consists of a list of `Concepts`, `Expression Concepts`, `Limited Concepts`
+and/or `Interfaces`.
 
-*	A concept is the basic element of your language definition. It defines which instances can be present in a model created by your users.
-*	An expression concept is a concept that is an expression. The editor will deal with them differently in order to give your user or more natural editing experience. Note that expression concepts need to have a priority.
-*	A limited concept is a concept that has a limited number of predefined instances. These instances are part of the standard library of your language.
-*	An interface is a concept that has no instances.
+*	A `concept` is the basic element of your language definition. It defines which instances can be present in
+a model created by your users.
+*	An `expression concept` is a concept that is an expression. The editor will deal with them differently in
+order to give your user or more natural editing experience. Note that expression concepts need to have a priority.
+*	A `limited concept` is a concept that has a limited number of predefined instances. These instances are part
+of the standard library of your language.
+*	An `interface` is a concept that has no instances.
 
-Each of the four language structure elements have Properties, of which there are the following three types.
+Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and
+expression concepts. Each of the four language structure elements have `Properties`, of which there are the
+following three types.
 
-*	Simple properties, which have as type one of string, number, or Boolean, and are always contained in its Concept.
-*	Parts, which have as type one of the Concepts in the Model, and are also contained in its Concept (as in the UML aggregation relationship). Note that simple properties are always considered to be parts.
-*	References, which have as type one of the Concepts in the Model, but are not contained in its Concept (as in the UML association relationship).
+*	`Simple properties`, which have as type one of string, number, or boolean, and are always contained in its
+`concept`.
+*	`Parts`, which have as type one of the `concepts` in the language, and are also contained in its `concept` (as in
+the UML aggregation relationship). Note that simple properties are always considered to be parts.
+*	`References`, which have as type one of the `concepts` in the language, but are not contained in its `concept`
+(as in the UML association relationship).
 
-----
+Several examples of concepts and properties can be found in the _Demo_ language.
+
 [source]
 ----
-
-Every language needs to define a root concept, which serves as the root of the abstract syntax tree.
+include::{src-dir}/LanguageDefinition.lang[tag=concepts]
 ----
+
+Every language needs to define one root concept, which serves as the root of the abstract syntax tree.
 [source]
 ----
-
-Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and expression concepts.
-----
-[source]
+include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
 ----
 
+[#editdef]
 == The Editor Definition
-You can define a ProjectIt editor by providing extra information for each Concept in your language. Currently, you can define the following three items.
+You can define a ProjectIt editor by providing extra information for each `concept` in your language. Currently,
+you can define the following three items.
 
-*	Projection, which is the manner in which the Concept is shown in the editor.
-*	Trigger, which is the key or keys your user needs to type in to create a new instance of the Concept.
-*	Symbol, which is optional and only used for Expressions. It is the character or character string that is shown when an Expression is being added to your user’s model. When the symbol is not present, the trigger will be used.
+*	`Projection`, which is the manner in which the `concept` is shown in the editor.
+*	`Trigger`, which is the key or keys your user needs to type in to create a new instance of the `concept`.
+*	`Symbol`, which is optional and only used for `expressions`. It is the character or character string that is
+shown when an `expression` is being added to your user’s model. When the `symbol` is not present, the `trigger` will be used.
 
-A projection is defined between angular brackets. Everything within the brackets, except the parts surrounded by ${ }, is taken literally.
-----
+A projection is defined between angular brackets. Everything within the brackets, except the parts surrounded
+by `${ }`, is taken literally.
 [source]
+----
+include::{src-dir}/LanguageDefinition.edit[tag=projection]
 ----
 
 When the indentation of the opening and closing brackets aligns, this indentation is not taken into account.
-----
 [source]
+----
+include::{src-dir}/LanguageDefinition.edit[tag=indentation]
 ----
 
 Using ${ } you tell ProjectIt to include a property. Its projection is defined by the projection for its type.
-----
 [source]
+----
+include::{src-dir}/LanguageDefinition.edit[tag=subprojection]
 ----
 
 If a property is a list, you can indicate whether it should be projected as a horizontal list or as a vertical list. De default is horizontal. Furthermore, you can add either a separator string in between all elements, or a terminator string after each element. Both are optional.
-----
 [source]
+----
+include::{src-dir}/LanguageDefinition.edit[tag=lists]
 ----
 
 Using ‘[+’ you can indicate that a newline should be added.
-----
 [source]
 ----
+include::{src-dir}/LanguageDefinition.edit[tag=newlines]
+----
 
-You can make even more adjustments to the projection by adding hand-made projections, see … For each concept the  editor will first take the hand-made one, when this is not present it will refer to the projection generated from the editor definition, and when this is not present it will use the default projection. When a concept is marked as an expression concept, its default projection is usually the one you want to go with, because of the extra support for expressions that is incorporated in it.
+You can make even more adjustments to the projection by adding hand-made projections, see xref:editor-framework.adoc[].
 
+For each concept the editor will
+
+. take the hand-made one, when this is not present it will
+. refer to the projection generated from the editor definition, and when this is not present it will
+. use the default projection.
+
+When a `concept` is marked as an `expression concept`, its default projection is usually the one you want to go with,
+because of the extra support for expressions that is incorporated in it.
+
+[#scopedef]
 == The Scoper Definition
-In the scoper definition you mark a list of concepts to be namespaces. Any namespace has their own set of visible names and it shadows names from its surrounding namespace. The default scoper simply regards the model of your user as the only namespace. Interfaces can be namespaces as well. In that case any instance of a concept that implements the interface is a namespace, but only the properties of the interface will be visible.
-----
+In the scoper definition you mark a list of concepts to be `namespaces`. Any `namespace` has their own set of visible
+names and it shadows names from its surrounding namespace. The default scoper simply regards the model of your user
+as the only namespace.
+
 [source]
 ----
+include::{src-dir}/LanguageDefinition.scop[tag=namespaces]
+----
 
+Interfaces can be namespaces as well. In that case any instance of a concept that implements the interface is a
+namespace, but only the properties of the interface will be visible.
+
+The standard namespaces can be added to. In that case also the visible elements from the addition are taken into account.
 By indicating an addition to a namespace you can, for instance, support inheritance.
-----
 [source]
 ----
-
-You can also indicate to use a different namespace altogether.
+include::{src-dir}/LanguageDefinition.scop[tag=namespace_addition]
 ----
+
+You can also indicate to use a different namespace altogether. In the following example, the elements visible in
+an `AppliedFeature` are determined based on the type of its container. i.e. its parent in the AST.
 [source]
 ----
+include::{src-dir}/LanguageDefinition.scop[tag=alternative_scope]
+----
 
+[#typedef]
 == The Typer Definition
 In the typer definition you provide the information necessary to do type checking. First, you have to indicate which concepts are considered to be types in your language. Note that the first concept in the list is considered to be the root of your type hierarchy.
-----
 [source]
+----
+include::{src-dir}/LanguageDefinition.type[tag=types]
 ----
 
 Using inference rules, you can indicate how to determine the type of certain concepts. Every concept for which an inference rule is defined has a type and that type is determined according to the given rule.
-----
 [source]
+----
+include::{src-dir}/LanguageDefinition.type[tag=inference]
 ----
 
 By stating that an inference rule is abstract, you define that the concept does have a type, but the way its type is determined, is given by the inference rules of its subconcepts.
-----
 [source]
+----
+include::{src-dir}/LanguageDefinition.type[tag=abstract]
 ----
 
 Finally, you have to state your type conformance rules. In both the inference and conformance rules it is possible to use the predefined instances of a limited concept.
-----
 [source]
 ----
+include::{src-dir}/LanguageDefinition.type[tag=conformance]
+----
 
+Conformance and other rules can also be defined to apply to any concept.
+[source]
+----
+include::{src-dir}/LanguageDefinition.type[tag=anytype]
+----
+
+[#validdef]
 == The Validator Definition
-The validator definitions defines the constraints that should be true in the models build by your users. Currently, there are the following three types of rules.
+The validator definitions defines the constraints that should be true in the models build by your users. Currently,
+there are the following five types of rules.
 
-*	Given a list property, a not-empty rule can be stated. The list complies with the rule if it is not empty.
-*	Given a simple property of type string, a valid-identifier-rule can be given. The property complies with the rule if it is a valid identifier according to the TypeScript definition.
-*	Given the rules in the typer definition, rules can be stated to ensure type compliance.
-To state a not-emtpy rule the notEmpty keyword is used.
-----
+.	Given a simple property of type string, a `valid-identifier-rule` can be given. The property complies with the
+rule if it is a valid identifier according to the TypeScript definition.
+[indent=1]
+For a `valid-identifier-rule` the validIdentifier keyword is used followed by an optional simple property. When the
+property is present, this property is checked. When the property is not present, ProjectIt assumes that the
+`concept` has a simple property named ‘`name`’ and it will check this property.
 [source]
 ----
-
-For a valid-identifier-rule the validIdentifier keyword is used followed by an optional simple property. When the property is present, this property is checked. When the property is not present, ProjectIt assumes that the concept has a simple property named ‘name’ and it will check this property.
+include::{src-dir}/LanguageDefinition.valid[tag=valididentifier]
 ----
+
+[start=2]
+.   Given a simple property, its value can be limited to certain values.
 [source]
 ----
-
-To indicate a type checking rule the keyword typecheck is used, followed by either equalsType or conformsTo. The first demands that the types of the two properties given are equal. The second demands that the type of the first conforms to the type of the second.
-----
-DemoComparisonExpression {
-    @typecheck equalsType( this.left, this.right )
-}
+include::{src-dir}/LanguageDefinition.valid[tag=value]
 ----
 
+[start=3]
+.	Given a list property, a `not-empty rule` can be stated. The list complies with the rule if it is not empty.
+.	Given a list property, a `is-unique rule` can be stated on a property of the elements in the list. The list
+complies when the value of the property is unique for every element in the list.
+[source]
+----
+include::{src-dir}/LanguageDefinition.valid[tag=lists]
+----
+
+[start=5]
+.	Given the rules in the typer definition, rules can be stated to ensure type compliance.
+To indicate a `type checking rule` the keyword `typecheck` is used, followed by either `equalsType` or `conformsTo`.
+The first demands that the types of the two properties given are equal. The second demands that the type of the first
+conforms to the type of the second.
 In the type checking rules it is possible to use the predefined instances of a limited concept.
+[source]
 ----
-DemoPlusExpression {
-    @typecheck equalsType( this.left, DemoAttributeType:Integer )
-    @typecheck equalsType( this.right, DemoAttributeType:Integer )
- }
+include::{src-dir}/LanguageDefinition.valid[tag=typecheck]
 ----
+
+
 

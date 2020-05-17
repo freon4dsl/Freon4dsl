@@ -1,0 +1,10 @@
+== Structure of the Generated Code
+*	Environment
+*	Language
+*	Editor
+*	Scoper
+*	Typer
+*   Unparser
+*	Validator
+
+// TODO add content

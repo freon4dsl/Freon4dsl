@@ -54,5 +54,3 @@ The current version is a proof-of-concept. We are working towards a more mature 
 * Make use of Github as model server.
 * Create other tools that have their use within a language workbench, like a scope provider generator (ScopeIt) and a type checker generator (TypeIt).
 
-== The Team
-This project is supported by https://openmodeling.nl/[Openmodeling]. 

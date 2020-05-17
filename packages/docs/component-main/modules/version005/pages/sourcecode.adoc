@@ -5,6 +5,8 @@
 :listing-caption: Code Sample
 
 = Deeper in the Source Code
+
+[#philosophy]
 == The Philosophy of ProjectIt
 The main idea behind ProjectIt is to build a minimal viable product which supports the
 language engineer in creating a work environment for a mini-language. A key principle
@@ -33,41 +35,14 @@ With these principles in mind, we have started of small and simple. Every defini
 from the language structure to the validation rules, is kept minimal. Over time, in an agile
 fashion, these will be extended whenever the need arises. Furthermore, we want to use bootstrapping
 to create editors for every one of the definition languages. If you are interested, you can
-check out our wish list of features to be developed in the future.
+check out our xref:wish-list.adoc[wish list] of features to be developed in the future.
 
-== The ProjectIt Editor Framework
-Include existing documentation
+With all this in mind, you are welcome to find out more on the following subjects.
 
-== Support For Expressions
-TODO: why and how
-
-== Structure of the Generated Code
-*	Environment
-*	Language
-*	Editor
-*	Scoper
-*	Typer
-*	Validator
-
-== Name Based References
-TODO: why and how
-
-== The ProjectIt Interfaces
-Explain the interfaces for the editor, scoper, typer, and validator.
-
-== Wish List for Future Developments
-In the future we want to extend ProjectIt with the following features. There is no order
-in this list, nor is there any guarantee that the features will be build. We take on a
-task at the moment the need for it arises.
-
-*	Add the possibility in the validator definition for language engineers to state
-their own error messages with each rule, instead of using the predefined messages.
-*	Support models that can be split into separate units using a reference and import/export
-mechanism. This will make it easier for multiple users to work on a model simultaneously.
-Standard version control systems can be used for storage of the models.
-*	Support multiple definition files for one element of the work environment, e.g. for
-defining the language structure.
-*	Support libraries for language development, like a library with definitions for expressions.
-*	Have a dedicated error pane where a single click gets your user to the faulty part of his/her model.
-*	Create an interpreter generator.
+* Learn about the xref:editor-framework.adoc[framework] used for projectional editing.
+* See how you can define xref:defining_actions.adoc[custom projections and actions].
+* Find out more about the xref:expressions.adoc[build-in support for expressions].
+* Explore why we use xref:name-based-references.adoc[name based references].
+* Note how the generated code is easily extendable using the xref:interfaces.adoc[ProjectIt interfaces].
+* Browse through the xref:sourcecode.adoc[source code documentation].
 

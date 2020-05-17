@@ -1,10 +1,6 @@
 language Demo
 
-root concept DemoModel {
-    functions: DemoFunction[];
-    name: string;
-    entities: DemoEntity[];
-}
+// tag::concepts[]
 interface BaseType {
     name: string;
     baseInterface_attr: number;
@@ -35,7 +31,14 @@ expression DemoAbsExpression base DemoExpression {
 binary expression DemoMultiplyExpression base DemoBinaryExpression {
     priority = 8;
 }
-
+// end::concepts[]
+// tag::rootconcept[]
+root concept DemoModel {
+    functions: DemoFunction[];
+    name: string;
+    entities: DemoEntity[];
+}
+// end::rootconcept[]
 concept DemoFunction {
     name: string;
     reference declaredType : Type;
@@ -73,8 +76,6 @@ expression DemoVariableRef base DemoExpression {
     reference variable: DemoVariable;
 }
 
-
-
 abstract expression DemoLiteralExpression base DemoExpression {}
 
 expression DemoStringLiteralExpression base DemoLiteralExpression {
@@ -88,8 +89,6 @@ expression DemoNumberLiteralExpression base DemoLiteralExpression {
 expression DemoBooleanLiteralExpression base DemoLiteralExpression {
     value: string; // TODO should be changed to type boolean
 }
-
-
 
 abstract binary expression DemoBinaryExpression base DemoExpression {
     left: DemoExpression;

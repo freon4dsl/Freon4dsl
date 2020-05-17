@@ -1,0 +1,18 @@
+== Name Based References
+Similar to expressions, in https://www.voelter.de/data/pub/fse2016-projEditing.pdf[Efficiency of Projectional Editing:
+A Controlled Experiment] the authors name _references_ as another challenge for projectional editing.
+
+[quote, Markus Voelter a.o., Efficiency of Projectional Editing]
+____
+*References.*
+References are based on pointers to the targetnode’s ID. Despite some advantages (e.g., robust
+refactorings) of this approach, we observe problems with the tradeoff that the reference target
+has to exist at the time the reference is created.  A more robust and intuitive handling of
+references is desirable.  While some problems can be solved by language developers (e.g.,
+quick fixes to create reference targets), there should be a better way to support references
+by the IDE itself.
+
+The approach to references in ProjectIt is to used only name-based references which are resolve
+on a need-to basis.
+
+// TODO add more information on name-based references

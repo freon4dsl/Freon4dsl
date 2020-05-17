@@ -1,0 +1,19 @@
+== Support For Expressions
+
+Editing expressions in a projectional editor is a well-known challenge. The representation of an expression
+in the AST is highly structured. Yet, because its appearance to the user looks textual, users expect that
+the editing behavior resembles classical text editing as much as possible.
+
+In https://www.voelter.de/data/pub/fse2016-projEditing.pdf[Efficiency of Projectional Editing:
+A Controlled Experiment] the authors express the problem like this.
+
+[quote, Markus Voelter a.o., Efficiency of Projectional Editing]
+____
+*Improving Expression Editing.*
+Editing expressions with their fine-grained tree structure is one of the major challenges in a
+projectional editor. The inability to insert and remove parentheses in arbitrary places (and
+then refactor the treestructure according to the precedence expressed by the parentheses) is an
+example.
+____
+
+//TODO explain what specific support for expressions is implemented
