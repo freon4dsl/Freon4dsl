@@ -18,14 +18,16 @@ editors. Editing expressions in a projectional editor is a well-known challenge.
 ProjectIt framework unique is the fact that it has built-in support for expressions, so you can
 easily make a projectional editor that allows for a natural manner of editing.
 
-On top of the core framework there are currently five generators, each of which generates part
+On top of the core framework there are five generators, each of which generates part
 of the work environment for your mini-language: the language structure, the editor, the scoper,
 the typer, and the validator.
 
 Currently, ProjectIt does not support the creation of debuggers, interpreters, generators, and
-such. Indeed, we have a (large) wish list of extra features that we would like to implement in
+such. Indeed, we have a (large) xref:meta-documentation/wish-list.adoc[wish list] of extra features
+that we would like to implement in
 the future. Given time, we hope to realize many of these extra items. If you want to know why
-we have chosen this development route, read our statement on the philosophy behind the tool.
+we have chosen this development route, read our statement on the xref:sourcecode.adoc[philosophy]
+behind the tool.
 
 We assume that people that want to use ProjectIt know all about making mini-languages. For instance,
 the terms metamodel, abstract syntax tree, etc, should be familiar. When we address the ProjectIt

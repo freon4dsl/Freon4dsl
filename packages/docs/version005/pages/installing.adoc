@@ -15,7 +15,7 @@ We are typically using the latest versions of all, although older versions likel
 You could also try and use NPM instead of yarn.
 
 *	The code can be found at https://github.com/projectit-org/ProjectIt.
-*   Clone branche 'development/release-candidate'.
+*   Clone branche `development/release-candidate`.
 *   If not installed, install lerna:
 
     yarn global add lerna
@@ -35,9 +35,11 @@ You could also try and use NPM instead of yarn.
 (The command opens a browser with the demo editor on `http://localhost:3000/`. If you are
 having trouble using the editor, have a look a the key-bindings under the help menu.)
 
+// TODO check the chain of commands
+
 *	Now you are ready for a closer look at ProjectIt. You can for instance:
 ** Have a look at how the example language is defined by browsing through the language definition files in
-packages/playground/demo/defs.
+`packages/playground/src/demo/defs`.
 ** <<Create Your Own Language>>
 ** Have a look at the <<Source code organisation>>
 ** See how you can <<Use ProjectIt from the Commandline>>
@@ -46,9 +48,10 @@ packages/playground/demo/defs.
 ==  Create Your Own Language
 Naturally, you will want to create your own language definitions. To do so, follows these steps.
 
-*	Add a new folder for your language in packages/playground/src, create a dedicated folder within it. We usually
+*	Add a new folder for your language in `packages/playground/src`, create a dedicated folder within it. We usually
 call it ‘defs’, but any name will do, just keep all language definition files in it. Next, adjust
-the scripts in playground’s package.json, as shown in the following screenshot.
+the scripts in playground’s package.json, as shown in the following screenshot. Use your own folders instead of
+`src/taxrules/defs` and `src/taxtrules`.
 
 ====
 [#img-package-json-adjustment]
@@ -57,9 +60,10 @@ image::package-json-adjustment.png[package-json-adjustment]
 ====
 
 *	Create a (set of) language definition(s). To start with, you only need to define the language structure,
-defaults will be generated for the editor, scoper, typer, and validator. See the xref:tutorials.adoc[tutorials]
-to find out how to adjust the defaults by writing definitions for each of them.
-*	Generate the code using the adjusted scripts in package.json. In the above example this would be done by:
+defaults will be generated for the editor, scoper, typer, and validator. You can start by copying `TaxRules.lang`
+to your own `defs`-folder. See the xref:tutorials.adoc[tutorials]
+to find out how to write the definitions for the language structure, editor, scoper, typer, and validator.
+*	Generate the code using the adjusted script in package.json. In the above example this would be done by:
 
     yarn taxrules
 
@@ -76,15 +80,16 @@ image::webapp-configuration.png[webapp-configuration]
 
     yarn start or lerna run start
 
-*	If you like, add other definitions or change the existing ones, and generate again (again,
-see the xref:tutorials.adoc[tutorials] to find out more about the definitions). Careful, all files in
-any ‘gen’ folder will be deleted.
-*	If you like, have a look at the generated code (see xref:structure-generated-code.adoc[structure of the generated code]).
-*	If you like, add handwritten code to improve the result (see xref:editor-framework.adoc[editor framework]).
+*	If you like, add other definitions or change the existing ones, and generate another time (Again,
+see the xref:tutorials.adoc[tutorials] to find out more about the definitions, and maybe you want to use
+the -w flag to watch changes to your definition files.). Careful with handmade changes, all files in
+any ‘gen’ folder will be deleted during the next generation.
+*	If you like, have a look at the generated code (see also xref:structure-generated-code.adoc[structure of the generated code]).
+*	If you like, add handwritten code to improve the result (see xref:meta-documentation/editor-framework.adoc[editor framework]).
 
 [#UseProjectit]
 == Use ProjectIt from the Commandline
-ProjectIt will be released as a commandline tool. If you look at the package.json file in packages/playground/
+ProjectIt will be released as a commandline tool. If you look at the package.json file in `packages/playground/`
 you can find the commands that were used to run the Demo example.
 ====
 [#img-package-json]
@@ -92,7 +97,7 @@ you can find the commands that were used to run the Demo example.
 image::package-json.png[projectit-package-json]
 ====
 
-Go to folder ‘packages/playground’ and type ‘ts-node ../meta/src/commandline/projectit’ to find out the different
+Go to folder `packages/playground` and type ‘`ts-node ../meta/src/commandline/projectit`’ to find out the different
 arguments that can be used.
 
 ====
@@ -107,12 +112,12 @@ image::projectit-commandline-options.png[projectit-commandline-options]
 * `docs`: documentation, i.e. this website
 * `packages/core`: framework source code.
 * `packages/core/src/editor`: the editor framework source code.
-* `packages/core/src/language/decorators`: source code for decorators that can be used to easily implement a language that can be
+* `packages/core/src/language/decorators`: source code for https://mobx.js.org/[MobX] decorators that can be used to easily implement a language that can be
 directly used by ProjectIt.
 * `packages/meta`: source code that reads the language definition files and generates the language environment.
 * `packages/playground`: source code generated from the language definition files.
-* `packages/playground/webapp`: a copy of `packages/webapp`, used within the playground.
-* `packages/playground/demo/defs`: the language definition files for the example language called 'demo'.
+* `packages/playground/src/webapp`: a copy of `packages/webapp`, used within the playground.
+* `packages/playground/src/demo/defs`: the language definition files for the example language called 'demo'.
 * `packages/server`: source code for a minimalistic model-server used for demonstration purposes.
 * `packages/webapp`: source code for the web-application used for all generated languages.
 * `/*`: the usual suspects.

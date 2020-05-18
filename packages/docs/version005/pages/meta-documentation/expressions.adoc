@@ -1,4 +1,4 @@
-== Support For Expressions
+= Support For Expressions
 
 Editing expressions in a projectional editor is a well-known challenge. The representation of an expression
 in the AST is highly structured. Yet, because its appearance to the user looks textual, users expect that
@@ -17,3 +17,6 @@ example.
 ____
 
 //TODO explain what specific support for expressions is implemented
+== Balancing AST for Expressions
+
+// TODO take some figures from Powerpoints
