@@ -1,0 +1,7 @@
+language XXXX
+
+root concept ZZ {}
+
+binary expression YYY {
+    simple: string;
+}

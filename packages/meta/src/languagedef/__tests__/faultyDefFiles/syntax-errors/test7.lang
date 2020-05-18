@@ -1,0 +1,5 @@
+language XXXX
+
+abstract expression GGGG {
+    part??: UUUU;
+}

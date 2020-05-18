@@ -1,0 +1,6 @@
+language XXXX
+
+concept RRRR {
+    simple: number
+    part: RRRR
+}

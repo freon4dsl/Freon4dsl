@@ -191,7 +191,7 @@ export class PiConcept extends PiClassifier {
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.implementedPrimProperties();
-        if (!!this.base) {
+        if (!!this.base && !!this.base.referred) {
             result = result.concat(this.base.referred.allPrimProperties());
         }
         return result;
@@ -199,7 +199,7 @@ export class PiConcept extends PiClassifier {
 
     allParts(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.implementedParts();
-        if (!!this.base) {
+        if (!!this.base && !!this.base.referred) {
             result = result.concat(this.base.referred.allParts());
         }
         return result;
@@ -207,7 +207,7 @@ export class PiConcept extends PiClassifier {
 
     allReferences(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.implementedReferences();
-        if (!!this.base) {
+        if (!!this.base && !!this.base.referred) {
             result = result.concat(this.base.referred.allReferences());
         }
         return result;

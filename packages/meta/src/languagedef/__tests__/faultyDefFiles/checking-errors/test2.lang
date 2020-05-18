@@ -1,0 +1,17 @@
+language XXX
+
+root concept YYY {
+}
+root concept ZZZ { // just one root concept is allowed
+}
+concept ZZZ {
+    simple: string; // properties must have unique names
+    simple: number;
+    reference xx: number; // references must have concept as type
+}
+expression YYY {
+}
+limited AAA {
+}
+interface AAA {
+}
