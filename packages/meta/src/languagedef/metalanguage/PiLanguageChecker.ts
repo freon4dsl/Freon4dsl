@@ -19,7 +19,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     foundRoot = false;
 
     public check(language: PiLanguageUnit): void {
-        let foundCircularity = false;
         LOGGER.info(this, "Checking language '" + language.name + "'");
         this.simpleCheck(!!language.name && !reservedWords.includes(language.name) ,
             `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
@@ -64,11 +63,9 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             }
             // check circularity
             let circulairNames: string[] = [];
-            foundCircularity = this.checkCirculairInheritance(circulairNames, con);
+            let foundCircularity = this.checkCirculairInheritance(circulairNames, con);
             // check that all properties have unique names
-            console.log("for " + con.name + " found: " + foundCircularity);
             if (!foundCircularity) this.checkPropertyUniqueNames(con);
-            foundCircularity = false;
         });
         language.interfaces.forEach((intf, index) => {
             if (names.includes(intf.name)) {
@@ -77,26 +74,43 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             } else {
                 names.push(intf.name);
             }
+            // check circularity
+            let circulairNames: string[] = [];
+            let foundCircularity = this.checkCirculairInheritance(circulairNames, intf);
             // check that all properties have unique names
-            // if (!foundCircularity) this.checkPropertyUniqueNames(intf);
+            if (!foundCircularity) this.checkPropertyUniqueNames(intf);
         });
     }
 
-    private checkCirculairInheritance(circulairNames: string[], con: PiConcept): boolean {
+    private checkCirculairInheritance(circulairNames: string[], con: PiClassifier): boolean {
         if (circulairNames.includes(con.name)) {
             // error, already seen this name
             this.simpleCheck(false,
-                        `Concept '${con.name}' is part of a forbidden circulair inheritance tree ` +
+                        `Concept or interface '${con.name}' is part of a forbidden circulair inheritance tree ` +
                         `[line: ${con.location?.start.line}, column: ${con.location?.start.column}].`);
             return true;
         } else {
             // not (yet) found a circularity, check 'base'
             circulairNames.push(con.name);
-            let base = con.base?.referred;
-            if (!!base) {
-                return this.checkCirculairInheritance(circulairNames, base);
+            if (con instanceof PiConcept) {
+                let base = con.base?.referred;
+                if (!!base) {
+                    return this.checkCirculairInheritance(circulairNames, base);
+                } else {
+                    // no problem because there is no 'base'
+                    return false;
+                }
+            } else if (con instanceof PiInterface) {
+                let result = false;
+                for( let base of con.base ) {
+                    let realBase = base.referred;
+                    if (!!realBase) {
+                        result = this.checkCirculairInheritance(circulairNames, realBase);
+                    }
+                }
+                return result;
             } else {
-                // no problem because there is no 'base'
+                // does not occur, PiConcept and PiInterface are the only subclasses of PiClassifier
                 return false;
             }
         }

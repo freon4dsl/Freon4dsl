@@ -57,9 +57,15 @@ describe("Checking language parser on checking errors", () => {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Binary expression concept YYY should have a priority [line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Binary expression concept YYY should have a left part [line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Binary expression concept YYY should have a right part [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circulair inheritance tree [line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circulair inheritance tree [line: 7, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circulair inheritance tree [line: 10, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circulair inheritance tree [line: 13, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circulair inheritance tree [line: 16, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circulair inheritance tree [line: 18, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 24, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 30, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property with name 'prop1' already exists in yyy [line: 30, column: 5].")).toBeTruthy();
         }
     });
 
@@ -71,9 +77,12 @@ describe("Checking language parser on checking errors", () => {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Binary expression concept YYY should have a priority [line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Binary expression concept YYY should have a left part [line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Binary expression concept YYY should have a right part [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circulair inheritance tree [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circulair inheritance tree [line: 18, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circulair inheritance tree [line: 8, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circulair inheritance tree [line: 11, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circulair inheritance tree [line: 14, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circulair inheritance tree [line: 21, column: 1].")).toBeTruthy();
         }
     });
 
