@@ -49,7 +49,7 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test.skip("checking circular inheritance", () => {
+    test("checking circular inheritance", () => {
         let parser = new LanguageParser();
         let checker = parser.checker;
         let parseFile = testdir + "test4.lang";
@@ -57,10 +57,13 @@ describe("Checking language parser on checking errors", () => {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
+            expect(checker.errors.includes("Binary expression concept YYY should have a priority [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Binary expression concept YYY should have a left part [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Binary expression concept YYY should have a right part [line: 5, column: 1].")).toBeTruthy();
         }
     });
 
-    test("checking expression concepts", () => {
+    test("checking circular interfaces", () => {
         let parser = new LanguageParser();
         let checker = parser.checker;
         let parseFile = testdir + "test5.lang";
@@ -74,10 +77,24 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test("checking limited concepts", () => {
+    test("checking expression concepts", () => {
         let parser = new LanguageParser();
         let checker = parser.checker;
         let parseFile = testdir + "test6.lang";
+        try {
+            parser.parse(parseFile);
+        } catch(e) {
+            expect(e.message).toBe(`checking errors.`);
+            expect(checker.errors.includes("Binary expression concept YYY should have a priority [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Binary expression concept YYY should have a left part [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Binary expression concept YYY should have a right part [line: 5, column: 1].")).toBeTruthy();
+        }
+    });
+
+    test("checking limited concepts", () => {
+        let parser = new LanguageParser();
+        let checker = parser.checker;
+        let parseFile = testdir + "test7.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {

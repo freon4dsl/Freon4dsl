@@ -1,19 +1,33 @@
 language XXXX
 
-expression AAA base BBB {
-}
-expression BBB base AAA {
+interface AAA base BBB {
 }
 
-root concept CCC base DDD {
+
+interface CCC base DDD {
 }
 
-//concept DDD base EEE {
-//}
-//
-//concept EEE base FFF {
-//}
-//
-//concept FFF base CCC {
-//}
+interface DDD base EEE {
+}
+
+interface EEE base FFF {
+}
+
+interface FFF base CCC {
+}
+
+interface BBB base AAA {
+    prop2: string;
+    prop2: number;
+}
+
+root concept xxx base yyy {
+    prop1: BBB;
+
+}
+
+concept yyy {
+    prop1: string;
+    prop1: AAA;
+}
 

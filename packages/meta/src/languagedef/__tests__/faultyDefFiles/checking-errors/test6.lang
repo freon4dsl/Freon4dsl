@@ -1,21 +1,7 @@
 language XXXX
 
-root concept r {}
+root concept ZZ {}
 
-limited RRRR {
-    simple: number;
-    instance1 = { s: "text" }        // property 's' does not exist on RRRR
-    instance2 = { simple: "text" }   // "text" is not of type 'number'
+binary expression YYY {
+    simple: string;
 }
-
-limited AA base RRRR {
-    prop1: string;
-    prop2: boolean;
-    instance1 = { s: "text" }        // property 's' does not exist on AA
-    instance2 = { simple: "text" }   // "text" is not of type 'number'
-    instance3 = { prop1: "10" }      // is correct: "10" is of type 'string'
-    instance4 = { prop2: "false" }   // is correct: "false" is of type 'boolean'
-    instance5 = { prop2: "10" }      // "10" is not of type 'boolean'
-    instance5 = { simple: "10" }     // cannot have duplicate names for instances
-}
-
