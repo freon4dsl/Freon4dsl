@@ -1,8 +1,8 @@
-import { LanguageParser } from "../parser/LanguageParser";
+import { LanguageParser } from "../../parser/LanguageParser";
 
 describe("Checking language parser on syntax errors", () => {
     let parser = new LanguageParser();
-    let testdir = "src/languagedef/__tests__/faultyDefFiles/syntax-errors/";
+    let testdir = "src/languagedef/__tests__/language-tests/faultyDefFiles/syntax-errors/";
 
     test("language should have a name", () => {
         let parseFile = testdir + "test1.lang";

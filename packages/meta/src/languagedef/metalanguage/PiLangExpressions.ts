@@ -1,7 +1,6 @@
 import { PiConcept, PiConceptProperty, PiFunction, PiInstance, PiLanguageUnit, PiProperty } from ".";
-import { ParseLocation } from "../../utils";
+import { Names, ParseLocation } from "../../utils";
 import { PiLangElement } from "./PiLanguage";
-import { nameForSelf } from "../../languagedef/parser/ExpressionCreators";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -54,7 +53,7 @@ export class PiLangSelfExp extends PiLangExp {
         const result = new PiLangSelfExp();
         result.referedElement = PiElementReference.create<PiConcept>(referred, "PiConcept");
         result.referedElement.owner = result;
-        result.sourceName = nameForSelf;
+        result.sourceName = Names.nameForSelf;
         return result;
     }
 }

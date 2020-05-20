@@ -224,10 +224,11 @@ export class ConceptTemplate {
         const decorator = property.isList ? "@observablelistpart" : "@observable";
         const arrayType = property.isList ? "[]" : "";
         let initializer = "";
-        if (property.primType === "string") initializer = "\"\"";
-        if (property.primType === "number") initializer = "-1";
-        if (property.primType === "boolean") initializer = "false";
-        return `${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer}; ${comment}`;
+        if (property.isList) initializer = "[]";
+        if (!property.isList && property.primType === "string") initializer = "\"\"";
+        if (!property.isList && property.primType === "number") initializer = "-1";
+        if (!property.isList && property.primType === "boolean") initializer = "false";
+        return `${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer}; \t${comment}`;
     }
 
     private generatePartProperty(property: PiConceptProperty): string {

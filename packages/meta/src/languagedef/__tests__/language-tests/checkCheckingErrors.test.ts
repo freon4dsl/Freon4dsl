@@ -1,7 +1,7 @@
-import { LanguageParser } from "../parser/LanguageParser";
+import { LanguageParser } from "../../parser/LanguageParser";
 
 describe("Checking language parser on checking errors", () => {
-    let testdir = "src/languagedef/__tests__/faultyDefFiles/checking-errors/";
+    let testdir = "src/languagedef/__tests__/language-tests/faultyDefFiles/checking-errors/";
 
     test("language should have a root concept", () => {
         let parser = new LanguageParser();
@@ -108,12 +108,14 @@ describe("Checking language parser on checking errors", () => {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Property 's' does not exist on concept RRRR [line: 7, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("Type of 'text' does not equal type of property 'simple' [line: 8, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("Property 's' does not exist on concept AA [line: 14, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("Type of 'text' does not equal type of property 'simple' [line: 15, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("Type of '10' does not equal type of property 'prop2' [line: 18, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("Instance with name 'instance5' already exists [line: 19, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no name property [line: 4, column: 24].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because its name property is not of type 'string' [line: 5, column: 25].")).toBeTruthy();
+            expect(checker.errors.includes("Property 's' does not exist on concept RRRR [line: 13, column: 19].")).toBeTruthy();
+            expect(checker.errors.includes("Type of 'text' does not equal type of property 'simple' [line: 14, column: 19].")).toBeTruthy();
+            expect(checker.errors.includes("Property 's' does not exist on concept AA [line: 20, column: 19].")).toBeTruthy();
+            expect(checker.errors.includes("Type of 'text' does not equal type of property 'simple' [line: 21, column: 19].")).toBeTruthy();
+            expect(checker.errors.includes("Type of '10' does not equal type of property 'prop2' [line: 24, column: 19].")).toBeTruthy();
+            expect(checker.errors.includes("Instance with name 'instance5' already exists [line: 25, column: 5].")).toBeTruthy();
         }
     });
 });

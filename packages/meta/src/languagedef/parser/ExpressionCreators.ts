@@ -14,9 +14,9 @@ import { PiClassifier } from "../metalanguage/PiLanguage";
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../metalanguage/PiElementReference";
+import { nameForSelf } from "../../../dist/meta/src/languagedef/parser/ExpressionCreators";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
-export const nameForSelf = "self";
 
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");

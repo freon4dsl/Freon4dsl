@@ -13,7 +13,6 @@
     "projectit": 	"ts-node ../meta/src/commandline/projectit -v all -d src/demo/defs -o src/demo",
     "projectit-watch": 	"ts-node ../meta/src/commandline/projectit -vw all -d src/demo/defs -o src/demo",
     "projectit-nonverbose": 	"ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",
-    "test-expressions": 		"ts-node ../meta/src/commandline/projectit -v test-expressions -l src/demo/defs/LanguageDefinition.lang -X src/demo/defs/LanguageExpressions.pitest -o src/demo",
     "meta-it": 		"ts-node ../meta/src/commandline/projectit -v meta-it -l src/demo/defs/LanguageDefinition.lang -o src/demo",
     "scope-it": 		"ts-node ../meta/src/commandline/projectit -v scope-it -l src/demo/defs/LanguageDefinition.lang -s src/demo/defs/LanguageDefinition.scop -o src/demo",
     "edit-it": 		"ts-node ../meta/src/commandline/projectit -v edit-it -l src/demo/defs/LanguageDefinition.lang -e src/demo/defs/LanguageDefinition.edit -o src/demo",   

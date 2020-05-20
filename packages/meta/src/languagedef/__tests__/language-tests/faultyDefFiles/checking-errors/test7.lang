@@ -1,6 +1,12 @@
 language XXXX
 
-root concept r {}
+root concept r {
+    reference refProp: NoName;
+    reference refProp2: NameNotStringType;
+}
+
+concept NoName {
+}
 
 limited RRRR {
     simple: number;
@@ -17,5 +23,9 @@ limited AA base RRRR {
     instance4 = { prop2: "false" }   // is correct: "false" is of type 'boolean'
     instance5 = { prop2: "10" }      // "10" is not of type 'boolean'
     instance5 = { simple: "10" }     // cannot have duplicate names for instances
+}
+
+concept NameNotStringType {
+    name: boolean;
 }
 

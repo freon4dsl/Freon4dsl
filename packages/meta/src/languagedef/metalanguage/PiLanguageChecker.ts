@@ -62,8 +62,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 names.push(con.name);
             }
             // check circularity
-            let circulairNames: string[] = [];
-            let foundCircularity = this.checkCirculairInheritance(circulairNames, con);
+            let circularNames: string[] = [];
+            let foundCircularity = this.checkCircularInheritance(circularNames, con);
             // check that all properties have unique names
             if (!foundCircularity) this.checkPropertyUniqueNames(con);
         });
@@ -75,27 +75,29 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 names.push(intf.name);
             }
             // check circularity
-            let circulairNames: string[] = [];
-            let foundCircularity = this.checkCirculairInheritance(circulairNames, intf);
+            let circularNames: string[] = [];
+            let foundCircularity = this.checkCircularInheritance(circularNames, intf);
             // check that all properties have unique names
             if (!foundCircularity) this.checkPropertyUniqueNames(intf);
         });
     }
 
-    private checkCirculairInheritance(circulairNames: string[], con: PiClassifier): boolean {
-        if (circulairNames.includes(con.name)) {
+    private checkCircularInheritance(circularNames: string[], con: PiClassifier): boolean {
+        if (circularNames.includes(con.name)) {
             // error, already seen this name
+            let text : string = '';
+            text = circularNames.map(name => name ).join(", ");
             this.simpleCheck(false,
-                        `Concept or interface '${con.name}' is part of a forbidden circulair inheritance tree ` +
+                        `Concept or interface '${con.name}' is part of a forbidden circular inheritance tree (${text}) ` +
                         `[line: ${con.location?.start.line}, column: ${con.location?.start.column}].`);
             return true;
         } else {
             // not (yet) found a circularity, check 'base'
-            circulairNames.push(con.name);
+            circularNames.push(con.name);
             if (con instanceof PiConcept) {
                 let base = con.base?.referred;
                 if (!!base) {
-                    return this.checkCirculairInheritance(circulairNames, base);
+                    return this.checkCircularInheritance(circularNames, base);
                 } else {
                     // no problem because there is no 'base'
                     return false;
@@ -105,7 +107,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 for( let base of con.base ) {
                     let realBase = base.referred;
                     if (!!realBase) {
-                        result = this.checkCirculairInheritance(circulairNames, realBase);
+                        result = this.checkCircularInheritance(circularNames, realBase);
                     }
                 }
                 return result;
@@ -277,11 +279,25 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 error: `Element '${piProperty.name}' should have a type [line: ${piProperty.location?.start.line}, column: ${piProperty.location?.start.column}].`,
                 whenOk: () => {
                     this.checkConceptReference(piProperty.type);
-                    if (!!piProperty.type.referred) { // error message taken care of by checkConceptReference
-                        if(piProperty.type.referred instanceof PiLimitedConcept) {
+                    let realType = piProperty.type.referred;
+                    if (!!realType) { // error message taken care of by checkConceptReference
+                        if(realType instanceof PiLimitedConcept) {
                             // this situation is OK, but property with limited concept as type should always be a reference property
                             // the property should refer to one of the predefined instances of the limited concept
                             piProperty.isPart = false;
+                        }
+                        if (!piProperty.isPart) {
+                            // it is a reference, so check whether the type has a name by which it can be referred
+                            let nameProperty = realType.allPrimProperties().find(p => p.name === "name");
+                            this.nestedCheck({
+                                    check: !!nameProperty,
+                                    error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ` +
+                                                `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`,
+                                    whenOk: () => {
+                                        this.simpleCheck(nameProperty.primType === "string",
+                                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'string' ` +
+                                                `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                                    }});
                         }
                     }
                 }
