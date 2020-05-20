@@ -1,20 +1,23 @@
 import { LanguageParser } from "../../parser/LanguageParser";
 import { LanguageExpressionParser } from "../../parser/LanguageExpressionParser";
 
-
 describe("Checking expression parser on syntax errors", () => {
-    let language = new LanguageParser().parse("src/languagedef/__tests__/expression-tests/expressionDefFiles/testLanguage.lang");
-    if (language == null) {
-        throw new Error("Language could not be parsed, exiting.");
-    }
     let testdir = "src/languagedef/__tests__/expression-tests/expressionDefFiles/syntax-errors/";
 
+    beforeEach(() => {
+        try {
+            let language = new LanguageParser().parse("src/languagedef/__tests__/expression-tests/expressionDefFiles/testLanguage.lang");
+        } catch (e) {
+            console.log("Language could not be read");
+        }
+    });
+
     test("original test on demo language", () => {
-        let demoLanguage = new LanguageParser().parse("src/languagedef/__tests__/expression-tests/expressionDefFiles/testLanguage.lang");
+        let demoLanguage = new LanguageParser().parse("src/languagedef/__tests__/expression-tests/expressionDefFiles/demoLanguage.lang");
         if (demoLanguage == null) {
             throw new Error("Demo Language could not be parsed, exiting.");
         }
-        let parser = new LanguageExpressionParser(language);
+        let parser = new LanguageExpressionParser(demoLanguage);
         let checker = parser.checker;
         let demoExpressionFile = "src/languagedef/__tests__/expression-tests/expressionDefFiles/demoExpressions.pitest";
         try {

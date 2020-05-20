@@ -49,7 +49,7 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test("checking circular inheritance", () => {
+    test.skip("checking circular inheritance", () => {
         let parser = new LanguageParser();
         let checker = parser.checker;
         let parseFile = testdir + "test4.lang";
@@ -69,7 +69,7 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test("checking circular interfaces", () => {
+    test.skip("checking circular interfaces", () => {
         let parser = new LanguageParser();
         let checker = parser.checker;
         let parseFile = testdir + "test5.lang";

@@ -71,18 +71,8 @@ limited ZZ {
     ZZprop4: number[];
     ZZprop5: boolean;
     ZZprop6: boolean[];
-    // properties with concept as type
-    ZZprop7: BB;
-    ZZprop8: BB[];
-    reference ZZprop9: CC;
-    reference ZZprop10: CC[];
-    // properties with interface as type
-    ZZprop11: DD;
-    ZZprop12: DD[];
-    reference ZZprop13: FF;
-    reference ZZprop14: FF[];
+    instanceZZ1 = {ZZprop1: "xxx" }
 }
-
 
 interface DD  {
     // the possibilities for primitive properties
