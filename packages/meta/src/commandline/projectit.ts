@@ -40,7 +40,7 @@ export class ProjectItParser extends CommandLineParser {
         this.addAction(this.validatorGenerator);
         this.addAction(this.typerGenerator);
 
-        // testGenerator is used only for testing purposes, should be removed from release
+        // TODO testGenerator is used only for testing purposes, should be removed from release
         this.testGenerator = new ProjectItTestLanguageExpressions();
         this.addAction(this.testGenerator);
     }

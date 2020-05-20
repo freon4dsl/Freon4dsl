@@ -85,4 +85,12 @@ describe("Checking language parser on syntax errors", () => {
         }
     });
 
+    test("instances of limited concepts should have some properties", () => {
+        let parseFile = testdir + "test10.lang";
+        try {
+            parser.parse(parseFile);
+        } catch(e) {
+            expect(e.message).toBe(`syntax error.`);
+        }
+    });
 });

@@ -182,7 +182,9 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         piConcept.interfaces = newInterfaces;
 
         piConcept.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
-        piConcept.properties.forEach(part => this.checkConceptProperty(part));
+        if (!(piConcept instanceof PiLimitedConcept)) {
+            piConcept.properties.forEach(part => this.checkConceptProperty(part));
+        }
 
         if (piConcept instanceof PiBinaryExpressionConcept && !(piConcept.isAbstract)) {
             // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
@@ -214,11 +216,28 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         }
     }
 
-    checkLimitedConcept(prop: PiLimitedConcept) {
-        LOGGER.log(`Checking limited concept '${prop.name}' [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}]`);
-        // checking only the predefined instances, all other stuff is done in this.checkConcept
+    checkLimitedConcept(piLimitedConcept: PiLimitedConcept) {
+        LOGGER.log(`Checking limited concept '${piLimitedConcept.name}' [line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}]`);
+        // most of the checking is done in this.checkConcept
+
+        // checking for properties other than primitive ones
+        piLimitedConcept.properties.forEach(prop => {
+            this.simpleCheck(false, `Property '${prop.name}' of limited concept should have primitive type [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`);
+        });
+
+        // if this concept is abstract there may be no instances
+        // if this concept is not abstract there must be instances
+        if (piLimitedConcept.isAbstract) {
+            this.simpleCheck(piLimitedConcept.instances.length === 0,
+                `An abstract limited concept may not have any instances [line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`);
+        } else {
+            this.simpleCheck(piLimitedConcept.instances.length > 0,
+                `A non-abstract limited concept must have instances [line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`);
+        }
+
+        // checking the predefined instances
         let names: string[] = [];
-        prop.instances.forEach((inst, index) => {
+        piLimitedConcept.instances.forEach((inst, index) => {
             if (names.includes(inst.name)) {
                 this.simpleCheck(false,
                     `Instance with name '${inst.name}' already exists [line: ${inst.location?.start.line}, column: ${inst.location?.start.column}].`);

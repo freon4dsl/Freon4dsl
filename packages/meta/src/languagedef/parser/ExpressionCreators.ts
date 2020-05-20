@@ -8,13 +8,13 @@ import {
     PiLangConceptExp, PiLangSimpleExp
 } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { Names } from "../../utils";
 import { PiClassifier } from "../metalanguage/PiLanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../metalanguage/PiElementReference";
-import { nameForSelf } from "../../../dist/meta/src/languagedef/parser/ExpressionCreators";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
 
@@ -62,7 +62,7 @@ export function createConceptReference(data: Partial<PiElementReference<PiClassi
 export function createExpression(data: Partial<PiLangExp>): PiLangExp {
     let result: PiLangExp;
     if (!!data.sourceName) {
-        if (data.sourceName === nameForSelf) {
+        if (data.sourceName === Names.nameForSelf) {
             // cannot use PiLangSelfExp.create() because referedElement is not yet known
             result = new PiLangSelfExp();
             LOGGER.log("createSelfExpression");

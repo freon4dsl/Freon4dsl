@@ -1,5 +1,5 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty, PiPrimitiveProperty, PiLimitedConcept, PiInterface } from "./PiLanguage";
+import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty, PiLimitedConcept } from "./PiLanguage";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
 import {
     PiLangExp,
@@ -10,8 +10,8 @@ import {
     PiInstanceExp, PiLangSimpleExp
 } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiElementReference } from "./PiElementReference";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
+import { PiElementReference } from "./PiElementReference";
 
 const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
 const validFunctionNames : string[] = [ "commonSuperType", "conformsTo", "equalsType", "typeof" ];
