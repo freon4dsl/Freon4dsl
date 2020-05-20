@@ -1,4 +1,4 @@
-import { Checker } from "../../utils";
+import { Checker, ParseLocation } from "../../utils";
 import {
     PiLanguageUnit,
     PiBinaryExpressionConcept,
@@ -218,7 +218,18 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
     checkLimitedConcept(piLimitedConcept: PiLimitedConcept) {
         LOGGER.log(`Checking limited concept '${piLimitedConcept.name}' [line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}]`);
-        // most of the checking is done in this.checkConcept
+        // the normal checking of concepts is done in this.checkConcept
+        // limited concept may be used as reference only, thus it should have a property 'name: string'
+        let nameProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
+        this.nestedCheck({
+            check: !!nameProperty,
+            error: `Limited concept '${piLimitedConcept.name}' can only be used as a reference, therefore it must have a 'name' property ` +
+                `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`,
+            whenOk: () => {
+                this.simpleCheck(nameProperty.primType === "string",
+                    `Limited concept '${piLimitedConcept.name}' can only be used as a reference, therefore its 'name' property must be of type 'string' ` +
+                    `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`);
+            }});
 
         // checking for properties other than primitive ones
         piLimitedConcept.properties.forEach(prop => {
