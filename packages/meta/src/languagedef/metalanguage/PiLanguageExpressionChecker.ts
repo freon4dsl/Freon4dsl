@@ -1,5 +1,5 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty, PiLimitedConcept } from "./PiLanguage";
+import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty, PiLimitedConcept, PiInstance } from "./PiLanguage";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
 import {
     PiLangExp,
@@ -7,7 +7,8 @@ import {
     PiLangAppliedFeatureExp,
     PiLangConceptExp,
     PiLangFunctionCallExp,
-    PiInstanceExp, PiLangSimpleExp
+    PiInstanceExp,
+    PiLangSimpleExp
 } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
@@ -115,14 +116,17 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
                     error: `Concept ${langExp.sourceName} does not defined any instances [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
                     whenOk: () => {
                         this.nestedCheck( {
-                            check: !!langExp.appliedfeature,
+                            check: !!langExp.instanceName,
                             error: `A limited concept expression should have an instance name [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
                             whenOk: () => {
-                                let foundInstance = (myLimitedConcept as PiLimitedConcept).instances.find(l => l.name === langExp.appliedfeature.sourceName);
+                                let foundInstance = (myLimitedConcept as PiLimitedConcept).instances.find(l => l.name === langExp.instanceName);
                                 this.simpleCheck(!!foundInstance,
-                                    `${langExp.appliedfeature.sourceName} is not a predefined instance of ${myLimitedConcept.name} `+
+                                    `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept.name} `+
                                             `[line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`
                                 );
+                                if (!!foundInstance) {
+                                    langExp.referedElement = PiElementReference.create<PiInstance>(foundInstance, "PiInstance");
+                                }
                             }
                         })
                     }

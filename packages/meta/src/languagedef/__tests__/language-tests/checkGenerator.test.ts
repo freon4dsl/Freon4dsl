@@ -10,7 +10,7 @@ describe("Checking generator for language definition", () => {
     test("generation of all kinds of properties", () => {
         let parser = new LanguageParser();
         let generator = new LanguageGenerator();
-        let parseFile = testdir + "test1.lang";
+        let parseFile = testdir + "test2.lang";
         let model : PiLanguageUnit;
         try {
             model = parser.parse(parseFile);

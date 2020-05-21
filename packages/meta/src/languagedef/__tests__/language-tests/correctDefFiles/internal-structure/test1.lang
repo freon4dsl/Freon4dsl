@@ -40,6 +40,11 @@ concept BB base CC implements DD {
     BBprop12: DD[];
     reference BBprop13: FF;
     reference BBprop14: FF[];
+    // properties with limited concept as type
+    BBprop15: ZZ;
+    BBprop16: ZZ[];
+    reference BBprop17: ZZ;
+    reference BBprop18: ZZ[];
 }
 
 concept CC implements EE, FF {

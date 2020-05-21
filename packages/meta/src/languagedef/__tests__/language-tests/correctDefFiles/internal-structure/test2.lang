@@ -38,6 +38,11 @@ concept BB base CC {
     BBprop12: DD[];
     reference BBprop13: FF;
     reference BBprop14: FF[];
+    // properties with limited concept as type
+    BBprop15: ZZ;
+    BBprop16: ZZ[];
+    reference BBprop17: ZZ;
+    reference BBprop18: ZZ[];
 }
 
 concept CC {
@@ -62,6 +67,7 @@ concept CC {
 }
 
 limited ZZ {
+    name: string;
     // the possibilities for primitive properties
     ZZprop1: string;
     ZZprop2: string[];
@@ -69,8 +75,9 @@ limited ZZ {
     ZZprop4: number[];
     ZZprop5: boolean;
     ZZprop6: boolean[];
+    ZZinstance1 = { name: "ZZinstance1", ZZprop1: "sometext" }
     // properties with concept as type
-    ZZprop7: BB;
+/*    ZZprop7: BB;
     ZZprop8: BB[];
     reference ZZprop9: CC;
     reference ZZprop10: CC[];
@@ -79,6 +86,7 @@ limited ZZ {
     ZZprop12: DD[];
     reference ZZprop13: FF;
     reference ZZprop14: FF[];
+    */
 }
 
 interface DD base EE {

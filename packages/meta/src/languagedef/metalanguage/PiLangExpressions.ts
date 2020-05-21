@@ -11,6 +11,7 @@ import { PiElementReference } from "../../languagedef/metalanguage/PiElementRefe
 
 export abstract class PiLangExp extends PiLangElement {
     sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+    // TODO appliedfeature could be moved to SelfExp, is not used elsewhere
     appliedfeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
     referedElement: PiElementReference<PiLangElement>;  // refers to the element called 'sourceName'
     location: ParseLocation;                            // holds start and end in the parsed file
@@ -59,10 +60,12 @@ export class PiLangSelfExp extends PiLangExp {
 }
 
 export class PiInstanceExp extends PiLangExp {
+    // sourceName should be name of a limited concept
+    instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
     referedElement: PiElementReference<PiInstance>;
 
     toPiString(): string {
-        return this.sourceName + (this.appliedfeature?.sourceName ? (":" + this.appliedfeature.sourceName) : "");
+        return this.sourceName + ":" + this.instanceName;
     }
 }
 

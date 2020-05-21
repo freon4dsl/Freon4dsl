@@ -1,4 +1,4 @@
-import { Checker, ParseLocation } from "../../utils";
+import { Checker } from "../../utils";
 import {
     PiLanguageUnit,
     PiBinaryExpressionConcept,

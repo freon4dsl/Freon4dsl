@@ -1,0 +1,57 @@
+expressions for language test1
+
+AA {
+    // the possibilities for primitive properties
+    self.AAprop1; // : string;
+    self.AAprop2; // : string[];
+    self.AAprop3; // : number;
+    self.AAprop4; // : number[];
+    self.AAprop5; // : boolean;
+    self.AAprop6; // : boolean[];
+    // properties with concept as type
+    self.AAprop7; // : BB;
+    self.AAprop8; // : BB[];
+    self.AAprop9; // : CC; // reference
+    self.AAprop10; // : CC[]; // reference
+    // properties with interface as type
+    self.AAprop11; // : DD;
+    self.AAprop12; // : DD[];
+    self.AAprop13; // : FF; // reference
+    self.AAprop14; // : FF[]; // reference
+}
+
+BB { // properties with limited concepts as type
+    self.BBprop15;
+    self.BBprop16;
+    self.BBprop17;
+    self.BBprop18;
+}
+
+CC {
+    ZZ:instanceZZ1;
+}
+
+DD {
+/* To be tested:
+    LimitedType:Inter;
+    container;
+    typeof ( self.attributes );
+    typeof ( container );
+    typeof ( xx );
+    DemoVariable.fgg;
+    conformsTo (self.declaredType);
+    self.parameters;
+    DemoFunction.parameters;
+    self.extra;
+    conformsTo( self.whenTrue, self.whenFalse );
+    equalsType( self.expr, DemoAttributeType:Integer ) ;
+*/
+}
+
+EE {
+
+}
+
+FF {
+
+}

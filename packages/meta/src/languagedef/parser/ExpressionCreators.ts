@@ -107,9 +107,8 @@ export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
     if (!!data.sourceName) {
         result.sourceName = data.sourceName;
     }
-    if (!!data.appliedfeature) {
-        result.appliedfeature = data.appliedfeature;
-        result.appliedfeature.sourceExp = result;
+    if (!!data.instanceName) {
+        result.instanceName = data.instanceName;
     }
     if (!!data.location) {
         result.location = data.location;
