@@ -4,6 +4,8 @@ root concept DemoModel {
     functions: DemoFunction[];
     name: string;
     entities: DemoEntity[];
+    types: Type[];
+    type: Type;
 }
 
 interface BaseType {

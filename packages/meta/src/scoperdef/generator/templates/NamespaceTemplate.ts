@@ -130,13 +130,15 @@ export class NamespaceTemplate {
              * @param metatype
              */
             private addIfTypeOK(namedElement: ${piNamedElementClassName}, result: ${piNamedElementClassName}[], metatype?: ${langConceptType}) {
-                if (metatype) {
-                    // TODO add support for inheritance
-                    if (namedElement.piLanguageConcept() === metatype) {
+                if (!!namedElement) { 
+                    if (metatype) {
+                        // TODO add support for inheritance
+                        if (namedElement.piLanguageConcept() === metatype) {
+                            result.push(namedElement);
+                        }
+                    } else {
                         result.push(namedElement);
                     }
-                } else {
-                    result.push(namedElement);
                 }
             }
         

@@ -90,6 +90,7 @@ DemoModel {
     @projection DemoModel
         [
         model ${self.name} {
+        type: ${self.type}
         entities:
             ${self.entities
                 @vertical

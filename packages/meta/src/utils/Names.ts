@@ -139,5 +139,7 @@ export class Names {
         return '';
     }
 
-
+    public static projectionFunction(c: PiConcept): string {
+        return "get" + Names.concept(c) + "Box";
+    }
 }

@@ -10,6 +10,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
+    "projectit-empty": 	"ts-node ../meta/src/commandline/projectit",
     "projectit": 	"ts-node ../meta/src/commandline/projectit -v all -d src/demo/defs -o src/demo",
     "projectit-watch": 	"ts-node ../meta/src/commandline/projectit -vw all -d src/demo/defs -o src/demo",
     "projectit-nonverbose": 	"ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",
