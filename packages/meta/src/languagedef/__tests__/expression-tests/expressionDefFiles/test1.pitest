@@ -32,24 +32,15 @@ CC {
 }
 
 DD {
-/* To be tested:
-    LimitedType:Inter;
-    container;
-    typeof ( self.attributes );
+    typeof ( self.DDprop7 );
     typeof ( container );
-    typeof ( xx );
-    DemoVariable.fgg;
-    conformsTo (self.declaredType);
-    self.parameters;
-    DemoFunction.parameters;
-    self.extra;
-    conformsTo( self.whenTrue, self.whenFalse );
-    equalsType( self.expr, DemoAttributeType:Integer ) ;
-*/
+    conformsTo( ZZ:instanceZZ1, self.DDprop1 );
+    conformsTo( container, self.DDprop1 );
+    equalsType( self.DDprop6, ZZ:instanceZZ2 ) ;
 }
 
 EE {
-
+    container;
 }
 
 FF {

@@ -1,6 +1,6 @@
 import { LanguageParser } from "../../parser/LanguageParser";
 import { LanguageExpressionParser } from "../../parser/LanguageExpressionParser";
-import { PiInstance, PiLanguageUnit, PiLimitedConcept } from "../../metalanguage";
+import { PiInstance, PiLangFunctionCallExp, PiLanguageUnit, PiLimitedConcept } from "../../metalanguage";
 
 describe("Checking expression on referedElement", () => {
     let testdir = "src/languagedef/__tests__/expression-tests/expressionDefFiles/";
@@ -82,4 +82,27 @@ describe("Checking expression on referedElement", () => {
         }
     });
 
+    test("referedElement of other kinds of expressions in DD", () => {
+        let expressionFile = testdir + "test1.pitest";
+        if (!!language) {
+            const readTest = new LanguageExpressionParser(language).parse(expressionFile);
+            // check expressions on DD
+            let DDconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "DD");
+            expect(DDconceptExps).not.toBeNull();
+            // for each expression in the set, it should refer to a function
+            DDconceptExps.exps.forEach(exp => {
+                expect(exp instanceof PiLangFunctionCallExp);
+                expect(exp.referedElement).toBeUndefined();
+                expect((exp as PiLangFunctionCallExp).actualparams.length > 0 );
+                // every actual parameter should refer to a property, a predefined instance, or to 'container'
+                (exp as PiLangFunctionCallExp).actualparams.forEach(param => {
+                    if (param.sourceName !== "container") {
+                        expect(param.referedElement?.referred).not.toBeNull();
+                    }
+                });
+            });
+        } else {
+            console.log("Language not present");
+        }
+    });
 });

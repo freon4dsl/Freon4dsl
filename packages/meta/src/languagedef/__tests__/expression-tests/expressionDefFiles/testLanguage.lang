@@ -78,6 +78,7 @@ limited ZZ {
     ZZprop5: boolean;
     ZZprop6: boolean[];
     instanceZZ1 = {ZZprop1: "xxx" }
+    instanceZZ2 = {ZZprop1: "yyy" }
 }
 
 interface DD  {
