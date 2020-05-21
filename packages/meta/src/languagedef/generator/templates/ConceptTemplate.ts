@@ -56,22 +56,22 @@ export class ConceptTemplate {
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }
-        if (concept.implementedParts().some(part => part.isList) || concept.references().some(part => part.isList)) {
+        if (concept.implementedProperties().some(part => part.isList) ) {
             mobxImports.push("observablelistpart");
         }
-        if (concept.implementedParts().some(part => !part.isList)) {
+        if (concept.implementedProperties().some(part => !part.isList)) {
             mobxImports.push("observablepart");
         }
-        if (concept.implementedReferences().some(ref => ref.isList)) {
-            if (!mobxImports.some(im => im === "observablelistpart")) {
-                mobxImports.push("observablelistpart");
-            }
-        }
-        if (concept.implementedReferences().some(ref => !ref.isList)) {
-            if (!mobxImports.some(im => im === "observablepart")) {
-                mobxImports.push("observablepart");
-            }
-        }
+        // if (concept.implementedReferences().some(ref => ref.isList)) {
+        //     if (!mobxImports.some(im => im === "observablelistpart")) {
+        //         mobxImports.push("observablelistpart");
+        //     }
+        // }
+        // if (concept.implementedReferences().some(ref => !ref.isList)) {
+        //     if (!mobxImports.some(im => im === "observablepart")) {
+        //         mobxImports.push("observablepart");
+        //     }
+        // }
 
         // Template starts here
         const result = `

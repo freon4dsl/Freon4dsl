@@ -20,9 +20,11 @@ export class ModelCreatorTemplate {
             `${concept.isAbstract? `` : 
             `public create${concept.name}(${this.makeParams(concept)}) : ${concept.name} {
                 let _result = new ${concept.name}();
-                ${concept.allPrimProperties().map(prop => 
-                    `_result.${prop.name} = ${prop.name}`
-                ).join(";")} 
+                ${concept.allPrimProperties().map(prop =>
+                    `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(${prop.name});`
+                        :
+                        `_result.${prop.name} = ${prop.name};`}`
+                ).join("\n")} 
                 ${concept.allParts().map(prop => 
                 `${prop.isList? `if(${prop.name} !== null) _result.${prop.name}.push(${prop.name});` 
                     : 
