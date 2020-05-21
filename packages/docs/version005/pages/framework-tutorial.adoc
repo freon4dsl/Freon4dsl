@@ -1,8 +1,8 @@
-:imagesdir: ../../assets/images/
-:src-dir: ../../../../../../packages/core/src/
+:page-parent: tutorials
+:imagesdir: ../assets/images
+:src-dir: ../../../core/src
 :projectitdir: ../../../../../../core
 :source-language: javascript
-
 = Tutorial: How to Use the ProjectIt Framework
 
 The ProjectIt Framework offers two axes along which you can specify your editor:
@@ -40,7 +40,7 @@ include::{src-dir}/test/testmodel/CoreTestModel.ts[tag=CoreTestModel]
 
 An obivous choice for the projection of this attribute is a `HorizontalListBox` which holds a `LabelBox` with the name of the class, followed by the value stored in the variable _model.name_. In the tutorial example this value is "CoreTestModel". When we start the editor based on this projection, we see the following:
 
-image::demomodel-name.png[align="left"]
+image::{imagesdir}/demomodel-name.png[align="left"]
 
 It doesn't look very nice currently:
 

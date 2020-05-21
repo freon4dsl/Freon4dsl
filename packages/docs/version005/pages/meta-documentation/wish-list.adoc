@@ -1,4 +1,4 @@
-== Wish List for Future Developments
+= Wish List for Future Developments
 In the future we want to extend ProjectIt with the following features. There is no order
 in this list, nor is there any guarantee that the features will be build. We take on a
 task at the moment the need for it arises.

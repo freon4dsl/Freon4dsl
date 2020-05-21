@@ -1,14 +1,13 @@
-:imagesdir: ../assets/images/
-:src-dir: ../../../../../../core/src
-:projectitdir: ../../../../../core
+:imagesdir: ../../assets/images
+:src-dir: ../../../../core/src
+:projectitdir: ../../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-
 = The ProjectIt Framework
 
 The ProjectIt Editor Framework is written in TypeScript and based on the React Framework. This page provides
 an overview of the Framework. If you want to get deeper into this, see the tutorial
-xref:framework-tutorial.adoc[How to Use the ProjectIt Framework].
+xref:../framework-tutorial.adoc[How to Use the ProjectIt Framework].
 
 == Projection Layout Based on Boxes
 The layout of every visible element in the editor is based on _boxes_. A box is a rectangular area
@@ -18,7 +17,7 @@ A small example to start with:
 ====
 [#img-package-json]
 .Mapping a StringLiteral
-image::mapping-example-stringliteral.svg[mapping-example-stringliteral]
+image::{imagesdir}/mapping-example-stringliteral.svg[mapping-example-stringliteral]
 ====
 
 The figure shows the projection of the concept `StringLiteral`. This is mapped to a horizontal list
@@ -48,7 +47,7 @@ In the following figure the roles are shown above the boxes in green.
 ====
 [#img-package-json]
 .Mapping a StringLiteral with Roles
-image::mapping-example-stringliteral-with-roles.svg[]
+image::{imagesdir}/mapping-example-stringliteral-with-roles.svg[]
 ====
 We can now show the full typescript code for this projection. Given that `literal` is the `StringLiteral` object:
 
@@ -70,6 +69,6 @@ in boxes with that specific role,
 * an _action_,  which is a typescript/javascript function the will be executed when the
 behavior is being triggered.
 
-Actions are further described in xref:meta-documentation/defining_actions.adoc[Actions].
+Actions are further described in xref:defining_actions.adoc[Actions].
 
 

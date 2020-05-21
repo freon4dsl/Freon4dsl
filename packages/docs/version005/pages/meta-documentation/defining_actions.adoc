@@ -1,8 +1,7 @@
-:imagesdir: ../assets/images/
-:src-dir: ../../../../..
-:projectitdir: ../../../../../core
+:imagesdir: ../../assets/images/
+:src-dir: ../../../../core/src
+:projectitdir: ../../../../core
 :source-language: javascript
-
 = Defining Actions
 
 In the ProjectIt editor all behavior is defined using actions.
@@ -50,7 +49,7 @@ The `trigger` defines the keys that will trigger execution of the action.
 // TODO document custom actions
 
 == Expressions and Binary Expressions
-Advanced expression editing is described in xref:meta-documentation/expressions.adoc[Expressions].
+Advanced expression editing is described in xref:expressions.adoc[Expressions].
 
 == Keyboard Shortcuts
 A keyboard shortcut specifies an action that is triggered by special keys, like e.g. Ctrl-A.

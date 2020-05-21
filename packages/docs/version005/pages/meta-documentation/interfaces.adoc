@@ -1,9 +1,8 @@
-:imagesdir: ../assets/images/
-:src-dir: ../../../../../..
-:projectitdir: ../../../../../core
+:imagesdir: ../../assets/images/
+:src-dir: ../../../../core/src
+:projectitdir: ../../../../core
 :source-language: javascript
-
-== The ProjectIt Interfaces
+= The ProjectIt Interfaces
 There are two series of interfaces that make ProjectIt and its generated code extensible and flexible. The first
 series are the interfaces of the generated code:
 
@@ -29,13 +28,13 @@ The projection from your model/AST is defined by implementing the _PiProjection_
 
 [source]
 ----
-include::{src-dir}/core/src/editor/PiProjection.ts[tag=PiProjection]
+include::{src-dir}/editor/PiProjection.ts[tag=PiProjection]
 ----
 
 Implementing this interface should return a _Box_ for each `element` in the AST.
 ProjectIt includes boxes of various types (textual, tabular, horizontal or vertical collections, etc.)
 to define this projection.
-The box model is further described in the xref:meta-documentation/editor-framework.adoc[editor framework].
+The box model is further described in the xref:editor-framework.adoc[editor framework].
 
 == PiElement
 As ProjectIt uses the AST for projections and behavior, it needs to know about the type of elements in the AST.
@@ -44,7 +43,7 @@ This interface is kept as small as possible, to allow ProjectIt to be used for a
 
 [source]
 ----
-include::{src-dir}/core/src/language/PiModel.ts[tag=PiElement]
+include::{src-dir}/language/PiModel.ts[tag=PiElement]
 ----
 
 The main two elements in this interface are:
@@ -64,5 +63,5 @@ but instead meant to be used with multiple language workbenches , or none.
 == PiValidator
 [source]
 ----
-include::{src-dir}/core/src/validator/PiValidator.ts[tag=validator-interface]
+include::{src-dir}/validator/PiValidator.ts[tag=validator-interface]
 ----

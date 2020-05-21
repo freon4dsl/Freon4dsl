@@ -1,4 +1,5 @@
-== Structure of the Generated Code
+= Structure of the Generated Code
+
 *	Environment
 *	Language
 *	Editor

@@ -1,9 +1,8 @@
 :imagesdir: ../assets/images/
-:src-dir: ../../../../../core/src/test
-:projectitdir: ../../../../../core
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-
 = Installing and Using ProjectIt
 
 [#installation]

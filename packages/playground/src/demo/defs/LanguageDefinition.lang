@@ -32,9 +32,6 @@ limited DemoAttributeType implements Type {
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
-binary expression DemoMultiplyExpression base DemoBinaryExpression {
-    priority = 8;
-}
 
 concept DemoFunction {
     name: string;

@@ -1,8 +1,7 @@
-:imagesdir: ../assets/images/
-:src-dir: ../../../../../core/src/test
-:projectitdir: ../../../../../core
+:imagesdir: ../../assets/images/
+:src-dir: ../../../../core/src
+:projectitdir: ../../../../core
 :source-language: javascript
-
 = Box
 
 A Box is an abstract class describing the features that are common for all boxes.
@@ -67,7 +66,7 @@ An example of using a `HorizontalListBox` is the following that represents the
 projection of a StringLiteral.
 [source]
 ----
-include::{src-dir}/testeditor/CoreTestProjection.ts[tag=StringLiteral]
+include::{src-dir}/test/testeditor/CoreTestProjection.ts[tag=StringLiteral]
 ----
 
 === VerticalListBox

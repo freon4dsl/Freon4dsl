@@ -1,4 +1,4 @@
-== Name Based References
+= Name Based References
 Similar to expressions, in https://www.voelter.de/data/pub/fse2016-projEditing.pdf[Efficiency of Projectional Editing:
 A Controlled Experiment] the authors name _references_ as another challenge for projectional editing.
 
@@ -14,5 +14,6 @@ by the IDE itself.
 
 The approach to references in ProjectIt is to used only name-based references which are resolve
 on a need-to basis.
+____
 
-// TODO add more information on name-based references
+TODO: add more information on name-based references

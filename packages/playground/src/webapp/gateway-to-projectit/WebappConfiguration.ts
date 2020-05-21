@@ -4,14 +4,14 @@ import { PiEnvironment } from "@projectit/core";
  * The one and only reference to the actual language for which this editor runs
  */
 
-// import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
-// export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
+import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
+export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
 
-import { HeatEnvironment } from "../../heating/environment/gen/HeatEnvironment";
-export const editorEnvironment: PiEnvironment = HeatEnvironment.getInstance();
+// import { HeatEnvironment } from "../../heating/environment/gen/HeatEnvironment";
+// export const editorEnvironment: PiEnvironment = HeatEnvironment.getInstance();
 
 // import { TaxRulesEnvironment } from "../../taxrules/environment/gen/TaxRulesEnvironment";
 // export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance();

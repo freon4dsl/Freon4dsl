@@ -1,9 +1,11 @@
+:page-title: tutorials
+:page-nav_order: 3
+:page-has_children: true
 :imagesdir: ../assets/images/
-:src-dir: ../../../../../playground/src/tutorial-language/defs
+:src-dir: ../../../../packages/playground/src/tutorial-language/defs
 :projectitdir: ../../../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-
 = Tutorials
 
 In all tutorials we will be using the _Demo_ Entity language as example. The gist of the _Demo_ language is that it defines

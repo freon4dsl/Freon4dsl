@@ -1,9 +1,8 @@
 :imagesdir: ../assets/images/
-:src-dir: ../../../../..
-:projectitdir: ../../../../../core
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
 :source-language: javascript
-
-== What is Projectional Editing?
+= What is Projectional Editing?
 
 The essential characteristic of projectional editing is that the user
 manipulates the Abstract Syntax Tree (AST) directly. For a generic view
