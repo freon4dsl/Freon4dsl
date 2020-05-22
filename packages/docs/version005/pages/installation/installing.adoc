@@ -1,0 +1,47 @@
+:imagesdir: ../images/
+:page-nav_order: 30
+:page-title: Installing and Using ProjectIt
+:page-has_children: true
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+= Installing and Using ProjectIt
+
+[#installation]
+== Installation
+
+For now (release candidate 0.05), if you want to use ProjectIt, you have to check out the release candidate branch from github.
+The main prerequisites are: Node.js (https://nodejs.org/), yarn (https://yarnpkg.com/) and lerna (https://lerna.js.org/).
+We are typically using the latest versions of all, although older versions likely work just as well.
+You could also try and use NPM instead of yarn.
+
+*	The code can be found at https://github.com/projectit-org/ProjectIt.
+*   Clone branche `development/release-candidate`.
+*   If not installed, install lerna:
+
+    yarn global add lerna
+
+*   Setup the lerna structure:
+
+    lerna bootstrap
+
+*   Build projectit:
+
+    lerna run build
+
+*	Run the example Demo language that is included in the build:
+
+    lerna run start
+
+(The command opens a browser with the demo editor on `http://localhost:3000/`. If you are
+having trouble using the editor, have a look a the key-bindings under the help menu.)
+
+// TODO check the chain of commands
+
+*	Now you are ready for a closer look at ProjectIt. You can for instance:
+** Have a look at how the example language is defined by browsing through the language definition files in
+`packages/playground/src/demo/defs`.
+** <<Create Your Own Language>>
+** Have a look at the <<Source code organisation>>
+** See how you can <<Use ProjectIt from the Commandline>>

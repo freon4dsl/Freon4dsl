@@ -16,6 +16,7 @@ describe("Checking generator for language definition", () => {
             model = parser.parse(parseFile);
             generator.outputfolder = outputdir;
             generator.generate(model);
+            // TODO remove generated files, because there are errors in import statements
         } catch(e) {
             // this is a real error
             console.log("Error in test generate language: " + e.message);
