@@ -134,7 +134,7 @@
     <li class="crumb"><a href="Framework-Tutorial.html">How to Use the Framework</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/coretests/packages/docs/component-main/modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/projectit-org/ProjectIt/edit/feature/documentation/packages/docs/component-main/modules/projectit-main/pages/tutorials/Framework-Tutorial.adoc">Edit this Page</a></div>
 </div>
 <article class="doc">
 <h1>Tutorial: How to Use the ProjectIt Framework</h1>
@@ -358,27 +358,7 @@ entity in a <code>VerticalListBox</code>.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">export class CoreTestAttribute extends CoreTestModelElement {
     @observable name: string = "";
-    @observable type: CoreTestAttributeType = CoreTestAttributeType.String;
-    $typename: string = "CoreTestAttribute";
-
-    constructor() {
-        super();
-    }
-
-    toString(): string {
-        return "attribute " + this.name + " : " + this.type;
-    }
-
-    asString(): string {
-        return this.toString();
-    }
-
-    static create(name: string): CoreTestAttribute {
-        const result = new CoreTestAttribute();
-        result.name = name;
-        return result;
-    }
-}</code></pre>
+    @observable type: CoreTestAttributeType = CoreTestAttributeType.String;</code></pre>
 </div>
 </div>
 <div class="listingblock">

@@ -1,0 +1,55 @@
+:imagesdir: ../../assets/images/
+:src-dir: ../../../../core/src
+:projectitdir: ../../../../core
+:source-language: javascript
+= Defining Actions
+
+In the ProjectIt editor all behavior is defined using actions.
+Although ProjectIt is implemented using React, actions abstract away from this implementation.
+
+Each action defines
+
+* The trigger
+* The action itself
+* The boxes in which the action can be triggered
+* An id for internal use
+
+Let's take a look at the definition of a behavior:
+
+[source]
+----
+export interface PiBehavior {
+    /**
+     * The trigger to activate this behavior
+     */
+    trigger: PiTriggerType;
+
+    /**
+     * The box roles in which this trigger is active
+     */
+    activeInBoxRoles: string[];
+
+    /**
+     * Optional callback function that returns whether the trigger is applicable for the specific box.
+     */
+    isApplicable?: (box: Box) => boolean;
+    boxRoleToSelect?: string;
+    caretPosition?: PiCaret;
+}
+----
+
+User actions are attached to boxes.
+This is done by adding these box roles to the `activeInBoxRoles` property of an action.
+
+The `trigger` defines the keys that will trigger execution of the action.
+
+//TODO: describe the optional properties
+
+== Custom Actions
+// TODO document custom actions
+
+== Expressions and Binary Expressions
+Advanced expression editing is described in xref:expressions.adoc[Expressions].
+
+== Keyboard Shortcuts
+A keyboard shortcut specifies an action that is triggered by special keys, like e.g. Ctrl-A.

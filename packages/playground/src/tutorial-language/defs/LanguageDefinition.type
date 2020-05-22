@@ -1,0 +1,74 @@
+typer Demo for language Demo
+
+// the first entry is considered to be the root of the type hierarchy
+// tag::types[]
+istype { DemoEntity, DemoAttributeType, Type }
+// end::types[]
+
+// tag::anytype[]
+anytype {
+    conformsto DemoAttributeType:ANY;
+    equalsto DemoAttributeType:ANY;
+}
+// end::anytype[]
+
+// tag::conformance[]
+DemoEntity {
+    conformsto self.baseEntity;
+}
+DemoStringLiteralExpression {
+    infertype DemoAttributeType:String;
+}
+// end::conformance[]
+
+DemoAttribute {
+    infertype self.declaredType;
+}
+// tag::inference[]
+DemoFunction {
+    infertype self.declaredType;
+}
+// end::inference[]
+// tag::abstract[]
+DemoExpression {
+    abstract infertype ;
+}
+// end::abstract[]
+
+DemoNumberLiteralExpression {
+    infertype DemoAttributeType:Integer;
+}
+DemoBooleanLiteralExpression {
+    infertype DemoAttributeType:Boolean;
+}
+DemoAbsExpression {
+    infertype self.expr;
+}
+DemoMultiplyExpression {
+    infertype self.left;
+}
+DemoPlusExpression {
+    infertype commonSuperType(self.left, self.right);
+}
+DemoDivideExpression {
+    infertype self.left;
+}
+DemoComparisonExpression {
+    infertype DemoAttributeType:Boolean;
+}
+DemoFunctionCallExpression {
+    infertype self.functionDefinition;
+}
+DemoIfExpression    {
+    infertype commonSuperType(self.whenTrue, self.whenFalse);
+}
+DemoVariable {
+    infertype self.declaredType;
+}
+DemoVariableRef   {
+    infertype self.variable.declaredType;
+}
+DemoAttributeRef   {
+    infertype self.attribute.declaredType;
+}
+
