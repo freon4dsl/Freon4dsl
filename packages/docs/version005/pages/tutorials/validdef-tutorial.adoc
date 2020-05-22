@@ -1,0 +1,48 @@
+:page-title: Validator Definition
+:page-nav_order: 50
+:page-parent: Tutorials
+:imagesdir: ../images/
+:src-dir: ../../../../playground/src/tutorial-language/defs
+:source-language: javascript
+:listing-caption: Code Sample
+= The Validator Definition
+The validator definitions defines the constraints that should be true in the models build by your users. Currently,
+there are the following five types of rules.
+
+.	Given a simple property of type string, a `valid-identifier-rule` can be given. The property complies with the
+rule if it is a valid identifier according to the TypeScript definition.
+[indent=1]
+For a `valid-identifier-rule` the validIdentifier keyword is used followed by an optional simple property. When the
+property is present, this property is checked. When the property is not present, ProjectIt assumes that the
+`concept` has a simple property named ‘`name`’ and it will check this property.
+[source]
+----
+include::{src-dir}/LanguageDefinition.valid[tag=valididentifier]
+----
+
+[start=2]
+.   Given a simple property, its value can be limited to certain values.
+[source]
+----
+include::{src-dir}/LanguageDefinition.valid[tag=value]
+----
+
+[start=3]
+.	Given a list property, a `not-empty rule` can be stated. The list complies with the rule if it is not empty.
+.	Given a list property, a `is-unique rule` can be stated on a property of the elements in the list. The list
+complies when the value of the property is unique for every element in the list.
+[source]
+----
+include::{src-dir}/LanguageDefinition.valid[tag=lists]
+----
+
+[start=5]
+.	Given the rules in the typer definition, rules can be stated to ensure type compliance.
+To indicate a `type checking rule` the keyword `typecheck` is used, followed by either `equalsType` or `conformsTo`.
+The first demands that the types of the two properties given are equal. The second demands that the type of the first
+conforms to the type of the second.
+In the type checking rules it is possible to use the predefined instances of a limited concept.
+[source]
+----
+include::{src-dir}/LanguageDefinition.valid[tag=typecheck]
+----

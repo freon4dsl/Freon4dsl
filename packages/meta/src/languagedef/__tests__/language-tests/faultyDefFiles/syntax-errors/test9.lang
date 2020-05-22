@@ -1,0 +1,4 @@
+language XXXX
+
+interface RRRR implements WWWW, YYYY {
+}

@@ -1,0 +1,20 @@
+:page-title: Tutorials
+:page-nav_order: 40
+:page-has_children: true
+:imagesdir: ../images/
+:src-dir: ../../../../playground/src/tutorial-language/defs
+:source-language: javascript
+:listing-caption: Code Sample
+= Tutorials
+
+In all tutorials we will be using the _Demo_ Entity language as example. The gist of the _Demo_ language is that it defines
+a `Model`, which holds `Entities` and `Functions`. `Entities` can hold `Properties` and also hold `Functions`. Every `Function`
+has a list of `Parameters` and an `Expression`.
+
+====
+[#img-package-json]
+.UML diagram of Demo Language
+image::demo-uml.png[uml-diagram-of-demo-language]
+====
+
+We have a few other examples, for instance _TaxRules_, and _Heating_. You can find them in `/playground/src/`.

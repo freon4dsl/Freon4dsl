@@ -1,0 +1,26 @@
+language XXXX
+
+root concept xxx {}
+
+interface AAA base BBB, FFF {
+}
+
+interface CCC base DDD {
+}
+
+interface DDD base EEE {
+}
+
+interface EEE base FFF {
+    prop2: boolean;
+}
+
+interface FFF base CCC {
+}
+
+interface BBB base AAA {
+    prop2: string;
+    prop2: number;
+}
+
+

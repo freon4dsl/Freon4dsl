@@ -1,0 +1,19 @@
+:imagesdir: ../../images
+:page-nav_order: 50
+:page-parent: Deeper in the Source Code
+:page-title: Structure of the Generated Code
+:page-has_children: true
+:src-dir: ../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+= Structure of the Generated Code
+
+*	Environment
+*	Language
+*	Editor
+*	Scoper
+*	Typer
+*   Unparser
+*	Validator
+
+// TODO add content

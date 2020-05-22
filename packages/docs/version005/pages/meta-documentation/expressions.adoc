@@ -1,3 +1,9 @@
+:imagesdir: ../../images
+:page-nav_order: 30
+:page-parent: Deeper in the Source Code
+:src-dir: ../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
 = Support For Expressions
 
 Editing expressions in a projectional editor is a well-known challenge. The representation of an expression
