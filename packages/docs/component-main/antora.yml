@@ -1,7 +1,0 @@
-name: projectit-documentation
-version: '0.0.5'
-title: ProjectIt Developer Documentation
-nav:
-  - modules/ROOT/nav.adoc
-  - modules/projectit-main/nav.adoc
-  - modules/projectit-meta/nav.adoc

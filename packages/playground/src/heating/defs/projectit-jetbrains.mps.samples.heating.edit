@@ -17,7 +17,6 @@ DailyPlan {
         ${self.items @vertical @terminator [\n]}
     ]
 }
-
 ChangeEvent  {
     @projection
     [
@@ -42,7 +41,7 @@ WeekDays {
 
 SpecificDay {
     @projection
-    [on ${self.day}]
+    [${self.day}]
 }
 
 DayRange {

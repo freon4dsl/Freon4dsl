@@ -33,7 +33,8 @@ yarn-debug.log
 yarn-error.log
 
 # generated files
-packages/docs/*/modules/*/examples/*
+packages/docs/*/.jekyll-cache/*
+packages/docs/*/_site/*
 packages/meta/src/languagedef/parser/LanguageGrammar.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.js
 packages/meta/src/editordef/parser/EditorGrammar.js

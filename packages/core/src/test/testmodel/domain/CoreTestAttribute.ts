@@ -9,7 +9,7 @@ import { CoreTestModelElement } from "../CoreTestModel";
 export class CoreTestAttribute extends CoreTestModelElement {
     @observable name: string = "";
     @observable type: CoreTestAttributeType = CoreTestAttributeType.String;
-// tag::CoreTestAttribute[]
+// end::CoreTestAttribute[]
     $typename: string = "CoreTestAttribute";
 
     constructor() {
