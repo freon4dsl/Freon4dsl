@@ -15,4 +15,8 @@ export class Roles {
         return "new-" + Roles.property(property);
     }
 
+    public static newConceptPart(concept: PiConcept, property: PiProperty): string {
+        return "new-" + Roles.elementName(concept) + "-" + property.name;
+    }
+
 }

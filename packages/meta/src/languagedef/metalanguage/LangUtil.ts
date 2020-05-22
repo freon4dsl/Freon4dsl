@@ -28,7 +28,7 @@ export class LangUtil {
         return result;
     }
 
-    public static superConceptsRecursive(self: PiClassifier, result: PiClassifier[]) {
+    private static superConceptsRecursive(self: PiClassifier, result: PiClassifier[]) {
         if (self instanceof PiConcept) {
             if(!!self.base) {
                 result.push(self.base.referred);
@@ -47,15 +47,20 @@ export class LangUtil {
         }
     }
 
-    public static subClasses(self: PiClassifier): PiConcept[] {
+    public static subConcepts(self: PiClassifier): PiConcept[] {
         const result: PiConcept[] = [];
-        if(self instanceof PiConcept) {
-            result.push(self);
-        }
         for (let cls of self.language.concepts) {
             if (LangUtil.superConcepts(cls).includes(self)) {
                 result.push(cls);
             }
+        }
+        return result;
+    }
+
+    public static subConceptsIncludingSelf(self: PiClassifier): PiConcept[] {
+        const result= LangUtil.subConcepts(self);
+        if(self instanceof PiConcept) {
+            result.push(self);
         }
         return result;
     }

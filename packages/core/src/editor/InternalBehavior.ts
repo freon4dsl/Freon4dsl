@@ -17,7 +17,7 @@ export abstract class InternalBehavior implements PiBehavior {
     /**
      * The box roles in which this alias is active
      */
-    activeInBoxRoles: string[];
+    activeInBoxRoles: string[] = [];
 
     isRegexp: boolean;
 
