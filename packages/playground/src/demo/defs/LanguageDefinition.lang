@@ -1,6 +1,7 @@
 language Demo
 
 root concept DemoModel {
+    main: DemoEntity;
     functions: DemoFunction[];
     name: string;
     entities: DemoEntity[];
@@ -17,7 +18,12 @@ interface Type base BaseType {
     int_functions: DemoFunction[];
     reference baseInterface: DemoEntity;
 }
-concept DemoEntity implements Type {
+
+abstract concept Nothing {
+    x: string;
+}
+
+concept DemoEntity base Nothing implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];

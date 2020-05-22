@@ -139,7 +139,7 @@ export class DefaultActionsTemplate {
                     result += `${LangUtil.subClasses(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
-                        trigger: "${editorDef.findConceptEditor(subClass).trigger}",
+                        trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                             const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
                             const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
@@ -154,11 +154,32 @@ export class DefaultActionsTemplate {
                     result += `${LangUtil.subClasses(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
-                        trigger: "${editorDef.findConceptEditor(subClass).trigger}",
+                        trigger: "${editorDef.findConceptEditor(subClass).trigger}", // for Interface part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                             const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
                             const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
                             parent.${part.name}.push(new${part.name});
+                            ed.selectElement(new${part.name});
+                            ed.selectFirstLeafChildBox();
+                            return null;
+                        }
+                    },`).join(",\n")}
+                    `
+                }
+            })
+        );
+        language.concepts.forEach(concept => concept.allParts().filter(ref => !ref.isList).forEach(part => {
+                const childConcept = part.type.referred;
+                if (childConcept instanceof PiConcept) {
+                    const conceptEditor = editorDef.findConceptEditor(childConcept);
+                    result += `${LangUtil.subClasses(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    {
+                        activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
+                        trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for single Concept part
+                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                            const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
+                            const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
+                            parent.${part.name} = new${part.name};
                             ed.selectElement(new${part.name});
                             ed.selectFirstLeafChildBox();
                             return null;
