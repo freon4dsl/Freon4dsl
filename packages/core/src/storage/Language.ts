@@ -35,7 +35,8 @@ export class Language {
     private interfaces: Map<string, Interface> = new Map<string, Interface>();
     private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
 
-    private constructor() {}
+    private constructor() {
+    }
 
     static getInstance() {
         if (Language.theInstance === null) {
@@ -92,6 +93,18 @@ export class Language {
 
     addEnumeration(enumeration: Enumeration) {
         this.enumerations.set(enumeration.typeName, enumeration);
+    }
+
+    subConcepts(typeName: string): string[] {
+        const concept = this.concept(typeName);
+        if (!!concept) {
+            return concept.subConceptNames
+        }
+        const intface = this.interface(typeName);
+        if (!!intface) {
+            return intface.subConceptNames
+        }
+        return [];
     }
 
     referenceCreator: (name: string, type: string) => any;

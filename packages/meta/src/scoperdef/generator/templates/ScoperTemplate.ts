@@ -47,7 +47,7 @@ export class ScoperTemplate {
         return `
         import { ${allLangConcepts}, ${langConceptType}, ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref => `${ref.name}`).join(", ")}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
-        import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger } from "${PROJECTITCORE}"
+        import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language } from "${PROJECTITCORE}"
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }          
                                    
@@ -205,7 +205,8 @@ export class ScoperTemplate {
              */           
             private getElementsFromStdlib(metatype?: ${langConceptType}): ${Names.PiNamedElement}[] {
                 if (!!metatype) {
-                    return ${Names.environment(language)}.getInstance().stdlib.elements.filter(elem => elem.piLanguageConcept() === metatype);
+                    return ${Names.environment(language)}.getInstance().stdlib.elements.filter((elem) => elem.piLanguageConcept() === metatype ||
+                            Language.getInstance().subConcepts(metatype).includes(elem.piLanguageConcept()));
                 } else {
                     return ${Names.environment(language)}.getInstance().stdlib.elements;
                 }

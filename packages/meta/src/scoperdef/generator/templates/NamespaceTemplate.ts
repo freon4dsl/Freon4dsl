@@ -38,7 +38,7 @@ export class NamespaceTemplate {
 
         // Template starts here
         return `
-        import { ${piNamedElementClassName}} from "${PROJECTITCORE}";
+        import { ${piNamedElementClassName}, Language } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${langConceptType}, ${this.imports.map(ref => `${ref}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
               
         const anymetatype = "_$anymetatype";
@@ -48,7 +48,7 @@ export class NamespaceTemplate {
          * It provides the implementation of the algorithm used to search for all names that are visible in the namespace.
          */
         export class ${generatedClassName} {
-            private static allNamespaces: Map<${allLangConcepts}, ${generatedClassName}> = new Map();
+            private static allNamespaces: Map< ${allLangConcepts}, ${generatedClassName}> = new Map();
         
             private constructor(elem: ${allLangConcepts}) {
                 this._myElem = elem;
@@ -132,8 +132,8 @@ export class NamespaceTemplate {
             private addIfTypeOK(namedElement: ${piNamedElementClassName}, result: ${piNamedElementClassName}[], metatype?: ${langConceptType}) {
                 if (!!namedElement) { 
                     if (metatype) {
-                        // TODO add support for inheritance
-                        if (namedElement.piLanguageConcept() === metatype) {
+                        const concept = namedElement.piLanguageConcept();
+                        if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(namedElement.piLanguageConcept())) {
                             result.push(namedElement);
                         }
                     } else {
