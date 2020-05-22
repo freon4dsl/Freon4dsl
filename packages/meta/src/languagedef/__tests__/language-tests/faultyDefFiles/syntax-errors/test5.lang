@@ -1,0 +1,7 @@
+language XXXX
+
+limited YYY {
+    simple: string;
+
+    = { }
+}

@@ -10,21 +10,20 @@
 conceptRef = name:var { return expCreate.createConceptReference( { "name": name, "location":location()}); }
 
 langExpression = functionExpression:functionExpression  { return functionExpression; }
+               / instanceExpression:instanceExpression  { return instanceExpression; }
                / expression:expression                  { return expression; }
-               / simple:simpleExpression                { return simple; }
+               / simpleExpression:simpleExpression      { return simpleExpression; }
 
-expression = sourceName:var ':' applied:(literal:var {return expCreate.createAppliedFeatureExp ({
-                                                        "sourceName": literal,
-                                                        "location": location()
-                                                      }) })
+instanceExpression = conceptName:var ':' instance:var
     {
         return expCreate.createInstanceExp ({
-            "sourceName": sourceName,
-            "appliedfeature": applied,
+            "sourceName": conceptName,
+            "instanceName": instance,
             "location": location()
         })
     }
-            / sourceName:var appliedfeature:dotExpression
+
+expression = sourceName:var appliedfeature:dotExpression
             {
                 return expCreate.createExpression ({
                     "sourceName": sourceName,

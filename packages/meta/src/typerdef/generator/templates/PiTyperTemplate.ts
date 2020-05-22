@@ -321,6 +321,7 @@ export class PiTyperTemplate {
     return "";
     }
 
+    // TODO see if can use langExpToTypescript from utils here
     private makeTypeExp(exp: PiLangExp) : string {
         // if (exp instanceof PiLangEnumExp) {
         //     return `${exp.sourceName}.${exp.appliedfeature}`;
@@ -332,7 +333,7 @@ export class PiTyperTemplate {
                 param => `${this.makeTypeExp(param)}`
             ).join(", ")})`
         } else if (exp instanceof PiInstanceExp) {
-            return `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`
+            return `${exp.sourceName}.${exp.instanceName}`;
         } else{
             return exp?.toPiString();
         }

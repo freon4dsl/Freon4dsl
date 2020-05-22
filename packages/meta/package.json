@@ -31,7 +31,8 @@
     "copy-scss1": "cp src/editordef/styles/*.scss ./dist/styles",
     "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
     "publish-local": "npm publish --registry http://localhost:4873",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "test": "jest"
   },
   "devDependencies": {
     "@types/pegjs": "^0.10.1",

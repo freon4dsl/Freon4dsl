@@ -8,6 +8,7 @@ import {
     PiLangConceptExp, PiLangSimpleExp
 } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { Names } from "../../utils";
 import { PiClassifier } from "../metalanguage/PiLanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -16,7 +17,6 @@ import { PiClassifier } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
-export const nameForSelf = "self";
 
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");
@@ -62,7 +62,7 @@ export function createConceptReference(data: Partial<PiElementReference<PiClassi
 export function createExpression(data: Partial<PiLangExp>): PiLangExp {
     let result: PiLangExp;
     if (!!data.sourceName) {
-        if (data.sourceName === nameForSelf) {
+        if (data.sourceName === Names.nameForSelf) {
             // cannot use PiLangSelfExp.create() because referedElement is not yet known
             result = new PiLangSelfExp();
             LOGGER.log("createSelfExpression");
@@ -107,9 +107,8 @@ export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
     if (!!data.sourceName) {
         result.sourceName = data.sourceName;
     }
-    if (!!data.appliedfeature) {
-        result.appliedfeature = data.appliedfeature;
-        result.appliedfeature.sourceExp = result;
+    if (!!data.instanceName) {
+        result.instanceName = data.instanceName;
     }
     if (!!data.location) {
         result.location = data.location;

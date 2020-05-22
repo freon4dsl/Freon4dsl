@@ -120,7 +120,7 @@ partProperty = name:var ws isOptional:optionalKey? name_separator ws type:var is
     }
 
 // TODO add initialvalue
-// referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separator ws type:conceptReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
+// referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
 referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? semicolon_separator
     { return create.createReferenceProperty({
         "name": name,
@@ -130,26 +130,23 @@ referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separa
         "location": location()
     }) }
 
-conceptReference = referredName:var
-    { return create.createConceptReference({"name": referredName, "location": location()}); }
-
 classifierReference = referredName:var
     { return create.createClassifierReference({"name": referredName, "location": location()}); }
 
-interfaceReference = referredName:var
-    { return create.createInterfaceReference({"name": referredName, "location": location()}); }
+//interfaceReference = referredName:var
+//    { return create.createInterfaceReference({"name": referredName, "location": location()}); }
 
-conceptbase = baseKey conceptReference:conceptReference
-    { return conceptReference; }
+conceptbase = baseKey classifierReference:classifierReference
+    { return classifierReference; }
 
-interfacebase = baseKey intfRefs:( head:interfaceReference
-                                   tail:(comma_separator v:interfaceReference { return v; })*
+interfacebase = baseKey intfRefs:( head:classifierReference
+                                   tail:(comma_separator v:classifierReference { return v; })*
                                    { return [head].concat(tail); }
                                  )
     { return intfRefs; }
 
-implementedInterfaces = implementsKey intfRefs:( head:interfaceReference
-                                                    tail:(comma_separator v:interfaceReference { return v; })*
+implementedInterfaces = implementsKey intfRefs:( head:classifierReference
+                                                    tail:(comma_separator v:classifierReference { return v; })*
                                                     { return [head].concat(tail); }
                                                   )
     { return intfRefs; }

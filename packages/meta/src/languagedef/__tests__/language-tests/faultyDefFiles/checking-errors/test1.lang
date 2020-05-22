@@ -1,0 +1,4 @@
+language YYYY
+
+concept XXX { // there must be one root concept
+}

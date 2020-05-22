@@ -1,0 +1,4 @@
+language XXXX
+
+concept RRRR base WWWW, YYYY {
+}

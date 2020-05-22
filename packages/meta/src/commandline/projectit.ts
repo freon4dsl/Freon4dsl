@@ -5,7 +5,6 @@ import { ProjectItGenerateEditor } from "./ProjectItGenerateEditor";
 import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
-import { ProjectItTestLanguageExpressions } from "./ProjectItTestLanguageExpressions";
 import { PiLogger } from "../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("ProjectItParser"); // .mute();
@@ -17,7 +16,6 @@ export class ProjectItParser extends CommandLineParser {
     private scoperGenerator: ProjectItGenerateScoper;
     private validatorGenerator: ProjectItGenerateValidator;
     private typerGenerator: ProjectItGenerateTyper;
-    private testGenerator: ProjectItTestLanguageExpressions;
     private verboseArg: CommandLineFlagParameter;
     private watchArg: CommandLineFlagParameter;
 
@@ -40,9 +38,6 @@ export class ProjectItParser extends CommandLineParser {
         this.addAction(this.validatorGenerator);
         this.addAction(this.typerGenerator);
 
-        // testGenerator is used only for testing purposes, should be removed from release
-        this.testGenerator = new ProjectItTestLanguageExpressions();
-        this.addAction(this.testGenerator);
     }
 
     protected onDefineParameters(): void {

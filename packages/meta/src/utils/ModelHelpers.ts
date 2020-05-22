@@ -105,7 +105,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
         let isRef = isReferenceProperty(exp);
         result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
-        result = `${exp.sourceName}.${langExpToTypeScript(exp.appliedfeature)}`;
+        result = `${exp.sourceName}.${exp.instanceName}`;
     } else {
         result = exp?.toPiString();
     }
