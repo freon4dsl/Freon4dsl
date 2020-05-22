@@ -1,3 +1,9 @@
+:imagesdir: ../../images
+:page-nav_order: 90
+:page-parent: Deeper in the Source Code
+:src-dir: ../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
 = Source Code Documentation
 
 In future this page will refer to the generated javadoc pages.

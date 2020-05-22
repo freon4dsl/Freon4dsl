@@ -1,0 +1,102 @@
+:imagesdir: ../../images
+:page-nav_order: 60
+:page-parent: The ProjectIt Framework
+:page-grandparent: Deeper in the Source Code
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+= Boxes
+
+A Box is an abstract class describing the features that are common for all boxes.
+As explained in the xref:editor-framework.adoc[editor framework], each box has a mandatory model element and role.
+The following boxes are available.
+
+|===
+|Primitive Boxes|Grouping Boxes
+
+|LabelBox | HorizontalListBox
+|TextBox | VerticalListBox
+
+|TextBox| GridBox
+
+|SpacerBox|VerticalPiElementListBox
+|AliasBox|
+|===
+
+== LabelBox
+A `LabelBox` shows a non-editable text.
+The text itself can either be a fixed string (1), or it can be defined as a function (2).
+Being a function allows the label text to change dynamically,
+depending on the result value of the function.
+
+[source]
+....
+new LabelBox(element, "role", "fixed text")         <1>
+new LabelBox(element, "role", () => element.value)  <2>
+....
+
+== TextBox
+A `TextBox` shows an editable text.
+In addition to the element and the role a text box needs two function parameters.
+The first function to get the value of the text,
+the second function to set the value of the text.
+
+[source]
+----
+new TextBox(
+    element,
+    "role",
+    () => element.stringValue,
+    (newValue: string) => element.stringValue = newValue
+)
+----
+
+There are two options you can set for a `TextBox`:
+
+These options control what happens when a textbox becomes empty, i.e. contains no characters.
+
+== SvgBox
+An `SvgBox` shows a single SVG image.
+
+== ListBox
+A `ListBox` is a list of child boxes, either horizontally or vertically.
+The ListBox itself is abstract.
+
+=== HorizontalListBox
+A `HorizontalListBox` show a list of child boxes next to each other horizontally.
+
+An example of using a `HorizontalListBox` is the following that represents the
+projection of a StringLiteral.
+[source]
+----
+include::{src-dir}/test/testeditor/CoreTestProjection.ts[tag=StringLiteral]
+----
+
+=== VerticalListBox
+A `VerticalListBox` show a list of child boxes next to each other vertically.
+
+It's usage is similar to that of the `HorizontalListBox`.
+
+=== VerticalModelElementListBox
+A `VerticalModelElementListBox` show a list of PiElement objects,
+where each ModelElement will be shown according to its defined projection.
+
+This box is a special case of a VerticalListBox, to show a list
+of child elements.
+A special property of this type of box is the `elementCreator()`.
+This is a function thet should create a new element that fits in the collection.
+Given this, the VerticalModelElementListBox generates the editor
+for the element list, including the neccesary behavior to add and remove elements from the list.
+
+== GridBox
+A `GridBox` is used to show boxes in a tabular fashion.
+// TODO document GridBox
+
+== SelectBox
+A `SelectBox` is used to show a selection to the user.
+// TODO document SelectBox
+
+== AliasBox
+An `AliasBox` is a box where the user can type text (printable characters),
+which is used as an alias for some action.
+// TODO document AliasBox

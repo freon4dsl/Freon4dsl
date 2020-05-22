@@ -1,0 +1,26 @@
+:imagesdir: ../images/
+:page-nav_order: 90
+:page-title: Future Developments
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+= Wish List for Future Developments
+
+In the future we want to extend ProjectIt with the following features. There is no order
+in this list, nor is there any guarantee that the features will be build. We take on a
+task at the moment the need for it arises.
+
+*	Add the possibility in the validator definition for language engineers to state
+their own error messages with each rule, instead of using the predefined messages.
+*	Support models that can be split into separate units using a reference and import/export
+mechanism. This will make it easier for multiple users to work on a model simultaneously.
+Standard version control systems can in that case be used for storage of the models.
+*	Support multiple definition files for one element of the work environment, e.g. for
+defining the language structure.
+*	Support libraries for language development, like a library with definitions for different
+types of expressions.
+*	Create an interpreter generator.
+*   Provide a coupling to a model-to-model generator.
+*   Add an importer for https://www.jetbrains.com/mps/[Jetbrains MPS] structure models.
+*   Create a diagrammatic view of the language structure definition.
+*   ...
