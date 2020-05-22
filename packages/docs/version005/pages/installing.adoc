@@ -1,0 +1,123 @@
+:imagesdir: ../assets/images/
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+= Installing and Using ProjectIt
+
+[#installation]
+== Installation
+
+For now (release candidate 0.05), if you want to use ProjectIt, you have to check out the release candidate branch from github.
+The main prerequisites are: Node.js (https://nodejs.org/), yarn (https://yarnpkg.com/) and lerna (https://lerna.js.org/).
+We are typically using the latest versions of all, although older versions likely work just as well.
+You could also try and use NPM instead of yarn.
+
+*	The code can be found at https://github.com/projectit-org/ProjectIt.
+*   Clone branche `development/release-candidate`.
+*   If not installed, install lerna:
+
+    yarn global add lerna
+
+*   Setup the lerna structure:
+
+    lerna bootstrap
+
+*   Build projectit:
+
+    lerna run build
+
+*	Run the example Demo language that is included in the build:
+
+    lerna run start
+
+(The command opens a browser with the demo editor on `http://localhost:3000/`. If you are
+having trouble using the editor, have a look a the key-bindings under the help menu.)
+
+// TODO check the chain of commands
+
+*	Now you are ready for a closer look at ProjectIt. You can for instance:
+** Have a look at how the example language is defined by browsing through the language definition files in
+`packages/playground/src/demo/defs`.
+** <<Create Your Own Language>>
+** Have a look at the <<Source code organisation>>
+** See how you can <<Use ProjectIt from the Commandline>>
+
+[#Create]
+==  Create Your Own Language
+Naturally, you will want to create your own language definitions. To do so, follows these steps.
+
+*	Add a new folder for your language in `packages/playground/src`, create a dedicated folder within it. We usually
+call it ‘defs’, but any name will do, just keep all language definition files in it. Next, adjust
+the scripts in playground’s package.json, as shown in the following screenshot. Use your own folders instead of
+`src/taxrules/defs` and `src/taxtrules`.
+
+====
+[#img-package-json-adjustment]
+.Screenshot of package.json for TaxRules Example
+image::package-json-adjustment.png[package-json-adjustment]
+====
+
+*	Create a (set of) language definition(s). To start with, you only need to define the language structure,
+defaults will be generated for the editor, scoper, typer, and validator. You can start by copying `TaxRules.lang`
+to your own `defs`-folder. See the xref:tutorials.adoc[tutorials]
+to find out how to write the definitions for the language structure, editor, scoper, typer, and validator.
+*	Generate the code using the adjusted script in package.json. In the above example this would be done by:
+
+    yarn taxrules
+
+*   Adjust the configuration file in *playground/src/webapp/gateway-to-projectit/WebappConfiguration.ts* to use the
+newly generated editor instead of the editor for the 'Demo' example.
+
+====
+[#img-webapp-config]
+.Screenshot of WebappConfiguration.ts
+image::webapp-configuration.png[webapp-configuration]
+====
+
+*   Try it out:
+
+    yarn start or lerna run start
+
+*	If you like, add other definitions or change the existing ones, and generate another time (Again,
+see the xref:tutorials.adoc[tutorials] to find out more about the definitions, and maybe you want to use
+the -w flag to watch changes to your definition files.). Careful with handmade changes, all files in
+any ‘gen’ folder will be deleted during the next generation.
+*	If you like, have a look at the generated code (see also xref:structure-generated-code.adoc[structure of the generated code]).
+*	If you like, add handwritten code to improve the result (see xref:meta-documentation/editor-framework.adoc[editor framework]).
+
+[#UseProjectit]
+== Use ProjectIt from the Commandline
+ProjectIt will be released as a commandline tool. If you look at the package.json file in `packages/playground/`
+you can find the commands that were used to run the Demo example.
+====
+[#img-package-json]
+.Screenshot of package.json
+image::package-json.png[projectit-package-json]
+====
+
+Go to folder `packages/playground` and type ‘`ts-node ../meta/src/commandline/projectit`’ to find out the different
+arguments that can be used.
+
+====
+[#img-commands]
+.Screenshot of commandline options
+image::projectit-commandline-options.png[projectit-commandline-options]
+====
+
+[#Source-code]
+== Source code organisation
+
+* `docs`: documentation, i.e. this website
+* `packages/core`: framework source code.
+* `packages/core/src/editor`: the editor framework source code.
+* `packages/core/src/language/decorators`: source code for https://mobx.js.org/[MobX] decorators that can be used to easily implement a language that can be
+directly used by ProjectIt.
+* `packages/meta`: source code that reads the language definition files and generates the language environment.
+* `packages/playground`: source code generated from the language definition files.
+* `packages/playground/src/webapp`: a copy of `packages/webapp`, used within the playground.
+* `packages/playground/src/demo/defs`: the language definition files for the example language called 'demo'.
+* `packages/server`: source code for a minimalistic model-server used for demonstration purposes.
+* `packages/webapp`: source code for the web-application used for all generated languages.
+* `/*`: the usual suspects.
+

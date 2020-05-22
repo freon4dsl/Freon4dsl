@@ -7,26 +7,40 @@ root concept DemoModel {
     types: Type[];
     type: Type;
 }
-
 interface BaseType {
     name: string;
     baseInterface_attr: number;
 }
-
 interface Type base BaseType {
     simpleprop: string;
     int_attrs: DemoAttribute[];
     int_functions: DemoFunction[];
     reference baseInterface: DemoEntity;
 }
-
 concept DemoEntity implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
     reference baseEntity: DemoEntity;
 }
+limited DemoAttributeType implements Type {
+    name: string;
+    extra: number;
+    String = { name: "String", "extra": "199"}
+    Integer = { "name": "Integer", "extra": "240261"}
+    Boolean = { "name": "Boolean", "extra": "5479"}
+    ANY = { "name": "ANY", "extra": "456"}
+}
+expression DemoAbsExpression base DemoExpression {
+    expr: DemoExpression;
+}
 
+concept DemoFunction {
+    name: string;
+    reference declaredType : Type;
+    expression: DemoExpression;
+    parameters: DemoVariable[];
+}
 concept DemoAttribute {
     reference declaredType: DemoAttributeType;
     name: string;
@@ -35,13 +49,6 @@ concept DemoAttribute {
 concept DemoAttributeWithEntityType {
     reference declaredType: DemoEntity;
     name: string;
-}
-
-concept DemoFunction {
-    name: string;
-    reference declaredType : Type;
-    expression: DemoExpression;
-    parameters: DemoVariable[];
 }
 
 concept DemoVariable {
@@ -65,14 +72,7 @@ expression DemoVariableRef base DemoExpression {
     reference variable: DemoVariable;
 }
 
-limited DemoAttributeType implements Type {
-    name: string;
-    extra: number;
-    String = { name: "String", "extra": "199"}
-    Integer = { "name": "Integer", "extra": "240261"}
-    Boolean = { "name": "Boolean", "extra": "5479"}
-    ANY = { "name": "ANY", "extra": "456"}
-}
+
 
 abstract expression DemoLiteralExpression base DemoExpression {}
 
@@ -88,9 +88,7 @@ expression DemoBooleanLiteralExpression base DemoLiteralExpression {
     value: string; // TODO should be changed to type boolean
 }
 
-expression DemoAbsExpression base DemoExpression {
-    expr: DemoExpression;
-}
+
 
 abstract binary expression DemoBinaryExpression base DemoExpression {
     left: DemoExpression;
