@@ -136,7 +136,7 @@ export class DefaultActionsTemplate {
                 if (childConcept instanceof PiConcept) {
                     const conceptEditor = editorDef.findConceptEditor(childConcept);
                     // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.name
-                    result += `${LangUtil.subClasses(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
@@ -151,7 +151,7 @@ export class DefaultActionsTemplate {
                     },`).join(",\n")}
                     `
                 } else { // TODO child is PiInterface
-                    result += `${LangUtil.subClasses(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}", // for Interface part
@@ -172,7 +172,7 @@ export class DefaultActionsTemplate {
                 const childConcept = part.type.referred;
                 if (childConcept instanceof PiConcept) {
                     const conceptEditor = editorDef.findConceptEditor(childConcept);
-                    result += `${LangUtil.subClasses(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for single Concept part
