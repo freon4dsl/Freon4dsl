@@ -23,6 +23,7 @@ root concept AA  {
 }
 
 concept BB base CC implements DD {
+    aa: AA; // to test applied feature
     // the possibilities for primitive properties
     BBprop1: string;
     BBprop2: string[];
@@ -49,6 +50,7 @@ concept BB base CC implements DD {
 
 concept CC {
     name: string; // so that this concept can be used as reference
+    bb: BB; // to test applied feature
     // the possibilities for primitive properties
     CCprop1: string;
     CCprop2: string[];
@@ -82,6 +84,7 @@ limited ZZ {
 }
 
 interface DD  {
+    cc: CC; // to test applied feature
     // the possibilities for primitive properties
     DDprop1: string;
     DDprop2: string[];
@@ -102,6 +105,7 @@ interface DD  {
 }
 
 interface EE base FF {
+    dd: DD; // to test applied feature
     // the possibilities for primitive properties
     EEprop1: string;
     EEprop2: string[];
@@ -123,6 +127,7 @@ interface EE base FF {
 
 interface FF {
     name: string; // so that this interface can be used as reference
+    ee: EE; // to test applied feature
     // the possibilities for primitive properties
     FFprop1: string;
     FFprop2: string[];

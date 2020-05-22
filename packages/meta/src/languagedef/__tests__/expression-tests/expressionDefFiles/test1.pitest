@@ -44,5 +44,5 @@ EE {
 }
 
 FF {
-
+    self.ee.dd.cc.bb.aa;
 }
