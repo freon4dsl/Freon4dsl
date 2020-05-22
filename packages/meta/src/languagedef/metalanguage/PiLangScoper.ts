@@ -4,11 +4,17 @@ import { PiLangAppliedFeatureExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiLangScoper"); //.mute();
+const anyElement = "_$anyElement";
 
 export class PiLangScoper {
     public language: PiLanguageUnit;
+    // TODO make searchlist a map {owner, name}
+    private searchList: string[] = [];
 
     public getFromVisibleElements(owner: PiLangElement, name: string, typeName: string) : PiLangElement {
+        // check whether we are already searching for a this name
+        if (this.searchingFor(name)) return null;
+
         let result: PiLangElement;
         if (typeName === "PiConcept" || typeName === "PiExpressionConcept" || typeName === "PiBinaryExpressionConcept") {
             result = this.language.findConcept(name);
@@ -32,6 +38,33 @@ export class PiLangScoper {
         } else {
             console.error("NO calculation found for " + name + ", owner: " + owner.name + ", type:" + typeName);
         }
+        this.cleanSearchList(name);
         return result;
+    }
+
+    /**
+     * Returns true if a search is already in progress for 'name'
+     * @param name
+     */
+    private searchingFor(name?: string): boolean {
+        let myName: string = !!name ? name : anyElement;
+        if (this.searchList.includes(myName)) {
+            return true;
+        } else {
+            this.searchList.push(myName);
+        }
+        return false;
+    }
+
+    /**
+     * Removes the 'metatype' from the list of searches that are in progress
+     * @param name
+     */
+    private cleanSearchList(name?: string) {
+        let type: string = !!name ? name : anyElement;
+        const index = this.searchList.indexOf(type);
+        if (index > -1) {
+            this.searchList.splice(index, 1);
+        }
     }
 }

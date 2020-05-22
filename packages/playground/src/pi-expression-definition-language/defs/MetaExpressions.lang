@@ -1,0 +1,38 @@
+language piExpression // needs language PiLanguage
+
+abstract concept PiLangExp base PiLangElement {
+    sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+    appliedFeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    reference referredElement: PiLangElement;            // refers to the element called 'sourceName'
+//    location: ParseLocation;                            // holds start and end in the parsed file
+    language: PiLanguageUnit;                           // the language for which this expression is defined
+}
+
+concept PiLangSimpleExp base PiLangExp {
+    value: number;
+}
+
+concept PiLangSelfExp base PiLangExp {
+    reference referredElement: PiConcept;                
+}
+
+concept PiInstanceExp base PiLangExp {
+    reference referredElement: PiInstance;
+}
+
+concept PiLangConceptExp base PiLangExp {
+    reference referredElement: PiConcept;
+}
+
+concept PiLangAppliedFeatureExp base PiLangExp {
+    sourceExp: PiLangExp;
+    reference referredElement: PiProperty;
+}
+
+concept PiLangFunctionCallExp base PiLangExp {
+    //sourceName: string; 			// in typer: name can only be 'commonSuperType', in validator: only 'conformsTo' and 'equalsType'
+    actualParams: PiLangExp[] = [];
+    returnValue: boolean;
+    reference referredElement: PiFunction;
+}
+

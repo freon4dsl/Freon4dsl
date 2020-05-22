@@ -1,0 +1,32 @@
+language XXXX
+
+expression AAA base BBB {
+}
+
+
+root concept CCC base DDD {
+}
+
+concept DDD base EEE {
+}
+
+concept EEE base FFF {
+}
+
+concept FFF base CCC {
+}
+expression BBB base AAA {
+    prop2: string;
+    prop2: number;
+}
+
+concept xxx base yyy {
+    prop1: BBB;
+
+}
+
+concept yyy {
+    prop1: string;
+    prop1: AAA;
+}
+

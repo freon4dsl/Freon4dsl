@@ -1,0 +1,8 @@
+language test10
+
+limited YY base ZZ {
+    // ERROR: no properties defined in the instances
+    YYinstance1 = { }
+    YYinstance2 = { }
+    YYinstance3 = { }
+}

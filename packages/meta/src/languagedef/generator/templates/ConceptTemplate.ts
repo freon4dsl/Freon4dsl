@@ -56,22 +56,22 @@ export class ConceptTemplate {
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }
-        if (concept.implementedParts().some(part => part.isList) || concept.references().some(part => part.isList)) {
+        if (concept.implementedProperties().some(part => part.isList) ) {
             mobxImports.push("observablelistpart");
         }
-        if (concept.implementedParts().some(part => !part.isList)) {
+        if (concept.implementedProperties().some(part => !part.isList)) {
             mobxImports.push("observablepart");
         }
-        if (concept.implementedReferences().some(ref => ref.isList)) {
-            if (!mobxImports.some(im => im === "observablelistpart")) {
-                mobxImports.push("observablelistpart");
-            }
-        }
-        if (concept.implementedReferences().some(ref => !ref.isList)) {
-            if (!mobxImports.some(im => im === "observablepart")) {
-                mobxImports.push("observablepart");
-            }
-        }
+        // if (concept.implementedReferences().some(ref => ref.isList)) {
+        //     if (!mobxImports.some(im => im === "observablelistpart")) {
+        //         mobxImports.push("observablelistpart");
+        //     }
+        // }
+        // if (concept.implementedReferences().some(ref => !ref.isList)) {
+        //     if (!mobxImports.some(im => im === "observablepart")) {
+        //         mobxImports.push("observablepart");
+        //     }
+        // }
 
         // Template starts here
         const result = `
@@ -224,10 +224,11 @@ export class ConceptTemplate {
         const decorator = property.isList ? "@observablelistpart" : "@observable";
         const arrayType = property.isList ? "[]" : "";
         let initializer = "";
-        if (property.primType === "string") initializer = "\"\"";
-        if (property.primType === "number") initializer = "-1";
-        if (property.primType === "boolean") initializer = "false";
-        return `${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer}; ${comment}`;
+        if (property.isList) initializer = "[]";
+        if (!property.isList && property.primType === "string") initializer = "\"\"";
+        if (!property.isList && property.primType === "number") initializer = "-1";
+        if (!property.isList && property.primType === "boolean") initializer = "false";
+        return `${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer}; \t${comment}`;
     }
 
     private generatePartProperty(property: PiConceptProperty): string {
