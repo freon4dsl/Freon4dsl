@@ -7,7 +7,7 @@ describe("Checking generator for language definition", () => {
     let outputdir = "src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output";
     let dirWithCorrectOutput = "src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/correct-output";
 
-    test("generation of all kinds of properties", () => {
+    test.skip("generation of all kinds of properties", () => {
         let parser = new LanguageParser();
         let generator = new LanguageGenerator();
         let parseFile = testdir + "test2.lang";
