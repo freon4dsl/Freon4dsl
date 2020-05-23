@@ -220,13 +220,23 @@ export class ProjectionTemplate {
         });
         if( multiLine){
             result += ` 
-                ]);
+                ])
             `;
         }
         if( result === "" ){ result = "null"}
-        return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
+        if (concept instanceof PiExpressionConcept ){
+            return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
+                    return createDefaultExpressionBox( ${element}, "default-expression-box", [
+                            ${result}
+                        ],
+                        { selectable: false }
+                    );
+                }`;
+        } else {
+            return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
                     return ${result};
                 }`;
+        }
     }
 
     // TODO change this to be used with PiLimitedConcept
