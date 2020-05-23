@@ -4,11 +4,11 @@ import { PiEnvironment } from "@projectit/core";
  * The one and only reference to the actual language for which this editor runs
  */
 
-import { ExampleEnvironment } from "../../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+// import { ExampleEnvironment } from "../../example/environment/gen/ExampleEnvironment";
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
-// import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
-// export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
+import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
+export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
