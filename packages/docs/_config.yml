@@ -43,7 +43,7 @@ aux_links:
     - "http://www.projectit.org"
 
 # Footer content appears at the bottom of every page's main content
-footer_content: "Copyright &copy; 2020-2021 Jos Warmer. Distributed by an <a href=\"https://github.com/projectit-org/ProjectIt/blob/development/LICENSE\">MIT license.</a> This project is supported by <a href=\"https://openmodeling.nl\">Openmodeling.nl.</a>"
+footer_content: "Copyright &copy; 2020-2021 Jos Warmer. Distributed by an <a class=\"text-small text-grey-dk-200 mb-0\" href=\"https://github.com/projectit-org/ProjectIt/blob/development/LICENSE\">MIT license.</a> This project is supported by <a href=\"https://openmodeling.nl\">Openmodeling.nl.</a>"
 
 # Color scheme currently only supports "dark" or nil (default)
 color_scheme: nil
@@ -61,7 +61,7 @@ asciidoctor:
 
 # Google Analytics Tracking (optional)
 # e.g, UA-1234567-89
-ga_tracking: UA-2709176-10
+# ga_tracking: UA-2709176-10
 
 plugins:
   - jekyll-asciidoc

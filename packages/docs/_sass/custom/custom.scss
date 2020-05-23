@@ -13,7 +13,7 @@
 //// Colors
 ////
 
-//$white: #fff;
+$white: #fff;
 
 //$grey-dk-000: #959396;
 //$grey-dk-100: #5c5962;
@@ -31,10 +31,11 @@
 //$purple-200: #4e26af;
 //$purple-300: #381885;
 
-//$blue-000: #2c84fa;
-//$blue-100: #2869e6;
-//$blue-200: #264caf;
-//$blue-300: #183385;
+$blue-000: #2c84fa;
+$blue-100: #2869e6;
+$blue-200: #264caf;
+$blue-300: #183385;
+$projectit-blue: rgb(0, 0, 139);
 
 //$green-000: #41d693;
 //$green-100: #11b584;
@@ -53,15 +54,19 @@
 
 //$body-background-color: $white;
 //$sidebar-color: $grey-lt-000;
+$sidebar-color: rgb(211, 227, 253);
 //$search-background-color: $white;
 //$table-background-color: $white;
 //$code-background-color: $grey-lt-000;
 
 //$body-text-color: $grey-dk-100;
 //$body-heading-color: $grey-dk-300;
+$body-heading-color: $projectit-blue;
 //$search-result-preview-color: $grey-dk-000;
 //$nav-child-link-color: $grey-dk-100;
+$nav-child-link-color: $projectit-blue;
 //$link-color: $purple-000;
+$link-color: $projectit-blue;
 //$btn-primary-color: $purple-100;
 //$base-button-color: #f7f7f7;
 
@@ -103,6 +108,7 @@
 //$border: 1px solid;
 //$border-radius: 4px;
 //$border-color: $grey-lt-100;
+$border-color: $projectit-blue;
 
 ////
 //// Grid system
@@ -113,6 +119,8 @@
 //$nav-width: 264px;
 //$nav-width-md: 248px;
 //$content-width: 800px;
+//$content-width: 800px;
+//$header-height: 60px;
 //$header-height: 60px;
 //$search-results-width: 500px;
 

@@ -1,7 +1,7 @@
 :page-title: Tutorials
 :page-nav_order: 40
 :page-has_children: true
-:imagesdir: ../images/
+:imagesdir: ../../images/
 :src-dir: ../../../../playground/src/tutorial-language/defs
 :source-language: javascript
 :listing-caption: Code Sample
