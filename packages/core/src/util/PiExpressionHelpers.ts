@@ -48,7 +48,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
     }
 }
 
-export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, style?: string): HorizontalListBox {
+export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
@@ -57,7 +57,7 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
         new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        createOperatorBox(projection["editor"], exp, symbol),
+        createOperatorBox(editor, exp, symbol),
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
@@ -78,7 +78,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         EXPRESSION_SYMBOL,
         "<...>",
         () => {
-            if (editor.actions && editor.actions.binaryExpressionCreators) {
+            if (!!editor.actions && editor.actions.binaryExpressionCreators) {
                 return editor.actions.binaryExpressionCreators
                     .filter(e => !e.isApplicable || e.isApplicable(operatorBox))
                     .map(e => ({

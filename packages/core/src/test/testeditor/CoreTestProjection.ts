@@ -107,7 +107,7 @@ export class CoreTestProjection implements PiProjection {
         if (this.projectionType === "tree") {
             return this.createBinaryBoxTree(projection, exp);
         } else {
-            let binBox = createDefaultBinaryBox(this, exp, symbol(exp));
+            let binBox = createDefaultBinaryBox(this, exp, symbol(exp), this.editor);
             if (
                 this.showBrackets &&
                 !!exp.piContainer().container &&
