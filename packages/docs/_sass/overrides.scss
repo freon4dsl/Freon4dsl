@@ -1,3 +1,10 @@
 //
 // Custom overrides from a user.
 //
+
+// Print-only styles.
+@media print {
+  .side-bar, .page-header { display: none; }
+  .main-content { max-width: max-content; margin: 1em;}
+}
+

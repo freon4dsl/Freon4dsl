@@ -1,22 +1,26 @@
 language Demo
 
-// tag::concepts[]
 interface BaseType {
     name: string;
     baseInterface_attr: number;
 }
+// tag::interface[]
 interface Type base BaseType {
     simpleprop: string;
     int_attrs: DemoAttribute[];
     int_functions: DemoFunction[];
     reference baseInterface: DemoEntity;
 }
+// end::interface[]
+// tag::concept[]
 concept DemoEntity implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
     reference baseEntity: DemoEntity;
 }
+// end::concept[]
+// tag::limited[]
 limited DemoAttributeType implements Type {
     name: string;
     extra: number;
@@ -25,30 +29,49 @@ limited DemoAttributeType implements Type {
     Boolean = { "name": "Boolean", "extra": "5479"}
     ANY = { "name": "ANY", "extra": "456"}
 }
+// end::limited[]
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
+// tag::expression[]
 binary expression DemoMultiplyExpression base DemoBinaryExpression {
     priority = 8;
 }
-// end::concepts[]
+// end::expression[]
+
 // tag::rootconcept[]
+// tag::partprop[]
 root concept DemoModel {
-    functions: DemoFunction[];
+// end::partprop[]
     name: string;
+// tag::partprop[]
+    functions: DemoFunction[];
     entities: DemoEntity[];
 }
+// end::partprop[]
 // end::rootconcept[]
+// tag::simpleprop[]
 concept DemoFunction {
     name: string;
+    aliases: string[];
+// end::simpleprop[]
     reference declaredType : Type;
     expression: DemoExpression;
     parameters: DemoVariable[];
+// tag::simpleprop[]
 }
+// end::simpleprop[]
+// tag::referenceprop[]
 concept DemoAttribute {
     reference declaredType: DemoAttributeType;
+// end::referenceprop[]
     name: string;
+// tag::referenceprop[]
 }
+// end::referenceprop[]
+
+
+concept DemoText {} // only defined to show that literal text can be part of a projection
 
 concept DemoAttributeWithEntityType {
     reference declaredType: DemoEntity;

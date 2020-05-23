@@ -2,6 +2,7 @@
 :page-nav_order: 30
 :page-title: Installing and Using ProjectIt
 :page-has_children: true
+:page-has_toc: false
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
@@ -12,11 +13,13 @@
 == Installation
 
 For now (release candidate 0.05), if you want to use ProjectIt, you have to check out the release candidate branch from github.
-The main prerequisites are: Node.js (https://nodejs.org/), yarn (https://yarnpkg.com/) and lerna (https://lerna.js.org/).
-We are typically using the latest versions of all, although older versions likely work just as well.
-You could also try and use NPM instead of yarn.
+The main prerequisites are: link:https://nodejs.org/[Node.js, window=_blank], link:https://yarnpkg.com/[yarn, window=_blank],
+and link:https://lerna.js.org/[lerna, window=_blank].
 
-*	The code can be found at https://github.com/projectit-org/ProjectIt.
+We are typically using the latest versions of all, although older versions likely work just as well.
+You could also try and use link:https://www.npmjs.com/[NPM, window=_blank] instead of yarn.
+
+*	The code can be found at link:https://github.com/projectit-org/ProjectIt[https://github.com/projectit-org/ProjectIt, window=_blank].
 *   Clone branche `development/release-candidate`.
 *   If not installed, install lerna:
 
@@ -26,7 +29,7 @@ You could also try and use NPM instead of yarn.
 
     lerna bootstrap
 
-*   Build projectit:
+*   Build ProjectIt:
 
     lerna run build
 
@@ -34,14 +37,17 @@ You could also try and use NPM instead of yarn.
 
     lerna run start
 
-(The command opens a browser with the demo editor on `http://localhost:3000/`. If you are
-having trouble using the editor, have a look a the key-bindings under the help menu.)
++
+(The command opens a browser with an editor for the Demo language on
+`link:http://localhost:3000/[http://localhost:3000/, window=_blank]`. If you are
+having trouble using the editor, have a look a the key-bindings under the *Help* menu.)
 
 // TODO check the chain of commands
 
-*	Now you are ready for a closer look at ProjectIt. You can for instance:
-** Have a look at how the example language is defined by browsing through the language definition files in
+Now you are ready for a closer look at ProjectIt. You can for instance:
+
+* Have a look at how the example language is defined by browsing through the language definition files in
 `packages/playground/src/demo/defs`.
-** <<Create Your Own Language>>
-** Have a look at the <<Source code organisation>>
-** See how you can <<Use ProjectIt from the Commandline>>
+* Create your xref:./first-language.adoc[own language].
+* Have a look at the xref:./code-organisation.adoc[source code organisation].
+* See how you can xref:./commandline.adoc[use ProjectIt from the commandline].

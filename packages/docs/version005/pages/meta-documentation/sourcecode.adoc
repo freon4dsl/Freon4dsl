@@ -14,10 +14,10 @@ xref:philosophy.adoc[philosophy] (and design guidelines) used during the creatio
 
 With these in mind, you are welcome to find out more, for example on the following subjects.
 
-* Learn about the xref:editor-framework.adoc[framework] used for projectional editing.
-* See how you can define xref:defining_actions.adoc[custom projections and actions].
+* Learn about the xref:framework/editor-framework.adoc[framework] used for projectional editing.
+* See how you can define xref:framework/defining_actions.adoc[custom projections and actions].
 * Find out more about the xref:expressions.adoc[build-in support for expressions].
 * Explore why we use xref:name-based-references.adoc[name based references].
-* Note how the generated code is easily extendable using the xref:interfaces.adoc[ProjectIt interfaces].
+* Note how the generated code is easily extendable using the xref:generated-code/interfaces.adoc[ProjectIt interfaces].
 * Browse through the xref:sourcecode.adoc[source code documentation].
 

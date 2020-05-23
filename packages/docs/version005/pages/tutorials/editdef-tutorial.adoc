@@ -6,19 +6,31 @@
 :source-language: javascript
 :listing-caption: Code Sample
 = The Editor Definition
-You can define a ProjectIt editor by providing extra information for each `concept` in your language. Currently,
+
+You can define a ProjectIt editor by providing extra information for each *concept* in your language. Currently,
 you can define the following three items.
 
-*	`Projection`, which is the manner in which the `concept` is shown in the editor.
-*	`Trigger`, which is the key or keys your user needs to type in to create a new instance of the `concept`.
-*	`Symbol`, which is optional and only used for `expressions`. It is the character or character string that is
-shown when an `expression` is being added to your user’s model. When the `symbol` is not present, the `trigger` will be used.
+*	*Projection*, which is the manner in which the *concept* is shown in the editor.
+*	*Trigger*, which is the key or keys your user needs to type in to create a new instance of the *concept*.
+*	*Symbol*, which is optional and only used for *expressions*. It is the character or character string that is
+shown when an *expression* is being added to your user’s model. When the *symbol* is not present, the *trigger* will be used.
 
-A projection is defined between angular brackets. Everything within the brackets, except the parts surrounded
-by `${ }`, is taken literally.
+== Three-way definition
+For each *concept* the editor will
+
+. use the _hand-made projection_, when this is present. Otherwise the editor will
+. refer to the _projection generated from the editor definition_, when this definition is present. Finally, the editor will
+. use the _default projection_.
+
+When a *concept* is marked as an *expression concept*, its default projection is usually the one you want to go with,
+because of the extra xref:../meta-documentation/expressions.adoc[support for expressions] that is incorporated in it.
+
+== Projections
+A *projection* is defined between angular brackets. Everything within the brackets, except the parts surrounded
+by *${ }*, is taken literally, including any indentation.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.edit[tag=projection]
+include::{src-dir}/LanguageDefinition.edit[tag=literal]
 ----
 
 When the indentation of the opening and closing brackets aligns, this indentation is not taken into account.
@@ -27,13 +39,24 @@ When the indentation of the opening and closing brackets aligns, this indentatio
 include::{src-dir}/LanguageDefinition.edit[tag=indentation]
 ----
 
-Using ${ } you tell ProjectIt to include a property. Its projection is defined by the projection for its type.
+=== Including Subprojections
+
+Using *${ }* you tell ProjectIt to include a property. Its projection is defined by the projection for its concept.
+
+In the following example `${self.condition}` is a property of type `DemoBooleanLiteralExpression`.
+It will be projected according to the definition for this concept, whereas `${self.whenTrue}` is a
+property of type `DemoExpression`, which is abstract. This property
+will be projected according to the definition for subtype of `DemoExpression` that is currently found.
+
 [source]
 ----
 include::{src-dir}/LanguageDefinition.edit[tag=subprojection]
 ----
 
-If a property is a list, you can indicate whether it should be projected as a horizontal list or as a vertical list. De default is horizontal. Furthermore, you can add either a separator string in between all elements, or a terminator string after each element. Both are optional.
+If a property is a list, you can indicate whether it should be projected as horizontally or vertically.
+The default is horizontal.
+
+Furthermore, you can add either a _separator_ string in between all elements, or a _terminator_ string after each element. Both are optional.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.edit[tag=lists]
@@ -45,13 +68,5 @@ Using ‘[+’ you can indicate that a newline should be added.
 include::{src-dir}/LanguageDefinition.edit[tag=newlines]
 ----
 
-You can make even more adjustments to the projection by adding hand-made projections, see xref:editor-framework.adoc[].
-
-For each concept the editor will
-
-. take the hand-made one, when this is not present it will
-. refer to the projection generated from the editor definition, and when this is not present it will
-. use the default projection.
-
-When a `concept` is marked as an `expression concept`, its default projection is usually the one you want to go with,
-because of the extra support for expressions that is incorporated in it.
+You can make even more adjustments to the projection by adding hand-made projections, see the
+tutorial on xref:framework-tutorial.adoc[using the framework].

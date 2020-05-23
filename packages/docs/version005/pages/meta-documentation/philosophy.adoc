@@ -9,7 +9,7 @@
 
 The main idea behind ProjectIt is to build a minimal viable product which supports the
 language engineer in creating a work environment for a mini-language. A key principle
-is the xref:https://en.wikipedia.org/wiki/Pareto_principle[Pareto principle] (or 80%-20% rule),
+is the xref:https://en.wikipedia.org/wiki/Pareto_principle[Pareto principle, window=_blank] (or 80%-20% rule),
 which states that for many events, roughly
 80% of the effects come from 20% of the causes. For example, it is an axiom of business
 management that "80% of sales come from 20% of clients".

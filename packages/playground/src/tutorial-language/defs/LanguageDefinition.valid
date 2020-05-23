@@ -11,9 +11,11 @@ ChangeEvent  {
 DemoModel {
     notEmpty self.entities;
     isunique name in self.entities;
+ // end::lists[]
     notEmpty self.functions;
     isunique name in self.functions;
     validIdentifier; // default is 'name'
+// tag::lists[]
 }
 // end::lists[]
 

@@ -1,7 +1,7 @@
 :imagesdir: ../../images
 :page-nav_order: 70
 :page-parent: Structure of the Generated Code
-:src-dir: ../../../../core/src
+:src-dir: ../../../../../core/src
 :source-language: javascript
 :listing-caption: Code Sample
 = The ProjectIt Interfaces
