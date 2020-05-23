@@ -19,5 +19,5 @@ With these in mind, you are welcome to find out more, for example on the followi
 * Find out more about the xref:expressions.adoc[build-in support for expressions].
 * Explore why we use xref:name-based-references.adoc[name based references].
 * Note how the generated code is easily extendable using the xref:generated-code/interfaces.adoc[ProjectIt interfaces].
-* Browse through the xref:sourcecode.adoc[source code documentation].
+* Browse through the xref:code-documentation.adoc[source code documentation].
 

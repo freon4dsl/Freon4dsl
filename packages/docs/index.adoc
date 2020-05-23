@@ -41,7 +41,7 @@ on many subjects. You could ..
 * .. see how you can xref:version005/pages/installation/installing.adoc[install and use] ProjectIt.
 * .. find out how to define a language and its editor, etc. in the xref:version005/pages/tutorials/tutorials.adoc[tutorials].
 * .. dive deeper into the xref:version005/pages/meta-documentation/generated-code/structure-generated-code.adoc[structure of the generated code].
-* .. get to know more about the xref:version005/pages/meta-documentation/sourcecode.adoc[meta-code] of ProjectIt.
+* .. get to know more about the xref:version005/pages/meta-documentation/meta-documentation.adoc[meta-code] of ProjectIt.
 
 Have fun! If you have questions that are not answered in this documentation, please email us at <TODO>.
 
