@@ -1,7 +1,9 @@
 //
 // The basic two column layout
 //
-
+.top-text {
+  color: white;
+}
 .page-wrap {
   @include mq(md) {
     position: absolute;
@@ -84,13 +86,13 @@
   display: none;
   padding-top: $gutter-spacing-sm;
   padding-bottom: $gutter-spacing-sm;
-  background-color: $sidebar-color;
+  //background-color: $sidebar-color;
 
   @include mq(md) {
     display: flex;
     justify-content: flex-end;
     height: $header-height;
-    background-color: $body-background-color;
+    //background-color: $body-background-color;
     //background-color: rgb(0,0,139);
     border-bottom: $border $border-color;
   }

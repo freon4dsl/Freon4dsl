@@ -53,8 +53,8 @@ $red-200: #e94c4c !default;
 $red-300: #dd2e2e !default;
 
 $body-background-color: $white !default;
-$sidebar-color: $grey-lt-000 !default;
-$search-background-color: $white !default;
+$sidebar-color: rgb(211, 227, 253) !default;
+$search-background-color: $sidebar-color !default;
 $table-background-color: $white !default;
 $code-background-color: $grey-lt-000 !default;
 
@@ -84,6 +84,7 @@ $spacers: (
   sp-8: $spacing-unit * 3,
   sp-9: $spacing-unit * 3.5,
   sp-10: $spacing-unit * 4,
+  sp-11: $spacing-unit * 20,
 ) !default;
 
 $sp-1: map-get($spacers, sp-1) !default; // 0.25 rem == 4px
@@ -96,6 +97,7 @@ $sp-7: map-get($spacers, sp-7) !default; // 2.5  rem == 40px
 $sp-8: map-get($spacers, sp-8) !default; // 3    rem == 48px
 $sp-9: map-get($spacers, sp-9) !default; // 4    rem == 48px
 $sp-10: map-get($spacers, sp-10) !default; // 4.5  rem == 48px
+$sp-11: map-get($spacers, sp-11) !default; // 4.5  rem == 48px
 
 //
 // Borders
