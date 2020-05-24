@@ -1,7 +1,6 @@
 import { observablepart } from "../../../language";
 
 import { CoreTestExpression } from "./CoreTestExpression";
-import { CoreTestPlaceholderExpression } from "./CoreTestPlaceholderExpression";
 import { symbol } from "./CoreTestUtil";
 
 export abstract class CoreTestBinaryExpression extends CoreTestExpression {
@@ -10,8 +9,6 @@ export abstract class CoreTestBinaryExpression extends CoreTestExpression {
 
     constructor() {
         super();
-        this.left = new CoreTestPlaceholderExpression();
-        this.right = new CoreTestPlaceholderExpression();
     }
 
     children(): CoreTestExpression[] {
@@ -19,10 +16,10 @@ export abstract class CoreTestBinaryExpression extends CoreTestExpression {
     }
 
     toString(): string {
-        return "(" + this.left.toString() + " " + symbol(this) + " " + this.right.toString() + ")";
+        return "(" + (!!this.left ? this.left.toString() : "...") + " " + symbol(this) + " " + (!!this.right ? this.right.toString() : "...") + ")";
     }
 
     asString(): string {
-        return "(" + this.left.asString() + " " + symbol(this) + " " + this.right.asString() + ")";
+        return "(" + (!!this.left ? this.left.asString() : "...") + " " + symbol(this) + " " + (!!this.right ? this.right.asString() : "...") + ")";
     }
 }

@@ -2,7 +2,7 @@ import { CoreTestContext, CoreTestProjection, CoreTestActions } from "../testedi
 import {
     CoreTestBinaryExpression,
     CoretestComparisonExpression, CoreTestModelElement,
-    CoreTestMultiplyExpression, CoreTestPlaceholderExpression,
+    CoreTestMultiplyExpression,
     CoreTestPlusExpression,
     CoreTestPowerExpression,
     CoreTestStringLiteralExpression
@@ -36,9 +36,6 @@ describe("BalanceTree", () => {
             rootBox = projection.getBox(root);
             editor = new PiEditor(projection, action);
             editor.rootElement = context.rootElement;
-            editor.getPlaceHolderExpression = () => {
-                return new CoreTestPlaceholderExpression();
-            };
 
             done();
         });
@@ -198,9 +195,6 @@ describe("BalanceTree", () => {
             rootBox = projection.getBox(root);
             editor = new PiEditor(projection, action);
             editor.rootElement = context.rootElement;
-            editor.getPlaceHolderExpression = () => {
-                return new CoreTestPlaceholderExpression();
-            };
             PiLogger.muteAllLogs();
 
             done();

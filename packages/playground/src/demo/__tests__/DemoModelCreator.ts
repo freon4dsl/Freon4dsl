@@ -23,7 +23,7 @@ import {
     DemoGreaterThenExpression,
     DemoEqualsExpression,
     DemoLiteralExpression,
-    AppliedFeature, PlaceholderExpression, DemoAttributeRef, DemoAttributeWithEntityType
+    AppliedFeature, DemoAttributeRef, DemoAttributeWithEntityType
 } from "../language/gen";
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
@@ -397,7 +397,7 @@ export class DemoModelCreator {
         const divideExpression = MakePlusExp("1", "2");
         // divideExpression : (1/2)
 
-        const multiplyExpression = MakeMultiplyExp(divideExpression, new PlaceholderExpression());
+        const multiplyExpression = MakeMultiplyExp(divideExpression, null);
         // multiplyExpression : (1/2) * ...
 
         const plusExpression = MakePlusExp(thenExpression, multiplyExpression);

@@ -6,7 +6,6 @@ describe("Checking internal structure of language", () => {
 
     // on PiLanguageUnit
     // there is a root concept
-    // there is an expressionPlaceHolder
     // there is a single expression base
     // ??? predefined (primitive types)
     // if there is a classifier, we can find it

@@ -4,7 +4,7 @@ import { Names } from "./Names";
 export class Roles {
 
     public static elementName(concept: PiClassifier): string {
-        return Names.classifier(concept).toLowerCase();
+        return Names.classifier(concept);
     }
 
     public static property(property: PiProperty): string {
@@ -12,11 +12,11 @@ export class Roles {
     }
 
     public static newPart(property: PiProperty): string {
-        return "new-" + Roles.property(property);
+        return Roles.property(property);
     }
 
     public static newConceptPart(concept: PiConcept, property: PiProperty): string {
-        return "new-" + Roles.elementName(concept) + "-" + property.name;
+        return Roles.elementName(concept) + "-" + property.name;
     }
 
 }

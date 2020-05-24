@@ -8,9 +8,8 @@
 import { PiElement, PiExpression, PiBinaryExpression, PiContainerDescriptor } from "../../language";
 import { symbol } from "../testmodel/expressions/CoreTestUtil";
 
-import { CoreTestBinaryExpression, CoreTestExpression, CoreTestPlaceholderExpression } from "../testmodel";
+import { CoreTestBinaryExpression, CoreTestExpression } from "../testmodel";
 import { CoreTestModelElement } from "../testmodel/CoreTestModel";
-import { CoreTestBinaryExpressionPlaceHolder } from "../testmodel/expressions/CoreTestBinaryExpressionPlaceHolder";
 
 declare module "../testmodel/CoreTestModel" {
     interface CoreTestModelElement extends PiElement {}
@@ -62,10 +61,6 @@ CoreTestExpression.prototype.piIsExpression = function(): boolean {
 
 CoreTestExpression.prototype.piIsBinaryExpression = function(): boolean {
     return false;
-};
-
-CoreTestExpression.prototype.piIsExpressionPlaceHolder = function(): boolean {
-    return this instanceof CoreTestPlaceholderExpression;
 };
 
 const priorities: object = {

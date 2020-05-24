@@ -51,7 +51,7 @@ export class InternalBinaryBehavior extends InternalBehavior implements PiBinary
     async execute(box: Box, aliasId: string, editor: PiEditor) {
         LOGGER.info(this, "execute binary expression alias ok");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, aliasId, editor), box, editor);
-        await editor.selectElement(selected, this.boxRoleToSelect, this.caretPosition);
+        editor.selectElement(selected.element, selected.boxRoleToSelect, this.caretPosition);
     }
 }
 
@@ -67,17 +67,8 @@ export class InternalExpressionBehavior extends InternalBehavior implements PiEx
     async execute(box: Box, aliasId: string, editor: PiEditor) {
         LOGGER.info(this, "execute expression alias ok");
         const selected = this.expressionBuilder(box, aliasId, editor);
-        PiUtils.CHECK(
-            isPiExpression(box.element) && box.element.piIsExpressionPlaceHolder(),
-            "execute expecting current element to be an expression placaholder"
-        );
-        PiUtils.CHECK(isPiExpression(selected), "execute: expecting new element to be a ProExpression");
-        if (isPiExpression(box.element)) {
-            PiUtils.replaceExpression(box.element, selected, editor);
-            await editor.selectElement(selected, this.boxRoleToSelect, this.caretPosition);
-        } else {
-            PiUtils.CHECK(false, "InternalExpressionAlias.execute: expecting a ProExpression");
-        }
+        PiUtils.CHECK(isPiExpression(selected), "execute: expecting new element to be a PiExpression");
+        await editor.selectElement(selected, this.boxRoleToSelect, this.caretPosition);
     }
 }
 

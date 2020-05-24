@@ -2,6 +2,7 @@
 import { KeyboardShortcutBehavior, PiActions, PiBinaryExpressionCreator, PiCustomBehavior, PiExpressionCreator } from "@projectit/core";
 import { EXPRESSION_PLACEHOLDER } from "@projectit/core";
 import { Box, PiEditor, PiTriggerType } from "@projectit/core";
+import { AliasBox } from "@projectit/core";
 import { DemoNumberLiteralExpression } from "../language/gen";
 
 export class CustomDemoActions implements PiActions {
@@ -15,10 +16,12 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {
         trigger: /[0-9]/,
-        activeInBoxRoles: [EXPRESSION_PLACEHOLDER],
+        activeInBoxRoles: ["PiBinaryExpression-left", "PiBinaryExpression-right"],
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
+            const parent = box.element;
             const x = new DemoNumberLiteralExpression();
             x.value = trigger.toString();
+            parent[(box as AliasBox).propertyName] = x;
             return x;
         },
         boxRoleToSelect: "num-literal-value"

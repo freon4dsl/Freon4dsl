@@ -21,7 +21,7 @@ export interface PiNamedElement extends PiElement {
 }
 
 export interface PiExpression extends PiElement {
-    piIsExpressionPlaceHolder(): boolean;
+    // TODO PiExpression cannot be distinguished from PiElement anymore,  is this a problem?
 }
 
 export interface PiBinaryExpression extends PiExpression {
@@ -43,9 +43,9 @@ export interface PiContainerDescriptor {
 }
 
 export function isPiExpression(element: PiElement): element is PiExpression {
-    return element.piIsExpression && element.piIsExpression();
+    return (!!element) && element.piIsExpression && element.piIsExpression();
 }
 
 export function isPiBinaryExpression(element: PiElement): element is PiBinaryExpression {
-    return element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression && element.piIsBinaryExpression();
+    return (!!element) && element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression && element.piIsBinaryExpression();
 }

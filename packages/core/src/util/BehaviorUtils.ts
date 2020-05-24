@@ -56,21 +56,21 @@ export async function executeBehavior(box: Box, text: string, editor: PiEditor):
                 const matchArray = text.match(trigger);
                 LOGGER.log("MATCH " + text + " against " + trigger + "  results in " + (!!matchArray ? matchArray.length : "null"));
                 if (matchArray !== null && text === matchArray[0]) {
-                    const execresult = a.execute(box, text, editor);
-                    if( !!execresult){
-                        editor.selectElement(execresult);
-                        editor.selectFirstLeafChildBox();
-                    }
+                    const execresult = await a.execute(box, text, editor);
+                    // if( !!execresult){
+                    //     editor.selectElement(execresult);
+                    //     editor.selectFirstLeafChildBox();
+                    // }
                     return BehaviorExecutionResult.EXECUTED;
                 }
             } else if (isString(trigger)) {
                 if (trigger === text) {
                     LOGGER.log("MATCH FULL TEXT");
-                    const execresult = a.execute(box, text, editor);
-                    if( !!execresult){
-                        editor.selectElement(execresult);
-                        editor.selectFirstLeafChildBox();
-                    }
+                    const execresult = await a.execute(box, text, editor);
+                    // if( !!execresult){
+                    //     await editor.selectElement(execresult, LEFT_MOST);
+                    //     editor.selectFirstLeafChildBox();
+                    // }
                     return BehaviorExecutionResult.EXECUTED;
                 } else if (trigger.startsWith(text)) {
                     LOGGER.log("MATCH PARTIAL TEXT");

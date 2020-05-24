@@ -7,7 +7,6 @@ import { TextComponent } from "../../../../editor/components/boxes";
 import { CoreTestActions } from "../../../testeditor/CoreTestActions";
 import { CoreTestContext } from "../../../testeditor/CoreTestContext";
 import { CoreTestProjection } from "../../../testeditor/CoreTestProjection";
-import { CoreTestPlaceholderExpression } from "../../../testmodel/expressions/CoreTestPlaceholderExpression";
 
 // let n = require("./setup");
 
@@ -19,14 +18,11 @@ describe("TextComponent", () => {
 
     beforeEach(() => {
         PiLogger.muteAllLogs();
-        const context = new CoreTestContext(new CoreTestPlaceholderExpression());
+        const context = new CoreTestContext(null);
         const action = new CoreTestActions();
         const projection = new CoreTestProjection();
         editor = new PiEditor(projection, action);
         editor.rootElement = context.rootElement;
-        editor.getPlaceHolderExpression = () => {
-            return new CoreTestPlaceholderExpression();
-        };
 
         nextLeaf = new AliasBox(context.rootElement, "", "");
         textbox = new TextBox(

@@ -23,9 +23,6 @@ export class PiEditor {
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
 
-    // TODO Should be removed completely, is only use here
-    getPlaceHolderExpression: () => PiExpression;
-
     // @observable private $rootBox: Box | null;
     @observable private $selectedBox: Box | null;
     private $projectedElement: HTMLDivElement | null;
@@ -172,11 +169,11 @@ export class PiEditor {
         LOGGER.info(this, "deleteBox");
         const exp: PiElement = box.element;
         const container: PiContainerDescriptor = exp.piContainer();
-        if (isPiExpression(exp)) {
-            const newExp = this.getPlaceHolderExpression();
-            PiUtils.replaceExpression(exp, newExp, this);
-            await this.selectElement(newExp);
-        } else {
+        // if (isPiExpression(exp)) {
+        //     const newExp = this.getPlaceHolderExpression();
+        //     PiUtils.replaceExpression(exp, newExp, this);
+        //     await this.selectElement(newExp);
+        // } else {
             if (container !== null) {
                 LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
                 const propertyIndex = container.propertyIndex;
@@ -187,15 +184,18 @@ export class PiEditor {
                     let length = arrayProperty.length;
                     if (length === 0) {
                         // TODO Maybe we should select the element (or leaf) just before the list.
-                        await this.selectElement(parentElement);
+                        await this.selectElement(parentElement,`${container.container.piLanguageConcept()}-${container.propertyName}`);
                     } else if (length <= propertyIndex) {
                         await this.selectElement(arrayProperty[propertyIndex - 1]);
                     } else {
                         await this.selectElement(arrayProperty[propertyIndex]);
                     }
+                } else {
+                    container.container[container.propertyName] = null;
+                    await this.selectElement(container.container, `${container.container.piLanguageConcept()}-${container.propertyName}`)
                 }
             }
-        }
+        // }
     }
 
     async selectFirstEditableChildBox() {

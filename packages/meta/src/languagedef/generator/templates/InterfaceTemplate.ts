@@ -55,9 +55,7 @@ export class InterfaceTemplate {
     generatePartProperty(property: PiConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        const initializer = ((property.type.referred instanceof PiExpressionConcept) ?
-            `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceHolder)} ${property.isList ? "]" : ""}` : "");
-        return `${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
+        return `${property.name} : ${Names.classifier(property.type.referred)}${arrayType}; ${comment}`;
     }
 
     generateReferenceProperty(property: PiConceptProperty): string {

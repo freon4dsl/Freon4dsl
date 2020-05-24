@@ -28,14 +28,14 @@ export class ProjectionTemplate {
             return editor === undefined || editor.projection === null;
         })
         ;
-        const nonBinaryConceptsWithDefaultProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiExpressionConcept && c.isExpressionPlaceholder())).filter(c => {
+        const nonBinaryConceptsWithDefaultProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
         });
         if (nonBinaryConceptsWithDefaultProjection.length>0){
             console.error("Projection generator: there are elements without projections "+ nonBinaryConceptsWithDefaultProjection.map(c => c.name));
         }
-        const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiExpressionConcept && c.isExpressionPlaceholder())).filter(c => {
+        const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return !!editor && !!editor.projection;
         });
@@ -119,12 +119,6 @@ export class ProjectionTemplate {
                 }                
                 `).join("\n")}    
                 
-                ${ !!language.expressionPlaceHolder ? `
-                private ${Names.projectionFunction(language.expressionPlaceHolder)} (element: ${Names.concept(language.expressionPlaceHolder)}) {
-                    return new AliasBox(element, EXPRESSION_PLACEHOLDER, "[exp]");
-                }`
-                :"" }
-      
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
                 
                 /**
@@ -188,7 +182,9 @@ export class ProjectionTemplate {
                                 result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
 
                             } else {
-                                result += `((!!${element}.${appliedFeature.name}) ? this.rootProjection.getBox(${element}.${appliedFeature.name}) : new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]" /* ${appliedFeature.name} */ ))`
+                                result += `((!!${element}.${appliedFeature.name}) ?
+                                                this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
+                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`
                             }
                         } else { // reference
                             if( appliedFeature.isList){
@@ -258,12 +254,13 @@ export class ProjectionTemplate {
      */
     conceptPartListProjection(direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
         return `
-            new ${direction}ListBox(${element}, "${Roles.property(propertyConcept)}", 
+            new ${direction}ListBox(${element}, "${Roles.property(propertyConcept)}-list", 
                 ${element}.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
                 }).concat(
                     new AliasBox(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
-                        style: ${Names.styles}.placeholdertext
+                        style: ${Names.styles}.placeholdertext,
+                        propertyName: "${propertyConcept.name}"
                     })
                 )
             )`;
