@@ -1,3 +1,4 @@
+import { LabelBox } from "../editor/boxes";
 import { PiCaret } from "./BehaviorUtils";
 import { STYLES } from "../editor/components/styles/Styles";
 import { AliasBox } from "../editor/boxes/AliasBox";
@@ -48,20 +49,20 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
     }
 }
 
-export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, style?: string): HorizontalListBox {
+export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
     result.addChildren([
-        projectionToUse.getBox(exp.piLeft()),
+        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, "PiBinaryExpression-left", "[add-left]", { propertyName: "left"})),
         new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        createOperatorBox(projection["editor"], exp, symbol),
+        createOperatorBox(editor, exp, symbol),
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        projectionToUse.getBox(exp.piRight())
+        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, "PiBinaryExpression-right", "[add-right]", { propertyName: "right"}))
     ]);
     return result;
 }
@@ -78,7 +79,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         EXPRESSION_SYMBOL,
         "<...>",
         () => {
-            if (editor.actions && editor.actions.binaryExpressionCreators) {
+            if (!!editor.actions && editor.actions.binaryExpressionCreators) {
                 return editor.actions.binaryExpressionCreators
                     .filter(e => !e.isApplicable || e.isApplicable(operatorBox))
                     .map(e => ({

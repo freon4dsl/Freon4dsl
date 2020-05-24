@@ -42,7 +42,6 @@ export class ConceptTemplate {
 
                     .concat(concept.references().map(r => Names.classifier(r.type.referred)))
                     .concat(concept.interfaces.map(i => Names.interface(i.referred)))
-                    .concat(Names.concept(language.expressionPlaceHolder))
                     .concat([baseExpressionName])
                     .concat(concept.allParts().map(part => part.type.name))
                     .concat(concept.allReferences().map(part => part.type.name))
@@ -107,8 +106,6 @@ export class ConceptTemplate {
                         }` : ""
                     }
                     ${concept instanceof PiBinaryExpressionConcept ? `
-                    this.left = new ${Names.concept(language.expressionPlaceHolder)};
-                    this.right = new ${Names.concept(language.expressionPlaceHolder)};
                     ` : ""
                     }
                 }
@@ -142,15 +139,6 @@ export class ConceptTemplate {
                 piIsBinaryExpression(): boolean {
                     return ${isBinaryExpression};
                 }
-                
-                ${isExpression || isBinaryExpression ? `
-                /**
-                 * Returns true if this instance is the generated place holder for expressions.
-                 */ 
-                piIsExpressionPlaceHolder(): boolean {
-                    return ${concept instanceof PiExpressionConcept && concept.isExpressionPlaceholder()};
-                }`
-            : ""}
                 
                 ${isBinaryExpression && binExpConcept != null ? `
                 /**
@@ -235,7 +223,7 @@ export class ConceptTemplate {
         const comment = "// implementation of " + property.name;
         const decorator = property.isList ? "@observablelistpart" : "@observablepart";
         const arrayType = property.isList ? "[]" : "";
-        const initializer = ((property.type.referred instanceof PiExpressionConcept) ? `= ${property.isList ? "[" : ""} new ${Names.concept(property.owningConcept.language.expressionPlaceHolder)} ${property.isList ? "]" : ""}` : "");
+        const initializer = "";
         return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
     }
 

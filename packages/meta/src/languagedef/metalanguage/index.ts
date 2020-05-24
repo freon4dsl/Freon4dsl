@@ -8,6 +8,7 @@ export * from "./PiLanguageChecker";
 export * from "./PiLanguageExpressionChecker";
 export * from "./PiMetaEnvironment";
 export * from "./PiLangScoper";
+export * from "./LangUtil";
 
 // Do not include PiElementReference.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.

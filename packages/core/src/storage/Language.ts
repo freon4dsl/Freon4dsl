@@ -10,10 +10,18 @@ export type Property = {
 };
 
 export type Concept = {
+    isAbstract: boolean;
     typeName: string;
-    baseNames: string;
+    baseName: string;
+    subConceptNames: string[];
     properties: Map<string, Property>;
     constructor: () => PiElement;
+};
+
+export type Interface = {
+    typeName: string;
+    subConceptNames: string[];
+    properties: Map<string, Property>;
 };
 
 export type Enumeration = {
@@ -24,9 +32,11 @@ export type Enumeration = {
 export class Language {
     private static theInstance: Language = null;
     private concepts: Map<string, Concept> = new Map<string, Concept>();
+    private interfaces: Map<string, Interface> = new Map<string, Interface>();
     private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
 
-    private constructor() {}
+    private constructor() {
+    }
 
     static getInstance() {
         if (Language.theInstance === null) {
@@ -35,8 +45,12 @@ export class Language {
         return Language.theInstance;
     }
 
-    concept(typeName, propertyName): Concept {
+    concept(typeName): Concept {
         return this.concepts.get(typeName);
+    }
+
+    interface(typeName): Interface {
+        return this.interfaces.get(typeName);
     }
 
     enumeration(typeName): Enumeration {
@@ -45,6 +59,10 @@ export class Language {
 
     conceptProperty(typeName, propertyName): Property {
         return this.concepts.get(typeName).properties.get(propertyName);
+    }
+
+    interfaceProperty(typeName, propertyName): Property {
+        return this.interfaces.get(typeName).properties.get(propertyName);
     }
 
     allConceptProperties(typeName: string): IterableIterator<Property> {
@@ -69,8 +87,24 @@ export class Language {
         this.concepts.set(concept.typeName, concept);
     }
 
+    addInterface(intface: Interface) {
+        this.interfaces.set(intface.typeName, intface);
+    }
+
     addEnumeration(enumeration: Enumeration) {
         this.enumerations.set(enumeration.typeName, enumeration);
+    }
+
+    subConcepts(typeName: string): string[] {
+        const concept = this.concept(typeName);
+        if (!!concept) {
+            return concept.subConceptNames
+        }
+        const intface = this.interface(typeName);
+        if (!!intface) {
+            return intface.subConceptNames
+        }
+        return [];
     }
 
     referenceCreator: (name: string, type: string) => any;

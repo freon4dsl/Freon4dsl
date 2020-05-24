@@ -1,0 +1,43 @@
+:page-title: Language Structure
+:page-nav_order: 10
+:page-parent: Tutorials
+:imagesdir: ../images/
+:src-dir: ../../../../playground/src/tutorial-language/defs
+:source-language: javascript
+:listing-caption: Code Sample
+= The Language Structure Definition
+
+The ProjectIt language structure consists of a list of `Concepts`, `Expression Concepts`, `Limited Concepts`
+and/or `Interfaces`.
+
+*	A `concept` is the basic element of your language definition. It defines which instances can be present in
+a model created by your users.
+*	An `expression concept` is a concept that is an expression. The editor will deal with them differently in
+order to give your user or more natural editing experience. Note that expression concepts need to have a priority.
+*	A `limited concept` is a concept that has a limited number of predefined instances. These instances are part
+of the standard library of your language.
+*	An `interface` is a concept that has no instances.
+
+Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and
+expression concepts. Each of the four language structure elements have `Properties`, of which there are the
+following three types.
+
+*	`Simple properties`, which have as type one of string, number, or boolean, and are always contained in its
+`concept`.
+*	`Parts`, which have as type one of the `concepts` in the language, and are also contained in its `concept` (as in
+the UML aggregation relationship). Note that simple properties are always considered to be parts.
+*	`References`, which have as type one of the `concepts` in the language, but are not contained in its `concept`
+(as in the UML association relationship).
+
+Several examples of concepts and properties can be found in the _Demo_ language.
+
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=concepts]
+----
+
+Every language needs to define one root concept, which serves as the root of the abstract syntax tree.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
+----

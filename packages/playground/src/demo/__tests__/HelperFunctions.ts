@@ -11,7 +11,7 @@ import {
     DemoMultiplyExpression,
     DemoPlusExpression,
     DemoDivideExpression,
-    DemoExpression, PlaceholderExpression
+    DemoExpression
 } from "../language/gen";
 
 export function makeLiteralExp(incoming: any): DemoExpression {
@@ -27,7 +27,7 @@ export function makeLiteralExp(incoming: any): DemoExpression {
         (mine as DemoStringLiteralExpression).value = incoming;
     } else {
         // When no expression can be created, return a place holder expression.
-        mine = new PlaceholderExpression();
+        mine = null;
     }
     return mine;
 }

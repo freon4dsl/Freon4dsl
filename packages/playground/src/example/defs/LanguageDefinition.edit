@@ -1,0 +1,112 @@
+editor User for language Example
+
+NumberLiteralExpression {
+    @projection normal
+        [${self.value}]
+}
+
+
+Attribute {
+    @projection attribuut [ ${self.name} : ${self.declaredType} ]
+}
+
+StringLiteralExpression {
+    @projection StringLiteralExpression
+        [
+        '${self.value}'
+        ]
+    @trigger "'"
+}
+
+IfExpression {
+    @projection IfExpression
+        [
+        if (${self.condition}) then
+                  ${self.whenTrue}
+        else
+           ${self.whenFalse}
+        endif
+        ]
+
+    @trigger "if"
+    @symbol "if"
+}
+/*
+IfExpression {
+    @projection IfExpression
+        [
+        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
+        ]
+
+    @trigger "if"
+    @symbol "if"
+}
+*/
+
+AbsExpression {
+    @projection default [
+        abs( ${self.expr} )
+    ]
+}
+
+PlusExpression {
+    @symbol "+"
+}
+
+MultiplyExpression {
+    @symbol "*"
+}
+
+DivideExpression {
+    @symbol "/"
+}
+LessThenExpression {
+    @symbol "<"
+}
+OrExpression {
+    @symbol "or"
+}
+
+
+
+Entity {
+    @trigger "entity"
+}
+
+/*
+MethodCallExpression {
+    @projection gewoon
+        [
+        ${self.name} (  )
+        ]
+    @trigger "Method2"
+}
+*/
+
+BooleanLiteralExpression {
+    @projection [ ${self.value} ]
+}
+
+MethodCallExpression {
+    @projection MethodCallExpression
+        [
+        CALL ${self.methodDefinition} (  )
+        ]
+    @trigger "method"
+}
+
+
+Model {
+    @projection Model
+        [
+        model ${self.name} {
+        entities:
+            ${self.entities
+                @vertical
+                @terminator [\n\n]
+            }
+        model wide Methods:
+            ${self.methods @horizontal @separator [\n] }
+        }
+        ]
+}

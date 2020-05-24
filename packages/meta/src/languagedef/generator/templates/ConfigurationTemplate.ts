@@ -15,7 +15,6 @@ export class ConfigurationTemplate {
     }
 
     generate(language: PiLanguageUnit, relativePath: string): string {
-        const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
         const configurationName = Names.configuration(language);
         return `
             import { ${Names.PiProjection}, ${Names.PiActions}, ${Names.PiModelInitialization} } from "${PROJECTITCORE}";

@@ -1,6 +1,6 @@
 import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
 import { DefEditorLanguage } from "../../metalanguage";
 import { LangUtil } from "../../../languagedef/metalanguage/LangUtil";
@@ -27,10 +27,12 @@ export class DefaultActionsTemplate {
                 PiEditor,
                 PiElement,
                 PiExpressionCreator,
+                PiBinaryExpression,
                 PiKey,
                 PiLogger,
                 PiTriggerType,
                 PiUtils,
+                AliasBox,
                 LEFT_MOST,
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
@@ -50,11 +52,15 @@ export class DefaultActionsTemplate {
             `{
                     trigger: ${c.triggerIsRegExp ? `/${editorDef.findConceptEditor(c).trigger}/` : `"${editorDef.findConceptEditor(c).trigger}"`},
                     activeInBoxRoles: [
-                        EXPRESSION_PLACEHOLDER
+                        "PiBinaryExpression-left", "PiBinaryExpression-right"
                     ],
                     expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
-                        return new ${Names.concept(c)}();
-                    }
+                        const parent = box.element;
+                        const newExpression = new ${Names.concept(c)}();
+                        parent[(box as AliasBox).propertyName] = newExpression;
+                        return newExpression;
+                    },
+                    boxRoleToSelect: "${editorDef.findConceptEditor(c).projection.cursorLocation()}" /* CURSOR  0 */
             }`
         )}
             ];
@@ -71,7 +77,10 @@ export class DefaultActionsTemplate {
                         AFTER_BINARY_OPERATOR
                     ],
                     expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
-                        return new ${Names.concept(c)}();
+                        const parent = box.element;
+                        const newExpression = new ${Names.concept(c)}();
+                        parent[(box as AliasBox).propertyName] = newExpression;
+                        return newExpression;
                     },
                     boxRoleToSelect: EXPRESSION_PLACEHOLDER
                 }`
@@ -79,46 +88,11 @@ export class DefaultActionsTemplate {
             ];
             
             export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
-                ${flatten(language.concepts.map(c => c.parts())).map(part => {
-                    const parentConcept = part.owningConcept;
-                    const partConcept = part.type.referred;
-                    return `${LangUtil.subClasses(partConcept).filter(cls => !cls.isAbstract).map(subClass => 
-                        `{
-                            activeInBoxRoles: ["${Roles.newPart(part)}"],
-                            trigger: "${!!editorDef.findConceptEditor(subClass)?.trigger ? editorDef.findConceptEditor(subClass)?.trigger : subClass.name}",
-                            action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                                const parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
-                                const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}();
-                                ${part.isList ? `parent.${part.name}.push(new${part.name});` : `parent.${part.name}= new${part.name};`}
-                                ed.selectElement(new${part.name});
-                                ed.selectFirstLeafChildBox();
-                                return null;
-                            }
-                        }`).join(",\n")}
-                `}).join(",")}
-                ,
-                ${flatten(language.concepts.map(c => c.references())).filter(p => p.isList).map(reference => {
-                    const parentConcept = reference.owningConcept;
-                    const referredConcept = reference.type.referred;
-                    const conceptEditor = editorDef.findConceptEditor(referredConcept);
-                    const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : reference.name
-                    return `
-                        {
-                            activeInBoxRoles: ["${Roles.newPart(reference)}"],
-                            trigger: "${trigger}",
-                            action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                                const parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
-                                const newBase: PiElementReference< ${Names.concept(referredConcept)}> = PiElementReference.createNamed("", null);
-                                parent.${reference.name}.push(newBase);
-                                return null;
-                            },
-                            boxRoleToSelect: "${reference.name}-name"
-                        }
-                `}).join(",")}
+                ${this.customActionForParts(language, editorDef)}
             ];
             
             export const KEYBOARD: KeyboardShortcutBehavior[] = [
-                ${flatten(language.concepts.map(c => c.parts())).filter(p => p.isList).map(part => {
+                ${flatten(language.concepts.map(c => c.allParts())).filter(p => p.isList).map(part => {
                     const parentConcept = part.owningConcept;
                     const partConcept = part.type.referred;
                     // TODO add keyboard shortcut
@@ -138,5 +112,122 @@ export class DefaultActionsTemplate {
             ];
             `;
         }
+
+    customActionForReferences(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+        let result = "";
+        language.concepts.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
+                const referredConcept = reference.type.referred;
+                const conceptEditor = editorDef.findConceptEditor(referredConcept);
+                const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : reference.name
+                result += `
+                {
+                    activeInBoxRoles: ["${Roles.newPart(reference)}"],
+                    trigger: "${trigger}",
+                    action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                        const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
+                        const newBase: PiElementReference< ${Names.concept(referredConcept)}> = PiElementReference.createNamed("", null);
+                        parent.${reference.name}.push(newBase);
+                        return newBase;
+                    },
+                    boxRoleToSelect: "${this.cursorLocation(editorDef,concept)}"  /* CURSOR 1 */
+                }
+                `
+                result +=",";
+            })
+        );
+        return result;
+    }
+
+    customActionForParts(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+        let result = "";
+        language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
+            const childConcept = part.type.referred;
+            // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.name
+            result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    {
+                        activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
+                        trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
+                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                            // const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
+                            // const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
+                            // parent.${part.name}.push(new${part.name});
+                            // return new${part.name};
+
+                            const parent = box.element;
+                            const newExpression = new ${Names.concept(subClass)}();
+                            parent[(box as AliasBox).propertyName].push(newExpression);
+                            return newExpression;
+                        },
+                        boxRoleToSelect: "${this.cursorLocation(editorDef, subClass)}" /* CURSOR 2 */
+                    },`).join(",\n")}
+                    `
+            if (childConcept instanceof PiConcept) {
+                const conceptEditor = editorDef.findConceptEditor(childConcept);
+            } else { // TODO child is PiInterface
+                result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                   {
+                        activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
+                        trigger: "${editorDef.findConceptEditor(subClass).trigger}", // for Interface part
+                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                            // const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
+                            // const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
+                            // parent.${part.name}.push(new${part.name});
+                            // return new${part.name};
+                            
+                            const parent = box.element;
+                            const newExpression = new ${Names.concept(subClass)}();
+                            parent[(box as AliasBox).propertyName].push(newExpression);
+                            return newExpression;
+
+                        },
+                        boxRoleToSelect: "${this.cursorLocation(editorDef, subClass)}" /* CURSOR 3 */
+                    },`).join(",\n")}
+                    `
+                }
+            })
+        );
+        language.concepts.forEach(concept => concept.allParts().filter(ref => !ref.isList).forEach(part => {
+                const childConcept = part.type.referred;
+                if (childConcept instanceof PiConcept) {
+                    const conceptEditor = editorDef.findConceptEditor(childConcept);
+                    result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    {
+                        activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
+                        trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for single Concept part
+                        action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                            //const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
+                            //const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
+                            //parent.${part.name} = new${part.name};
+                            //return new${part.name};
+
+                            const parent = box.element;
+                            const newExpression = new ${Names.concept(subClass)}();
+                            parent[(box as AliasBox).propertyName] = newExpression;
+                            return newExpression;
+                        },
+                        boxRoleToSelect: "${this.cursorLocation(editorDef, subClass)}" /* CURSOR 4  ${subClass.name} */
+                    },`).join(",\n")}
+                    `
+                }
+            })
+        );
+        return result;
+    }
+
+    cursorLocation(editorDef: DefEditorLanguage, c: PiConcept) {
+        const projection = editorDef.findConceptEditor(c).projection;
+        if (!!projection) {
+            if (c.name === "DemoEntity") {
+                console.log("DemoEntity cursorLocation: " + projection.cursorLocation());
+                console.log(projection.toString());
+            }
+            return projection.cursorLocation();
+        } else {
+            if (c instanceof PiBinaryExpressionConcept) {
+                return "PiBinaryExpression-left";
+            }
+        }
+        return "===== " + c.name + " =====";
+    }
 }
 

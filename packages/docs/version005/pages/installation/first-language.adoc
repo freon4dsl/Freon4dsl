@@ -1,0 +1,52 @@
+:imagesdir: ../images/
+:page-nav_order: 30
+:page-title: Create Your Own Language
+:page-parent: Installing and Using ProjectIt
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+= Create Your Own Language
+
+Naturally, you will want to create your own language definitions. To do so, follows these steps.
+
+.	Add a new folder for your language in `packages/playground/src`, create a dedicated folder within it. We usually
+call it ‘defs’, but any name will do, just keep all language definition files in it. Next, adjust
+the scripts in playground’s package.json, as shown in the following screenshot. Use your own folders instead of
+`src/taxrules/defs` and `src/taxtrules`.
+
+====
+[#img-package-json-adjustment]
+.Screenshot of package.json for TaxRules Example
+image::package-json-adjustment.png[package-json-adjustment]
+====
+
+.	Create a (set of) language definition(s). To start with, you only need to define the language structure,
+defaults will be generated for the editor, scoper, typer, and validator. You can start by copying `TaxRules.lang`
+to your own `defs`-folder. See the xref:../tutorials/tutorials.adoc[tutorials]
+to find out how to write the definitions for the language structure, editor, scoper, typer, and validator.
+
+.	Generate the code using the adjusted script in package.json. In the above example this would be done by:
+
+    yarn taxrules
+
+.   Adjust the configuration file in *playground/src/webapp/gateway-to-projectit/WebappConfiguration.ts* to use the
+newly generated editor instead of the editor for the 'Demo' example.
+
+====
+[#img-webapp-config]
+.Screenshot of WebappConfiguration.ts
+image::webapp-configuration.png[webapp-configuration]
+====
+
+[start=4]
+.   Try it out:
+
+    yarn start or lerna run start
+
+.	If you like, add other definitions or change the existing ones, and generate another time (Again,
+see the xref:../tutorials/tutorials.adoc[tutorials] to find out more about the definitions, and maybe you want to use
+the -w flag to watch changes to your definition files.). Careful with handmade changes, all files in
+any ‘gen’ folder will be deleted during the next generation.
+.	If you like, have a look at the generated code (see also xref:structure-generated-code.adoc[structure of the generated code]).
+.	If you like, add handwritten code to improve the result (see xref:meta-documentation/editor-framework.adoc[editor framework]).

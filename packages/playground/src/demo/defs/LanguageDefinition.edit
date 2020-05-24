@@ -90,6 +90,13 @@ DemoModel {
     @projection DemoModel
         [
         model ${self.name} {
+        main: ${self.main}
+        type: ${self.type}
+        types:
+            ${self.types
+                @vertical
+                @terminator [\n\n]
+            }
         entities:
             ${self.entities
                 @vertical

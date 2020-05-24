@@ -1,0 +1,27 @@
+:imagesdir: ../images/
+:page-nav_order: 20
+:page-title: Commandline
+:page-parent: Installing and Using ProjectIt
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+= Use ProjectIt from the Commandline
+
+ProjectIt will be released as a commandline tool. If you look at the package.json file in `packages/playground/`
+you can find the commands that were used to run the Demo example.
+
+====
+[#img-package-json]
+.Screenshot of package.json
+image::package-json.png[projectit-package-json]
+====
+
+Go to folder `packages/playground` and type ‘`ts-node ../meta/src/commandline/projectit`’ to find out the different
+arguments that can be used.
+
+====
+[#img-commands]
+.Screenshot of commandline options
+image::projectit-commandline-options.png[projectit-commandline-options]
+====

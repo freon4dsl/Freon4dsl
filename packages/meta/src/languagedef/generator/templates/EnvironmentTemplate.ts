@@ -14,7 +14,6 @@ export class EnvironmentTemplate {
     }
 
     generateEnvironment(language: PiLanguageUnit, relativePath: string): string {
-        const placeHolderConceptName = Names.concept(language.expressionPlaceHolder);
         return `
         import { projectitConfiguration } from "../../projectit/ProjectitConfiguration";
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, 
@@ -31,7 +30,6 @@ export class EnvironmentTemplate {
         import { ${Names.initialization(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.initialization(language)}";
 
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
-        ${(placeHolderConceptName === "" ? "" : `import { ${placeHolderConceptName} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";`)}
         
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
@@ -65,9 +63,6 @@ export class EnvironmentTemplate {
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");
                 rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(rootProjection, actions);
-                this.editor.getPlaceHolderExpression = () => {
-                    return new ${placeHolderConceptName}();
-                }
                 this.editor.rootElement = projectitConfiguration.customInitialization.initialize();
                 initializeLanguage();
             }

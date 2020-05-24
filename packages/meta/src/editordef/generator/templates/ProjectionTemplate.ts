@@ -28,14 +28,14 @@ export class ProjectionTemplate {
             return editor === undefined || editor.projection === null;
         })
         ;
-        const nonBinaryConceptsWithDefaultProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiExpressionConcept && c.isExpressionPlaceholder())).filter(c => {
+        const nonBinaryConceptsWithDefaultProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
         });
         if (nonBinaryConceptsWithDefaultProjection.length>0){
             console.error("Projection generator: there are elements without projections "+ nonBinaryConceptsWithDefaultProjection.map(c => c.name));
         }
-        const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) && !(c instanceof PiExpressionConcept && c.isExpressionPlaceholder())).filter(c => {
+        const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return !!editor && !!editor.projection;
         });
@@ -98,7 +98,7 @@ export class ProjectionTemplate {
                         this.name = name;
                     }
                 }
-          
+                
                 getBox(exp: ${Names.PiElement}): Box {
                     if( exp === null ) {
                         return null;
@@ -106,7 +106,7 @@ export class ProjectionTemplate {
 
                     switch( exp.piLanguageConcept() ) { 
                         ${language.concepts.map(c => `
-                        case "${c.name}" : return this.get${c.name}Box(exp as ${Names.concept(c)});`
+                        case "${c.name}" : return this.${Names.projectionFunction(c)} (exp as ${Names.concept(c)});`
                         ).join("  ")}
                     }
                     // nothing fits
@@ -114,21 +114,18 @@ export class ProjectionTemplate {
                 }
 
                 ${binaryConceptsWithDefaultProjection.map(c => `
-                private get${c.name}Box(element: ${Names.concept(c)}) {
+                private ${Names.projectionFunction(c)} (element: ${Names.concept(c)}) {
                      return this.createBinaryBox(this, element, "${editorDef.findConceptEditor(c).symbol}");
                 }                
                 `).join("\n")}    
                 
-                ${ !!language.expressionPlaceHolder ? `
-                private get${language.expressionPlaceHolder.name}Box(element: ${Names.concept(language.expressionPlaceHolder)}) {
-                    return new AliasBox(element, EXPRESSION_PLACEHOLDER, "[exp]");
-                }`
-                :"" }
-      
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
                 
+                /**
+                 *  Create a standard binary box to enure binary expressions can be editied easily
+                 */
                 private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
-                    let binBox = createDefaultBinaryBox(this, exp, symbol);
+                    let binBox = createDefaultBinaryBox(this, exp, symbol, ${Names.environment(language)}.getInstance().editor);
                     if (
                         this.showBrackets &&
                         !!exp.piContainer().container &&
@@ -148,27 +145,26 @@ export class ProjectionTemplate {
         `;
     }
 
-    private generateUserProjection(language: PiLanguageUnit, c: PiConcept, editor: DefEditorConcept) {
+    private generateUserProjection(language: PiLanguageUnit, concept: PiConcept, editor: DefEditorConcept) {
         let result: string = "";
-        const element = Roles.elementName(c);
+        const element = Roles.elementName(concept);
         const projection: MetaEditorProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if(multiLine){
-            result += `new VerticalListBox(${element}, "${c.name}-overall", [
+            result += `new VerticalListBox(${element}, "${concept.name}-overall", [
             `;
         }
 
-        let indentNr = 0;
         projection.lines.forEach( (line, index) => {
             if( line.indent > 0) {
-                result += `new IndentBox(${element}, "${c.name}-indent-${indentNr++}", ${line.indent}, `
+                result += `new IndentBox(${element}, "${concept.name}-indent-line-${index}", ${line.indent}, `
             }
             if( line.items.length > 1) {
-                result += `new HorizontalListBox(${element}, "${c.name}-line-${index}", [ `;
+                result += `new HorizontalListBox(${element}, "${concept.name}-hlist-line-${index}", [ `;
             }
             line.items.forEach((item, itemIndex) => {
                 if ( item instanceof DefEditorProjectionText ){
-                    result += ` new LabelBox(${element}, "${element}-name-${index}-${itemIndex}", "${item.text}", {
+                    result += ` new LabelBox(${element}, "${element}-label-line-${index}-item-${itemIndex}", "${item.text}", {
                             style: projectitStyles.${item.style},
                             selectable: false
                         })  `
@@ -183,10 +179,12 @@ export class ProjectionTemplate {
                         if (appliedFeature.isPart) {
                             if (appliedFeature.isList) {
                                 const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
-                                result += this.conceptPartListProjection(direction, appliedFeature, element);
+                                result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
 
                             } else {
-                                result += `((!!${element}.${appliedFeature.name}) ? this.rootProjection.getBox(${element}.${appliedFeature.name}) : new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]" /* ${appliedFeature.name} */ ))`
+                                result += `((!!${element}.${appliedFeature.name}) ?
+                                                this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
+                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`
                             }
                         } else { // reference
                             if( appliedFeature.isList){
@@ -218,13 +216,23 @@ export class ProjectionTemplate {
         });
         if( multiLine){
             result += ` 
-                ]);
+                ])
             `;
         }
         if( result === "" ){ result = "null"}
-        return `public get${Names.concept(c)}Box(${element}: ${Names.concept(c)}): Box {
+        if (concept instanceof PiExpressionConcept ){
+            return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
+                    return createDefaultExpressionBox( ${element}, "default-expression-box", [
+                            ${result}
+                        ],
+                        { selectable: false }
+                    );
+                }`;
+        } else {
+            return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
                     return ${result};
                 }`;
+        }
     }
 
     // TODO change this to be used with PiLimitedConcept
@@ -244,14 +252,15 @@ export class ProjectionTemplate {
      * @param propertyConcept   The property for whioch the projection is generated.
      * @param element           The name of the element parameter of the getBox projection method.
      */
-    conceptPartListProjection(direction: string, propertyConcept: PiConceptProperty, element: string) {
+    conceptPartListProjection(direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
         return `
-            new ${direction}ListBox(${element}, "${Roles.property(propertyConcept)}", 
+            new ${direction}ListBox(${element}, "${Roles.property(propertyConcept)}-list", 
                 ${element}.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
                 }).concat(
-                    new AliasBox(${element}, "${Roles.newPart(propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
-                        style: ${Names.styles}.placeholdertext
+                    new AliasBox(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
+                        style: ${Names.styles}.placeholdertext,
+                        propertyName: "${propertyConcept.name}"
                     })
                 )
             )`;
@@ -314,25 +323,25 @@ export class ProjectionTemplate {
         // TODO This now only works for strings
         switch(property.primType) {
             case "string":
-                return `new TextBox(${element}, "${Roles.property(property)}-text", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "number":
-                return `new TextBox(${element}, "${Roles.property(property)}-text", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = Number.parseInt(c)) ,
+                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = Number.parseInt(c)) ,
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "boolean":
-                return `new TextBox(${element}, "${Roles.property(property)}-text", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = (c === "true" ? true : false)),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = (c === "true" ? true : false)),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             default:
-                return `new TextBox(${element}, "${Roles.property(property)}-text", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext

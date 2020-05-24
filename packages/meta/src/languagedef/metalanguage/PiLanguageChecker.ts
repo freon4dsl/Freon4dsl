@@ -31,20 +31,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.concepts.forEach(concept => this.checkConcept(concept));
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
-        // create and add expressionPlaceHolder
-        // TODO remove the addition of a placeholder as soon as the editor is capable of working with placeholders in general
-        let expressionPlaceHolder = new PiExpressionConcept();
-        expressionPlaceHolder.name = "PlaceholderExpression";
-        expressionPlaceHolder.language = language;
-        expressionPlaceHolder._isPlaceHolder = true;
-        let xx = language.findExpressionBase();
-        if (!!xx){
-            expressionPlaceHolder.base = PiElementReference.create<PiExpressionConcept>(xx, "PiExpressionConcept");
-            expressionPlaceHolder.base.owner = expressionPlaceHolder;
-        }
-        language.concepts.push(expressionPlaceHolder);
-        language.expressionPlaceHolder = expressionPlaceHolder;
-
         this.simpleCheck(!!language.concepts.find(c => c.isRoot),
             `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
         LOGGER.info(this, "Language '" + language.name + "' checked");

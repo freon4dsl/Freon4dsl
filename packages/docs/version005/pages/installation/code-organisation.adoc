@@ -1,0 +1,25 @@
+:imagesdir: ../images/
+:page-nav_order: 40
+:page-title: Source Code Organisation
+:page-parent: Installing and Using ProjectIt
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+= Source code organisation
+
+The source code in this project is organised into the following packages.
+
+* `docs`: documentation, i.e. this website
+* `packages/core`: framework source code.
+* `packages/core/src/editor`: the editor framework source code.
+* `packages/core/src/language/decorators`: source code for https://mobx.js.org/[MobX] decorators that can be used to easily implement a language that can be
+directly used by ProjectIt.
+* `packages/meta`: source code that reads the language definition files and generates the language environment.
+* `packages/playground`: source code generated from the language definition files.
+* `packages/playground/src/webapp`: a copy of `packages/webapp`, used within the playground.
+* `packages/playground/src/demo/defs`: the language definition files for the example language called 'demo'.
+* `packages/server`: source code for a minimalistic model-server used for demonstration purposes.
+* `packages/webapp`: source code for the web-application used for all generated languages.
+* `/*`: the usual suspects.
+

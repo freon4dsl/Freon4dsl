@@ -1,4 +1,5 @@
 import { Names } from "../../../utils/Names";
+import { LangUtil } from "../../metalanguage";
 import {
     PiLanguageUnit
 } from "../../metalanguage/PiLanguage";
@@ -9,7 +10,7 @@ export class LanguageTemplate {
     }
 
     generateLanguage(language: PiLanguageUnit, relativePath: string): string {
-        return `import { Language, Property, Concept, Enumeration } from "${PROJECTITCORE}";
+        return `import { Language, Property, Concept, Interface, Enumeration } from "${PROJECTITCORE}";
         
             ${language.concepts.map(concept =>
                 `import { ${Names.concept(concept)} } from "./${Names.concept(concept)}";`
@@ -23,6 +24,9 @@ export class LanguageTemplate {
                 ${language.concepts.map(concept =>
                     `Language.getInstance().addConcept(describe${Names.concept(concept)}());`
                 ).join("\n")}
+                ${language.interfaces.map(intface =>
+                    `Language.getInstance().addInterface(describe${Names.interface(intface)}());`
+                ).join("\n")}
                 Language.getInstance().addReferenceCreator( (name: string, type: string) => { return PiElementReference.createNamed(name, type)});
             }
             
@@ -31,9 +35,11 @@ export class LanguageTemplate {
                 function describe${concept.name}(): Concept {
                     const concept =             {
                         typeName: "${Names.concept(concept)}",
+                        isAbstract: ${concept.isAbstract ? "true" : "false"},
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),
-                        baseNames: null
+                        baseName: ${!!concept.base ? `"${concept.base.name}"` : "null"},
+                        subConceptNames: [${LangUtil.subConcepts(concept).map(sub => "\"" + sub.name+ "\"").join(", ")}]
                     }
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
@@ -62,6 +68,41 @@ export class LanguageTemplate {
                 return concept;
             }`
             ).join("\n")}
+            ${language.interfaces.map(intface =>
+            `
+                function describe${intface.name}(): Interface {
+                    const intface =             {
+                        typeName: "${Names.interface(intface)}",
+                        properties: new Map< string, Property>(),
+                        subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + sub.name+ "\"").join(", ")}]
+                    }
+                ${intface.allPrimProperties().map(prop =>
+                `intface.properties.set("${prop.name}", {
+                                name: "${prop.name}",
+                                type: "${prop.primType}",
+                                isList: ${prop.isList} ,
+                                propertyType: "primitive"
+                            });`
+                ).join("\n")}
+                ${intface.allParts().map(prop =>
+                `intface.properties.set("${prop.name}", {
+                                name: "${prop.name}",
+                                type: "${prop.type.name}",
+                                isList: ${prop.isList} ,
+                                propertyType: "part"
+                            });`
+                ).join("\n")}
+                ${intface.allReferences().map(prop =>
+                `intface.properties.set("${prop.name}", {
+                                name: "${prop.name}",
+                                type: "${prop.type.name}",
+                                isList: ${prop.isList} ,
+                                propertyType: "reference"
+                            });`
+                ).join("\n")}
+                return intface;
+            }`
+        ).join("\n")}
         `;
     }
 }

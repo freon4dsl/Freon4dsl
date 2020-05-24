@@ -13,7 +13,6 @@ export * from "./expressions/CoreTestMember";
 export * from "./expressions/CoreTestMultiplyExpression";
 export * from "./expressions/CoreTestNumberLiteralExpression";
 export * from "./expressions/CoreTestOrExpression";
-export * from "./expressions/CoreTestPlaceholderExpression";
 export * from "./expressions/CoreTestPlusExpression";
 export * from "./expressions/CoreTestPowerExpression";
 export * from "./expressions/CoreTestStringLiteralExpression";

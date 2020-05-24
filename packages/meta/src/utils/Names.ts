@@ -18,7 +18,6 @@ export class Names {
     public static PiStdlib = "PiStdlib";
     public static PiUnparser = "PiUnparser";
     public static PiError = "PiError"; 
-    public static PiContext = "PiContext";
     public static PiActions = "PiActions";
     public static PiEditor = "PiEditor";
     public static PiProjection = "PiProjection";
@@ -140,5 +139,7 @@ export class Names {
         return '';
     }
 
-
+    public static projectionFunction(c: PiConcept): string {
+        return "get" + Names.concept(c) + "Box";
+    }
 }
