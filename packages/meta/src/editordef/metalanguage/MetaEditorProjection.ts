@@ -1,4 +1,5 @@
 import { PiLangExp } from "../../languagedef/metalanguage";
+import { Roles } from "../../utils/Roles";
 import { DefEditorConcept } from "./DefEditorConcept";
 import { ParseLocation } from "../../utils";
 
@@ -77,12 +78,12 @@ export class DefEditorSubProjection {
 
     toString(): string {
         return (
-            "[-[" +
+            "${" +
             this.expression.sourceName +
             "." +
             this.expression.appliedfeature.sourceName +
             (!!this.listJoin ? " " + this.listJoin.toString() : "") +
-            "]-]"
+            "}"
         );
     }
 }
@@ -171,8 +172,24 @@ export class MetaEditorProjection {
         });
     }
 
+    cursorLocation(): string {
+        for (let line of this.lines) {
+            for (let item of line.items) {
+                if (item instanceof DefEditorSubProjection) {
+                    return Roles.property(item.expression.appliedfeature.referedElement.referred);
+                    // const referred: PiProperty = item.expression.appliedfeature.referedElement.referred;
+                    // if (referred.type.referred instanceof PiExpressionConcept) {
+                    //     return "expression-placeholder";
+                    // } else {
+                    // }
+                }
+            }
+        }
+        return "";
+    }
+
     toString() {
         return `projection ${this.name} lines: ${this.lines.length}
-${this.lines.map(line => line.toString()).join("")}`;
+${this.lines.map(line => line.toString()).join("\n")}`;
     }
 }

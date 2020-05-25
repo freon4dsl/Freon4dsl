@@ -14,15 +14,7 @@ module.exports = {
   context: sourcePath,
   entry: {
       // main: "./webapp/run.tsx",
-      main: "./webapp/index.tsx",
-    vendor: [
-      'react',
-      'react-dom',
-      'react-router',
-      'mobx',
-      'mobx-react',
-      'mobx-react-router'
-    ]
+      main: "./webapp/index.tsx"
   },
   output: {
     path: outPath,
@@ -34,8 +26,6 @@ module.exports = {
       extensions: [".webpack.js", ".web.js", ".js", ".ts", ".tsx", ".json", ".scss", ".css"],
    alias: {
      "@projectit/core": path.join(__dirname, '../core/src'),
-     "@projectit/demo": path.join(__dirname, './src'),
-     "@projectit/meta": path.join(__dirname, '../meta/src')
     },
     // Fix webpack's default behavior to not load packages with jsnext:main module
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)

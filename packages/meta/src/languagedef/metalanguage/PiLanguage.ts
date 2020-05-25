@@ -13,7 +13,6 @@ export class PiLanguageUnit extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
     predefInstances: PiInstance[] = [];
-    expressionPlaceHolder: PiExpressionConcept; // set by checker
     rootConcept: PiConcept; // set by the checker
 
     constructor() {
@@ -308,10 +307,6 @@ export class PiConcept extends PiClassifier {
 
 export class PiExpressionConcept extends PiConcept {
     _isPlaceHolder: boolean;
-
-    isExpressionPlaceholder(): boolean {
-        return this._isPlaceHolder;
-    }
 }
 
 export class PiBinaryExpressionConcept extends PiExpressionConcept {

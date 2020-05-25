@@ -47,7 +47,6 @@ import {
     CoreTestMultiplyExpression,
     CoreTestNumberLiteralExpression,
     CoreTestOrExpression,
-    CoreTestPlaceholderExpression,
     CoreTestPlusExpression,
     CoreTestStringLiteralExpression, CoreTestVariable
 } from "../testmodel";
@@ -97,8 +96,6 @@ export class TutorialProjection implements PiProjection {
             return this.createDivideBox(exp);
         } else if (exp instanceof CoretestComparisonExpression) {
             return this.createComparisonBox(exp);
-        } else if (exp instanceof CoreTestPlaceholderExpression) {
-            return this.createPlaceholderBox(exp);
         } else if (exp instanceof CoreTestFunction) {
             return this.createFunctionBox(exp);
         } else if (exp instanceof CoreTestEntity) {
@@ -224,7 +221,7 @@ export class TutorialProjection implements PiProjection {
         if (this.projectionType === "tree") {
             return this.createBinaryBoxTree(exp);
         } else {
-            let binBox = createDefaultBinaryBox(this, exp, symbol(exp));
+            let binBox = createDefaultBinaryBox(this, exp, symbol(exp), this.editor);
             if (
                 this.showBrackets &&
                 !!exp.piContainer().container &&
@@ -663,11 +660,6 @@ export class TutorialProjection implements PiProjection {
         //     new GridBox(exp, "grid-varref", gridCells, { style: styles.grid })
         // ]);
         return new GridBox(exp, "grid-or", gridCells, { style: STYLES.grid });
-    }
-
-    private createPlaceholderBox(exp: CoreTestPlaceholderExpression): Box {
-        LOGGER.info(this, "createPlaceholderBox: ");
-        return new AliasBox(exp, EXPRESSION_PLACEHOLDER, "<exp>");
     }
 }
 

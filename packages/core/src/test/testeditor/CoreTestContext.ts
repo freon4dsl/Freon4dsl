@@ -9,7 +9,6 @@ import {
     CoreTestIfExpression,
     CoreTestNumberLiteralExpression,
     CoreTestOrExpression,
-    CoreTestPlaceholderExpression,
     CoreTestPlusExpression,
     CoreTestStringLiteralExpression,
     CoreTestVariableRefExpression,
@@ -20,7 +19,6 @@ import { CoreTestEntity } from "../testmodel/domain/CoreTestEntity";
 import { CoreTestAttribute } from "../testmodel/domain/CoreTestAttribute";
 import { CoreTestFunction } from "../testmodel/domain/CoreTestFunction";
 import { CoreTestVariable } from "../testmodel/domain/CoreTestVariable";
-// import { CoreTestBinaryExpressionPlaceHolder } from "../testmodel/expressions/DemoBinaryExpressionPlaceHolder";
 
 require("./CoreTestExpression");
 
@@ -48,10 +46,6 @@ export class CoreTestContext {
 
     toString(): string {
         return "CoreTestContext";
-    }
-
-    getPlaceHolderExpression(): PiExpression {
-        return new CoreTestPlaceholderExpression();
     }
 
     function1: CoreTestFunction;
@@ -137,7 +131,7 @@ export class CoreTestContext {
 
         const multiplyExpression = new CoreTestPlusExpression();
         multiplyExpression.left = divideExpression;
-        multiplyExpression.right = new CoreTestPlaceholderExpression();
+        multiplyExpression.right = null;
 
         const plusExpression = new CoreTestPlusExpression();
         plusExpression.left = CoreTestStringLiteralExpression.create("Maybe");

@@ -11,7 +11,8 @@
   },
   "scripts": {
     "demo": 	"ts-node ../meta/src/commandline/projectit -v all -d src/demo/defs -o src/demo",
-    "build":    "yarn run demo-nonverbose && yarn run taxrules && tsc ",
+    "example": 	"ts-node ../meta/src/commandline/projectit -v all -d src/example/defs -o src/example",
+    "build":    "yarn run demo-nonverbose && yarn run taxrules && yarn run example && tsc ",
     "start":    "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "demo-watch": 	"ts-node ../meta/src/commandline/projectit -vw all -d src/demo/defs -o src/demo",
     "demo-nonverbose": 	"ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",

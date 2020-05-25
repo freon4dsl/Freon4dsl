@@ -1,4 +1,3 @@
-import { CoreTestPlaceholderExpression } from "../../testmodel/expressions/CoreTestPlaceholderExpression";
 import * as React from "react";
 import { mount, ReactWrapper } from "enzyme";
 import mountToJson, { Json } from "enzyme-to-json";
@@ -23,9 +22,6 @@ describe("ProjectionalEditor", () => {
         const projection = new CoreTestProjection();
         editor = new PiEditor(projection, action);
         editor.rootElement = context.rootElement;
-        editor.getPlaceHolderExpression = () => {
-            return new CoreTestPlaceholderExpression();
-        };
 
         const rootBox = projection.getBox(editor.rootElement);
         props = {

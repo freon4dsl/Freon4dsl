@@ -1,7 +1,6 @@
 import { model, observablepart } from "../../../language";
 
 import { CoreTestExpression } from "./CoreTestExpression";
-import { CoreTestPlaceholderExpression } from "./CoreTestPlaceholderExpression";
 
 @model
 export class CoreTestIfExpression extends CoreTestExpression {
@@ -12,19 +11,16 @@ export class CoreTestIfExpression extends CoreTestExpression {
 
     constructor() {
         super();
-        this.condition = new CoreTestPlaceholderExpression();
-        this.thenExpression = new CoreTestPlaceholderExpression();
-        this.elseExpression = new CoreTestPlaceholderExpression();
     }
 
     toString(): string {
         return (
             "IF " +
-            this.condition.toString() +
+            (!!this.condition ? this.condition.toString() : "...") +
             " THEN " +
-            this.thenExpression.toString() +
+            (!!this.thenExpression ? this.thenExpression.toString() : "...") +
             " ELSE " +
-            this.elseExpression.toString() +
+            (!!this.elseExpression ? this.elseExpression.toString() : "...") +
             " ENDIF"
         );
     }
