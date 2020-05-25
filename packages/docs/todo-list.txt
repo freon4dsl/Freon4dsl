@@ -4,7 +4,7 @@ Still to do in the documentation:
 2. improve pictures in 'projectional-editing.adoc'
 3. add branch name for release candidate in 'installing.adoc'
 4. check series of command in 'installing.adoc'
-5. improve the jekyll generation of figures: like the asciidoc generation
+5. DONE improve the jekyll generation of figures: like the asciidoc generation
 6. the ascii-doc directive [start=5], where 5 can be any number, does not work in jekyll, but it does work in the preview
 7. in 'first-language.adoc' check whether "yarn start" or "lerna run start" can be used from any package
 8. in 'first-language.adoc' the [NOTE] directive does not work (it should add an icon from Font Awesome before the text block, jekyll-config is already adjusted)
