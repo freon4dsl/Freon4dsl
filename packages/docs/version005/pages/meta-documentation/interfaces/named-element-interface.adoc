@@ -1,0 +1,17 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The ProjectIt Interfaces
+:page-grand_parent: Under the Hood
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+=  PiNamedElement
+
+An object that implements `PiNamedElement` can be a node in a model AST, similar to
+xref:element-interface.adoc[`PiElement`]
+implementations. The difference is that `PiNamedElements` have a name property.
+
+[source]
+----
+include::{src-dir}/language/PiModel.ts[tag=named-element-interface]
+----

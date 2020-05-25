@@ -7,33 +7,35 @@
 :listing-caption: Code Sample
 = The Language Structure Definition
 
-The ProjectIt language structure consists of a list of `Concepts`, `Expression Concepts`, `Limited Concepts`
-and/or `Interfaces`.
+== Concepts
+The ProjectIt language structure consists of a list of *Concepts*, *Expression Concepts*, *Limited Concepts*
+and/or *Interfaces*.
 
-*	A `concept` is the basic element of your language definition. It defines which instances can be present in
+A *concept* is the basic element of your language definition. It defines which instances can be present in
 a model created by your users.
-*	An `expression concept` is a concept that is an expression. The editor will deal with them differently in
-order to give your user or more natural editing experience. Note that expression concepts need to have a priority.
-*	A `limited concept` is a concept that has a limited number of predefined instances. These instances are part
-of the standard library of your language.
-*	An `interface` is a concept that has no instances.
-
-Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and
-expression concepts. Each of the four language structure elements have `Properties`, of which there are the
-following three types.
-
-*	`Simple properties`, which have as type one of string, number, or boolean, and are always contained in its
-`concept`.
-*	`Parts`, which have as type one of the `concepts` in the language, and are also contained in its `concept` (as in
-the UML aggregation relationship). Note that simple properties are always considered to be parts.
-*	`References`, which have as type one of the `concepts` in the language, but are not contained in its `concept`
-(as in the UML association relationship).
-
-Several examples of concepts and properties can be found in the _Demo_ language.
-
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=concepts]
+include::{src-dir}/LanguageDefinition.lang[tag=concept]
+----
+
+An *expression concept* is a concept that is an expression. The editor will deal with them differently in
+order to give your user or more natural editing experience. Note that expression concepts need to have a priority.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=expression]
+----
+
+A *limited concept* is a concept that has a limited number of predefined instances. These instances are part
+of the standard library of your language.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=limited]
+----
+
+An *interface* is a concept that has no instances.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=interface]
 ----
 
 Every language needs to define one root concept, which serves as the root of the abstract syntax tree.
@@ -41,3 +43,33 @@ Every language needs to define one root concept, which serves as the root of the
 ----
 include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
 ----
+
+Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and
+expression concepts.
+
+== Properties
+
+Each of the four language structure elements have *Properties*, of which there are the
+following three types.
+
+*	*Simple properties*, which have as type one of string, number, or boolean, and are always contained in its
+*concept*. Simple properties may also be lists of string, number or boolean.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=simpleprop]
+----
+
+*	*Parts*, which have as type one of the *concepts* in the language, are also contained in its *concept* (as in
+the UML composition relationship). Note that simple properties are always considered to be parts.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=partprop]
+----
+
+*	*References*, which have as type one of the *concepts* in the language, are not contained in its *concept*
+(as in the UML association relationship).
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=referenceprop]
+----
+

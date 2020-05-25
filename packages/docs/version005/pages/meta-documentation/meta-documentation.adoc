@@ -1,23 +1,23 @@
 :imagesdir: ../images/
 :page-nav_order: 50
 :page-has_children: true
-:page-title: Deeper in the Source Code
+:page-title: Under the Hood
 :page-has_toc: false
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-= Deeper in the Source Code
+= Under the Hood
 
-Before you dive deeper into the source code of this project, we invite you to read about the
+Before you dive deeper under the hood of this project, we invite you to read about the
 xref:philosophy.adoc[philosophy] (and design guidelines) used during the creation of this tool.
 
 With these in mind, you are welcome to find out more, for example on the following subjects.
 
-* Learn about the xref:editor-framework.adoc[framework] used for projectional editing.
-* See how you can define xref:defining_actions.adoc[custom projections and actions].
+* Learn about the xref:framework/editor-framework.adoc[framework] used for projectional editing.
+* See how you can define xref:framework/defining_actions.adoc[custom projections and actions].
 * Find out more about the xref:expressions.adoc[build-in support for expressions].
 * Explore why we use xref:name-based-references.adoc[name based references].
-* Note how the generated code is easily extendable using the xref:interfaces.adoc[ProjectIt interfaces].
-* Browse through the xref:sourcecode.adoc[source code documentation].
+* Note how the generated code is easily extendable using the xref:interfaces/interfaces.adoc[ProjectIt interfaces].
+* Browse through the xref:code-documentation.adoc[source code documentation].
 

@@ -1,7 +1,9 @@
 //
 // The basic two column layout
 //
-
+.top-text {
+  color: white;
+}
 .page-wrap {
   @include mq(md) {
     position: absolute;
@@ -84,13 +86,13 @@
   display: none;
   padding-top: $gutter-spacing-sm;
   padding-bottom: $gutter-spacing-sm;
-  background-color: $sidebar-color;
+  //background-color: $sidebar-color;
 
   @include mq(md) {
     display: flex;
     justify-content: flex-end;
     height: $header-height;
-    background-color: $body-background-color;
+    //background-color: $body-background-color;
     //background-color: rgb(0,0,139);
     border-bottom: $border $border-color;
   }
@@ -125,10 +127,22 @@
   }
 }
 
+// Anneke: added topbar div to default.html
+// when .page-header:background-color is omitted, the dark-blue color is shown in the topbar
+// However, I cannot yet get the text to be shown white
+.topbar {
+  min-height: $header-height;
+  background-color: rgb(0, 0, 139);
+}
+
+// Anneke: changed the background-color to projectit-blue
+// however, there is an error when I used the variable $projectit-blue
+// and, the logo should be inverted!!
 .site-header {
   display: flex;
   min-height: $header-height;
   align-items: center;
+  background-color: rgb(0, 0, 139); // was: no color at all
 
   @include mq(md) {
     z-index: 101;

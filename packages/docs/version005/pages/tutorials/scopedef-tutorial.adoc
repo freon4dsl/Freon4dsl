@@ -6,27 +6,35 @@
 :source-language: javascript
 :listing-caption: Code Sample
 = The Scoper Definition
-In the scoper definition you mark a list of concepts to be `namespaces`. Any `namespace` has their own set of visible
-names and it shadows names from its surrounding namespace. The default scoper simply regards the model of your user
-as the only namespace.
+
+== Namespaces
+In the scoper definition you can mark a list of concepts to be *namespaces*. Any *namespace* has its own
+set of visible names. Any namespace shadows the visible names from its surrounding namespace (using lexical scope).
+The default scoper simply regards the model of your user as the only namespace.
 
 [source]
 ----
 include::{src-dir}/LanguageDefinition.scop[tag=namespaces]
 ----
 
-Interfaces can be namespaces as well. In that case any instance of a concept that implements the interface is a
+Interfaces can be namespaces as well.
+[NOTE]
+Any instance of a concept that implements the namespace interface is a
 namespace, but only the properties of the interface will be visible.
 
-The standard namespaces can be added to. In that case also the visible elements from the addition are taken into account.
-By indicating an addition to a namespace you can, for instance, support inheritance.
+== Namespace Additions
+The standard namespaces can be added to. In that case, the visible elements from the addition are included.
+By indicating an addition to a namespace you can, for instance, support inheritance. In the following example,
+`baseEntity` is defined to be the super type of the `DemoEntity` concept. The names visible in the `baseEntity`
+are include in the namespace by defining the namespace-addition.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.scop[tag=namespace_addition]
 ----
 
+== Alternative Scopes
 You can also indicate to use a different namespace altogether. In the following example, the elements visible in
-an `AppliedFeature` are determined based on the type of its container. i.e. its parent in the AST.
+an `AppliedFeature` are determined based on the type of its container, i.e. the type of its parent in the AST.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.scop[tag=alternative_scope]

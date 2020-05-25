@@ -1,11 +1,11 @@
 :imagesdir: ../../images
-:page-nav_order: 20
-:page-parent: Deeper in the Source Code
-:page-grandparent: Deeper in the Source Code
+:page-nav_order: 60
+:page-parent: Under the Hood
 :page-title: The ProjectIt Framework
 :page-has_children: true
+:page-has_toc: false
 :src-dir: ../../../../../core/src
-:source-language: javascript
+:page-source-language: javascript
 :listing-caption: Code Sample
 = The ProjectIt Framework
 
@@ -59,6 +59,7 @@ We can now show the full typescript code for this projection. Given that `litera
 ----
 include::{src-dir}/test/testeditor/CoreTestProjection.ts[tag=StringLiteral]
 ----
+
 <1> The overall horizontal list box to group everything
 <2> The first label box for the start quote
 <3> The text box for the value of the string literal

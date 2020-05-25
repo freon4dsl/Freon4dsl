@@ -1,0 +1,20 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The ProjectIt Interfaces
+:page-grand_parent: Under the Hood
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+= PiProjection
+
+The projection from your model/AST is defined by implementing the _PiProjection_ interface:
+
+[source]
+----
+include::{src-dir}/editor/PiProjection.ts[tag=PiProjection]
+----
+
+Implementing this interface should return a _Box_ for each `element` in the AST.
+ProjectIt includes boxes of various types (textual, tabular, horizontal or vertical collections, etc.)
+to define this projection.
+The box model is further described in the xref:../framework/editor-framework.adoc[editor framework].

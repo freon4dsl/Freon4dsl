@@ -1,9 +1,9 @@
 validator Demo for language Demo
 
 // tag::value[]
-ChangeEvent  {
-	self.temperature >= 12;
-	self.temperature <= 30;
+DemoAttributeType  {
+	self.extra >= 12;
+	self.extra <= 30;
 }
 // end::value[]
 
@@ -11,9 +11,11 @@ ChangeEvent  {
 DemoModel {
     notEmpty self.entities;
     isunique name in self.entities;
+ // end::lists[]
     notEmpty self.functions;
     isunique name in self.functions;
     validIdentifier; // default is 'name'
+// tag::lists[]
 }
 // end::lists[]
 

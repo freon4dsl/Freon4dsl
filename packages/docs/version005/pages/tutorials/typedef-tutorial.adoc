@@ -6,31 +6,42 @@
 :source-language: javascript
 :listing-caption: Code Sample
 = The Typer Definition
-In the typer definition you provide the information necessary to do type checking. First, you have to indicate which concepts are considered to be types in your language. Note that the first concept in the list is considered to be the root of your type hierarchy.
+
+In the typer definition you provide the information necessary to do type checking. First, you have to
+indicate which concepts are considered to be types in your language. Note that the first concept in
+the list is considered to be the root of your type hierarchy.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.type[tag=types]
 ----
 
-Using inference rules, you can indicate how to determine the type of certain concepts. Every concept for which an inference rule is defined has a type and that type is determined according to the given rule.
+== Inference Rules
+
+Using *inference rules*, you can indicate how to determine the type of certain concepts. Every concept
+for which an inference rule is defined has a type and that type is determined according to the given
+rule.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.type[tag=inference]
 ----
 
-By stating that an inference rule is abstract, you define that the concept does have a type, but the way its type is determined, is given by the inference rules of its subconcepts.
+By stating that an inference rule is *abstract*, you define that the concept does have a type, but the
+way its type is determined, is given by the inference rules of its subconcepts.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.type[tag=abstract]
 ----
 
-Finally, you have to state your type conformance rules. In both the inference and conformance rules it is possible to use the predefined instances of a limited concept.
+== Type Conformance Rules
+Finally, you have to state your *type conformance rules*. In both the inference and conformance rules
+it is possible to use the predefined instances of a limited concept.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.type[tag=conformance]
 ----
 
-Conformance and other rules can also be defined to apply to any concept.
+== Rules that Apply to any Concept
+Conformance and other rules can also be defined to apply to *any* concept.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.type[tag=anytype]

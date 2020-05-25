@@ -2,6 +2,7 @@ import { PiElement } from "../language";
 
 // Part of the ProjectIt Framework.
 
+// tag::typer-interface[]
 export interface PiTyper {
     /**
      * Returns the type of 'modelelement' according to the type rules in the Typer Definition
@@ -38,3 +39,4 @@ export interface PiTyper {
      */
     isType(elem: PiElement): boolean;
 }
+// end::typer-interface[]

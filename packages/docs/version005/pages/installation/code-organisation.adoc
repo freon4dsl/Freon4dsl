@@ -10,16 +10,21 @@
 
 The source code in this project is organised into the following packages.
 
-* `docs`: documentation, i.e. this website
-* `packages/core`: framework source code.
-* `packages/core/src/editor`: the editor framework source code.
-* `packages/core/src/language/decorators`: source code for https://mobx.js.org/[MobX] decorators that can be used to easily implement a language that can be
+* _docs_: documentation, i.e. this website
+* _packages/core_: framework source code.
+** _packages/core/src/editor_: the editor framework source code.
+** _packages/core/src/language/decorators_: source code for link:https://mobx.js.org/[MobX, window=_blank] decorators that can be used to easily implement a language that can be
 directly used by ProjectIt.
-* `packages/meta`: source code that reads the language definition files and generates the language environment.
-* `packages/playground`: source code generated from the language definition files.
-* `packages/playground/src/webapp`: a copy of `packages/webapp`, used within the playground.
-* `packages/playground/src/demo/defs`: the language definition files for the example language called 'demo'.
-* `packages/server`: source code for a minimalistic model-server used for demonstration purposes.
-* `packages/webapp`: source code for the web-application used for all generated languages.
-* `/*`: the usual suspects.
+* _packages/meta_: source code that reads the language definition files and generates the language environment.
+** _packages/meta/src/languagedef_: source code that generates code from a language structure definition (_.lang_) file.
+** _packages/meta/src/editordef_: source code that generates code from an editor definition (_.edit_) file.
+** _packages/meta/src/scoperdef_: source code that generates code from a scoper definition (_.scope_) file.
+** _packages/meta/src/typerdef_: source code that generates code from a typer definition (_.type_) file.
+** _packages/meta/src/validatordef_: source code that generates code from a validator definition (_.valid_) file.
+* _packages/playground_: source code generated from the language definition files.
+** _packages/playground/src/webapp_: a copy of _packages/webapp_, for use within the playground.
+** _packages/playground/src/demo/defs_: the language definition files for the example language called 'demo'.
+* _packages/server_: source code for a minimalistic model-server used for demonstration purposes.
+* _packages/webapp_: source code for the web-application used for all generated languages.
+* _/*_: the usual suspects.
 

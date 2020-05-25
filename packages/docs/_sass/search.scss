@@ -8,7 +8,8 @@
   flex-grow: 1;
   height: 100%;
   margin-bottom: $sp-3;
-
+  margin-left: $sp-3;
+  margin-right: $sp-11;
   @include mq(md) {
     margin-bottom: 0;
   }
@@ -27,7 +28,7 @@
     padding-right: 0;
     padding-bottom: 0;
     padding-left: 0;
-    background-color: $body-background-color;
+    background-color: $search-background-color;
     border-radius: 0;
     box-shadow: none;
   }
@@ -56,7 +57,7 @@
   }
 
   @include mq(md) {
-    background-color: $body-background-color;
+    background-color: $search-background-color;
     @include fs-3;
   }
 }

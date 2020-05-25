@@ -233,15 +233,15 @@ const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
     // end::CreateEntityAction[]
     // tag::CreateAttributeAction[]
     {
-        trigger: "attribute",
-        activeInBoxRoles: ["end-of-attribute-list"],
+        trigger: "attribute",                                                           // <1>
+        activeInBoxRoles: ["end-of-attribute-list"],                                    // <2>
         action: (box: Box, trigger: PiTriggerType, editor: PiEditor): PiElement | null => {
-            var entity: CoreTestEntity = box.element as CoreTestEntity;
+            var entity: CoreTestEntity = box.element as CoreTestEntity;                 // <3>
             const attribute: CoreTestAttribute = new CoreTestAttribute();
             entity.attributes.push(attribute);
             return attribute;
         },
-        boxRoleToSelect: "attribute-name"
+        boxRoleToSelect: "attribute-name"                                               // <4>
     },
     // end::CreateAttributeAction[]
     {

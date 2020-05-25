@@ -1,0 +1,18 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The ProjectIt Interfaces
+:page-grand_parent: Under the Hood
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+=  PiStdlib
+
+An object that implements `PiStdlib` holds a number of predefined AST nodes, which
+can be referred to in the model AST.
+
+If you want to write your own standard library you will need to implement this interface.
+
+[source]
+----
+include::{src-dir}/stdlib/PiStdlib.ts[tag=stdlib-interface]
+----

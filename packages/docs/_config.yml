@@ -21,10 +21,10 @@ destination: ../../docs
 
 # permalink: pretty
 permalink: none
-exclude: ["version004", "old", "node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
+exclude: ["version004", "old", "*.txt", "node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
 
 # Set a path/url to a logo that will be displayed instead of the title
-logo: "/version005/images/projectit.png"
+logo: "/version005/images/logo-inverse-colors.png"
 
 # Enable or disable the site search
 search_enabled: true
@@ -43,7 +43,7 @@ aux_links:
     - "http://www.projectit.org"
 
 # Footer content appears at the bottom of every page's main content
-footer_content: "Copyright &copy; 2020-2021 Jos Warmer. Distributed by an <a class=\"text-small text-grey-dk-200 mb-0\" href=\"https://github.com/projectit-org/ProjectIt/blob/development/LICENSE\">MIT license.</a> This project is supported by <a href=\"https://openmodeling.nl\">Openmodeling.nl.</a>"
+footer_content: "Copyright &copy; 2020-2021 Jos Warmer. Distributed by an <a class=\"text-small text-grey-dk-200 mb-0\" href=\"https://github.com/projectit-org/ProjectIt/blob/development/LICENSE\" target=\"_blank\">MIT license.</a> This project is supported by <a class=\"text-small text-grey-dk-200 mb-0\" href=\"https://openmodeling.nl\" target=\"_blank\">Openmodeling.nl.</a>"
 
 # Color scheme currently only supports "dark" or nil (default)
 color_scheme: nil
@@ -58,6 +58,8 @@ asciidoctor:
   attributes:
     - showtitle=@
     - imagesdir=/version005/images
+    - icons=font
+    - source-language=javascript
 
 # Google Analytics Tracking (optional)
 # e.g, UA-1234567-89

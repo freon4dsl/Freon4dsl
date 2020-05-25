@@ -3,7 +3,12 @@ import { PiElement } from "../language";
 // Part of the ProjectIt Framework.
 // tag::unparser-interface[]
 export interface PiUnparser {
-    // returns the type of 'modelelement' according to the type rules in the Typer Definition
+
+    /** returns a string representation of 'modelelement' according to the
+     * projections in the Editor Definition
+     *
+     * @param modelelement
+     */
     unparse(modelelement: PiElement): string;
 }
 // end::unparser-interface[]

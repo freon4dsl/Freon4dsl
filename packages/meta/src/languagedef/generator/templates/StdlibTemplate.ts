@@ -9,8 +9,8 @@ export class StdlibTemplate {
         this.makeTexts(language);
 
         return `
-        import { ${Names.PiNamedElement}, ${Names.PiStdlib} } from "${PROJECTITCORE}";
-        import { ${this.limitedConceptNames.map(name => `${name}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.PiNamedElement}, ${Names.PiStdlib}, Language } from "${PROJECTITCORE}";
+        import { ${Names.metaType(language)}, ${this.limitedConceptNames.map(name => `${name}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -34,11 +34,33 @@ export class StdlibTemplate {
             
             /**
              * A private constructor, as demanded by the singleton pattern,
-             * in which the list if predefined elements is filled.
+             * in which the list of predefined elements is filled.
              */          
             private constructor() {
                 ${this.constructorText}
-            }                        
+            }  
+            
+            /**
+             * Returns the element named 'name', if it can be found in this library.
+             * When 'metatype' is provided, the element is only returned when it is
+             * an instance of this metatype.
+             * @param name
+             * @param metatype
+             */            
+            public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.PiNamedElement} {
+                if (!!name) {
+                    let namedElement = this.elements.find(elem => elem.name === name);
+                    if (metatype) {
+                        const concept = namedElement.piLanguageConcept();
+                        if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(namedElement.piLanguageConcept())) {
+                            return namedElement;
+                        }
+                    } else {
+                        return namedElement;
+                    }
+                }  
+                return null;               
+            }                      
         }`;
     }
 

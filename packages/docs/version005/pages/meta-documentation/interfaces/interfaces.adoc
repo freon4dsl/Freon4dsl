@@ -1,0 +1,32 @@
+:imagesdir: ../../images
+:page-nav_order: 50
+:page-title: The ProjectIt Interfaces
+:page-parent: Under the Hood
+:page-has_children: true
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+= The ProjectIt Interfaces
+
+There are two series of interfaces that make ProjectIt and its generated code extensible and flexible. The first
+series are the interfaces of the generated code:
+
+. xref:environment-interface.adoc[PiEnvironment]
+. xref:initialization-interface.adoc[PiModelInitialization]
+. xref:scoper-interface.adoc[PiScoper]
+. xref:standardlib-interface.adoc[PiStdlib]
+. xref:typer-interface.adoc[PiTyper]
+. xref:unparser-interface.adoc[PiUnparser]
+. xref:validator-interface.adoc[PiValidator]
+
+The second series of interfaces are those that define parts of the core of the ProjectIt framework:
+
+. xref:projection-interface.adoc[PiProjection]
+. xref:action-interface.adoc[PiActions]
+. xref:expression-interface.adoc[PiExpression]
+. xref:binary-expression-interface.adoc[PiBinaryExpression]
+
+In both series the following two interfaces are used:
+
+. xref:element-interface.adoc[PiElement]
+. xref:named-element-interface.adoc[PiNamedElement]

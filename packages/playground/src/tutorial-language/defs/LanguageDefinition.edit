@@ -1,5 +1,16 @@
 editor StartEditor for language Demo
 
+// tag::literal[]
+DemoText {
+    @projection
+        [This is
+                literal text
+         that is projected in the
+
+                editor
+        for every concept of type DemoText.]
+}
+// end::literal[]
 // tag::projection[]
 DemoNumberLiteralExpression {
     @projection normal
@@ -103,7 +114,7 @@ DemoModel {
                 @terminator [\n\n]
             }
         model wide functions:
-            ${self.functions @horizontal @separator [\n] }
+            ${self.functions @horizontal @separator [; ] }
         }
         ]
 }

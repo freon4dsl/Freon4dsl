@@ -25,3 +25,11 @@ arguments that can be used.
 .Screenshot of commandline options
 image::projectit-commandline-options.png[projectit-commandline-options]
 ====
+
+
+Note that the commands _meta-it_ through to _type-it_, used solely (without the other commands) generate code that
+does not compile correctly. For instance, both the scoper and validator might need to use the typer, therefore the
+code seeks to include the typer class, which might not be generated yet. Likewise, the editor seeks to include
+the scoper. Best way to go about is to use the _all_ command. Next, when you focus on one of the aspects of your
+language, you can use the specific command for that aspect. Thus, you can keep regeneration-time as short as possible.
+
