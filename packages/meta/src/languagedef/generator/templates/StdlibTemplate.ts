@@ -9,8 +9,8 @@ export class StdlibTemplate {
         this.makeTexts(language);
 
         return `
-        import { ${Names.PiNamedElement}, ${Names.PiStdlib} } from "${PROJECTITCORE}";
-        import { ${this.limitedConceptNames.map(name => `${name}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.PiNamedElement}, ${Names.PiStdlib}, Language } from "${PROJECTITCORE}";
+        import { ${Names.metaType(language)}, ${this.limitedConceptNames.map(name => `${name}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -47,7 +47,7 @@ export class StdlibTemplate {
              * @param name
              * @param metatype
              */            
-            public find(name: string, metatype?: string) : PiNamedElement {
+            public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.PiNamedElement} {
                 if (!!name) {
                     let namedElement = this.elements.find(elem => elem.name === name);
                     if (metatype) {
