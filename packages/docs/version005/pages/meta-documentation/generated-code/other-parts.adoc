@@ -1,0 +1,22 @@
+:imagesdir: ../../images
+:page-nav_order: 20
+:page-parent: Structure of the Generated Code
+:page-grand_parent: Under the Hood
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+= The Server and Webapp folders
+
+For the language environment to function, more is needed than the code for the editor, validator and such. In particular,
+there is a need for a server which can hold and provide stored users models, and for a small web application that
+is able to show the editor, errors message, models that are available form the server, and so on.
+
+We provide a minimal *server* that stores your user models in a json format. The code for the server can be found in the
+`packages/server`. The stored models can be found in `packages/server/modelstore/[name-of-your-language]/`.
+
+A simple *web application* is also provided. The code can be found in `packages/webapp`. A copy is put inside
+`packages/playground` in order for the playground languages to function.
+
+Note that both the server and the web application are provided for your convenience. We assume that when ProjectIt
+is used in a larger context, these two parts will be interchanged with suitable choices by the language engineer
+and team.

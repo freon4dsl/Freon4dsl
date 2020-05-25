@@ -16,6 +16,7 @@ export function triggerToString(t: PiTriggerType): string {
     }
 }
 
+// tag::action-interface[]
 export interface PiActions {
     expressionCreators: PiExpressionCreator[];
 
@@ -25,6 +26,7 @@ export interface PiActions {
 
     keyboardActions: KeyboardShortcutBehavior[];
 }
+// end::action-interface[]
 
 export interface PiBehavior {
     /**

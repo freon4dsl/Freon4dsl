@@ -53,7 +53,7 @@ root concept DemoModel {
 // tag::simpleprop[]
 concept DemoFunction {
     name: string;
-    aliases: string[];
+//    aliases: string[];
 // end::simpleprop[]
     reference declaredType : Type;
     expression: DemoExpression;
@@ -116,10 +116,6 @@ expression DemoBooleanLiteralExpression base DemoLiteralExpression {
 abstract binary expression DemoBinaryExpression base DemoExpression {
     left: DemoExpression;
     right: DemoExpression;
-}
-
-binary expression DemoMultiplyExpression base DemoBinaryExpression {
-    priority = 8;
 }
 
 binary expression DemoPlusExpression base DemoBinaryExpression {

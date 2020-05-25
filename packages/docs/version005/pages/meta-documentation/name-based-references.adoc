@@ -1,13 +1,14 @@
 :imagesdir: ../../images
-:page-nav_order: 40
-:page-parent: Deeper in the Source Code
+:page-nav_order: 30
+:page-parent: Under the Hood
 :src-dir: ../../../../core/src
 :source-language: javascript
 :listing-caption: Code Sample
-= Name Based References
+= Name-Based References
 
-Similar to expressions, in https://www.voelter.de/data/pub/fse2016-projEditing.pdf[Efficiency of Projectional Editing:
-A Controlled Experiment] the authors name _references_ as another challenge for projectional editing.
+In xref:expressions.adoc[Support for Expressions] we explain that editing expressions is a known challenge
+for projectional editors. A second challenge is posed by _references_. Stated in https://www.voelter.de/data/pub/fse2016-projEditing.pdf[Efficiency of Projectional Editing:
+A Controlled Experiment] as follows.
 
 [quote, Markus Voelter a.o., Efficiency of Projectional Editing]
 ____
@@ -23,4 +24,15 @@ The approach to references in ProjectIt is to used only name-based references wh
 on a need-to basis.
 ____
 
-TODO: add more information on name-based references
+== All References are Name-Based
+We have chosen to allow only name-based references. Every reference is an instance of `PiElementReference`,
+which holds
+
+. the name of the referred element
+. the meta-type of the referred element
+. a cache of the element itself
+
+This means that the AST is truly a tree, not a graph.
+
+The advantage is that, when in the future multi-file models are allowed, we are not obliged to have the complete
+model in memory. Partial models suffice. <TODO add some references to publications>

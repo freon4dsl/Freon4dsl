@@ -2,27 +2,26 @@
 :page-nav_order: 60
 :page-parent: Tutorials
 :imagesdir: ../images/
-:src-dir: ../../../../core/src
+:src-dir: ../../../../playground/src/tutorial-language/
 :source-language: javascript
 :listing-caption: Code Sample
 = How to Use the ProjectIt Framework
 
-The ProjectIt Framework can also be directly, by writing Typescript that uses the classes in `packages/core/`.
+The ProjectIt Framework can also be used directly, by writing Typescript that uses the classes in `packages/core/`.
 If you want to do this, there are two axes along which you can specify your editor:
 (1) _hand-build projections_ and (2) _hand-build actions_. This tutorial describes how to create them.
-But before you dive into this, we suggest that you first read the information
+But before you dive into this, we suggest that you read the information
 in the xref:../meta-documentation/framework/editor-framework.adoc[ProjectIt Framework].
 
 // TODO write Define your own Actions
 
-== Define your Projection
+== Define your own Projection
 
 As you known from the xref:../meta-documentation/framework/editor-framework.adoc[ProjectIt Framework],
 all projections are based on boxes. In the next few steps we will show you how to build a hierarchy
 of boxes to project your AST nodes, and how to style these boxes according to your wishes.
 
-The projections in this tutorial are all available in
-`packages/core/src/test/testeditor/TutorialProjection.ts`.
+The projections in this tutorial are available in `<TODO>`.
 
 === Step 1 - Projecting a Simple Attribute
 
@@ -30,13 +29,13 @@ We start with building the projection for a simple attribute of type string:
 the name of the model in our DemoLanguage. In the metamodel this is represented by the value of 
 the attribute _name_ of class _DemoModel_
 
-.CoreTestModel Element
+.DemoModel Element
 [source]
 ----
-include::{src-dir}/test/testmodel/CoreTestModel.ts[tag=CoreTestModel]
+include::{src-dir}/editor/CustomDemoProjection.ts[tag=DemoModelBox1]
 ----
 
-An obivous choice for the projection of this attribute is a `HorizontalListBox` which holds a `LabelBox` with the name of the class, followed by the value stored in the variable _model.name_. In the tutorial example this value is "CoreTestModel". When we start the editor based on this projection, we see the following:
+An obivous choice for the projection of this attribute is a `HorizontalListBox` which holds a `LabelBox` with the name of the class, followed by the value stored in the variable _model.name_. In the tutorial example this value is "DemoModel". When we start the editor based on this projection, we see the following:
 
 image::{imagesdir}/demomodel-name.png[align="left"]
 
@@ -52,14 +51,14 @@ that implements the default projection:
 .Simple Projection
 [source]
 ----
-include::{src-dir}/test/testeditor/TutorialProjection.ts[tag=ModelBox1]
+include::{src-dir}/editor/CustomDemoProjection.ts[tag=DemoModelBox1]
 ----
 Let's first add a style to the `LabelBox`:
 
 .Projection with Style and Placeholder
 [source]
 ----
-include::{src-dir}/test/testeditor/TutorialProjection.ts[tag=ModelBox2]
+include::{src-dir}/editor/CustomDemoProjection.ts[tag=DemoModelBox2]
 ----
 
 We associated the `LabelBox` with the style `demoStyles.keyword`, so it will show in a different color.
@@ -76,16 +75,16 @@ The style is defined in a css (or actually scss) as follows. In principle all CS
 .CSS for Styled Projection
 [source, language=css]
 ----
-include::{src-dir}/test/styles/style.scss[tag=StyleKeyword]
+include::{src-dir}/editor/styles/style.scss[tag=StyleKeyword]
 ----
 
 == Step 2 - Projecting a List Attribute
-Next we will add the `entities` attribute owned by the `CoreTestModel` to the projection. Let's again look at the definition in the metamodel.
+Next we will add the `entities` attribute owned by the `DemoModel` to the projection. Let's again look at the definition in the metamodel.
 
-.CoreTestModel Element
+.DemoModel Element
 [source]
 ----
-include::{src-dir}/test/testmodel/CoreTestModel.ts[tag=CoreTestModel]
+include::{src-dir}/language/gen/DemoModel.ts
 ----
 
 We see that the `entities` attribute is a list of `DemoEntities`. Now take a look at the projection.
@@ -93,39 +92,39 @@ We see that the `entities` attribute is a list of `DemoEntities`. Now take a loo
 .Projection of Child Elements
 [source]
 ----
-include::{src-dir}/test/testeditor/TutorialProjection.ts[tag=ModelBox3]
+include::{src-dir}/editor/CustomDemoProjection.ts[tag=DemoModelBox3]
 ----
 
 The `entities` attribute is to be shown as a vertical list, therefore we use a _VerticalListBox_. The first element of this list is a label, like the `LabelBox` in the previous step, styled as a keyword. The entities themselves are projected in another `VerticalListBox`.
 
-The projection of a single `CoreTestEntity` is defined in a separate function, thus building a hierarchy of boxes.
+The projection of a single `DemoEntity` is defined in a separate function, thus building a hierarchy of boxes.
 
-.CoreTestEntity Element
+.DemoEntity Element
 [source]
 ----
-include::{src-dir}/test/testmodel/domain/CoreTestEntity.ts[tag=CoreTestEntity]
+include::{src-dir}/language/gen/DemoEntity.ts
 ----
 
-.Projection of CoreTestEntity
+.Projection of DemoEntity
 [source]
 ----
-include::{src-dir}/test/testeditor/TutorialProjection.ts[tag=EntityBox]
+include::{src-dir}/editor/CustomDemoProjection.ts[tag=EntityBox]
 ----
-The projection function is very similar to the projection of the `CoreTestModel`,
+The projection function is very similar to the projection of the `DemoModel`,
 showing the keyword _Entity_ followed by its name and below all attributes of the
 entity in a `VerticalListBox`.
 
 Once again, the projection of an attribute is defined in its own function.
 
-.CoreTestAttribute Element
+.DemoAttribute Element
 [source]
 ----
-include::{src-dir}/test/testmodel/domain/CoreTestAttribute.ts[tag=CoreTestAttribute]
+include::{src-dir}/defs/LanguageDefinition.lang[tag=referenceprop]
 ----
-.Projection of CoreTestAttribute
+.Projection of DemoAttribute
 [source]
 ----
-include::{src-dir}/test/testeditor/TutorialProjection.ts[tag=AttributeBox]
+include::{src-dir}/editor/CustomDemoProjection.ts[tag=AttributeBox]
 ----
 Here, we use a `HorizontalListBox` to show the attribute name, followed by a colon,
 followed by its type. Note that we use an indentation style to take care of the
@@ -153,7 +152,7 @@ First we add an `AliasBox` to the projection of the attribute list. Note the rol
 .Add AliasBox to Attribute List
 [source]
 ----
-include::{src-dir}/test/testeditor/TutorialProjection.ts[tag=CreateAttributeAction]
+include::{src-dir}/editor/CustomDemoProjection.ts[tag=CreateAttributeAction]
 ----
 
 Then we create the actual action and attach it to the role of the `AliasBox`.
@@ -161,13 +160,13 @@ Then we create the actual action and attach it to the role of the `AliasBox`.
 .Attach Create Attribute Action to AliasBox
 [source]
 ----
-include::{src-dir}/test/testeditor/CoreTestActions.ts[tag=CreateAttributeAction]
+include::{src-dir}/editor/CustomDemoActions.ts[tag=CreateAttributeAction]
 ----
 <1> The action is attached to each box with the role "end-of-attribute-list".
 
 <2> The action will be triggered when the user types `"attribute"` inside the.alias box.
 
-<3> The executable code for the action. It creates a new `CoreTestEntity` and attaches is to the `CoreTestModel`
+<3> The executable code for the action. It creates a new `DemoEntity` and attaches is to the `DemoModel`
 
 <4> The focus of the editor is returned to the `Box` with the role `"attribute-name"`
 within the entity. This ensures that the user can immediately start typing the name of the entity after it has been created.

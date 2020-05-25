@@ -6,6 +6,7 @@ import { PiTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
 import { PiUnparser } from "../unparser";
 
+// tag::environment-interface[]
 export interface PiEnvironment {
     scoper: PiScoper;
     typer: PiTyper;
@@ -18,3 +19,4 @@ export interface PiEnvironment {
     initializer: PiModelInitialization;
     languageName: string;
 }
+// end::environment-interface[]

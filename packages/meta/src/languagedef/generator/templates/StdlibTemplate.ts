@@ -34,11 +34,33 @@ export class StdlibTemplate {
             
             /**
              * A private constructor, as demanded by the singleton pattern,
-             * in which the list if predefined elements is filled.
+             * in which the list of predefined elements is filled.
              */          
             private constructor() {
                 ${this.constructorText}
-            }                        
+            }  
+            
+            /**
+             * Returns the element named 'name', if it can be found in this library.
+             * When 'metatype' is provided, the element is only returned when it is
+             * an instance of this metatype.
+             * @param name
+             * @param metatype
+             */            
+            public find(name: string, metatype?: string) : PiNamedElement {
+                if (!!name) {
+                    let namedElement = this.elements.find(elem => elem.name === name);
+                    if (metatype) {
+                        const concept = namedElement.piLanguageConcept();
+                        if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(namedElement.piLanguageConcept())) {
+                            return namedElement;
+                        }
+                    } else {
+                        return namedElement;
+                    }
+                }  
+                return null;               
+            }                      
         }`;
     }
 

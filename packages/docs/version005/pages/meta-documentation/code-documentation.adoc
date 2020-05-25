@@ -1,6 +1,6 @@
 :imagesdir: ../../images
 :page-nav_order: 90
-:page-parent: Deeper in the Source Code
+:page-parent: Under the Hood
 :src-dir: ../../../../core/src
 :source-language: javascript
 :listing-caption: Code Sample

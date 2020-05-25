@@ -14,7 +14,7 @@ The documentation uses jekyll to generate the documentation site.
   - install jekyll in your IDE: `gem install jekyll`
   - install jekyll-asciidoc: [webpage](https://github.com/asciidoctor/jekyll-asciidoc) `gem install jekyll-asciidoc`
   - Install ruby bundler: `gem install bundle`
-  - Install just-the-docs template:  `gem install just-the-docs`
+  - Install just-the-docs template:  `bundle`
   - Run bundle init: `bundle init`
   - Run bundle from /packages/docs/ to update everything:  `bundle`
   - start jekyll from /packages/docs:  `jekyll serve`

@@ -1,51 +1,19 @@
 :imagesdir: ../../images
-:page-nav_order: 70
-:page-parent: Structure of the Generated Code
+:page-nav_order: 10
+:page-parent: The ProjectIt Interfaces
+:page-grand_parent: Under the Hood
 :src-dir: ../../../../../core/src
 :source-language: javascript
 :listing-caption: Code Sample
-= The ProjectIt Interfaces
-There are two series of interfaces that make ProjectIt and its generated code extensible and flexible. The first
-series are the interfaces of the generated code:
+= PiElement
 
-. PiEditor
-. PiElement
-. PiEnvironment
-. PiModelInitialization
-. PiNamedElement
-. PiScoper
-. PiStdlib
-. PiTyper
-. PiUnparser
-. PiValidator
-
-The second series of interfaces are those that define parts of the core of the ProjectIt framework:
-
-. PiProjection
-. PiActions
-. PiBehavior
-
-== PiProjection
-The projection from your model/AST is defined by implementing the _PiProjection_ interface:
-
-[source]
-----
-include::{src-dir}/editor/PiProjection.ts[tag=PiProjection]
-----
-
-Implementing this interface should return a _Box_ for each `element` in the AST.
-ProjectIt includes boxes of various types (textual, tabular, horizontal or vertical collections, etc.)
-to define this projection.
-The box model is further described in the xref:editor-framework.adoc[editor framework].
-
-== PiElement
 As ProjectIt uses the AST for projections and behavior, it needs to know about the type of elements in the AST.
 To allow ProjectIt to work, each element type that occurrs in the AST needs to implement the `PiElement` interface.
 This interface is kept as small as possible, to allow ProjectIt to be used for any AST.
 
 [source]
 ----
-include::{src-dir}/language/PiModel.ts[tag=PiElement]
+include::{src-dir}/language/PiModel.ts[tag=element-interface]
 ----
 
 The main two elements in this interface are:
@@ -62,8 +30,3 @@ No need to know the availale element type, nor the properties of en element type
 This is by design, as ProjectIt is not meant to be a full Language Workbench,
 but instead meant to be used with multiple language workbenches , or none.
 
-== PiValidator
-[source]
-----
-include::{src-dir}/validator/PiValidator.ts[tag=validator-interface]
-----

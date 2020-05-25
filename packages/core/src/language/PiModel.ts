@@ -2,7 +2,7 @@
  * You can either directly implement these interfaces, or use `Module Augmentation`,
  * as described in `https://www.typescriptlang.org/docs/handbook/declaration-merging.html`.
  */
-// tag::PiElement[]
+// tag::element-interface[]
 export interface PiElement {
     piId(): string;
 
@@ -14,16 +14,21 @@ export interface PiElement {
 
     piIsBinaryExpression(): boolean;
 }
-// end::PiElement[]
+// end::element-interface[]
 
+// tag::named-element-interface[]
 export interface PiNamedElement extends PiElement {
     name: string;
 }
+// end::named-element-interface[]
 
+// TODO PiExpression cannot be distinguished from PiElement anymore,  is this a problem?
+// tag::expression-interface[]
 export interface PiExpression extends PiElement {
-    // TODO PiExpression cannot be distinguished from PiElement anymore,  is this a problem?
 }
+// end::expression-interface[]
 
+// tag::binary-expression-interface[]
 export interface PiBinaryExpression extends PiExpression {
     piLeft(): PiExpression;
 
@@ -35,6 +40,7 @@ export interface PiBinaryExpression extends PiExpression {
 
     piPriority(): number;
 }
+// end::binary-expression-interface[]
 
 export interface PiContainerDescriptor {
     container: PiElement;

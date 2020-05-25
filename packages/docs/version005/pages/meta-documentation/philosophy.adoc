@@ -1,11 +1,11 @@
 :imagesdir: ../images/
 :page-nav_order: 10
-:page-parent: Deeper in the Source Code
+:page-parent: Under the Hood
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-= The Philosophy of ProjectIt
+= Our Philosophy
 
 The main idea behind ProjectIt is to build a minimal viable product which supports the
 language engineer in creating a work environment for a mini-language. A key principle

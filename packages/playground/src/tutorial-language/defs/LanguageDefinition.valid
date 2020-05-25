@@ -1,9 +1,9 @@
 validator Demo for language Demo
 
 // tag::value[]
-ChangeEvent  {
-	self.temperature >= 12;
-	self.temperature <= 30;
+DemoAttributeType  {
+	self.extra >= 12;
+	self.extra <= 30;
 }
 // end::value[]
 

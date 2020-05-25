@@ -36,9 +36,6 @@
       "@projectit/meta/*": [
         "packages/meta/src/*"
       ],
-      "@projectit/demo/*": [
-        "packages/demo/src/*"
-      ],
       "@projectit/playground/*": [
         "packages/playground/src/*"
       ],
