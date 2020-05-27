@@ -1,8 +1,10 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiConcept, PiProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguageUnit, PiConcept, PiProperty, PiClassifier, PiInterface } from "../../languagedef/metalanguage/PiLanguage";
 import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeConceptRule, PiTypeStatement } from "./PiTyperDefLang";
 import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiLangUtil } from "../../languagedef/metalanguage";
 
 const LOGGER = new PiLogger("PiTyperChecker").mute();
 const infertypeName = "infertype";
@@ -10,8 +12,8 @@ const infertypeName = "infertype";
 export class PiTyperChecker extends Checker<PiTypeDefinition> {
     definition: PiTypeDefinition;
     myExpressionChecker : PiLanguageExpressionChecker;
-    typeConcepts: PiConcept[] = [];         // all concepts marked as 'isType'
-    conceptsWithRules: PiConcept[] = [];    // all concepts for which a rule is found. Used to check whether there are two rules for the same concept.
+    typeConcepts: PiClassifier[] = [];         // all concepts marked as 'isType'
+    conceptsWithRules: PiClassifier[] = [];    // all concepts for which a rule is found. Used to check whether there are two rules for the same concept.
     
     constructor(language: PiLanguageUnit) {
         super(language);
@@ -61,17 +63,17 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
 
     private checkConceptRule(rule: PiTypeConceptRule) {
         LOGGER.log("Checking checkConceptRule '" + rule.toPiString() + "'");
-        this.myExpressionChecker.checkConceptReference(rule.conceptRef);
+        this.myExpressionChecker.checkClassifierReference(rule.conceptRef);
         if (!!rule.conceptRef.referred) { // error messages done by myExpressionChecker
-            let myConcept = rule.conceptRef.referred;
+            let classifier = rule.conceptRef.referred;
 
             this.nestedCheck({
-                check: !this.conceptsWithRules.includes(myConcept),
-                error: `Found a second entry for ${myConcept.name} [line: ${rule.location?.start.line}, column: ${rule.location?.start.column}].`,
+                check: !this.conceptsWithRules.includes(classifier),
+                error: `Found a second entry for ${classifier.name} [line: ${rule.location?.start.line}, column: ${rule.location?.start.column}].`,
                 whenOk: () => {
-                    this.conceptsWithRules.push(myConcept);
+                    this.conceptsWithRules.push(classifier);
                     for( let stat of rule.statements) {
-                        this.checkStatement(stat, myConcept);
+                        this.checkStatement(stat, classifier);
                     }
                 }
             });
@@ -81,12 +83,27 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     private checkIsTypeRule(rule: PiTypeIsTypeRule) {
         LOGGER.log("Checking checkIsTypeRule '" + rule.toPiString() + "'");
         let first = true;
+        let typeroot: PiClassifier;
         for (let t of rule.types) {
-            this.myExpressionChecker.checkConceptReference(t);
+            this.myExpressionChecker.checkClassifierReference(t);
             this.typeConcepts.push(t.referred);
             if (first) {
                 this.definition.typeroot = t;
+                typeroot = t.referred;
                 first = false;
+            } else {
+                // check the new type against the root of the type hierarchy
+                // there are two assumptions: (1) the typeroot is the common super concept of all types
+                // or (2) the typeroot is an interface that is implemented by all types
+                if (typeroot instanceof PiConcept) { // check (1)
+                    let base = PiLangUtil.superConcepts(t.referred);
+                    this.simpleCheck(base.includes(typeroot), `The root type concept (${typeroot.name}) should be a base concept of '${t.referred.name}' `
+                        + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`);
+                } else if (typeroot instanceof PiInterface) { // check (2)
+                    let base = t.referred.allInterfaces();
+                    this.simpleCheck(base.includes(typeroot), `The root type interface (${typeroot.name}) should be implemented by '${t.referred.name}' `
+                        + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`);
+                }
             }
         }
     }
@@ -103,7 +120,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         }
     }
 
-    private checkStatement(stat: PiTypeStatement, enclosingConcept: PiConcept, predefined?: PiProperty[]) {
+    private checkStatement(stat: PiTypeStatement, enclosingConcept: PiClassifier, predefined?: PiProperty[]) {
         LOGGER.log("Checking checkStatement '" + stat.toPiString() + "'");
         if (stat.isAbstract) {
             this.simpleCheck(stat.exp == null,
@@ -132,5 +149,6 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         definition.typerRules = newTypeRules;
         definition.conceptRules = conceptRules;
     }
+
 }
 

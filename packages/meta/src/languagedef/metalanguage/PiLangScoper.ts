@@ -27,7 +27,7 @@ export class PiLangScoper {
         } else
         if (typeName === "PiProperty" || typeName === "PiPrimitiveProperty" || typeName === "PiConceptProperty") {
             if (owner instanceof PiLangAppliedFeatureExp) {
-                let xx = owner.sourceExp.referedElement?.referred;
+                let xx = owner.sourceExp.referredElement?.referred;
                 if (!(!!xx)) {
                     LOGGER.error(this, `Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
                 }

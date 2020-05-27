@@ -172,7 +172,7 @@ export class ProjectionTemplate {
                         result += ",";
                     }
                 } else if( item instanceof DefEditorSubProjection){
-                    const appliedFeature: PiProperty = item.expression.appliedfeature.referedElement.referred;
+                    const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
                     if (appliedFeature instanceof PiPrimitiveProperty){
                         result += this.primitivePropertyProjection(appliedFeature, element);
                     } else if( appliedFeature instanceof PiConceptProperty) {
@@ -241,7 +241,7 @@ export class ProjectionTemplate {
     //         this.helpers.enumSelectFor${p.type.name}(element,
     //             "${p.name}-type",
     //             () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
-    //             (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referedElement())}.fromString(o.id)
+    //             (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referredElement())}.fromString(o.id)
     //         )
     //     `;
     // }

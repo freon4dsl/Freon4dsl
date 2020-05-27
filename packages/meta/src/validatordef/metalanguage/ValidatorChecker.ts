@@ -54,7 +54,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkConceptRule(rule: ConceptRuleSet) {
-        this.myExpressionChecker.checkConceptReference(rule.conceptRef);
+        this.myExpressionChecker.checkClassifierReference(rule.conceptRef);
 
         const enclosingConcept = rule.conceptRef.referred;
         if (enclosingConcept) {
@@ -92,7 +92,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     tr.property = PiLangSelfExp.create(enclosingConcept);
                     tr.property.appliedfeature = PiLangAppliedFeatureExp.create(tr.property,"name", myProp);
                     // tr.property.appliedfeature.sourceName = "name";
-                    // tr.property.appliedfeature.referedElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                    // tr.property.appliedfeature.referredElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                     tr.property.location = tr.location;
                   }
             });
@@ -201,7 +201,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                                                 //         let t = myListProperty.type;
                                                 //         console.log("class of type: " + t.constructor.name +", referred: " + t.referred?.name);
                                                 //     } else {
-                                                //         this.simpleCheck(!!myListProperty.type?.referred, `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()} (${tr.listproperty.appliedfeature.referedElement.referred.name})` +
+                                                //         this.simpleCheck(!!myListProperty.type?.referred, `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()} (${tr.listproperty.appliedfeature.referredElement.referred.name})` +
                                                 //             `[line: ${tr.listproperty.location?.start.line}, column: ${tr.listproperty.location?.start.column}].`);
                                                 //     }
                                                 // }

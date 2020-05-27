@@ -60,7 +60,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
 
     private checkConceptEditor(conceptEditor: DefEditorConcept) {
         // TODO maybe use
-        // this.myExpressionChecker.checkConceptReference(conceptEditor.concept);
+        // this.myExpressionChecker.checkClassifierReference(conceptEditor.concept);
         this.nestedCheck({
             check: !!conceptEditor.concept.referred,
             error: `Concept ${conceptEditor.concept.name} is unknown [line: ${conceptEditor.location?.start.line}, column: ${conceptEditor.location?.start.column}].`,

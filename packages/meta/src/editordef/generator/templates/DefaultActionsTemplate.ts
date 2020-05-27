@@ -3,7 +3,7 @@ import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../.
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
 import { DefEditorLanguage } from "../../metalanguage";
-import { LangUtil } from "../../../languagedef/metalanguage/LangUtil";
+import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
 
 export class DefaultActionsTemplate {
     constructor() {
@@ -143,7 +143,7 @@ export class DefaultActionsTemplate {
         language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
             const childConcept = part.type.referred;
             // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.name
-            result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+            result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
@@ -164,7 +164,7 @@ export class DefaultActionsTemplate {
             if (childConcept instanceof PiConcept) {
                 const conceptEditor = editorDef.findConceptEditor(childConcept);
             } else { // TODO child is PiInterface
-                result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                    {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}", // for Interface part
@@ -190,7 +190,7 @@ export class DefaultActionsTemplate {
                 const childConcept = part.type.referred;
                 if (childConcept instanceof PiConcept) {
                     const conceptEditor = editorDef.findConceptEditor(childConcept);
-                    result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for single Concept part

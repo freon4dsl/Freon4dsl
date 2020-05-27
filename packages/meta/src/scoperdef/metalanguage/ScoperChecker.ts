@@ -42,7 +42,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 
             definition.scopeConceptDefs.forEach(def => {
-                this.myExpressionChecker.checkConceptReference(def.conceptRef);
+                this.myExpressionChecker.checkClassifierReference(def.conceptRef);
                 if (!!def.conceptRef.referred) {
                     if (!!def.namespaceAdditions) {
                         this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
@@ -87,9 +87,9 @@ export class ScoperChecker extends Checker<PiScopeDef> {
     private findAllNamespaces(namespaces: PiElementReference<PiClassifier>[]): PiClassifier[] {
         let result: PiClassifier[] = [];
         namespaces.forEach(ref => {
-            this.myExpressionChecker.checkConceptReference(ref);
+            this.myExpressionChecker.checkClassifierReference(ref);
             let myClassifier = ref.referred;
-            if (!!myClassifier) { // error message handled by checkConceptReference()
+            if (!!myClassifier) { // error message handled by checkClassifierReference()
                 result = result.concat(findAllImplementorsAndSubs(myClassifier));
             }
         });

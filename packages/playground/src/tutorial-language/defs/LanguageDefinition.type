@@ -1,7 +1,7 @@
 typer Demo for language Demo
 
-// the first entry is considered to be the root of the type hierarchy
 // tag::types[]
+// 'Type' is the root of the type hierarchy
 istype { Type, DemoEntity, DemoAttributeType }
 // end::types[]
 
