@@ -2,7 +2,7 @@ import { Checker } from "../../utils/Checker";
 import {
     PiConcept,
     PiLanguageUnit,
-    PiLanguageExpressionChecker, PiProperty, PiClassifier, PiInterface
+    PiLangExpressionChecker, PiProperty, PiClassifier, PiInterface
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
 import { findAllImplementorsAndSubs } from "../../utils/ModelHelpers";
@@ -15,12 +15,12 @@ import { PiElementReference} from "../../languagedef/metalanguage/PiElementRefer
 
 const LOGGER = new PiLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<PiScopeDef> {
-    myExpressionChecker : PiLanguageExpressionChecker;
+    myExpressionChecker : PiLangExpressionChecker;
     myNamespaces: PiClassifier[] = [];
 
     constructor(language: PiLanguageUnit) {
         super(language);
-        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
         // in a scope definition an expression may be simply 'self'
         // this.myExpressionChecker.strictUseOfThis = false;
     }

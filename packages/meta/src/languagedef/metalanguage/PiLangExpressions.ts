@@ -119,7 +119,7 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
 }
 
 export class PiLangFunctionCallExp extends PiLangExp {
-    //sourceName: string; 			// in typer: name can only be 'commonSuperType', in validator: only 'conformsTo' and 'equalsType'
+    //sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: PiLangExp[] = [];
     returnValue: boolean;
     referredElement: PiElementReference<PiFunction>;

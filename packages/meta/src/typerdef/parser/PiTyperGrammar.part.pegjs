@@ -22,12 +22,11 @@ inferenceKey  = "infertype" ws
 conformsKey   = "conformsto" ws
 equalsKey     = "equalsto" ws
 anyKey        = "anytype" ws { return true; }
-superTypeKey  = "commonSuperType" ws
 abstractKey   = "abstract" ws { return true; }
 
 typerRule = itr:isTypeRule   { return itr; }
           / any:anyTypeRule  { return any; }
-          / other:otherRule  { return other; }
+          / concept:conceptRule  { return concept; }
 
 isTypeRule = isTypeKey curly_begin types:(
       head:conceptRef
@@ -49,7 +48,7 @@ anyTypeRule = anyKey curly_begin statements:statement* curly_end
   })
 }
 
-otherRule = conceptRef:conceptRef curly_begin statements:statement* curly_end
+conceptRule = conceptRef:conceptRef curly_begin statements:statement* curly_end
 {
   return create.createConceptRule( {
     "conceptRef": conceptRef,

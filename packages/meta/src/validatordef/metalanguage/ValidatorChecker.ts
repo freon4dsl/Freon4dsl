@@ -12,7 +12,7 @@ import {
 } from "./ValidatorDefLang";
 import { PiLangAppliedFeatureExp, PiLangSelfExp, PiLangSimpleExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
+import { PiLangExpressionChecker } from "../../languagedef/metalanguage/PiLangExpressionChecker";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -24,11 +24,11 @@ const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 
 export class ValidatorChecker extends Checker<PiValidatorDef> {
-    myExpressionChecker: PiLanguageExpressionChecker;
+    myExpressionChecker: PiLangExpressionChecker;
     
     constructor(language: PiLanguageUnit) {
         super(language);
-        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }
 
     public check(definition: PiValidatorDef): void {

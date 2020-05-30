@@ -39,6 +39,14 @@ limited DemoAttributeType implements Type {
     Boolean = { "name": "Boolean", "extra": "5479"}
     ANY = { "name": "ANY", "extra": "456"}
 }
+
+limited TestLimited {
+    name: string;
+    something: boolean;
+    Object1 = { name: "ONWAAR", something: "false" }
+    Object2 = { name: "WAAR",  something: "true" }
+}
+
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }

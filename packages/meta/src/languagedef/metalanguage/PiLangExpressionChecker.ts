@@ -14,11 +14,11 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
 import { PiElementReference } from "./PiElementReference";
 
-const LOGGER = new PiLogger("PiLanguageExpressionChecker").mute();
-const validFunctionNames : string[] = [ "commonSuperType", "conformsTo", "equalsType", "typeof" ];
+const LOGGER = new PiLogger("PiLangExpressionChecker").mute();
+const validFunctionNames : string[] = [ "conformsTo", "equalsType", "typeof" ];
 const containerKeyword : string = "container";
 
-export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTester> {
+export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     strictUseOfSelf: boolean = true; // if true, then a ThisExpression must have an appliedfeature
 
     constructor(language: PiLanguageUnit) {
@@ -78,7 +78,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
                     this.nestedCheck(
                     {
                         check: reference.referred !== undefined,
-                        error: `Concept reference to ${reference.name} cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
+                        error: `Concept reference to '${reference.name}' cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
                     })}
             })
     }
@@ -177,7 +177,7 @@ export class PiLanguageExpressionChecker extends Checker<LanguageExpressionTeste
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
             whenOk: () => {
-                if (langExp.sourceName === validFunctionNames[3]) { // "typeof"
+                if (langExp.sourceName === validFunctionNames[2]) { // "typeof"
                     this.nestedCheck({
                         check: langExp.actualparams.length === 1,
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +

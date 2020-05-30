@@ -14,8 +14,9 @@ export class PiTypeDefinition {
     languageName: string;
     language: PiLanguageUnit;
     typerRules: PiTypeRule[];
-    conceptRules: PiTypeConceptRule[];
+    classifierRules: PiTypeClassifierRule[] = [];
     typeroot: PiElementReference<PiClassifier>;
+    types: PiElementReference<PiClassifier>[] = [];
 
     constructor() { 
     }
@@ -28,7 +29,7 @@ export abstract class PiTypeRule extends PiLangElement {
     }
 }
 export class PiTypeIsTypeRule extends PiTypeRule {
-    types: PiElementReference<PiConcept>[] = [];
+    types: PiElementReference<PiClassifier>[] = [];
 
     toPiString(): string {
         return `isType { ${this.types.map( t => t.name ).join(", ")} }`;
@@ -43,7 +44,7 @@ export class PiTypeAnyTypeRule extends PiTypeRule {
     }
 }
 
-export class PiTypeConceptRule extends PiTypeRule {
+export class PiTypeClassifierRule extends PiTypeRule {
     conceptRef: PiElementReference<PiClassifier>;
     statements: PiTypeStatement[] = [];
 

@@ -14,7 +14,7 @@ The default scoper simply regards the model of your user as the only namespace.
 
 [source]
 ----
-include::{src-dir}/LanguageDefinition.scop[tag=namespaces]
+include::{src-dir}/LanguageDefinition.scope[tag=namespaces]
 ----
 
 Interfaces can be namespaces as well.
@@ -29,7 +29,7 @@ By indicating an addition to a namespace you can, for instance, support inherita
 are include in the namespace by defining the namespace-addition.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.scop[tag=namespace_addition]
+include::{src-dir}/LanguageDefinition.scope[tag=namespace_addition]
 ----
 
 == Alternative Scopes
@@ -37,5 +37,5 @@ You can also indicate to use a different namespace altogether. In the following 
 an `AppliedFeature` are determined based on the type of its container, i.e. the type of its parent in the AST.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.scop[tag=alternative_scope]
+include::{src-dir}/LanguageDefinition.scope[tag=alternative_scope]
 ----

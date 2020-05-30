@@ -98,7 +98,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
         result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
         result = `this.${exp.sourceName} (${exp.actualparams.map(
-            param => `${this.makeTypeExp(param)}`
+            param => `${langExpToTypeScript(param)}`
         ).join(", ")})`;
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties

@@ -1,5 +1,5 @@
 import { PiLanguageUnit } from "../metalanguage/PiLanguage";
-import { PiLanguageExpressionChecker } from "../metalanguage/PiLanguageExpressionChecker";
+import { PiLangExpressionChecker } from "../metalanguage/PiLangExpressionChecker";
 import { PiParser } from "../../utils/PiParser";
 import { LanguageExpressionTester } from "./LanguageExpressionTester";
 let pegjsParser = require("./ExpressionGrammar");
@@ -11,6 +11,6 @@ export class LanguageExpressionParser extends PiParser<LanguageExpressionTester>
         super();
         this.parser = pegjsParser;
         this.language = language;
-        this.checker = new PiLanguageExpressionChecker(this.language);
+        this.checker = new PiLangExpressionChecker(this.language);
     }
 }

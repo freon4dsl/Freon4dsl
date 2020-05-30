@@ -75,7 +75,7 @@ export class ValidatorTemplate {
         export class ${generatedClassName} implements ${this.validatorInterfaceName} {
             public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${this.errorClassName}[]{
                 let errorList : ${this.errorClassName}[] = [];
-                errorList.push(new ${this.errorClassName}("No validator found.", modelelement));
+                errorList.push(new ${this.errorClassName}("No validator found.", modelelement, "--"));
                 return errorList;
             }
         }`;

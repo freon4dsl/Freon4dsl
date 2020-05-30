@@ -41,7 +41,7 @@ DemoMultiplyExpression {
     infertype self.left;
 }
 DemoPlusExpression {
-    infertype commonSuperType(self.left, self.right);
+    infertype self.left;
 }
 DemoDivideExpression {
     infertype self.left;
@@ -53,7 +53,7 @@ DemoFunctionCallExpression {
     infertype self.functionDefinition;
 }
 DemoIfExpression    {
-    infertype commonSuperType(self.whenTrue, self.whenFalse);
+    infertype self.whenTrue;
 }
 DemoVariable {
     infertype self.declaredType;

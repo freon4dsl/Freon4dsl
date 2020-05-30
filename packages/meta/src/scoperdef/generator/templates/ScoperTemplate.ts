@@ -103,12 +103,12 @@ export class ScoperTemplate {
              * See ${scoperInterfaceName}.
              */
             public getFromVisibleElements(modelelement: ${allLangConcepts}, name : string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : ${Names.PiNamedElement} {
-                let vis = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
-                if (vis !== null) {
-                    for (let e of vis) {
-                        let n: string = e.name;
+                let visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
+                if (visibleElements !== null) {
+                    for (let element of visibleElements) {
+                        let n: string = element.name;
                         if (name === n) {
-                            return e;
+                            return element;
                         }  
                     }
                 }    
@@ -120,9 +120,9 @@ export class ScoperTemplate {
              */
             public getVisibleNames(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : string[] {
                 let result: string[] = [];
-                let vis = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
-                for (let e of vis) {
-                    let n: string = e.name;
+                let visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
+                for (let element of visibleElements) {
+                    let n: string = element.name;
                     result.push(n);                    
                 }
                 return result;

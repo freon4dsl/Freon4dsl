@@ -5,7 +5,7 @@ export * from "./PiLangEveryConcept"
 export * from "./PiLangExpressions";
 export * from "./PiLanguage";
 export * from "./PiLanguageChecker";
-export * from "./PiLanguageExpressionChecker";
+export * from "./PiLangExpressionChecker";
 export * from "./PiMetaEnvironment";
 export * from "./PiLangScoper";
 export * from "./PiLangUtil";
