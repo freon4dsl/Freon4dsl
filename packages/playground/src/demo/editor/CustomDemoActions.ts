@@ -16,7 +16,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {
         trigger: /[0-9]/,
-        activeInBoxRoles: ["PiBinaryExpression-left", "PiBinaryExpression-right"],
+        activeInBoxRoles: ["PiBinaryExpression-left", "PiBinaryExpression-right", "Method-expression"],
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
             const parent = box.element;
             const x = new DemoNumberLiteralExpression();
