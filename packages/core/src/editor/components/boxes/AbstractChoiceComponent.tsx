@@ -391,12 +391,16 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
         this.clearSelection();
         const range = document.createRange();
         // TODO sometimes childnodes tdo not exist,  is this ok?
-        if (!!this.element && !!this.element.childNodes && this.element.childNodes[0]) {
-            range.setStart(this.element.childNodes[0], Math.min(position, this.element.innerText.length));
-        } else {
-            if (!!this.element) {
-                range.setStart(this.element, position);
+        try{
+            if (!!this.element && !!this.element.childNodes && this.element.childNodes[0]) {
+                range.setStart(this.element.childNodes[0], Math.min(position, this.element.innerText.length));
+            } else {
+                if (!!this.element) {
+                    range.setStart(this.element, position);
+                }
             }
+        } catch (e) {
+            console.log(e.toString())
         }
         range.collapse(true);
         window.getSelection().addRange(range);
