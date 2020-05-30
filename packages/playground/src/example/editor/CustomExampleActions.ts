@@ -6,7 +6,7 @@ import {
     PiExpressionCreator,
     PiActions,
     EXPRESSION_PLACEHOLDER,
-    Box, PiTriggerType, PiEditor
+    Box, PiTriggerType, PiEditor, AliasBox
 } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen";
 
@@ -31,10 +31,12 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {
         trigger: /[0-9]/,
-        activeInBoxRoles: [EXPRESSION_PLACEHOLDER],
+        activeInBoxRoles: ["PiBinaryExpression-right", "PiBinaryExpression-left", "Method-expression"],
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
+            const parent = box.element;
             const x = new NumberLiteralExpression();
             x.value = trigger.toString();
+            parent[(box as AliasBox).propertyName] = x;
             return x;
         },
         boxRoleToSelect: "num-literal-value"
