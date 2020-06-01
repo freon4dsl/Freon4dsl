@@ -26,7 +26,7 @@ describe("testing Scoper", () => {
         // for (let ww of ent.baseEntity) {
         //     // extra props should be visible
         //     ww.referred.attributes.forEach(attr => {
-        //         expect(vis).toContain(attr.name);
+        //         expect(vis).toContain(attr.unitName);
         //     });
         //     testInheritedPropsrecursive(ww.referred, vis);
         // }
@@ -42,7 +42,7 @@ describe("testing Scoper", () => {
             let done: DemoEntity[] = [];
             done.push(ent);
             testInheritedPropsrecursive(ent, vis, done);
-            // console.log("visible elements for " + ent.name + ":");
+            // console.log("visible elements for " + ent.unitName + ":");
             // vis.forEach(n => {console.log(n);});
         });
     });
@@ -57,7 +57,7 @@ describe("testing Scoper", () => {
             let done: DemoEntity[] = [];
             done.push(ent);
             testInheritedPropsrecursive(ent, vis, done);
-            // console.log("visible elements for " + ent.name + ":");
+            // console.log("visible elements for " + ent.unitName + ":");
             // vis.forEach(n => {console.log(n);});
         });
     });

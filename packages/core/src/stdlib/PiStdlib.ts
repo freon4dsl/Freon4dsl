@@ -7,7 +7,7 @@ export interface PiStdlib {
 // end::stdlib-interface[]
 // tag::stdlib-interface[]
     /**
-     * Returns the element named 'name', if it can be found in this library.
+     * Returns the element named 'unitName', if it can be found in this library.
      * When 'metatype' is provided, the element is only returned when it is
      * an instance of this metatype.
      * @param name

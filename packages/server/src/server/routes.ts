@@ -17,7 +17,7 @@ router.get("/getModel", async (ctx: Router.IRouterContext) => {
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name' or 'folder'";
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
     }
 });
 
@@ -42,7 +42,7 @@ router.put("/putModel", async (ctx: Router.IRouterContext) => {
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name' or 'folder'";
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
     }
     ctx.body = { massage: (ctx.request as any).body };
 });
@@ -56,7 +56,7 @@ router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name' or 'folder'";
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
     }
     ctx.body = { massage: (ctx.request as any).body };
 });

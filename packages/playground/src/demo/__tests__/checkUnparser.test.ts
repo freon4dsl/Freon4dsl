@@ -72,7 +72,7 @@ describe("Testing Unparser", () => {
 
             // variableExpression.referredName = "Person";
             // variableExpression.attribute = new DemoAttribute();
-            // variableExpression.attribute.name = "Person";
+            // variableExpression.attribute.unitName = "Person";
             // variableExpression.attribute.declaredType = DemoAttributeType.String;
 
             const divideExpression = MakePlusExp("1", "2");
@@ -95,7 +95,7 @@ describe("Testing Unparser", () => {
             // expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
         });
 
-        test("Person { name, age, first(Resultvar): Boolean = 5 + 24 }", () => {
+        test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
             const personEnt = DemoEntity.create({name: "Person"});
             const age = DemoAttribute.create({name: "age"});
@@ -114,11 +114,11 @@ describe("Testing Unparser", () => {
             // age.declaredType = DemoAttributeType.Boolean;
             // first.declaredType = DemoAttributeType.Boolean;
             // Resultvar.declaredType = DemoAttributeType.Boolean;
-            // Person { name, age, first(Resultvar) = 5 + 24 }
+            // Person { unitName, age, first(Resultvar) = 5 + 24 }
 
             result = unparser.unparse(personEnt, true);
             expect(result).toBe("DemoEntity Person");
-            // expect(result).toBe("DemoEntity Person{ age : Boolean, name : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
+            // expect(result).toBe("DemoEntity Person{ age : Boolean, unitName : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
 
         test.skip("complete example model with simple attribute types", () => {

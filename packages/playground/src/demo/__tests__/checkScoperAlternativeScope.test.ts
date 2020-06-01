@@ -17,7 +17,7 @@ describe("testing Alternative Scopes", () => {
             done();
         });
 
-        test("isInscope 'name' of 'Variable1.attrFromPerson', Variable1: Person", () => {
+        test("isInscope 'unitName' of 'Variable1.attrFromPerson', Variable1: Person", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "name")).toBe(true);
         });
@@ -80,14 +80,14 @@ describe("testing Alternative Scopes", () => {
         test("isInscope 'NOOT' of 'Variable1.attrFromPerson', Variable1: Person", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature;
             // let names: string = "";
-            // for (let name of scoper.getVisibleElements(appliedFeature)) {
-            //     names = names.concat(name.name + ", ");
+            // for (let unitName of scoper.getVisibleElements(appliedFeature)) {
+            //     names = names.concat(unitName.unitName + ", ");
             // }
             // console.log("In Scope: " + names);
             expect(scoper.isInScope(appliedFeature, "NOOT")).toBe(false);
         });
 
-        test("isInscope 'name' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
+        test("isInscope 'unitName' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
             let appliedFeature: AppliedFeature = model.functions[0].expression.appliedfeature.appliedfeature;
             expect(model.functions[0].name).toBe("length");
             expect((model.functions[0].expression.appliedfeature as DemoAttributeRef).attribute.name).toBe("attrFromPerson");
@@ -95,10 +95,10 @@ describe("testing Alternative Scopes", () => {
             // let testfeat = model.functions[0].expression.appliedfeature;
             // let type = DemoEnvironment.getInstance().typer.inferType(testfeat);
             // let names: string = "";
-            // for (let name of scoper.getVisibleElements(appliedFeature)) {
-            //     names = names.concat(name.name + ", ");
+            // for (let unitName of scoper.getVisibleElements(appliedFeature)) {
+            //     names = names.concat(unitName.unitName + ", ");
             // }
-            // console.log("In Scope: " + names + " type: " + (type as PiNamedElement).name);
+            // console.log("In Scope: " + names + " type: " + (type as PiNamedElement).unitName);
             expect(scoper.isInScope(appliedFeature, "name")).toBe(true);
         });
 

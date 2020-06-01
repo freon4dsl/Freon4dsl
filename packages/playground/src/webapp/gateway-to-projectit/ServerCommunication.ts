@@ -2,7 +2,7 @@ import { GenericModelSerializer, PiLogger } from "@projectit/core";
 import axios from "axios";
 import { PiElement } from "@projectit/core";
 import { SERVER_URL } from "./WebappConfiguration";
-import { IServerCommunication } from "./IServerCommunication";
+import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
 
 const LOGGER = new PiLogger("ServerCommunication"); // TODO show errors to user
 
@@ -19,35 +19,35 @@ export class ServerCommunication implements IServerCommunication {
 
     /**
      * Takes 'piModel' and stores it under 'modelName' on the server at SERVER_URL.
-     * 'modelName' must start with a character and contain only characters and/or numbers.
-     * @param modelName
+     * 'modelInfo.unitName' must start with a character and contain only characters and/or numbers.
+     * @param modelInfo
      * @param piModel
      */
-    async putModel(folderName: string, modelName: string, piModel: PiElement) {
-        console.log("ServerCommunication.putModel " + modelName);
-        if (!!modelName && modelName !== "" && modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
+    async putModelUnit(modelInfo: IModelUnitData, piModel: PiElement) {
+        console.log("ServerCommunication.putModel " + modelInfo.unitName);
+        if (!!modelInfo.unitName && modelInfo.unitName !== "" && modelInfo.unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
             try {
-                const res = await axios.put(`${SERVER_URL}putModel?folder=${folderName}&name=${modelName}`, model);
+                const res = await axios.put(`${SERVER_URL}putModel?folder=${modelInfo.language}&name=${modelInfo.unitName}`, model);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }
         } else {
-            LOGGER.error(this, "Model name '" + modelName + "' may contain only characters and numbers, and must start with a character.");
+            LOGGER.error(this, "Name of Model Unit '" + modelInfo.unitName + "' may contain only characters and numbers, and must start with a character.");
         }
     }
 
     /**
-     * Reads the model with name 'modelName' from the server and calls 'loadCallBack',
+     * Reads the model with unitName 'modelName' from the server and calls 'loadCallBack',
      * which takes the model as parameter.
      * @param modelName
      * @param loadCallback
      */
-    async loadModel(folderName: string, modelName: string, loadCallback: (piModel: PiElement) => void) {
-        console.log("ServerCommunication.loadModel " + modelName);
-        if (!!modelName && modelName !== "") {
+    async loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void) {
+        console.log("ServerCommunication.loadModel " + modelInfo.unitName);
+        if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
-                const res = await axios.get(`${SERVER_URL}getModel?folder=${folderName}&name=${modelName}`);
+                const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}&name=${modelInfo.unitName}`);
                 const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
                 loadCallback(model);
             } catch (e) {
@@ -74,11 +74,11 @@ export class ServerCommunication implements IServerCommunication {
         return [];
     }
 
-    async deleteModel(folderName: string, modelName: string) {
-        console.log("ServerCommunication.deleteModel " + modelName);
-        if (!!modelName && modelName !== "") {
+    async deleteModelUnit(modelInfo: IModelUnitData ) {
+        console.log("ServerCommunication.deleteModel " + modelInfo.unitName);
+        if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
-                const res = await axios.get(`${SERVER_URL}deleteModel?folder=${folderName}&name=${modelName}`);
+                const res = await axios.get(`${SERVER_URL}deleteModel?folder=${modelInfo.language}&name=${modelInfo.unitName}`);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }

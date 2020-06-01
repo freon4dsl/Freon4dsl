@@ -9,7 +9,7 @@ describe("Demo Model", () => {
             done();
         });
 
-        test("model name should be set", () => {
+        test("model unitName should be set", () => {
             expect(model.name).not.toBeNull();
         });
 

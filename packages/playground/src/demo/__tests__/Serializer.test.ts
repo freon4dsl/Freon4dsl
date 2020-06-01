@@ -14,7 +14,7 @@ describe("Demo Model", () => {
             done();
         });
 
-        test("model name should be set", () => {
+        test("model unitName should be set", () => {
             expect(initialModel.name).not.toBeNull();
             const serial = new GenericModelSerializer();
             const jsonOut = serial.convertToJSON(initialModel);
@@ -24,7 +24,7 @@ describe("Demo Model", () => {
             // console.log("typescript  type: " + typescript["$typename"]);
 
             const inModel = typescript as DemoModel;
-            // console.log("inModel type: " + inModel.piLanguageConcept() + "  and name " + inModel.name + " id "+ inModel.$id);
+            // console.log("inModel type: " + inModel.piLanguageConcept() + "  and unitName " + inModel.unitName + " id "+ inModel.$id);
             expect(typescript instanceof DemoModel).toBeTruthy();
             expect(typescript instanceof DemoFunction).toBeFalsy();
             expect(inModel.name).toBe("DemoModel_1");
@@ -48,13 +48,13 @@ describe("Demo Model", () => {
         //
         //     const f1: DemoEntity = model.entities[0];
         //     expect(f1.container).toBe(model);
-        //     expect(f1.name).not.toBeNull;
+        //     expect(f1.unitName).not.toBeNull;
         // });
         //
         // test("entity attributes should be set correctly", () => {
         //   for (let i of model.entities) {
         //     for (let a of i.attributes) {
-        //       expect(a.name).not.toBeNull;
+        //       expect(a.unitName).not.toBeNull;
         //       expect(a.container).toBe(i);
         //     }
         //   }

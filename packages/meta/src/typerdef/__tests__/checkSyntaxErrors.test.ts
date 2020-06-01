@@ -16,7 +16,7 @@ describe("Checking typer on checking errors", () => {
         }
     });
 
-    test("language should have a name", () => {
+    test("language should have a unitName", () => {
         let parseFile = testdir + "test1.type";
         try {
             parser.parse(parseFile);

@@ -14,7 +14,7 @@ export class ConceptTemplate {
     generateConcept(concept: PiConcept, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        // if(hasSuper && !(!!concept.base.referred)) console.log("ERROR in " + concept.name);
+        // if(hasSuper && !(!!concept.base.referred)) console.log("ERROR in " + concept.unitName);
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const isAbstract = concept.isAbstract;

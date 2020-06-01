@@ -4,7 +4,7 @@ describe("Checking language parser on syntax errors", () => {
     let parser = new LanguageParser();
     let testdir = "src/languagedef/__tests__/language-tests/faultyDefFiles/syntax-errors/";
 
-    test("language should have a name", () => {
+    test("language should have a unitName", () => {
         let parseFile = testdir + "test1.lang";
         try {
             parser.parse(parseFile);
@@ -13,7 +13,7 @@ describe("Checking language parser on syntax errors", () => {
         }
     });
 
-    test("language name should not contain a dot", () => {
+    test("language unitName should not contain a dot", () => {
         let parseFile = testdir + "test2.lang";
         try {
             parser.parse(parseFile);
@@ -31,7 +31,7 @@ describe("Checking language parser on syntax errors", () => {
         }
     });
 
-    test("concepts should have a name", () => {
+    test("concepts should have a unitName", () => {
         let parseFile = testdir + "test4.lang";
         try {
             parser.parse(parseFile);
@@ -40,7 +40,7 @@ describe("Checking language parser on syntax errors", () => {
         }
     });
 
-    test("instances of limited concepts should have a name", () => {
+    test("instances of limited concepts should have a unitName", () => {
         let parseFile = testdir + "test5.lang";
         try {
             parser.parse(parseFile);

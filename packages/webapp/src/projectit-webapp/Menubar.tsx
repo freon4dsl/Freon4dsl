@@ -55,7 +55,7 @@ export default class Menubar extends React.Component {
                         key: "filesaveas",
                         content: "save as ...",
                         icon: "files-txt",
-                        tooltip: 'Save the current model unit with a different name',
+                        tooltip: 'Save the current model unit with a different unitName',
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
                             const {tooltip, ...rest} = props;
@@ -197,7 +197,7 @@ export default class Menubar extends React.Component {
 
     private newValue: string;
     captureName (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) {
-        // TODO how to capture the new name???
+        // TODO how to capture the new unitName???
         console.log("event type is " + event.type );
         // if (!!newValue ) this.newValue = newValue;
     }

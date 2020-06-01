@@ -70,7 +70,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
     private checkCircularInheritance(circularNames: string[], con: PiClassifier): boolean {
         if (circularNames.includes(con.name)) {
-            // error, already seen this name
+            // error, already seen this unitName
             let text : string = '';
             text = circularNames.map(name => name ).join(", ");
             this.simpleCheck(false,
@@ -173,7 +173,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         }
 
         if (piConcept instanceof PiBinaryExpressionConcept && !(piConcept.isAbstract)) {
-            // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.name} should have a symbol`);
+            // this.simpleCheck(binExpConcept.getSymbol() !== "undefined", `Concept ${piClass.unitName} should have a symbol`);
             this.simpleCheck(piConcept.getPriority() !== -1,
                 `Binary expression concept ${piConcept.name} should have a priority [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
 
@@ -205,7 +205,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
     checkLimitedConcept(piLimitedConcept: PiLimitedConcept) {
         LOGGER.log(`Checking limited concept '${piLimitedConcept.name}' [line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}]`);
         // the normal checking of concepts is done in this.checkConcept
-        // limited concept may be used as reference only, thus it should have a property 'name: string'
+        // limited concept may be used as reference only, thus it should have a property 'unitName: string'
         let nameProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
         this.nestedCheck({
             check: !!nameProperty,
@@ -303,7 +303,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                             piProperty.isPart = false;
                         }
                         if (!piProperty.isPart) {
-                            // it is a reference, so check whether the type has a name by which it can be referred
+                            // it is a reference, so check whether the type has a unitName by which it can be referred
                             let nameProperty = realType.allPrimProperties().find(p => p.name === "name");
                             this.nestedCheck({
                                     check: !!nameProperty,

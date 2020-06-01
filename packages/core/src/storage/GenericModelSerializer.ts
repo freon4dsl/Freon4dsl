@@ -48,7 +48,7 @@ export class GenericModelSerializer {
             if (value === undefined) {
                 continue;
             }
-            // console.log(">> creating property "+ property.name + "  of type " + property.propertyType + " isList " + property.isList);
+            // console.log(">> creating property "+ property.unitName + "  of type " + property.propertyType + " isList " + property.isList);
             switch (property.propertyType) {
                 case "primitive":
                     if (property.isList) {
@@ -80,7 +80,7 @@ export class GenericModelSerializer {
                 case "part":
                     if (property.isList) {
                         // console.log("    list property of size "+ value.length);
-                        // result[property.name] = [];
+                        // result[property.unitName] = [];
                         for (var item in value) {
                             result[property.name].push(this.toTypeScriptInstance(value[item]));
                         }
@@ -97,7 +97,7 @@ export class GenericModelSerializer {
                             result[property.name].push(this.language.referenceCreator(value[item], property.type));
                         }
                     } else {
-                        // console.log("Serializer creating property " + property.name + "  reference [" + value + "] to a [" + property.type+ "]")
+                        // console.log("Serializer creating property " + property.unitName + "  reference [" + value + "] to a [" + property.type+ "]")
                         result[property.name] = this.language.referenceCreator(value, property.type);
                     }
                     break;
@@ -112,10 +112,10 @@ export class GenericModelSerializer {
      */
     convertToJSON(tsObject: PiElement): Object {
         const typename = tsObject.piLanguageConcept();
-        // console.log("start converting concept name " + typename);
+        // console.log("start converting concept unitName " + typename);
         var result: Object = { $typename: typename };
         for (let p of this.language.allConceptProperties(typename)) {
-            // console.log(">>>> start converting property " + p.name + " of type " + p.propertyType);
+            // console.log(">>>> start converting property " + p.unitName + " of type " + p.propertyType);
             switch (p.propertyType) {
                 case "part":
                     var value = tsObject[p.name];
@@ -135,7 +135,7 @@ export class GenericModelSerializer {
                         const references: Object[] = tsObject[p.name];
                         result[p.name] = [];
                         for (var i: number = 0; i < references.length; i++) {
-                            result[p.name][i] = references[i]["name"];
+                            result[p.name][i] = references[i]["unitName"];
                         }
                     } else {
                         // single reference
@@ -149,7 +149,7 @@ export class GenericModelSerializer {
                         const literals: Object[] = tsObject[p.name];
                         result[p.name] = [];
                         for (var i: number = 0; i < literals.length; i++) {
-                            result[p.name][i] = literals[i]["name"];
+                            result[p.name][i] = literals[i]["unitName"];
                         }
                     } else {
                         // single value
@@ -169,9 +169,9 @@ export class GenericModelSerializer {
                 default:
                     break;
             }
-            // console.log("<<<< end converting property  " + p.name);
+            // console.log("<<<< end converting property  " + p.unitName);
         }
-        // console.log("end converting concept name " + tsObject.piLanguageConcept());
+        // console.log("end converting concept unitName " + tsObject.piLanguageConcept());
         return result;
     }
 }

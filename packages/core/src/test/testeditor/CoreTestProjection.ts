@@ -142,9 +142,9 @@ export class CoreTestProjection implements PiProjection {
         cells.push({
             row: 1,
             column: 1,
-            box: new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
+            box: new TextBox(entity, "entity-unitName", () => entity.name, (s: string) => (entity.name = s), {
                 deleteWhenEmpty: true,
-                placeHolder: "<enter entity name>",
+                placeHolder: "<enter entity unitName>",
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isName(currentText, key, index);
                 }
@@ -165,7 +165,7 @@ export class CoreTestProjection implements PiProjection {
                 row: 1,
                 column: 1,
                 columnSpan: 2,
-                box: new TextBox(entity, "entity-name", () => entity.name, (v: string) => (entity.name = v))
+                box: new TextBox(entity, "entity-unitName", () => entity.name, (v: string) => (entity.name = v))
             }
         ];
         let row = 2;
@@ -173,7 +173,7 @@ export class CoreTestProjection implements PiProjection {
             cells.push({
                 row: row,
                 column: 1,
-                box: new TextBox(a, "attr-name-" + row, () => a.name, (v: string) => (a.name = v))
+                box: new TextBox(a, "attr-unitName-" + row, () => a.name, (v: string) => (a.name = v))
             });
             cells.push({
                 row: row,
@@ -195,12 +195,12 @@ export class CoreTestProjection implements PiProjection {
             ["name", "type"],
             [
                 (att: CoreTestAttribute): Box => {
-                    return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
+                    return new TextBox(att, "attr-unitName", () => att.name, (s: string) => (att.name = s), {
                         deleteWhenEmpty: true,
                         keyPressAction: (currentText: string, key: string, index: number) => {
                             return isName(currentText, key, index);
                         },
-                        placeHolder: "<name>"
+                        placeHolder: "<unitName>"
                     });
                 },
                 (attr: CoreTestAttribute): Box => {
@@ -278,9 +278,9 @@ export class CoreTestProjection implements PiProjection {
                     style: projectitStyles.keyword
                 }),
                 new TextBox(model, "textC", () => model.name, (c: string) => (model.name = c))
-                // SHORTHAND: this.textbox(model, "name"),
+                // SHORTHAND: this.textbox(model, "unitName"),
             ]),
-            // this.textbox(model, "name"),
+            // this.textbox(model, "unitName"),
             // new SelectBox(model, "test-selest", "<select>",
             //     () => [
             //         {
@@ -296,7 +296,7 @@ export class CoreTestProjection implements PiProjection {
             //     ],
             //     () => null,
             //     (option: SelectOption) => {
-            //         model.name = "new: " + option.label;
+            //         model.unitName = "new: " + option.label;
             //     },
             // ),
 
@@ -304,7 +304,7 @@ export class CoreTestProjection implements PiProjection {
             //     style: projectitStyles.keyword
             // }),
             // new VerticalPiElementListBox(model, "entities", model.entities,"entities", () => new CoreTestEntity(), this.editor,
-            //     { roleToSelectAfterCreation: "entity-name" }),
+            //     { roleToSelectAfterCreation: "entity-unitName" }),
             new LabelBox(model, "entityexpression", "expression", {
                 style: projectitStyles.keyword
             }),
@@ -439,7 +439,7 @@ export class CoreTestProjection implements PiProjection {
             {
                 row: 1,
                 column: 2,
-                box: new TextBox(fun, "fun-name", () => fun.name, (v: string) => (fun.name = v))
+                box: new TextBox(fun, "fun-unitName", () => fun.name, (v: string) => (fun.name = v))
             },
             {
                 row: 1,

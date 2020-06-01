@@ -59,7 +59,7 @@ export class GridUtil {
         editor.keyboardActions.splice(
             0,
             0,
-            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(element, listPropertyName, builder, "textbox-name")
+            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(element, listPropertyName, builder, "textbox-unitName")
         );
         return new GridBox(element, role, cells, initializer);
     }

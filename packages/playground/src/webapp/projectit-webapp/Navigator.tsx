@@ -9,11 +9,12 @@ import { App } from "./App";
 // TODO try to make dependence of gateway-to-projectit as small as possible
 import { editorEnvironment } from "../gateway-to-projectit/WebappConfiguration";
 import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
-import { IModelUnit } from "../gateway-to-projectit/IEditorCommunication";
+import { IModelUnitData } from "../gateway-to-projectit/IServerCommunication";
 
 // This component holds the navigator, which shows all available models sorted by language
 
-// TODO language should be removed, instead model and model-units should be used
+// for now, but TODO change this
+const modelName: string = "currentModel";
 
 // The type of an element in the navigation tree
 type TreeElement = {
@@ -36,7 +37,7 @@ const titleRenderer = (Component, { content, open, hasSubtree, ...restProps }) =
 export class Navigator extends React.Component<{}, {}> {
     // TODO keep current selection
     private _selection: Selection;
-    @observable _allModels: IModelUnit[] = [];
+    @observable _allModels: IModelUnitData[] = [];
     private _activeItemId: string = "-1";
 
     constructor(props: {}) {
@@ -57,18 +58,18 @@ export class Navigator extends React.Component<{}, {}> {
                 onTitleClick: this._onTitleClick,
                 as: "h5"
             };
-            for (let model of this._allModels) {
+            this._allModels.forEach((model, index) => {
                 if (model.language === lang) {
                     let elem: TreeElement = {
-                        id: model.id.toString(),
-                        title: model.name,
+                        id: index.toString(10),
+                        title: model.unitName,
                         items: [],
                         onTitleClick: this._onTitleClick,
                         as: "p"
                     };
                     group.items.push(elem);
                 }
-            }
+            });
             tree.push(group);
         }
         return tree;
@@ -86,7 +87,7 @@ export class Navigator extends React.Component<{}, {}> {
 
     public removeName(name: string) {
         // TODO this method is not functioning correctly yet
-        const index = this._allModels.findIndex(elem  => elem.name = name);
+        const index = this._allModels.findIndex(elem  => elem.unitName = name);
         console.log(`length: ${this._allModels.length}, index: ${index}`);
         this._allModels.splice(index-1 , 1);
     }
@@ -129,7 +130,7 @@ export class Navigator extends React.Component<{}, {}> {
     private modelListCallBack = (names: string[]) => {
         if (!!names && names.length > 0) {
             names.forEach((name, itemIndex) => {
-                this._allModels.push({ id: itemIndex, name: name, language: editorEnvironment.languageName });
+                this._allModels.push({ unitName: name, model: modelName, language: editorEnvironment.languageName });
 
             });
             if (!!!this._activeItemId) {
@@ -137,7 +138,7 @@ export class Navigator extends React.Component<{}, {}> {
             }
         } else {
             // push a dummy element on the list, to show something
-            this._allModels.push({id: -2, name: name, language: editorEnvironment.languageName });
+            this._allModels.push({unitName: name, model: modelName, language: editorEnvironment.languageName });
         }
     }
 }

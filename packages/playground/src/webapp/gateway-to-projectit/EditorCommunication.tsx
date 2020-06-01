@@ -6,8 +6,12 @@ import { EditorArea } from "../projectit-webapp/EditorArea";
 import { App } from "../projectit-webapp/App";
 import { Input } from "@fluentui/react-northstar";
 import * as React from "react";
+import { IModelUnitData } from "./IServerCommunication";
 
 // TODO make this a singleton, no static methods
+// for now, but TODO change this
+const modelName: string = "currentModel";
+
 
 export class EditorCommunication {
     static currentModelName = '';
@@ -39,26 +43,37 @@ export class EditorCommunication {
         if (!!editorEnvironment.editor.rootElement) {
             // set up the dialog and show it
             App.setDialogTitle("Changing to model '" + (!!newModelName? newModelName : "new") + "'");
-            App.setDialogSubText("Should the previous model be saved? If so, please, enter its name. ");
+            App.setDialogSubText("Should the previous model be saved? If so, please, enter its unitName. ");
             App.useDefaultButton();
             App.setDialogContent(<Input placeholder={EditorCommunication.currentModelName} inputRef={this.setInput}/>);
             App.showDialogWithCallback(() => {
-                // user has pushed OK and may have entered a new name
+                // user has pushed OK and may have entered a new unitName
                 const saveName = EditorCommunication.input?.value;
                 if (saveName !== EditorCommunication.currentModelName) {
-                    ServerCommunication.getInstance().putModel(editorEnvironment.languageName, saveName, editorEnvironment.editor.rootElement);
+                    ServerCommunication.getInstance().putModelUnit({
+                            language: editorEnvironment.languageName,
+                            unitName: saveName,
+                            model: modelName},
+                        editorEnvironment.editor.rootElement);
                     EditorCommunication.editorArea.navigator._allModels.push({
-                        id: randomIntFromInterval(0, 10000),
-                        name: saveName,
+                        unitName: saveName,
+                        model: modelName,
                         language: editorEnvironment.languageName,
-                        url: "100.100.100.100"
                     });
                 } else {
-                    ServerCommunication.getInstance().putModel(editorEnvironment.languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
+                    ServerCommunication.getInstance().putModelUnit({
+                            language: editorEnvironment.languageName,
+                            unitName: EditorCommunication.currentModelName,
+                            model: modelName},
+                        editorEnvironment.editor.rootElement);
                 }
                 // now we can finally switch to the new model
                 if(!!newModelName) {
-                    ServerCommunication.getInstance().loadModel(editorEnvironment.languageName, newModelName, EditorCommunication.loadModelInEditor);
+                    ServerCommunication.getInstance().loadModelUnit({
+                        language: editorEnvironment.languageName,
+                        unitName: newModelName,
+                        model: modelName},
+                        EditorCommunication.loadModelInEditor);
                     EditorCommunication.currentModelName = newModelName;
                 } else {
                     editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
@@ -73,7 +88,11 @@ export class EditorCommunication {
         if (!!editorEnvironment.editor.rootElement) {
             EditorCommunication.savePrevious(name);
         } else {
-            ServerCommunication.getInstance().loadModel(editorEnvironment.languageName, name, EditorCommunication.loadModelInEditor);
+            ServerCommunication.getInstance().loadModelUnit({
+                language: editorEnvironment.languageName,
+                unitName: name,
+                model: modelName},
+                EditorCommunication.loadModelInEditor);
             EditorCommunication.currentModelName = name;
         }
     }
@@ -90,21 +109,33 @@ export class EditorCommunication {
         console.log("EditorCommunication save called");
         if (!!editorEnvironment.editor.rootElement) {
             if (EditorCommunication.currentModelName.length === 0) {
-                // no name, so get name from user
+                // no unitName, so get unitName from user
                 App.setDialogTitle("Saving model");
-                App.setDialogSubText("Please, enter a name. ");
+                App.setDialogSubText("Please, enter a unitName. ");
                 App.useDefaultButton();
                 App.setDialogContent(<Input value={"modelUnit" + randomIntFromInterval(10, 100)} inputRef={this.setInput}/>);
                 App.showDialogWithCallback(() => {
-                    // user has pushed OK and may have entered a new name
+                    // user has pushed OK and may have entered a new unitName
                     const saveName = EditorCommunication.input?.value;
                     // TODO check saveName
                     EditorCommunication.currentModelName = saveName;
-                    ServerCommunication.getInstance().putModel(editorEnvironment.languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
-                    EditorCommunication.editorArea.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: EditorCommunication.currentModelName, language: editorEnvironment.languageName, url: "100.100.100.100"})
+                    ServerCommunication.getInstance().putModelUnit({
+                        language: editorEnvironment.languageName,
+                        unitName: EditorCommunication.currentModelName,
+                        model: modelName},
+                        editorEnvironment.editor.rootElement);
+                    EditorCommunication.editorArea.navigator._allModels.push({
+                        unitName: EditorCommunication.currentModelName,
+                        model: modelName,
+                        language: editorEnvironment.languageName
+                    })
                 });
             } else {
-                ServerCommunication.getInstance().putModel(editorEnvironment.languageName, EditorCommunication.currentModelName, editorEnvironment.editor.rootElement);
+                ServerCommunication.getInstance().putModelUnit({
+                    unitName: EditorCommunication.currentModelName,
+                    model: modelName,
+                    language: editorEnvironment.languageName
+                }, editorEnvironment.editor.rootElement);
             }
         } else {
             console.log("NO rootElement in editor");
@@ -112,10 +143,14 @@ export class EditorCommunication {
     }
 
     static saveAs(newName: string) {
-        console.log("EditorCommunication save as called, new name: " + newName);
+        console.log("EditorCommunication save as called, new unitName: " + newName);
         if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.getInstance().putModel(editorEnvironment.languageName, newName, editorEnvironment.editor.rootElement);
-            EditorCommunication.editorArea.navigator._allModels.push({id: randomIntFromInterval(0, 10000), name: newName, language: editorEnvironment.languageName, url: "100.100.100.100"})
+            ServerCommunication.getInstance().putModelUnit({
+                unitName: newName,
+                model: modelName,
+                language: editorEnvironment.languageName
+            }, editorEnvironment.editor.rootElement);
+            EditorCommunication.editorArea.navigator._allModels.push({unitName: newName, model: modelName, language: editorEnvironment.languageName})
         } else {
             console.log("NO rootElement in editor");
         }
@@ -124,7 +159,7 @@ export class EditorCommunication {
     static deleteCurrentModel() {
         console.log("EditorCommunication delete called, current model: " + EditorCommunication.currentModelName);
         if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.getInstance().deleteModel(editorEnvironment.languageName, EditorCommunication.currentModelName);
+            ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: EditorCommunication.currentModelName, model: modelName});
             editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
             EditorCommunication.editorArea.navigator.removeName(EditorCommunication.currentModelName);
             EditorCommunication.currentModelName = "";

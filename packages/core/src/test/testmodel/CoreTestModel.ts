@@ -21,10 +21,10 @@ export abstract class CoreTestModelElement extends MobxModelElementImpl {
         let con: any = this;
         while (con) {
             if (con instanceof CoreTestModel) {
-                // console.log("get model projectit-demo model: " + con.name);
+                // console.log("get model projectit-demo model: " + con.unitName);
                 return con;
             } else if (con instanceof CoreTestModelElement) {
-                // console.log("get model up from: " + con.name + " to: " + con.container.toString());
+                // console.log("get model up from: " + con.unitName + " to: " + con.container.toString());
                 con = con.container;
             } else {
                 // console.log("get model NULL: ");

@@ -8,7 +8,7 @@ export class ModelCreatorTemplate {
     }
 
     generateModelCreator(language: PiLanguageUnit, relativePath: string): string {
-        // TODO use Names for class name
+        // TODO use Names for class unitName
         
         // the template starts here
         return `

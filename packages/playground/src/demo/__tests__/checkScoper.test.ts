@@ -123,8 +123,8 @@ describe("testing Scoper", () => {
             testEntity(scoper, model, nameTotest);
         });
 
-        test("isInscope 'name'", () => {
-            // name is Attribute of Person and of Company in DemoModel_1
+        test("isInscope 'unitName'", () => {
+            // unitName is Attribute of Person and of Company in DemoModel_1
             let nameTotest: string = "name";
             expect(scoper.isInScope(model, nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
@@ -146,7 +146,7 @@ describe("testing Scoper", () => {
         });
 
         test("isInscope 'age'", () => {
-            // name is Attribute of Person and of Company in DemoModel_1
+            // unitName is Attribute of Person and of Company in DemoModel_1
             let nameTotest: string = "age";
             expect(scoper.isInScope(model, nameTotest)).toBe(false);
             // test if nameTotest is known in model functions

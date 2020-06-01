@@ -31,7 +31,7 @@ export class DemoModelCreator {
     public createModelWithIsUniqueError(): DemoModel {
         let result = this.createCorrectModel();
 
-        const companyEnt = DemoEntity.create({name: "Company"}); // another one with the same name
+        const companyEnt = DemoEntity.create({name: "Company"}); // another one with the same unitName
         const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
         const VAT_Number2 = DemoAttribute.create({name: "VAT_Number"});
         companyEnt.attributes.push(VAT_Number2);
@@ -48,7 +48,7 @@ export class DemoModelCreator {
 
         companyEnt.functions.push(ifFunction);
 
-        const double = DemoFunction.create({name: "compare"}); // another one with the same name
+        const double = DemoFunction.create({name: "compare"}); // another one with the same unitName
         const extra = DemoVariable.create({name: "Extra"});
         const extra2 = DemoVariable.create({name: "Extra"});
         double.parameters.push(extra);
@@ -60,7 +60,7 @@ export class DemoModelCreator {
         return result;
     }
 
-    // model.functions[0].expression.appliedfeature.type.referred.name).toBe("Company")
+    // model.functions[0].expression.appliedfeature.type.referred.unitName).toBe("Company")
     public createModelWithAppliedfeature(): DemoModel {
         let result = this.createIncorrectModel();
         // add new attribute to Person entity
@@ -195,7 +195,7 @@ export class DemoModelCreator {
         // another(NOOT) = ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         companyEnt.functions.push(another);
-        // Company { name, VAT_Number, another(NOOT) = ... }
+        // Company { unitName, VAT_Number, another(NOOT) = ... }
 
         model.entities.push(personEnt);
         model.entities.push(companyEnt);
@@ -256,7 +256,7 @@ export class DemoModelCreator {
         work.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
 
         companyEnt.functions.push(work);
-        // Company { VAT_Number: Integer, name: String, doClean(at: School) = 5 + 24 }
+        // Company { VAT_Number: Integer, unitName: String, doClean(at: School) = 5 + 24 }
 
         const schoolEntity = DemoEntity.create({name: "School"});
 
@@ -273,7 +273,7 @@ export class DemoModelCreator {
         clean.expression = MakePlusExp("5", "24");
         clean.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         schoolEntity.functions.push(clean);
-        // School { foundedIn: Integer, name: String, requestClean(cleaningCompany: Company) = 5 + 24 }
+        // School { foundedIn: Integer, unitName: String, requestClean(cleaningCompany: Company) = 5 + 24 }
 
         param.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
 

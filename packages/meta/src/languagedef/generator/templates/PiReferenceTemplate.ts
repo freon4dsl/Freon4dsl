@@ -5,7 +5,7 @@ export class PiReferenceTemplate {
     constructor() {
     }
 
-    // TODO why create with param "name: string | T" and createNamed with param "name: string" both? Clearer to have create(elem: T, ...)
+    // TODO why create with param "unitName: string | T" and createNamed with param "unitName: string" both? Clearer to have create(elem: T, ...)
     generatePiReference(language: PiLanguageUnit, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";

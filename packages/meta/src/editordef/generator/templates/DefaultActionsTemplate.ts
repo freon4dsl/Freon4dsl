@@ -142,7 +142,7 @@ export class DefaultActionsTemplate {
         let result = "";
         language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
             const childConcept = part.type.referred;
-            // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.name
+            // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.unitName
             result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],

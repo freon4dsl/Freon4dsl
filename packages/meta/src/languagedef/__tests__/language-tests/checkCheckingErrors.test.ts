@@ -26,11 +26,11 @@ describe("Checking language parser on checking errors", () => {
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("There may be only one root class in the language definition [line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept with name 'ZZZ' already exists [line: 7, column: 1]."));
-            expect(checker.errors.includes("Property with name 'simple' already exists in ZZZ [line: 9, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Concept with unitName 'ZZZ' already exists [line: 7, column: 1]."));
+            expect(checker.errors.includes("Property with unitName 'simple' already exists in ZZZ [line: 9, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Reference to number cannot be resolved [line: 10, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("Concept with name 'YYY' already exists [line: 12, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface with name 'AAA' already exists [line: 16, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept with unitName 'YYY' already exists [line: 12, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface with unitName 'AAA' already exists [line: 16, column: 1].")).toBeTruthy();
         }
     });
 
@@ -63,9 +63,9 @@ describe("Checking language parser on checking errors", () => {
             expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circulair inheritance tree [line: 13, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circulair inheritance tree [line: 16, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circulair inheritance tree [line: 18, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 24, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 30, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Property with name 'prop1' already exists in yyy [line: 30, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property with unitName 'prop1' already exists in xxx [line: 24, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property with unitName 'prop1' already exists in xxx [line: 30, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Property with unitName 'prop1' already exists in yyy [line: 30, column: 5].")).toBeTruthy();
         }
     });
 
@@ -108,14 +108,14 @@ describe("Checking language parser on checking errors", () => {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no name property [line: 4, column: 24].")).toBeTruthy();
-            expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because its name property is not of type 'string' [line: 5, column: 25].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no unitName property [line: 4, column: 24].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because its unitName property is not of type 'string' [line: 5, column: 25].")).toBeTruthy();
             expect(checker.errors.includes("Property 's' does not exist on concept RRRR [line: 13, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("Type of 'text' does not equal type of property 'simple' [line: 14, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("Property 's' does not exist on concept AA [line: 20, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("Type of 'text' does not equal type of property 'simple' [line: 21, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("Type of '10' does not equal type of property 'prop2' [line: 24, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("Instance with name 'instance5' already exists [line: 25, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("Instance with unitName 'instance5' already exists [line: 25, column: 5].")).toBeTruthy();
         }
     });
 

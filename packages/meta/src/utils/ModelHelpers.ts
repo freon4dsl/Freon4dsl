@@ -10,7 +10,7 @@ import { int } from "parjs";
  * This is needed in cases where an if-statement is generated where the
  * condition is the type of the object, for instance in the unparser.
  * An entry for a subclass must precede an entry for its base class,
- * otherwise the unparse${concept.name} for the base class will be called.
+ * otherwise the unparse${concept.unitName} for the base class will be called.
  *
  * @param piclasses: the list of classes to be sorted
  */

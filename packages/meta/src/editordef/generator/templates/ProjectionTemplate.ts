@@ -238,10 +238,10 @@ export class ProjectionTemplate {
     // TODO change this to be used with PiLimitedConcept
     // enumPropertyProjection(p: PiLangEnumProperty) {
     //     return `
-    //         this.helpers.enumSelectFor${p.type.name}(element,
-    //             "${p.name}-type",
-    //             () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
-    //             (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referredElement())}.fromString(o.id)
+    //         this.helpers.enumSelectFor${p.type.unitName}(element,
+    //             "${p.unitName}-type",
+    //             () => { return { id: element.${p.unitName}.unitName, label: element.${p.unitName}.unitName} },
+    //             (o: SelectOption) => element.${p.unitName} = ${Names.enumeration(p.type.referredElement())}.fromString(o.id)
     //         )
     //     `;
     // }
@@ -250,7 +250,7 @@ export class ProjectionTemplate {
      *
      * @param direction         Horizontal or Vertical.
      * @param propertyConcept   The property for whioch the projection is generated.
-     * @param element           The name of the element parameter of the getBox projection method.
+     * @param element           The unitName of the element parameter of the getBox projection method.
      */
     conceptPartListProjection(direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
         return `

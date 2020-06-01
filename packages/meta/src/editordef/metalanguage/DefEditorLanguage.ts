@@ -15,7 +15,7 @@ export class DefEditorLanguage {
 
     findConceptEditor(cls: PiConcept): DefEditorConcept {
         const result = this.conceptEditors.find(con => con.concept.referred === cls);
-        // console.log("Finding editor for "+ cls.name + " is [" + result +  "]");
+        // console.log("Finding editor for "+ cls.unitName + " is [" + result +  "]");
         return result;
     }
 }

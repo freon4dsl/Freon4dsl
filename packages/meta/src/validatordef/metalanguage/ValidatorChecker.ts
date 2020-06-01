@@ -75,7 +75,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
         // check whether tr.property (if set) is a property of enclosingConcept
-        // if not set, set tr.property to the 'self.name' property of the enclosingConcept
+        // if not set, set tr.property to the 'self.unitName' property of the enclosingConcept
         if (!!tr.property) {
             this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
         } else {
@@ -91,7 +91,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 whenOk: () => {
                     tr.property = PiLangSelfExp.create(enclosingConcept);
                     tr.property.appliedfeature = PiLangAppliedFeatureExp.create(tr.property,"name", myProp);
-                    // tr.property.appliedfeature.sourceName = "name";
+                    // tr.property.appliedfeature.sourceName = "unitName";
                     // tr.property.appliedfeature.referredElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                     tr.property.location = tr.location;
                   }
@@ -196,12 +196,12 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                                                 this.myExpressionChecker.checkLangExp(tr.listproperty, myType);
                                                 // let myListProperty = tr.listproperty.findRefOfLastAppliedFeature();
                                                 // if (!!myListProperty) {
-                                                //     console.log(`my list property: ${myListProperty.name}, type: ${myListProperty.type}, primType: ${(myListProperty instanceof PiPrimitiveProperty)? (myListProperty as PiPrimitiveProperty).primType : ""}`);
+                                                //     console.log(`my list property: ${myListProperty.unitName}, type: ${myListProperty.type}, primType: ${(myListProperty instanceof PiPrimitiveProperty)? (myListProperty as PiPrimitiveProperty).primType : ""}`);
                                                 //     if (myListProperty instanceof PiPrimitiveProperty) {
                                                 //         let t = myListProperty.type;
-                                                //         console.log("class of type: " + t.constructor.name +", referred: " + t.referred?.name);
+                                                //         console.log("class of type: " + t.constructor.unitName +", referred: " + t.referred?.unitName);
                                                 //     } else {
-                                                //         this.simpleCheck(!!myListProperty.type?.referred, `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()} (${tr.listproperty.appliedfeature.referredElement.referred.name})` +
+                                                //         this.simpleCheck(!!myListProperty.type?.referred, `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()} (${tr.listproperty.appliedfeature.referredElement.referred.unitName})` +
                                                 //             `[line: ${tr.listproperty.location?.start.line}, column: ${tr.listproperty.location?.start.column}].`);
                                                 //     }
                                                 // }
