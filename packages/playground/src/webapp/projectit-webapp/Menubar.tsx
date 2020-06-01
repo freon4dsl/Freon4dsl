@@ -226,9 +226,9 @@ export default class Menubar extends React.Component {
 
     delete() {
         App.setDialogTitle("Delete Model");
-        if (EditorCommunication.currentModelName.length > 0) {
+        if (EditorCommunication.currentDocumentName.length > 0) {
             App.setDialogSubText("Are you sure you want to delete the current model?");
-            App.setDialogContent(<Text content={EditorCommunication.currentModelName}/>);
+            App.setDialogContent(<Text content={EditorCommunication.currentDocumentName}/>);
             App.useDefaultButton();
             App.showDialogWithCallback(() => {
                 EditorCommunication.deleteCurrentModel();

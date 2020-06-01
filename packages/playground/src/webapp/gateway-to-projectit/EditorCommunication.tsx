@@ -10,11 +10,10 @@ import { IModelUnitData } from "./IServerCommunication";
 
 // TODO make this a singleton, no static methods
 // for now, but TODO change this
-const modelName: string = "currentModel";
-
 
 export class EditorCommunication {
-    static currentModelName = '';
+    static currentDocumentName = '';
+    static currentModelName = 'currentModel';
     static editorArea: EditorArea;
 
     // used from the editor area
@@ -29,7 +28,7 @@ export class EditorCommunication {
             EditorCommunication.savePrevious();
         } else {
             editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
-            EditorCommunication.currentModelName = "";
+            EditorCommunication.currentDocumentName = "";
         }
     }
 
@@ -39,61 +38,71 @@ export class EditorCommunication {
     };
 
     private static savePrevious(newModelName?: string) {
+        console.log(`savePrevious called`);
         // TODO this works for new but not for open
         if (!!editorEnvironment.editor.rootElement) {
             // set up the dialog and show it
-            App.setDialogTitle("Changing to model '" + (!!newModelName? newModelName : "new") + "'");
-            App.setDialogSubText("Should the previous model be saved? If so, please, enter its unitName. ");
+            App.setDialogTitle("Changing to document '" + (!!newModelName? newModelName : "new") + "'");
+            App.setDialogSubText("Should the previous document be saved? If so, please, enter its name. ");
             App.useDefaultButton();
-            App.setDialogContent(<Input placeholder={EditorCommunication.currentModelName} inputRef={this.setInput}/>);
+            App.setDialogContent(<Input placeholder={EditorCommunication.currentDocumentName} inputRef={this.setInput}/>);
             App.showDialogWithCallback(() => {
                 // user has pushed OK and may have entered a new unitName
                 const saveName = EditorCommunication.input?.value;
-                if (saveName !== EditorCommunication.currentModelName) {
+                if (saveName !== EditorCommunication.currentDocumentName) {
+                    console.log(`savePrevious: saveName != current name `);
                     ServerCommunication.getInstance().putModelUnit({
                             language: editorEnvironment.languageName,
                             unitName: saveName,
-                            model: modelName},
+                            model: EditorCommunication.currentModelName},
                         editorEnvironment.editor.rootElement);
-                    EditorCommunication.editorArea.navigator._allModels.push({
+                    EditorCommunication.editorArea.navigator._allDocuments.push({
                         unitName: saveName,
-                        model: modelName,
+                        model: EditorCommunication.currentModelName,
                         language: editorEnvironment.languageName,
                     });
                 } else {
+                    console.log(`savePrevious: saveName == current name `);
                     ServerCommunication.getInstance().putModelUnit({
                             language: editorEnvironment.languageName,
-                            unitName: EditorCommunication.currentModelName,
-                            model: modelName},
+                            unitName: EditorCommunication.currentDocumentName,
+                            model: EditorCommunication.currentModelName},
                         editorEnvironment.editor.rootElement);
                 }
                 // now we can finally switch to the new model
                 if(!!newModelName) {
+                    console.log(`savePrevious: newModelName has value `);
                     ServerCommunication.getInstance().loadModelUnit({
                         language: editorEnvironment.languageName,
                         unitName: newModelName,
-                        model: modelName},
+                        model: EditorCommunication.currentModelName},
                         EditorCommunication.loadModelInEditor);
-                    EditorCommunication.currentModelName = newModelName;
+                    EditorCommunication.currentDocumentName = newModelName;
                 } else {
+                    console.log(`savePrevious: newModelName does not have a value `);
                     editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
-                    EditorCommunication.currentModelName = "";
+                    EditorCommunication.currentDocumentName = "";
                 }
             });
+        } else {
+            console.log(`savePrevious called ELSE branch`);
         }
     }
 
-    static open(name: string) {
-        console.log("Open model unit '" + name + "'");
+    static open(model: string, document: string) {
+        console.log("Open document '" + model + "/" + document + "'");
         if (!!editorEnvironment.editor.rootElement) {
-            EditorCommunication.savePrevious(name);
+            EditorCommunication.savePrevious(document);
+            console.log("savePrevious should have been called");
         } else {
+            console.log("loading new document");
             ServerCommunication.getInstance().loadModelUnit({
                 language: editorEnvironment.languageName,
-                unitName: name,
-                model: modelName},
+                unitName: document,
+                model: model},
                 EditorCommunication.loadModelInEditor);
-            EditorCommunication.currentModelName = name;
+            EditorCommunication.currentDocumentName = document;
+            EditorCommunication.currentModelName = model;
         }
     }
 
@@ -108,32 +117,32 @@ export class EditorCommunication {
     static save() {
         console.log("EditorCommunication save called");
         if (!!editorEnvironment.editor.rootElement) {
-            if (EditorCommunication.currentModelName.length === 0) {
+            if (EditorCommunication.currentDocumentName.length === 0) {
                 // no unitName, so get unitName from user
-                App.setDialogTitle("Saving model");
-                App.setDialogSubText("Please, enter a unitName. ");
+                App.setDialogTitle("Saving document");
+                App.setDialogSubText("Please, enter a name. ");
                 App.useDefaultButton();
-                App.setDialogContent(<Input value={"modelUnit" + randomIntFromInterval(10, 100)} inputRef={this.setInput}/>);
+                App.setDialogContent(<Input value={"document" + randomIntFromInterval(10, 100)} inputRef={this.setInput}/>);
                 App.showDialogWithCallback(() => {
                     // user has pushed OK and may have entered a new unitName
                     const saveName = EditorCommunication.input?.value;
                     // TODO check saveName
-                    EditorCommunication.currentModelName = saveName;
+                    EditorCommunication.currentDocumentName = saveName;
                     ServerCommunication.getInstance().putModelUnit({
                         language: editorEnvironment.languageName,
-                        unitName: EditorCommunication.currentModelName,
-                        model: modelName},
+                        unitName: EditorCommunication.currentDocumentName,
+                        model: EditorCommunication.currentModelName},
                         editorEnvironment.editor.rootElement);
-                    EditorCommunication.editorArea.navigator._allModels.push({
-                        unitName: EditorCommunication.currentModelName,
-                        model: modelName,
+                    EditorCommunication.editorArea.navigator._allDocuments.push({
+                        unitName: EditorCommunication.currentDocumentName,
+                        model: EditorCommunication.currentModelName,
                         language: editorEnvironment.languageName
                     })
                 });
             } else {
                 ServerCommunication.getInstance().putModelUnit({
-                    unitName: EditorCommunication.currentModelName,
-                    model: modelName,
+                    unitName: EditorCommunication.currentDocumentName,
+                    model: EditorCommunication.currentModelName,
                     language: editorEnvironment.languageName
                 }, editorEnvironment.editor.rootElement);
             }
@@ -143,26 +152,26 @@ export class EditorCommunication {
     }
 
     static saveAs(newName: string) {
-        console.log("EditorCommunication save as called, new unitName: " + newName);
+        console.log("EditorCommunication save as called, new name: " + newName);
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.getInstance().putModelUnit({
                 unitName: newName,
-                model: modelName,
+                model: EditorCommunication.currentModelName,
                 language: editorEnvironment.languageName
             }, editorEnvironment.editor.rootElement);
-            EditorCommunication.editorArea.navigator._allModels.push({unitName: newName, model: modelName, language: editorEnvironment.languageName})
+            EditorCommunication.editorArea.navigator._allDocuments.push({unitName: newName, model: EditorCommunication.currentModelName, language: editorEnvironment.languageName})
         } else {
             console.log("NO rootElement in editor");
         }
     }
 
     static deleteCurrentModel() {
-        console.log("EditorCommunication delete called, current model: " + EditorCommunication.currentModelName);
+        console.log("EditorCommunication delete called, current document: " + EditorCommunication.currentDocumentName);
         if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: EditorCommunication.currentModelName, model: modelName});
+            ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: EditorCommunication.currentDocumentName, model: EditorCommunication.currentModelName});
             editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
-            EditorCommunication.editorArea.navigator.removeName(EditorCommunication.currentModelName);
-            EditorCommunication.currentModelName = "";
+            EditorCommunication.editorArea.navigator.removeName(EditorCommunication.currentDocumentName);
+            EditorCommunication.currentDocumentName = "";
         } else {
             console.log("NO rootElement in editor");
         }
@@ -170,7 +179,7 @@ export class EditorCommunication {
 
     // used from the navigator:
     static getModelUnits(modelListCallback: (names: string[]) => void) {
-        ServerCommunication.getInstance().loadModelList(editorEnvironment.languageName, modelListCallback);
+        ServerCommunication.getInstance().loadModelUnitList(editorEnvironment.languageName, EditorCommunication.currentModelName, modelListCallback);
     }
 
     // END OF: for the communication with the navigator

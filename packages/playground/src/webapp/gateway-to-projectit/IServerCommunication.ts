@@ -41,7 +41,7 @@ export interface IServerCommunication {
      * @param languageName
      * @param modelListCallback
      */
-    loadModelList(languageName: string, modelListCallback: (names: string[]) => void);
+    // loadModelList(languageName: string, modelListCallback: (names: string[]) => void);
 
     /**
      * Deletes the complete model with name 'modelName', including all its modelunits
@@ -55,5 +55,5 @@ export interface IServerCommunication {
      * @param languageName
      * @param modelListCallback
      */
-    // loadModelUnitList(languageName: string, modelName: string, modelListCallback: (names: string[]) => void);
+    loadModelUnitList(languageName: string, modelName: string, modelListCallback: (names: string[]) => void);
 }

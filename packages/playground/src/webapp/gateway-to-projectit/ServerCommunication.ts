@@ -24,11 +24,11 @@ export class ServerCommunication implements IServerCommunication {
      * @param piModel
      */
     async putModelUnit(modelInfo: IModelUnitData, piModel: PiElement) {
-        console.log("ServerCommunication.putModel " + modelInfo.unitName);
+        console.log(`ServerCommunication.putModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "" && modelInfo.unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
             try {
-                const res = await axios.put(`${SERVER_URL}putModel?folder=${modelInfo.language}&name=${modelInfo.unitName}`, model);
+                const res = await axios.put(`${SERVER_URL}putModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`, model);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }
@@ -44,12 +44,23 @@ export class ServerCommunication implements IServerCommunication {
      * @param loadCallback
      */
     async loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void) {
-        console.log("ServerCommunication.loadModel " + modelInfo.unitName);
+        console.log(`ServerCommunication.loadModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
-                const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}&name=${modelInfo.unitName}`);
+                const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`);
                 const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
                 loadCallback(model);
+            } catch (e) {
+                LOGGER.error(this, e.toString());
+            }
+        }
+    }
+
+    async deleteModelUnit(modelInfo: IModelUnitData ) {
+        console.log(`ServerCommunication.deleteModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
+        if (!!modelInfo.unitName && modelInfo.unitName !== "") {
+            try {
+                const res = await axios.get(`${SERVER_URL}deleteModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }
@@ -60,10 +71,10 @@ export class ServerCommunication implements IServerCommunication {
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
-    async loadModelList(folderName: string, modelListCallback: (names: string[]) => void) {
-        console.log("ServerCommunication.loadModelList ");
+    async loadModelUnitList(languageName: string, modelName: string, modelListCallback: (names: string[]) => void) {
+        console.log("ServerCommunication.loadModelUnitList ");
         try {
-            const res = await axios.get(`${SERVER_URL}getModelList?folder=${folderName}`);
+            const res = await axios.get(`${SERVER_URL}getModelList?folder=${languageName}/${modelName}`);
             if (!!res) {
                 modelListCallback(res.data);
             }
@@ -74,14 +85,4 @@ export class ServerCommunication implements IServerCommunication {
         return [];
     }
 
-    async deleteModelUnit(modelInfo: IModelUnitData ) {
-        console.log("ServerCommunication.deleteModel " + modelInfo.unitName);
-        if (!!modelInfo.unitName && modelInfo.unitName !== "") {
-            try {
-                const res = await axios.get(`${SERVER_URL}deleteModel?folder=${modelInfo.language}&name=${modelInfo.unitName}`);
-            } catch (e) {
-                LOGGER.error(this, e.toString());
-            }
-        }
-    }
 }
