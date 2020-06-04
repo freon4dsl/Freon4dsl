@@ -33,7 +33,7 @@ expression AbsExpression base Expression {
 concept Method {
     name: string;
     reference declaredType : Type;
-    expression: Expression;
+    body: Expression;
     parameters: Variable[];
 }
 concept Attribute {
@@ -82,8 +82,6 @@ expression NumberLiteralExpression base LiteralExpression {
 expression BooleanLiteralExpression base LiteralExpression {
     value: string; // TODO should be changed to type boolean
 }
-
-
 
 abstract binary expression BinaryExpression base Expression {
     left: Expression;

@@ -21,7 +21,7 @@ Attribute {
 }
 
 Method {
-    typecheck conformsTo (self.expression, self.declaredType);
+    typecheck conformsTo (self.body, self.declaredType);
     isunique name in self.parameters;
     validIdentifier ;
 }

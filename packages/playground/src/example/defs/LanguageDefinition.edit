@@ -1,14 +1,52 @@
 editor User for language Example
-
 NumberLiteralExpression {
     @projection normal
         [${self.value}]
 }
 
-
 Attribute {
-    @projection attribuut [ ${self.name} : ${self.declaredType} ]
+    @projection attribuut [
+        ${self.name} : ${self.declaredType}
+    ]
 }
+
+Entity {
+    @projection [
+        Entity ${self.name} base ${self.baseEntity} {
+            ${self.attributes @vertical @separator}
+        }
+    ]
+    @trigger "entity"
+}
+
+Model {
+    @projection Model
+        [
+        model ${self.name} {
+            ${self.entities
+                @vertical
+                @terminator [\n\n]
+            }
+        model wide Methods:
+            ${self.methods @vertical @separator [\n] }
+        }
+        ]
+}
+
+Method {
+    @projection [
+        method ${self.name} ( ${self.parameters @separator[,] } ): ${self.declaredType} {
+            ${self.body}
+        }
+    ]
+}
+
+Variable {
+    @projection attribuut [
+        ${self.name} : ${self.declaredType}
+    ]
+}
+
 
 StringLiteralExpression {
     @projection StringLiteralExpression
@@ -17,6 +55,20 @@ StringLiteralExpression {
         ]
     @trigger "'"
 }
+
+PlusExpression {
+    @symbol "+"
+}
+
+MethodCallExpression {
+    @projection MethodCallExpression
+        [
+        CALL ${self.methodDefinition} (  )
+        ]
+    @trigger "method"
+}
+
+
 
 IfExpression {
     @projection IfExpression
@@ -31,26 +83,11 @@ IfExpression {
     @trigger "if"
     @symbol "if"
 }
-/*
-IfExpression {
-    @projection IfExpression
-        [
-        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
-        ]
-
-    @trigger "if"
-    @symbol "if"
-}
-*/
 
 AbsExpression {
     @projection default [
         abs( ${self.expr} )
     ]
-}
-
-PlusExpression {
-    @symbol "+"
 }
 
 MultiplyExpression {
@@ -69,44 +106,20 @@ OrExpression {
 
 
 
-Entity {
-    @trigger "entity"
-}
-
-/*
-MethodCallExpression {
-    @projection gewoon
-        [
-        ${self.name} (  )
-        ]
-    @trigger "Method2"
-}
-*/
-
 BooleanLiteralExpression {
     @projection [ ${self.value} ]
 }
 
-MethodCallExpression {
-    @projection MethodCallExpression
+/*
+*/
+/*
+IfExpression {
+    @projection IfExpression
         [
-        CALL ${self.methodDefinition} (  )
+        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
         ]
-    @trigger "method"
-}
 
-
-Model {
-    @projection Model
-        [
-        model ${self.name} {
-        entities:
-            ${self.entities
-                @vertical
-                @terminator [\n\n]
-            }
-        model wide Methods:
-            ${self.methods @horizontal @separator [\n] }
-        }
-        ]
+    @trigger "if"
+    @symbol "if"
 }
+*/
