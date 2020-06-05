@@ -249,7 +249,7 @@ export class ProjectionTemplate {
      * generate the part list
      *
      * @param direction         Horizontal or Vertical.
-     * @param propertyConcept   The property for whioch the projection is generated.
+     * @param propertyConcept   The property for which the projection is generated.
      * @param element           The unitName of the element parameter of the getBox projection method.
      */
     conceptPartListProjection(direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
