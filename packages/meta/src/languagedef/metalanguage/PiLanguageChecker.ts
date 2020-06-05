@@ -16,7 +16,7 @@ const reservedWords = ["root", "abstract", "limited", "interface", "binary", "ex
 // TODO add check: priority error from parser into checker => only for expression concepts
 
 export class PiLanguageChecker extends Checker<PiLanguageUnit> {
-    foundRoot = false;
+    // foundRoot = false;
 
     public check(language: PiLanguageUnit): void {
         LOGGER.info(this, "Checking language '" + language.name + "'");
@@ -122,16 +122,16 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
         this.simpleCheck(!!piConcept.name, `Concept should have a name [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
 
-        if ( piConcept.isRoot ) {
-            this.nestedCheck({
-                check:!this.foundRoot,
-                error: `There may be only one root class in the language definition [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`,
-                whenOk: () => {
-                    this.foundRoot = true;
-                    piConcept.language.rootConcept = piConcept;
-                }
-            });
-        }
+        // if ( piConcept.isRoot ) {
+        //     this.nestedCheck({
+        //         check:!this.foundRoot,
+        //         error: `There may be only one root class in the language definition [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`,
+        //         whenOk: () => {
+        //             this.foundRoot = true;
+        //             piConcept.language.rootConcept = piConcept;
+        //         }
+        //     });
+        // }
 
         if (!!piConcept.base) {
             this.checkConceptReference(piConcept.base);

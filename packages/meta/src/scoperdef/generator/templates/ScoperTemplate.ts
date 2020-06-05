@@ -32,15 +32,9 @@ export class ScoperTemplate {
         const typerClassName : string = Names.typer(language);
 
         let generateAlternativeScopes = false;
-        if (!!scopedef) {
+        if (!!scopedef) { // should always be the case, either the definition read from file or the default
             this.makeAlternativeScopeTexts(scopedef, language);
             if (this.hasAlternativeScopeText.length > 0) generateAlternativeScopes = true;
-        } else {
-            // generate default
-            scopedef = new PiScopeDef();
-            scopedef.languageName = language.name;
-            scopedef.namespaces = [];
-            scopedef.namespaces.push(PiElementReference.create<PiConcept>(language.rootConcept, "PiConcept"));
         }
 
         // Template starts here

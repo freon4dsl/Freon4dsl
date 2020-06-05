@@ -1,10 +1,11 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiConcept, PiLanguageUnit } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
+import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("ScoperGenerator"); //.mute();
 export class ScoperGenerator {
@@ -18,6 +19,18 @@ export class ScoperGenerator {
     }
 
     generate(scopedef: PiScopeDef): void {
+
+        // generate default, if the scoper definition is not present, i.e. was not read from file
+        if (scopedef == null) {
+            scopedef = new PiScopeDef();
+            scopedef.languageName = this.language.name;
+            scopedef.namespaces = [];
+            // for now, every root concept is a namespace in the default scoper
+            this.language.rootConcepts.forEach(con => {
+                scopedef.namespaces.push(PiElementReference.create<PiConcept>(con, "PiConcept"));
+            });
+        }
+
         let generationStatus = new GenerationStatus();
         this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
         this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;

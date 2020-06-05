@@ -6,19 +6,22 @@ export class InitalizationTemplate {
     }
 
     generate(language: PiLanguageUnit): string {
+        let imports: string = language.rootConcepts.map(con => {
+            `${Names.concept(con)}`
+        }).join(", ");
         return `
-            import { ${Names.concept(language.rootConcept)} } from "../language/gen";
+            import { ${imports} } from "../language/gen";
 
              /**
              * Class ${Names.initialization(language)} provides an entry point for the language engineer to
              * initialize user models.
-             * Default is to initialize a user model by creating an instance of the root concept of the language. 
+             * Default is to initialize a user model by creating an instance of the first root concept of the language. 
              */         
             export class ${Names.initialization(language)} {
             
                 initialize() {
-                    // Add you initial model here            
-                    return new ${Names.concept(language.rootConcept)}();
+                    // Add you initial model(s) here     
+                    return new ${language.rootConcepts[0]}();
                 }
             }
         `;

@@ -13,11 +13,15 @@ export class PiLanguageUnit extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
     predefInstances: PiInstance[] = [];
-    rootConcept: PiConcept; // set by the checker
+    // rootConcepts: PiConcept[]; // set by the checker
 
     constructor() {
         super();
         // this.addPredefinedElements();
+    }
+
+    get rootConcepts() : PiConcept[] {
+        return this.concepts.filter(c => c.isRoot);
     }
 
     conceptsAndInterfaces(): PiClassifier[] {
@@ -74,6 +78,7 @@ export class PiLanguageUnit extends PiLangElement {
 
 export abstract class PiClassifier extends PiLangElement {
     language: PiLanguageUnit;
+    isPublic: boolean;
     properties: PiProperty[] = [];
     primProperties: PiPrimitiveProperty[] = [];
 
@@ -332,6 +337,7 @@ export class PiLimitedConcept extends PiConcept {
 }
 
 export class PiProperty extends PiLangElement {
+    isPublic: boolean;
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property

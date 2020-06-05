@@ -19,13 +19,8 @@ export class NamespaceTemplate {
 
     generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
         let generateAdditionalNamespaces = false;
-        if (scopedef == null) {
-            // generating default
-            scopedef = new PiScopeDef();
-            scopedef.languageName = language.name;
-            scopedef.namespaces = [];
-            scopedef.namespaces.push(PiElementReference.create<PiConcept>(language.rootConcept, "PiConcept"));
-        } else {
+
+        if (!!scopedef) { // should always be the case, either the definition read from file or the default
             this.makeAdditionalNamespaceTexts(scopedef, language);
             if (this.hasAdditionalNamespacetext.length > 0) generateAdditionalNamespaces = true;
         }
