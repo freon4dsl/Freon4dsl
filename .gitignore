@@ -64,3 +64,4 @@ packages/playground/exampleLangDefs/Entity/EntityDefinition.valid
 
 packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output/*
 
+/packages/playground/src/hdml/
