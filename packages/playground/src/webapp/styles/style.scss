@@ -1,5 +1,10 @@
 .placeholdertext {
-    color: gray;
+    color: black;
+}
+.placeholdertext:empty:before {
+    color: blue;
+    opacity: 0.5;
+    content: attr(data-placeholdertext);
 }
 
 .indentedplaceholdertext {
@@ -10,10 +15,13 @@
 .numeric {
     color: green;
 }
+
+reference {
+    color: darkorange;
+}
 .stringLiteral {
     color: green;
 }
-// tag::StyleKeyword[]
 .keyword {
     font-weight: bold;
     color: blue;
@@ -26,7 +34,6 @@
     font-weight: bold;
     color: darkblue;
 }
-// end::StyleKeyword[]
 
 .mygrid {
     padding: 0px;
