@@ -27,7 +27,9 @@ export class LanguageTemplate {
                 ${language.interfaces.map(intface =>
                     `Language.getInstance().addInterface(describe${Names.interface(intface)}());`
                 ).join("\n")}
-                Language.getInstance().addReferenceCreator( (name: string, type: string) => { return PiElementReference.createNamed(name, type)});
+                Language.getInstance().addReferenceCreator( (name: string, type: string) => {
+                    return (!!name ? PiElementReference.createNamed(name, type) : null);
+                });
             }
             
             ${language.concepts.map(concept =>

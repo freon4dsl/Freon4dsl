@@ -63,11 +63,8 @@ export class ProjectionTemplate {
                 VerticalListBox,
                 VerticalPiElementListBox,
                 PiUtils,
-                EXPRESSION_PLACEHOLDER,
                 createDefaultBinaryBox,
                 createDefaultExpressionBox,
-                PiLogger,
-                STYLES,
                 isPiBinaryExpression,
                 ${Names.PiBinaryExpression}
             } from "${PROJECTITCORE}";
@@ -277,11 +274,15 @@ export class ProjectionTemplate {
                         }
                     },
                     (option: SelectOption) => {
-                        ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                            ${element},
-                            option.label,
-                            "${featureType}"
-                        ) as ${featureType}, "${featureType}");
+                        if(!!option) {
+                            ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
+                                ${element},
+                                option.label,
+                                "${featureType}"
+                            ) as ${featureType}, "${featureType}");
+                        } else {
+                            ${element}.${appliedFeature.name} = null;
+                        }
                     }
                 )
             `

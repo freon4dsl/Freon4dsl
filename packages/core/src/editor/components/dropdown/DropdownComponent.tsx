@@ -95,6 +95,9 @@ export class DropdownComponent extends React.Component<DropdownProps, {}> {
                 } else {
                     return false;
                 }
+            case Keys.DELETE:
+                this.props.handleSelectedOption(null);
+                return true;
             case Keys.ESCAPE:
                 this.props.handleSelectedOption("ESCAPE");
                 this.initOption();
