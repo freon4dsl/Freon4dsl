@@ -6,19 +6,19 @@ root concept OpenHabModel {
 //    ruleModels: RuleModel[];
 }
 
-unit concept ItemModel {
-	items: ModelItem[];
+public unit concept ItemModel {
+	public items: ModelItem[];
 }
 
-abstract concept ModelItem {
-    name: string;
-    type: BaseModelItemType;
-    reference groups?: ModelGroup[];
-    label?: string;
+public abstract concept ModelItem {
+    public name: string;
+    public type: BaseModelItemType;
+    public reference groups?: ModelGroup[];
+    public label?: string;
 //    state?: StateType;
 }
 
-concept ModelBaseItem base ModelItem {
+public concept ModelBaseItem base ModelItem {
 //    icon?: Icon;
 //    tags?: Tag[];
 //    bindings: Binding[];

@@ -9,3 +9,4 @@ export * from "./WorkerInterfaceTemplate";
 export * from "./LanguageTemplate";
 export * from "./InterfaceTemplate";
 export * from "./StdlibTemplate";
+export * from "./ModelunitTemplate";

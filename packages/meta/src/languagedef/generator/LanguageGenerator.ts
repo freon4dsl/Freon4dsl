@@ -15,6 +15,7 @@ import { PiLanguageUnit } from "../metalanguage/PiLanguage";
 import {
     AllConceptsTemplate,
     ConceptTemplate,
+    ModelunitTemplate,
     EnvironmentTemplate,
     IndexTemplate,
     LanguageTemplate,
@@ -51,6 +52,7 @@ export class LanguageGenerator {
         const languageTemplate = new LanguageTemplate();
         const metaTypeTemplate = new MetaTypeTemplate();
         const interfaceTemplate = new InterfaceTemplate();
+        const modelunitTemplate = new ModelunitTemplate();
         const languageIndexTemplate = new IndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
         const piReferenceTemplate = new PiReferenceTemplate();
@@ -65,8 +67,9 @@ export class LanguageGenerator {
         Helpers.createDirIfNotExisting(this.languageGenFolder);
         Helpers.createDirIfNotExisting(this.utilsGenFolder);
         Helpers.createDirIfNotExisting(this.environmentGenFolder);
-        Helpers.createDirIfNotExisting(this.configurationFolder);
         Helpers.createDirIfNotExisting(this.stdlibGenFolder);
+        Helpers.createDirIfNotExisting(this.configurationFolder);
+        // do not delete files in configurationFolder, because these may contain user edits
         Helpers.deleteFilesInDir(this.languageGenFolder, generationStatus);
         Helpers.deleteFilesInDir(this.utilsGenFolder, generationStatus);
         Helpers.deleteFilesInDir(this.environmentGenFolder, generationStatus);
@@ -86,6 +89,15 @@ export class LanguageGenerator {
             LOGGER.log(`Generating interface: ${this.languageGenFolder}/${Names.interface(piInterface)}.ts`);
             var generated = Helpers.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name, generationStatus);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(piInterface)}.ts`, generated);
+        });
+
+        // generate the interfaces needed for model units
+        language.concepts.forEach(concept => {
+            if (concept.isUnit) {
+                LOGGER.log(`Generating model units: ${this.languageGenFolder}/${Names.modelunit(concept)}.ts`);
+                var generated = Helpers.pretty(modelunitTemplate.generateModelUnit(concept, relativePath), "model unit " + concept.name, generationStatus);
+                fs.writeFileSync(`${this.languageGenFolder}/${Names.modelunit(concept)}.ts`, generated);
+            }
         });
 
         // the following classes do not need the relative path for their imports
