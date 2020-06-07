@@ -39,6 +39,7 @@ export function createConcept(data: Partial<PiConcept>): PiConcept {
     // console.log("createConcept " + data.name);
     const result = new PiConcept();
     result.isRoot = !!data.isRoot;
+    result.isUnit = !!data.isUnit;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;

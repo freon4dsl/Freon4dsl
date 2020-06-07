@@ -13,17 +13,16 @@ export class PiLanguageUnit extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
     predefInstances: PiInstance[] = [];
-    // rootConcepts: PiConcept[]; // set by the checker
+    rootConcept: PiConcept; // set by the checker
 
     constructor() {
         super();
         // this.addPredefinedElements();
     }
 
-    get rootConcepts() : PiConcept[] {
-        return this.concepts.filter(c => c.isRoot);
+    get units(): PiConcept[] {
+        return this.concepts.filter(con => con.isUnit === true);
     }
-
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
         return result.concat(this.interfaces);
@@ -188,6 +187,7 @@ export class PiInterface extends PiClassifier {
 export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
     isRoot:boolean = false;
+    isUnit:boolean = false;
     base: PiElementReference<PiConcept>;
     interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
     // TODO the following should be moved to the editor generator

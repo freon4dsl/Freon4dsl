@@ -7,7 +7,7 @@ export class InitalizationTemplate {
 
     generate(language: PiLanguageUnit, relativePath: string): string {
         return `
-            import { ${language.rootConcepts.map(con => `${Names.concept(con)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${Names.concept(language.rootConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
              * Class ${Names.initialization(language)} provides an entry point for the language engineer to
@@ -18,7 +18,7 @@ export class InitalizationTemplate {
             
                 initialize() {
                     // Add you initial model(s) here     
-                    return new ${Names.concept(language.rootConcepts[0])}();
+                    return new ${Names.concept(language.rootConcept)}();
                 }
             }
         `;

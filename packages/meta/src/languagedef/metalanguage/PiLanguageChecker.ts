@@ -16,7 +16,7 @@ const reservedWords = ["root", "abstract", "limited", "interface", "binary", "ex
 // TODO add check: priority error from parser into checker => only for expression concepts
 
 export class PiLanguageChecker extends Checker<PiLanguageUnit> {
-    // foundRoot = false;
+    foundRoot = false;
 
     public check(language: PiLanguageUnit): void {
         LOGGER.info(this, "Checking language '" + language.name + "'");
@@ -122,16 +122,16 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
         this.simpleCheck(!!piConcept.name, `Concept should have a name [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
 
-        // if ( piConcept.isRoot ) {
-        //     this.nestedCheck({
-        //         check:!this.foundRoot,
-        //         error: `There may be only one root class in the language definition [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`,
-        //         whenOk: () => {
-        //             this.foundRoot = true;
-        //             piConcept.language.rootConcept = piConcept;
-        //         }
-        //     });
-        // }
+        if ( piConcept.isRoot ) {
+            this.nestedCheck({
+                check:!this.foundRoot,
+                error: `There may be only one root class in the language definition [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`,
+                whenOk: () => {
+                    this.foundRoot = true;
+                    piConcept.language.rootConcept = piConcept;
+                }
+            });
+        }
 
         if (!!piConcept.base) {
             this.checkConceptReference(piConcept.base);
@@ -296,28 +296,46 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 whenOk: () => {
                     this.checkConceptReference(piProperty.type);
                     let realType = piProperty.type.referred;
-                    if (!!realType) { // error message taken care of by checkClassifierReference
-                        if(realType instanceof PiLimitedConcept) {
-                            // this situation is OK, but property with limited concept as type should always be a reference property
-                            // the property should refer to one of the predefined instances of the limited concept
-                            piProperty.isPart = false;
-                        }
-                        if (!piProperty.isPart) {
-                            // it is a reference, so check whether the type has a unitName by which it can be referred
-                            let nameProperty = realType.allPrimProperties().find(p => p.name === "name");
-                            this.nestedCheck({
-                                    check: !!nameProperty,
-                                    error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ` +
-                                                `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`,
-                                    whenOk: () => {
-                                        this.simpleCheck(nameProperty.primType === "string",
-                                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'string' ` +
-                                                `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
-                                    }});
-                        }
+                    let owningClassifier = piProperty.owningConcept;
+                    this.checkPropertyType(piProperty, realType);
+                    // check use of unit types in non-root concepts
+                    if (realType.isUnit) {
+                        this.simpleCheck(
+                            owningClassifier instanceof PiConcept && owningClassifier.isRoot,
+                            `Unit concept '${realType.name}' may not be used in a non-root concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                    }
+                    // check use of non-unit types in root concept
+                    if (owningClassifier instanceof PiConcept && owningClassifier.isRoot) {
+                        this.simpleCheck(
+                            realType.isUnit,
+                            `Type of property '${piProperty.name}' should be a unit concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
                     }
                 }
             });
+    }
+
+    private checkPropertyType(piProperty: PiProperty, realType: PiConcept) {
+        if (!!realType) { // error message taken care of by checkClassifierReference
+            if (realType instanceof PiLimitedConcept) {
+                // this situation is OK, but property with limited concept as type should always be a reference property
+                // the property should refer to one of the predefined instances of the limited concept
+                piProperty.isPart = false;
+            }
+            if (!piProperty.isPart) {
+                // it is a reference, so check whether the type has a unitName by which it can be referred
+                let nameProperty = realType.allPrimProperties().find(p => p.name === "name");
+                this.nestedCheck({
+                    check: !!nameProperty,
+                    error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ` +
+                        `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`,
+                    whenOk: () => {
+                        this.simpleCheck(nameProperty.primType === "string",
+                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'string' ` +
+                            `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                    }
+                });
+            }
+        }
     }
 
     checkPrimitiveProperty(element: PiPrimitiveProperty): void {

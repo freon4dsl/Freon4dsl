@@ -16,8 +16,8 @@ import { PiEnvironment } from "@projectit/core";
 // import { HeatEnvironment } from "../../heating/environment/gen/HeatEnvironment";
 // export const editorEnvironment: PiEnvironment = HeatEnvironment.getInstance();
 
-import { TaxRulesEnvironment } from "../../taxrules/environment/gen/TaxRulesEnvironment";
-export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance();
+// import { TaxRulesEnvironment } from "../../taxrules/environment/gen/TaxRulesEnvironment";
+// export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance();
 
 // import { DemoEnvironment } from "../../tutorial-language/environment/gen/DemoEnvironment";
 // export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
@@ -27,6 +27,8 @@ export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance(
 
 // export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
 
+import { OpenhabEnvironment } from "../../openhab/environment/gen/OpenhabEnvironment";
+export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
 
 /**
  * The one and only reference to the server on which the models are stored

@@ -14,6 +14,7 @@ Language_Definition
 
 abstractKey     = ws "abstract" ws { return true; }
 rootKey         = ws "root" ws { return true; }
+unitKey         = ws "unit" ws { return true; }
 publicKey       = ws "public" ws { return true; }
 limitedKey      = ws "limited" ws {return true; }
 interfaceKey    = ws "interface" ws
@@ -28,11 +29,12 @@ implementsKey   = ws "implements" ws
 
 langdef = c:concept { return c;} / t:limited {return t;} / i:interface {return i;} / e:expression {return e;}
 
-concept = isPublic:publicKey? isRoot:rootKey? abs:abstractKey? conceptKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
+concept = isPublic:publicKey? isRoot:rootKey? isUnit:unitKey? abs:abstractKey? conceptKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
     {
         return create.createConcept({
             "isPublic": (!!isPublic),
             "isRoot": (!!isRoot),
+            "isUnit": (!!isUnit),
             "isAbstract": (!!abs),
             "name": name,
             "base": base,

@@ -4,12 +4,12 @@ root concept DemoModel {
     main: DemoEntity;
     functions: DemoFunction[];
     name: string;
-    public entities: DemoEntity[];
+    entities: DemoEntity[];
     types: Type[];
     type: Type;
 }
-public interface BaseType {
-    public name: string;
+interface BaseType {
+    name: string;
     baseInterface_attr: number;
 }
 interface X {
@@ -18,20 +18,20 @@ interface Type base BaseType, X {
     simpleprop: string;
     int_attrs: DemoAttribute[];
     int_functions: DemoFunction[];
-    public reference baseInterface: DemoEntity;
+    reference baseInterface: DemoEntity;
 }
 
-public abstract concept Nothing {
-    public x: string;
+abstract concept Nothing {
+    x: string;
 }
 
-public root concept DemoEntity base Nothing implements Type {
-    public attributes: DemoAttribute[];
+concept DemoEntity base Nothing implements Type {
+    attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
     reference baseEntity: DemoEntity;
 }
-public limited DemoAttributeType implements Type {
+limited DemoAttributeType implements Type {
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}
@@ -39,14 +39,6 @@ public limited DemoAttributeType implements Type {
     Boolean = { "name": "Boolean", "extra": "5479"}
     ANY = { "name": "ANY", "extra": "456"}
 }
-
-limited TestLimited {
-    name: string;
-    something: boolean;
-    Object1 = { name: "ONWAAR", something: "false" }
-    Object2 = { name: "WAAR",  something: "true" }
-}
-
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }

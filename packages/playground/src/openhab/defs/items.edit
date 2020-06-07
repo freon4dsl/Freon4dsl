@@ -1,0 +1,35 @@
+editor YY for language openhab
+
+// Group groupname ["labeltext"] [<iconname>] [(group1, group2, ...)]
+// Group[:itemtype[:function]] groupname ["labeltext"] [<iconname>] [(group1, group2, ...)]
+
+// itemtype itemname "labeltext [stateformat]" <iconname> (group1, group2, ...) ["tag1", "tag2", ...] {bindingconfig}
+// <item-type> MyItem { channel="<bindingID>:<thing-typeID>:MyThing:myChannel"[profile="<profileID>", <profile-parameterID>="MyValue", ...]}
+
+ItemModel {
+    @projection
+    [
+    ${self.items @vertical @separator [\n ]}
+    ]
+}
+
+ModelBaseItem {
+    @projection
+    [
+    ${self.type} ${self.name} ${self.label} ( ${self.groups @horizontal @separator [, ]} )
+    ]
+}
+
+ModelGroup {
+    @projection
+    [
+    Group : ${self.type} : ${self.groupFunction} ${self.name} ${self.label} ( ${self.groups @horizontal @separator [, ]} )
+    ]
+}
+
+ModelGroupFunction {
+    @projection
+    [
+    ${self.groupFunctionName} ( ${self.args @horizontal @separator [, ]} )
+    ]
+}

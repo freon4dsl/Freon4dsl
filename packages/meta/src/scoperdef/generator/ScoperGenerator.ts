@@ -25,10 +25,7 @@ export class ScoperGenerator {
             scopedef = new PiScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            // for now, every root concept is a namespace in the default scoper
-            this.language.rootConcepts.forEach(con => {
-                scopedef.namespaces.push(PiElementReference.create<PiConcept>(con, "PiConcept"));
-            });
+            scopedef.namespaces.push(PiElementReference.create<PiConcept>(this.language.rootConcept, "PiConcept"));
         }
 
         let generationStatus = new GenerationStatus();

@@ -31,7 +31,8 @@
     "expressions":  "ts-node ../meta/src/commandline/projectit all -d src/mps-expressions/defs -o src/mps-expressions",
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "tutorial":     "ts-node ../meta/src/commandline/projectit all -d src/tutorial-language/defs -o src/tutorial-language",
-    "meta-lang":    "ts-node ../meta/src/commandline/projectit -v all -d src/pi-language-definition-language/defs -o src/pi-language-definition-language"
+    "meta-lang":    "ts-node ../meta/src/commandline/projectit -v all -d src/pi-language-definition-language/defs -o src/pi-language-definition-language",
+    "openhab":      "ts-node ../meta/src/commandline/projectit -v all -d src/openhab/defs -o src/openhab"
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.9",
