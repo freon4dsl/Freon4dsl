@@ -209,11 +209,11 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         let nameProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
         this.nestedCheck({
             check: !!nameProperty,
-            error: `Limited concept '${piLimitedConcept.name}' can only be used as a reference, therefore it must have a 'name' property ` +
+            error: `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore it must have a 'name' property ` +
                 `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`,
             whenOk: () => {
                 this.simpleCheck(nameProperty.primType === "string",
-                    `Limited concept '${piLimitedConcept.name}' can only be used as a reference, therefore its 'name' property must be of type 'string' ` +
+                    `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property must be of type 'string' ` +
                     `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`);
             }});
 

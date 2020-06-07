@@ -160,8 +160,14 @@ implementedInterfaces = implementsKey intfRefs:( head:classifierReference
 priority = priorityKey ws equals_separator ws value:numberliteral ws semicolon_separator
     { return Number.parseInt(value); }
 
-instance = name:var equals_separator curly_begin props:propDefList curly_end
+instance = i1:instance1 { return i1; }
+         / i2:instance2 { return i2; }
+
+instance1 = name:var equals_separator curly_begin props:propDefList curly_end
     { return create.createInstance( {"name": name, "props": props, "location": location() } ); }
+
+instance2 = name:var semicolon_separator
+    { return create.createInstance( {"name": name, "location": location() } ); }
 
 propDefList = head:propDef tail:(comma_separator v:propDef { return v; })*
     { return [head].concat(tail); }
