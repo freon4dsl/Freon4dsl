@@ -54,4 +54,4 @@ limited ZZ {
     ZZinstance1 = { name: "ZZinstance1", ZZprop1: "sometext" }
 }
 
-limited XX { XXinstance1; XXinstance2; XXinstance3; }
+// limited XX { XXinstance1; XXinstance2; XXinstance3; }
