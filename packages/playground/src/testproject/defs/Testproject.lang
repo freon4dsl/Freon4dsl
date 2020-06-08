@@ -1,0 +1,57 @@
+language Testproject
+
+concept AA  {
+    name: string;
+    // the possibilities for primitive properties
+    AAprop1: string;
+    AAprop2: string; // [];
+    AAprop3: number;
+    AAprop4: number; //[];
+    AAprop5: boolean;
+    AAprop6: boolean; //[];
+    // properties with concept as type
+    AAprop7: BB;
+    AAprop8: BB[];
+    reference AAprop9: CC;
+    reference AAprop10: CC[];
+    // properties with interface as type
+    AAprop11: DD;
+    AAprop12: DD[];
+    reference AAprop13: FF;
+    reference AAprop14: FF[];
+    // properties with limited concept as type
+    AAprop15: ZZ;
+    AAprop16: ZZ[];
+    reference AAprop17: ZZ;
+    reference AAprop18: ZZ[];
+    AAprop19: AA;
+    AAprop20: AA[];
+    AAprop21: CC;
+}
+
+root concept BB {
+    supers: AA[];
+}
+
+concept CC implements FF {
+    name: string;
+}
+
+interface DD {}
+interface FF {
+    name: string;
+}
+
+limited ZZ {
+    name: string;
+    // the possibilities for primitive properties
+    ZZprop1: string;
+    ZZprop2: string; //[];
+    ZZprop3: number;
+    ZZprop4: number; //[];
+    ZZprop5: boolean;
+    ZZprop6: boolean; //[];
+    ZZinstance1 = { name: "ZZinstance1", ZZprop1: "sometext" }
+}
+
+limited XX { XXinstance1; XXinstance2; XXinstance3; }

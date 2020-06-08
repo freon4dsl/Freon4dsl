@@ -15,7 +15,6 @@ import { PiLanguageUnit } from "../metalanguage/PiLanguage";
 import {
     AllConceptsTemplate,
     ConceptTemplate,
-    ModelunitTemplate,
     EnvironmentTemplate,
     IndexTemplate,
     LanguageTemplate,
@@ -52,7 +51,6 @@ export class LanguageGenerator {
         const languageTemplate = new LanguageTemplate();
         const metaTypeTemplate = new MetaTypeTemplate();
         const interfaceTemplate = new InterfaceTemplate();
-        const modelunitTemplate = new ModelunitTemplate();
         const languageIndexTemplate = new IndexTemplate();
         const allConceptsTemplate = new AllConceptsTemplate();
         const piReferenceTemplate = new PiReferenceTemplate();
@@ -89,15 +87,6 @@ export class LanguageGenerator {
             LOGGER.log(`Generating interface: ${this.languageGenFolder}/${Names.interface(piInterface)}.ts`);
             var generated = Helpers.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name, generationStatus);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(piInterface)}.ts`, generated);
-        });
-
-        // generate the interfaces needed for model units
-        language.concepts.forEach(concept => {
-            if (concept.isUnit) {
-                LOGGER.log(`Generating model units: ${this.languageGenFolder}/${Names.modelunit(concept)}.ts`);
-                var generated = Helpers.pretty(modelunitTemplate.generateModelUnit(concept, relativePath), "model unit " + concept.name, generationStatus);
-                fs.writeFileSync(`${this.languageGenFolder}/${Names.modelunit(concept)}.ts`, generated);
-            }
         });
 
         // the following classes do not need the relative path for their imports

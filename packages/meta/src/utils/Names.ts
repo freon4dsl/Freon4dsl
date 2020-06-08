@@ -82,10 +82,6 @@ export class Names {
         return this.startWithUpperCase(concept?.name);
     }
 
-    public static modelunit(concept: PiConcept): string {
-        return "ModelUnit" + this.startWithUpperCase(concept?.name);
-    }
-
     public static classifier(concept: PiClassifier): string {
         return this.startWithUpperCase(concept?.name);
     }
