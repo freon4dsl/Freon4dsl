@@ -1,16 +1,19 @@
 import { PiElement } from "../language/PiModel";
 
+// TODO remove enumeration and see if other types need to be added
 export type PropertyType = "primitive" | "enumeration" | "part" | "reference";
 
 export type Property = {
     name: string;
     type: string;
     isList: boolean;
+    isPublic: boolean;
     propertyType: PropertyType;
 };
 
 export type Concept = {
     isAbstract: boolean;
+    isPublic: boolean;
     typeName: string;
     baseName: string;
     subConceptNames: string[];
@@ -19,21 +22,22 @@ export type Concept = {
 };
 
 export type Interface = {
+    isPublic: boolean;
     typeName: string;
     subConceptNames: string[];
     properties: Map<string, Property>;
 };
 
-export type Enumeration = {
-    typeName: string;
-    literal: (literal: string) => PiElement;
-};
+// export type Enumeration = {
+//     typeName: string;
+//     literal: (literal: string) => PiElement;
+// };
 
 export class Language {
     private static theInstance: Language = null;
     private concepts: Map<string, Concept> = new Map<string, Concept>();
     private interfaces: Map<string, Interface> = new Map<string, Interface>();
-    private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
+    // private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
 
     private constructor() {
     }
@@ -53,9 +57,9 @@ export class Language {
         return this.interfaces.get(typeName);
     }
 
-    enumeration(typeName): Enumeration {
-        return this.enumerations.get(typeName);
-    }
+    // enumeration(typeName): Enumeration {
+    //     return this.enumerations.get(typeName);
+    // }
 
     conceptProperty(typeName, propertyName): Property {
         return this.concepts.get(typeName).properties.get(propertyName);
@@ -91,9 +95,9 @@ export class Language {
         this.interfaces.set(intface.typeName, intface);
     }
 
-    addEnumeration(enumeration: Enumeration) {
-        this.enumerations.set(enumeration.typeName, enumeration);
-    }
+    // addEnumeration(enumeration: Enumeration) {
+    //     this.enumerations.set(enumeration.typeName, enumeration);
+    // }
 
     subConcepts(typeName: string): string[] {
         const concept = this.concept(typeName);

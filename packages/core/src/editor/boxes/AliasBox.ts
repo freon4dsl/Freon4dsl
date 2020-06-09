@@ -6,7 +6,7 @@ export class AliasBox extends AbstractChoiceBox {
     readonly kind = "AliasBox";
     placeholder: string;
     /**
-     * Filled with the unitName of the property, in case the AliasBox is used to create new elments
+     * Filled with the name of the property, in case the AliasBox is used to create new elments
      */
     propertyName?: string;
 

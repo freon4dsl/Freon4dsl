@@ -142,9 +142,9 @@ export class CoreTestProjection implements PiProjection {
         cells.push({
             row: 1,
             column: 1,
-            box: new TextBox(entity, "entity-unitName", () => entity.name, (s: string) => (entity.name = s), {
+            box: new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
                 deleteWhenEmpty: true,
-                placeHolder: "<enter entity unitName>",
+                placeHolder: "<enter entity name>",
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isName(currentText, key, index);
                 }
@@ -165,7 +165,7 @@ export class CoreTestProjection implements PiProjection {
                 row: 1,
                 column: 1,
                 columnSpan: 2,
-                box: new TextBox(entity, "entity-unitName", () => entity.name, (v: string) => (entity.name = v))
+                box: new TextBox(entity, "entity-name", () => entity.name, (v: string) => (entity.name = v))
             }
         ];
         let row = 2;

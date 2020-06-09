@@ -122,7 +122,7 @@ export class TutorialProjection implements PiProjection {
     private createModelBox(model: CoreTestModel): Box {
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "CoreTestModel"),
-            new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c))
+            new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c))
         ]);
     }
 
@@ -135,15 +135,15 @@ export class TutorialProjection implements PiProjection {
             new LabelBox(model, "model-label", "Model", {
                 style: projectitStyles.keyword
             }),
-            new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c), {
-                placeHolder: "<unitName>"
+            new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
+                placeHolder: "<name>"
             })
         ]);
     }
 
     // end::ModelBox2[]
 
-    // ModelBox with placeholder for the unitName and a list of entities
+    // ModelBox with placeholder for the name and a list of entities
     // tag::ModelBox3[]
     private createModelBox3(model: CoreTestModel): Box {
         return new VerticalListBox(model, "model", [
@@ -152,8 +152,8 @@ export class TutorialProjection implements PiProjection {
                 new LabelBox(model, "model-keyword", "Model", {
                     style: projectitStyles.keyword
                 }),
-                new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c), {
-                    placeHolder: "<unitName>"
+                new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
+                    placeHolder: "<name>"
                 })
             ]),
             // tag::ModelBox3[]
@@ -172,7 +172,7 @@ export class TutorialProjection implements PiProjection {
 
     // end::ModelBox3[]
 
-    // ModelBox with placeholder for the unitName and a list of entities
+    // ModelBox with placeholder for the name and a list of entities
     // tag::ModelBox4[]
     private createModelBox4(model: CoreTestModel): Box {
         LOGGER.log("createModelBox4 [" + model + "]");
@@ -181,8 +181,8 @@ export class TutorialProjection implements PiProjection {
                 new LabelBox(model, "model-keyword", "CoreTestModel", {
                     style: projectitStyles.keyword
                 }),
-                new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c), {
-                    placeHolder: "<unitName>"
+                new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
+                    placeHolder: "<name>"
                 })
             ]),
             new LabelBox(model, "entity-list", "Entities", {
@@ -259,7 +259,7 @@ export class TutorialProjection implements PiProjection {
             att,
             "attribute",
             [
-                new TextBox(att, "attribute-unitName",
+                new TextBox(att, "attribute-name",
                     () => {
                         return att.name;
                     },
@@ -287,7 +287,7 @@ export class TutorialProjection implements PiProjection {
             parameter,
             "parameter",
             [
-                new TextBox(parameter, "parameter-unitName",
+                new TextBox(parameter, "parameter-name",
                     () => {
                         return parameter.name;
                     },
@@ -316,7 +316,7 @@ export class TutorialProjection implements PiProjection {
                 new LabelBox(entity, "entity-label", "entity", {
                     style: projectitStyles.keyword
                 }),
-                new TextBox(entity, "entity-unitName", () => entity.name, (c: string) => (entity.name = c))
+                new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
             ]),
             new VerticalListBox(
                 entity,
@@ -338,8 +338,8 @@ export class TutorialProjection implements PiProjection {
                     new LabelBox(entity, "entity-keyword", "Entity", {
                         style: projectitStyles.keyword
                     }),
-                    new TextBox(entity, "entity-unitName", () => entity.name, (c: string) => (entity.name = c), {
-                        placeHolder: "<unitName>"
+                    new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c), {
+                        placeHolder: "<name>"
                     })
                 ]),
                 new VerticalListBox(entity, "attribute-list",
@@ -364,7 +364,7 @@ export class TutorialProjection implements PiProjection {
                     new LabelBox(entity, "entity-label", "entity", {
                         style: projectitStyles.keyword
                     }),
-                    new TextBox(entity, "entity-unitName", () => entity.name, (c: string) => (entity.name = c))
+                    new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
                 ]),
                 // tag::CreateAttributeAction[]
                 new VerticalListBox(entity, "attributes",
@@ -539,7 +539,7 @@ export class TutorialProjection implements PiProjection {
                     new LabelBox(fun, "fun-label", "function", {
                         style: projectitStyles.keyword
                     }),
-                    new TextBox(fun, "fun-unitName", () => fun.name, (c: string) => (fun.name = c))
+                    new TextBox(fun, "fun-name", () => fun.name, (c: string) => (fun.name = c))
                 ]),
                 // tag::CreateAttributeAction[]
                 new VerticalListBox(fun, "parameters",
@@ -567,7 +567,7 @@ export class TutorialProjection implements PiProjection {
             // {
             //     row: 1,
             //     column: 2,
-            //     box: new TextBox(fun, "fun-unitName", () => fun.unitName, (v: string) => (fun.unitName = v))
+            //     box: new TextBox(fun, "fun-name", () => fun.name, (v: string) => (fun.name = v))
             // },
             // {
             //     row: 1,

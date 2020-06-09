@@ -1,6 +1,6 @@
 import { ModelInfoMap } from "./ModelInfoMap";
 
-// type Constructors =  { [unitName: string]: Function };
+// type Constructors =  { [name: string]: Function };
 
 /**
  *

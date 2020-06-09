@@ -22,7 +22,7 @@ import { LabelComponent } from "./boxes/LabelComponent";
 import { SelectableComponent } from "./SelectableComponent";
 import { TextComponent } from "./boxes/TextComponent";
 
-// tslint:disable-next-line:variable-unitName
+// tslint:disable-next-line:variable-name
 export const RenderBox = observer(({ box, editor }: { box: Box; editor: PiEditor }) => (
     <SelectableComponent key={box.id} box={box} editor={editor}>
         {renderComponent(box, editor)}
