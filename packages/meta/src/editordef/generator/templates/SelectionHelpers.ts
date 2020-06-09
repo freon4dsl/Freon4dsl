@@ -6,8 +6,8 @@ export class SelectionHelpers {
 
     // TODO improved generated class comment
     generateEnumProjection(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
-        // console.log("EnumSelectGenerator language "+language.unitName + " #enums " + language.enumerations.length);
-        // console.log("EnumSelectGenerator language " + language.enumerations[0].unitName);
+        // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
+        // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
         import { ${Names.PiElement}, SelectBox, SelectOption } from "${PROJECTITCORE}";
         import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";

@@ -296,19 +296,22 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 whenOk: () => {
                     this.checkConceptReference(piProperty.type);
                     let realType = piProperty.type.referred;
-                    let owningClassifier = piProperty.owningConcept;
-                    this.checkPropertyType(piProperty, realType);
-                    // check use of unit types in non-root concepts
-                    if (realType.isUnit) {
-                        this.simpleCheck(
-                            owningClassifier instanceof PiConcept && owningClassifier.isRoot,
-                            `Unit concept '${realType.name}' may not be used in a non-root concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
-                    }
-                    // check use of non-unit types in root concept
-                    if (owningClassifier instanceof PiConcept && owningClassifier.isRoot) {
-                        this.simpleCheck(
-                            realType.isUnit,
-                            `Type of property '${piProperty.name}' should be a unit concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                    if (!!realType) { // error message handle by checkConceptReference
+                        let owningClassifier = piProperty.owningConcept;
+                        this.checkPropertyType(piProperty, realType);
+
+                        // check use of unit types in non-root concepts: may be references only
+                        if (realType.isUnit && piProperty.isPart) {
+                            this.simpleCheck(
+                                owningClassifier instanceof PiConcept && owningClassifier.isRoot,
+                                `Unit concept '${realType.name}' may be used as reference only in a non-root concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                        }
+                        // check use of non-unit types in root concept
+                        if (owningClassifier instanceof PiConcept && owningClassifier.isRoot) {
+                            this.simpleCheck(
+                                realType.isUnit,
+                                `Type of property '${piProperty.name}' should be a unit concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                        }
                     }
                 }
             });

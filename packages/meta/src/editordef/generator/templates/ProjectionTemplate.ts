@@ -122,7 +122,7 @@ export class ProjectionTemplate {
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
                 
                 /**
-                 *  Create a standard binary box to enure binary expressions can be editied easily
+                 *  Create a standard binary box to ensure binary expressions can be edited easily
                  */
                 private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
                     let binBox = createDefaultBinaryBox(this, exp, symbol, ${Names.environment(language)}.getInstance().editor);
@@ -229,28 +229,25 @@ export class ProjectionTemplate {
                     );
                 }`;
         } else {
+            if (result[0] === "\n") {
+                // TODO find out where this newline is added and make sure this is not done
+                // this error occurred in openhab project for concept ItemModel (!!only for this concept)
+                // for now:
+                // console.log("FOUND NEWLINE");
+                result = result.substr(1);
+            }
             return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
                     return ${result};
                 }`;
         }
     }
 
-    // TODO change this to be used with PiLimitedConcept
-    // enumPropertyProjection(p: PiLangEnumProperty) {
-    //     return `
-    //         this.helpers.enumSelectFor${p.type.unitName}(element,
-    //             "${p.unitName}-type",
-    //             () => { return { id: element.${p.unitName}.unitName, label: element.${p.unitName}.unitName} },
-    //             (o: SelectOption) => element.${p.unitName} = ${Names.enumeration(p.type.referredElement())}.fromString(o.id)
-    //         )
-    //     `;
-    // }
     /**
      * generate the part list
      *
      * @param direction         Horizontal or Vertical.
      * @param propertyConcept   The property for which the projection is generated.
-     * @param element           The unitName of the element parameter of the getBox projection method.
+     * @param element           The name of the element parameter of the getBox projection method.
      */
     conceptPartListProjection(direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
         return `

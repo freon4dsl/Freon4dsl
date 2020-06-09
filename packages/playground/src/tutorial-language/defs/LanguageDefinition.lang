@@ -1,5 +1,9 @@
 language Demo
 
+root concept Demo {
+    models: DemoModel[];
+}
+
 interface BaseType {
     name: string;
     baseInterface_attr: number;
@@ -42,7 +46,7 @@ binary expression DemoMultiplyExpression base DemoBinaryExpression {
 
 // tag::rootconcept[]
 // tag::partprop[]
-root concept DemoModel {
+unit concept DemoModel {
 // end::partprop[]
     name: string;
 // tag::partprop[]

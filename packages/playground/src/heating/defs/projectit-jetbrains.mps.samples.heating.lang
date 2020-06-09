@@ -1,6 +1,10 @@
 language heat // long name: jetbrains.mps.samples.heating
 
-root concept HeatingPlan implements INamedConcept {
+root concept Heating {
+    plans: HeatingPlan[];
+}
+
+unit concept HeatingPlan implements INamedConcept {
 	dailyPlans: DailyPlan[];
 }
 

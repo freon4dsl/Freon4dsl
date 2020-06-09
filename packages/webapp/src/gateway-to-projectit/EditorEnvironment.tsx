@@ -33,7 +33,7 @@ export class EditorEnvironment {
     }
 
     static saveAs(newValue: string) {
-        console.log("EditorEnvironment save as called, new unitName: " + newValue);
+        console.log("EditorEnvironment save as called, new name: " + newValue);
     }
 
     static redo() {

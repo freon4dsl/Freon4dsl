@@ -52,7 +52,7 @@ export default class Menubar extends React.Component {
                         key: "filesaveas",
                         content: "save as ...",
                         icon: "files-txt",
-                        tooltip: "Save the current model unit with a different unitName",
+                        tooltip: "Save the current model unit with a different name",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />}/>;

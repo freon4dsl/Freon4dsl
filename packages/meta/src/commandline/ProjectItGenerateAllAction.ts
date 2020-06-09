@@ -58,7 +58,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             // LOGGER.log("languageFile: " + this.languageFile);
             // LOGGER.log("editFile: " + this.editFile);
             // LOGGER.log("validFile: " + this.validFile);
-            LOGGER.log("scopeFile: " + this.scopeFile);
+            // LOGGER.log("scopeFile: " + this.scopeFile);
             // LOGGER.log("typerFile: " + this.typerFile);
 
             if (this.watch) {

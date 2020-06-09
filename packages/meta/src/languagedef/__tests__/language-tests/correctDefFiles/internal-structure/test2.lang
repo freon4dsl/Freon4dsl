@@ -1,6 +1,10 @@
 language test1 // without 'implements'
 
-root concept AA  {
+root concept ROOT {
+    aa: AA[];
+}
+
+unit concept AA  {
     // the possibilities for primitive properties
     AAprop1: string;
     AAprop2: string[];

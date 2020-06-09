@@ -47,7 +47,11 @@ concept ModelGroup base ModelItem {
 
 concept ModelGroupFunction {
     groupFunctionName: ModelGroupFunctionName;
-    args: string[];
+    args: Argument[];
+}
+
+concept Argument {
+    name: string;
 }
 
 limited ModelGroupFunctionName {

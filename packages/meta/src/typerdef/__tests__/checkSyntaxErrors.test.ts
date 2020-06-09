@@ -9,14 +9,14 @@ describe("Checking typer on checking errors", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/languagedef/__tests__/expression-tests/expressionDefFiles/testLanguage.lang");
+            language = new LanguageParser().parse("src/typerdef/__tests__/test-language.lang");
             parser = new PiTyperParser(language);
         } catch (e) {
             console.log("Language could not be read");
         }
     });
 
-    test("language should have a unitName", () => {
+    test("language should have a name", () => {
         let parseFile = testdir + "test1.type";
         try {
             parser.parse(parseFile);

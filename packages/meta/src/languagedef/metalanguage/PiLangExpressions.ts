@@ -67,8 +67,8 @@ export class PiLangSelfExp extends PiLangExp {
 }
 
 export class PiInstanceExp extends PiLangExp {
-    // sourceName should be unitName of a limited concept
-    instanceName: string;   // should be unitName of one of the predefined instances of 'sourceName'
+    // sourceName should be name of a limited concept
+    instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
     referredElement: PiElementReference<PiInstance>;
 
     toPiString(): string {
@@ -103,7 +103,7 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
             // console.log(" last of: " + this.appliedfeature.sourceName);
             return this.appliedfeature.findRefOfLastAppliedFeature();
         } else {
-            // console.log("found reference: " + this.referredElement?.referred?.unitName);
+            // console.log("found reference: " + this.referredElement?.referred?.name);
             return this.referredElement?.referred;
         }
     }
