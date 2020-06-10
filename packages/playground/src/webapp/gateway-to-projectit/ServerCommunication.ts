@@ -27,8 +27,10 @@ export class ServerCommunication implements IServerCommunication {
         console.log(`ServerCommunication.putModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "" && modelInfo.unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
+            const publicModel = ServerCommunication.serial.convertToJSON(piModel, true);
             try {
-                const res = await axios.put(`${SERVER_URL}putModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`, model);
+                const res1 = await axios.put(`${SERVER_URL}putModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`, model);
+                const res2 = await axios.put(`${SERVER_URL}putModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}Public`, publicModel);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }
@@ -44,12 +46,20 @@ export class ServerCommunication implements IServerCommunication {
      * @param loadCallback
      */
     async loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void) {
+        // TODO extra param: complete: boolean
+        let complete: boolean = true;
         console.log(`ServerCommunication.loadModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
-                const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`);
-                const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
-                loadCallback(model);
+                if (complete) {
+                    const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`);
+                    const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
+                    loadCallback(model);
+                } else {
+                    const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}Public`);
+                    const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
+                    loadCallback(model);
+                }
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }

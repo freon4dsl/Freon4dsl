@@ -7,8 +7,8 @@ import { PiEnvironment } from "@projectit/core";
 // import { ExampleEnvironment } from "../../example/environment/gen/ExampleEnvironment";
 // export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
-// import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
-// export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
+import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
+export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
@@ -27,8 +27,8 @@ import { PiEnvironment } from "@projectit/core";
 
 // export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
 
-import { OpenhabEnvironment } from "../../openhab/environment/gen/OpenhabEnvironment";
-export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
+// import { OpenhabEnvironment } from "../../openhab/environment/gen/OpenhabEnvironment";
+// export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
 
 /**
  * The one and only reference to the server on which the models are stored
