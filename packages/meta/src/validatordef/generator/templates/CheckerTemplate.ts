@@ -111,38 +111,46 @@ export class CheckerTemplate {
     }
 
     private createRules(ruleSet: ConceptRuleSet) : string {
-       return `${
+        // find the property that indicates the location in human terms
+        let myType = ruleSet.conceptRef.referred;
+        let nameProp = myType.allPrimProperties().find(prop => prop.name === 'name');
+        if (!(!!nameProp)) {
+            nameProp = myType.allPrimProperties().find(prop => prop.primType === 'string');
+        }
+        let locationdescription = !!nameProp ? `modelelement.${nameProp.name}` : `"--"`;
+        //
+        return `${
             ruleSet.rules.map(r => 
                 `// ${r.toPiString()}
                 ${(r instanceof CheckEqualsTypeRule ?
                     `if(!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                         this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}) 
-                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}) + "'", ${langExpToTypeScript(r.type1)}));
+                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}) + "'", ${langExpToTypeScript(r.type1)}, ${locationdescription}));
                     }`
                 : (r instanceof CheckConformsRule ?
                     `if(!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                         this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}) + 
-                        "' does not conform to (the type of) '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type2)}) + "'", ${langExpToTypeScript(r.type1)}));
+                        "' does not conform to (the type of) '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type2)}) + "'", ${langExpToTypeScript(r.type1)}, ${locationdescription}));
                     }`           
                 : (r instanceof NotEmptyRule ?
                     `if(${langExpToTypeScript(r.property)}.length == 0) {
-                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", modelelement));
+                        this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", modelelement, ${locationdescription}));
                     }`
                 : (r instanceof ValidNameRule ?
                     `if(!this.isValidName(${langExpToTypeScript(r.property)})) {
-                        this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement));
+                        this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement, ${locationdescription}));
                     }` 
                 : (r instanceof ExpressionRule ?
                     `if(!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
-                        this.errorList.push(new PiError("'${r.toPiString()}' is false", modelelement));
+                        this.errorList.push(new PiError("'${r.toPiString()}' is false", modelelement, ${locationdescription}));
                     }`
                 : (r instanceof IsuniqueRule ?
-                    `${this.makeIsuniqueRule(r)}`
+                    `${this.makeIsuniqueRule(r, locationdescription)}`
                 : ""))))))}`
             ).join("\n")}`;
     }
 
-    private makeIsuniqueRule(rule: IsuniqueRule): string {
+    private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string): string {
         const listpropertyName = rule.listproperty.appliedfeature.toPiString();
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
@@ -154,7 +162,7 @@ export class CheckerTemplate {
             if (!${uniquelistName}.includes(elem.${listpropertyTypescript})){
                 ${uniquelistName}.push(elem.${listpropertyTypescript});
             } else {
-                this.errorList.push(new PiError("The value of property '${listpropertyName}' is not unique in list '${listName}'", ${langExpToTypeScript(rule.list)}[index]));
+                this.errorList.push(new PiError("The value of property '${listpropertyName}' is not unique in list '${listName}'", ${langExpToTypeScript(rule.list)}[index], ${locationdescription}));
             }
         });`;
     }

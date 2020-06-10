@@ -135,7 +135,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
 
         if (!!piConcept.base) {
             this.checkConceptReference(piConcept.base);
-            if (!!piConcept.base.referred) { // error message taken care of by checkConceptReference
+            if (!!piConcept.base.referred) { // error message taken care of by checkClassifierReference
                 this.nestedCheck({
                     check: piConcept.base.referred instanceof PiConcept,
                     error: `Base '${piConcept.base.name}' must be a concept ` +
@@ -158,7 +158,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         let newInterfaces: PiElementReference<PiInterface>[] = [];
         for (let intf of piConcept.interfaces) {
             this.checkConceptReference(intf);
-            if (!!intf.referred) { // error message taken care of by checkConceptReference
+            if (!!intf.referred) { // error message taken care of by checkClassifierReference
                 this.simpleCheck(intf.referred instanceof PiInterface, `Concept '${intf.name}' is not an interface `+
                         `[line: ${intf.location?.start.line}, column: ${intf.location?.start.column}].`,);
                 // add to the list
@@ -296,7 +296,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 whenOk: () => {
                     this.checkConceptReference(piProperty.type);
                     let realType = piProperty.type.referred;
-                    if (!!realType) { // error message taken care of by checkConceptReference
+                    if (!!realType) { // error message taken care of by checkClassifierReference
                         if(realType instanceof PiLimitedConcept) {
                             // this situation is OK, but property with limited concept as type should always be a reference property
                             // the property should refer to one of the predefined instances of the limited concept
@@ -359,7 +359,7 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         this.simpleCheck(!!piInterface.name, `Concept should have a name [line: ${piInterface.location?.start.line}, column: ${piInterface.location?.start.column}].`);
         for (let intf of piInterface.base) {
             this.checkConceptReference(intf);
-            if (!!intf.referred) { // error message taken care of by checkConceptReference
+            if (!!intf.referred) { // error message taken care of by checkClassifierReference
                 this.simpleCheck(intf.referred instanceof PiInterface,
                     `Base concept '${intf.name}' must be an interface concept `+
                         `[line: ${intf.location?.start.line}, column: ${intf.location?.start.column}].`);

@@ -53,7 +53,7 @@ export class PathProvider {
 
     public static scopeFile(defFolder: string, languageFile: string): string {
         let languageName: string = languageFile.slice(0, languageFile.length - 5);
-        return defFolder + "/" + languageName + ".scop";
+        return defFolder + "/" + languageName + ".scope";
     }
 
     public static typeFile(defFolder: string, languageFile: string): string {

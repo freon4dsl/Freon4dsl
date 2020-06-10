@@ -12,7 +12,7 @@ import {
 } from "./ValidatorDefLang";
 import { PiLangAppliedFeatureExp, PiLangSelfExp, PiLangSimpleExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiLanguageExpressionChecker } from "../../languagedef/metalanguage/PiLanguageExpressionChecker";
+import { PiLangExpressionChecker } from "../../languagedef/metalanguage/PiLangExpressionChecker";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -24,11 +24,11 @@ const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 
 export class ValidatorChecker extends Checker<PiValidatorDef> {
-    myExpressionChecker: PiLanguageExpressionChecker;
+    myExpressionChecker: PiLangExpressionChecker;
     
     constructor(language: PiLanguageUnit) {
         super(language);
-        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }
 
     public check(definition: PiValidatorDef): void {
@@ -54,7 +54,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkConceptRule(rule: ConceptRuleSet) {
-        this.myExpressionChecker.checkConceptReference(rule.conceptRef);
+        this.myExpressionChecker.checkClassifierReference(rule.conceptRef);
 
         const enclosingConcept = rule.conceptRef.referred;
         if (enclosingConcept) {
@@ -92,7 +92,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     tr.property = PiLangSelfExp.create(enclosingConcept);
                     tr.property.appliedfeature = PiLangAppliedFeatureExp.create(tr.property,"name", myProp);
                     // tr.property.appliedfeature.sourceName = "name";
-                    // tr.property.appliedfeature.referedElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                    // tr.property.appliedfeature.referredElement = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                     tr.property.location = tr.location;
                   }
             });
@@ -201,7 +201,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                                                 //         let t = myListProperty.type;
                                                 //         console.log("class of type: " + t.constructor.name +", referred: " + t.referred?.name);
                                                 //     } else {
-                                                //         this.simpleCheck(!!myListProperty.type?.referred, `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()} (${tr.listproperty.appliedfeature.referedElement.referred.name})` +
+                                                //         this.simpleCheck(!!myListProperty.type?.referred, `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()} (${tr.listproperty.appliedfeature.referredElement.referred.name})` +
                                                 //             `[line: ${tr.listproperty.location?.start.line}, column: ${tr.listproperty.location?.start.column}].`);
                                                 //     }
                                                 // }

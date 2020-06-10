@@ -58,7 +58,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             // LOGGER.log("languageFile: " + this.languageFile);
             // LOGGER.log("editFile: " + this.editFile);
             // LOGGER.log("validFile: " + this.validFile);
-            // LOGGER.log("scopeFile: " + this.scopeFile);
+            LOGGER.log("scopeFile: " + this.scopeFile);
             // LOGGER.log("typerFile: " + this.typerFile);
 
             if (this.watch) {
@@ -181,7 +181,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 this.editFile = filename;
             } else if (/\.valid$/.test(filename)) {
                 this.validFile = filename;
-            } else if (/\.scop$/.test(filename)) {
+            } else if (/\.scope$/.test(filename)) {
                 this.scopeFile = filename;
             } else if (/\.type$/.test(filename)) {
                 this.typerFile = filename;

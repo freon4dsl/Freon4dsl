@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { LangUtil } from "../../metalanguage";
+import { PiLangUtil } from "../../metalanguage";
 import {
     PiLanguageUnit
 } from "../../metalanguage/PiLanguage";
@@ -39,7 +39,7 @@ export class LanguageTemplate {
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),
                         baseName: ${!!concept.base ? `"${concept.base.name}"` : "null"},
-                        subConceptNames: [${LangUtil.subConcepts(concept).map(sub => "\"" + sub.name+ "\"").join(", ")}]
+                        subConceptNames: [${PiLangUtil.subConcepts(concept).map(sub => "\"" + sub.name+ "\"").join(", ")}]
                     }
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
@@ -74,7 +74,7 @@ export class LanguageTemplate {
                     const intface =             {
                         typeName: "${Names.interface(intface)}",
                         properties: new Map< string, Property>(),
-                        subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + sub.name+ "\"").join(", ")}]
+                        subConceptNames: [${PiLangUtil.subConcepts(intface).map(sub => "\"" + sub.name+ "\"").join(", ")}]
                     }
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {

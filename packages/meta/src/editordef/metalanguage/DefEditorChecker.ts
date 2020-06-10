@@ -1,6 +1,6 @@
 import {
     PiConcept,
-    PiLanguageExpressionChecker,
+    PiLangExpressionChecker,
     PiLanguageUnit
 } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
@@ -20,11 +20,11 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
 
 export class DefEditorChecker extends Checker<DefEditorLanguage> {
-    myExpressionChecker: PiLanguageExpressionChecker;
+    myExpressionChecker: PiLangExpressionChecker;
 
     constructor(language: PiLanguageUnit) {
         super(language);
-        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }
 
     /**
@@ -60,7 +60,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
 
     private checkConceptEditor(conceptEditor: DefEditorConcept) {
         // TODO maybe use
-        // this.myExpressionChecker.checkConceptReference(conceptEditor.concept);
+        // this.myExpressionChecker.checkClassifierReference(conceptEditor.concept);
         this.nestedCheck({
             check: !!conceptEditor.concept.referred,
             error: `Concept ${conceptEditor.concept.name} is unknown [line: ${conceptEditor.location?.start.line}, column: ${conceptEditor.location?.start.column}].`,
