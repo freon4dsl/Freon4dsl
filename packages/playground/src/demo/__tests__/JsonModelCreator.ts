@@ -1,4 +1,4 @@
-import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, PiElementReference } from "../language/gen";
+import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, PiElementReference, DemoFunction } from "../language/gen";
 
 export class JsonModelCreator {
     model: DemoModel;
@@ -28,6 +28,10 @@ export class JsonModelCreator {
 
         correctModel.entities.push(personEnt);
         correctModel.entities.push(companyEnt);
+
+        const aFunction = DemoFunction.create({name: "SomeFunction", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType")});
+        correctModel.functions.push(aFunction);
+
         return correctModel;
     }
 }
