@@ -46,7 +46,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param loadCallback
      */
     async loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void) {
-        // TODO extra param: complete: boolean
+        // TODO extra param 'complete: boolean' to represent opening the model unit interface or the complete model unit
         let complete: boolean = true;
         console.log(`ServerCommunication.loadModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {

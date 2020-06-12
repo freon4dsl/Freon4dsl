@@ -39,6 +39,7 @@
     "@uifabric/fluent-theme": "^7.1.51",
     "@fluentui/react": "^7.105.13",
     "@fluentui/react-northstar": "^0.47.0",
+    "@fluentui/react-icons-northstar": "^0.49.0",
     "@types/pegjs": "^0.10.1",
     "@types/react": "16.8.15",
     "@types/react-dom": "16.8.4",

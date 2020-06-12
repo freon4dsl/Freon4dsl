@@ -1,4 +1,4 @@
-import { Toolbar } from "@fluentui/react-northstar";
+import { Toolbar, Alert } from "@fluentui/react-northstar";
 import * as React from 'react';
 import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
 import { observable } from "mobx";
@@ -15,12 +15,16 @@ const errorsNotShown: IIconProps = { iconName: 'FlickDown' };
 @observer
 export class PiToolbar extends React.Component<{}, {}> {
     disabled: boolean = false;
+    static instance: PiToolbar = null;
     @observable showNavigator: boolean = true;
     @observable showErrorlist = true;
+    @observable public alertIsVisible: boolean = false;
+    @observable public alertContent: string = "";
 
     constructor(props: {}) {
         super(props);
         initializeIcons(/* optional base url */);
+        PiToolbar.instance = this;
     }
 
     render() {
@@ -68,6 +72,21 @@ export class PiToolbar extends React.Component<{}, {}> {
                     fitted: 'horizontally',
                     title: "Validate model",
                 },
+                {
+                    key: 'alert-message',
+                    kind: 'custom',
+                    content:   <Alert
+                        content={this.alertContent}
+                        dismissible
+                        variables={{
+                            urgent: true,
+                        }}
+                        visible={this.alertIsVisible}
+                        onVisibleChange={this.setAlertVisible}
+                    />,
+                    fitted: 'horizontally',
+                    title: "Alert message",
+                }
             ]}
         />;
     }
@@ -87,6 +106,11 @@ export class PiToolbar extends React.Component<{}, {}> {
     validateModel = () => {
         console.log("validate model");
         EditorCommunication.getErrors();
+    }
+
+    private setAlertVisible = (ev: React.MouseEvent<HTMLElement>) => {
+        // console.log("setAlertVisible called");
+        this.alertIsVisible = false;
     }
 }
 
