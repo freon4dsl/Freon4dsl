@@ -17,7 +17,7 @@ export class ModelRequests {
         ctx.response.body = fs.readFileSync(path.join(`${modelfolder}`, foldername, `${name}.json` ));
     }
 
-    public static async getModelList(foldername: string, ctx: IRouterContext) {
+    public static async getUnitList(foldername: string, ctx: IRouterContext) {
         if (!fs.existsSync(path.join(`${modelfolder}`, foldername))) {
             fs.mkdirSync(path.join(`${modelfolder}`, foldername));
         }
@@ -25,6 +25,15 @@ export class ModelRequests {
             .readdirSync(path.join(`${modelfolder}`, foldername))
             .filter(f => f.endsWith(".json"))
             .map(f => f.substring(0, f.length - 5));
+        ctx.response.body = dir;
+    }
+
+    public static async getModelList(foldername: string, ctx: IRouterContext) {
+        if (!fs.existsSync(path.join(`${modelfolder}`, foldername))) {
+            fs.mkdirSync(path.join(`${modelfolder}`, foldername));
+        }
+        const dir = fs
+            .readdirSync(path.join(`${modelfolder}`, foldername));
         ctx.response.body = dir;
     }
 

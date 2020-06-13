@@ -33,6 +33,17 @@ router.get("/getModelList", async (ctx: Router.IRouterContext) => {
     }
 });
 
+router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
+    console.log("getUnitList: " + folder);
+    if (!!folder) {
+        ModelRequests.getUnitList(folder, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'folder'";
+    }
+});
 router.put("/putModel", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
     const name = ctx.query["name"];

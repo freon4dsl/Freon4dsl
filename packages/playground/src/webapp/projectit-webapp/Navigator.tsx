@@ -1,20 +1,19 @@
 import * as React from "react";
 import { Selection } from "office-ui-fabric-react/lib/DetailsList";
-import { Icon, Tree, Box, Label } from "@fluentui/react-northstar";
+import { Icon, Tree, Box } from "@fluentui/react-northstar";
 import { ComponentEventHandler } from "@fluentui/react-northstar/dist/es/types";
 import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selection";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { App } from "./App";
+import { AddIcon, CircleIcon, TriangleDownIcon, TriangleEndIcon } from "@fluentui/react-icons-northstar";
+
 // TODO try to make dependence of gateway-to-projectit as small as possible
-import { editorEnvironment } from "../gateway-to-projectit/WebappConfiguration";
 import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
 import { IModelUnitData } from "../gateway-to-projectit/IServerCommunication";
+import { lineHeightSmall } from "@fluentui/react-northstar/dist/es/themes/teams/siteVariables";
+
 
 // This component holds the navigator, which shows all available models sorted by language
-
-// for now, but TODO change this
-const modelName: string = "currentModel";
 
 // The type of an element in the navigation tree
 type TreeElement = {
@@ -23,6 +22,7 @@ type TreeElement = {
     items: TreeElement[];
     parent: string;
     onTitleClick: ComponentEventHandler<TreeElement>;
+    // selectable: string;
     as: string; // TODO add styling
 };
 
@@ -47,61 +47,40 @@ export class Navigator extends React.Component<{}, {}> {
 
         this._selection = new Selection();
         EditorCommunication.editorArea.navigator = this;
-        EditorCommunication.getModelUnits(this.modelListCallBack);
+        EditorCommunication.getModelUnits(this.setAllDocuments);
     }
 
     @computed get buildTree(): TreeElement[] {
         let tree: TreeElement[] = [];
         let modelMap = new Map();
-        for (let lang of this.findlanguages()) {
-            let languageGroup: TreeElement = {
-                id: lang,
-                title: lang,
+        this._allDocuments.forEach((model, index) => {
+            let modelGroup: TreeElement = modelMap.get(model.model);
+            if (!(!!modelGroup)) {
+                // not yet encountered, so create a tree element for this model
+                modelGroup = {
+                    id: model.model,
+                    title: model.model,
+                    items: [],
+                    onTitleClick: this._onTitleClick,
+                    as: "h5",
+                    parent : "",
+                    // selectable: "false"
+                };
+                modelMap.set(model.model, modelGroup);
+                tree.push(modelGroup);
+            }
+            let elem: TreeElement = {
+                id: index.toString(10),
+                title: model.unitName,
                 items: [],
                 onTitleClick: this._onTitleClick,
                 as: "h5",
-                parent : ""
+                parent: modelGroup.id,
+                // selectable: "true"
             };
-            this._allDocuments.forEach((model, index) => {
-                if (model.language === lang) {
-                    let modelGroup: TreeElement = modelMap.get(model.model);
-                    if (!(!!modelGroup)) {
-                        // create a tree element for this model
-                        modelGroup = {
-                            id: model.model,
-                            title: model.model,
-                            items: [],
-                            onTitleClick: this._onTitleClick,
-                            as: "h5",
-                            parent : languageGroup.id
-                        };
-                        modelMap.set(model.model, modelGroup);
-                        languageGroup.items.push(modelGroup);
-                    }
-                    let elem: TreeElement = {
-                        id: index.toString(10),
-                        title: model.unitName,
-                        items: [],
-                        onTitleClick: this._onTitleClick,
-                        as: "h5",
-                        parent: modelGroup.id
-                    };
-                    modelGroup.items.push(elem);
-                }
-            });
-            tree.push(languageGroup);
-        }
+            modelGroup.items.push(elem);
+        });
         return tree;
-    }
-
-    private findlanguages(): string[] {
-        let result: string[] = [];
-        for (let model of this._allDocuments) {
-            if (!result.includes(model.language)) {
-                result.push(model.language);
-            }
-        }
-        return result;
     }
 
     public removeName(name: string) {
@@ -119,9 +98,6 @@ export class Navigator extends React.Component<{}, {}> {
                 EditorCommunication.open(modelInfo.model, modelInfo.unitName);
                 // TODO show selection with grey background (or something)
             }
-            App.closeDialog();
-        // } else {
-        //     console.log(`trying to open ${item.id}, which is not a model unit`);
         }
     }
 
@@ -145,25 +121,18 @@ export class Navigator extends React.Component<{}, {}> {
                     renderItemTitle={titleRenderer}
                     aria-label="Initially open"
                     defaultActiveItemIds={[this._activeItemId]}
-                    // selectionIndicator: TODO show current selection
                 />
                 {/*</SelectionZone>*/}
             </Box>
         );
     }
 
-    // TODO this callback should receive a list of IModelUnitData
-    private modelListCallBack = (names: string[]) => {
-        if (!!names && names.length > 0) {
-            names.forEach((name) => {
-                this._allDocuments.push({ unitName: name, model: modelName, language: editorEnvironment.languageName });
-            });
+    private setAllDocuments = (documents: IModelUnitData[]) => {
+        if (!!documents && documents.length > 0) {
+            this._allDocuments = documents;
             if (!(!!this._activeItemId)) {
-                this._activeItemId = editorEnvironment.languageName;
+                this._activeItemId = documents[0].model;
             }
-        // } else {
-        //     // push a dummy element on the list, to show something
-        //     this._allDocuments.push({unitName: name, model: modelName, language: editorEnvironment.languageName });
         }
     }
 }

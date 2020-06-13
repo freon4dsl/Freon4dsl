@@ -5,6 +5,7 @@ import { ServerCommunication } from "./ServerCommunication";
 import { EditorArea } from "../projectit-webapp/EditorArea";
 import * as React from "react";
 import { PiToolbar } from "../projectit-webapp/PiToolbar";
+import { IModelUnitData } from "./IServerCommunication";
 
 // TODO make this a singleton, no static methods
 
@@ -25,7 +26,7 @@ export class EditorCommunication {
             // models should have a name property
             this.currentModelName = (model as PiNamedElement).name;
         }
-        console.log(`unit '${this.currentDocumentName}' has model '${this.currentModelName}'`);
+        // console.log(`unit '${this.currentDocumentName}' has model '${this.currentModelName}'`);
         return editorEnvironment.projectionalEditorComponent;
     }
 
@@ -123,8 +124,8 @@ export class EditorCommunication {
     }
 
     // used from the navigator:
-    static getModelUnits(modelListCallback: (names: string[]) => void) {
-        ServerCommunication.getInstance().loadModelUnitList(editorEnvironment.languageName, EditorCommunication.currentModelName, modelListCallback);
+    static getModelUnits(modelListCallback: (names: IModelUnitData[]) => void) {
+        ServerCommunication.getInstance().loadModelUnitList(editorEnvironment.languageName, modelListCallback);
     }
 
     // END OF: for the communication with the navigator

@@ -51,9 +51,9 @@ export interface IServerCommunication {
     // deleteModel(languageName: string, modelName: string);
 
     /**
-     * Reads the list of model units of model 'modelName' that are available on the server and calls 'modelListCallback'.
+     * Reads the list of model units of language 'languageName' that are available on the server and calls 'modelListCallback'.
      * @param languageName
      * @param modelListCallback
      */
-    loadModelUnitList(languageName: string, modelName: string, modelListCallback: (names: string[]) => void);
+    loadModelUnitList(languageName: string, modelListCallback: (names: IModelUnitData[]) => void);
 }

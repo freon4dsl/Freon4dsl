@@ -64,7 +64,7 @@ export class PiToolbar extends React.Component<{}, {}> {
                     kind: 'custom',
                     content:     <DefaultButton
                         text={'Validate model'}
-                        iconProps={{ iconName: 'Home' }}
+                        iconProps={{ iconName: 'StatusCircleCheckmark' }}
                         onClick={this.validateModel}
                         allowDisabledFocus
                         disabled={this.disabled}
