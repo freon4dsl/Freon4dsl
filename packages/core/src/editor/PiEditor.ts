@@ -209,13 +209,13 @@ export class PiEditor {
 
     set rootElement(exp: PiElement) {
         this._rootElement = exp;
-        if (exp instanceof MobxModelElementImpl) {
-            exp.container = this;
-            exp.propertyIndex = undefined;
-            exp.propertyName = "rootElement";
-            // not a PiElement , therefore no root.
-            exp.container = null;
-        }
+        // if (exp instanceof MobxModelElementImpl) {
+        //     exp.container = this;
+        //     exp.propertyIndex = undefined;
+        //     exp.propertyName = "rootElement";
+        //     // not a PiElement , therefore no root.
+        //     // exp.container = null;
+        // }
     }
 
     get rootElement(): PiElement {

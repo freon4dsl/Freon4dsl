@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError } from "@projectit/core";
+import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError, PiNamedElement } from "@projectit/core";
 import { editorEnvironment } from "./WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
 import { EditorArea } from "../projectit-webapp/EditorArea";
@@ -10,19 +10,37 @@ import { PiToolbar } from "../projectit-webapp/PiToolbar";
 
 export class EditorCommunication {
     static currentDocumentName = '';
-    static currentModelName = 'currentModel';
+    static currentModelName = '';
     static hasChanges: boolean = true;
     static editorArea: EditorArea;
 
     // used from the editor area
     static getEditor(): ProjectionalEditor {
+        const currentUnit = editorEnvironment.editor.rootElement;
+        if (!!currentUnit) {
+            this.currentDocumentName = (currentUnit as PiNamedElement).name;
+        }
+        const model: PiElement = currentUnit.piContainer()?.container;
+        if (!!model) { // should not be null of undefined
+            // models should have a name property
+            this.currentModelName = (model as PiNamedElement).name;
+        }
+        console.log(`unit '${this.currentDocumentName}' has model '${this.currentModelName}'`);
         return editorEnvironment.projectionalEditorComponent;
     }
 
     // used from the menubar
     static newModel() {
-        console.log("EditorCommunication new called");
+        console.log("EditorCommunication new model called");
         editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
+        EditorCommunication.currentModelName = "";
+        EditorCommunication.currentDocumentName = "";
+    }
+
+    static newDocument(documentType: string) {
+        console.log("EditorCommunication new document called, documentType: " + documentType);
+        // add new model unit of right type to current model
+        editorEnvironment.editor.rootElement = editorEnvironment.initializer.newUnit(editorEnvironment.editor.rootElement.piContainer().container, documentType);
         EditorCommunication.currentDocumentName = "";
     }
 
@@ -100,6 +118,10 @@ export class EditorCommunication {
         }
     }
 
+    static getModelUnitTypes(): string[] {
+        return editorEnvironment.unitNames;
+    }
+
     // used from the navigator:
     static getModelUnits(modelListCallback: (names: string[]) => void) {
         ServerCommunication.getInstance().loadModelUnitList(editorEnvironment.languageName, EditorCommunication.currentModelName, modelListCallback);
@@ -146,8 +168,9 @@ export class EditorCommunication {
         return undefined;
     }
 
+
 }
 
-function randomIntFromInterval(min, max) { // min and max included
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
+// function randomIntFromInterval(min, max) { // min and max included
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// }

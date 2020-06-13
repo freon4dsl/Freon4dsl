@@ -7,9 +7,13 @@ export class InitalizationTemplate {
 
     generate(language: PiLanguageUnit, relativePath: string): string {
         const firstUnit: PiConceptProperty = language.rootConcept.parts()[0];
+        const firstUnitTypeName: string = Names.concept(firstUnit?.type.referred);
+        const imports: string[] = language.rootConcept.parts().map(part => `${Names.concept(part.type.referred)}`);
+
+        // the template starts here
         return `
             import { ${Names.PiElement} } from "${PROJECTITCORE}";
-            import { ${Names.concept(language.rootConcept)}, ${Names.concept(firstUnit.type.referred)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${Names.concept(language.rootConcept)}, ${imports.map(str => `${str}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
              * Class ${Names.initialization(language)} provides an entry point for the language engineer to
@@ -21,11 +25,24 @@ export class InitalizationTemplate {
             export class ${Names.initialization(language)} {
             
                 initialize(): ${Names.PiElement} {
-                    // You may replace the default with the initial model unit of your choice     
                     let model = new ${Names.concept(language.rootConcept)}();
-                    let unit = new ${Names.concept(firstUnit.type.referred)}();
-                    ${firstUnit.isList? `model.${firstUnit.name}.push(unit);` : `model.${firstUnit.name} = unit`}
-                    return unit;
+                    // You may replace the default with the initial model unit of your choice   
+                    const defaultTypeName = "${firstUnitTypeName}";
+                    return this.newUnit(model, defaultTypeName);
+                }
+                
+                newUnit(model: ${Names.concept(language.rootConcept)}, typename: ${Names.metaType(language)}) : PiElement {
+                    switch (typename) {
+                        ${language.rootConcept.allParts().map(part => 
+                            `case "${Names.concept(part.type.referred)}": {
+                                let unit: ${Names.concept(part.type.referred)} = new ${Names.concept(part.type.referred)}();
+                                ${part.isList? `model.${part.name}.push(unit as ${Names.concept(part.type.referred)});` : `model.${part.name} = unit as ${Names.concept(part.type.referred)}`}
+                                return unit;
+                             }`                           
+                             ).join("\n")
+                        }
+                    }
+                    return null;
                 }
             }
         `;

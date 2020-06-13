@@ -1,7 +1,8 @@
 language Demo
 
 public root concept Demo {
-    models: DemoModel[];
+    public name: string;
+    public models: DemoModel[];
 }
 
 public unit concept DemoModel {

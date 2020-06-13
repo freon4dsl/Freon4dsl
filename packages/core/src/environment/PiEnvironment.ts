@@ -18,5 +18,6 @@ export interface PiEnvironment {
     projectionalEditorComponent: ProjectionalEditor;
     initializer: PiModelInitialization;
     languageName: string;
+    unitNames: string[];
 }
 // end::environment-interface[]

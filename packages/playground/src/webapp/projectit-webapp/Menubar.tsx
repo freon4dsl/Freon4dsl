@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Menu, Tooltip, Icon, Flex, Text, Input, Segment, FlexItem } from "@fluentui/react-northstar";
+import { Menu, Tooltip, Icon, Flex, Text, Input, Segment, FlexItem, Divider, RadioGroup } from "@fluentui/react-northstar";
 import { Link } from "@fluentui/react";
 import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
 import { App } from "./App";
@@ -12,6 +12,7 @@ const versionNumber = "0.0.5";
 export default class Menubar extends React.Component {
     modelName: string = "";
     documentName: string = "";
+    documentType: string = "";
 
     private setModelName = (element: any | null) => {
         if (!!element && !!element.value) {
@@ -20,10 +21,17 @@ export default class Menubar extends React.Component {
         }
     };
 
-    private setUnitName = (element: any | null) => {
+    private setDocumentName = (element: any | null) => {
         if (!!element && !!element.value) {
             this.documentName = element?.value;
-            // console.log("unit name set to : " + this.documentName);
+            // console.log("Document name set to : " + this.documentName);
+        }
+    };
+
+    private setDocumentType = (e, props) => {
+        if (!!props && !!props.value) {
+            this.documentType = props?.value;
+            console.log("Document type set to : " + this.documentType);
         }
     };
 
@@ -34,22 +42,35 @@ export default class Menubar extends React.Component {
             menu: {
                 items: [
                     {
-                        key: "filenew",
-                        content: "new",
+                        key: 'filenewmodel',
+                        content: 'new model',
                         icon: "add",
-                        tooltip: "Create a new model unit",
+                        tooltip: "Create a new model",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
-                            return <Tooltip key="newtip" content={tooltip} trigger={<Component {...props} />}/>;
+                            return <Tooltip key="newmodeltip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
                         onClick: () => this.newModel()
+                    },
+                    {
+                        key: 'filenewdocument',
+                        content: 'new document ...',
+                        // TODO different icon for new document
+                        icon: "add",
+                        tooltip: "Create a new document",
+                        children: (Component, props) => {
+                            /* ☝️ `tooltip` comes from shorthand object */
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="newdocumenttip" content={tooltip} trigger={<Component {...props} />}/>;
+                        },
+                        onClick: () => this.newDocument()
                     },
                     {
                         key: "fileopen",
                         content: "open ...",
                         icon: "download",
-                        tooltip: "Open an existing model unit",
+                        tooltip: "Open an existing document",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="opentip" content={tooltip} trigger={<Component {...props} />}/>;
@@ -60,7 +81,7 @@ export default class Menubar extends React.Component {
                         key: "filesave",
                         content: "save",
                         icon: "open-outside",
-                        tooltip: "Save the current model unit on the server",
+                        tooltip: "Save the current document on the server",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="savetip" content={tooltip} trigger={<Component {...props} />}/>;
@@ -71,7 +92,7 @@ export default class Menubar extends React.Component {
                         key: "filesaveas",
                         content: "save as ...",
                         icon: "files-txt",
-                        tooltip: "Save the current model unit with a different name",
+                        tooltip: "Save the current document with a different name",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />}/>;
@@ -82,7 +103,7 @@ export default class Menubar extends React.Component {
                         key: "filedelete",
                         content: "delete",
                         icon: "files-txt",
-                        tooltip: "Delete the current model unit",
+                        tooltip: "Delete the current document",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="deleteastip" content={tooltip} trigger={<Component {...props} />}/>;
@@ -135,7 +156,7 @@ export default class Menubar extends React.Component {
                         key: "searchstring",
                         content: "search (not yet implemented)",
                         icon: "search",
-                        tooltip: "Search in the model unit",
+                        tooltip: "Search in the document",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
@@ -243,7 +264,7 @@ export default class Menubar extends React.Component {
         return <Menu defaultActiveIndex={0} items={this.menuItems}/>;
     }
 
-    makeModelUnitForm(disabledModelName: boolean, placeHolderModelName: string, placeHolderDocumentName: string ): JSX.Element {
+    makeModelDocumentForm(disabledModelName: boolean, placeHolderModelName: string, placeHolderDocumentName: string ): JSX.Element {
         return <Flex column={true}>
             <Text content="Model name: "/>
             <Input clearable fluid placeholder={placeHolderModelName} disabled={disabledModelName} inputRef={this.setModelName}/>
@@ -252,8 +273,8 @@ export default class Menubar extends React.Component {
             <FlexItem push>
                 <Text content="Document name: "/>
             </FlexItem>
-            <Input clearable fluid placeholder={placeHolderDocumentName} inputRef={this.setUnitName}/>
-            {/*<Input clearable fluid placeholder={placeHolderDocumentName} icon={<CanvasAddPageIcon />} inputRef={this.setUnitName}/>*/}
+            <Input clearable fluid placeholder={placeHolderDocumentName} inputRef={this.setDocumentName}/>
+            {/*<Input clearable fluid placeholder={placeHolderDocumentName} icon={<CanvasAddPageIcon />} inputRef={this.setDocumentName}/>*/}
         </Flex>;
     }
 
@@ -261,7 +282,7 @@ export default class Menubar extends React.Component {
         App.setDialogTitle("Delete Document ...");
         if (EditorCommunication.currentDocumentName.length > 0) {
             App.setDialogSubText("Are you sure you want to delete the current document?");
-            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+            App.setDialogContent(this.makeModelDocumentForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
             App.useDefaultButton();
             App.showDialogWithCallback(() => {
                 EditorCommunication.deleteCurrentModel();
@@ -279,26 +300,62 @@ export default class Menubar extends React.Component {
         // as well as in the save and cancel callbacks
         if (EditorCommunication.hasChanges) {
             // console.log("HAS CHANGES");
-            App.setDialogTitle(`Document '${this.modelName}/${this.documentName}' has unsaved changes.`);
-            App.setDialogSubText("Do you want it saved? If so, please, enter a name. ");
+            App.setDialogTitle(`Document '${EditorCommunication.currentModelName}/${EditorCommunication.currentDocumentName}' has unsaved changes.`);
+            App.setDialogSubText("Do you want to save it? If so, please, enter a name. ");
             App.useDefaultButton();
-            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+            App.setDialogContent(this.makeModelDocumentForm(false, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
             await App.showDialogWithCallback( () => {
                     if (!!this.documentName) {
                         EditorCommunication.saveAs(this.modelName, this.documentName);
                     }
-                    this.internalNew();
+                    EditorCommunication.newModel();
                 },
                 () => {
-                    this.internalNew();
+                    EditorCommunication.newModel();
                 });
         } else {
-            this.internalNew();
+            EditorCommunication.newModel();
         }
     }
 
-    private internalNew() {
-        EditorCommunication.newModel();
+    newDocument() {
+        console.log("new Document called");
+        // get the list of document types
+        const documentTypes = EditorCommunication.getModelUnitTypes();
+        if (documentTypes.length === 0) {
+            // error
+            return;
+        }
+        this.documentType = documentTypes[0];
+        // create a list of document types => radio group with document type name as label
+        // and show this in a dialog
+        App.setDialogTitle(`Select the type of the new document:`);
+        App.setDialogSubText("");
+        App.setDialogContent(<div>
+            <RadioGroup
+                vertical
+                defaultCheckedValue={documentTypes[0]}
+                items={this.getItems(documentTypes)}
+                onCheckedValueChange={this.setDocumentType}
+            />
+        </div>);
+        App.showDialogWithCallback( () => {
+            // get the selected document type and let EditorCommunication do the rest
+            EditorCommunication.newDocument(this.documentType);
+        });
+    }
+
+    getItems(labels: string[]) {
+        let result = [];
+        labels.forEach(label => {
+           result.push({
+               name: 'documentType',
+               key: label,
+               label: label,
+               value: label,
+           })
+        });
+        return result;
     }
 
     async openModel() {
@@ -309,7 +366,7 @@ export default class Menubar extends React.Component {
             App.setDialogTitle(`Document '${this.modelName}/${this.documentName}' has unsaved changes.`);
             App.setDialogSubText("Do you want it saved? If so, please, enter a name. ");
             App.useDefaultButton();
-            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+            App.setDialogContent(this.makeModelDocumentForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
             await App.showDialogWithCallback( () => {
                 if (!!this.documentName) {
                     EditorCommunication.saveAs(this.modelName, this.documentName);
@@ -328,7 +385,7 @@ export default class Menubar extends React.Component {
         App.setDialogTitle("Open Document ...");
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModelName, ""));
+        App.setDialogContent(this.makeModelDocumentForm(false, EditorCommunication.currentModelName, ""));
         App.showDialogWithCallback(() => {
             if (!!this.documentName) {
                 const documentToOpen = this.documentName;
@@ -352,7 +409,7 @@ export default class Menubar extends React.Component {
         App.setDialogTitle((title? title : "Save as ..."));
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+        App.setDialogContent(this.makeModelDocumentForm(false, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
         App.showDialogWithCallback( () => {
             if (!!this.documentName) {
                 EditorCommunication.saveAs(this.modelName, this.documentName);
@@ -395,4 +452,5 @@ export default class Menubar extends React.Component {
         App.setDialogContent(<Text align="center">This should be a list of keybindings</Text>);
         App.showDialog();
     }
+
 }
