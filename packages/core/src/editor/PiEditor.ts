@@ -192,7 +192,9 @@ export class PiEditor {
                     }
                 } else {
                     container.container[container.propertyName] = null;
-                    await this.selectElement(container.container, `${container.container.piLanguageConcept()}-${container.propertyName}`)
+                    // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
+                    await this.selectElement(container.container,
+                        (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`))
                 }
             }
         // }

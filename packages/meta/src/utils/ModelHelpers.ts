@@ -103,7 +103,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
         let isRef = isReferenceProperty(exp);
-        result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`.${langExpToTypeScript(exp.appliedfeature)}`) : "");
+        result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
         result = `${exp.sourceName}.${exp.instanceName}`;
     } else {

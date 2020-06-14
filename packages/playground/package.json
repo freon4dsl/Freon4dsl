@@ -18,6 +18,7 @@
     "demo-watch": 	"ts-node ../meta/src/commandline/projectit -vw all -d src/demo/defs -o src/demo",
     "demo-nonverbose": 	"ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",
     "taxrules": 	"ts-node ../meta/src/commandline/projectit all -d src/taxrules/defs -o src/taxrules",
+    "taxrules-w": 	"ts-node ../meta/src/commandline/projectit -w all -d src/taxrules/defs -o src/taxrules",
     "json": 	"ts-node ../meta/src/commandline/projectit all -d src/json/defs -o src/json",
     "meta-it": 		"ts-node ../meta/src/commandline/projectit -v meta-it -l src/demo/defs/LanguageDefinition.lang -o src/demo",
     "scope-it": 		"ts-node ../meta/src/commandline/projectit -v scope-it -l src/demo/defs/LanguageDefinition.lang -s src/demo/defs/LanguageDefinition.scop -o src/demo",
