@@ -44,7 +44,7 @@ MultiplyExpression {
     infertype self.left;
 }
 PlusExpression {
-    infertype commonSuperType(self.left, self.right);
+    infertype self.left;
 }
 DivideExpression {
     infertype self.left;
@@ -56,7 +56,7 @@ MethodCallExpression {
     infertype self.methodDefinition;
 }
 IfExpression    {
-    infertype commonSuperType(self.whenTrue, self.whenFalse);
+    infertype self.whenTrue;
 }
 Parameter {
     infertype self.declaredType;

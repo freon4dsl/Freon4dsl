@@ -1,0 +1,9 @@
+typer test1 for language test1
+
+istype { AA }
+
+anytype {
+    conformto BB;
+}
+
+AA { }

@@ -302,11 +302,10 @@ export class NamespaceTemplate {
                     loopVarExtended = loopVarExtended.concat(".referred");
                 }
             }
-            // TODO test list
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
             for (let ${loopVar} of this._myElem.${expression.appliedfeature.toPiString()}) {
-                if (!!${loopVarExtended})) {
+                if (!!${loopVarExtended}) {
                     let extraNamespace = ${generatedClassName}.create(${loopVarExtended});
                     ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);
                 }

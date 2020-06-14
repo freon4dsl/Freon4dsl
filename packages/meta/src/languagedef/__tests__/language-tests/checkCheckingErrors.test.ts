@@ -132,4 +132,18 @@ describe("Checking language parser on checking errors", () => {
             expect(checker.errors.includes("Property 'ZZprop7' does not exist on concept YY [line: 16, column: 21].")).toBeTruthy();
         }
     });
+
+    test("on", () => {
+        let parser = new LanguageParser();
+        let checker = parser.checker;
+        let parseFile = testdir + "test8.lang";
+        try {
+            parser.parse(parseFile);
+        } catch(e) {
+            expect(e.message).toBe(`checking errors.`);
+            expect(checker.errors.includes("Property 'ZZprop7' of limited concept should have primitive type [line: 12, column: 5].")).toBeTruthy();
+            expect(checker.errors.includes("A non-abstract limited concept must have instances [line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Property 'ZZprop7' does not exist on concept YY [line: 16, column: 21].")).toBeTruthy();
+        }
+    });
 });

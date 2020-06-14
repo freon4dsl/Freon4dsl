@@ -8,8 +8,10 @@
 = The Typer Definition
 
 In the typer definition you provide the information necessary to do type checking. First, you have to
-indicate which concepts are considered to be types in your language. Note that the first concept in
-the list is considered to be the root of your type hierarchy.
+indicate which concepts are considered to be types in your language. Note that we assume that either
+there is a concept that is the common super type of all types in your language, or all types in your
+language implement the same interface. The first concept or interface in
+the types list is considered to be this root of your type hierarchy.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.type[tag=types]

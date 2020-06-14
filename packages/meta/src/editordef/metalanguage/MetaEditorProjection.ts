@@ -176,8 +176,8 @@ export class MetaEditorProjection {
         for (let line of this.lines) {
             for (let item of line.items) {
                 if (item instanceof DefEditorSubProjection) {
-                    return Roles.property(item.expression.appliedfeature.referedElement.referred);
-                    // const referred: PiProperty = item.expression.appliedfeature.referedElement.referred;
+                    return Roles.property(item.expression.appliedfeature.referredElement.referred);
+                    // const referred: PiProperty = item.expression.appliedfeature.referredElement.referred;
                     // if (referred.type.referred instanceof PiExpressionConcept) {
                     //     return "expression-placeholder";
                     // } else {

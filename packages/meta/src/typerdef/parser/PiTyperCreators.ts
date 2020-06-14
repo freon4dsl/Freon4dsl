@@ -1,4 +1,4 @@
-import { PiTypeDefinition, PiTypeIsTypeRule, PiTypeStatement, PiTypeConceptRule, PiTypeAnyTypeRule } from "../metalanguage/PiTyperDefLang";
+import { PiTypeDefinition, PiTypeIsTypeRule, PiTypeStatement, PiTypeClassifierRule, PiTypeAnyTypeRule } from "../metalanguage/PiTyperDefLang";
 
 // Functions used to create instances of the language classes (in TyperDefLang) from the parsed data objects (from TyperGrammar.pegjs).
 
@@ -47,8 +47,8 @@ export function createAnyTypeRule(data: Partial<PiTypeAnyTypeRule>): PiTypeAnyTy
     return result;
 }
 
-export function createConceptRule(data: Partial<PiTypeConceptRule>): PiTypeConceptRule {
-    const result = new PiTypeConceptRule();
+export function createConceptRule(data: Partial<PiTypeClassifierRule>): PiTypeClassifierRule {
+    const result = new PiTypeClassifierRule();
 
     if (!!data.conceptRef) {
         result.conceptRef = data.conceptRef;

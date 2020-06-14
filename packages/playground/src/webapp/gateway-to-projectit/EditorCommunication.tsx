@@ -83,7 +83,7 @@ export class EditorCommunication {
         editorEnvironment.editor.rootElement = model as PiElement;
         EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
         // TODO remove the next statement, only used for debugging
-        EditorCommunication.editorArea.errorlist.allItems.push(new PiError("new message" + randomIntFromInterval(10, 100), null))
+        EditorCommunication.editorArea.errorlist.allItems.push(new PiError("new message" + randomIntFromInterval(10, 100), null, ""))
     }
 
     static save() {

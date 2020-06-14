@@ -8,7 +8,6 @@ abstract concept PiLangElement {
 root concept PiLanguageUnit base PiLangElement {
     concepts: PiConcept[];
     interfaces: PiInterface[];
-    expressionPlaceHolder: PiExpressionConcept;
     rootconcept: PiConcept;
 }
 abstract concept PiClassifier base PiLangElement {
@@ -25,13 +24,11 @@ concept PiConcept base PiClassifier {
     reference base?: PiConcept;
     reference interfaces: PiInterface[];
 }
-concept PiExpressionConcept base PiConcept {
-    isPlaceHolder: boolean;
+abstract concept PiExpressionConcept base PiConcept {
 }
 concept PiBinaryExpressionConcept base PiExpressionConcept {
     left: PiExpressionConcept;
     right: PiExpressionConcept;
-    symbol: string;
     priority: number;
 }
 concept PiLimitedConcept base PiConcept {

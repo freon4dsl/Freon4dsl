@@ -98,7 +98,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
         result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
         result = `this.${exp.sourceName} (${exp.actualparams.map(
-            param => `${this.makeTypeExp(param)}`
+            param => `${langExpToTypeScript(param)}`
         ).join(", ")})`;
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
@@ -114,9 +114,9 @@ export function langExpToTypeScript(exp: PiLangExp): string {
 
 function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
     let isRef: boolean = false;
-    if (!!exp.referedElement && !!exp.referedElement.referred) { // should be present, otherwise it is an incorrect model
+    if (!!exp.referredElement && !!exp.referredElement.referred) { // should be present, otherwise it is an incorrect model
         // now see whether it is marked in the .lang file as 'reference'
-        const ref = exp.referedElement.referred;
+        const ref = exp.referredElement.referred;
         isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
     }
     return isRef;

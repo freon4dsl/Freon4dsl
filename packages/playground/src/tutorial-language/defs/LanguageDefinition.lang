@@ -25,6 +25,7 @@ limited DemoAttributeType implements Type {
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}
+    // notations 'name:' and '"name":' are both correct
     Integer = { "name": "Integer", "extra": "240261"}
     Boolean = { "name": "Boolean", "extra": "5479"}
     ANY = { "name": "ANY", "extra": "456"}

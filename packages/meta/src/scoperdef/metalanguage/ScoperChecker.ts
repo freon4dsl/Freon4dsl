@@ -2,7 +2,7 @@ import { Checker } from "../../utils/Checker";
 import {
     PiConcept,
     PiLanguageUnit,
-    PiLanguageExpressionChecker, PiProperty, PiClassifier, PiInterface
+    PiLangExpressionChecker, PiProperty, PiClassifier, PiInterface
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
 import { findAllImplementorsAndSubs } from "../../utils/ModelHelpers";
@@ -15,12 +15,12 @@ import { PiElementReference} from "../../languagedef/metalanguage/PiElementRefer
 
 const LOGGER = new PiLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<PiScopeDef> {
-    myExpressionChecker : PiLanguageExpressionChecker;
+    myExpressionChecker : PiLangExpressionChecker;
     myNamespaces: PiClassifier[] = [];
 
     constructor(language: PiLanguageUnit) {
         super(language);
-        this.myExpressionChecker = new PiLanguageExpressionChecker(this.language);
+        this.myExpressionChecker = new PiLangExpressionChecker(this.language);
         // in a scope definition an expression may be simply 'self'
         // this.myExpressionChecker.strictUseOfThis = false;
     }
@@ -42,7 +42,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 
             definition.scopeConceptDefs.forEach(def => {
-                this.myExpressionChecker.checkConceptReference(def.conceptRef);
+                this.myExpressionChecker.checkClassifierReference(def.conceptRef);
                 if (!!def.conceptRef.referred) {
                     if (!!def.namespaceAdditions) {
                         this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
@@ -87,9 +87,9 @@ export class ScoperChecker extends Checker<PiScopeDef> {
     private findAllNamespaces(namespaces: PiElementReference<PiClassifier>[]): PiClassifier[] {
         let result: PiClassifier[] = [];
         namespaces.forEach(ref => {
-            this.myExpressionChecker.checkConceptReference(ref);
+            this.myExpressionChecker.checkClassifierReference(ref);
             let myClassifier = ref.referred;
-            if (!!myClassifier) { // error message handled by checkConceptReference()
+            if (!!myClassifier) { // error message handled by checkClassifierReference()
                 result = result.concat(findAllImplementorsAndSubs(myClassifier));
             }
         });

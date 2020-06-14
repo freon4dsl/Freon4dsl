@@ -19,12 +19,14 @@ export interface PiValidator {
  * element or a list of model elements.
  */
 export class PiError {
-    message: string;
-    reportedOn: PiElement | PiElement[];
+    message: string;                        // human-readable error message
+    reportedOn: PiElement | PiElement[];    // the model element that does not comply
+    locationdescription: string;            // human-readable indication of 'reportedOn'
 
-    constructor(mess: string, elem: PiElement | PiElement[]) {
+    constructor(mess: string, elem: PiElement | PiElement[], locationdescription: string) {
         this.message = mess;
         this.reportedOn = elem;
+        this.locationdescription = locationdescription;
     }
 }
 // end::validator-interface[]

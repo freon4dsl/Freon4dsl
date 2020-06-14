@@ -50,8 +50,8 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
-export function createConceptReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
-    LOGGER.log("createConceptReference " + data.name);
+export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
+    LOGGER.log("createClassifierReference " + data.name);
     const result = PiElementReference.createNamed<PiClassifier>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
@@ -63,7 +63,7 @@ export function createExpression(data: Partial<PiLangExp>): PiLangExp {
     let result: PiLangExp;
     if (!!data.sourceName) {
         if (data.sourceName === Names.nameForSelf) {
-            // cannot use PiLangSelfExp.create() because referedElement is not yet known
+            // cannot use PiLangSelfExp.create() because referredElement is not yet known
             result = new PiLangSelfExp();
             LOGGER.log("createSelfExpression");
             result.sourceName = data.sourceName;

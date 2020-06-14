@@ -61,16 +61,6 @@ export class ConceptTemplate {
         if (concept.implementedProperties().some(part => !part.isList)) {
             mobxImports.push("observablepart");
         }
-        // if (concept.implementedReferences().some(ref => ref.isList)) {
-        //     if (!mobxImports.some(im => im === "observablelistpart")) {
-        //         mobxImports.push("observablelistpart");
-        //     }
-        // }
-        // if (concept.implementedReferences().some(ref => !ref.isList)) {
-        //     if (!mobxImports.some(im => im === "observablepart")) {
-        //         mobxImports.push("observablepart");
-        //     }
-        // }
 
         // Template starts here
         const result = `
@@ -214,7 +204,7 @@ export class ConceptTemplate {
         let initializer = "";
         if (property.isList) initializer = "[]";
         if (!property.isList && property.primType === "string") initializer = "\"\"";
-        if (!property.isList && property.primType === "number") initializer = "-1";
+        if (!property.isList && property.primType === "number") initializer = "0";
         if (!property.isList && property.primType === "boolean") initializer = "false";
         return `${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer}; \t${comment}`;
     }
@@ -244,8 +234,7 @@ export class ConceptTemplate {
     private createInstanceInitialisations(limitedConcept: PiLimitedConcept): string {
         let conceptName = limitedConcept.name;
         return `${limitedConcept.instances.map(predef =>
-            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)})` ).join(";")}
-             ${conceptName}.$piANY = ${conceptName}.create({name:"$piANY"});`
+            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)})` ).join(";")}`
     }
 
     private createInstanceProperties(instance: PiInstance) : string {

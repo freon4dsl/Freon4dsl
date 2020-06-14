@@ -183,7 +183,7 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
 }
 
 export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-    // console.log("createConceptReference " + data.name);
+    // console.log("createClassifierReference " + data.name);
     const result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
     if (!!data.location) {
         result.location = data.location;
@@ -192,7 +192,7 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
 }
 
 export function createClassifierReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-    // console.log("createConceptReference " + data.name);
+    // console.log("createClassifierReference " + data.name);
     const result = PiElementReference.createNamed<PiConcept>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
@@ -201,7 +201,7 @@ export function createClassifierReference(data: Partial<PiElementReference<PiCon
 }
 
 export function createInterfaceReference(data: Partial<PiElementReference<PiInterface>>): PiElementReference<PiInterface> {
-    // console.log("createConceptReference " + data.name);
+    // console.log("createClassifierReference " + data.name);
     const result = PiElementReference.createNamed<PiInterface>(data.name, "PiInterface");
     if (!!data.location) {
         result.location = data.location;

@@ -1,0 +1,21 @@
+language Incorrect
+
+root concept Yxxy {
+    prop1: number; // = 10;
+    prop6: AAA;
+}
+
+interface AAA {
+    prop3: string;
+    prop4: boolean; // = true;
+}
+
+interface Xxxy base AAA {
+    prop2: string; // = "iets";
+    prop4: string; // = [];
+}
+concept ZZ base Yxxy implements Xxxy {
+    prop1: string; // = "nog iets";
+    prop2: number; // = 5678;
+    prop3: boolean; // = false;
+}
