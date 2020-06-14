@@ -9,12 +9,11 @@ interface BaseType {
     name: string;
 }
 interface Type base BaseType {
-    reference baseInterface: Entity;
+//    reference baseInterface: Entity;
 }
 
 concept Entity implements Type {
     attributes: Attribute[];
-    entAttributes: AttributeWithEntityType[];
     methods: Method[];
     reference baseEntity: Entity;
 }
@@ -26,48 +25,35 @@ limited AttributeType implements Type {
     Boolean = { "name": "Boolean", "extra": "5479"}
     ANY = { "name": "ANY", "extra": "456"}
 }
-expression AbsExpression base Expression {
-    expr: Expression;
-}
 
 concept Method {
     name: string;
     reference declaredType : Type;
     body: Expression;
-    parameters: Variable[];
+    parameters: Parameter[];
 }
 concept Attribute {
-    reference declaredType: AttributeType;
+    reference declaredType: Type;
     name: string;
 }
 
-concept AttributeWithEntityType {
-    reference declaredType: Entity;
+//concept AttributeWithEntityType {
+//    reference declaredType: Entity;
+//    name: string;
+//}
+
+concept Parameter  {
     name: string;
+    reference declaredType: Type;
 }
 
-concept Variable {
-    name: string;
-    reference declaredType: Entity;
-}
+////////////////////////////////////
+//       Expressions
+////////////////////////////////////
 
 abstract expression Expression {
     appliedfeature?: AppliedFeature;
 }
-
-abstract concept AppliedFeature {
-    appliedfeature?: AppliedFeature;
-}
-
-concept AttributeRef base AppliedFeature {
-    reference attribute: AttributeWithEntityType;
-}
-
-expression VariableRef base Expression {
-    reference variable: Variable;
-}
-
-
 
 abstract expression LiteralExpression base Expression {}
 
@@ -75,7 +61,7 @@ expression StringLiteralExpression base LiteralExpression {
     value: string;
 }
 
-expression NumberLiteralExpression base LiteralExpression {
+expression NumberLiteralExpression base LiteralExpression   {
     value: string; // TODO should be changed to type number
 }
 
@@ -83,6 +69,41 @@ expression BooleanLiteralExpression base LiteralExpression {
     value: string; // TODO should be changed to type boolean
 }
 
+expression AbsExpression base Expression {
+    expr: Expression;
+}
+
+abstract concept AppliedFeature {
+    appliedfeature?: AppliedFeature;
+}
+
+concept AttributeRef base AppliedFeature {
+    reference attribute: Attribute;
+}
+
+expression ParameterRef base Expression {
+    reference parameter: Parameter;
+}
+
+expression SumExpression base Expression {
+    from: Expression;
+    to  : Expression;
+    body: Expression;
+}
+
+expression MethodCallExpression base Expression {
+    reference methodDefinition: Method;
+}
+
+expression IfExpression base Expression {
+    condition: Expression;
+    whenTrue: Expression;
+    whenFalse: Expression;
+}
+
+////////////////////////////////////
+//    Binary Expressions
+////////////////////////////////////
 abstract binary expression BinaryExpression base Expression {
     left: Expression;
     right: Expression;
@@ -121,15 +142,5 @@ binary expression GreaterThenExpression base ComparisonExpression {
 
 binary expression EqualsExpression base ComparisonExpression {
     priority = 10;
-}
-
-expression MethodCallExpression base Expression {
-    reference methodDefinition: Method;
-}
-
-expression IfExpression base Expression {
-    condition: Expression;
-    whenTrue: Expression;
-    whenFalse: Expression;
 }
 

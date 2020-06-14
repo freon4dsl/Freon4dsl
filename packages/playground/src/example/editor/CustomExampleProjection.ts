@@ -39,20 +39,20 @@ export class CustomExampleProjection implements PiProjection {
         if (element instanceof SumExpression) {
             return this.createSumBox(element);
         }
-        if (element instanceof OrExpression) {
-            return this.createOrBoxGrid(element);
-        }
-        if (element instanceof Entity) {
-            // return this.createEntityBox(element);
-            return this.createEntityBox2(element);
-        }
+        // if (element instanceof OrExpression) {
+        //     return this.createOrBoxGrid(element);
+        // }
+        // if (element instanceof Entity) {
+        //     // return this.createEntityBox(element);
+        //     return this.createEntityBox2(element);
+        // }
 
         return null;
     }
 
     public getDemoNumberLiteralExpressionBox(exp: NumberLiteralExpression): Box {
         return createDefaultExpressionBox(exp, "number-literal", [
-            new TextBox(exp, "num-literal-value", () => exp.value, (v: string) => (exp.value = v), {
+            new TextBox(exp, "NumberLiteralExpression-value", () => exp.value, (v: string) => (exp.value = v), {
                 deleteWhenEmpty: true,
                 style: projectitStyles.stringLiteral,
                 keyPressAction: (currentText: string, key: string, index: number) => {
@@ -242,7 +242,33 @@ export class CustomExampleProjection implements PiProjection {
                 ],
                 { selectable: true }
             ),
-            this.createAttributeGrid(entity)
+            new IndentBox(
+                entity,
+                "Entity-attributes",
+                4,
+                this.createAttributeGrid(entity)
+            ),
+            new IndentBox(
+                entity,
+                "Entity-methods",
+                4,
+                new VerticalListBox(
+                    entity,
+                    "Model-methods-list",
+                    entity.methods
+                        .map((feature) => {
+                            return this.rootProjection.getBox(feature);
+                        })
+                        .concat(
+                            new AliasBox(entity, "Entity-methods", "<+>", {
+                                //  add methods
+                                style: projectitStyles.placeholdertext,
+                                propertyName: "methods",
+                            })
+                        )
+                )
+            ),
+
         ]);
     }
 

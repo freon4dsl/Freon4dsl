@@ -1,19 +1,17 @@
 scoper Demo for language Example
 
-isnamespace { Model, Entity, Method }
+//isnamespace { StringLiteralExpression }
 
-// Inheritance scope
+//isnamespace { Method }
+//isnamespace { Method, Entity }
+isnamespace { Method, Entity, Model }
+
 Entity {
     namespace_addition = self.baseEntity;
 }
-/*
-Type {
-    namespace_addition = self.baseInterface
-}
-*/
+
 AppliedFeature {
 	scope = typeof( container );
 }
 
-//    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'
-//    include: if( t.friends.includes(context)) then t.attributes where visibility = 'friends'
+

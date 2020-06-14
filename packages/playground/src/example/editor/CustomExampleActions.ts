@@ -32,7 +32,8 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {
         trigger: /[0-9]/,
-        activeInBoxRoles: ["PiBinaryExpression-right", "PiBinaryExpression-left", "Method-body", "OrExpression-left", "OrExpression-right"],
+        activeInBoxRoles: ["PiBinaryExpression-right", "PiBinaryExpression-left", "Method-body", "OrExpression-left", "OrExpression-right",
+        "IfExpression-condition", "IfExpression-whenTrue", "IfExpression-whenFalse"],
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
@@ -40,7 +41,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
             parent[(box as AliasBox).propertyName] = x;
             return x;
         },
-        boxRoleToSelect: "num-literal-value",
+        boxRoleToSelect: "NumberLiteralExpression-value",
         caretPosition: PiCaret.RIGHT_MOST
     }
 ];
