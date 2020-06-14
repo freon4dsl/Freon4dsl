@@ -47,14 +47,18 @@ export class EditorCommunication {
 
     static open(modelName: string, documentName: string) {
         console.log("Open document '" + modelName + "/" + documentName + "'");
+        // TODO make sure the model unit interfaces are read
         ServerCommunication.getInstance().loadModelUnit({
                 language: editorEnvironment.languageName,
                 unitName: documentName,
                 model: modelName},
-            (model: PiElement) => {
+            (unit: PiElement) => {
                 console.log("loadModelInEditor");
-                if (!!model) {
-                    editorEnvironment.editor.rootElement = model as PiElement;
+                if (!!unit) {
+                    // TODO make sure the model unit interfaces are read
+
+                    // now set the editor to show the new unit
+                    editorEnvironment.editor.rootElement = unit;
                     EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
                     EditorCommunication.currentDocumentName = documentName;
                     EditorCommunication.currentModelName = modelName;
