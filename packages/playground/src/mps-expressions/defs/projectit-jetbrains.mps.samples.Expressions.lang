@@ -1,7 +1,7 @@
 language MpsExpressions // jetbrains.mps.samples.Expressions
 
 root concept SimpleMathExpression  {
-
+    name: string;
 
 }
 

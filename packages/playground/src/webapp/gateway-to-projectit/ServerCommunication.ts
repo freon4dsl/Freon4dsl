@@ -47,20 +47,25 @@ export class ServerCommunication implements IServerCommunication {
      * @param loadCallback
      */
     async loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void) {
-        // TODO extra param 'complete: boolean' to represent opening the model unit interface or the complete model unit
-        let complete: boolean = true;
         console.log(`ServerCommunication.loadModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
-                if (complete) {
-                    const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`);
-                    const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
-                    loadCallback(model);
-                } else {
-                    const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}${ModelUnitInterfacePostfix}`);
-                    const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
-                    loadCallback(model);
-                }
+                const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}`);
+                const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
+                loadCallback(model);
+            } catch (e) {
+                LOGGER.error(this, e.toString());
+            }
+        }
+    }
+
+    async loadModelUnitInterface(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void) {
+        console.log(`ServerCommunication.loadModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
+        if (!!modelInfo.unitName && modelInfo.unitName !== "") {
+            try {
+                const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}${ModelUnitInterfacePostfix}`);
+                const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
+                loadCallback(model);
             } catch (e) {
                 LOGGER.error(this, e.toString());
             }

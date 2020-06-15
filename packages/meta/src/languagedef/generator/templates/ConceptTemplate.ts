@@ -23,7 +23,7 @@ export class ConceptTemplate {
         const isBinaryExpression = concept instanceof PiBinaryExpressionConcept;
         const isExpression = (!isBinaryExpression) && concept instanceof PiExpressionConcept;
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
+        const implementsPi = (concept.isRoot ? "PiModel" : (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement"))));
         const hasInterface = concept.interfaces.length > 0;
         const intfaces = Array.from(
             new Set(
@@ -66,9 +66,10 @@ export class ConceptTemplate {
         const result = `
             ${(concept.implementedPrimProperties().length > 0 ) ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PROJECTITCORE}";
+            import { ${implementsPi} ${concept.isRoot ? `, Language` : ``} } from "${PROJECTITCORE}";
             import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
+            ${concept.isRoot ? `import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";` : ``}
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
@@ -116,6 +117,13 @@ export class ConceptTemplate {
                 }`
             : ""}
 
+                /**
+                 * Returns true if this instance is a root concept.
+                 */                 
+                piIsModel(): boolean {
+                    return ${concept.isRoot};
+                }
+                
                 /**
                  * Returns true if this instance is an expression concept.
                  */                 
@@ -181,7 +189,28 @@ export class ConceptTemplate {
                     return result;
                 }`
             : ""}
-                 
+
+                ${(concept.isRoot) ? `
+                 /**
+                 * A convenience method that finds a unit of this model based on its name and 'metatype'.
+                 * @param name
+                 * @param metatype
+                 */
+                findUnit(name: string, metatype?: ${Names.metaType(language)} ): ${Names.allConcepts(language)} {
+                    let result: ${Names.allConcepts(language)} = null;
+                    ${concept.parts().map(p => this.generatefindUnit(p)).join("\n")}
+                    if (!!metatype) {
+                        const myMetatype = result.piLanguageConcept();
+                        if (myMetatype === metatype || Language.getInstance().subConcepts(metatype).includes(myMetatype)) {
+                            return result;
+                        }
+                    } else {
+                        return result;
+                    }                    
+                    return null;
+                }`
+            : ""}
+                             
                 ${predefInstanceDefinitions}               
             }
             
@@ -252,5 +281,16 @@ export class ConceptTemplate {
             }
         }
         return ``;
+    }
+
+    private generatefindUnit(p: PiConceptProperty) : string {
+        // prettier removes inner brackets from "(! (!!result) )"
+        // therefore we take another approach here
+        return `if (result !== null) {
+        ${p.isList ?
+        `result = this.${p.name}.find(mod => mod.name === name);`
+        :
+        `if (this.${p.name}.name === name ) result = this.${p.name}`}
+        }`;
     }
 }

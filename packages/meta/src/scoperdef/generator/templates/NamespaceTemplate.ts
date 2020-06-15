@@ -126,9 +126,9 @@ export class NamespaceTemplate {
              */
             private addIfTypeOK(namedElement: ${piNamedElementClassName}, result: ${piNamedElementClassName}[], metatype?: ${langConceptType}) {
                 if (!!namedElement) { 
-                    if (metatype) {
+                    if (!!metatype) {
                         const concept = namedElement.piLanguageConcept();
-                        if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(namedElement.piLanguageConcept())) {
+                        if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(concept)) {
                             result.push(namedElement);
                         }
                     } else {

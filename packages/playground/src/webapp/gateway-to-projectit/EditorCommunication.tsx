@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError, PiNamedElement } from "@projectit/core";
+import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError, PiNamedElement, PiModel } from "@projectit/core";
 import { editorEnvironment } from "./WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
 import { EditorArea } from "../projectit-webapp/EditorArea";
@@ -48,6 +48,43 @@ export class EditorCommunication {
     static open(modelName: string, documentName: string) {
         console.log("Open document '" + modelName + "/" + documentName + "'");
         // TODO make sure the model unit interfaces are read
+        const parentOfCurrentDocument = editorEnvironment.editor.rootElement.piContainer().container;
+        let model: PiModel = (parentOfCurrentDocument.piIsModel() ? (parentOfCurrentDocument as PiModel) : null);
+
+        let oldUnit = editorEnvironment.editor.rootElement;
+        if (!!model) { // else internal error
+            if ((model as PiModel).name === modelName) { // we are opening another unit of the same model
+                let allright: boolean = true;
+                // make whole operation atomic, i.e. it can be reversed if anything in the process goes wrong
+                // so remember old unit and new unit interface
+                let newUnitInterface = model.findUnit(documentName);
+                // remove old unit and add old unit model unit interface, if present
+                ServerCommunication.getInstance().loadModelUnitInterface({
+                    language: editorEnvironment.languageName,
+                    unitName: this.currentDocumentName,
+                    model: this.currentModelName},
+                    (unit: PiElement) => {
+                        if (!!unit) {
+                            // we must store the interface in the same place as the old unit, which info is held in PiContainer()
+                            if (oldUnit.piContainer().propertyIndex > -1) { // it is a list
+                                model[oldUnit.piContainer().propertyName].splice(oldUnit.piContainer().propertyIndex, 1, unit);
+                            } else {
+                                model[oldUnit.piContainer().propertyName] = unit;
+                            }
+                        } else {
+                            allright = false;
+                            // give error message to user
+                            PiToolbar.instance.alertContent = `Document interface for '${this.currentModelName}/${this.currentDocumentName}' could not be found on the server.`;
+                            PiToolbar.instance.alertIsVisible = true;
+                        }
+                    });
+                // remove model unit interface of new unit, if present
+                // add the new complete unit
+                // if everything goes well, show the new unit in the editor
+            }
+        }
+
+        // old code:
         ServerCommunication.getInstance().loadModelUnit({
                 language: editorEnvironment.languageName,
                 unitName: documentName,
@@ -55,8 +92,6 @@ export class EditorCommunication {
             (unit: PiElement) => {
                 console.log("loadModelInEditor");
                 if (!!unit) {
-                    // TODO make sure the model unit interfaces are read
-
                     // now set the editor to show the new unit
                     editorEnvironment.editor.rootElement = unit;
                     EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);

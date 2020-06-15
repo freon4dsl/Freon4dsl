@@ -12,6 +12,7 @@ export type Property = {
 };
 
 export type Concept = {
+    // TODO add isUnit and isRoot
     isAbstract: boolean;
     isPublic: boolean;
     typeName: string;

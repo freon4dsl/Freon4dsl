@@ -22,12 +22,20 @@ export interface IServerCommunication {
     putModelUnit(modelInfo: IModelUnitData, piUnit: PiElement);
 
     /**
-     * Reads the model according to the data in 'modelInfo' from the server and
-     * calls 'loadCallBack', which takes the model as parameter.
+     * Reads the model unit according to the data in 'modelInfo' from the server and
+     * calls 'loadCallBack', which takes the model unit as parameter.
      * @param modelInfo
      * @param loadCallback
      */
-    loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void);
+    loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piUnit: PiElement) => void);
+
+    /**
+     * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
+     * calls 'loadCallBack', which takes the model unit as parameter.
+     * @param modelInfo
+     * @param loadCallback
+     */
+    loadModelUnitInterface(modelInfo: IModelUnitData, loadCallback: (piUnit: PiElement) => void);
 
     /**
      * Deletes the model according to the data in 'modelInfo' from the server
@@ -36,18 +44,11 @@ export interface IServerCommunication {
     deleteModelUnit(modelInfo: IModelUnitData);
 
     /**
-     * Reads the list of models that are available for language 'languageName' on the server
-     * and calls 'modelListCallback'.
-     * @param languageName
-     * @param modelListCallback
-     */
-    // loadModelList(languageName: string, modelListCallback: (names: string[]) => void);
-
-    /**
      * Deletes the complete model with name 'modelName', including all its modelunits
      * @param languageName
      * @param modelName
      */
+    // TODO implement this
     // deleteModel(languageName: string, modelName: string);
 
     /**

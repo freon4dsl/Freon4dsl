@@ -1,6 +1,7 @@
 language Testproject
 
 root concept TestStart {
+    name: string;
     bb: BB[];
 }
 

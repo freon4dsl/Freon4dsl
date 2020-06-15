@@ -10,6 +10,8 @@ export interface PiElement {
 
     piContainer(): PiContainerDescriptor;
 
+    piIsModel(): boolean;
+
     piIsExpression(): boolean;
 
     piIsBinaryExpression(): boolean;
@@ -21,6 +23,12 @@ export interface PiNamedElement extends PiElement {
     name: string;
 }
 // end::named-element-interface[]
+
+// tag::model-interface[]
+export interface PiModel extends PiNamedElement {
+    findUnit(name: string, metatype?: string): PiElement;
+}
+// end::model-interface[]
 
 // TODO PiExpression cannot be distinguished from PiElement anymore,  is this a problem?
 // tag::expression-interface[]
@@ -46,6 +54,10 @@ export interface PiContainerDescriptor {
     container: PiElement;
     propertyName: string;
     propertyIndex?: number;
+}
+
+export function isPiModel(element: PiElement): element is PiModel {
+    return (!!element) && element.piIsModel && element.piIsModel();
 }
 
 export function isPiExpression(element: PiElement): element is PiExpression {

@@ -2,11 +2,13 @@
 language openhab
 
 root concept OpenHabModel {
+    name: string;
     itemModels: ItemModel[];
 //    ruleModels: RuleModel[];
 }
 
 public unit concept ItemModel {
+    public name: string;
 	public items: ModelItem[];
 }
 

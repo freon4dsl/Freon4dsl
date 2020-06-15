@@ -1,11 +1,12 @@
 language Json
 
 root concept Json {
+    name: string;
     files: JsonFile[];
 }
 
 unit concept JsonFile  implements INamedConcept {
-
+    name: string;
 	contents: IJsonValue;
 }
 
