@@ -35,8 +35,14 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             error: `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`,
             whenOk: () => {
                 // language.rootConcept is set in 'checkConcept'
-                this.simpleCheck(language.rootConcept.primProperties.some(prop => prop.name === 'name'), 
-                    `The root concept should have a 'name' property [line: ${language.rootConcept.location?.start.line}, column: ${language.rootConcept.location?.start.column}].`);
+                this.nestedCheck({
+                    check: language.rootConcept.primProperties.some(prop => prop.name === 'name'),
+                    error: `The root concept should have a 'name' property [line: ${language.rootConcept.location?.start.line}, column: ${language.rootConcept.location?.start.column}].`,
+                    whenOk: () => {
+                        this.simpleCheck(language.rootConcept.parts().length > 0,
+                            `The root concept should have at least one unit type [line: ${language.rootConcept.location?.start.line}, column: ${language.rootConcept.location?.start.column}].`);
+                    }
+                });
             }
         });
 

@@ -60,7 +60,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     async loadModelUnitInterface(modelInfo: IModelUnitData, loadCallback: (piModel: PiElement) => void) {
-        console.log(`ServerCommunication.loadModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
+        console.log(`ServerCommunication.loadModelUnitInterface for ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}getModel?folder=${modelInfo.language}/${modelInfo.model}&name=${modelInfo.unitName}${ModelUnitInterfacePostfix}`);
@@ -97,7 +97,7 @@ export class ServerCommunication implements IServerCommunication {
                 let resultWithoutModelUnitInterfaces: IModelUnitData[] = [];
                 for (let folder of modelSubfolders.data) {
                     // console.log(`searching sub folder: ${folder}`);
-                    const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${languageName}/${folder}`);
+                    const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${languageName}&subfolder=${folder}`);
                     // filter out the modelUnitInterfaces
                     if (!!modelUnits) {
                         for (let unit of modelUnits.data.filter( (name: string) => name.indexOf(ModelUnitInterfacePostfix) === -1) ) {
@@ -112,7 +112,25 @@ export class ServerCommunication implements IServerCommunication {
             console.log(e.message);
             LOGGER.error(this, e.toString());
         }
-        return [];
+        // return [];
+    }
+
+    async getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: PiElement) => void) {
+        console.log(`ServerCommunication.getUnitsForModel for ${modelName}`);
+        try {
+            // console.log(`searching sub folder: ${folder}`);
+            const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${languageName}&subfolder=${modelName}`);
+            // filter out the modelUnitInterfaces
+            if (!!modelUnits) {
+                for (let unit of modelUnits.data.filter( (name: string) => name.indexOf(ModelUnitInterfacePostfix) === -1) ) {
+                    // console.log(`loading: language: ${languageName}, model: ${modelName}, unitName: ${unit} `);
+                    await this.loadModelUnitInterface({ language: languageName, model: modelName, unitName: unit }, loadCallback);
+                }
+            }
+        } catch (e) {
+            console.log(e.message);
+            LOGGER.error(this, e.toString());
+        }
     }
 
 }

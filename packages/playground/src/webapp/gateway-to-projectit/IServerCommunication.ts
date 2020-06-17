@@ -57,4 +57,12 @@ export interface IServerCommunication {
      * @param modelListCallback
      */
     loadModelUnitList(languageName: string, modelListCallback: (names: IModelUnitData[]) => void);
+
+    /**
+     * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.
+     * @param languageName
+     * @param modelName
+     * @param loadCallback
+     */
+    getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: PiElement) => void);
 }

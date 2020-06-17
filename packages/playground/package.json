@@ -33,7 +33,7 @@
     "tutorial":     "ts-node ../meta/src/commandline/projectit all -d src/tutorial-language/defs -o src/tutorial-language",
     "meta-lang":    "ts-node ../meta/src/commandline/projectit -v all -d src/pi-language-definition-language/defs -o src/pi-language-definition-language",
     "openhab":      "ts-node ../meta/src/commandline/projectit -v all -d src/openhab/defs -o src/openhab",
-    "all-examples": "yarn run build && yarn run calculator && yarn run heating && yarn run expressions && yarn run testproject && yarn run tutorial && yarn run openhab && yarn run json"
+    "all-examples": "yarn run demo-nonverbose && yarn run taxrules && yarn run example && yarn run tutorial && yarn run testproject && yarn run calculator && yarn run heating && yarn run expressions && yarn run testproject && yarn run tutorial && yarn run openhab && yarn run json"
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.9",

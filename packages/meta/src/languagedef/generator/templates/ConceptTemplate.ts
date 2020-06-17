@@ -208,7 +208,64 @@ export class ConceptTemplate {
                         return result;
                     }                    
                     return null;
-                }`
+                }
+                
+                    
+                /**
+                 * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
+                 * Returns false if the replacement could not be done, e.g. because 'oldUnit' is not a child of this object.
+                 * @param oldUnit
+                 * @param newUnit
+                 */
+                replaceUnit(oldUnit: ${Names.allConcepts(language)}, newUnit: ${Names.allConcepts(language)}): boolean {
+                    if ( oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
+                        return false;
+                    }
+                    if ( oldUnit.piContainer().container !== this) {
+                        return false;
+                    }
+                    // we must store the interface in the same place as the old unit, which info is held in PiContainer()
+                    // TODO review this approach
+                    ${concept.parts().map(part => 
+                    `if ( oldUnit.piLanguageConcept() === "${part.type.referred.name}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+                        ${part.isList ? 
+                        `let index = this.${part.name}.indexOf(oldUnit as ${part.type.referred.name});
+                        this.${part.name}.splice(index, 1, newUnit as ${part.type.referred.name});`
+                        : 
+                        `this.${part.name} = newUnit as ${part.type.referred.name};`}
+                    } else`
+                    ).join(" ")}                    
+                    {
+                        return false;
+                    }
+            
+                    // TODO maybe this is better?
+                    // if (oldUnit.piContainer().propertyIndex > -1) { // it is a list
+                    //     this[oldUnit.piContainer().propertyName].splice(oldUnit.piContainer().propertyIndex, 1, newUnit);
+                    // } else {
+                    //     this[oldUnit.piContainer().propertyName] = newUnit;
+                    // }
+                    return  true;
+                }
+                
+                    /**
+                     * Adds a model unit. Returns false if anything goes wrong.
+                     *
+                     * @param oldUnit
+                     * @param newUnit
+                     */
+                    addUnit(newUnit: ${Names.allConcepts(language)}): boolean {
+                        const myMetatype = newUnit.piLanguageConcept();
+                        // TODO this depends on the fact the only one part of the root concept has the same type, should we allow differently???
+                        switch (myMetatype) {
+                        ${language.rootConcept.allParts().map(part =>
+                            `case "${Names.concept(part.type.referred)}": {
+                                ${part.isList? `this.${part.name}.push(newUnit as ${Names.concept(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.concept(part.type.referred)}`}
+                                return true;
+                            }`).join("\n")}
+                        }
+                        return false;                 
+                    }`
             : ""}
                              
                 ${predefInstanceDefinitions}               

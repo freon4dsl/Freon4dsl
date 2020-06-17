@@ -1,8 +1,16 @@
 language MpsExpressions // jetbrains.mps.samples.Expressions
 
-root concept SimpleMathExpression  {
+root concept MpsExpressionModel {
     name: string;
+    expressions: Expression[];
+}
 
+unit concept Expression {
+    name: string;
+    expression: SimpleMathExpression;
+}
+
+concept SimpleMathExpression  {
 }
 
 concept BinarySimpleMathExpression  base SimpleMathExpression {

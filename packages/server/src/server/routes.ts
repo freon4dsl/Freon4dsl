@@ -35,9 +35,10 @@ router.get("/getModelList", async (ctx: Router.IRouterContext) => {
 
 router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
-    console.log("getUnitList: " + folder);
+    const subfolder = ctx.query["subfolder"];
+    console.log("getUnitList: " + folder + "/" + subfolder);
     if (!!folder) {
-        ModelRequests.getUnitList(folder, ctx);
+        ModelRequests.getUnitList(folder, subfolder, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
