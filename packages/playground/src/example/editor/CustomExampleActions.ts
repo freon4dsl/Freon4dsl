@@ -33,7 +33,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     {
         trigger: /[0-9]/,
         activeInBoxRoles: ["PiBinaryExpression-right", "PiBinaryExpression-left", "Method-body", "OrExpression-left", "OrExpression-right",
-        "IfExpression-condition", "IfExpression-whenTrue", "IfExpression-whenFalse"],
+        "IfExpression-condition", "IfExpression-whenTrue", "IfExpression-whenFalse", "SumExpression-from", "SumExpression-to", "SumExpression-body"],
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();

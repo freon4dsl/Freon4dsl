@@ -9,21 +9,12 @@ interface BaseType {
     name: string;
 }
 interface Type base BaseType {
-//    reference baseInterface: Entity;
 }
 
 concept Entity implements Type {
     attributes: Attribute[];
     methods: Method[];
     reference baseEntity: Entity;
-}
-limited AttributeType implements Type {
-    name: string;
-    extra: number;
-    String = { name: "String", "extra": "199"}
-    Integer = { "name": "Integer", "extra": "240261"}
-    Boolean = { "name": "Boolean", "extra": "5479"}
-    ANY = { "name": "ANY", "extra": "456"}
 }
 
 concept Method {
@@ -32,15 +23,20 @@ concept Method {
     body: Expression;
     parameters: Parameter[];
 }
+
 concept Attribute {
     reference declaredType: Type;
     name: string;
 }
 
-//concept AttributeWithEntityType {
-//    reference declaredType: Entity;
-//    name: string;
-//}
+limited AttributeType implements Type {
+    name: string;
+    extra: number;
+    String = { name: "String", "extra": "199"}
+    Integer = { "name": "Integer", "extra": "240261"}
+    Boolean = { "name": "Boolean", "extra": "5479"}
+    ANY = { "name": "ANY", "extra": "456"}
+}
 
 concept Parameter  {
     name: string;
@@ -85,7 +81,16 @@ expression ParameterRef base Expression {
     reference parameter: Parameter;
 }
 
+concept LoopVariable {
+    name: string;
+}
+
+expression LoopVariableRef base Expression {
+    reference variable: LoopVariable;
+}
+
 expression SumExpression base Expression {
+    variable: LoopVariable;
     from: Expression;
     to  : Expression;
     body: Expression;

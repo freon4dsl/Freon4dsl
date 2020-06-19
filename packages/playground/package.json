@@ -32,7 +32,7 @@
     "type-it": 	    "ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
     "build-wait":   "tsc -w",
     "lint":         "tslint -c ./tslint.json './src/**/*.ts*'",
-    "test":         "jest",
+    "test":         "yarn run testproject && jest",
     "calculator":   "ts-node ../meta/src/commandline/projectit all -d src/calculator/defs -o src/calculator",
     "heating":      "ts-node ../meta/src/commandline/projectit all -d src/heating/defs -o src/heating",
     "expressions":  "ts-node ../meta/src/commandline/projectit all -d src/mps-expressions/defs -o src/mps-expressions",

@@ -49,7 +49,7 @@ export class PiReferenceTemplate {
                     // this._PI_name = this._PI_referred.name;
                     return this.referred.name
                 } else {
-                    this._PI_referred = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
+                    // this._PI_referred = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
                 }
                 return this._PI_name;
             }
@@ -59,7 +59,7 @@ export class PiReferenceTemplate {
                 if (!!this._PI_referred) {
                     return this._PI_referred;
                 } else {
-                    return this._PI_referred = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
+                    return ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
                 }
                 // return this._PI_referred;
             }

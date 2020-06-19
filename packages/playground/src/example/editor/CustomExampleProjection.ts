@@ -36,9 +36,9 @@ export class CustomExampleProjection implements PiProjection {
         if (element instanceof NumberLiteralExpression) {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
-        if (element instanceof SumExpression) {
-            return this.createSumBox(element);
-        }
+        // if (element instanceof SumExpression) {
+        //     return this.createSumBox(element);
+        // }
         // if (element instanceof OrExpression) {
         //     return this.createOrBoxGrid(element);
         // }
@@ -75,7 +75,11 @@ export class CustomExampleProjection implements PiProjection {
                 row: 3,
                 column: 1,
                 columnSpan: 2,
-                box: this.optionalPartBox(sum, "SumExpression-from", "from"),
+                box: new HorizontalListBox(sum, "Sum-from-part", [
+                    this.optionalPartBox(sum, "SumExpression-variable", "variable"),
+                    new LabelBox(sum, "sum-from-equals", "=", { style: exampleStyles.bracket }),
+                    this.optionalPartBox(sum, "SumExpression-from", "from")
+                ]),
                     // !!sum.from
                     // ? this.rootProjection.getBox(sum.from)
                     // : new AliasBox(sum, "sum-from", "[from]", { propertyName: "from" }),

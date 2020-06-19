@@ -8,6 +8,14 @@ anytype {
     equalsto AttributeType:ANY;
 }
 
+Parameter {
+    infertype self.declaredType;
+}
+
+ParameterRef   {
+    infertype self.parameter.declaredType;
+}
+
 Entity {
     conformsto self.baseEntity;
 }
@@ -58,14 +66,12 @@ MethodCallExpression {
 IfExpression    {
     infertype self.whenTrue;
 }
-Parameter {
-    infertype self.declaredType;
-}
-ParameterRef   {
-    infertype self.parameter.declaredType;
-}
 AttributeRef   {
     infertype self.attribute.declaredType;
+}
+
+SumExpression {
+    infertype AttributeType:Integer;
 }
 /*
 

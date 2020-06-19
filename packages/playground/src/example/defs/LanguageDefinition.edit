@@ -22,7 +22,7 @@ Model {
         model ${self.name} {
             ${self.entities
                 @vertical
-                @terminator [\n\n]
+                @terminator [\n]
             }
         model wide Methods:
             ${self.methods @vertical @separator [\n] }
@@ -43,6 +43,31 @@ Parameter {
         ${self.name} : ${self.declaredType}
     ]
 }
+
+MethodCallExpression {
+    @projection MethodCallExpression
+        [
+        CALL ${self.methodDefinition} ( ... )
+        ]
+    @trigger "method"
+}
+
+SumExpression {
+    @projection [
+        sum from ${self.variable} = ${self.from} to ${self.to} of ${self.body}
+    ]
+    @trigger "sum"
+}
+
+LoopVariableRef {
+    @projection [ ${self.variable} ]
+}
+
+LoopVariable {
+    @projection [ ${self.name} ]
+    @trigger    "var"
+}
+
 
 NumberLiteralExpression {
     @projection normal
@@ -92,14 +117,6 @@ BooleanLiteralExpression {
 }
 
 
-MethodCallExpression {
-    @projection MethodCallExpression
-        [
-        CALL ${self.methodDefinition} ( ... )
-        ]
-    @trigger "method"
-}
-
 AttributeRef {
     @projection [ ${self.attribute} ]
     @trigger "attribute"
@@ -110,31 +127,32 @@ ParameterRef {
 }
 
 
-//IfExpression {
-//    @projection IfExpression
-//        [
-//        if (${self.condition}) then
-//            ${self.whenTrue}
-//        else
-//            ${self.whenFalse}
-//        endif
-//        ]
-//    @trigger "if"
-//}
+IfExpression {
+    @projection IfExpression
+        [
+        if (${self.condition}) then
+            ${self.whenTrue}
+        else
+            ${self.whenFalse}
+        endif
+        ]
+    @trigger "if"
+}
 
 AbsExpression {
     @projection default [
         abs( ${self.expr} )
     ]
 }
+/*
 
-IfExpression {
-    @projection IfExpression
-        [
-        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
-        ]
-    @trigger "if"
-}
+//IfExpression {
+//    @projection IfExpression
+//        [
+//        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
+//        ]
+//    @trigger "if"
+//}
 /*
 
 /*
