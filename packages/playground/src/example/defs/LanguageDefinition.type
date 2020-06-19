@@ -1,13 +1,19 @@
 typer Demo for language Example
 
 // for now: first is considered to be the root of the type hierarchy
-istype {BaseType }
+istype {  BaseType }
 
 anytype {
-    // conformsto self.base
-    //conformsto self.implements
     conformsto AttributeType:ANY;
     equalsto AttributeType:ANY;
+}
+
+Parameter {
+    infertype self.declaredType;
+}
+
+ParameterRef   {
+    infertype self.parameter.declaredType;
 }
 
 Entity {
@@ -22,7 +28,7 @@ Method {
     infertype self.declaredType;
 }
 Expression {
-    abstract infertype ;
+    abstract infertype  ;
 }
 StringLiteralExpression {
     infertype AttributeType:String;
@@ -35,6 +41,12 @@ BooleanLiteralExpression {
 }
 AbsExpression {
     infertype self.expr;
+}
+OrExpression {
+    infertype AttributeType:Boolean;
+}
+AndExpression {
+    infertype AttributeType:Boolean;
 }
 MultiplyExpression {
     infertype self.left;
@@ -54,13 +66,13 @@ MethodCallExpression {
 IfExpression    {
     infertype self.whenTrue;
 }
-Variable {
-    infertype self.declaredType;
-}
-VariableRef   {
-    infertype self.variable.declaredType;
-}
 AttributeRef   {
     infertype self.attribute.declaredType;
 }
 
+SumExpression {
+    infertype AttributeType:Integer;
+}
+/*
+
+*/

@@ -11,6 +11,7 @@ export const projectitStyles: {
     function: string;
     optional: string;
     ifthenelse: string;
+    reference: string;
     requiredPlaceholder: string;
     grid: string;
     gridcell: string;

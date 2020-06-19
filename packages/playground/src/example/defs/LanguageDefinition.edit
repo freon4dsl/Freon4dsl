@@ -1,13 +1,77 @@
 editor User for language Example
 
-NumberLiteralExpression {
-    @projection normal
-        [${self.value}]
+Attribute {
+    @projection attribuut [
+        ${self.name} : ${self.declaredType}
+    ]
+}
+
+Entity {
+    @projection [
+        Entity ${self.name} base ${self.baseEntity} {
+            ${self.attributes @vertical @separator}
+            ${self.methods @vertical @separator}
+        }
+    ]
+    @trigger "entity"
+}
+
+Model {
+    @projection Model
+        [
+        model ${self.name} {
+            ${self.entities
+                @vertical
+                @terminator [\n]
+            }
+        model wide Methods:
+            ${self.methods @vertical @separator [\n] }
+        }
+        ]
+}
+
+Method {
+    @projection [
+        method ${self.name} ( ${self.parameters @separator[,] } ): ${self.declaredType} {
+            ${self.body}
+        }
+    ]
+}
+
+Parameter {
+    @projection attribuut [
+        ${self.name} : ${self.declaredType}
+    ]
+}
+
+MethodCallExpression {
+    @projection MethodCallExpression
+        [
+        CALL ${self.methodDefinition} ( ... )
+        ]
+    @trigger "method"
+}
+
+SumExpression {
+    @projection [
+        sum from ${self.variable} = ${self.from} to ${self.to} of ${self.body}
+    ]
+    @trigger "sum"
+}
+
+LoopVariableRef {
+    @projection [ ${self.variable} ]
+}
+
+LoopVariable {
+    @projection [ ${self.name} ]
+    @trigger    "var"
 }
 
 
-Attribute {
-    @projection attribuut [ ${self.name} : ${self.declaredType} ]
+NumberLiteralExpression {
+    @projection normal
+        [${self.value}]
 }
 
 StringLiteralExpression {
@@ -16,37 +80,6 @@ StringLiteralExpression {
         '${self.value}'
         ]
     @trigger "'"
-}
-
-IfExpression {
-    @projection IfExpression
-        [
-        if (${self.condition}) then
-                  ${self.whenTrue}
-        else
-           ${self.whenFalse}
-        endif
-        ]
-
-    @trigger "if"
-    @symbol "if"
-}
-/*
-IfExpression {
-    @projection IfExpression
-        [
-        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
-        ]
-
-    @trigger "if"
-    @symbol "if"
-}
-*/
-
-AbsExpression {
-    @projection default [
-        abs( ${self.expr} )
-    ]
 }
 
 PlusExpression {
@@ -60,53 +93,69 @@ MultiplyExpression {
 DivideExpression {
     @symbol "/"
 }
+
 LessThenExpression {
     @symbol "<"
 }
+
 OrExpression {
     @symbol "or"
 }
-
-
-
-Entity {
-    @trigger "entity"
+AndExpression {
+    @symbol "and"
 }
-
-/*
-MethodCallExpression {
-    @projection gewoon
-        [
-        ${self.name} (  )
-        ]
-    @trigger "Method2"
+GreaterThenExpression {
+    @symbol ">"
 }
-*/
+EqualsExpression {
+    @symbol "=="
+}
 
 BooleanLiteralExpression {
     @projection [ ${self.value} ]
+    @trigger "boolean"
 }
 
-MethodCallExpression {
-    @projection MethodCallExpression
+
+AttributeRef {
+    @projection [ ${self.attribute} ]
+    @trigger "attribute"
+}
+
+ParameterRef {
+    @projection [ ${self.parameter} . ${self.appliedfeature} ]
+}
+
+
+IfExpression {
+    @projection IfExpression
         [
-        CALL ${self.methodDefinition} (  )
+        if (${self.condition}) then
+            ${self.whenTrue}
+        else
+            ${self.whenFalse}
+        endif
         ]
-    @trigger "method"
+    @trigger "if"
 }
 
-
-Model {
-    @projection Model
-        [
-        model ${self.name} {
-        entities:
-            ${self.entities
-                @vertical
-                @terminator [\n\n]
-            }
-        model wide Methods:
-            ${self.methods @horizontal @separator [\n] }
-        }
-        ]
+AbsExpression {
+    @projection default [
+        abs( ${self.expr} )
+    ]
 }
+/*
+
+//IfExpression {
+//    @projection IfExpression
+//        [
+//        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
+//        ]
+//    @trigger "if"
+//}
+/*
+
+/*
+*/
+/*
+*/

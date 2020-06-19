@@ -333,23 +333,27 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
             // TODO Find out why innertext can be falsy.
             return;
         }
-        if (position > this.element.innerText.length) {
-            // TODO Fix the error below
-            console.log("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
-            console.log("TExtComponent.setCaretPosition >length: " + position + " > " + this.element.innerText.length);
-            // position = this.element.innerText.length;
+        try {
+            if (position > this.element.innerText.length) {
+                // TODO Fix the error below
+                console.log("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
+                console.log("TExtComponent.setCaretPosition >length: " + position + " > " + this.element.innerText.length);
+                // position = this.element.innerText.length;
+            }
+            this.clearSelection();
+            const range = document.createRange();
+            if (this.element!.childNodes[0]) {
+                range.setStart(this.element!.childNodes[0], position);
+            } else {
+                range.setStart(this.element!, position);
+            }
+            range.collapse(true);
+            window.getSelection().addRange(range);
+            this.caretPosition = position;
+            this.props.box.caretPosition = position;
+        } catch (e) {
+            console.log("TextComponent.setCaretPosition ERROR: "+ e.toString());
         }
-        this.clearSelection();
-        const range = document.createRange();
-        if (this.element!.childNodes[0]) {
-            range.setStart(this.element!.childNodes[0], position);
-        } else {
-            range.setStart(this.element!, position);
-        }
-        range.collapse(true);
-        window.getSelection().addRange(range);
-        this.caretPosition = position;
-        this.props.box.caretPosition = position;
     };
 
     private clearSelection = () => {

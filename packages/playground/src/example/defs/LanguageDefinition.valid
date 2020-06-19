@@ -16,20 +16,25 @@ Entity {
     validIdentifier;
 }
 
-Attribute {
-    validIdentifier self.name;
-}
+//Attribute {
+//    validIdentifier self.name;
+//}
+
 
 Method {
-    typecheck conformsTo (self.expression, self.declaredType);
+    typecheck conformsTo (self.body, self.declaredType);
     isunique name in self.parameters;
     validIdentifier ;
 }
 
-Variable {
+Parameter {
     validIdentifier ;
 }
 
+OrExpression {
+    typecheck equalsType( self.left, AttributeType:Boolean );
+    typecheck equalsType( self.right, AttributeType:Boolean );
+}
 AbsExpression {
     typecheck equalsType( self.expr, AttributeType:Integer );
 }
@@ -51,11 +56,6 @@ DivideExpression {
 }
 
 AndExpression {
-    typecheck equalsType( self.left, AttributeType:Boolean );
-    typecheck equalsType( self.right, AttributeType:Boolean );
-}
-
-OrExpression {
     typecheck equalsType( self.left, AttributeType:Boolean );
     typecheck equalsType( self.right, AttributeType:Boolean );
 }

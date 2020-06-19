@@ -33,7 +33,7 @@ yarn-debug.log
 yarn-error.log
 
 # generated files
-packages/docs/*/.jekyll-cache/*
+packages/docs/.jekyll-cache/*
 packages/docs/*/_site/*
 packages/meta/src/languagedef/parser/LanguageGrammar.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.js
@@ -64,3 +64,4 @@ packages/playground/exampleLangDefs/Entity/EntityDefinition.valid
 
 packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output/*
 
+/packages/playground/src/hdml/
