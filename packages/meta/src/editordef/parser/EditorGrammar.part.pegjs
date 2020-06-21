@@ -104,7 +104,7 @@ anythingButEndBracket = !("]" ) src:sourceChar
                 return src;
             }
 
-anythingBut = !("${" / newline / "]" / "[[" ) src:sourceChar
+anythingBut = !("${" / newline / "]" / "[[" ) src:char
             {
                 return src;
             }
