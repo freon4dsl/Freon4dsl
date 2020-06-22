@@ -59,13 +59,13 @@ export class SelectComponent extends AbstractChoiceComponent {
             return;
         }
         if (isSelectBox(this.props.box)) {
-            let option = this.getOptions()[findExactOptionId(this.getOptions(), optionId)];
-            LOGGER.info(this, "handleSelected option: " + option.label);
+            let option = (!!optionId ? this.getOptions()[findExactOptionId(this.getOptions(), optionId)] : null);
+            LOGGER.info(this, "handleSelected option: " + (!!option ? option.label: "null"));
             this.props.box.setSelectedOption(option);
             LOGGER.info(this, "handleSelected option done");
             this.dropdownIsOpen = false;
-            this.element.innerText = option.label;
-            this.text = option.label;
+            this.element.innerText = (!!option ? option.label: "");
+            this.text = (!!option ? option.label: "");
             this.hasError = false;
             this.element.focus();
             this.setCaretToMostRight();

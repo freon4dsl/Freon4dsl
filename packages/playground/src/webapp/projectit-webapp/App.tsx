@@ -6,7 +6,7 @@ import { Text, Flex, Box } from "@fluentui/react-northstar";
 import { MainGrid } from "./MainGrid";
 
 // This component holds the MainGrid and the Dialog
-const footerheight = "25px";
+export const footerheight = "25px";
 // TODO states should be implemented differently: using mobx
 
 export interface IDialogState {
@@ -95,7 +95,7 @@ export class App extends React.Component<{}, IDialogState> {
                     <Flex gap="gap.small" padding="padding.medium" hAlign="center" vAlign="center"
                           style={{
                               height: footerheight,
-                              marginTop: "-50px",
+                              marginTop: "-25px",
                               backgroundColor: "darkblue",
                               color: "rgba(211, 227, 253, 255)"
                           }}>

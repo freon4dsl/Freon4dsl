@@ -16,7 +16,6 @@ export class DefaultActionsTemplate {
             import {
                 AFTER_BINARY_OPERATOR,
                 BEFORE_BINARY_OPERATOR,
-                EXPRESSION_PLACEHOLDER,
                 Box,
                 KeyboardShortcutBehavior,
                 MetaKey,
@@ -72,7 +71,6 @@ export class DefaultActionsTemplate {
                     activeInBoxRoles: [
                         LEFT_MOST,
                         RIGHT_MOST,
-                        EXPRESSION_PLACEHOLDER,
                         BEFORE_BINARY_OPERATOR,
                         AFTER_BINARY_OPERATOR
                     ],
@@ -81,9 +79,8 @@ export class DefaultActionsTemplate {
                         const newExpression = new ${Names.concept(c)}();
                         parent[(box as AliasBox).propertyName] = newExpression;
                         return newExpression;
-                    },
-                    boxRoleToSelect: EXPRESSION_PLACEHOLDER
-                }`
+                    }
+            }`
         )}
             ];
             
@@ -148,11 +145,6 @@ export class DefaultActionsTemplate {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                            // const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                            // const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
-                            // parent.${part.name}.push(new${part.name});
-                            // return new${part.name};
-
                             const parent = box.element;
                             const newExpression = new ${Names.concept(subClass)}();
                             parent[(box as AliasBox).propertyName].push(newExpression);
@@ -169,11 +161,6 @@ export class DefaultActionsTemplate {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}", // for Interface part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                            // const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                            // const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
-                            // parent.${part.name}.push(new${part.name});
-                            // return new${part.name};
-                            
                             const parent = box.element;
                             const newExpression = new ${Names.concept(subClass)}();
                             parent[(box as AliasBox).propertyName].push(newExpression);
@@ -195,11 +182,6 @@ export class DefaultActionsTemplate {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for single Concept part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                            //const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                            //const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
-                            //parent.${part.name} = new${part.name};
-                            //return new${part.name};
-
                             const parent = box.element;
                             const newExpression = new ${Names.concept(subClass)}();
                             parent[(box as AliasBox).propertyName] = newExpression;
