@@ -4,11 +4,11 @@ import { CoreTestVariable } from "../domain/CoreTestVariable";
 import { CoreTestAttribute } from "../domain/CoreTestAttribute";
 
 // export class ACoreTestVariable {
-//     constructor(public unitName: string) {}
+//     constructor(public name: string) {}
 // }
 //
 // export class ACoreTestAttribute {
-//     constructor(public unitName: string) {}
+//     constructor(public name: string) {}
 // }
 
 @model

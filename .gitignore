@@ -55,6 +55,7 @@ packages/playground/src/*/typer/gen/*
 packages/playground/src/*/utils/gen/*
 packages/playground/src/*/validator/gen/*
 packages/playground/src/*/stdlib/gen/*
+packages/playground/src/HDML/*
 packages/playground/handmade/unparsedDemoModel.txt
 packages/playground/exampleLangDefs/Entity/EntityDefinition.edit
 packages/playground/exampleLangDefs/Entity/EntityDefinition.lang

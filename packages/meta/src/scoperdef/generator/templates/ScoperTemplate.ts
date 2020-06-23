@@ -19,7 +19,9 @@ export class ScoperTemplate {
     generateIndex(language: PiLanguageUnit): string {
         return `
         export * from "./${Names.scoper(language)}";
+        export * from "./${Names.scoperUtils(language)}";
         export * from "./${Names.namespace(language)}";
+        export * from "./${Names.namesCollector(language)}";
         `;
     }
 
@@ -43,6 +45,7 @@ export class ScoperTemplate {
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language } from "${PROJECTITCORE}"
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { isNameSpace } from "./${Names.scoperUtils(language)}";
         ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }          
                                    
         const LOGGER = new PiLogger("${generatedClassName}");  
@@ -141,24 +144,13 @@ export class ScoperTemplate {
                 if (modelelement === null) {
                     return null;
                 }
-                if (this.isNameSpace(modelelement)) {
+                if (isNameSpace(modelelement)) {
                     return ${namespaceClassName}.create(modelelement);
                 } else {
                     return this.findNearestNamespace(this.getParent(modelelement));
                 }
             }
-        
-            /**
-             * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition.
-             * When no namespaces are defined in the scoper definition, this method returns true if
-             * 'modelelement' is the model root. 
-             * @param modelelement
-             */
-            private isNameSpace(modelelement: ${allLangConcepts}): boolean {
-                ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref => `if(modelelement instanceof ${ref.name}) return true;`).join("\n")}      
-                return false;
-            }
-        
+               
             /**
              * Returns the element in the abstract syntax tree that contains 'modelelement'.
              * @param modelelement

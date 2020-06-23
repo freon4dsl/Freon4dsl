@@ -17,7 +17,7 @@ import * as fs from "fs";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
-        const model: DemoModel = new DemoModelCreator().createIncorrectModel();
+        const model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
         const unparser = new DemoUnparser();
 
         beforeEach(done => {

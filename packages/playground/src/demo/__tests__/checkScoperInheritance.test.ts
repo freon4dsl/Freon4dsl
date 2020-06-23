@@ -1,10 +1,10 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
-import { DemoModel, DemoFunction, DemoEntity } from "../language/gen";
+import { DemoModel, DemoFunction, DemoEntity, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("testing Scoper", () => {
     let modelCreator = new DemoModelCreator();
-    let inheritanceModel: DemoModel = modelCreator.createInheritanceModel();
+    let inheritanceModel: Demo = modelCreator.createInheritanceModel();
     let scoper = new DemoScoper();
 
     beforeEach(done => {
@@ -33,7 +33,7 @@ describe("testing Scoper", () => {
     }
 
     test("inheritance on loop", () => {
-        modelCreator.createInheritanceWithLoop().entities.forEach(ent => {
+        modelCreator.createInheritanceWithLoop().models[0].entities.forEach(ent => {
             let vis = scoper.getVisibleNames(ent);
             expect(vis).toContain(ent.name);
             ent.attributes.forEach(attr => {
@@ -48,7 +48,7 @@ describe("testing Scoper", () => {
     });
 
     test("inheritance", () => {
-        inheritanceModel.entities.forEach(ent => {
+        inheritanceModel.models[0].entities.forEach(ent => {
             let vis = scoper.getVisibleNames(ent);
             expect(vis).toContain(ent.name);
             ent.attributes.forEach(attr => {

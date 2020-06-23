@@ -215,7 +215,7 @@ const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
             model.functions.push(fun);
             return fun;
         },
-        boxRoleToSelect: "fun-unitName"
+        boxRoleToSelect: "fun-name"
     },
     // end::CreateFunctionAction[]
     // tag::CreateEntityAction[]
@@ -228,7 +228,7 @@ const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
             model.entities.push(entity);
             return entity;
         },
-        boxRoleToSelect: "entity-unitName"                                                  // <4>
+        boxRoleToSelect: "entity-name"                                                  // <4>
     },
     // end::CreateEntityAction[]
     // tag::CreateAttributeAction[]
@@ -241,7 +241,7 @@ const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
             entity.attributes.push(attribute);
             return attribute;
         },
-        boxRoleToSelect: "attribute-unitName"                                               // <4>
+        boxRoleToSelect: "attribute-name"                                               // <4>
     },
     // end::CreateAttributeAction[]
     {
@@ -285,7 +285,7 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
             if (parent instanceof CoreTestModel) {
                 const e = new CoreTestEntity();
                 parent.entities.splice(proc.propertyIndex + 1, 0, e);
-                await editor.selectElement(e, "entity-unitName");
+                await editor.selectElement(e, "entity-name");
             }
             return null;
         }
@@ -316,7 +316,7 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
             model.entities.push(entity);
             return Promise.resolve(entity);
         },
-        boxRoleToSelect: "entity-unitName"
+        boxRoleToSelect: "entity-name"
     },
     // end::createEntityByEnter[]
 

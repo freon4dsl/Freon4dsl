@@ -56,7 +56,7 @@ export class ValidatorTemplate {
  
                 let myWalker = new ${walkerClassName}();
                 myWalker.myWorker = myChecker;
-                myWalker.walk(modelelement, includeChildren );
+                myWalker.walk(modelelement, ()=> { return includeChildren; } );
 
                 return errorlist;
             }

@@ -21,10 +21,10 @@ export abstract class CoreTestModelElement extends MobxModelElementImpl {
         let con: any = this;
         while (con) {
             if (con instanceof CoreTestModel) {
-                // console.log("get model projectit-demo model: " + con.unitName);
+                // console.log("get model projectit-demo model: " + con.name);
                 return con;
             } else if (con instanceof CoreTestModelElement) {
-                // console.log("get model up from: " + con.unitName + " to: " + con.container.toString());
+                // console.log("get model up from: " + con.name + " to: " + con.container.toString());
                 con = con.container;
             } else {
                 // console.log("get model NULL: ");
@@ -44,11 +44,12 @@ export abstract class CoreTestModelElement extends MobxModelElementImpl {
     }
 }
 
+// TODO are tags still used???
 @model
 // tag::CoreTestModel[]
 export class CoreTestModel extends CoreTestModelElement {
     @observable name: string;
-    @observablelistpart entities: CoreTestEntity[];
+    @observablelistpart units: CoreTestUnit[];
     // end::CoreTestModel[]
 
     @observablelistpart functions: CoreTestFunction[];
@@ -74,3 +75,30 @@ export class CoreTestModel extends CoreTestModelElement {
 // tag::CoreTestModel[]
 }
 // end::CoreTestModel[]
+
+export class CoreTestUnit extends CoreTestModelElement {
+    @observable name: string;
+    @observablelistpart entities: CoreTestEntity[];
+    // end::CoreTestModel[]
+
+    @observablelistpart functions: CoreTestFunction[];
+    $typename: string = "CoreTestUnit";
+
+    constructor() {
+        super();
+    }
+
+    toString(): string {
+        return "unit " + this.name;
+    }
+
+    asString(): string {
+        return "unit " + this.name;
+    }
+
+    static create(name: string): CoreTestUnit {
+        const result = new CoreTestUnit();
+        result.name = name;
+        return result;
+    }
+}

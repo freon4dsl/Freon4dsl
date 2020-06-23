@@ -10,8 +10,8 @@ import {
     CoreTestNumberLiteralExpression,
     CoreTestOrExpression,
     CoreTestPlusExpression,
-    CoreTestStringLiteralExpression,
-    CoreTestVariableRefExpression,
+    CoreTestStringLiteralExpression, CoreTestUnit,
+    CoreTestVariableRefExpression
     // CoreTestAttributeType
 } from "../testmodel";
 import { CoreTestModel, CoreTestModelElement } from "../testmodel/CoreTestModel";
@@ -26,6 +26,7 @@ export class CoreTestContext {
     @observable private _rootElement: CoreTestModelElement;
 
     model: CoreTestModel = CoreTestModel.create("CoreTestModel");
+
 
     constructor(initialExpression?: CoreTestModelElement) {
         this.initialize();
@@ -52,6 +53,9 @@ export class CoreTestContext {
 
     @action
     private initialize() {
+        const unit: CoreTestUnit = CoreTestUnit.create("CoreTestUnit");
+        this.model.units.push(unit);
+
         const entity1 = CoreTestEntity.create("Person");
         const attribute1 = CoreTestAttribute.create("name");
         const attribute2 = CoreTestAttribute.create("age");
@@ -73,8 +77,8 @@ export class CoreTestContext {
         const var3 = CoreTestVariable.create("Resultvar", entity1);
         const var4 = CoreTestVariable.create("Param", entity1);
 
-        this.model.entities.push(entity1);
-        this.model.entities.push(entity2);
+        unit.entities.push(entity1);
+        unit.entities.push(entity2);
         entity1.functions.push(f1);
         entity1.functions.push(f2);
         entity2.functions.push(f3);

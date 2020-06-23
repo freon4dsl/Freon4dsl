@@ -42,21 +42,21 @@ describe("Mobx Model", () => {
                 },
                 element => {
                     reaktion++;
-                    // console.log("React " + reaktion + " on " + (!!element ? element["unitName"] : "element is null"));
+                    // console.log("React " + reaktion + " on " + (!!element ? element["name"] : "element is null"));
                 }
             );
             reaktion = 0;
             done();
         });
         it("references 1", () => {
-            // unitName and reference should be to part2
+            // name and reference should be to part2
             expect(element.singleReference.name).toBe("part2");
             expect(element.singleReference.referred).toBe(part2);
             checkUnchanged();
 
             element.singleReference.name = "part1";
 
-            // unitName and reference should be changed
+            // name and reference should be changed
             expect(element.manyPart.length).toBe(2);
             expect(element.singleReference.referred).toBe(part1);
             expect(element.singleReference.name).toBe("part1");
@@ -74,7 +74,7 @@ describe("Mobx Model", () => {
             checkUnchanged();
 
             part1.name = "part1-newname";
-            // referred part changes unitName, thus reference follows this change
+            // referred part changes name, thus reference follows this change
             expect(element.singleReference.name).toBe("part1-newname");
             expect(element.singleReference.referred).toBe(part1);
             checkUnchanged();

@@ -23,20 +23,21 @@ import {
     DemoGreaterThenExpression,
     DemoEqualsExpression,
     DemoLiteralExpression,
-    AppliedFeature, DemoAttributeRef, DemoAttributeWithEntityType
+    AppliedFeature, DemoAttributeRef, DemoAttributeWithEntityType, Demo
 } from "../language/gen";
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
 export class DemoModelCreator {
-    public createModelWithIsUniqueError(): DemoModel {
+    public createModelWithIsUniqueError(): Demo {
         let result = this.createCorrectModel();
+        let unit: DemoModel = result.models.find(m => m.name === "CorrectUnit");
 
         const companyEnt = DemoEntity.create({name: "Company"}); // another one with the same unitName
         const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
         const VAT_Number2 = DemoAttribute.create({name: "VAT_Number"});
         companyEnt.attributes.push(VAT_Number2);
         companyEnt.attributes.push(VAT_Number);
-        result.entities.push(companyEnt);
+        unit.entities.push(companyEnt);
 
         const ifFunction = DemoFunction.create({name: "compare"});
         ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
@@ -56,29 +57,30 @@ export class DemoModelCreator {
         double.expression = MakePlusExp("24", "2020");
         // compare(Extra, Extra) = "24" + "2020"
 
-        result.functions.push(double);
+        unit.functions.push(double);
         return result;
     }
 
     // model.functions[0].expression.appliedfeature.type.referred.unitName).toBe("Company")
-    public createModelWithAppliedfeature(): DemoModel {
+    public createModelWithAppliedfeature(): Demo {
         let result = this.createIncorrectModel();
+        let unit: DemoModel = result.models.find(m => m.name === "DemoModel_1");
         // add new attribute to Person entity
-        let personent = result.entities[0]; // Person
+        let personent = unit.entities[0]; // Person
         let personattr = new DemoAttributeWithEntityType();
         personattr.name = "attrFromPerson";
-        personattr.declaredType = PiElementReference.create<DemoEntity>(result.entities[1], "DemoEntity"); // Company
+        personattr.declaredType = PiElementReference.create<DemoEntity>(unit.entities[1], "DemoEntity"); // Company
         personent.entAttributes.push(personattr);
 
         // add new attribute to Company entity
-        let companyent = result.entities[1]; // Company
+        let companyent = unit.entities[1]; // Company
         let compattr = new DemoAttributeWithEntityType();
         compattr.name = "attrFromCompany";
-        compattr.declaredType = PiElementReference.create<DemoEntity>(result.entities[0], "DemoEntity"); // Person
+        compattr.declaredType = PiElementReference.create<DemoEntity>(unit.entities[0], "DemoEntity"); // Person
         companyent.entAttributes.push(compattr);
 
         // find the function to be changed
-        let length = result.functions[0];
+        let length = unit.functions[0];
 
         // create an expression that includes applied features
         let expression: DemoVariableRef = new DemoVariableRef();
@@ -98,8 +100,11 @@ export class DemoModelCreator {
         return result;
     }
 
-    public createInheritanceModel(): DemoModel {
+    public createInheritanceModel(): Demo {
+        let model: Demo = Demo.create({name: "ModelWithInheritance"});
         let inheritanceModel: DemoModel = DemoModel.create({name: "DemoModel_with_inheritance"});
+        model.models.push(inheritanceModel);
+
         const vehicleEnt = DemoEntity.create({name: "Vehicle"});
         const brand = DemoAttribute.create({name: "brand"});
         const vehicleName = DemoAttribute.create({name: "name"});
@@ -135,18 +140,21 @@ export class DemoModelCreator {
         inheritanceModel.entities.push(bikeEnt);
         inheritanceModel.entities.push(racebikeEnt);
 
-        return inheritanceModel;
+        return model;
     }
 
-    public createInheritanceWithLoop(): DemoModel {
-        let result = this.createInheritanceModel();
+    public createInheritanceWithLoop(): Demo {
+        let model = this.createInheritanceModel();
+        let unit = model.models.find(m => m.name === "DemoModel_with_inheritance");
         // let Vehicle inherit from RaceBike
-        result.entities[0].baseEntity = PiElementReference.create<DemoEntity>(result.entities[3], "DemoEntity");
-        return result;
+        unit.entities[0].baseEntity = PiElementReference.create<DemoEntity>(unit.entities[3], "DemoEntity");
+        return model;
     }
 
-    public createIncorrectModel(): DemoModel {
-        let model: DemoModel = DemoModel.create({name: "DemoModel_1"});
+    public createIncorrectModel(): Demo {
+        let model: Demo = Demo.create({name:"InCorrectModel"});
+        let unit: DemoModel = DemoModel.create({name: "DemoModel_1"});
+        model.models.push(unit);
 
         const length = DemoFunction.create({name: "length"});
         const Variable1 = DemoVariable.create({name: "Variable1"});
@@ -166,9 +174,9 @@ export class DemoModelCreator {
         last.expression = MakePlusExp("5", "woord");
         // last() = 5 + "woord"
 
-        model.functions.push(length);
-        model.functions.push(determine);
-        model.functions.push(last);
+        unit.functions.push(length);
+        unit.functions.push(determine);
+        unit.functions.push(last);
 
         const personEnt = DemoEntity.create({name: "Person"});
         const age = DemoAttribute.create({name: "age"});
@@ -197,8 +205,8 @@ export class DemoModelCreator {
         companyEnt.functions.push(another);
         // Company { unitName, VAT_Number, another(NOOT) = ... }
 
-        model.entities.push(personEnt);
-        model.entities.push(companyEnt);
+        unit.entities.push(personEnt);
+        unit.entities.push(companyEnt);
 
         this.addEntityTypes(
             companyEnt,
@@ -221,8 +229,10 @@ export class DemoModelCreator {
         return model;
     }
 
-    public createCorrectModel(): DemoModel {
-        let model: DemoModel = DemoModel.create({name: "CorrectModel"});
+    public createCorrectModel(): Demo {
+        let model: Demo = Demo.create({name:"CorrectModel"});
+        let unit: DemoModel = DemoModel.create({name: "CorrectUnit"});
+        model.models.push(unit);
 
         const ifFunction = DemoFunction.create({name: "compare"});
         ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
@@ -239,8 +249,8 @@ export class DemoModelCreator {
         helloFunction.expression = makeLiteralExp("Hello Demo");
         // helloString() = "Hello Demo"
 
-        model.functions.push(ifFunction);
-        model.functions.push(helloFunction);
+        unit.functions.push(ifFunction);
+        unit.functions.push(helloFunction);
 
         const companyEnt = DemoEntity.create({name: "Company"});
         const companyName = DemoAttribute.create({name: "name"});
@@ -277,8 +287,8 @@ export class DemoModelCreator {
 
         param.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
 
-        model.entities.push(schoolEntity);
-        model.entities.push(companyEnt);
+        unit.entities.push(schoolEntity);
+        unit.entities.push(companyEnt);
 
         return model;
     }

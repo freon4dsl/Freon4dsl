@@ -14,7 +14,7 @@ import {
     DemoVariable,
     PiElementReference,
     DemoLiteralExpression,
-    DemoBooleanLiteralExpression
+    DemoBooleanLiteralExpression, Demo
 } from "../language/gen";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -22,7 +22,7 @@ import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions"
 
 describe("Testing Validator", () => {
     describe("Validate DemoModel Instance", () => {
-        const model: DemoModel = new DemoModelCreator().createIncorrectModel();
+        const model: Demo = new DemoModelCreator().createIncorrectModel();
         const validator = new DemoValidator();
 
         beforeEach(done => {

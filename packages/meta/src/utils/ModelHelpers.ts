@@ -196,3 +196,13 @@ export function findAllImplementorsAndSubs(classifier: PiElementReference<PiClas
     }
     return result;
 }
+
+export function hasNameProperty (prop: PiConceptProperty): boolean {
+    const type = prop.type.referred;
+    if (!!type) {
+        if (type.allPrimProperties().some(prop => prop.name === 'name' && prop.primType === 'string') ) {
+            return true;
+        }
+    }
+    return false;
+}

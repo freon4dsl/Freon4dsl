@@ -16,9 +16,9 @@ export class DemoInitialization implements PiModelInitialization {
      * Used to initialize a completely new model. It returns the first model unit in the model.
      */
     initialize(): PiElement {
-        let model = new Demo();
+        let model = new DemoModelCreator().createCorrectModel();
         // You may replace the default with the initial model unit of your choice
-        return this.newUnit(model, "DemoModel");
+        return model.models[0];
     }
 
     /**
@@ -30,7 +30,7 @@ export class DemoInitialization implements PiModelInitialization {
     newUnit(model: Demo, typename: DemoConceptType): PiElement {
         switch (typename) {
             case "DemoModel": {
-                let unit: DemoModel = new DemoModelCreator().createCorrectModel();
+                let unit: DemoModel = new DemoModel();
                 model.models.push(unit as DemoModel);
                 return unit;
             }

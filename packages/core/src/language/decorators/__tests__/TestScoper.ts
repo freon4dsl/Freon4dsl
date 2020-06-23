@@ -6,9 +6,9 @@ export class TestScoper {
     constructor() {}
 
     getFromVisibleElements(name: string): MobxTestElement {
-        // console.log("Scoper get ["+ unitName + "] element [" + this.root.element.unitName + "] length [" + this.root.element.manyPart.length + "]" );
+        // console.log("Scoper get ["+ name + "] element [" + this.root.element.name + "] length [" + this.root.element.manyPart.length + "]" );
         const result = this.root.element.manyPart.find(part => part.name === name);
-        // console.log("parts "+ this.root.element.manyPart.map(p => p.unitName) + "  found => "+ result);
+        // console.log("parts "+ this.root.element.manyPart.map(p => p.name) + "  found => "+ result);
         return result;
     }
 

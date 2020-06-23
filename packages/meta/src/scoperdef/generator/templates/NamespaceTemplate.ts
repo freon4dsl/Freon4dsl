@@ -7,7 +7,7 @@ import {
     Names,
     PROJECTITCORE,
     sortClasses,
-    findImplementors, findAllImplementorsAndSubs
+    findImplementors, findAllImplementorsAndSubs, LANGUAGE_UTILS_GEN_FOLDER
 } from "../../../utils";
 import { PiElementReference } from "../../../languagedef/metalanguage/PiElementReference";
 
@@ -29,12 +29,15 @@ export class NamespaceTemplate {
         const langConceptType : string = Names.metaType(language);
         const generatedClassName : string = Names.namespace(language);
         const piNamedElementClassName : string = Names.PiNamedElement;
-        const myIfStatement = this.createIfStatement(scopedef);
+        const myIfStatement = this.createIfStatement(scopedef, language);
 
         // Template starts here
         return `
         import { ${piNamedElementClassName}, Language } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${langConceptType}, ${this.imports.map(ref => `${ref}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.walker(language)}";
+        import { isNameSpace } from "./${Names.scoperUtils(language)}";
+        import { ${Names.namesCollector(language)} } from "./${Names.namesCollector(language)}";
               
         const anymetatype = "_$anymetatype";
 
@@ -117,26 +120,7 @@ export class NamespaceTemplate {
                 return result;
             }
             
-            /**
-             * Checks whether 'namedElement' is an instance of 'metatype', if so 'namedElement' is added to 'result'.
-             * 
-             * @param namedElement
-             * @param result
-             * @param metatype
-             */
-            private addIfTypeOK(namedElement: ${piNamedElementClassName}, result: ${piNamedElementClassName}[], metatype?: ${langConceptType}) {
-                if (!!namedElement) { 
-                    if (!!metatype) {
-                        const concept = namedElement.piLanguageConcept();
-                        if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(concept)) {
-                            result.push(namedElement);
-                        }
-                    } else {
-                        result.push(namedElement);
-                    }
-                }
-            }
-        
+      
             /**
              * Returns true if there are additional namespaces defined for 'this._myElem' in the scoper definition
              */
@@ -188,46 +172,62 @@ export class NamespaceTemplate {
         this.imports = [];
     }
 
-    private createIfStatement(scopedef: PiScopeDef) : string {
+    private createIfStatement(scopedef: PiScopeDef, language: PiLanguageUnit) : string {
         let result : string = "";
-        let generatedConcepts: PiConcept[] = [];
-        for (let piConcept of scopedef.namespaces) {
-            let myClassifier = piConcept.referred;
-            let comment = `// based on namespace '${myClassifier.name}'\n`;
-            for (let xx of findAllImplementorsAndSubs(myClassifier)) {
-                if (xx instanceof PiConcept) {
-                    if (!generatedConcepts.includes(xx)) {
-                        result = result.concat(this.makeIfForConcept(xx, comment, myClassifier.allParts()));
-                        generatedConcepts.push(xx);
-                        this.imports.push(xx.name);
-                    }
+        // let generatedConcepts: PiConcept[] = [];
+        result += `// set up the 'worker' of the visitor pattern
+                let myNamesCollector = new ${Names.namesCollector(language)}();
+                myNamesCollector.namesList = result;
+                if (!!metatype) {
+                    myNamesCollector.metatype = metatype;
                 }
-            }
-        }
+ 
+                // set up the 'walker of the visitor pattern
+                let myWalker = new ${Names.walker(language)}();
+                myWalker.myWorker = myNamesCollector;
+                
+                // collect the elements from the namespace
+                myWalker.walk(this._myElem, (elem: ${Names.allConcepts(language)})=> { return !isNameSpace(elem); } );`;
+        // for (let piConcept of scopedef.namespaces) {
+        //     let myClassifier = piConcept.referred;
+        //     result += `// based on namespace '${myClassifier.name}'\n`;
+        //     // TODO find out whether we can remove 'findAllImplementorsAndSubs' in new approach
+        //     for (let xx of findAllImplementorsAndSubs(myClassifier)) {
+        //         if (xx instanceof PiConcept) {
+        //             if (!generatedConcepts.includes(xx)) {
+        //                 // TODO useProperties of interface only is not taken into account in new approach
+        //                 // result = result.concat(this.makeIfForConcept(xx, comment, myClassifier.allParts()));
+        //                 result += `myWalker.walk(this._myElem, (elem: ${Names.allConcepts(language)})=> { return isNameSpace(elem); } );`;
+        //                 generatedConcepts.push(xx);
+        //                 this.imports.push(xx.name);
+        //             }
+        //         }
+        //     }
+        // }
         return result;
     }
 
-    private makeIfForConcept(piConcept: PiConcept, comment: string, useProperties: PiProperty[]): string {
-        let result: string = comment;
-        result = result.concat("if (this._myElem instanceof " + piConcept.name + ") {");
-        for (let part of useProperties) {
-            for (let allProperty of part.type.referred.allProperties()) {
-                if (allProperty.name === "name") {
-                    if (part.isList) {
-                        result = result.concat(
-                            "for (let z of this._myElem." + part.name + ") { this.addIfTypeOK(z, result, metatype);  }"
-                        );
-                    } else {
-                        result = result.concat("this.addIfTypeOK(this._myElem." + part.name + ", result, metatype);");
-                    }
-                } else {
-                    result = result.concat("");
-                }
-            }
-        }
-        result = result.concat("}" + "\n");
-        return result;
-    }
+    // private makeIfForConcept(piConcept: PiConcept, comment: string, useProperties: PiProperty[]): string {
+    //     let result: string = comment;
+    //     result = result.concat("if (this._myElem instanceof " + piConcept.name + ") {");
+    //     for (let part of useProperties) {
+    //         for (let allProperty of part.type.referred.allProperties()) {
+    //             if (allProperty.name === "name") {
+    //                 if (part.isList) {
+    //                     result = result.concat(
+    //                         "for (let z of this._myElem." + part.name + ") { this.addIfTypeOK(z, result, metatype);  }"
+    //                     );
+    //                 } else {
+    //                     result = result.concat("this.addIfTypeOK(this._myElem." + part.name + ", result, metatype);");
+    //                 }
+    //             } else {
+    //                 result = result.concat("");
+    //             }
+    //         }
+    //     }
+    //     result = result.concat("}" + "\n");
+    //     return result;
+    // }
 
     private makeAdditionalNamespaceTexts(scopedef: PiScopeDef, language: PiLanguageUnit) {
         const generatedClassName : string = Names.namespace(language);
@@ -244,6 +244,7 @@ export class NamespaceTemplate {
                         }
                         this.makeAdditionalNamespaceTextsForConcept(implementor, def, language, isDone, comment);
                         generatedConcepts.push(implementor);
+                        this.imports.push(implementor.name);
                     }
                 } else {
                     if ( !generatedConcepts.includes(myClassifier)) {
@@ -251,6 +252,7 @@ export class NamespaceTemplate {
                     }
                     this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, language, isDone, comment);
                     generatedConcepts.push(myClassifier);
+                    this.imports.push(myClassifier.name);
                 }
             }
         }

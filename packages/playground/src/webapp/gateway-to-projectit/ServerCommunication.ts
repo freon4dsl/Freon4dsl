@@ -26,7 +26,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async putModelUnit(modelInfo: IModelUnitData, piModel: PiElement) {
         console.log(`ServerCommunication.putModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
-        if (!!modelInfo.unitName && modelInfo.unitName !== "" && modelInfo.unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9]*$/)) {
+        if (!!modelInfo.unitName && modelInfo.unitName !== "" && modelInfo.unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piModel);
             const publicModel = ServerCommunication.serial.convertToJSON(piModel, true);
             try {
