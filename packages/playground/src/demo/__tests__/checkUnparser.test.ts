@@ -123,6 +123,7 @@ describe("Testing Unparser", () => {
 
         test.skip("complete example model with simple attribute types", () => {
             let result: string = "";
+            const model = new DemoModelCreator().createModelWithMultipleUnits();
             result = unparser.unparse(model, false);
             let path: string = "./handmade/unparsedDemoModel.txt";
             if (!fs.existsSync(path)) {

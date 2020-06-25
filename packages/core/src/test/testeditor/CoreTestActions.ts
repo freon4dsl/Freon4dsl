@@ -225,7 +225,7 @@ const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => { // <3>
             var model: CoreTestModel = box.element as CoreTestModel;
             const entity: CoreTestEntity = new CoreTestEntity();
-            model.entities.push(entity);
+            model.units[0].entities.push(entity);
             return entity;
         },
         boxRoleToSelect: "entity-name"                                                  // <4>
@@ -284,7 +284,7 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
             PiUtils.CHECK(parent instanceof CoreTestModel);
             if (parent instanceof CoreTestModel) {
                 const e = new CoreTestEntity();
-                parent.entities.splice(proc.propertyIndex + 1, 0, e);
+                parent.units[0].entities.splice(proc.propertyIndex + 1, 0, e);
                 await editor.selectElement(e, "entity-name");
             }
             return null;
@@ -313,7 +313,7 @@ const KEYBOARD: KeyboardShortcutBehavior[] = [
         action: (box: Box,key: PiKey, editor: PiEditor): Promise<PiElement> => {
             var model: CoreTestModel = box.element as CoreTestModel;
             const entity: CoreTestEntity = CoreTestEntity.create("");
-            model.entities.push(entity);
+            model.units[0].entities.push(entity);
             return Promise.resolve(entity);
         },
         boxRoleToSelect: "entity-name"

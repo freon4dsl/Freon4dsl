@@ -71,8 +71,8 @@ export class Language {
     }
 
     allConceptProperties(typeName: string): IterableIterator<Property> {
-        // console.log("Looking up properties for "+ typeName)
-        return this.concepts.get(typeName).properties.values();
+        // console.log("Looking up properties for "+ typeName);
+        return this.concepts.get(typeName)?.properties.values();
     }
 
     /**

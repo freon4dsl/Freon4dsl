@@ -28,6 +28,14 @@ import {
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
 export class DemoModelCreator {
+
+    public createModelWithMultipleUnits(): Demo {
+        let model: Demo = Demo.create({name: "ModelWithUnits"});
+        model.models.push(this.createInheritanceUnit());
+        model.models.push(this.createCorrectUnit());
+        return model;
+    }
+
     public createModelWithIsUniqueError(): Demo {
         let result = this.createCorrectModel();
         let unit: DemoModel = result.models.find(m => m.name === "CorrectUnit");
@@ -102,34 +110,39 @@ export class DemoModelCreator {
 
     public createInheritanceModel(): Demo {
         let model: Demo = Demo.create({name: "ModelWithInheritance"});
-        let inheritanceModel: DemoModel = DemoModel.create({name: "DemoModel_with_inheritance"});
+        let inheritanceModel = this.createInheritanceUnit();
         model.models.push(inheritanceModel);
+        return model;
+    }
 
-        const vehicleEnt = DemoEntity.create({name: "Vehicle"});
-        const brand = DemoAttribute.create({name: "brand"});
-        const vehicleName = DemoAttribute.create({name: "name"});
+    private createInheritanceUnit() {
+        let inheritanceModel: DemoModel = DemoModel.create({ name: "DemoModel_with_inheritance" });
+
+        const vehicleEnt = DemoEntity.create({ name: "Vehicle" });
+        const brand = DemoAttribute.create({ name: "brand" });
+        const vehicleName = DemoAttribute.create({ name: "type" });
         vehicleEnt.attributes.push(brand);
         vehicleEnt.attributes.push(vehicleName);
 
-        const carEnt = DemoEntity.create({name: "Car"});
-        const numberplate = DemoAttribute.create({name: "numberplate"});
-        const carType = DemoAttribute.create({name: "make"});
+        const carEnt = DemoEntity.create({ name: "Car" });
+        const numberplate = DemoAttribute.create({ name: "numberplate" });
+        const carType = DemoAttribute.create({ name: "make" });
         // carEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
         carEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         carEnt.attributes.push(numberplate);
         carEnt.attributes.push(carType);
 
-        const bikeEnt = DemoEntity.create({name: "Bike"});
-        const backseat = DemoAttribute.create({name: "backseat"});
-        const gears = DemoAttribute.create({name: "gears"});
+        const bikeEnt = DemoEntity.create({ name: "Bike" });
+        const backseat = DemoAttribute.create({ name: "backseat" });
+        const gears = DemoAttribute.create({ name: "gears" });
         // bikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
         bikeEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         bikeEnt.attributes.push(backseat);
         bikeEnt.attributes.push(gears);
 
-        const racebikeEnt = DemoEntity.create({name: "RaceBike"});
-        const color = DemoAttribute.create({name: "color"});
-        const wheelsize = DemoAttribute.create({name: "wheelsize"});
+        const racebikeEnt = DemoEntity.create({ name: "RaceBike" });
+        const color = DemoAttribute.create({ name: "color" });
+        const wheelsize = DemoAttribute.create({ name: "wheelsize" });
         // racebikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity"));
         racebikeEnt.baseEntity = PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity");
         racebikeEnt.attributes.push(color);
@@ -139,8 +152,7 @@ export class DemoModelCreator {
         inheritanceModel.entities.push(carEnt);
         inheritanceModel.entities.push(bikeEnt);
         inheritanceModel.entities.push(racebikeEnt);
-
-        return model;
+        return inheritanceModel;
     }
 
     public createInheritanceWithLoop(): Demo {
@@ -231,10 +243,14 @@ export class DemoModelCreator {
 
     public createCorrectModel(): Demo {
         let model: Demo = Demo.create({name:"CorrectModel"});
-        let unit: DemoModel = DemoModel.create({name: "CorrectUnit"});
+        let unit = this.createCorrectUnit();
         model.models.push(unit);
+        return model;
+    }
 
-        const ifFunction = DemoFunction.create({name: "compare"});
+    private createCorrectUnit() {
+        let unit: DemoModel = DemoModel.create({ name: "CorrectUnit" });
+        const ifFunction = DemoFunction.create({ name: "compare" });
         ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         const ifExpression = new DemoIfExpression();
         ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
@@ -244,7 +260,7 @@ export class DemoModelCreator {
         ifFunction.expression = ifExpression;
         // compare(Variable1, Variable2): IF (2 < 5) THEN 1 ELSE 5 ENDIF
 
-        const helloFunction = DemoFunction.create({name: "helloString"});
+        const helloFunction = DemoFunction.create({ name: "helloString" });
         helloFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         helloFunction.expression = makeLiteralExp("Hello Demo");
         // helloString() = "Hello Demo"
@@ -252,15 +268,15 @@ export class DemoModelCreator {
         unit.functions.push(ifFunction);
         unit.functions.push(helloFunction);
 
-        const companyEnt = DemoEntity.create({name: "Company"});
-        const companyName = DemoAttribute.create({name: "name"});
+        const companyEnt = DemoEntity.create({ name: "Company" });
+        const companyName = DemoAttribute.create({ name: "name" });
         companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
+        const VAT_Number = DemoAttribute.create({ name: "VAT_Number" });
         VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
-        const work = DemoFunction.create({name: "doClean"});
-        const param = DemoVariable.create({name: "at"});
+        const work = DemoFunction.create({ name: "doClean" });
+        const param = DemoVariable.create({ name: "at" });
         work.parameters.push(param);
         work.expression = MakePlusExp("5", "24");
         work.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
@@ -268,16 +284,16 @@ export class DemoModelCreator {
         companyEnt.functions.push(work);
         // Company { VAT_Number: Integer, unitName: String, doClean(at: School) = 5 + 24 }
 
-        const schoolEntity = DemoEntity.create({name: "School"});
+        const schoolEntity = DemoEntity.create({ name: "School" });
 
-        const founded = DemoAttribute.create({name: "foundedIn"});
+        const founded = DemoAttribute.create({ name: "foundedIn" });
         founded.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        const schoolName = DemoAttribute.create({name: "name"});
+        const schoolName = DemoAttribute.create({ name: "name" });
         schoolName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         schoolEntity.attributes.push(founded);
         schoolEntity.attributes.push(schoolName);
-        const clean = DemoFunction.create({name: "requestClean"});
-        const variable = DemoVariable.create({name: "cleaningCompany"});
+        const clean = DemoFunction.create({ name: "requestClean" });
+        const variable = DemoVariable.create({ name: "cleaningCompany" });
         variable.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
         clean.parameters.push(variable);
         clean.expression = MakePlusExp("5", "24");
@@ -289,8 +305,7 @@ export class DemoModelCreator {
 
         unit.entities.push(schoolEntity);
         unit.entities.push(companyEnt);
-
-        return model;
+        return unit;
     }
 
     private addSimpleTypes(

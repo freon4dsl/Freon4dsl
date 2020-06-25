@@ -46,11 +46,12 @@ export class NamesCollectorTemplate {
         ${language.concepts.map(concept =>
             `${commentBefore}
             public execBefore${concept.name}(modelelement: ${concept.name}) {
-                ${concept.allParts().map(part => hasNameProperty(part) ? 
-                    (part.isList ? 
-                        `for (let z of modelelement.${part.name}) { this.addIfTypeOK(z);  }` 
-                        : `this.addIfTypeOK(modelelement.${part.name});`) 
-                    : `// ${part.name} has no 'name' property`).join("\n")}
+                ${hasNameProperty(concept) ? `this.addIfTypeOK(modelelement);` : ``}
+                ${concept.allParts().map(part => hasNameProperty(part.type?.referred) ?
+                    (part.isList ?
+                        `for (let z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
+                        : `this.addIfTypeOK(modelelement.${part.name});`)
+                    : `// type of ${part.name} has no 'name' property`).join("\n")}
             }
             
             ${commentAfter}
@@ -79,4 +80,5 @@ export class NamesCollectorTemplate {
             } 
         }`;
     }
+    // OUDE tekst:
 }

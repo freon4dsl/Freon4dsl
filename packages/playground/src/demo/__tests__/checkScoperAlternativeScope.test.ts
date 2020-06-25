@@ -109,6 +109,8 @@ describe("testing Alternative Scopes", () => {
 
         test("isInscope 'Company' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
             let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
+            let vi = scoper.getVisibleNames(appliedFeature);
+            expect(vi).toContain("Anneke");
             expect(scoper.isInScope(appliedFeature, "Company")).toBe(false);
         });
 

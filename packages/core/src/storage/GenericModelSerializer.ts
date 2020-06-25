@@ -114,7 +114,7 @@ export class GenericModelSerializer {
         const typename = tsObject.piLanguageConcept();
         // console.log("start converting concept name " + typename);
         var result: Object;
-        if (!(publicOnly === undefined) && publicOnly) {
+        if (publicOnly !== undefined && publicOnly) {
             if (this.language.concept(typename).isPublic) {
                 result = this.convertToJSONinternal(tsObject, true, typename);
             }
@@ -127,6 +127,7 @@ export class GenericModelSerializer {
 
     private convertToJSONinternal(tsObject: PiElement, publicOnly: boolean, typename: string): Object {
         var result: Object = { $typename: typename };
+        // console.log("typename: " + typename);
         for (let p of this.language.allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyType);
             if (publicOnly) {
