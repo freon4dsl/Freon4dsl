@@ -21,11 +21,11 @@ describe("CoreTest Model", () => {
             expect(root.model instanceof CoreTestModel).toBe(true);
 
             const model = root as CoreTestModel;
-            expect(model.entities.length).toBe(2);
+            expect(model.units[0].entities.length).toBe(2);
 
-            const f: CoreTestFunction = model.entities[0].functions[0];
+            const f: CoreTestFunction = model.units[0].entities[0].functions[0];
             expect(f.expression.container).toBe(f);
-            expect(f.container).toBe(model.entities[0]);
+            expect(f.container).toBe(model.units[0].entities[0]);
             expect((f.expression as any).container).toBeTruthy();
             expect(f.expression.piContainer().container).toBe(f);
         });

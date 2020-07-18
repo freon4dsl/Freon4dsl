@@ -1,16 +1,18 @@
 language TaxRules
 
 root concept RevenueService {
+    name: string;
     rules: TaxRuleSet; //[]
     payers: TaxPayer[];
 }
 
-concept TaxRuleSet {
+unit concept TaxRuleSet {
+    name: string;
     year: string; //number
     taxrules: TaxRule[];
 }
 
-concept TaxPayer {
+unit concept TaxPayer {
     name: string;
     address: string;
     payerType: TaxPayerType;

@@ -1,5 +1,10 @@
 language Testproject
 
+root concept TestStart {
+    name: string;
+    bb: BB[];
+}
+
 concept AA  {
     name: string;
     // the possibilities for primitive properties
@@ -10,10 +15,10 @@ concept AA  {
     AAprop5: boolean;
     AAprop6: boolean; //[];
     // properties with concept as type
-    AAprop7: BB;
-    AAprop8: BB[];
-    reference AAprop9: CC;
-    reference AAprop10: CC[];
+    reference AAprop7: BB;
+    reference AAprop8: BB[];
+    AAprop9: CC;
+    AAprop10: CC[];
     // properties with interface as type
     AAprop11: DD;
     AAprop12: DD[];
@@ -29,7 +34,8 @@ concept AA  {
     AAprop21: CC;
 }
 
-root concept BB {
+unit concept BB {
+    name: string;
     supers: AA[];
 }
 
@@ -54,4 +60,11 @@ limited ZZ {
     ZZinstance1 = { name: "ZZinstance1", ZZprop1: "sometext" }
 }
 
-// limited XX { XXinstance1; XXinstance2; XXinstance3; }
+limited XX { XXinstance1; XXinstance2; XXinstance3; }
+
+ limited TestLimited {
+     name: string;
+     something: boolean;
+     Object1 = { name: "ONWAAR", something: "false" }
+     Object2 = { name: "WAAR",  something: "true" }
+ }

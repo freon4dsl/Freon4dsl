@@ -10,6 +10,8 @@ export interface PiElement {
 
     piContainer(): PiContainerDescriptor;
 
+    piIsModel(): boolean;
+
     piIsExpression(): boolean;
 
     piIsBinaryExpression(): boolean;
@@ -21,6 +23,34 @@ export interface PiNamedElement extends PiElement {
     name: string;
 }
 // end::named-element-interface[]
+
+// tag::model-interface[]
+export interface PiModel extends PiNamedElement {
+    /**
+     * Finds a unit of this model based on its name and 'metatype'.
+     * @param name
+     * @param metatype
+     */
+    findUnit(name: string, metatype?: string): PiElement;
+
+    /**
+     * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
+     * Returns false if the replacement could not be done, e.g. because 'oldUnit' is not a child of this object.
+     *
+     * @param oldUnit
+     * @param newUnit
+     */
+    replaceUnit(oldUnit: PiElement, newUnit: PiElement): boolean;
+
+    /**
+     * Adds a model unit. Returns false if anything goes wrong.
+     *
+     * @param oldUnit
+     * @param newUnit
+     */
+    addUnit(newUnit: PiElement): boolean;
+}
+// end::model-interface[]
 
 // TODO PiExpression cannot be distinguished from PiElement anymore,  is this a problem?
 // tag::expression-interface[]
@@ -46,6 +76,10 @@ export interface PiContainerDescriptor {
     container: PiElement;
     propertyName: string;
     propertyIndex?: number;
+}
+
+export function isPiModel(element: PiElement): element is PiModel {
+    return (!!element) && element.piIsModel && element.piIsModel();
 }
 
 export function isPiExpression(element: PiElement): element is PiExpression {

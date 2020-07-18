@@ -21,7 +21,7 @@ export function createScopeDef(data: Partial<PiScopeDef>): PiScopeDef {
     }
     if (!!data.location) { result.location = data.location; }
     // result.namespaces.forEach(ns => {
-    //     LOGGER.log("namespace: " + ns.name + " created");
+    //     LOGGER.log("namespace: " + ns.unitName + " created");
     // });
     return result;
 }

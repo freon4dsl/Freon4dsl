@@ -20,6 +20,9 @@ export class PiLanguageUnit extends PiLangElement {
         // this.addPredefinedElements();
     }
 
+    get units(): PiConcept[] {
+        return this.concepts.filter(con => con.isUnit === true);
+    }
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
         return result.concat(this.interfaces);
@@ -74,6 +77,7 @@ export class PiLanguageUnit extends PiLangElement {
 
 export abstract class PiClassifier extends PiLangElement {
     language: PiLanguageUnit;
+    isPublic: boolean;
     properties: PiProperty[] = [];
     primProperties: PiPrimitiveProperty[] = [];
 
@@ -183,6 +187,7 @@ export class PiInterface extends PiClassifier {
 export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
     isRoot:boolean = false;
+    isUnit:boolean = false;
     base: PiElementReference<PiConcept>;
     interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
     // TODO the following should be moved to the editor generator
@@ -332,6 +337,7 @@ export class PiLimitedConcept extends PiConcept {
 }
 
 export class PiProperty extends PiLangElement {
+    isPublic: boolean;
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property

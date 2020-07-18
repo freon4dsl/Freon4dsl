@@ -4,7 +4,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Testing Typer", () => {
     describe("Typer.isType on DemoModel Instance", () => {
-        let model: DemoModel = new DemoModelCreator().createIncorrectModel();
+        let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
         let typer = new DemoTyper();
 
         beforeEach(done => {

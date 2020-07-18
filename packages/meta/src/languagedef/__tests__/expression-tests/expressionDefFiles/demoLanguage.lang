@@ -1,6 +1,11 @@
 language Demo
 
-root concept DemoModel {
+root concept ROOT {
+    name: string;
+    aa: DemoModel[];
+}
+
+unit concept DemoModel {
     functions: DemoFunction[];
     name: string;
     entities: DemoEntity[];

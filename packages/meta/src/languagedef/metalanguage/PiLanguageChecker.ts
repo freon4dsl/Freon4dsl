@@ -31,12 +31,23 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.concepts.forEach(concept => this.checkConcept(concept));
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
-        this.simpleCheck(!!language.concepts.find(c => c.isRoot),
-            `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
-        LOGGER.info(this, "Language '" + language.name + "' checked");
+        this.nestedCheck({check: !!language.concepts.find(c => c.isRoot),
+            error: `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`,
+            whenOk: () => {
+                // language.rootConcept is set in 'checkConcept'
+                this.nestedCheck({
+                    check: language.rootConcept.primProperties.some(prop => prop.name === 'name'),
+                    error: `The root concept should have a 'name' property [line: ${language.rootConcept.location?.start.line}, column: ${language.rootConcept.location?.start.column}].`,
+                    whenOk: () => {
+                        this.simpleCheck(language.rootConcept.parts().length > 0,
+                            `The root concept should have at least one unit type [line: ${language.rootConcept.location?.start.line}, column: ${language.rootConcept.location?.start.column}].`);
+                    }
+                });
+            }
+        });
 
         // now everything has been resolved, check that all concepts and interfaces have
-        // unique names, that there are no circulair inheritance or interface relationships,
+        // unique names, that there are no circular inheritance or interface relationships,
         // and that all their properties have unique names
         let names: string[] = [];
         language.concepts.forEach((con, index) => {
@@ -51,7 +62,17 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             let circularNames: string[] = [];
             let foundCircularity = this.checkCircularInheritance(circularNames, con);
             // check that all properties have unique names
-            if (!foundCircularity) this.checkPropertyUniqueNames(con);
+            if (!foundCircularity) {
+                this.checkPropertyUniqueNames(con);
+                // check that unit concepts have a name property, and .
+                // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
+                if ( con.isUnit ) {
+                    this.checkUnitConceptName(con);
+                }
+                if (con instanceof  PiLimitedConcept) {
+                    this.checkLimitedConceptName(con);
+                }
+            }
         });
         language.interfaces.forEach((intf, index) => {
             if (names.includes(intf.name)) {
@@ -65,6 +86,33 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
             let foundCircularity = this.checkCircularInheritance(circularNames, intf);
             // check that all properties have unique names
             if (!foundCircularity) this.checkPropertyUniqueNames(intf);
+        });
+    }
+
+    private checkUnitConceptName(con: PiConcept) {
+        let nameProperty = con.allPrimProperties().find(p => p.name === "name");
+        this.nestedCheck({
+            check: !!nameProperty,
+            error: `A unit concept should have a 'name' property [line: ${con.location?.start.line}, column: ${con.location?.start.column}].`,
+            whenOk: () => {
+                this.simpleCheck(nameProperty.primType === "string",
+                    `A unit concept should have a 'name' property of type 'string' ` +
+                    `[line: ${con.location?.start.line}, column: ${con.location?.start.column}].`);
+            }
+        });
+    }
+
+    private checkLimitedConceptName(piLimitedConcept: PiLimitedConcept) {
+        let nameProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
+        this.nestedCheck({
+            check: !!nameProperty,
+            error: `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore it should have a 'name' property ` +
+                `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`,
+            whenOk: () => {
+                this.simpleCheck(nameProperty.primType === "string",
+                    `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'string' ` +
+                    `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`);
+            }
         });
     }
 
@@ -206,16 +254,6 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         LOGGER.log(`Checking limited concept '${piLimitedConcept.name}' [line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}]`);
         // the normal checking of concepts is done in this.checkConcept
         // limited concept may be used as reference only, thus it should have a property 'name: string'
-        let nameProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
-        this.nestedCheck({
-            check: !!nameProperty,
-            error: `Limited concept '${piLimitedConcept.name}' can only be used as a reference, therefore it must have a 'name' property ` +
-                `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`,
-            whenOk: () => {
-                this.simpleCheck(nameProperty.primType === "string",
-                    `Limited concept '${piLimitedConcept.name}' can only be used as a reference, therefore its 'name' property must be of type 'string' ` +
-                    `[line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}].`);
-            }});
 
         // checking for properties other than primitive ones
         piLimitedConcept.properties.forEach(prop => {
@@ -296,28 +334,49 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
                 whenOk: () => {
                     this.checkConceptReference(piProperty.type);
                     let realType = piProperty.type.referred;
-                    if (!!realType) { // error message taken care of by checkClassifierReference
-                        if(realType instanceof PiLimitedConcept) {
-                            // this situation is OK, but property with limited concept as type should always be a reference property
-                            // the property should refer to one of the predefined instances of the limited concept
-                            piProperty.isPart = false;
+                    if (!!realType) { // error message handle by checkConceptReference
+                        let owningClassifier = piProperty.owningConcept;
+                        this.checkPropertyType(piProperty, realType);
+
+                        // check use of unit types in non-root concepts: may be references only
+                        if (realType.isUnit && piProperty.isPart) {
+                            this.simpleCheck(
+                                owningClassifier instanceof PiConcept && owningClassifier.isRoot,
+                                `Unit concept '${realType.name}' may be used as reference only in a non-root concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
                         }
-                        if (!piProperty.isPart) {
-                            // it is a reference, so check whether the type has a name by which it can be referred
-                            let nameProperty = realType.allPrimProperties().find(p => p.name === "name");
-                            this.nestedCheck({
-                                    check: !!nameProperty,
-                                    error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ` +
-                                                `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`,
-                                    whenOk: () => {
-                                        this.simpleCheck(nameProperty.primType === "string",
-                                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'string' ` +
-                                                `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
-                                    }});
+                        // check use of non-unit types in root concept
+                        if (owningClassifier instanceof PiConcept && owningClassifier.isRoot) {
+                            this.simpleCheck(
+                                realType.isUnit,
+                                `Type of property '${piProperty.name}' should be a unit concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
                         }
                     }
                 }
             });
+    }
+
+    private checkPropertyType(piProperty: PiProperty, realType: PiConcept) {
+        if (!!realType) { // error message taken care of by checkClassifierReference
+            if (realType instanceof PiLimitedConcept) {
+                // this situation is OK, but property with limited concept as type should always be a reference property
+                // the property should refer to one of the predefined instances of the limited concept
+                piProperty.isPart = false;
+            }
+            if (!piProperty.isPart) {
+                // it is a reference, so check whether the type has a name by which it can be referred
+                let nameProperty = realType.allPrimProperties().find(p => p.name === "name");
+                this.nestedCheck({
+                    check: !!nameProperty,
+                    error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ` +
+                        `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`,
+                    whenOk: () => {
+                        this.simpleCheck(nameProperty.primType === "string",
+                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'string' ` +
+                            `[line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                    }
+                });
+            }
+        }
     }
 
     checkPrimitiveProperty(element: PiPrimitiveProperty): void {

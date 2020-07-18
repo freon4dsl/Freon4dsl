@@ -27,7 +27,11 @@ export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
 
 // export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
 
+// import { OpenhabEnvironment } from "../../openhab/environment/gen/OpenhabEnvironment";
+// export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
 
+// import { HDMLEnvironment } from "../../HDML/environment/gen/HDMLEnvironment";
+// export const editorEnvironment: PiEnvironment = HDMLEnvironment.getInstance();
 /**
  * The one and only reference to the server on which the models are stored
  */

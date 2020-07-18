@@ -48,7 +48,7 @@ figure.highlight {
 } // literal //
 .highlight .n {
   color: #93a1a1;
-} // name //
+} // unitName //
 .highlight .o {
   color: #859900;
 } // operator //
@@ -131,46 +131,46 @@ figure.highlight {
 } // literal.string //
 .highlight .na {
   color: #555;
-} // name.attribute //
+} // unitName.attribute //
 .highlight .nb {
   color: #b58900;
-} // name.builtin //
+} // unitName.builtin //
 .highlight .nc {
   color: #268bd2;
-} // name.class //
+} // unitName.class //
 .highlight .no {
   color: #cb4b16;
-} // name.constant //
+} // unitName.constant //
 .highlight .nd {
   color: #268bd2;
-} // name.decorator //
+} // unitName.decorator //
 .highlight .ni {
   color: #cb4b16;
-} // name.entity //
+} // unitName.entity //
 .highlight .ne {
   color: #cb4b16;
-} // name.exception //
+} // unitName.exception //
 .highlight .nf {
   color: #268bd2;
-} // name.function //
+} // unitName.function //
 .highlight .nl {
   color: #555;
-} // name.label //
+} // unitName.label //
 .highlight .nn {
   color: #93a1a1;
-} // name.namespace //
+} // unitName.namespace //
 .highlight .nx {
   color: #555;
-} // name.other //
+} // unitName.other //
 .highlight .py {
   color: #93a1a1;
-} // name.property //
+} // unitName.property //
 .highlight .nt {
   color: #268bd2;
-} // name.tag //
+} // unitName.tag //
 .highlight .nv {
   color: #268bd2;
-} // name.variable //
+} // unitName.variable //
 .highlight .ow {
   color: #859900;
 } // operator.word //
@@ -224,16 +224,16 @@ figure.highlight {
 } // literal.string.symbol //
 .highlight .bp {
   color: #268bd2;
-} // name.builtin.pseudo //
+} // unitName.builtin.pseudo //
 .highlight .vc {
   color: #268bd2;
-} // name.variable.class //
+} // unitName.variable.class //
 .highlight .vg {
   color: #268bd2;
-} // name.variable.global //
+} // unitName.variable.global //
 .highlight .vi {
   color: #268bd2;
-} // name.variable.instance //
+} // unitName.variable.instance //
 .highlight .il {
   color: #2aa198;
 } // literal.number.integer.long //
