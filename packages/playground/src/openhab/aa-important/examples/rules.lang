@@ -1,0 +1,114 @@
+language openhab // org.openhab.core.model.rule.Rules with org.openhab.core.model.script.Script
+
+root concept RuleModel {
+//	importSection: XImportSection?
+	variables: VariableDeclaration[];
+	rules: Rule[];
+}
+
+concept VariableDeclaration {
+	writeable?: boolean;
+	type: JvmTypeReference; 
+	name: string; 
+	right?: XExpression; // initial value???
+}
+
+concept Rule {
+	name: string;
+	eventtrigger: EventTrigger[];
+	script: Script;
+}
+
+interface EventTrigger { // interface maken???
+}
+
+concept CommandEventTrigger implements EventTrigger  {
+	item: string;
+	command?: ValidCommand;
+}
+
+concept GroupMemberCommandEventTrigger implements EventTrigger  {
+    group: string;
+	command?: ValidCommand;
+}
+
+concept UpdateEventTrigger implements EventTrigger  {
+	item: string;
+	state?: ValidState;
+}
+
+concept GroupMemberUpdateEventTrigger implements EventTrigger  {
+    group: string;
+	state?: ValidState;
+}
+
+concept ChangedEventTrigger implements EventTrigger  {
+	item: string;
+	oldState?: ValidState;
+	newState?: ValidState;
+}
+
+concept GroupMemberChangedEventTrigger implements EventTrigger  {
+    group: string;
+	oldState?: ValidState;
+	newState?: ValidState;
+}
+
+concept EventEmittedTrigger implements EventTrigger  {
+	channel: string;
+	trigger?: ValidTrigger;
+}
+
+concept TimerTrigger implements EventTrigger  {
+	cron: string;
+	time: TimeType;
+}
+
+limited TimeType {
+    name: string;
+    midnight = { name: "midnight" }
+    noon = { name: "noon" }
+}
+
+limited SystemTrigger implements EventTrigger  {
+    name: string;
+    SystemOnStartupTrigger = { name: "SystemOnStartupTrigger" }
+    SystemOnShutdownTrigger = { name: "SystemOnShutdownTrigger" }
+}
+
+concept ThingStateUpdateEventTrigger implements EventTrigger  {
+    thing: string;
+	state?: ThingValidState;
+}
+
+concept ThingStateChangedEventTrigger implements EventTrigger  {
+    thing: string;
+	oldState?: ThingValidState;
+	newState?: ThingValidState;
+}
+
+concept ValidState {
+    str_value?: string;
+    num_value?: number;
+}
+
+concept ValidCommand {
+    str_value?: string;
+    num_value?: number;
+}
+
+concept ValidTrigger {
+    str_value?: string;
+    num_value?: number;
+}
+
+limited ThingValidState {
+    name: string;
+    UNINITIALIZED = { name: "UNINITIALIZED" }
+    INITIALIZING = { name: "INITIALIZING" }
+    UNKNOWN= { name: "UNKNOWN" }
+    ONLINE = { name: "ONLINE" }
+    OFFLINE = { name: "OFFLINE" }
+    REMOVING = { name: "REMOVING" }
+    REMOVED = { name: "REMOVED" }
+}

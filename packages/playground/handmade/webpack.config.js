@@ -17,7 +17,7 @@ module.exports = {
     },
     output: {
         path: outPath,
-        filename: "[name].js",
+        filename: "[unitName].js",
         publicPath: "/"
     },
     target: "web",

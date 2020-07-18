@@ -241,7 +241,7 @@ export class PiTyperTemplate {
             for (let rule of conceptRules) {
                 if (piclass === rule.conceptRef.referred) {
                     myRule = rule;
-                    // console.log("found " + piclass.name + ", index in classes: " + sortedClasses.indexOf(piclass) + ", index in rules: " + classifierRules.indexOf(rule));
+                    // console.log("found " + piclass.unitName + ", index in classes: " + sortedClasses.indexOf(piclass) + ", index in rules: " + classifierRules.indexOf(rule));
                 }
             }
             // if found push rule

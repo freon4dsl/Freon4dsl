@@ -14,7 +14,7 @@ import {
     DemoVariable,
     PiElementReference,
     DemoLiteralExpression,
-    DemoBooleanLiteralExpression
+    DemoBooleanLiteralExpression, Demo
 } from "../language/gen";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
@@ -22,7 +22,7 @@ import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions"
 
 describe("Testing Validator", () => {
     describe("Validate DemoModel Instance", () => {
-        const model: DemoModel = new DemoModelCreator().createIncorrectModel();
+        const model: Demo = new DemoModelCreator().createIncorrectModel();
         const validator = new DemoValidator();
 
         beforeEach(done => {
@@ -67,7 +67,7 @@ describe("Testing Validator", () => {
             });
         });
 
-        test("'self.entities' and 'self.functions' may not empty and model name should be valid", () => {
+        test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
             let errors: PiError[] = [];
             errors = validator.validate(new DemoModel());
             // let text = "";
@@ -78,7 +78,7 @@ describe("Testing Validator", () => {
             expect(errors.length).toBe(3);
         });
 
-        test("incorrect name of DemoModel: YY\\XX", () => {
+        test("incorrect unitName of DemoModel: YY\\XX", () => {
             let errors: PiError[] = [];
             let model = new DemoModel();
             model.name = "YY\\XX";
@@ -131,7 +131,7 @@ describe("Testing Validator", () => {
             expect(errors.length).toBe(3);
         });
 
-        test("Person { name, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
+        test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
             let errors: PiError[] = [];
             const personEnt = DemoEntity.create({name: "Person"});
             const age = DemoAttribute.create({name: "age"});
@@ -154,7 +154,7 @@ describe("Testing Validator", () => {
             first.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
             Resultvar.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
 
-            // Person { name, age, first(Resultvar) = 5 + 24 }
+            // Person { unitName, age, first(Resultvar) = 5 + 24 }
 
             errors = validator.validate(personEnt, true);
             errors.forEach(e => {

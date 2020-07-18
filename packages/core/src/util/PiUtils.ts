@@ -36,7 +36,7 @@ export class PiUtils {
 
     @action
     static setContainer(exp: PiElement, piContainer: PiContainerDescriptor | null, editor: PiEditor): void {
-        if (piContainer) {
+        if (!!piContainer) {
             if (piContainer.propertyIndex === undefined) {
                 piContainer.container[piContainer.propertyName] = exp;
             } else {

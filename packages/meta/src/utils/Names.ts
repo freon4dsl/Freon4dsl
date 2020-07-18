@@ -106,6 +106,14 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Scoper";
     }
 
+    public static scoperUtils(language: PiLanguageUnit): string {
+        return this.startWithUpperCase(language?.name) + "ScoperUtils";
+    }
+
+    public static namesCollector(language: PiLanguageUnit): string {
+        return this.startWithUpperCase(language?.name) + "NamesCollector";
+    }
+
     public static validator(language: PiLanguageUnit): string {
         return this.startWithUpperCase(language?.name) + "Validator";
     }

@@ -15,7 +15,7 @@ export class DefEditorDefaults {
         for (let binConcept of editor.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
             let conceptEditor = editor.findConceptEditor(binConcept);
             if (conceptEditor === null || conceptEditor === undefined) {
-                // console.log("Adding brand editor for " + binConcept.name);
+                // console.log("Adding brand editor for " + binConcept.unitName);
                 conceptEditor = new DefEditorConcept();
                 conceptEditor.concept = PiElementReference.create<PiConcept>(binConcept, "PiConcept");
                 conceptEditor.concept.owner = editor.language;
@@ -47,7 +47,7 @@ export class DefEditorDefaults {
             }
             if (!coneditor.projection) {
                 // create a new projection
-                // console.log("Adding default projection for " + con.name);
+                // console.log("Adding default projection for " + con.unitName);
                 coneditor.projection = new MetaEditorProjection();
                 coneditor.projection.name = "default";
                 coneditor.projection.conceptEditor = coneditor;
@@ -55,7 +55,7 @@ export class DefEditorDefaults {
                 const text = DefEditorProjectionText.create(con.name);
                 text.style = "conceptkeyword";
                 startLine.items.push(text);
-                // find name property is available
+                // find unitName property is available
                 const nameProp = con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
                 if (!!nameProp) {
                     const exp = PiLangSelfExp.create(con);

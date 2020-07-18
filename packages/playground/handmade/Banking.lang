@@ -1,0 +1,269 @@
+language Bank
+
+// module ProductDefinition
+root abstract concept ProductDefinition {
+    productname: string;
+    target: ClientType;
+    product_type: ProductType;
+    conditions: LegalCondition[];
+    forecasts: Forecast[];
+}
+
+concept Forecast {
+    type: ForecastType;
+    expected_profit: Expression;
+    expected_risk: RiskAssessment;
+}
+
+limited ForecastType {
+    name: string;
+    WorstCase = { name: "WorstCase" }
+    Optimistic = { name: "Optimistic" }
+    Median = { name: "Median" }
+}
+
+// main module
+concept Bank {
+    employees: Employee[];
+    clients: Client[];
+    available_products: BankProduct[];
+    sold_products: BankProduct[];
+}
+
+// first module: Individual Client and all its personal data
+public root concept Individual implements Client, Employee {
+    public name: string;
+    address: Address;
+    date_of_birth: Date;
+    civil_status: CivilStatus;
+    partner?: Individual;
+    reference usesProducts: BankProduct[];
+}
+
+limited CivilStatus {
+    name: string;
+    Married = { name: "Married" }
+    Single = { name: "Single" }
+    Partnership = { name: "Partnership" }
+}
+
+// second module: Company Client and all its personal data
+public root concept Company implements Client {
+    public name: string;
+    address: Address;
+    date_of_registration: Date;
+    business_type: BusinessType;
+    reference authorised_to_sign: Individual[];
+    reference usesProducts: BankProduct[];
+}
+
+limited BusinessType {
+    name: string;
+    Sole_Proprietorship = { name: "Sole_Proprietorship" }
+    Corporation = { name: "Corporation" }
+    Partnership = { name: "Partnership" }
+    Cooperative = { name: "Cooperative" }
+}
+
+// third module: BankProducts
+public interface BankProduct {
+    public name: string;
+    public product_number: number;
+    public product_type_number: number;
+    public reference client: Client[];
+    public start_date: Date;
+    public end_date: Date;
+    public risk_assessment: RiskAssessment;
+}
+
+public concept RiskAssessment {
+    risk_level: number; // ranges from 1 to 10, 10 being very risky
+    expected_profit: Expression;
+    reference made_by: Employee;
+}
+
+public root concept Loan implements BankProduct {
+    amount: number;
+    interest_rate: Percentage;
+}
+
+public root concept Mortgage implements BankProduct {
+    principle_amount: number;
+    remaining_amount: number;
+    monthly_payment: number;
+    mortgage_type: MortgageType;
+    interest_rate: Percentage;
+    security: Address;
+}
+
+limited MortgageType {
+    name: string;
+    duration: number; // in months
+    Annuity30 = { name: "Annuity", duration: "360"  }
+    Linear30 = { name: "Linear", duration: "360" }
+    Annuity20 = { name: "Annuity", duration: "240"  }
+    Linear20 = { name: "Linear", duration: "240" }
+}
+
+public root concept DebitAccount implements BankProduct {
+    current_balance: number;
+    debit_interest_rate: Percentage; // only charged when balance is below zero
+    account_changes: AccountChange[];
+}
+
+public concept AccountChange {
+    interest_date: Date;
+    amount: number;
+    creditdebit: CreditDebit;
+    description: string;
+    contra_account: ContraAccount;
+    payment_method: PaymentMethod;
+}
+
+concept ContraAccount {
+    account_number: number;
+    account_holder: string;
+    account_bank: string;
+}
+
+limited CreditDebit {
+    name: string;
+    credit = {name: "Credit"}
+    debit = {name: "Debit"}
+}
+
+limited PaymentMethod {
+    name: string;
+    periodical: boolean; // initial value should be 'false'
+    DirectDebitNormal = { name: "DirectDebit", periodical: "false" }
+    DirectDebitPeriodical = { name: "DirectDebit", periodical: "true" }
+    WireTransfer = { name: "WireTransfer" }
+    PaymentTerminal = { name: "PaymentTerminal" }
+    Interest = { name: "Interest" }
+}
+
+public root concept CreditAccount implements BankProduct {
+    amount: number;
+    credit_interest_rate: Percentage;
+    account_changes: AccountChange[];
+}
+
+public root abstract concept Insurance implements BankProduct {
+    principle_amount: number;
+    monthly_payment: number;
+    coverage: CoverageType;
+}
+
+public concept CoverageType {
+    alias: string; // something like 'home contents' or 'third party liabilities'
+    code: number;
+    reference conditions: InsuranceConditions;
+}
+
+concept InsuranceConditions {
+    name: string;
+    contents: string;
+}
+
+// set of interfaces
+interface Client {
+    name: string;
+    client_status: ClientStatus;
+}
+
+limited ClientStatus {
+    name: string;
+    Excellent = { name: "Excellent" }
+    Normal = { name: "Normal" }
+    Poor = { name: "Poor" }
+}
+
+interface Employee {
+    name: string;
+    current_position: string;
+    current_salary: number;
+}
+
+// last module: basic concepts
+concept Percentage {
+    inner: Expression;
+}
+
+concept Date {
+    day: number;
+    month: number;
+    year: number;
+}
+
+concept Address {
+    street: string;
+    housenumber: number;
+    city: string;
+}
+
+// Library: Expression
+abstract expression Expression {
+}
+
+abstract expression LiteralExpression base Expression {
+    value: string;
+}
+
+expression StringLiteralExpression base LiteralExpression {
+}
+
+expression NumberLiteralExpression base LiteralExpression {
+}
+
+expression BooleanLiteralExpression base LiteralExpression {
+}
+
+expression AbsExpression base Expression {
+    expr: Expression;
+}
+
+abstract binary expression BinaryExpression base Expression {
+    left: Expression;
+    right: Expression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression PlusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression AndExpression base BinaryExpression {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpression {
+    priority = 1;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpression {
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 10;
+}
+
+expression IfExpression base Expression {
+    condition: Expression;
+    whenTrue: Expression;
+    whenFalse: Expression;
+}

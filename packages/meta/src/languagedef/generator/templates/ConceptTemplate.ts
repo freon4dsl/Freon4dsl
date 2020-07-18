@@ -14,7 +14,7 @@ export class ConceptTemplate {
     generateConcept(concept: PiConcept, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        // if(hasSuper && !(!!concept.base.referred)) console.log("ERROR in " + concept.name);
+        // if(hasSuper && !(!!concept.base.referred)) console.log("ERROR in " + concept.unitName);
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const isAbstract = concept.isAbstract;
@@ -23,7 +23,7 @@ export class ConceptTemplate {
         const isBinaryExpression = concept instanceof PiBinaryExpressionConcept;
         const isExpression = (!isBinaryExpression) && concept instanceof PiExpressionConcept;
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement")));
+        const implementsPi = (concept.isRoot ? "PiModel" : (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement"))));
         const hasInterface = concept.interfaces.length > 0;
         const intfaces = Array.from(
             new Set(
@@ -66,9 +66,10 @@ export class ConceptTemplate {
         const result = `
             ${(concept.implementedPrimProperties().length > 0 ) ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { ${Names.PiElement}, ${Names.PiNamedElement}, ${Names.PiExpression}, ${Names.PiBinaryExpression} } from "${PROJECTITCORE}";
+            import { ${implementsPi} ${concept.isRoot ? `, Language` : ``} } from "${PROJECTITCORE}";
             import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
+            ${concept.isRoot ? `import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";` : ``}
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
@@ -116,6 +117,13 @@ export class ConceptTemplate {
                 }`
             : ""}
 
+                /**
+                 * Returns true if this instance is a root concept.
+                 */                 
+                piIsModel(): boolean {
+                    return ${concept.isRoot};
+                }
+                
                 /**
                  * Returns true if this instance is an expression concept.
                  */                 
@@ -181,7 +189,85 @@ export class ConceptTemplate {
                     return result;
                 }`
             : ""}
-                 
+
+                ${(concept.isRoot) ? `
+                 /**
+                 * A convenience method that finds a unit of this model based on its name and 'metatype'.
+                 * @param name
+                 * @param metatype
+                 */
+                findUnit(name: string, metatype?: ${Names.metaType(language)} ): ${Names.allConcepts(language)} {
+                    let result: ${Names.allConcepts(language)} = null;
+                    ${concept.parts().map(p => this.generatefindUnit(p)).join("\n")}
+                    if (!!metatype) {
+                        const myMetatype = result.piLanguageConcept();
+                        if (myMetatype === metatype || Language.getInstance().subConcepts(metatype).includes(myMetatype)) {
+                            return result;
+                        }
+                    } else {
+                        return result;
+                    }                    
+                    return null;
+                }
+                
+                    
+                /**
+                 * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
+                 * Returns false if the replacement could not be done, e.g. because 'oldUnit' is not a child of this object.
+                 * @param oldUnit
+                 * @param newUnit
+                 */
+                replaceUnit(oldUnit: ${Names.allConcepts(language)}, newUnit: ${Names.allConcepts(language)}): boolean {
+                    if ( oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
+                        return false;
+                    }
+                    if ( oldUnit.piContainer().container !== this) {
+                        return false;
+                    }
+                    // we must store the interface in the same place as the old unit, which info is held in PiContainer()
+                    // TODO review this approach
+                    ${concept.parts().map(part => 
+                    `if ( oldUnit.piLanguageConcept() === "${part.type.referred.name}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+                        ${part.isList ? 
+                        `let index = this.${part.name}.indexOf(oldUnit as ${part.type.referred.name});
+                        this.${part.name}.splice(index, 1, newUnit as ${part.type.referred.name});`
+                        : 
+                        `this.${part.name} = newUnit as ${part.type.referred.name};`}
+                    } else`
+                    ).join(" ")}                    
+                    {
+                        return false;
+                    }
+            
+                    // TODO maybe this is better?
+                    // if (oldUnit.piContainer().propertyIndex > -1) { // it is a list
+                    //     this[oldUnit.piContainer().propertyName].splice(oldUnit.piContainer().propertyIndex, 1, newUnit);
+                    // } else {
+                    //     this[oldUnit.piContainer().propertyName] = newUnit;
+                    // }
+                    return  true;
+                }
+                
+                    /**
+                     * Adds a model unit. Returns false if anything goes wrong.
+                     *
+                     * @param oldUnit
+                     * @param newUnit
+                     */
+                    addUnit(newUnit: ${Names.allConcepts(language)}): boolean {
+                        const myMetatype = newUnit.piLanguageConcept();
+                        // TODO this depends on the fact the only one part of the root concept has the same type, should we allow differently???
+                        switch (myMetatype) {
+                        ${language.rootConcept.allParts().map(part =>
+                            `case "${Names.concept(part.type.referred)}": {
+                                ${part.isList? `this.${part.name}.push(newUnit as ${Names.concept(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.concept(part.type.referred)}`}
+                                return true;
+                            }`).join("\n")}
+                        }
+                        return false;                 
+                    }`
+            : ""}
+                             
                 ${predefInstanceDefinitions}               
             }
             
@@ -252,5 +338,16 @@ export class ConceptTemplate {
             }
         }
         return ``;
+    }
+
+    private generatefindUnit(p: PiConceptProperty) : string {
+        // prettier removes inner brackets from "(! (!!result) )"
+        // therefore we take another approach here
+        return `if (result !== null) {
+        ${p.isList ?
+        `result = this.${p.name}.find(mod => mod.name === name);`
+        :
+        `if (this.${p.name}.name === name ) result = this.${p.name}`}
+        }`;
     }
 }

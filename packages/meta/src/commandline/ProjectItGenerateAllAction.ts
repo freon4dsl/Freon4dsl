@@ -58,15 +58,15 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             // LOGGER.log("languageFile: " + this.languageFile);
             // LOGGER.log("editFile: " + this.editFile);
             // LOGGER.log("validFile: " + this.validFile);
-            LOGGER.log("scopeFile: " + this.scopeFile);
+            // LOGGER.log("scopeFile: " + this.scopeFile);
             // LOGGER.log("typerFile: " + this.typerFile);
 
             if (this.watch) {
-                new FileWatcher(this.languageFile, this.generateLanguage);
-                new FileWatcher(this.editFile, this.generateEditor);
-                new FileWatcher(this.typerFile, this.generateTyper);
-                new FileWatcher(this.scopeFile, this.generateScoper);
-                new FileWatcher(this.validFile, this.generateValidator);
+                if (!!this.languageFile) new FileWatcher(this.languageFile, this.generateLanguage);
+                if (!!this.editFile) new FileWatcher(this.editFile, this.generateEditor);
+                if (!!this.typerFile) new FileWatcher(this.typerFile, this.generateTyper);
+                if (!!this.scopeFile) new FileWatcher(this.scopeFile, this.generateScoper);
+                if (!!this.validFile) new FileWatcher(this.validFile, this.generateValidator);
             }
 
             // generate the language

@@ -31,7 +31,7 @@ export class TestTaxRulesCreator extends TaxRulesCreator {
         let exp: Expression = this.createMoneyLiteralExp("0");
         let whenexp = this.createIfExpression(condition, exp, null);
         let companyTax = this.createTaxRule("NGO_income_tax_free", whenexp);
-        let ruleset: TaxRuleSet = this.createTaxRuleSet("2020", companyTax);
+        let ruleset: TaxRuleSet = this.createTaxRuleSet("IB2020","2020", companyTax);
         this.addRulesToSet(ruleset);
 
         let usGov: TaxPayer = this.createTaxPayer("USA Goverment", "Washington", this.createTaxID("4444"), null, null, null, TaxPayerType.Goverment);
@@ -39,7 +39,7 @@ export class TestTaxRulesCreator extends TaxRulesCreator {
         let income: IncomePart = this.createIncomePart(this.createMoney("0"), this.createMoney("5000000"), IncomeType.Salary, usGov);
         let trump: TaxPayer = this.createTaxPayer("Donald Trump", "Mar-a-Lago", this.createTaxID("987654321"), income, null, null, TaxPayerType.Person);
 
-        let rs = this.createRevenueService(ruleset, trump);
+        let rs = this.createRevenueService("SmallStateGoverment", ruleset, trump);
         rs.payers.push(usGov);
         return rs;
     }

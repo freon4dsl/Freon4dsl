@@ -42,6 +42,7 @@ export class StdlibTemplate {
             
             /**
              * Returns the element named 'name', if it can be found in this library.
+             * If the element can not be found, 'null' is returned.
              * When 'metatype' is provided, the element is only returned when it is
              * an instance of this metatype.
              * @param name
@@ -50,13 +51,15 @@ export class StdlibTemplate {
             public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.PiNamedElement} {
                 if (!!name) {
                     let namedElement = this.elements.find(elem => elem.name === name);
-                    if (metatype) {
-                        const concept = namedElement.piLanguageConcept();
-                        if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(namedElement.piLanguageConcept())) {
+                    if (!!namedElement) {
+                        if (metatype) {
+                            const concept = namedElement.piLanguageConcept();
+                            if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(namedElement.piLanguageConcept())) {
+                                return namedElement;
+                            }
+                        } else {
                             return namedElement;
                         }
-                    } else {
-                        return namedElement;
                     }
                 }  
                 return null;               

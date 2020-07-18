@@ -6,7 +6,7 @@ import { PiElement, PiNamedElement } from "../language";
 export interface PiScoper {
 
     /**
-     *   Returns true if 'name' is known in the namespace containing 'modelelement' or one
+     *   Returns true if 'unitName' is known in the namespace containing 'modelelement' or one
      *   of its surrounding namespaces.
      *
      *   When parameter 'metatype' is present, it returns true if the element named 'name'

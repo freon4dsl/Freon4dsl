@@ -35,7 +35,7 @@ export class WalkerTemplate {
              * @param modelelement the top node of the part of the tree to be visited
              * @param includeChildren if true, the children of 'modelelement' will also be visited
              */
-            public walk(modelelement: ${allLangConcepts}, includeChildren?: boolean) {
+            public walk(modelelement: ${allLangConcepts}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                 ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${concept.name}) {
                     return this.walk${concept.name}(modelelement, includeChildren );
@@ -43,12 +43,12 @@ export class WalkerTemplate {
             }
 
             ${language.concepts.map(concept => `
-                private walk${concept.name}(modelelement: ${concept.name}, includeChildren?: boolean) {
+                private walk${concept.name}(modelelement: ${concept.name}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                     if(!!this.myWorker) {
                         this.myWorker.execBefore${concept.name}(modelelement);
                         ${((concept.allParts().length > 0)?
                         ` // work on children in the model tree
-                        if(!(includeChildren === undefined) && includeChildren) { 
+                        if(!(includeChildren === undefined) && includeChildren(modelelement)) { 
                             ${concept.allParts().map( part =>
                                 (part.isList ?
                                     `modelelement.${part.name}.forEach(p => {
