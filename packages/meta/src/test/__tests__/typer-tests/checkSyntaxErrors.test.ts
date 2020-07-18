@@ -1,15 +1,15 @@
-import { PiTyperParser } from "../parser/PiTyperParser";
-import { PiLanguageUnit } from "../../languagedef/metalanguage";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { PiTyperParser } from "../../../typerdef/parser/PiTyperParser";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage";
+import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 
 describe("Checking typer on checking errors", () => {
-    let testdir = "src/typerdef/__tests__/faultyDefFiles/syntax-errors/";
+    let testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
     let parser: PiTyperParser;
     let language: PiLanguageUnit;
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/typerdef/__tests__/test-language.lang");
+            language = new LanguageParser().parse("src/test/__tests__/typer-tests/test-language.lang");
             parser = new PiTyperParser(language);
         } catch (e) {
             console.log("Language could not be read");
