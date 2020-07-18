@@ -1,7 +1,7 @@
-import { LanguageParser } from "../../parser/LanguageParser";
+import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 
 describe("Checking language parser on checking errors", () => {
-    let testdir = "src/languagedef/__tests__/language-tests/faultyDefFiles/checking-errors/";
+    let testdir = "src/test/__tests__/language-tests/faultyDefFiles/checking-errors/";
 
     test("language should have a root concept", () => {
         let parser = new LanguageParser();

@@ -19,8 +19,8 @@ export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
 // import { TaxRulesEnvironment } from "../../taxrules/environment/gen/TaxRulesEnvironment";
 // export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance();
 
-// import { DemoEnvironment } from "../../tutorial-language/environment/gen/DemoEnvironment";
-// export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
+// import { PiLanguageEnvironment } from "../../pi-languages/environment/gen/PiLanguageEnvironment";
+// export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
 
 // import { PiLanguageEnvironment } from "../../pi-language-definition-language/environment/gen/PiLanguageEnvironment";
 // export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();

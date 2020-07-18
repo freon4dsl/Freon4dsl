@@ -1,14 +1,14 @@
-import { LanguageParser } from "../../parser/LanguageParser";
-import { LanguageExpressionParser } from "../../parser/LanguageExpressionParser";
-import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguageUnit, PiLimitedConcept } from "../../metalanguage";
+import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
+import { LanguageExpressionParser } from "../../../languagedef/parser/LanguageExpressionParser";
+import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguageUnit, PiLimitedConcept } from "../../../languagedef/metalanguage";
 
 describe("Checking expression on referredElement", () => {
-    let testdir = "src/languagedef/__tests__/expression-tests/expressionDefFiles/";
+    let testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
     let language: PiLanguageUnit;
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/languagedef/__tests__/expression-tests/expressionDefFiles/testLanguage.lang");
+            language = new LanguageParser().parse(testdir + "testLanguage.lang");
         } catch (e) {
             console.log("Language could not be read");
         }

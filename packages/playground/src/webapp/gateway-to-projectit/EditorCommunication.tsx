@@ -41,8 +41,15 @@ export class EditorCommunication {
     static newDocument(documentType: string) {
         console.log("EditorCommunication new document called, documentType: " + documentType);
         // add new model unit of right type to current model
-        editorEnvironment.editor.rootElement = editorEnvironment.initializer.newUnit(editorEnvironment.editor.rootElement.piContainer().container, documentType);
-        EditorCommunication.currentDocumentName = "";
+        let unit = editorEnvironment.initializer.newUnit(editorEnvironment.editor.rootElement.piContainer().container, documentType);
+        if (!!unit){
+            editorEnvironment.editor.rootElement = unit;
+            EditorCommunication.currentDocumentName = (unit as PiNamedElement).name;    // this is save, because all units must have a name
+        } else {
+            // error message
+            PiToolbar.instance.alertContent = `Document type '${documentType}' could not be created.`;
+            PiToolbar.instance.alertIsVisible = true;
+        }
     }
 
     static async open(modelName: string, documentName: string) {

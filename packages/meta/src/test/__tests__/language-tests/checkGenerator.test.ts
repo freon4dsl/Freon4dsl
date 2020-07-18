@@ -1,11 +1,11 @@
-import { LanguageParser } from "../../parser/LanguageParser";
-import { PiLanguageUnit } from "../../metalanguage";
-import { LanguageGenerator } from "../../generator/LanguageGenerator";
+import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
+import { PiLanguageUnit } from "../../../languagedef/metalanguage";
+import { LanguageGenerator } from "../../../languagedef/generator/LanguageGenerator";
 
 describe("Checking generator for language definition", () => {
-    let testdir = "src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/";
-    let outputdir = "src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output";
-    let dirWithCorrectOutput = "src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/correct-output";
+    let testdir = "src/test/__tests__/language-tests/correctDefFiles/internal-structure/";
+    let outputdir = "src/test/__tests__/language-tests/correctDefFiles/internal-structure/output";
+    let dirWithCorrectOutput = "src/test/__tests__/language-tests/correctDefFiles/internal-structure/correct-output";
 
     test.skip("generation of all kinds of properties", () => {
         let parser = new LanguageParser();

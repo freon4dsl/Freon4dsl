@@ -1,0 +1,262 @@
+language PiLanguage
+
+public root concept PiLanguage {
+    public name: string;
+    public structure: PiStructureDef;
+    public editor: PiEditorDef;
+    public scoper: PiScoperDef;
+    public typer: PiTyperDef;
+    public validator: PiValidatorDef;
+}
+// begin structure definition
+public unit concept PiStructureDef {
+    public name: string;
+//}
+//root concept PiLanguageUnit base PiLangElement {
+    public concepts: PiConcept[];
+    public interfaces: PiInterface[];
+    public rootconcept: PiConcept;
+}
+
+abstract concept PiLangElement {
+    // location: ParseLocation
+    name: string;
+    // piMetaName: string; not yet implemented
+}
+
+abstract concept PiClassifier base PiLangElement {
+    reference owningLanguage: PiStructureDef;
+    properties: PiProperty[];
+    primProperties: PiPrimitiveProperty[];
+}
+concept PiInterface base PiClassifier {
+    reference base: PiInterface[];
+}
+concept PiConcept base PiClassifier {
+    isAbstract: boolean;
+    isRoot:boolean;
+    reference base?: PiConcept;
+    reference interfaces: PiInterface[];
+}
+abstract concept PiExpressionConcept base PiConcept {
+}
+concept PiBinaryExpressionConcept base PiExpressionConcept {
+    left: PiExpressionConcept;
+    right: PiExpressionConcept;
+    priority: number;
+}
+concept PiLimitedConcept base PiConcept {
+    instances: PiInstance[];
+}
+abstract concept PiProperty base PiLangElement {
+    isOptional: boolean;
+    isList: boolean;
+    isPart: boolean; // if false then it is a reference property
+    reference type: PiClassifier;
+    owningConcept: PiClassifier; // should this be a reference?
+}
+concept PiConceptProperty base PiProperty {
+    hasLimitedType: boolean;
+}
+concept PiPrimitiveProperty base PiProperty {
+    isStatic: boolean;
+	initialValue: string;
+    primType: string;
+	// The inherited 'type' cannot be used, because this has a primitive type,
+	// which is not a subtype of PiReference<PiClassifier>
+	// Therefore, here we have:
+    /*
+    get type() : PiReference<PiClassifier> {
+        let value : PiReference<PiClassifier> = new PiReference<PiClassifier>();
+        value.name = this.primType;
+        return value;
+    }
+    */
+}
+concept PiInstance base PiLangElement {
+    reference concept: PiLimitedConcept;
+    propertyDefs: PiPropertyInstance[];
+}
+concept PiPropertyInstance base PiLangElement {
+    reference owningInstance: PiInstance;
+    reference property: PiProperty;
+    value: string;
+}
+// the following two classes are only used in the typer and validator definitions
+concept PiFunction base PiLangElement {
+    reference language: PiStructureDef;
+    formalparams: PiParameter[];
+    reference returnType: PiClassifier;
+}
+
+concept PiParameter base PiLangElement {
+    reference type: PiClassifier;
+}
+// end structure definition
+// begin expressions definition
+abstract concept PiLangExp base PiLangElement {
+    sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+//    appliedFeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    reference referredElement: PiLangElement;            // refers to the element called 'sourceName'
+//    location: ParseLocation;                            // holds start and end in the parsed file
+    reference language: PiStructureDef;                           // the language for which this expression is defined
+}
+
+concept PiLangSimpleExp base PiLangExp {
+    value: number;
+}
+
+concept PiLangSelfExp base PiLangExp {
+//    reference referredElement: PiConcept;
+}
+
+concept PiInstanceExp base PiLangExp {
+//    reference referredElement: PiInstance;
+}
+
+concept PiLangConceptExp base PiLangExp {
+//    reference referredElement: PiConcept;
+}
+
+concept PiLangAppliedFeatureExp base PiLangExp {
+    reference sourceExp: PiLangExp;
+//    reference referredElement: PiProperty;
+}
+
+concept PiLangFunctionCallExp base PiLangExp {
+    //sourceName: string; 			// in typer: name can only be 'commonSuperType', in validator: only 'conformsTo' and 'equalsType'
+    actualParams: PiLangExp[];
+    returnValue: boolean;
+//    reference referredElement: PiFunction;
+}
+// end expressions definition
+
+
+// begin editor definition
+public unit concept PiEditorDef {
+    public name: string;
+}
+// end editor definition
+// begin scoper definition
+public unit concept PiScoperDef {
+    public name: string;
+    languageName: string;
+    reference namespaces: PiConcept[];
+    scopeConceptDefs: ScopeConceptDef[];
+}
+
+concept ScopeConceptDef {
+    reference conceptRef: PiConcept;
+    namespaceAdditions: PiNamespaceAddition;
+    alternativeScope: PiAlternativeScope;
+}
+
+concept PiNamespaceAddition {
+    expressions: PiLangExp[];
+}
+
+concept PiAlternativeScope {
+    expression: PiLangExp;
+}
+
+// end scoper definition
+// begin typer definition
+public unit concept PiTyperDef {
+    public name: string;
+//}
+//concept PiTypeDefinition {
+//    location: ParseLocation;
+//    name: string;
+    languageName: string;
+    reference language: PiStructureDef;
+    typerRules: PiTypeRule[];
+    classifierRules: PiTypeClassifierRule[];
+    reference typeroot: PiClassifier;
+    reference types: PiClassifier[];
+}
+
+abstract concept PiTypeRule base PiLangElement {
+//    location: ParseLocation;
+}
+concept PiTypeIsTypeRule base PiTypeRule {
+    reference types: PiClassifier[];
+}
+
+concept PiTypeAnyTypeRule base PiTypeRule {
+    statements: PiTypeStatement[];
+}
+
+concept PiTypeClassifierRule base PiTypeRule {
+    reference conceptRef: PiClassifier;
+    statements: PiTypeStatement[];
+}
+
+concept PiTypeStatement {
+//    location: ParseLocation;
+    statementtype: string;
+    exp: PiLangExp;
+    isAbstract: boolean;
+}
+// end typer definition
+// begin validator definition
+public unit concept PiValidatorDef {
+    public name: string;
+//}
+//concept PiValidatorDef {
+//    location: ParseLocation;
+//    validatorName: string;
+    languageName: string;
+    conceptRules: ConceptRuleSet[];
+}
+
+concept ConceptRuleSet {
+//    location: ParseLocation;
+    reference conceptRef: PiConcept;
+    rules: ValidationRule[];
+}
+
+abstract concept ValidationRule {
+//    location: ParseLocation;
+}
+
+concept CheckEqualsTypeRule base ValidationRule {
+    type1: PiLangExp;
+    type2: PiLangExp;
+}
+
+concept CheckConformsRule base ValidationRule {
+    type1: PiLangExp;
+    type2: PiLangExp;
+}
+
+concept ExpressionRule base ValidationRule {
+    exp1: PiLangExp;
+    exp2: PiLangExp;
+    comparator: PiComparator;
+}
+
+concept IsuniqueRule base ValidationRule {
+    list: PiLangExp;
+    listproperty: PiLangExp;
+    comparator: PiComparator;
+}
+
+concept NotEmptyRule base ValidationRule {
+    property: PiLangExp;
+}
+
+concept ValidNameRule base ValidationRule {
+    property: PiLangExp;
+}
+
+limited PiComparator {
+    name: string;
+    Equals = { name: "="}
+    LargerThen = { name: ">"}
+    LargerIncluding = { name: ">="}
+    SmallerThen = { name: "<"}
+    SmallerIncluding = { name: "<="}
+}
+
+// end validator definition
+

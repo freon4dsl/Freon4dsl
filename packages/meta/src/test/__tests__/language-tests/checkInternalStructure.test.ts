@@ -1,6 +1,6 @@
 
 describe("Checking internal structure of language", () => {
-    let testdir = "src/languagedef/__tests__/language-tests/faultyDefFiles/internal-structure/";
+    let testdir = "src/test/__tests__/language-tests/faultyDefFiles/internal-structure/";
 
     // TODO implement the following tests:
 
