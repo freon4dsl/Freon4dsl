@@ -36,16 +36,16 @@ export class CustomExampleProjection implements PiProjection {
         if (element instanceof NumberLiteralExpression) {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
-        // if (element instanceof SumExpression) {
-        //     return this.createSumBox(element);
-        // }
-        // if (element instanceof OrExpression) {
-        //     return this.createOrBoxGrid(element);
-        // }
-        // if (element instanceof Entity) {
-        //     // return this.createEntityBox(element);
-        //     return this.createEntityBox2(element);
-        // }
+        if (element instanceof SumExpression) {
+            return this.createSumBox(element);
+        }
+        if (element instanceof OrExpression) {
+            return this.createOrBoxGrid(element);
+        }
+        if (element instanceof Entity) {
+            // return this.createEntityBox(element);
+            return this.createEntityBox2(element);
+        }
 
         return null;
     }
