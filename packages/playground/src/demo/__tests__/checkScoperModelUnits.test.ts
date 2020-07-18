@@ -16,9 +16,8 @@ describe("testing Scoper on model units", () => {
 
         test("visible elements in model", () => {
             let vi = scoper.getVisibleNames(model);
-            // expect(vi).toContain("Anneke");
-            expect(vi.length).toBe(7);
-            expect(vi).toContain("ModelWithUnits");
+            expect(vi.length).toBe(6);
+            expect(vi).not.toContain("ModelWithUnits");
             expect(vi).toContain("DemoModel_with_inheritance");
             expect(vi).toContain("CorrectUnit");
             for (let e of stdlib.elements) {
@@ -56,9 +55,8 @@ describe("testing Scoper on model units", () => {
         test("visible elements in JSON model", () => {
             let readModel = new DemoUnitCreator().modelToJsonToModel();
             let vi = scoper.getVisibleNames(readModel);
-            // expect(vi).toContain("Anneke");
-            expect(vi.length).toBe(7);
-            expect(vi).toContain("ReadFromJson");
+            expect(vi.length).toBe(6);
+            expect(vi).not.toContain("ReadFromJson");
             expect(vi).toContain("DemoModel_with_inheritance");
             expect(vi).toContain("CorrectUnit");
             for (let e of stdlib.elements) {
@@ -73,8 +71,7 @@ describe("testing Scoper on model units", () => {
             expect(unit2.entities.length).toBe(0);  // entities are not public
 
             let vi = scoper.getVisibleNames(unit1);
-            // expect(vi).toContain("Anneke");
-            expect(vi.length).toBe(11);
+            expect(vi.length).toBe(10);
             for (let e of unit2.entities) {
                 expect(vi).not.toContain(e.name);
             }

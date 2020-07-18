@@ -3,10 +3,12 @@ language test1
 // TODO test optional properties
 
 root concept ROOT {
-     aa: AA[];
+    name: string;
+    aa: AA[];
 }
 
 unit concept AA  {
+    name: string;
     // the possibilities for primitive properties
     AAprop1: string;
     AAprop2: string[];
@@ -27,7 +29,7 @@ unit concept AA  {
 }
 
 concept BB base CC implements DD {
-    aa: AA; // to test applied feature
+    reference aa: AA; // to test applied feature
     // the possibilities for primitive properties
     BBprop1: string;
     BBprop2: string[];

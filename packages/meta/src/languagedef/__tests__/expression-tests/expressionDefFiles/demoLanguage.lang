@@ -1,6 +1,7 @@
 language Demo
 
 root concept ROOT {
+    name: string;
     aa: DemoModel[];
 }
 
