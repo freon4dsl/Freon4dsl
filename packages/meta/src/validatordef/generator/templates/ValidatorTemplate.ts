@@ -56,7 +56,7 @@ export class ValidatorTemplate {
  
                 let myWalker = new ${walkerClassName}();
                 myWalker.myWorker = myChecker;
-                myWalker.walk(modelelement, includeChildren );
+                myWalker.walk(modelelement, ()=> { return includeChildren; } );
 
                 return errorlist;
             }
@@ -75,7 +75,7 @@ export class ValidatorTemplate {
         export class ${generatedClassName} implements ${this.validatorInterfaceName} {
             public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${this.errorClassName}[]{
                 let errorList : ${this.errorClassName}[] = [];
-                errorList.push(new ${this.errorClassName}("No validator found.", modelelement));
+                errorList.push(new ${this.errorClassName}("No validator found.", modelelement, "--"));
                 return errorList;
             }
         }`;

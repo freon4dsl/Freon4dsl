@@ -80,7 +80,7 @@ export class CustomDemoProjection implements PiProjection {
     private createDemoModelBox(model: DemoModel): Box {
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "DemoModel"),
-            new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c))
+            new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c))
         ]);
     }
 
@@ -93,15 +93,15 @@ export class CustomDemoProjection implements PiProjection {
             new LabelBox(model, "model-label", "Model", {
                 style: projectitStyles.keyword
             }),
-            new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
-                placeHolder: "<name>"
+            new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c), {
+                placeHolder: "<unitName>"
             })
         ]);
     }
 
     // end::DemoModelBox2[]
 
-    // DemoModelBox with placeholder for the name and a list of entities
+    // DemoModelBox with placeholder for the unitName and a list of entities
     // tag::DemoModelBox3[]
     private createDemoModelBox3(model: DemoModel): Box {
         return new VerticalListBox(model, "model", [
@@ -110,8 +110,8 @@ export class CustomDemoProjection implements PiProjection {
                 new LabelBox(model, "model-keyword", "Model", {
                     style: projectitStyles.keyword
                 }),
-                new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
-                    placeHolder: "<name>"
+                new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c), {
+                    placeHolder: "<unitName>"
                 })
             ]),
             // tag::DemoModelBox3[]
@@ -130,7 +130,7 @@ export class CustomDemoProjection implements PiProjection {
 
     // end::DemoModelBox3[]
 
-    // DemoModelBox with placeholder for the name and a list of entities
+    // DemoModelBox with placeholder for the unitName and a list of entities
     // tag::DemoModelBox4[]
     private createDemoModelBox4(model: DemoModel): Box {
         LOGGER.log("createDemoModelBox4 [" + model + "]");
@@ -139,8 +139,8 @@ export class CustomDemoProjection implements PiProjection {
                 new LabelBox(model, "model-keyword", "DemoModel", {
                     style: projectitStyles.keyword
                 }),
-                new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
-                    placeHolder: "<name>"
+                new TextBox(model, "model-unitName", () => model.name, (c: string) => (model.name = c), {
+                    placeHolder: "<unitName>"
                 })
             ]),
             new LabelBox(model, "entity-list", "Entities", {
@@ -181,7 +181,7 @@ export class CustomDemoProjection implements PiProjection {
             att,
             "attribute",
             [
-                new TextBox(att, "attribute-name",
+                new TextBox(att, "attribute-unitName",
                     () => {
                         return att.name;
                     },
@@ -216,7 +216,7 @@ export class CustomDemoProjection implements PiProjection {
                 new LabelBox(entity, "entity-label", "entity", {
                     style: projectitStyles.keyword
                 }),
-                new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
+                new TextBox(entity, "entity-unitName", () => entity.name, (c: string) => (entity.name = c))
             ]),
             new VerticalListBox(
                 entity,
@@ -238,8 +238,8 @@ export class CustomDemoProjection implements PiProjection {
                     new LabelBox(entity, "entity-keyword", "Entity", {
                         style: projectitStyles.keyword
                     }),
-                    new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c), {
-                        placeHolder: "<name>"
+                    new TextBox(entity, "entity-unitName", () => entity.name, (c: string) => (entity.name = c), {
+                        placeHolder: "<unitName>"
                     })
                 ]),
                 new VerticalListBox(entity, "attribute-list",
@@ -264,7 +264,7 @@ export class CustomDemoProjection implements PiProjection {
                     new LabelBox(entity, "entity-label", "entity", {
                         style: projectitStyles.keyword
                     }),
-                    new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
+                    new TextBox(entity, "entity-unitName", () => entity.name, (c: string) => (entity.name = c))
                 ]),
                 // tag::CreateAttributeAction[]
                 new VerticalListBox(entity, "attributes",
@@ -290,7 +290,7 @@ export class CustomDemoProjection implements PiProjection {
                     new LabelBox(fun, "fun-label", "function", {
                         style: projectitStyles.keyword
                     }),
-                    new TextBox(fun, "fun-name", () => fun.name, (c: string) => (fun.name = c))
+                    new TextBox(fun, "fun-unitName", () => fun.name, (c: string) => (fun.name = c))
                 ]),
                 // tag::CreateAttributeAction[]
                 new VerticalListBox(fun, "parameters",
@@ -312,7 +312,7 @@ export class CustomDemoProjection implements PiProjection {
             parameter,
             "parameter",
             [
-                new TextBox(parameter, "parameter-name",
+                new TextBox(parameter, "parameter-unitName",
                     () => {
                         return parameter.name;
                     },

@@ -5,7 +5,7 @@ import {
     PiLangFunctionCallExp,
     PiLangSelfExp, PiInstanceExp
 } from "../../../languagedef/metalanguage/PiLangExpressions";
-import { PiTypeDefinition, PiTypeConceptRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeRule } from "../../metalanguage/PiTyperDefLang";
+import { PiTypeDefinition, PiTypeClassifierRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeRule } from "../../metalanguage/PiTyperDefLang";
 
 export class PiTyperTemplate {
     typerdef: PiTypeDefinition;
@@ -86,13 +86,7 @@ export class PiTyperTemplate {
             public isType(elem: ${allLangConcepts}): boolean { // entries for all types marked as @isType
                 ${this.makeIsType()}
                 return false;
-            }
-
-            private commonSuperType(type1: ${rootType}, type2: ${rootType}) : ${rootType} {
-                // not yet possible to define supertypes in any language
-                if (type1 === type2) return type1;
-                return this.defaultType;
-            }   
+            } 
         }`;
     }
 
@@ -151,8 +145,8 @@ export class PiTyperTemplate {
         for ( let tr of this.typerdef.typerRules ) {
             if (tr instanceof PiTypeAnyTypeRule) {
                 for ( let stat of tr.statements  ) {
-                    if ( stat.statementtype === "conformsto" ) {                        
-                        result = result.concat(`${this.makeTypeExp(stat.exp)}`);
+                    if ( stat.statementtype === "conformsto" || stat.statementtype === "equalsto") {
+                        return `${this.makeTypeExp(stat.exp)}`;
                     }
                 }
             } 
@@ -163,7 +157,7 @@ export class PiTyperTemplate {
     private makeConformsStatements() : string {
         let result : string = "";
         for ( let tr of this.typerdef.typerRules ) {
-            if (tr instanceof PiTypeConceptRule) {
+            if (tr instanceof PiTypeClassifierRule) {
                 let myConceptName = tr.conceptRef.name;
                 for ( let stat of tr.statements  ) {
                     if ( stat.statementtype === "conformsto" ) {                        
@@ -196,8 +190,7 @@ export class PiTyperTemplate {
             if (tr instanceof PiTypeIsTypeRule) {
                 let typesAdded: PiClassifier[] = [];
                 for (let type of tr.types) {
-                    // TODO type.referred should not be of type PiConcept but of type PiClassifier
-                    // TODO create a separate method to find all concepts that are marked'isType', this if-statement is also used in makeIsType
+                    // TODO create a separate method to find all concepts that are marked 'isType', this if-statement is also used in makeIsType
                     let realType = type.referred;
                     if (!!realType && (realType instanceof PiInterface)) {
                         let yy = realType as PiInterface;
@@ -225,7 +218,7 @@ export class PiTyperTemplate {
         }
         // change the order in which the statements are generated, because subclasses need to overwrite their super
         // and thus their statement needs to come before the super statement
-        let myList = this.sortConceptRules(this.typerdef.conceptRules);
+        let myList = this.sortConceptRules(this.typerdef.classifierRules);
         for (let tr of myList) {
             let myConceptName = tr.conceptRef.name;
             for ( let stat of tr.statements  ) {
@@ -239,16 +232,16 @@ export class PiTyperTemplate {
         return result;
     }
 
-    private sortConceptRules(conceptRules: PiTypeConceptRule[]): PiTypeConceptRule[] {
-        let sortedConceptRules: PiTypeConceptRule[] = [];
+    private sortConceptRules(conceptRules: PiTypeClassifierRule[]): PiTypeClassifierRule[] {
+        let sortedConceptRules: PiTypeClassifierRule[] = [];
         let sortedClasses = sortClasses(this.language.concepts);
         for (let piclass of sortedClasses) {
             // find conceptRule for this piclass
-            let myRule: PiTypeConceptRule;
+            let myRule: PiTypeClassifierRule;
             for (let rule of conceptRules) {
                 if (piclass === rule.conceptRef.referred) {
                     myRule = rule;
-                    // console.log("found " + piclass.name + ", index in classes: " + sortedClasses.indexOf(piclass) + ", index in rules: " + conceptRules.indexOf(rule));
+                    // console.log("found " + piclass.unitName + ", index in classes: " + sortedClasses.indexOf(piclass) + ", index in rules: " + classifierRules.indexOf(rule));
                 }
             }
             // if found push rule
@@ -294,48 +287,23 @@ export class PiTyperTemplate {
 
     private makeEqualsStatement() : string {
         for ( let rule of this.typerdef.typerRules ) {
-            // TODO makeEqualsStatement
-        // case: two enum refs
-        // if (!!rule.type1.enumRef && !!rule.type2.enumRef) {
-        //     return `
-        //         if ( this.inferType(elem1) === ${this.langExpToTypeScript(rule.type1.enumRef)}
-        //             && this.inferType(elem2) === ${this.langExpToTypeScript(rule.type2.enumRef)} ) { return true; }
-        //         if ( this.inferType(elem2) === ${this.langExpToTypeScript(rule.type1.enumRef)}
-        //             && this.inferType(elem1) === ${this.langExpToTypeScript(rule.type2.enumRef)} ) { return true; }
-        //         `
-        //     ;
-        // }
-        // // case: one enum ref and one @anyType
-        // let enumstr: string = "";
-        // if (!!rule.type1.enumRef)
-        //     enumstr = this.langExpToTypeScript(rule.type1.enumRef);
-
-        // if (!!rule.type2.enumRef) {
-        //     enumstr = this.langExpToTypeScript(rule.type2.enumRef);
-        // }
-
-        // if (!!enumstr && (!!rule.type1.allTypes || !!rule.type2.allTypes)) {
-        //     return `if ( this.inferType(elem1) === ${enumstr} || this.inferType(elem2) === ${enumstr} ) { return true; }`
-        // }
-    }
-    return "";
+            // TODO check makeEqualsStatement
+            if (rule instanceof PiTypeClassifierRule) {
+                for (let stat of rule.statements) {
+                    if (stat.statementtype === "equalsto") {
+                        return `${langExpToTypeScript(stat.exp)}`;
+                    }
+                }
+            }
+        }
+        return "";
     }
 
-    // TODO see if can use langExpToTypescript from utils here
     private makeTypeExp(exp: PiLangExp) : string {
-        // if (exp instanceof PiLangEnumExp) {
-        //     return `${exp.sourceName}.${exp.appliedfeature}`;
-        // } else
         if (exp instanceof PiLangSelfExp) {
             return `this.inferType(modelelement.${langExpToTypeScript(exp.appliedfeature)})`;
-        } else if (exp instanceof PiLangFunctionCallExp) {
-            return `this.${exp.sourceName} (${exp.actualparams.map(
-                param => `${this.makeTypeExp(param)}`
-            ).join(", ")})`
-        } else if (exp instanceof PiInstanceExp) {
-            return `${exp.sourceName}.${exp.instanceName}`;
-        } else{
-            return exp?.toPiString();
+        } else {
+            return `${langExpToTypeScript(exp)}`;
         }
     }
 }

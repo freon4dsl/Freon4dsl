@@ -6,7 +6,7 @@ import { Text, Flex, Box } from "@fluentui/react-northstar";
 import { MainGrid } from "./MainGrid";
 
 // This component holds the MainGrid and the Dialog
-const footerheight = "25px";
+export const footerheight = "25px";
 // TODO states should be implemented differently: using mobx
 
 export interface IDialogState {
@@ -95,7 +95,7 @@ export class App extends React.Component<{}, IDialogState> {
                     <Flex gap="gap.small" padding="padding.medium" hAlign="center" vAlign="center"
                           style={{
                               height: footerheight,
-                              marginTop: "-50px",
+                              marginTop: "-25px",
                               backgroundColor: "darkblue",
                               color: "rgba(211, 227, 253, 255)"
                           }}>
@@ -127,8 +127,8 @@ export class App extends React.Component<{}, IDialogState> {
                     >
                         {content}
                         <DialogFooter>
-                            <PrimaryButton onClick={this._okDialog} text="Ok" />
-                            {this.useDefaultButton ? <DefaultButton onClick={this._cancelDialog} text="Cancel" /> : null}
+                            <PrimaryButton onClick={this._okPushed} text="Ok" />
+                            {this.useDefaultButton ? <DefaultButton onClick={this._cancelPushed} text="Cancel" /> : null}
                         </DialogFooter>
                     </Dialog>
                 </div>
@@ -143,23 +143,28 @@ export class App extends React.Component<{}, IDialogState> {
     private _dismissDialog = (): void => {
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
-        App.callBack = null;
+        App.onOkCallBack = null;
+        App.onCancelCallBack = null;
     };
 
-    private _okDialog = (): void => {
+    private _okPushed = async () => {
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
-        if (!!App.callBack) {
-            console.log("Calling callBack");
-            App.callBack();
-            App.callBack = null;
+        if (!!App.onOkCallBack) {
+            // console.log("Calling ok callBack");
+            await App.onOkCallBack();
+            // console.log("Ready calling ok callBack");
         }
     };
 
-    private _cancelDialog = (): void => {
-        App.callBack = null;
+    private _cancelPushed = async () => {
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
+        if (!!App.onCancelCallBack) {
+            // console.log("Calling cancel callBack");
+            await App.onCancelCallBack();
+            // console.log("Ready calling cancel callBack");
+        }
     };
 
     private setInitialDialogContent = () => {
@@ -168,20 +173,26 @@ export class App extends React.Component<{}, IDialogState> {
 
     // set of statics to enable the calling of the dialog from elsewhere in the application
     static thisApp: App;
-    // set when a save dialog is opened.
-    static callBack: () => void;
+    // set when the dialog is opened from the menu.
+    // watch out: these are set to null at a subsequential call of ShowDialog
+    // this should not be forgotten
+    static onOkCallBack: () => void;
+    static onCancelCallBack: () => void;
 
-    public static showDialogWithCallback(onSave: () => void) {
-        this.callBack = onSave;
+    public static showDialogWithCallback(onSave: () => void, onCancel?: () => void) {
+        App.onOkCallBack = onSave;
+        App.onCancelCallBack = (!!onCancel? onCancel : null);
         !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
     }
 
     public static showDialog = (): void => {
+        App.onOkCallBack = null;
+        App.onCancelCallBack = null;
         !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
     };
 
     public static closeDialog = (): void => {
-        !!App.thisApp ? App.thisApp._okDialog() : console.error("No App object found");
+        !!App.thisApp ? App.thisApp._cancelPushed() : console.error("No App object found");
     };
 
     public static useDefaultButton = (): void => {

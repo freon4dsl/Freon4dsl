@@ -62,7 +62,7 @@ export class ErrorList extends React.Component<{}, {}> {
                 key: index,
                 error: err,
                 errormessage: err.message,
-                errorlocation: "ergens", // TODO set location
+                errorlocation: err.locationdescription,
             })
         });
         return myList;

@@ -106,6 +106,20 @@ $font-family-base: "Source Code Pro", "Courier New";
     padding: 2px 5px 0px 5px;
 }
 
+.aliasSelected:empty:before {
+    color: blue;
+    opacity: 0.5;
+    content: attr(data-placeholdertext);
+    display: block; /* For Firefox */
+}
+
+
+.aliasSelected {
+    color: darkmagenta;
+    border-radius: 3px;
+    padding: 2px 5px 0px 5px;
+}
+
 .bracket {
     font-size: x-large;
 }

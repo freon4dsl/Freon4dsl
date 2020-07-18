@@ -8,11 +8,11 @@ const anyElement = "_$anyElement";
 
 export class PiLangScoper {
     public language: PiLanguageUnit;
-    // TODO make searchlist a map {owner, name}
+    // TODO make searchlist a map {owner, unitName}
     private searchList: string[] = [];
 
     public getFromVisibleElements(owner: PiLangElement, name: string, typeName: string) : PiLangElement {
-        // check whether we are already searching for a this name
+        // check whether we are already searching for a this unitName
         if (this.searchingFor(name)) return null;
 
         let result: PiLangElement;
@@ -27,7 +27,7 @@ export class PiLangScoper {
         } else
         if (typeName === "PiProperty" || typeName === "PiPrimitiveProperty" || typeName === "PiConceptProperty") {
             if (owner instanceof PiLangAppliedFeatureExp) {
-                let xx = owner.sourceExp.referedElement?.referred;
+                let xx = owner.sourceExp.referredElement?.referred;
                 if (!(!!xx)) {
                     LOGGER.error(this, `Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
                 }
@@ -43,7 +43,7 @@ export class PiLangScoper {
     }
 
     /**
-     * Returns true if a search is already in progress for 'name'
+     * Returns true if a search is already in progress for 'unitName'
      * @param name
      */
     private searchingFor(name?: string): boolean {

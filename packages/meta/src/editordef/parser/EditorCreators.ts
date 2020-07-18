@@ -37,7 +37,7 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
 }
 
 export function createConceptEditor(data: Partial<DefEditorConcept>): DefEditorConcept {
-    // console.log("creating concept " + data.name);
+    // console.log("creating concept " + data.unitName);
     const result = new DefEditorConcept();
 
     if (!!data.trigger) {

@@ -2,13 +2,7 @@
 import { ProjectionalEditor, PiError } from "@projectit/core";
 import * as React from "react";
 
-// TODO rethink these interfaces
-export interface IModelUnit {
-    id: number;
-    name: string;
-    language: string;
-    url?: string;
-}
+
 
 // TODO see if we want to use this interface
 export interface IEditorCommunication {

@@ -2,7 +2,7 @@ import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { DefEditorLanguage } from "../../metalanguage";
-import { LangUtil } from "../../../languagedef/metalanguage/LangUtil";
+import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
 
 export class ActionsTemplate {
     constructor() {

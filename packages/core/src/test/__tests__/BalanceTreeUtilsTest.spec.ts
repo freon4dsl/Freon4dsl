@@ -1,18 +1,17 @@
 import { CoreTestContext, CoreTestProjection, CoreTestActions } from "../testeditor";
 import {
     CoreTestBinaryExpression,
-    CoretestComparisonExpression, CoreTestModelElement,
+    CoretestComparisonExpression, CoreTestFunction, CoreTestModel, CoreTestModelElement,
     CoreTestMultiplyExpression,
     CoreTestPlusExpression,
     CoreTestPowerExpression,
-    CoreTestStringLiteralExpression
+    CoreTestStringLiteralExpression, CoreTestUnit
 } from "../testmodel";
 import { Box, PiEditor } from "../../editor";
 import { AFTER_BINARY_OPERATOR, BEFORE_BINARY_OPERATOR, BTREE, LEFT_MOST, PiLogger, RIGHT_MOST } from "../../util";
 
 describe("BalanceTree", () => {
     describe("insertBinaryExpression without binary child", () => {
-        let context: CoreTestContext;
         let root: CoreTestBinaryExpression;
         let left: CoreTestStringLiteralExpression;
         let right: CoreTestStringLiteralExpression;
@@ -20,6 +19,10 @@ describe("BalanceTree", () => {
         let editor: PiEditor;
         let projection: CoreTestProjection;
         const action = new CoreTestActions();
+
+        let model: CoreTestModel;
+        let unit: CoreTestUnit;
+        let function1: CoreTestFunction;
 
         beforeEach(done => {
             PiLogger.muteAllLogs();
@@ -30,12 +33,16 @@ describe("BalanceTree", () => {
             right.value = "rootRight";
             root.left = left;
             root.right = right;
-            // TODO remove this class, outdated.
-            context = new CoreTestContext(root);
+            model = new CoreTestModel();
+            unit = new CoreTestUnit();
+            model.units.push(unit);
+            function1 = new CoreTestFunction();
+            unit.functions.push(function1)
+            function1.expression = root;
             projection = new CoreTestProjection();
-            rootBox = projection.getBox(root);
+            rootBox = projection.getBox(function1);
             editor = new PiEditor(projection, action);
-            editor.rootElement = context.rootElement;
+            editor.rootElement = unit;
 
             done();
         });
@@ -47,8 +54,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(newExp);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('("rootLeft" < (... + "rootRight"))');
+                expect(function1.expression).toBe(newExp);
+                expect((function1.expression).asString()).toBe('("rootLeft" < (... + "rootRight"))');
             });
 
             it("should insert to the right of the operator correctly: <left> <operator> Insertion-point <right>", () => {
@@ -57,8 +64,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(newExp);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('(("rootLeft" + ...) < "rootRight")');
+                expect(function1.expression).toBe(newExp);
+                expect((function1.expression).asString()).toBe('(("rootLeft" + ...) < "rootRight")');
             });
 
             it("should insert at left most of the expression correctly: Insertion-point <left> <operator> <right>", () => {
@@ -67,7 +74,7 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('(... < ("rootLeft" + "rootRight"))');
+                expect((function1.expression).asString()).toBe('(... < ("rootLeft" + "rootRight"))');
             });
 
             it("should insert at right most of the expression correctly", () => {
@@ -76,7 +83,7 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('(("rootLeft" + "rootRight") < ...)');
+                expect((function1.expression).asString()).toBe('(("rootLeft" + "rootRight") < ...)');
             });
         });
 
@@ -87,8 +94,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('(("rootLeft" + ...) + "rootRight")');
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe('(("rootLeft" + ...) + "rootRight")');
             });
 
             it("should insert 'right' correctly", () => {
@@ -97,8 +104,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(newExp);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('(("rootLeft" + ...) + "rootRight")');
+                expect(function1.expression).toBe(newExp);
+                expect((function1.expression).asString()).toBe('(("rootLeft" + ...) + "rootRight")');
             });
 
             it("should insert 'pre' correctly", () => {
@@ -107,8 +114,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('((... + "rootLeft") + "rootRight")');
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe('((... + "rootLeft") + "rootRight")');
             });
 
             it("should insert 'post' correctly", () => {
@@ -117,8 +124,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(newExp);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('(("rootLeft" + "rootRight") + ...)');
+                expect(function1.expression).toBe(newExp);
+                expect((function1.expression).asString()).toBe('(("rootLeft" + "rootRight") + ...)');
             });
         });
 
@@ -129,8 +136,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('(("rootLeft" * ...) + "rootRight")');
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe('(("rootLeft" * ...) + "rootRight")');
             });
 
             it("should insert 'right' correctly", () => {
@@ -139,8 +146,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('("rootLeft" + (... * "rootRight"))');
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe('("rootLeft" + (... * "rootRight"))');
             });
 
             it("should insert 'pre' correctly", () => {
@@ -149,8 +156,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('((... * "rootLeft") + "rootRight")');
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe('((... * "rootLeft") + "rootRight")');
             });
 
             it("should insert 'post' correctly", () => {
@@ -159,14 +166,13 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe('("rootLeft" + ("rootRight" * ...))');
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe('("rootLeft" + ("rootRight" * ...))');
             });
         });
     });
 
     describe("insertBinaryExpression with binaryExpression child", () => {
-        let context: CoreTestContext;
         let root: CoreTestBinaryExpression;
         let left: CoreTestStringLiteralExpression;
         let multiLeft: CoreTestStringLiteralExpression;
@@ -175,6 +181,10 @@ describe("BalanceTree", () => {
         let multiply: CoreTestMultiplyExpression;
         let projection: CoreTestProjection;
         let editor: PiEditor;
+
+        let model: CoreTestModel;
+        let unit: CoreTestUnit;
+        let function1: CoreTestFunction;
 
         beforeEach(done => {
             root = CoretestComparisonExpression.create("<");
@@ -189,19 +199,25 @@ describe("BalanceTree", () => {
             root.right = multiply;
             multiply.right = multiRight;
             multiply.left = multiLeft;
-            context = new CoreTestContext(root);
+
+            model = new CoreTestModel();
+            unit = new CoreTestUnit();
+            model.units.push(unit);
+            function1 = new CoreTestFunction();
+            unit.functions.push(function1)
+            function1.expression = root;
             const action = new CoreTestActions();
             projection = new CoreTestProjection();
-            rootBox = projection.getBox(root);
+            rootBox = projection.getBox(function1);
             editor = new PiEditor(projection, action);
-            editor.rootElement = context.rootElement;
+            editor.rootElement = unit;
             PiLogger.muteAllLogs();
 
             done();
         });
 
         it("should initialize correctly", () => {
-            expect((editor.rootElement as CoreTestModelElement).toString()).toBe('("rootLeft" < ("multiplyLeft" * "multiplyRight"))');
+            expect((function1.expression).toString()).toBe('("rootLeft" < ("multiplyLeft" * "multiplyRight"))');
         });
 
         describe("with lower priority", () => {
@@ -210,7 +226,7 @@ describe("BalanceTree", () => {
                 const newExp = new CoreTestPlusExpression();
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe(
+                expect((function1.expression).asString()).toBe(
                     '("rootLeft" < (... + ("multiplyLeft" * "multiplyRight")))'
                 );
             });
@@ -219,7 +235,7 @@ describe("BalanceTree", () => {
                 const newExp = new CoreTestPlusExpression();
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe(
+                expect((function1.expression).asString()).toBe(
                     '("rootLeft" < (("multiplyLeft" * ...) + "multiplyRight"))'
                 );
             });
@@ -230,12 +246,12 @@ describe("BalanceTree", () => {
                 const box = rootBox.findBox(root.piId(), AFTER_BINARY_OPERATOR);
                 const newExp = new CoreTestMultiplyExpression();
 
-                expect((editor.rootElement as CoreTestModelElement).toString()).toBe('("rootLeft" < ("multiplyLeft" * "multiplyRight"))');
+                expect((function1.expression).toString()).toBe('("rootLeft" < ("multiplyLeft" * "multiplyRight"))');
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe(
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe(
                     '("rootLeft" < ((... * "multiplyLeft") * "multiplyRight"))'
                 );
             });
@@ -245,8 +261,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe(
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe(
                     '("rootLeft" < (("multiplyLeft" * ...) * "multiplyRight"))'
                 );
             });
@@ -258,8 +274,8 @@ describe("BalanceTree", () => {
 
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe(
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe(
                     '("rootLeft" < ((... ^ "multiplyLeft") * "multiplyRight"))'
                 );
             });
@@ -268,8 +284,8 @@ describe("BalanceTree", () => {
                 const newExp = new CoreTestPowerExpression();
                 BTREE.insertBinaryExpression(newExp, box!, editor);
 
-                expect(editor.rootElement).toBe(root);
-                expect((editor.rootElement as CoreTestModelElement).asString()).toBe(
+                expect(function1.expression).toBe(root);
+                expect((function1.expression).asString()).toBe(
                     '("rootLeft" < ("multiplyLeft" * (... ^ "multiplyRight")))'
                 );
             });

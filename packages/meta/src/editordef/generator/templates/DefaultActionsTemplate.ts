@@ -3,7 +3,7 @@ import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../.
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
 import { DefEditorLanguage } from "../../metalanguage";
-import { LangUtil } from "../../../languagedef/metalanguage/LangUtil";
+import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
 
 export class DefaultActionsTemplate {
     constructor() {
@@ -16,7 +16,6 @@ export class DefaultActionsTemplate {
             import {
                 AFTER_BINARY_OPERATOR,
                 BEFORE_BINARY_OPERATOR,
-                EXPRESSION_PLACEHOLDER,
                 Box,
                 KeyboardShortcutBehavior,
                 MetaKey,
@@ -72,7 +71,6 @@ export class DefaultActionsTemplate {
                     activeInBoxRoles: [
                         LEFT_MOST,
                         RIGHT_MOST,
-                        EXPRESSION_PLACEHOLDER,
                         BEFORE_BINARY_OPERATOR,
                         AFTER_BINARY_OPERATOR
                     ],
@@ -81,9 +79,8 @@ export class DefaultActionsTemplate {
                         const newExpression = new ${Names.concept(c)}();
                         parent[(box as AliasBox).propertyName] = newExpression;
                         return newExpression;
-                    },
-                    boxRoleToSelect: EXPRESSION_PLACEHOLDER
-                }`
+                    }
+            }`
         )}
             ];
             
@@ -142,17 +139,12 @@ export class DefaultActionsTemplate {
         let result = "";
         language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
             const childConcept = part.type.referred;
-            // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.name
-            result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+            // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.unitName
+            result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                            // const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                            // const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
-                            // parent.${part.name}.push(new${part.name});
-                            // return new${part.name};
-
                             const parent = box.element;
                             const newExpression = new ${Names.concept(subClass)}();
                             parent[(box as AliasBox).propertyName].push(newExpression);
@@ -164,16 +156,11 @@ export class DefaultActionsTemplate {
             if (childConcept instanceof PiConcept) {
                 const conceptEditor = editorDef.findConceptEditor(childConcept);
             } else { // TODO child is PiInterface
-                result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                    {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}", // for Interface part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                            // const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                            // const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
-                            // parent.${part.name}.push(new${part.name});
-                            // return new${part.name};
-                            
                             const parent = box.element;
                             const newExpression = new ${Names.concept(subClass)}();
                             parent[(box as AliasBox).propertyName].push(newExpression);
@@ -190,16 +177,11 @@ export class DefaultActionsTemplate {
                 const childConcept = part.type.referred;
                 if (childConcept instanceof PiConcept) {
                     const conceptEditor = editorDef.findConceptEditor(childConcept);
-                    result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+                    result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for single Concept part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
-                            //const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                            //const new${part.name}: ${Names.concept(subClass)} = new ${Names.concept(subClass)}(); 
-                            //parent.${part.name} = new${part.name};
-                            //return new${part.name};
-
                             const parent = box.element;
                             const newExpression = new ${Names.concept(subClass)}();
                             parent[(box as AliasBox).propertyName] = newExpression;

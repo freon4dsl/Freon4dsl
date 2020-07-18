@@ -1,5 +1,15 @@
 language Json
 
+root concept Json {
+    name: string;
+    files: JsonFile[];
+}
+
+unit concept JsonFile  implements INamedConcept {
+    name: string;
+	contents: IJsonValue;
+}
+
 concept JsonObject  implements IJsonValue {
 
 	pairs: JsonPair[];
@@ -15,10 +25,7 @@ concept JsonArray  implements IJsonValue {
 	items: IJsonValue[];
 }
 
-root concept JsonFile  implements INamedConcept {
 
-	contents: IJsonValue;
-}
 
 concept JsonNumber  implements IJsonValue {
 	value: string;

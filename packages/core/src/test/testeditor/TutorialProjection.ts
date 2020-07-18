@@ -163,7 +163,7 @@ export class TutorialProjection implements PiProjection {
             new VerticalListBox(
                 model,
                 "entity-list",
-                model.entities.map(ent => {
+                model.units[0].entities.map(ent => {
                     return this.createEntityBox(ent);
                 })
             )
@@ -191,7 +191,7 @@ export class TutorialProjection implements PiProjection {
             new VerticalListBox(
                 model,
                 "entities",
-                model.entities.map(ent => {
+                model.units[0].entities.map(ent => {
                     return this.createEntityBox3(ent);
                 })
 

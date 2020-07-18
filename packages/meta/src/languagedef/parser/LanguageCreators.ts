@@ -39,6 +39,7 @@ export function createConcept(data: Partial<PiConcept>): PiConcept {
     // console.log("createConcept " + data.name);
     const result = new PiConcept();
     result.isRoot = !!data.isRoot;
+    result.isUnit = !!data.isUnit;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
@@ -55,6 +56,19 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
         }
     }
     createCommonConceptProps(data, result);
+    // if 'name' property is not present, create it.
+    if ( !result.primProperties.some(prop => prop.name === "name") ) {
+        const nameProperty = new PiPrimitiveProperty();
+        nameProperty.name = "name";
+        nameProperty.primType = "string";
+        nameProperty.isPart = true;
+        nameProperty.isList = false;
+        nameProperty.isOptional = false;
+        nameProperty.isPublic = false;
+        nameProperty.isStatic = false;
+        nameProperty.owningConcept = result;
+        result.primProperties.push(nameProperty);
+    }
     return result;
 }
 
@@ -83,6 +97,7 @@ export function createInterface(data: Partial<PiInterface>): PiInterface {
     if (!!data.location) {
         result.location = data.location;
     }
+    result.isPublic = !!data.isPublic;
     return result;
 }
 
@@ -90,6 +105,7 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     if (!!data.name) {
         result.name = data.name;
     }
+    result.isPublic = !!data.isPublic;
     if (!!data.base) {
         result.base = data.base;
         result.base.owner = result;
@@ -118,6 +134,7 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
 export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionConcept>): PiBinaryExpressionConcept {
     // console.log("createBinaryExpressionConcept " + data.name);
     const result = new PiBinaryExpressionConcept();
+    result.isPublic = !!data.isPublic;
     result.isRoot = !!data.isRoot;
     result.isAbstract = !!data.isAbstract;
     if( !!data.priority ) {
@@ -130,6 +147,7 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
 export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiExpressionConcept {
     // console.log("createExpressionConcept " + data.name);
     const result = new PiExpressionConcept();
+    result.isPublic = !!data.isPublic;
     result.isRoot = !!data.isRoot;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
@@ -141,6 +159,7 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
         result.name = data.name;
     }
     result.isOptional = !!data.isOptional;
+    result.isPublic = !!data.isPublic;
     result.isList = !!data.isList;
     if (!!data.location) {
         result.location = data.location;
@@ -183,7 +202,7 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
 }
 
 export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-    // console.log("createConceptReference " + data.name);
+    // console.log("createClassifierReference " + data.name);
     const result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
     if (!!data.location) {
         result.location = data.location;
@@ -192,7 +211,7 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
 }
 
 export function createClassifierReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-    // console.log("createConceptReference " + data.name);
+    // console.log("createClassifierReference " + data.name);
     const result = PiElementReference.createNamed<PiConcept>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
@@ -201,7 +220,7 @@ export function createClassifierReference(data: Partial<PiElementReference<PiCon
 }
 
 export function createInterfaceReference(data: Partial<PiElementReference<PiInterface>>): PiElementReference<PiInterface> {
-    // console.log("createConceptReference " + data.name);
+    // console.log("createClassifierReference " + data.name);
     const result = PiElementReference.createNamed<PiInterface>(data.name, "PiInterface");
     if (!!data.location) {
         result.location = data.location;
@@ -219,6 +238,14 @@ export function createInstance(data: Partial<PiInstance>) : PiInstance {
         for (let p of result.props) {
             p.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
         }
+    } else {
+        result.props = [];
+        const prop = new PiPropertyInstance();
+        prop.name = "name";
+        prop.value = data.name;
+        prop.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
+        prop.location = data.location;
+        result.props.push(prop);
     }
     if (!!data.location) {
         result.location = data.location;

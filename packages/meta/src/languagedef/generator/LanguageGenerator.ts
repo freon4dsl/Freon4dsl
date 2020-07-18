@@ -65,8 +65,9 @@ export class LanguageGenerator {
         Helpers.createDirIfNotExisting(this.languageGenFolder);
         Helpers.createDirIfNotExisting(this.utilsGenFolder);
         Helpers.createDirIfNotExisting(this.environmentGenFolder);
-        Helpers.createDirIfNotExisting(this.configurationFolder);
         Helpers.createDirIfNotExisting(this.stdlibGenFolder);
+        Helpers.createDirIfNotExisting(this.configurationFolder);
+        // do not delete files in configurationFolder, because these may contain user edits
         Helpers.deleteFilesInDir(this.languageGenFolder, generationStatus);
         Helpers.deleteFilesInDir(this.utilsGenFolder, generationStatus);
         Helpers.deleteFilesInDir(this.environmentGenFolder, generationStatus);

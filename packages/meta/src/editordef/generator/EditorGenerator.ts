@@ -74,6 +74,11 @@ export class EditorGenerator {
         var defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
 
+        // use different relative path
+        LOGGER.log(`Generating initialization: ${this.editorFolder}${Names.initialization(this.language)}.ts`);
+        var initializationFile = Helpers.pretty(initializationTemplate.generate(this.language, "../"), "Initialization", generationStatus);
+        Helpers.generateManualFile(`${this.editorFolder}/${Names.initialization(this.language)}.ts`, initializationFile, "Initialization");
+
         // the following do not need the relativePath for imports
         LOGGER.log(`Generating actions: ${this.editorGenFolder}/${Names.actions(this.language)}.ts`);
         var actionsFile = Helpers.pretty(actions.generate(this.language, editDef), "Actions", generationStatus);
@@ -82,10 +87,6 @@ export class EditorGenerator {
         LOGGER.log(`Generating manual actions: ${this.editorFolder}${Names.customActions(this.language)}.ts`);
         var customActionsFile = Helpers.pretty(customActions.generate(this.language), "CustomActions", generationStatus);
         Helpers.generateManualFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`, customActionsFile, "CustomActions");
-
-        LOGGER.log(`Generating initialization: ${this.editorFolder}${Names.initialization(this.language)}.ts`);
-        var initializationFile = Helpers.pretty(initializationTemplate.generate(this.language), "Initialization", generationStatus);
-        Helpers.generateManualFile(`${this.editorFolder}/${Names.initialization(this.language)}.ts`, initializationFile, "Initialization");
 
         LOGGER.log(`Generating custom projection: ${this.editorFolder}${Names.customProjection(this.language)}.ts`);
         var customProjectionFile = Helpers.pretty(customProjectiontemplate.generate(this.language), "Custom Projection", generationStatus);

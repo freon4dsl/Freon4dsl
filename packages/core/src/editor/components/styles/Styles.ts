@@ -13,6 +13,7 @@ export const STYLES: {
     verticalList: string;
     text: string;
     alias: string;
+    aliasSelected: string;
     incorrect: string;
     aliasExpression: string;
     bracket: string;

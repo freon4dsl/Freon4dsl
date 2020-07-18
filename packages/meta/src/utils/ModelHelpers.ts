@@ -98,12 +98,12 @@ export function langExpToTypeScript(exp: PiLangExp): string {
         result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
         result = `this.${exp.sourceName} (${exp.actualparams.map(
-            param => `${this.makeTypeExp(param)}`
+            param => `${langExpToTypeScript(param)}`
         ).join(", ")})`;
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
         let isRef = isReferenceProperty(exp);
-        result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`.${langExpToTypeScript(exp.appliedfeature)}`) : "");
+        result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
         result = `${exp.sourceName}.${exp.instanceName}`;
     } else {
@@ -114,9 +114,9 @@ export function langExpToTypeScript(exp: PiLangExp): string {
 
 function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
     let isRef: boolean = false;
-    if (!!exp.referedElement && !!exp.referedElement.referred) { // should be present, otherwise it is an incorrect model
+    if (!!exp.referredElement && !!exp.referredElement.referred) { // should be present, otherwise it is an incorrect model
         // now see whether it is marked in the .lang file as 'reference'
-        const ref = exp.referedElement.referred;
+        const ref = exp.referredElement.referred;
         isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
     }
     return isRef;
@@ -195,4 +195,13 @@ export function findAllImplementorsAndSubs(classifier: PiElementReference<PiClas
         }
     }
     return result;
+}
+
+export function hasNameProperty (concept: PiConcept): boolean {
+    if (!!concept) {
+        if (concept.allPrimProperties().some(prop => prop.name === 'name' && prop.primType === 'string') ) {
+            return true;
+        }
+    }
+    return false;
 }

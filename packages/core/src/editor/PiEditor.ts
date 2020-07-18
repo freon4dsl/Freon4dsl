@@ -192,7 +192,9 @@ export class PiEditor {
                     }
                 } else {
                     container.container[container.propertyName] = null;
-                    await this.selectElement(container.container, `${container.container.piLanguageConcept()}-${container.propertyName}`)
+                    // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
+                    await this.selectElement(container.container,
+                        (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`))
                 }
             }
         // }
@@ -209,13 +211,13 @@ export class PiEditor {
 
     set rootElement(exp: PiElement) {
         this._rootElement = exp;
-        if (exp instanceof MobxModelElementImpl) {
-            exp.container = this;
-            exp.propertyIndex = undefined;
-            exp.propertyName = "rootElement";
-            // not a PiElement , therefore no root.
-            exp.container = null;
-        }
+        // if (exp instanceof MobxModelElementImpl) {
+        //     exp.container = this;
+        //     exp.propertyIndex = undefined;
+        //     exp.propertyName = "rootElement";
+        //     // not a PiElement , therefore no root.
+        //     // exp.container = null;
+        // }
     }
 
     get rootElement(): PiElement {

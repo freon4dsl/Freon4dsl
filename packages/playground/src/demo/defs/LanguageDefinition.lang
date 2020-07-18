@@ -1,9 +1,14 @@
 language Demo
 
-root concept DemoModel {
-    main: DemoEntity;
-    functions: DemoFunction[];
-    name: string;
+public root concept Demo {
+    public name: string;
+    public models: DemoModel[];
+}
+
+public unit concept DemoModel {
+    public main: DemoEntity;
+    public functions: DemoFunction[];
+    public name: string;
     entities: DemoEntity[];
     types: Type[];
     type: Type;
@@ -25,7 +30,7 @@ abstract concept Nothing {
     x: string;
 }
 
-concept DemoEntity base Nothing implements Type {
+public concept DemoEntity base Nothing implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
@@ -43,8 +48,8 @@ expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
 
-concept DemoFunction {
-    name: string;
+public concept DemoFunction {
+    public name: string;
     reference declaredType : Type;
     expression: DemoExpression;
     parameters: DemoVariable[];

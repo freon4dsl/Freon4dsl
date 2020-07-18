@@ -2,7 +2,7 @@ import { isAliasBox, isMetaKey, isSelectBox } from "../../../index";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as classNames from "classnames";
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 
 import { PiKey } from "../../../util/Keys";
 import { AbstractChoiceBox } from "../../boxes/AbstractChoiceBox";
@@ -116,20 +116,32 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
         // this.props.box.update();
     }
 
+    @computed
+    get myStyleClasses(): string {
+        const box = this.props.box;
+        let styleClasses: string ;
+
+        if (this.text === box.placeholder) {
+            styleClasses = classNames(STYLES.alias, box.style);
+        } else {
+            styleClasses = classNames(box.style, STYLES.aliasSelected );
+        }
+
+        if (this.hasError) {
+            styleClasses = classNames(STYLES.incorrect, styleClasses);
+        }
+        return styleClasses;
+    }
+
     render() {
         RENDER_LOG.info(this, "AbstractChoiceComponent");
         const box = this.props.box;
-        let styleClasses: string = classNames(STYLES.alias, box.style);
-
-        if (this.hasError) {
-            styleClasses = classNames(STYLES.incorrect, STYLES.alias, box.style);
-        }
 
         return (
             <div id={this.props.box.id + "maindiv"} onBlur={this.onBlur}>
                 <div
                     id={this.props.box.id + "textdiv"}
-                    className={styleClasses}
+                    className={this.myStyleClasses}
                     ref={this.setElement}
                     tabIndex={0}
                     onInput={this.onInput}
@@ -391,12 +403,16 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
         this.clearSelection();
         const range = document.createRange();
         // TODO sometimes childnodes tdo not exist,  is this ok?
-        if (!!this.element && !!this.element.childNodes && this.element.childNodes[0]) {
-            range.setStart(this.element.childNodes[0], Math.min(position, this.element.innerText.length));
-        } else {
-            if (!!this.element) {
-                range.setStart(this.element, position);
+        try{
+            if (!!this.element && !!this.element.childNodes && this.element.childNodes[0]) {
+                range.setStart(this.element.childNodes[0], Math.min(position, this.element.innerText.length));
+            } else {
+                if (!!this.element) {
+                    range.setStart(this.element, position);
+                }
             }
+        } catch (e) {
+            console.log(e.toString())
         }
         range.collapse(true);
         window.getSelection().addRange(range);

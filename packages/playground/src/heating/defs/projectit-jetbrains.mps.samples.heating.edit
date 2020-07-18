@@ -1,11 +1,11 @@
 editor heat for language heat // long name: jetbrains.mps.samples.heating
 
 HeatingPlan {
-	@projection
-	[Heating plan for room: ${self.name}
+    @projection
+    [Heating plan for room: ${self.name}
 
-	${self.dailyPlans @vertical @terminator [\n]}
-	]
+    ${self.dailyPlans @vertical @terminator [\n]}
+    ]
 }
 
 DailyPlan {

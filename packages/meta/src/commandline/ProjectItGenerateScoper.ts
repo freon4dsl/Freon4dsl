@@ -36,7 +36,7 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
         super.onDefineParameters();
         this.scopeFile = this.defineStringParameter({
             argumentName: "SCOPE",
-            defaultValue: "LanguageDefinition.scop",
+            defaultValue: "LanguageDefinition.scope",
             parameterLongName: "--scope",
             parameterShortName: "-s",
             description: "Scope Definition file"

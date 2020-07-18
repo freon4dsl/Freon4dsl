@@ -49,7 +49,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             gridRow: "1",
                             border: "2px solid #ccc",
                             color: "blue",
-                            height: "calc((100vh - 220px) * 0.80)",
+                            height: "calc((100vh - 235px) * 0.80)",
                             overflowX: "auto"
                         }}
                     >
@@ -58,7 +58,7 @@ export class EditorArea extends React.Component<{}, {}> {
                     <Box
                         styles={{
                             gridColumn: "2",
-                            height: "calc((100vh - 220px) * 0.80)",
+                            height: "calc((100vh - 235px) * 0.80)",
                             gridRow: "1",
                             border: "2px solid #ccc",
                             width: "100%",
@@ -99,7 +99,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             gridRow: "1",
                             border: "2px solid #ccc",
                             color: "blue",
-                            height: "calc((100vh - 220px))",
+                            height: "calc(((100vh - 235px) * 0.8) + 20vh)",
                             overflowX: "auto"
                         }}
                     >
@@ -108,7 +108,7 @@ export class EditorArea extends React.Component<{}, {}> {
                     <Box
                         styles={{
                             gridColumn: "2",
-                            height: "calc((100vh - 220px))",
+                            height: "calc(((100vh - 235px) * 0.8) + 20vh)",
                             gridRow: "1",
                             border: "2px solid #ccc",
                             width: "100%",
@@ -130,7 +130,7 @@ export class EditorArea extends React.Component<{}, {}> {
                     <Box
                         styles={{
                             gridColumn: "span 8",
-                            height: "calc((100vh - 220px))",
+                            height: "calc(((100vh - 235px) * 0.8) + 20vh)",
                             gridRow: "1",
                             border: "2px solid #ccc",
                             width: "100%",
@@ -152,7 +152,7 @@ export class EditorArea extends React.Component<{}, {}> {
                     <Box
                         styles={{
                             gridColumn: "span 8",
-                            height: "calc((100vh - 220px) * 0.80)",
+                            height: "calc((100vh - 235px) * 0.80)",
                             gridRow: "1",
                             border: "2px solid #ccc",
                             width: "100%",

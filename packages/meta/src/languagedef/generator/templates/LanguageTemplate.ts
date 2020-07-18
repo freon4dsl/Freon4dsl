@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/Names";
-import { LangUtil } from "../../metalanguage";
+import { PiLangUtil } from "../../metalanguage";
 import {
     PiLanguageUnit
 } from "../../metalanguage/PiLanguage";
@@ -10,7 +10,7 @@ export class LanguageTemplate {
     }
 
     generateLanguage(language: PiLanguageUnit, relativePath: string): string {
-        return `import { Language, Property, Concept, Interface, Enumeration } from "${PROJECTITCORE}";
+        return `import { Language, Property, Concept, Interface } from "${PROJECTITCORE}";
         
             ${language.concepts.map(concept =>
                 `import { ${Names.concept(concept)} } from "./${Names.concept(concept)}";`
@@ -27,7 +27,9 @@ export class LanguageTemplate {
                 ${language.interfaces.map(intface =>
                     `Language.getInstance().addInterface(describe${Names.interface(intface)}());`
                 ).join("\n")}
-                Language.getInstance().addReferenceCreator( (name: string, type: string) => { return PiElementReference.createNamed(name, type)});
+                Language.getInstance().addReferenceCreator( (name: string, type: string) => {
+                    return (!!name ? PiElementReference.createNamed(name, type) : null);
+                });
             }
             
             ${language.concepts.map(concept =>
@@ -35,17 +37,19 @@ export class LanguageTemplate {
                 function describe${concept.name}(): Concept {
                     const concept =             {
                         typeName: "${Names.concept(concept)}",
-                        isAbstract: ${concept.isAbstract ? "true" : "false"},
+                        isAbstract: ${concept.isAbstract},
+                        isPublic: ${concept.isPublic},
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),
                         baseName: ${!!concept.base ? `"${concept.base.name}"` : "null"},
-                        subConceptNames: [${LangUtil.subConcepts(concept).map(sub => "\"" + sub.name+ "\"").join(", ")}]
+                        subConceptNames: [${PiLangUtil.subConcepts(concept).map(sub => "\"" + sub.name+ "\"").join(", ")}]
                     }
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 type: "${prop.primType}",
-                                isList: ${prop.isList} ,
+                                isList: ${prop.isList},
+                                isPublic: ${prop.isPublic},
                                 propertyType: "primitive"
                             });`
                     ).join("\n")}
@@ -53,7 +57,8 @@ export class LanguageTemplate {
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 type: "${prop.type.name}",
-                                isList: ${prop.isList} ,
+                                isList: ${prop.isList},
+                                isPublic: ${prop.isPublic},
                                 propertyType: "part"
                             });`
                     ).join("\n")}
@@ -61,7 +66,8 @@ export class LanguageTemplate {
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 type: "${prop.type.name}",
-                                isList: ${prop.isList} ,
+                                isList: ${prop.isList},
+                                isPublic: ${prop.isPublic},
                                 propertyType: "reference"
                             });`
                     ).join("\n")}
@@ -73,14 +79,16 @@ export class LanguageTemplate {
                 function describe${intface.name}(): Interface {
                     const intface =             {
                         typeName: "${Names.interface(intface)}",
+                        isPublic: ${intface.isPublic},
                         properties: new Map< string, Property>(),
-                        subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + sub.name+ "\"").join(", ")}]
+                        subConceptNames: [${PiLangUtil.subConcepts(intface).map(sub => "\"" + sub.name+ "\"").join(", ")}]
                     }
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 type: "${prop.primType}",
-                                isList: ${prop.isList} ,
+                                isList: ${prop.isList},
+                                isPublic: ${prop.isPublic},
                                 propertyType: "primitive"
                             });`
                 ).join("\n")}
@@ -88,7 +96,8 @@ export class LanguageTemplate {
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 type: "${prop.type.name}",
-                                isList: ${prop.isList} ,
+                                isList: ${prop.isList},
+                                isPublic: ${prop.isPublic},
                                 propertyType: "part"
                             });`
                 ).join("\n")}
@@ -96,7 +105,8 @@ export class LanguageTemplate {
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
                                 type: "${prop.type.name}",
-                                isList: ${prop.isList} ,
+                                isList: ${prop.isList},
+                                isPublic: ${prop.isPublic},
                                 propertyType: "reference"
                             });`
                 ).join("\n")}

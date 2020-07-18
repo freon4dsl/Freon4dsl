@@ -1,5 +1,10 @@
 language Demo
 
+root concept Demo {
+    name: string;
+    models: DemoModel[];
+}
+
 interface BaseType {
     name: string;
     baseInterface_attr: number;
@@ -25,6 +30,7 @@ limited DemoAttributeType implements Type {
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}
+    // notations 'name:' and '"name":' are both correct
     Integer = { "name": "Integer", "extra": "240261"}
     Boolean = { "name": "Boolean", "extra": "5479"}
     ANY = { "name": "ANY", "extra": "456"}
@@ -41,7 +47,7 @@ binary expression DemoMultiplyExpression base DemoBinaryExpression {
 
 // tag::rootconcept[]
 // tag::partprop[]
-root concept DemoModel {
+unit concept DemoModel {
 // end::partprop[]
     name: string;
 // tag::partprop[]

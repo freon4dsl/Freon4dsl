@@ -63,11 +63,8 @@ export class ProjectionTemplate {
                 VerticalListBox,
                 VerticalPiElementListBox,
                 PiUtils,
-                EXPRESSION_PLACEHOLDER,
                 createDefaultBinaryBox,
                 createDefaultExpressionBox,
-                PiLogger,
-                STYLES,
                 isPiBinaryExpression,
                 ${Names.PiBinaryExpression}
             } from "${PROJECTITCORE}";
@@ -122,7 +119,7 @@ export class ProjectionTemplate {
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
                 
                 /**
-                 *  Create a standard binary box to enure binary expressions can be editied easily
+                 *  Create a standard binary box to ensure binary expressions can be edited easily
                  */
                 private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
                     let binBox = createDefaultBinaryBox(this, exp, symbol, ${Names.environment(language)}.getInstance().editor);
@@ -172,7 +169,7 @@ export class ProjectionTemplate {
                         result += ",";
                     }
                 } else if( item instanceof DefEditorSubProjection){
-                    const appliedFeature: PiProperty = item.expression.appliedfeature.referedElement.referred;
+                    const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
                     if (appliedFeature instanceof PiPrimitiveProperty){
                         result += this.primitivePropertyProjection(appliedFeature, element);
                     } else if( appliedFeature instanceof PiConceptProperty) {
@@ -229,27 +226,24 @@ export class ProjectionTemplate {
                     );
                 }`;
         } else {
+            if (result[0] === "\n") {
+                // TODO find out where this newline is added and make sure this is not done
+                // this error occurred in openhab project for concept ItemModel (!!only for this concept)
+                // for now:
+                // console.log("FOUND NEWLINE");
+                result = result.substr(1);
+            }
             return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
                     return ${result};
                 }`;
         }
     }
 
-    // TODO change this to be used with PiLimitedConcept
-    // enumPropertyProjection(p: PiLangEnumProperty) {
-    //     return `
-    //         this.helpers.enumSelectFor${p.type.name}(element,
-    //             "${p.name}-type",
-    //             () => { return { id: element.${p.name}.name, label: element.${p.name}.name} },
-    //             (o: SelectOption) => element.${p.name} = ${Names.enumeration(p.type.referedElement())}.fromString(o.id)
-    //         )
-    //     `;
-    // }
     /**
      * generate the part list
      *
      * @param direction         Horizontal or Vertical.
-     * @param propertyConcept   The property for whioch the projection is generated.
+     * @param propertyConcept   The property for which the projection is generated.
      * @param element           The name of the element parameter of the getBox projection method.
      */
     conceptPartListProjection(direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
@@ -277,11 +271,15 @@ export class ProjectionTemplate {
                         }
                     },
                     (option: SelectOption) => {
-                        ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                            ${element},
-                            option.label,
-                            "${featureType}"
-                        ) as ${featureType}, "${featureType}");
+                        if(!!option) {
+                            ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
+                                ${element},
+                                option.label,
+                                "${featureType}"
+                            ) as ${featureType}, "${featureType}");
+                        } else {
+                            ${element}.${appliedFeature.name} = null;
+                        }
                     }
                 )
             `

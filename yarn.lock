@@ -287,6 +287,15 @@
     keyboard-key "1.0.1"
     lodash "^4.17.15"
 
+"@fluentui/accessibility@^0.49.0":
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/@fluentui/accessibility/-/accessibility-0.49.0.tgz#e109ed3732ae792c383868c5952572ab33d735fb"
+  integrity sha512-eU/mthS88E8dcFWj2X9k6aWAc/oaGP65fgMza8umnPJxd8TTyL52unyKvELSssNf7LDCuFjQhBwAlVEnuJI7dg==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    keyboard-key "1.0.1"
+    lodash "^4.17.15"
+
 "@fluentui/react-bindings@^0.47.1":
   version "0.47.1"
   resolved "https://registry.yarnpkg.com/@fluentui/react-bindings/-/react-bindings-0.47.1.tgz#a906f5e9d9b072562f8d0d47f4f4be04bade3337"
@@ -300,10 +309,38 @@
     fela "^10.6.1"
     lodash "^4.17.15"
 
+"@fluentui/react-bindings@^0.49.0":
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-bindings/-/react-bindings-0.49.0.tgz#07d8da4c2cf079c10bde30e2a85a79b5bfa3c687"
+  integrity sha512-w1a/LlNPVxt0MDo0yekeE46V2sPdWdWXJRbZp7PBO2DEnHgUSSrUGJ8k/RYXVfLZabxN0idfQMQahht4slSylQ==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    "@fluentui/accessibility" "^0.49.0"
+    "@fluentui/react-component-event-listener" "^0.49.0"
+    "@fluentui/react-component-ref" "^0.49.0"
+    "@fluentui/react-compose" "^0.2.12"
+    "@fluentui/state" "^0.49.0"
+    "@fluentui/styles" "^0.49.0"
+    "@uifabric/utilities" "^7.16.3"
+    classnames "^2.2.6"
+    fela "^10.6.1"
+    keyboard-key "1.0.1"
+    lodash "^4.17.15"
+    prop-types "^15.7.2"
+    react-fela "^10.6.1"
+
 "@fluentui/react-component-event-listener@^0.47.1":
   version "0.47.1"
   resolved "https://registry.yarnpkg.com/@fluentui/react-component-event-listener/-/react-component-event-listener-0.47.1.tgz#d39db071cb7ab4ef8d6dddab5c45138e09579c94"
   integrity sha512-JILkO3yHRwa4dOqsJZew5xkrH4uUUelSSssPB2QaN9lNjq3FAB765uWGKrUD0JaFzBpOdE20UvlnzKVnVicaHA==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    prop-types "^15.7.2"
+
+"@fluentui/react-component-event-listener@^0.49.0":
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-component-event-listener/-/react-component-event-listener-0.49.0.tgz#648b5d32d4a241315fbde7f96db98017c0b07503"
+  integrity sha512-uqzXVjwXhi8OD8Iq3Prhom6wO2nHemWUXU7GaG8klY1Dp6K2Cbg1oXx2rAHBZ+XqlfSkP6JY9HY0izU4b43HBg==
   dependencies:
     "@babel/runtime" "^7.7.6"
     prop-types "^15.7.2"
@@ -325,6 +362,23 @@
     prop-types "^15.7.2"
     react-is "^16.6.3"
 
+"@fluentui/react-component-ref@^0.49.0":
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-component-ref/-/react-component-ref-0.49.0.tgz#2145c471ba3400afce16f729c2cdb90a6f14faff"
+  integrity sha512-9PQaDQL1GRHgnYipdsYZFRLv9ZVY51mxmRQNmwmu6vTmuxc2u9AWdETAW7p88xTEQ35EqH0CC945kVmOFS5cDw==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    prop-types "^15.7.2"
+    react-is "^16.6.3"
+
+"@fluentui/react-compose@^0.2.12":
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-compose/-/react-compose-0.2.12.tgz#b46f0b5bb66c9859769597f1626460184107f002"
+  integrity sha512-KMQCkfUHRFIpB/EZ+gnDHTcs6Jq3279Od2MwKD3PFcfYcLT2JEmPjGGLPm2c6L0DjxlRMP8YdW0BmTqGvlB8rQ==
+  dependencies:
+    "@uifabric/set-version" "^7.0.12"
+    tslib "^1.10.0"
+
 "@fluentui/react-context-selector@^0.47.1":
   version "0.47.1"
   resolved "https://registry.yarnpkg.com/@fluentui/react-context-selector/-/react-context-selector-0.47.1.tgz#b96016506936551189f07f5eafda90f4baa20fec"
@@ -342,6 +396,19 @@
     "@uifabric/styling" "^7.11.6"
     "@uifabric/utilities" "^7.15.10"
     tslib "^1.10.0"
+
+"@fluentui/react-icons-northstar@^0.49.0":
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/@fluentui/react-icons-northstar/-/react-icons-northstar-0.49.0.tgz#7709f0e2c307dc7c67e67f8e37858b87d11e2214"
+  integrity sha512-en5aaDleKG+mCnSY6N96d63piSvAUKEtPvtNEwFSUhUCEi6NjnP/1zFcREMcDM7pVDxqK/SEonCk8EYlEbbsXg==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    "@fluentui/accessibility" "^0.49.0"
+    "@fluentui/react-bindings" "^0.49.0"
+    "@fluentui/styles" "^0.49.0"
+    classnames "^2.2.6"
+    fela "^10.6.1"
+    react-fela "^10.6.1"
 
 "@fluentui/react-icons@^0.1.4":
   version "0.1.4"
@@ -408,10 +475,26 @@
   dependencies:
     "@babel/runtime" "^7.7.6"
 
+"@fluentui/state@^0.49.0":
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/@fluentui/state/-/state-0.49.0.tgz#14a272d5335eebfe0644a1a64240fc40adda4b91"
+  integrity sha512-2A8qpS25DHsbNOvzl4Kqvra5iKH+9dLywrThvLH0RvOmvm72hDa5U9O0E8lc7g2LBSNRu1gNbA/hEFj5+oC/7Q==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+
 "@fluentui/styles@^0.47.1":
   version "0.47.1"
   resolved "https://registry.yarnpkg.com/@fluentui/styles/-/styles-0.47.1.tgz#d8dd894b27c4ecd7336472760e3a12bca21d92c7"
   integrity sha512-d4ypNO/2WJDnoDrm2glok/1KseVdsZZ9j1WuRM3Mgz9M1k5m1QjMdGn0ePIzD077nDadEh2sEA1U1AisMBQrvA==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    csstype "^2.6.7"
+    lodash "^4.17.15"
+
+"@fluentui/styles@^0.49.0":
+  version "0.49.0"
+  resolved "https://registry.yarnpkg.com/@fluentui/styles/-/styles-0.49.0.tgz#cb55d86018fb57d5ae0adb578a3567080e3ed2e2"
+  integrity sha512-EKWtcMUi9+33avm78QHX9kQbqy6oym6lMyeAQV8ZwzqxBtStrqi8brOiG/WZrrbU1FQFtu4t5GhGX+ibD4bH/g==
   dependencies:
     "@babel/runtime" "^7.7.6"
     csstype "^2.6.7"
@@ -1802,6 +1885,14 @@
     "@uifabric/set-version" "^7.0.10"
     tslib "^1.10.0"
 
+"@uifabric/merge-styles@^7.16.2":
+  version "7.16.2"
+  resolved "https://registry.yarnpkg.com/@uifabric/merge-styles/-/merge-styles-7.16.2.tgz#0d76cf50f3a9eb64e374f938112d51efb454912e"
+  integrity sha512-Xcmzne0IzoRYShFyHL8rdJCplChdPHcD6NZWPWcbBI674K6+6twVrQh5l4KWSuAVb4M26hB5NU3AIi7ne2Tiyg==
+  dependencies:
+    "@uifabric/set-version" "^7.0.17"
+    tslib "^1.10.0"
+
 "@uifabric/react-hooks@^7.1.6":
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/@uifabric/react-hooks/-/react-hooks-7.1.6.tgz#801cebf52ab1b705d73e35a65c2006ba7056cf1d"
@@ -1815,6 +1906,13 @@
   version "7.0.10"
   resolved "https://registry.yarnpkg.com/@uifabric/set-version/-/set-version-7.0.10.tgz#c2dd1de0f0730c9601a65b1ae864fbbde71a450a"
   integrity sha512-AK7jpLKYYQAQajpbbyKt6lpXRthu+rlDrhAkp3sBt3SOrqPlB3qdR7V8hsCIlNj10f2D5TaP/8X72QqLGF/Ksw==
+  dependencies:
+    tslib "^1.10.0"
+
+"@uifabric/set-version@^7.0.12", "@uifabric/set-version@^7.0.17":
+  version "7.0.17"
+  resolved "https://registry.yarnpkg.com/@uifabric/set-version/-/set-version-7.0.17.tgz#4b22e2d24126e7b39bc965aded641b23f4d02848"
+  integrity sha512-YRPfV8HgT2XfhhdIV4HWP3hSBkOmb3vrB/dKp+BYbcqjQ3XZJeTca8kQkiwxxeMWrOwYD7Psh89NnZzbr2jgTw==
   dependencies:
     tslib "^1.10.0"
 
@@ -1836,6 +1934,16 @@
   dependencies:
     "@uifabric/merge-styles" "^7.11.0"
     "@uifabric/set-version" "^7.0.10"
+    prop-types "^15.7.2"
+    tslib "^1.10.0"
+
+"@uifabric/utilities@^7.16.3":
+  version "7.24.3"
+  resolved "https://registry.yarnpkg.com/@uifabric/utilities/-/utilities-7.24.3.tgz#a2baa1d745616649914a2f8efc19a352d6b48b82"
+  integrity sha512-ALSsevp3+sDUzPP3aalPlcO+mhv7mHkvYlle/6nxs7GgRNzB/d9KCJcDOuockzDryImpvXgNkucMuSloKpph8g==
+  dependencies:
+    "@uifabric/merge-styles" "^7.16.2"
+    "@uifabric/set-version" "^7.0.17"
     prop-types "^15.7.2"
     tslib "^1.10.0"
 
