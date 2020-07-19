@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "name": "@projectit/documentation",
+  "version": "0.0.5",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joswarmer/ProjectIt.git"
+  },
+  "scripts": {
+    "tutorial":     "ts-node ../meta/src/commandline/projectit all -d src/tutorial-language/defs -o src/tutorial-language"
+  },
+  "devDependencies": {
+    "@types/react": "16.8.15",
+    "@types/react-dom": "16.8.4",
+    "@types/react-router": "^5.1.4",
+    "mobx-devtools": "^0.9.21",
+    "ts-loader": "^6.2.0",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@projectit/core": "^0.0.5",
+    "@projectit/meta": "^0.0.5",
+    "@types/lodash": "4.14.73",
+    "@types/history": "^4.7.5",
+    "global": "^4.4.0",
+    "mobx": "^5.14.0",
+    "mobx-react": "6.1.3"
+  }
+}

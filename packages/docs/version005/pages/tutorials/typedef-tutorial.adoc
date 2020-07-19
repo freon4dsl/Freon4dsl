@@ -2,7 +2,7 @@
 :page-nav_order: 40
 :page-parent: Tutorials
 :imagesdir: ../images/
-:src-dir: ../../../../playground/src/tutorial-language/defs
+:src-dir: ../../../src/tutorial-language/defs
 :source-language: javascript
 :listing-caption: Code Sample
 = The Typer Definition
