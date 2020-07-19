@@ -1,15 +1,39 @@
+.placeholdertext {
+    color: black;
+}
+.placeholdertext:empty:before {
+    color: blue;
+    opacity: 0.5;
+    content: attr(data-placeholdertext);
+}
+
+.indentedplaceholdertext {
+    color: gray;
+    margin-left: 40px;
+}
+
 .numeric {
     color: green;
+}
+
+reference {
+    color: darkorange;
 }
 .stringLiteral {
     color: green;
 }
-// tag::StyleKeyword[]
 .keyword {
     font-weight: bold;
     color: blue;
 }
-// end::StyleKeyword[]
+.propertykeyword {
+    font-weight: normal;
+    color: blue;
+}
+.conceptkeyword {
+    font-weight: bold;
+    color: darkblue;
+}
 
 .mygrid {
     padding: 0px;
@@ -39,3 +63,16 @@
     margin-left: 80px;
 }
 
+.myButton {
+    border: 1px solid blue;
+    background: lightblue;
+    color: black;
+    border-radius: 2px;
+}
+
+.borderLeft {
+    border-left: 2px;
+    border-style: solid;
+    border-top-style: none;
+    border-top: none;
+}

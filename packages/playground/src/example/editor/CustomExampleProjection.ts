@@ -3,7 +3,7 @@ import { Box, PiProjection, PiElement, createDefaultExpressionBox, TextBox, KeyP
 import { HorizontalListBox, LabelBox, SvgBox, GridCell, GridBox , GridUtil, PiEditor } from "@projectit/core";
 import { VerticalListBox } from "@projectit/core";
 import { editorEnvironment } from "../../webapp/gateway-to-projectit/WebappConfiguration";
-import { projectitStyles } from "../../webapp/styles/styles";
+import { projectitStyles } from "example/editor/styles/styles";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute, AttributeType, Entity, NumberLiteralExpression, OrExpression, PiElementReference, SumExpression } from "../language/gen";
 import { projectitConfiguration } from "../projectit/ProjectitConfiguration";

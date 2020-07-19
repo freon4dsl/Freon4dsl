@@ -38,8 +38,11 @@
       "@projectit/meta": [
         "packages/meta/src"
       ],
-      "@projectit/demo": [
-        "packages/demo/src"
+      "@projectit/test": [
+        "packages/test/src"
+      ],
+      "@projectit/docs": [
+        "packages/docs/src"
       ],
       "@projectit/playground": [
         "packages/playground/src"
