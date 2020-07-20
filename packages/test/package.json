@@ -1,0 +1,60 @@
+{
+  "private": true,
+  "name": "@projectit/tests",
+  "version": "0.0.5",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joswarmer/ProjectIt.git"
+  },
+  "scripts": {
+    "demo": 	    "ts-node ../meta/src/commandline/projectit all -d src/demo/defs -o src/demo",
+    "meta-it": 		"ts-node ../meta/src/commandline/projectit -v meta-it -l src/demo/defs/LanguageDefinition.lang -o src/demo",
+    "scope-it":     "ts-node ../meta/src/commandline/projectit -v scope-it -l src/demo/defs/LanguageDefinition.lang -s src/demo/defs/LanguageDefinition.scope -o src/demo",
+    "edit-it": 		"ts-node ../meta/src/commandline/projectit -v edit-it -l src/demo/defs/LanguageDefinition.lang -e src/demo/defs/LanguageDefinition.edit -o src/demo",
+    "validate-it": 	"ts-node ../meta/src/commandline/projectit -v validate-it -l src/demo/defs/LanguageDefinition.lang -c src/demo/defs/LanguageDefinition.valid -o src/demo",
+    "type-it": 	    "ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
+
+    "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
+    "all":          "yarn run demo && yarn run testproject && tsc",
+    "test":         "yarn run all && jest"
+  },
+  "devDependencies": {
+    "@uifabric/example-data": "^7.0.9",
+    "@uifabric/fluent-theme": "^7.1.51",
+    "@fluentui/react": "^7.105.13",
+    "@fluentui/react-northstar": "^0.47.0",
+    "@fluentui/react-icons-northstar": "^0.49.0",
+    "@types/pegjs": "^0.10.1",
+    "@types/react": "16.8.15",
+    "@types/react-dom": "16.8.4",
+    "@types/react-router": "^5.1.4",
+    "@types/webpack": "^4.39.2",
+    "@types/webpack-env": "^1.14.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "html-webpack-plugin": "^3.2.0",
+    "mobx-devtools": "^0.9.21",
+    "ts-loader": "^6.2.0",
+    "ts-node": "^8.4.1",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2",
+    "prettier": "^2.0.4",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@projectit/core": "^0.0.5",
+    "@projectit/meta": "^0.0.5",
+    "@types/lodash": "4.14.73",
+    "@types/history": "^4.7.5",
+    "global": "^4.4.0",
+    "mobx": "^5.14.0",
+    "mobx-react": "6.1.3"
+  },
+  "publishConfig": {
+    "access": "private"
+  }
+}

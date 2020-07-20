@@ -17,10 +17,11 @@ export const TYPER_FOLDER = "typer";
 export const TYPER_GEN_FOLDER = "typer/gen";
 export const STDLIB_GEN_FOLDER = "stdlib/gen";
 export const UNPARSER_GEN_FOLDER = "unparser/gen";
-export const WEBAPP_FOLDER = "../webapp";
-export const APP_FOLDER = "../webapp/app";
-export const ASSETS_FOLDER = "../webapp/assets";
-export const STYLES_FOLDER = "../webapp/styles";
+// export const WEBAPP_FOLDER = "../webapp";
+// export const APP_FOLDER = "../webapp/app";
+// export const ASSETS_FOLDER = "../webapp/assets";
+export const STYLES_ORIGIN  = "../meta/src/editordef/generator/templates/styles";    // the folder in which the to-be-copied files can be found
+export const STYLES_FOLDER = EDITOR_FOLDER + "/styles";     // the folder to which the style files should be copied
 // the predefined interfaces and classes can be found in ...
 export const PROJECTITCORE = "@projectit/core";
 export const scoperInterface = PROJECTITCORE;

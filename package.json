@@ -80,6 +80,8 @@
     "packages/core",
     "packages/meta",
     "packages/playground",
+    "packages/docs",
+    "packages/test",
     "packages/server"
   ],
   "jest": {

@@ -1,12 +1,17 @@
 export const projectitStyles: {
+    placeholdertext: string;
     variable: string;
     member: string;
     keyword: string;
+    propertykeyword: string;
+    conceptkeyword: string;
+    indentedplaceholdertext: string;
     numeric: string;
     stringLiteral: string;
     function: string;
     optional: string;
     ifthenelse: string;
+    reference: string;
     requiredPlaceholder: string;
     grid: string;
     gridcell: string;
@@ -19,4 +24,6 @@ export const projectitStyles: {
     tree: string;
     indent: string;
     indent2: string;
+    myButton: string;
+    borderLeft: string;
 } = require("./style.scss");

@@ -2,7 +2,7 @@
 :page-nav_order: 40
 :page-parent: Tutorials
 :imagesdir: ../images/
-:src-dir: ../../../../playground/src/tutorial-language/defs
+:src-dir: ../../../src/tutorial-language/defs
 :source-language: javascript
 :listing-caption: Code Sample
 = The Typer Definition
@@ -21,7 +21,8 @@ include::{src-dir}/LanguageDefinition.type[tag=types]
 
 Using *inference rules*, you can indicate how to determine the type of certain concepts. Every concept
 for which an inference rule is defined has a type and that type is determined according to the given
-rule.
+rule. In the following example the type of a function is the type that is the value of the attribute
+'declaredType'.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.type[tag=inference]

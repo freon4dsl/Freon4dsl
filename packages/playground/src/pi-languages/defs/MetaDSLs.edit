@@ -4,7 +4,7 @@ editor First for language PiLanguage
 //    @projection
 //    [name]
 //}
-PiLanguageUnit {
+PiStructureDef {
     @projection
     [language ${self.name}
 
@@ -105,7 +105,8 @@ PiInstance {
 }
 PiPropertyInstance {
     @projection
-    [${self.property.name} : \"${self.value}\"]
+    [${self.property.name} : ${self.value}]
+//    [${self.property.name} : \"${self.value}\"]
 }
 // the following two classes are only used in the typer and validator definitions
 //PiFunction {

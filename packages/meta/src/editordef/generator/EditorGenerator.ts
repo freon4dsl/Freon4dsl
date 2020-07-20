@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageUnit } from "../../languagedef/metalanguage";
-import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, UNPARSER_GEN_FOLDER } from "../../utils";
+import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER, UNPARSER_GEN_FOLDER } from "../../utils";
 import { DefEditorLanguage } from "../metalanguage";
 import { DefEditorDefaults } from "../metalanguage/DefEditorDefaults";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers, UnparserTemplate } from "./templates";
@@ -9,6 +9,7 @@ import { CustomActionsTemplate } from "./templates/CustomActionsTemplate";
 import { CustomProjectionTemplate } from "./templates/CustomProjectionTemplate";
 import { DefaultActionsTemplate } from "./templates/DefaultActionsTemplate";
 import { InitalizationTemplate } from "./templates/InitializationTemplate";
+import { StylesTemplate } from "./templates/StylesTemplate";
 
 const LOGGER = new PiLogger("EditorGenerator"); //.mute();
 
@@ -16,8 +17,8 @@ export class EditorGenerator {
     public outputfolder: string = ".";
     protected editorGenFolder: string;
     protected unparserGenFolder: string;
-
     protected editorFolder: string;
+    protected stylesFolder: string;
     language: PiLanguageUnit;
 
     constructor() {
@@ -26,6 +27,7 @@ export class EditorGenerator {
     generate(editDef: DefEditorLanguage): void {
         let generationStatus = new GenerationStatus();
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
+        this.stylesFolder = this.outputfolder + "/" + STYLES_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
         this.unparserGenFolder = this.outputfolder + "/" + UNPARSER_GEN_FOLDER;
         let name = editDef ? editDef.name : "";
@@ -45,14 +47,15 @@ export class EditorGenerator {
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
         const customProjectiontemplate = new CustomProjectionTemplate();
-
         const enumProjection = new SelectionHelpers();
         const editorIndexTemplate = new EditorIndexTemplate();
         const unparserTemplate = new UnparserTemplate();
         const initializationTemplate = new InitalizationTemplate();
+        const stylesTemplate = new StylesTemplate();
 
         //Prepare folders
-        Helpers.createDirIfNotExisting(this.editorFolder);
+        Helpers.createDirIfNotExisting(this.editorFolder);  // will not be overwritten
+        Helpers.createDirIfNotExisting(this.stylesFolder);  // will not be overwritten
         Helpers.createDirIfNotExisting(this.editorGenFolder);
         Helpers.deleteFilesInDir(this.editorGenFolder, generationStatus);
         Helpers.createDirIfNotExisting(this.unparserGenFolder);
@@ -96,6 +99,14 @@ export class EditorGenerator {
         var unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(this.language, editDef, relativePath), "Unparser Class", generationStatus);
         // var unparserFile = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
         fs.writeFileSync(`${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`, unparserFile);
+
+        LOGGER.log(`Generating editor styles part 1: ${this.stylesFolder}/styles.ts`);
+        var editorStylesConst = Helpers.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
+        Helpers.generateManualFile(`${this.stylesFolder}/styles.ts`, editorStylesConst, "Editor Styles Constant");
+
+        LOGGER.log(`Generating editor styles part 2: ${this.stylesFolder}/style.scss`);
+        var editorStylesConst = stylesTemplate.generateSCSS();
+        Helpers.generateManualFile(`${this.stylesFolder}/style.scss`, editorStylesConst, "Editor Styles scss");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
         var editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef), "Editor Gen Index", generationStatus);
