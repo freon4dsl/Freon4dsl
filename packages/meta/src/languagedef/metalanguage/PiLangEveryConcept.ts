@@ -7,7 +7,7 @@ import {
     PiInterface,
     PiFunction,
     PiParameter,
-    PiLanguageUnit,
+    PiLanguage,
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty,
@@ -18,7 +18,7 @@ import { PiLangElement } from "./PiLanguage";
 
 export type PiLangEveryConcept =
     | PiLangElement
-    | PiLanguageUnit
+    | PiLanguage
     | PiClassifier
     | PiInterface
     | PiConcept

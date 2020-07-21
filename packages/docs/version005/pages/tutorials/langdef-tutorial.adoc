@@ -19,7 +19,7 @@ include::{src-dir}/LanguageDefinition.lang[tag=concept]
 ----
 
 An *expression concept* is a concept that is an expression. The editor will deal with them differently in
-order to give your user or more natural editing experience. Note that expression concepts need to have a priority.
+order to give your user a more natural editing experience. Note that expression concepts need to have a priority.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.lang[tag=expression]

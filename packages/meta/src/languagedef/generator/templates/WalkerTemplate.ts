@@ -1,12 +1,12 @@
 import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiLanguage } from "../../metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
 
 export class WalkerTemplate {
     constructor() {
     }
 
-    generateWalker(language: PiLanguageUnit, relativePath: string): string {
+    generateWalker(language: PiLanguage, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : String = Names.walker(language);
 

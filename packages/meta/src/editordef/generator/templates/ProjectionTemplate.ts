@@ -6,7 +6,7 @@ import {
     PiProperty
 } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
 import {
     DefEditorConcept,
@@ -21,7 +21,7 @@ export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjectionDefault(language: PiLanguageUnit,  editorDef: DefEditorLanguage, relativePath: string): string {
+    generateProjectionDefault(language: PiLanguage, editorDef: DefEditorLanguage, relativePath: string): string {
         const binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
             const editor = editorDef.findConceptEditor(c);
@@ -142,7 +142,7 @@ export class ProjectionTemplate {
         `;
     }
 
-    private generateUserProjection(language: PiLanguageUnit, concept: PiConcept, editor: DefEditorConcept) {
+    private generateUserProjection(language: PiLanguage, concept: PiConcept, editor: DefEditorConcept) {
         let result: string = "";
         const element = Roles.elementName(concept);
         const projection: MetaEditorProjection = editor.projection;
@@ -260,7 +260,7 @@ export class ProjectionTemplate {
             )`;
     }
 
-    conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiConceptProperty, element: string) {
+    conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
         const featureType = appliedFeature.type.name;
         return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}", "<select ${appliedFeature.name}>", "${featureType}",
                     () => {

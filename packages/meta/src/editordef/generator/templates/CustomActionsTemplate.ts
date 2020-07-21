@@ -1,11 +1,11 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class CustomActionsTemplate {
     constructor() {
     }
 
-    generate(language: PiLanguageUnit): string {
+    generate(language: PiLanguage): string {
         return `
             import {
                 KeyboardShortcutBehavior,

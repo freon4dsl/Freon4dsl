@@ -1,5 +1,5 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiProperty, PiConcept, PiPrimitiveProperty, PiClassifier } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiProperty, PiConcept, PiPrimitiveProperty, PiClassifier } from "../../languagedef/metalanguage/PiLanguage";
 import {
     ConceptRuleSet,
     PiValidatorDef,
@@ -26,7 +26,7 @@ const conformsToName = "conformsTo";
 export class ValidatorChecker extends Checker<PiValidatorDef> {
     myExpressionChecker: PiLangExpressionChecker;
     
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         super(language);
         this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }

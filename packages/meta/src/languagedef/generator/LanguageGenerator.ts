@@ -11,7 +11,7 @@ import {
     Names,
     STDLIB_GEN_FOLDER
 } from "../../utils";
-import { PiLanguageUnit } from "../metalanguage/PiLanguage";
+import { PiLanguage } from "../metalanguage/PiLanguage";
 import {
     AllConceptsTemplate,
     ConceptTemplate,
@@ -38,7 +38,7 @@ export class LanguageGenerator {
 
     constructor() {}
 
-    generate(language: PiLanguageUnit): void {
+    generate(language: PiLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
         let generationStatus = new GenerationStatus();
         this.languageGenFolder = this.outputfolder + "/" + LANGUAGE_GEN_FOLDER;

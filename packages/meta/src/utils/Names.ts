@@ -1,6 +1,6 @@
 import {
     PiClassifier, PiConcept, PiInterface,
-    PiLanguageUnit
+    PiLanguage
 } from "../languagedef/metalanguage/PiLanguage";
 
 /**
@@ -34,47 +34,47 @@ export class Names {
     // because the below Names are used to generate TypeScript classes
     // they all have to start with an uppercase character
 
-    public static configuration(language: PiLanguageUnit) {
+    public static configuration(language: PiLanguage) {
         return "ProjectitConfiguration";
     }
 
-    public static environment(language: PiLanguageUnit) {
+    public static environment(language: PiLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";
     }
 
-    public static context(language: PiLanguageUnit): string {
+    public static context(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Context";
     }
 
-    public static actions(language: PiLanguageUnit): string {
+    public static actions(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Actions";
     }
 
-    public static defaultActions(language: PiLanguageUnit): string {
+    public static defaultActions(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "DefaultActions";
     }
 
-    public static customActions(language: PiLanguageUnit): string {
+    public static customActions(language: PiLanguage): string {
         return "Custom" + this.actions(language);
     }
 
-    public static projectionDefault(language: PiLanguageUnit): string {
+    public static projectionDefault(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ProjectionDefault";
     }
 
-    public static selectionHelpers(language: PiLanguageUnit): string {
+    public static selectionHelpers(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "SelectionHelpers";
     }
 
-    public static customProjection(language: PiLanguageUnit): string {
+    public static customProjection(language: PiLanguage): string {
         return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
     }
 
-    public static language(language: PiLanguageUnit): string {
+    public static language(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Language";
     }
 
-    public static initialization(language: PiLanguageUnit) {
+    public static initialization(language: PiLanguage) {
         return this.startWithUpperCase(language?.name) + "Initialization";
     }
 
@@ -90,55 +90,55 @@ export class Names {
         return this.startWithUpperCase(interf?.name);
     }
 
-    public static metaType(language: PiLanguageUnit): string {
+    public static metaType(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ConceptType";
     }
 
-    public static allConcepts(language: PiLanguageUnit): string {
+    public static allConcepts(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "EveryConcept";
     }
 
-    public static namespace(language: PiLanguageUnit): string {
+    public static namespace(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Namespace";
     }
 
-    public static scoper(language: PiLanguageUnit): string {
+    public static scoper(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Scoper";
     }
 
-    public static scoperUtils(language: PiLanguageUnit): string {
+    public static scoperUtils(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ScoperUtils";
     }
 
-    public static namesCollector(language: PiLanguageUnit): string {
+    public static namesCollector(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "NamesCollector";
     }
 
-    public static validator(language: PiLanguageUnit): string {
+    public static validator(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Validator";
     }
 
-    public static checker(language: PiLanguageUnit): string {
+    public static checker(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Checker";
     }
 
-    public static typer(language: PiLanguageUnit): string {
+    public static typer(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Typer";
     }
 
-    public static stdlib(language: PiLanguageUnit): string {
+    public static stdlib(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Stdlib";
     }
 
-    public static unparser(language: PiLanguageUnit): string {
+    public static unparser(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Unparser";
     }
 
-    public static walker(language: PiLanguageUnit): string {
+    public static walker(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Walker";
     }
 
-    public static workerInterface(language: PiLanguageUnit): string {
+    public static workerInterface(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Worker";
     }
 

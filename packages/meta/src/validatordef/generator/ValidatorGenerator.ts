@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils";
 import { PiValidatorDef } from "../metalanguage";
 import { CheckerTemplate } from "./templates/CheckerTemplate";
@@ -9,11 +9,11 @@ import { ValidatorTemplate } from "./templates/ValidatorTemplate";
 const LOGGER = new PiLogger("ValidatorGenerator"); //.mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguageUnit;
+    public language: PiLanguage;
     protected validatorGenFolder: string;
     protected validatorFolder: string;
 
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         this.language = language;
     }
 

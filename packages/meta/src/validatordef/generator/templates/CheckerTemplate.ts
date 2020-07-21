@@ -1,5 +1,5 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiValidatorDef,
     CheckEqualsTypeRule,
@@ -14,7 +14,7 @@ export class CheckerTemplate {
     constructor() {
     }
 
-    generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef, relativePath: string): string {
+    generateChecker(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
         const errorClassName : string = Names.PiError;
         const checkerClassName : string = Names.checker(language);
@@ -99,7 +99,7 @@ export class CheckerTemplate {
         `;
     }
 
-    private createImports(language: PiLanguageUnit, validdef: PiValidatorDef) : string {
+    private createImports(language: PiLanguage, validdef: PiValidatorDef) : string {
         let result : string = "";
         result = language.concepts?.map(concept => `
                 ${concept.name}`).join(", ");
@@ -166,7 +166,7 @@ export class CheckerTemplate {
             }
         });`;
     }
-    private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiConcept[] {
+    private conceptsWithoutRules(language: PiLanguage, validdef: PiValidatorDef) : PiConcept[] {
         let withRules : PiConcept[] = [];
         for (let ruleSet of validdef.conceptRules) {
             withRules.push(ruleSet.conceptRef.referred);

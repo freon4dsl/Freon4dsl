@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses, langExpToTypeScript } from "../../../utils";
-import { PiClassifier, PiConcept, PiInterface, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiClassifier, PiConcept, PiInterface, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiLangExp,
     PiLangFunctionCallExp,
@@ -9,12 +9,12 @@ import { PiTypeDefinition, PiTypeClassifierRule, PiTypeIsTypeRule, PiTypeAnyType
 
 export class PiTyperTemplate {
     typerdef: PiTypeDefinition;
-    language: PiLanguageUnit;
+    language: PiLanguage;
 
     constructor() {
     }
 
-    generateTyper(language: PiLanguageUnit, typerdef: PiTypeDefinition, relativePath: string): string {
+    generateTyper(language: PiLanguage, typerdef: PiTypeDefinition, relativePath: string): string {
         if (typerdef == null) return this.generateDefault(language, relativePath);
 
         this.typerdef = typerdef;
@@ -90,7 +90,7 @@ export class PiTyperTemplate {
         }`;
     }
 
-    generateDefault(language: PiLanguageUnit, relativePath: string): string {
+    generateDefault(language: PiLanguage, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const typerInterfaceName : string = Names.PiTyper;
         const generatedClassName : string = Names.typer(language);
@@ -134,7 +134,7 @@ export class PiTyperTemplate {
         }`;
     }
 
-    generateGenIndex(language: PiLanguageUnit): string {
+    generateGenIndex(language: PiLanguage): string {
         return `
         export * from "./${Names.typer(language)}";
         `;

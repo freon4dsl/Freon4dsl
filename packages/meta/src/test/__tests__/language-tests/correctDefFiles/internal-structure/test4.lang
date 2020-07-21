@@ -1,0 +1,34 @@
+language test3
+
+root concept Model {
+    name: string;
+    unit: AA;
+}
+
+unit concept AA {
+    name: string;
+    prop1: BB;
+}
+
+limited BB {
+    // the possibilities for primitive properties
+    AAprop1: string;
+    AAprop2: string[];
+    AAprop3: number;
+    AAprop4: number[];
+    AAprop5: boolean;
+    AAprop6: boolean[];
+    BB1 = {AAprop1: "some_text", AAprop3: "5", AAprop5: "true" }
+}
+
+limited CC {
+    // the possibilities for primitive properties
+    AAprop1: string;
+    AAprop2: string[];
+    AAprop3: number;
+    AAprop4: number[];
+    AAprop5: boolean;
+    AAprop6: boolean[];
+    CC1 = {AAprop1: "some_text", AAprop3: "78", AAprop5: "false" }
+    CC2 = {AAprop1: "other_text", AAprop3: "99999", AAprop5: "false" }
+}

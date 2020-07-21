@@ -1,10 +1,10 @@
 import { LANGUAGE_GEN_FOLDER, Names, replaceInterfacesWithImplementors } from "../../../utils";
-import { PiConcept, PiLanguageUnit } from "../../../languagedef/metalanguage";
+import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiScopeDef } from "../../metalanguage";
 
 export class ScoperUtilsTemplate {
 
-    generateScoperUtils(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
+    generateScoperUtils(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);
         const concreteNamespaces: PiConcept[] = replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.rootConcept);

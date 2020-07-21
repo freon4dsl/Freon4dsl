@@ -1,4 +1,4 @@
-import { PiConcept, PiLangExp, PiLangFunctionCallExp, PiLanguageUnit } from "../../../languagedef/metalanguage";
+import { PiConcept, PiLangExp, PiLangFunctionCallExp, PiLanguage } from "../../../languagedef/metalanguage";
 import {
     Names,
     LANGUAGE_GEN_FOLDER,
@@ -16,7 +16,7 @@ export class ScoperTemplate {
     getAlternativeScopeText: string = '';
     alternativeScopeImports: string = '';
 
-    generateIndex(language: PiLanguageUnit): string {
+    generateIndex(language: PiLanguage): string {
         return `
         export * from "./${Names.scoper(language)}";
         export * from "./${Names.scoperUtils(language)}";
@@ -25,7 +25,7 @@ export class ScoperTemplate {
         `;
     }
 
-    generateScoper(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
+    generateScoper(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);
         const langConceptType : string = Names.metaType(language);
         const generatedClassName : string = Names.scoper(language);
@@ -203,7 +203,7 @@ export class ScoperTemplate {
         this.getAlternativeScopeText = "";
     }
 
-    private makeAlternativeScopeTexts(scopedef: PiScopeDef, language: PiLanguageUnit) {
+    private makeAlternativeScopeTexts(scopedef: PiScopeDef, language: PiLanguage) {
         const allLangConcepts : string = Names.allConcepts(language);
         const namespaceClassName : string = Names.namespace(language);
         for (let def of scopedef.scopeConceptDefs) {
@@ -229,7 +229,7 @@ export class ScoperTemplate {
         }
     }
 
-    private altScopeExpToTypeScript(expression: PiLangExp, allLangConcepts: string, language: PiLanguageUnit): string {
+    private altScopeExpToTypeScript(expression: PiLangExp, allLangConcepts: string, language: PiLanguage): string {
         let result = ``;
         // special case: the expression refers to 'typeof'
         if (expression instanceof  PiLangFunctionCallExp && expression.sourceName === "typeof") {

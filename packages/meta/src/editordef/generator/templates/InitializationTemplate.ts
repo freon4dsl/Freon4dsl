@@ -1,11 +1,11 @@
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
-import { PiConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiConceptProperty, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class InitalizationTemplate {
     constructor() {
     }
 
-    generate(language: PiLanguageUnit, relativePath: string): string {
+    generate(language: PiLanguage, relativePath: string): string {
         const firstUnit: PiConceptProperty = language.rootConcept.parts()[0];
         const firstUnitTypeName: string = Names.concept(firstUnit?.type.referred);
         if (firstUnitTypeName.length === 0) {

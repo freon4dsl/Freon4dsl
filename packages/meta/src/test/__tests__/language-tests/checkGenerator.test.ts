@@ -1,5 +1,5 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 import { LanguageGenerator } from "../../../languagedef/generator/LanguageGenerator";
 
 describe("Checking generator for language definition", () => {
@@ -11,7 +11,7 @@ describe("Checking generator for language definition", () => {
         let parser = new LanguageParser();
         let generator = new LanguageGenerator();
         let parseFile = testdir + "test2.lang";
-        let model : PiLanguageUnit;
+        let model : PiLanguage;
         try {
             model = parser.parse(parseFile);
             generator.outputfolder = outputdir;

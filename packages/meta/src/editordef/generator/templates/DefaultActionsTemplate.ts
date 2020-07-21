@@ -1,6 +1,6 @@
 import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
 import { DefEditorLanguage } from "../../metalanguage";
 import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
@@ -10,7 +10,7 @@ export class DefaultActionsTemplate {
     }
 
     // TODO generate the correct class comment for DefaultActions
-    generate(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
+    generate(language: PiLanguage, editorDef: DefEditorLanguage, relativePath: string): string {
         return `
             import * as Keys from "${PROJECTITCORE}";
             import {
@@ -110,7 +110,7 @@ export class DefaultActionsTemplate {
             `;
         }
 
-    customActionForReferences(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+    customActionForReferences(language: PiLanguage, editorDef: DefEditorLanguage): string {
         let result = "";
         language.concepts.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
                 const referredConcept = reference.type.referred;
@@ -135,7 +135,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForParts(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+    customActionForParts(language: PiLanguage, editorDef: DefEditorLanguage): string {
         let result = "";
         language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
             const childConcept = part.type.referred;

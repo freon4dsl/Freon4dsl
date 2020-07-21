@@ -1,5 +1,5 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiConcept, PiProperty, PiClassifier, PiInterface } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept, PiProperty, PiClassifier, PiInterface } from "../../languagedef/metalanguage/PiLanguage";
 import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeClassifierRule, PiTypeStatement } from "./PiTyperDefLang";
 import { PiLangExpressionChecker } from "../../languagedef/metalanguage/PiLangExpressionChecker";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
@@ -15,7 +15,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
     typeConcepts: PiClassifier[] = [];         // all concepts marked as 'isType'
     conceptsWithRules: PiClassifier[] = [];    // all concepts for which a rule is found. Used to check whether there are two rules for the same concept.
     
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         super(language);
         this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }

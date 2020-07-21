@@ -1,27 +1,126 @@
+import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
+import { PiExpressionConcept, PiLanguage, PiLangUtil, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+
+// The tests in this file determine whether the internal structure of a language definition is correct.
 
 describe("Checking internal structure of language", () => {
-    let testdir = "src/test/__tests__/language-tests/faultyDefFiles/internal-structure/";
+    let parser = new LanguageParser();
+    let testdir = "src/test/__tests__/language-tests/correctDefFiles/internal-structure/";
 
     // TODO implement the following tests:
 
-    // on PiLanguageUnit
-    // there is a root concept
-    // there is a single expression base
+    // on PiLanguage
     // ??? predefined (primitive types)
-    // if there is a classifier, we can find it
+    test("internal structure of PiLanguage", () => {
+        let parseFile = testdir + "test2.lang";
+        let piLanguage: PiLanguage;
+        try {
+            piLanguage = parser.parse(parseFile);
+        } catch(e) {
+            // this would be a true error
+            console.log(e.message);
+        }
+        // there is a root concept
+        expect(piLanguage.rootConcept).not.toBeNull();
+        // there is a single expression base or none at all
+        const result = piLanguage.concepts.filter(c => {
+            return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
+        });
+        expect(result.length).toBeLessThan(2);
+        // if there is a classifier, we can find it
+        piLanguage.concepts.forEach(classifier => {
+            expect(piLanguage.findClassifier(classifier.name)).not.toBeNull();
+            expect(piLanguage.findConcept(classifier.name)).not.toBeNull();
+            expect(piLanguage.findInterface(classifier.name)).toBeUndefined();
+        });
+        piLanguage.interfaces.forEach(classifier => {
+            expect(piLanguage.findClassifier(classifier.name)).not.toBeNull();
+            expect(piLanguage.findConcept(classifier.name)).toBeUndefined();
+            expect(piLanguage.findInterface(classifier.name)).not.toBeNull();
+        });
+    });
 
     // on PiConcept and PiInterface
-    // no references in the parts list, and vice versa
-    // no primProps in reference list
-    // if a 'base' has a prop, we can find it
-    // if an implemented interface has a prop, we can find it
-    // we can find all subconcepts, also recursive
-    // we can find all superconcepts, also recursive
-    // we can find all subinterfaces, also recursive
-    // we can find all superinterfaces, also recursive
+    // TODO if an implemented interface has a prop, we can find it
+    test("internal structure of PiConcept and PiInterface: properties", () => {
+        let parseFile = testdir + "test2.lang";
+        let piLanguage: PiLanguage;
+        try {
+            piLanguage = parser.parse(parseFile);
+        } catch(e) {
+            // this would be a true error
+            console.log(e.message);
+            console.log(e.stack);
+        }
+        // no references in the parts list, and vice versa
+        // no primProps in reference list
+        let piConcept = piLanguage.findConcept("BB");
+        piConcept.parts().forEach(part => {
+            expect(part.isPart).toBe(true);
+        });
+        piConcept.references().forEach(part => {
+            expect(part.isPart).toBe(false);
+            expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
+        });
+        piConcept.primProperties.forEach(part => {
+            expect(part.isPart).toBe(true);
+        });
+    });
 
-    // on PiExpression
-    // a binary expression has a left and a right part, and a priority
+    test("internal structure of PiConcept and PiInterface: inheritance", () => {
+        let parseFile = testdir + "test3.lang";
+        let piLanguage: PiLanguage;
+        try {
+            piLanguage = parser.parse(parseFile);
+        } catch(e) {
+            // this would be a true error
+            console.log(e.message);
+        }
+
+        // no references in the parts list, and vice versa
+        // no primProps in reference list
+        let piConcept = piLanguage.findConcept("BB");
+        expect(piConcept.allParts().length).toBeGreaterThan(0);
+        piConcept.allParts().forEach(part => {
+            expect(part.isPart).toBe(true);
+        });
+        piConcept.allReferences().forEach(part => {
+            expect(part.isPart).toBe(false);
+            expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
+        });
+        piConcept.allPrimProperties().forEach(part => {
+            expect(part.isPart).toBe(true);
+        });
+
+        // if a 'base' has a prop, we can find it
+        let baseConcept = piConcept.base.referred.base.referred;     // should be "BaseBaseBB"
+        expect(baseConcept).not.toBeUndefined();
+        baseConcept.allProperties().forEach(prop => {
+            expect(piConcept.allProperties()).toContain(prop);
+        });
+
+        // we can find all subconcepts, also recursive
+        let list = PiLangUtil.subConcepts(baseConcept);
+        expect(list).toContain(piLanguage.findConcept("BaseBB"));
+        expect(list).toContain(piLanguage.findConcept("DD"));
+        expect(list).not.toContain(piLanguage.findConcept("Model"));
+        expect(list).not.toContain(piLanguage.findConcept("AA"));
+        expect(list).toContain(piLanguage.findConcept("BB"));
+        expect(list).toContain(piLanguage.findConcept("CC"));
+        expect(list).not.toContain(piLanguage.findConcept("BaseBaseBB"));
+
+        // we can find all superconcepts, also recursive
+        list = PiLangUtil.superConcepts(piConcept);
+        expect(list).toContain(piLanguage.findConcept("BaseBB"));
+        expect(list).not.toContain(piLanguage.findConcept("DD"));
+        expect(list).not.toContain(piLanguage.findConcept("Model"));
+        expect(list).not.toContain(piLanguage.findConcept("AA"));
+        expect(list).not.toContain(piLanguage.findConcept("BB"));
+        expect(list).not.toContain(piLanguage.findConcept("CC"));
+        expect(list).toContain(piLanguage.findConcept("BaseBaseBB"));
+        // TODO we can find all subinterfaces, also recursive
+        // TODO we can find all superinterfaces, also recursive
+    });
 
     // on PiProperty
     // test optional, list, part properties
@@ -30,13 +129,27 @@ describe("Checking internal structure of language", () => {
     // test initial value of properties
 
     // on PiInstance
-    // PiInstance.concept should be a limited property
-    // test PiInstance against its concept
-
-    // on PiElementReference
-    // all references can be found
-
-    test("checking internal structure", () => {
-
+    test("internal structure of PiInstance", () => {
+        let parseFile = testdir + "test4.lang";
+        let piLanguage: PiLanguage;
+        try {
+            piLanguage = parser.parse(parseFile);
+        } catch(e) {
+            // this would be a true error
+            console.log(e.message);
+        }
+        const list = piLanguage.concepts.filter(con => con instanceof PiLimitedConcept);
+        // PiInstance.concept should be a limited property
+        // let myLimited = piLanguage.findConcept("BB");
+        list.forEach(myLimited => {
+            expect(myLimited).toBeInstanceOf(PiLimitedConcept);
+            // test PiInstance against its concept
+            (myLimited as PiLimitedConcept).instances.forEach(inst => {
+                inst.concept.referred === myLimited;
+                inst.props.forEach(instProp => {
+                    expect(myLimited.allProperties()).toContain(instProp.property.referred);
+                });
+            });
+        });
     });
 });

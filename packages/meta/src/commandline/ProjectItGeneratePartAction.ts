@@ -1,7 +1,7 @@
 import { CommandLineStringParameter, ICommandLineActionOptions } from "@microsoft/ts-command-line";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
-import { PiLanguageUnit } from "../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../languagedef/metalanguage/PiLanguage";
 import { PiLogger } from "../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("ProjectItGeneratePartAction"); // .mute();
@@ -13,7 +13,7 @@ const LOGGER = new PiLogger("ProjectItGeneratePartAction"); // .mute();
 export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
     private languageFileArg: CommandLineStringParameter;
     protected languageFile: string;
-    protected language: PiLanguageUnit;
+    protected language: PiLanguage;
     protected succesfull: boolean = true;
 
     public constructor(options: ICommandLineActionOptions) {

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiConcept, PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
@@ -12,11 +12,11 @@ import { NamesCollectorTemplate } from "./templates/NamesCollectorTemplate";
 const LOGGER = new PiLogger("ScoperGenerator"); //.mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
-    public language: PiLanguageUnit;
+    public language: PiLanguage;
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         this.language = language;
     }
 

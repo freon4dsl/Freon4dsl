@@ -1,11 +1,11 @@
-import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiLanguage } from "../../metalanguage/PiLanguage";
 import { Names } from "../../../utils/Names";
 
 export class MetaTypeTemplate {
     constructor() {
     }
 
-    generateMetaType(language: PiLanguageUnit): string {
+    generateMetaType(language: PiLanguage): string {
         return `
         /**
          * Type ${Names.metaType(language)} is a union of the metatype, represented by a name, of all concepts 

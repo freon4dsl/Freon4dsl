@@ -9,7 +9,7 @@ export abstract class PiLangElement {
     name: string;
 }
 
-export class PiLanguageUnit extends PiLangElement {
+export class PiLanguage extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
     predefInstances: PiInstance[] = [];
@@ -23,6 +23,7 @@ export class PiLanguageUnit extends PiLangElement {
     get units(): PiConcept[] {
         return this.concepts.filter(con => con.isUnit === true);
     }
+
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
         return result.concat(this.interfaces);
@@ -76,7 +77,7 @@ export class PiLanguageUnit extends PiLangElement {
 }
 
 export abstract class PiClassifier extends PiLangElement {
-    language: PiLanguageUnit;
+    language: PiLanguage;
     isPublic: boolean;
     properties: PiProperty[] = [];
     primProperties: PiPrimitiveProperty[] = [];
@@ -375,7 +376,7 @@ export class PiPropertyInstance extends PiLangElement {
 
 // the following two classes are only used in the typer and validator definitions
 export class PiFunction extends PiLangElement {
-    language: PiLanguageUnit;
+    language: PiLanguage;
     formalparams: PiParameter[] = [];
     returnType: PiElementReference<PiConcept>;
 }

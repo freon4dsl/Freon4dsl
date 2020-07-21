@@ -2,10 +2,12 @@ language test1
 
 // TODO test optional properties
 root concept ROOT {
+    name: string;
     aa: AA[];
 }
 
 unit concept AA  {
+    name: string;
     // the possibilities for primitive properties
     AAprop1: string;
     AAprop2: string[];

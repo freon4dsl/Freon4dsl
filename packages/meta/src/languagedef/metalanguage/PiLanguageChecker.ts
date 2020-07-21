@@ -1,6 +1,6 @@
 import { Checker } from "../../utils";
 import {
-    PiLanguageUnit,
+    PiLanguage,
     PiBinaryExpressionConcept,
     PiExpressionConcept,
     PiPrimitiveProperty,
@@ -15,11 +15,12 @@ const reservedWords = ["root", "abstract", "limited", "interface", "binary", "ex
 
 // TODO add check: priority error from parser into checker => only for expression concepts
 
-export class PiLanguageChecker extends Checker<PiLanguageUnit> {
+export class PiLanguageChecker extends Checker<PiLanguage> {
     foundRoot = false;
 
-    public check(language: PiLanguageUnit): void {
+    public check(language: PiLanguage): void {
         LOGGER.info(this, "Checking language '" + language.name + "'");
+        this.foundRoot = false;
         this.simpleCheck(!!language.name && !reservedWords.includes(language.name) ,
             `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
 
@@ -31,7 +32,8 @@ export class PiLanguageChecker extends Checker<PiLanguageUnit> {
         language.concepts.forEach(concept => this.checkConcept(concept));
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
-        this.nestedCheck({check: !!language.concepts.find(c => c.isRoot),
+        const myRoot = language.concepts.find(c => c.isRoot);
+        this.nestedCheck({check: !!myRoot,
             error: `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`,
             whenOk: () => {
                 // language.rootConcept is set in 'checkConcept'

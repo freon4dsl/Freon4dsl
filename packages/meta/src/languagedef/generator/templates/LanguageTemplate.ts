@@ -1,7 +1,7 @@
 import { Names } from "../../../utils/Names";
 import { PiLangUtil } from "../../metalanguage";
 import {
-    PiLanguageUnit
+    PiLanguage
 } from "../../metalanguage/PiLanguage";
 import { PROJECTITCORE } from "../../../utils";
 
@@ -9,7 +9,7 @@ export class LanguageTemplate {
     constructor() {
     }
 
-    generateLanguage(language: PiLanguageUnit, relativePath: string): string {
+    generateLanguage(language: PiLanguage, relativePath: string): string {
         return `import { Language, Property, Concept, Interface } from "${PROJECTITCORE}";
         
             ${language.concepts.map(concept =>

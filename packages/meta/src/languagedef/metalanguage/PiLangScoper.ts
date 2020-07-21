@@ -1,5 +1,5 @@
 import { PiLangElement } from "./PiLanguage";
-import { PiClassifier, PiConcept, PiConceptProperty, PiInterface, PiLanguageUnit, PiProperty } from "./PiLanguage";
+import { PiClassifier, PiConcept, PiConceptProperty, PiInterface, PiLanguage, PiProperty } from "./PiLanguage";
 import { PiLangAppliedFeatureExp } from "./PiLangExpressions";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
@@ -7,7 +7,7 @@ const LOGGER = new PiLogger("PiLangScoper"); //.mute();
 const anyElement = "_$anyElement";
 
 export class PiLangScoper {
-    public language: PiLanguageUnit;
+    public language: PiLanguage;
     // TODO make searchlist a map {owner, unitName}
     private searchList: string[] = [];
 

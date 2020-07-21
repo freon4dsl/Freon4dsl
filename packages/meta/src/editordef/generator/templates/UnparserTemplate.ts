@@ -2,7 +2,7 @@ import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 import {
     PiBinaryExpressionConcept,
     PiConcept,
-    PiLanguageUnit,
+    PiLanguage,
     PiPrimitiveProperty,
     PiProperty
 } from "../../../languagedef/metalanguage/PiLanguage";
@@ -24,7 +24,7 @@ export class UnparserTemplate {
     constructor() {
     }
 
-    generateUnparser(language: PiLanguageUnit, editDef: DefEditorLanguage, relativePath: string): string {
+    generateUnparser(language: PiLanguage, editDef: DefEditorLanguage, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : String = Names.unparser(language);
 

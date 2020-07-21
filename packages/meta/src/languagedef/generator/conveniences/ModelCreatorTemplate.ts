@@ -1,13 +1,13 @@
 import { Names } from "../../../utils/Names";
 import { LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiConcept, PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiConcept, PiLanguage } from "../../metalanguage/PiLanguage";
 
 // TODO decide whether to keep generator 'ModelCreatorTemplate'
 export class ModelCreatorTemplate {
     constructor() {
     }
 
-    generateModelCreator(language: PiLanguageUnit, relativePath: string): string {
+    generateModelCreator(language: PiLanguage, relativePath: string): string {
         // TODO use Names for class unitName
         
         // the template starts here
@@ -70,7 +70,7 @@ export class ModelCreatorTemplate {
         return paramlist.concat(optionalParamList).join(", ");
     }
 
-    private createImports(language: PiLanguageUnit) : string {
+    private createImports(language: PiLanguage) : string {
         // sort all names alphabetically
         let tmp : string[] = [];
         language.concepts.map(c =>

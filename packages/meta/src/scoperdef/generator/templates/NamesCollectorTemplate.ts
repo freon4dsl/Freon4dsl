@@ -7,13 +7,13 @@ import {
     ENVIRONMENT_GEN_FOLDER,
     hasNameProperty
 } from "../../../utils";
-import { PiLanguageUnit, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class NamesCollectorTemplate {
     constructor() {
     }
 
-    generateNamesCollector(language: PiLanguageUnit, relativePath: string): string {
+    generateNamesCollector(language: PiLanguage, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
         const PiNamedElement = Names.PiNamedElement;
         const namesCollectorClassName : string = Names.namesCollector(language);

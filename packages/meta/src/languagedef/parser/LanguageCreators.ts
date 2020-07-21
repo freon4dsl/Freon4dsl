@@ -1,7 +1,7 @@
 import {
     PiPrimitiveProperty,
     PiConceptProperty,
-    PiLanguageUnit,
+    PiLanguage,
     PiInterface,
     PiPropertyInstance,
     PiInstance,
@@ -13,9 +13,9 @@ import { PiElementReference } from "../metalanguage/PiElementReference";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 
-export function createLanguage(data: Partial<PiLanguageUnit>): PiLanguageUnit {
+export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     // console.log("createLanguage " + data.name);
-    const result = new PiLanguageUnit();
+    const result = new PiLanguage();
     if (!!data.name) {
         result.name = data.name;
     }
