@@ -67,7 +67,7 @@ typeConformsRule = typecheckKey "conformsTo" round_begin type1:langExpression co
   });
 }
 
-expressionRule = exp1:langExpression comparator:comparator exp2:langExpression {
+expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpression {
   return create.createExpressionRule( {
     "exp1": exp1,
     "exp2": exp2,

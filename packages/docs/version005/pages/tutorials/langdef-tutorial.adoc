@@ -8,8 +8,22 @@
 = The Language Structure Definition
 
 == Concepts
-The ProjectIt language structure consists of a list of *Concepts*, *Expression Concepts*, *Limited Concepts*
+The ProjectIt language structure consists of a list of a *Model*, *ModelUnits*, *Concepts*, *Expression Concepts*, *Limited Concepts*
 and/or *Interfaces*.
+
+A *model* is the complete description of a system specified by the user. The model serves as the root of the abstract syntax tree.
+It may hold any number of modelunits as children.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=model]
+----
+
+A *modelunit* is a part of the model that can be edited independently from the rest of the model. A modelunit is
+always a direct child of a model.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
+----
 
 A *concept* is the basic element of your language definition. It defines which instances can be present in
 a model created by your users.
@@ -41,12 +55,6 @@ An *interface* is a concept that has no instances.
 include::{src-dir}/LanguageDefinition.lang[tag=interface]
 ----
 
-Every language needs to define one root concept, which serves as the root of the abstract syntax tree.
-[source]
-----
-include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
-----
-
 Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and
 expression concepts.
 
@@ -76,3 +84,9 @@ include::{src-dir}/LanguageDefinition.lang[tag=partprop]
 include::{src-dir}/LanguageDefinition.lang[tag=referenceprop]
 ----
 
+== Public/private elements at the Language Level
+Concepts and properties can be defined to be public in the language definition. Only public parts of a modelunit
+can be referenced in another model unit.
+
+Note that this is a definition at the language level, similar to restrictions in a programming language that state that only certain elements may be exported.
+// TODO finish this description

@@ -173,6 +173,9 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
     private checkConcept(piConcept: PiConcept): void {
         LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
         this.simpleCheck(!!piConcept.name, `Concept should have a name [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
+        this.simpleCheck(!(piConcept.name === "string"), `Concept may not be named 'string' [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
+        this.simpleCheck(!(piConcept.name === "boolean"), `Concept may not be named 'boolean' [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
+        this.simpleCheck(!(piConcept.name === "number"), `Concept may not be named 'number' [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
 
         if ( piConcept.isModel ) {
             this.nestedCheck({

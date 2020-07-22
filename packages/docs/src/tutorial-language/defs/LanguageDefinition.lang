@@ -1,9 +1,11 @@
 language Demo
 
+// tag::model[]
 model Demo {
     name: string;
-    models: DemoModel[];
+    units: DemoModel[];
 }
+//end::model[]
 
 interface BaseType {
     name: string;
@@ -38,7 +40,7 @@ limited DemoAttributeType implements Type {
     ANY = { "extra": "456"}
 }
 
-limited MockEnumeration { EnumValue1, EnumValue2, EnumValue3 }
+limited MockEnumeration { EnumValue1; EnumValue2; EnumValue3; }
 // end::limited[]
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
