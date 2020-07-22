@@ -1,11 +1,11 @@
 language test3
 
-root concept Model {
+model Model {
     name: string;
     unit: AA;
 }
 
-unit concept AA {
+modelunit AA {
     name: string;
     prop1: BB;
 }

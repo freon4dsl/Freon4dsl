@@ -3,38 +3,53 @@
 }
 
 Language_Definition
-  = ws "language" ws name:var ws concepts:(langdef)*
+  = ws "language" rws name:var rws langparts:(langdef)*
     {
         return create.createLanguage({
             "name": name,
-            "concepts": concepts,
+            "concepts": langparts,
             "location": location()
         });
     } 
 
-abstractKey     = ws "abstract" ws { return true; }
-rootKey         = ws "root" ws { return true; }
-unitKey         = ws "unit" ws { return true; }
-publicKey       = ws "public" ws { return true; }
-limitedKey      = ws "limited" ws {return true; }
-interfaceKey    = ws "interface" ws
-binaryKey       = ws "binary" ws { return true; }
-expressionKey   = ws "expression" ws { return true; }
-conceptKey      = ws "concept" ws
-baseKey         = ws "base" ws { return true; }
-referenceKey    = ws "reference" ws
-priorityKey     = ws "priority" ws
+abstractKey     = "abstract" rws { return true; }
+modelKey        = "model" rws { return true; }
+unitKey         = "modelunit" rws { return true; }
+publicKey       = "public" rws { return true; }
+limitedKey      = "limited" rws {return true; }
+interfaceKey    = "interface" rws
+binaryKey       = "binary" rws { return true; }
+expressionKey   = "expression" rws { return true; }
+conceptKey      = "concept" rws
+baseKey         = "base" rws { return true; }
+referenceKey    = "reference" rws
+priorityKey     = "priority" rws
 optionalKey     = ws "?" ws
-implementsKey   = ws "implements" ws
+implementsKey   = "implements" rws
 
-langdef = c:concept { return c;} / t:limited {return t;} / i:interface {return i;} / e:expression {return e;}
+langdef = m:modelOrUnit {return m;} / c:concept { return c;} / t:limited {return t;} / i:interface {return i;} / e:expression {return e;}
 
-concept = isPublic:publicKey? isRoot:rootKey? isUnit:unitKey? abs:abstractKey? conceptKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
+modelOrUnit = isPublic:publicKey? isModel:modelKey? isUnit:unitKey? name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
     {
         return create.createConcept({
             "isPublic": (!!isPublic),
-            "isRoot": (!!isRoot),
+            "isModel": (!!isModel),
             "isUnit": (!!isUnit),
+            "isAbstract": false,
+            "name": name,
+            "base": base,
+            "interfaces": implementedInterfaces,
+            "properties": props,
+            "location": location()
+        });
+    }
+
+concept = isPublic:publicKey? abs:abstractKey? conceptKey name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
+    {
+        return create.createConcept({
+            "isPublic": (!!isPublic),
+            "isModel": false,
+            "isUnit": false,
             "isAbstract": (!!abs),
             "name": name,
             "base": base,
@@ -44,7 +59,7 @@ concept = isPublic:publicKey? isRoot:rootKey? isUnit:unitKey? abs:abstractKey? c
         });
     }
 
-limited = isPublic:publicKey? limitedKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
+limited = isPublic:publicKey? limitedKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* instances:instance* curly_end
     {
         return create.createLimitedConcept({
             "isPublic": (!!isPublic),
@@ -57,7 +72,7 @@ limited = isPublic:publicKey? limitedKey ws name:var ws base:conceptbase? ws imp
         });
     }
 
-interface = isPublic:publicKey? interfaceKey ws name:var ws base:interfacebase? curly_begin props:property* curly_end
+interface = isPublic:publicKey? interfaceKey ws name:var rws base:interfacebase? curly_begin props:property* curly_end
     {
         return create.createInterface({
             "isPublic": (!!isPublic),
@@ -68,7 +83,7 @@ interface = isPublic:publicKey? interfaceKey ws name:var ws base:interfacebase? 
         });
     }
 
-expression = isPublic:publicKey? isRoot:rootKey? abs:abstractKey? binary:binaryKey? expressionKey ws name:var ws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
+expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKey ws name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces?
                 curly_begin
                     props:property*
                     priority:priority?
@@ -77,7 +92,7 @@ expression = isPublic:publicKey? isRoot:rootKey? abs:abstractKey? binary:binaryK
         if (!!binary) {
             return create.createBinaryExpressionConcept({
                 "isPublic": (!!isPublic),
-                "isRoot": (!!isRoot),
+                "isModel": false,
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,
@@ -89,7 +104,7 @@ expression = isPublic:publicKey? isRoot:rootKey? abs:abstractKey? binary:binaryK
         } else {
             return create.createExpressionConcept({
                 "isPublic": (!!isPublic),
-                "isRoot": (!!isRoot),
+                "isModel": false,
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,
@@ -130,8 +145,8 @@ partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? name_sepa
     }
 
 // TODO add initialvalue
-// referenceProperty = referenceKey ws name:var isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
-referenceProperty = isPublic:publicKey? referenceKey ws name:var isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? semicolon_separator
+// referenceProperty = referenceKey ws name:var ws isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
+referenceProperty = isPublic:publicKey? referenceKey ws name:var ws isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? semicolon_separator
     { return create.createReferenceProperty({
         "isPublic": (!!isPublic),
         "name": name,
@@ -141,7 +156,7 @@ referenceProperty = isPublic:publicKey? referenceKey ws name:var isOptional:opti
         "location": location()
     }) }
 
-classifierReference = referredName:var
+classifierReference = referredName:var ws
     { return create.createClassifierReference({"name": referredName, "location": location()}); }
 
 conceptbase = baseKey classifierReference:classifierReference
@@ -168,6 +183,7 @@ instance = i1:instance1 { return i1; }
 instance1 = name:var equals_separator curly_begin props:propDefList curly_end
     { return create.createInstance( {"name": name, "props": props, "location": location() } ); }
 
+// shorthand for "{name: "name"}"
 instance2 = name:var semicolon_separator
     { return create.createInstance( {"name": name, "location": location() } ); }
 
@@ -180,11 +196,15 @@ propDef = "\"" name:var "\"" name_separator value:propValue
     / name:var name_separator value:propValue
     { return create.createPropDef( {"name": name, "value": value, "location": location() } ); }
 
-propValue = "\"" value:string "\""  { return value; }
-          / "false"                 { return "false"; }
-          / "true"                  { return "true"; }
-          / "[]"                    { return "[]"; }
-          / number:numberliteral    { return Number.parseInt(number); }
+propValue = "\"" value:string "\""      { return value; }
+          / "false"                     { return "false"; }
+          / "true"                      { return "true"; }
+          / number:numberliteral        { return Number.parseInt(number); }
+          / "[" ws list:propValueList ws "]"  { return list; }
+          / "[]"
+
+propValueList = head:propValue tail:(comma_separator v:propValue { return v; })*
+                    { return [head].concat(tail); }
 
 initialvalue = equals_separator value:propValue
     { return value; }

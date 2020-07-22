@@ -1,6 +1,6 @@
 language XXX
 
-root concept YY {
+model YY {
 }
 concept ZZ {
 }

@@ -1,11 +1,11 @@
 language test3
 
-root concept Model {
+model Model {
     name: string;
     unit: AA;
 }
 
-unit concept AA {
+modelunit AA {
     name: string;
     prop1: BB;
 }
@@ -29,6 +29,13 @@ limited CC {
     AAprop4: number[];
     AAprop5: boolean;
     AAprop6: boolean[];
-    CC1 = {AAprop1: "some_text", AAprop3: "78", AAprop5: "false" }
+    CC1 = {
+    AAprop1: "some_text",
+    AAprop2: [ "text1", "text2" ],
+    AAprop3: "78",
+    AAprop4: [ "102", "3489" ],
+    AAprop5: "true",
+    AAprop6: [ "false", "false" ]
+    }
     CC2 = {AAprop1: "other_text", AAprop3: "99999", AAprop5: "false" }
 }

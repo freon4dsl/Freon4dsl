@@ -20,7 +20,7 @@ concept PiInterface base PiClassifier {
 }
 concept PiConcept base PiClassifier {
     isAbstract: boolean;
-    isRoot:boolean;
+    isModel:boolean;
     reference base?: PiConcept;
     reference interfaces: PiInterface[];
 }

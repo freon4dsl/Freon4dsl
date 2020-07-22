@@ -1,11 +1,11 @@
 language Json
 
-root concept Json {
+model Json {
     name: string;
     files: JsonFile[];
 }
 
-unit concept JsonFile  implements INamedConcept {
+modelunit JsonFile  implements INamedConcept {
     name: string;
 	contents: IJsonValue;
 }

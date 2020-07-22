@@ -88,7 +88,7 @@ export class EnvironmentTemplate {
             unparser: ${Names.PiUnparser} = new ${Names.unparser(language)}();
             initializer: ${Names.PiModelInitialization} = new ${Names.initialization(language)}();
             languageName: string = "${language.name}";
-            unitNames: string[] = [${language.rootConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
+            unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
             private _projectionalEditorComponent : ${Names.ProjectionalEditor} = null;
         }`;
     }

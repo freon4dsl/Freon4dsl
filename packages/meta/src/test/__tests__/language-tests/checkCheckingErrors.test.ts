@@ -1,31 +1,29 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 
 describe("Checking language parser on checking errors", () => {
-    let testdir = "src/test/__tests__/language-tests/faultyDefFiles/checking-errors/";
+    const testdir = "src/test/__tests__/language-tests/faultyDefFiles/checking-errors/";
+    const parser = new LanguageParser();
+    const checker = parser.checker;
 
-    test("language should have a root concept", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
+    test("language should have a model concept", () => {
         let parseFile = testdir + "test1.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
             checker.errors.forEach(error =>
-                expect(error).toBe("There should be a root concept in your language [line: 1, column: 1].")
+                expect(error).toBe("There should be a model in your language [line: 1, column: 1].")
             );
         }
     });
 
-    test("language should have no more than one root concept and concepts and properties should have unique names", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
+    test("language should have no more than one model concept and concepts and properties should have unique names", () => {
         let parseFile = testdir + "test2.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("There may be only one root class in the language definition [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("There may be only one model in the language definition [line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept with name 'ZZZ' already exists [line: 7, column: 1]."));
             expect(checker.errors.includes("Property with name 'simple' already exists in ZZZ [line: 9, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Reference to number cannot be resolved [line: 10, column: 19].")).toBeTruthy();
@@ -35,8 +33,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limitations on inheritance and implemented interfaces", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test3.lang";
         try {
             parser.parse(parseFile);
@@ -50,8 +46,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test.skip("checking circular inheritance", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test4.lang";
         try {
             parser.parse(parseFile);
@@ -70,8 +64,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test.skip("checking circular interfaces", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test5.lang";
         try {
             parser.parse(parseFile);
@@ -87,8 +79,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking expression concepts", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test6.lang";
         try {
             parser.parse(parseFile);
@@ -101,8 +91,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limited concepts", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test7.lang";
         try {
             parser.parse(parseFile);
@@ -120,8 +108,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limited concepts extended", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test8.lang";
         try {
             parser.parse(parseFile);
@@ -133,17 +119,15 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test("on", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
-        let parseFile = testdir + "test8.lang";
+    test("language should have a name", () => {
+        let parseFile = testdir + "test10.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Property 'ZZprop7' of limited concept should have primitive type [line: 12, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("A non-abstract limited concept must have instances [line: 3, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'ZZprop7' does not exist on concept YY [line: 16, column: 21].")).toBeTruthy();
+            expect(checker.errors.includes("Language should have a name [line: 1, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("There should be a model in your language [line: 1, column: 1].")).toBeTruthy();
         }
     });
+
 });

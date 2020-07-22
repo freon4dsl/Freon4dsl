@@ -2,6 +2,7 @@ import { PiElementReference } from "./PiElementReference";
 import { ParseLocation } from "../../utils";
 
 const primitiveTypeName = "PiPrimitiveType";
+export type PiPrimitiveType = string | boolean | number;
 
 // root of the inheritance structure of all language elements
 export abstract class PiLangElement {
@@ -13,7 +14,7 @@ export class PiLanguage extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
     predefInstances: PiInstance[] = [];
-    rootConcept: PiConcept; // set by the checker
+    modelConcept: PiConcept; // set by the checker
 
     constructor() {
         super();
@@ -187,7 +188,7 @@ export class PiInterface extends PiClassifier {
 
 export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
-    isRoot:boolean = false;
+    isModel:boolean = false;
     isUnit:boolean = false;
     base: PiElementReference<PiConcept>;
     interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
@@ -353,6 +354,7 @@ export class PiConceptProperty extends PiProperty {
 export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
 	initialValue: string;
+	// TODO use PiPrimitiveType instead of 'string'
     primType: string;
     // The inherited 'type' cannot be used, because 'this' has a primitive type,
     // which is not a subtype of PiElementReference<PiConcept>
@@ -371,7 +373,8 @@ export class PiInstance extends PiLangElement {
 export class PiPropertyInstance extends PiLangElement {
     owningInstance: PiElementReference<PiInstance>;
     property: PiElementReference<PiProperty>;
-    value: string;
+    value: PiPrimitiveType;
+    valueList: PiPrimitiveType[];
 }
 
 // the following two classes are only used in the typer and validator definitions

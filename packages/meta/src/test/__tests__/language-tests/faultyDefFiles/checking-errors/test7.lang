@@ -1,11 +1,11 @@
 language XXXX
 
-root concept r {
+model r {
     reference refProp: NoName;
     reference refProp2: NameNotStringType;
 }
 
-unit concept NoName {
+modelunit NoName {
 }
 
 limited RRRR {
@@ -25,7 +25,7 @@ limited AA base RRRR {
     instance5 = { simple: "10" }     // cannot have duplicate names for instances
 }
 
-unit concept NameNotStringType {
+modelunit NameNotStringType {
     name: boolean;
 }
 

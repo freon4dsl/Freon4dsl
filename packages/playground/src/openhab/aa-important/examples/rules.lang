@@ -1,6 +1,6 @@
 language openhab // org.openhab.core.model.rule.Rules with org.openhab.core.model.script.Script
 
-root concept RuleModel {
+model RuleModel {
 //	importSection: XImportSection?
 	variables: VariableDeclaration[];
 	rules: Rule[];

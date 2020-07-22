@@ -18,5 +18,5 @@ limited YY base ZZ {
     YYinstance3 = { ZZprop1: "xxx" }
 }
 
-root concept BB {}
+model BB {}
 

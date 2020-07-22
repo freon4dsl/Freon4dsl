@@ -1,4 +1,10 @@
 language XXXX
+model test {
+}
+
+modelunit testUnit {
+}
+
 
 concept RRRR base WWWW, YYYY {
 }

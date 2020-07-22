@@ -1,11 +1,11 @@
 language Example
 
-root concept Demo {
+model Demo {
     name: string;
     models: Model[];
 }
 
-unit concept Model {
+modelunit Model {
     name: string;
     entities: Entity[];
     methods: Method[];

@@ -1,13 +1,13 @@
 // This is a limited version of the openhab DSL for items
 language openhab
 
-root concept OpenHabModel {
+model OpenHabModel {
     name: string;
     itemModels: ItemModel[];
 //    ruleModels: RuleModel[];
 }
 
-public unit concept ItemModel {
+public modelunit ItemModel {
     public name: string;
 	public items: ModelItem[];
 }

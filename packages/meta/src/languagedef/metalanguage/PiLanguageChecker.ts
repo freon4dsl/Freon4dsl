@@ -4,23 +4,24 @@ import {
     PiBinaryExpressionConcept,
     PiExpressionConcept,
     PiPrimitiveProperty,
-    PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance
+    PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveType
 } from "./PiLanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
-const reservedWords = ["root", "abstract", "limited", "interface", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
+const reservedWords = ["model", "modelunit", "abstract", "limited", "interface", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
 
 // TODO add check: priority error from parser into checker => only for expression concepts
 
 export class PiLanguageChecker extends Checker<PiLanguage> {
-    foundRoot = false;
+    foundModel = false;
 
     public check(language: PiLanguage): void {
         LOGGER.info(this, "Checking language '" + language.name + "'");
-        this.foundRoot = false;
+        this.foundModel = false;
+        this.errors = [];
         this.simpleCheck(!!language.name && !reservedWords.includes(language.name) ,
             `Language should have a name [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`);
 
@@ -32,17 +33,18 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         language.concepts.forEach(concept => this.checkConcept(concept));
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
-        const myRoot = language.concepts.find(c => c.isRoot);
-        this.nestedCheck({check: !!myRoot,
-            error: `There should be a root concept in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`,
+        const myModel = language.concepts.find(c => c.isModel);
+        // language.concepts.forEach(c => {if (c.isModel) console.log(c.name + " is a model.")});
+        this.nestedCheck({check: !!myModel,
+            error: `There should be a model in your language [line: ${language.location?.start.line}, column: ${language.location?.start.column}].`,
             whenOk: () => {
-                // language.rootConcept is set in 'checkConcept'
+                // language.modelConcept is set in 'checkConcept'
                 this.nestedCheck({
-                    check: language.rootConcept.primProperties.some(prop => prop.name === 'name'),
-                    error: `The root concept should have a 'name' property [line: ${language.rootConcept.location?.start.line}, column: ${language.rootConcept.location?.start.column}].`,
+                    check: language.modelConcept.primProperties.some(prop => prop.name === 'name'),
+                    error: `The model should have a 'name' property [line: ${language.modelConcept.location?.start.line}, column: ${language.modelConcept.location?.start.column}].`,
                     whenOk: () => {
-                        this.simpleCheck(language.rootConcept.parts().length > 0,
-                            `The root concept should have at least one unit type [line: ${language.rootConcept.location?.start.line}, column: ${language.rootConcept.location?.start.column}].`);
+                        this.simpleCheck(language.modelConcept.parts().length > 0,
+                            `The model should have at least one unit type [line: ${language.modelConcept.location?.start.line}, column: ${language.modelConcept.location?.start.column}].`);
                     }
                 });
             }
@@ -66,7 +68,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             // check that all properties have unique names
             if (!foundCircularity) {
                 this.checkPropertyUniqueNames(con);
-                // check that unit concepts have a name property, and .
+                // check that modelunits have a name property, and .
                 // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
                 if ( con.isUnit ) {
                     this.checkUnitConceptName(con);
@@ -95,10 +97,10 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         let nameProperty = con.allPrimProperties().find(p => p.name === "name");
         this.nestedCheck({
             check: !!nameProperty,
-            error: `A unit concept should have a 'name' property [line: ${con.location?.start.line}, column: ${con.location?.start.column}].`,
+            error: `A modelunit should have a 'name' property [line: ${con.location?.start.line}, column: ${con.location?.start.column}].`,
             whenOk: () => {
                 this.simpleCheck(nameProperty.primType === "string",
-                    `A unit concept should have a 'name' property of type 'string' ` +
+                    `A modelunit should have a 'name' property of type 'string' ` +
                     `[line: ${con.location?.start.line}, column: ${con.location?.start.column}].`);
             }
         });
@@ -172,13 +174,13 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
         this.simpleCheck(!!piConcept.name, `Concept should have a name [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`);
 
-        if ( piConcept.isRoot ) {
+        if ( piConcept.isModel ) {
             this.nestedCheck({
-                check:!this.foundRoot,
-                error: `There may be only one root class in the language definition [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`,
+                check:!this.foundModel,
+                error: `There may be only one model in the language definition [line: ${piConcept.location?.start.line}, column: ${piConcept.location?.start.column}].`,
                 whenOk: () => {
-                    this.foundRoot = true;
-                    piConcept.language.rootConcept = piConcept;
+                    this.foundModel = true;
+                    piConcept.language.modelConcept = piConcept;
                 }
             });
         }
@@ -255,7 +257,9 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
     checkLimitedConcept(piLimitedConcept: PiLimitedConcept) {
         LOGGER.log(`Checking limited concept '${piLimitedConcept.name}' [line: ${piLimitedConcept.location?.start.line}, column: ${piLimitedConcept.location?.start.column}]`);
         // the normal checking of concepts is done in this.checkConcept
+
         // limited concept may be used as reference only, thus it should have a property 'name: string'
+        // this property is added in 'createLimitedConcept' in file 'LanguageCreators.ts'
 
         // checking for properties other than primitive ones
         piLimitedConcept.properties.forEach(prop => {
@@ -291,7 +295,14 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             check: piInstance.concept.referred !== null,
             error: `Predefined instance '${piInstance.name}' should belong to a concept [line: ${piInstance.location?.start.line}, column: ${piInstance.location?.start.column}].`,
             whenOk: () => {
-                piInstance.props.forEach(p => this.checkInstanceProperty(p, piInstance.concept.referred));
+                let hasValueForNameProperty: boolean = false;
+                piInstance.props.forEach(p => {
+                    this.checkInstanceProperty(p, piInstance.concept.referred);
+                    if (p.name === "name") hasValueForNameProperty = true;
+                });
+                // the following check is not really needed, because this situation is taken care of by the 'createInstance' method in 'LanguageCreators.ts'
+                this.simpleCheck(hasValueForNameProperty,
+                    `Predefined instance '${piInstance.name}' should provide value for property 'name' [line: ${piInstance.location?.start.line}, column: ${piInstance.location?.start.column}].`);
             }
         });
     }
@@ -316,9 +327,19 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                                     `[line: ${piPropertyInstance.location?.start.line}, column: ${piPropertyInstance.location?.start.column}].`,
                                 whenOk: () => {
                                     piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
-                                    this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myProp.primType),
-                                        `Type of '${piPropertyInstance.value}' does not equal type of property '${piPropertyInstance.name}' `+
+                                    if (!myProp.isList) {
+                                        this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myProp.primType),
+                                            `Type of '${piPropertyInstance.value}' does not equal type of property '${piPropertyInstance.name}' ` +
                                             `[line: ${piPropertyInstance.location?.start.line}, column: ${piPropertyInstance.location?.start.column}].`);
+                                    } else {
+                                        if (!!piPropertyInstance.valueList) {
+                                            piPropertyInstance.valueList.forEach(value => {
+                                                this.simpleCheck(this.checkValueToType(value, myProp.primType),
+                                                    `Type of '${value}' does not equal type of property '${piPropertyInstance.name}' ` +
+                                                    `[line: ${piPropertyInstance.location?.start.line}, column: ${piPropertyInstance.location?.start.column}].`);
+                                            });
+                                        }
+                                    }
                                 }
                             });
                         }
@@ -340,17 +361,17 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                         let owningClassifier = piProperty.owningConcept;
                         this.checkPropertyType(piProperty, realType);
 
-                        // check use of unit types in non-root concepts: may be references only
+                        // check use of unit types in non-model concepts: may be references only
                         if (realType.isUnit && piProperty.isPart) {
                             this.simpleCheck(
-                                owningClassifier instanceof PiConcept && owningClassifier.isRoot,
-                                `Unit concept '${realType.name}' may be used as reference only in a non-root concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                                owningClassifier instanceof PiConcept && owningClassifier.isModel,
+                                `Modelunit '${realType.name}' may be used as reference only in a non-model concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
                         }
-                        // check use of non-unit types in root concept
-                        if (owningClassifier instanceof PiConcept && owningClassifier.isRoot) {
+                        // check use of non-unit types in model concept
+                        if (owningClassifier instanceof PiConcept && owningClassifier.isModel) {
                             this.simpleCheck(
                                 realType.isUnit,
-                                `Type of property '${piProperty.name}' should be a unit concept [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
+                                `Type of property '${piProperty.name}' should be a modelunit [line: ${piProperty.type.location?.start.line}, column: ${piProperty.type.location?.start.column}].`);
                         }
                     }
                 }
@@ -436,7 +457,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
      * @param value
      * @param primType
      */
-    private checkValueToType(value: string, primType: string): boolean {
+    private checkValueToType(value: PiPrimitiveType, primType: string): boolean {
         if (primType === "number") {
             if (!isNaN(Number(value)) ) {
                 return true;

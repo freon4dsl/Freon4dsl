@@ -216,7 +216,7 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
 
 /**
  * Function called when an array element is changed, will ensure
- * that the old element is removed and iots container reference is cleared.
+ * that the old element is removed and its container reference is cleared.
  * The new element will have its container reference set correctly.
  * @param change
  */
@@ -231,6 +231,7 @@ function willChange(
             const oldValue = change.object[change.index];
             if (newValue === oldValue) {
                 // new object at index
+                // TODO if there is no need to do anything, why not change the condition to this if-statement
             } else {
                 if (!!newValue) {
                     if (!!newValue.container) {

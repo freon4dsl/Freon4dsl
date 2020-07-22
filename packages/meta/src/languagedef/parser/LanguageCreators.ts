@@ -38,7 +38,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
 export function createConcept(data: Partial<PiConcept>): PiConcept {
     // console.log("createConcept " + data.name);
     const result = new PiConcept();
-    result.isRoot = !!data.isRoot;
+    result.isModel = !!data.isModel;
     result.isUnit = !!data.isUnit;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
@@ -135,7 +135,7 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
     // console.log("createBinaryExpressionConcept " + data.name);
     const result = new PiBinaryExpressionConcept();
     result.isPublic = !!data.isPublic;
-    result.isRoot = !!data.isRoot;
+    result.isModel = !!data.isModel;
     result.isAbstract = !!data.isAbstract;
     if( !!data.priority ) {
         result.priority = data.priority;
@@ -148,7 +148,7 @@ export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiE
     // console.log("createExpressionConcept " + data.name);
     const result = new PiExpressionConcept();
     result.isPublic = !!data.isPublic;
-    result.isRoot = !!data.isRoot;
+    result.isModel = !!data.isModel;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
@@ -238,8 +238,11 @@ export function createInstance(data: Partial<PiInstance>) : PiInstance {
         for (let p of result.props) {
             p.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
         }
-    } else {
-        result.props = [];
+    }
+    // if the user has not provided a value for the 'name' property,
+    // or the instance was defined using the shorthand that simulates enumeration
+    // create a value for the 'name' property based on 'data.name
+    if (!(!!data.props) || !data.props.some(prop => prop.name === "name")) {
         const prop = new PiPropertyInstance();
         prop.name = "name";
         prop.value = data.name;
@@ -259,7 +262,11 @@ export function createPropDef(data: Partial<PiPropertyInstance>) : PiPropertyIns
         result.name = data.name;
     }
     if (!!data.value) {
-        result.value = data.value;
+        if (Array.isArray(data.value)) {
+            result.valueList = data.value;
+        } else {
+            result.value = data.value;
+        }
     }
     if (!!data.location) {
         result.location = data.location;

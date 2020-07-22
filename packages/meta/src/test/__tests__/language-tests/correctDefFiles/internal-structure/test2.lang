@@ -1,11 +1,11 @@
 language test2 // same as test1, but without 'implements'
 
-root concept ROOT {
+model ROOT {
     name: string;
     aa: AA[];
 }
 
-unit concept AA  {
+modelunit AA  {
     name: string;
     // the possibilities for primitive properties
     AAprop1: string;

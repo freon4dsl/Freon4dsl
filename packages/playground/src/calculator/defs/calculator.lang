@@ -1,11 +1,11 @@
 language calculator // jetbrains.mps.calculator
 
-root concept CalculatorModel {
+model CalculatorModel {
     name: string;
     calc: Calculator;
 }
 
-unit concept Calculator  implements INamedConcept {
+modelunit Calculator  implements INamedConcept {
     name: string;
 	inputFields: InputField[];
 	outputFields: OutputField[];

@@ -4,15 +4,6 @@ describe("Checking language parser on syntax errors", () => {
     let parser = new LanguageParser();
     let testdir = "src/test/__tests__/language-tests/faultyDefFiles/syntax-errors/";
 
-    test("language should have a name", () => {
-        let parseFile = testdir + "test1.lang";
-        try {
-            parser.parse(parseFile);
-        } catch(e) {
-            expect(e.message).toBe(`syntax error.`);
-        }
-    });
-
     test("language name should not contain a dot", () => {
         let parseFile = testdir + "test2.lang";
         try {
@@ -24,15 +15,6 @@ describe("Checking language parser on syntax errors", () => {
 
     test("properties cannot be initialized", () => {
         let parseFile = testdir + "test3.lang";
-        try {
-            parser.parse(parseFile);
-        } catch(e) {
-            expect(e.message).toBe(`syntax error.`);
-        }
-    });
-
-    test("concepts should have a name", () => {
-        let parseFile = testdir + "test4.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
@@ -87,6 +69,15 @@ describe("Checking language parser on syntax errors", () => {
 
     test("instances of limited concepts should have some properties", () => {
         let parseFile = testdir + "test10.lang";
+        try {
+            parser.parse(parseFile);
+        } catch(e) {
+            expect(e.message).toBe(`syntax error.`);
+        }
+    });
+
+    test("model and modelunit should have a name", () => {
+        let parseFile = testdir + "test1.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {

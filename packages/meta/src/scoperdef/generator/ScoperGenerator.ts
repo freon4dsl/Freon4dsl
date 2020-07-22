@@ -27,7 +27,7 @@ export class ScoperGenerator {
             scopedef = new PiScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(PiElementReference.create<PiConcept>(this.language.rootConcept, "PiConcept"));
+            scopedef.namespaces.push(PiElementReference.create<PiConcept>(this.language.modelConcept, "PiConcept"));
         }
 
         let generationStatus = new GenerationStatus();

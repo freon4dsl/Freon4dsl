@@ -1,4 +1,4 @@
-root concept Script {
+model Script {
 	expressions: XExpressionOrVarDeclaration[];
 }
 

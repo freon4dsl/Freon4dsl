@@ -317,29 +317,38 @@ export class ProjectionTemplate {
             `
     }
 
-    primitivePropertyProjection(property: PiPrimitiveProperty, element: string) {
-        // TODO This now only works for strings
+    primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
+        if (property.isList) {
+            // TODO remove this hack
+            return this.listPrimitivePropertyProjection(property, element);
+        } else {
+            return this.singlePrimitivePropertyProjection(property, element);
+        }
+    }
+
+    singlePrimitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
+        const listAddition: string = `${property.isList ? `[index]` : ``}`;
         switch(property.primType) {
             case "string":
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "number":
-                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = Number.parseInt(c)) ,
+                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "boolean":
-                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = (c === "true" ? true : false)),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             default:
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
@@ -347,4 +356,14 @@ export class ProjectionTemplate {
         }
     }
 
+    private listPrimitivePropertyProjection(property: PiPrimitiveProperty, element: string) : string {
+        return `new HorizontalListBox(${element}, "${Roles.property(property)}-hlist",
+                            (${element}.${property.name}.map( (item, index)  =>
+                                ${this.singlePrimitivePropertyProjection(property, element)}
+                            ) as Box[]).concat( [
+                                // TODO  Create Action for the role to actually add an element.
+                                new AliasBox(${element}, "new-${Roles.property(property)}-hlist", "<+>")
+                            ])
+                        ),`;
+    }
 }

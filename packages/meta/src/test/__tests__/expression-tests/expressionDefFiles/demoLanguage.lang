@@ -1,11 +1,11 @@
 language Demo
 
-root concept ROOT {
+model ROOT {
     name: string;
     aa: DemoModel[];
 }
 
-unit concept DemoModel {
+modelunit DemoModel {
     functions: DemoFunction[];
     name: string;
     entities: DemoEntity[];

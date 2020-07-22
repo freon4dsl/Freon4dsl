@@ -20,8 +20,9 @@ describe("Checking internal structure of language", () => {
             // this would be a true error
             console.log(e.message);
         }
+        expect(piLanguage).not.toBeUndefined();
         // there is a root concept
-        expect(piLanguage.rootConcept).not.toBeNull();
+        expect(piLanguage.modelConcept).not.toBeNull();
         // there is a single expression base or none at all
         const result = piLanguage.concepts.filter(c => {
             return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
@@ -52,6 +53,7 @@ describe("Checking internal structure of language", () => {
             console.log(e.message);
             console.log(e.stack);
         }
+        expect(piLanguage).not.toBeUndefined();
         // no references in the parts list, and vice versa
         // no primProps in reference list
         let piConcept = piLanguage.findConcept("BB");
@@ -76,6 +78,8 @@ describe("Checking internal structure of language", () => {
             // this would be a true error
             console.log(e.message);
         }
+
+        expect(piLanguage).not.toBeUndefined();
 
         // no references in the parts list, and vice versa
         // no primProps in reference list
@@ -138,6 +142,7 @@ describe("Checking internal structure of language", () => {
             // this would be a true error
             console.log(e.message);
         }
+        expect(piLanguage).not.toBeUndefined();
         const list = piLanguage.concepts.filter(con => con instanceof PiLimitedConcept);
         // PiInstance.concept should be a limited property
         // let myLimited = piLanguage.findConcept("BB");

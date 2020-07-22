@@ -1,4 +1,4 @@
 language YYYY
 
-concept XXX { // there must be one root concept
+concept XXX { // there must be one model concept
 }

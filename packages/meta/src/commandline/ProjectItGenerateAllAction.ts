@@ -127,6 +127,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         let validator: PiValidatorDef;
         try {
             if (this.validFile.length > 0) {
+
                 validator = new ValidatorParser(this.language).parse(this.validFile);
             } else {
                 LOGGER.log("Generating default validator");

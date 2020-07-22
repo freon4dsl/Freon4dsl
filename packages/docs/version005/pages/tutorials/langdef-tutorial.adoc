@@ -26,7 +26,10 @@ include::{src-dir}/LanguageDefinition.lang[tag=expression]
 ----
 
 A *limited concept* is a concept that has a limited number of predefined instances. These instances are part
-of the standard library of your language.
+of the standard library of your language. A limited concept must always have a name, but if this is not provided
+in the definition then it is automatically created. Furthermore, when a predefined instance does not provide a
+value for the name, the name of the instance is used. In this manner, you can define enumerations.
+
 [source]
 ----
 include::{src-dir}/LanguageDefinition.lang[tag=limited]
