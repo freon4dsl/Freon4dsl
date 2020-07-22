@@ -1,4 +1,4 @@
-import { Checker } from "../../utils";
+import { Checker, Names } from "../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
@@ -55,11 +55,12 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         // and that all their properties have unique names
         let names: string[] = [];
         language.concepts.forEach((con, index) => {
-            // check unique names
+            // check unique names, disregarding upper/lower case of first character
             if (names.includes(con.name)) {
                 this.simpleCheck(false,
                     `Concept with name '${con.name}' already exists [line: ${con.location?.start.line}, column: ${con.location?.start.column}].`);
             } else {
+                names.push(Names.startWithUpperCase(con.name));
                 names.push(con.name);
             }
             // check circularity

@@ -15,3 +15,13 @@ limited AAA {
 }
 interface AAA {
 }
+
+concept string { }
+
+concept number { }
+
+concept boolean { }
+
+concept lowerCase { }
+
+concept LowerCase { }
