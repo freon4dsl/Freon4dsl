@@ -279,7 +279,16 @@ export class ConceptTemplate {
     }
 
     private generatePartialCreate(property: PiProperty): string {
-        return `if (data.${property.name}) result.${property.name} = data.${property.name};`;
+        if (property.isList && !(property instanceof PiPrimitiveProperty)) {
+            // TODO remove this hack, when the decorators are improved
+            return `if (data.${property.name}) {
+                data.${property.name}.forEach(x =>
+                    result.${property.name}.push(x)
+                );
+            }`;
+        } else {
+            return `if (data.${property.name}) result.${property.name} = data.${property.name};`;
+        }
     }
 
     private generatePrimitiveProperty(property: PiPrimitiveProperty): string {

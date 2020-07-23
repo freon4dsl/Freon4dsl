@@ -26,6 +26,9 @@ export class WalkerTemplate {
          * This class implements the traversal of the model tree, classes that implement ${Names.workerInterface(language)} 
          * are responsible for the actual work being done on the nodes of the tree.        
          * Every node is visited twice, once before the visit of its children, and once after this visit.
+         *
+         * With the use of the parameter 'includeChildren', which takes a function, a very fine-grained control can be taken
+         * over which nodes are and are not visited.
          */
         export class ${generatedClassName}  {
             myWorker : ${Names.workerInterface(language)};  // the instance that does the actual work on each node of the tree
@@ -47,18 +50,21 @@ export class WalkerTemplate {
                     if(!!this.myWorker) {
                         this.myWorker.execBefore${concept.name}(modelelement);
                         ${((concept.allParts().length > 0)?
-                        ` // work on children in the model tree
-                        if(!(includeChildren === undefined) && includeChildren(modelelement)) { 
-                            ${concept.allParts().map( part =>
-                                (part.isList ?
-                                    `modelelement.${part.name}.forEach(p => {
+                        `// work on children in the model tree                     
+                        ${concept.allParts().map( part =>
+                            (part.isList ?
+                                `modelelement.${part.name}.forEach(p => {
+                                    if(!(includeChildren === undefined) && includeChildren(p)) {                                    
                                         this.walk(p, includeChildren );
-                                    });`
-                                :
-                                    `this.walk(modelelement.${part.name}, includeChildren );`
-                                )
+                                    }
+                                });`
+                            : 
+                                `if(!(includeChildren === undefined) && includeChildren(modelelement.${part.name})) {
+                                    this.walk(modelelement.${part.name}, includeChildren );
+                                }`
+                            )
                             ).join("\n")}
-                        }`
+                        `
                         : ``
                         )}
                         this.myWorker.execAfter${concept.name}(modelelement);

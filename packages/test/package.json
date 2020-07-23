@@ -18,7 +18,8 @@
     "type-it": 	    "ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
 
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
-    "all":          "yarn run demo && yarn run testproject && tsc",
+    "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
+    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && tsc",
     "test":         "yarn run all && jest"
   },
   "devDependencies": {

@@ -1,13 +1,11 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
 import { DemoModel, DemoFunction, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleElements from DemoModel Instance", () => {
         let model: Demo = new DemoModelCreator().createIncorrectModel();
         let scoper = new DemoScoper();
-        let unparser = new DemoUnparser();
 
         beforeEach(done => {
             done();
