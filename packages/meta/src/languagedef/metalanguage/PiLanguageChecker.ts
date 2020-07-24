@@ -146,7 +146,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                 for( let base of con.base ) {
                     let realBase = base.referred;
                     if (!!realBase) {
-                        result = this.checkCircularInheritance(circularNames, realBase);
+                        result = result || this.checkCircularInheritance(circularNames, realBase);
                     }
                 }
                 return result;

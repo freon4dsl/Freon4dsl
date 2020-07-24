@@ -49,36 +49,36 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test.skip("checking circular inheritance", () => {
+    test("checking circular inheritance", () => {
         let parseFile = testdir + "test4.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circulair inheritance tree [line: 3, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circulair inheritance tree [line: 7, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circulair inheritance tree [line: 10, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circulair inheritance tree [line: 13, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circulair inheritance tree [line: 16, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circulair inheritance tree [line: 18, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [line: 7, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [line: 10, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circular inheritance tree (EEE, FFF, CCC, DDD) [line: 13, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circular inheritance tree (FFF, CCC, DDD, EEE) [line: 16, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [line: 18, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 24, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 30, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Property with name 'prop1' already exists in yyy [line: 30, column: 5].")).toBeTruthy();
         }
     });
 
-    test.skip("checking circular interfaces", () => {
+    test("checking circular interfaces", () => {
         let parseFile = testdir + "test5.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circulair inheritance tree [line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circulair inheritance tree [line: 18, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circulair inheritance tree [line: 8, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circulair inheritance tree [line: 11, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circulair inheritance tree [line: 14, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circulair inheritance tree [line: 21, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [line: 8, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [line: 11, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circular inheritance tree (EEE, FFF, CCC, DDD) [line: 14, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circular inheritance tree (FFF, CCC, DDD, EEE) [line: 18, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [line: 21, column: 1].")).toBeTruthy();
         }
     });
 
