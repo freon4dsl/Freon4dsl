@@ -21,4 +21,4 @@ export const exampleStyles: {
     // tree: string;
     // indent: string;
     // indent2: string;
-} = require("./style.scss");
+} = require("./examplestyle.scss");
