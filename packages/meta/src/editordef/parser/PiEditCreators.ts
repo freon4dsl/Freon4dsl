@@ -76,9 +76,6 @@ export function createLanguageEditor(data: Partial<PiEditUnit>): PiEditUnit {
     result.conceptEditors.forEach(concept => {
         concept.languageEditor = result;
     });
-    // result.enumerations.forEach(enumeration => {
-    //     enumeration.languageEditor = result;
-    // });
     if (!!data.location) {
         result.location = data.location;
     }
