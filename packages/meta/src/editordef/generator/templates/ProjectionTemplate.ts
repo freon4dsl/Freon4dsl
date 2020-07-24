@@ -9,19 +9,18 @@ import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDIT
 import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
 import {
-    DefEditorConcept,
-    DefEditorLanguage,
-    MetaEditorProjection,
-    DefEditorProjectionExpression,
-    DefEditorProjectionText,
-    DefEditorSubProjection, Direction, DefEditorProjectionIndent
+    PiEditConcept,
+    PiEditUnit,
+    PiEditProjection,
+    PiEditProjectionText,
+    PiEditSubProjection, PiEditProjectionDirection, PiEditParsedProjectionIndent
 } from "../../metalanguage";
 
 export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjectionDefault(language: PiLanguage, editorDef: DefEditorLanguage, relativePath: string): string {
+    generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
         const binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
             const editor = editorDef.findConceptEditor(c);
@@ -142,10 +141,10 @@ export class ProjectionTemplate {
         `;
     }
 
-    private generateUserProjection(language: PiLanguage, concept: PiConcept, editor: DefEditorConcept) {
+    private generateUserProjection(language: PiLanguage, concept: PiConcept, editor: PiEditConcept) {
         let result: string = "";
         const element = Roles.elementName(concept);
-        const projection: MetaEditorProjection = editor.projection;
+        const projection: PiEditProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if(multiLine){
             result += `new VerticalListBox(${element}, "${concept.name}-overall", [
@@ -160,7 +159,7 @@ export class ProjectionTemplate {
                 result += `new HorizontalListBox(${element}, "${concept.name}-hlist-line-${index}", [ `;
             }
             line.items.forEach((item, itemIndex) => {
-                if ( item instanceof DefEditorProjectionText ){
+                if ( item instanceof PiEditProjectionText ){
                     result += ` new LabelBox(${element}, "${element}-label-line-${index}-item-${itemIndex}", "${item.text}", {
                             style: projectitStyles.${item.style},
                             selectable: false
@@ -168,14 +167,14 @@ export class ProjectionTemplate {
                     if( itemIndex < line.items.length-1 ){
                         result += ",";
                     }
-                } else if( item instanceof DefEditorSubProjection){
+                } else if( item instanceof PiEditSubProjection){
                     const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
                     if (appliedFeature instanceof PiPrimitiveProperty){
                         result += this.primitivePropertyProjection(appliedFeature, element);
                     } else if( appliedFeature instanceof PiConceptProperty) {
                         if (appliedFeature.isPart) {
                             if (appliedFeature.isList) {
-                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
+                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
                                 result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
 
                             } else {
@@ -185,7 +184,7 @@ export class ProjectionTemplate {
                             }
                         } else { // reference
                             if( appliedFeature.isList){
-                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : Direction.Horizontal.toString());
+                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
                                 result += this.conceptReferenceListProjection(direction, appliedFeature, element);
                             }else {
                                 result += this.conceptReferenceProjection(language, appliedFeature, element) ;

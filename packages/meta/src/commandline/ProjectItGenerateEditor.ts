@@ -1,6 +1,6 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { DefEditorParser } from "../editordef/parser/DefEditorParser";
+import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { PiLogger } from "../../../core/src/util/PiLogging";
 
@@ -26,7 +26,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
             this.editorGenerator.outputfolder = this.outputFolder;
             this.editorGenerator.language = this.language;
 
-            const editor = new DefEditorParser(this.language).parse(this.editorFile.value);
+            const editor = new PiEditParser(this.language).parse(this.editorFile.value);
             if (editor == null) {
                 throw new Error("Editor definition could not be parsed, exiting.");
             }

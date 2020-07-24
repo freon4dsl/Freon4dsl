@@ -1,7 +1,7 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { DefEditorLanguage } from "../editordef/metalanguage";
-import { DefEditorParser } from "../editordef/parser/DefEditorParser";
 import { PiLanguage } from "../languagedef/metalanguage";
+import { PiEditUnit } from "../editordef/metalanguage";
+import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 import { FileWatcher } from "../utils/FileWatcher";
@@ -127,7 +127,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         let validator: PiValidatorDef;
         try {
             if (this.validFile.length > 0) {
-
                 validator = new ValidatorParser(this.language).parse(this.validFile);
             } else {
                 LOGGER.log("Generating default validator");
@@ -142,10 +141,10 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateEditor = () => {
         LOGGER.info(this, "Generating editor");
-        let editor: DefEditorLanguage = null;
+        let editor: PiEditUnit = null;
         try {
             if (this.editFile.length > 0) {
-                editor = new DefEditorParser(this.language).parse(this.editFile);
+                editor = new PiEditParser(this.language).parse(this.editFile);
             } else {
                 LOGGER.log("Generating default editor");
             }

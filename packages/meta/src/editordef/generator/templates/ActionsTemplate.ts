@@ -9,7 +9,7 @@ export class ActionsTemplate {
     }
 
     // TODO generate the correct class comment for Actions
-    generate(language: PiLanguage, editorDef: DefEditorLanguage): string {
+    generate(language: PiLanguage, editorDef: PiEditUnit): string {
         return `
             import {
                 KeyboardShortcutBehavior,

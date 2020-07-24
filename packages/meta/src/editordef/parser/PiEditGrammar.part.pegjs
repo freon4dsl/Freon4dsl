@@ -1,5 +1,5 @@
 {
-    let creator = require("./EditorCreators");
+    let creator = require("./PiEditCreators");
     let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
 

@@ -4,22 +4,19 @@ import {
     PiLanguage
 } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
-import { DefEditorConcept } from "./DefEditorConcept";
-import { DefEditorLanguage } from "./DefEditorLanguage";
 import {
-    DefEditorProjectionText,
-    DefEditorSubProjection,
-    Direction,
+    PiEditUnit,
+    PiEditConcept,
+    PiEditSubProjection,
     ListJoin,
     ListJoinType,
-    MetaEditorProjection,
-    MetaEditorProjectionLine
-} from "./MetaEditorProjection";
+    PiEditProjection
+} from "./PiEditDefLang";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
 
-export class DefEditorChecker extends Checker<DefEditorLanguage> {
+export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;
 
     constructor(language: PiLanguage) {
@@ -32,7 +29,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
      *
      * @param editor
      */
-    public check(editor: DefEditorLanguage): void {
+    public check(editor: PiEditUnit): void {
         if (this.language === null || this.language === undefined) {
             throw new Error(`Editor definition checker does not known the language.`);
         }
@@ -58,7 +55,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
             });
     }
 
-    private checkConceptEditor(conceptEditor: DefEditorConcept) {
+    private checkConceptEditor(conceptEditor: PiEditConcept) {
         // TODO maybe use
         // this.myExpressionChecker.checkClassifierReference(conceptEditor.concept);
         this.nestedCheck({
@@ -70,7 +67,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         });
     }
 
-    private checkEditor(editor: DefEditorLanguage) {
+    private checkEditor(editor: PiEditUnit) {
         const conceptEditorsDoubles = this.unique(editor.conceptEditors);
         conceptEditorsDoubles.forEach(ced => {
                 this.errors.push(`Editor definition for concept ${ced.concept.name} is already defined earlier [line: ${ced.location?.start.line}, column: ${ced.location?.start.column}].`);
@@ -78,11 +75,11 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         );
     }
 
-    private checkProjection(projection: MetaEditorProjection, cls: PiConcept) {
+    private checkProjection(projection: PiEditProjection, cls: PiConcept) {
         if (!!projection) {
             projection.lines.forEach((line) => {
                 line.items.forEach((item) => {
-                    if (item instanceof DefEditorSubProjection) {
+                    if (item instanceof PiEditSubProjection) {
                         this.checkSubProjection(item, cls);
                     }
                 });
@@ -90,7 +87,7 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         }
     }
 
-    private checkSubProjection(projection: DefEditorSubProjection, cls: PiConcept) {
+    private checkSubProjection(projection: PiEditSubProjection, cls: PiConcept) {
         this.myExpressionChecker.checkLangExp(projection.expression, cls);
         let myprop = projection.expression.findRefOfLastAppliedFeature();
         this.nestedCheck({ // TODO this check is done by myExpressionChecker, remove
@@ -112,14 +109,14 @@ export class DefEditorChecker extends Checker<DefEditorLanguage> {
         });
     }
 
-    private resolveReferences(editorDef: DefEditorLanguage) {
+    private resolveReferences(editorDef: PiEditUnit) {
         for (let conceptEditor of editorDef.conceptEditors) {
             conceptEditor.languageEditor = editorDef;
             conceptEditor.concept.owner = this.language;
         }
     }
 
-    private unique(array: DefEditorConcept[]): DefEditorConcept[] {
+    private unique(array: PiEditConcept[]): PiEditConcept[] {
         var seen = new Set;
         return array.filter(function(item) {
             if (!seen.has(item.concept.referred)) {

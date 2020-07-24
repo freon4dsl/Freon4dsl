@@ -1,11 +1,11 @@
 import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
-import { DefEditorLanguage } from "../../metalanguage";
+import { PiEditUnit } from "../../metalanguage";
 
 export class SelectionHelpers {
 
     // TODO improved generated class comment
-    generateEnumProjection(language: PiLanguage, editorDef: DefEditorLanguage, relativePath: string): string {
+    generateEnumProjection(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
         // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `

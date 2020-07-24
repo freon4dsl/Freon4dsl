@@ -1,4 +1,4 @@
-typer Demo for language Example
+typer ExampleTyper for language Example
 
 // for now: first is considered to be the root of the type hierarchy
 istype {  BaseType }
