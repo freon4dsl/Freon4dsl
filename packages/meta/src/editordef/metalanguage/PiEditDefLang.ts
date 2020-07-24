@@ -1,4 +1,4 @@
-import { PiConcept, PiLangExp, PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiConcept, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 import { Roles } from "../../utils/Roles";
 import { ParseLocation } from "../../utils";
@@ -6,7 +6,7 @@ import { ParseLocation } from "../../utils";
 export class PiEditUnit {
     location: ParseLocation;
     name: string;
-    language: PiLanguageUnit;
+    language: PiLanguage;
     languageName: string;
     conceptEditors: PiEditConcept[] = [];
 
