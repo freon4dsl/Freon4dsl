@@ -1,6 +1,6 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
-import { DefEditorLanguage } from "../editordef/metalanguage";
-import { DefEditorParser } from "../editordef/parser/DefEditorParser";
+import { PiEditUnit } from "../editordef/metalanguage";
+import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { PiLanguageUnit } from "../languagedef/metalanguage";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
@@ -141,10 +141,10 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
     private generateEditor = () => {
         LOGGER.info(this, "Generating editor");
-        let editor: DefEditorLanguage = null;
+        let editor: PiEditUnit = null;
         try {
             if (this.editFile.length > 0) {
-                editor = new DefEditorParser(this.language).parse(this.editFile);
+                editor = new PiEditParser(this.language).parse(this.editFile);
             } else {
                 LOGGER.log("Generating default editor");
             }

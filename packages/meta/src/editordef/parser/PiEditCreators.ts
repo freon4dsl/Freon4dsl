@@ -1,17 +1,15 @@
 import {
-    Direction,
+    PiEditProjectionDirection,
     ListJoin,
     ListJoinType,
-    DefEditorConcept,
-    DefEditorEnumeration,
-    DefEditorLanguage,
-    DefEditorNewline,
-    MetaEditorProjection,
-    DefEditorProjectionExpression,
-    DefEditorProjectionIndent,
-    MetaEditorProjectionLine,
-    DefEditorProjectionText,
-    DefEditorSubProjection
+    PiEditConcept,
+    PiEditUnit,
+    PiEditParsedNewline,
+    PiEditProjection,
+    PiEditParsedProjectionIndent,
+    PiEditProjectionLine,
+    PiEditProjectionText,
+    PiEditSubProjection
 } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiConcept } from "../../languagedef/metalanguage";
@@ -20,6 +18,7 @@ import { PiConcept } from "../../languagedef/metalanguage";
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
+import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 
 const LOGGER = new PiLogger("EditorCreators").mute();
 // Functions used to create instances of the language classes from the parsed data objects.
@@ -36,9 +35,9 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
     return result;
 }
 
-export function createConceptEditor(data: Partial<DefEditorConcept>): DefEditorConcept {
+export function createConceptEditor(data: Partial<PiEditConcept>): PiEditConcept {
     // console.log("creating concept " + data.unitName);
-    const result = new DefEditorConcept();
+    const result = new PiEditConcept();
 
     if (!!data.trigger) {
         result.trigger = data.trigger;
@@ -58,8 +57,8 @@ export function createConceptEditor(data: Partial<DefEditorConcept>): DefEditorC
     return result;
 }
 
-export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEditorLanguage {
-    const result = new DefEditorLanguage();
+export function createLanguageEditor(data: Partial<PiEditUnit>): PiEditUnit {
+    const result = new PiEditUnit();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -77,17 +76,14 @@ export function createLanguageEditor(data: Partial<DefEditorLanguage>): DefEdito
     result.conceptEditors.forEach(concept => {
         concept.languageEditor = result;
     });
-    // result.enumerations.forEach(enumeration => {
-    //     enumeration.languageEditor = result;
-    // });
     if (!!data.location) {
         result.location = data.location;
     }
     return result;
 }
 
-export function createProjection(data: Partial<MetaEditorProjection>): MetaEditorProjection {
-    const result = new MetaEditorProjection();
+export function createProjection(data: Partial<PiEditProjection>): PiEditProjection {
+    const result = new PiEditProjection();
     if (!!data.lines) {
         result.lines = data.lines;
     }
@@ -98,16 +94,16 @@ export function createProjection(data: Partial<MetaEditorProjection>): MetaEdito
         result.name = "normal";
     }
     // Now cleanup the parsed projection
-    result.normalize();
+    PiEditProjectionUtil.normalize(result);
     if (!!data.location) {
         result.location = data.location;
     }
     return result;
 }
 
-export function createLine(data: Partial<MetaEditorProjectionLine>): MetaEditorProjectionLine {
+export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectionLine {
     // console.log("Create LINE " + JSON.stringify(data));
-    const result = new MetaEditorProjectionLine();
+    const result = new PiEditProjectionLine();
     if (!!data.items) {
         result.items = data.items;
     }
@@ -117,9 +113,9 @@ export function createLine(data: Partial<MetaEditorProjectionLine>): MetaEditorP
     return result;
 }
 
-export function createIndent(data: Partial<DefEditorProjectionIndent>): DefEditorProjectionIndent {
+export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEditParsedProjectionIndent {
     // console.log("createIndent <<" + data.indent + ">>");
-    const result = new DefEditorProjectionIndent();
+    const result = new PiEditParsedProjectionIndent();
     if (!!data.indent) {
         result.indent = data.indent;
     }
@@ -129,8 +125,8 @@ export function createIndent(data: Partial<DefEditorProjectionIndent>): DefEdito
     return result;
 }
 
-export function createText(data: string): DefEditorProjectionText {
-    const result = new DefEditorProjectionText();
+export function createText(data: string): PiEditProjectionText {
+    const result = new PiEditProjectionText();
     if (!!data) {
         result.text = data;
     }
@@ -138,9 +134,9 @@ export function createText(data: string): DefEditorProjectionText {
     return result;
 }
 
-export function createSubProjection(data: Partial<DefEditorSubProjection>): DefEditorSubProjection {
+export function createSubProjection(data: Partial<PiEditSubProjection>): PiEditSubProjection {
     // console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listJoin + "]");
-    const result = new DefEditorSubProjection();
+    const result = new PiEditSubProjection();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }
@@ -156,9 +152,9 @@ export function createSubProjection(data: Partial<DefEditorSubProjection>): DefE
     return result;
 }
 
-export function createListDirection(data: Object): Direction {
+export function createListDirection(data: Object): PiEditProjectionDirection {
     const dir = data["direction"];
-    return dir === "@horizontal" ? Direction.Horizontal : dir === "@vertical" ? Direction.Vertical : Direction.NONE;
+    return dir === "@horizontal" ? PiEditProjectionDirection.Horizontal : dir === "@vertical" ? PiEditProjectionDirection.Vertical : PiEditProjectionDirection.NONE;
 }
 
 export function createJoinType(data: Object): ListJoinType {
@@ -184,26 +180,6 @@ export function createListJoin(data: Partial<ListJoin>): ListJoin {
     return result;
 }
 
-export function createExpression(data: Partial<DefEditorProjectionExpression>): DefEditorProjectionExpression {
-    // console.log("createExpression <<" + data.propertyName + ">>");
-    const result = new DefEditorProjectionExpression();
-    if (!!data.propertyName) {
-        result.propertyName = data.propertyName;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-    }
-    return result;
+export function createNewline(): PiEditParsedNewline {
+    return new PiEditParsedNewline();
 }
-
-export function createNewline(): DefEditorNewline {
-    return new DefEditorNewline();
-}
-
-// export function createEnumeration(data: Partial<DefEditorEnumeration>): DefEditorEnumeration {
-//     const result = new DefEditorEnumeration();
-//     if (!!data.location) {
-//         result.location = data.location;
-//     }
-//     return result;
-// }

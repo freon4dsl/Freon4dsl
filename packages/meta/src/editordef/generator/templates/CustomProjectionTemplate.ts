@@ -1,6 +1,6 @@
 import { Names, PROJECTITCORE } from "../../../utils";
 import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
-import { DefEditorLanguage } from "../../metalanguage";
+import { PiEditUnit } from "../../metalanguage";
 
 export class CustomProjectionTemplate {
     constructor() {

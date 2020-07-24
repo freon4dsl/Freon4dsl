@@ -1,7 +1,7 @@
 import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
-import { DefEditorLanguage } from "../../metalanguage";
+import { PiEditUnit } from "../../metalanguage";
 import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
 
 export class ActionsTemplate {
@@ -9,7 +9,7 @@ export class ActionsTemplate {
     }
 
     // TODO generate the correct class comment for Actions
-    generate(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+    generate(language: PiLanguageUnit, editorDef: PiEditUnit): string {
         return `
             import {
                 KeyboardShortcutBehavior,

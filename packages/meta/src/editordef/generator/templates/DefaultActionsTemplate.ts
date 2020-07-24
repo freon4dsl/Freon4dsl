@@ -2,7 +2,7 @@ import { flatten } from "lodash";
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
-import { DefEditorLanguage } from "../../metalanguage";
+import { PiEditUnit } from "../../metalanguage";
 import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
 
 export class DefaultActionsTemplate {
@@ -10,7 +10,7 @@ export class DefaultActionsTemplate {
     }
 
     // TODO generate the correct class comment for DefaultActions
-    generate(language: PiLanguageUnit, editorDef: DefEditorLanguage, relativePath: string): string {
+    generate(language: PiLanguageUnit, editorDef: PiEditUnit, relativePath: string): string {
         return `
             import * as Keys from "${PROJECTITCORE}";
             import {
@@ -110,7 +110,7 @@ export class DefaultActionsTemplate {
             `;
         }
 
-    customActionForReferences(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+    customActionForReferences(language: PiLanguageUnit, editorDef: PiEditUnit): string {
         let result = "";
         language.concepts.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
                 const referredConcept = reference.type.referred;
@@ -135,7 +135,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForParts(language: PiLanguageUnit, editorDef: DefEditorLanguage): string {
+    customActionForParts(language: PiLanguageUnit, editorDef: PiEditUnit): string {
         let result = "";
         language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
             const childConcept = part.type.referred;
@@ -196,7 +196,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    cursorLocation(editorDef: DefEditorLanguage, c: PiConcept) {
+    cursorLocation(editorDef: PiEditUnit, c: PiConcept) {
         const projection = editorDef.findConceptEditor(c).projection;
         if (!!projection) {
             if (c.name === "DemoEntity") {
