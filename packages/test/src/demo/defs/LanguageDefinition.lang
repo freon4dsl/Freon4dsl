@@ -1,11 +1,11 @@
 language Demo
 
-public root concept Demo {
+public model Demo {
     public name: string;
     public models: DemoModel[];
 }
 
-public unit concept DemoModel {
+public modelunit DemoModel {
     public main: DemoEntity;
     public functions: DemoFunction[];
     public name: string;

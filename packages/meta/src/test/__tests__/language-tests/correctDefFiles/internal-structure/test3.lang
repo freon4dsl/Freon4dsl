@@ -1,0 +1,39 @@
+language test3
+
+model Model {
+    name: string;
+    unit: AA;
+}
+
+modelunit AA {
+    name: string;
+    prop1: BB;
+}
+
+concept BB base BaseBB {
+}
+
+concept BaseBB base BaseBaseBB {
+}
+
+concept BaseBaseBB {
+    // the possibilities for primitive properties
+    AAprop1: string;
+    AAprop2: string[];
+    AAprop3: number;
+    AAprop4: number[];
+    AAprop5: boolean;
+    AAprop6: boolean[];
+    // properties with concept as type
+    AAprop7: BB;
+    AAprop8: BB[];
+    reference AAprop9: CC;
+    reference AAprop10: CC[];
+}
+
+concept CC base BaseBB {
+    name: string;
+}
+
+concept DD base BaseBaseBB {
+}

@@ -1,5 +1,5 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
 import {
     PiValidatorDef,
     CheckEqualsTypeRule,
@@ -14,7 +14,7 @@ export class CheckerTemplate {
     constructor() {
     }
 
-    generateChecker(language: PiLanguageUnit, validdef: PiValidatorDef, relativePath: string): string {
+    generateChecker(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
         const errorClassName : string = Names.PiError;
         const checkerClassName : string = Names.checker(language);
@@ -58,22 +58,22 @@ export class CheckerTemplate {
 
         ${validdef.conceptRules.map(ruleSet =>
             `${commentBefore}
-            public execBefore${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
+            public execBefore${Names.concept(ruleSet.conceptRef.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef.referred)}) {
                 ${this.createRules(ruleSet)}
             }
             
             ${commentAfter}
-            public execAfter${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
+            public execAfter${Names.concept(ruleSet.conceptRef.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef.referred)}) {
             }`
         ).join("\n\n")}
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
             `${commentNoRule}
-            public execBefore${concept.name}(modelelement: ${concept.name}) {
+            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
             }
             
             ${commentNoRule}
-            public execAfter${concept.name}(modelelement: ${concept.name}) {
+            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
             }`
         ).join("\n\n") }
         
@@ -99,14 +99,14 @@ export class CheckerTemplate {
         `;
     }
 
-    private createImports(language: PiLanguageUnit, validdef: PiValidatorDef) : string {
+    private createImports(language: PiLanguage, validdef: PiValidatorDef) : string {
         let result : string = "";
         result = language.concepts?.map(concept => `
-                ${concept.name}`).join(", ");
+                ${Names.concept(concept)}`).join(", ");
         result = result.concat(language.concepts? `,` :``);
         result = result.concat(
-            language.interfaces?.map(concept => `
-                ${concept.name}`).join(", "));
+            language.interfaces?.map(intf => `
+                ${Names.interface(intf)}`).join(", "));
         return result;
     }
 
@@ -166,7 +166,7 @@ export class CheckerTemplate {
             }
         });`;
     }
-    private conceptsWithoutRules(language: PiLanguageUnit, validdef: PiValidatorDef) : PiConcept[] {
+    private conceptsWithoutRules(language: PiLanguage, validdef: PiValidatorDef) : PiConcept[] {
         let withRules : PiConcept[] = [];
         for (let ruleSet of validdef.conceptRules) {
             withRules.push(ruleSet.conceptRef.referred);

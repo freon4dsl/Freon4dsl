@@ -4,11 +4,8 @@ import { PiEnvironment } from "@projectit/core";
  * The one and only reference to the actual language for which this editor runs
  */
 
-import { ExampleEnvironment } from "../../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
-
-// import { DemoEnvironment } from "../../demo/environment/gen/DemoEnvironment";
-// export const editorEnvironment: PiEnvironment = DemoEnvironment.getInstance();
+// import { ExampleEnvironment } from "../../example/environment/gen/ExampleEnvironment";
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
@@ -27,8 +24,8 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
 
 // export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
 
-// import { OpenhabEnvironment } from "../../openhab/environment/gen/OpenhabEnvironment";
-// export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
+import { OpenhabEnvironment } from "../../openhab/environment/gen/OpenhabEnvironment";
+export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
 
 // import { HDMLEnvironment } from "../../HDML/environment/gen/HDMLEnvironment";
 // export const editorEnvironment: PiEnvironment = HDMLEnvironment.getInstance();

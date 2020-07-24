@@ -1,12 +1,12 @@
 import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiLanguage } from "../../metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
 
 export class WalkerTemplate {
     constructor() {
     }
 
-    generateWalker(language: PiLanguageUnit, relativePath: string): string {
+    generateWalker(language: PiLanguage, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : String = Names.walker(language);
 
@@ -14,7 +14,7 @@ export class WalkerTemplate {
         return `
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
+                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
@@ -26,6 +26,9 @@ export class WalkerTemplate {
          * This class implements the traversal of the model tree, classes that implement ${Names.workerInterface(language)} 
          * are responsible for the actual work being done on the nodes of the tree.        
          * Every node is visited twice, once before the visit of its children, and once after this visit.
+         *
+         * With the use of the parameter 'includeChildren', which takes a function, a very fine-grained control can be taken
+         * over which nodes are and are not visited.
          */
         export class ${generatedClassName}  {
             myWorker : ${Names.workerInterface(language)};  // the instance that does the actual work on each node of the tree
@@ -37,31 +40,34 @@ export class WalkerTemplate {
              */
             public walk(modelelement: ${allLangConcepts}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                 ${sortClasses(language.concepts).map(concept => `
-                if(modelelement instanceof ${concept.name}) {
-                    return this.walk${concept.name}(modelelement, includeChildren );
+                if(modelelement instanceof ${Names.concept(concept)}) {
+                    return this.walk${Names.concept(concept)}(modelelement, includeChildren );
                 }`).join("")}
             }
 
             ${language.concepts.map(concept => `
-                private walk${concept.name}(modelelement: ${concept.name}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
+                private walk${Names.concept(concept)}(modelelement: ${Names.concept(concept)}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                     if(!!this.myWorker) {
-                        this.myWorker.execBefore${concept.name}(modelelement);
+                        this.myWorker.execBefore${Names.concept(concept)}(modelelement);
                         ${((concept.allParts().length > 0)?
-                        ` // work on children in the model tree
-                        if(!(includeChildren === undefined) && includeChildren(modelelement)) { 
-                            ${concept.allParts().map( part =>
-                                (part.isList ?
-                                    `modelelement.${part.name}.forEach(p => {
+                        `// work on children in the model tree                     
+                        ${concept.allParts().map( part =>
+                            (part.isList ?
+                                `modelelement.${part.name}.forEach(p => {
+                                    if(!(includeChildren === undefined) && includeChildren(p)) {                                    
                                         this.walk(p, includeChildren );
-                                    });`
-                                :
-                                    `this.walk(modelelement.${part.name}, includeChildren );`
-                                )
+                                    }
+                                });`
+                            : 
+                                `if(!(includeChildren === undefined) && includeChildren(modelelement.${part.name})) {
+                                    this.walk(modelelement.${part.name}, includeChildren );
+                                }`
+                            )
                             ).join("\n")}
-                        }`
+                        `
                         : ``
                         )}
-                        this.myWorker.execAfter${concept.name}(modelelement);
+                        this.myWorker.execAfter${Names.concept(concept)}(modelelement);
                 } else {
                     LOGGER.error(this, "No worker found.");
                 }

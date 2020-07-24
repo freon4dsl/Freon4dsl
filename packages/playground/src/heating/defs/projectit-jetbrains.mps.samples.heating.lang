@@ -1,11 +1,11 @@
 language heat // long name: jetbrains.mps.samples.heating
 
-root concept Heating {
+model Heating {
     name: string;
     plans: HeatingPlan[];
 }
 
-unit concept HeatingPlan implements INamedConcept {
+modelunit HeatingPlan implements INamedConcept {
     name: string;
 	dailyPlans: DailyPlan[];
 }

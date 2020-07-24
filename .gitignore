@@ -65,4 +65,11 @@ packages/playground/exampleLangDefs/Entity/EntityDefinition.valid
 
 packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output/*
 
-/packages/playground/src/hdml/
+packages/test/src/*/editor/gen/*
+packages/test/src/*/environment/gen/*
+packages/test/src/*/language/gen/*
+packages/test/src/*/scoper/gen/*
+packages/test/src/*/typer/gen/*
+packages/test/src/*/utils/gen/*
+packages/test/src/*/validator/gen/*
+packages/test/src/*/stdlib/gen/*

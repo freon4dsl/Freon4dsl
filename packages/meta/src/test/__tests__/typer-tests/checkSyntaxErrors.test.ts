@@ -1,11 +1,11 @@
 import { PiTyperParser } from "../../../typerdef/parser/PiTyperParser";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 
 describe("Checking typer on checking errors", () => {
     let testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
     let parser: PiTyperParser;
-    let language: PiLanguageUnit;
+    let language: PiLanguage;
 
     beforeEach(() => {
         try {
@@ -17,6 +17,7 @@ describe("Checking typer on checking errors", () => {
     });
 
     test("language should have a name", () => {
+        // TODO implement all tests
         let parseFile = testdir + "test1.type";
         try {
             parser.parse(parseFile);

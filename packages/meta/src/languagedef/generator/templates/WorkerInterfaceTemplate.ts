@@ -1,11 +1,11 @@
 import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiLanguage } from "../../metalanguage/PiLanguage";
 
 export class WorkerInterfaceTemplate {
     constructor() {
     }
 
-    generateWorkerInterface(language: PiLanguageUnit, relativePath: string): string {
+    generateWorkerInterface(language: PiLanguage, relativePath: string): string {
         
         // the template starts here
         return `
@@ -20,13 +20,13 @@ export class WorkerInterfaceTemplate {
         export interface ${Names.workerInterface(language)} {
 
         ${language.concepts.map(concept => 
-            `execBefore${concept.name}(modelelement: ${concept.name});
-            execAfter${concept.name}(modelelement: ${concept.name});`
+            `execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)});
+            execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)});`
         ).join("\n\n") }       
         }`;
     }
 
-    private createImports(language: PiLanguageUnit) : string {
+    private createImports(language: PiLanguage) : string {
         // sort all names alphabetically
         let tmp : string[] = [];
         language.concepts.map(c =>

@@ -1,11 +1,11 @@
 import { Names } from "../../../utils/Names";
-import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiLanguage } from "../../metalanguage/PiLanguage";
 
 export class AllConceptsTemplate {
     constructor() {
     }
 
-    generateAllConceptsClass(language: PiLanguageUnit): string {
+    generateAllConceptsClass(language: PiLanguage): string {
         // sort all names alphabetically
         let tmp : string[] = [];
         language.concepts.map(c =>

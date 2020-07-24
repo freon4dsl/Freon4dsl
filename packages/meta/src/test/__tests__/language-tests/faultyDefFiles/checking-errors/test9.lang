@@ -1,6 +1,6 @@
 language Incorrect
 
-root concept Yxxy {
+model Yxxy {
     prop1: number; // = 10;
     prop6: AAA;
 }

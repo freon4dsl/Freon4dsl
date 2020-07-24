@@ -1,6 +1,6 @@
 language XXXX
 
-root concept ZZ {}
+model ZZ {}
 
 binary expression YYY {
     simple: string;

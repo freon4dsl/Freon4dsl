@@ -1,23 +1,23 @@
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
-import { PiConceptProperty, PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiConceptProperty, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class InitalizationTemplate {
     constructor() {
     }
 
-    generate(language: PiLanguageUnit, relativePath: string): string {
-        const firstUnit: PiConceptProperty = language.rootConcept.parts()[0];
+    generate(language: PiLanguage, relativePath: string): string {
+        const firstUnit: PiConceptProperty = language.modelConcept.parts()[0];
         const firstUnitTypeName: string = Names.concept(firstUnit?.type.referred);
         if (firstUnitTypeName.length === 0) {
             //TODO error message
             // "model should have at least one unit type"
         }
-        const imports: string[] = language.rootConcept.parts().map(part => `${Names.concept(part.type.referred)}`);
+        const imports: string[] = language.modelConcept.parts().map(part => `${Names.concept(part.type.referred)}`);
 
         // the template starts here
         return `
             import { ${Names.PiElement}, PiModel, PiModelInitialization } from "${PROJECTITCORE}";
-            import { ${Names.metaType(language)}, ${Names.concept(language.rootConcept)}, ${imports.map(str => `${str}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${Names.metaType(language)}, ${Names.concept(language.modelConcept)}, ${imports.map(str => `${str}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
              * Class ${Names.initialization(language)} provides an entry point for the language engineer to
@@ -32,7 +32,7 @@ export class InitalizationTemplate {
                  * Used to initialize a completely new model. It returns the first model unit in the model.
                  */
                 initialize(): ${Names.PiElement} {
-                    let model = new ${Names.concept(language.rootConcept)}();
+                    let model = new ${Names.concept(language.modelConcept)}();
                     // You may replace the default with the initial model unit of your choice   
                     return this.newUnit(model, "${firstUnitTypeName}");
                 }
@@ -43,9 +43,9 @@ export class InitalizationTemplate {
                  * @param model
                  * @param unitTypeName
                  */
-                newUnit(model: ${Names.concept(language.rootConcept)}, typename: ${Names.metaType(language)}) : ${Names.PiElement}  {
+                newUnit(model: ${Names.concept(language.modelConcept)}, typename: ${Names.metaType(language)}) : ${Names.PiElement}  {
                     switch (typename) {
-                        ${language.rootConcept.allParts().map(part => 
+                        ${language.modelConcept.allParts().map(part => 
                             `case "${Names.concept(part.type.referred)}": {
                                 let unit: ${Names.concept(part.type.referred)} = new ${Names.concept(part.type.referred)}();
                                 ${part.isList? `model.${part.name}.push(unit as ${Names.concept(part.type.referred)});` : `model.${part.name} = unit as ${Names.concept(part.type.referred)}`}
@@ -62,8 +62,8 @@ export class InitalizationTemplate {
                  * 
                  * @param modelName
                  */
-                 newModel(modelName: string) : ${Names.concept(language.rootConcept)} {
-                    let model = new ${Names.concept(language.rootConcept)}();
+                 newModel(modelName: string) : ${Names.concept(language.modelConcept)} {
+                    let model = new ${Names.concept(language.modelConcept)}();
                     model.name = modelName;
                     return model;
                 }                                   

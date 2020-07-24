@@ -1,10 +1,10 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../../languagedef/parser/LanguageExpressionParser";
-import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguageUnit, PiLimitedConcept } from "../../../languagedef/metalanguage";
+import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguage, PiLimitedConcept } from "../../../languagedef/metalanguage";
 
 describe("Checking expression on referredElement", () => {
     let testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
-    let language: PiLanguageUnit;
+    let language: PiLanguage;
 
     beforeEach(() => {
         try {

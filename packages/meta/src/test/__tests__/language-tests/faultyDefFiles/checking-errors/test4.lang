@@ -4,7 +4,7 @@ expression AAA base BBB {
 }
 
 
-root concept CCC base DDD {
+model CCC base DDD {
 }
 
 concept DDD base EEE {

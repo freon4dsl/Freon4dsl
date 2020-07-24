@@ -1,7 +1,7 @@
 import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
-import { PiLanguageUnit } from "../languagedef/metalanguage";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 import { FileWatcher } from "../utils/FileWatcher";
@@ -30,7 +30,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected scoperGenerator: ScoperGenerator; // constructor needs language
     protected validatorGenerator: ValidatorGenerator; // constructor needs language
     protected typerGenerator: PiTyperGenerator; // constructor needs language
-    protected language: PiLanguageUnit;
+    protected language: PiLanguage;
 
     public constructor() {
         super({

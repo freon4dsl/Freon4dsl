@@ -1,6 +1,6 @@
 import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
-import { PiClassifier, PiConcept, PiLanguageUnit } from "../../languagedef/metalanguage/PiLanguage";
+import { PiClassifier, PiConcept, PiLanguage } from "../../languagedef/metalanguage/PiLanguage";
 import { PiLangElement } from "../../languagedef/metalanguage/PiLanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -12,7 +12,7 @@ export class PiTypeDefinition {
     location: ParseLocation;
     name: string;
     languageName: string;
-    language: PiLanguageUnit;
+    language: PiLanguage;
     typerRules: PiTypeRule[];
     classifierRules: PiTypeClassifierRule[] = [];
     typeroot: PiElementReference<PiClassifier>;

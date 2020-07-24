@@ -15,13 +15,13 @@ Validator_Definition
     } 
 
 validnameKey = "validIdentifier" ws
-typecheckKey = "typecheck" ws
-notEmptyKey  = "notEmpty" ws
-isuniqueKey  = "isunique" ws
-inKey        = "in" ws
+typecheckKey = "typecheck" rws
+notEmptyKey  = "notEmpty" rws
+isuniqueKey  = "isunique" rws
+inKey        = "in" rws
 comparator   = "<=" / "=" / ">=" / ">" / "<"
 
-conceptRule = conceptRef:conceptRef ws curly_begin ws rules:rule* curly_end 
+conceptRule = conceptRef:conceptRef curly_begin rules:rule* curly_end
     { 
         return create.createConceptRule({ 
           "conceptRef": conceptRef, 
@@ -51,7 +51,7 @@ notEmptyRule = notEmptyKey property:langExpression ws {
   })
 }
 
-typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langExpression ws comma_separator ws type2:langExpression ws round_end ws {
+typeEqualsRule = typecheckKey "equalsType" round_begin type1:langExpression comma_separator type2:langExpression round_end {
   return create.createTypeEqualsRule( {
     "type1": type1,
     "type2": type2,
@@ -59,7 +59,7 @@ typeEqualsRule = typecheckKey "equalsType" ws round_begin ws type1:langExpressio
   });
 }
 
-typeConformsRule = typecheckKey "conformsTo" ws round_begin ws type1:langExpression ws comma_separator ws type2:langExpression ws round_end ws {
+typeConformsRule = typecheckKey "conformsTo" round_begin type1:langExpression comma_separator type2:langExpression round_end {
   return create.createTypeConformsRule( {
     "type1": type1,
     "type2": type2,
@@ -76,7 +76,7 @@ expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpres
   });
 }
 
-isuniqueRule = isuniqueKey exp1:langExpression inKey exp2:langExpression {
+isuniqueRule = isuniqueKey exp1:langExpression rws inKey exp2:langExpression {
   return create.createIsuniqueRule( {
     "listproperty": exp1,
     "list": exp2,

@@ -7,13 +7,13 @@ import {
     ENVIRONMENT_GEN_FOLDER,
     hasNameProperty
 } from "../../../utils";
-import { PiLanguageUnit, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class NamesCollectorTemplate {
     constructor() {
     }
 
-    generateNamesCollector(language: PiLanguageUnit, relativePath: string): string {
+    generateNamesCollector(language: PiLanguage, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
         const PiNamedElement = Names.PiNamedElement;
         const namesCollectorClassName : string = Names.namesCollector(language);
@@ -45,7 +45,7 @@ export class NamesCollectorTemplate {
 
         ${language.concepts.map(concept =>
             `${commentBefore}
-            public execBefore${concept.name}(modelelement: ${concept.name}) {
+            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
                 ${concept.allParts().map(part => hasNameProperty(part.type?.referred) ?
                     (part.isList ?
                         `for (let z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
@@ -54,7 +54,7 @@ export class NamesCollectorTemplate {
             }
             
             ${commentAfter}
-            public execAfter${concept.name}(modelelement: ${concept.name}) {
+            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
             }`
         ).join("\n\n")}
       

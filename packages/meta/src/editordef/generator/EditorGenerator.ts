@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiLanguage } from "../../languagedef/metalanguage";
 import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER, UNPARSER_GEN_FOLDER } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
@@ -19,7 +19,7 @@ export class EditorGenerator {
     protected unparserGenFolder: string;
     protected editorFolder: string;
     protected stylesFolder: string;
-    language: PiLanguageUnit;
+    language: PiLanguage;
 
     constructor() {
     }

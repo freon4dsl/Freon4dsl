@@ -2,7 +2,7 @@ import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 import {
     PiBinaryExpressionConcept,
     PiConcept,
-    PiLanguageUnit,
+    PiLanguage,
     PiPrimitiveProperty,
     PiProperty
 } from "../../../languagedef/metalanguage/PiLanguage";
@@ -23,8 +23,8 @@ export class UnparserTemplate {
     constructor() {
     }
 
-    generateUnparser(language: PiLanguageUnit, editDef: PiEditUnit, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);   
+    generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+        const allLangConcepts : string = Names.allConcepts(language);
         const generatedClassName : String = Names.unparser(language);
 
         language.concepts.filter(elem => elem.implementedPrimProperties().some(p => p.name === "name"));
@@ -34,7 +34,7 @@ export class UnparserTemplate {
         import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
+                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
                 
@@ -70,8 +70,8 @@ export class UnparserTemplate {
                 // set default for optional parameter
                 if (short === undefined) short = true;
                 ${sortClasses(language.concepts).map(concept => `
-                if(modelelement instanceof ${concept.name}) {
-                    return this.unparse${concept.name}(modelelement, short);
+                if(modelelement instanceof ${Names.concept(concept)}) {
+                    return this.unparse${Names.concept(concept)}(modelelement, short);
                 }`).join("")}
                 return "";
             }
@@ -132,7 +132,7 @@ export class UnparserTemplate {
     private makeConceptMethod (conceptDef: PiEditConcept ) : string {
         // console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
         let myConcept: PiConcept = conceptDef.concept.referred;
-        let name: string = myConcept.name;
+        let name: string = Names.concept(myConcept);
         let lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
         const comment =   `/**
                             * See the public unparse method.

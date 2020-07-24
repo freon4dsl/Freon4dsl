@@ -1,42 +1,42 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 
 describe("Checking language parser on checking errors", () => {
-    let testdir = "src/test/__tests__/language-tests/faultyDefFiles/checking-errors/";
+    const testdir = "src/test/__tests__/language-tests/faultyDefFiles/checking-errors/";
+    const parser = new LanguageParser();
+    const checker = parser.checker;
 
-    test("language should have a root concept", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
+    test("language should have a model concept", () => {
         let parseFile = testdir + "test1.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
             checker.errors.forEach(error =>
-                expect(error).toBe("There should be a root concept in your language [line: 1, column: 1].")
+                expect(error).toBe("There should be a model in your language [line: 1, column: 1].")
             );
         }
     });
 
-    test("language should have no more than one root concept and concepts and properties should have unique names", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
+    test("language should have no more than one model concept and concepts and properties should have unique names", () => {
         let parseFile = testdir + "test2.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("There may be only one root class in the language definition [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("There may be only one model in the language definition [line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept with name 'ZZZ' already exists [line: 7, column: 1]."));
             expect(checker.errors.includes("Property with name 'simple' already exists in ZZZ [line: 9, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Reference to number cannot be resolved [line: 10, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("Concept with name 'YYY' already exists [line: 12, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface with name 'AAA' already exists [line: 16, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept may not be named 'string' [line: 19, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept may not be named 'number' [line: 21, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept may not be named 'boolean' [line: 23, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept with name 'LowerCase' already exists [line: 27, column: 1].")).toBeTruthy();
+
         }
     });
 
     test("checking limitations on inheritance and implemented interfaces", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test3.lang";
         try {
             parser.parse(parseFile);
@@ -49,46 +49,40 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test.skip("checking circular inheritance", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
+    test("checking circular inheritance", () => {
         let parseFile = testdir + "test4.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circulair inheritance tree [line: 3, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circulair inheritance tree [line: 7, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circulair inheritance tree [line: 10, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circulair inheritance tree [line: 13, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circulair inheritance tree [line: 16, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circulair inheritance tree [line: 18, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [line: 3, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [line: 7, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [line: 10, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circular inheritance tree (EEE, FFF, CCC, DDD) [line: 13, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circular inheritance tree (FFF, CCC, DDD, EEE) [line: 16, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [line: 18, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 24, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Property with name 'prop1' already exists in xxx [line: 30, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Property with name 'prop1' already exists in yyy [line: 30, column: 5].")).toBeTruthy();
         }
     });
 
-    test.skip("checking circular interfaces", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
+    test("checking circular interfaces", () => {
         let parseFile = testdir + "test5.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circulair inheritance tree [line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circulair inheritance tree [line: 18, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circulair inheritance tree [line: 8, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circulair inheritance tree [line: 11, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circulair inheritance tree [line: 14, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circulair inheritance tree [line: 21, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [line: 5, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [line: 8, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'DDD' is part of a forbidden circular inheritance tree (DDD, EEE, FFF, CCC) [line: 11, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'EEE' is part of a forbidden circular inheritance tree (EEE, FFF, CCC, DDD) [line: 14, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'FFF' is part of a forbidden circular inheritance tree (FFF, CCC, DDD, EEE) [line: 18, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface 'BBB' is part of a forbidden circular inheritance tree (BBB, AAA) [line: 21, column: 1].")).toBeTruthy();
         }
     });
 
     test("checking expression concepts", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test6.lang";
         try {
             parser.parse(parseFile);
@@ -101,8 +95,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limited concepts", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test7.lang";
         try {
             parser.parse(parseFile);
@@ -120,8 +112,6 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limited concepts extended", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
         let parseFile = testdir + "test8.lang";
         try {
             parser.parse(parseFile);
@@ -133,17 +123,15 @@ describe("Checking language parser on checking errors", () => {
         }
     });
 
-    test("on", () => {
-        let parser = new LanguageParser();
-        let checker = parser.checker;
-        let parseFile = testdir + "test8.lang";
+    test("language should have a name", () => {
+        let parseFile = testdir + "test10.lang";
         try {
             parser.parse(parseFile);
         } catch(e) {
             expect(e.message).toBe(`checking errors.`);
-            expect(checker.errors.includes("Property 'ZZprop7' of limited concept should have primitive type [line: 12, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("A non-abstract limited concept must have instances [line: 3, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'ZZprop7' does not exist on concept YY [line: 16, column: 21].")).toBeTruthy();
+            expect(checker.errors.includes("Language should have a name [line: 1, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("There should be a model in your language [line: 1, column: 1].")).toBeTruthy();
         }
     });
+
 });

@@ -8,8 +8,22 @@
 = The Language Structure Definition
 
 == Concepts
-The ProjectIt language structure consists of a list of *Concepts*, *Expression Concepts*, *Limited Concepts*
+The ProjectIt language structure consists of a list of a *Model*, *ModelUnits*, *Concepts*, *Expression Concepts*, *Limited Concepts*
 and/or *Interfaces*.
+
+A *model* is the complete description of a system specified by the user. The model serves as the root of the abstract syntax tree.
+It may hold any number of modelunits as children.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=model]
+----
+
+A *modelunit* is a part of the model that can be edited independently from the rest of the model. A modelunit is
+always a direct child of a model.
+[source]
+----
+include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
+----
 
 A *concept* is the basic element of your language definition. It defines which instances can be present in
 a model created by your users.
@@ -19,14 +33,17 @@ include::{src-dir}/LanguageDefinition.lang[tag=concept]
 ----
 
 An *expression concept* is a concept that is an expression. The editor will deal with them differently in
-order to give your user or more natural editing experience. Note that expression concepts need to have a priority.
+order to give your user a more natural editing experience. Note that expression concepts need to have a priority.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.lang[tag=expression]
 ----
 
 A *limited concept* is a concept that has a limited number of predefined instances. These instances are part
-of the standard library of your language.
+of the standard library of your language. A limited concept must always have a name, but if this is not provided
+in the definition then it is automatically created. Furthermore, when a predefined instance does not provide a
+value for the name, the name of the instance is used. In this manner, you can define enumerations.
+
 [source]
 ----
 include::{src-dir}/LanguageDefinition.lang[tag=limited]
@@ -36,12 +53,6 @@ An *interface* is a concept that has no instances.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.lang[tag=interface]
-----
-
-Every language needs to define one root concept, which serves as the root of the abstract syntax tree.
-[source]
-----
-include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
 ----
 
 Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and
@@ -73,3 +84,9 @@ include::{src-dir}/LanguageDefinition.lang[tag=partprop]
 include::{src-dir}/LanguageDefinition.lang[tag=referenceprop]
 ----
 
+== Public/private elements at the Language Level
+Concepts and properties can be defined to be public in the language definition. Only public parts of a modelunit
+can be referenced in another model unit.
+
+Note that this is a definition at the language level, similar to restrictions in a programming language that state that only certain elements may be exported.
+// TODO finish this description

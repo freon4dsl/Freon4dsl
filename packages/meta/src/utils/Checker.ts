@@ -1,12 +1,12 @@
-import { PiLanguageUnit } from "../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../languagedef/metalanguage/PiLanguage";
 
 export type CheckB = { check: boolean; error: string; whenOk?: () => void };
 
 export abstract class Checker<DEFINITION> {
     errors: string[] = [];
-    language: PiLanguageUnit; // should be set in every checker, except the checker for the language definition langauge (LDL)
+    language: PiLanguage; // should be set in every checker, except the checker for the language definition langauge (LDL)
 
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         this.language = language;
     }
 

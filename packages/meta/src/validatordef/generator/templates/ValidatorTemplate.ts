@@ -1,5 +1,5 @@
 import { ENVIRONMENT_GEN_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
 
 export class ValidatorTemplate {
@@ -10,7 +10,7 @@ export class ValidatorTemplate {
     constructor() {
     }
 
-    generateValidator(language: PiLanguageUnit, validdef: PiValidatorDef, relativePath: string): string {
+    generateValidator(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
 
         if (validdef === null || validdef === undefined) return this.generateDefault(language, relativePath);
 
@@ -63,7 +63,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateDefault(language: PiLanguageUnit, relativePath: string): string {
+    generateDefault(language: PiLanguage, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.validator(language);
 
@@ -81,7 +81,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateIndex(language: PiLanguageUnit, validdef: PiValidatorDef): string {
+    generateIndex(language: PiLanguage, validdef: PiValidatorDef): string {
         return `
         export * from "./${Names.validator(language)}";
         ${!!validdef ? `export * from "./${Names.checker(language)}";` : ``}

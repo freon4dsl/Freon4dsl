@@ -6,7 +6,7 @@ import {
     PiProperty
 } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
-import { PiLanguageUnit } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { Roles } from "../../../utils/Roles";
 import {
     PiEditConcept,
@@ -20,7 +20,7 @@ export class ProjectionTemplate {
     constructor() {
     }
 
-    generateProjectionDefault(language: PiLanguageUnit, editorDef: PiEditUnit, relativePath: string): string {
+    generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
         const binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
             const editor = editorDef.findConceptEditor(c);
@@ -141,7 +141,7 @@ export class ProjectionTemplate {
         `;
     }
 
-    private generateUserProjection(language: PiLanguageUnit, concept: PiConcept, editor: PiEditConcept) {
+    private generateUserProjection(language: PiLanguage, concept: PiConcept, editor: PiEditConcept) {
         let result: string = "";
         const element = Roles.elementName(concept);
         const projection: PiEditProjection = editor.projection;
@@ -259,8 +259,8 @@ export class ProjectionTemplate {
             )`;
     }
 
-    conceptReferenceProjection(language: PiLanguageUnit, appliedFeature: PiConceptProperty, element: string) {
-        const featureType = appliedFeature.type.name;
+    conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
+        const featureType = Names.classifier(appliedFeature.type.referred);
         return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}", "<select ${appliedFeature.name}>", "${featureType}",
                     () => {
                         if (!!${element}.${appliedFeature.name}) {
@@ -270,7 +270,7 @@ export class ProjectionTemplate {
                         }
                     },
                     (option: SelectOption) => {
-                        if(!!option) {
+                        if (!!option) {
                             ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                                 ${element},
                                 option.label,
@@ -316,29 +316,38 @@ export class ProjectionTemplate {
             `
     }
 
-    primitivePropertyProjection(property: PiPrimitiveProperty, element: string) {
-        // TODO This now only works for strings
+    primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
+        if (property.isList) {
+            // TODO remove this hack
+            return this.listPrimitivePropertyProjection(property, element);
+        } else {
+            return this.singlePrimitivePropertyProjection(property, element);
+        }
+    }
+
+    singlePrimitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
+        const listAddition: string = `${property.isList ? `[index]` : ``}`;
         switch(property.primType) {
             case "string":
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "number":
-                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = Number.parseInt(c)) ,
+                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             case "boolean":
-                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}, (c: string) => (${element}.${property.name} = (c === "true" ? true : false)),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
                 })`;
             default:
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}, (c: string) => (${element}.${property.name} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as ${"string"}),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
@@ -346,4 +355,14 @@ export class ProjectionTemplate {
         }
     }
 
+    private listPrimitivePropertyProjection(property: PiPrimitiveProperty, element: string) : string {
+        return `new HorizontalListBox(${element}, "${Roles.property(property)}-hlist",
+                            (${element}.${property.name}.map( (item, index)  =>
+                                ${this.singlePrimitivePropertyProjection(property, element)}
+                            ) as Box[]).concat( [
+                                // TODO  Create Action for the role to actually add an element.
+                                new AliasBox(${element}, "new-${Roles.property(property)}-hlist", "<+>")
+                            ])
+                        ),`;
+    }
 }

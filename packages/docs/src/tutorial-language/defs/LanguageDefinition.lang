@@ -1,9 +1,11 @@
 language Demo
 
-root concept Demo {
+// tag::model[]
+model Demo {
     name: string;
-    models: DemoModel[];
+    units: DemoModel[];
 }
+//end::model[]
 
 interface BaseType {
     name: string;
@@ -27,14 +29,18 @@ concept DemoEntity implements Type {
 // end::concept[]
 // tag::limited[]
 limited DemoAttributeType implements Type {
+    // if the 'name' property was not provided, it would have been generated
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}
     // notations 'name:' and '"name":' are both correct
     Integer = { "name": "Integer", "extra": "240261"}
-    Boolean = { "name": "Boolean", "extra": "5479"}
-    ANY = { "name": "ANY", "extra": "456"}
+    Boolean = { name: "Boolean", "extra": "5479"}
+    // the following instance gets the name "ANY"
+    ANY = { "extra": "456"}
 }
+
+limited MockEnumeration { EnumValue1; EnumValue2; EnumValue3; }
 // end::limited[]
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
@@ -47,7 +53,7 @@ binary expression DemoMultiplyExpression base DemoBinaryExpression {
 
 // tag::rootconcept[]
 // tag::partprop[]
-unit concept DemoModel {
+modelunit DemoModel {
 // end::partprop[]
     name: string;
 // tag::partprop[]

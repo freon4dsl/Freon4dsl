@@ -18,9 +18,9 @@ Scoper_Definition
         });
     } 
 
-isnamespaceKey = ws "isnamespace" ws
-additionKey = ws "namespace_addition" ws
-alternativeScopeKey = ws "scope" ws
+isnamespaceKey          = "isnamespace" rws
+additionKey             = "namespace_addition" rws
+alternativeScopeKey     = "scope" rws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(
                                               head:conceptRef

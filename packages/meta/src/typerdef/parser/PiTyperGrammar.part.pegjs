@@ -17,12 +17,12 @@ Typer_Definition
        });
     } 
 
-isTypeKey     = "istype" ws
-inferenceKey  = "infertype" ws
-conformsKey   = "conformsto" ws
-equalsKey     = "equalsto" ws
-anyKey        = "anytype" ws { return true; }
-abstractKey   = "abstract" ws { return true; }
+isTypeKey     = "istype" rws
+inferenceKey  = "infertype" rws
+conformsKey   = "conformsto" rws
+equalsKey     = "equalsto" rws
+anyKey        = "anytype" rws { return true; }
+abstractKey   = "abstract" rws { return true; }
 
 typerRule = itr:isTypeRule   { return itr; }
           / any:anyTypeRule  { return any; }

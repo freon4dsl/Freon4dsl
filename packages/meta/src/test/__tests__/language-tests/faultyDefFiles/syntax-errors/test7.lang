@@ -1,4 +1,10 @@
 language XXXX
+model test {
+}
+
+modelunit testUnit {
+}
+
 
 abstract expression GGGG {
     part??: UUUU;

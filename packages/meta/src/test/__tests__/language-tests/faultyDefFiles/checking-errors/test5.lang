@@ -1,6 +1,6 @@
 language XXXX
 
-root concept xxx {}
+model xxx {}
 
 interface AAA base BBB, FFF {
 }

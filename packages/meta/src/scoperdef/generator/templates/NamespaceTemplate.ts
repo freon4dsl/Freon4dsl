@@ -1,4 +1,4 @@
-import { PiConcept, PiConceptProperty, PiInterface, PiLangExp, PiLanguageUnit, PiProperty } from "../../../languagedef/metalanguage";
+import { PiConcept, PiConceptProperty, PiInterface, PiLangExp, PiLanguage, PiProperty } from "../../../languagedef/metalanguage";
 import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
 import {
     replaceInterfacesWithImplementors,
@@ -17,7 +17,7 @@ export class NamespaceTemplate {
     additionalNamespaceImports = '';
     imports: string[] = [];
 
-    generateNamespace(language: PiLanguageUnit, scopedef: PiScopeDef, relativePath: string): string {
+    generateNamespace(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
         let generateAdditionalNamespaces = false;
 
         if (!!scopedef) { // should always be the case, either the definition read from file or the default
@@ -172,7 +172,7 @@ export class NamespaceTemplate {
         this.imports = [];
     }
 
-    private createIfStatement(scopedef: PiScopeDef, language: PiLanguageUnit) : string {
+    private createIfStatement(scopedef: PiScopeDef, language: PiLanguage) : string {
         let result : string = "";
         // let generatedConcepts: PiConcept[] = [];
         result += `// set up the 'worker' of the visitor pattern
@@ -229,7 +229,7 @@ export class NamespaceTemplate {
     //     return result;
     // }
 
-    private makeAdditionalNamespaceTexts(scopedef: PiScopeDef, language: PiLanguageUnit) {
+    private makeAdditionalNamespaceTexts(scopedef: PiScopeDef, language: PiLanguage) {
         const generatedClassName : string = Names.namespace(language);
         let generatedConcepts: PiConcept[] = [];
         for (let def of scopedef.scopeConceptDefs) {
@@ -244,7 +244,7 @@ export class NamespaceTemplate {
                         }
                         this.makeAdditionalNamespaceTextsForConcept(implementor, def, language, isDone, comment);
                         generatedConcepts.push(implementor);
-                        this.imports.push(implementor.name);
+                        this.imports.push(Names.concept(implementor));
                     }
                 } else {
                     if ( !generatedConcepts.includes(myClassifier)) {
@@ -252,24 +252,25 @@ export class NamespaceTemplate {
                     }
                     this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, language, isDone, comment);
                     generatedConcepts.push(myClassifier);
-                    this.imports.push(myClassifier.name);
+                    this.imports.push(Names.classifier(myClassifier));
                 }
             }
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(piConcept: PiConcept, def: ScopeConceptDef, language: PiLanguageUnit, isDone: boolean, comment: string) {
+    private makeAdditionalNamespaceTextsForConcept(piConcept: PiConcept, def: ScopeConceptDef, language: PiLanguage, isDone: boolean, comment: string) {
+        const typeName = Names.concept(piConcept);
         // we are adding to three textstrings
         // first, to the import statements
         if (isDone) { // do this only if the concept has not yet been imported (indicated by isDone)
-            this.additionalNamespaceImports = this.additionalNamespaceImports.concat(", " + piConcept.name);
+            this.additionalNamespaceImports = this.additionalNamespaceImports.concat(", " + typeName);
         }
 
         // second, to the 'hasAlternativeScope' method
         if (isDone) { // do this only if the concept has not yet been imported (indicated by isDone)
             this.hasAdditionalNamespacetext = this.hasAdditionalNamespacetext.concat(comment);
             this.hasAdditionalNamespacetext = this.hasAdditionalNamespacetext.concat(
-                `if (this._myElem instanceof ${piConcept.name}) {
+                `if (this._myElem instanceof ${typeName}) {
                         return true;
                     }\n`);
         }
@@ -279,7 +280,7 @@ export class NamespaceTemplate {
         // and the interface that its implements. Both should added!
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(comment);
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
-            `if (this._myElem instanceof ${piConcept.name}) {`);
+            `if (this._myElem instanceof ${typeName}) {`);
         for (let expression of def.namespaceAdditions.expressions) {
             this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression, language));
         }
@@ -287,7 +288,7 @@ export class NamespaceTemplate {
             `}\n`);
     }
 
-    private addNamespaceExpression(expression: PiLangExp, language: PiLanguageUnit): string {
+    private addNamespaceExpression(expression: PiLangExp, language: PiLanguage): string {
         let result: string = '';
         const generatedClassName : string = Names.namespace(language);
         let myRef = expression.findRefOfLastAppliedFeature();

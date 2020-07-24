@@ -1,7 +1,7 @@
 import { Checker } from "../../utils/Checker";
 import {
     PiConcept,
-    PiLanguageUnit,
+    PiLanguage,
     PiLangExpressionChecker, PiProperty, PiClassifier, PiInterface
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
@@ -18,7 +18,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
     myExpressionChecker : PiLangExpressionChecker;
     myNamespaces: PiClassifier[] = [];
 
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         super(language);
         this.myExpressionChecker = new PiLangExpressionChecker(this.language);
         // in a scope definition an expression may be simply 'self'

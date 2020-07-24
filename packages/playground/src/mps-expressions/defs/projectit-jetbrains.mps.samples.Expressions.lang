@@ -1,11 +1,11 @@
 language MpsExpressions // jetbrains.mps.samples.Expressions
 
-root concept MpsExpressionModel {
+model MpsExpressionModel {
     name: string;
     expressions: Expression[];
 }
 
-unit concept Expression {
+modelunit Expression {
     name: string;
     expression: SimpleMathExpression;
 }

@@ -7,13 +7,13 @@ import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, UNPARSER_GEN_FOLDER
 } from "../../../utils/";
-import { PiLanguageUnit } from "../../metalanguage/PiLanguage";
+import { PiLanguage } from "../../metalanguage/PiLanguage";
 
 export class EnvironmentTemplate {
     constructor() {
     }
 
-    generateEnvironment(language: PiLanguageUnit, relativePath: string): string {
+    generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
         import { projectitConfiguration } from "../../projectit/ProjectitConfiguration";
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, 
@@ -88,7 +88,7 @@ export class EnvironmentTemplate {
             unparser: ${Names.PiUnparser} = new ${Names.unparser(language)}();
             initializer: ${Names.PiModelInitialization} = new ${Names.initialization(language)}();
             languageName: string = "${language.name}";
-            unitNames: string[] = [${language.rootConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
+            unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
             private _projectionalEditorComponent : ${Names.ProjectionalEditor} = null;
         }`;
     }

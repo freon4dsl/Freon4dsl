@@ -1,11 +1,11 @@
-import { PiLanguageUnit, PiLimitedConcept } from "../../metalanguage";
+import { PiLanguage, PiLimitedConcept } from "../../metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];
     constructorText: string = "";
 
-    generateStdlibClass(language: PiLanguageUnit, relativePath: string): string {
+    generateStdlibClass(language: PiLanguage, relativePath: string): string {
         this.makeTexts(language);
 
         return `

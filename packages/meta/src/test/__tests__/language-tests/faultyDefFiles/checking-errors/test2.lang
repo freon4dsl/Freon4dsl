@@ -1,8 +1,8 @@
 language XXX
 
-root concept YYY {
+model YYY {
 }
-root concept ZZZ { // just one root concept is allowed
+model ZZZ { // just one model is allowed
 }
 concept ZZZ {
     simple: string; // properties must have unique names
@@ -15,3 +15,13 @@ limited AAA {
 }
 interface AAA {
 }
+
+concept string { }
+
+concept number { }
+
+concept boolean { }
+
+concept lowerCase { }
+
+concept LowerCase { }

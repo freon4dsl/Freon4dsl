@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiConceptProperty, PiFunction, PiInstance, PiLanguageUnit, PiProperty } from ".";
+import { PiClassifier, PiConcept, PiConceptProperty, PiFunction, PiInstance, PiLanguage, PiProperty } from ".";
 import { Names, ParseLocation } from "../../utils";
 import { PiLangElement } from "./PiLanguage";
 // The next import should be separate and the last of the imports.
@@ -22,7 +22,7 @@ export abstract class PiLangExp extends PiLangElement {
     appliedfeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
     referredElement: PiElementReference<PiLangElement>;  // refers to the element called 'sourceName'
     location: ParseLocation;                            // holds start and end in the parsed file
-    language: PiLanguageUnit;                           // the language for which this expression is defined
+    language: PiLanguage;                           // the language for which this expression is defined
 
     // returns the element to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
     findRefOfLastAppliedFeature(): PiProperty {

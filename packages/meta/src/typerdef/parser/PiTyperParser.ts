@@ -1,14 +1,14 @@
 import { PiParser } from "../../utils";
-import { PiLanguageUnit } from "../../languagedef/metalanguage";
+import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiTypeDefinition } from "../metalanguage";
 import { PiTyperChecker } from "../metalanguage";
 
 let typerParser = require("./PiTyperGrammar");
 
 export class PiTyperParser extends PiParser<PiTypeDefinition> {
-    public language: PiLanguageUnit;
+    public language: PiLanguage;
 
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         super();
         this.parser = typerParser;
         this.language = language;

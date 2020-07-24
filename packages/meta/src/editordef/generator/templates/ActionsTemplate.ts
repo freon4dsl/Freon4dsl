@@ -1,15 +1,13 @@
-import { flatten } from "lodash";
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguageUnit, PiBinaryExpressionConcept, PiExpressionConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { Names, PROJECTITCORE } from "../../../utils";
+import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiEditUnit } from "../../metalanguage";
-import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
 
 export class ActionsTemplate {
     constructor() {
     }
 
     // TODO generate the correct class comment for Actions
-    generate(language: PiLanguageUnit, editorDef: PiEditUnit): string {
+    generate(language: PiLanguage, editorDef: PiEditUnit): string {
         return `
             import {
                 KeyboardShortcutBehavior,

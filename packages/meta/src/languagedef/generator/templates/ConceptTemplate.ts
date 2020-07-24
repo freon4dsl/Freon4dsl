@@ -23,7 +23,7 @@ export class ConceptTemplate {
         const isBinaryExpression = concept instanceof PiBinaryExpressionConcept;
         const isExpression = (!isBinaryExpression) && concept instanceof PiExpressionConcept;
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (concept.isRoot ? "PiModel" : (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement"))));
+        const implementsPi = (concept.isModel ? "PiModel" : (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement"))));
         const hasInterface = concept.interfaces.length > 0;
         const intfaces = Array.from(
             new Set(
@@ -43,9 +43,9 @@ export class ConceptTemplate {
                     .concat(concept.references().map(r => Names.classifier(r.type.referred)))
                     .concat(concept.interfaces.map(i => Names.interface(i.referred)))
                     .concat([baseExpressionName])
-                    .concat(concept.allParts().map(part => part.type.name))
-                    .concat(concept.allReferences().map(part => part.type.name))
-                    .filter(name => !(name === concept.name))
+                    .concat(concept.allParts().map(part => Names.classifier(part.type.referred)))
+                    .concat(concept.allReferences().map(part => Names.classifier(part.type.referred)))
+                    .filter(name => !(name === Names.concept(concept)))
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
                     .filter(r => r !== null)
             )
@@ -66,10 +66,10 @@ export class ConceptTemplate {
         const result = `
             ${(concept.implementedPrimProperties().length > 0 ) ? `import { observable } from "mobx";` : ""}
             import * as uuid from "uuid";
-            import { ${implementsPi} ${concept.isRoot ? `, Language` : ``} } from "${PROJECTITCORE}";
+            import { ${implementsPi} ${concept.isModel ? `, Language` : ``} } from "${PROJECTITCORE}";
             import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
-            ${concept.isRoot ? `import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";` : ``}
+            ${concept.isModel ? `import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";` : ``}
             import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
@@ -81,7 +81,7 @@ export class ConceptTemplate {
             @model
             export ${abstract} class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
-                readonly $typename: ${Names.metaType(language)} = "${concept.name}";    // holds the metatype in the form of a string
+                readonly $typename: ${Names.metaType(language)} = "${Names.concept(concept)}";    // holds the metatype in the form of a string
                 ${!hasSuper ? "$id: string;" : ""}                                      // a unique identifier
                 ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("\n")}
                 ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("\n")}
@@ -118,10 +118,10 @@ export class ConceptTemplate {
             : ""}
 
                 /**
-                 * Returns true if this instance is a root concept.
+                 * Returns true if this instance is a model concept.
                  */                 
                 piIsModel(): boolean {
-                    return ${concept.isRoot};
+                    return ${concept.isModel};
                 }
                 
                 /**
@@ -183,14 +183,14 @@ export class ConceptTemplate {
                  * based on the properties defined in 'data'.
                  * @param data
                  */
-                static create(data: Partial<${concept.name}>): ${concept.name} {
-                    const result = new ${concept.name}();
+                static create(data: Partial<${Names.concept(concept)}>): ${Names.concept(concept)} {
+                    const result = new ${Names.concept(concept)}();
                     ${concept.implementedProperties().map(p => this.generatePartialCreate(p)).join("\n")}
                     return result;
                 }`
             : ""}
 
-                ${(concept.isRoot) ? `
+                ${(concept.isModel) ? `
                  /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
                  * @param name
@@ -208,8 +208,7 @@ export class ConceptTemplate {
                         return result;
                     }                    
                     return null;
-                }
-                
+                }               
                     
                 /**
                  * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
@@ -227,12 +226,12 @@ export class ConceptTemplate {
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     // TODO review this approach
                     ${concept.parts().map(part => 
-                    `if ( oldUnit.piLanguageConcept() === "${part.type.referred.name}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+                    `if ( oldUnit.piLanguageConcept() === "${Names.concept(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
                         ${part.isList ? 
-                        `let index = this.${part.name}.indexOf(oldUnit as ${part.type.referred.name});
-                        this.${part.name}.splice(index, 1, newUnit as ${part.type.referred.name});`
+                        `let index = this.${part.name}.indexOf(oldUnit as ${Names.concept(part.type.referred)});
+                        this.${part.name}.splice(index, 1, newUnit as ${Names.concept(part.type.referred)});`
                         : 
-                        `this.${part.name} = newUnit as ${part.type.referred.name};`}
+                        `this.${part.name} = newUnit as ${Names.concept(part.type.referred)};`}
                     } else`
                     ).join(" ")}                    
                     {
@@ -256,9 +255,9 @@ export class ConceptTemplate {
                      */
                     addUnit(newUnit: ${Names.allConcepts(language)}): boolean {
                         const myMetatype = newUnit.piLanguageConcept();
-                        // TODO this depends on the fact the only one part of the root concept has the same type, should we allow differently???
+                        // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
                         switch (myMetatype) {
-                        ${language.rootConcept.allParts().map(part =>
+                        ${language.modelConcept.allParts().map(part =>
                             `case "${Names.concept(part.type.referred)}": {
                                 ${part.isList? `this.${part.name}.push(newUnit as ${Names.concept(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.concept(part.type.referred)}`}
                                 return true;
@@ -280,19 +279,29 @@ export class ConceptTemplate {
     }
 
     private generatePartialCreate(property: PiProperty): string {
-        return `if (data.${property.name}) result.${property.name} = data.${property.name};`;
+        if (property.isList && !(property instanceof PiPrimitiveProperty)) {
+            // TODO remove this hack, when the decorators are improved
+            return `if (data.${property.name}) {
+                data.${property.name}.forEach(x =>
+                    result.${property.name}.push(x)
+                );
+            }`;
+        } else {
+            return `if (data.${property.name}) result.${property.name} = data.${property.name};`;
+        }
     }
 
     private generatePrimitiveProperty(property: PiPrimitiveProperty): string {
         const comment = "// implementation of " + property.name;
-        const decorator = property.isList ? "@observablelistpart" : "@observable";
+        // const decorator = property.isList ? "@observablelistpart" : "@observable";
+        const decorator = "@observable";
         const arrayType = property.isList ? "[]" : "";
         let initializer = "";
-        if (property.isList) initializer = "[]";
-        if (!property.isList && property.primType === "string") initializer = "\"\"";
-        if (!property.isList && property.primType === "number") initializer = "0";
-        if (!property.isList && property.primType === "boolean") initializer = "false";
-        return `${decorator} ${property.name} : ${property.primType}${arrayType} = ${initializer}; \t${comment}`;
+        if (property.isList) initializer = "";
+        if (!property.isList && property.primType === "string") initializer = "= \"\"";
+        if (!property.isList && property.primType === "number") initializer = "= 0";
+        if (!property.isList && property.primType === "boolean") initializer = "= false";
+        return `${decorator} ${property.name} : ${property.primType}${arrayType} ${initializer}; \t${comment}`;
     }
 
     private generatePartProperty(property: PiConceptProperty): string {
@@ -311,30 +320,32 @@ export class ConceptTemplate {
     }
 
     private createInstanceDefinitions(limitedConcept: PiLimitedConcept): string {
-        let conceptName = limitedConcept.name;
+        let conceptName = Names.concept(limitedConcept);
         return `${limitedConcept.instances.map(predef =>
             `static ${predef.name}: ${conceptName}; // implementation of instance ${predef.name}`).join("\n")}
              static $piANY : ${conceptName}; // default predefined instance`
     }
 
     private createInstanceInitialisations(limitedConcept: PiLimitedConcept): string {
-        let conceptName = limitedConcept.name;
+        let conceptName = Names.concept(limitedConcept);
         return `${limitedConcept.instances.map(predef =>
-            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)})` ).join(";")}`
+            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)});` ). join(" ")}`
     }
 
     private createInstanceProperties(instance: PiInstance) : string {
-
         return `{${instance.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}}`;
     }
 
     private createInstancePropValue(property: PiPropertyInstance): string {
-        let refProperty = property.property?.referred;
+        let refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
-            if (refProperty.primType === "string") {
-                return `"${property.value}"`;
+            const type: string = refProperty.primType;
+            if (refProperty.isList) {
+                return `[ ${property.valueList.map(value => 
+                    `${type === "string" ? `"${value}"` : `${value}` }`
+                ).join(", ")} ]`;
             } else {
-                return `${property.value}`;
+                return `${type === "string" ? `"${property.value}"` : `${property.value}` }`;
             }
         }
         return ``;

@@ -1,6 +1,6 @@
 language PiLanguage
 
-public root concept PiLanguage {
+public model PiLanguage {
     public name: string;
     public structure: PiStructureDef;
     public editor: PiEditorDef;
@@ -9,10 +9,10 @@ public root concept PiLanguage {
     public validator: PiValidatorDef;
 }
 // begin structure definition
-public unit concept PiStructureDef {
+public modelunit PiStructureDef {
     public name: string;
 //}
-//root concept PiLanguageUnit base PiLangElement {
+//model PiLanguageUnit base PiLangElement {
     public concepts: PiConcept[];
     public interfaces: PiInterface[];
     public rootconcept: PiConcept;
@@ -133,12 +133,12 @@ concept PiLangFunctionCallExp base PiLangExp {
 
 
 // begin editor definition
-public unit concept PiEditorDef {
+public modelunit PiEditorDef {
     public name: string;
 }
 // end editor definition
 // begin scoper definition
-public unit concept PiScoperDef {
+public modelunit PiScoperDef {
     public name: string;
     languageName: string;
     reference namespaces: PiConcept[];
@@ -161,7 +161,7 @@ concept PiAlternativeScope {
 
 // end scoper definition
 // begin typer definition
-public unit concept PiTyperDef {
+public modelunit PiTyperDef {
     public name: string;
 //}
 //concept PiTypeDefinition {
@@ -199,7 +199,7 @@ concept PiTypeStatement {
 }
 // end typer definition
 // begin validator definition
-public unit concept PiValidatorDef {
+public modelunit PiValidatorDef {
     public name: string;
 //}
 //concept PiValidatorDef {

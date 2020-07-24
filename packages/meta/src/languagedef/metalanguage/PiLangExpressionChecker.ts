@@ -1,5 +1,5 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguageUnit, PiConcept, PiClassifier, PiProperty, PiLimitedConcept, PiInstance } from "./PiLanguage";
+import { PiLanguage, PiConcept, PiClassifier, PiProperty, PiLimitedConcept, PiInstance } from "./PiLanguage";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
 import {
     PiLangExp,
@@ -21,7 +21,7 @@ const containerKeyword : string = "container";
 export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     strictUseOfSelf: boolean = true; // if true, then a ThisExpression must have an appliedfeature
 
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         super(language);
     }
 

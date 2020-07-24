@@ -1,7 +1,7 @@
 import {
     PiConcept,
     PiLangExpressionChecker,
-    PiLanguageUnit
+    PiLanguage
 } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
 import {
@@ -19,7 +19,7 @@ const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
 export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;
 
-    constructor(language: PiLanguageUnit) {
+    constructor(language: PiLanguage) {
         super(language);
         this.myExpressionChecker = new PiLangExpressionChecker(this.language);
     }

@@ -12,9 +12,10 @@ name_separator  = ws ":" ws
 equals_separator  = ws "=" ws
 plus_separator = ws "+" ws
 ws "whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComment) )*
+rws "required whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComment) )+
 
-var "var"
-  = first:varLetter rest:identifierChar* ws { return first + rest.join(""); }
+var "variable"
+  = first:varLetter rest:identifierChar* { return first + rest.join(""); }
 
 string           = chars:anyChar* { return chars.join(""); }
 
