@@ -2,8 +2,8 @@ import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguageUnit } from "../../languagedef/metalanguage";
 import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER, UNPARSER_GEN_FOLDER } from "../../utils";
-import { DefEditorLanguage } from "../metalanguage";
-import { DefEditorDefaults } from "../metalanguage/DefEditorDefaults";
+import { PiEditUnit } from "../metalanguage";
+import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers, UnparserTemplate } from "./templates";
 import { CustomActionsTemplate } from "./templates/CustomActionsTemplate";
 import { CustomProjectionTemplate } from "./templates/CustomProjectionTemplate";
@@ -24,7 +24,7 @@ export class EditorGenerator {
     constructor() {
     }
 
-    generate(editDef: DefEditorLanguage): void {
+    generate(editDef: PiEditUnit): void {
         let generationStatus = new GenerationStatus();
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.stylesFolder = this.outputfolder + "/" + STYLES_FOLDER;
@@ -34,13 +34,13 @@ export class EditorGenerator {
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder + " for language " + this.language?.name);
 
         if (editDef === null || editDef === undefined) {
-            editDef = new DefEditorLanguage();
+            editDef = new PiEditUnit();
             editDef.name = "default";
             editDef.languageName = this.language.name;
         }
         editDef.language = this.language;
         // fill default values if they are not there
-        DefEditorDefaults.addDefaults(editDef);
+        PiEditProjectionUtil.addDefaults(editDef);
 
         const defaultActions = new DefaultActionsTemplate();
         const customActions = new CustomActionsTemplate();

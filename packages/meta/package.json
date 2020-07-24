@@ -15,7 +15,7 @@
   "scripts": {
     "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
     "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
-    "edit-parser": "pegjs src/editordef/parser/EditorGrammar.pegjs",
+    "edit-parser": "pegjs src/editordef/parser/PiEditGrammar.pegjs",
     "valid-parser": "pegjs src/validatordef/parser/ValidatorGrammar.pegjs",
     "type-parser": "pegjs src/typerdef/parser/PiTyperGrammar.pegjs",
     "lang-exp-parser": "pegjs src/languagedef/parser/ExpressionGrammar.pegjs",

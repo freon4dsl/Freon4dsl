@@ -8,15 +8,14 @@ import {
 } from "../../../languagedef/metalanguage/PiLanguage";
 import { sortClasses } from "../../../utils/ModelHelpers";
 import {
-    DefEditorConcept,
-    DefEditorLanguage,
-    DefEditorProjectionExpression,
-    DefEditorProjectionIndent,
-    DefEditorProjectionText,
-    DefEditorSubProjection,
-    Direction,
+    PiEditConcept,
+    PiEditUnit,
+    PiEditParsedProjectionIndent,
+    PiEditProjectionText,
+    PiEditSubProjection,
+    PiEditProjectionDirection,
     ListJoinType,
-    MetaEditorProjectionLine
+    PiEditProjectionLine
 } from "../../metalanguage";
 import { langExpToTypeScript } from "../../../utils";
 
@@ -24,7 +23,7 @@ export class UnparserTemplate {
     constructor() {
     }
 
-    generateUnparser(language: PiLanguageUnit, editDef: DefEditorLanguage, relativePath: string): string {
+    generateUnparser(language: PiLanguageUnit, editDef: PiEditUnit, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);   
         const generatedClassName : String = Names.unparser(language);
 
@@ -130,11 +129,11 @@ export class UnparserTemplate {
         } `;
     }
 
-    private makeConceptMethod (conceptDef: DefEditorConcept ) : string {
+    private makeConceptMethod (conceptDef: PiEditConcept ) : string {
         // console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
         let myConcept: PiConcept = conceptDef.concept.referred;
         let name: string = myConcept.name;
-        let lines: MetaEditorProjectionLine[] = conceptDef.projection?.lines;
+        let lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
         const comment =   `/**
                             * See the public unparse method.
                             */`;
@@ -174,7 +173,7 @@ export class UnparserTemplate {
         }
     }
 
-    private makeLine (line : MetaEditorProjectionLine) : string {
+    private makeLine (line : PiEditProjectionLine) : string {
         // the result should be text or should end in a quote
         let result: string = "";
         // TODO indents are not correct because tabs are not yet recognised by the .edit parser
@@ -183,11 +182,11 @@ export class UnparserTemplate {
             result += " ";
         }
         line.items.forEach((item, index) => {
-            if (item instanceof DefEditorProjectionText) {
+            if (item instanceof PiEditProjectionText) {
                 // TODO escape all quotes in the text string
                 result += `${item.text}`;
             }
-            if (item instanceof DefEditorSubProjection) {
+            if (item instanceof PiEditSubProjection) {
                 let myElem = item.expression.findRefOfLastAppliedFeature();
                 if (myElem instanceof PiPrimitiveProperty) {
                     result = this.makeItemWithPrimitiveType(myElem, result, item);
@@ -195,10 +194,7 @@ export class UnparserTemplate {
                     result = this.makeItemWithConceptType(myElem, item, result);
                 }
             }
-            if (item instanceof DefEditorProjectionExpression) {
-                // TODO implement this
-            }
-            if (item instanceof DefEditorProjectionIndent) {
+            if (item instanceof PiEditParsedProjectionIndent) {
                 // TODO implement this
             }
             if (index < line.items.length - 1) result += ' '; // add a space between each item on a line
@@ -206,7 +202,7 @@ export class UnparserTemplate {
         return result;
     }
 
-    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, result: string, item: DefEditorSubProjection) {
+    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, result: string, item: PiEditSubProjection) {
         // the expression is of primitive type
         if (myElem.isList) {
             result += `\$\{${langExpToTypeScript(item.expression)}.map(listElem => {
@@ -224,12 +220,12 @@ export class UnparserTemplate {
         return result;
     }
 
-    private makeItemWithConceptType(myElem: PiProperty, item: DefEditorSubProjection, result: string) {
+    private makeItemWithConceptType(myElem: PiProperty, item: PiEditSubProjection, result: string) {
         // the expression has a concept as type, thus we need to call its unparse method
         let type = myElem.type.referred;
         if (!!type) {
             if (myElem.isList) {
-                let vertical = (item.listJoin.direction === Direction.Vertical);
+                let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
                 let joinType: string = "";
                 if (item.listJoin.joinType === ListJoinType.Separator) {
                     joinType = "SeparatorType.Separator";
