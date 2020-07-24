@@ -43,9 +43,9 @@ export class ConceptTemplate {
                     .concat(concept.references().map(r => Names.classifier(r.type.referred)))
                     .concat(concept.interfaces.map(i => Names.interface(i.referred)))
                     .concat([baseExpressionName])
-                    .concat(concept.allParts().map(part => part.type.name))
-                    .concat(concept.allReferences().map(part => part.type.name))
-                    .filter(name => !(name === concept.name))
+                    .concat(concept.allParts().map(part => Names.classifier(part.type.referred)))
+                    .concat(concept.allReferences().map(part => Names.classifier(part.type.referred)))
+                    .filter(name => !(name === Names.concept(concept)))
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
                     .filter(r => r !== null)
             )
@@ -81,7 +81,7 @@ export class ConceptTemplate {
             @model
             export ${abstract} class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
-                readonly $typename: ${Names.metaType(language)} = "${concept.name}";    // holds the metatype in the form of a string
+                readonly $typename: ${Names.metaType(language)} = "${Names.concept(concept)}";    // holds the metatype in the form of a string
                 ${!hasSuper ? "$id: string;" : ""}                                      // a unique identifier
                 ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("\n")}
                 ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("\n")}
@@ -183,8 +183,8 @@ export class ConceptTemplate {
                  * based on the properties defined in 'data'.
                  * @param data
                  */
-                static create(data: Partial<${concept.name}>): ${concept.name} {
-                    const result = new ${concept.name}();
+                static create(data: Partial<${Names.concept(concept)}>): ${Names.concept(concept)} {
+                    const result = new ${Names.concept(concept)}();
                     ${concept.implementedProperties().map(p => this.generatePartialCreate(p)).join("\n")}
                     return result;
                 }`
@@ -226,12 +226,12 @@ export class ConceptTemplate {
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     // TODO review this approach
                     ${concept.parts().map(part => 
-                    `if ( oldUnit.piLanguageConcept() === "${part.type.referred.name}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+                    `if ( oldUnit.piLanguageConcept() === "${Names.concept(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
                         ${part.isList ? 
-                        `let index = this.${part.name}.indexOf(oldUnit as ${part.type.referred.name});
-                        this.${part.name}.splice(index, 1, newUnit as ${part.type.referred.name});`
+                        `let index = this.${part.name}.indexOf(oldUnit as ${Names.concept(part.type.referred)});
+                        this.${part.name}.splice(index, 1, newUnit as ${Names.concept(part.type.referred)});`
                         : 
-                        `this.${part.name} = newUnit as ${part.type.referred.name};`}
+                        `this.${part.name} = newUnit as ${Names.concept(part.type.referred)};`}
                     } else`
                     ).join(" ")}                    
                     {
@@ -320,14 +320,14 @@ export class ConceptTemplate {
     }
 
     private createInstanceDefinitions(limitedConcept: PiLimitedConcept): string {
-        let conceptName = limitedConcept.name;
+        let conceptName = Names.concept(limitedConcept);
         return `${limitedConcept.instances.map(predef =>
             `static ${predef.name}: ${conceptName}; // implementation of instance ${predef.name}`).join("\n")}
              static $piANY : ${conceptName}; // default predefined instance`
     }
 
     private createInstanceInitialisations(limitedConcept: PiLimitedConcept): string {
-        let conceptName = limitedConcept.name;
+        let conceptName = Names.concept(limitedConcept);
         return `${limitedConcept.instances.map(predef =>
             `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)});` ). join(" ")}`
     }

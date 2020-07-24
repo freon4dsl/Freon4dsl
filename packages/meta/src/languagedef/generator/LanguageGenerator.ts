@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { ModelCreatorTemplate } from "./conveniences/ModelCreatorTemplate";
 import {
     CONFIGURATION_FOLDER,
     ENVIRONMENT_GEN_FOLDER,
@@ -58,7 +57,6 @@ export class LanguageGenerator {
         const stdlibTemplate = new StdlibTemplate();
         const walkerTemplate = new WalkerTemplate();
         const workerTemplate = new WorkerInterfaceTemplate();
-        const modelcreatorTemplate = new ModelCreatorTemplate();
         const configurationTemplate = new ConfigurationTemplate();
 
         //Prepare folders
@@ -134,11 +132,6 @@ export class LanguageGenerator {
         LOGGER.log(`Generating user model worker: ${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`);
         var workerFile = Helpers.pretty(workerTemplate.generateWorkerInterface(language, relativePath), "WorkerInterface Class", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`, workerFile);
-
-        // generate the convenience classes
-        LOGGER.log(`Generating convenience model creator: ${this.utilsGenFolder}/${language.name}Creator.ts`);
-        var creatorFile = Helpers.pretty(modelcreatorTemplate.generateModelCreator(language, relativePath), "Model Creator Class", generationStatus);
-        fs.writeFileSync(`${this.utilsGenFolder}/${language.name}Creator.ts`, creatorFile);
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(this, `Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);

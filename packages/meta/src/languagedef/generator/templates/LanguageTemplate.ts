@@ -34,15 +34,15 @@ export class LanguageTemplate {
             
             ${language.concepts.map(concept =>
             `
-                function describe${concept.name}(): Concept {
+                function describe${Names.concept(concept)}(): Concept {
                     const concept =             {
                         typeName: "${Names.concept(concept)}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),
-                        baseName: ${!!concept.base ? `"${concept.base.name}"` : "null"},
-                        subConceptNames: [${PiLangUtil.subConcepts(concept).map(sub => "\"" + sub.name+ "\"").join(", ")}]
+                        baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "null"},
+                        subConceptNames: [${PiLangUtil.subConcepts(concept).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
@@ -56,7 +56,7 @@ export class LanguageTemplate {
                     ${concept.allParts().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${prop.type.name}",
+                                type: "${Names.classifier(prop.type.referred)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "part"
@@ -65,7 +65,7 @@ export class LanguageTemplate {
                     ${concept.allReferences().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${prop.type.name}",
+                                type: "${Names.classifier(prop.type.referred)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "reference"
@@ -81,7 +81,7 @@ export class LanguageTemplate {
                         typeName: "${Names.interface(intface)}",
                         isPublic: ${intface.isPublic},
                         properties: new Map< string, Property>(),
-                        subConceptNames: [${PiLangUtil.subConcepts(intface).map(sub => "\"" + sub.name+ "\"").join(", ")}]
+                        subConceptNames: [${PiLangUtil.subConcepts(intface).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {
@@ -95,7 +95,7 @@ export class LanguageTemplate {
                 ${intface.allParts().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${prop.type.name}",
+                                type: "${Names.classifier(prop.type.referred)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "part"
@@ -104,7 +104,7 @@ export class LanguageTemplate {
                 ${intface.allReferences().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${prop.type.name}",
+                                type: "${Names.classifier(prop.type.referred)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "reference"

@@ -20,8 +20,8 @@ export class ScoperUtilsTemplate {
          * @param modelelement
          */
         export function isNameSpace(modelelement: ${allLangConcepts}): boolean {
-            ${includeRoot ? `if (modelelement instanceof ${language.modelConcept.name}) { return true; }` : ``} 
-            ${concreteNamespaces.map(ref => `if (modelelement instanceof ${ref.name}) { return true; }`).join("\n")}      
+            ${includeRoot ? `if (modelelement instanceof ${Names.concept(language.modelConcept)}) { return true; }` : ``} 
+            ${concreteNamespaces.map(ref => `if (modelelement instanceof ${Names.concept(ref)}) { return true; }`).join("\n")}      
                 return false;
         }`;
     }

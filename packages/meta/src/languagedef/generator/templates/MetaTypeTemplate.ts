@@ -12,8 +12,8 @@ export class MetaTypeTemplate {
          * and interfaces that are defined for language Demo.
          */
         export type ${Names.metaType(language)} = 
-        ${language.concepts.map(c => `"${c.name}"`)
-            .concat(language.interfaces.map(c => `"${c.name}"`))
+        ${language.concepts.map(c => `"${Names.concept(c)}"`)
+            .concat(language.interfaces.map(c => `"${Names.interface(c)}"`))
             .join(" | ")}
         ;`;
     }

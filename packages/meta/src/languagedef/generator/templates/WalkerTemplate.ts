@@ -14,7 +14,7 @@ export class WalkerTemplate {
         return `
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
+                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
@@ -40,15 +40,15 @@ export class WalkerTemplate {
              */
             public walk(modelelement: ${allLangConcepts}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                 ${sortClasses(language.concepts).map(concept => `
-                if(modelelement instanceof ${concept.name}) {
-                    return this.walk${concept.name}(modelelement, includeChildren );
+                if(modelelement instanceof ${Names.concept(concept)}) {
+                    return this.walk${Names.concept(concept)}(modelelement, includeChildren );
                 }`).join("")}
             }
 
             ${language.concepts.map(concept => `
-                private walk${concept.name}(modelelement: ${concept.name}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
+                private walk${Names.concept(concept)}(modelelement: ${Names.concept(concept)}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                     if(!!this.myWorker) {
-                        this.myWorker.execBefore${concept.name}(modelelement);
+                        this.myWorker.execBefore${Names.concept(concept)}(modelelement);
                         ${((concept.allParts().length > 0)?
                         `// work on children in the model tree                     
                         ${concept.allParts().map( part =>
@@ -67,7 +67,7 @@ export class WalkerTemplate {
                         `
                         : ``
                         )}
-                        this.myWorker.execAfter${concept.name}(modelelement);
+                        this.myWorker.execAfter${Names.concept(concept)}(modelelement);
                 } else {
                     LOGGER.error(this, "No worker found.");
                 }

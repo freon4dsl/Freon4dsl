@@ -261,7 +261,7 @@ export class ProjectionTemplate {
     }
 
     conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
-        const featureType = appliedFeature.type.name;
+        const featureType = Names.classifier(appliedFeature.type.referred);
         return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}", "<select ${appliedFeature.name}>", "${featureType}",
                     () => {
                         if (!!${element}.${appliedFeature.name}) {
@@ -271,7 +271,7 @@ export class ProjectionTemplate {
                         }
                     },
                     (option: SelectOption) => {
-                        if(!!option) {
+                        if (!!option) {
                             ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                                 ${element},
                                 option.label,

@@ -41,7 +41,7 @@ export class ScoperTemplate {
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${langConceptType}, ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref => `${ref.name}`).join(", ")}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${allLangConcepts}, ${langConceptType}, ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref => `${Names.concept(ref)}`).join(", ")}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language } from "${PROJECTITCORE}"
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";

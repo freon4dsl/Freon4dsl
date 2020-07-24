@@ -58,22 +58,22 @@ export class CheckerTemplate {
 
         ${validdef.conceptRules.map(ruleSet =>
             `${commentBefore}
-            public execBefore${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
+            public execBefore${Names.concept(ruleSet.conceptRef.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef.referred)}) {
                 ${this.createRules(ruleSet)}
             }
             
             ${commentAfter}
-            public execAfter${ruleSet.conceptRef.referred.name}(modelelement: ${ruleSet.conceptRef.referred.name}) {
+            public execAfter${Names.concept(ruleSet.conceptRef.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef.referred)}) {
             }`
         ).join("\n\n")}
 
         ${this.conceptsWithoutRules(language, validdef).map(concept => 
             `${commentNoRule}
-            public execBefore${concept.name}(modelelement: ${concept.name}) {
+            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
             }
             
             ${commentNoRule}
-            public execAfter${concept.name}(modelelement: ${concept.name}) {
+            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
             }`
         ).join("\n\n") }
         
@@ -102,11 +102,11 @@ export class CheckerTemplate {
     private createImports(language: PiLanguage, validdef: PiValidatorDef) : string {
         let result : string = "";
         result = language.concepts?.map(concept => `
-                ${concept.name}`).join(", ");
+                ${Names.concept(concept)}`).join(", ");
         result = result.concat(language.concepts? `,` :``);
         result = result.concat(
-            language.interfaces?.map(concept => `
-                ${concept.name}`).join(", "));
+            language.interfaces?.map(intf => `
+                ${Names.interface(intf)}`).join(", "));
         return result;
     }
 

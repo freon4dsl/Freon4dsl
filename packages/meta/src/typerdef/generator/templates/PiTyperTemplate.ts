@@ -30,7 +30,7 @@ export class PiTyperTemplate {
         import { ${typerInterfaceName} } from "${PROJECTITCORE}";
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
-                ${concept.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";       
+                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";       
         import { ${language.interfaces.map(intf => `
                 ${intf.name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";       
 
@@ -197,7 +197,7 @@ export class PiTyperTemplate {
                         // add a statement for all concepts that implement this interface
                         this.language.concepts.filter(con => con.allInterfaces().some(intf => intf === yy)).map(implementor => {
                             if (!typesAdded.includes(implementor)) {
-                                result = result.concat(`if (modelelement instanceof ${implementor.name}) {
+                                result = result.concat(`if (modelelement instanceof ${Names.concept(implementor)}) {
                                     return modelelement;
                                 }`);
                                 typesAdded.push(implementor);
@@ -205,7 +205,7 @@ export class PiTyperTemplate {
                         });
                     } else if (!!realType && (realType instanceof PiConcept)) {
                          if (!typesAdded.includes(realType)) {
-                            let myConceptName = realType.name;
+                            let myConceptName = Names.concept(realType);
                             result = result.concat(`if (modelelement instanceof ${myConceptName}) {
                                 return modelelement;
                             }`);
@@ -264,7 +264,7 @@ export class PiTyperTemplate {
                         // add a statement for all concepts that implement this interface
                         this.language.concepts.filter(con => con.allInterfaces().some(intf => intf === yy )).map (implementor => {
                             if (!typesAdded.includes(implementor)) {
-                                result = result.concat(`if (elem instanceof ${implementor.name}) {
+                                result = result.concat(`if (elem instanceof ${Names.concept(implementor)}) {
                                     return true;
                                 }`)
                                 typesAdded.push(implementor);

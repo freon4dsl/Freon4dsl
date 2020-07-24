@@ -45,7 +45,7 @@ export class NamesCollectorTemplate {
 
         ${language.concepts.map(concept =>
             `${commentBefore}
-            public execBefore${concept.name}(modelelement: ${concept.name}) {
+            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
                 ${concept.allParts().map(part => hasNameProperty(part.type?.referred) ?
                     (part.isList ?
                         `for (let z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
@@ -54,7 +54,7 @@ export class NamesCollectorTemplate {
             }
             
             ${commentAfter}
-            public execAfter${concept.name}(modelelement: ${concept.name}) {
+            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
             }`
         ).join("\n\n")}
       
