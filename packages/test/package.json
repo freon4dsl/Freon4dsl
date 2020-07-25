@@ -19,6 +19,9 @@
 
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
+    "pegjs":        "pegjs src/parser_gen/unparser/gen/DemoParserGeneratorInput.pegjs",
+    "parser-project": "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen && pegjs",
+    "parser-gen": 	"ts-node ../meta/src/commandline/projectit -v edit-it -l src/parser_gen/defs/LanguageDefinition.lang -e src/parser_gen/defs/LanguageDefinition.edit -o src/parser_gen && yarn pegjs",
     "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && tsc",
     "test":         "yarn run all && jest"
   },
@@ -44,7 +47,10 @@
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2",
     "prettier": "^2.0.4",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "@types/pegjs": "^0.10.1",
+    "pegjs": "^0.10.0",
+    "ts-pegjs": "^0.2.6"
   },
   "dependencies": {
     "@projectit/core": "^0.0.5",
