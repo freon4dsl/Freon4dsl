@@ -125,7 +125,7 @@ describe("Testing Unparser", () => {
             let result: string = "";
             const model = new DemoModelCreator().createModelWithMultipleUnits();
             result = unparser.unparse(model, false);
-            let path: string = "./handmade/unparsedDemoModel.txt";
+            let path: string = "./unparsedDemoModel.txt";
             if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, result);
             } else {
@@ -133,7 +133,7 @@ describe("Testing Unparser", () => {
             }
 
             // TODO use snapshot
-            expect(result.length).toBe(1597);
+            expect(result.length).toBe(2453);
         });
     });
 });

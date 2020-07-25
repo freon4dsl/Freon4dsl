@@ -194,9 +194,9 @@ export class UnparserTemplate {
                     result = this.makeItemWithConceptType(myElem, item, result);
                 }
             }
-            if (item instanceof PiEditParsedProjectionIndent) {
-                // TODO implement this
-            }
+            // if (item instanceof PiEditParsedProjectionIndent) {
+            //     // no need to implement anything, only used in parsing
+            // }
             if (index < line.items.length - 1) result += ' '; // add a space between each item on a line
         });
         return result;

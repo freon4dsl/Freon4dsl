@@ -4,7 +4,7 @@ import { PiLanguage } from "../../languagedef/metalanguage";
 import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER, UNPARSER_GEN_FOLDER } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
-import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers, UnparserTemplate } from "./templates";
+import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers, UnparserTemplate, ParserTemplate } from "./templates";
 import { CustomActionsTemplate } from "./templates/CustomActionsTemplate";
 import { CustomProjectionTemplate } from "./templates/CustomProjectionTemplate";
 import { DefaultActionsTemplate } from "./templates/DefaultActionsTemplate";
@@ -50,6 +50,7 @@ export class EditorGenerator {
         const enumProjection = new SelectionHelpers();
         const editorIndexTemplate = new EditorIndexTemplate();
         const unparserTemplate = new UnparserTemplate();
+        const parserTemplate = new ParserTemplate();
         const initializationTemplate = new InitalizationTemplate();
         const stylesTemplate = new StylesTemplate();
 
@@ -97,8 +98,11 @@ export class EditorGenerator {
 
         LOGGER.log(`Generating language unparser: ${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`);
         var unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(this.language, editDef, relativePath), "Unparser Class", generationStatus);
-        // var unparserFile = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
         fs.writeFileSync(`${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`, unparserFile);
+
+        LOGGER.log(`Generating language parser: ${this.unparserGenFolder}/${Names.parser(this.language)}.pegjs`);
+        var parserFile = parserTemplate.generateParser(this.language, editDef, relativePath);
+        fs.writeFileSync(`${this.unparserGenFolder}/${Names.parser(this.language)}.pegjs`, parserFile);
 
         LOGGER.log(`Generating editor styles part 1: ${this.stylesFolder}/styles.ts`);
         var editorStylesConst = Helpers.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);

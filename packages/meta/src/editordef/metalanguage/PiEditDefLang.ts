@@ -42,7 +42,7 @@ export class PiEditConcept {
 }
 
 /**
- * This clas is only used by tge parser and removed from the edit model after normalization.
+ * This class is only used by the parser and removed from the edit model after normalization.
  */
 export class PiEditParsedNewline {
     toString(): string {
@@ -51,7 +51,7 @@ export class PiEditParsedNewline {
 }
 
 /**
- * This clas is only used by tge parser and removed from the edit model after normalization.
+ * This class is only used by the parser and removed from the edit model after normalization.
  */
 export class PiEditParsedProjectionIndent {
     location: ParseLocation;

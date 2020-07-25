@@ -150,4 +150,8 @@ export class Names {
     public static projectionFunction(c: PiConcept): string {
         return "get" + Names.concept(c) + "Box";
     }
+
+    public static parser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ParserGeneratorInput";
+    }
 }
