@@ -130,10 +130,6 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Stdlib";
     }
 
-    public static unparser(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "Unparser";
-    }
-
     public static walker(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Walker";
     }
@@ -151,7 +147,19 @@ export class Names {
         return "get" + Names.concept(c) + "Box";
     }
 
+    public static unparser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Unparser";
+    }
+
+    public static pegjsInput(unit: PiConcept): string {
+        return this.startWithUpperCase(unit?.name) + "UnitParser";
+    }
+
     public static parser(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "ParserGeneratorInput";
+        return this.startWithUpperCase(language?.name) + "Parser";
+    }
+
+    public static parserCreator(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "CreatorPartOfParser";
     }
 }

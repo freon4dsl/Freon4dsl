@@ -16,7 +16,7 @@ public concept DemoEntity  {
     attributes: DemoAttribute[];
 //    entAttributes: DemoAttributeWithEntityType[];
 //    functions: DemoFunction[];
-    reference baseEntity: DemoEntity;
+    reference baseEntity: DemoEntity[];
 }
 concept DemoAttribute {
     name: string;

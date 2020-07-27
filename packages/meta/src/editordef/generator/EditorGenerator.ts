@@ -1,10 +1,10 @@
 import * as fs from "fs";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiLanguage } from "../../languagedef/metalanguage";
-import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER, UNPARSER_GEN_FOLDER } from "../../utils";
+import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
-import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers, UnparserTemplate, ParserTemplate } from "./templates";
+import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers } from "./templates";
 import { CustomActionsTemplate } from "./templates/CustomActionsTemplate";
 import { CustomProjectionTemplate } from "./templates/CustomProjectionTemplate";
 import { DefaultActionsTemplate } from "./templates/DefaultActionsTemplate";
@@ -16,7 +16,6 @@ const LOGGER = new PiLogger("EditorGenerator"); //.mute();
 export class EditorGenerator {
     public outputfolder: string = ".";
     protected editorGenFolder: string;
-    protected unparserGenFolder: string;
     protected editorFolder: string;
     protected stylesFolder: string;
     language: PiLanguage;
@@ -29,17 +28,13 @@ export class EditorGenerator {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.stylesFolder = this.outputfolder + "/" + STYLES_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
-        this.unparserGenFolder = this.outputfolder + "/" + UNPARSER_GEN_FOLDER;
         let name = editDef ? editDef.name : "";
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder + " for language " + this.language?.name);
-
-        if (editDef === null || editDef === undefined) {
-            editDef = new PiEditUnit();
-            editDef.name = "default";
-            editDef.languageName = this.language.name;
+        if (editDef == null || editDef == undefined) {
+            editDef = this.createDefaultEditorDefinition();
         }
         editDef.language = this.language;
-        // fill default values if they are not there
+        // add default values if they are not present in the editor definition
         PiEditProjectionUtil.addDefaults(editDef);
 
         const defaultActions = new DefaultActionsTemplate();
@@ -49,8 +44,6 @@ export class EditorGenerator {
         const customProjectiontemplate = new CustomProjectionTemplate();
         const enumProjection = new SelectionHelpers();
         const editorIndexTemplate = new EditorIndexTemplate();
-        const unparserTemplate = new UnparserTemplate();
-        const parserTemplate = new ParserTemplate();
         const initializationTemplate = new InitalizationTemplate();
         const stylesTemplate = new StylesTemplate();
 
@@ -59,8 +52,6 @@ export class EditorGenerator {
         Helpers.createDirIfNotExisting(this.stylesFolder);  // will not be overwritten
         Helpers.createDirIfNotExisting(this.editorGenFolder);
         Helpers.deleteFilesInDir(this.editorGenFolder, generationStatus);
-        Helpers.createDirIfNotExisting(this.unparserGenFolder);
-        Helpers.deleteFilesInDir(this.unparserGenFolder, generationStatus);
 
         // set relative path to get the imports right
         let relativePath = "../../";
@@ -96,14 +87,6 @@ export class EditorGenerator {
         var customProjectionFile = Helpers.pretty(customProjectiontemplate.generate(this.language), "Custom Projection", generationStatus);
         Helpers.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`, customProjectionFile, "Custom Projection");
 
-        LOGGER.log(`Generating language unparser: ${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`);
-        var unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(this.language, editDef, relativePath), "Unparser Class", generationStatus);
-        fs.writeFileSync(`${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`, unparserFile);
-
-        LOGGER.log(`Generating language parser: ${this.unparserGenFolder}/${Names.parser(this.language)}.pegjs`);
-        var parserFile = parserTemplate.generateParser(this.language, editDef, relativePath);
-        fs.writeFileSync(`${this.unparserGenFolder}/${Names.parser(this.language)}.pegjs`, parserFile);
-
         LOGGER.log(`Generating editor styles part 1: ${this.stylesFolder}/styles.ts`);
         var editorStylesConst = Helpers.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
         Helpers.generateManualFile(`${this.stylesFolder}/styles.ts`, editorStylesConst, "Editor Styles Constant");
@@ -125,6 +108,12 @@ export class EditorGenerator {
         } else {
             LOGGER.info(this, `Succesfully generated editor ${name}`);
         }
+    }
 
+    public createDefaultEditorDefinition(): PiEditUnit {
+        let editDef = new PiEditUnit();
+        editDef.name = "default";
+        editDef.languageName = this.language.name;
+        return editDef;
     }
 }

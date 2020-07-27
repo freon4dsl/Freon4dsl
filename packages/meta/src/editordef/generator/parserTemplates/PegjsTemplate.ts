@@ -2,23 +2,25 @@ import { PiConcept, PiLanguage, PiPrimitiveProperty, PiProperty } from "../../..
 import { ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
 import { Names } from "../../../utils";
 
-export class ParserTemplate {
+export class PegjsTemplate {
     referredConcepts: PiConcept[] = [];
     textForListConcepts: string[] = [];
     listNumber: number = 0;
 
-    generateParser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
-        const langUnit = language.units[0];
-        // TODO we should generate a different parser for each unit type, for now we only take the first unit
+    generatePegjsForUnit(language: PiLanguage, langUnit: PiConcept, editDef: PiEditUnit): string {
+        this.referredConcepts = [];
+        this.textForListConcepts = [];
+        this.listNumber= 0;
+        const creatorName = Names.parserCreator(language);
 
         // Note that the order in which the rules are stated, determines whether the parser is functioning or not
         // first create a rule for the unit, next for its children, etc.
-        const sortedEditorDefs = this.sortEditorDefs(langUnit, editDef.conceptEditors);
+        const sortedEditorDefs = this.findEditorDefsForUnit(langUnit, editDef.conceptEditors);
 
         // Template starts here, no prettier for pegjs files, therefore we take indentation into account in this template
         return `
 {
-    let creator = require("../CreatorPartOfParser");
+    let creator = require("./${creatorName}");
 }
         
 ${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("")}
@@ -109,7 +111,7 @@ HEXDIG = [0-9a-f]
         return `${concept.name} = ${conceptDef.projection.lines.map(l => 
             `${l.items.map(item => 
                 `${(item instanceof PiEditProjectionText)? 
-                    `\"${item.text}\" ws ` 
+                    `\"${item.text.trim()}\" ws ` 
                     : 
                     `${(item instanceof PiEditSubProjection)? 
                         `${this.makeSubProjectionRule(item)} ws `
@@ -122,16 +124,28 @@ HEXDIG = [0-9a-f]
     private makeSubProjectionRule(item: PiEditSubProjection): string {
         const myElem = item.expression.findRefOfLastAppliedFeature();
         if (myElem.isList) {
+            this.listNumber++;
             let listRuleName: string;
             if (myElem instanceof PiPrimitiveProperty) {
                 listRuleName = Names.startWithUpperCase(myElem.primType) + "List" + this.listNumber;
             } else {
-                listRuleName = myElem.type.referred.name + "List" + this.listNumber;;
+                if (item.listJoin?.joinType === ListJoinType.Separator) {
+                    listRuleName = Names.startWithUpperCase(myElem.type.referred.name) + "List" + this.listNumber;
+                } else {
+                    listRuleName = Names.startWithUpperCase(myElem.type.referred.name);
+                }
             }
+
             if (item.listJoin?.joinType === ListJoinType.Separator) {
                 this.makeRuleForList(item, myElem, listRuleName);
                 return `${myElem.name}:${listRuleName} ws `;
             } else {
+                if (!myElem.isPart) {
+                    listRuleName += "Reference";
+                    if (!this.referredConcepts.includes(myElem.type.referred)) {
+                        this.referredConcepts.push(myElem.type.referred);
+                    }
+                }
                 return `${myElem.name}:(${listRuleName} ws "${item.listJoin?.joinText}" ws)* `;
             }
         } else {
@@ -153,7 +167,9 @@ HEXDIG = [0-9a-f]
                 if (myElem.isPart) {
                     return `${myElem.name}:${typeName}`;
                 } else { // the property is a reference
-                    this.referredConcepts.push(myElem.type.referred);
+                    if (!this.referredConcepts.includes(myElem.type.referred)) {
+                        this.referredConcepts.push(myElem.type.referred);
+                    }
                     return `${myElem.name}:${typeName}Reference ws `;
                 }
             }
@@ -165,35 +181,52 @@ HEXDIG = [0-9a-f]
     { return creator.create${concept.name}Reference({name: name}); }\n\n`;
     }
 
-    private sortEditorDefs(langUnit: PiConcept, conceptEditors: PiEditConcept[]): PiEditConcept[] {
-        let result : PiEditConcept[] = [];
-        this.addEditor(langUnit, conceptEditors, result);
-        this.addEditorsForParts(langUnit, conceptEditors, result);
-        return result;
-    }
-
-    private addEditorsForParts(langUnit: PiConcept, conceptEditors: PiEditConcept[], result: PiEditConcept[]) {
-        langUnit.allParts().forEach(part => {
-            const type = part.type.referred;
-            this.addEditor(type, conceptEditors, result);
-            this.addEditorsForParts(type, conceptEditors, result);
-        });
-    }
-
-    private addEditor(piConcept: PiConcept, conceptEditors: PiEditConcept[], result: PiEditConcept[]) {
-        let editor = conceptEditors.find(ed => ed.concept.referred === piConcept);
-        if (!!editor) {
-            result.push(editor);
-        }
-    }
-
     private makeRuleForList(item: PiEditSubProjection, myElem: PiProperty, listRuleName: string) {
-        const typeName = myElem.type.referred.name;
+        let typeName = myElem.type.referred.name;
+        if (!myElem.isPart) {
+            typeName += "Reference";
+            if (!this.referredConcepts.includes(myElem.type.referred)) {
+                this.referredConcepts.push(myElem.type.referred);
+            }
+        }
         const joinText = item.listJoin?.joinText.trimRight();
         if (item.listJoin?.joinType === ListJoinType.Separator) {
             this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
-    { return [head].concat(tail); }`);
+    { return [head].concat(tail); }\n\n`);
         }
+    }
+
+    private findPartConceptsInUnit(langUnit: PiConcept): PiConcept[] {
+        let result: PiConcept[] = [];
+        result.push(langUnit);
+        this.addPartConcepts(langUnit, result);
+        return result;
+    }
+
+    private addPartConcepts(langUnit: PiConcept, result: PiConcept[]) {
+        langUnit.allParts().forEach(part => {
+            const type = part.type.referred;
+            if (!result.includes(type)) {
+                result.push(type);
+                this.addPartConcepts(type, result);
+            }
+        });
+    }
+
+    private findEditorDefsForUnit(langUnit: PiConcept, conceptEditors: PiEditConcept[]): PiEditConcept[] {
+        let result : PiEditConcept[] = [];
+        const unitConcepts = this.findPartConceptsInUnit(langUnit);
+        // Again note that the order in which the rules are stated, determines whether the parser is functioning or not
+        // first create a rule for the unit, next for its children, etc.
+        unitConcepts.forEach(con => {
+            result.push(...conceptEditors.filter(editor => editor.concept.referred == con));
+        });
+        // conceptEditors.forEach(editor => {
+        //     if (unitConcepts.includes(editor.concept.referred)) {
+        //         result.push(editor);
+        //     }
+        // });
+        return result;
     }
 }
 

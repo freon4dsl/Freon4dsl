@@ -18,6 +18,7 @@ import { GenerationStatus, Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
+import { ParserGenerator } from "../editordef/generator/ParserGenerator";
 
 const LOGGER = new PiLogger("ProjectItGenerateAllAction"); //.mute();
 
@@ -27,6 +28,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     private defFolder: CommandLineStringParameter;
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
+    protected parserGenerator: ParserGenerator = new ParserGenerator();
     protected scoperGenerator: ScoperGenerator; // constructor needs language
     protected validatorGenerator: ValidatorGenerator; // constructor needs language
     protected typerGenerator: PiTyperGenerator; // constructor needs language
@@ -63,7 +65,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
 
             if (this.watch) {
                 if (!!this.languageFile) new FileWatcher(this.languageFile, this.generateLanguage);
-                if (!!this.editFile) new FileWatcher(this.editFile, this.generateEditor);
+                if (!!this.editFile) new FileWatcher(this.editFile, this.generateEditorAndParser);
                 if (!!this.typerFile) new FileWatcher(this.typerFile, this.generateTyper);
                 if (!!this.scopeFile) new FileWatcher(this.scopeFile, this.generateScoper);
                 if (!!this.validFile) new FileWatcher(this.validFile, this.generateValidator);
@@ -72,7 +74,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             // generate the language
             try {
                 this.generateLanguage();
-                this.generateEditor();
+                this.generateEditorAndParser();
                 this.generateValidator();
                 this.generateScoper();
                 this.generateTyper();
@@ -139,7 +141,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         }
     };
 
-    private generateEditor = () => {
+    private generateEditorAndParser = () => {
         LOGGER.info(this, "Generating editor");
         let editor: PiEditUnit = null;
         try {
@@ -147,13 +149,18 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 editor = new PiEditParser(this.language).parse(this.editFile);
             } else {
                 LOGGER.log("Generating default editor");
+                editor = this.editorGenerator.createDefaultEditorDefinition();
             }
             this.editorGenerator.outputfolder = this.outputFolder;
             this.editorGenerator.language = this.language;
             this.editorGenerator.generate(editor);
+            this.parserGenerator.outputfolder = this.outputFolder;
+            this.parserGenerator.language = this.language;
+            this.parserGenerator.generate(editor);
         } catch (e) {
             LOGGER.error(this, "Stopping editor generation because of errors: " + e.message + "\n" + e.stack);
         }
+        return editor;
     };
 
     private generateLanguage = () => {

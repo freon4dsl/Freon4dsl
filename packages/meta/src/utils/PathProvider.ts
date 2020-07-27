@@ -17,6 +17,7 @@ export const TYPER_FOLDER = "typer";
 export const TYPER_GEN_FOLDER = "typer/gen";
 export const STDLIB_GEN_FOLDER = "stdlib/gen";
 export const UNPARSER_GEN_FOLDER = "unparser/gen";
+export const PARSER_GEN_FOLDER = "parser/gen";
 // export const WEBAPP_FOLDER = "../webapp";
 // export const APP_FOLDER = "../webapp/app";
 // export const ASSETS_FOLDER = "../webapp/assets";
