@@ -213,9 +213,9 @@ export class UnparserTemplate {
                 return `${comment}
                     private unparse${name}(modelelement: ${name}, short: boolean) {
                         this.output[this.currentIndex] += "(";
-                        this.unparsePrivate(modelelement.left, indent, short);
-                        this.output[this.currentIndex] += ${conceptDef.symbol};
-                        this.unparsePrivate(modelelement.right, indent, short);
+                        this.unparsePrivate(modelelement.left, short);
+                        this.output[this.currentIndex] += "${conceptDef.symbol}";
+                        this.unparsePrivate(modelelement.right, short);
                         this.output[this.currentIndex] += ")";
                 }`;
             }
@@ -277,7 +277,7 @@ export class UnparserTemplate {
         } else {
             let myCall: string = `this.output[this.currentIndex] += \`\$\{${elemStr}\} \``;
             if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-                result += `if (!!${elemStr}}) { ${myCall} }`;
+                result += `if (!!${elemStr}) { ${myCall} }`;
             } else {
                 result += myCall;
             }
@@ -322,7 +322,7 @@ export class UnparserTemplate {
                     myCall += `this.output[this.currentIndex] += \`\$\{${myTypeScript}.name\} \``;
                 }
                 if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-                    result += `if (!!${myTypeScript}}) { ${myCall} }`;
+                    result += `if (!!${myTypeScript}) { ${myCall} }`;
                 } else {
                     result = myCall;
                 }
