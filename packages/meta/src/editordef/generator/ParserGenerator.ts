@@ -7,6 +7,7 @@ import { UnparserTemplate, PegjsTemplate, CreatorTemplate } from "./parserTempla
 import { ParserTemplate } from "./parserTemplates/ParserTemplate";
 
 const LOGGER = new PiLogger("ParserGenerator"); //.mute();
+var peg = require("pegjs");
 
 export class ParserGenerator {
     public outputfolder: string = ".";
@@ -43,9 +44,13 @@ export class ParserGenerator {
         fs.writeFileSync(`${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`, unparserFile);
 
         this.language.units.forEach(unit => {
-            LOGGER.log(`Generating language parser pegjs input: ${this.parserGenFolder}/${Names.pegjsInput(unit)}.pegjs`);
+            LOGGER.log(`Generating language parser pegjs input: ${this.parserGenFolder}/${Names.pegjs(unit)}.pegjs`);
             var pegjsFile = pegjsTemplate.generatePegjsForUnit(this.language, unit, editDef);
-            fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjsInput(unit)}.pegjs`, pegjsFile);
+            fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.pegjs`, pegjsFile);
+
+            LOGGER.log(`Generating language parser pegjs output: ${this.parserGenFolder}/${Names.pegjs(unit)}.js`);
+            var parser = peg.generate(pegjsFile, {output: "source"});
+            fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.js`, parser);
         });
 
         LOGGER.log(`Generating language parser creator part: ${this.parserGenFolder}/${Names.parserCreator(this.language)}.ts`);

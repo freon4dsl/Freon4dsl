@@ -20,6 +20,7 @@ public concept DemoEntity  {
 }
 concept DemoAttribute {
     name: string;
+    somePrimAttr: string[];
     reference declaredType: DemoAttributeType;
 }
 

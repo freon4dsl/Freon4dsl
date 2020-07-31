@@ -102,6 +102,7 @@ export function langExpToTypeScript(exp: PiLangExp): string {
         ).join(", ")})`;
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
+        // and the unparser should be adjusted to this
         let isRef = isReferenceProperty(exp);
         result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
@@ -114,9 +115,15 @@ export function langExpToTypeScript(exp: PiLangExp): string {
 
 function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
     let isRef: boolean = false;
-    if (!!exp.referredElement && !!exp.referredElement.referred) { // should be present, otherwise it is an incorrect model
+    // if (!!exp.referredElement && !!exp.referredElement.referred) { // should be present, otherwise it is an incorrect model
+    //     // now see whether it is marked in the .lang file as 'reference'
+    //     const ref = exp.referredElement.referred;
+    //     isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
+    // }
+    // TODO check the change from the above to this code
+    const ref = exp.referredElement?.referred;
+    if (!!ref) { // should be present, otherwise it is an incorrect model
         // now see whether it is marked in the .lang file as 'reference'
-        const ref = exp.referredElement.referred;
         isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
     }
     return isRef;

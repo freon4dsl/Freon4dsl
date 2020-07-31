@@ -151,7 +151,7 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Unparser";
     }
 
-    public static pegjsInput(unit: PiConcept): string {
+    public static pegjs(unit: PiConcept): string {
         return this.startWithUpperCase(unit?.name) + "UnitParser";
     }
 

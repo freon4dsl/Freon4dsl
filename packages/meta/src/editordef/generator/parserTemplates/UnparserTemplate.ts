@@ -10,7 +10,6 @@ import { sortClasses } from "../../../utils/ModelHelpers";
 import {
     PiEditConcept,
     PiEditUnit,
-    PiEditParsedProjectionIndent,
     PiEditProjectionText,
     PiEditSubProjection,
     PiEditProjectionDirection,
@@ -20,20 +19,15 @@ import {
 import { langExpToTypeScript } from "../../../utils";
 
 export class UnparserTemplate {
-    constructor() {
-    }
 
-    generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+    public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);
         const generatedClassName : String = Names.unparser(language);
 
-        language.concepts.filter(elem => elem.implementedPrimProperties().some(p => p.name === "name"));
-
-        // Template starts here 
+        // Template starts here
         return `
         import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
-        import { ${allLangConcepts}, ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${language.concepts.map(concept => `
+        import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         // TODO change import to @project/core
         import { PiLogger } from "../../../../../core/src/util/PiLogging";
@@ -58,6 +52,8 @@ export class UnparserTemplate {
          * It is, amongst others, used to create error messages in the validator.
          */
         export class ${generatedClassName}  {
+            output: string[] = [];      // stores the result, one line per array element
+            currentIndex: number = 0;   // keeps track of the element in 'output' that we are working on
 
             /**
              * Returns a string representation of 'modelelement'.
@@ -66,65 +62,118 @@ export class UnparserTemplate {
              * @param modelelement
              * @param short
              */
-            public unparse(modelelement: ${allLangConcepts}, short?: boolean) : string {
+            public unparse(modelelement: ${allLangConcepts}, startIndent: number, short?: boolean) : string {
+                this.unparseToLines(modelelement, startIndent, short);
+                return \`\$\{this.output.map(line => \`\$\{line\}\`).join("\\n")}\`;
+            }
+ 
+            /**
+             * Returns a string representation of 'modelelement', divided into an array of strings,
+             * each of which contain a single line (without newline).
+             * If 'short' is present and false, then a multi-line result will be given.
+             * Otherwise, the result is always a single-line string.
+             * @param modelelement
+             * @param short
+             */
+            public unparseToLines(modelelement: ${allLangConcepts}, startIndent: number, short?: boolean): string[] {
                 // set default for optional parameter
                 if (short === undefined) short = true;
+        
+                // make sure the global variables are reset
+                this.output = [];
+                this.currentIndex = 0;
+        
+                // begin the unparsing with an indent if asked for
+                let indentString: string = "";
+                for (var _i = 0; _i < startIndent; _i++) {
+                    indentString += " ";
+                }
+                this.output[this.currentIndex] = indentString;
+        
+                // do the actual work
+                this.unparsePrivate(modelelement, short);
+                return this.output;
+            }
+        
+            private unparsePrivate(modelelement: ${allLangConcepts}, short: boolean) {
                 ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${Names.concept(concept)}) {
-                    return this.unparse${Names.concept(concept)}(modelelement, short);
+                    this.unparse${Names.concept(concept)}(modelelement, short);
                 }`).join("")}
-                return "";
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
                
             /**
-             * Returns a string representation of 'list', using 'sepText' , and 'sepType' to include either a separator string 
+             * Adds a string representation of 'list' to the 'output', using 'sepText' , and 'sepType' to include either a separator string
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
-             * If 'short' is false, then a multi-line result will be given. Otherwise, the result is always a single-line string.
+             * If 'short' is false, then a multi-line result will be given. Otherwise, only one single-line string is added.
              * @param list
              * @param sepText
              * @param sepType
              * @param vertical
+             * @param indent
              * @param short
              */         
-            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, short: boolean) : string {
-                let result: string = "";
+            private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach(listElem => {
-                    result = result.concat(this.unparse(listElem, short));
-                    if (sepType === SeparatorType.Separator) {
-                        if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
-                    }
-                    if (sepType === SeparatorType.Terminator) {
-                        result = result.concat(sepText);
-                    }
-                    if (vertical) result = result.concat("\\n");
+                    const isLastInList: boolean  = list.indexOf(listElem) == list.length - 1;
+                    this.unparsePrivate(listElem, short);
+                    this.doSeperatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
-                return result;
             }
 
             /**
-             * Returns a string representation of a list of references, where every reference
-             * is replaced by a single-line representation of its referred element. The use of params 
+             * Adds a string representation of a list of references, where every reference
+             * is replaced by the name of its referred element. The use of params
              * 'sepText' and 'SepType' are equals to those in the private method unparseList.
              * @param list
              * @param sepText
              * @param sepType
              * @param vertical
+             * @param indent
+             * @param short
              */
-            private showReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean) : string {
-                let result: string = "";
+            private unparseReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach(listElem => {
-                    result = result.concat(this.unparse(listElem?.referred as ${allLangConcepts}, true));
-                    if (sepType === SeparatorType.Separator) {
-                        if (list.indexOf(listElem) !== list.length-1) result = result.concat(sepText);
-                    }
-                    if (sepType === SeparatorType.Terminator) {
-                        result = result.concat(sepText);
-                    }
-                    if (vertical) result = result.concat("\\\\n");
+                    const isLastInList: boolean  = list.indexOf(listElem) == list.length - 1;
+                    this.output[this.currentIndex] += listElem.name;
+                    this.doSeperatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
-                return result;
+            }
+            
+            private doSeperatorOrTerminatorAndNewline(sepType: SeparatorType, isLastInList: boolean, sepText: string, vertical: boolean, short: boolean, indent: number) {
+                switch (sepType) {
+                    case SeparatorType.Separator: {
+                        if (!isLastInList) {
+                            this.output[this.currentIndex] += sepText;
+                        }
+                        break;
+                    }
+                    case SeparatorType.Terminator: {
+                        this.output[this.currentIndex] += sepText;
+                        break;
+                    }
+                }
+                if (vertical && !isLastInList) {
+                    if (!short) {
+                        this.newlineAndIndentation(indent);
+                    } else { // stop after 1 line
+                        this.output[this.currentIndex] += \` ...\`;
+                        return;
+                    }
+                }
+            }
+        
+            private newlineAndIndentation(indent: number) {
+                // make a new entry in the 'output' array
+                // and add the indentation
+                this.currentIndex += 1;
+                let indentation: string = "";
+                for (var _i = 0; _i < indent; _i++) {
+                    indentation += " ";
+                }
+                this.output[this.currentIndex] = indentation;
             }
         } `;
     }
@@ -142,88 +191,106 @@ export class UnparserTemplate {
             if (lines.length > 1) {
                 return `
                 ${comment}
-                private unparse${name}(modelelement: ${name}, short: boolean) : string {
-                    if (short) {
-                        return \`${this.makeLine(lines[0])}\`
-                    } else {
-                        return \`${lines.map(line => `${this.makeLine(line)}`).join("\\n")}\`
+                private unparse${name}(modelelement: ${name}, short: boolean) {
+                    const blockIndent = this.output[this.currentIndex].length;
+                    // do the first line
+                    ${this.makeLine(lines[0])}
+                    if (!short) { // do the rest of the lines as well
+                        ${this.makeRemainingLines(lines)}
                     }
                 }`;
             } else {
                 return `
                 ${comment}
-                private unparse${name}(modelelement: ${name}, short: boolean) : string {
-                    return \`${this.makeLine(lines[0])}\`
+                private unparse${name}(modelelement: ${name}, short: boolean) {
+                    ${this.makeLine(lines[0])}
                 }`;
             }
         } else {
-            if (myConcept instanceof  PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
+            // TODO check in which cases there are no lines in the edit def
+            // TODO unparsing of expressions
+            if (myConcept instanceof PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
                 return `${comment}
-                    private unparse${name}(modelelement: ${name}, short: boolean) : string {
-                    return \`\$\{this.unparse(modelelement.left, short)\} ${conceptDef.symbol} \$\{this.unparse(modelelement.right, short)\}\`;
+                    private unparse${name}(modelelement: ${name}, short: boolean) {
+                        this.output[this.currentIndex] += "(";
+                        this.unparsePrivate(modelelement.left, indent, short);
+                        this.output[this.currentIndex] += ${conceptDef.symbol};
+                        this.unparsePrivate(modelelement.right, indent, short);
+                        this.output[this.currentIndex] += ")";
                 }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
                 return `${comment}
-                    private unparse${name}(modelelement: ${name}, short: boolean) : string {
-                    return \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
+                    private unparse${name}(modelelement: ${name}, short: boolean) {
+                        this.output[this.currentIndex] += \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
             return '';
         }
     }
 
-    private makeLine (line : PiEditProjectionLine) : string {
-        // the result should be text or should end in a quote
-        let result: string = "";
-        // TODO indents are not correct because tabs are not yet recognised by the .edit parser
-        // TODO indents should be aware of the indent of surrounding elements
-        for (var _i = 0; _i < line.indent; _i++) {
-            result += " ";
-        }
-        line.items.forEach((item, index) => {
-            if (item instanceof PiEditProjectionText) {
-                // TODO escape all quotes in the text string
-                result += `${item.text}`;
+    private makeRemainingLines(lines: PiEditProjectionLine[]): string {
+        let first = true;
+        let result: string = '';
+        lines.forEach(line => {
+            if (first) { // skip the first line, this is already taken care of in 'makeConceptMethod'
+                first = false;
+            } else {
+                result += `this.newlineAndIndentation(blockIndent + ${line.indent});
+                           ${this.makeLine(line)}`;
             }
-            if (item instanceof PiEditSubProjection) {
-                let myElem = item.expression.findRefOfLastAppliedFeature();
-                if (myElem instanceof PiPrimitiveProperty) {
-                    result = this.makeItemWithPrimitiveType(myElem, result, item);
-                } else {
-                    result = this.makeItemWithConceptType(myElem, item, result);
-                }
-            }
-            // if (item instanceof PiEditParsedProjectionIndent) {
-            //     // no need to implement anything, only used in parsing
-            // }
-            if (index < line.items.length - 1) result += ' '; // add a space between each item on a line
         });
         return result;
     }
 
-    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, result: string, item: PiEditSubProjection) {
-        // the expression is of primitive type
-        if (myElem.isList) {
-            result += `\$\{${langExpToTypeScript(item.expression)}.map(listElem => {
-                                    ${langExpToTypeScript(item.expression)}
-                                })\}`;
-        } else {
-            if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-                result += `\$\{${langExpToTypeScript(item.expression)} ? \``;
+    private makeLine (line : PiEditProjectionLine) : string {
+        let result: string = ``;
+        // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
+
+        line.items.forEach((item) => {
+            if (item instanceof PiEditProjectionText) {
+                // TODO escape all quotes in the text string
+                result += `this.output[this.currentIndex] += \`${item.text.trimRight()} \`;\n`;
+            } else if (item instanceof PiEditSubProjection) {
+                let myElem = item.expression.findRefOfLastAppliedFeature();
+                if (myElem instanceof PiPrimitiveProperty) {
+                    result += this.makeItemWithPrimitiveType(myElem, item);
+                } else {
+                    result += this.makeItemWithConceptType(myElem, item, line.indent);
+                }
             }
-            result += `\$\{${langExpToTypeScript(item.expression)}\}`;
-            if (myElem.isOptional) { // end the if-statement
-                result += `\` : \`none\` \}`;
-            }
-        }
+        });
         return result;
     }
 
-    private makeItemWithConceptType(myElem: PiProperty, item: PiEditSubProjection, result: string) {
+    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditSubProjection): string {
+        // the expression is of primitive type
+        let result: string = ``;
+        const elemStr = langExpToTypeScript(item.expression);
+        if (myElem.isList) {
+            console.log ("Primitive list found");
+            // TODO change this into a call to a convenience method unparsePrimitiveList,
+            // similar to unparselist and unparseReferenceList
+            result += `${elemStr}.forEach(listElem => {
+                                    this.output[this.currentIndex] += listElem;
+                                })`;
+        } else {
+            let myCall: string = `this.output[this.currentIndex] += \`\$\{${elemStr}\} \``;
+            if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
+                result += `if (!!${elemStr}}) { ${myCall} }`;
+            } else {
+                result += myCall;
+            }
+        }
+        return result + ";\n";
+    }
+
+    private makeItemWithConceptType(myElem: PiProperty, item: PiEditSubProjection, indent: number) {
         // the expression has a concept as type, thus we need to call its unparse method
+        let result: string = "";
         let type = myElem.type.referred;
         if (!!type) {
+            var myTypeScript: string = langExpToTypeScript(item.expression);
             if (myElem.isList) {
                 let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
                 let joinType: string = "";
@@ -233,26 +300,35 @@ export class UnparserTemplate {
                 if (item.listJoin.joinType === ListJoinType.Terminator) {
                     joinType = "SeparatorType.Terminator";
                 }
+
                 if (myElem.isPart) {
-                    result += `\$\{this.unparseList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, short)\}`;
+                    result += `this.unparseList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentIndex].length, short) `;
                 } else {
-                    result += `\$\{this.showReferenceList(${langExpToTypeScript(item.expression)}, "${item.listJoin.joinText}", ${joinType}, ${vertical})\}`;
+                    result += `this.unparseReferenceList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentIndex].length, short) `;
                 }
             } else {
-                if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-                    result += `\$\{${langExpToTypeScript(item.expression)} ? \``;
-                }
+                let myCall: string = "";
                 if (myElem.isPart) {
-                    result += `\$\{this.unparse(${langExpToTypeScript(item.expression)}, short)\}`;
+                    myCall += `this.unparsePrivate(${myTypeScript}, short) `;
                 } else {
-                    result += `\$\{${langExpToTypeScript(item.expression)}?.name\}`;
+                    // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
+                    // remove only the last ".referred"
+                    if (myTypeScript.endsWith("?.referred") ) {
+                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
+                    } else if (myTypeScript.endsWith(".referred") ) {
+                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
+                    }
+
+                    myCall += `this.output[this.currentIndex] += \`\$\{${myTypeScript}.name\} \``;
                 }
-                if (myElem.isOptional) { // end the if-statement
-                    result += `\` : \`none\` \}`;
+                if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
+                    result += `if (!!${myTypeScript}}) { ${myCall} }`;
+                } else {
+                    result = myCall;
                 }
             }
         }
-        return result;
+        return result + ";\n";
     }
 }
 

@@ -1,13 +1,14 @@
 editor StartEditor for language Demo
 
 DemoAttribute {
-    @projection attribuut [ ${self.name} : ${self.declaredType} ]
+    @projection attribuut [ ${self.name} : ${self.declaredType} = ${self.somePrimAttr}]
 }
 
 DemoEntity  {
-@projection [${self.name} base ${self.baseEntity} start
-    ${self.attributes @vertical @separator [, ]}
-end
+@projection [${self.name} base ${self.baseEntity @vertical @separator [, ]}
+    start
+        ${self.attributes @vertical @separator [, ]}
+    end
 ]
 }
 
