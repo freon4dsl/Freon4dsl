@@ -43,6 +43,14 @@ export class ParserGenerator {
         var unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(this.language, editDef, relativePath), "Unparser Class", generationStatus);
         fs.writeFileSync(`${this.unparserGenFolder}/${Names.unparser(this.language)}.ts`, unparserFile);
 
+        LOGGER.log(`Generating language parser creator part: ${this.parserGenFolder}/${Names.parserCreator(this.language)}.ts`);
+        var creatorFile = Helpers.pretty(creatorTemplate.generateCreatorPart(this.language, editDef, relativePath), "Creator Functions", generationStatus);
+        fs.writeFileSync(`${this.parserGenFolder}/${Names.parserCreator(this.language)}.ts`, creatorFile);
+
+        LOGGER.log(`Generating language parser: ${this.parserGenFolder}/${Names.parser(this.language)}.ts`);
+        var parserFile = Helpers.pretty(parserTemplate.generateParser(this.language, editDef, relativePath), "Parser Class", generationStatus);
+        fs.writeFileSync(`${this.parserGenFolder}/${Names.parser(this.language)}.ts`, parserFile);
+
         this.language.units.forEach(unit => {
             LOGGER.log(`Generating language parser pegjs input: ${this.parserGenFolder}/${Names.pegjs(unit)}.pegjs`);
             var pegjsFile = pegjsTemplate.generatePegjsForUnit(this.language, unit, editDef);
@@ -52,14 +60,6 @@ export class ParserGenerator {
             var parser = peg.generate(pegjsFile, {output: "source"});
             fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.js`, parser);
         });
-
-        LOGGER.log(`Generating language parser creator part: ${this.parserGenFolder}/${Names.parserCreator(this.language)}.ts`);
-        var creatorFile = Helpers.pretty(creatorTemplate.generateCreatorPart(this.language, editDef, relativePath), "Creator Functions", generationStatus);
-        fs.writeFileSync(`${this.parserGenFolder}/${Names.parserCreator(this.language)}.ts`, creatorFile);
-
-        LOGGER.log(`Generating language parser: ${this.parserGenFolder}/${Names.parser(this.language)}.ts`);
-        var parserFile = Helpers.pretty(parserTemplate.generateParser(this.language, editDef, relativePath), "Parser Class", generationStatus);
-        fs.writeFileSync(`${this.parserGenFolder}/${Names.parser(this.language)}.ts`, parserFile);
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(this, `Generated parser and unparser for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);

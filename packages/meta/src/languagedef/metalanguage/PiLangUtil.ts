@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiInterface } from "./index";
+import { PiClassifier, PiConcept, PiInterface, PiPrimitiveProperty } from "./index";
 
 // TODO add all find methods from PiLanguage.ts to this util module
 
@@ -106,5 +106,9 @@ export class PiLangUtil {
             result.push(self);
         }
         return result;
+    }
+
+    public static findNameProp(con: PiConcept): PiPrimitiveProperty {
+        return con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
     }
 }

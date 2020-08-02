@@ -62,7 +62,7 @@ export class UnparserTemplate {
              * @param modelelement
              * @param short
              */
-            public unparse(modelelement: ${allLangConcepts}, startIndent: number, short?: boolean) : string {
+            public unparse(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean) : string {
                 this.unparseToLines(modelelement, startIndent, short);
                 return \`\$\{this.output.map(line => \`\$\{line\}\`).join("\\n")}\`;
             }
@@ -75,8 +75,9 @@ export class UnparserTemplate {
              * @param modelelement
              * @param short
              */
-            public unparseToLines(modelelement: ${allLangConcepts}, startIndent: number, short?: boolean): string[] {
-                // set default for optional parameter
+            public unparseToLines(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean): string[] {
+                // set default for optional parameters
+                if (startIndent === undefined) startIndent = 0;
                 if (short === undefined) short = true;
         
                 // make sure the global variables are reset

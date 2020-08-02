@@ -43,6 +43,6 @@ describe("Probeer de parser", () => {
         // }
         //
         const unparser = new DemoUnparser();
-        console.log(unparser.unparse(model, 0,false));
+        console.log(unparser.unparse(model, 0, false));
     });
 });

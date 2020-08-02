@@ -28,7 +28,7 @@ describe("Testing Unparser", () => {
             let result: string = "";
             let left = new DemoNumberLiteralExpression();
             left.value = "3";
-            result = unparser.unparse(left);
+            result = unparser.unparse(left, 0);
             expect(result).toBe("3");
         });
 
@@ -37,7 +37,7 @@ describe("Testing Unparser", () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
-            result = unparser.unparse(mult);
+            result = unparser.unparse(mult, 0);
             expect(result).toBe("3 * 10");
         });
 
@@ -46,7 +46,7 @@ describe("Testing Unparser", () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
-            result = unparser.unparse(mult);
+            result = unparser.unparse(mult, 0);
             expect(result).toBe("3 * ' temp '");
         });
 
@@ -58,7 +58,7 @@ describe("Testing Unparser", () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = div;
             mult.right = makeLiteralExp("temp");
-            result = unparser.unparse(mult);
+            result = unparser.unparse(mult, 0);
             expect(result).toBe("3 / 4 * ' temp '");
         });
 
@@ -77,7 +77,7 @@ describe("Testing Unparser", () => {
 
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
-            result = unparser.unparse(multiplyExpression, true);
+            result = unparser.unparse(multiplyExpression, 0, true);
             expect(result).toBe("1 + 2 * DemoVariableRef");
         });
 
@@ -90,7 +90,7 @@ describe("Testing Unparser", () => {
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
             // determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
-            result = unparser.unparse(determine);
+            result = unparser.unparse(determine, 0);
             expect(result).toBe("DemoFunction determine");
             // expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
         });
@@ -116,15 +116,15 @@ describe("Testing Unparser", () => {
             // Resultvar.declaredType = DemoAttributeType.Boolean;
             // Person { unitName, age, first(Resultvar) = 5 + 24 }
 
-            result = unparser.unparse(personEnt, true);
+            result = unparser.unparse(personEnt, 0, true);
             expect(result).toBe("DemoEntity Person");
             // expect(result).toBe("DemoEntity Person{ age : Boolean, unitName : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
 
-        test.skip("complete example model with simple attribute types", () => {
+        test("complete example model with simple attribute types", () => {
             let result: string = "";
             const model = new DemoModelCreator().createModelWithMultipleUnits();
-            result = unparser.unparse(model, false);
+            result = unparser.unparse(model, 0, false);
             let path: string = "./unparsedDemoModel.txt";
             if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, result);

@@ -1,14 +1,21 @@
-import { PiConcept, PiLanguage, PiPrimitiveProperty, PiProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import {
+    PiClassifier,
+    PiConcept,
+    PiInterface,
+    PiLanguage, PiLimitedConcept,
+    PiPrimitiveProperty,
+    PiProperty
+} from "../../../languagedef/metalanguage/PiLanguage";
 import { ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
-import { Names } from "../../../utils";
+import { findAllImplementorsAndSubs, findImplementors, Helpers, Names } from "../../../utils";
 
 export class PegjsTemplate {
-    referredConcepts: PiConcept[] = [];
+    referredClassifiers: PiClassifier[] = [];
     textForListConcepts: string[] = [];
     listNumber: number = 0;
 
     generatePegjsForUnit(language: PiLanguage, langUnit: PiConcept, editDef: PiEditUnit): string {
-        this.referredConcepts = [];
+        this.referredClassifiers = [];
         this.textForListConcepts = [];
         this.listNumber= 0;
         const creatorName = Names.parserCreator(language);
@@ -23,14 +30,15 @@ export class PegjsTemplate {
 // This file contains the input to the PEG.JS parser generator (see https://pegjs.org). The parser generator 
 // is automatically called by the ProjectIt Language Generator and another file with the same name, but with
 // extension ".js" is created. The ".js" file contains the actual parser.
-// The file with extension".pegjs" (this file) is stored in order for the parsing rules to be examined.
+// The file with extension ".pegjs" (this file) is stored in order for the parsing rules to be examined.
 
 {
     let creator = require("./${creatorName}");
 }
         
 ${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("")}
-${this.referredConcepts.map(concept => `${this.makeReferenceRule(concept)}`).join("")}
+${language.interfaces.map(intf => `${this.makeInterfaceRule(intf)}`).join("")}
+${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}`).join("")}
 ${this.textForListConcepts.map(listRule => `${listRule}`).join("")}
 
 ws "whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )*
@@ -102,8 +110,9 @@ HEXDIG = [0-9a-f]
     }
 
     private makeConceptRule(conceptDef: PiEditConcept): string {
-        const concept = conceptDef.concept.referred;
-        if (concept.isModel) return ``;
+        // TODO extend this for interfaces, AFTER the editDefinition is adjusted
+        const piClassifier: PiConcept = conceptDef.concept.referred;
+        if (piClassifier.isModel) return ``;
 
         const propsToSet: PiProperty[] = [];
 
@@ -114,7 +123,7 @@ HEXDIG = [0-9a-f]
         });
 
         // TODO escape all quotes in a text string
-        return `${concept.name} = ${conceptDef.projection.lines.map(l => 
+        return `${Names.classifier(piClassifier)} = ${conceptDef.projection.lines.map(l => 
             `${l.items.map(item => 
                 `${(item instanceof PiEditProjectionText)? 
                     `\"${item.text.trim()}\" ws ` 
@@ -124,7 +133,7 @@ HEXDIG = [0-9a-f]
                         : 
                         `` }` 
             }`).join("")}`
-        ).join("\n\t")}\n\t{ return creator.create${concept.name}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n\n`;
+        ).join("\n\t")}\n\t{ return creator.create${piClassifier.name}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n\n`;
     }
 
     private makeSubProjectionRule(item: PiEditSubProjection): string {
@@ -148,8 +157,8 @@ HEXDIG = [0-9a-f]
             } else {
                 if (!myElem.isPart) {
                     listRuleName += "Reference";
-                    if (!this.referredConcepts.includes(myElem.type.referred)) {
-                        this.referredConcepts.push(myElem.type.referred);
+                    if (!this.referredClassifiers.includes(myElem.type.referred)) {
+                        this.referredClassifiers.push(myElem.type.referred);
                     }
                 }
                 return `${myElem.name}:(${listRuleName} ws "${item.listJoin?.joinText}" ws)* `;
@@ -173,8 +182,8 @@ HEXDIG = [0-9a-f]
                 if (myElem.isPart) {
                     return `${myElem.name}:${typeName}`;
                 } else { // the property is a reference
-                    if (!this.referredConcepts.includes(myElem.type.referred)) {
-                        this.referredConcepts.push(myElem.type.referred);
+                    if (!this.referredClassifiers.includes(myElem.type.referred)) {
+                        this.referredClassifiers.push(myElem.type.referred);
                     }
                     return `${myElem.name}:${typeName}Reference ws `;
                 }
@@ -182,9 +191,9 @@ HEXDIG = [0-9a-f]
         }
     }
 
-    private makeReferenceRule(concept: PiConcept): string {
-        return `${concept.name}Reference = name:variable
-    { return creator.create${concept.name}Reference({name: name}); }\n\n`;
+    private makeReferenceRule(piClassifier: PiClassifier): string {
+        return `${piClassifier.name}Reference = name:variable
+    { return creator.create${piClassifier.name}Reference({name: name}); }\n\n`;
     }
 
     private makeRuleForList(item: PiEditSubProjection, myElem: PiProperty, listRuleName: string) {
@@ -197,8 +206,8 @@ HEXDIG = [0-9a-f]
             typeName = myElem.type.referred.name;
             if (!myElem.isPart) {
                 typeName += "Reference";
-                if (!this.referredConcepts.includes(myElem.type.referred)) {
-                    this.referredConcepts.push(myElem.type.referred);
+                if (!this.referredClassifiers.includes(myElem.type.referred)) {
+                    this.referredClassifiers.push(myElem.type.referred);
                 }
             }
         }
@@ -234,12 +243,18 @@ HEXDIG = [0-9a-f]
         unitConcepts.forEach(con => {
             result.push(...conceptEditors.filter(editor => editor.concept.referred == con));
         });
-        // conceptEditors.forEach(editor => {
-        //     if (unitConcepts.includes(editor.concept.referred)) {
-        //         result.push(editor);
-        //     }
-        // });
         return result;
+    }
+
+    private makeInterfaceRule(intf: PiInterface): string {
+        // for interfaces we create a parse rule that is a choice between all classifiers that either implement or extend the interface
+        // TODO should we include a reference to a limited concept in the parse rule for an interface?
+        // because, limited concept can only be used as reference, these are excluded for this choice
+        // we also need to filter out the interface itself
+        const implementors = findAllImplementorsAndSubs(intf).filter(piCLassifier => (piCLassifier !== intf) && !(piCLassifier instanceof PiLimitedConcept));
+
+        return `${intf.name} = 
+     ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n\n`;
     }
 }
 
