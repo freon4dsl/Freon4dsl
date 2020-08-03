@@ -9,6 +9,8 @@ import {
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
+import { LangUtil } from "../../../dist/meta/src/languagedef/metalanguage/LangUtil";
+import { PiLangUtil } from "./PiLangUtil";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
 const reservedWords = ["model", "modelunit", "abstract", "limited", "interface", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
@@ -68,7 +70,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             let foundCircularity = this.checkCircularInheritance(circularNames, con);
             // check that all properties have unique names
             if (!foundCircularity) {
-                this.checkPropertyUniqueNames(con);
+                this.checkPropertyUniqueNames(con, true);
                 // check that modelunits have a name property, and .
                 // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
                 if ( con.isUnit ) {
@@ -90,7 +92,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             let circularNames: string[] = [];
             let foundCircularity = this.checkCircularInheritance(circularNames, intf);
             // check that all properties have unique names
-            if (!foundCircularity) this.checkPropertyUniqueNames(intf);
+            if (!foundCircularity) this.checkPropertyUniqueNames(intf, false);
         });
     }
 
@@ -157,16 +159,26 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         }
     }
 
-    private checkPropertyUniqueNames(con: PiClassifier) {
+    private checkPropertyUniqueNames(con: PiClassifier, strict: boolean) {
         let propnames: string[] = [];
-        con.allProperties().forEach(prop => {
+        let propsDone: PiProperty[] = [];
+        con.allProperties().forEach((prop, index )=> {
             // TODO allProperties() filters out names from implemented interfaces, but there should be a test that
             // this filtering is ok, i.e. the type of both properties should be the same
             if (propnames.includes(prop.name)) {
-                this.simpleCheck(false,
-                    `Property with name '${prop.name}' already exists in ${con.name} [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`);
+                if (strict) {
+                    this.simpleCheck(false,
+                        `Property with name '${prop.name}' already exists in ${con.name} [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}].`);
+                } else {
+                    // in non-strict mode properties with the same name are allowed, but only if they have the same type
+                    // find the first property with this name
+                    let otherProp = propsDone.find(p => p.name === prop.name);
+                    this.simpleCheck(PiLangUtil.compareTypes(prop, otherProp),
+                        `Property with name '${prop.name}' but different type already exists in ${con.name} [line: ${prop.location?.start.line}, column: ${prop.location?.start.column}] and [line: ${otherProp.location?.start.line}, column: ${otherProp.location?.start.column}].`);
+                }
             } else {
                 propnames.push(prop.name);
+                propsDone.push(prop);
             }
         });
     }
