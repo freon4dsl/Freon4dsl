@@ -229,12 +229,16 @@ export class PiConcept extends PiClassifier {
         let result: PiPrimitiveProperty[] = this.primProperties;
         for (let intf of this.interfaces) {
             for (let intfProp of intf.referred.allPrimProperties()) {
-                let includes = false;
+                let allreadyIncluded = false;
                 // if the prop from the interface is present in this concept, do not include
-                includes = this.primProperties.some(p => p.name === intfProp.name );
-                // if the prop from the interface is present in the base of this concept, do not include
-                if (!includes && !!this.base && !!this.base.referred) includes = this.base.referred.allPrimProperties().some(p => p.name === intfProp.name );
-                if (!includes) {
+                allreadyIncluded = this.primProperties.some(p => p.name === intfProp.name );
+                // if the prop from the interface is present in the base of this concept (resursive), do not include
+                if (!allreadyIncluded && !!this.base && !!this.base.referred) allreadyIncluded = this.base.referred.allPrimProperties().some(p => p.name === intfProp.name );
+                // if the prop from the interface is present in another implemented interface, do not include
+                if (!allreadyIncluded) {
+                    allreadyIncluded = result.some(p => p.name === intfProp.name );
+                }
+                if (!allreadyIncluded) {
                     result = result.concat(intfProp);
                 }
             }
@@ -246,12 +250,16 @@ export class PiConcept extends PiClassifier {
         let result: PiConceptProperty[] = this.parts();
         for (let intf of this.interfaces) {
             for (let intfProp of intf.referred.allParts()) {
-                let includes = false;
+                let allreadyIncluded = false;
                 // if the prop from the interface is present in this concept, do not include
-                includes = this.parts().some(p => p.name === intfProp.name);
+                allreadyIncluded = this.parts().some(p => p.name === intfProp.name);
                 // if the prop from the interface is present in the base of this concept, do not include
-                if (!includes && !!this.base && !!this.base.referred) includes = this.base.referred.allParts().some(p => p.name === intfProp.name);
-                if (!includes) {
+                if (!allreadyIncluded && !!this.base && !!this.base.referred) allreadyIncluded = this.base.referred.allParts().some(p => p.name === intfProp.name);
+                // if the prop from the interface is present in another implemented interface, do not include
+                if (!allreadyIncluded) {
+                    allreadyIncluded = result.some(p => p.name === intfProp.name );
+                }
+                if (!allreadyIncluded) {
                     result = result.concat(intfProp);
                 }
             }
@@ -263,12 +271,16 @@ export class PiConcept extends PiClassifier {
         let result: PiConceptProperty[] = this.references();
         for (let intf of this.interfaces) {
             for (let intfProp of intf.referred.allReferences()) {
-                let includes = false;
+                let allreadyIncluded = false;
                 // if the prop from the interface is present in this concept, do not include
-                includes = this.references().some(p => p.name === intfProp.name);
+                allreadyIncluded = this.references().some(p => p.name === intfProp.name);
                 // if the prop from the interface is present in the base of this concept, do not include
-                if (!includes && !!this.base && !!this.base.referred) includes = this.base.referred.allReferences().some(p => p.name === intfProp.name);
-                if (!includes) {
+                if (!allreadyIncluded && !!this.base && !!this.base.referred) allreadyIncluded = this.base.referred.allReferences().some(p => p.name === intfProp.name);
+                // if the prop from the interface is present in another implemented interface, do not include
+                if (!allreadyIncluded) {
+                    allreadyIncluded = result.some(p => p.name === intfProp.name );
+                }
+                if (!allreadyIncluded) {
                     result = result.concat(intfProp);
                 }
             }

@@ -36,7 +36,8 @@ public concept DemoEntity base Nothing implements Type {
     functions: DemoFunction[];
     reference baseEntity: DemoEntity;
 }
-limited DemoAttributeType implements Type {
+
+limited DemoAttributeType implements BaseType {
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}
@@ -50,7 +51,7 @@ expression DemoAbsExpression base DemoExpression {
 
 public concept DemoFunction {
     public name: string;
-    reference declaredType : Type;
+    reference declaredType : BaseType;
     expression: DemoExpression;
     parameters: DemoVariable[];
 }

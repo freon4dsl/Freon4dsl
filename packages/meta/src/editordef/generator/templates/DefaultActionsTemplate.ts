@@ -200,8 +200,8 @@ export class DefaultActionsTemplate {
         const projection = editorDef.findConceptEditor(c).projection;
         if (!!projection) {
             if (c.name === "DemoEntity") {
-                console.log("DemoEntity cursorLocation: " + projection.cursorLocation());
-                console.log(projection.toString());
+                // console.log("DemoEntity cursorLocation: " + projection.cursorLocation());
+                // console.log(projection.toString());
             }
             return projection.cursorLocation();
         } else {

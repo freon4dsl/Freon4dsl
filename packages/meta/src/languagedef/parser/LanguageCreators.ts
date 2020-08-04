@@ -57,7 +57,7 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     }
     createCommonConceptProps(data, result);
     // if 'name' property is not present, create it.
-    if ( !result.primProperties.some(prop => prop.name === "name") ) {
+    if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
         const nameProperty = new PiPrimitiveProperty();
         nameProperty.name = "name";
         nameProperty.primType = "string";
