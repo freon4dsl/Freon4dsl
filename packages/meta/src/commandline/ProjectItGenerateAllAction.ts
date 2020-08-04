@@ -145,17 +145,19 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         LOGGER.info(this, "Generating editor");
         let editor: PiEditUnit = null;
         try {
+            this.editorGenerator.outputfolder = this.outputFolder;
+            this.editorGenerator.language = this.language;
+            this.parserGenerator.outputfolder = this.outputFolder;
+            this.parserGenerator.language = this.language;
+
             if (this.editFile.length > 0) {
                 editor = new PiEditParser(this.language).parse(this.editFile);
             } else {
                 LOGGER.log("Generating default editor");
                 editor = this.editorGenerator.createDefaultEditorDefinition();
             }
-            this.editorGenerator.outputfolder = this.outputFolder;
-            this.editorGenerator.language = this.language;
+
             this.editorGenerator.generate(editor);
-            this.parserGenerator.outputfolder = this.outputFolder;
-            this.parserGenerator.language = this.language;
             this.parserGenerator.generate(editor);
         } catch (e) {
             LOGGER.error(this, "Stopping editor generation because of errors: " + e.message + "\n" + e.stack);

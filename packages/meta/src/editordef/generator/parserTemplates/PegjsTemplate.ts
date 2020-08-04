@@ -2,12 +2,13 @@ import {
     PiClassifier,
     PiConcept,
     PiInterface,
-    PiLanguage, PiLimitedConcept,
+    PiLanguage,
+    PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty
 } from "../../../languagedef/metalanguage/PiLanguage";
-import { ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
-import { findAllImplementorsAndSubs, findImplementors, Helpers, Names } from "../../../utils";
+import { ListJoin, ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
+import { findAllImplementorsAndSubs, Names } from "../../../utils";
 
 export class PegjsTemplate {
     referredClassifiers: PiClassifier[] = [];
@@ -36,10 +37,10 @@ export class PegjsTemplate {
     let creator = require("./${creatorName}");
 }
         
-${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("")}
-${language.interfaces.map(intf => `${this.makeInterfaceRule(intf)}`).join("")}
-${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}`).join("")}
-${this.textForListConcepts.map(listRule => `${listRule}`).join("")}
+${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}\n`).join("")}
+${language.interfaces.map(intf => `${this.makeInterfaceRule(intf)}\n`).join("")}
+${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}\n`).join("")}
+${this.textForListConcepts.map(listRule => `${listRule}\n`).join("")}
 
 ws "whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )*
 rws "required whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )+
@@ -133,7 +134,7 @@ HEXDIG = [0-9a-f]
                         : 
                         `` }` 
             }`).join("")}`
-        ).join("\n\t")}\n\t{ return creator.create${piClassifier.name}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n\n`;
+        ).join("\n\t")}\n\t{ return creator.create${piClassifier.name}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
     }
 
     private makeSubProjectionRule(item: PiEditSubProjection): string {
@@ -143,6 +144,11 @@ HEXDIG = [0-9a-f]
             let listRuleName: string;
             if (myElem instanceof PiPrimitiveProperty) {
                 listRuleName = Names.startWithUpperCase(myElem.primType) + "List" + this.listNumber;
+                // TODO remove this hack when the edit definition includes lists of primitives
+                item.listJoin = new ListJoin();
+                item.listJoin.joinText = ", ";
+                item.listJoin.joinType = ListJoinType.Separator;
+                // end hack
             } else {
                 if (item.listJoin?.joinType === ListJoinType.Separator) {
                     listRuleName = Names.startWithUpperCase(myElem.type.referred.name) + "List" + this.listNumber;
@@ -193,7 +199,7 @@ HEXDIG = [0-9a-f]
 
     private makeReferenceRule(piClassifier: PiClassifier): string {
         return `${piClassifier.name}Reference = name:variable
-    { return creator.create${piClassifier.name}Reference({name: name}); }\n\n`;
+    { return creator.create${piClassifier.name}Reference({name: name}); }\n`;
     }
 
     private makeRuleForList(item: PiEditSubProjection, myElem: PiProperty, listRuleName: string) {
@@ -211,10 +217,10 @@ HEXDIG = [0-9a-f]
                 }
             }
         }
-        const joinText = item.listJoin?.joinText.trimRight();
+        const joinText = (item.listJoin?.joinText ? item.listJoin?.joinText.trimRight() : "NO_JOINTEXT");
         if (item.listJoin?.joinType === ListJoinType.Separator) {
             this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
-    { return [head].concat(tail); }\n\n`);
+    { return [head].concat(tail); }\n`);
         }
     }
 
@@ -248,13 +254,16 @@ HEXDIG = [0-9a-f]
 
     private makeInterfaceRule(intf: PiInterface): string {
         // for interfaces we create a parse rule that is a choice between all classifiers that either implement or extend the interface
-        // TODO should we include a reference to a limited concept in the parse rule for an interface?
-        // because, limited concept can only be used as reference, these are excluded for this choice
+        // because limited concepts can only be used as reference, these are excluded for this choice
         // we also need to filter out the interface itself
+        // TODO should we include a reference to a limited concept in the parse rule for an interface?
         const implementors = findAllImplementorsAndSubs(intf).filter(piCLassifier => (piCLassifier !== intf) && !(piCLassifier instanceof PiLimitedConcept));
 
-        return `${intf.name} = 
-     ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n\n`;
+        if (implementors.length > 0 ) {
+            return `${Names.interface(intf)} = ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n`;
+        } else {
+            return `${Names.interface(intf)} = "ERROR: there are no concepts that implement this interface"\n`;
+        }
     }
 }
 

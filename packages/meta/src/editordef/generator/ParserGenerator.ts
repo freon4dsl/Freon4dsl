@@ -56,9 +56,13 @@ export class ParserGenerator {
             var pegjsFile = pegjsTemplate.generatePegjsForUnit(this.language, unit, editDef);
             fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.pegjs`, pegjsFile);
 
-            LOGGER.log(`Generating language parser pegjs output: ${this.parserGenFolder}/${Names.pegjs(unit)}.js`);
-            var parser = peg.generate(pegjsFile, {output: "source"});
-            fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.js`, parser);
+            try {
+                LOGGER.log(`Generating language parser pegjs output: ${this.parserGenFolder}/${Names.pegjs(unit)}.js`);
+                var parser = peg.generate(pegjsFile, { output: "source" });
+                fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.js`, parser);
+            } catch (e) {
+                throw new Error(`Error in call to pegjs: file '${Names.pegjs(unit)}' returns '${e.message}'.`);
+            }
         });
 
         if (generationStatus.numberOfErrors > 0) {
