@@ -9,8 +9,8 @@ Attribute {
 Entity {
     @projection [
         Entity ${self.name} base ${self.baseEntity} {
-            ${self.attributes @vertical @separator}
-            ${self.methods @vertical @separator}
+            ${self.attributes @vertical @separator [\n]}
+            ${self.methods @vertical @separator [\n]}
         }
     ]
     @trigger "entity"
