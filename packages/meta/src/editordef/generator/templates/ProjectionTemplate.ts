@@ -32,7 +32,7 @@ export class ProjectionTemplate {
             return editor === undefined || editor.projection === null;
         });
         if (nonBinaryConceptsWithDefaultProjection.length>0){
-            console.error("Projection generator: there are elements without projections "+ nonBinaryConceptsWithDefaultProjection.map(c => c.name));
+            // console.error("Projection generator: there are elements without projections "+ nonBinaryConceptsWithDefaultProjection.map(c => c.name));
         }
         const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
             const editor = editorDef.findConceptEditor(c);

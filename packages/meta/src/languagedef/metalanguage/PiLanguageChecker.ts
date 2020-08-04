@@ -9,7 +9,6 @@ import {
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
-import { LangUtil } from "../../../dist/meta/src/languagedef/metalanguage/LangUtil";
 import { PiLangUtil } from "./PiLangUtil";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
