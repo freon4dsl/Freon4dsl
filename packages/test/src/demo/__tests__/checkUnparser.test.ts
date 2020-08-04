@@ -38,7 +38,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
             result = unparser.unparse(mult, 0);
-            expect(result).toBe("3 * 10");
+            expect(result).toBe("( 3 * 10 )");
         });
 
         test("multiplication 3 * 'temp'", () => {
@@ -47,7 +47,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult, 0);
-            expect(result).toBe("3 * ' temp '");
+            expect(result).toBe("( 3 * ' temp ' )");
         });
 
         test("multiplication (3 / 4) * 'temp'", () => {
@@ -59,7 +59,7 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult, 0);
-            expect(result).toBe("3 / 4 * ' temp '");
+            expect(result).toBe("( ( 3 / 4 ) * ' temp ' )");
         });
 
         test("(1 + 2) * 'Person'", () => {
@@ -78,7 +78,7 @@ describe("Testing Unparser", () => {
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.unparse(multiplyExpression, 0, true);
-            expect(result).toBe("1 + 2 * DemoVariableRef");
+            expect(result).toBe("( ( 1 + 2 ) * DemoVariableRef )");
         });
 
         test('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
@@ -121,7 +121,7 @@ describe("Testing Unparser", () => {
             // expect(result).toBe("DemoEntity Person{ age : Boolean, unitName : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
 
-        test("complete example model with simple attribute types", () => {
+        test.skip("complete example model with simple attribute types", () => {
             let result: string = "";
             const model = new DemoModelCreator().createModelWithMultipleUnits();
             result = unparser.unparse(model, 0, false);

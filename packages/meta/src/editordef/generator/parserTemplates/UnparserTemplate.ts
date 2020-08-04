@@ -64,7 +64,7 @@ export class UnparserTemplate {
              */
             public unparse(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean) : string {
                 this.unparseToLines(modelelement, startIndent, short);
-                return \`\$\{this.output.map(line => \`\$\{line\}\`).join("\\n")}\`;
+                return \`\$\{this.output.map(line => \`\$\{line\}\`).join("\\n").trimRight()}\`;
             }
  
             /**
@@ -100,6 +100,7 @@ export class UnparserTemplate {
                 ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${Names.concept(concept)}) {
                     this.unparse${Names.concept(concept)}(modelelement, short);
+                    return;
                 }`).join("")}
             }
 
@@ -213,11 +214,11 @@ export class UnparserTemplate {
             if (myConcept instanceof PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
                 return `${comment}
                     private unparse${name}(modelelement: ${name}, short: boolean) {
-                        this.output[this.currentIndex] += "(";
+                        this.output[this.currentIndex] += "( ";
                         this.unparsePrivate(modelelement.left, short);
-                        this.output[this.currentIndex] += "${conceptDef.symbol}";
+                        this.output[this.currentIndex] += "${conceptDef.symbol} ";
                         this.unparsePrivate(modelelement.right, short);
-                        this.output[this.currentIndex] += ")";
+                        this.output[this.currentIndex] += ") ";
                 }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
