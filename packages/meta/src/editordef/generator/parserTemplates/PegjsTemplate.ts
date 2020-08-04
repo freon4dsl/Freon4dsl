@@ -123,8 +123,9 @@ HEXDIG = [0-9a-f]
             });
         });
 
+        const myName = Names.classifier(piClassifier);
         // TODO escape all quotes in a text string
-        return `${Names.classifier(piClassifier)} = ${conceptDef.projection.lines.map(l => 
+        return `${myName} = ${conceptDef.projection.lines.map(l => 
             `${l.items.map(item => 
                 `${(item instanceof PiEditProjectionText)? 
                     `\"${item.text.trim()}\" ws ` 
@@ -134,7 +135,7 @@ HEXDIG = [0-9a-f]
                         : 
                         `` }` 
             }`).join("")}`
-        ).join("\n\t")}\n\t{ return creator.create${piClassifier.name}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
+        ).join("\n\t")}\n\t{ return creator.create${myName}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
     }
 
     private makeSubProjectionRule(item: PiEditSubProjection): string {
@@ -184,7 +185,7 @@ HEXDIG = [0-9a-f]
                 }
                 return ``;
             } else {
-                const typeName = myElem.type.referred.name;
+                const typeName = Names.classifier(myElem.type.referred);
                 if (myElem.isPart) {
                     return `${myElem.name}:${typeName}`;
                 } else { // the property is a reference
@@ -198,18 +199,20 @@ HEXDIG = [0-9a-f]
     }
 
     private makeReferenceRule(piClassifier: PiClassifier): string {
-        return `${piClassifier.name}Reference = name:variable
-    { return creator.create${piClassifier.name}Reference({name: name}); }\n`;
+        const myName = Names.classifier(piClassifier);
+        return `${myName}Reference = name:variable
+    { return creator.create${myName}Reference({name: name}); }\n`;
     }
 
     private makeRuleForList(item: PiEditSubProjection, myElem: PiProperty, listRuleName: string) {
         let typeName: string = '';
         if (myElem instanceof PiPrimitiveProperty) {
-            // TODO add the boolean and number type
             // TODO make a difference between variables and stringLiterals
-            typeName = "stringLiteral";
+            if (myElem.primType == "string" ) typeName = "stringLiteral";
+            if (myElem.primType == "number" ) typeName = "numberLiteral";
+            if (myElem.primType == "boolean" ) typeName = "booleanLiteral";
         } else {
-            typeName = myElem.type.referred.name;
+            typeName = Names.classifier(myElem.type.referred);
             if (!myElem.isPart) {
                 typeName += "Reference";
                 if (!this.referredClassifiers.includes(myElem.type.referred)) {
