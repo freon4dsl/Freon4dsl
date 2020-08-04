@@ -1,7 +1,7 @@
 typer Demo for language Demo
 
 // for now: first is considered to be the root of the type hierarchy
-istype {BaseType }
+istype { BaseType }
 // TODO: remove errors when this statement is used: istype { DemoEntity, DemoAttributeType, Type }
 
 anytype {

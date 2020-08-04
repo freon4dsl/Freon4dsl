@@ -1,6 +1,7 @@
-import { PiClassifier, PiConcept, PiInterface, PiPrimitiveProperty } from "./index";
+import { PiClassifier, PiConcept, PiInterface, PiPrimitiveProperty, PiProperty } from "./index";
 
 // TODO add all find methods from PiLanguage.ts to this util module
+// TODO add all methods from util/ModelHelpers.ts to this module
 
 export class PiLangUtil {
     /**
@@ -106,6 +107,24 @@ export class PiLangUtil {
             result.push(self);
         }
         return result;
+    }
+
+    public static compareTypes(firstProp: PiProperty, secondProp: PiProperty): boolean {
+        // find the types
+        let myType: string = "";
+        if (firstProp instanceof PiPrimitiveProperty) {
+            myType = firstProp.primType;
+        } else {
+            myType = firstProp.type?.referred?.name;
+        }
+        let otherType: string = "";
+        if (secondProp instanceof PiPrimitiveProperty) {
+            otherType = secondProp.primType;
+        } else {
+            otherType = secondProp.type?.referred?.name;
+        }
+        if ( myType === otherType ) return true;
+        return false;
     }
 
     public static findNameProp(con: PiConcept): PiPrimitiveProperty {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Selection } from "office-ui-fabric-react/lib/DetailsList";
 import { Icon, Tree, Box } from "@fluentui/react-northstar";
-import { ComponentEventHandler } from "@fluentui/react-northstar/dist/es/types";
+import { ComponentEventHandler } from "@fluentui/react-northstar/";
 import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selection";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";

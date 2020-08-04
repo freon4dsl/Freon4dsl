@@ -76,7 +76,7 @@ export class LanguageTemplate {
             ).join("\n")}
             ${language.interfaces.map(intface =>
             `
-                function describe${intface.name}(): Interface {
+                function describe${Names.interface(intface)}(): Interface {
                     const intface =             {
                         typeName: "${Names.interface(intface)}",
                         isPublic: ${intface.isPublic},

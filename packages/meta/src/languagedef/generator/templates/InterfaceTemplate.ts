@@ -18,12 +18,13 @@ export class InterfaceTemplate {
             new Set (intf.base.map ( elem => Names.interface(elem.referred) )));
         const hasName = intf.primProperties.some(p => p.name === "name");
         const abstract = '';
+        const myName = Names.interface(intf);
 
         const imports = Array.from(
             new Set(
                 intf.properties.map(p => Names.classifier(p.type.referred))
-                    .filter(name => !(name === intf.name))
                     .concat(intf.base.map ( elem => Names.interface(elem.referred) ))
+                    .filter(name => !(name === myName))
                     .filter(r => r !== null)
             )
         );
@@ -35,20 +36,20 @@ export class InterfaceTemplate {
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
             /**
-             * Interface ${Names.interface(intf)} is the implementation of the interface with the same name in the language definition file.
+             * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
              */              
-            export ${abstract} interface ${Names.interface(intf)} 
+            export ${abstract} interface ${myName} 
                 extends ${extendsInterfaces.length>0? `${extendsInterfaces.map(int => `${int}`).join(", ")}`: `${Names.PiElement}`} 
             {               
-                ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("")}
-                ${intf.parts().map(p => this.generatePartProperty(p)).join("")}
-                ${intf.references().map(p => this.generateReferenceProperty(p)).join("")}                         
+                ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("\n")}
+                ${intf.parts().map(p => this.generatePartProperty(p)).join("\n")}
+                ${intf.references().map(p => this.generateReferenceProperty(p)).join("\n")}                         
             }`;
         return result;
     }
 
     generatePrimitiveProperty(property: PiPrimitiveProperty): string {
-        const comment = "// implementation of " + property.name;
+        const comment = "// implementation of " + property.name ;
         return `${property.name}: ${property.primType} ${property.isList ? "[]" : ""}; ${comment}`;
     }
 

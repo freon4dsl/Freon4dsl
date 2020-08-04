@@ -47,6 +47,7 @@ export class PiParser<DEFINITION> {
             this.checker.check(model);
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOGGER.error(this, `${definitionFile}: ${error}`));
+                // TODO maybe we should add the number of errors to this Error
                 throw new Error("checking errors."); // error message
             }
             return model;

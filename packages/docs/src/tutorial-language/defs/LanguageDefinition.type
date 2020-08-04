@@ -1,8 +1,8 @@
 typer Demo for language Demo
 
 // tag::types[]
-// 'Type' is the root of the type hierarchy
-istype { Type, DemoEntity, DemoAttributeType }
+// 'BaseType' is the root of the type hierarchy
+istype { BaseType, Type, DemoEntity, DemoAttributeType }
 // end::types[]
 
 // tag::anytype[]

@@ -28,7 +28,7 @@ concept DemoEntity implements Type {
 }
 // end::concept[]
 // tag::limited[]
-limited DemoAttributeType implements Type {
+limited DemoAttributeType implements BaseType {
     // if the 'name' property was not provided, it would have been generated
     name: string;
     extra: number;
