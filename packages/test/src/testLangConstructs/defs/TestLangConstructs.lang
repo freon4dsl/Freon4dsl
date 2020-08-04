@@ -191,6 +191,6 @@ limited limitedWithBase base limitedConcept1 {
     FOURTH;     // TODO issue 120: maybe we should give a warning that this is the same name as in the base concept
 }
 
-limited limitedWithInheritanceTree base limitedWithBase { TREE1; TREE2; }
+limited limitedWithInheritanceTree base limitedWithBase { TREE1; TREE2; THIRD; }
 
 limited limitedWithInterface implements interfaceWithPrimProps { limIntf1; limIntf2; }

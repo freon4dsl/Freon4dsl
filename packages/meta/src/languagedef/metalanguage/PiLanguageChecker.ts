@@ -123,6 +123,18 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         });
         this.simpleCheck(piLimitedConcept.allParts().length == 0, `A limited concept may not inherit or implement non-primitive parts ${this.location(piLimitedConcept)}.`);
         this.simpleCheck(piLimitedConcept.allReferences().length == 0, `A limited concept may not inherit or implement references ${this.location(piLimitedConcept)}.`);
+
+        // checking the predefined instances => here, because now we know that the definition of the limited concept is complete
+        let names: string[] = [];
+        piLimitedConcept.instances.forEach((inst, index) => {
+            if (names.includes(inst.name)) {
+                this.simpleCheck(false,
+                    `Instance with name '${inst.name}' already exists ${this.location(inst)}.`);
+            } else {
+                names.push(inst.name);
+            }
+            this.checkInstance(inst);
+        });
     }
 
     private checkCircularInheritance(circularNames: string[], con: PiClassifier): boolean {
@@ -291,18 +303,6 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             this.simpleCheck(piLimitedConcept.instances.length > 0,
                 `A non-abstract limited concept must have instances ${this.location(piLimitedConcept)}.`);
         }
-
-        // checking the predefined instances
-        let names: string[] = [];
-        piLimitedConcept.instances.forEach((inst, index) => {
-            if (names.includes(inst.name)) {
-                this.simpleCheck(false,
-                    `Instance with name '${inst.name}' already exists ${this.location(inst)}.`);
-            } else {
-                names.push(inst.name);
-            }
-            this.checkInstance(inst);
-        });
     }
 
     checkInstance(piInstance: PiInstance) {
@@ -314,7 +314,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                 let hasValueForNameProperty: boolean = false;
                 piInstance.props.forEach(p => {
                     this.checkInstanceProperty(p, piInstance.concept.referred);
-                    if (p.name === "name") hasValueForNameProperty = true;
+                    if (p.name === "name" && (p.value.toString().length != 0) ) hasValueForNameProperty = true;
                 });
                 // the following check is not really needed, because this situation is taken care of by the 'createInstance' method in 'LanguageCreators.ts'
                 this.simpleCheck(hasValueForNameProperty,
@@ -334,25 +334,21 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                     let myProp = myInstance.concept.referred.allPrimProperties().find(p => p.name === piPropertyInstance.name);
                     this.nestedCheck({
                         check: !!myProp,
-                        error: `Property '${piPropertyInstance.name}' does not exist on concept ${enclosingConcept.name} `+
-                            `${this.location(piPropertyInstance)}.`,
+                        error: `Property '${piPropertyInstance.name}' does not exist on concept ${enclosingConcept.name} ${this.location(piPropertyInstance)}.`,
                         whenOk: () => {
                             this.nestedCheck({
                                 check: myProp instanceof PiPrimitiveProperty,
-                                error: `Predefined property '${piPropertyInstance.name}' should have a primitive type `+
-                                    `${this.location(piPropertyInstance)}.`,
+                                error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${this.location(piPropertyInstance)}.`,
                                 whenOk: () => {
                                     piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                                     if (!myProp.isList) {
                                         this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myProp.primType),
-                                            `Type of '${piPropertyInstance.value}' does not equal type of property '${piPropertyInstance.name}' ` +
-                                            `${this.location(piPropertyInstance)}.`);
+                                            `Type of '${piPropertyInstance.value}' does not equal type of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
                                     } else {
                                         if (!!piPropertyInstance.valueList) {
                                             piPropertyInstance.valueList.forEach(value => {
                                                 this.simpleCheck(this.checkValueToType(value, myProp.primType),
-                                                    `Type of '${value}' does not equal type of property '${piPropertyInstance.name}' ` +
-                                                    `${this.location(piPropertyInstance)}.`);
+                                                    `Type of '${value}' does not equal type of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
                                             });
                                         }
                                     }

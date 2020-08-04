@@ -50,15 +50,17 @@ export class StdlibTemplate {
              */            
             public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.PiNamedElement} {
                 if (!!name) {
-                    let namedElement = this.elements.find(elem => elem.name === name);
-                    if (!!namedElement) {
+                    let possibles = this.elements.filter((elem) => elem.name === name);
+                    if (possibles.length != 0) {
                         if (metatype) {
-                            const concept = namedElement.piLanguageConcept();
-                            if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(namedElement.piLanguageConcept())) {
-                                return namedElement;
+                            for (let elem of possibles) {
+                                const concept = elem.piLanguageConcept();
+                                if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(elem.piLanguageConcept())) {
+                                    return elem;
+                                }
                             }
                         } else {
-                            return namedElement;
+                            return possibles[0];
                         }
                     }
                 }  

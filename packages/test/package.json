@@ -17,6 +17,7 @@
     "validate-it": 	"ts-node ../meta/src/commandline/projectit -v validate-it -l src/demo/defs/LanguageDefinition.lang -c src/demo/defs/LanguageDefinition.valid -o src/demo",
     "type-it": 	    "ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
 
+    "tmpTest":      "ts-node ../meta/src/commandline/projectit all -d src/tmpTest/def -o src/tmpTest",
     "testLangCstr": "ts-node ../meta/src/commandline/projectit all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",

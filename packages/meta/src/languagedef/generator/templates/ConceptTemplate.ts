@@ -185,7 +185,7 @@ export class ConceptTemplate {
                  */
                 static create(data: Partial<${Names.concept(concept)}>): ${Names.concept(concept)} {
                     const result = new ${Names.concept(concept)}();
-                    ${concept.implementedProperties().map(p => this.generatePartialCreate(p)).join("\n")}
+                    ${concept.allProperties().map(p => this.generatePartialCreate(p)).join("\n")}
                     return result;
                 }`
             : ""}
