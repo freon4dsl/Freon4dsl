@@ -69,8 +69,9 @@ export class StdlibTemplate {
 
     private makeTexts(language) {
         language.concepts.filter(con => con instanceof PiLimitedConcept).map(limitedConcept => {
-            this.limitedConceptNames.push(limitedConcept.name);
-            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x => `this.elements.push(${limitedConcept.name}.${x.name});`).join("\n ")}`);
+            const myName = Names.concept(limitedConcept)
+            this.limitedConceptNames.push(myName);
+            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x => `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
         });
     }
 }
