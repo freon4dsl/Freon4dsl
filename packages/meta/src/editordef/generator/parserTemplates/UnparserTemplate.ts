@@ -269,7 +269,7 @@ export class UnparserTemplate {
         let result: string = ``;
         const elemStr = langExpToTypeScript(item.expression);
         if (myElem.isList) {
-            console.log ("Primitive list found");
+            // console.log ("Primitive list found");
             // TODO change this into a call to a convenience method unparsePrimitiveList,
             // similar to unparselist and unparseReferenceList
             result += `${elemStr}.forEach(listElem => {

@@ -226,12 +226,12 @@ export class ConceptTemplate {
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     // TODO review this approach
                     ${concept.parts().map(part => 
-                    `if ( oldUnit.piLanguageConcept() === "${Names.concept(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+                    `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
                         ${part.isList ? 
-                        `let index = this.${part.name}.indexOf(oldUnit as ${Names.concept(part.type.referred)});
-                        this.${part.name}.splice(index, 1, newUnit as ${Names.concept(part.type.referred)});`
+                        `let index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
+                        this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type.referred)});`
                         : 
-                        `this.${part.name} = newUnit as ${Names.concept(part.type.referred)};`}
+                        `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)};`}
                     } else`
                     ).join(" ")}                    
                     {
@@ -258,8 +258,8 @@ export class ConceptTemplate {
                         // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
                         switch (myMetatype) {
                         ${language.modelConcept.allParts().map(part =>
-                            `case "${Names.concept(part.type.referred)}": {
-                                ${part.isList? `this.${part.name}.push(newUnit as ${Names.concept(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.concept(part.type.referred)}`}
+                            `case "${Names.classifier(part.type.referred)}": {
+                                ${part.isList? `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`}
                                 return true;
                             }`).join("\n")}
                         }

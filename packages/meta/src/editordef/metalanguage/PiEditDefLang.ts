@@ -1,4 +1,4 @@
-import { PiConcept, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 import { Roles } from "../../utils/Roles";
 import { ParseLocation } from "../../utils";
@@ -12,7 +12,7 @@ export class PiEditUnit {
 
     constructor() {}
 
-    findConceptEditor(cls: PiConcept): PiEditConcept {
+    findConceptEditor(cls: PiClassifier): PiEditConcept {
         const result = this.conceptEditors.find(con => con.concept.referred === cls);
         return result;
     }

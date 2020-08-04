@@ -372,8 +372,10 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                         let owningClassifier = piProperty.owningConcept;
                         this.checkPropertyType(piProperty, realType);
 
+                        const isUnit = (realType instanceof PiConcept) && realType.isUnit;
+
                         // check use of unit types in non-model concepts: may be references only
-                        if (realType.isUnit && piProperty.isPart) {
+                        if (isUnit && piProperty.isPart) {
                             this.simpleCheck(
                                 owningClassifier instanceof PiConcept && owningClassifier.isModel,
                                 `Modelunit '${realType.name}' may be used as reference only in a non-model concept ${this.location(piProperty.type)}.`);
@@ -381,7 +383,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                         // check use of non-unit types in model concept
                         if (owningClassifier instanceof PiConcept && owningClassifier.isModel) {
                             this.simpleCheck(
-                                realType.isUnit,
+                                isUnit,
                                 `Type of property '${piProperty.name}' should be a modelunit ${this.location(piProperty.type)}.`);
                         }
                     }
@@ -389,7 +391,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             });
     }
 
-    private checkPropertyType(piProperty: PiProperty, realType: PiConcept) {
+    private checkPropertyType(piProperty: PiProperty, realType: PiClassifier) {
         if (!!realType) { // error message taken care of by checkClassifierReference
             if (realType instanceof PiLimitedConcept) {
                 // this situation is OK, but property with limited concept as type should always be a reference property

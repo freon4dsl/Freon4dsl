@@ -355,7 +355,7 @@ export class PiProperty extends PiLangElement {
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
-    type: PiElementReference<PiConcept>; // TODO this should be PiElementReference<PiClassifier>
+    type: PiElementReference<PiClassifier>;
     owningConcept: PiClassifier;
 }
 
