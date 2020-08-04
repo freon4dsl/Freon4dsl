@@ -68,7 +68,7 @@ expression DemoVariableRef base DemoExpression {
     reference variable: DemoVariable;
 }
 
-limited DemoAttributeType implements Type {
+limited DemoAttributeType implements BaseType {
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}
