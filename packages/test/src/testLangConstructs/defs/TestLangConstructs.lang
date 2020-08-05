@@ -87,6 +87,7 @@ modelunit unitD {
     reference Cref13: interfaceWithMultipleBaseInterfaces;
     reference Cref14: interfaceWithInheritanceTree;
 }
+
 concept conceptWithPrimProps {
     name: string;
     // the possibilities for primitive properties
