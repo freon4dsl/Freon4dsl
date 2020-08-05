@@ -5,6 +5,7 @@ import { GenerationStatus, Helpers, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDE
 import { PiValidatorDef } from "../metalanguage";
 import { CheckerTemplate } from "./templates/CheckerTemplate";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate";
+import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
 
 const LOGGER = new PiLogger("ValidatorGenerator"); //.mute();
 export class ValidatorGenerator {
@@ -24,8 +25,9 @@ export class ValidatorGenerator {
         let name = validdef ? validdef.validatorName + " " : "";
         LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
 
-        const validator = new ValidatorTemplate();
-        const checker = new CheckerTemplate();
+        const validatorTemplate = new ValidatorTemplate();
+        const checkerTemplate = new CheckerTemplate();
+        const reservedWordsTemplate = new ReservedWordsTemplate();
 
         //Prepare folders
         Helpers.createDirIfNotExisting(this.validatorFolder);
@@ -37,18 +39,22 @@ export class ValidatorGenerator {
 
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);
-        var validatorFile = Helpers.pretty(validator.generateValidator(this.language, validdef, relativePath), "Validator Class", generationStatus);
+        var validatorFile = Helpers.pretty(validatorTemplate.generateValidator(this.language, validdef, relativePath), "Validator Class", generationStatus);
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         //  Generate checker
         if (validdef !== null && validdef !== undefined) {
             LOGGER.log(`Generating checker: ${this.validatorGenFolder}/${Names.checker(this.language)}.ts`);
-            var checkerFile = Helpers.pretty(checker.generateChecker(this.language, validdef, relativePath), "Checker Class", generationStatus);
+            var checkerFile = Helpers.pretty(checkerTemplate.generateChecker(this.language, validdef, relativePath), "Checker Class", generationStatus);
             fs.writeFileSync(`${this.validatorGenFolder}/${Names.checker(this.language)}.ts`, checkerFile);
         }
 
+        LOGGER.log(`Generating reserved words file: ${this.validatorGenFolder}/ReservedWords.ts`);
+        var reservedWords = reservedWordsTemplate.generateConst();
+        Helpers.generateManualFile(`${this.validatorGenFolder}/ReservedWords.ts`, reservedWords, "Reserved Words constant definition");
+
         LOGGER.log(`Generating validator gen index: ${this.validatorGenFolder}/index.ts`);
-        var indexFile = Helpers.pretty(validator.generateIndex(this.language, validdef), "Index Class", generationStatus);
+        var indexFile = Helpers.pretty(validatorTemplate.generateIndex(this.language, validdef), "Index Class", generationStatus);
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
 
         if (generationStatus.numberOfErrors > 0) {

@@ -21,6 +21,7 @@ export const PARSER_GEN_FOLDER = "parser/gen";
 // export const WEBAPP_FOLDER = "../webapp";
 // export const APP_FOLDER = "../webapp/app";
 // export const ASSETS_FOLDER = "../webapp/assets";
+export const RESERVED_WORDS_ORIGIN  = "../meta/src/validatordef/generator/templates";    // the folder in which the to-be-copied files can be found
 export const STYLES_ORIGIN  = "../meta/src/editordef/generator/templates/styles";    // the folder in which the to-be-copied files can be found
 export const STYLES_FOLDER = EDITOR_FOLDER + "/styles";     // the folder to which the style files should be copied
 // the predefined interfaces and classes can be found in ...

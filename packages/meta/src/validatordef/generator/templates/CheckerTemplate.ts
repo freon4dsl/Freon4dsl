@@ -9,8 +9,10 @@ import {
     ConceptRuleSet,
     ExpressionRule, IsuniqueRule
 } from "../../metalanguage/ValidatorDefLang";
+import { PiError } from "@projectit/core";
 
 export class CheckerTemplate {
+    done : PiConcept[] = [];
     constructor() {
     }
 
@@ -25,22 +27,15 @@ export class CheckerTemplate {
                                  * Found errors are pushed onto 'errorlist'.
                                  * @param modelelement
                                  */`;
-        // const commentAfter =    `/**
-        //                          * Checks 'modelelement' after checking its children.
-        //                          * Found errors are pushed onto 'errorlist'.
-        //                          * @param modelelement
-        //                          */`;
-        // const commentNoRule =   `/**
-        //                          * No checks are implemented for this 'modelelement'.
-        //                          * @param modelelement
-        //                          */`;
+        this.done = [];
 
         // the template starts here
         return `
         import { ${errorClassName}, ${typerInterfaceName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language, validdef)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-        import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";     
+        import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";   
+        import { reservedWordsInTypescript } from "./ReservedWords";  
 
         /**
          * Class ${checkerClassName} is part of the implementation of the validator generated from, if present, 
@@ -51,7 +46,7 @@ export class CheckerTemplate {
         export class ${checkerClassName} extends ${defaultWorkerName} {
             // 'myUnparser' is used to provide error messages on the nodes in the model tree
             myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
-            // 'typer' is used to implment the 'typecheck' rules in the validator definition 
+            // 'typer' is used to implement the 'typecheck' rules in the validator definition 
             typer: ${typerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).typer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
@@ -60,6 +55,7 @@ export class CheckerTemplate {
             `${commentBefore}
             public execBefore${Names.concept(ruleSet.conceptRef.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef.referred)}) {
                 ${this.createRules(ruleSet)}
+                ${this.createChecksOnNonOptionalParts(ruleSet.conceptRef.referred)}
             }`
         ).join("\n\n")}
         
@@ -78,7 +74,7 @@ export class CheckerTemplate {
             // may not contain whitespaces
             if (/[\\t|\\n|\\r| ]/.test(name)) return false;
             // may not be a Typescript keyword
-            // TODO implement this
+            if (reservedWordsInTypescript.includes(name)) return false;
             return true;
             }
         }    
@@ -98,36 +94,31 @@ export class CheckerTemplate {
 
     private createRules(ruleSet: ConceptRuleSet) : string {
         // find the property that indicates the location in human terms
-        let myType = ruleSet.conceptRef.referred;
-        let nameProp = myType.allPrimProperties().find(prop => prop.name === 'name');
-        if (!(!!nameProp)) {
-            nameProp = myType.allPrimProperties().find(prop => prop.primType === 'string');
-        }
-        let locationdescription = !!nameProp ? `modelelement.${nameProp.name}` : `"--"`;
+        let locationdescription = this.findLocationDescription(ruleSet.conceptRef.referred);
         //
         return `${
             ruleSet.rules.map(r => 
                 `// ${r.toPiString()}
                 ${(r instanceof CheckEqualsTypeRule ?
-                    `if(!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
+                    `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                         this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) 
                         + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'", ${langExpToTypeScript(r.type1)}, ${locationdescription}));
                     }`
                 : (r instanceof CheckConformsRule ?
-                    `if(!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
+                    `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                         this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) + 
                         "' does not conform to (the type of) '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'", ${langExpToTypeScript(r.type1)}, ${locationdescription}));
                     }`           
                 : (r instanceof NotEmptyRule ?
-                    `if(${langExpToTypeScript(r.property)}.length == 0) {
+                    `if (${langExpToTypeScript(r.property)}.length == 0) {
                         this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", modelelement, ${locationdescription}));
                     }`
                 : (r instanceof ValidNameRule ?
-                    `if(!this.isValidName(${langExpToTypeScript(r.property)})) {
+                    `if (!this.isValidName(${langExpToTypeScript(r.property)})) {
                         this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement, ${locationdescription}));
                     }` 
                 : (r instanceof ExpressionRule ?
-                    `if(!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
+                    `if (!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
                         this.errorList.push(new PiError("'${r.toPiString()}' is false", modelelement, ${locationdescription}));
                     }`
                 : (r instanceof IsuniqueRule ?
@@ -152,15 +143,30 @@ export class CheckerTemplate {
             }
         });`;
     }
-    private conceptsWithoutRules(language: PiLanguage, validdef: PiValidatorDef) : PiConcept[] {
-        let withRules : PiConcept[] = [];
-        for (let ruleSet of validdef.conceptRules) {
-            withRules.push(ruleSet.conceptRef.referred);
+
+    private createChecksOnNonOptionalParts(concept: PiConcept) : string {
+        let result: string = '';
+        let locationdescription = this.findLocationDescription(concept);
+
+        concept.allProperties().forEach(prop => {
+            if (!prop.isOptional) {
+                result += `if (modelelement.${prop.name} == null || modelelement.${prop.name} == undefined ) {
+                    this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}));
+                }
+                `
+            }
+        });
+
+        this.done.push(concept);
+        return result;
+    }
+
+    private findLocationDescription(concept: PiConcept) {
+        let nameProp = concept.allPrimProperties().find(prop => prop.name === "name");
+        if (!(!!nameProp)) {
+            nameProp = concept.allPrimProperties().find(prop => prop.primType === "string");
         }
-        let withoutRules : PiConcept[] = [];
-        for( let c of language.concepts) {
-            if( !withRules.includes(c) ) withoutRules.push(c);
-        }
-        return withoutRules;
+        let locationdescription = !!nameProp ? `modelelement.${nameProp.name}` : `"--"`;
+        return locationdescription;
     }
 }

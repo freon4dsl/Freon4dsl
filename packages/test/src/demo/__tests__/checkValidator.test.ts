@@ -128,7 +128,7 @@ describe("Testing Validator", () => {
                 // console.log(e.message);
                 expect(e.reportedOn === determine);
             });
-            expect(errors.length).toBe(3);
+            expect(errors.length).toBe(4);
         });
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
@@ -172,7 +172,7 @@ describe("Testing Validator", () => {
             //     console.log(e.message)
             // );
             // TODO check result "Type of 'PlaceholderExpression' does not conform to (the type of) 'DemoAttributeType Integer'"
-            expect(errors.length).toBe(5);
+            expect(errors.length).toBe(11);
         });
 
         test ("test correct model", () => {
@@ -189,9 +189,9 @@ describe("Testing Validator", () => {
             let errors: PiError[] = [];
             errors = validator.validate(model, true);
             // errors.forEach(e =>
-            //     console.log(e.message)
+            //     console.log(e.message + " => " + e.locationdescription)
             // );
-            expect(errors.length).toBe(16);
+            expect(errors.length).toBe(17);
         });
     });
 });

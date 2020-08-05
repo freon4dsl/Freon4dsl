@@ -10,9 +10,10 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiElementReference } from "./PiElementReference";
 import { PiMetaEnvironment } from "./PiMetaEnvironment";
 import { PiLangUtil } from "./PiLangUtil";
+import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
-const reservedWords = ["model", "modelunit", "abstract", "limited", "interface", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
+const piReservedWords = ["model", "modelunit", "abstract", "limited", "interface", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
 
 // TODO add check: priority error from parser into checker => only for expression concepts
 
@@ -23,7 +24,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         LOGGER.info(this, "Checking language '" + language.name + "'");
         this.foundModel = false;
         this.errors = [];
-        this.simpleCheck(!!language.name && !reservedWords.includes(language.name) ,
+        this.simpleCheck(!!language.name && !piReservedWords.includes(language.name) ,
             `Language should have a name ${this.location(language)}.`);
 
         this.language = language;
@@ -198,9 +199,9 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
     private checkConcept(piConcept: PiConcept): void {
         LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
         this.simpleCheck(!!piConcept.name, `Concept should have a name ${this.location(piConcept)}.`);
-        this.simpleCheck(!(piConcept.name === "string"), `Concept may not be named 'string' ${this.location(piConcept)}.`);
-        this.simpleCheck(!(piConcept.name === "boolean"), `Concept may not be named 'boolean' ${this.location(piConcept)}.`);
-        this.simpleCheck(!(piConcept.name === "number"), `Concept may not be named 'number' ${this.location(piConcept)}.`);
+        this.simpleCheck(!(piReservedWords.includes(piConcept.name)), `Concept may not have a name that is equal to a reserved word ('${piConcept.name}') ${this.location(piConcept)}.`);
+        this.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name)),
+            `Concept may not have a name that is equal to a reserved word in TypeScript ('${piConcept.name}') ${this.location(piConcept)}.`);
 
         if ( piConcept.isModel ) {
             this.nestedCheck({
@@ -449,7 +450,11 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
     }
 
     checkInterface(piInterface: PiInterface) {
-        this.simpleCheck(!!piInterface.name, `Concept should have a name ${this.location(piInterface)}.`);
+        this.simpleCheck(!!piInterface.name, `Interface should have a name ${this.location(piInterface)}.`);
+        this.simpleCheck(!(piReservedWords.includes(piInterface.name)), `Interface may not have a name that is equal to a reserved word ('${piInterface.name}') ${this.location(piInterface)}.`);
+        this.simpleCheck(!(reservedWordsInTypescript.includes(piInterface.name)),
+            `Interface may not have a name that is equal to a reserved word in TypeScript ('${piInterface.name}') ${this.location(piInterface)}.`);
+
         for (let intf of piInterface.base) {
             this.checkConceptReference(intf);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference

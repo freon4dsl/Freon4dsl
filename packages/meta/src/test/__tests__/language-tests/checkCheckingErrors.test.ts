@@ -28,9 +28,9 @@ describe("Checking language parser on checking errors", () => {
             expect(checker.errors.includes("Property with name 'simple' already exists in ZZZ [line: 9, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Concept with name 'YYY' already exists [line: 12, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface with name 'AAA' already exists [line: 16, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept may not be named 'string' [line: 19, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept may not be named 'number' [line: 21, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept may not be named 'boolean' [line: 23, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('string') [line: 19, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('number') [line: 21, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('boolean') [line: 23, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept with name 'LowerCase' already exists [line: 27, column: 1].")).toBeTruthy();
 
         }

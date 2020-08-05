@@ -6,12 +6,12 @@ public model Demo {
 }
 
 public modelunit DemoModel {
-    public main: DemoEntity;
+    public main?: DemoEntity;
     public functions: DemoFunction[];
     public name: string;
     entities: DemoEntity[];
     types: Type[];
-    type: Type;
+    type?: Type;
 }
 interface BaseType {
     name: string;
@@ -23,7 +23,7 @@ interface Type base BaseType, X {
     simpleprop: string;
     int_attrs: DemoAttribute[];
     int_functions: DemoFunction[];
-    reference baseInterface: DemoEntity;
+    reference baseInterface?: DemoEntity;
 }
 
 abstract concept Nothing {
@@ -34,7 +34,7 @@ public concept DemoEntity base Nothing implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
-    reference baseEntity: DemoEntity;
+    reference baseEntity?: DemoEntity;
 }
 
 limited DemoAttributeType implements BaseType {
