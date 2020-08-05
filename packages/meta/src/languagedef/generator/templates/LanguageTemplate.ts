@@ -12,10 +12,8 @@ export class LanguageTemplate {
     generateLanguage(language: PiLanguage, relativePath: string): string {
         return `import { Language, Property, Concept, Interface } from "${PROJECTITCORE}";
         
-            ${language.concepts.map(concept =>
-                `import { ${Names.concept(concept)} } from "./${Names.concept(concept)}";`
-            ).join("\n")}
-            import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
+            import { ${language.concepts.map(concept =>
+                `${Names.concept(concept)}`).join(", ") }, ${Names.PiElementReference} } from "./internal";
     
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.

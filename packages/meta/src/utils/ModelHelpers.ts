@@ -26,38 +26,15 @@ export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcep
     while (newList.length < piclasses.length) {
         for (let c of piclasses) {
             let concept = (c instanceof PiElementReference ? c.referred : c);
-            if (concept.base) {
-                // see whether the base, or the base of the base recursively, is in the new list
-                // if so, push concept before concept.base, else push concept as first
-                let index = indexOfBaseInList(newList, concept);
-                if (index !== -1) { // no base found in 'newList'
-                    newList.splice(index, 0, concept);
-                } else {
-                    newList.unshift(concept);
+            let base = concept.base?.referred;
+            if (base) {
+                if (newList.indexOf(base) > -1) { // base of the concept is already in the list
+                    newList.push(concept);
                 }
             }
         }
     }
-    return newList;
-}
-
-/**
- * Returns the index of the base of 'concept' in 'newList'.
- * If the direct base is not present, the function will search for parents of
- * the direct base recursively.
- * Returns -1 if no of the base concepts of 'concept' is present.
- *
- * @param newList
- * @param concept
- */
-function indexOfBaseInList(newList: PiConcept[], concept: PiConcept): number {
-    let myBase = concept.base?.referred;
-    let index = -1;
-    while (!!myBase || index > 0) {
-        index = newList.indexOf(myBase);
-        myBase = myBase?.base?.referred;
-    }
-    return index;
+    return newList.reverse();
 }
 
 /**

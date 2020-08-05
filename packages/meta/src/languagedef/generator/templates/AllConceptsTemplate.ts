@@ -23,7 +23,7 @@ export class AllConceptsTemplate {
             ${tmp.map(c => 
                 `${c}`
             ).join(", ")}
-        } from "./index";
+        } from "./internal";
 
         /**
          * Type ${Names.allConcepts(language)} is a union of all concepts and interfaces that are defined for language ${language.name}.

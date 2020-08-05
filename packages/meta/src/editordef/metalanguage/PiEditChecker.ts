@@ -1,17 +1,6 @@
-import {
-    PiConcept,
-    PiLangExpressionChecker,
-    PiLanguage
-} from "../../languagedef/metalanguage";
+import { PiConcept, PiLangExpressionChecker, PiLanguage } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
-import {
-    PiEditUnit,
-    PiEditConcept,
-    PiEditSubProjection,
-    ListJoin,
-    ListJoinType,
-    PiEditProjection
-} from "./PiEditDefLang";
+import { ListJoin, ListJoinType, PiEditConcept, PiEditProjection, PiEditSubProjection, PiEditUnit } from "./PiEditDefLang";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
@@ -103,6 +92,9 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         projection.listJoin = new ListJoin();
                         projection.listJoin.joinType = ListJoinType.Separator;
                         projection.listJoin.joinText = ", ";
+                    } else {
+                        const text = projection.listJoin.joinType == ListJoinType.Separator ? `@separator` : `@terminator`;
+                        this.simpleCheck(!!projection.listJoin.joinText, `${text} should be followed by a string between '[' and ']' [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`);
                     }
                 }
             }

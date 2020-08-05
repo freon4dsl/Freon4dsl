@@ -1,5 +1,6 @@
 import { Names } from "../../../utils/Names";
 import { PiLanguage } from "../../metalanguage/PiLanguage";
+import { sortClasses } from "../../../utils";
 
 export class IndexTemplate {
     constructor() {
@@ -16,16 +17,58 @@ export class IndexTemplate {
         );
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
+        tmp.push(Names.PiElementReference);
 
-        tmp = tmp.sort();
+        // tmp = tmp.sort();
 
         // the template starts here
         return `
+        /**
+         * This index deploys the pattern from Michael Weststrate
+         * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
+         * in order to avoid problem with circular imports.
+         */
+         
+        export {
         ${tmp.map(c => 
-            `export * from "./${c}";`
-        ).join("\n")}
-        export * from "./PiElementReference";
-        `;
+            `${c}`
+        ).join(",\n")}
+        } from "./internal"`;
     }
 
+    generateInternal(language: PiLanguage): string {
+        // The exports need to be sorted such that base concepts are exported before the
+        // concepts that are extending them.
+        // Function 'sortClasses' provides a sorting mechanism, but its result needs to be reversed.
+
+        let tmp : string[] = [];
+        tmp.push(Names.PiElementReference);
+        // TODO should be sorting interfaces as well, I think
+        language.interfaces.map(c =>
+            tmp.push(Names.interface(c))
+        );
+
+        sortClasses(language.concepts).reverse().map(c =>
+            tmp.push(Names.concept(c))
+        );
+
+        tmp.push(Names.allConcepts(language));
+        tmp.push(Names.metaType(language));
+
+        // the template starts here
+        return `
+        /**
+         * This index deploys the pattern from Michael Weststrate
+         * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
+         * in order to avoid problem with circular imports.
+         *
+         * The exports are sorted such that base concepts are exported before the
+         * concepts that are extending them.
+         */           
+            
+        ${tmp.map(c =>
+            `export * from "./${c}";`
+        ).join("\n")}
+        `;
+    }
 }

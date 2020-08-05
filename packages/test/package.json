@@ -17,10 +17,11 @@
     "validate-it": 	"ts-node ../meta/src/commandline/projectit -v validate-it -l src/demo/defs/LanguageDefinition.lang -c src/demo/defs/LanguageDefinition.valid -o src/demo",
     "type-it": 	    "ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
 
+    "imports":      "ts-node ../meta/src/commandline/projectit all -d src/testCicularImports/def -o src/testCicularImports",
     "testLangCstr": "ts-node ../meta/src/commandline/projectit all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
-    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && tsc",
+    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && yarn run imports && tsc",
     "pegjs":        "pegjs src/parser_gen/parser/gen/DemoUnitUnitParser.pegjs",
     "parser-project": "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen && yarn pegjs",
     "parser-gen": 	"ts-node ../meta/src/commandline/projectit -v edit-it -l src/parser_gen/defs/LanguageDefinition.lang -e src/parser_gen/defs/LanguageDefinition.edit -o src/parser_gen && yarn pegjs",

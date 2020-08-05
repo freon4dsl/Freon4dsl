@@ -14,7 +14,7 @@ export class ConceptTemplate {
     generateConcept(concept: PiConcept, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
-        // if(hasSuper && !(!!concept.base.referred)) console.log("ERROR in " + concept.unitName);
+        const hasReferences = concept.implementedReferences().length > 0;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const isAbstract = concept.isAbstract;
@@ -43,11 +43,11 @@ export class ConceptTemplate {
                     .concat(concept.references().map(r => Names.classifier(r.type.referred)))
                     .concat(concept.interfaces.map(i => Names.interface(i.referred)))
                     .concat([baseExpressionName])
-                    .concat(concept.allParts().map(part => Names.classifier(part.type.referred)))
-                    .concat(concept.allReferences().map(part => Names.classifier(part.type.referred)))
+                    .concat(concept.implementedParts().map(part => Names.classifier(part.type.referred)))
+                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type.referred)))
                     .filter(name => !(name === Names.concept(concept)))
                     .concat((concept.base ? Names.concept(concept.base.referred) : null))
-                    .filter(r => r !== null)
+                    .filter(r => (r !== null) && (r.length > 0))
             )
         );
 
@@ -55,23 +55,23 @@ export class ConceptTemplate {
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
         }
-        if (concept.implementedProperties().some(part => part.isList) ) {
+        if (concept.implementedProperties().some(part => part.isList && !part.isPrimitive) ) {
             mobxImports.push("observablelistpart");
         }
-        if (concept.implementedProperties().some(part => !part.isList)) {
+        if (concept.implementedProperties().some(part => !part.isList && !part.isPrimitive)) {
             mobxImports.push("observablepart");
         }
 
         // Template starts here
         const result = `
             ${(concept.implementedPrimProperties().length > 0 ) ? `import { observable } from "mobx";` : ""}
-            import * as uuid from "uuid";
+            ${!hasSuper ? `import * as uuid from "uuid";` : ``}
             import { ${implementsPi} ${concept.isModel ? `, Language` : ``} } from "${PROJECTITCORE}";
             import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
             import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
             ${concept.isModel ? `import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";` : ``}
-            import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
-            ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
+            ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
+            ${imports.map(imp => `import { ${imp} } from "./internal";`).join("")}
 
             /**
              * Class ${Names.concept(concept)} is the implementation of the concept with the same name in the language definition file.
