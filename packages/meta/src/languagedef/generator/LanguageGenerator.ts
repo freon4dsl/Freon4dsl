@@ -96,9 +96,13 @@ export class LanguageGenerator {
         var allConceptsFile = Helpers.pretty(allConceptsTemplate.generateAllConceptsClass(language), "All Concepts Class", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.allConcepts(language)}.ts`, allConceptsFile);
 
-        LOGGER.log(`Generating language index: ${this.languageGenFolder}/index.ts`);
+        LOGGER.log(`Generating language external index: ${this.languageGenFolder}/index.ts`);
         var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/index.ts`, languageIndexFile);
+
+        LOGGER.log(`Generating language internal index: ${this.languageGenFolder}/internal.ts`);
+        var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateInternal(language), "Language Index", generationStatus);
+        fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, languageIndexFile);
 
         // Generate projectit configuration if it isn't there
         LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration(language)}.ts`);

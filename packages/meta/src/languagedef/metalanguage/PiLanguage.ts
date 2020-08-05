@@ -357,6 +357,10 @@ export class PiProperty extends PiLangElement {
     isPart: boolean; // if false then it is a reference property
     type: PiElementReference<PiConcept>; // TODO this should be PiElementReference<PiClassifier>
     owningConcept: PiClassifier;
+
+    get isPrimitive(): boolean {
+        return false;
+    };
 }
 
 export class PiConceptProperty extends PiProperty {
@@ -375,6 +379,10 @@ export class PiPrimitiveProperty extends PiProperty {
     get type() : PiElementReference<PiConcept> {
         return PiElementReference.createNamed<PiConcept>(primitiveTypeName, "PiConcept");
     }
+
+    get isPrimitive(): boolean {
+        return true;
+    };
 }
 
 export class PiInstance extends PiLangElement {

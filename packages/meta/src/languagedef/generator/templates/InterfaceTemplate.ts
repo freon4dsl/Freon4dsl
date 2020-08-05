@@ -2,7 +2,6 @@ import { Names } from "../../../utils/Names";
 import {
     PiConceptProperty,
     PiPrimitiveProperty,
-    PiExpressionConcept,
     PiInterface
 } from "../../metalanguage/PiLanguage";
 import { PROJECTITCORE } from "../../../utils";
@@ -12,11 +11,13 @@ export class InterfaceTemplate {
     }
 
     generateInterface(intf: PiInterface, relativePath: string): string {
-        const language = intf.language;
-        const hasSuper = intf.base.length > 0;
+        // const language = intf.language;
+        // const hasSuper = intf.base.length > 0;
         const extendsInterfaces: string[] = Array.from (
             new Set (intf.base.map ( elem => Names.interface(elem.referred) )));
-        const hasName = intf.primProperties.some(p => p.name === "name");
+        // const hasName = intf.primProperties.some(p => p.name === "name");
+        const hasReferences = intf.references().length > 0;
+
         const abstract = '';
         const myName = Names.interface(intf);
 
@@ -25,13 +26,13 @@ export class InterfaceTemplate {
                 intf.properties.map(p => Names.classifier(p.type.referred))
                     .concat(intf.base.map ( elem => Names.interface(elem.referred) ))
                     .filter(name => !(name === myName))
-                    .filter(r => r !== null)
+                    .filter(r => r !== null && (r.length > 0))
             )
         );
 
         // Template starts here
         const result = `
-            import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";
+            ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
             import { ${Names.PiElement} } from "${PROJECTITCORE}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
 
