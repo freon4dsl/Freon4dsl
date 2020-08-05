@@ -138,6 +138,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Worker";
     }
 
+    public static defaultWorker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "DefaultWorker";
+    }
+
     public static startWithUpperCase(word: string): string {
         if (!!word) return word[0].toUpperCase() + word.substr(1);
         return '';

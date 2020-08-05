@@ -153,4 +153,8 @@ export class PathProvider {
     public static workerInterface(language: PiLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.workerInterface(language);
     }
+
+    public static defaultWorker(language: PiLanguage): string {
+        return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.defaultWorker(language);
+    }
 }

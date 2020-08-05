@@ -1,5 +1,6 @@
 export * from "./AllConceptsTemplate";
 export * from "./ConceptTemplate";
+export * from "./DefaultWorkerTemplate";
 export * from "./EnvironmentTemplate";
 export * from "./IndexTemplate";
 export * from "./MetaTypeTemplate";

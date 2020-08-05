@@ -15,7 +15,7 @@ export class CheckerTemplate {
     }
 
     generateChecker(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
-        const workerInterfaceName = Names.workerInterface(language);
+        const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName : string = Names.PiError;
         const checkerClassName : string = Names.checker(language);
         const typerInterfaceName: string = Names.PiTyper;
@@ -25,22 +25,22 @@ export class CheckerTemplate {
                                  * Found errors are pushed onto 'errorlist'.
                                  * @param modelelement
                                  */`;
-        const commentAfter =    `/**
-                                 * Checks 'modelelement' after checking its children.
-                                 * Found errors are pushed onto 'errorlist'.
-                                 * @param modelelement
-                                 */`;
-        const commentNoRule =   `/**
-                                 * No checks are implemented for this 'modelelement'.
-                                 * @param modelelement
-                                 */`;
+        // const commentAfter =    `/**
+        //                          * Checks 'modelelement' after checking its children.
+        //                          * Found errors are pushed onto 'errorlist'.
+        //                          * @param modelelement
+        //                          */`;
+        // const commentNoRule =   `/**
+        //                          * No checks are implemented for this 'modelelement'.
+        //                          * @param modelelement
+        //                          */`;
 
         // the template starts here
         return `
         import { ${errorClassName}, ${typerInterfaceName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language, validdef)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-        import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";     
+        import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";     
 
         /**
          * Class ${checkerClassName} is part of the implementation of the validator generated from, if present, 
@@ -48,7 +48,7 @@ export class CheckerTemplate {
          * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements 
          * the actual checking of each node in the tree.
          */
-        export class ${checkerClassName} implements ${workerInterfaceName} {
+        export class ${checkerClassName} extends ${defaultWorkerName} {
             // 'myUnparser' is used to provide error messages on the nodes in the model tree
             myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
             // 'typer' is used to implment the 'typecheck' rules in the validator definition 
@@ -60,22 +60,8 @@ export class CheckerTemplate {
             `${commentBefore}
             public execBefore${Names.concept(ruleSet.conceptRef.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef.referred)}) {
                 ${this.createRules(ruleSet)}
-            }
-            
-            ${commentAfter}
-            public execAfter${Names.concept(ruleSet.conceptRef.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef.referred)}) {
             }`
         ).join("\n\n")}
-
-        ${this.conceptsWithoutRules(language, validdef).map(concept => 
-            `${commentNoRule}
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
-            }
-            
-            ${commentNoRule}
-            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
-            }`
-        ).join("\n\n") }
         
         /**
          * Returns true if 'name' is a valid identifier
