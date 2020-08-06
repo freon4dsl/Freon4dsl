@@ -10,6 +10,8 @@ import {
 import { ListJoin, ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
 import { findAllImplementorsAndSubs, Names } from "../../../utils";
 
+// TODO add support for expressions in the parser
+
 export class PegjsTemplate {
     referredClassifiers: PiClassifier[] = [];
     textForListConcepts: string[] = [];
@@ -41,7 +43,7 @@ export class PegjsTemplate {
 }
         
 ${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}\n`).join("")}
-${sortedInterfaces.map(intf => `${this.makeInterfaceRule(intf)}\n`).join("")}
+${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}\n`).join("")}
 ${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}\n`).join("")}
 ${this.textForListConcepts.map(listRule => `${listRule}\n`).join("")}
 
@@ -114,31 +116,35 @@ HEXDIG = [0-9a-f]
     }
 
     private makeConceptRule(conceptDef: PiEditConcept): string {
-        // TODO extend this for interfaces, AFTER the editDefinition is adjusted
         const piClassifier: PiConcept = conceptDef.concept.referred;
         if (piClassifier.isModel) return ``;
-
-        const propsToSet: PiProperty[] = [];
-
-        conceptDef.projection.lines.forEach(l => {
-            l.items.forEach(item => {
-                if (item instanceof PiEditSubProjection) {propsToSet.push(item.expression.findRefOfLastAppliedFeature())}
-            });
-        });
-
         const myName = Names.classifier(piClassifier);
-        // TODO escape all quotes in a text string
-        return `${myName} = ${conceptDef.projection.lines.map(l => 
-            `${l.items.map(item => 
-                `${(item instanceof PiEditProjectionText)? 
-                    `\"${item.text.trim()}\" ws ` 
-                    : 
-                    `${(item instanceof PiEditSubProjection)? 
-                        `${this.makeSubProjectionRule(item)} ws `
-                        : 
-                        `` }` 
-            }`).join("")}`
-        ).join("\n\t")}\n\t{ return creator.create${myName}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
+        if (piClassifier.isAbstract) {
+            return this.makeChoiceRule(piClassifier);
+        } else {
+            const propsToSet: PiProperty[] = [];
+
+            conceptDef.projection.lines.forEach(l => {
+                l.items.forEach(item => {
+                    if (item instanceof PiEditSubProjection) {
+                        propsToSet.push(item.expression.findRefOfLastAppliedFeature())
+                    }
+                });
+            });
+
+            // TODO escape all quotes in a text string
+            return `${myName} = ${conceptDef.projection.lines.map(l =>
+                `${l.items.map(item =>
+                    `${(item instanceof PiEditProjectionText) ?
+                        `\"${item.text.trim()}\" ws `
+                        :
+                        `${(item instanceof PiEditSubProjection) ?
+                            `${this.makeSubProjectionRule(item)} ws `
+                            :
+                            ``}`
+                    }`).join("")}`
+            ).join("\n\t")}\n\t{ return creator.create${myName}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
+        }
     }
 
     private makeSubProjectionRule(item: PiEditSubProjection): string {
@@ -260,17 +266,17 @@ HEXDIG = [0-9a-f]
         });
     }
 
-    private makeInterfaceRule(intf: PiInterface): string {
+    private makeChoiceRule(piClassifier: PiClassifier): string {
         // for interfaces we create a parse rule that is a choice between all classifiers that either implement or extend the interface
         // because limited concepts can only be used as reference, these are excluded for this choice
         // we also need to filter out the interface itself
         // TODO should we include a reference to a limited concept in the parse rule for an interface?
-        const implementors = findAllImplementorsAndSubs(intf).filter(piCLassifier => (piCLassifier !== intf) && !(piCLassifier instanceof PiLimitedConcept));
+        const implementors = findAllImplementorsAndSubs(piClassifier).filter(piCLassifier => (piCLassifier !== piClassifier) && !(piCLassifier instanceof PiLimitedConcept));
 
         if (implementors.length > 0 ) {
-            return `${Names.interface(intf)} = ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n`;
+            return `${Names.classifier(piClassifier)} = ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n`;
         } else {
-            return `${Names.interface(intf)} = "ERROR: there are no concepts that implement this interface"\n`;
+            return `${Names.classifier(piClassifier)} = "ERROR: there are no concepts that implement this interface"\n`;
         }
     }
 }
