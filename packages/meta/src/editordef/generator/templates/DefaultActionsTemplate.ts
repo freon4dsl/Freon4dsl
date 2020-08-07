@@ -99,7 +99,7 @@ export class DefaultActionsTemplate {
                     //     trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
                     //     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
                     //         var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
-                    //         const new${part.name}: ${Names.concept(partConcept)} = new ${Names.concept(partConcept)}();
+                    //         const new${part.name}: ${Names.classifier(partConcept)} = new ${Names.classifier(partConcept)}();
                     //         parent.${part.name}.push(new${part.name});
                     //         return Promise.resolve(new${part.name});
                     //     },
@@ -122,7 +122,7 @@ export class DefaultActionsTemplate {
                     trigger: "${trigger}",
                     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                         const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                        const newBase: PiElementReference< ${Names.concept(referredConcept)}> = PiElementReference.createNamed("", null);
+                        const newBase: PiElementReference< ${Names.classifier(referredConcept)}> = PiElementReference.createNamed("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase;
                     },

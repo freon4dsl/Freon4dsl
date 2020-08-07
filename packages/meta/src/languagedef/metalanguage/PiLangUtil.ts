@@ -126,4 +126,8 @@ export class PiLangUtil {
         if ( myType === otherType ) return true;
         return false;
     }
+
+    public static findNameProp(con: PiConcept): PiPrimitiveProperty {
+        return con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
+    }
 }

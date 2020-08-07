@@ -41,25 +41,26 @@ export class DemoModelCreator {
         let unit: DemoModel = result.models.find(m => m.name === "CorrectUnit");
 
         const companyEnt = DemoEntity.create({name: "Company"}); // another one with the same unitName
-        const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
-        const VAT_Number2 = DemoAttribute.create({name: "VAT_Number"});
+        const VAT_Number = DemoAttribute.create({name: "VAT_Number", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
+        const VAT_Number2 = DemoAttribute.create({name: "VAT_Number", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
         companyEnt.attributes.push(VAT_Number2);
         companyEnt.attributes.push(VAT_Number);
         unit.entities.push(companyEnt);
 
-        const ifFunction = DemoFunction.create({name: "compare"});
+        const ifFunction = DemoFunction.create({name: "compare", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
         ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         const ifExpression = new DemoIfExpression();
         ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
         ifExpression.whenTrue = makeLiteralExp("87");
         ifExpression.whenFalse = makeLiteralExp("1345");
         const divideExpression = MakeDivideExp("678", "9990");
+        ifFunction.expression = ifExpression;
 
         companyEnt.functions.push(ifFunction);
 
-        const double = DemoFunction.create({name: "compare"}); // another one with the same unitName
-        const extra = DemoVariable.create({name: "Extra"});
-        const extra2 = DemoVariable.create({name: "Extra"});
+        const double = DemoFunction.create({name: "compare", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")}); // another one with the same name
+        const extra = DemoVariable.create({name: "Extra", declaredType: PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity")});
+        const extra2 = DemoVariable.create({name: "Extra", declaredType: PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity")}); // another one with the same name
         double.parameters.push(extra);
         double.parameters.push(extra2);
         double.expression = MakePlusExp("24", "2020");

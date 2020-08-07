@@ -31,46 +31,59 @@ export class WalkerTemplate {
          * over which nodes are and are not visited.
          */
         export class ${generatedClassName}  {
-            myWorker : ${Names.workerInterface(language)};  // the instance that does the actual work on each node of the tree
+            myWorkers: ${Names.workerInterface(language)}[] = [];  // the instances that do the actual work on each node of the tree
 
             /**
-             * This method is the entry point of the traversal through the model tree.
+             * This method is the entry point of the traversal through the model tree. Each of the workers will be called in
+             * the order in which they are present in the array 'myWorkers'. If, for a tree node, a worker returns 'false',
+             * none of the rest of the workers will be called. For that particular node both the 'execBefore' and 'execAfter'
+             * method of any of the other workers will be skipped.
+             *
              * @param modelelement the top node of the part of the tree to be visited
              * @param includeChildren if true, the children of 'modelelement' will also be visited
              */
             public walk(modelelement: ${allLangConcepts}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
-                ${sortClasses(language.concepts).map(concept => `
-                if(modelelement instanceof ${Names.concept(concept)}) {
-                    return this.walk${Names.concept(concept)}(modelelement, includeChildren );
-                }`).join("")}
+                if(this.myWorkers.length > 0) {
+                    ${sortClasses(language.concepts).map(concept => `
+                    if(modelelement instanceof ${Names.concept(concept)}) {
+                        return this.walk${Names.concept(concept)}(modelelement, includeChildren );
+                    }`).join("")}
+                } else {
+                    LOGGER.error(this, "No worker found.");
+                }
             }
 
             ${language.concepts.map(concept => `
                 private walk${Names.concept(concept)}(modelelement: ${Names.concept(concept)}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
-                    if(!!this.myWorker) {
-                        this.myWorker.execBefore${Names.concept(concept)}(modelelement);
-                        ${((concept.allParts().length > 0)?
-                        `// work on children in the model tree                     
-                        ${concept.allParts().map( part =>
-                            (part.isList ?
-                                `modelelement.${part.name}.forEach(p => {
-                                    if(!(includeChildren === undefined) && includeChildren(p)) {                                    
-                                        this.walk(p, includeChildren );
-                                    }
-                                });`
-                            : 
-                                `if(!(includeChildren === undefined) && includeChildren(modelelement.${part.name})) {
-                                    this.walk(modelelement.${part.name}, includeChildren );
-                                }`
-                            )
-                            ).join("\n")}
-                        `
-                        : ``
-                        )}
-                        this.myWorker.execAfter${Names.concept(concept)}(modelelement);
-                } else {
-                    LOGGER.error(this, "No worker found.");
-                }
+                    let stopWalkingThisNode: boolean = false;
+                    for (let worker of this.myWorkers ) {
+                        if (!stopWalkingThisNode ) {
+                            stopWalkingThisNode = worker.execBefore${Names.concept(concept)}(modelelement);
+                        }
+                    }
+                    ${((concept.allParts().length > 0)?
+                    `// work on children in the model tree                     
+                    ${concept.allParts().map( part =>
+                        (part.isList ?
+                            `modelelement.${part.name}.forEach(p => {
+                                if(!(includeChildren === undefined) && includeChildren(p)) {                                    
+                                    this.walk(p, includeChildren );
+                                }
+                            });`
+                        : 
+                            `if(!(includeChildren === undefined) && includeChildren(modelelement.${part.name})) {
+                                this.walk(modelelement.${part.name}, includeChildren );
+                            }`
+                        )
+                    ).join("\n")}
+                    `
+                    : ``
+                    )}
+                    for (let worker of this.myWorkers ) {                    
+                        if (!stopWalkingThisNode ) {
+                            stopWalkingThisNode = worker.execAfter${Names.concept(concept)}(modelelement);
+                        }
+                    }
             }`).join("\n")}
         }`;
     }

@@ -21,6 +21,7 @@ import {
     PiReferenceTemplate,
     WalkerTemplate,
     WorkerInterfaceTemplate,
+    DefaultWorkerTemplate,
     InterfaceTemplate,
     StdlibTemplate
 } from "./templates";
@@ -57,6 +58,7 @@ export class LanguageGenerator {
         const stdlibTemplate = new StdlibTemplate();
         const walkerTemplate = new WalkerTemplate();
         const workerTemplate = new WorkerInterfaceTemplate();
+        const defaultWorkerTemplate = new DefaultWorkerTemplate();
         const configurationTemplate = new ConfigurationTemplate();
 
         //Prepare folders
@@ -133,9 +135,13 @@ export class LanguageGenerator {
         var walkerFile = Helpers.pretty(walkerTemplate.generateWalker(language, relativePath), "Walker Class", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.walker(language)}.ts`, walkerFile);
 
-        LOGGER.log(`Generating user model worker: ${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`);
-        var workerFile = Helpers.pretty(workerTemplate.generateWorkerInterface(language, relativePath), "WorkerInterface Class", generationStatus);
+        LOGGER.log(`Generating user model worker interface: ${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`);
+        var workerFile = Helpers.pretty(workerTemplate.generateWorkerInterface(language, relativePath), "Worker Interface", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`, workerFile);
+
+        LOGGER.log(`Generating user model worker: ${this.utilsGenFolder}/${Names.defaultWorker(language)}.ts`);
+        var defaultWorkerFile = Helpers.pretty(defaultWorkerTemplate.generateDefaultWorker(language, relativePath), "DefaultWorker Class", generationStatus);
+        fs.writeFileSync(`${this.utilsGenFolder}/${Names.defaultWorker(language)}.ts`, defaultWorkerFile);
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(this, `Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);

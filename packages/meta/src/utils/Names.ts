@@ -118,8 +118,16 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Validator";
     }
 
-    public static checker(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "Checker";
+    public static rulesChecker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ValidationRulesChecker";
+    }
+
+    public static nonOptionalsChecker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "NonOptionalsChecker";
+    }
+
+    public static referenceChecker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ReferenceChecker";
     }
 
     public static typer(language: PiLanguage): string {
@@ -130,16 +138,16 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Stdlib";
     }
 
-    public static unparser(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "Unparser";
-    }
-
     public static walker(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Walker";
     }
 
     public static workerInterface(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Worker";
+    }
+
+    public static defaultWorker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "DefaultWorker";
     }
 
     public static startWithUpperCase(word: string): string {
@@ -150,4 +158,21 @@ export class Names {
     public static projectionFunction(c: PiConcept): string {
         return "get" + Names.concept(c) + "Box";
     }
+
+    public static unparser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Unparser";
+    }
+
+    public static pegjs(unit: PiConcept): string {
+        return this.startWithUpperCase(unit?.name) + "UnitParser";
+    }
+
+    public static parser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Parser";
+    }
+
+    public static parserCreator(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "CreatorPartOfParser";
+    }
+
 }

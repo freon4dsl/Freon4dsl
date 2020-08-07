@@ -14,21 +14,18 @@ export class NamesCollectorTemplate {
     }
 
     generateNamesCollector(language: PiLanguage, relativePath: string): string {
-        const workerInterfaceName = Names.workerInterface(language);
+        const defaultWorkerName = Names.defaultWorker(language);
         const PiNamedElement = Names.PiNamedElement;
         const namesCollectorClassName : string = Names.namesCollector(language);
         const commentBefore =   `/**
                                  * Collects all parts of 'modelelement' that have a name.
                                  * @param modelelement
                                  */`;
-        const commentAfter =    `/**
-                                 * Does nothing. Here to comply to the interface
-                                 */`;
 
         // the template starts here
         return `
         import { ${PiNamedElement}, Language } from "${PROJECTITCORE}";   
-        import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";
+        import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";
         import { ${Names.metaType(language)}, ${language.concepts.map( concept => `${Names.concept(concept)}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";           
 
         /**
@@ -37,7 +34,7 @@ export class NamesCollectorTemplate {
          * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements 
          * the collection of named parts of nodes in the tree.
          */
-        export class ${namesCollectorClassName} implements ${workerInterfaceName} {
+        export class ${namesCollectorClassName} extends ${defaultWorkerName} {
             // 'namesList' holds the named elements found while traversing the model tree
             namesList: ${PiNamedElement}[] = [];
             // 'metatype' may or may not be set; if set any named element is included only if it conforms to this type
@@ -45,17 +42,15 @@ export class NamesCollectorTemplate {
 
         ${language.concepts.map(concept =>
             `${commentBefore}
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
+            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
                 ${concept.allParts().map(part => hasNameProperty(part.type?.referred) ?
                     (part.isList ?
                         `for (let z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
                         : `this.addIfTypeOK(modelelement.${part.name});`)
                     : `// type of ${part.name} has no 'name' property`).join("\n")}
+                return true;
             }
-            
-            ${commentAfter}
-            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
-            }`
+            `
         ).join("\n\n")}
       
             /**
@@ -79,5 +74,4 @@ export class NamesCollectorTemplate {
             } 
         }`;
     }
-    // OUDE tekst:
 }

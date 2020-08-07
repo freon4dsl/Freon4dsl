@@ -17,9 +17,11 @@ export const TYPER_FOLDER = "typer";
 export const TYPER_GEN_FOLDER = "typer/gen";
 export const STDLIB_GEN_FOLDER = "stdlib/gen";
 export const UNPARSER_GEN_FOLDER = "unparser/gen";
+export const PARSER_GEN_FOLDER = "parser/gen";
 // export const WEBAPP_FOLDER = "../webapp";
 // export const APP_FOLDER = "../webapp/app";
 // export const ASSETS_FOLDER = "../webapp/assets";
+export const RESERVED_WORDS_ORIGIN  = "../meta/src/validatordef/generator/templates";    // the folder in which the to-be-copied files can be found
 export const STYLES_ORIGIN  = "../meta/src/editordef/generator/templates/styles";    // the folder in which the to-be-copied files can be found
 export const STYLES_FOLDER = EDITOR_FOLDER + "/styles";     // the folder to which the style files should be copied
 // the predefined interfaces and classes can be found in ...
@@ -136,7 +138,7 @@ export class PathProvider {
     }
 
     public static checker(language: PiLanguage): string {
-        return VALIDATOR_GEN_FOLDER + "/" + Names.checker(language);
+        return VALIDATOR_GEN_FOLDER + "/" + Names.rulesChecker(language);
     }
 
     // the generated classes that implement the unparser can be found in ...
@@ -151,5 +153,9 @@ export class PathProvider {
 
     public static workerInterface(language: PiLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.workerInterface(language);
+    }
+
+    public static defaultWorker(language: PiLanguage): string {
+        return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.defaultWorker(language);
     }
 }

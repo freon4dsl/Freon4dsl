@@ -2,42 +2,30 @@ language Demo
 
 public model Demo {
     public name: string;
-    public models: DemoModel[];
+    public models: DemoUnit[];
 }
 
-public modelunit DemoModel {
-    public main?: DemoEntity;
-    public functions: DemoFunction[];
+public modelunit DemoUnit {
     public name: string;
-    entities: DemoEntity[];
-    types: Type[];
-    type?: Type;
+    public main: DemoEntity;
+    public functions: DemoFunction[];
 }
-interface BaseType {
+
+public concept DemoEntity  {
     name: string;
-    baseInterface_attr: number;
-}
-interface X {
-}
-interface Type base BaseType, X {
-    simpleprop: string;
-    int_attrs: DemoAttribute[];
-    int_functions: DemoFunction[];
-    reference baseInterface?: DemoEntity;
-}
-
-abstract concept Nothing {
-    x: string;
-}
-
-public concept DemoEntity base Nothing implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
-    reference baseEntity?: DemoEntity;
+    reference baseEntity: DemoEntity[];
 }
 
-limited DemoAttributeType implements BaseType {
+concept DemoAttribute {
+    name: string;
+    somePrimAttr: string[];
+    reference declaredType: DemoAttributeType;
+}
+
+limited DemoAttributeType  {
     name: string;
     extra: number;
     String = { name: "String", "extra": "199"}
@@ -45,19 +33,16 @@ limited DemoAttributeType implements BaseType {
     Boolean = { "name": "Boolean", "extra": "5479"}
     ANY = { "name": "ANY", "extra": "456"}
 }
+
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
 
 public concept DemoFunction {
     public name: string;
-    reference declaredType : BaseType;
+    reference declaredType : DemoAttributeType;
     expression: DemoExpression;
     parameters: DemoVariable[];
-}
-concept DemoAttribute {
-    reference declaredType: DemoAttributeType;
-    name: string;
 }
 
 concept DemoAttributeWithEntityType {
@@ -86,8 +71,6 @@ expression DemoVariableRef base DemoExpression {
     reference variable: DemoVariable;
 }
 
-
-
 abstract expression DemoLiteralExpression base DemoExpression {}
 
 expression DemoStringLiteralExpression base DemoLiteralExpression {
@@ -101,8 +84,6 @@ expression DemoNumberLiteralExpression base DemoLiteralExpression {
 expression DemoBooleanLiteralExpression base DemoLiteralExpression {
     value: string; // TODO should be changed to type boolean
 }
-
-
 
 abstract binary expression DemoBinaryExpression base DemoExpression {
     left: DemoExpression;
@@ -153,4 +134,5 @@ expression DemoIfExpression base DemoExpression {
     whenTrue: DemoExpression;
     whenFalse: DemoExpression;
 }
+
 

@@ -184,7 +184,7 @@ export class NamespaceTemplate {
  
                 // set up the 'walker of the visitor pattern
                 let myWalker = new ${Names.walker(language)}();
-                myWalker.myWorker = myNamesCollector;
+                myWalker.myWorkers.push( myNamesCollector );
                 
                 // collect the elements from the namespace
                 myWalker.walk(this._myElem, (elem: ${Names.allConcepts(language)})=> { return !isNameSpace(elem); } );`;

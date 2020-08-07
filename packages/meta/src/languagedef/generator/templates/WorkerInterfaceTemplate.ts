@@ -20,8 +20,8 @@ export class WorkerInterfaceTemplate {
         export interface ${Names.workerInterface(language)} {
 
         ${language.concepts.map(concept => 
-            `execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)});
-            execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)});`
+            `execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;
+            execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;`
         ).join("\n\n") }       
         }`;
     }

@@ -16,12 +16,16 @@
     "edit-it": 		"ts-node ../meta/src/commandline/projectit -v edit-it -l src/demo/defs/LanguageDefinition.lang -e src/demo/defs/LanguageDefinition.edit -o src/demo",
     "validate-it": 	"ts-node ../meta/src/commandline/projectit -v validate-it -l src/demo/defs/LanguageDefinition.lang -c src/demo/defs/LanguageDefinition.valid -o src/demo",
     "type-it": 	    "ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
+    "demo-pegjs":   "pegjs src/demo/parser/gen/DemoModelUnitParser.pegjs",
 
     "imports":      "ts-node ../meta/src/commandline/projectit all -d src/testCicularImports/def -o src/testCicularImports",
     "testLangCstr": "ts-node ../meta/src/commandline/projectit all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
-    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && yarn run imports && tsc",
+    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && yarn run imports && yarn run parser-project && tsc",
+    "pegjs":        "pegjs src/parser_gen/parser/gen/DemoUnitUnitParser.pegjs",
+    "parser-gen": 	"ts-node ../meta/src/commandline/projectit -v edit-it -l src/parser_gen/defs/LanguageDefinition.lang -e src/parser_gen/defs/LanguageDefinition.edit -o src/parser_gen",
+    "parser-project": "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen",
     "test":         "yarn run all && jest"
   },
   "devDependencies": {
@@ -46,7 +50,10 @@
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2",
     "prettier": "^2.0.4",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "@types/pegjs": "^0.10.1",
+    "pegjs": "^0.10.0",
+    "ts-pegjs": "^0.2.6"
   },
   "dependencies": {
     "@projectit/core": "^0.0.5",
