@@ -61,7 +61,8 @@ export class ParserGenerator {
                 var pegjs_parser = peg.generate(pegjsFile, { output: "source", format: "commonjs" });
                 fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.js`, pegjs_parser);
             } catch (e) {
-                throw new Error(`Error in call to pegjs: file '${Names.pegjs(unit)}' returns '${e.message}'.`);
+                generationStatus.numberOfErrors += 1;
+                LOGGER.error(this, `Error in call to pegjs: file '${Names.pegjs(unit)}' returns '${e.message}'.`);
             }
         });
 

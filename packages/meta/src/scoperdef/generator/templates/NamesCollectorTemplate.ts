@@ -42,12 +42,13 @@ export class NamesCollectorTemplate {
 
         ${language.concepts.map(concept =>
             `${commentBefore}
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
+            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
                 ${concept.allParts().map(part => hasNameProperty(part.type?.referred) ?
                     (part.isList ?
                         `for (let z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
                         : `this.addIfTypeOK(modelelement.${part.name});`)
                     : `// type of ${part.name} has no 'name' property`).join("\n")}
+                return true;
             }
             `
         ).join("\n\n")}

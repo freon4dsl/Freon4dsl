@@ -22,10 +22,10 @@
     "testLangCstr": "ts-node ../meta/src/commandline/projectit all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
-    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && yarn run imports && tsc",
+    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && yarn run imports && yarn run parser-project && tsc",
     "pegjs":        "pegjs src/parser_gen/parser/gen/DemoUnitUnitParser.pegjs",
-    "parser-project": "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen",
     "parser-gen": 	"ts-node ../meta/src/commandline/projectit -v edit-it -l src/parser_gen/defs/LanguageDefinition.lang -e src/parser_gen/defs/LanguageDefinition.edit -o src/parser_gen",
+    "parser-project": "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen",
     "test":         "yarn run all && jest"
   },
   "devDependencies": {

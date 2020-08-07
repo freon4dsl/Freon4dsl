@@ -118,8 +118,12 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Validator";
     }
 
-    public static checker(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "Checker";
+    public static rulesChecker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ValidationRulesChecker";
+    }
+
+    public static nonOptionalsChecker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "NonOptionalsChecker";
     }
 
     public static referenceChecker(language: PiLanguage): string {
@@ -170,4 +174,5 @@ export class Names {
     public static parserCreator(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "CreatorPartOfParser";
     }
+
 }

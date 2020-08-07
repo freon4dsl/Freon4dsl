@@ -34,11 +34,13 @@ export class DefaultWorkerTemplate {
 
         ${language.concepts.map(concept =>
             `${commentBefore}
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
+            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+                return false;
             }
             
             ${commentAfter}
-            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}) {
+            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+                return false;
             }`
         ).join("\n\n")}
         }`;

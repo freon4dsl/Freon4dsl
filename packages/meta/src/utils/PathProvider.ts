@@ -138,7 +138,7 @@ export class PathProvider {
     }
 
     public static checker(language: PiLanguage): string {
-        return VALIDATOR_GEN_FOLDER + "/" + Names.checker(language);
+        return VALIDATOR_GEN_FOLDER + "/" + Names.rulesChecker(language);
     }
 
     // the generated classes that implement the unparser can be found in ...

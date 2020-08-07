@@ -89,7 +89,7 @@ describe("Testing Validator", () => {
         test("(1 + 2) * 'Person' should give type error", () => {
             let errors: PiError[] = [];
             const variableExpression = new DemoVariableRef();
-            const variable = DemoVariable.create({name: "PersonVar"});
+            const variable = DemoVariable.create({name: "XXX"});
             const personEnt = DemoEntity.create({name: "Person"});
             variable.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
             variableExpression.variable = PiElementReference.create<DemoVariable>(variable, "DemoVariable");
@@ -98,7 +98,11 @@ describe("Testing Validator", () => {
             const multiplyExpression = MakeMultiplyExp(plusExpression, variableExpression);
             errors = validator.validate(multiplyExpression);
             expect(errors.length).toBe(1);
-            errors.forEach(e => expect(e.reportedOn === multiplyExpression));
+            // Type of 'DemoVariableRef' should be equal to (the type of) 'DemoAttributeType Integer' in unnamed
+            errors.forEach(e => {
+                // console.log(e.message + " in " + e.locationdescription);
+                expect(e.reportedOn === multiplyExpression)
+            });
         });
 
         test('"Hello Demo" + "Goodbye"\'\' should have 2 errors', () => {
@@ -114,7 +118,7 @@ describe("Testing Validator", () => {
             });
         });
 
-        test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 3 errors', () => {
+        test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 4 errors', () => {
             let errors: PiError[] = [];
             const determine = DemoFunction.create({name: "determine"});
             const AAP = DemoVariable.create({name: "AAP"});
@@ -125,9 +129,13 @@ describe("Testing Validator", () => {
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             errors = validator.validate(determine, true);
             errors.forEach(e => {
-                // console.log(e.message);
+                console.log(e.message);
                 expect(e.reportedOn === determine);
             });
+            // Cannot find reference Person
+            // Type of '' Hello Demo '' should be equal to (the type of) 'DemoAttributeType Integer'
+            // Type of '' Goodbye '' should be equal to (the type of) 'DemoAttributeType Integer'
+            // Property 'declaredType' must have a value
             expect(errors.length).toBe(4);
         });
 
@@ -158,7 +166,7 @@ describe("Testing Validator", () => {
 
             errors = validator.validate(personEnt, true);
             errors.forEach(e => {
-                // console.log(e.message);
+                console.log(e.message + " in " + e.locationdescription);
                 expect(e.reportedOn === personEnt);
             });
             expect(errors.length).toBe(1);
@@ -169,10 +177,9 @@ describe("Testing Validator", () => {
             let errors: PiError[] = [];
             errors = validator.validate(model1, true);
             // errors.forEach(e =>
-            //     console.log(e.message)
+            //     console.log(e.message + " in " + e.locationdescription)
             // );
-            // TODO check result "Type of 'PlaceholderExpression' does not conform to (the type of) 'DemoAttributeType Integer'"
-            expect(errors.length).toBe(11);
+            expect(errors.length).toBe(4);
         });
 
         test ("test correct model", () => {
@@ -191,7 +198,7 @@ describe("Testing Validator", () => {
             // errors.forEach(e =>
             //     console.log(e.message + " => " + e.locationdescription)
             // );
-            expect(errors.length).toBe(17);
+            expect(errors.length).toBe(16);
         });
     });
 });

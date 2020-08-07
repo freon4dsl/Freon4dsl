@@ -1,16 +1,14 @@
 import { DemoModelCreator } from "./DemoModelCreator";
 import * as fs from "fs";
 import { DemoParser } from "../parser/gen/DemoParser";
-import { DemoModel } from "../language/gen";
 import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { DemoUnit } from "../../parser_gen/language/gen";
 import { DemoValidator } from "../validator/gen";
 
-var demoParser = require("../parser/gen/DemoModelUnitParser");
-
-describe("Testing Parser", () => {
+describe.skip("Testing Parser", () => {
+    var demoParser = require("../parser/gen/DemoModelUnitParser");
     // TODO finish the following test after validator includes check on non-optional parts
-    test("complete example model unparsed and parsed again", () => {
+    test.skip("complete example model unparsed and parsed again", () => {
         const model = new DemoModelCreator().createCorrectModel();
         const unparser = new DemoUnparser();
         const parser = new DemoParser<DemoUnit>();
