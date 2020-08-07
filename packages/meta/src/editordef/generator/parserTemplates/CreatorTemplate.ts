@@ -49,7 +49,7 @@ export class CreatorTemplate {
             `;
         }
 
-        if (con.isAbstract) {
+        if (con.isAbstract || (con instanceof PiLimitedConcept)) {
             return `${addReferenceFunction ? `
             ${referenceFunction}` : ``}`;
         } else {

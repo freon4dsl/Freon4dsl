@@ -122,6 +122,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Checker";
     }
 
+    public static referenceChecker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ReferenceChecker";
+    }
+
     public static typer(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Typer";
     }

@@ -117,7 +117,7 @@ HEXDIG = [0-9a-f]
 
     private makeConceptRule(conceptDef: PiEditConcept): string {
         const piClassifier: PiConcept = conceptDef.concept.referred;
-        if (piClassifier.isModel) return ``;
+        if (piClassifier.isModel || piClassifier instanceof PiLimitedConcept) return ``;
         const myName = Names.classifier(piClassifier);
         if (piClassifier.isAbstract) {
             return this.makeChoiceRule(piClassifier);
