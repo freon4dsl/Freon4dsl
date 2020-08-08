@@ -2,6 +2,7 @@ import { PiConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "..
 import { PiEditUnit } from "../../metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, STDLIB_GEN_FOLDER } from "../../../utils";
 import { PiLangUtil } from "../../../languagedef/metalanguage";
+import { referencePostfix } from "./PegjsTemplate";
 
 export class CreatorTemplate {
 
@@ -43,7 +44,7 @@ export class CreatorTemplate {
         const addReferenceFunction: boolean = !(con.isModel || con.isUnit) && !!nameProperty;
         let referenceFunction: string = "";
         if (!!addReferenceFunction) {
-            referenceFunction = `export function create${conceptName}Reference(data: Name): PiElementReference<${conceptName}> {
+            referenceFunction = `export function create${conceptName}${referencePostfix}(data: Name): PiElementReference<${conceptName}> {
                 return PiElementReference.create<${conceptName}>(data.name, "${conceptName}");
             }
             `;

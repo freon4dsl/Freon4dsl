@@ -30,7 +30,8 @@
     "taxrules": 	"ts-node ../meta/src/commandline/projectit all -d src/taxrules/defs -o src/taxrules",
     "taxrules-w": 	"ts-node ../meta/src/commandline/projectit -w all -d src/taxrules/defs -o src/taxrules",
     "all-examples": "yarn run calculator && yarn run example && yarn run heating && yarn run json && yarn run expressions && yarn run openhab && yarn run pi-languages && yarn run taxrules",
-    "lint":         "tslint -c ./tslint.json './src/**/*.ts*'"
+    "lint":         "tslint -c ./tslint.json './src/**/*.ts*'",
+    "pegjs":        "pegjs src/calculator/parser/gen/CalculatorUnitParser.pegjs"
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.9",
