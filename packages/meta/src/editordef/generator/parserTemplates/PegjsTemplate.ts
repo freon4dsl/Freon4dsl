@@ -10,7 +10,7 @@ import {
 import { ListJoin, ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
 import { findAllImplementorsAndSubs, Names } from "../../../utils";
 
-// TODO add support for expressions in the parser
+export const referencePostfix = "PiElemRef";
 
 export class PegjsTemplate {
     referredClassifiers: PiClassifier[] = [];
@@ -42,26 +42,23 @@ export class PegjsTemplate {
     let creator = require("./${creatorName}");
 }
         
-${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}\n`).join("")}
-${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}\n`).join("")}
-${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}\n`).join("")}
-${this.textForListConcepts.map(listRule => `${listRule}\n`).join("")}
-
+${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("\n")}
+${sortedInterfaces.length > 0 ?`${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}`).join("\n")}` : `` }
+${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}`).join("\n")}
+${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
 ws "whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )*
 rws "required whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )+
-
-variable "variable"
-  = first:varLetter rest:identifierChar* { return first + rest.join(""); }
-
-stringLiteral       = "\\"" chars:anyChar* "\\"" { return chars.join(""); }
 
 varLetter           = [a-zA-Z]
 identifierChar      = [a-zA-Z0-9_$] // any char but not /.,!?@~%^&*-=+(){}"':;<>?[]\\/
 anyChar             = [*a-zA-Z0-9' /\\-[\\]+<>=#$_.,!?@~%^&*-=+(){}:;<>?]
 number              = [0-9]
 
-numberLiteral     = nums:number+ { return nums.join(""); }
-booleanLiteral    = fbool:"false" \ tbool:"true" { if (!!fbool) { return fbool; } else { return tbool; } }
+variable            = first:varLetter rest:identifierChar* { return first + rest.join(""); }
+stringLiteral       = "\\"" chars:anyChar* "\\"" { return chars.join(""); }
+numberLiteral       = nums:number+ { return Number.parseInt(nums.join("")); }
+booleanLiteral      = "false" { return false; }
+                    / "true" { return true; }
 
 SingleLineComment
   = "//" (!LineTerminator SourceCharacter)*
@@ -172,7 +169,7 @@ HEXDIG = [0-9a-f]
                 return `${myElem.name}:${listRuleName} ws `;
             } else {
                 if (!myElem.isPart) {
-                    listRuleName += "Reference";
+                    listRuleName += referencePostfix;
                     if (!this.referredClassifiers.includes(myElem.type.referred)) {
                         this.referredClassifiers.push(myElem.type.referred);
                     }
@@ -201,7 +198,7 @@ HEXDIG = [0-9a-f]
                     if (!this.referredClassifiers.includes(myElem.type.referred)) {
                         this.referredClassifiers.push(myElem.type.referred);
                     }
-                    return `${myElem.name}:${typeName}Reference ws `;
+                    return `${myElem.name}:${typeName}${referencePostfix} ws `;
                 }
             }
         }
@@ -209,8 +206,8 @@ HEXDIG = [0-9a-f]
 
     private makeReferenceRule(piClassifier: PiClassifier): string {
         const myName = Names.classifier(piClassifier);
-        return `${myName}Reference = name:variable
-    { return creator.create${myName}Reference({name: name}); }\n`;
+        return `${myName}${referencePostfix} = name:variable
+    { return creator.create${myName}${referencePostfix}({name: name}); }\n`;
     }
 
     private makeRuleForList(item: PiEditSubProjection, myElem: PiProperty, listRuleName: string) {
@@ -223,7 +220,7 @@ HEXDIG = [0-9a-f]
         } else {
             typeName = Names.classifier(myElem.type.referred);
             if (!myElem.isPart) {
-                typeName += "Reference";
+                typeName += referencePostfix;
                 if (!this.referredClassifiers.includes(myElem.type.referred)) {
                     this.referredClassifiers.push(myElem.type.referred);
                 }
