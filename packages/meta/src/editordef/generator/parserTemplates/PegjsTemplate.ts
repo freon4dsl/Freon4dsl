@@ -236,25 +236,44 @@ HEXDIG = [0-9a-f]
         }
     }
 
-    private findPartTypesInUnit(langUnit: PiConcept): PiClassifier[] {
-        let result: PiClassifier[] = [];
-        result.push(langUnit);
-        this.addPartConcepts(langUnit, result);
-        return result;
-    }
+    // this method returns a list of classifiers that are used as types of parts of 'piClassifier'
+    // if the type of a part is an interface, all implementing concepts - direct, or through base interfaces -
+    // are returned
+    // if the type of a part is an abstract concept, all direct subconcepts are returned
+    // 'typesDone' is a list of classifiers that are already examined
+    private addPartConcepts(piClassifier: PiClassifier, result: PiClassifier[], typesDone: PiClassifier[]) {
+        // make sure this classifier is not visited twice
+        if (typesDone.includes(piClassifier)) return;
+        typesDone.push(piClassifier);
 
-    private addPartConcepts(piClassifier: PiClassifier, result: PiClassifier[]) {
-        piClassifier.allParts().forEach(part => {
-            const type = part.type.referred;
-            if (!result.includes(type)) {
-                result.push(type);
-                this.addPartConcepts(type, result);
+        // include this classifier in the result
+        if (!result.includes(piClassifier)) result.push(piClassifier);
+
+        // see what else needs to be included
+        if (piClassifier instanceof PiConcept) {
+            if (!piClassifier.isAbstract) {
+                // for non-abstract concepts include all types of parts
+                piClassifier.allParts().forEach(part => {
+                    const type = part.type.referred;
+                    this.addPartConcepts(type, result, typesDone);
+                });
+            } else {
+                // for abstract concepts include all direct subconcepts
+                piClassifier.allSubConceptsDirect().forEach(type2 => {
+                    this.addPartConcepts(type2, result, typesDone);
+                });
             }
-        });
+        } else if (piClassifier instanceof PiInterface){
+            // for interfaces include all implementors and subinterfaces
+            findAllImplementorsAndSubs(piClassifier).forEach(type2 => {
+                this.addPartConcepts(type2, result, typesDone);
+            });
+        }
     }
 
     private findEditorDefsForUnit(langUnit: PiConcept, conceptEditors: PiEditConcept[], result1: PiEditConcept[], result2: PiInterface[]) {
-        const typesUsedInUnit = this.findPartTypesInUnit(langUnit);
+        let typesUsedInUnit = [];
+        this.addPartConcepts(langUnit, typesUsedInUnit, []);
         // Again note that the order in which the rules are stated, determines whether the parser is functioning or not
         // first create a rule for the unit, next for its children, etc.
         typesUsedInUnit.forEach(type => {
@@ -287,8 +306,8 @@ HEXDIG = [0-9a-f]
     }
 
     private makeBinaryExpressionRule(conceptDef: PiEditConcept, piClassifier: PiBinaryExpressionConcept) {
-        const left = piClassifier.allProperties().find(prop => prop.name = "left");
-        const right = piClassifier.allProperties().find(prop => prop.name = "right");
+        const left = piClassifier.allProperties().find(prop => prop.name === "left");
+        const right = piClassifier.allProperties().find(prop => prop.name === "right");
         const leftRule = Names.classifier(left.type.referred);
         const rightRule = Names.classifier(right.type.referred);
         const symbol = conceptDef.symbol;
