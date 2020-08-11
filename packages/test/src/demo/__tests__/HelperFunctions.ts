@@ -18,10 +18,10 @@ export function makeLiteralExp(incoming: any): DemoExpression {
     let mine: DemoExpression;
     if (typeof incoming === "string" && /[0-9]+/.test(incoming)) {
         mine = new DemoNumberLiteralExpression();
-        (mine as DemoNumberLiteralExpression).value = incoming;
+        (mine as DemoNumberLiteralExpression).value = Number.parseInt(incoming);
     } else if (typeof incoming === "string" && (incoming === "true" || incoming === "false")) {
         mine = new DemoBooleanLiteralExpression();
-        (mine as DemoBooleanLiteralExpression).value = incoming;
+        (mine as DemoBooleanLiteralExpression).value = (incoming === "true" ? true : false);
     } else if (typeof incoming === "string") {
         mine = new DemoStringLiteralExpression();
         (mine as DemoStringLiteralExpression).value = incoming;

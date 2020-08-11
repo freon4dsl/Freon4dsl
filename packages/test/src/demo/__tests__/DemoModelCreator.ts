@@ -46,16 +46,7 @@ export class DemoModelCreator {
         companyEnt.attributes.push(VAT_Number2);
         companyEnt.attributes.push(VAT_Number);
         unit.entities.push(companyEnt);
-
-        const ifFunction = DemoFunction.create({name: "compare", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
-        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        const ifExpression = new DemoIfExpression();
-        ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
-        ifExpression.whenTrue = makeLiteralExp("87");
-        ifExpression.whenFalse = makeLiteralExp("1345");
-        const divideExpression = MakeDivideExp("678", "9990");
-        ifFunction.expression = ifExpression;
-
+        const ifFunction = this.makeIfFunction2();
         companyEnt.functions.push(ifFunction);
 
         const double = DemoFunction.create({name: "compare", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")}); // another one with the same name
@@ -70,7 +61,37 @@ export class DemoModelCreator {
         return result;
     }
 
-    // model.functions[0].expression.appliedfeature.type.referred.unitName).toBe("Company")
+    private makeIfFunction() {
+        const ifFunction = DemoFunction.create({
+            name: "SOMETHING",
+            declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")
+        });
+        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        const ifExpression = new DemoIfExpression();
+        ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
+        ifExpression.whenTrue = makeLiteralExp("87");
+        ifExpression.whenFalse = makeLiteralExp("1345");
+        const divideExpression = MakeDivideExp("678", "9990");
+        ifFunction.expression = ifExpression;
+        return ifFunction;
+    }
+
+
+    private makeIfFunction2() {
+        const ifFunction = DemoFunction.create({
+            name: "compare",
+            declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")
+        });
+        ifFunction.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        const ifExpression = new DemoIfExpression();
+        ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
+        ifExpression.whenTrue = makeLiteralExp("87");
+        ifExpression.whenFalse = makeLiteralExp("1345");
+        const divideExpression = MakeDivideExp("678", "9990");
+        ifFunction.expression = ifExpression;
+        return ifFunction;
+    }
+// model.functions[0].expression.appliedfeature.type.referred.unitName).toBe("Company")
     public createModelWithAppliedfeature(): Demo {
         let result = this.createIncorrectModel();
         let unit: DemoModel = result.models.find(m => m.name === "DemoModel_1");
@@ -120,30 +141,30 @@ export class DemoModelCreator {
         let inheritanceModel: DemoModel = DemoModel.create({ name: "DemoModel_with_inheritance" });
 
         const vehicleEnt = DemoEntity.create({ name: "Vehicle" });
-        const brand = DemoAttribute.create({ name: "brand" });
-        const vehicleName = DemoAttribute.create({ name: "type" });
+        const brand = DemoAttribute.create({ name: "brand", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
+        const vehicleName = DemoAttribute.create({ name: "type", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
         vehicleEnt.attributes.push(brand);
         vehicleEnt.attributes.push(vehicleName);
 
         const carEnt = DemoEntity.create({ name: "Car" });
-        const numberplate = DemoAttribute.create({ name: "numberplate" });
-        const carType = DemoAttribute.create({ name: "make" });
+        const numberplate = DemoAttribute.create({ name: "numberplate", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
+        const carType = DemoAttribute.create({ name: "make", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
         // carEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
         carEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         carEnt.attributes.push(numberplate);
         carEnt.attributes.push(carType);
 
         const bikeEnt = DemoEntity.create({ name: "Bike" });
-        const backseat = DemoAttribute.create({ name: "backseat" });
-        const gears = DemoAttribute.create({ name: "gears" });
+        const backseat = DemoAttribute.create({ name: "backseat", declaredType: PiElementReference.create<DemoAttributeType>("Boolean", "DemoAttributeType") });
+        const gears = DemoAttribute.create({ name: "gears", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
         // bikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
         bikeEnt.baseEntity = PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity");
         bikeEnt.attributes.push(backseat);
         bikeEnt.attributes.push(gears);
 
         const racebikeEnt = DemoEntity.create({ name: "RaceBike" });
-        const color = DemoAttribute.create({ name: "color" });
-        const wheelsize = DemoAttribute.create({ name: "wheelsize" });
+        const color = DemoAttribute.create({ name: "color", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
+        const wheelsize = DemoAttribute.create({ name: "wheelsize", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
         // racebikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity"));
         racebikeEnt.baseEntity = PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity");
         racebikeEnt.attributes.push(color);
@@ -153,6 +174,13 @@ export class DemoModelCreator {
         inheritanceModel.entities.push(carEnt);
         inheritanceModel.entities.push(bikeEnt);
         inheritanceModel.entities.push(racebikeEnt);
+
+        // add functions to everything because this part is not optional
+        inheritanceModel.functions.push(this.makeIfFunction());
+        vehicleEnt.functions.push(this.makeIfFunction());
+        carEnt.functions.push(this.makeIfFunction());
+        bikeEnt.functions.push(this.makeIfFunction());
+        racebikeEnt.functions.push(this.makeIfFunction());
         return inheritanceModel;
     }
 

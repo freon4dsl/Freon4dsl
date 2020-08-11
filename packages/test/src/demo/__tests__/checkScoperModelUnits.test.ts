@@ -71,7 +71,7 @@ describe("testing Scoper on model units", () => {
             expect(unit2.entities.length).toBe(0);  // entities are not public
 
             let vi = scoper.getVisibleNames(unit1);
-            expect(vi.length).toBe(10);
+            expect(vi.length).toBe(11);
             for (let e of unit2.entities) {
                 expect(vi).not.toContain(e.name);
             }

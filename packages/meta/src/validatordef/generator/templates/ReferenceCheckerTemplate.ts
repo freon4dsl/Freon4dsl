@@ -16,14 +16,6 @@ export class ReferenceCheckerTemplate {
         // is returned
         this.imports = [];
         let allMethods = `${language.concepts.map(concept =>
-                `${this.createChecksOnNonOptionalParts(concept)}`
-            ).join("\n\n")}`;
-
-        // because 'createChecksOnNonOptionalParts' determines which concepts to import
-        // and thus fills 'this.imports' list, it needs to be called before the rest of the template
-        // is returned
-        this.imports = [];
-        let allMethods = `${language.concepts.map(concept =>
             `${this.createChecksOnNonOptionalParts(concept)}`
         ).join("\n\n")}`;
 
