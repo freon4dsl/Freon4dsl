@@ -1,4 +1,5 @@
 import {
+    PiBinaryExpressionConcept,
     PiClassifier,
     PiConcept,
     PiInterface,
@@ -8,9 +9,9 @@ import {
     PiProperty
 } from "../../../languagedef/metalanguage/PiLanguage";
 import { ListJoin, ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
-import { findAllImplementorsAndSubs, Names } from "../../../utils";
+import { findAllImplementorsAndSubs, findImplementors, Names } from "../../../utils";
 
-// TODO add support for expressions in the parser
+export const referencePostfix = "PiElemRef";
 
 export class PegjsTemplate {
     referredClassifiers: PiClassifier[] = [];
@@ -42,26 +43,23 @@ export class PegjsTemplate {
     let creator = require("./${creatorName}");
 }
         
-${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}\n`).join("")}
-${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}\n`).join("")}
-${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}\n`).join("")}
-${this.textForListConcepts.map(listRule => `${listRule}\n`).join("")}
-
+${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("\n")}
+${sortedInterfaces.length > 0 ?`${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}`).join("\n")}` : `` }
+${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}`).join("\n")}
+${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
 ws "whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )*
 rws "required whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )+
-
-variable "variable"
-  = first:varLetter rest:identifierChar* { return first + rest.join(""); }
-
-stringLiteral       = "\\"" chars:anyChar* "\\"" { return chars.join(""); }
 
 varLetter           = [a-zA-Z]
 identifierChar      = [a-zA-Z0-9_$] // any char but not /.,!?@~%^&*-=+(){}"':;<>?[]\\/
 anyChar             = [*a-zA-Z0-9' /\\-[\\]+<>=#$_.,!?@~%^&*-=+(){}:;<>?]
 number              = [0-9]
 
-numberLiteral     = nums:number+ { return nums.join(""); }
-booleanLiteral    = fbool:"false" \ tbool:"true" { if (!!fbool) { return fbool; } else { return tbool; } }
+variable            = first:varLetter rest:identifierChar* { return first + rest.join(""); }
+stringLiteral       = "\\"" chars:anyChar* "\\"" { return chars.join(""); }
+numberLiteral       = nums:number+ { return Number.parseInt(nums.join("")); }
+booleanLiteral      = "false" { return false; }
+                    / "true" { return true; }
 
 SingleLineComment
   = "//" (!LineTerminator SourceCharacter)*
@@ -121,6 +119,8 @@ HEXDIG = [0-9a-f]
         const myName = Names.classifier(piClassifier);
         if (piClassifier.isAbstract) {
             return this.makeChoiceRule(piClassifier);
+        } else if (piClassifier instanceof PiBinaryExpressionConcept) {
+            return this.makeBinaryExpressionRule(conceptDef, piClassifier);
         } else {
             const propsToSet: PiProperty[] = [];
 
@@ -172,7 +172,7 @@ HEXDIG = [0-9a-f]
                 return `${myElem.name}:${listRuleName} ws `;
             } else {
                 if (!myElem.isPart) {
-                    listRuleName += "Reference";
+                    listRuleName += referencePostfix;
                     if (!this.referredClassifiers.includes(myElem.type.referred)) {
                         this.referredClassifiers.push(myElem.type.referred);
                     }
@@ -201,7 +201,7 @@ HEXDIG = [0-9a-f]
                     if (!this.referredClassifiers.includes(myElem.type.referred)) {
                         this.referredClassifiers.push(myElem.type.referred);
                     }
-                    return `${myElem.name}:${typeName}Reference ws `;
+                    return `${myElem.name}:${typeName}${referencePostfix} ws `;
                 }
             }
         }
@@ -209,8 +209,8 @@ HEXDIG = [0-9a-f]
 
     private makeReferenceRule(piClassifier: PiClassifier): string {
         const myName = Names.classifier(piClassifier);
-        return `${myName}Reference = name:variable
-    { return creator.create${myName}Reference({name: name}); }\n`;
+        return `${myName}${referencePostfix} = name:variable
+    { return creator.create${myName}${referencePostfix}({name: name}); }\n`;
     }
 
     private makeRuleForList(item: PiEditSubProjection, myElem: PiProperty, listRuleName: string) {
@@ -223,38 +223,57 @@ HEXDIG = [0-9a-f]
         } else {
             typeName = Names.classifier(myElem.type.referred);
             if (!myElem.isPart) {
-                typeName += "Reference";
+                typeName += referencePostfix;
                 if (!this.referredClassifiers.includes(myElem.type.referred)) {
                     this.referredClassifiers.push(myElem.type.referred);
                 }
             }
         }
-        const joinText = (item.listJoin?.joinText ? item.listJoin?.joinText.trimRight() : "NO_JOINTEXT");
+        const joinText = (item.listJoin?.joinText ? `${item.listJoin?.joinText.trimRight()}` : " ");
         if (item.listJoin?.joinType === ListJoinType.Separator) {
             this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
     { return [head].concat(tail); }\n`);
         }
     }
 
-    private findPartTypesInUnit(langUnit: PiConcept): PiClassifier[] {
-        let result: PiClassifier[] = [];
-        result.push(langUnit);
-        this.addPartConcepts(langUnit, result);
-        return result;
-    }
+    // this method returns a list of classifiers that are used as types of parts of 'piClassifier'
+    // if the type of a part is an interface, all implementing concepts - direct, or through base interfaces -
+    // are returned
+    // if the type of a part is an abstract concept, all direct subconcepts are returned
+    // 'typesDone' is a list of classifiers that are already examined
+    private addPartConcepts(piClassifier: PiClassifier, result: PiClassifier[], typesDone: PiClassifier[]) {
+        // make sure this classifier is not visited twice
+        if (typesDone.includes(piClassifier)) return;
+        typesDone.push(piClassifier);
 
-    private addPartConcepts(piClassifier: PiClassifier, result: PiClassifier[]) {
-        piClassifier.allParts().forEach(part => {
-            const type = part.type.referred;
-            if (!result.includes(type)) {
-                result.push(type);
-                this.addPartConcepts(type, result);
+        // include this classifier in the result
+        if (!result.includes(piClassifier)) result.push(piClassifier);
+
+        // see what else needs to be included
+        if (piClassifier instanceof PiConcept) {
+            if (!piClassifier.isAbstract) {
+                // for non-abstract concepts include all types of parts
+                piClassifier.allParts().forEach(part => {
+                    const type = part.type.referred;
+                    this.addPartConcepts(type, result, typesDone);
+                });
+            } else {
+                // for abstract concepts include all direct subconcepts
+                piClassifier.allSubConceptsDirect().forEach(type2 => {
+                    this.addPartConcepts(type2, result, typesDone);
+                });
             }
-        });
+        } else if (piClassifier instanceof PiInterface){
+            // for interfaces include all implementors and subinterfaces
+            findAllImplementorsAndSubs(piClassifier).forEach(type2 => {
+                this.addPartConcepts(type2, result, typesDone);
+            });
+        }
     }
 
     private findEditorDefsForUnit(langUnit: PiConcept, conceptEditors: PiEditConcept[], result1: PiEditConcept[], result2: PiInterface[]) {
-        const typesUsedInUnit = this.findPartTypesInUnit(langUnit);
+        let typesUsedInUnit = [];
+        this.addPartConcepts(langUnit, typesUsedInUnit, []);
         // Again note that the order in which the rules are stated, determines whether the parser is functioning or not
         // first create a rule for the unit, next for its children, etc.
         typesUsedInUnit.forEach(type => {
@@ -270,14 +289,32 @@ HEXDIG = [0-9a-f]
         // for interfaces we create a parse rule that is a choice between all classifiers that either implement or extend the interface
         // because limited concepts can only be used as reference, these are excluded for this choice
         // we also need to filter out the interface itself
-        // TODO should we include a reference to a limited concept in the parse rule for an interface?
-        const implementors = findAllImplementorsAndSubs(piClassifier).filter(piCLassifier => (piCLassifier !== piClassifier) && !(piCLassifier instanceof PiLimitedConcept));
+        // the same is done for abstract concepts
+        let implementors: PiClassifier[] = [];
+        if (piClassifier instanceof  PiInterface) {
+            // TODO should we include a reference to a limited concept in the parse rule for an interface?
+            implementors = findImplementors(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
+        } else if (piClassifier instanceof PiConcept) {
+            implementors = piClassifier.allSubConceptsDirect().filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
+        }
 
         if (implementors.length > 0 ) {
             return `${Names.classifier(piClassifier)} = ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n`;
         } else {
             return `${Names.classifier(piClassifier)} = "ERROR: there are no concepts that implement this interface"\n`;
         }
+    }
+
+    private makeBinaryExpressionRule(conceptDef: PiEditConcept, piClassifier: PiBinaryExpressionConcept) {
+        const left = piClassifier.allProperties().find(prop => prop.name === "left");
+        const right = piClassifier.allProperties().find(prop => prop.name === "right");
+        const leftRule = Names.classifier(left.type.referred);
+        const rightRule = Names.classifier(right.type.referred);
+        const symbol = conceptDef.symbol;
+        const myName = Names.classifier(piClassifier);
+        return `${myName} = "(" ws left:${leftRule} ws "${symbol}" ws right:${rightRule} ws ")"
+    { return creator.create${myName}({left: left, right: right}); }
+    `;
     }
 }
 

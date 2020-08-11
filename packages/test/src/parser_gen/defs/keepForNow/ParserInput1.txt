@@ -1,0 +1,8 @@
+DemoUnit eenNaam
+
+main
+
+entity1 base anotherEntity, andAnother, andYetAnother start
+    attr1: type1 = "myString",
+    attr2: type2 = "TEKST"
+end

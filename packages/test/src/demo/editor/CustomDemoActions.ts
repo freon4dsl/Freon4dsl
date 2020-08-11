@@ -20,7 +20,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
             const parent = box.element;
             const x = new DemoNumberLiteralExpression();
-            x.value = trigger.toString();
+            x.value = Number.parseInt(trigger.toString());
             parent[(box as AliasBox).propertyName] = x;
             return x;
         },

@@ -3,8 +3,7 @@ import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLangu
 import { ValidationUtils } from "../ValidationUtils";
 
 export class ReferenceCheckerTemplate {
-    constructor() {
-    }
+    imports: string[] = [];
 
     generateChecker(language: PiLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
@@ -12,11 +11,18 @@ export class ReferenceCheckerTemplate {
         const checkerClassName : string = Names.referenceChecker(language);
         const unparserInterfaceName: string = Names.PiUnparser;
 
+        // because 'createChecksOnNonOptionalParts' determines which concepts to import
+        // and thus fills 'this.imports' list, it needs to be called before the rest of the template
+        // is returned
+        this.imports = [];
+        let allMethods = `${language.concepts.map(concept =>
+            `${this.createChecksOnNonOptionalParts(concept)}`
+        ).join("\n\n")}`;
 
         // the template starts here
         return `
         import { ${errorClassName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
+        import { ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";   
 
@@ -33,21 +39,8 @@ export class ReferenceCheckerTemplate {
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
-            ${language.concepts.map(concept =>
-                `${this.createChecksOnNonOptionalParts(concept)}`
-            ).join("\n\n")}
+            ${allMethods}
         }`;
-    }
-
-    private createImports(language: PiLanguage) : string {
-        let result : string = "";
-        result = language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts? `,` :``);
-        result = result.concat(
-            language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`).join(", "));
-        return result;
     }
 
     private createChecksOnNonOptionalParts(concept: PiConcept) : string {
@@ -55,24 +48,34 @@ export class ReferenceCheckerTemplate {
         let locationdescription = ValidationUtils.findLocationDescription(concept);
 
         concept.allProperties().forEach(prop => {
-            // empty lists can be checked using one of the validation rules
-            if (!prop.isPart && !prop.isList) {
-                result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred == null) {
-                    this.errorList.push(new PiError(\`Cannot find reference '\${modelelement.${prop.name}.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`));
-                    hasFatalError = true;
+            if (!prop.isPart) {
+                if (prop.isList) {
+                    result += `for (let referredElem of modelelement.${prop.name} ) {
+                        if (referredElem.referred == null) {
+                            this.errorList.push(
+                                new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`)
+                            );
+                            hasFatalError = true;
+                        }
+                    }`
+                } else {
+                    result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred == null) {
+                        this.errorList.push(new PiError(\`Cannot find reference '\${modelelement.${prop.name}.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`));
+                        hasFatalError = true;
+                    }`
                 }
-                `
             }
         });
 
         if (result.length > 0) {
+            this.imports.push(Names.concept(concept));
             return `
             /**
              * Checks 'modelelement' before checking its children.
              * Found errors are pushed onto 'errorlist'.
              * If an error is found, it is considered 'fatal', which means that no other checks on 
              * 'modelelement' are performed.
-             
+             *
              * @param modelelement
              */
             public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {

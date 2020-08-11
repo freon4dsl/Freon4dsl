@@ -1,8 +1,17 @@
-DemoUnit eenNaam
+unit eenNaam {
 
-main
+main:
 
 entity1 base anotherEntity, andAnother, andYetAnother start
     attr1: type1 = "myString",
     attr2: type2 = "TEKST"
 end
+
+unit wide functions:
+DemoFunction functionXXX
+	expression CALL funct555 (  )
+	parameters
+	DemoVariable variableYYY
+    	declaredType entity1
+	declaredType STRING
+}

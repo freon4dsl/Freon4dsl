@@ -14,6 +14,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import * as fs from "fs";
+import { DemoValidator } from "../validator/gen";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -27,7 +28,7 @@ describe("Testing Unparser", () => {
         test("3", () => {
             let result: string = "";
             let left = new DemoNumberLiteralExpression();
-            left.value = "3";
+            left.value = 3;
             result = unparser.unparse(left, 0);
             expect(result).toBe("3");
         });
@@ -47,7 +48,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult, 0);
-            expect(result).toBe("( 3 * ' temp ' )");
+            expect(result).toBe("( 3 * ' \"temp\" ' )");
         });
 
         test("multiplication (3 / 4) * 'temp'", () => {
@@ -59,7 +60,7 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.unparse(mult, 0);
-            expect(result).toBe("( ( 3 / 4 ) * ' temp ' )");
+            expect(result).toBe("( ( 3 / 4 ) * ' \"temp\" ' )");
         });
 
         test("(1 + 2) * 'Person'", () => {
@@ -121,9 +122,17 @@ describe("Testing Unparser", () => {
             // expect(result).toBe("DemoEntity Person{ age : Boolean, unitName : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
 
-        test.skip("complete example model with simple attribute types", () => {
+        test("complete example model with simple attribute types", () => {
             let result: string = "";
             const model = new DemoModelCreator().createModelWithMultipleUnits();
+
+            let validator = new DemoValidator();
+            let errors = validator.validate(model, true);
+            errors.forEach(err =>{
+               console.log((err.message + " in " + err.locationdescription))
+            });
+            expect(errors.length).toBeLessThanOrEqual(0);
+
             result = unparser.unparse(model, 0, false);
             let path: string = "./unparsedDemoModel.txt";
             if (!fs.existsSync(path)) {
@@ -133,7 +142,8 @@ describe("Testing Unparser", () => {
             }
 
             // TODO use snapshot
-            expect(result.length).toBe(2453);
+            // expect(result.length).toBe(6124);
+            expect(result).toMatchSnapshot();
         });
     });
 });

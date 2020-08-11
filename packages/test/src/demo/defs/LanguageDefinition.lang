@@ -86,8 +86,6 @@ expression DemoVariableRef base DemoExpression {
     reference variable: DemoVariable;
 }
 
-
-
 abstract expression DemoLiteralExpression base DemoExpression {}
 
 expression DemoStringLiteralExpression base DemoLiteralExpression {
@@ -95,14 +93,12 @@ expression DemoStringLiteralExpression base DemoLiteralExpression {
 }
 
 expression DemoNumberLiteralExpression base DemoLiteralExpression {
-    value: string; // TODO should be changed to type number
+    value: number;
 }
 
 expression DemoBooleanLiteralExpression base DemoLiteralExpression {
-    value: string; // TODO should be changed to type boolean
+    value: boolean;
 }
-
-
 
 abstract binary expression DemoBinaryExpression base DemoExpression {
     left: DemoExpression;

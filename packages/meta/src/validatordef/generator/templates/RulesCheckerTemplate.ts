@@ -137,10 +137,14 @@ export class RulesCheckerTemplate {
         const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
         ${langExpToTypeScript(rule.list)}.forEach((elem, index) => {
-            if (!${uniquelistName}.includes(elem.${listpropertyTypescript})){
-                ${uniquelistName}.push(elem.${listpropertyTypescript});
+            if ((elem === undefined) || (elem === null)) {
+                this.errorList.push(new PiError(\`Element[\$\{index\}] of property '${listName}' has no value\`, ${langExpToTypeScript(rule.list)}[index], ${locationdescription}));
             } else {
-                this.errorList.push(new PiError("The value of property '${listpropertyName}' is not unique in list '${listName}'", ${langExpToTypeScript(rule.list)}[index], ${locationdescription}));
+                if (!${uniquelistName}.includes(elem.${listpropertyTypescript})){
+                    ${uniquelistName}.push(elem.${listpropertyTypescript});
+                } else {
+                    this.errorList.push(new PiError("The value of property '${listpropertyName}' is not unique in list '${listName}'", ${langExpToTypeScript(rule.list)}[index], ${locationdescription}));
+                }
             }
         });`;
     }

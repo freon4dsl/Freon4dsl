@@ -8,16 +8,17 @@ public model Demo {
 public modelunit DemoUnit {
     public name: string;
     public main: DemoEntity;
-//    public functions: DemoFunction[];
+    public functions: DemoFunction[];
 }
 
 public concept DemoEntity  {
     name: string;
     attributes: DemoAttribute[];
-//    entAttributes: DemoAttributeWithEntityType[];
-//    functions: DemoFunction[];
+    entAttributes: DemoAttributeWithEntityType[];
+    functions: DemoFunction[];
     reference baseEntity: DemoEntity[];
 }
+
 concept DemoAttribute {
     name: string;
     somePrimAttr: string[];
@@ -33,18 +34,16 @@ limited DemoAttributeType  {
     ANY = { "name": "ANY", "extra": "456"}
 }
 
-/*
 expression DemoAbsExpression base DemoExpression {
     expr: DemoExpression;
 }
 
 public concept DemoFunction {
     public name: string;
-    reference declaredType : Type;
+    reference declaredType : DemoAttributeType;
     expression: DemoExpression;
     parameters: DemoVariable[];
 }
-
 
 concept DemoAttributeWithEntityType {
     reference declaredType: DemoEntity;
@@ -72,8 +71,6 @@ expression DemoVariableRef base DemoExpression {
     reference variable: DemoVariable;
 }
 
-
-
 abstract expression DemoLiteralExpression base DemoExpression {}
 
 expression DemoStringLiteralExpression base DemoLiteralExpression {
@@ -87,8 +84,6 @@ expression DemoNumberLiteralExpression base DemoLiteralExpression {
 expression DemoBooleanLiteralExpression base DemoLiteralExpression {
     value: string; // TODO should be changed to type boolean
 }
-
-
 
 abstract binary expression DemoBinaryExpression base DemoExpression {
     left: DemoExpression;
@@ -140,5 +135,4 @@ expression DemoIfExpression base DemoExpression {
     whenFalse: DemoExpression;
 }
 
-*/
 
