@@ -19,6 +19,14 @@ export class ReferenceCheckerTemplate {
                 `${this.createChecksOnNonOptionalParts(concept)}`
             ).join("\n\n")}`;
 
+        // because 'createChecksOnNonOptionalParts' determines which concepts to import
+        // and thus fills 'this.imports' list, it needs to be called before the rest of the template
+        // is returned
+        this.imports = [];
+        let allMethods = `${language.concepts.map(concept =>
+            `${this.createChecksOnNonOptionalParts(concept)}`
+        ).join("\n\n")}`;
+
         // the template starts here
         return `
         import { ${errorClassName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";

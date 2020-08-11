@@ -139,6 +139,7 @@ export function  replaceInterfacesWithImplementors(classifiers: PiClassifier[] |
  * @param piInterface
  */
 export function  findImplementors(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
+    // TODO add implementors of sub-interfaces
     let myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
     return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
 }
