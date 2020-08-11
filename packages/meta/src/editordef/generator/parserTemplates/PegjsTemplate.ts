@@ -9,7 +9,7 @@ import {
     PiProperty
 } from "../../../languagedef/metalanguage/PiLanguage";
 import { ListJoin, ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
-import { findAllImplementorsAndSubs, Names } from "../../../utils";
+import { findAllImplementorsAndSubs, findImplementors, Names } from "../../../utils";
 
 export const referencePostfix = "PiElemRef";
 
@@ -270,8 +270,14 @@ HEXDIG = [0-9a-f]
         // for interfaces we create a parse rule that is a choice between all classifiers that either implement or extend the interface
         // because limited concepts can only be used as reference, these are excluded for this choice
         // we also need to filter out the interface itself
-        // TODO should we include a reference to a limited concept in the parse rule for an interface?
-        const implementors = findAllImplementorsAndSubs(piClassifier).filter(piCLassifier => (piCLassifier !== piClassifier) && !(piCLassifier instanceof PiLimitedConcept));
+        // the same is done for abstract concepts
+        let implementors: PiClassifier[] = [];
+        if (piClassifier instanceof  PiInterface) {
+            // TODO should we include a reference to a limited concept in the parse rule for an interface?
+            implementors = findImplementors(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
+        } else if (piClassifier instanceof PiConcept) {
+            implementors = piClassifier.allSubConceptsDirect().filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
+        }
 
         if (implementors.length > 0 ) {
             return `${Names.classifier(piClassifier)} = ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n`;
