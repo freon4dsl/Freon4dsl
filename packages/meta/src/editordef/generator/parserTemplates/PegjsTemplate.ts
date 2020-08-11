@@ -229,7 +229,7 @@ HEXDIG = [0-9a-f]
                 }
             }
         }
-        const joinText = (item.listJoin?.joinText ? item.listJoin?.joinText.trimRight() : "NO_JOINTEXT");
+        const joinText = (item.listJoin?.joinText ? `${item.listJoin?.joinText.trimRight()}` : " ");
         if (item.listJoin?.joinType === ListJoinType.Separator) {
             this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
     { return [head].concat(tail); }\n`);
