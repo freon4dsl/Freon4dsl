@@ -1,0 +1,201 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 1`] = `
+"Demo ModelWithUnits 
+    models 
+        model DemoModel_with_inheritance { 
+        main: 
+        type: 
+        types: 
+            
+        entities: 
+            DemoEntity Vehicle 
+                simpleprop \\"\\" 
+                baseInterface_attr 0 
+                x \\"\\" 
+                attributes 
+                    brand : String
+                    type : String
+                entAttributes 
+                    
+                functions 
+                    DemoFunction SOMETHING 
+                        expression if ( ( 4 < 80 ) ) then 
+                                             87 
+                                   else 
+                                      1345 
+                                   endif 
+                        parameters 
+                            
+                        declaredType Integer
+                int_attrs 
+                    
+                int_functions 
+                    
+                baseEntity 
+                baseInterface
+
+
+            DemoEntity Car 
+                simpleprop \\"\\" 
+                baseInterface_attr 0 
+                x \\"\\" 
+                attributes 
+                    numberplate : Integer
+                    make : String
+                entAttributes 
+                    
+                functions 
+                    DemoFunction SOMETHING 
+                        expression if ( ( 4 < 80 ) ) then 
+                                             87 
+                                   else 
+                                      1345 
+                                   endif 
+                        parameters 
+                            
+                        declaredType Integer
+                int_attrs 
+                    
+                int_functions 
+                    
+                baseEntity Vehicle 
+                baseInterface
+
+
+            DemoEntity Bike 
+                simpleprop \\"\\" 
+                baseInterface_attr 0 
+                x \\"\\" 
+                attributes 
+                    backseat : Boolean
+                    gears : Integer
+                entAttributes 
+                    
+                functions 
+                    DemoFunction SOMETHING 
+                        expression if ( ( 4 < 80 ) ) then 
+                                             87 
+                                   else 
+                                      1345 
+                                   endif 
+                        parameters 
+                            
+                        declaredType Integer
+                int_attrs 
+                    
+                int_functions 
+                    
+                baseEntity Vehicle 
+                baseInterface
+
+
+            DemoEntity RaceBike 
+                simpleprop \\"\\" 
+                baseInterface_attr 0 
+                x \\"\\" 
+                attributes 
+                    color : String
+                    wheelsize : Integer
+                entAttributes 
+                    
+                functions 
+                    DemoFunction SOMETHING 
+                        expression if ( ( 4 < 80 ) ) then 
+                                             87 
+                                   else 
+                                      1345 
+                                   endif 
+                        parameters 
+                            
+                        declaredType Integer
+                int_attrs 
+                    
+                int_functions 
+                    
+                baseEntity Bike 
+                baseInterface
+
+
+        model wide functions: 
+            DemoFunction SOMETHING 
+                expression if ( ( 4 < 80 ) ) then 
+                                     87 
+                           else 
+                              1345 
+                           endif 
+                parameters 
+                    
+                declaredType Integer
+        }
+        model CorrectUnit { 
+        main: 
+        type: 
+        types: 
+            
+        entities: 
+            DemoEntity School 
+                simpleprop \\"\\" 
+                baseInterface_attr 0 
+                x \\"\\" 
+                attributes 
+                    foundedIn : Integer
+                    name : String
+                entAttributes 
+                    
+                functions 
+                    DemoFunction requestClean 
+                        expression ( 5 + 24 ) 
+                        parameters 
+                            DemoVariable cleaningCompany 
+                                declaredType Company
+                        declaredType Integer
+                int_attrs 
+                    
+                int_functions 
+                    
+                baseEntity 
+                baseInterface
+
+
+            DemoEntity Company 
+                simpleprop \\"\\" 
+                baseInterface_attr 0 
+                x \\"\\" 
+                attributes 
+                    name : String
+                    VAT_Number : Integer
+                entAttributes 
+                    
+                functions 
+                    DemoFunction doClean 
+                        expression ( 5 + 24 ) 
+                        parameters 
+                            DemoVariable at 
+                                declaredType Company
+                        declaredType Integer
+                int_attrs 
+                    
+                int_functions 
+                    
+                baseEntity 
+                baseInterface
+
+
+        model wide functions: 
+            DemoFunction compare 
+                expression if ( ( 2 < 5 ) ) then 
+                                     1 
+                           else 
+                              5 
+                           endif 
+                parameters 
+                    
+                declaredType Integer
+DemoFunction helloString 
+                                         expression ' \\"Hello Demo\\" ' 
+                                         parameters 
+                                             
+                                         declaredType String
+        }"
+`;
