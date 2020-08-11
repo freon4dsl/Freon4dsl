@@ -1,4 +1,5 @@
 import {
+    PiBinaryExpressionConcept,
     PiClassifier,
     PiConcept,
     PiInterface,
@@ -118,6 +119,8 @@ HEXDIG = [0-9a-f]
         const myName = Names.classifier(piClassifier);
         if (piClassifier.isAbstract) {
             return this.makeChoiceRule(piClassifier);
+        } else if (piClassifier instanceof PiBinaryExpressionConcept) {
+            return this.makeBinaryExpressionRule(conceptDef, piClassifier);
         } else {
             const propsToSet: PiProperty[] = [];
 
@@ -275,6 +278,18 @@ HEXDIG = [0-9a-f]
         } else {
             return `${Names.classifier(piClassifier)} = "ERROR: there are no concepts that implement this interface"\n`;
         }
+    }
+
+    private makeBinaryExpressionRule(conceptDef: PiEditConcept, piClassifier: PiBinaryExpressionConcept) {
+        const left = piClassifier.allProperties().find(prop => prop.name = "left");
+        const right = piClassifier.allProperties().find(prop => prop.name = "right");
+        const leftRule = Names.classifier(left.type.referred);
+        const rightRule = Names.classifier(right.type.referred);
+        const symbol = conceptDef.symbol;
+        const myName = Names.classifier(piClassifier);
+        return `${myName} = "(" ws left:${leftRule} ws "${symbol}" ws right:${rightRule} ws ")"
+    { return creator.create${myName}({left: left, right: right}); }
+    `;
     }
 }
 
