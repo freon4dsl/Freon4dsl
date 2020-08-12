@@ -23,13 +23,16 @@ export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcep
             newList.push(concept);
         }
     }
+
     while (newList.length < piclasses.length) {
         for (let c of piclasses) {
             let concept = (c instanceof PiElementReference ? c.referred : c);
-            let base = concept.base?.referred;
-            if (base) {
-                if (newList.indexOf(base) > -1) { // base of the concept is already in the list
-                    newList.push(concept);
+            if (!newList.includes(concept)) { // concept is already in the list
+                let base = concept.base?.referred;
+                if (base) {
+                    if (newList.indexOf(base) > -1) { // base of the concept is already in the list
+                        newList.push(concept);
+                    }
                 }
             }
         }
