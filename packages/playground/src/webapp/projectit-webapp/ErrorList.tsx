@@ -38,6 +38,7 @@ export interface IErrorItem {
     error: PiError;
     errormessage: string;
     errorlocation: string;
+    errorseverity: string;
 }
 
 @observer
@@ -63,6 +64,7 @@ export class ErrorList extends React.Component<{}, {}> {
                 error: err,
                 errormessage: err.message,
                 errorlocation: err.locationdescription,
+                errorseverity: err.severity
             })
         });
         return myList;
@@ -76,6 +78,14 @@ export class ErrorList extends React.Component<{}, {}> {
             fieldName: "errormessage",
             minWidth: 200,
             maxWidth: 600,
+            isResizable: true
+        });
+        this._columns.push({
+            key: "severity",
+            name: "severity",
+            fieldName: "errorseverity",
+            minWidth: 200,
+            maxWidth: 400,
             isResizable: true
         });
         this._columns.push({
