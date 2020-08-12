@@ -8,6 +8,7 @@ export class ReferenceCheckerTemplate {
     generateChecker(language: PiLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName : string = Names.PiError;
+        const errorSeverityName : string = Names.PiErrorSeverity;
         const checkerClassName : string = Names.referenceChecker(language);
         const unparserInterfaceName: string = Names.PiUnparser;
 
@@ -21,7 +22,7 @@ export class ReferenceCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";   
@@ -53,14 +54,14 @@ export class ReferenceCheckerTemplate {
                     result += `for (let referredElem of modelelement.${prop.name} ) {
                         if (referredElem.referred == null) {
                             this.errorList.push(
-                                new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`)
+                                new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`, PiErrorSeverity.Error)
                             );
                             hasFatalError = true;
                         }
                     }`
                 } else {
                     result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred == null) {
-                        this.errorList.push(new PiError(\`Cannot find reference '\${modelelement.${prop.name}.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`));
+                        this.errorList.push(new PiError(\`Cannot find reference '\${modelelement.${prop.name}.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`, PiErrorSeverity.Error));
                         hasFatalError = true;
                     }`
                 }

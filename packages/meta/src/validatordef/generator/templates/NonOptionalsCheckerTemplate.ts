@@ -2,6 +2,15 @@ import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GE
 import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
+const commentBefore =   `/**
+                          * Checks 'modelelement' before checking its children.
+                          * Found errors are pushed onto 'errorlist'.
+                          * If an error is found, it is considered 'fatal', which means that no other checks on 
+                          * 'modelelement' are performed.
+                          *       
+                          * @param modelelement
+                          */`;
+
 export class NonOptionalsCheckerTemplate {
     done : PiConcept[] = [];
     constructor() {
@@ -10,23 +19,14 @@ export class NonOptionalsCheckerTemplate {
     generateChecker(language: PiLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName : string = Names.PiError;
+        const errorSeverityName : string = Names.PiErrorSeverity;
         const checkerClassName : string = Names.nonOptionalsChecker(language);
         const unparserInterfaceName: string = Names.PiUnparser;
-        const commentBefore =   `/**
-                                 * Checks 'modelelement' before checking its children.
-                                 * Found errors are pushed onto 'errorlist'.
-                                 * If an error is found, it is considered 'fatal', which means that no other checks on 
-                                 * 'modelelement' are performed.
-                                 
-                                 * @param modelelement
-                                 */`;
         this.done = [];
-
-        // TODO do not generate a method for concepts that have no non-optional parts
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";   
@@ -45,12 +45,7 @@ export class NonOptionalsCheckerTemplate {
             errorList: ${errorClassName}[] = [];
 
         ${language.concepts.map(concept =>
-            `${commentBefore}
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
-                let hasFatalError: boolean = false;
-                ${this.createChecksOnNonOptionalParts(concept)}
-                return hasFatalError;
-            }`
+            `${this.createChecksOnNonOptionalParts(concept)}`
         ).join("\n\n")}
         }`;
     }
@@ -70,18 +65,29 @@ export class NonOptionalsCheckerTemplate {
         let result: string = '';
         let locationdescription = ValidationUtils.findLocationDescription(concept);
 
+        // TODO do not produce errors for non-optionals in a model-interface
         concept.allProperties().forEach(prop => {
             if (!prop.isOptional && !prop.isList) {
                 // empty lists can be checked using one of the validation rules
                 result += `if (modelelement.${prop.name} == null || modelelement.${prop.name} == undefined ) {
                     hasFatalError = true;
-                    this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}));
+                    this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, PiErrorSeverity.Error));
                 }
                 `
             }
         });
 
         this.done.push(concept);
-        return result;
+
+        if (result.length > 0 ) {
+            return `${commentBefore}
+                public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+                    let hasFatalError: boolean = false;
+                    ${result}
+                    return hasFatalError;
+                }`
+        } else {
+            return ``;
+        }
     }
 }
