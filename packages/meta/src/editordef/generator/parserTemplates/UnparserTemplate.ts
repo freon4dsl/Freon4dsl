@@ -20,6 +20,10 @@ import { langExpToTypeScript } from "../../../utils";
 
 export class UnparserTemplate {
 
+    /**
+     * Returns a string representation of the class that implements an unparser for modelunits of
+     * 'language', based on the given editor definition.
+     */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const allLangConcepts : string = Names.allConcepts(language);
         const generatedClassName : String = Names.unparser(language);
@@ -58,7 +62,10 @@ export class UnparserTemplate {
             /**
              * Returns a string representation of 'modelelement'.
              * If 'short' is present and false, then a multi-line result will be given.
-             * Otherwise, the result is always a single-line string.
+             * Otherwise, the result is always a single-line string, which is used in
+             * error messages.
+             * Note that the single-line-string cannot be parsed into a correct model.
+             * 
              * @param modelelement
              * @param short
              */
@@ -205,15 +212,20 @@ export class UnparserTemplate {
                     if (!short) {
                         this.newlineAndIndentation(indent);
                     } else { // stop after 1 line
+                        // note that the following cannot be parsed
                         this.output[this.currentLine] += \` ...\`;
                         return;
                     }
                 }
             }
         
+            /**
+             * Makes a a new entry in the 'output' array
+             * and adds the indentation of 'number' spaces
+             * to the new entry/line.
+             * @param indent
+             */
             private newlineAndIndentation(indent: number) {
-                // make a new entry in the 'output' array
-                // and add the indentation
                 this.currentLine += 1;
                 let indentation: string = "";
                 for (var _i = 0; _i < indent; _i++) {
@@ -224,8 +236,12 @@ export class UnparserTemplate {
         } `;
     }
 
+    /**
+     * Creates a method that unparses the concept in 'conceptDef' based on the projection in
+     * 'conceptDef'.
+     * @param conceptDef
+     */
     private makeConceptMethod (conceptDef: PiEditConcept ) : string {
-        // console.log("creating unparse method for concept " + conceptDef.concept.name + ", editDef: " + (conceptDef.projection? conceptDef.projection.toString() : conceptDef.symbol));
         let myConcept: PiConcept = conceptDef.concept.referred;
         let name: string = Names.concept(myConcept);
         let lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
@@ -254,7 +270,6 @@ export class UnparserTemplate {
             }
         } else {
             // TODO check in which cases there are no lines in the edit def
-            // TODO unparsing of expressions
             if (myConcept instanceof PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
                 return `${comment}
                     private unparse${name}(modelelement: ${name}, short: boolean) {
@@ -275,6 +290,35 @@ export class UnparserTemplate {
         }
     }
 
+    /**
+     * Creates the statements needed to unparse a single line in an editor projection definition
+     * @param line
+     */
+    private makeLine (line : PiEditProjectionLine) : string {
+        let result: string = ``;
+        // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
+
+        line.items.forEach((item) => {
+            if (item instanceof PiEditProjectionText) {
+                // TODO escape all quotes in the text string, when we know how they are stored in the projection
+                result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
+            } else if (item instanceof PiEditSubProjection) {
+                let myElem = item.expression.findRefOfLastAppliedFeature();
+                if (myElem instanceof PiPrimitiveProperty) {
+                    result += this.makeItemWithPrimitiveType(myElem, item);
+                } else {
+                    result += this.makeItemWithConceptType(myElem, item, line.indent);
+                }
+            }
+        });
+        return result;
+    }
+
+    /**
+     * Creates the statements needed to unparse lines[1] till lines[lines.length -1], as well as
+     * the statements needed to generate newlines and indentation.
+     * @param lines
+     */
     private makeRemainingLines(lines: PiEditProjectionLine[]): string {
         let first = true;
         let result: string = '';
@@ -289,26 +333,12 @@ export class UnparserTemplate {
         return result;
     }
 
-    private makeLine (line : PiEditProjectionLine) : string {
-        let result: string = ``;
-        // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
-
-        line.items.forEach((item) => {
-            if (item instanceof PiEditProjectionText) {
-                // TODO escape all quotes in the text string
-                result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
-            } else if (item instanceof PiEditSubProjection) {
-                let myElem = item.expression.findRefOfLastAppliedFeature();
-                if (myElem instanceof PiPrimitiveProperty) {
-                    result += this.makeItemWithPrimitiveType(myElem, item);
-                } else {
-                    result += this.makeItemWithConceptType(myElem, item, line.indent);
-                }
-            }
-        });
-        return result;
-    }
-
+    /**
+     * Creates the statement neede to unparse an element with primitive type. The element may be a list or
+     * a single property.
+     * @param myElem
+     * @param item
+     */
     private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditSubProjection): string {
         // the expression is of primitive type
         let result: string = ``;
@@ -331,7 +361,7 @@ export class UnparserTemplate {
             // end hack
         } else {
             let myCall: string = ``;
-            // TODO remove this hack: test on "myElem.name !== "name" "
+            // TODO remove this hack: test on "myElem.name !== "name" ", when a difference is made between identifiers and strings
             if (myElem.primType === "string" && myElem.name !== "name") {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else {
@@ -346,6 +376,13 @@ export class UnparserTemplate {
         return result + ";\n";
     }
 
+    /**
+     * Creates the statement needed to unparse an element whose type is a concept. Takes into account that the type might be a list
+     * of concepts, and that the type might be a reference to a concept.
+     * @param myElem
+     * @param item
+     * @param indent
+     */
     private makeItemWithConceptType(myElem: PiProperty, item: PiEditSubProjection, indent: number) {
         // the expression has a concept as type, thus we need to call its unparse method
         let result: string = "";
@@ -386,7 +423,11 @@ export class UnparserTemplate {
         return result + ";\n";
     }
 
-    private getJoinType(item: PiEditSubProjection) {
+    /**
+     * Changes the jointype in 'item' into the text needed in the unparser.
+     * @param item
+     */
+    private getJoinType(item: PiEditSubProjection): string {
         let joinType: string = "";
         if (item.listJoin.joinType === ListJoinType.Separator) {
             joinType = "SeparatorType.Separator";
