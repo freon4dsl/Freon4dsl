@@ -4,7 +4,11 @@ import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 
 export class ParserTemplate {
 
-    generateParser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
+    /**
+     * Returns a string representation of a generic parser for 'language'. This parser is able
+     * to handle every modelunit in the language.
+     */
+    public generateParser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const unitNames = language.units.map(unit => Names.concept(unit));
  
         // Template starts here
