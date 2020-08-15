@@ -132,17 +132,17 @@ export class GenericModelSerializer {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyType);
             if (publicOnly) {
                 if (p.isPublic) {
-                    this.convertPropertyToJSON(p, tsObject, result);
+                    this.convertPropertyToJSON(p, tsObject, publicOnly, result);
                 }
             } else {
-                this.convertPropertyToJSON(p, tsObject, result);
+                this.convertPropertyToJSON(p, tsObject, publicOnly, result);
             }
             // console.log("<<<< end converting property  " + p.name);
         }
         return result;
     }
 
-    private convertPropertyToJSON(p: Property, tsObject: PiElement, result: Object) {
+    private convertPropertyToJSON(p: Property, tsObject: PiElement, publicOnly: boolean, result: Object) {
         switch (p.propertyType) {
             case "part":
                 var value = tsObject[p.name];
@@ -150,11 +150,11 @@ export class GenericModelSerializer {
                     const parts: Object[] = tsObject[p.name];
                     result[p.name] = [];
                     for (var i: number = 0; i < parts.length; i++) {
-                        result[p.name][i] = this.convertToJSON(parts[i] as PiElement);
+                        result[p.name][i] = this.convertToJSON(parts[i] as PiElement, publicOnly);
                     }
                 } else {
                     // single value
-                    result[p.name] = !!value ? this.convertToJSON(value as PiElement) : null;
+                    result[p.name] = !!value ? this.convertToJSON(value as PiElement, publicOnly) : null;
                 }
                 break;
             case "reference":

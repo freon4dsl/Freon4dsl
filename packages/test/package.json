@@ -19,9 +19,10 @@
     "demo-pegjs":   "pegjs src/demo/parser/gen/DemoModelUnitParser.pegjs",
 
     "imports":      "ts-node ../meta/src/commandline/projectit all -d src/testCicularImports/def -o src/testCicularImports",
-    "testLangCstr": "ts-node ../meta/src/commandline/projectit all -d src/testLangConstructs/defs -o src/testLangConstructs",
+    "langconstr":   "ts-node ../meta/src/commandline/projectit all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
+    "definedscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
     "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && yarn run imports && yarn run parser-project && tsc",
     "pegjs":        "pegjs src/parser_gen/parser/gen/DemoUnitUnitParser.pegjs",
     "parser-gen": 	"ts-node ../meta/src/commandline/projectit -v edit-it -l src/parser_gen/defs/LanguageDefinition.lang -e src/parser_gen/defs/LanguageDefinition.edit -o src/parser_gen",
