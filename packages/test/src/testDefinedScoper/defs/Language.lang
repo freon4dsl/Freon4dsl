@@ -1,8 +1,5 @@
 language DefinedScoperTest
 
-// this language definition is the same as in testDefaultScoper
-// here we also add a scoper definition to the test
-
 model DSmodel {
     name: string;
     units: DSunit[];
@@ -10,28 +7,28 @@ model DSmodel {
 
 public modelunit DSunit {
     public name: string;
-    public dsParts: DSpart[];
+    public dsPublics: DSpublic[];
     public reference dsRefs: DSref[];
     dsPrivates: DSprivate[];
 }
 
-public concept DSpart {
+public concept DSpublic {
     public name: string;
-    public conceptParts: DSpart[];
+    public conceptParts: DSpublic[];
     public reference conceptRefs: DSref[];
     conceptPrivates: DSprivate[];
 }
 
 public concept DSref {
     name: string;
-    conceptParts: DSpart[];
+    conceptParts: DSpublic[];
     conceptPrivates: DSprivate[];
     reference conceptRefs: DSref[];
 }
 
 concept DSprivate {
     name: string;
-    conceptParts: DSpart[];
+    conceptParts: DSpublic[];
     conceptPrivates: DSprivate[];
     reference conceptRefs: DSref[];
 }
