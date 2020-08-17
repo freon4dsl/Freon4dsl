@@ -16,17 +16,13 @@
     "edit-it": 		"ts-node ../meta/src/commandline/projectit -v edit-it -l src/demo/defs/LanguageDefinition.lang -e src/demo/defs/LanguageDefinition.edit -o src/demo",
     "validate-it": 	"ts-node ../meta/src/commandline/projectit -v validate-it -l src/demo/defs/LanguageDefinition.lang -c src/demo/defs/LanguageDefinition.valid -o src/demo",
     "type-it": 	    "ts-node ../meta/src/commandline/projectit -v type-it -l src/demo/defs/LanguageDefinition.lang -t src/demo/defs/LanguageDefinition.type -o src/demo",
-    "demo-pegjs":   "pegjs src/demo/parser/gen/DemoModelUnitParser.pegjs",
-
     "imports":      "ts-node ../meta/src/commandline/projectit all -d src/testCicularImports/def -o src/testCicularImports",
     "langconstr":   "ts-node ../meta/src/commandline/projectit all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
-    "all":          "yarn run defaultscoper && yarn run demo && yarn run testproject && yarn run testLangCstr && yarn run imports && yarn run parser-project && tsc",
-    "pegjs":        "pegjs src/parser_gen/parser/gen/DemoUnitUnitParser.pegjs",
-    "parser-gen": 	"ts-node ../meta/src/commandline/projectit -v edit-it -l src/parser_gen/defs/LanguageDefinition.lang -e src/parser_gen/defs/LanguageDefinition.edit -o src/parser_gen",
     "parser-project": "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen",
+    "all":          "yarn run imports && yarn run langconstr && yarn run testproject && yarn run defaultscoper && yarn run definedscoper && yarn run demo && yarn run parser-project && tsc",
     "test":         "yarn run all && jest"
   },
   "devDependencies": {
