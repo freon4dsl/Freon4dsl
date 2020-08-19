@@ -20,7 +20,6 @@ export class StdlibTemplate {
          */        
         export class ${Names.stdlib(language)} implements ${Names.PiStdlib} {
             private static stdlib: ${Names.PiStdlib};           // the only instance of this class
-            public elements: ${Names.PiNamedElement}[] = [];    // the predefined elements of language ${language.name}
 
             /**
              * This method implements the singleton pattern
@@ -32,6 +31,8 @@ export class StdlibTemplate {
                 return this.stdlib;
             }
             
+            public elements: ${Names.PiNamedElement}[] = [];    // the predefined elements of language ${language.name}
+
             /**
              * A private constructor, as demanded by the singleton pattern,
              * in which the list of predefined elements is filled.
@@ -50,10 +51,10 @@ export class StdlibTemplate {
              */            
             public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.PiNamedElement} {
                 if (!!name) {
-                    let possibles = this.elements.filter((elem) => elem.name === name);
-                    if (possibles.length != 0) {
+                    const possibles = this.elements.filter((elem) => elem.name === name);
+                    if (possibles.length !== 0) {
                         if (metatype) {
-                            for (let elem of possibles) {
+                            for (const elem of possibles) {
                                 const concept = elem.piLanguageConcept();
                                 if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(elem.piLanguageConcept())) {
                                     return elem;

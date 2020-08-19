@@ -12,15 +12,13 @@ const commentBefore =   `/**
                           */`;
 
 export class NonOptionalsCheckerTemplate {
-    done : PiConcept[] = [];
-    constructor() {
-    }
+    done: PiConcept[] = [];
 
     generateChecker(language: PiLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName : string = Names.PiError;
-        const errorSeverityName : string = Names.PiErrorSeverity;
-        const checkerClassName : string = Names.nonOptionalsChecker(language);
+        const errorClassName: string = Names.PiError;
+        const errorSeverityName: string = Names.PiErrorSeverity;
+        const checkerClassName: string = Names.nonOptionalsChecker(language);
         const unparserInterfaceName: string = Names.PiUnparser;
         this.done = [];
 
@@ -50,26 +48,26 @@ export class NonOptionalsCheckerTemplate {
         }`;
     }
 
-    private createImports(language: PiLanguage) : string {
-        let result : string = "";
+    private createImports(language: PiLanguage): string {
+        let result: string = "";
         result = language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts? `,` :``);
+        result = result.concat(language.concepts ? `,` : ``);
         result = result.concat(
             language.interfaces?.map(intf => `
                 ${Names.interface(intf)}`).join(", "));
         return result;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiConcept) : string {
-        let result: string = '';
-        let locationdescription = ValidationUtils.findLocationDescription(concept);
+    private createChecksOnNonOptionalParts(concept: PiConcept): string {
+        let result: string = "";
+        const locationdescription = ValidationUtils.findLocationDescription(concept);
 
         // TODO do not produce errors for non-optionals in a model-interface
         concept.allProperties().forEach(prop => {
             if (!prop.isOptional && !prop.isList) {
                 // empty lists can be checked using one of the validation rules
-                result += `if (modelelement.${prop.name} == null || modelelement.${prop.name} == undefined ) {
+                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ) {
                     hasFatalError = true;
                     this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, PiErrorSeverity.Error));
                 }

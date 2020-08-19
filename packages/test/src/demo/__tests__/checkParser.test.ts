@@ -6,7 +6,7 @@ import { DemoUnit } from "../../parser_gen/language/gen";
 import { DemoValidator } from "../validator/gen";
 
 describe.skip("Testing Parser", () => {
-    var demoParser = require("../parser/gen/DemoModelUnitParser");
+    const demoParser = require("../parser/gen/DemoModelUnitParser");
     // TODO finish the following test after validator includes check on non-optional parts
     test.skip("complete example model unparsed and parsed again", () => {
         const model = new DemoModelCreator().createCorrectModel();
@@ -23,20 +23,20 @@ describe.skip("Testing Parser", () => {
         });
 
         const errors = validator.validate(model);
-        for (let e of errors) {
-            console.log(e.message +"=>"+ e.locationdescription);
+        for (const e of errors) {
+            console.log(e.message + "=>" + e.locationdescription);
         }
         // do not unparse if there are errors
-        if (errors.length == 0) {
+        if (errors.length === 0) {
             // unparse the first unit to a string
-            let unit1_unparsed: string = unparser.unparse(model.models[0], 0, false);
-            let path: string = "./unparsedDemoModel1.txt";
+            const unit1Unparsed: string = unparser.unparse(model.models[0], 0, false);
+            const path: string = "./unparsedDemoModel1.txt";
             if (!fs.existsSync(path)) {
-                fs.writeFileSync(path, unit1_unparsed);
+                fs.writeFileSync(path, unit1Unparsed);
             } else {
                 console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
             }
-            let unit1 = parser.parse(path);
+            const unit1 = parser.parse(path);
         }
     });
 });

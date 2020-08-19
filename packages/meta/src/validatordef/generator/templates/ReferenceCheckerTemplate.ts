@@ -16,7 +16,7 @@ export class ReferenceCheckerTemplate {
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template
         // is returned
         this.imports = [];
-        let allMethods = `${language.concepts.map(concept =>
+        const allMethods = `${language.concepts.map(concept =>
             `${this.createChecksOnNonOptionalParts(concept)}`
         ).join("\n\n")}`;
 
@@ -45,14 +45,14 @@ export class ReferenceCheckerTemplate {
     }
 
     private createChecksOnNonOptionalParts(concept: PiConcept) : string {
-        let result: string = '';
-        let locationdescription = ValidationUtils.findLocationDescription(concept);
+        let result: string = "";
+        const locationdescription = ValidationUtils.findLocationDescription(concept);
 
         concept.allProperties().forEach(prop => {
             if (!prop.isPart) {
                 if (prop.isList) {
-                    result += `for (let referredElem of modelelement.${prop.name} ) {
-                        if (referredElem.referred == null) {
+                    result += `for (const referredElem of modelelement.${prop.name} ) {
+                        if (referredElem.referred === null) {
                             this.errorList.push(
                                 new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`, PiErrorSeverity.Error)
                             );
@@ -60,7 +60,7 @@ export class ReferenceCheckerTemplate {
                         }
                     }`
                 } else {
-                    result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred == null) {
+                    result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) {
                         this.errorList.push(new PiError(\`Cannot find reference '\${modelelement.${prop.name}.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`, PiErrorSeverity.Error));
                         hasFatalError = true;
                     }`

@@ -2,8 +2,6 @@ import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeS
 import { PiLanguage, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class DefaultWorkerTemplate {
-    constructor() {
-    }
 
     generateDefaultWorker(language: PiLanguage, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
@@ -20,8 +18,7 @@ export class DefaultWorkerTemplate {
         // the template starts here
         return `
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}"; 
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
-        import { ${workerInterfaceName} } from "${relativePath}${PathProvider.workerInterface(language)}";     
+        import { ${workerInterfaceName} } from "./${Names.workerInterface(language)}";     
 
         /**
          * Class ${defaultWorkerClassName} is part of the implementation of the visitor pattern on models.
@@ -46,11 +43,11 @@ export class DefaultWorkerTemplate {
         }`;
     }
 
-    private createImports(language: PiLanguage) : string {
-        let result : string = "";
+    private createImports(language: PiLanguage): string {
+        let result: string = "";
         result = language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts? `,` :``);
+        result = result.concat(language.concepts ? `,` : ``);
         result = result.concat(
             language.interfaces?.map(intf => `
                 ${Names.interface(intf)}`).join(", "));

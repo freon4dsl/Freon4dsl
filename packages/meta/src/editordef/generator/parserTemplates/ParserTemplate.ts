@@ -44,7 +44,7 @@ export class ParserTemplate {
                     model = this.parser.parse(langSpec);
                 } catch (e) {
                     // syntax error
-                    let errorstr = \`\${inputFile}: \${e} \${e.location && e.location.start ? \`[line \${e.location.start.line}, column \${e.location.start.column}]\` : \`\`}\`;
+                    const errorstr = \`\${inputFile}: \${e} \${e.location && e.location.start ? \`[line \${e.location.start.line}, column \${e.location.start.column}]\` : \`\`}\`;
                     console.error(errorstr);
                 }
                 return model;

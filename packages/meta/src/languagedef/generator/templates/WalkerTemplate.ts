@@ -56,7 +56,7 @@ export class WalkerTemplate {
             ${language.concepts.map(concept => `
                 private walk${Names.concept(concept)}(modelelement: ${Names.concept(concept)}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                     let stopWalkingThisNode: boolean = false;
-                    for (let worker of this.myWorkers ) {
+                    for (const worker of this.myWorkers ) {
                         if (!stopWalkingThisNode ) {
                             stopWalkingThisNode = worker.execBefore${Names.concept(concept)}(modelelement);
                         }
