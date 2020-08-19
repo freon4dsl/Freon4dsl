@@ -33,10 +33,6 @@ export class UnparserTemplate {
         import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
-        // TODO change import to @project/core
-        import { PiLogger } from "../../../../../core/src/util/PiLogging";
-                
-        const LOGGER = new PiLogger("${generatedClassName}");
         
         /**
          * SeparatorType is used to unparse lists.
@@ -67,6 +63,7 @@ export class UnparserTemplate {
              * Note that the single-line-string cannot be parsed into a correct model.
              * 
              * @param modelelement
+             * @param startIndent
              * @param short
              */
             public unparse(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean) : string {
@@ -79,13 +76,19 @@ export class UnparserTemplate {
              * each of which contain a single line (without newline).
              * If 'short' is present and false, then a multi-line result will be given.
              * Otherwise, the result is always a single-line string.
+             *
              * @param modelelement
+             * @param startIndent
              * @param short
              */
             public unparseToLines(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean): string[] {
                 // set default for optional parameters
-                if (startIndent === undefined) startIndent = 0;
-                if (short === undefined) short = true;
+                if (startIndent === undefined) {
+                    startIndent = 0;
+                }
+                if (short === undefined) {
+                    short = true;
+                }
         
                 // make sure the global variables are reset
                 this.output = [];
@@ -93,7 +96,7 @@ export class UnparserTemplate {
         
                 // begin the unparsing with an indent if asked for
                 let indentString: string = "";
-                for (var _i = 0; _i < startIndent; _i++) {
+                for (let _i = 0; _i < startIndent; _i++) {
                     indentString += " ";
                 }
                 this.output[this.currentLine] = indentString;
@@ -126,7 +129,7 @@ export class UnparserTemplate {
              */         
             private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index == list.length - 1;
+                    const isLastInList: boolean = index === list.length - 1;
                     this.unparsePrivate(listElem, short);
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
@@ -145,7 +148,7 @@ export class UnparserTemplate {
              */
             private unparseReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index == list.length - 1;
+                    const isLastInList: boolean = index === list.length - 1;
                     this.output[this.currentLine] += listElem.name;
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
@@ -171,7 +174,7 @@ export class UnparserTemplate {
                 short: boolean
             ) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index == list.length - 1;
+                    const isLastInList: boolean = index === list.length - 1;
                     if (typeof listElem === "string") {
                         this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
                     } else {
@@ -191,6 +194,7 @@ export class UnparserTemplate {
              * @param short
              * @param indent
              */
+            // tslint:disable-next-line:max-line-length
             private doSeparatorOrTerminatorAndNewline(sepType: SeparatorType, isLastInList: boolean, sepText: string, vertical: boolean, short: boolean, indent: number) {
                 // first eliminate any whitespace at the end of the line
                 this.output[this.currentLine] = this.output[this.currentLine].trimRight();
@@ -228,7 +232,7 @@ export class UnparserTemplate {
             private newlineAndIndentation(indent: number) {
                 this.currentLine += 1;
                 let indentation: string = "";
-                for (var _i = 0; _i < indent; _i++) {
+                for (let _i = 0; _i < indent; _i++) {
                     indentation += " ";
                 }
                 this.output[this.currentLine] = indentation;
