@@ -32,7 +32,7 @@ export class InitalizationTemplate {
                  * Used to initialize a completely new model. It returns the first model unit in the model.
                  */
                 initialize(): ${Names.PiElement} {
-                    let model = new ${Names.concept(language.modelConcept)}();
+                    const model = new ${Names.concept(language.modelConcept)}();
                     // You may replace the default with the initial model unit of your choice   
                     return this.newUnit(model, "${firstUnitTypeName}");
                 }
@@ -47,7 +47,7 @@ export class InitalizationTemplate {
                     switch (typename) {
                         ${language.modelConcept.allParts().map(part => 
                             `case "${Names.classifier(part.type.referred)}": {
-                                let unit: ${Names.classifier(part.type.referred)} = new ${Names.classifier(part.type.referred)}();
+                                const unit: ${Names.classifier(part.type.referred)} = new ${Names.classifier(part.type.referred)}();
                                 ${part.isList? `model.${part.name}.push(unit as ${Names.classifier(part.type.referred)});` : `model.${part.name} = unit as ${Names.classifier(part.type.referred)}`}
                                 return unit;
                              }`                           
@@ -63,7 +63,7 @@ export class InitalizationTemplate {
                  * @param modelName
                  */
                  newModel(modelName: string) : ${Names.concept(language.modelConcept)} {
-                    let model = new ${Names.concept(language.modelConcept)}();
+                    const model = new ${Names.concept(language.modelConcept)}();
                     model.name = modelName;
                     return model;
                 }                                   

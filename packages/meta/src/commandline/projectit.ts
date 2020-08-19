@@ -54,8 +54,12 @@ export class ProjectItParser extends CommandLineParser {
     }
 
     protected onExecute(): Promise<void> {
-        if (!this.verboseArg.value) PiLogger.muteAllLogs();
-        if (this.verboseArg.value) PiLogger.unmuteAllLogs();
+        if (!this.verboseArg.value) {
+            PiLogger.muteAllLogs();
+        }
+        if (this.verboseArg.value) {
+            PiLogger.unmuteAllLogs();
+        }
         if (!!this.watchArg.value) {
             this.allGenerator.watch = true;
         }

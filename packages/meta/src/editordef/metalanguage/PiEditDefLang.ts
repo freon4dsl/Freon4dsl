@@ -10,8 +10,6 @@ export class PiEditUnit {
     languageName: string;
     conceptEditors: PiEditConcept[] = [];
 
-    constructor() {}
-
     findConceptEditor(cls: PiClassifier): PiEditConcept {
         const result = this.conceptEditors.find(con => con.concept.referred === cls);
         return result;
@@ -63,7 +61,7 @@ export class PiEditParsedProjectionIndent {
      */
     normalize(): void {
         let spaces = 0;
-        for (let char of this.indent) {
+        for (const char of this.indent) {
             if (char === "\t") {
                 spaces += 4;
             } else if (char === " ") {
@@ -158,8 +156,8 @@ export class PiEditProjection {
     lines: PiEditProjectionLine[] = [];
 
     cursorLocation(): string {
-        for (let line of this.lines) {
-            for (let item of line.items) {
+        for (const line of this.lines) {
+            for (const item of line.items) {
                 if (item instanceof PiEditSubProjection) {
                     return Roles.property(item.expression.appliedfeature.referredElement.referred);
                     // const referred: PiProperty = item.expression.appliedfeature.referredElement.referred;

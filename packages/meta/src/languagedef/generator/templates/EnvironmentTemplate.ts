@@ -10,8 +10,6 @@ import {
 import { PiLanguage } from "../../metalanguage/PiLanguage";
 
 export class EnvironmentTemplate {
-    constructor() {
-    }
 
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
@@ -57,7 +55,7 @@ export class EnvironmentTemplate {
             private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
-                for(let p of projectitConfiguration.customProjection){
+                for (const p of projectitConfiguration.customProjection) {
                     rootProjection.addProjection(p);
                 }
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");

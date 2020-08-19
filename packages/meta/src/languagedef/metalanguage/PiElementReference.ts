@@ -6,7 +6,26 @@ import { PiMetaEnvironment } from "./PiMetaEnvironment";
  * Implementation for a (named) reference in ProjectIt.
  * Reference can be set with either a referred object, or with a unitName.
  */
-export class PiElementReference<T extends PiLangElement>  {
+export class PiElementReference<T extends PiLangElement> {
+
+    public static createNamed<T extends PiLangElement>(name: string, typeName: PiLangConceptType): PiElementReference<T> {
+        const result = new PiElementReference(null, typeName);
+        result.name = name;
+        result.typeName = typeName;
+        return result;
+    }
+
+    public static create<T extends PiLangElement>(name: string | T, typeName: PiLangConceptType): PiElementReference<T> {
+        const result = new PiElementReference(null, typeName);
+        if (typeof name === "string") {
+            result.name = name;
+        } else if (typeof name === "object") {
+            result.referred = name;
+        }
+        result.typeName = typeName;
+        return result;
+    }
+
     private _PI_name: string = "";
     private _PI_referred: T = null;
 
@@ -63,23 +82,5 @@ export class PiElementReference<T extends PiLangElement>  {
             this._PI_name = "";
         }
         this._PI_referred = referredElement;
-    }
-
-    public static createNamed<T extends PiLangElement>(name: string, typeName: PiLangConceptType): PiElementReference<T> {
-        const result = new PiElementReference(null, typeName);
-        result.name = name;
-        result.typeName = typeName;
-        return result;
-    }
-
-    public static create<T extends PiLangElement>(name: string | T, typeName: PiLangConceptType): PiElementReference<T> {
-        const result = new PiElementReference(null, typeName);
-        if (typeof name === "string") {
-            result.name = name;
-        } else if (typeof name === "object") {
-            result.referred = name;
-        }
-        result.typeName = typeName;
-        return result;
     }
 }

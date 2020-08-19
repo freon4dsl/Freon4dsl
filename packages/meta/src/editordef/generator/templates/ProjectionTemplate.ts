@@ -121,7 +121,7 @@ export class ProjectionTemplate {
                  *  Create a standard binary box to ensure binary expressions can be edited easily
                  */
                 private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
-                    let binBox = createDefaultBinaryBox(this, exp, symbol, ${Names.environment(language)}.getInstance().editor);
+                    const binBox = createDefaultBinaryBox(this, exp, symbol, ${Names.environment(language)}.getInstance().editor);
                     if (
                         this.showBrackets &&
                         !!exp.piContainer().container &&

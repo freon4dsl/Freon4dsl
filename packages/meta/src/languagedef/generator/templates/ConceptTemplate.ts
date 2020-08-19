@@ -81,6 +81,22 @@ export class ConceptTemplate {
             @model
             export ${abstract} class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
+            
+                ${(!isAbstract) ? `
+                 /**
+                 * A convenience method that creates an instance of this class
+                 * based on the properties defined in 'data'.
+                 * @param data
+                 */
+                static create(data: Partial<${Names.concept(concept)}>): ${Names.concept(concept)} {
+                    const result = new ${Names.concept(concept)}();
+                    ${concept.allProperties().map(p => this.generatePartialCreate(p)).join("\n")}
+                    return result;
+                }`
+            : ""}
+             
+                ${predefInstanceDefinitions}
+                            
                 readonly $typename: ${Names.metaType(language)} = "${Names.concept(concept)}";    // holds the metatype in the form of a string
                 ${!hasSuper ? "$id: string;" : ""}                                      // a unique identifier
                 ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("\n")}
@@ -138,7 +154,7 @@ export class ConceptTemplate {
                     return ${isBinaryExpression};
                 }
                 
-                ${isBinaryExpression && binExpConcept != null ? `
+                ${isBinaryExpression && binExpConcept !== null ? `
                 /**
                  * Returns the priority of this expression instance.
                  * Used to balance the expression tree.
@@ -177,19 +193,6 @@ export class ConceptTemplate {
                 `
             : ""}
 
-                ${(!isAbstract) ? `
-                 /**
-                 * A convenience method that creates an instance of this class
-                 * based on the properties defined in 'data'.
-                 * @param data
-                 */
-                static create(data: Partial<${Names.concept(concept)}>): ${Names.concept(concept)} {
-                    const result = new ${Names.concept(concept)}();
-                    ${concept.allProperties().map(p => this.generatePartialCreate(p)).join("\n")}
-                    return result;
-                }`
-            : ""}
-
                 ${(concept.isModel) ? `
                  /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
@@ -199,7 +202,7 @@ export class ConceptTemplate {
                 findUnit(name: string, metatype?: ${Names.metaType(language)} ): ${Names.allConcepts(language)} {
                     let result: ${Names.allConcepts(language)} = null;
                     ${concept.parts().map(p => this.generatefindUnit(p)).join("\n")}
-                    if (!!metatype) {
+                    if (!!result && !!metatype) {
                         const myMetatype = result.piLanguageConcept();
                         if (myMetatype === metatype || Language.getInstance().subConcepts(metatype).includes(myMetatype)) {
                             return result;
@@ -228,7 +231,7 @@ export class ConceptTemplate {
                     ${concept.parts().map(part => 
                     `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
                         ${part.isList ? 
-                        `let index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
+                        `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
                         this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type.referred)});`
                         : 
                         `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)};`}
@@ -250,7 +253,6 @@ export class ConceptTemplate {
                     /**
                      * Adds a model unit. Returns false if anything goes wrong.
                      *
-                     * @param oldUnit
                      * @param newUnit
                      */
                     addUnit(newUnit: ${Names.allConcepts(language)}): boolean {
@@ -265,9 +267,7 @@ export class ConceptTemplate {
                         }
                         return false;                 
                     }`
-            : ""}
-                             
-                ${predefInstanceDefinitions}               
+            : ""}        
             }
             
             ${predefInstanceInitialisations.length>0 ? `
@@ -287,7 +287,9 @@ export class ConceptTemplate {
                 );
             }`;
         } else {
-            return `if (data.${property.name}) result.${property.name} = data.${property.name};`;
+            return `if (data.${property.name}) { 
+                result.${property.name} = data.${property.name};
+            }`;
         }
     }
 

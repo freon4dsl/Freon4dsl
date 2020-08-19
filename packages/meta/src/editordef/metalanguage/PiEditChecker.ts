@@ -35,7 +35,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                             check: !!editor.name,
                             error: `Editor should have a name, it is empty [line: ${editor.location?.start.line}, column: ${editor.location?.start.column}].`
                         });
-                    for (let conceptEditor of editor.conceptEditors) {
+                    for (const conceptEditor of editor.conceptEditors) {
                         this.checkConceptEditor(conceptEditor);
                     }
                     this.checkEditor(editor);
@@ -66,8 +66,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
     private checkProjection(projection: PiEditProjection, cls: PiConcept) {
         if (!!projection) {
-            projection.lines.forEach((line) => {
-                line.items.forEach((item) => {
+            projection.lines.forEach(line => {
+                line.items.forEach(item => {
                     if (item instanceof PiEditSubProjection) {
                         this.checkSubProjection(item, cls);
                     }
@@ -78,7 +78,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
 
     private checkSubProjection(projection: PiEditSubProjection, cls: PiConcept) {
         this.myExpressionChecker.checkLangExp(projection.expression, cls);
-        let myprop = projection.expression.findRefOfLastAppliedFeature();
+        const myprop = projection.expression.findRefOfLastAppliedFeature();
         this.nestedCheck({ // TODO this check is done by myExpressionChecker, remove
             check: !!myprop,
             error: `No property '${projection.expression.toPiString()}' found in ${cls.name} [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`,
@@ -93,7 +93,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         projection.listJoin.joinType = ListJoinType.Separator;
                         projection.listJoin.joinText = ", ";
                     } else {
-                        const text = projection.listJoin.joinType == ListJoinType.Separator ? `@separator` : `@terminator`;
+                        const text = projection.listJoin.joinType === ListJoinType.Separator ? `@separator` : `@terminator`;
                         this.simpleCheck(!!projection.listJoin.joinText, `${text} should be followed by a string between '[' and ']' [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`);
                     }
                 }
@@ -102,14 +102,14 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private resolveReferences(editorDef: PiEditUnit) {
-        for (let conceptEditor of editorDef.conceptEditors) {
+        for (const conceptEditor of editorDef.conceptEditors) {
             conceptEditor.languageEditor = editorDef;
             conceptEditor.concept.owner = this.language;
         }
     }
 
     private unique(array: PiEditConcept[]): PiEditConcept[] {
-        var seen = new Set;
+        const seen = new Set();
         return array.filter(function(item) {
             if (!seen.has(item.concept.referred)) {
                 seen.add(item.concept.referred);

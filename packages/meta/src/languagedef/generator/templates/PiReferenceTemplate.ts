@@ -18,10 +18,40 @@ export class PiReferenceTemplate {
          * References can be set with either a referred object, or with a name.
          */
         export class ${Names.PiElementReference}< T extends ${Names.PiNamedElement}> extends MobxModelElementImpl {
-            @observable
-            private _PI_name: string = "";
-            @observable
-            private _PI_referred: T = null;
+        
+            /**
+             * Returns a new instance which refers to an element named 'name' of type T.
+             * Param 'typeName' should be equal to T.constructor.name.
+             * @param name
+             * @param typeName
+             */        
+            public static createNamed< T extends ${Names.PiNamedElement}>(name: string, typeName: string): ${Names.PiElementReference}<T> {
+                const result = new ${Names.PiElementReference}(null, typeName);
+                result.name = name;
+                result.typeName = typeName;
+                return result;
+            }
+        
+            /**
+             * Returns a new instance which refers to an element named 'name' of type T, or
+             * to the element 'name' itself.
+             * Param 'typeName' should be equal to T.constructor.name.
+             * @param name
+             * @param typeName
+             */
+            public static create< T extends ${Names.PiNamedElement}>(name: string | T, typeName: string): ${Names.PiElementReference}<T> {
+                const result = new ${Names.PiElementReference}(null, typeName);
+                if( typeof name === "string" ) {
+                    result.name = name;
+                } else if( typeof name === "object" ){
+                    result.referred = name;
+                }
+                result.typeName = typeName;
+                return result;
+            }
+            
+            @observable private _PI_name: string = "";
+            @observable private _PI_referred: T = null;
         
             // Needed for the scoper to work
             private typeName: string;
@@ -71,37 +101,6 @@ export class PiReferenceTemplate {
                     this._PI_name = "";
                 }
                 this._PI_referred = referredElement;
-            }
-
-            /**
-             * Returns a new instance which refers to an element named 'name' of type T.
-             * Param 'typeName' should be equal to T.constructor.name.
-             * @param name
-             * @param typeName
-             */        
-            public static createNamed< T extends ${Names.PiNamedElement}>(name: string, typeName: string): ${Names.PiElementReference}<T> {
-                const result = new ${Names.PiElementReference}(null, typeName);
-                result.name = name;
-                result.typeName = typeName;
-                return result;
-            }
-        
-            /**
-             * Returns a new instance which refers to an element named 'name' of type T, or
-             * to the element 'name' itself.
-             * Param 'typeName' should be equal to T.constructor.name.
-             * @param name
-             * @param typeName
-             */
-            public static create< T extends ${Names.PiNamedElement}>(name: string | T, typeName: string): ${Names.PiElementReference}<T> {
-                const result = new ${Names.PiElementReference}(null, typeName);
-                if( typeof name === "string" ) {
-                    result.name = name;
-                } else if( typeof name === "object" ){
-                    result.referred = name;
-                }
-                result.typeName = typeName;
-                return result;
             }
         }`;
     }

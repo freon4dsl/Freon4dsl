@@ -39,9 +39,11 @@ export class PiLanguage extends PiLangElement {
     }
 
     findClassifier(name: string): PiClassifier {
-        let result : PiClassifier;
+        let result: PiClassifier;
         result = this.findConcept(name);
-        if (result === undefined) result = this.findInterface(name);
+        if (result === undefined) {
+            result = this.findInterface(name);
+        }
         return result;
     }
 
@@ -54,21 +56,21 @@ export class PiLanguage extends PiLangElement {
 
     private addPredefinedElements() {
         // make the primitive types
-        let primitiveTypeConcept = new PiLimitedConcept();
+        const primitiveTypeConcept = new PiLimitedConcept();
         primitiveTypeConcept.name = "PiPrimitiveType";
         primitiveTypeConcept.language = this;
         this.concepts.push(primitiveTypeConcept);
-        let STRING = new PiInstance();
+        const STRING = new PiInstance();
         STRING.name = "string";
         STRING.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
         STRING.concept.owner = STRING;
         this.predefInstances.push(STRING);
-        let NUMBER = new PiInstance();
+        const NUMBER = new PiInstance();
         NUMBER.name = "number";
         NUMBER.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
         NUMBER.concept.owner = NUMBER;
         this.predefInstances.push(NUMBER);
-        let BOOLEAN = new PiInstance();
+        const BOOLEAN = new PiInstance();
         BOOLEAN.name = "boolean";
         BOOLEAN.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
         BOOLEAN.concept.owner = BOOLEAN;
@@ -85,8 +87,8 @@ export abstract class PiClassifier extends PiLangElement {
 
     parts(): PiConceptProperty[] {
         // return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart);
-        let result: PiConceptProperty[] = [];
-        for (let prop of this.properties) {
+        const result: PiConceptProperty[] = [];
+        for (const prop of this.properties) {
             if (prop instanceof PiConceptProperty && prop.isPart) {
                 result.push(prop);
             }
@@ -95,8 +97,8 @@ export abstract class PiClassifier extends PiLangElement {
     }
 
     references(): PiConceptProperty[] {
-        let result: PiConceptProperty[] = [];
-        for (let prop of this.properties) {
+        const result: PiConceptProperty[] = [];
+        for (const prop of this.properties) {
             if (prop instanceof PiConceptProperty && !prop.isPart) {
                 result.push(prop);
             }
@@ -117,7 +119,7 @@ export abstract class PiClassifier extends PiLangElement {
     }
 
     allProperties(): PiProperty[] {
-        let result : PiProperty[] = [];
+        let result: PiProperty[] = [];
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
@@ -128,7 +130,7 @@ export class PiInterface extends PiClassifier {
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.primProperties;
-        for (let intf of this.base) {
+        for (const intf of this.base) {
             result = result.concat(intf.referred.allPrimProperties());
         }
         return result;
@@ -136,7 +138,7 @@ export class PiInterface extends PiClassifier {
 
     allParts(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.parts();
-        for (let intf of this.base) {
+        for (const intf of this.base) {
             result = result.concat(intf.referred.allParts());
         }
         return result;
@@ -144,22 +146,22 @@ export class PiInterface extends PiClassifier {
 
     allReferences(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.references();
-        for (let intf of this.base) {
+        for (const intf of this.base) {
             result = result.concat(intf.referred.allReferences());
         }
         return result;
     }
 
     allProperties(): PiProperty[] {
-        let result : PiProperty[] = [];
+        let result: PiProperty[] = [];
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
 
     allBaseInterfaces(): PiInterface[] {
-        let result : PiInterface[] = [];
-        for (let base of this.base) {
-            let realbase = base.referred;
+        let result: PiInterface[] = [];
+        for (const base of this.base) {
+            const realbase = base.referred;
             if (!!realbase) {
                 result.push(realbase);
                 result = result.concat(realbase.allBaseInterfaces());
@@ -179,7 +181,7 @@ export class PiInterface extends PiClassifier {
      * returns all subinterfaces and subinterfaces of the subinterfaces
      */
     allSubInterfacesRecursive(): PiInterface[] {
-        var result = this.allSubInterfacesDirect();
+        let result = this.allSubInterfacesDirect();
         const tmp = this.allSubInterfacesDirect();
         tmp.forEach(concept => result = result.concat(concept.allSubInterfacesRecursive()));
         return result;
@@ -188,8 +190,8 @@ export class PiInterface extends PiClassifier {
 
 export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
-    isModel:boolean = false;
-    isUnit:boolean = false;
+    isModel: boolean = false;
+    isUnit: boolean = false;
     base: PiElementReference<PiConcept>;
     interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
     // TODO the following should be moved to the editor generator
@@ -220,20 +222,22 @@ export class PiConcept extends PiClassifier {
     }
 
     allProperties(): PiProperty[] {
-        let result : PiProperty[] = [];
+        let result: PiProperty[] = [];
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
 
     implementedPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.primProperties;
-        for (let intf of this.interfaces) {
-            for (let intfProp of intf.referred.allPrimProperties()) {
+        for (const intf of this.interfaces) {
+            for (const intfProp of intf.referred.allPrimProperties()) {
                 let allreadyIncluded = false;
                 // if the prop from the interface is present in this concept, do not include
                 allreadyIncluded = this.primProperties.some(p => p.name === intfProp.name );
                 // if the prop from the interface is present in the base of this concept (resursive), do not include
-                if (!allreadyIncluded && !!this.base && !!this.base.referred) allreadyIncluded = this.base.referred.allPrimProperties().some(p => p.name === intfProp.name );
+                if (!allreadyIncluded && !!this.base && !!this.base.referred) {
+                    allreadyIncluded = this.base.referred.allPrimProperties().some(p => p.name === intfProp.name);
+                }
                 // if the prop from the interface is present in another implemented interface, do not include
                 if (!allreadyIncluded) {
                     allreadyIncluded = result.some(p => p.name === intfProp.name );
@@ -248,13 +252,15 @@ export class PiConcept extends PiClassifier {
 
     implementedParts(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.parts();
-        for (let intf of this.interfaces) {
-            for (let intfProp of intf.referred.allParts()) {
+        for (const intf of this.interfaces) {
+            for (const intfProp of intf.referred.allParts()) {
                 let allreadyIncluded = false;
                 // if the prop from the interface is present in this concept, do not include
                 allreadyIncluded = this.parts().some(p => p.name === intfProp.name);
                 // if the prop from the interface is present in the base of this concept, do not include
-                if (!allreadyIncluded && !!this.base && !!this.base.referred) allreadyIncluded = this.base.referred.allParts().some(p => p.name === intfProp.name);
+                if (!allreadyIncluded && !!this.base && !!this.base.referred) {
+                    allreadyIncluded = this.base.referred.allParts().some(p => p.name === intfProp.name);
+                }
                 // if the prop from the interface is present in another implemented interface, do not include
                 if (!allreadyIncluded) {
                     allreadyIncluded = result.some(p => p.name === intfProp.name );
@@ -269,13 +275,15 @@ export class PiConcept extends PiClassifier {
 
     implementedReferences(): PiConceptProperty[] {
         let result: PiConceptProperty[] = this.references();
-        for (let intf of this.interfaces) {
-            for (let intfProp of intf.referred.allReferences()) {
+        for (const intf of this.interfaces) {
+            for (const intfProp of intf.referred.allReferences()) {
                 let allreadyIncluded = false;
                 // if the prop from the interface is present in this concept, do not include
                 allreadyIncluded = this.references().some(p => p.name === intfProp.name);
                 // if the prop from the interface is present in the base of this concept, do not include
-                if (!allreadyIncluded && !!this.base && !!this.base.referred) allreadyIncluded = this.base.referred.allReferences().some(p => p.name === intfProp.name);
+                if (!allreadyIncluded && !!this.base && !!this.base.referred) {
+                    allreadyIncluded = this.base.referred.allReferences().some(p => p.name === intfProp.name);
+                }
                 // if the prop from the interface is present in another implemented interface, do not include
                 if (!allreadyIncluded) {
                     allreadyIncluded = result.some(p => p.name === intfProp.name );
@@ -289,15 +297,15 @@ export class PiConcept extends PiClassifier {
     }
 
     implementedProperties(): PiProperty[] {
-        let result : PiProperty[] = [];
+        let result: PiProperty[] = [];
         result = result.concat(this.implementedPrimProperties()).concat(this.implementedParts()).concat(this.implementedReferences());
         return result;
     }
 
-    allInterfaces() : PiInterface[] {
+    allInterfaces(): PiInterface[] {
         let result: PiInterface[] = [];
-        for (let intf of this.interfaces) {
-            let realintf = intf.referred;
+        for (const intf of this.interfaces) {
+            const realintf = intf.referred;
             if (!!realintf) {
                 result.push(realintf);
                 result = result.concat(realintf.allBaseInterfaces());
@@ -317,7 +325,7 @@ export class PiConcept extends PiClassifier {
      * returns all subconcepts and subconcepts of the subconcepts
      */
     allSubConceptsRecursive(): PiConcept[] {
-        var result = this.allSubConceptsDirect();
+        let result = this.allSubConceptsDirect();
         const tmp = this.allSubConceptsDirect();
         tmp.forEach(concept => result = result.concat(concept.allSubConceptsRecursive()));
         return result;
@@ -369,14 +377,14 @@ export class PiConceptProperty extends PiProperty {
 
 export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
-	initialValue: string;
+    initialValue: string;
 	// TODO use PiPrimitiveType instead of 'string'
     primType: string;
     // The inherited 'type' cannot be used, because 'this' has a primitive type,
     // which is not a subtype of PiElementReference<PiConcept>
     // Therefore, here we have:
     // TODO dit moet beter worden!!!
-    get type() : PiElementReference<PiConcept> {
+    get type(): PiElementReference<PiConcept> {
         return PiElementReference.createNamed<PiConcept>(primitiveTypeName, "PiConcept");
     }
 
