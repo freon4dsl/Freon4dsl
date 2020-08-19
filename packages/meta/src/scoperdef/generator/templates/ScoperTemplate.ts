@@ -26,12 +26,12 @@ export class ScoperTemplate {
     }
 
     generateScoper(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);
-        const langConceptType : string = Names.metaType(language);
-        const generatedClassName : string = Names.scoper(language);
-        const namespaceClassName : string = Names.namespace(language);
-        const scoperInterfaceName : string = Names.PiScoper;
-        const typerClassName : string = Names.typer(language);
+        const allLangConcepts: string = Names.allConcepts(language);
+        const langConceptType: string = Names.metaType(language);
+        const generatedClassName: string = Names.scoper(language);
+        const namespaceClassName: string = Names.namespace(language);
+        const scoperInterfaceName: string = Names.PiScoper;
+        const typerClassName: string = Names.typer(language);
 
         let generateAlternativeScopes = false;
         if (!!scopedef) { // should always be the case, either the definition read from file or the default
@@ -75,12 +75,14 @@ export class ScoperTemplate {
                         nearestNamespace = this.findNearestNamespace(modelelement);
                     }
                     // second, get the elements from the found namespace
-                    if (!!nearestNamespace) result = result.concat(nearestNamespace.getVisibleElements(metatype));
+                    if (!!nearestNamespace) {
+                        result = result.concat(nearestNamespace.getVisibleElements(metatype));
+                    }
             
                     // third, get the elements from any surrounding namespaces
                     let parentElement = this.getParent(modelelement);
                     while (doSurrouding) {
-                        let parentNamespace = this.findNearestNamespace(parentElement);
+                        const parentNamespace = this.findNearestNamespace(parentElement);
                         if (!!parentNamespace) {
                             // join the results with shadowing
                             ${namespaceClassName}.joinResultsWithShadowing(parentNamespace.getVisibleElements(metatype), result);
@@ -100,10 +102,10 @@ export class ScoperTemplate {
              * See ${scoperInterfaceName}.
              */
             public getFromVisibleElements(modelelement: ${allLangConcepts}, name : string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : ${Names.PiNamedElement} {
-                let visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
+                const visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
                 if (visibleElements !== null) {
-                    for (let element of visibleElements) {
-                        let n: string = element.name;
+                    for (const element of visibleElements) {
+                        const n: string = element.name;
                         if (name === n) {
                             return element;
                         }  
@@ -116,10 +118,10 @@ export class ScoperTemplate {
              * See ${scoperInterfaceName}.
              */
             public getVisibleNames(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : string[] {
-                let result: string[] = [];
-                let visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
-                for (let element of visibleElements) {
-                    let n: string = element.name;
+                const result: string[] = [];
+                const visibleElements = this.getVisibleElements(modelelement, metatype, excludeSurrounding);
+                for (const element of visibleElements) {
+                    const n: string = element.name;
                     result.push(n);                    
                 }
                 return result;
@@ -129,11 +131,7 @@ export class ScoperTemplate {
              * See ${scoperInterfaceName}.
              */
             public isInScope(modelElement: ${allLangConcepts}, name: string, metatype?: ${langConceptType}, excludeSurrounding? : boolean) : boolean {
-                if (this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return this.getFromVisibleElements(modelElement, name, metatype, excludeSurrounding) !== null;
             }
             
              /**
@@ -206,9 +204,9 @@ export class ScoperTemplate {
     private makeAlternativeScopeTexts(scopedef: PiScopeDef, language: PiLanguage) {
         const allLangConcepts : string = Names.allConcepts(language);
         const namespaceClassName : string = Names.namespace(language);
-        for (let def of scopedef.scopeConceptDefs) {
+        for (const def of scopedef.scopeConceptDefs) {
             if (!!def.alternativeScope) {
-                let conceptName = def.conceptRef.referred.name;
+                const conceptName = def.conceptRef.referred.name;
                 // we are adding to three textstrings
                 // first, to the import statements
                 this.alternativeScopeImports = this.alternativeScopeImports.concat(", " + conceptName);
@@ -235,7 +233,7 @@ export class ScoperTemplate {
         if (expression instanceof  PiLangFunctionCallExp && expression.sourceName === "typeof") {
             let actualParamToGenerate: string = ``;
             // we know that typeof has exactly 1 actual parameter
-            if( expression.actualparams[0].sourceName === "container" ) {
+            if ( expression.actualparams[0].sourceName === "container" ) {
                 actualParamToGenerate = `modelelement.piContainer().container as ${allLangConcepts}`;
             } else {
                 actualParamToGenerate = langExpToTypeScript(expression.actualparams[0]);

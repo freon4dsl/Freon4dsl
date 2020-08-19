@@ -5,7 +5,7 @@ import { PiScopeDef } from "../../metalanguage";
 export class ScoperUtilsTemplate {
 
     generateScoperUtils(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);
+        const allLangConcepts: string = Names.allConcepts(language);
         const concreteNamespaces: PiConcept[] = replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
 

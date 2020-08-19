@@ -47,10 +47,6 @@ export class NamespaceTemplate {
          */
         export class ${generatedClassName} {
             private static allNamespaces: Map< ${allLangConcepts}, ${generatedClassName}> = new Map();
-        
-            private constructor(elem: ${allLangConcepts}) {
-                this._myElem = elem;
-            }
             
             /**
              * This method ensures that every element in the model has one and only one associated namespace object.
@@ -61,12 +57,12 @@ export class NamespaceTemplate {
                 if (this.allNamespaces.has(elem)) {
                     return this.allNamespaces.get(elem);
                 } else {
-                    let result = new ${generatedClassName}(elem);
+                    const result = new ${generatedClassName}(elem);
                     this.allNamespaces.set(elem, result);
                     return result;
                 }
             }
-            
+                               
             /**
              * This convenience method merges 'list' and 'result', where if an element is present in both,
              * the element in 'list' is discarded, thus shadowing names from 'list'.
@@ -81,9 +77,13 @@ export class NamespaceTemplate {
                     }
                 });
             }
-        
+
             private _myElem: ${allLangConcepts};
             private searchList: string[] = [];
+                        
+            private constructor(elem: ${allLangConcepts}) {
+                this._myElem = elem;
+            }
             
             /**
              * Returns all elements that are visible in this namespace, including those from additional namespaces
@@ -93,7 +93,9 @@ export class NamespaceTemplate {
                 let result: ${piNamedElementClassName}[] = [];
         
                 // check whether we are already searching this namespace for a certain type
-                if ( this.searchingFor(metatype) ) return [];
+                if (this.searchingFor(metatype)) {
+                    return [];
+                }
         
                 // do it
                 result = this.getInternalVisibleElements(metatype);
@@ -114,7 +116,7 @@ export class NamespaceTemplate {
              * @param metatype
              */       
             private getInternalVisibleElements(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
-                let result: ${piNamedElementClassName}[] = [];       
+                const result: ${piNamedElementClassName}[] = [];       
                 // for now we push all parts, later public/private annotations can be taken into account 
                 ${myIfStatement}       
                 return result;
@@ -134,7 +136,7 @@ export class NamespaceTemplate {
              * @param metatype
              */
             private addAdditionalNamespaces(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
-                let result: ${piNamedElementClassName}[] = [];
+                const result: ${piNamedElementClassName}[] = [];
                 ${this.getAdditionalNamespacetext}
                 return result;
             }
@@ -144,7 +146,7 @@ export class NamespaceTemplate {
              * @param metatype
              */
             private searchingFor(metatype?: ${langConceptType}): boolean {
-                let type: string = (!!metatype ? metatype : anymetatype);
+                const type: string = (!!metatype ? metatype : anymetatype);
                 if (this.searchList.includes(type)) {
                     return true;
                 } else {
@@ -158,7 +160,7 @@ export class NamespaceTemplate {
              * @param metatype
              */
             private cleanSearchList(metatype?: ${langConceptType}) {
-                let type: string = (!!metatype ? metatype : anymetatype);
+                const type: string = (!!metatype ? metatype : anymetatype);
                 const index = this.searchList.indexOf(type);
                 if (index > -1) {
                     this.searchList.splice(index, 1);
@@ -176,14 +178,14 @@ export class NamespaceTemplate {
         let result : string = "";
         // let generatedConcepts: PiConcept[] = [];
         result += `// set up the 'worker' of the visitor pattern
-                let myNamesCollector = new ${Names.namesCollector(language)}();
+                const myNamesCollector = new ${Names.namesCollector(language)}();
                 myNamesCollector.namesList = result;
                 if (!!metatype) {
                     myNamesCollector.metatype = metatype;
                 }
  
                 // set up the 'walker of the visitor pattern
-                let myWalker = new ${Names.walker(language)}();
+                const myWalker = new ${Names.walker(language)}();
                 myWalker.myWorkers.push( myNamesCollector );
                 
                 // collect the elements from the namespace

@@ -45,7 +45,7 @@ export class NamesCollectorTemplate {
             public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
                 ${concept.allParts().map(part => hasNameProperty(part.type?.referred) ?
                     (part.isList ?
-                        `for (let z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
+                        `for (const z of modelelement.${part.name}) { this.addIfTypeOK(z);  }`
                         : `this.addIfTypeOK(modelelement.${part.name});`)
                     : `// type of ${part.name} has no 'name' property`).join("\n")}
                 return true;
@@ -54,11 +54,9 @@ export class NamesCollectorTemplate {
         ).join("\n\n")}
       
             /**
-             * Checks whether 'namedElement' is an instance of 'metatype', if so 'namedElement' is added to 'result'.
+             * Checks whether 'namedElement' is an instance of 'this.metatype', if so 'namedElement' is added to 'result'.
              * 
              * @param namedElement
-             * @param result
-             * @param metatype
              */
             private addIfTypeOK(namedElement: ${PiNamedElement}) {
                 if (!!namedElement) { 
