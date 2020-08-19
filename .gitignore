@@ -72,3 +72,5 @@ packages/test/src/*/typer/gen/*
 packages/test/src/*/utils/gen/*
 packages/test/src/*/validator/gen/*
 packages/test/src/*/stdlib/gen/*
+/packages/test/src/testDefinedScoper/defs/Language.lang
+/packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts
