@@ -53,7 +53,7 @@ export class PiReferenceTemplate {
             @observable private _PI_referred: T = null;
         
             // Needed for the scoper to work
-            private typeName: string;
+            public typeName: string;
  
              /**
              * The constructor is private, use either the create() or the createNamed() methods
@@ -74,6 +74,7 @@ export class PiReferenceTemplate {
         
             @computed
             get name(): string {
+                // TODO this should be made clearer
                 if(!!this._PI_referred){
                     // this._PI_name = this._PI_referred.name;
                     return this.referred.name

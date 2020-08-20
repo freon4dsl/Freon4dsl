@@ -44,15 +44,7 @@ export class ValidatorTemplate {
              * @param includeChildren if true, the children of 'modelelement' are also checked.
              * The default for 'includeChildren' is true.
              */
-            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${this.errorClassName}[]{
-                // set the default such that children are included 
-                // we do not use the TypeScript default for a parameter because we cannot distinguish a null value passed to this method
-                // from no value for 'includeChildren'
-                // block is empty, because the prettier changes "!(!!includeChildren)" into "!!!includeChildren"
-                if (!!includeChildren) {
-                } else {
-                    includeChildren = true;
-                }
+            public validate(modelelement: ${allLangConcepts}, includeChildren: boolean = true) : ${this.errorClassName}[]{
                 // initialize the errorlist        
                 const errorlist : ${this.errorClassName}[] = [];
                 
