@@ -2,27 +2,27 @@ import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../../languagedef/parser/LanguageExpressionParser";
 
 describe("Checking expression parser on syntax errors", () => {
-    let testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
+    const testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
 
     beforeEach(() => {
         try {
-            let language = new LanguageParser().parse(testdir + "testLanguage.lang");
+            const language = new LanguageParser().parse(testdir + "testLanguage.lang");
         } catch (e) {
             console.log("Language could not be read");
         }
     });
 
     test("original test on demo language", () => {
-        let demoLanguage = new LanguageParser().parse(testdir + "demoLanguage.lang");
-        if (demoLanguage == null) {
+        const demoLanguage = new LanguageParser().parse(testdir + "demoLanguage.lang");
+        if (demoLanguage === null) {
             throw new Error("Demo Language could not be parsed, exiting.");
         }
-        let parser = new LanguageExpressionParser(demoLanguage);
-        let checker = parser.checker;
-        let demoExpressionFile = testdir + "demoExpressions.pitest";
+        const parser = new LanguageExpressionParser(demoLanguage);
+        const checker = parser.checker;
+        const demoExpressionFile = testdir + "demoExpressions.pitest";
         try {
             const readTest = parser.parse(demoExpressionFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("List property 'entities' should not have an applied expression (.expr) [line: 5, column: 9].")).toBeTruthy();
             expect(checker.errors.includes("Cannot find property 'expr' in 'DemoEntity' [line: 5, column: 18]."));
@@ -35,5 +35,4 @@ describe("Checking expression parser on syntax errors", () => {
             expect(checker.errors.includes("Cannot find property 'extra' in 'DemoVariable' [line: 33, column: 9].")).toBeTruthy();
         }
     });
-
 });

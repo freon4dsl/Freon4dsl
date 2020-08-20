@@ -39,7 +39,11 @@ export class PiParser<DEFINITION> {
             model = this.parser.parse(langSpec);
         } catch (e) {
             // syntax error
-            let errorstr = `${definitionFile}: ${e} ${e.location && e.location.start ? `[line ${e.location.start.line}, column ${e.location.start.column}]` : ``}`;
+            const errorstr = `${definitionFile}: ${e} 
+                ${e.location && e.location.start ?
+                    `[line ${e.location.start.line}, column ${e.location.start.column}]`
+                :
+                    ``}`;
             LOGGER.error(this, errorstr);
             throw new Error("syntax error.");
         }

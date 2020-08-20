@@ -1,15 +1,15 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
-const commentBefore =   `/**
-                          * Checks 'modelelement' before checking its children.
-                          * Found errors are pushed onto 'errorlist'.
-                          * If an error is found, it is considered 'fatal', which means that no other checks on 
-                          * 'modelelement' are performed.
-                          *       
-                          * @param modelelement
-                          */`;
+const commentBefore = `/**
+                        * Checks 'modelelement' before checking its children.
+                        * Found errors are pushed onto 'errorlist'.
+                        * If an error is found, it is considered 'fatal', which means that no other checks on 
+                        * 'modelelement' are performed.
+                        *       
+                        * @param modelelement
+                        */`;
 
 export class NonOptionalsCheckerTemplate {
     done: PiConcept[] = [];
@@ -49,8 +49,7 @@ export class NonOptionalsCheckerTemplate {
     }
 
     private createImports(language: PiLanguage): string {
-        let result: string = "";
-        result = language.concepts?.map(concept => `
+        let result: string = language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).join(", ");
         result = result.concat(language.concepts ? `,` : ``);
         result = result.concat(
@@ -71,7 +70,7 @@ export class NonOptionalsCheckerTemplate {
                     hasFatalError = true;
                     this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, PiErrorSeverity.Error));
                 }
-                `
+                `;
             }
         });
 
@@ -83,7 +82,7 @@ export class NonOptionalsCheckerTemplate {
                     let hasFatalError: boolean = false;
                     ${result}
                     return hasFatalError;
-                }`
+                }`;
         } else {
             return ``;
         }

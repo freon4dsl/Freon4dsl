@@ -10,7 +10,9 @@ export class StdlibTemplate {
 
         return `
         import { ${Names.PiNamedElement}, ${Names.PiStdlib}, Language } from "${PROJECTITCORE}";
-        import { ${Names.metaType(language)}, ${this.limitedConceptNames.map(name => `${name}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.metaType(language)}, 
+                    ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
+               } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -72,9 +74,10 @@ export class StdlibTemplate {
 
     private makeTexts(language) {
         language.concepts.filter(con => con instanceof PiLimitedConcept).map(limitedConcept => {
-            const myName = Names.concept(limitedConcept)
+            const myName = Names.concept(limitedConcept);
             this.limitedConceptNames.push(myName);
-            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x => `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
+            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x =>
+                `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
         });
     }
 }

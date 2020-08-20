@@ -1,10 +1,8 @@
-import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { Names } from "../../../utils";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 
 export class EditorIndexTemplate {
-    constructor() {
-    }
 
     generateGenIndex(language: PiLanguage, editorDef: PiEditUnit): string {
         return `

@@ -1,4 +1,4 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, langExpToTypeScript } from "../../../utils";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -7,9 +7,9 @@ export class ReferenceCheckerTemplate {
 
     generateChecker(language: PiLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName : string = Names.PiError;
-        const errorSeverityName : string = Names.PiErrorSeverity;
-        const checkerClassName : string = Names.referenceChecker(language);
+        const errorClassName: string = Names.PiError;
+        const errorSeverityName: string = Names.PiErrorSeverity;
+        const checkerClassName: string = Names.referenceChecker(language);
         const unparserInterfaceName: string = Names.PiUnparser;
 
         // because 'createChecksOnNonOptionalParts' determines which concepts to import
@@ -44,7 +44,7 @@ export class ReferenceCheckerTemplate {
         }`;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiConcept) : string {
+    private createChecksOnNonOptionalParts(concept: PiConcept): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
 
@@ -58,12 +58,12 @@ export class ReferenceCheckerTemplate {
                             );
                             hasFatalError = true;
                         }
-                    }`
+                    }`;
                 } else {
                     result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) {
                         this.errorList.push(new PiError(\`Cannot find reference '\${modelelement.${prop.name}.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`, PiErrorSeverity.Error));
                         hasFatalError = true;
-                    }`
+                    }`;
                 }
             }
         });

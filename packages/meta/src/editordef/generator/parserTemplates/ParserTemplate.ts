@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 
@@ -10,7 +10,7 @@ export class ParserTemplate {
      */
     public generateParser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const unitNames = language.units.map(unit => Names.concept(unit));
- 
+
         // Template starts here
         return `
         import { Parser } from "pegjs";
@@ -54,4 +54,3 @@ export class ParserTemplate {
         // end Template
     }
 }
-

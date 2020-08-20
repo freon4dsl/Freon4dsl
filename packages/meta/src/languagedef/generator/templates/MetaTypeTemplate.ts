@@ -1,9 +1,7 @@
-import { PiLanguage } from "../../metalanguage/PiLanguage";
-import { Names } from "../../../utils/Names";
+import { PiLanguage } from "../../metalanguage";
+import { Names } from "../../../utils";
 
 export class MetaTypeTemplate {
-    constructor() {
-    }
 
     generateMetaType(language: PiLanguage): string {
         return `

@@ -9,7 +9,7 @@ import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate";
 
-const LOGGER = new PiLogger("ValidatorGenerator"); //.mute();
+const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;
@@ -21,10 +21,10 @@ export class ValidatorGenerator {
     }
 
     generate(validdef: PiValidatorDef): void {
-        let generationStatus = new GenerationStatus();
+        const generationStatus = new GenerationStatus();
         this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
         this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
-        let name = validdef ? validdef.validatorName + " " : "default";
+        const name = validdef ? validdef.validatorName + " " : "default";
         LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
 
         const validatorTemplate = new ValidatorTemplate();
@@ -33,42 +33,48 @@ export class ValidatorGenerator {
         const checkerTemplate = new RulesCheckerTemplate();
         const reservedWordsTemplate = new ReservedWordsTemplate();
 
-        //Prepare folders
+        // Prepare folders
         Helpers.createDirIfNotExisting(this.validatorFolder);
         Helpers.createDirIfNotExisting(this.validatorGenFolder);
         Helpers.deleteFilesInDir(this.validatorGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        let relativePath = "../../";
+        const relativePath = "../../";
 
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);
-        var validatorFile = Helpers.pretty(validatorTemplate.generateValidator(this.language, validdef, relativePath), "Validator Class", generationStatus);
+        const validatorFile = Helpers.pretty(validatorTemplate.generateValidator(this.language, validdef, relativePath),
+            "Validator Class", generationStatus);
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.validator(this.language)}.ts`, validatorFile);
 
         // generate the default checker on non-optional properties
         LOGGER.log(`Generating checker for non-optional parts: ${this.validatorGenFolder}/${Names.nonOptionalsChecker(this.language)}.ts`);
-        var checkerFile = Helpers.pretty(nonOptionalsCheckerTemplate.generateChecker(this.language, relativePath), "Non-optionals Checker Class", generationStatus);
+        let checkerFile = Helpers.pretty(nonOptionalsCheckerTemplate.generateChecker(this.language, relativePath),
+            "Non-optionals Checker Class", generationStatus);
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.nonOptionalsChecker(this.language)}.ts`, checkerFile);
 
         // generate the default checker for references
         LOGGER.log(`Generating checker for references: ${this.validatorGenFolder}/${Names.referenceChecker(this.language)}.ts`);
-        var checkerFile = Helpers.pretty(referenceCheckerTemplate.generateChecker(this.language, relativePath), "Reference Checker Class", generationStatus);
+        checkerFile = Helpers.pretty(referenceCheckerTemplate.generateChecker(this.language, relativePath),
+            "Reference Checker Class", generationStatus);
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.referenceChecker(this.language)}.ts`, checkerFile);
 
         //  Generate checker
         if (validdef !== null && validdef !== undefined) {
             LOGGER.log(`Generating rules checker: ${this.validatorGenFolder}/${Names.rulesChecker(this.language)}.ts`);
-            var checkerFile = Helpers.pretty(checkerTemplate.generateRulesChecker(this.language, validdef, relativePath), "Rules Checker Class", generationStatus);
+            checkerFile = Helpers.pretty(checkerTemplate.generateRulesChecker(this.language, validdef, relativePath),
+                "Rules Checker Class", generationStatus);
             fs.writeFileSync(`${this.validatorGenFolder}/${Names.rulesChecker(this.language)}.ts`, checkerFile);
 
             LOGGER.log(`Generating reserved words file: ${this.validatorGenFolder}/ReservedWords.ts`);
-            var reservedWords = reservedWordsTemplate.generateConst();
-            Helpers.generateManualFile(`${this.validatorGenFolder}/ReservedWords.ts`, reservedWords, "Reserved Words constant definition");
+            const reservedWords = reservedWordsTemplate.generateConst();
+            Helpers.generateManualFile(`${this.validatorGenFolder}/ReservedWords.ts`, reservedWords,
+                "Reserved Words constant definition");
         }
 
         LOGGER.log(`Generating validator gen index: ${this.validatorGenFolder}/index.ts`);
-        var indexFile = Helpers.pretty(validatorTemplate.generateIndex(this.language, validdef), "Index Class", generationStatus);
+        const indexFile = Helpers.pretty(validatorTemplate.generateIndex(this.language, validdef),
+            "Index Class", generationStatus);
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
 
         if (generationStatus.numberOfErrors > 0) {

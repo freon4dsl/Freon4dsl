@@ -4,7 +4,7 @@ import { PiLogger } from "../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("FileHelpers").mute();
 const prettier = require("prettier/standalone");
-var path = require("path");
+const path = require("path");
 
 export class GenerationStatus {
     numberOfErrors: number = 0;
@@ -51,8 +51,7 @@ export class Helpers {
     public static createDirIfNotExisting(dir: string) {
         const parts = dir.split("/");
         let current = ".";
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
+        for (const part of parts) {
             current = current + "/" + part;
             if (!fs.existsSync(current)) {
                 LOGGER.log("creating folder: [" + dir + "]");
@@ -68,7 +67,7 @@ export class Helpers {
      */
     public static deleteFilesInDir(dir: string, status: GenerationStatus) {
         LOGGER.log("deleting files from folder: [" + dir + "]");
-        let folder = "./" + dir;
+        const folder = "./" + dir;
         if (fs.existsSync(folder)) {
             fs.readdirSync(folder).forEach(file => {
                 fs.unlink(path.join(folder, file), err => {
@@ -89,7 +88,7 @@ export class Helpers {
      * startPath: the folder where the files should be located
      * extension: a regular expression to filter the filenames found
      */
-    public static findFiles(startPath: string, status: GenerationStatus, extension?: string, ): string[] {
+    public static findFiles(startPath: string, status: GenerationStatus, extension?: string): string[] {
         if (!fs.existsSync(startPath)) {
             LOGGER.error(this, "cannot find folder '" + startPath + "'");
             status.numberOfErrors += 1;
@@ -102,16 +101,16 @@ export class Helpers {
             return [];
         }
 
-        let result: string[] = [];
-        var files = fs.readdirSync(startPath);
-        for (var i = 0; i < files.length; i++) {
-            var filename = path.join(startPath, files[i]);
-            var stat = fs.lstatSync(filename);
+        const result: string[] = [];
+        const files = fs.readdirSync(startPath);
+        for (const file of files) {
+            const filename = path.join(startPath, file);
+            const stat = fs.lstatSync(filename);
             if (!stat.isDirectory()) {
                 if (extension === undefined) {
                     result.push(filename);
                 } else {
-                    let regex = new RegExp(`\\${extension}\$`);
+                    const regex = new RegExp(`\\${extension}\$`);
                     if (regex.test(filename)) {
                         result.push(filename);
                     }

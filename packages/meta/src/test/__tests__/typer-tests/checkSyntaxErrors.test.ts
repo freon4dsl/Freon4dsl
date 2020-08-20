@@ -3,7 +3,7 @@ import { PiLanguage } from "../../../languagedef/metalanguage";
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
 
 describe("Checking typer on checking errors", () => {
-    let testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
+    const testdir = "src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/";
     let parser: PiTyperParser;
     let language: PiLanguage;
 
@@ -18,10 +18,10 @@ describe("Checking typer on checking errors", () => {
 
     test("language should have a name", () => {
         // TODO implement all tests
-        let parseFile = testdir + "test1.type";
+        const parseFile = testdir + "test1.type";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`syntax error.`);
         }
     });

@@ -1,4 +1,4 @@
-import { PiConcept, PiLangExp, PiLangFunctionCallExp, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiLangExp, PiLangFunctionCallExp, PiLanguage } from "../../../languagedef/metalanguage";
 import {
     Names,
     LANGUAGE_GEN_FOLDER,
@@ -9,12 +9,11 @@ import {
     replaceInterfacesWithImplementors
 } from "../../../utils";
 import { PiScopeDef } from "../../metalanguage";
-import { PiElementReference } from "../../../languagedef/metalanguage/PiElementReference";
 
 export class ScoperTemplate {
-    hasAlternativeScopeText: string = '';
-    getAlternativeScopeText: string = '';
-    alternativeScopeImports: string = '';
+    hasAlternativeScopeText: string = "";
+    getAlternativeScopeText: string = "";
+    alternativeScopeImports: string = "";
 
     generateIndex(language: PiLanguage): string {
         return `
@@ -26,6 +25,10 @@ export class ScoperTemplate {
     }
 
     generateScoper(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
+        this.hasAlternativeScopeText = "";
+        this.getAlternativeScopeText = "";
+        this.alternativeScopeImports = "";
+
         const allLangConcepts: string = Names.allConcepts(language);
         const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.scoper(language);
@@ -36,17 +39,22 @@ export class ScoperTemplate {
         let generateAlternativeScopes = false;
         if (!!scopedef) { // should always be the case, either the definition read from file or the default
             this.makeAlternativeScopeTexts(scopedef, language);
-            if (this.hasAlternativeScopeText.length > 0) generateAlternativeScopes = true;
+            if (this.hasAlternativeScopeText.length > 0) {
+                generateAlternativeScopes = true;
+            }
         }
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${langConceptType}, ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref => `${Names.concept(ref)}`).join(", ")}${this.alternativeScopeImports} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${allLangConcepts}, ${langConceptType},
+                    ${replaceInterfacesWithImplementors(scopedef.namespaces).map(ref =>
+                        `${Names.concept(ref)}`).join(", ")}${this.alternativeScopeImports} 
+                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${namespaceClassName} } from "./${namespaceClassName}";
         import { ${scoperInterfaceName},  ${Names.PiNamedElement}, PiLogger, Language } from "${PROJECTITCORE}"
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { isNameSpace } from "./${Names.scoperUtils(language)}";
-        ${generateAlternativeScopes? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";`:`` }          
+        ${generateAlternativeScopes ? `import { ${typerClassName} } from "${relativePath}${TYPER_GEN_FOLDER}";` : `` }          
                                    
         const LOGGER = new PiLogger("${generatedClassName}");  
         
@@ -55,13 +63,13 @@ export class ScoperTemplate {
          * otherwise this class implements the default scoper. 
          */      
         export class ${generatedClassName} implements ${scoperInterfaceName} {
-            ${generateAlternativeScopes? `myTyper: ${typerClassName};` : ``}
+            ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
     
             /**
              * See ${scoperInterfaceName}.
              */
             public getVisibleElements(modelelement: ${allLangConcepts}, metatype?: ${langConceptType}, excludeSurrounding? : boolean): ${Names.PiNamedElement}[] {
-                ${generateAlternativeScopes? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
+                ${generateAlternativeScopes ? `this.myTyper = ${Names.environment(language)}.getInstance().typer as ${typerClassName};` : ``}
                 let result: ${Names.PiNamedElement}[] = this.getElementsFromStdlib(metatype);
                 if (!!modelelement) {
                     let doSurrouding: boolean = !(!(excludeSurrounding === undefined) && excludeSurrounding);
@@ -196,14 +204,10 @@ export class ScoperTemplate {
                 }
             }
         }`;
-
-        this.hasAlternativeScopeText = "";
-        this.getAlternativeScopeText = "";
     }
 
     private makeAlternativeScopeTexts(scopedef: PiScopeDef, language: PiLanguage) {
-        const allLangConcepts : string = Names.allConcepts(language);
-        const namespaceClassName : string = Names.namespace(language);
+        const allLangConcepts: string = Names.allConcepts(language);
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.alternativeScope) {
                 const conceptName = def.conceptRef.referred.name;
@@ -228,10 +232,10 @@ export class ScoperTemplate {
     }
 
     private altScopeExpToTypeScript(expression: PiLangExp, allLangConcepts: string, language: PiLanguage): string {
-        let result = ``;
+        let result = "";
         // special case: the expression refers to 'typeof'
-        if (expression instanceof  PiLangFunctionCallExp && expression.sourceName === "typeof") {
-            let actualParamToGenerate: string = ``;
+        if (expression instanceof PiLangFunctionCallExp && expression.sourceName === "typeof") {
+            let actualParamToGenerate: string = "";
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
                 actualParamToGenerate = `modelelement.piContainer().container as ${allLangConcepts}`;
@@ -242,13 +246,11 @@ export class ScoperTemplate {
                 if (!!container) {
                     let newScopeElement = this.myTyper.inferType(${actualParamToGenerate});
                     return ${Names.namespace(language)}.create(newScopeElement);
-                }`
+                }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
             result = langExpToTypeScript(expression);
         }
         return result;
     }
-
-
 }

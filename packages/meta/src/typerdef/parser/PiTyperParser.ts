@@ -3,7 +3,7 @@ import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiTypeDefinition } from "../metalanguage";
 import { PiTyperChecker } from "../metalanguage";
 
-let typerParser = require("./PiTyperGrammar");
+const typerParser = require("./PiTyperGrammar");
 
 export class PiTyperParser extends PiParser<PiTypeDefinition> {
     public language: PiLanguage;

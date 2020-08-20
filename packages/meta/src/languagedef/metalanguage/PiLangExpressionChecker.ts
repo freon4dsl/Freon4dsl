@@ -221,7 +221,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             error: `Cannot find property '${feat.sourceName}' in '${enclosingConcept.name}'` +
                 ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}].`,
             whenOk: () => {
-                if (feat.appliedfeature !== null) {
+                if (!!feat.appliedfeature) {
                     this.simpleCheck(!feat.referredElement.referred.isList,
                         `List property '${feat.referredElement.name}' should not have an applied expression (.${feat.appliedfeature.toPiString()})` +
                         ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}].`);

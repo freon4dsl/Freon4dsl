@@ -1,5 +1,5 @@
-import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 
 export class SelectionHelpers {
@@ -25,7 +25,7 @@ export class SelectionHelpers {
         export class ${Names.selectionHelpers(language)} {
         
         ${this.generateRefs(language)}
-        }`
+        }`;
     }
 
     generateRefs(language: PiLanguage): string {
@@ -52,6 +52,6 @@ export class SelectionHelpers {
                 (option: SelectOption) => setAction(option)
             );
         }
-        `
+        `;
     }
 }

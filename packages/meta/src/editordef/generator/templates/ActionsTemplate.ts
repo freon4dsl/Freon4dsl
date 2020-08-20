@@ -3,8 +3,6 @@ import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiEditUnit } from "../../metalanguage";
 
 export class ActionsTemplate {
-    constructor() {
-    }
 
     // TODO generate the correct class comment for Actions
     generate(language: PiLanguage, editorDef: PiEditUnit): string {

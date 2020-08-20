@@ -1,7 +1,5 @@
-import { PiLangExp } from "../../languagedef/metalanguage/PiLangExpressions";
 import { ParseLocation } from "../../utils";
-import { PiClassifier, PiConcept, PiLanguage } from "../../languagedef/metalanguage/PiLanguage";
-import { PiLangElement } from "../../languagedef/metalanguage/PiLanguage";
+import { PiClassifier, PiLanguage, PiLangElement, PiLangExp } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -17,14 +15,11 @@ export class PiTypeDefinition {
     classifierRules: PiTypeClassifierRule[] = [];
     typeroot: PiElementReference<PiClassifier>;
     types: PiElementReference<PiClassifier>[] = [];
-
-    constructor() { 
-    }
 }
 
 export abstract class PiTypeRule extends PiLangElement {
     location: ParseLocation;
-    toPiString() : string {
+    toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PiTyperDefLang.PiTypeRule'";
     }
 }
@@ -60,7 +55,6 @@ export class PiTypeStatement {
     isAbstract: boolean;
 
     toPiString(): string {
-        return `${this.isAbstract? `abstract ` : ``}${this.statementtype} ${this.exp?.toPiString()}`;
+        return `${this.isAbstract ? `abstract ` : ``}${this.statementtype} ${this.exp?.toPiString()}`;
     }
 }
-

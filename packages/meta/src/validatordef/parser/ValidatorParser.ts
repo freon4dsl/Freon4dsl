@@ -3,7 +3,7 @@ import { PiParser } from "../../utils";
 import { ValidatorChecker } from "../../validatordef/metalanguage";
 import { PiValidatorDef } from "../metalanguage";
 
-let validatorParser = require("./ValidatorGrammar");
+const validatorParser = require("./ValidatorGrammar");
 
 export class ValidatorParser extends PiParser<PiValidatorDef> {
     public language: PiLanguage;

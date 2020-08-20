@@ -1,15 +1,13 @@
+import { PiLanguage } from "../../metalanguage";
 import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguage } from "../../metalanguage/PiLanguage";
 
 export class WorkerInterfaceTemplate {
-    constructor() {
-    }
 
     generateWorkerInterface(language: PiLanguage, relativePath: string): string {
-        
+
         // the template starts here
         return `
-        import { ${this.createImports(language, )} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
+        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
 
         /**
          * Interface ${Names.workerInterface(language)} implements the extended visitor pattern of instances of language ${language.name}.
@@ -19,24 +17,24 @@ export class WorkerInterfaceTemplate {
          */
         export interface ${Names.workerInterface(language)} {
 
-        ${language.concepts.map(concept => 
+        ${language.concepts.map(concept =>
             `execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;
             execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;`
         ).join("\n\n") }       
         }`;
     }
 
-    private createImports(language: PiLanguage) : string {
+    private createImports(language: PiLanguage): string {
         // sort all names alphabetically
-        let tmp : string[] = [];
+        let tmp: string[] = [];
         language.concepts.map(c =>
             tmp.push(Names.concept(c))
         );
         tmp = tmp.sort();
-    
+
         // the template starts here
         return `
-            ${tmp.map(c => 
+            ${tmp.map(c =>
                 `${c}`
             ).join(", ")}`;
     }

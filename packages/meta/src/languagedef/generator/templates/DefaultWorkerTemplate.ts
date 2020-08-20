@@ -1,19 +1,19 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { PiLanguage } from "../../metalanguage";
 
 export class DefaultWorkerTemplate {
 
     generateDefaultWorker(language: PiLanguage, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
         const defaultWorkerClassName = Names.defaultWorker(language);
-        const commentBefore =   `/**
-                                 * Visits 'modelelement' before visiting its children.
-                                 * @param modelelement
-                                 */`;
-        const commentAfter =    `/**
-                                 * Visits 'modelelement' after visiting its children.
-                                 * @param modelelement
-                                 */`;
+        const commentBefore = `/**
+                                * Visits 'modelelement' before visiting its children.
+                                * @param modelelement
+                                */`;
+        const commentAfter = `/**
+                               * Visits 'modelelement' after visiting its children.
+                               * @param modelelement
+                               */`;
 
         // the template starts here
         return `
@@ -44,8 +44,7 @@ export class DefaultWorkerTemplate {
     }
 
     private createImports(language: PiLanguage): string {
-        let result: string = "";
-        result = language.concepts?.map(concept => `
+        let result: string = language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).join(", ");
         result = result.concat(language.concepts ? `,` : ``);
         result = result.concat(

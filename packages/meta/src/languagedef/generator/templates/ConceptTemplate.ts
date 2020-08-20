@@ -1,16 +1,19 @@
-import { Names } from "../../../utils/Names";
-import { PathProvider, PROJECTITCORE } from "../../../utils/PathProvider";
+import { Names, PROJECTITCORE } from "../../../utils";
 import {
     PiConceptProperty,
     PiPrimitiveProperty,
     PiBinaryExpressionConcept,
-    PiExpressionConcept, PiConcept, PiLimitedConcept, PiProperty, PiInstance, PiPropertyInstance
-} from "../../metalanguage/PiLanguage";
+    PiExpressionConcept,
+    PiConcept,
+    PiLimitedConcept,
+    PiProperty,
+    PiInstance,
+    PiPropertyInstance
+} from "../../metalanguage";
 
 export class ConceptTemplate {
-    constructor() {
-    }
 
+    // TODO make this method simpler: tslint complains about cyclomatic-complexity
     generateConcept(concept: PiConcept, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;
@@ -24,7 +27,7 @@ export class ConceptTemplate {
         const isExpression = (!isBinaryExpression) && concept instanceof PiExpressionConcept;
         const abstract = (concept.isAbstract ? "abstract" : "");
         const implementsPi = (concept.isModel ? "PiModel" : (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement"))));
-        const hasInterface = concept.interfaces.length > 0;
+        // const hasInterface = concept.interfaces.length > 0;
         const intfaces = Array.from(
             new Set(
                 concept.interfaces.map(i => Names.interface(i.referred))
@@ -228,12 +231,12 @@ export class ConceptTemplate {
                     }
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     // TODO review this approach
-                    ${concept.parts().map(part => 
+                    ${concept.parts().map(part =>
                     `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
-                        ${part.isList ? 
+                        ${part.isList ?
                         `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
                         this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type.referred)});`
-                        : 
+                        :
                         `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)};`}
                     } else`
                     ).join(" ")}                    
@@ -261,7 +264,7 @@ export class ConceptTemplate {
                         switch (myMetatype) {
                         ${language.modelConcept.allParts().map(part =>
                             `case "${Names.classifier(part.type.referred)}": {
-                                ${part.isList? `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`}
+                                ${part.isList ? `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`}
                                 return true;
                             }`).join("\n")}
                         }
@@ -270,7 +273,7 @@ export class ConceptTemplate {
             : ""}        
             }
             
-            ${predefInstanceInitialisations.length>0 ? `
+            ${predefInstanceInitialisations.length > 0 ? `
             // Because of mobx we need to generate the initialisations outside of the class,
             // otherwise the state of properties with primitive type will not be kept correctly. 
             ${predefInstanceInitialisations}` : ``}
@@ -299,10 +302,24 @@ export class ConceptTemplate {
         const decorator = "@observable";
         const arrayType = property.isList ? "[]" : "";
         let initializer = "";
-        if (property.isList) initializer = "";
-        if (!property.isList && property.primType === "string") initializer = "= \"\"";
-        if (!property.isList && property.primType === "number") initializer = "= 0";
-        if (!property.isList && property.primType === "boolean") initializer = "= false";
+        if (property.isList) {
+            initializer = "";
+        } else {
+            switch (property.primType) {
+                case "string": {
+                    initializer = "= \"\"";
+                    break;
+                }
+                case "number": {
+                    initializer = "= 0";
+                    break;
+                }
+                case "boolean": {
+                    initializer = "= false";
+                    break;
+                }
+            }
+        }
         return `${decorator} ${property.name} : ${property.primType}${arrayType} ${initializer}; \t${comment}`;
     }
 
@@ -322,28 +339,28 @@ export class ConceptTemplate {
     }
 
     private createInstanceDefinitions(limitedConcept: PiLimitedConcept): string {
-        let conceptName = Names.concept(limitedConcept);
+        const conceptName = Names.concept(limitedConcept);
         return `${limitedConcept.instances.map(predef =>
             `static ${predef.name}: ${conceptName}; // implementation of instance ${predef.name}`).join("\n")}
-             static $piANY : ${conceptName}; // default predefined instance`
+             static $piANY : ${conceptName}; // default predefined instance`;
     }
 
     private createInstanceInitialisations(limitedConcept: PiLimitedConcept): string {
-        let conceptName = Names.concept(limitedConcept);
+        const conceptName = Names.concept(limitedConcept);
         return `${limitedConcept.instances.map(predef =>
-            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)});` ). join(" ")}`
+            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)});` ). join(" ")}`;
     }
 
-    private createInstanceProperties(instance: PiInstance) : string {
+    private createInstanceProperties(instance: PiInstance): string {
         return `{${instance.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}}`;
     }
 
     private createInstancePropValue(property: PiPropertyInstance): string {
-        let refProperty: PiProperty = property.property?.referred;
+        const refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
             const type: string = refProperty.primType;
             if (refProperty.isList) {
-                return `[ ${property.valueList.map(value => 
+                return `[ ${property.valueList.map(value =>
                     `${type === "string" ? `"${value}"` : `${value}` }`
                 ).join(", ")} ]`;
             } else {
@@ -353,7 +370,7 @@ export class ConceptTemplate {
         return ``;
     }
 
-    private generatefindUnit(p: PiConceptProperty) : string {
+    private generatefindUnit(p: PiConceptProperty): string {
         // prettier removes inner brackets from "(! (!!result) )"
         // therefore we take another approach here
         return `if (result !== null) {

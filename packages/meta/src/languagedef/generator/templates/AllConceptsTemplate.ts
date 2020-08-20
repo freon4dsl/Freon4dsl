@@ -1,13 +1,11 @@
-import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../metalanguage/PiLanguage";
+import { Names } from "../../../utils";
+import { PiLanguage } from "../../metalanguage";
 
 export class AllConceptsTemplate {
-    constructor() {
-    }
 
     generateAllConceptsClass(language: PiLanguage): string {
         // sort all names alphabetically
-        let tmp : string[] = [];
+        let tmp: string[] = [];
         language.concepts.map(c =>
             tmp.push(Names.concept(c))
         );
@@ -20,7 +18,7 @@ export class AllConceptsTemplate {
         // the template starts here
         return `
         import {
-            ${tmp.map(c => 
+            ${tmp.map(c =>
                 `${c}`
             ).join(", ")}
         } from "./internal";
@@ -32,7 +30,7 @@ export class AllConceptsTemplate {
          * of instances. 
          */
         export type ${Names.allConcepts(language)} =
-        ${tmp.map(c => 
+        ${tmp.map(c =>
             `${c}`
         ).join(" | ")}
         ;`;

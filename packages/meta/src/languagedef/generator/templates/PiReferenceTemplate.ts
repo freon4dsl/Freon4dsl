@@ -1,11 +1,10 @@
-import { Names, PathProvider, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
-import { PiLanguage } from "../../metalanguage/PiLanguage";
+import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
+import { PiLanguage } from "../../metalanguage";
 
 export class PiReferenceTemplate {
-    constructor() {
-    }
 
-    // TODO why create with param "unitName: string | T" and createNamed with param "unitName: string" both? Clearer to have create(elem: T, ...)
+    // TODO why create with param "unitName: string | T" and createNamed with param "unitName: string" both?
+    // Clearer to have create(elem: T, ...)
     generatePiReference(language: PiLanguage, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";

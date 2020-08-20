@@ -5,8 +5,8 @@ import {
     PiLanguage,
     PiPrimitiveProperty,
     PiProperty
-} from "../../../languagedef/metalanguage/PiLanguage";
-import { sortClasses } from "../../../utils/ModelHelpers";
+} from "../../../languagedef/metalanguage";
+import { sortClasses, langExpToTypeScript } from "../../../utils";
 import {
     PiEditConcept,
     PiEditUnit,
@@ -16,7 +16,6 @@ import {
     ListJoinType,
     PiEditProjectionLine
 } from "../../metalanguage";
-import { langExpToTypeScript } from "../../../utils";
 
 export class UnparserTemplate {
 
@@ -25,8 +24,8 @@ export class UnparserTemplate {
      * 'language', based on the given editor definition.
      */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);
-        const generatedClassName : String = Names.unparser(language);
+        const allLangConcepts: string = Names.allConcepts(language);
+        const generatedClassName: String = Names.unparser(language);
 
         // Template starts here
         return `
@@ -245,13 +244,13 @@ export class UnparserTemplate {
      * 'conceptDef'.
      * @param conceptDef
      */
-    private makeConceptMethod (conceptDef: PiEditConcept ) : string {
-        let myConcept: PiConcept = conceptDef.concept.referred;
-        let name: string = Names.concept(myConcept);
-        let lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
-        const comment =   `/**
-                            * See the public unparse method.
-                            */`;
+    private makeConceptMethod (conceptDef: PiEditConcept ): string {
+        const myConcept: PiConcept = conceptDef.concept.referred;
+        const name: string = Names.concept(myConcept);
+        const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
+        const comment = `/**
+                          * See the public unparse method.
+                          */`;
 
         if (!!lines) {
             if (lines.length > 1) {
@@ -290,7 +289,7 @@ export class UnparserTemplate {
                         this.output[this.currentLine] += \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
-            return '';
+            return "";
         }
     }
 
@@ -298,16 +297,16 @@ export class UnparserTemplate {
      * Creates the statements needed to unparse a single line in an editor projection definition
      * @param line
      */
-    private makeLine (line : PiEditProjectionLine) : string {
+    private makeLine (line: PiEditProjectionLine): string {
         let result: string = ``;
         // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
 
-        line.items.forEach((item) => {
+        line.items.forEach(item => {
             if (item instanceof PiEditProjectionText) {
                 // TODO escape all quotes in the text string, when we know how they are stored in the projection
                 result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
             } else if (item instanceof PiEditSubProjection) {
-                let myElem = item.expression.findRefOfLastAppliedFeature();
+                const myElem = item.expression.findRefOfLastAppliedFeature();
                 if (myElem instanceof PiPrimitiveProperty) {
                     result += this.makeItemWithPrimitiveType(myElem, item);
                 } else {
@@ -325,7 +324,7 @@ export class UnparserTemplate {
      */
     private makeRemainingLines(lines: PiEditProjectionLine[]): string {
         let first = true;
-        let result: string = '';
+        let result: string = "";
         lines.forEach(line => {
             if (first) { // skip the first line, this is already taken care of in 'makeConceptMethod'
                 first = false;
@@ -390,12 +389,12 @@ export class UnparserTemplate {
     private makeItemWithConceptType(myElem: PiProperty, item: PiEditSubProjection, indent: number) {
         // the expression has a concept as type, thus we need to call its unparse method
         let result: string = "";
-        let type = myElem.type.referred;
+        const type = myElem.type.referred;
         if (!!type) {
-            var myTypeScript: string = langExpToTypeScript(item.expression);
+            let myTypeScript: string = langExpToTypeScript(item.expression);
             if (myElem.isList) {
-                let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-                let joinType = this.getJoinType(item);
+                const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+                const joinType = this.getJoinType(item);
 
                 if (myElem.isPart) {
                     result += `this.unparseList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
@@ -441,4 +440,3 @@ export class UnparserTemplate {
         return joinType;
     }
 }
-

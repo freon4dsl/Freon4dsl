@@ -1,21 +1,23 @@
-import { Checker } from "../../utils/Checker";
+import { Checker } from "../../utils";
 import {
     PiConcept,
     PiLanguage,
-    PiLangExpressionChecker, PiProperty, PiClassifier, PiInterface
+    PiLangExpressionChecker,
+    PiProperty,
+    PiClassifier
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
-import { findAllImplementorsAndSubs } from "../../utils/ModelHelpers";
+import { findAllImplementorsAndSubs } from "../../utils";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference} from "../../languagedef/metalanguage/PiElementReference";
+import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("ScoperChecker").mute();
 export class ScoperChecker extends Checker<PiScopeDef> {
-    myExpressionChecker : PiLangExpressionChecker;
+    myExpressionChecker: PiLangExpressionChecker;
     myNamespaces: PiClassifier[] = [];
 
     constructor(language: PiLanguage) {
@@ -34,26 +36,26 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         this.nestedCheck(
             {
                 check: this.language.name === definition.languageName,
-                error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' `+
-                        `does not match language '${this.language.name}' [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
+                error:  `Language reference ('${definition.languageName}') in scoper definition '${definition.scoperName}' ` +
+                        `does not match language '${this.language.name}' [line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`
             });
 
-            // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
-            this.myNamespaces = this.findAllNamespaces(definition.namespaces);
+        // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
+        this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 
-            definition.scopeConceptDefs.forEach(def => {
-                this.myExpressionChecker.checkClassifierReference(def.conceptRef);
-                if (!!def.conceptRef.referred) {
-                    if (!!def.namespaceAdditions) {
-                        this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
-                    }
-                    if (!!def.alternativeScope) {
-                        this.checkAlternativeScope(def.alternativeScope, def.conceptRef.referred);
-                    }
+        definition.scopeConceptDefs.forEach(def => {
+            this.myExpressionChecker.checkClassifierReference(def.conceptRef);
+            if (!!def.conceptRef.referred) {
+                if (!!def.namespaceAdditions) {
+                    this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
                 }
-            });
-            this.errors = this.errors.concat(this.myExpressionChecker.errors);
-        }
+                if (!!def.alternativeScope) {
+                    this.checkAlternativeScope(def.alternativeScope, def.conceptRef.referred);
+                }
+            }
+        });
+        this.errors = this.errors.concat(this.myExpressionChecker.errors);
+    }
 
     private checkNamespaceAdditions(namespaceAddition: PiNamespaceAddition, enclosingConcept: PiConcept) {
         LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
@@ -63,7 +65,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-                    let xx : PiProperty = exp.findRefOfLastAppliedFeature();
+                    const xx: PiProperty = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.nestedCheck({
                             check: (!!xx.type.referred && xx.type.referred instanceof PiConcept),
@@ -72,7 +74,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
                                 this.simpleCheck(this.myNamespaces.includes(xx.type.referred),
                                     `A namespace addition should refer to a namespace concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`);
                             }
-                        })
+                        });
                     }
                 });
             }
@@ -88,7 +90,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         let result: PiClassifier[] = [];
         namespaces.forEach(ref => {
             this.myExpressionChecker.checkClassifierReference(ref);
-            let myClassifier = ref.referred;
+            const myClassifier = ref.referred;
             if (!!myClassifier) { // error message handled by checkClassifierReference()
                 result = result.concat(findAllImplementorsAndSubs(myClassifier));
             }
@@ -96,4 +98,3 @@ export class ScoperChecker extends Checker<PiScopeDef> {
         return result;
     }
 }
-

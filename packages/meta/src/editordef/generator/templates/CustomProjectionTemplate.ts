@@ -1,10 +1,8 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 
 export class CustomProjectionTemplate {
-    constructor() {
-    }
 
     generate(language: PiLanguage): string {
         return `

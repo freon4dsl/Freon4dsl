@@ -21,8 +21,8 @@
     "testproject":  "ts-node ../meta/src/commandline/projectit all -d src/testproject/defs -o src/testproject",
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper":"cp src/testDefaultScoper/defs/Language.lang src/testDefinedScoper/defs/Language.lang && cp src/testDefaultScoper/__tests__/ModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && ts-node ../meta/src/commandline/projectit all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
-    "parser-project": "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen",
-    "all":          "yarn run imports && yarn run langconstr && yarn run testproject && yarn run defaultscoper && yarn run definedscoper && yarn run demo && yarn run parser-project && tsc",
+    "parsergen":    "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen",
+    "all":          "yarn run imports && yarn run langconstr && yarn run testproject && yarn run defaultscoper && yarn run definedscoper && yarn run demo && yarn run parsergen && tsc",
     "test":         "yarn run all && jest"
   },
   "devDependencies": {

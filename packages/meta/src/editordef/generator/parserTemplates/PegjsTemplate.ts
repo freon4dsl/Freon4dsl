@@ -7,11 +7,14 @@ import {
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty
-} from "../../../languagedef/metalanguage/PiLanguage";
+} from "../../../languagedef/metalanguage";
 import { ListJoin, ListJoinType, PiEditConcept, PiEditProjectionText, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
 import { findAllImplementorsAndSubs, findImplementors, Names } from "../../../utils";
 
 export const referencePostfix = "PiElemRef";
+
+// there is no prettier for pegjs files, therefore we take indentation and other layout matters into account in this template
+// unfortunately, this makes things a little less legible :-(
 
 export class PegjsTemplate {
     referredClassifiers: PiClassifier[] = [];
@@ -21,14 +24,14 @@ export class PegjsTemplate {
     generatePegjsForUnit(language: PiLanguage, langUnit: PiConcept, editDef: PiEditUnit): string {
         this.referredClassifiers = [];
         this.textForListConcepts = [];
-        this.listNumber= 0;
+        this.listNumber = 0;
         const creatorName = Names.parserCreator(language);
 
         // Note that the order in which the rules are stated, determines whether the parser is functioning or not
         // first create a rule for the unit, next for its children, etc.
         // the following method stores its result in two lists: one for all editor definitions found, one for all used interfaces
-        let sortedEditorDefs: PiEditConcept[] = [];
-        let sortedInterfaces: PiInterface[] = [];
+        const sortedEditorDefs: PiEditConcept[] = [];
+        const sortedInterfaces: PiInterface[] = [];
         this.findEditorDefsForUnit(langUnit, editDef.conceptEditors, sortedEditorDefs, sortedInterfaces);
 
         // Template starts here, no prettier for pegjs files, therefore we take indentation into account in this template
@@ -44,7 +47,7 @@ export class PegjsTemplate {
 }
         
 ${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("\n")}
-${sortedInterfaces.length > 0 ?`${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}`).join("\n")}` : `` }
+${sortedInterfaces.length > 0 ? `${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}`).join("\n")}` : `` }
 ${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}`).join("\n")}
 ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
 ws "whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )*
@@ -115,7 +118,9 @@ HEXDIG = [0-9a-f]
 
     private makeConceptRule(conceptDef: PiEditConcept): string {
         const piClassifier: PiConcept = conceptDef.concept.referred;
-        if (piClassifier.isModel || piClassifier instanceof PiLimitedConcept) return ``;
+        if (piClassifier.isModel || piClassifier instanceof PiLimitedConcept) {
+            return ``;
+        }
         const myName = Names.classifier(piClassifier);
         if (piClassifier.isAbstract) {
             return this.makeChoiceRule(piClassifier);
@@ -127,7 +132,7 @@ HEXDIG = [0-9a-f]
             conceptDef.projection.lines.forEach(l => {
                 l.items.forEach(item => {
                     if (item instanceof PiEditSubProjection) {
-                        propsToSet.push(item.expression.findRefOfLastAppliedFeature())
+                        propsToSet.push(item.expression.findRefOfLastAppliedFeature());
                     }
                 });
             });
@@ -214,26 +219,51 @@ HEXDIG = [0-9a-f]
     }
 
     private makeRuleForList(item: PiEditSubProjection, myElem: PiProperty, listRuleName: string) {
-        let typeName: string = '';
+        // the following test should have been performed before calling this method
+        // we only need a separate rule for list with a separator, example:
+        // VariableList = head:Variable tail:("separator" ws v:Variable { return v; })*
+        // without separator we write, for example
+        // SomeRule = ".. anything" (Variable "terminator")*
+        if (item.listJoin?.joinType !== ListJoinType.Separator) {
+            console.log("rejecting rule " + listRuleName);
+            return;
+        }
+        // now make the rule
+        // find the right typeName
+        let typeName: string = "";
         if (myElem instanceof PiPrimitiveProperty) {
             // TODO make a difference between variables and stringLiterals
-            if (myElem.primType == "string" ) typeName = "stringLiteral";
-            if (myElem.primType == "number" ) typeName = "numberLiteral";
-            if (myElem.primType == "boolean" ) typeName = "booleanLiteral";
+            switch (myElem.primType) {
+                case "string": {
+                    typeName = "stringLiteral";
+                    break;
+                }
+                case "number": {
+                    typeName = "numberLiteral";
+                    break;
+                }
+                case "boolean": {
+                    typeName = "booleanLiteral";
+                    break;
+                }
+                default: typeName = "stringLiteral";
+            }
         } else {
             typeName = Names.classifier(myElem.type.referred);
-            if (!myElem.isPart) {
+            if (!myElem.isPart) { // it is a reference, so use the rule for creating a PiElementReference
                 typeName += referencePostfix;
                 if (!this.referredClassifiers.includes(myElem.type.referred)) {
                     this.referredClassifiers.push(myElem.type.referred);
                 }
             }
         }
+
+        // create the right separator text
         const joinText = (item.listJoin?.joinText ? `${item.listJoin?.joinText.trimRight()}` : " ");
-        if (item.listJoin?.joinType === ListJoinType.Separator) {
-            this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
+
+        // push the rule to the textForListConcepts to be added to the template later
+        this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
     { return [head].concat(tail); }\n`);
-        }
     }
 
     // this method returns a list of classifiers that are used as types of parts of 'piClassifier'
@@ -243,11 +273,15 @@ HEXDIG = [0-9a-f]
     // 'typesDone' is a list of classifiers that are already examined
     private addPartConcepts(piClassifier: PiClassifier, result: PiClassifier[], typesDone: PiClassifier[]) {
         // make sure this classifier is not visited twice
-        if (typesDone.includes(piClassifier)) return;
+        if (typesDone.includes(piClassifier)) {
+            return;
+        }
         typesDone.push(piClassifier);
 
         // include this classifier in the result
-        if (!result.includes(piClassifier)) result.push(piClassifier);
+        if (!result.includes(piClassifier)) {
+            result.push(piClassifier);
+        }
 
         // see what else needs to be included
         if (piClassifier instanceof PiConcept) {
@@ -263,7 +297,7 @@ HEXDIG = [0-9a-f]
                     this.addPartConcepts(type2, result, typesDone);
                 });
             }
-        } else if (piClassifier instanceof PiInterface){
+        } else if (piClassifier instanceof PiInterface) {
             // for interfaces include all implementors and subinterfaces
             findAllImplementorsAndSubs(piClassifier).forEach(type2 => {
                 this.addPartConcepts(type2, result, typesDone);
@@ -272,14 +306,14 @@ HEXDIG = [0-9a-f]
     }
 
     private findEditorDefsForUnit(langUnit: PiConcept, conceptEditors: PiEditConcept[], result1: PiEditConcept[], result2: PiInterface[]) {
-        let typesUsedInUnit = [];
+        const typesUsedInUnit = [];
         this.addPartConcepts(langUnit, typesUsedInUnit, []);
         // Again note that the order in which the rules are stated, determines whether the parser is functioning or not
         // first create a rule for the unit, next for its children, etc.
         typesUsedInUnit.forEach(type => {
             if (type instanceof PiConcept) {
-                result1.push(...conceptEditors.filter(editor => editor.concept.referred == type));
-            } else if (type instanceof  PiInterface) {
+                result1.push(...conceptEditors.filter(editor => editor.concept.referred === type));
+            } else if (type instanceof PiInterface) {
                 result2.push(type);
             }
         });
@@ -291,7 +325,7 @@ HEXDIG = [0-9a-f]
         // we also need to filter out the interface itself
         // the same is done for abstract concepts
         let implementors: PiClassifier[] = [];
-        if (piClassifier instanceof  PiInterface) {
+        if (piClassifier instanceof PiInterface) {
             // TODO should we include a reference to a limited concept in the parse rule for an interface?
             implementors = findImplementors(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
         } else if (piClassifier instanceof PiConcept) {
@@ -299,7 +333,8 @@ HEXDIG = [0-9a-f]
         }
 
         if (implementors.length > 0 ) {
-            return `${Names.classifier(piClassifier)} = ${implementors.map((piClassifier, index) => `var${index}:${Names.classifier(piClassifier)} { return var${index}; }`).join("\n    / ")}\n`;
+            return `${Names.classifier(piClassifier)} = ${implementors.map((implementor, index) =>
+                `var${index}:${Names.classifier(implementor)} { return var${index}; }`).join("\n    / ")}\n`;
         } else {
             return `${Names.classifier(piClassifier)} = "ERROR: there are no concepts that implement this interface"\n`;
         }
@@ -317,4 +352,3 @@ HEXDIG = [0-9a-f]
     `;
     }
 }
-

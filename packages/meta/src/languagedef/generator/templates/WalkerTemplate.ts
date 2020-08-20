@@ -1,16 +1,13 @@
-import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguage } from "../../metalanguage/PiLanguage";
-import { sortClasses } from "../../../utils/ModelHelpers";
+import { PiLanguage } from "../../metalanguage";
+import { Names, LANGUAGE_GEN_FOLDER, sortClasses } from "../../../utils";
 
 export class WalkerTemplate {
-    constructor() {
-    }
 
     generateWalker(language: PiLanguage, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);   
-        const generatedClassName : String = Names.walker(language);
+        const allLangConcepts: string = Names.allConcepts(language);
+        const generatedClassName: String = Names.walker(language);
 
-        // Template starts here 
+        // Template starts here
         return `
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         import { ${language.concepts.map(concept => `
@@ -54,14 +51,16 @@ export class WalkerTemplate {
             }
 
             ${language.concepts.map(concept => `
-                private walk${Names.concept(concept)}(modelelement: ${Names.concept(concept)}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
+                private walk${Names.concept(concept)}(
+                            modelelement: ${Names.concept(concept)}, 
+                            includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                     let stopWalkingThisNode: boolean = false;
                     for (const worker of this.myWorkers ) {
                         if (!stopWalkingThisNode ) {
                             stopWalkingThisNode = worker.execBefore${Names.concept(concept)}(modelelement);
                         }
                     }
-                    ${((concept.allParts().length > 0)?
+                    ${((concept.allParts().length > 0) ?
                     `// work on children in the model tree                     
                     ${concept.allParts().map( part =>
                         (part.isList ?
@@ -70,7 +69,7 @@ export class WalkerTemplate {
                                     this.walk(p, includeChildren );
                                 }
                             });`
-                        : 
+                        :
                             `if(!(includeChildren === undefined) && includeChildren(modelelement.${part.name})) {
                                 this.walk(modelelement.${part.name}, includeChildren );
                             }`
@@ -88,4 +87,3 @@ export class WalkerTemplate {
         }`;
     }
 }
-

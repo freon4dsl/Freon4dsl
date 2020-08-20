@@ -11,7 +11,12 @@ export class ScoperUtilsTemplate {
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${includeRoot ? `${Names.concept(language.modelConcept)},` : ``} ${concreteNamespaces.map(ref => `${Names.concept(ref)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${allLangConcepts}, 
+                    ${includeRoot ?
+                        `${Names.concept(language.modelConcept)},`
+                    : ``} 
+                    ${concreteNamespaces.map(ref => `${Names.concept(ref)}`).join(", ")} 
+                } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
               
         /**
          * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition.

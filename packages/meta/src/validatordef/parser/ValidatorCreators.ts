@@ -5,10 +5,11 @@ import {
     NotEmptyRule,
     PiValidatorDef,
     ValidNameRule
-} from "../metalanguage/ValidatorDefLang";
+} from "../metalanguage";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
 
-// Functions used to create instances of the language classes (in ValidatorDefLang) from the parsed data objects (from ValidatorGrammar.pegjs).
+// Functions used to create instances of the language classes (in ValidatorDefLang)
+// from the parsed data objects (from ValidatorGrammar.pegjs).
 
 export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDef {
     const result = new PiValidatorDef();

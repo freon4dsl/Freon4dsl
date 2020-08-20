@@ -1,15 +1,13 @@
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
-import { PiConceptProperty, PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiConceptProperty, PiLanguage } from "../../../languagedef/metalanguage";
 
 export class InitalizationTemplate {
-    constructor() {
-    }
 
     generate(language: PiLanguage, relativePath: string): string {
         const firstUnit: PiConceptProperty = language.modelConcept.parts()[0];
         const firstUnitTypeName: string = Names.classifier(firstUnit?.type.referred);
         if (firstUnitTypeName.length === 0) {
-            //TODO error message
+            // TODO error message
             // "model should have at least one unit type"
         }
         const imports: string[] = language.modelConcept.parts().map(part => `${Names.classifier(part.type.referred)}`);
@@ -45,12 +43,12 @@ export class InitalizationTemplate {
                  */
                 newUnit(model: ${Names.concept(language.modelConcept)}, typename: ${Names.metaType(language)}) : ${Names.PiElement}  {
                     switch (typename) {
-                        ${language.modelConcept.allParts().map(part => 
+                        ${language.modelConcept.allParts().map(part =>
                             `case "${Names.classifier(part.type.referred)}": {
                                 const unit: ${Names.classifier(part.type.referred)} = new ${Names.classifier(part.type.referred)}();
-                                ${part.isList? `model.${part.name}.push(unit as ${Names.classifier(part.type.referred)});` : `model.${part.name} = unit as ${Names.classifier(part.type.referred)}`}
+                                ${part.isList ? `model.${part.name}.push(unit as ${Names.classifier(part.type.referred)});` : `model.${part.name} = unit as ${Names.classifier(part.type.referred)}`}
                                 return unit;
-                             }`                           
+                             }`
                              ).join("\n")
                         }
                     }
