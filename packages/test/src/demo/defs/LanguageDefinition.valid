@@ -13,21 +13,33 @@ DemoEntity {
     isunique name in self.attributes;
     notEmpty self.functions;
     isunique name in self.functions;
-    validIdentifier;
+    validIdentifier    {
+                       message:
+                       "iets met ${self.name} enzo",
+                       severity: ToDo
+                       };
 }
 
 DemoAttribute {
-    validIdentifier self.name;
+    validIdentifier self.name
+    {severity: TODO,
+    message:
+    "iets met ${self.name} enzo"
+    };
 }
 
 DemoFunction {
     typecheck conformsTo (self.expression, self.declaredType);
-    isunique name in self.parameters;
-    validIdentifier ;
+    isunique name in self.parameters         {severity: error
+                                             };
+    validIdentifier;
 }
 
 DemoVariable {
-    validIdentifier ;
+    validIdentifier     {
+                        message:
+                        "iets met ${self.name} enzo"
+                        };
 }
 
 DemoAbsExpression {

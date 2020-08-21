@@ -15,10 +15,11 @@ export interface PiValidator {
 }
 
 export enum PiErrorSeverity {
-    NONE = "NONE",
     Error = "Error",
+    Improvement = "Improvement",
     ToDo = "TODO",
-    Info = "Info"
+    Info = "Info",
+    NONE = "NONE",
 }
 
 /**

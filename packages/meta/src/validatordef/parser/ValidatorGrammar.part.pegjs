@@ -19,15 +19,17 @@ typecheckKey = "typecheck" rws
 notEmptyKey  = "notEmpty" rws
 isuniqueKey  = "isunique" rws
 inKey        = "in" rws
+severityKey  = "severity" ws
+messageKey   = "message" ws
 comparator   = "<=" / "=" / ">=" / ">" / "<"
 
 conceptRule = conceptRef:conceptRef curly_begin rules:rule* curly_end
-    { 
-        return create.createConceptRule({ 
-          "conceptRef": conceptRef, 
+    {
+        return create.createConceptRule({
+          "conceptRef": conceptRef,
           "rules": rules,
           "location": location()
-        }); 
+        });
     }
 
 rule =  rule1: typeEqualsRule   semicolon_separator { return rule1; }
@@ -37,49 +39,82 @@ rule =  rule1: typeEqualsRule   semicolon_separator { return rule1; }
       / rule5: expressionRule   semicolon_separator { return rule5; }
       / rule6: isuniqueRule     semicolon_separator { return rule6; }
 
-validNameRule = validnameKey property:langExpression? ws {
-  return create.createValidNameRule( {
-    "property": property,
+ruleExtras = curly_begin severity:severity message:(comma_separator e:errormessage { return { e } })? curly_end {
+    return { "severity": severity, "message": message };
+}
+    / curly_begin message:errormessage severity:(comma_separator s:severity { return { s } } )? curly_end {
+    return { "severity": severity, "message": message };
+}
+
+severity = severityKey name_separator value:var {
+  return create.createSeverity( {
+    "value": value,
     "location": location()
   });
 }
 
-notEmptyRule = notEmptyKey property:langExpression ws {
+errormessage = messageKey name_separator "\"" value:string "\"" {
+  return create.createErrorMessage( {
+    "message": value,
+    "location": location()
+  });
+}
+
+validNameRule = validnameKey property:langExpression? ws extra:ruleExtras? {
+  return create.createValidNameRule( {
+    "property": property,
+    "severity": (!!extra ? extra.severity : undefined),
+    "message": (!!extra ? extra.message : undefined),
+    "location": location()
+  });
+}
+
+notEmptyRule = notEmptyKey property:langExpression ws extra:ruleExtras? {
   return create.createNotEmptyRule( {
     "property": property,
+    "severity": (!!extra ? extra.severity : undefined),
+    "message": (!!extra ? extra.message : undefined),
     "location": location()
   })
 }
 
-typeEqualsRule = typecheckKey "equalsType" round_begin type1:langExpression comma_separator type2:langExpression round_end {
+typeEqualsRule = typecheckKey "equalsType" round_begin type1:langExpression comma_separator type2:langExpression round_end extra:ruleExtras? {
   return create.createTypeEqualsRule( {
     "type1": type1,
     "type2": type2,
+    "severity": (!!extra ? extra.severity : undefined),
+    "message": (!!extra ? extra.message : undefined),
     "location": location()
   });
 }
 
-typeConformsRule = typecheckKey "conformsTo" round_begin type1:langExpression comma_separator type2:langExpression round_end {
+typeConformsRule = typecheckKey "conformsTo" round_begin type1:langExpression comma_separator type2:langExpression round_end extra:ruleExtras? {
   return create.createTypeConformsRule( {
     "type1": type1,
     "type2": type2,
+    "severity": (!!extra ? extra.severity : undefined),
+    "message": (!!extra ? extra.message : undefined),
     "location": location()
   });
 }
 
-expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpression {
+expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpression extra:ruleExtras? {
   return create.createExpressionRule( {
     "exp1": exp1,
     "exp2": exp2,
     "comparator": comparator,
+    "severity": (!!extra ? extra.severity : undefined),
+    "message": (!!extra ? extra.message : undefined),
     "location": location()
   });
 }
 
-isuniqueRule = isuniqueKey exp1:langExpression rws inKey exp2:langExpression {
+isuniqueRule = isuniqueKey exp1:langExpression rws inKey exp2:langExpression extra:ruleExtras? {
   return create.createIsuniqueRule( {
     "listproperty": exp1,
     "list": exp2,
+    "severity": (!!extra ? extra.severity : undefined),
+    "message": (!!extra ? extra.message : undefined),
     "location": location()
   });
 }

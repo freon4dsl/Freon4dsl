@@ -3,7 +3,7 @@ import {
     CheckEqualsTypeRule,
     ConceptRuleSet, ExpressionRule, IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef,
+    PiValidatorDef, ValidationMessage, ValidationSeverity,
     ValidNameRule
 } from "../metalanguage";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
@@ -135,6 +135,44 @@ export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
     }
     if (!!data.location) {
         result.location = data.location;
+    }
+    return result;
+}
+
+export function createSeverity(data: Partial<ValidationSeverity>): ValidationSeverity {
+    const result = new ValidationSeverity();
+    if (!!data.value) {
+        result.value = data.value;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createErrorMessage(data: Partial<ValidationMessage>): ValidationMessage {
+    const result = new ValidationMessage();
+    if (!!data.value) {
+        result.value = data.value;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export class ParsedRuleExtras {
+    severity: ValidationSeverity;
+    message: ValidationMessage;
+}
+
+export function createParsedExtras(data: Partial<ParsedRuleExtras>): ParsedRuleExtras {
+    const result = new ParsedRuleExtras();
+    if (!!data.severity) {
+        result.severity = data.severity;
+    }
+    if (!!data.message) {
+        result.message = data.message;
     }
     return result;
 }
