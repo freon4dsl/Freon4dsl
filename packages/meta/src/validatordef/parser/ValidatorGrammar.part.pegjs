@@ -39,10 +39,10 @@ rule =  rule1: typeEqualsRule   semicolon_separator { return rule1; }
       / rule5: expressionRule   semicolon_separator { return rule5; }
       / rule6: isuniqueRule     semicolon_separator { return rule6; }
 
-ruleExtras = curly_begin severity:severity message:(comma_separator e:errormessage { return { e } })? curly_end {
+ruleExtras = curly_begin severity:severity message:(comma_separator e:errormessage { return e; })? curly_end {
     return { "severity": severity, "message": message };
 }
-    / curly_begin message:errormessage severity:(comma_separator s:severity { return { s } } )? curly_end {
+    / curly_begin message:errormessage severity:(comma_separator s:severity { return s; } )? curly_end {
     return { "severity": severity, "message": message };
 }
 

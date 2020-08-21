@@ -21,10 +21,12 @@ import {
     ValidationSeverity,
     ValidNameRule
 } from "./ValidatorDefLang";
+// TODO note that the following imports cannot be from "@projectit/core", because
+// this leads to a load error
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiErrorSeverity } from "@projectit/core";
+import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
 
-const LOGGER = new PiLogger("ValidatorChecker").mute();
+const LOGGER = new PiLogger("ValidatorChecker"); // .mute();
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 
@@ -80,7 +82,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if ( tr instanceof ValidNameRule) { this.checkValidNameRule(tr, enclosingConcept); }
         if ( tr instanceof ExpressionRule) { this.checkExpressionRule(tr, enclosingConcept); }
         if ( tr instanceof IsuniqueRule) { this.checkIsuniqueRule(tr, enclosingConcept); }
-        this.checkAndFindSeverity(tr.severity);
+        if (!!tr.severity) { this.checkAndFindSeverity(tr.severity); }
     }
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
@@ -244,6 +246,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkAndFindSeverity(severity: ValidationSeverity) {
+        LOGGER.log("checkAndFindSeverity " + severity.value);
         const myValue = severity.value.toLowerCase();
         this.nestedCheck(
             {

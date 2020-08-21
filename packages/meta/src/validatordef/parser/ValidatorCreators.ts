@@ -3,7 +3,7 @@ import {
     CheckEqualsTypeRule,
     ConceptRuleSet, ExpressionRule, IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef, ValidationMessage, ValidationSeverity,
+    PiValidatorDef, ValidationMessage, ValidationRule, ValidationSeverity,
     ValidNameRule
 } from "../metalanguage";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
@@ -44,11 +44,21 @@ export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet
     return result;
 }
 
+function createRuleCommonParts(data: Partial<ValidNameRule>, result: ValidationRule) {
+    if (!!data.severity) {
+        result.severity = data.severity;
+    }
+    if (!!data.message) {
+        result.message = data.message;
+    }
+}
+
 export function createValidNameRule(data: Partial<ValidNameRule>): ValidNameRule {
     const result = new ValidNameRule();
     if (!!data.property) {
         result.property = data.property;
     }
+    createRuleCommonParts(data, result);
     if (!!data.location) {
         result.location = data.location;
     }
@@ -60,6 +70,7 @@ export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
     if (!!data.property) {
         result.property = data.property;
     }
+    createRuleCommonParts(data, result);
     if (!!data.location) {
         result.location = data.location;
     }
@@ -69,6 +80,7 @@ export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
 export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckEqualsTypeRule {
     const result = new CheckEqualsTypeRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.type1) {
         result.type1 = data.type1;
     }
@@ -84,6 +96,7 @@ export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckE
 export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckConformsRule {
     const result = new CheckConformsRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.type1) {
         result.type1 = data.type1;
     }
@@ -99,6 +112,7 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
 export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionRule {
     const result = new ExpressionRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.exp1) {
         result.exp1 = data.exp1;
     }
@@ -117,6 +131,7 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
 export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
     const result = new IsuniqueRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.list) {
         result.list = data.list;
     }

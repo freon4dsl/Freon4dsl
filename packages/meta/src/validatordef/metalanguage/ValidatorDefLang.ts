@@ -25,7 +25,7 @@ export class ValidationSeverity {
     // 'value'is the string that the language engineer has provided in the .valid file
     // it will disregarded after checking, instead 'severity will be used
     value: string;
-    severity: PiErrorSeverity;
+    severity: PiErrorSeverity; // is set by the checker
 }
 
 export class ValidationMessage {

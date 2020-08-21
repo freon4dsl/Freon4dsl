@@ -16,7 +16,7 @@ DemoEntity {
     validIdentifier    {
                        message:
                        "iets met ${self.name} enzo",
-                       severity: ToDo
+                       severity: huppelepup
                        };
 }
 
