@@ -255,7 +255,6 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkAndFindSeverity(severity: ValidationSeverity) {
-        LOGGER.log("checkAndFindSeverity " + severity.value);
         const myValue = severity.value.toLowerCase();
         this.nestedCheck(
             {
@@ -292,7 +291,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkValidationMessage(message: ValidationMessage) {
-        this.simpleCheck(!!message.value, `User defined error message should have a value` +
+        this.simpleCheck(!!message.content && !!message.content[0], `User defined error message should have a value` +
             `[line: ${message.location?.start.line}, column: ${message.location?.start.column}].`);
     }
 }

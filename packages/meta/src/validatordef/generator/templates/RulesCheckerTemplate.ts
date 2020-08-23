@@ -10,7 +10,7 @@ import {
     NotEmptyRule,
     ValidNameRule,
     ConceptRuleSet,
-    ExpressionRule, IsuniqueRule, ValidationRule, ValidationMessage
+    ExpressionRule, IsuniqueRule, ValidationRule, ValidationMessage, ValidationMessageText, ValidationMessageReference
 } from "../../metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -114,13 +114,13 @@ export class RulesCheckerTemplate {
             } else if (r instanceof CheckConformsRule) {
                 result += this.makeConformsRule(r, locationdescription, severity, message);
             } else if (r instanceof NotEmptyRule) {
-                result += this.makeNotEmptyRule(r, locationdescription, severity)
+                result += this.makeNotEmptyRule(r, locationdescription, severity, message)
             } else if (r instanceof ValidNameRule) {
-                result += this.makeValidNameRule(r, locationdescription, severity)
+                result += this.makeValidNameRule(r, locationdescription, severity, message)
             } else if (r instanceof ExpressionRule) {
-                result += this.makeExpressionRule(r, locationdescription, severity)
+                result += this.makeExpressionRule(r, locationdescription, severity, message)
             } else if (r instanceof IsuniqueRule) {
-                result += this.makeIsuniqueRule(r, locationdescription, severity);
+                result += this.makeIsuniqueRule(r, locationdescription, severity, message);
             }
         });
         return result;
@@ -155,29 +155,39 @@ export class RulesCheckerTemplate {
         return result;
     }
 
-    private makeExpressionRule(r: ExpressionRule, locationdescription: string, severity: string) {
+    private makeExpressionRule(r: ExpressionRule, locationdescription: string, severity: string, message: string) {
+        if (message.length === 0) {
+            message = `"'${r.toPiString()}' is false"`;
+            // console.log("message: " + `${message}` + ", " + `"'${r.toPiString()}' is false"`);
+        }
+        console.log("message: " + `${message}` + ", " + `"'${r.toPiString()}' is false"`);
         return `if (!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
-                        this.errorList.push(new PiError("'${r.toPiString()}' is false", modelelement,
-                         ${locationdescription},
-                         ${severity}));
-                         
-                    }`;
+                    this.errorList.push( new PiError( ${message}, modelelement, ${locationdescription}, ${severity} ));                         
+                }`;
     }
 
-    private makeValidNameRule(r: ValidNameRule, locationdescription: string, severity: string) {
+    private makeValidNameRule(r: ValidNameRule, locationdescription: string, severity: string, message: string) {
+        if (message.length === 0) {
+            message = `"'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
+            console.log("in IF message: " + `${message}` + ", " + `"'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier"`);
+
+        }
+        console.log("message: " + `${message}` + ", " + `"'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier"`);
         return `if (!this.isValidName(${langExpToTypeScript(r.property)})) {
-                         this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement,
-                         ${locationdescription},
-                         ${severity}));
-                    }`;
+                    this.errorList.push( new PiError( ${message}, modelelement, ${locationdescription}, ${severity} ));                         
+                }`;
     }
 
-    private makeNotEmptyRule(r: NotEmptyRule, locationdescription: string, severity: string) {
+    private makeNotEmptyRule(r: NotEmptyRule, locationdescription: string, severity: string, message: string) {
+        if (message.length === 0) {
+            message = `"List '${r.property.toPiString()}' may not be empty"`;
+            console.log("message: " + `${message}` + ", " + `"List '${r.property.toPiString()}' may not be empty"`);
+
+        }
+        console.log("message: " + `${message}` + ", " + message);
         return `if (${langExpToTypeScript(r.property)}.length == 0) {
-                         this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", modelelement,
-                         ${locationdescription},
-                         ${severity}));
-                    }`;
+                    this.errorList.push(new PiError(${message}, modelelement, ${locationdescription}, ${severity}));
+                }`;
     }
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
@@ -185,28 +195,24 @@ export class RulesCheckerTemplate {
             message = `"Type of '" + this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) + 
                          "' does not conform to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
         }
+        console.log("message: " + `${message}`);
         return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
-                         this.errorList.push(
-                            new PiError(
-                                 ${message},
-                                 ${langExpToTypeScript(r.type1)},
-                                 ${locationdescription},
-                                 ${severity}
-                            ));
-                    }`;
+                    this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+                 }`;
     }
 
     private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
+        if (message.length === 0) {
+            message = `"Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) 
+                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+        }
+        console.log("message: " + `${message}`);
         return `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
-                         this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) 
-                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'",
-                         ${langExpToTypeScript(r.type1)}, 
-                         ${locationdescription}, 
-                         ${severity}));
-                    }`;
+                    this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+                }`;
     }
 
-    private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string, severity: string): string {
+    private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string, severity: string, message: string): string {
         const listpropertyName = rule.listproperty.appliedfeature.toPiString();
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
@@ -216,6 +222,9 @@ export class RulesCheckerTemplate {
             :
                 referredListproperty.type.referred.name;
         const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
+        if (message.length === 0) {
+            message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;
+        }
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
         ${langExpToTypeScript(rule.list)}.forEach((elem, index) => {
             if ((elem === undefined) || (elem === null)) {
@@ -227,7 +236,7 @@ export class RulesCheckerTemplate {
                 if (!${uniquelistName}.includes(elem.${listpropertyTypescript})){
                     ${uniquelistName}.push(elem.${listpropertyTypescript});
                 } else {
-                    this.errorList.push(new PiError("The value of property '${listpropertyName}' is not unique in list '${listName}'",
+                    this.errorList.push(new PiError(${message},
                      ${langExpToTypeScript(rule.list)}[index],
                      ${locationdescription},
                      ${severity}));                }
@@ -237,10 +246,23 @@ export class RulesCheckerTemplate {
 
     private makeMessage(message: ValidationMessage): string {
         let result = "";
-        // TODO use the expressions to create a better message
         if (!!message) {
-            console.log("FOUND message: " + message.value);
-            result += `"${message.value}"`;
+            const numberOfparts = message.content.length;
+            message.content.forEach((cont, index) => {
+                if (cont instanceof ValidationMessageText) {
+                    // console.log("FOUND message text: '" + cont.value + "'");
+                    result += `${cont.value}`;
+                } else if (cont instanceof  ValidationMessageReference) {
+                    // console.log("FOUND message expression: '" + cont.expression.toPiString() + "'");
+                    result += `\${${langExpToTypeScript(cont.expression)}}`;
+                }
+                if (index < numberOfparts - 1) {
+                    result += " ";
+                }
+            });
+        }
+        if (result.length > 0) {
+            result = "\`" + result + "\`";
         }
         return result;
     }

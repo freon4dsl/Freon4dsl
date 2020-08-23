@@ -32,7 +32,19 @@ export class ValidationSeverity {
 
 export class ValidationMessage {
     location: ParseLocation;
-    value: string; // TODO should be list of elements, including language expressions
+    content: ValidationMessagePart[] = [];
+}
+
+export type ValidationMessagePart = ValidationMessageText | ValidationMessageReference;
+
+export class ValidationMessageText {
+    location: ParseLocation;
+    value: string;
+}
+
+export class ValidationMessageReference {
+    location: ParseLocation;
+    expression: PiLangExp;
 }
 
 export abstract class ValidationRule {

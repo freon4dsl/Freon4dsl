@@ -3,7 +3,7 @@ import {
     CheckEqualsTypeRule,
     ConceptRuleSet, ExpressionRule, IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef, ValidationMessage, ValidationRule, ValidationSeverity,
+    PiValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
     ValidNameRule
 } from "../metalanguage";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
@@ -167,6 +167,28 @@ export function createSeverity(data: Partial<ValidationSeverity>): ValidationSev
 
 export function createErrorMessage(data: Partial<ValidationMessage>): ValidationMessage {
     const result = new ValidationMessage();
+    if (!!data.content) {
+        result.content = data.content;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createValidationMessageReference(data: Partial<ValidationMessageReference>): ValidationMessageReference {
+    const result = new ValidationMessageReference();
+    if (!!data.expression) {
+        result.expression = data.expression;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createValidationMessageText(data: Partial<ValidationMessageText>): ValidationMessageText {
+    const result = new ValidationMessageText();
     if (!!data.value) {
         result.value = data.value;
     }
@@ -175,20 +197,3 @@ export function createErrorMessage(data: Partial<ValidationMessage>): Validation
     }
     return result;
 }
-
-// TODO remove the lines below this marker
-// export class ParsedRuleExtras {
-//     severity: ValidationSeverity;
-//     message: ValidationMessage;
-// }
-//
-// export function createParsedExtras(data: Partial<ParsedRuleExtras>): ParsedRuleExtras {
-//     const result = new ParsedRuleExtras();
-//     if (!!data.severity) {
-//         result.severity = data.severity;
-//     }
-//     if (!!data.message) {
-//         result.message = data.message;
-//     }
-//     return result;
-// }

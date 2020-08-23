@@ -22,6 +22,8 @@ inKey        = "in" rws
 severityKey  = "severity" ws
 messageKey   = "message" ws
 comparator   = "<=" / "=" / ">=" / ">" / "<"
+modelReferenceStart = "${"
+modelReferenceEnd = "}"
 
 conceptRule = conceptRef:conceptRef curly_begin rules:rule* curly_end
     {
@@ -53,12 +55,40 @@ severity = severityKey name_separator value:var {
   });
 }
 
-errormessage = messageKey name_separator "\"" value:string "\"" {
+errormessage = messageKey name_separator "\"" content:messageContent "\"" {
   return create.createErrorMessage( {
-    "value": value,
+    "content": content,
     "location": location()
   });
 }
+
+messageContent = head:messagePart tail:(" " v:messagePart { return v; })*
+                     { return [head].concat(tail); }
+
+messagePart = ref:modelReference { return ref; }
+            / value:text {
+    return create.createValidationMessageText({
+      "value": value,
+      "location": location()
+    });
+}
+
+modelReference = modelReferenceStart ws exp:expression ws modelReferenceEnd {
+    return create.createValidationMessageReference({
+      "expression": exp,
+      "location": location()
+    });
+}
+
+text = chars:anythingBut+
+            {
+                return chars.join("");
+            }
+
+anythingBut = !(" ${") src:char
+            {
+                return src;
+            }
 
 validNameRule = validnameKey property:langExpression? ws extra:ruleExtras? {
   return create.createValidNameRule( {

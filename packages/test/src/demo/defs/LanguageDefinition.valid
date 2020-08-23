@@ -15,7 +15,7 @@ DemoEntity {
     isunique name in self.functions;
     validIdentifier    {
                        message:
-                       "iets met ${self.name} enzo",
+                       "iets met ${self.name} en nog een ${self.simpleprop} enzo",
                        severity: eRRor
                        };
 }
@@ -29,7 +29,7 @@ DemoAttribute {
 }
 
 DemoFunction {
-    typecheck conformsTo (self.expression, self.declaredType) {severity: improvement, message: "FUNCTION IS NOT CORRECT!!"};
+    typecheck conformsTo (self.expression, self.declaredType) {severity: improvement, message: "${self.name} IS NOT CORRECT!!"};
     isunique name in self.parameters         {severity: improvement};
     validIdentifier;
 }
