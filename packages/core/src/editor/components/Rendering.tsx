@@ -21,6 +21,8 @@ import { ListComponent } from "./boxes/ListComponent";
 import { LabelComponent } from "./boxes/LabelComponent";
 import { SelectableComponent } from "./SelectableComponent";
 import { TextComponent } from "./boxes/TextComponent";
+import { OptionalComponent } from "./boxes/OptionalComponent";
+import { OptionalBox } from "../boxes/OptionalBox";
 
 // tslint:disable-next-line:variable-name
 export const RenderBox = observer(({ box, editor }: { box: Box; editor: PiEditor }) => (
@@ -53,6 +55,8 @@ export function renderComponent(box: Box, editor: PiEditor): React.ReactElement<
             const callback = (box1: Box, editor1: PiEditor): any => <RenderBox box={box1} editor={editor1} />;
             return <GridComponent box={box as GridBox} editor={editor} renderBoxCallback={callback} />;
         }
+        case "OptionalBox":
+            return <OptionalComponent box={box as OptionalBox} editor={editor} />;
         default:
             console.log("RenderComponent unknow box type: " + box);
     }

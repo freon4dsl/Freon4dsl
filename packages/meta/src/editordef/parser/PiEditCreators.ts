@@ -9,7 +9,7 @@ import {
     PiEditParsedProjectionIndent,
     PiEditProjectionLine,
     PiEditProjectionText,
-    PiEditSubProjection
+    PiEditPropertyProjection, PiEditSubProjection
 } from "../metalanguage";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 import { PiConcept } from "../../languagedef/metalanguage";
@@ -113,6 +113,21 @@ export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectio
     return result;
 }
 
+export function createSubProjection(data: Partial<PiEditSubProjection>): PiEditSubProjection {
+    console.log("Create SUBPROJECTION ");// + JSON.stringify(data));
+    const result = new PiEditSubProjection();
+    if (!!data.optional) {
+        result.optional = data.optional;
+    }
+    if (!!data.items) {
+        result.items = data.items;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
 export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEditParsedProjectionIndent {
     // console.log("createIndent <<" + data.indent + ">>");
     const result = new PiEditParsedProjectionIndent();
@@ -134,9 +149,9 @@ export function createText(data: string): PiEditProjectionText {
     return result;
 }
 
-export function createSubProjection(data: Partial<PiEditSubProjection>): PiEditSubProjection {
+export function createPropertyProjection(data: Partial<PiEditPropertyProjection>): PiEditPropertyProjection {
     // console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listJoin + "]");
-    const result = new PiEditSubProjection();
+    const result = new PiEditPropertyProjection();
     if (!!data.propertyName) {
         result.propertyName = data.propertyName;
     }

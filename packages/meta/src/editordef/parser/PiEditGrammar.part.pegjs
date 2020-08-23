@@ -41,14 +41,14 @@ templateSpace = s:[ ]+
                     return creator.createIndent( { "indent": s.join(""), "location": location() });
                 }
 
-sub_projection = subProjectionStart ws
+property_projection = subProjectionStart ws
                      exp:expression ws join:listJoin? ws
                  subProjectionEnd
             {
-                return creator.createSubProjection( {  "expression": exp, "listJoin": join, "location": location() });
+                return creator.createPropertyProjection( {  "expression": exp, "listJoin": join, "location": location() });
             }
 
-//sub_projection = "[[" ws "this" ws "." ws prop:var ws
+//property_projection = "[[" ws "this" ws "." ws prop:var ws
 //                        join:listJoin?
 //                 "]]"
 //            {
@@ -104,7 +104,7 @@ anythingButEndBracket = !("]" ) src:sourceChar
                 return src;
             }
 
-anythingBut = !("${" / newline / "]" / "[[" ) src:char
+anythingBut = !("${" / newline / "]" / "[" ) src:char
             {
                 return src;
             }
@@ -116,9 +116,17 @@ newline     = "\r"? "\n"
                     return creator.createNewline();
                 }
 
-line        = items:(s:templateSpace / t:text / p:sub_projection / w:newline )+
+line        = items:(s:templateSpace / t:text / p:property_projection / sub:subProjection /  w:newline )+
                 {
                     return creator.createLine( {"items": items} );
+                }
+
+subProjection = projection_begin
+                    optional:"?"?
+                    items:(s:templateSpace / t:text / p:property_projection )+
+                projection_end
+                {
+                    return creator.createSubProjection( {"optional": optional, "items": items} );
                 }
 
 conceptReference = referredName:var {

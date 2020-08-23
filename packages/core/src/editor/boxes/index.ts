@@ -8,3 +8,4 @@ export * from "./GridBox";
 export * from "./SvgBox";
 export * from "./SelectOption";
 export * from "./IndentBox";
+export * from "./OptionalBox"

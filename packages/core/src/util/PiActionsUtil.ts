@@ -20,7 +20,7 @@ export class PiActionsUtil {
     }
 
     static remove(from: PiBehavior[], item: PiBehavior) {
-        remove(from, e => this.equalsTrigger(e.trigger, item.trigger));
+        remove(from, (value, index, collection) => this.equalsTrigger(value.trigger, item.trigger));
     }
 
     static equalsTrigger(trigger1: PiTriggerType, trigger2: PiTriggerType): boolean {
@@ -29,7 +29,7 @@ export class PiActionsUtil {
 
         if (type1 === type2) {
             if (type1 === "string") {
-                return type1 === type2;
+                return trigger1 === trigger2;
             } else if (type1 === "object") {
                 type1 = trigger1["meta"] === undefined ? "PiKey" : "RegExp";
                 type2 = trigger2["meta"] === undefined ? "PiKey" : "RegExp";

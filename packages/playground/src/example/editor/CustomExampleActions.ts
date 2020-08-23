@@ -6,7 +6,7 @@ import {
     PiExpressionCreator,
     PiActions,
     EXPRESSION_PLACEHOLDER,
-    Box, PiTriggerType, PiEditor, AliasBox
+    Box, PiTriggerType, PiEditor, AliasBox, isAliasBox, isOptionalBox, PiElement
 } from "@projectit/core";
 import { PiCaret } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen";
@@ -52,6 +52,19 @@ export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
 
 export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
     // Add your own custom behavior here
+    {
+        activeInBoxRoles: ["optional-base-optional"],
+        action: (box, trigger, editor): PiElement => {
+            if( isAliasBox(box)){
+                const parent = box.parent;
+                if( isOptionalBox(parent)) {
+                    parent.mustShow = true;
+                }
+            }
+            return null;
+        },
+        trigger: "add-base"
+    }
 ];
 
 export const MANUAL_KEYBOARD: KeyboardShortcutBehavior[] = [
