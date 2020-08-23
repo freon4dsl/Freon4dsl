@@ -16,7 +16,7 @@ export class PiLangUtil {
 
     private static superConceptsRecursive(self: PiClassifier, result: PiConcept[]): void {
         if (self instanceof PiConcept) {
-            if(!!self.base) {
+            if (!!self.base) {
                 result.push(self.base.referred);
                 PiLangUtil.superConceptsRecursive(self.base.referred, result);
             }
@@ -45,16 +45,16 @@ export class PiLangUtil {
 
     private static superInterfacesRecursive(self: PiClassifier, result: PiInterface[]): void {
         if (self instanceof PiConcept) {
-            if(!!self.base) {
+            if (!!self.base) {
                 PiLangUtil.superInterfacesRecursive(self.base.referred, result);
             }
-            for (let i of self.interfaces) {
+            for (const i of self.interfaces) {
                 result.push(i.referred);
                 PiLangUtil.superInterfacesRecursive(i.referred, result);
             }
         }
         if (self instanceof PiInterface) {
-            for (let i of self.base) {
+            for (const i of self.base) {
                 result.push(i.referred);
                 PiLangUtil.superInterfacesRecursive(i.referred, result);
             }
@@ -74,17 +74,17 @@ export class PiLangUtil {
 
     private static superClassifiersRecursive(self: PiClassifier, result: PiClassifier[]) {
         if (self instanceof PiConcept) {
-            if(!!self.base) {
+            if (!!self.base) {
                 result.push(self.base.referred);
                 PiLangUtil.superClassifiersRecursive(self.base.referred, result);
             }
-            for (let i of self.interfaces) {
+            for (const i of self.interfaces) {
                 result.push(i.referred);
                 PiLangUtil.superClassifiersRecursive(i.referred, result);
             }
         }
         if (self instanceof PiInterface) {
-            for (let i of self.base) {
+            for (const i of self.base) {
                 result.push(i.referred);
                 PiLangUtil.superClassifiersRecursive(i.referred, result);
             }
@@ -93,7 +93,7 @@ export class PiLangUtil {
 
     public static subConcepts(self: PiClassifier): PiConcept[] {
         const result: PiConcept[] = [];
-        for (let cls of self.language.concepts) {
+        for (const cls of self.language.concepts) {
             if (PiLangUtil.superClassifiers(cls).includes(self)) {
                 result.push(cls);
             }
@@ -102,8 +102,8 @@ export class PiLangUtil {
     }
 
     public static subConceptsIncludingSelf(self: PiClassifier): PiConcept[] {
-        const result= PiLangUtil.subConcepts(self);
-        if(self instanceof PiConcept) {
+        const result = PiLangUtil.subConcepts(self);
+        if (self instanceof PiConcept) {
             result.push(self);
         }
         return result;
@@ -123,8 +123,7 @@ export class PiLangUtil {
         } else {
             otherType = secondProp.type?.referred?.name;
         }
-        if ( myType === otherType ) return true;
-        return false;
+        return myType === otherType;
     }
 
     public static findNameProp(con: PiConcept): PiPrimitiveProperty {

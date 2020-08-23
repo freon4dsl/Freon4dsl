@@ -4,19 +4,19 @@ import { PiExpressionConcept, PiLanguage, PiLangUtil, PiLimitedConcept, PiPrimit
 // The tests in this file determine whether the internal structure of a language definition is correct.
 
 describe("Checking internal structure of language", () => {
-    let parser = new LanguageParser();
-    let testdir = "src/test/__tests__/language-tests/correctDefFiles/internal-structure/";
+    const parser = new LanguageParser();
+    const testdir = "src/test/__tests__/language-tests/correctDefFiles/internal-structure/";
 
     // TODO implement the following tests:
 
     // on PiLanguage
     // ??? predefined (primitive types)
     test("internal structure of PiLanguage", () => {
-        let parseFile = testdir + "test2.lang";
+        const parseFile = testdir + "test2.lang";
         let piLanguage: PiLanguage;
         try {
             piLanguage = parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             // this would be a true error
             console.log(e.message);
         }
@@ -44,11 +44,11 @@ describe("Checking internal structure of language", () => {
     // on PiConcept and PiInterface
     // TODO if an implemented interface has a prop, we can find it
     test("internal structure of PiConcept and PiInterface: properties", () => {
-        let parseFile = testdir + "test2.lang";
+        const parseFile = testdir + "test2.lang";
         let piLanguage: PiLanguage;
         try {
             piLanguage = parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             // this would be a true error
             console.log(e.message);
             console.log(e.stack);
@@ -56,7 +56,7 @@ describe("Checking internal structure of language", () => {
         expect(piLanguage).not.toBeUndefined();
         // no references in the parts list, and vice versa
         // no primProps in reference list
-        let piConcept = piLanguage.findConcept("BB");
+        const piConcept = piLanguage.findConcept("BB");
         piConcept.parts().forEach(part => {
             expect(part.isPart).toBe(true);
         });
@@ -70,11 +70,11 @@ describe("Checking internal structure of language", () => {
     });
 
     test("internal structure of PiConcept and PiInterface: inheritance", () => {
-        let parseFile = testdir + "test3.lang";
+        const parseFile = testdir + "test3.lang";
         let piLanguage: PiLanguage;
         try {
             piLanguage = parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             // this would be a true error
             console.log(e.message);
         }
@@ -83,7 +83,7 @@ describe("Checking internal structure of language", () => {
 
         // no references in the parts list, and vice versa
         // no primProps in reference list
-        let piConcept = piLanguage.findConcept("BB");
+        const piConcept = piLanguage.findConcept("BB");
         expect(piConcept.allParts().length).toBeGreaterThan(0);
         piConcept.allParts().forEach(part => {
             expect(part.isPart).toBe(true);
@@ -97,7 +97,7 @@ describe("Checking internal structure of language", () => {
         });
 
         // if a 'base' has a prop, we can find it
-        let baseConcept = piConcept.base.referred.base.referred;     // should be "BaseBaseBB"
+        const baseConcept = piConcept.base.referred.base.referred;     // should be "BaseBaseBB"
         expect(baseConcept).not.toBeUndefined();
         baseConcept.allProperties().forEach(prop => {
             expect(piConcept.allProperties()).toContain(prop);
@@ -134,11 +134,11 @@ describe("Checking internal structure of language", () => {
 
     // on PiInstance
     test("internal structure of PiInstance", () => {
-        let parseFile = testdir + "test4.lang";
+        const parseFile = testdir + "test4.lang";
         let piLanguage: PiLanguage;
         try {
             piLanguage = parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             // this would be a true error
             console.log(e.message);
         }
@@ -150,7 +150,7 @@ describe("Checking internal structure of language", () => {
             expect(myLimited).toBeInstanceOf(PiLimitedConcept);
             // test PiInstance against its concept
             (myLimited as PiLimitedConcept).instances.forEach(inst => {
-                inst.concept.referred === myLimited;
+                expect(inst.concept.referred).toBe(myLimited);
                 inst.props.forEach(instProp => {
                     expect(myLimited.allProperties()).toContain(instProp.property.referred);
                 });

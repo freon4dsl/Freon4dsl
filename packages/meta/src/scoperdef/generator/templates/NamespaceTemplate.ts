@@ -1,34 +1,35 @@
-import { PiConcept, PiConceptProperty, PiInterface, PiLangExp, PiLanguage, PiProperty } from "../../../languagedef/metalanguage";
+import { PiConcept, PiConceptProperty, PiInterface, PiLangExp, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiScopeDef, ScopeConceptDef } from "../../metalanguage";
 import {
-    replaceInterfacesWithImplementors,
     langExpToTypeScript,
     LANGUAGE_GEN_FOLDER,
     Names,
     PROJECTITCORE,
-    sortClasses,
-    findImplementors, findAllImplementorsAndSubs, LANGUAGE_UTILS_GEN_FOLDER
+    findImplementors,
+    LANGUAGE_UTILS_GEN_FOLDER
 } from "../../../utils";
-import { PiElementReference } from "../../../languagedef/metalanguage/PiElementReference";
 
 export class NamespaceTemplate {
-    hasAdditionalNamespacetext = '';
-    getAdditionalNamespacetext = '';
-    additionalNamespaceImports = '';
+    hasAdditionalNamespacetext = "";
+    getAdditionalNamespacetext = "";
+    additionalNamespaceImports = "";
     imports: string[] = [];
 
     generateNamespace(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
-        let generateAdditionalNamespaces = false;
+
+        this.hasAdditionalNamespacetext = "";
+        this.getAdditionalNamespacetext = "";
+        this.additionalNamespaceImports = "";
+        this.imports = [];
 
         if (!!scopedef) { // should always be the case, either the definition read from file or the default
             this.makeAdditionalNamespaceTexts(scopedef, language);
-            if (this.hasAdditionalNamespacetext.length > 0) generateAdditionalNamespaces = true;
         }
 
-        const allLangConcepts : string = Names.allConcepts(language);
-        const langConceptType : string = Names.metaType(language);
-        const generatedClassName : string = Names.namespace(language);
-        const piNamedElementClassName : string = Names.PiNamedElement;
+        const allLangConcepts: string = Names.allConcepts(language);
+        const langConceptType: string = Names.metaType(language);
+        const generatedClassName: string = Names.namespace(language);
+        const piNamedElementClassName: string = Names.PiNamedElement;
         const myIfStatement = this.createIfStatement(scopedef, language);
 
         // Template starts here
@@ -47,10 +48,6 @@ export class NamespaceTemplate {
          */
         export class ${generatedClassName} {
             private static allNamespaces: Map< ${allLangConcepts}, ${generatedClassName}> = new Map();
-        
-            private constructor(elem: ${allLangConcepts}) {
-                this._myElem = elem;
-            }
             
             /**
              * This method ensures that every element in the model has one and only one associated namespace object.
@@ -61,12 +58,12 @@ export class NamespaceTemplate {
                 if (this.allNamespaces.has(elem)) {
                     return this.allNamespaces.get(elem);
                 } else {
-                    let result = new ${generatedClassName}(elem);
+                    const result = new ${generatedClassName}(elem);
                     this.allNamespaces.set(elem, result);
                     return result;
                 }
             }
-            
+                               
             /**
              * This convenience method merges 'list' and 'result', where if an element is present in both,
              * the element in 'list' is discarded, thus shadowing names from 'list'.
@@ -81,9 +78,13 @@ export class NamespaceTemplate {
                     }
                 });
             }
-        
+
             private _myElem: ${allLangConcepts};
             private searchList: string[] = [];
+                        
+            private constructor(elem: ${allLangConcepts}) {
+                this._myElem = elem;
+            }
             
             /**
              * Returns all elements that are visible in this namespace, including those from additional namespaces
@@ -93,7 +94,9 @@ export class NamespaceTemplate {
                 let result: ${piNamedElementClassName}[] = [];
         
                 // check whether we are already searching this namespace for a certain type
-                if ( this.searchingFor(metatype) ) return [];
+                if (this.searchingFor(metatype)) {
+                    return [];
+                }
         
                 // do it
                 result = this.getInternalVisibleElements(metatype);
@@ -114,7 +117,7 @@ export class NamespaceTemplate {
              * @param metatype
              */       
             private getInternalVisibleElements(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
-                let result: ${piNamedElementClassName}[] = [];       
+                const result: ${piNamedElementClassName}[] = [];       
                 // for now we push all parts, later public/private annotations can be taken into account 
                 ${myIfStatement}       
                 return result;
@@ -134,7 +137,7 @@ export class NamespaceTemplate {
              * @param metatype
              */
             private addAdditionalNamespaces(metatype?: ${langConceptType}): ${piNamedElementClassName}[] {
-                let result: ${piNamedElementClassName}[] = [];
+                const result: ${piNamedElementClassName}[] = [];
                 ${this.getAdditionalNamespacetext}
                 return result;
             }
@@ -144,7 +147,7 @@ export class NamespaceTemplate {
              * @param metatype
              */
             private searchingFor(metatype?: ${langConceptType}): boolean {
-                let type: string = (!!metatype ? metatype : anymetatype);
+                const type: string = (!!metatype ? metatype : anymetatype);
                 if (this.searchList.includes(type)) {
                     return true;
                 } else {
@@ -158,32 +161,27 @@ export class NamespaceTemplate {
              * @param metatype
              */
             private cleanSearchList(metatype?: ${langConceptType}) {
-                let type: string = (!!metatype ? metatype : anymetatype);
+                const type: string = (!!metatype ? metatype : anymetatype);
                 const index = this.searchList.indexOf(type);
                 if (index > -1) {
                     this.searchList.splice(index, 1);
                 }
             }
         }`;
-
-        this.hasAdditionalNamespacetext = '';
-        this.getAdditionalNamespacetext = '';
-        this.additionalNamespaceImports = '';
-        this.imports = [];
     }
 
-    private createIfStatement(scopedef: PiScopeDef, language: PiLanguage) : string {
-        let result : string = "";
+    private createIfStatement(scopedef: PiScopeDef, language: PiLanguage): string {
+        let result: string = "";
         // let generatedConcepts: PiConcept[] = [];
         result += `// set up the 'worker' of the visitor pattern
-                let myNamesCollector = new ${Names.namesCollector(language)}();
+                const myNamesCollector = new ${Names.namesCollector(language)}();
                 myNamesCollector.namesList = result;
                 if (!!metatype) {
                     myNamesCollector.metatype = metatype;
                 }
  
                 // set up the 'walker of the visitor pattern
-                let myWalker = new ${Names.walker(language)}();
+                const myWalker = new ${Names.walker(language)}();
                 myWalker.myWorkers.push( myNamesCollector );
                 
                 // collect the elements from the namespace
@@ -230,15 +228,14 @@ export class NamespaceTemplate {
     // }
 
     private makeAdditionalNamespaceTexts(scopedef: PiScopeDef, language: PiLanguage) {
-        const generatedClassName : string = Names.namespace(language);
-        let generatedConcepts: PiConcept[] = [];
-        for (let def of scopedef.scopeConceptDefs) {
+        const generatedConcepts: PiConcept[] = [];
+        for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
-                let myClassifier = def.conceptRef.referred;
+                const myClassifier = def.conceptRef.referred;
                 let isDone: boolean = false;
-                let comment = "// based on namespace addition for " + myClassifier.name + "\n";
+                const comment = "// based on namespace addition for " + myClassifier.name + "\n";
                 if (myClassifier instanceof PiInterface) {
-                    for (let implementor of findImplementors(myClassifier)) {
+                    for (const implementor of findImplementors(myClassifier)) {
                         if ( !generatedConcepts.includes(implementor)) {
                             isDone = true;
                         }
@@ -281,7 +278,7 @@ export class NamespaceTemplate {
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(comment);
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
             `if (this._myElem instanceof ${typeName}) {`);
-        for (let expression of def.namespaceAdditions.expressions) {
+        for (const expression of def.namespaceAdditions.expressions) {
             this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression, language));
         }
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
@@ -289,12 +286,12 @@ export class NamespaceTemplate {
     }
 
     private addNamespaceExpression(expression: PiLangExp, language: PiLanguage): string {
-        let result: string = '';
-        const generatedClassName : string = Names.namespace(language);
-        let myRef = expression.findRefOfLastAppliedFeature();
-        let loopVar: string = "loopVariable";
+        let result: string = "";
+        const generatedClassName: string = Names.namespace(language);
+        const myRef = expression.findRefOfLastAppliedFeature();
+        const loopVar: string = "loopVariable";
         let loopVarExtended = loopVar;
-        if(myRef.isList) {
+        if (myRef.isList) {
             if (myRef instanceof PiConceptProperty) {
                 if (!myRef.isPart) {
                     loopVarExtended = loopVarExtended.concat(".referred");

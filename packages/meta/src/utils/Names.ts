@@ -1,31 +1,52 @@
 import {
     PiClassifier, PiConcept, PiInterface,
     PiLanguage
-} from "../languagedef/metalanguage/PiLanguage";
+} from "../languagedef/metalanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
  * at each usage.
  */
 export class Names {
+    // tslint:disable-next-line:variable-name
     public static PiNamedElement = "PiNamedElement";
+    // tslint:disable-next-line:variable-name
     public static PiElement = "PiElement";
+    // tslint:disable-next-line:variable-name
     public static PiExpression = "PiExpression";
+    // tslint:disable-next-line:variable-name
     public static PiBinaryExpression = "PiBinaryExpression";
+    // tslint:disable-next-line:variable-name
     public static PiScoper = "PiScoper";
+    // tslint:disable-next-line:variable-name
     public static PiTyper = "PiTyper";
+    // tslint:disable-next-line:variable-name
     public static PiValidator = "PiValidator";
+    // tslint:disable-next-line:variable-name
     public static PiStdlib = "PiStdlib";
+    // tslint:disable-next-line:variable-name
     public static PiUnparser = "PiUnparser";
-    public static PiError = "PiError"; 
+    // tslint:disable-next-line:variable-name
+    public static PiError = "PiError";
+    // tslint:disable-next-line:variable-name
+    public static PiErrorSeverity = "PiErrorSeverity";
+    // tslint:disable-next-line:variable-name
     public static PiActions = "PiActions";
+    // tslint:disable-next-line:variable-name
     public static PiEditor = "PiEditor";
+    // tslint:disable-next-line:variable-name
     public static PiProjection = "PiProjection";
+    // tslint:disable-next-line:variable-name
     public static PiModelInitialization = "PiModelInitialization";
+    // tslint:disable-next-line:variable-name
     public static Box = "Box";
+    // tslint:disable-next-line:variable-name
     public static PiElementReference = "PiElementReference";
+    // tslint:disable-next-line:variable-name
     public static PiEnvironment = "PiEnvironment";
+    // tslint:disable-next-line:variable-name
     public static CompositeProjection = "PiCompositeProjection";
+    // tslint:disable-next-line:variable-name
     public static ProjectionalEditor = "ProjectionalEditor";
     public static mainProjectionalEditor = "MainProjectionalEditor";
     public static styles = "projectitStyles";
@@ -34,6 +55,7 @@ export class Names {
     // because the below Names are used to generate TypeScript classes
     // they all have to start with an uppercase character
 
+    // TODO see if we can remove this parameter
     public static configuration(language: PiLanguage) {
         return "ProjectitConfiguration";
     }
@@ -151,8 +173,10 @@ export class Names {
     }
 
     public static startWithUpperCase(word: string): string {
-        if (!!word) return word[0].toUpperCase() + word.substr(1);
-        return '';
+        if (!!word) {
+            return word[0].toUpperCase() + word.substr(1);
+        }
+        return "";
     }
 
     public static projectionFunction(c: PiConcept): string {

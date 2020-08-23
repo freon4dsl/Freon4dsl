@@ -81,7 +81,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } catch (e) {
                 LOGGER.error(this, "Stopping generation because of errors in the language definition: " + e.message + "\n");
             }
-            if (this.watch){
+            if (this.watch) {
                 LOGGER.info(this, "Watching language definition files ...");
             }
         } catch (e) {
@@ -177,12 +177,12 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         if (!this.defFolder.value) {
             throw new Error("No definitions folder, exiting.");
         }
-        let generationStatus = new GenerationStatus();
-        let myFileSet: string[] = Helpers.findFiles(this.defFolder.value, generationStatus);
+        const generationStatus = new GenerationStatus();
+        const myFileSet: string[] = Helpers.findFiles(this.defFolder.value, generationStatus);
         if (myFileSet.length === 0) {
             throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
         }
-        for (let filename of myFileSet) {
+        for (const filename of myFileSet) {
             // TODO take into account multiple files with the same extension
             if (/\.lang$/.test(filename)) {
                 this.languageFile = filename;
@@ -208,6 +208,4 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             description: "Folder where your language definition files can be found"
         });
     }
-
-
 }

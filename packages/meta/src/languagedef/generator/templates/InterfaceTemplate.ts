@@ -1,14 +1,11 @@
-import { Names } from "../../../utils/Names";
 import {
     PiConceptProperty,
     PiPrimitiveProperty,
     PiInterface
-} from "../../metalanguage/PiLanguage";
-import { PROJECTITCORE } from "../../../utils";
+} from "../../metalanguage";
+import { Names, PROJECTITCORE } from "../../../utils";
 
 export class InterfaceTemplate {
-    constructor() {
-    }
 
     generateInterface(intf: PiInterface, relativePath: string): string {
         // const language = intf.language;
@@ -18,7 +15,7 @@ export class InterfaceTemplate {
         // const hasName = intf.primProperties.some(p => p.name === "name");
         const hasReferences = intf.references().length > 0;
 
-        const abstract = '';
+        const abstract = "";
         const myName = Names.interface(intf);
 
         const imports = Array.from(
@@ -31,7 +28,7 @@ export class InterfaceTemplate {
         );
 
         // Template starts here
-        const result = `
+        return `
             ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
             import { ${Names.PiElement} } from "${PROJECTITCORE}";
             ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
@@ -40,13 +37,12 @@ export class InterfaceTemplate {
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
              */              
             export ${abstract} interface ${myName} 
-                extends ${extendsInterfaces.length>0? `${extendsInterfaces.map(int => `${int}`).join(", ")}`: `${Names.PiElement}`} 
+                extends ${extendsInterfaces.length > 0 ? `${extendsInterfaces.map(int => `${int}`).join(", ")}` : `${Names.PiElement}`} 
             {               
                 ${intf.primProperties.map(p => this.generatePrimitiveProperty(p)).join("\n")}
                 ${intf.parts().map(p => this.generatePartProperty(p)).join("\n")}
                 ${intf.references().map(p => this.generateReferenceProperty(p)).join("\n")}                         
             }`;
-        return result;
     }
 
     generatePrimitiveProperty(property: PiPrimitiveProperty): string {

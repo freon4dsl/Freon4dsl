@@ -1,4 +1,4 @@
-import { PiLanguage } from "../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../languagedef/metalanguage";
 
 export type CheckB = { check: boolean; error: string; whenOk?: () => void };
 

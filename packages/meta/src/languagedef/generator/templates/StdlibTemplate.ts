@@ -10,7 +10,9 @@ export class StdlibTemplate {
 
         return `
         import { ${Names.PiNamedElement}, ${Names.PiStdlib}, Language } from "${PROJECTITCORE}";
-        import { ${Names.metaType(language)}, ${this.limitedConceptNames.map(name => `${name}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.metaType(language)}, 
+                    ${this.limitedConceptNames.map(name => `${name}`).join(", ") } 
+               } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -20,7 +22,6 @@ export class StdlibTemplate {
          */        
         export class ${Names.stdlib(language)} implements ${Names.PiStdlib} {
             private static stdlib: ${Names.PiStdlib};           // the only instance of this class
-            public elements: ${Names.PiNamedElement}[] = [];    // the predefined elements of language ${language.name}
 
             /**
              * This method implements the singleton pattern
@@ -32,6 +33,8 @@ export class StdlibTemplate {
                 return this.stdlib;
             }
             
+            public elements: ${Names.PiNamedElement}[] = [];    // the predefined elements of language ${language.name}
+
             /**
              * A private constructor, as demanded by the singleton pattern,
              * in which the list of predefined elements is filled.
@@ -50,10 +53,10 @@ export class StdlibTemplate {
              */            
             public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.PiNamedElement} {
                 if (!!name) {
-                    let possibles = this.elements.filter((elem) => elem.name === name);
-                    if (possibles.length != 0) {
+                    const possibles = this.elements.filter((elem) => elem.name === name);
+                    if (possibles.length !== 0) {
                         if (metatype) {
-                            for (let elem of possibles) {
+                            for (const elem of possibles) {
                                 const concept = elem.piLanguageConcept();
                                 if (concept === metatype || Language.getInstance().subConcepts(metatype).includes(elem.piLanguageConcept())) {
                                     return elem;
@@ -71,9 +74,10 @@ export class StdlibTemplate {
 
     private makeTexts(language) {
         language.concepts.filter(con => con instanceof PiLimitedConcept).map(limitedConcept => {
-            const myName = Names.concept(limitedConcept)
+            const myName = Names.concept(limitedConcept);
             this.limitedConceptNames.push(myName);
-            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x => `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
+            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x =>
+                `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
         });
     }
 }

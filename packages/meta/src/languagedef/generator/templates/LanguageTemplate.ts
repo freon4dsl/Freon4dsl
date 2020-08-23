@@ -1,13 +1,7 @@
-import { Names } from "../../../utils/Names";
-import { PiLangUtil } from "../../metalanguage";
-import {
-    PiLanguage
-} from "../../metalanguage/PiLanguage";
-import { PROJECTITCORE } from "../../../utils";
+import { PiLanguage, PiLangUtil } from "../../metalanguage";
+import { Names, PROJECTITCORE } from "../../../utils";
 
 export class LanguageTemplate {
-    constructor() {
-    }
 
     generateLanguage(language: PiLanguage, relativePath: string): string {
         return `import { Language, Property, Concept, Interface } from "${PROJECTITCORE}";

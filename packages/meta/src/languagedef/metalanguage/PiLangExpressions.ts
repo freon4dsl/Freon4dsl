@@ -47,6 +47,15 @@ export class PiLangSimpleExp extends PiLangExp {
 }
 
 export class PiLangSelfExp extends PiLangExp {
+
+    static create(referred: PiConcept): PiLangSelfExp {
+        const result = new PiLangSelfExp();
+        result.referredElement = PiElementReference.create<PiConcept>(referred, "PiConcept");
+        result.referredElement.owner = result;
+        result.sourceName = Names.nameForSelf;
+        return result;
+    }
+
     referredElement: PiElementReference<PiClassifier>; // is not needed, can be determined based on its parent
 
     toPiString(): string {
@@ -55,14 +64,6 @@ export class PiLangSelfExp extends PiLangExp {
         } else { // e.g. in isunique validation rules
             return this.appliedfeature ? this.appliedfeature.toPiString() : "";
         }
-    }
-
-    static create(referred: PiConcept): PiLangSelfExp {
-        const result = new PiLangSelfExp();
-        result.referredElement = PiElementReference.create<PiConcept>(referred, "PiConcept");
-        result.referredElement.owner = result;
-        result.sourceName = Names.nameForSelf;
-        return result;
     }
 }
 
@@ -85,6 +86,16 @@ export class PiLangConceptExp extends PiLangExp {
 }
 
 export class PiLangAppliedFeatureExp extends PiLangExp {
+
+    static create(owner: PiLangExp, name: string, referred: PiProperty): PiLangAppliedFeatureExp {
+        const result = new PiLangAppliedFeatureExp();
+        result.referredElement = PiElementReference.create<PiProperty>(referred, "PiProperty");
+        result.referredElement.owner = result;
+        result.sourceName = name;
+        result.sourceExp = owner;
+        return result;
+    }
+
     sourceExp: PiLangExp;
     referredElement: PiElementReference<PiProperty>;
 
@@ -107,29 +118,20 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
             return this.referredElement?.referred;
         }
     }
-
-    static create(owner: PiLangExp, name: string, referred: PiProperty): PiLangAppliedFeatureExp {
-        const result = new PiLangAppliedFeatureExp();
-        result.referredElement = PiElementReference.create<PiProperty>(referred, "PiProperty");
-        result.referredElement.owner = result;
-        result.sourceName = name;
-        result.sourceExp = owner;
-        return result;
-    }
 }
 
 export class PiLangFunctionCallExp extends PiLangExp {
-    //sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
+    // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: PiLangExp[] = [];
     returnValue: boolean;
     referredElement: PiElementReference<PiFunction>;
 
     toPiString(): string {
-        let actualPars: string = '( ';
+        let actualPars: string = "( ";
         if (!!this.actualparams) {
-            for (let actual of this.actualparams) {
+            for (const actual of this.actualparams) {
                 actualPars = actualPars.concat(actual.toPiString());
-                if (this.actualparams.indexOf(actual) !== this.actualparams.length -1) {
+                if (this.actualparams.indexOf(actual) !== this.actualparams.length - 1) {
                     actualPars = actualPars.concat(", ");
                 }
             }
@@ -138,4 +140,3 @@ export class PiLangFunctionCallExp extends PiLangExp {
         return this.sourceName + actualPars + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
     }
 }
-

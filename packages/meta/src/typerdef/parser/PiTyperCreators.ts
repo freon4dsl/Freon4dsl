@@ -1,4 +1,4 @@
-import { PiTypeDefinition, PiTypeIsTypeRule, PiTypeStatement, PiTypeClassifierRule, PiTypeAnyTypeRule } from "../metalanguage/PiTyperDefLang";
+import { PiTypeDefinition, PiTypeIsTypeRule, PiTypeStatement, PiTypeClassifierRule, PiTypeAnyTypeRule } from "../metalanguage";
 
 // Functions used to create instances of the language classes (in TyperDefLang) from the parsed data objects (from TyperGrammar.pegjs).
 

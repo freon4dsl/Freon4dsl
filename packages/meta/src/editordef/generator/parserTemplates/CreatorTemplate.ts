@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, STDLIB_GEN_FOLDER } from "../../../utils";
 import { PiLangUtil } from "../../../languagedef/metalanguage";
@@ -41,11 +41,11 @@ export class CreatorTemplate {
      * @param con
      */
     private makeConceptFunctions(con: PiConcept): string {
-        const conceptName : string = Names.concept(con);
+        const conceptName: string = Names.concept(con);
 
         // check if the concept has a name property, otherwise we cannot create a reference function
         // we also do not create a reference for a modelunit, nor for a model
-        const nameProperty : PiPrimitiveProperty = PiLangUtil.findNameProp(con);
+        const nameProperty: PiPrimitiveProperty = PiLangUtil.findNameProp(con);
         const addReferenceFunction: boolean = !(con.isModel || con.isUnit) && !!nameProperty;
         let referenceFunction: string = "";
         if (!!addReferenceFunction) {
@@ -62,9 +62,8 @@ export class CreatorTemplate {
             return `export function create${conceptName}(data: Partial<${conceptName}>): ${conceptName} {
             return ${conceptName}.create(data);
         }        
-        ${addReferenceFunction? `
+        ${addReferenceFunction ? `
             ${referenceFunction}` : ``}`;
         }
     }
 }
-

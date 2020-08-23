@@ -3,7 +3,7 @@ import { LanguageExpressionParser } from "../../../languagedef/parser/LanguageEx
 import { PiInstance, PiLangFunctionCallExp, PiLangSelfExp, PiLanguage, PiLimitedConcept } from "../../../languagedef/metalanguage";
 
 describe("Checking expression on referredElement", () => {
-    let testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
+    const testdir = "src/test/__tests__/expression-tests/expressionDefFiles/";
     let language: PiLanguage;
 
     beforeEach(() => {
@@ -15,19 +15,20 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of simple expressions on AA", () => {
-        let expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.pitest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on AA
-            let AAconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "AA");
+            // tslint:disable-next-line:variable-name
+            const AAconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "AA");
             // set of expressions should refer to some concept or interface in the language
             expect(AAconceptExps).not.toBeNull();
-            let aaConcept = AAconceptExps.conceptRef?.referred;
+            const aaConcept = AAconceptExps.conceptRef?.referred;
             expect(aaConcept).not.toBeNull();
             // for each expression in the set, it should refer to a property of 'AA'
             AAconceptExps.exps.forEach(exp => {
                 expect(exp.referredElement.referred === aaConcept);
-                let prop = exp.appliedfeature?.referredElement?.referred;
+                const prop = exp.appliedfeature?.referredElement?.referred;
                 expect(prop).not.toBeNull();
                 expect(aaConcept.allProperties().includes(prop));
             });
@@ -37,21 +38,22 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of simple expressions on BB", () => {
-        let expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.pitest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on BB
-            let BBconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "BB");
+            // tslint:disable-next-line:variable-name
+            const BBconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "BB");
             // set of expressions should refer to some concept or interface in the language
             expect(BBconceptExps).not.toBeNull();
             expect(BBconceptExps).not.toBeUndefined();
-            let bbConcept = BBconceptExps.conceptRef?.referred;
+            const bbConcept = BBconceptExps.conceptRef?.referred;
             expect(bbConcept).not.toBeNull();
             expect(bbConcept).not.toBeUndefined();
             // for each expression in the set, it should refer to a property of 'BB'
             BBconceptExps.exps.forEach(exp => {
                 expect(exp.referredElement.referred === bbConcept);
-                let prop = exp.appliedfeature?.referredElement?.referred;
+                const prop = exp.appliedfeature?.referredElement?.referred;
                 expect(prop).not.toBeNull();
                 expect(prop).not.toBeUndefined();
                 expect(bbConcept.allProperties().includes(prop));
@@ -62,22 +64,23 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of limited concept expressions in CC", () => {
-        let expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.pitest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on CC
-            let CCconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "CC");
+            // tslint:disable-next-line:variable-name
+            const CCconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "CC");
             // set of expressions should refer to some concept or interface in the language
             expect(CCconceptExps).not.toBeNull();
             expect(CCconceptExps).not.toBeUndefined();
-            let zzConcept = language.findConcept("ZZ");
+            const zzConcept = language.findConcept("ZZ");
             expect(zzConcept).not.toBeNull();
             expect(zzConcept).not.toBeUndefined();
             expect(zzConcept instanceof PiLimitedConcept);
             // for each expression in the set, it should refer to an predefined instance of 'ZZ'
             CCconceptExps.exps.forEach(exp => {
                 expect(exp.referredElement?.referred === zzConcept);
-                let piInstance = exp.referredElement.referred;
+                const piInstance = exp.referredElement.referred;
                 expect(piInstance).not.toBeNull();
                 expect(piInstance instanceof PiInstance);
                 expect((zzConcept as PiLimitedConcept).instances.includes(piInstance as PiInstance));
@@ -88,11 +91,12 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("referredElement of other kinds of expressions in DD", () => {
-        let expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.pitest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on DD
-            let DDconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "DD");
+            // tslint:disable-next-line:variable-name
+            const DDconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "DD");
             expect(DDconceptExps).not.toBeNull();
             expect(DDconceptExps).not.toBeUndefined();
             // for each expression in the set, it should refer to a function
@@ -114,21 +118,22 @@ describe("Checking expression on referredElement", () => {
     });
 
     test("applied feature in FF", () => {
-        let expressionFile = testdir + "test1.pitest";
+        const expressionFile = testdir + "test1.pitest";
         if (!!language) {
             const readTest = new LanguageExpressionParser(language).parse(expressionFile);
             // check expressions on FF
-            let FFconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "FF");
+            // tslint:disable-next-line:variable-name
+            const FFconceptExps = readTest.conceptExps.find(ce => ce.conceptRef.name === "FF");
             expect(FFconceptExps).not.toBeNull();
-            let ffConcept = FFconceptExps.conceptRef?.referred;
+            const ffConcept = FFconceptExps.conceptRef?.referred;
             expect(ffConcept).not.toBeNull();
             // the only expression in the set is an appliedFeature
             // its reference should be set correctly
-            let aaConcept = language.findConcept("AA");
+            const aaConcept = language.findConcept("AA");
             FFconceptExps.exps.forEach(exp => {
                 expect(exp instanceof PiLangSelfExp);
                 expect(exp.referredElement.referred === ffConcept);
-                let elem = exp.findRefOfLastAppliedFeature();
+                const elem = exp.findRefOfLastAppliedFeature();
                 expect(elem).not.toBeNull();
                 expect(elem).not.toBeUndefined();
                 expect(elem.name === "aa");

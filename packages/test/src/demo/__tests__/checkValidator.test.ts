@@ -89,8 +89,8 @@ describe("Testing Validator", () => {
         test("(1 + 2) * 'Person' should give type error", () => {
             let errors: PiError[] = [];
             const variableExpression = new DemoVariableRef();
-            const variable = DemoVariable.create({name: "XXX"});
-            const personEnt = DemoEntity.create({name: "Person"});
+            const variable = DemoVariable.create({ name: "XXX" });
+            const personEnt = DemoEntity.create({ name: "Person" });
             variable.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
             variableExpression.variable = PiElementReference.create<DemoVariable>(variable, "DemoVariable");
 
@@ -101,7 +101,7 @@ describe("Testing Validator", () => {
             // Type of 'DemoVariableRef' should be equal to (the type of) 'DemoAttributeType Integer' in unnamed
             errors.forEach(e => {
                 // console.log(e.message + " in " + e.locationdescription);
-                expect(e.reportedOn === multiplyExpression)
+                expect(e.reportedOn === multiplyExpression);
             });
         });
 
@@ -120,11 +120,11 @@ describe("Testing Validator", () => {
 
         test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 4 errors', () => {
             let errors: PiError[] = [];
-            const determine = DemoFunction.create({name: "determine"});
-            const AAP = DemoVariable.create({name: "AAP"});
+            const determine = DemoFunction.create({ name: "determine" });
+            const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-            const personEnt = DemoEntity.create({name: "Person"});
+            const personEnt = DemoEntity.create({ name: "Person" });
             determine.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
             errors = validator.validate(determine, true);
@@ -132,22 +132,22 @@ describe("Testing Validator", () => {
                 console.log(e.message);
                 expect(e.reportedOn === determine);
             });
-            // Cannot find reference Person
-            // Type of '' Hello Demo '' should be equal to (the type of) 'DemoAttributeType Integer'
-            // Type of '' Goodbye '' should be equal to (the type of) 'DemoAttributeType Integer'
+            // Type of '( ' "Hello Demo" ' + ' "Goodbye" ' )' does not conform to (the type of) 'DemoEntity Person'
+            // Type of '' "Hello Demo" '' should be equal to (the type of) 'DemoAttributeType Integer'
+            // Type of '' "Goodbye" '' should be equal to (the type of) 'DemoAttributeType Integer'
             // Property 'declaredType' must have a value
             expect(errors.length).toBe(4);
         });
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
             let errors: PiError[] = [];
-            const personEnt = DemoEntity.create({name: "Person"});
-            const age = DemoAttribute.create({name: "age"});
-            const personName = DemoAttribute.create({name: "name"});
+            const personEnt = DemoEntity.create({  name: "Person" });
+            const age = DemoAttribute.create({ name: "age" });
+            const personName = DemoAttribute.create({ name: "name" });
             personEnt.attributes.push(age);
             personEnt.attributes.push(personName);
-            const first = DemoFunction.create({name: "first"});
-            const Resultvar = DemoVariable.create({name: "Resultvar"});
+            const first = DemoFunction.create({ name: "first" });
+            const Resultvar = DemoVariable.create({ name: "Resultvar" });
             first.parameters.push(Resultvar);
             first.expression = MakePlusExp("5", "24");
             personEnt.functions.push(first);

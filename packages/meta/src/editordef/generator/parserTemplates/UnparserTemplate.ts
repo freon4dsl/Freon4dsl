@@ -5,8 +5,8 @@ import {
     PiLanguage,
     PiPrimitiveProperty,
     PiProperty
-} from "../../../languagedef/metalanguage/PiLanguage";
-import { sortClasses } from "../../../utils/ModelHelpers";
+} from "../../../languagedef/metalanguage";
+import { sortClasses, langExpToTypeScript } from "../../../utils";
 import {
     PiEditConcept,
     PiEditUnit,
@@ -16,7 +16,6 @@ import {
     ListJoinType,
     PiEditProjectionLine
 } from "../../metalanguage";
-import { langExpToTypeScript } from "../../../utils";
 
 export class UnparserTemplate {
 
@@ -25,18 +24,14 @@ export class UnparserTemplate {
      * 'language', based on the given editor definition.
      */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);
-        const generatedClassName : String = Names.unparser(language);
+        const allLangConcepts: string = Names.allConcepts(language);
+        const generatedClassName: String = Names.unparser(language);
 
         // Template starts here
         return `
         import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
-        // TODO change import to @project/core
-        import { PiLogger } from "../../../../../core/src/util/PiLogging";
-                
-        const LOGGER = new PiLogger("${generatedClassName}");
         
         /**
          * SeparatorType is used to unparse lists.
@@ -67,6 +62,7 @@ export class UnparserTemplate {
              * Note that the single-line-string cannot be parsed into a correct model.
              * 
              * @param modelelement
+             * @param startIndent
              * @param short
              */
             public unparse(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean) : string {
@@ -79,13 +75,19 @@ export class UnparserTemplate {
              * each of which contain a single line (without newline).
              * If 'short' is present and false, then a multi-line result will be given.
              * Otherwise, the result is always a single-line string.
+             *
              * @param modelelement
+             * @param startIndent
              * @param short
              */
             public unparseToLines(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean): string[] {
                 // set default for optional parameters
-                if (startIndent === undefined) startIndent = 0;
-                if (short === undefined) short = true;
+                if (startIndent === undefined) {
+                    startIndent = 0;
+                }
+                if (short === undefined) {
+                    short = true;
+                }
         
                 // make sure the global variables are reset
                 this.output = [];
@@ -93,7 +95,7 @@ export class UnparserTemplate {
         
                 // begin the unparsing with an indent if asked for
                 let indentString: string = "";
-                for (var _i = 0; _i < startIndent; _i++) {
+                for (let _i = 0; _i < startIndent; _i++) {
                     indentString += " ";
                 }
                 this.output[this.currentLine] = indentString;
@@ -126,7 +128,7 @@ export class UnparserTemplate {
              */         
             private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index == list.length - 1;
+                    const isLastInList: boolean = index === list.length - 1;
                     this.unparsePrivate(listElem, short);
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
@@ -145,7 +147,7 @@ export class UnparserTemplate {
              */
             private unparseReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index == list.length - 1;
+                    const isLastInList: boolean = index === list.length - 1;
                     this.output[this.currentLine] += listElem.name;
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
@@ -171,7 +173,7 @@ export class UnparserTemplate {
                 short: boolean
             ) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index == list.length - 1;
+                    const isLastInList: boolean = index === list.length - 1;
                     if (typeof listElem === "string") {
                         this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
                     } else {
@@ -191,6 +193,7 @@ export class UnparserTemplate {
              * @param short
              * @param indent
              */
+            // tslint:disable-next-line:max-line-length
             private doSeparatorOrTerminatorAndNewline(sepType: SeparatorType, isLastInList: boolean, sepText: string, vertical: boolean, short: boolean, indent: number) {
                 // first eliminate any whitespace at the end of the line
                 this.output[this.currentLine] = this.output[this.currentLine].trimRight();
@@ -228,7 +231,7 @@ export class UnparserTemplate {
             private newlineAndIndentation(indent: number) {
                 this.currentLine += 1;
                 let indentation: string = "";
-                for (var _i = 0; _i < indent; _i++) {
+                for (let _i = 0; _i < indent; _i++) {
                     indentation += " ";
                 }
                 this.output[this.currentLine] = indentation;
@@ -241,13 +244,13 @@ export class UnparserTemplate {
      * 'conceptDef'.
      * @param conceptDef
      */
-    private makeConceptMethod (conceptDef: PiEditConcept ) : string {
-        let myConcept: PiConcept = conceptDef.concept.referred;
-        let name: string = Names.concept(myConcept);
-        let lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
-        const comment =   `/**
-                            * See the public unparse method.
-                            */`;
+    private makeConceptMethod (conceptDef: PiEditConcept ): string {
+        const myConcept: PiConcept = conceptDef.concept.referred;
+        const name: string = Names.concept(myConcept);
+        const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
+        const comment = `/**
+                          * See the public unparse method.
+                          */`;
 
         if (!!lines) {
             if (lines.length > 1) {
@@ -286,7 +289,7 @@ export class UnparserTemplate {
                         this.output[this.currentLine] += \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
-            return '';
+            return "";
         }
     }
 
@@ -294,16 +297,16 @@ export class UnparserTemplate {
      * Creates the statements needed to unparse a single line in an editor projection definition
      * @param line
      */
-    private makeLine (line : PiEditProjectionLine) : string {
+    private makeLine (line: PiEditProjectionLine): string {
         let result: string = ``;
         // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
 
-        line.items.forEach((item) => {
+        line.items.forEach(item => {
             if (item instanceof PiEditProjectionText) {
                 // TODO escape all quotes in the text string, when we know how they are stored in the projection
                 result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
             } else if (item instanceof PiEditSubProjection) {
-                let myElem = item.expression.findRefOfLastAppliedFeature();
+                const myElem = item.expression.findRefOfLastAppliedFeature();
                 if (myElem instanceof PiPrimitiveProperty) {
                     result += this.makeItemWithPrimitiveType(myElem, item);
                 } else {
@@ -321,7 +324,7 @@ export class UnparserTemplate {
      */
     private makeRemainingLines(lines: PiEditProjectionLine[]): string {
         let first = true;
-        let result: string = '';
+        let result: string = "";
         lines.forEach(line => {
             if (first) { // skip the first line, this is already taken care of in 'makeConceptMethod'
                 first = false;
@@ -386,12 +389,12 @@ export class UnparserTemplate {
     private makeItemWithConceptType(myElem: PiProperty, item: PiEditSubProjection, indent: number) {
         // the expression has a concept as type, thus we need to call its unparse method
         let result: string = "";
-        let type = myElem.type.referred;
+        const type = myElem.type.referred;
         if (!!type) {
-            var myTypeScript: string = langExpToTypeScript(item.expression);
+            let myTypeScript: string = langExpToTypeScript(item.expression);
             if (myElem.isList) {
-                let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-                let joinType = this.getJoinType(item);
+                const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+                const joinType = this.getJoinType(item);
 
                 if (myElem.isPart) {
                     result += `this.unparseList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
@@ -437,4 +440,3 @@ export class UnparserTemplate {
         return joinType;
     }
 }
-

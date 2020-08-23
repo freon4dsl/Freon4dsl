@@ -30,7 +30,7 @@
     "jsx-no-multiline-js": false,
     "jsx-no-lambda": true,
     "label-position": true,
-    "max-line-length": [true, 140],
+    "max-line-length": [true, 160],
     "member-ordering": [true, "static-before-instance"],
     "new-parens": true,
     "no-angle-bracket-type-assertion": true,

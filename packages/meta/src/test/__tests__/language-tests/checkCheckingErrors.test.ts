@@ -6,10 +6,10 @@ describe("Checking language parser on checking errors", () => {
     const checker = parser.checker;
 
     test("language should have a model concept", () => {
-        let parseFile = testdir + "test1.lang";
+        const parseFile = testdir + "test1.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             checker.errors.forEach(error =>
                 expect(error).toBe("There should be a model in your language [line: 1, column: 1].")
@@ -18,10 +18,10 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("language should have no more than one model concept and concepts and properties should have unique names", () => {
-        let parseFile = testdir + "test2.lang";
+        const parseFile = testdir + "test2.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("There may be only one model in the language definition [line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept with name 'ZZZ' already exists [line: 7, column: 1]."));
@@ -37,10 +37,10 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limitations on inheritance and implemented interfaces", () => {
-        let parseFile = testdir + "test3.lang";
+        const parseFile = testdir + "test3.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("Base 'AAA' must be a concept [line: 9, column: 18].")).toBeTruthy();
             expect(checker.errors.includes("Base 'ZZ' of limited concept must be a limited concept [line: 11, column: 17].")).toBeTruthy();
@@ -50,10 +50,10 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking circular inheritance", () => {
-        let parseFile = testdir + "test4.lang";
+        const parseFile = testdir + "test4.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [line: 7, column: 1].")).toBeTruthy();
@@ -68,10 +68,10 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking circular interfaces", () => {
-        let parseFile = testdir + "test5.lang";
+        const parseFile = testdir + "test5.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("Concept or interface 'AAA' is part of a forbidden circular inheritance tree (AAA, BBB) [line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface 'CCC' is part of a forbidden circular inheritance tree (CCC, DDD, EEE, FFF) [line: 8, column: 1].")).toBeTruthy();
@@ -83,10 +83,10 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking expression concepts", () => {
-        let parseFile = testdir + "test6.lang";
+        const parseFile = testdir + "test6.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("Binary expression concept YYY should have a priority [line: 5, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Binary expression concept YYY should have a left part [line: 5, column: 1].")).toBeTruthy();
@@ -95,10 +95,10 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limited concepts", () => {
-        let parseFile = testdir + "test7.lang";
+        const parseFile = testdir + "test7.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no name property [line: 4, column: 24].")).toBeTruthy();
             expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because its name property is not of type 'string' [line: 5, column: 25].")).toBeTruthy();
@@ -112,10 +112,10 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("checking limited concepts extended", () => {
-        let parseFile = testdir + "test8.lang";
+        const parseFile = testdir + "test8.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("Property 'ZZprop7' of limited concept should have primitive type [line: 12, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [line: 3, column: 1].")).toBeTruthy();
@@ -124,14 +124,13 @@ describe("Checking language parser on checking errors", () => {
     });
 
     test("language should have a name", () => {
-        let parseFile = testdir + "test10.lang";
+        const parseFile = testdir + "test10.lang";
         try {
             parser.parse(parseFile);
-        } catch(e) {
+        } catch (e) {
             expect(e.message).toBe(`checking errors.`);
             expect(checker.errors.includes("Language should have a name [line: 1, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("There should be a model in your language [line: 1, column: 1].")).toBeTruthy();
         }
     });
-
 });

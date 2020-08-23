@@ -6,7 +6,7 @@ export class ValidationUtils {
         if (!(!!nameProp)) {
             nameProp = concept.allPrimProperties().find(prop => prop.primType === "string");
         }
-        let locationdescription = !!nameProp ? `modelelement.${nameProp.name}` : `'unnamed'`;
+        const locationdescription = !!nameProp ? `modelelement.${nameProp.name}` : `'unnamed'`;
         return locationdescription;
     }
 }

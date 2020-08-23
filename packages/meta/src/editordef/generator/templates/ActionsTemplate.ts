@@ -3,8 +3,6 @@ import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
 import { PiEditUnit } from "../../metalanguage";
 
 export class ActionsTemplate {
-    constructor() {
-    }
 
     // TODO generate the correct class comment for Actions
     generate(language: PiLanguage, editorDef: PiEditUnit): string {
@@ -34,10 +32,7 @@ export class ActionsTemplate {
                 expressionCreators: PiExpressionCreator[] = PiActionsUtil.join(EXPRESSION_CREATORS, MANUAL_EXPRESSION_CREATORS) as PiExpressionCreator[];
                 binaryExpressionCreators: PiBinaryExpressionCreator[] = PiActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_CREATORS) as PiBinaryExpressionCreator[];
                 customBehaviors: PiCustomBehavior[] = PiActionsUtil.join(CUSTOM_BEHAVIORS, MANUAL_CUSTOM_BEHAVIORS) as PiCustomBehavior[];
-                keyboardActions: KeyboardShortcutBehavior[] = PiActionsUtil.join(KEYBOARD, MANUAL_KEYBOARD) as KeyboardShortcutBehavior[];
-                
-                constructor() {
-                }
+                keyboardActions: KeyboardShortcutBehavior[] = PiActionsUtil.join(KEYBOARD, MANUAL_KEYBOARD) as KeyboardShortcutBehavior[];                
             }`;
     }
 }

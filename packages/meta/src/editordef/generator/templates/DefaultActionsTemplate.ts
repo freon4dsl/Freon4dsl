@@ -1,13 +1,10 @@
 import { flatten } from "lodash";
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { PiLanguage, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept, PiLangUtil } from "../../../languagedef/metalanguage";
 import { Roles } from "../../../utils/Roles";
 import { PiEditUnit } from "../../metalanguage";
-import { PiLangUtil } from "../../../languagedef/metalanguage/PiLangUtil";
 
 export class DefaultActionsTemplate {
-    constructor() {
-    }
 
     // TODO generate the correct class comment for DefaultActions
     generate(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
@@ -115,7 +112,7 @@ export class DefaultActionsTemplate {
         language.concepts.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
                 const referredConcept = reference.type.referred;
                 const conceptEditor = editorDef.findConceptEditor(referredConcept);
-                const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : reference.name
+                const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : reference.name;
                 result += `
                 {
                     activeInBoxRoles: ["${Roles.newPart(reference)}"],
@@ -126,10 +123,10 @@ export class DefaultActionsTemplate {
                         parent.${reference.name}.push(newBase);
                         return newBase;
                     },
-                    boxRoleToSelect: "${this.cursorLocation(editorDef,concept)}"  /* CURSOR 1 */
+                    boxRoleToSelect: "${this.cursorLocation(editorDef, concept)}"  /* CURSOR 1 */
                 }
-                `
-                result +=",";
+                `;
+                result += ",";
             })
         );
         return result;
@@ -152,7 +149,7 @@ export class DefaultActionsTemplate {
                         },
                         boxRoleToSelect: "${this.cursorLocation(editorDef, subClass)}" /* CURSOR 2 */
                     },`).join(",\n")}
-                    `
+                    `;
             if (childConcept instanceof PiConcept) {
                 const conceptEditor = editorDef.findConceptEditor(childConcept);
             } else { // TODO child is PiInterface
@@ -169,7 +166,7 @@ export class DefaultActionsTemplate {
                         },
                         boxRoleToSelect: "${this.cursorLocation(editorDef, subClass)}" /* CURSOR 3 */
                     },`).join(",\n")}
-                    `
+                    `;
                 }
             })
         );
@@ -189,7 +186,7 @@ export class DefaultActionsTemplate {
                         },
                         boxRoleToSelect: "${this.cursorLocation(editorDef, subClass)}" /* CURSOR 4  ${subClass.name} */
                     },`).join(",\n")}
-                    `
+                    `;
                 }
             })
         );
@@ -212,4 +209,3 @@ export class DefaultActionsTemplate {
         return "===== " + c.name + " =====";
     }
 }
-

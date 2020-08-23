@@ -1,8 +1,12 @@
-import { DSmodel, DSpart, DSprivate, DSref, DSunit } from "../language/gen";
+import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
+import { GenericModelSerializer } from "@projectit/core";
 
 export class ModelCreator {
-    nameNumber: number = 0;
-    allNames: string[] = [];
+    private breadth = 1;
+    private nameNumber: number = 0;
+    public allNames: string[] = [];
+    private serial: GenericModelSerializer = new GenericModelSerializer();
+    private numberOfRefs: number = 0;
 
     createName(parent: string, type: string): string {
         this.nameNumber += 1;
@@ -12,63 +16,153 @@ export class ModelCreator {
     }
 
     /**
-     * creates a model with 'nrOfunits' units, where all child nodes are a tree of depth 'depth'
+     * creates a model with 'nrOfUnits' units, where all child nodes are a tree of depth 'depth'
+     * without taking into account modelUnit interfaces
      * @param nrOfUnits     must be larger than 0
      * @param depth         must be larger than 0
      */
     public createModel(nrOfUnits: number, depth: number): DSmodel {
-        let modelUnits: DSunit[] = [];
+        // reset names
+        this.nameNumber = 0;
+        this.allNames = [];
+        this.numberOfRefs = 0;
+        // create a new model
+        const modelUnits: DSunit[] = [];
         for (let i = 0; i < nrOfUnits; i++) {
             modelUnits.push(this.createUnit("model", depth));
         }
-        return DSmodel.create({name: "modelOfDepth" + depth, units: modelUnits});
+        // add references, after all names have been created
+        for (let i = 0; i < nrOfUnits; i++) {
+            this.addReferencesToUnit(modelUnits[i]);
+        }
+        return DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+    }
+
+    /**
+     * creates a model with 'nrOfUnits' units, where all child nodes are a tree of depth 'depth'
+     * without taking into account modelUnit interfaces
+     * @param nrOfUnits     must be equal or larger than 0
+     * @param depth         must be equal or larger than 0
+     * @param primary       the index of the unit that has the focus, all other units are represented by their interfaces
+     *                      note that the following must be true: primary < nrOfUnits
+     */
+    public createModelWithInterfaces(nrOfUnits: number, depth: number, primary: number): DSmodel {
+        // reset names
+        this.nameNumber = 0;
+        this.allNames = [];
+        this.numberOfRefs = 0;
+        // create a new model
+        if (primary >= nrOfUnits) {
+            return null;
+        }
+        const modelUnits: DSunit[] = [];
+        for (let i = 0; i < nrOfUnits; i++) {
+            const completeUnit = this.createUnit("model", depth);
+            if (i === primary) {
+                modelUnits.push(completeUnit);
+            } else {
+                const serialized = this.serial.convertToJSON(completeUnit, true);
+                const unitInterface = this.serial.toTypeScriptInstance(serialized);
+                modelUnits.push(unitInterface);
+            }
+        }
+        // add references, after all names have been created
+        for (let i = 0; i < nrOfUnits; i++) {
+            this.addReferencesToUnit(modelUnits[i]);
+        }
+        return DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
     }
 
     createUnit(parent: string, depth: number): DSunit {
         const unitName = this.createName(parent, "unit");
-        let dsParts: DSpart[] = [];
-        for (let i = 0; i < 2; i++) {
-            dsParts.push(this.createPart(unitName, depth));
+        const dsPublics: DSpublic[] = [];
+        for (let i = 0; i < this.breadth; i++) {
+            dsPublics.push(this.createPublic(unitName, depth));
         }
-        let dsPrivates: DSprivate[] = [];
-        for (let i = 0; i < 2; i++) {
+        const dsPrivates: DSprivate[] = [];
+        for (let i = 0; i < this.breadth; i++) {
             dsPrivates.push(this.createPrivate(unitName, depth));
         }
-        // TODO include references
-        return DSunit.create({name: unitName, dsParts: dsParts, dsPrivates: dsPrivates});
+        return DSunit.create({ name: unitName, dsPublics: dsPublics, dsPrivates: dsPrivates });
     }
 
-    createPart(parent: string, depth: number): DSpart {
-        const partName = this.createName(parent, "part");
-        let dsParts: DSpart[] = [];
-        let dsPrivates: DSprivate[] = [];
+    createPublic(parent: string, depth: number): DSpublic {
+        const partName = this.createName(parent, "public");
+        const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, partName);
+        return DSpublic.create({ name: partName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
+    }
+
+    private makePublicsAndPrivates(depth: number, partName: string) {
+        const dsPublics: DSpublic[] = [];
+        const dsPrivates: DSprivate[] = [];
         if (depth > 0) {
-            for (let i = 0; i < 2; i++) {
-                dsParts.push(this.createPart(partName, depth - 1));
+            for (let i = 0; i < this.breadth; i++) {
+                dsPublics.push(this.createPublic(partName, depth - 1));
             }
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < this.breadth; i++) {
                 dsPrivates.push(this.createPrivate(partName, depth - 1));
             }
         }
-        return DSpart.create({name: partName, conceptParts: dsParts, conceptPrivates: dsPrivates});
-    }
-
-    createRef(parent: string, depth: number): DSref {
-        return DSref.create({name: this.createName(parent, "ref")});
+        return { dsPublics, dsPrivates };
     }
 
     createPrivate(parent: string, depth: number): DSprivate {
         const privateName = this.createName(parent, "private");
-        let dsParts: DSpart[] = [];
-        let dsPrivates: DSprivate[] = [];
-        if (depth > 0) {
-            for (let i = 0; i < 2; i++) {
-                dsParts.push(this.createPart(privateName, depth - 1));
+        const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, privateName);
+        return DSprivate.create({ name: privateName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
+    }
+
+    private addReferencesToUnit(dSunit: DSunit) {
+        const referedNames = this.allNames;
+        for (let i = 0; i < this.breadth * 2; i++) {
+            const index = this.makeReferenceIndex();
+            if (!!this.allNames[index] && this.allNames[index].length > 0) {
+                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
+                dSunit.dsRefs.push(someReference);
+            } else {
+                console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
             }
-            for (let i = 0; i < 2; i++) {
-                dsPrivates.push(this.createPrivate(privateName, depth - 1));
+            dSunit.dsPrivates.forEach(part => this.addReferencesToPrivate(part));
+            dSunit.dsPublics.forEach(part => this.addReferencesToPublic(part));
+        }
+    }
+
+    private addReferencesToPrivate(part: DSprivate) {
+        for (let i = 0; i < this.breadth * 2; i++) {
+            const index = this.makeReferenceIndex();
+            if (!!this.allNames[index] && this.allNames[index].length > 0) {
+                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
+                part.conceptRefs.push(someReference);
+            } else {
+                console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
             }
         }
-        return DSprivate.create({name: privateName, conceptParts: dsParts, conceptPrivates: dsPrivates});
+    }
+
+    private addReferencesToPublic(part: DSpublic) {
+        for (let i = 0; i < this.breadth * 2; i++) {
+            const index = this.makeReferenceIndex();
+            if (!!this.allNames[index] && this.allNames[index].length > 0) {
+                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
+                part.conceptRefs.push(someReference);
+            } else {
+                console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
+            }
+        }
+    }
+
+    private makeReferenceIndex(): number {
+        let result: number;
+        result = this.allNames.length - this.numberOfRefs - 1;
+
+        if (result < 0 || result >= this.allNames.length) {
+            this.numberOfRefs = 0;
+            // console.log("replacing result " + result + " with " + this.allNames.length);
+            result = this.makeReferenceIndex();
+        }
+        this.numberOfRefs += 1;
+        return result;
     }
 }
+
+function isOdd(num) { return num % 2; }

@@ -7,17 +7,17 @@ import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, UNPARSER_GEN_FOLDER
 } from "../../../utils/";
-import { PiLanguage } from "../../metalanguage/PiLanguage";
+import { PiLanguage } from "../../metalanguage";
 
 export class EnvironmentTemplate {
-    constructor() {
-    }
 
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
         import { projectitConfiguration } from "../../projectit/ProjectitConfiguration";
-        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, ${Names.PiScoper}, 
-                        ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, ${Names.PiUnparser}, ${Names.PiModelInitialization} } from "${PROJECTITCORE}";
+        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, 
+                    ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
+                    ${Names.PiUnparser}, ${Names.PiModelInitialization} 
+               } from "${PROJECTITCORE}";
         import { ${Names.ProjectionalEditor} } from "@projectit/core";
         import * as React from "react";
         import { ${Names.actions(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
@@ -57,7 +57,7 @@ export class EnvironmentTemplate {
             private constructor() {
                 const actions = new ${Names.actions(language)}();
                 const rootProjection = new ${Names.CompositeProjection}("root");
-                for(let p of projectitConfiguration.customProjection){
+                for (const p of projectitConfiguration.customProjection) {
                     rootProjection.addProjection(p);
                 }
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");

@@ -29,7 +29,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
             this.editorGenerator.language = this.language;
 
             const editor = new PiEditParser(this.language).parse(this.editorFile.value);
-            if (editor == null) {
+            if (editor === null) {
                 // TODO should we generate a default editor???
                 throw new Error("Editor definition could not be parsed, exiting.");
             }

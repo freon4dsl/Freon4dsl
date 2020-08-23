@@ -10,7 +10,7 @@ import {
     Names,
     STDLIB_GEN_FOLDER
 } from "../../utils";
-import { PiLanguage } from "../metalanguage/PiLanguage";
+import { PiLanguage } from "../metalanguage";
 import {
     AllConceptsTemplate,
     ConceptTemplate,
@@ -27,7 +27,7 @@ import {
 } from "./templates";
 import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
 
-const LOGGER = new PiLogger("LanguageGenerator"); //.mute();
+const LOGGER = new PiLogger("LanguageGenerator"); // .mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
     protected languageGenFolder: string;
@@ -36,11 +36,9 @@ export class LanguageGenerator {
     protected stdlibGenFolder: string;
     protected configurationFolder: string;
 
-    constructor() {}
-
     generate(language: PiLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
-        let generationStatus = new GenerationStatus();
+        const generationStatus = new GenerationStatus();
         this.languageGenFolder = this.outputfolder + "/" + LANGUAGE_GEN_FOLDER;
         this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
         this.environmentGenFolder = this.outputfolder + "/" + ENVIRONMENT_GEN_FOLDER;
@@ -61,7 +59,7 @@ export class LanguageGenerator {
         const defaultWorkerTemplate = new DefaultWorkerTemplate();
         const configurationTemplate = new ConfigurationTemplate();
 
-        //Prepare folders
+        // Prepare folders
         Helpers.createDirIfNotExisting(this.languageGenFolder);
         Helpers.createDirIfNotExisting(this.utilsGenFolder);
         Helpers.createDirIfNotExisting(this.environmentGenFolder);
@@ -79,68 +77,68 @@ export class LanguageGenerator {
         //  Generate it
         language.concepts.forEach(concept => {
             LOGGER.log(`Generating concept: ${this.languageGenFolder}/${Names.concept(concept)}.ts`);
-            var generated = Helpers.pretty(conceptTemplate.generateConcept(concept, relativePath), "concept " + concept.name, generationStatus);
+            const generated = Helpers.pretty(conceptTemplate.generateConcept(concept, relativePath), "concept " + concept.name, generationStatus);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.concept(concept)}.ts`, generated);
         });
 
         language.interfaces.forEach(piInterface => {
             LOGGER.log(`Generating interface: ${this.languageGenFolder}/${Names.interface(piInterface)}.ts`);
-            var generated = Helpers.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name, generationStatus);
+            const generated = Helpers.pretty(interfaceTemplate.generateInterface(piInterface, relativePath), "interface " + piInterface.name, generationStatus);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.interface(piInterface)}.ts`, generated);
         });
 
         // the following classes do not need the relative path for their imports
         LOGGER.log(`Generating metatype info: ${this.languageGenFolder}/${Names.metaType(language)}.ts`);
-        var languageFile = Helpers.pretty(metaTypeTemplate.generateMetaType(language), "Model info", generationStatus);
+        const languageFile = Helpers.pretty(metaTypeTemplate.generateMetaType(language), "Model info", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.metaType(language)}.ts`, languageFile);
 
         LOGGER.log(`Generating metatype class: ${this.languageGenFolder}/${Names.allConcepts(language)}.ts`);
-        var allConceptsFile = Helpers.pretty(allConceptsTemplate.generateAllConceptsClass(language), "All Concepts Class", generationStatus);
+        const allConceptsFile = Helpers.pretty(allConceptsTemplate.generateAllConceptsClass(language), "All Concepts Class", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.allConcepts(language)}.ts`, allConceptsFile);
 
         LOGGER.log(`Generating language external index: ${this.languageGenFolder}/index.ts`);
-        var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index", generationStatus);
+        const languageIndexFile = Helpers.pretty(languageIndexTemplate.generateIndex(language), "Language Index", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/index.ts`, languageIndexFile);
 
         LOGGER.log(`Generating language internal index: ${this.languageGenFolder}/internal.ts`);
-        var languageIndexFile = Helpers.pretty(languageIndexTemplate.generateInternal(language), "Language Index", generationStatus);
-        fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, languageIndexFile);
+        const internalIndexFile = Helpers.pretty(languageIndexTemplate.generateInternal(language), "Language Index", generationStatus);
+        fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, internalIndexFile);
 
         // Generate projectit configuration if it isn't there
         LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration(language)}.ts`);
-        var configurationFile = Helpers.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
+        const configurationFile = Helpers.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
         Helpers.generateManualFile(`${this.configurationFolder}/${Names.configuration(language)}.ts`, configurationFile, "Configuration");
 
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
 
         LOGGER.log(`Generating PiElementReference: ${this.languageGenFolder}/${Names.PiElementReference}.ts`);
-        var referenceFile = Helpers.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "PiElementReference", generationStatus);
+        const referenceFile = Helpers.pretty(piReferenceTemplate.generatePiReference(language, relativePath), "PiElementReference", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.PiElementReference}.ts`, referenceFile);
 
         LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`);
-        var referenceFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language Structure", generationStatus);
-        fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, referenceFile);
+        const structureFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language Structure", generationStatus);
+        fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, structureFile);
 
         LOGGER.log(`Generating language environment: ${this.environmentGenFolder}/${Names.environment(language)}.tsx`);
-        var environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment", generationStatus);
+        const environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment", generationStatus);
         fs.writeFileSync(`${this.environmentGenFolder}/${Names.environment(language)}.tsx`, environmentFile);
 
         LOGGER.log(`Generating standard library: ${this.stdlibGenFolder}/${Names.stdlib(language)}.ts`);
-        var stdlibFile = Helpers.pretty(stdlibTemplate.generateStdlibClass(language, relativePath), "Language Standard Library", generationStatus);
+        const stdlibFile = Helpers.pretty(stdlibTemplate.generateStdlibClass(language, relativePath), "Language Standard Library", generationStatus);
         fs.writeFileSync(`${this.stdlibGenFolder}/${Names.stdlib(language)}.ts`, stdlibFile);
 
         // generate the utility classes
         LOGGER.log(`Generating user model walker: ${this.utilsGenFolder}/${Names.walker(language)}.ts`);
-        var walkerFile = Helpers.pretty(walkerTemplate.generateWalker(language, relativePath), "Walker Class", generationStatus);
+        const walkerFile = Helpers.pretty(walkerTemplate.generateWalker(language, relativePath), "Walker Class", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.walker(language)}.ts`, walkerFile);
 
         LOGGER.log(`Generating user model worker interface: ${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`);
-        var workerFile = Helpers.pretty(workerTemplate.generateWorkerInterface(language, relativePath), "Worker Interface", generationStatus);
+        const workerFile = Helpers.pretty(workerTemplate.generateWorkerInterface(language, relativePath), "Worker Interface", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.workerInterface(language)}.ts`, workerFile);
 
         LOGGER.log(`Generating user model worker: ${this.utilsGenFolder}/${Names.defaultWorker(language)}.ts`);
-        var defaultWorkerFile = Helpers.pretty(defaultWorkerTemplate.generateDefaultWorker(language, relativePath), "DefaultWorker Class", generationStatus);
+        const defaultWorkerFile = Helpers.pretty(defaultWorkerTemplate.generateDefaultWorker(language, relativePath), "DefaultWorker Class", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.defaultWorker(language)}.ts`, defaultWorkerFile);
 
         if (generationStatus.numberOfErrors > 0) {

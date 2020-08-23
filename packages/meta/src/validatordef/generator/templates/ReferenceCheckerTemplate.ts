@@ -1,4 +1,4 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, langExpToTypeScript } from "../../../utils";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -7,23 +7,26 @@ export class ReferenceCheckerTemplate {
 
     generateChecker(language: PiLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName : string = Names.PiError;
-        const checkerClassName : string = Names.referenceChecker(language);
+        const errorClassName: string = Names.PiError;
+        const errorSeverityName: string = Names.PiErrorSeverity;
+        const checkerClassName: string = Names.referenceChecker(language);
         const unparserInterfaceName: string = Names.PiUnparser;
+        const environmentName: string = Names.environment(language);
+        const overallTypeName: string = Names.allConcepts(language);
 
         // because 'createChecksOnNonOptionalParts' determines which concepts to import
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template
         // is returned
         this.imports = [];
-        let allMethods = `${language.concepts.map(concept =>
-            `${this.createChecksOnNonOptionalParts(concept)}`
+        const allMethods = `${language.concepts.map(concept =>
+            `${this.createChecksOnNonOptionalParts(concept, environmentName)}`
         ).join("\n\n")}`;
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
-        import { ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
-        import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+        import { ${errorClassName}, ${errorSeverityName}, ${unparserInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import { ${overallTypeName}, ${Names.PiElementReference}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
+        import { ${environmentName} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${environmentName}";
         import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";   
 
         /**
@@ -35,34 +38,50 @@ export class ReferenceCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} {
             // 'myUnparser' is used to provide error messages on the nodes in the model tree
-            myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
+            myUnparser: ${unparserInterfaceName} = (${environmentName}.getInstance() as ${environmentName}).unparser;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
-            ${allMethods}
+            ${allMethods}           
+            
+            private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
+                const scoper = ${environmentName}.getInstance().scoper;
+                const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
+                if (possibles.length > 0) {
+                    this.errorList.push(
+                        new PiError(                                       
+                            \`Reference '\${referredElem.name}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
+                                modelelement,
+                                \`\${propertyName} of \${locationDescription}\`,
+                            PiErrorSeverity.Error
+                        )
+                    );
+                } else {
+                    this.errorList.push(
+                        new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, PiErrorSeverity.Error)
+                    );
+                }
+            }
         }`;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiConcept) : string {
-        let result: string = '';
-        let locationdescription = ValidationUtils.findLocationDescription(concept);
-
+    private createChecksOnNonOptionalParts(concept: PiConcept, environmentName: string): string {
+        let result: string = "";
+        const locationdescription = ValidationUtils.findLocationDescription(concept);
         concept.allProperties().forEach(prop => {
             if (!prop.isPart) {
                 if (prop.isList) {
-                    result += `for (let referredElem of modelelement.${prop.name} ) {
-                        if (referredElem.referred == null) {
-                            this.errorList.push(
-                                new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`)
-                            );
+                    result += `for (const referredElem of modelelement.${prop.name} ) {
+                        if (referredElem.referred === null) {
+                            this.makeErrorMessage(modelelement, referredElem, "${prop.name}", "${locationdescription}");
                             hasFatalError = true;
                         }
-                    }`
+                    }`;
                 } else {
-                    result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred == null) {
-                        this.errorList.push(new PiError(\`Cannot find reference '\${modelelement.${prop.name}.name}'\`, modelelement, \`${prop.name} of \${${locationdescription}}\`));
-                        hasFatalError = true;
-                    }`
+                    result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) {
+                            this.makeErrorMessage(modelelement, modelelement.${prop.name}, "${prop.name}", "${locationdescription}");
+                            hasFatalError = true;
+                    }`;
                 }
             }
         });

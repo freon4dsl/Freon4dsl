@@ -2,7 +2,7 @@ import { PiLanguage } from "../metalanguage/PiLanguage";
 import { PiLangExpressionChecker } from "../metalanguage/PiLangExpressionChecker";
 import { PiParser } from "../../utils/PiParser";
 import { LanguageExpressionTester } from "./LanguageExpressionTester";
-let pegjsParser = require("./ExpressionGrammar");
+const pegjsParser = require("./ExpressionGrammar");
 
 export class LanguageExpressionParser extends PiParser<LanguageExpressionTester> {
     public language: PiLanguage;

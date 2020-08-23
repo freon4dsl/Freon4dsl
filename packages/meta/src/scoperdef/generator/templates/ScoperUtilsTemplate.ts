@@ -5,13 +5,18 @@ import { PiScopeDef } from "../../metalanguage";
 export class ScoperUtilsTemplate {
 
     generateScoperUtils(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
-        const allLangConcepts : string = Names.allConcepts(language);
+        const allLangConcepts: string = Names.allConcepts(language);
         const concreteNamespaces: PiConcept[] = replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
 
         // Template starts here
         return `
-        import { ${allLangConcepts}, ${includeRoot ? `${Names.concept(language.modelConcept)},` : ``} ${concreteNamespaces.map(ref => `${Names.concept(ref)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${allLangConcepts}, 
+                    ${includeRoot ?
+                        `${Names.concept(language.modelConcept)},`
+                    : ``} 
+                    ${concreteNamespaces.map(ref => `${Names.concept(ref)}`).join(", ")} 
+                } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
               
         /**
          * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition.

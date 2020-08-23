@@ -55,7 +55,6 @@ packages/playground/src/*/typer/gen/*
 packages/playground/src/*/utils/gen/*
 packages/playground/src/*/validator/gen/*
 packages/playground/src/*/stdlib/gen/*
-packages/playground/src/HDML/*
 packages/playground/handmade/unparsedDemoModel.txt
 packages/playground/exampleLangDefs/Entity/EntityDefinition.edit
 packages/playground/exampleLangDefs/Entity/EntityDefinition.lang
@@ -73,3 +72,5 @@ packages/test/src/*/typer/gen/*
 packages/test/src/*/utils/gen/*
 packages/test/src/*/validator/gen/*
 packages/test/src/*/stdlib/gen/*
+/packages/test/src/testDefinedScoper/defs/Language.lang
+/packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts

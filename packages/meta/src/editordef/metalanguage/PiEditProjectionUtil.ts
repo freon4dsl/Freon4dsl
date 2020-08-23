@@ -1,6 +1,9 @@
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage/PiLangExpressions";
-import { PiBinaryExpressionConcept, PiConcept, PiConceptProperty } from "../../languagedef/metalanguage/PiLanguage";
+import { PiLangAppliedFeatureExp,
+    PiLangSelfExp,
+    PiBinaryExpressionConcept,
+    PiConcept,
+    PiConceptProperty } from "../../languagedef/metalanguage";
 import { PiEditUnit, PiEditConcept, PiEditParsedProjectionIndent, PiEditParsedNewline } from "./PiEditDefLang";
 import {
     PiEditProjectionText,
@@ -16,7 +19,7 @@ export class PiEditProjectionUtil {
      * @param editor
      */
     public static addDefaults(editor: PiEditUnit): void {
-        for (let binConcept of editor.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
+        for (const binConcept of editor.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
             let conceptEditor = editor.findConceptEditor(binConcept);
             if (conceptEditor === null || conceptEditor === undefined) {
                 // console.log("Adding brand editor for " + binConcept.unitName);
@@ -33,7 +36,7 @@ export class PiEditProjectionUtil {
             }
         }
 
-        for (let con of editor.language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept))) {
+        for (const con of editor.language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept))) {
             // Find or create the concept editor, and its properties
             let coneditor: PiEditConcept = editor.conceptEditors.find(ed => ed.concept.referred === con);
             if (!coneditor) {
@@ -69,7 +72,7 @@ export class PiEditProjectionUtil {
                     startLine.items.push(sub);
                 }
                 coneditor.projection.lines.push(startLine);
-                for (let prop of con.allPrimProperties().filter((p => p !== nameProp))) {
+                for (const prop of con.allPrimProperties().filter((p => p !== nameProp))) {
                     const line = new PiEditProjectionLine();
                     line.indent = 4;
                     line.items.push(PiEditProjectionText.create(prop.name));
@@ -80,14 +83,14 @@ export class PiEditProjectionUtil {
                     line.items.push(sub);
                     coneditor.projection.lines.push(line);
                 }
-                for (let prop of con.allParts()) {
+                for (const prop of con.allParts()) {
                     if (prop.isList) {
                         this.defaultListConceptProperty(con, prop, coneditor);
                     } else {
                         this.defaultSingleConceptProperty(con, prop, coneditor);
                     }
                 }
-                for (let prop of con.allReferences()) {
+                for (const prop of con.allReferences()) {
                     if (prop.isList) {
                         this.defaultListConceptProperty(con, prop, coneditor);
                     } else {
@@ -181,7 +184,7 @@ export class PiEditProjectionUtil {
         projection.lines.forEach(line => {
             const firstItem = line.items[0];
             if (firstItem instanceof PiEditParsedProjectionIndent) {
-                const indent = firstItem.amount - ignoredIndent;
+                // const indent = firstItem.amount - ignoredIndent;
                 line.indent = firstItem.amount - ignoredIndent;
                 line.items.splice(0, 1);
             }

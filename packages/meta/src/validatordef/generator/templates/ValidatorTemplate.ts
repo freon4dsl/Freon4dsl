@@ -1,14 +1,11 @@
-import { CONFIGURATION_FOLDER, ENVIRONMENT_GEN_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiValidatorDef } from "../../../validatordef/metalanguage/ValidatorDefLang";
+import { CONFIGURATION_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
+import { PiLanguage } from "../../../languagedef/metalanguage";
+import { PiValidatorDef } from "../../metalanguage";
 
 export class ValidatorTemplate {
-    errorClassName : string = Names.PiError;
+    errorClassName: string = Names.PiError;
     validatorInterfaceName: string = Names.PiValidator;
     typerInterfaceName: string = Names.PiTyper;
-
-    constructor() {
-    }
 
     generateValidator(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const doValidDef = validdef !== null && validdef !== undefined;
@@ -19,8 +16,8 @@ export class ValidatorTemplate {
         const nonOptionalsChecker: string = Names.nonOptionalsChecker(language);
         const referenceChecker: string = Names.referenceChecker(language);
         const walkerClassName: string = Names.walker(language);
-    
-        // Template starts here 
+
+        // Template starts here
         return `
         import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName} } from "${PROJECTITCORE}";
         import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
@@ -47,19 +44,12 @@ export class ValidatorTemplate {
              * @param includeChildren if true, the children of 'modelelement' are also checked.
              * The default for 'includeChildren' is true.
              */
-            public validate(modelelement: ${allLangConcepts}, includeChildren?: boolean) : ${this.errorClassName}[]{
-                // set the default such that children are included 
-                // we do not use the TypeScript default for a parameter because we cannot distinguish a null value passed to this method
-                // from no value for 'includeChildren'
-                if (!!includeChildren) {
-                } else {
-                    includeChildren = true;
-                }
+            public validate(modelelement: ${allLangConcepts}, includeChildren: boolean = true) : ${this.errorClassName}[]{
                 // initialize the errorlist        
-                let errorlist : ${this.errorClassName}[] = [];
+                const errorlist : ${this.errorClassName}[] = [];
                 
                 // create the walker over the model tree
-                let myWalker = new ${walkerClassName}();
+                const myWalker = new ${walkerClassName}();
                 
                 // create the checker on non-optional parts
                 let myChecker = new ${nonOptionalsChecker}();

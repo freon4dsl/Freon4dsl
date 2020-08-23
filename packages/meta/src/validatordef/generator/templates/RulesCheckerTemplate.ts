@@ -1,5 +1,5 @@
 import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, langExpToTypeScript, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept, PiLangElement, PiProperty, PiPrimitiveProperty } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
     PiValidatorDef,
     CheckEqualsTypeRule,
@@ -8,32 +8,29 @@ import {
     ValidNameRule,
     ConceptRuleSet,
     ExpressionRule, IsuniqueRule
-} from "../../metalanguage/ValidatorDefLang";
-import { PiError } from "@projectit/core";
+} from "../../metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {
-    done : PiConcept[] = [];
-    constructor() {
-    }
+    done: PiConcept[] = [];
 
     generateRulesChecker(language: PiLanguage, validdef: PiValidatorDef, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
-        const errorClassName : string = Names.PiError;
-        const checkerClassName : string = Names.rulesChecker(language);
+        const errorClassName: string = Names.PiError;
+        const checkerClassName: string = Names.rulesChecker(language);
         const typerInterfaceName: string = Names.PiTyper;
         const unparserInterfaceName: string = Names.PiUnparser;
-        const commentBefore =   `/**
-                                 * Checks 'modelelement' before checking its children.
-                                 * Found errors are pushed onto 'errorlist'.
-                                 * @param modelelement
-                                 */`;
+        const commentBefore = `/**
+                                * Checks 'modelelement' before checking its children.
+                                * Found errors are pushed onto 'errorlist'.
+                                * @param modelelement
+                                */`;
         this.done = [];
 
         // the template starts here
         return `
         import { ${errorClassName}, ${typerInterfaceName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
-        import { ${this.createImports(language, validdef)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
+        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";   
         import { reservedWordsInTypescript } from "./ReservedWords";  
@@ -64,7 +61,7 @@ export class RulesCheckerTemplate {
          * Returns true if 'name' is a valid identifier
          * @param name
          */
-        private isValidName(name: string) : boolean {
+        private isValidName(name: string): boolean {
             if (!(!!name)) return false;
             // cannot start with number
             if (/[0-9]/.test( name[0]) ) return false; 
@@ -82,20 +79,19 @@ export class RulesCheckerTemplate {
         `;
     }
 
-    private createImports(language: PiLanguage, validdef: PiValidatorDef) : string {
-        let result : string = "";
-        result = language.concepts?.map(concept => `
+    private createImports(language: PiLanguage): string {
+        let result: string = language.concepts?.map(concept => `
                 ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts? `,` :``);
+        result = result.concat(language.concepts ? `,` : ``);
         result = result.concat(
             language.interfaces?.map(intf => `
                 ${Names.interface(intf)}`).join(", "));
         return result;
     }
 
-    private createRules(ruleSet: ConceptRuleSet) : string {
+    private createRules(ruleSet: ConceptRuleSet): string {
         // find the property that indicates the location in human terms
-        let locationdescription = ValidationUtils.findLocationDescription(ruleSet.conceptRef.referred);
+        const locationdescription = ValidationUtils.findLocationDescription(ruleSet.conceptRef.referred);
         //
         return `${
             ruleSet.rules.map(r =>
@@ -105,26 +101,26 @@ export class RulesCheckerTemplate {
                         this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) 
                         + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'", ${langExpToTypeScript(r.type1)}, ${locationdescription}));
                     }`
-                    : (r instanceof CheckConformsRule ?
+                   : (r instanceof CheckConformsRule ?
                         `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                         this.errorList.push(new PiError("Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) + 
                         "' does not conform to (the type of) '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'", ${langExpToTypeScript(r.type1)}, ${locationdescription}));
                     }`
-                        : (r instanceof NotEmptyRule ?
+                       : (r instanceof NotEmptyRule ?
                             `if (${langExpToTypeScript(r.property)}.length == 0) {
                         this.errorList.push(new PiError("List '${r.property.toPiString()}' may not be empty", modelelement, ${locationdescription}));
                     }`
-                            : (r instanceof ValidNameRule ?
+                           : (r instanceof ValidNameRule ?
                                 `if (!this.isValidName(${langExpToTypeScript(r.property)})) {
                         this.errorList.push(new PiError("'" + ${langExpToTypeScript(r.property)} + "' is not a valid identifier", modelelement, ${locationdescription}));
                     }`
-                                : (r instanceof ExpressionRule ?
+                               : (r instanceof ExpressionRule ?
                                     `if (!(${langExpToTypeScript(r.exp1)} ${r.comparator} ${langExpToTypeScript(r.exp2)})) {
                         this.errorList.push(new PiError("'${r.toPiString()}' is false", modelelement, ${locationdescription}));
                     }`
-                                    : (r instanceof IsuniqueRule ?
+                                   : (r instanceof IsuniqueRule ?
                                         `${this.makeIsuniqueRule(r, locationdescription)}`
-                                        : ""))))))}`
+                                       : ""))))))}`
             ).join("\n")}`;
     }
 
@@ -133,7 +129,10 @@ export class RulesCheckerTemplate {
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = (referredListproperty instanceof PiPrimitiveProperty) ? referredListproperty.primType :referredListproperty.type.referred.name;
+        const listpropertyTypeName = (referredListproperty instanceof PiPrimitiveProperty) ?
+                referredListproperty.primType
+            :
+                referredListproperty.type.referred.name;
         const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
         return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
         ${langExpToTypeScript(rule.list)}.forEach((elem, index) => {

@@ -1,15 +1,12 @@
 import * as fs from "fs";
-import { GenerationStatus, Helpers, STYLES_ORIGIN } from "../../../utils";
-// import { PiLogger } from "@projectit/core";
+import { STYLES_ORIGIN } from "../../../utils";
 
 const constFile = STYLES_ORIGIN + "/styles.ts";
 const cssFile = STYLES_ORIGIN + "/style.scss";
 
-// const LOGGER = new PiLogger("StylesTemplate"); //.mute();
-
 export class StylesTemplate {
 
-    generateConst() : string {
+    generateConst(): string {
         return fs.readFileSync(constFile, { encoding: "UTF8" });
     }
 

@@ -11,6 +11,7 @@ export class FileWatcher {
         fs.watch(filename, this.fileWatcher);
     }
 
+    // TODO see if these params can be removed
     fileWatcher = (event: string, filename: string) => {
         const timestamp = fs.statSync(this.filename).mtimeMs;
         const process = this.lastChanged !== timestamp;

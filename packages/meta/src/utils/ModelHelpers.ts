@@ -2,7 +2,6 @@ import { PiClassifier, PiInterface, PiLangElement } from "../languagedef/metalan
 import { PiConcept, PiConceptProperty } from "../languagedef/metalanguage/";
 import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp } from "../languagedef/metalanguage";
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
-import { int } from "parjs";
 
 /**
  * This function sorts the list of PiClasses in such a way that
@@ -15,21 +14,24 @@ import { int } from "parjs";
  * @param piclasses: the list of classes to be sorted
  */
 export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcept>[]): PiConcept[] {
-    let newList: PiConcept[] = [];
-    for (let c of piclasses) {
+    const newList: PiConcept[] = [];
+    for (const c of piclasses) {
         // without base must be last
-        let concept = (c instanceof PiElementReference ? c.referred : c);
+        const concept = (c instanceof PiElementReference ? c.referred : c);
         if (!concept.base) {
             newList.push(concept);
         }
     }
+
     while (newList.length < piclasses.length) {
-        for (let c of piclasses) {
-            let concept = (c instanceof PiElementReference ? c.referred : c);
-            let base = concept.base?.referred;
-            if (base) {
-                if (newList.indexOf(base) > -1) { // base of the concept is already in the list
-                    newList.push(concept);
+        for (const c of piclasses) {
+            const concept = (c instanceof PiElementReference ? c.referred : c);
+            if (!newList.includes(concept)) { // concept is already in the list
+                const base = concept.base?.referred;
+                if (base) {
+                    if (newList.indexOf(base) > -1) { // base of the concept is already in the list
+                        newList.push(concept);
+                    }
                 }
             }
         }
@@ -44,9 +46,10 @@ export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcep
  * @param list
  * @param element
  */
-export function refListIncludes(list: PiElementReference<PiLangElement>[], element: PiElementReference<PiLangElement> | PiLangElement): boolean {
+export function refListIncludes(list: PiElementReference<PiLangElement>[],
+                                element: PiElementReference<PiLangElement> | PiLangElement): boolean {
     // TODO ??? should we add a check on the types of the list and the element?
-    for (let xx of list) {
+    for (const xx of list) {
         if (element instanceof PiLangElement) {
             if (xx.referred === element) {
                 return true;
@@ -70,7 +73,8 @@ export function isPrimitiveType(type: PiLangElement): boolean {
 }
 
 export function langExpToTypeScript(exp: PiLangExp): string {
-    let result : string = '';
+    // tslint:disable-next-line:typedef-whitespace
+    let result : string = "";
     if (exp instanceof PiLangSelfExp) {
         result = `modelelement.${langExpToTypeScript(exp.appliedfeature)}`;
     } else if (exp instanceof PiLangFunctionCallExp) {
@@ -80,8 +84,9 @@ export function langExpToTypeScript(exp: PiLangExp): string {
     } else if (exp instanceof PiLangAppliedFeatureExp) {
         // TODO this should be replaced by special getters and setters for reference properties
         // and the unparser should be adjusted to this
-        let isRef = isReferenceProperty(exp);
-        result = exp.sourceName + (isRef ? "?.referred" : "") + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
+        const isRef = isReferenceProperty(exp);
+        result = exp.sourceName + (isRef ? "?.referred" : "")
+            + (exp.appliedfeature ? (`?.${langExpToTypeScript(exp.appliedfeature)}`) : "");
     } else if (exp instanceof PiInstanceExp) {
         result = `${exp.sourceName}.${exp.instanceName}`;
     } else {
@@ -112,19 +117,19 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
  *
  * @param classifiers
  */
-export function  replaceInterfacesWithImplementors(classifiers: PiClassifier[] | PiElementReference<PiClassifier>[]): PiConcept[] {
-    let result: PiConcept[] = [];
-    for (let ref of classifiers) {
-        let myClassifier = (ref instanceof PiElementReference ? ref.referred : ref);
-        if (myClassifier instanceof PiInterface){
-            let implementors = myClassifier.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myClassifier));
+export function replaceInterfacesWithImplementors(classifiers: PiClassifier[] | PiElementReference<PiClassifier>[]): PiConcept[] {
+    const result: PiConcept[] = [];
+    for (const ref of classifiers) {
+        const myClassifier = (ref instanceof PiElementReference ? ref.referred : ref);
+        if (myClassifier instanceof PiInterface) {
+            const implementors = myClassifier.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myClassifier));
             // check on duplicates
-            for (let implementor of implementors) {
+            for (const implementor of implementors) {
                 if (!result.includes(implementor)) {
                     result.push(implementor);
                 }
             }
-        } else if (myClassifier instanceof PiConcept){
+        } else if (myClassifier instanceof PiConcept) {
             if (!result.includes(myClassifier)) {
                 result.push(myClassifier);
             }
@@ -138,9 +143,9 @@ export function  replaceInterfacesWithImplementors(classifiers: PiClassifier[] |
  *
  * @param piInterface
  */
-export function  findImplementors(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
+export function findImplementors(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
     // TODO add implementors of sub-interfaces
-    let myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
+    const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
     return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
 }
 
@@ -153,23 +158,23 @@ export function  findImplementors(piInterface: PiInterface | PiElementReference<
  */
 export function findAllImplementorsAndSubs(classifier: PiElementReference<PiClassifier> | PiClassifier): PiClassifier[] {
     let result: PiClassifier[] = [];
-    let myClassifier = (classifier instanceof PiElementReference ? classifier.referred : classifier);
+    const myClassifier = (classifier instanceof PiElementReference ? classifier.referred : classifier);
     if (!!myClassifier) {
         result.push(myClassifier);
-        if (myClassifier instanceof  PiConcept) { // find all subclasses and mark them as namespace
+        if (myClassifier instanceof PiConcept) { // find all subclasses and mark them as namespace
             result = result.concat(myClassifier.allSubConceptsRecursive());
-        } else if (myClassifier instanceof  PiInterface) { // find all implementors and their subclasses and mark them as namespace
-            for (let implementor of findImplementors(myClassifier)) {
+        } else if (myClassifier instanceof PiInterface) { // find all implementors and their subclasses and mark them as namespace
+            for (const implementor of findImplementors(myClassifier)) {
                 if (!result.includes(implementor)) {
                     result.push(implementor);
                     result = result.concat(implementor.allSubConceptsRecursive());
                 }
             }
             // find all subinterfaces and add their implementors as well
-            for (let subInterface of myClassifier.allSubInterfacesRecursive()) {
+            for (const subInterface of myClassifier.allSubInterfacesRecursive()) {
                 if (!result.includes(subInterface)) {
                     result.push(subInterface);
-                    for (let implementor of findImplementors(subInterface)) {
+                    for (const implementor of findImplementors(subInterface)) {
                         if (!result.includes(implementor)) {
                             result.push(implementor);
                             result = result.concat(implementor.allSubConceptsRecursive());
@@ -184,7 +189,7 @@ export function findAllImplementorsAndSubs(classifier: PiElementReference<PiClas
 
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
     if (!!piClassifier) {
-        if (piClassifier.allPrimProperties().some(prop => prop.name === 'name' && prop.primType === 'string') ) {
+        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.primType === "string") ) {
             return true;
         }
     }

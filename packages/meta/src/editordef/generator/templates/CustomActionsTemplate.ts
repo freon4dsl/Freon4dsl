@@ -1,9 +1,7 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import { PiLanguage } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage } from "../../../languagedef/metalanguage";
 
 export class CustomActionsTemplate {
-    constructor() {
-    }
 
     generate(language: PiLanguage): string {
         return `

@@ -25,7 +25,7 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
         this.scoperGenerator.outputfolder = this.outputFolder;
 
         const scoper = new ScoperParser(this.language).parse(this.scopeFile.value);
-        if (scoper == null) {
+        if (scoper === null) {
             throw new Error("Scoper definition could not be parsed, exiting.");
         }
         this.scoperGenerator.generate(scoper);

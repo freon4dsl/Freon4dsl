@@ -5,7 +5,7 @@ const constFile = RESERVED_WORDS_ORIGIN + "/ReservedWords.ts";
 
 export class ReservedWordsTemplate {
 
-    generateConst() : string {
+    generateConst(): string {
         return fs.readFileSync(constFile, { encoding: "UTF8" });
     }
 

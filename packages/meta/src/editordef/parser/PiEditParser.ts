@@ -2,7 +2,7 @@ import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiParser } from "../../utils";
 import { PiEditChecker, PiEditUnit } from "../metalanguage";
 
-let editorParser = require("./PiEditGrammar");
+const editorParser = require("./PiEditGrammar");
 
 export class PiEditParser extends PiParser<PiEditUnit> {
     language: PiLanguage;

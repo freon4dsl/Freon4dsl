@@ -1,4 +1,4 @@
-language DefaultScoperTest
+language ScoperTest
 
 model DSmodel {
     name: string;
@@ -7,28 +7,23 @@ model DSmodel {
 
 public modelunit DSunit {
     public name: string;
-    public dsParts: DSpart[];
+    public dsPublics: DSpublic[];
     public reference dsRefs: DSref[];
     dsPrivates: DSprivate[];
 }
 
-public concept DSpart {
+public interface DSref {
     public name: string;
-    public conceptParts: DSpart[];
+}
+
+public concept DSpublic implements DSref {
+    public conceptParts: DSpublic[];
     public reference conceptRefs: DSref[];
     conceptPrivates: DSprivate[];
 }
 
-public concept DSref {
-    name: string;
-    conceptParts: DSpart[];
-    conceptPrivates: DSprivate[];
-    reference conceptRefs: DSref[];
-}
-
-concept DSprivate {
-    name: string;
-    conceptParts: DSpart[];
+concept DSprivate implements DSref {
+    conceptParts: DSpublic[];
     conceptPrivates: DSprivate[];
     reference conceptRefs: DSref[];
 }

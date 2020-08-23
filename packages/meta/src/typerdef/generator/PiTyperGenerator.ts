@@ -5,7 +5,7 @@ import { PiTypeDefinition } from "../metalanguage";
 import { GenerationStatus, Helpers, Names, TYPER_FOLDER, TYPER_GEN_FOLDER } from "../../utils";
 import { PiTyperTemplate } from "./templates/PiTyperTemplate";
 
-const LOGGER = new PiLogger("PiTyperGenerator"); //.mute();
+const LOGGER = new PiLogger("PiTyperGenerator"); // .mute();
 export class PiTyperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;
@@ -17,29 +17,29 @@ export class PiTyperGenerator {
     }
 
     generate(typerdef: PiTypeDefinition): void {
-        let generationStatus = new GenerationStatus();
+        const generationStatus = new GenerationStatus();
         this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
         this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
-        let name = typerdef ? typerdef.name + " " : "";
+        const name = typerdef ? typerdef.name + " " : "";
         LOGGER.log("Generating typer: " + name + "in folder " + this.typerGenFolder);
 
         const typer = new PiTyperTemplate();
 
-        //Prepare folders
+        // Prepare folders
         Helpers.createDirIfNotExisting(this.typerFolder);
         Helpers.createDirIfNotExisting(this.typerGenFolder);
         Helpers.deleteFilesInDir(this.typerGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        let relativePath = "../../";
+        const relativePath = "../../";
 
         //  Generate typer
         LOGGER.log(`Generating typer: ${this.typerGenFolder}/${Names.typer(this.language)}.ts`);
-        var typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class", generationStatus);
+        const typerFile = Helpers.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class", generationStatus);
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
         LOGGER.log(`Generating typer gen index: ${this.typerGenFolder}/index.ts`);
-        var typerIndexGenFile = Helpers.pretty(typer.generateGenIndex(this.language), "Typer Gen Index", generationStatus);
+        const typerIndexGenFile = Helpers.pretty(typer.generateGenIndex(this.language), "Typer Gen Index", generationStatus);
         fs.writeFileSync(`${this.typerGenFolder}/index.ts`, typerIndexGenFile);
 
         if (generationStatus.numberOfErrors > 0) {

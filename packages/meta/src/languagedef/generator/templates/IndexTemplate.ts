@@ -1,14 +1,11 @@
-import { Names } from "../../../utils/Names";
-import { PiLanguage } from "../../metalanguage/PiLanguage";
-import { sortClasses } from "../../../utils";
+import { PiLanguage } from "../../metalanguage";
+import { Names, sortClasses } from "../../../utils";
 
 export class IndexTemplate {
-    constructor() {
-    }
 
     generateIndex(language: PiLanguage): string {
         // sort all names alphabetically
-        let tmp : string[] = [];
+        const tmp: string[] = [];
         language.concepts.map(c =>
             tmp.push(Names.concept(c))
         );
@@ -30,7 +27,7 @@ export class IndexTemplate {
          */
          
         export {
-        ${tmp.map(c => 
+        ${tmp.map(c =>
             `${c}`
         ).join(",\n")}
         } from "./internal"`;
@@ -41,7 +38,7 @@ export class IndexTemplate {
         // concepts that are extending them.
         // Function 'sortClasses' provides a sorting mechanism, but its result needs to be reversed.
 
-        let tmp : string[] = [];
+        const tmp: string[] = [];
         tmp.push(Names.PiElementReference);
         // TODO should be sorting interfaces as well, I think
         language.interfaces.map(c =>
