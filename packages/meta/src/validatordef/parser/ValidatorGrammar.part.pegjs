@@ -55,7 +55,7 @@ severity = severityKey name_separator value:var {
 
 errormessage = messageKey name_separator "\"" value:string "\"" {
   return create.createErrorMessage( {
-    "message": value,
+    "value": value,
     "location": location()
   });
 }

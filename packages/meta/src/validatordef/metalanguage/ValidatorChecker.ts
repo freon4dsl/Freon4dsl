@@ -16,7 +16,7 @@ import {
     ExpressionRule,
     IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef,
+    PiValidatorDef, ValidationMessage,
     ValidationRule,
     ValidationSeverity,
     ValidNameRule
@@ -82,7 +82,16 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if ( tr instanceof ValidNameRule) { this.checkValidNameRule(tr, enclosingConcept); }
         if ( tr instanceof ExpressionRule) { this.checkExpressionRule(tr, enclosingConcept); }
         if ( tr instanceof IsuniqueRule) { this.checkIsuniqueRule(tr, enclosingConcept); }
-        if (!!tr.severity) { this.checkAndFindSeverity(tr.severity); }
+        if (!!tr.severity) {
+            this.checkAndFindSeverity(tr.severity); }
+        else {
+            // set default
+            tr.severity = new ValidationSeverity();
+            tr.severity.severity = PiErrorSeverity.ToDo;
+        }
+        if (!!tr.message) {
+            this.checkValidationMessage(tr.message);
+        }
     }
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
@@ -251,7 +260,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: severityLevels.includes(myValue),
-                error:`Severity '${severity.value}' should equal (disregarding case) one of the values (${severityLevels}) ` +
+                error:`Severity '${severity.value}' should equal (disregarding case) one of the values (${severityLevels.map(elem => `${elem}`).join(", ")}) ` +
                             `[line: ${severity.location?.start.line}, column: ${severity.location?.start.column}].`,
                 whenOk: () => {
                     switch (myValue) {
@@ -271,9 +280,19 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                             severity.severity = PiErrorSeverity.Improvement;
                             break;
                         }
+                        default: {
+                            severity.severity = PiErrorSeverity.ToDo;
+                        }
                     }
                 }
         });
-        severity.severity = PiErrorSeverity.NONE;
+        if (!!!severity.severity) {
+            severity.severity = PiErrorSeverity.ToDo;
+        }
+    }
+
+    private checkValidationMessage(message: ValidationMessage) {
+        this.simpleCheck(!!message.value, `User defined error message should have a value` +
+            `[line: ${message.location?.start.line}, column: ${message.location?.start.column}].`);
     }
 }

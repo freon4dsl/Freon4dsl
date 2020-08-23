@@ -16,22 +16,21 @@ DemoEntity {
     validIdentifier    {
                        message:
                        "iets met ${self.name} enzo",
-                       severity: huppelepup
+                       severity: eRRor
                        };
 }
 
 DemoAttribute {
     validIdentifier self.name
-    {severity: TODO,
+    {severity: Info,
     message:
     "iets met ${self.name} enzo"
     };
 }
 
 DemoFunction {
-    typecheck conformsTo (self.expression, self.declaredType);
-    isunique name in self.parameters         {severity: error
-                                             };
+    typecheck conformsTo (self.expression, self.declaredType) {severity: improvement, message: "FUNCTION IS NOT CORRECT!!"};
+    isunique name in self.parameters         {severity: improvement};
     validIdentifier;
 }
 
@@ -52,9 +51,9 @@ DemoMultiplyExpression {
 }
 
 DemoPlusExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Integer );
-    typecheck equalsType( self.right, DemoAttributeType:Integer );
-    typecheck conformsTo( self.left, self.right );
+    typecheck equalsType( self.left, DemoAttributeType:Integer )  {severity: improvement};
+    typecheck equalsType( self.right, DemoAttributeType:Integer )  {severity: improvement};
+    typecheck conformsTo( self.left, self.right )  {severity: info, message: "WAT IS DIT LEUK!!"};
 }
 
 DemoDivideExpression {

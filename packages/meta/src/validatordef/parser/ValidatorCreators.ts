@@ -176,18 +176,19 @@ export function createErrorMessage(data: Partial<ValidationMessage>): Validation
     return result;
 }
 
-export class ParsedRuleExtras {
-    severity: ValidationSeverity;
-    message: ValidationMessage;
-}
-
-export function createParsedExtras(data: Partial<ParsedRuleExtras>): ParsedRuleExtras {
-    const result = new ParsedRuleExtras();
-    if (!!data.severity) {
-        result.severity = data.severity;
-    }
-    if (!!data.message) {
-        result.message = data.message;
-    }
-    return result;
-}
+// TODO remove the lines below this marker
+// export class ParsedRuleExtras {
+//     severity: ValidationSeverity;
+//     message: ValidationMessage;
+// }
+//
+// export function createParsedExtras(data: Partial<ParsedRuleExtras>): ParsedRuleExtras {
+//     const result = new ParsedRuleExtras();
+//     if (!!data.severity) {
+//         result.severity = data.severity;
+//     }
+//     if (!!data.message) {
+//         result.message = data.message;
+//     }
+//     return result;
+// }

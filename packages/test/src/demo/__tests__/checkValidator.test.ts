@@ -1,204 +1,198 @@
-import { PiError, PiElement } from "@projectit/core";
+import { PiError } from "@projectit/core";
 import {
     DemoModel,
     DemoAttributeType,
     DemoMultiplyExpression,
-    DemoNumberLiteralExpression,
-    DemoStringLiteralExpression,
     DemoDivideExpression,
     DemoVariableRef,
     DemoEntity,
     DemoAttribute,
-    DemoEveryConcept,
     DemoFunction,
     DemoVariable,
     PiElementReference,
-    DemoLiteralExpression,
-    DemoBooleanLiteralExpression, Demo
+    Demo
 } from "../language/gen";
 import { DemoValidator } from "../validator/gen/DemoValidator";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
 describe("Testing Validator", () => {
-    describe("Validate DemoModel Instance", () => {
-        const model: Demo = new DemoModelCreator().createIncorrectModel();
-        const validator = new DemoValidator();
+    const model: Demo = new DemoModelCreator().createIncorrectModel();
+    const validator = new DemoValidator();
 
-        beforeEach(done => {
-            done();
+    beforeEach(done => {
+        done();
+    });
+
+    test("multiplication 3 * 10", () => {
+        let errors: PiError[] = [];
+        let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
+        mult.left = makeLiteralExp("3");
+        mult.right = makeLiteralExp("10");
+        errors = validator.validate(mult);
+        expect(errors.length).toBe(0);
+    });
+
+    test("multiplication 3 * 'temp'", () => {
+        let errors: PiError[] = [];
+        let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
+        mult.left = makeLiteralExp("3");
+        mult.right = makeLiteralExp("temp");
+        errors = validator.validate(mult);
+        expect(errors.length).toBe(1);
+        errors.forEach(e => {
+            expect(e.reportedOn).toBe(mult.right);
+            // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         });
+    });
 
-        test("multiplication 3 * 10", () => {
-            let errors: PiError[] = [];
-            let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
-            mult.left = makeLiteralExp("3");
-            mult.right = makeLiteralExp("10");
-            errors = validator.validate(mult);
-            expect(errors.length).toBe(0);
+    test("multiplication (3/4) * 'temp'", () => {
+        let errors: PiError[] = [];
+        let div: DemoDivideExpression = new DemoDivideExpression();
+        div.left = makeLiteralExp("3");
+        div.right = makeLiteralExp("4");
+        let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
+        mult.left = div;
+        mult.right = makeLiteralExp("temp");
+        errors = validator.validate(mult);
+        expect(errors.length).toBe(1);
+        errors.forEach(e => {
+            expect(e.reportedOn).toBe(mult.right);
+            // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         });
+    });
 
-        test("multiplication 3 * 'temp'", () => {
-            let errors: PiError[] = [];
-            let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
-            mult.left = makeLiteralExp("3");
-            mult.right = makeLiteralExp("temp");
-            errors = validator.validate(mult);
-            expect(errors.length).toBe(1);
-            errors.forEach(e => {
-                expect(e.reportedOn).toBe(mult.right);
-                // console.log(e.message);
-            });
+    test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
+        let errors: PiError[] = [];
+        errors = validator.validate(new DemoModel());
+        // let text = "";
+        // for (let e of errors) {
+        //     text = text.concat(e.message + "\n");
+        // }
+        // console.log(text);
+        expect(errors.length).toBe(3);
+    });
+
+    test("incorrect unitName of DemoModel: YY\\XX", () => {
+        let errors: PiError[] = [];
+        let model = new DemoModel();
+        model.name = "YY\\XX";
+        errors = validator.validate(model);
+        expect(errors.length).toBe(3);
+    });
+
+    test("(1 + 2) * 'Person' should give type error", () => {
+        let errors: PiError[] = [];
+        const variableExpression = new DemoVariableRef();
+        const variable = DemoVariable.create({ name: "XXX" });
+        const personEnt = DemoEntity.create({ name: "Person" });
+        variable.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+        variableExpression.variable = PiElementReference.create<DemoVariable>(variable, "DemoVariable");
+
+        const plusExpression = MakePlusExp("1", "2");
+        const multiplyExpression = MakeMultiplyExp(plusExpression, variableExpression);
+        errors = validator.validate(multiplyExpression);
+        expect(errors.length).toBe(1);
+        // Type of 'DemoVariableRef' should be equal to (the type of) 'DemoAttributeType Integer' in unnamed
+        errors.forEach(e => {
+            // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
+            expect(e.reportedOn === multiplyExpression);
         });
+    });
 
-        test("multiplication (3/4) * 'temp'", () => {
-            let errors: PiError[] = [];
-            let div: DemoDivideExpression = new DemoDivideExpression();
-            div.left = makeLiteralExp("3");
-            div.right = makeLiteralExp("4");
-            let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
-            mult.left = div;
-            mult.right = makeLiteralExp("temp");
-            errors = validator.validate(mult);
-            expect(errors.length).toBe(1);
-            errors.forEach(e => {
-                expect(e.reportedOn).toBe(mult.right);
-                // console.log(e.message);
-            });
+    test('"Hello Demo" + "Goodbye"\'\' should have 2 errors', () => {
+        let errors: PiError[] = [];
+        let expression = MakePlusExp("Hello Demo", "Goodbye");
+        // "Hello Demo" + "Goodbye"
+
+        errors = validator.validate(expression);
+        expect(errors.length).toBe(2);
+        errors.forEach(e => {
+            expect(e.reportedOn === expression);
+            // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         });
+    });
 
-        test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
-            let errors: PiError[] = [];
-            errors = validator.validate(new DemoModel());
-            // let text = "";
-            // for (let e of errors) {
-            //     text = text.concat(e.message + "\n");
-            // }
-            // console.log(text);
-            expect(errors.length).toBe(3);
+    test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 4 errors', () => {
+        let errors: PiError[] = [];
+        const determine = DemoFunction.create({ name: "determine" });
+        const AAP = DemoVariable.create({ name: "AAP" });
+        determine.parameters.push(AAP);
+        determine.expression = MakePlusExp("Hello Demo", "Goodbye");
+        const personEnt = DemoEntity.create({ name: "Person" });
+        determine.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+        // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
+        errors = validator.validate(determine, true);
+        errors.forEach(e => {
+            console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
+            expect(e.reportedOn === determine);
         });
+        // Type of '( ' "Hello Demo" ' + ' "Goodbye" ' )' does not conform to (the type of) 'DemoEntity Person'
+        // Type of '' "Hello Demo" '' should be equal to (the type of) 'DemoAttributeType Integer'
+        // Type of '' "Goodbye" '' should be equal to (the type of) 'DemoAttributeType Integer'
+        // Property 'declaredType' must have a value
+        expect(errors.length).toBe(4);
+    });
 
-        test("incorrect unitName of DemoModel: YY\\XX", () => {
-            let errors: PiError[] = [];
-            let model = new DemoModel();
-            model.name = "YY\\XX";
-            errors = validator.validate(model);
-            expect(errors.length).toBe(3);
+    test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
+        let errors: PiError[] = [];
+        const personEnt = DemoEntity.create({  name: "Person" });
+        const age = DemoAttribute.create({ name: "age" });
+        const personName = DemoAttribute.create({ name: "name" });
+        personEnt.attributes.push(age);
+        personEnt.attributes.push(personName);
+        const first = DemoFunction.create({ name: "first" });
+        const Resultvar = DemoVariable.create({ name: "Resultvar" });
+        first.parameters.push(Resultvar);
+        first.expression = MakePlusExp("5", "24");
+        personEnt.functions.push(first);
+
+        // add types to the model elements
+        // personName.declaredType = DemoAttributeType.String;
+        // age.declaredType = DemoAttributeType.Boolean;
+        // first.declaredType = DemoAttributeType.Boolean;
+        // Resultvar.declaredType = DemoAttributeType.Boolean;
+        personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        first.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+        Resultvar.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
+
+        // Person { unitName, age, first(Resultvar) = 5 + 24 }
+
+        errors = validator.validate(personEnt, true);
+        errors.forEach(e => {
+            // console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
+            expect(e.reportedOn === personEnt);
         });
+        expect(errors.length).toBe(1);
+    });
 
-        test("(1 + 2) * 'Person' should give type error", () => {
-            let errors: PiError[] = [];
-            const variableExpression = new DemoVariableRef();
-            const variable = DemoVariable.create({ name: "XXX" });
-            const personEnt = DemoEntity.create({ name: "Person" });
-            variable.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-            variableExpression.variable = PiElementReference.create<DemoVariable>(variable, "DemoVariable");
+    test ("test isUnique rule for model entities", () => {
+        let model1 = new DemoModelCreator().createModelWithIsUniqueError();
+        let errors: PiError[] = [];
+        errors = validator.validate(model1, true);
+        // errors.forEach(e =>
+        //     console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity)
+        // );
+        expect(errors.length).toBe(4);
+    });
 
-            const plusExpression = MakePlusExp("1", "2");
-            const multiplyExpression = MakeMultiplyExp(plusExpression, variableExpression);
-            errors = validator.validate(multiplyExpression);
-            expect(errors.length).toBe(1);
-            // Type of 'DemoVariableRef' should be equal to (the type of) 'DemoAttributeType Integer' in unnamed
-            errors.forEach(e => {
-                // console.log(e.message + " in " + e.locationdescription);
-                expect(e.reportedOn === multiplyExpression);
-            });
-        });
+    test ("test correct model", () => {
+        let correctModel = new DemoModelCreator().createCorrectModel();
+        let errors: PiError[] = [];
+        errors = validator.validate(correctModel, true);
+        // errors.forEach(e =>
+        //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
+        // );
+        expect(errors.length).toBe(0);
+    });
 
-        test('"Hello Demo" + "Goodbye"\'\' should have 2 errors', () => {
-            let errors: PiError[] = [];
-            let expression = MakePlusExp("Hello Demo", "Goodbye");
-            // "Hello Demo" + "Goodbye"
-
-            errors = validator.validate(expression);
-            expect(errors.length).toBe(2);
-            errors.forEach(e => {
-                expect(e.reportedOn === expression);
-                // console.log(e.message);
-            });
-        });
-
-        test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 4 errors', () => {
-            let errors: PiError[] = [];
-            const determine = DemoFunction.create({ name: "determine" });
-            const AAP = DemoVariable.create({ name: "AAP" });
-            determine.parameters.push(AAP);
-            determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-            const personEnt = DemoEntity.create({ name: "Person" });
-            determine.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-            // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
-            errors = validator.validate(determine, true);
-            errors.forEach(e => {
-                console.log(e.message);
-                expect(e.reportedOn === determine);
-            });
-            // Type of '( ' "Hello Demo" ' + ' "Goodbye" ' )' does not conform to (the type of) 'DemoEntity Person'
-            // Type of '' "Hello Demo" '' should be equal to (the type of) 'DemoAttributeType Integer'
-            // Type of '' "Goodbye" '' should be equal to (the type of) 'DemoAttributeType Integer'
-            // Property 'declaredType' must have a value
-            expect(errors.length).toBe(4);
-        });
-
-        test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
-            let errors: PiError[] = [];
-            const personEnt = DemoEntity.create({  name: "Person" });
-            const age = DemoAttribute.create({ name: "age" });
-            const personName = DemoAttribute.create({ name: "name" });
-            personEnt.attributes.push(age);
-            personEnt.attributes.push(personName);
-            const first = DemoFunction.create({ name: "first" });
-            const Resultvar = DemoVariable.create({ name: "Resultvar" });
-            first.parameters.push(Resultvar);
-            first.expression = MakePlusExp("5", "24");
-            personEnt.functions.push(first);
-
-            // add types to the model elements
-            // personName.declaredType = DemoAttributeType.String;
-            // age.declaredType = DemoAttributeType.Boolean;
-            // first.declaredType = DemoAttributeType.Boolean;
-            // Resultvar.declaredType = DemoAttributeType.Boolean;
-            personName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-            age.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-            first.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-            Resultvar.declaredType = PiElementReference.create<DemoEntity>(personEnt, "DemoEntity");
-
-            // Person { unitName, age, first(Resultvar) = 5 + 24 }
-
-            errors = validator.validate(personEnt, true);
-            errors.forEach(e => {
-                console.log(e.message + " in " + e.locationdescription);
-                expect(e.reportedOn === personEnt);
-            });
-            expect(errors.length).toBe(1);
-        });
-
-        test ("test isUnique rule for model entities", () => {
-            let model1 = new DemoModelCreator().createModelWithIsUniqueError();
-            let errors: PiError[] = [];
-            errors = validator.validate(model1, true);
-            // errors.forEach(e =>
-            //     console.log(e.message + " in " + e.locationdescription)
-            // );
-            expect(errors.length).toBe(4);
-        });
-
-        test ("test correct model", () => {
-            let correctModel = new DemoModelCreator().createCorrectModel();
-            let errors: PiError[] = [];
-            errors = validator.validate(correctModel, true);
-            // errors.forEach(e =>
-            //     console.log(e.message)
-            // );
-            expect(errors.length).toBe(0);
-        });
-
-        test("complete example model", () => {
-            let errors: PiError[] = [];
-            errors = validator.validate(model, true);
-            // errors.forEach(e =>
-            //     console.log(e.message + " => " + e.locationdescription)
-            // );
-            expect(errors.length).toBe(16);
-        });
+    test("complete example model", () => {
+        let errors: PiError[] = [];
+        errors = validator.validate(model, true);
+        errors.forEach(e =>
+            console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
+        );
+        expect(errors.length).toBe(16);
     });
 });
