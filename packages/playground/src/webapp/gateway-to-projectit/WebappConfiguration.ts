@@ -19,6 +19,11 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
 // import { PiLanguageEnvironment } from "../../pi-languages/environment/gen/PiLanguageEnvironment";
 // export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
 
+// import { PiLanguageEnvironment } from "../../pi-language-definition-language/environment/gen/PiLanguageEnvironment";
+// export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
+
+// export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
+
 // import { OpenhabEnvironment } from "../../openhab/environment/gen/OpenhabEnvironment";
 // export const editorEnvironment: PiEnvironment = OpenhabEnvironment.getInstance();
 

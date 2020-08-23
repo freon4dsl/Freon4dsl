@@ -11,7 +11,7 @@ import {
     PiEditConcept,
     PiEditUnit,
     PiEditProjectionText,
-    PiEditSubProjection,
+    PiEditPropertyProjection,
     PiEditProjectionDirection,
     ListJoinType,
     PiEditProjectionLine
@@ -305,7 +305,7 @@ export class UnparserTemplate {
             if (item instanceof PiEditProjectionText) {
                 // TODO escape all quotes in the text string, when we know how they are stored in the projection
                 result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
-            } else if (item instanceof PiEditSubProjection) {
+            } else if (item instanceof PiEditPropertyProjection) {
                 const myElem = item.expression.findRefOfLastAppliedFeature();
                 if (myElem instanceof PiPrimitiveProperty) {
                     result += this.makeItemWithPrimitiveType(myElem, item);
@@ -342,7 +342,7 @@ export class UnparserTemplate {
      * @param myElem
      * @param item
      */
-    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditSubProjection): string {
+    private makeItemWithPrimitiveType(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection): string {
         // the expression is of primitive type
         let result: string = ``;
         const elemStr = langExpToTypeScript(item.expression);
@@ -386,7 +386,7 @@ export class UnparserTemplate {
      * @param item
      * @param indent
      */
-    private makeItemWithConceptType(myElem: PiProperty, item: PiEditSubProjection, indent: number) {
+    private makeItemWithConceptType(myElem: PiProperty, item: PiEditPropertyProjection, indent: number) {
         // the expression has a concept as type, thus we need to call its unparse method
         let result: string = "";
         const type = myElem.type.referred;
@@ -430,7 +430,7 @@ export class UnparserTemplate {
      * Changes the jointype in 'item' into the text needed in the unparser.
      * @param item
      */
-    private getJoinType(item: PiEditSubProjection): string {
+    private getJoinType(item: PiEditPropertyProjection): string {
         let joinType: string = "";
         if (item.listJoin.joinType === ListJoinType.Separator) {
             joinType = "SeparatorType.Separator";

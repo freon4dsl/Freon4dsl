@@ -13,7 +13,6 @@ import {
 
 export class ConceptTemplate {
 
-    // TODO make this method simpler: tslint complains about cyclomatic-complexity
     generateConcept(concept: PiConcept, relativePath: string): string {
         const language = concept.language;
         const hasSuper = !!concept.base;

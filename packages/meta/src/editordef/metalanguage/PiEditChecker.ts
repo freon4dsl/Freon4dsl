@@ -1,6 +1,6 @@
 import { PiConcept, PiLangExpressionChecker, PiLanguage } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
-import { ListJoin, ListJoinType, PiEditConcept, PiEditProjection, PiEditSubProjection, PiEditUnit } from "./PiEditDefLang";
+import { ListJoin, ListJoinType, PiEditConcept, PiEditProjection, PiEditPropertyProjection, PiEditUnit } from "./PiEditDefLang";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
@@ -68,7 +68,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         if (!!projection) {
             projection.lines.forEach(line => {
                 line.items.forEach(item => {
-                    if (item instanceof PiEditSubProjection) {
+                    if (item instanceof PiEditPropertyProjection) {
                         this.checkSubProjection(item, cls);
                     }
                 });
@@ -76,7 +76,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkSubProjection(projection: PiEditSubProjection, cls: PiConcept) {
+    private checkSubProjection(projection: PiEditPropertyProjection, cls: PiConcept) {
         this.myExpressionChecker.checkLangExp(projection.expression, cls);
         const myprop = projection.expression.findRefOfLastAppliedFeature();
         this.nestedCheck({ // TODO this check is done by myExpressionChecker, remove

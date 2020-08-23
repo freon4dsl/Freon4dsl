@@ -4,7 +4,7 @@ import { Names } from "./Names";
 export class Roles {
 
     public static elementName(concept: PiClassifier): string {
-        return Names.classifier(concept);
+        return Names.classifier(concept).toLowerCase();
     }
 
     public static property(property: PiProperty): string {
