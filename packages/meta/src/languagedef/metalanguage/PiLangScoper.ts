@@ -31,8 +31,7 @@ export class PiLangScoper {
             if (owner instanceof PiLangAppliedFeatureExp) {
                 const xx = owner.sourceExp.referredElement?.referred;
                 if (!(!!xx)) {
-                    LOGGER.error(this,
-                        `Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
+                    LOGGER.error(this, `Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
                 }
                 if (!!xx && xx instanceof PiClassifier) {
                     result = xx.allProperties().filter(prop => prop.name === name)[0];
