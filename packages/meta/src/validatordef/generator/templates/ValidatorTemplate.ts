@@ -1,4 +1,4 @@
-import { CONFIGURATION_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
+import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, PROJECTITCORE } from "../../../utils";
 import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiValidatorDef } from "../../metalanguage";
 
@@ -16,6 +16,7 @@ export class ValidatorTemplate {
         const nonOptionalsChecker: string = Names.nonOptionalsChecker(language);
         const referenceChecker: string = Names.referenceChecker(language);
         const walkerClassName: string = Names.walker(language);
+        const workerClassName: string = Names.defaultWorker(language);
 
         // Template starts here
         return `
@@ -24,9 +25,18 @@ export class ValidatorTemplate {
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";    
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";
-        import { ${walkerClassName} } from "${relativePath}${PathProvider.walker(language)}"; 
+        import { ${walkerClassName}, ${workerClassName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}"; 
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration(language)}";
-
+ 
+        /**
+         * Interface '${Names.checkerInterface(language)}' represents any object that traverses the model tree and checks
+         * its nodes, where any errors are deposit in 'errorList'.
+         * Every checker that is used by the validator '${generatedClassName}' should implement this interface.
+         */     
+        export interface ${Names.checkerInterface(language)} extends ${workerClassName} {
+            errorList: ${this.errorClassName}[];
+        }
+        
         /**
          * Class ${generatedClassName} implements the validator generated from, if present, the validator definition,
          * otherwise this class implements the default validator.
@@ -71,7 +81,10 @@ export class ValidatorTemplate {
                 : `` }
                 
                 // add any custom validations
-                myWalker.myWorkers.push(...projectitConfiguration.customValidations);
+                for (let checker of projectitConfiguration.customValidations) {
+                    checker.errorList = errorlist;
+                    myWalker.myWorkers.push(checker);
+                }
                                 
                 // do the work
                 myWalker.walk(modelelement, ()=> { return includeChildren; } );

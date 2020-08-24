@@ -1,27 +1,38 @@
 import { Checker } from "../../utils";
-import { PiLanguage,
-    PiProperty,
-    PiConcept,
-    PiPrimitiveProperty,
-    PiLangExpressionChecker,
-    PiLangAppliedFeatureExp,
-    PiLangSelfExp,
-    PiLangSimpleExp } from "../../languagedef/metalanguage";
 import {
-    ConceptRuleSet,
-    PiValidatorDef,
-    CheckEqualsTypeRule,
-    ValidationRule,
+    PiConcept,
+    PiLangAppliedFeatureExp,
+    PiLangExpressionChecker,
+    PiLangSelfExp,
+    PiLangSimpleExp,
+    PiLanguage,
+    PiPrimitiveProperty,
+    PiProperty
+} from "../../languagedef/metalanguage";
+import {
     CheckConformsRule,
-    NotEmptyRule,
-    ValidNameRule,
+    CheckEqualsTypeRule,
+    ConceptRuleSet,
     ExpressionRule,
-    IsuniqueRule } from "./ValidatorDefLang";
+    IsuniqueRule,
+    NotEmptyRule,
+    PiValidatorDef, ValidationMessage,
+    ValidationRule,
+    ValidationSeverity,
+    ValidNameRule
+} from "./ValidatorDefLang";
+// TODO note that the following imports cannot be from "@projectit/core", because
+// this leads to a load error
 import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
 
-const LOGGER = new PiLogger("ValidatorChecker").mute();
+const LOGGER = new PiLogger("ValidatorChecker"); // .mute();
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
+
+// 'severityLevels' should mirror the levels in PiValidator/PiErrorSeverity, but
+// all names should be in lowercase
+const severityLevels = ["error", "improvement", "todo", "info"];
 
 export class ValidatorChecker extends Checker<PiValidatorDef> {
     myExpressionChecker: PiLangExpressionChecker;
@@ -71,6 +82,16 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if ( tr instanceof ValidNameRule) { this.checkValidNameRule(tr, enclosingConcept); }
         if ( tr instanceof ExpressionRule) { this.checkExpressionRule(tr, enclosingConcept); }
         if ( tr instanceof IsuniqueRule) { this.checkIsuniqueRule(tr, enclosingConcept); }
+        if (!!tr.severity) {
+            this.checkAndFindSeverity(tr.severity); }
+        else {
+            // set default
+            tr.severity = new ValidationSeverity();
+            tr.severity.severity = PiErrorSeverity.ToDo;
+        }
+        if (!!tr.message) {
+            this.checkValidationMessage(tr.message);
+        }
     }
 
     checkValidNameRule(tr: ValidNameRule, enclosingConcept: PiConcept) {
@@ -231,5 +252,46 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     }
                 }
             });
+    }
+
+    private checkAndFindSeverity(severity: ValidationSeverity) {
+        const myValue = severity.value.toLowerCase();
+        this.nestedCheck(
+            {
+                check: severityLevels.includes(myValue),
+                error:`Severity '${severity.value}' should equal (disregarding case) one of the values (${severityLevels.map(elem => `${elem}`).join(", ")}) ` +
+                            `[line: ${severity.location?.start.line}, column: ${severity.location?.start.column}].`,
+                whenOk: () => {
+                    switch (myValue) {
+                        case "error": {
+                            severity.severity = PiErrorSeverity.Error;
+                            break;
+                        }
+                        case "info": {
+                            severity.severity = PiErrorSeverity.Info;
+                            break;
+                        }
+                        case "todo": {
+                            severity.severity = PiErrorSeverity.ToDo;
+                            break;
+                        }
+                        case "improvement": {
+                            severity.severity = PiErrorSeverity.Improvement;
+                            break;
+                        }
+                        default: {
+                            severity.severity = PiErrorSeverity.ToDo;
+                        }
+                    }
+                }
+        });
+        if (!!!severity.severity) {
+            severity.severity = PiErrorSeverity.ToDo;
+        }
+    }
+
+    private checkValidationMessage(message: ValidationMessage) {
+        this.simpleCheck(!!message.content && !!message.content[0], `User defined error message should have a value` +
+            `[line: ${message.location?.start.line}, column: ${message.location?.start.column}].`);
     }
 }

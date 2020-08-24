@@ -40,6 +40,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         this.nestedCheck({check: !!myModel,
             error: `There should be a model in your language ${this.location(language)}.`,
             whenOk: () => {
+                // models may not be modelunits
+                this.simpleCheck(!myModel.isUnit, `A model may not be a modelunit ${this.location(language.modelConcept)}.`);
                 // language.modelConcept is set in 'checkConcept'
                 this.nestedCheck({
                     check: language.modelConcept.primProperties.some(prop => prop.name === "name"),
@@ -72,9 +74,10 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
             if (!foundCircularity) {
                 this.checkPropertyUniqueNames(con, true);
-                // check that modelunits have a name property
+                // check that modelunits have a name property and that they are not marked as 'model
                 if ( con.isUnit ) {
                     this.checkUnitConceptName(con);
+                    this.simpleCheck(!con.isModel, `A modelunit may not be a model ${this.location(con)}.`);
                 }
                 // check that limited concepts have a name property
                 // and that they do not inherit any non-prim properties

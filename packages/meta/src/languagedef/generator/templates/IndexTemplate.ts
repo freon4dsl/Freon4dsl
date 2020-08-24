@@ -4,7 +4,7 @@ import { Names, sortClasses } from "../../../utils";
 export class IndexTemplate {
 
     generateIndex(language: PiLanguage): string {
-        // sort all names alphabetically
+
         const tmp: string[] = [];
         language.concepts.map(c =>
             tmp.push(Names.concept(c))
@@ -15,8 +15,6 @@ export class IndexTemplate {
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
         tmp.push(Names.PiElementReference);
-
-        // tmp = tmp.sort();
 
         // the template starts here
         return `
@@ -67,5 +65,11 @@ export class IndexTemplate {
             `export * from "./${c}";`
         ).join("\n")}
         `;
+    }
+
+    generateUtilsIndex(language: PiLanguage): string {
+        return `export * from "./${Names.workerInterface(language)}";
+                export * from "./${Names.walker(language)}";
+                export * from "./${Names.defaultWorker(language)}";`;
     }
 }

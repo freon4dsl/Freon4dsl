@@ -1,4 +1,4 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER } from "../../../utils";
+import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -10,6 +10,7 @@ export class ReferenceCheckerTemplate {
         const errorClassName: string = Names.PiError;
         const errorSeverityName: string = Names.PiErrorSeverity;
         const checkerClassName: string = Names.referenceChecker(language);
+        const checkerInterfaceName: string = Names.checkerInterface(language);
         const unparserInterfaceName: string = Names.PiUnparser;
         const environmentName: string = Names.environment(language);
         const overallTypeName: string = Names.allConcepts(language);
@@ -27,7 +28,8 @@ export class ReferenceCheckerTemplate {
         import { ${errorClassName}, ${errorSeverityName}, ${unparserInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${overallTypeName}, ${Names.PiElementReference}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${environmentName} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${environmentName}";
-        import { ${defaultWorkerName} } from "${relativePath}${PathProvider.defaultWorker(language)}";   
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
+        import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 
         /**
          * Class ${checkerClassName} is part of the implementation of the default validator. 
@@ -36,7 +38,7 @@ export class ReferenceCheckerTemplate {
          * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements 
          * the actual checking of each node in the tree.
          */
-        export class ${checkerClassName} extends ${defaultWorkerName} {
+        export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myUnparser' is used to provide error messages on the nodes in the model tree
             myUnparser: ${unparserInterfaceName} = (${environmentName}.getInstance() as ${environmentName}).unparser;
             // 'errorList' holds the errors found while traversing the model tree

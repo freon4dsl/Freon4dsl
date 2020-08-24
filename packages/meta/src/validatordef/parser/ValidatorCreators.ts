@@ -3,7 +3,7 @@ import {
     CheckEqualsTypeRule,
     ConceptRuleSet, ExpressionRule, IsuniqueRule,
     NotEmptyRule,
-    PiValidatorDef,
+    PiValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
     ValidNameRule
 } from "../metalanguage";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
@@ -44,11 +44,21 @@ export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet
     return result;
 }
 
+function createRuleCommonParts(data: Partial<ValidNameRule>, result: ValidationRule) {
+    if (!!data.severity) {
+        result.severity = data.severity;
+    }
+    if (!!data.message) {
+        result.message = data.message;
+    }
+}
+
 export function createValidNameRule(data: Partial<ValidNameRule>): ValidNameRule {
     const result = new ValidNameRule();
     if (!!data.property) {
         result.property = data.property;
     }
+    createRuleCommonParts(data, result);
     if (!!data.location) {
         result.location = data.location;
     }
@@ -60,6 +70,7 @@ export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
     if (!!data.property) {
         result.property = data.property;
     }
+    createRuleCommonParts(data, result);
     if (!!data.location) {
         result.location = data.location;
     }
@@ -69,6 +80,7 @@ export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
 export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckEqualsTypeRule {
     const result = new CheckEqualsTypeRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.type1) {
         result.type1 = data.type1;
     }
@@ -84,6 +96,7 @@ export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckE
 export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckConformsRule {
     const result = new CheckConformsRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.type1) {
         result.type1 = data.type1;
     }
@@ -99,6 +112,7 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
 export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionRule {
     const result = new ExpressionRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.exp1) {
         result.exp1 = data.exp1;
     }
@@ -117,6 +131,7 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
 export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
     const result = new IsuniqueRule();
 
+    createRuleCommonParts(data, result);
     if (!!data.list) {
         result.list = data.list;
     }
@@ -132,6 +147,50 @@ export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
         result.listproperty.appliedfeature.location = data.listproperty.location;
         result.listproperty.appliedfeature.appliedfeature = data.listproperty.appliedfeature;
         result.listproperty.appliedfeature.sourceExp = result.listproperty;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createSeverity(data: Partial<ValidationSeverity>): ValidationSeverity {
+    const result = new ValidationSeverity();
+    if (!!data.value) {
+        result.value = data.value;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createErrorMessage(data: Partial<ValidationMessage>): ValidationMessage {
+    const result = new ValidationMessage();
+    if (!!data.content) {
+        result.content = data.content;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createValidationMessageReference(data: Partial<ValidationMessageReference>): ValidationMessageReference {
+    const result = new ValidationMessageReference();
+    if (!!data.expression) {
+        result.expression = data.expression;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
+    return result;
+}
+
+export function createValidationMessageText(data: Partial<ValidationMessageText>): ValidationMessageText {
+    const result = new ValidationMessageText();
+    if (!!data.value) {
+        result.value = data.value;
     }
     if (!!data.location) {
         result.location = data.location;

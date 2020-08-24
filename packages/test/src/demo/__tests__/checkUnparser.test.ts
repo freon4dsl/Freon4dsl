@@ -128,10 +128,11 @@ describe("Testing Unparser", () => {
 
             let validator = new DemoValidator();
             let errors = validator.validate(model, true);
-            errors.forEach(err =>{
-               console.log((err.message + " in " + err.locationdescription))
-            });
-            expect(errors.length).toBeLessThanOrEqual(0);
+            // errors.forEach(err =>{
+            //    console.log((err.message + " in " + err.locationdescription))
+            // });
+            // the custom validation adds error message to an otherwise correct model
+            expect(errors.length).toBe(9);
 
             result = unparser.unparse(model, 0, false);
             let path: string = "./unparsedDemoModel.txt";
@@ -141,8 +142,6 @@ describe("Testing Unparser", () => {
                 console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
             }
 
-            // TODO use snapshot
-            // expect(result.length).toBe(6124);
             expect(result).toMatchSnapshot();
         });
     });

@@ -1,6 +1,8 @@
-import { PiLangExp } from "../../languagedef/metalanguage";
+// TODO note that the following import cannot be from "@projectit/core", because
+// this leads to a load error
+import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
 import { ParseLocation } from "../../utils";
-import { PiConcept } from "../../languagedef/metalanguage";
+import { PiLangExp, PiConcept } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -20,8 +22,35 @@ export class ConceptRuleSet {
     rules: ValidationRule[];
 }
 
+export class ValidationSeverity {
+    location: ParseLocation;
+    // 'value'is the string that the language engineer has provided in the .valid file
+    // it will disregarded after checking, instead 'severity will be used
+    value: string;
+    severity: PiErrorSeverity; // is set by the checker
+}
+
+export class ValidationMessage {
+    location: ParseLocation;
+    content: ValidationMessagePart[] = [];
+}
+
+export type ValidationMessagePart = ValidationMessageText | ValidationMessageReference;
+
+export class ValidationMessageText {
+    location: ParseLocation;
+    value: string;
+}
+
+export class ValidationMessageReference {
+    location: ParseLocation;
+    expression: PiLangExp;
+}
+
 export abstract class ValidationRule {
     location: ParseLocation;
+    severity: ValidationSeverity;
+    message: ValidationMessage;
     toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
     }
