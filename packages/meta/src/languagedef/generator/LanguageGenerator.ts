@@ -141,6 +141,10 @@ export class LanguageGenerator {
         const defaultWorkerFile = Helpers.pretty(defaultWorkerTemplate.generateDefaultWorker(language, relativePath), "DefaultWorker Class", generationStatus);
         fs.writeFileSync(`${this.utilsGenFolder}/${Names.defaultWorker(language)}.ts`, defaultWorkerFile);
 
+        LOGGER.log(`Generating utils index: ${this.utilsGenFolder}/index.ts`);
+        const utilIndexFile = Helpers.pretty(languageIndexTemplate.generateUtilsIndex(language), "Utils Index", generationStatus);
+        fs.writeFileSync(`${this.utilsGenFolder}/index.ts`, utilIndexFile);
+
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(this, `Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {

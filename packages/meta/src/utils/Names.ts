@@ -140,6 +140,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Validator";
     }
 
+    public static checkerInterface(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "CheckerInterface";
+    }
+
     public static rulesChecker(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ValidationRulesChecker";
     }

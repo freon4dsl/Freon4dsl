@@ -2,6 +2,7 @@ import { PiElement } from "../language";
 
 // Part of the ProjectIt Framework.
 // tag::validator-interface[]
+// TODO remove this interface in favor of PiChecker???
 export interface PiValidator {
     /**
      * Returns a list of errors on 'modelelement' according to the validation rules

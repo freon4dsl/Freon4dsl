@@ -31,7 +31,11 @@
     "taxrules-w": 	"ts-node ../meta/src/commandline/projectit -w all -d src/taxrules/defs -o src/taxrules",
     "all-examples": "yarn run calculator && yarn run example && yarn run heating && yarn run json && yarn run expressions && yarn run openhab && yarn run pi-languages && yarn run taxrules",
     "lint":         "tslint -c ./tslint.json './src/**/*.ts*'",
-    "pegjs":        "pegjs src/calculator/parser/gen/CalculatorUnitParser.pegjs"
+    "pegjs":        "pegjs src/calculator/parser/gen/CalculatorUnitParser.pegjs",
+    "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
+    "clean-custom": "rm */*/*/Custom*.ts",
+    "clean-init":   "rm */*/*/*Initialization.ts",
+    "clean":        "yarn run clean-config && yarn run clean-custom && yarn run clean-init"
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.9",
