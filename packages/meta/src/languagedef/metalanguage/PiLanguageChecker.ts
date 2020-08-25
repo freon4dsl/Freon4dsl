@@ -74,7 +74,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
             if (!foundCircularity) {
                 this.checkPropertyUniqueNames(con, true);
-                // check that modelunits have a name property and that they are not marked as 'model
+                // check that modelunits have a name property and that they are not marked as 'model'
                 if ( con.isUnit ) {
                     this.checkUnitConceptName(con);
                     this.simpleCheck(!con.isModel, `A modelunit may not be a model ${this.location(con)}.`);

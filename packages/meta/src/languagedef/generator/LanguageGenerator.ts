@@ -77,7 +77,7 @@ export class LanguageGenerator {
         //  Generate it
         language.concepts.forEach(concept => {
             LOGGER.log(`Generating concept: ${this.languageGenFolder}/${Names.concept(concept)}.ts`);
-            const generated = Helpers.pretty(conceptTemplate.generateConcept(concept, relativePath), "concept " + concept.name, generationStatus);
+            const generated = Helpers.pretty(conceptTemplate.generateConcept(concept), "concept " + concept.name, generationStatus);
             fs.writeFileSync(`${this.languageGenFolder}/${Names.concept(concept)}.ts`, generated);
         });
 

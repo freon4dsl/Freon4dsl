@@ -1,168 +1,135 @@
-import { Names, PROJECTITCORE } from "../../../utils";
+import { Names } from "../../../utils";
 import {
-    PiConceptProperty,
     PiPrimitiveProperty,
     PiBinaryExpressionConcept,
     PiExpressionConcept,
     PiConcept,
     PiLimitedConcept,
     PiProperty,
-    PiInstance,
     PiPropertyInstance
 } from "../../metalanguage";
+import {
+    findMobxImports,
+    makeBasicMethods,
+    makeBasicProperties,
+    makeImportStatements,
+    makePartProperty,
+    makePrimitiveProperty, makeReferenceProperty
+} from "./ConceptUtils";
 
 export class ConceptTemplate {
 
-    generateConcept(concept: PiConcept, relativePath: string): string {
+    generateConcept(concept: PiConcept): string {
+        if (concept.isModel) {
+            return this.generateModel(concept);
+        } else if (concept.isUnit) {
+            return this.generateUnit(concept);
+        } else if (concept instanceof PiLimitedConcept) {
+            return this.generateLimited(concept);
+        } else if (concept instanceof PiBinaryExpressionConcept) {
+            return this.generateBinaryExpression(concept);
+        } else {
+            return this.generateConceptPrivate(concept);
+        }
+    }
+
+    private generateConceptPrivate(concept: PiConcept): string {
         const language = concept.language;
+        const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
         const hasReferences = concept.implementedReferences().length > 0;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
-        const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
         const isAbstract = concept.isAbstract;
-        // const hasSymbol = !!concept.symbol;
-        const baseExpressionName = Names.concept(concept.language.findExpressionBase());
-        const isBinaryExpression = concept instanceof PiBinaryExpressionConcept;
-        const isExpression = (!isBinaryExpression) && concept instanceof PiExpressionConcept;
+        const isExpression = (concept instanceof PiBinaryExpressionConcept) || (concept instanceof PiExpressionConcept);
         const abstract = (concept.isAbstract ? "abstract" : "");
-        const implementsPi = (concept.isModel ? "PiModel" : (isExpression ? "PiExpression" : (isBinaryExpression ? "PiBinaryExpression" : (hasName ? "PiNamedElement" : "PiElement"))));
-        // const hasInterface = concept.interfaces.length > 0;
+        const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
+        const implementsPi = (isExpression ? "PiExpression" : (hasName ? "PiNamedElement" : "PiElement"));
+        const needsObservable = concept.implementedPrimProperties().length > 0;
+        const coreImports = findMobxImports(hasSuper, concept).concat(implementsPi);
+        const metaType = Names.metaType(language);
+        const modelImports = this.findModelImports(concept, myName, hasReferences);
         const intfaces = Array.from(
             new Set(
                 concept.interfaces.map(i => Names.interface(i.referred))
             )
         );
 
-        const predefInstanceDefinitions = (concept instanceof PiLimitedConcept ? this.createInstanceDefinitions(concept) : ``);
-        const predefInstanceInitialisations = (concept instanceof PiLimitedConcept ? this.createInstanceInitialisations(concept) : ``);
-
-        const binExpConcept: PiBinaryExpressionConcept = isBinaryExpression ? concept as PiBinaryExpressionConcept : null;
-
-        const imports = Array.from(
-            new Set(
-                concept.parts().map(p => Names.classifier(p.type.referred))
-
-                    .concat(concept.references().map(r => Names.classifier(r.type.referred)))
-                    .concat(concept.interfaces.map(i => Names.interface(i.referred)))
-                    .concat([baseExpressionName])
-                    .concat(concept.implementedParts().map(part => Names.classifier(part.type.referred)))
-                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type.referred)))
-                    .filter(name => !(name === Names.concept(concept)))
-                    .concat((concept.base ? Names.concept(concept.base.referred) : null))
-                    .filter(r => (r !== null) && (r.length > 0))
-            )
-        );
-
-        const mobxImports: string[] = ["model"];
-        if (!hasSuper) {
-            mobxImports.push("MobxModelElementImpl");
-        }
-        if (concept.implementedProperties().some(part => part.isList && !part.isPrimitive) ) {
-            mobxImports.push("observablelistpart");
-        }
-        if (concept.implementedProperties().some(part => !part.isList && !part.isPrimitive)) {
-            mobxImports.push("observablepart");
-        }
-
         // Template starts here
-        const result = `
-            ${(concept.implementedPrimProperties().length > 0 ) ? `import { observable } from "mobx";` : ""}
-            ${!hasSuper ? `import * as uuid from "uuid";` : ``}
-            import { ${implementsPi} ${concept.isModel ? `, Language` : ``} } from "${PROJECTITCORE}";
-            import { ${mobxImports.join(",")} } from "${PROJECTITCORE}";
-            import { ${Names.metaType(language)} } from "./${Names.metaType(language)}";
-            ${concept.isModel ? `import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";` : ``}
-            ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
-            ${imports.map(imp => `import { ${imp} } from "./internal";`).join("")}
+        return `
+            ${makeImportStatements(hasSuper, needsObservable, coreImports, modelImports)}
 
             /**
-             * Class ${Names.concept(concept)} is the implementation of the concept with the same name in the language definition file.
+             * Class ${myName} is the implementation of the concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
              * to changes in the state of its properties.
              */            
             @model
-            export ${abstract} class ${Names.concept(concept)} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
+            export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsPi}${intfaces.map(imp => `, ${imp}`).join("")}
             {
-            
-                ${(!isAbstract) ? `
-                 /**
-                 * A convenience method that creates an instance of this class
-                 * based on the properties defined in 'data'.
-                 * @param data
-                 */
-                static create(data: Partial<${Names.concept(concept)}>): ${Names.concept(concept)} {
-                    const result = new ${Names.concept(concept)}();
-                    ${concept.allProperties().map(p => this.generatePartialCreate(p)).join("\n")}
-                    return result;
-                }`
-            : ""}
-             
-                ${predefInstanceDefinitions}
+                ${(!isAbstract) ? `${this.makeStaticCreateMethod(concept, myName)}`
+                : ""}
                             
-                readonly $typename: ${Names.metaType(language)} = "${Names.concept(concept)}";    // holds the metatype in the form of a string
-                ${!hasSuper ? "$id: string;" : ""}                                      // a unique identifier
-                ${concept.implementedPrimProperties().map(p => this.generatePrimitiveProperty(p)).join("\n")}
-                ${concept.implementedParts().map(p => this.generatePartProperty(p)).join("\n")}
-                ${concept.implementedReferences().map(p => this.generateReferenceProperty(p)).join("\n")}     
+                ${makeBasicProperties(metaType, myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
+                ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
-                constructor(id?: string) {
-                    ${!hasSuper ? "super();" : "super(id);"}
-                    ${!hasSuper ? `
-                        if (!!id) { 
-                            this.$id = id;
-                        } else {
-                            this.$id = uuid.v4();
-                        }` : ""
-                    }
-                    ${concept instanceof PiBinaryExpressionConcept ? `
-                    ` : ""
-                    }
-                }
-            
-                /**
-                 * Returns the metatype of this instance in the form of a string.
-                 */               
-                piLanguageConcept(): ${Names.metaType(language)} {
-                    return this.$typename;
-                }
+                ${makeBasicMethods(hasSuper, metaType,false, isExpression, false)}                                   
+            }
+        `;
+    }
 
-                ${!concept.base ? `
-                /**
-                 * Returns the unique identifier of this instance.
-                 */                
-                 piId(): string {
-                    return this.$id;
-                }`
-            : ""}
+    // assumptions:
+    // an expression is not a model
+    private generateBinaryExpression(concept: PiBinaryExpressionConcept) {
+        const language = concept.language;
+        const myName = Names.concept(concept);
+        const hasSuper = !!concept.base;
+        const hasReferences = concept.implementedReferences().length > 0;
+        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const isAbstract = concept.isAbstract;
+        const baseExpressionName = Names.concept(concept.language.findExpressionBase());
+        const abstract = concept.isAbstract ? "abstract" : "";
+        const needsObservable = concept.implementedPrimProperties().length > 0;
+        const coreImports = findMobxImports(hasSuper, concept).concat("PiBinaryExpression");
+        const metaType = Names.metaType(language);
+        let modelImports = this.findModelImports(concept, myName, hasReferences);
+        if (!modelImports.includes(baseExpressionName)) {
+            modelImports = modelImports.concat(baseExpressionName);
+        }
+        const intfaces = Array.from(
+            new Set(
+                concept.interfaces.map(i => Names.interface(i.referred))
+            )
+        );
 
-                /**
-                 * Returns true if this instance is a model concept.
-                 */                 
-                piIsModel(): boolean {
-                    return ${concept.isModel};
-                }
+        // Template starts here
+        return `
+            ${makeImportStatements(hasSuper, needsObservable, coreImports, modelImports)}
+
+            /**
+             * Class ${myName} is the implementation of the binary expression concept with the same name in the language definition file.
+             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
+             * to changes in the state of its properties.
+             */            
+            @model
+            export ${abstract} class ${myName} extends ${extendsClass} implements PiBinaryExpression${intfaces.map(imp => `, ${imp}`).join("")} {            
+                ${(!isAbstract) ? `${this.makeStaticCreateMethod(concept, myName)}`
+                : ""}
+                            
+                ${makeBasicProperties(metaType, myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
+                ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
+                              
+                ${makeBasicMethods(hasSuper, metaType,false, true, true)}                    
                 
-                /**
-                 * Returns true if this instance is an expression concept.
-                 */                 
-                piIsExpression(): boolean {
-                    return ${isExpression || isBinaryExpression};
-                }
-
-                /**
-                 * Returns true if this instance is a binary expression concept.
-                 */                 
-                piIsBinaryExpression(): boolean {
-                    return ${isBinaryExpression};
-                }
-                
-                ${isBinaryExpression && binExpConcept !== null ? `
                 /**
                  * Returns the priority of this expression instance.
                  * Used to balance the expression tree.
                  */ 
                 piPriority(): number {
-                    return ${binExpConcept.getPriority() ? binExpConcept.getPriority() : "-1"};
+                    return ${concept.getPriority() ? concept.getPriority() : "-1"};
                 }
                 
                 /**
@@ -192,18 +159,166 @@ export class ConceptTemplate {
                 public piSetRight(value: ${baseExpressionName}): void {
                     this.right = value;
                 }
-                `
-            : ""}
+            }
+        `;
+    }
 
-                ${(concept.isModel) ? `
-                 /**
+
+// the folowing template is based on assumptions about a limited concept.
+    // a limited has a name property
+    // a limited is not an expression ???
+    // a limited does not have any non-prim properties
+    // a limited does not have any references
+    // the base of a limited is also a limited
+    private generateLimited(concept: PiLimitedConcept): string {
+        const language = concept.language;
+        const myName = Names.concept(concept);
+        const hasSuper = !!concept.base;
+        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const abstract = (concept.isAbstract ? "abstract" : "");
+        const needsObservable = concept.implementedPrimProperties().length > 0;
+        const coreImports = findMobxImports(hasSuper, concept).concat("PiNamedElement");
+        const metaType = Names.metaType(language);
+        const imports = this.findModelImports(concept, myName, false);
+        const intfaces = Array.from(
+            new Set(
+                concept.interfaces.map(i => Names.interface(i.referred))
+            )
+        );
+
+        // Template starts here
+        return `
+            ${makeImportStatements(hasSuper, needsObservable, coreImports, imports)}
+
+            /**
+             * Class ${myName} is the implementation of the limited concept with the same name in the language definition file.
+             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
+             * to changes in the state of its properties.
+             */            
+            @model
+            export ${abstract} class ${myName} extends ${extendsClass} implements PiNamedElement${intfaces.map(imp => `, ${imp}`).join("")}
+            {           
+                ${(!concept.isAbstract) ? `${this.makeStaticCreateMethod(concept, myName)}`
+                : ""}
+             
+                ${concept.instances.map(predef =>
+                    `static ${predef.name}: ${myName};  // implementation of instance ${predef.name}`).join("\n")}
+                     static $piANY : ${myName};         // default predefined instance
+                            
+                ${makeBasicProperties(metaType, myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
+
+                ${makeBasicMethods(hasSuper, metaType,false, false, false)}                
+            }
+                       
+            // Because of mobx we need to generate the initialisations outside of the class,
+            // otherwise the state of properties with primitive type will not be kept correctly. 
+            ${concept.instances.map(predef =>
+                `${myName}.${predef.name} = ${myName}.create({
+                        ${predef.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}
+                    });` ). join(" ")}`;
+    }
+
+    // the folowing template is based on assumptions about a 'unit' (i.e. a concept
+    // with concept.isUnit === true.
+    // a unit has a name property
+    // a unit is not an expression
+    private generateUnit(concept: PiConcept) {
+        const language = concept.language;
+        const myName = Names.concept(concept);
+        const hasSuper = !!concept.base;
+        const hasReferences = concept.implementedReferences().length > 0;
+        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const abstract = (concept.isAbstract ? "abstract" : "");
+        const needsObservable = concept.implementedPrimProperties().length > 0;
+        const coreImports = findMobxImports(hasSuper, concept).concat("PiNamedElement");
+        const metaType = Names.metaType(language);
+        const imports = this.findModelImports(concept, myName, hasReferences);
+        const intfaces = Array.from(
+            new Set(
+                concept.interfaces.map(i => Names.interface(i.referred))
+            )
+        );
+
+        // Template starts here
+        return `
+            ${makeImportStatements(hasSuper, needsObservable, coreImports, imports)}
+            
+            /**
+             * Class ${myName} is the implementation of the model unit with the same name in the language definition file.
+             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
+             * to changes in the state of its properties.
+             */            
+            @model
+            export ${abstract} class ${myName} extends ${extendsClass} implements PiNamedElement${intfaces.map(imp => `, ${imp}`).join("")} {
+            
+                ${(!concept.isAbstract) ? `${this.makeStaticCreateMethod(concept, myName)}`
+                : ""}
+                                        
+                ${makeBasicProperties(metaType, myName, hasSuper)}
+                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
+                ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
+            
+                ${makeBasicMethods(hasSuper, metaType,false, false, false)}                
+            }
+            `;
+    }
+
+    // the folowing template is based on assumptions about a 'model'(i.e. a concept
+    // with concept.isModel === true.
+    // a model is not abstract
+    // a model is not an expression
+    // a model is not a modelunit
+    // a model may not have a superclass
+    // a model may not implement any interfaces
+    private generateModel(concept: PiConcept): string {
+        const language = concept.language;
+        const myName = Names.concept(concept);
+        const hasReferences = concept.implementedReferences().length > 0;
+        const needsObservable = concept.implementedPrimProperties().length > 0;
+        const coreImports = findMobxImports(false, concept).concat(["PiModel", "Language"]);
+        const metaType = Names.metaType(language);
+        const imports = this.findModelImports(concept, myName, hasReferences);
+
+        // Template starts here
+        return `
+            ${makeImportStatements(false, needsObservable, coreImports, imports)}
+            import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";
+            
+            /**
+             * Class ${myName} is the implementation of the model with the same name in the language definition file.
+             * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react 
+             * to changes in the state of its properties.
+             */            
+            @model
+            export class ${myName} extends MobxModelElementImpl implements PiModel {     
+            
+                ${this.makeStaticCreateMethod(concept, myName)}
+                                      
+                ${makeBasicProperties(metaType, myName, false)}
+                ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
+                ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
+                ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
+            
+                ${makeBasicMethods(false, metaType,true, false, false)}
+                
+                /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
                  * @param name
                  * @param metatype
                  */
-                findUnit(name: string, metatype?: ${Names.metaType(language)} ): ${Names.allConcepts(language)} {
+                findUnit(name: string, metatype?: ${metaType} ): ${Names.allConcepts(language)} {
                     let result: ${Names.allConcepts(language)} = null;
-                    ${concept.parts().map(p => this.generatefindUnit(p)).join("\n")}
+                    ${concept.parts().map(p => 
+                        `if (result !== null) {
+                            ${p.isList ?
+                                `result = this.${p.name}.find(mod => mod.name === name);`
+                                :
+                                `if (this.${p.name}.name === name ) result = this.${p.name}`
+                            }
+                        }`
+                        ).join("\n")}
                     if (!!result && !!metatype) {
                         const myMetatype = result.piLanguageConcept();
                         if (myMetatype === metatype || Language.getInstance().subConcepts(metatype).includes(myMetatype)) {
@@ -231,13 +346,13 @@ export class ConceptTemplate {
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
                     // TODO review this approach
                     ${concept.parts().map(part =>
-                    `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
-                        ${part.isList ?
-                        `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
-                        this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type.referred)});`
-                        :
-                        `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)};`}
-                    } else`
+                        `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
+                                ${part.isList ?
+                            `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)});
+                                this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type.referred)});`
+                            :
+                            `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)};`}
+                            } else`
                     ).join(" ")}                    
                     {
                         return false;
@@ -263,97 +378,59 @@ export class ConceptTemplate {
                         switch (myMetatype) {
                         ${language.modelConcept.allParts().map(part =>
                             `case "${Names.classifier(part.type.referred)}": {
-                                ${part.isList ? `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` : `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`}
+                                ${part.isList ? 
+                                    `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` 
+                                : 
+                                    `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`
+                                }
                                 return true;
                             }`).join("\n")}
                         }
                         return false;                 
-                    }`
-            : ""}        
-            }
-            
-            ${predefInstanceInitialisations.length > 0 ? `
-            // Because of mobx we need to generate the initialisations outside of the class,
-            // otherwise the state of properties with primitive type will not be kept correctly. 
-            ${predefInstanceInitialisations}` : ``}
-            `;
-        return result;
+                    }
+                }`;
     }
 
-    private generatePartialCreate(property: PiProperty): string {
-        if (property.isList && !(property instanceof PiPrimitiveProperty)) {
-            // TODO remove this hack, when the decorators are improved
-            return `if (data.${property.name}) {
-                data.${property.name}.forEach(x =>
-                    result.${property.name}.push(x)
-                );
-            }`;
-        } else {
-            return `if (data.${property.name}) { 
-                result.${property.name} = data.${property.name};
-            }`;
-        }
+    private makeStaticCreateMethod(concept: PiConcept, myName: string): string {
+        return `/**
+                 * A convenience method that creates an instance of this class
+                 * based on the properties defined in 'data'.
+                 * @param data
+                 */
+                static create(data: Partial<${myName}>): ${myName} {
+                    const result = new ${myName}();
+                    ${concept.allProperties().map(property =>
+                        `${(property.isList && !(property instanceof PiPrimitiveProperty)) ? 
+                            `if (data.${property.name}) {
+                                data.${property.name}.forEach(x =>
+                                    result.${property.name}.push(x)
+                                );
+                            }`
+                        : `if (data.${property.name}) { 
+                                result.${property.name} = data.${property.name};
+                            }`
+                        }`).join("\n")
+                    }
+                    return result;
+                }`;
     }
 
-    private generatePrimitiveProperty(property: PiPrimitiveProperty): string {
-        const comment = "// implementation of " + property.name;
-        // const decorator = property.isList ? "@observablelistpart" : "@observable";
-        const decorator = "@observable";
-        const arrayType = property.isList ? "[]" : "";
-        let initializer = "";
-        if (property.isList) {
-            initializer = "";
-        } else {
-            switch (property.primType) {
-                case "string": {
-                    initializer = "= \"\"";
-                    break;
-                }
-                case "number": {
-                    initializer = "= 0";
-                    break;
-                }
-                case "boolean": {
-                    initializer = "= false";
-                    break;
-                }
-            }
-        }
-        return `${decorator} ${property.name} : ${property.primType}${arrayType} ${initializer}; \t${comment}`;
+    private findModelImports(concept: PiConcept, myName: string, hasReferences: boolean): string[] {
+        return Array.from(
+            new Set(
+                concept.interfaces.map(i => Names.interface(i.referred))
+                    .concat((concept.base ? Names.concept(concept.base.referred) : null))
+                    .concat(concept.implementedParts().map(part => Names.classifier(part.type.referred)))
+                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type.referred)))
+                    .concat(Names.metaType(concept.language))
+                    .concat(hasReferences ? (Names.PiElementReference) : null)
+                    .filter(name => !(name === myName))
+                    .filter(r => (r !== null) && (r.length > 0))
+            )
+        );
     }
 
-    private generatePartProperty(property: PiConceptProperty): string {
-        const comment = "// implementation of " + property.name;
-        const decorator = property.isList ? "@observablelistpart" : "@observablepart";
-        const arrayType = property.isList ? "[]" : "";
-        const initializer = "";
-        return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
-    }
-
-    private generateReferenceProperty(property: PiConceptProperty): string {
-        const comment = "// implementation of " + property.name;
-        const decorator = property.isList ? "@observablelistpart" : "@observablepart";
-        const arrayType = property.isList ? "[]" : "";
-        return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
-    }
-
-    private createInstanceDefinitions(limitedConcept: PiLimitedConcept): string {
-        const conceptName = Names.concept(limitedConcept);
-        return `${limitedConcept.instances.map(predef =>
-            `static ${predef.name}: ${conceptName}; // implementation of instance ${predef.name}`).join("\n")}
-             static $piANY : ${conceptName}; // default predefined instance`;
-    }
-
-    private createInstanceInitialisations(limitedConcept: PiLimitedConcept): string {
-        const conceptName = Names.concept(limitedConcept);
-        return `${limitedConcept.instances.map(predef =>
-            `${conceptName}.${predef.name} = ${conceptName}.create(${this.createInstanceProperties(predef)});` ). join(" ")}`;
-    }
-
-    private createInstanceProperties(instance: PiInstance): string {
-        return `{${instance.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}}`;
-    }
-
+    // TODO weave the next method into the template for limited concepts
     private createInstancePropValue(property: PiPropertyInstance): string {
         const refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
@@ -367,16 +444,5 @@ export class ConceptTemplate {
             }
         }
         return ``;
-    }
-
-    private generatefindUnit(p: PiConceptProperty): string {
-        // prettier removes inner brackets from "(! (!!result) )"
-        // therefore we take another approach here
-        return `if (result !== null) {
-        ${p.isList ?
-        `result = this.${p.name}.find(mod => mod.name === name);`
-        :
-        `if (this.${p.name}.name === name ) result = this.${p.name}`}
-        }`;
     }
 }
