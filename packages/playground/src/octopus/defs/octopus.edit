@@ -32,7 +32,7 @@ AssociationEnd {
 
 Attribute {
     @projection normal
-        [+ ${self.name}[?${self.multiplicity}] : ${self.type}]
+        [${self.visibility} ${self.name}[?${self.multiplicity}] : ${self.type}]
 }
 
 // below '+' is short for visibility PUBLIC
@@ -51,9 +51,9 @@ UmlClass {
 //        <endclass>
 //        ]
 
-//        [+ [?${self.isAbstract @keyword <abstract>}] <class> ${self.name}
+//        [${self.visibility} [?${self.isAbstract @keyword <abstract>}] <class> ${self.name}
     @projection normal
-        [+ [?${self.isAbstract}] <class> ${self.name}
+        [${self.visibility} [?${self.isAbstract @keyword [<abstract>]}] <class> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         [?<implements> ${self.interfaces @horizontal @separator [, ] }]
         <attributes>
@@ -126,7 +126,7 @@ MultiplicityKind {
 
 Operation {
     @projection normal
-    [+ ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) : ${self.returnType}]
+    [${self.visibility} ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) : ${self.returnType}]
 }
 
 UmlPackage {
@@ -175,16 +175,17 @@ PathName {
 //    // initExpression: OclExpression;
 //    isIteratorVar: boolean;
 //}
-VisibilityKind {
-    @projection normal [+]
-}
-// for limited concepts
 //VisibilityKind {
-//    @projection normal
-//    [PUBLIC @keyword +]
-//    [PRIVATE @keyword -]
-//    [PROTECTED @keyword #]
+//    @projection normal [${self.visibility}]
 //}
+// for limited concepts
+VisibilityKind {
+    @projection normal [
+        ${PUBLIC @keyword [+]}
+        ${PRIVATE @keyword [-]}
+        ${PROTECTED @keyword [#]}
+    ]
+}
 ParameterDirectionKind {
     @projection normal [<${self.name}>]
 //    IN    = { name: "in" }

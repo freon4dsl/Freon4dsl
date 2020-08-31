@@ -356,6 +356,10 @@ export class PiBinaryExpressionConcept extends PiExpressionConcept {
 
 export class PiLimitedConcept extends PiConcept {
     instances: PiInstance[] = [];
+
+    findInstance(name: string) : PiInstance {
+        return this.instances.find(inst => inst.name === name);
+    }
 }
 
 export class PiProperty extends PiLangElement {

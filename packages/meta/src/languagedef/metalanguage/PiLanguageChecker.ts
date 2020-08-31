@@ -51,7 +51,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                             `The model should have at least one unit type ${this.location(language.modelConcept)}.`);
                     }
                 });
-            }
+            },
         });
 
         // now everything has been resolved, check that all concepts and interfaces have

@@ -22,7 +22,7 @@
 <endclass>
  + <abstract> <class> Bookpart
     <attributes>
-     + startPageNr: Integer;
+     # startPageNr: Integer;
      + nrOfPages: Integer;
      + title: String;
     <operations>

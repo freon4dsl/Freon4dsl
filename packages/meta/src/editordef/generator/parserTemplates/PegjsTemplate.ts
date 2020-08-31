@@ -11,7 +11,7 @@ import {
 import {
     ListJoin,
     ListJoinType,
-    PiEditConcept, PiEditProjectionItem,
+    PiEditConcept, PiEditInstanceProjection, PiEditProjectionItem,
     PiEditProjectionText,
     PiEditPropertyProjection,
     PiEditSubProjection,
@@ -56,7 +56,7 @@ export class PegjsTemplate {
         
 ${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("\n")}
 ${sortedInterfaces.length > 0 ? `${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}`).join("\n")}` : `` }
-${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier)}`).join("\n")}
+${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier, editDef)}`).join("\n")}
 ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
 ws "whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )*
 rws "required whitespace" = (([ \\t\\n\\r]) / (SingleLineComment) / (MultiLineComment) )+
@@ -163,7 +163,7 @@ HEXDIG = [0-9a-f]
     private doAllItems(list: PiEditProjectionItem[]): string {
         if (!!list && list.length > 0) {
             // console.log("doAllItems van line " + list[0]?.location?.start.line + ", column: " + list[0]?.location?.start.column);
-            return `${list.map(item =>
+            return `${list.map((item, index) =>
                 `${(item instanceof PiEditProjectionText) ?
                     `${this.makeTextProjection(item)}`
                     :
@@ -236,18 +236,8 @@ HEXDIG = [0-9a-f]
                 }
             } else {
                 if (myElem instanceof PiPrimitiveProperty) {
-                    if (myElem.name === "name") {
-                        return `${variableName}:variable`;
-                    }
-                    switch (myElem.primType) {
-                        case "string":
-                            return `${variableName}:stringLiteral ws`;
-                        case "boolean":
-                            return `${variableName}:booleanLiteral ws`;
-                        case "number":
-                            return `${variableName}:numberLiteral ws`;
-                    }
-                    return ``;
+                    const typeName = this.makeTypeName(myElem, item);
+                    return `${variableName}:${typeName} ws`;
                 } else {
                     const typeName = Names.classifier(myElem.type.referred);
                     if (myElem.isPart) {
@@ -280,10 +270,58 @@ HEXDIG = [0-9a-f]
         return listRuleName;
     }
 
-    private makeReferenceRule(piClassifier: PiClassifier): string {
+    private makeReferenceRule(piClassifier: PiClassifier, editDef: PiEditUnit): string {
+        if (piClassifier instanceof PiLimitedConcept) {
+            // see if there is a projection defined
+            const conceptEditor = editDef.findConceptEditor(piClassifier);
+            if (conceptEditor) {
+                // make a rule according to the projection
+                const result = this.makeInstanceReferenceRule(piClassifier, conceptEditor);
+                if (result.length <=0) {
+                    return this.makeNormalReferenceRule(piClassifier);
+                } else {
+                    return result;
+                }
+            } else {
+                return this.makeNormalReferenceRule(piClassifier);
+            }
+        }
+        return this.makeNormalReferenceRule(piClassifier);
+    }
+
+    private makeInstanceReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
+        const myName = Names.classifier(piClassifier);
+        let noResult = false;
+        let result: string = `${myName}${referencePostfix} = `;
+        conceptEditor.projection.lines.forEach((line, index) => {
+            line.items.forEach(item => {
+                if (item instanceof PiEditInstanceProjection) {
+                    result += this.makeInstanceProjection(item, myName);
+                } else if (item instanceof PiEditPropertyProjection) {
+                    // TODO do we allow other projections for limited concepts????
+                    noResult = true;
+                }
+            });
+            if (index < conceptEditor.projection.lines.length -1) {
+                result += "\n\t/ ";
+            }
+        });
+        if (noResult) {
+            return "";
+        } else {
+            return result + "\n";
+        }
+    }
+
+    private makeNormalReferenceRule(piClassifier: PiClassifier) {
         const myName = Names.classifier(piClassifier);
         return `${myName}${referencePostfix} = name:variable
     { return creator.create${myName}${referencePostfix}({name: name}); }\n`;
+    }
+
+    private makeInstanceProjection(item: PiEditInstanceProjection, conceptName: string): string {
+        const instanceName = item.expression.referredElement.name;
+        return `"${item.keyword}" { return creator.create${conceptName}${referencePostfix}({name: "${instanceName}"});}`;
     }
 
     private makeRuleForList(item: PiEditPropertyProjection, myElem: PiProperty, listRuleName: string) {
@@ -300,22 +338,7 @@ HEXDIG = [0-9a-f]
         // find the right typeName
         let typeName: string = "";
         if (myElem instanceof PiPrimitiveProperty) {
-            // TODO make a difference between variables and stringLiterals
-            switch (myElem.primType) {
-                case "string": {
-                    typeName = "stringLiteral";
-                    break;
-                }
-                case "number": {
-                    typeName = "numberLiteral";
-                    break;
-                }
-                case "boolean": {
-                    typeName = "booleanLiteral";
-                    break;
-                }
-                default: typeName = "stringLiteral";
-            }
+            typeName = this.makeTypeName(myElem, item);
         } else {
             typeName = Names.classifier(myElem.type.referred);
             if (!myElem.isPart) { // it is a reference, so use the rule for creating a PiElementReference
@@ -336,6 +359,36 @@ HEXDIG = [0-9a-f]
             this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:(v:${typeName} { return v; })*
     { return [head].concat(tail); }\n`);
         }
+    }
+
+    private makeTypeName(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection): string {
+        // TODO make a difference between variables and stringLiterals in the .lang file
+        let typeName: string = "";
+        if (myElem.name === "name") {
+            typeName = "variable";
+        } else {
+            switch (myElem.primType) {
+                case "string": {
+                    typeName = "stringLiteral";
+                    break;
+                }
+                case "number": {
+                    typeName = "numberLiteral";
+                    break;
+                }
+                case "boolean": {
+                    if (!!item.keyword) {
+                        typeName = `"${item.keyword}"`
+                    } else {
+                        typeName = "booleanLiteral";
+                    }
+                    break;
+                }
+                default:
+                    typeName = "stringLiteral";
+            }
+        }
+        return typeName;
     }
 
     // this method returns a list of classifiers that are used as types of parts of 'piClassifier'
@@ -456,4 +509,5 @@ HEXDIG = [0-9a-f]
             return `\"${trimmed}\" ws `;
         }
     }
+
 }

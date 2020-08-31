@@ -61,3 +61,11 @@ Attribute {
 MultiplicityKind {
     @projection normal [\[ ${self.lowerBound}..${self.upperBound}]
 }
+
+VisibilityKind {
+    @projection normal [
+        ${PUBLIC @keyword [+]}
+        ${PRIVATE @keyword [-]}
+        ${PROTECTED @keyword [#]}
+    ]
+}

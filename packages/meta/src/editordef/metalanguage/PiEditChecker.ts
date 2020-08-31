@@ -1,10 +1,17 @@
-import { PiConcept, PiLangExpressionChecker, PiLanguage } from "../../languagedef/metalanguage";
+import {
+    PiConcept,
+    PiInstanceExp, PiLangElement,
+    PiLangExpressionChecker,
+    PiLanguage,
+    PiLimitedConcept,
+    PiPrimitiveProperty
+} from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
 import {
     ListJoin,
     ListJoinType,
-    PiEditConcept,
-    PiEditProjection,
+    PiEditConcept, PiEditElement, PiEditInstanceProjection,
+    PiEditProjection, PiEditProjectionLine,
     PiEditPropertyProjection,
     PiEditSubProjection,
     PiEditUnit
@@ -35,13 +42,13 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             {
                 check: this.language.name === editor.languageName,
                 error: `Language reference ('${editor.languageName}') in editor definition '${editor.name}' ` +
-                    `does not match language '${this.language.name}' [line: ${editor.location?.start.line}, column: ${editor.location?.start.column}].`,
+                    `does not match language '${this.language.name}' ${this.location(editor)}.`,
                 whenOk: () => {
                     this.resolveReferences(editor);
                     this.nestedCheck(
                         {
                             check: !!editor.name,
-                            error: `Editor should have a name, it is empty [line: ${editor.location?.start.line}, column: ${editor.location?.start.column}].`
+                            error: `Editor should have a name, it is empty ${this.location(editor)}.`
                         });
                     for (const conceptEditor of editor.conceptEditors) {
                         this.checkConceptEditor(conceptEditor);
@@ -57,7 +64,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         // this.myExpressionChecker.checkClassifierReference(conceptEditor.concept);
         this.nestedCheck({
             check: !!conceptEditor.concept.referred,
-            error: `Concept ${conceptEditor.concept.name} is unknown [line: ${conceptEditor.location?.start.line}, column: ${conceptEditor.location?.start.column}].`,
+            error: `Concept ${conceptEditor.concept.name} is unknown ${this.location(conceptEditor)}.`,
             whenOk: () => {
                 this.checkProjection(conceptEditor.projection, conceptEditor.concept.referred);
             }
@@ -67,7 +74,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkEditor(editor: PiEditUnit) {
         const conceptEditorsDoubles = this.unique(editor.conceptEditors);
         conceptEditorsDoubles.forEach(ced => {
-                this.errors.push(`Editor definition for concept ${ced.concept.name} is already defined earlier [line: ${ced.location?.start.line}, column: ${ced.location?.start.column}].`);
+                this.errors.push(`Editor definition for concept ${ced.concept.name} is already defined earlier ${this.location(ced)}.`);
             }
         );
     }
@@ -75,27 +82,58 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkProjection(projection: PiEditProjection, cls: PiConcept) {
         if (!!projection) {
             projection.lines.forEach(line => {
-                line.items.forEach(item => {
+                let toBeReplaced: number[] = [];
+                line.items.forEach((item, index) => {
                     if (item instanceof PiEditPropertyProjection) {
-                        this.checkPropertyProjection(item, cls);
+                        if (cls instanceof PiLimitedConcept && item.expression.sourceName !== "self") {
+                            this.checkLimitedProjection(item, cls);
+                            toBeReplaced.push(index);
+                        } else {
+                            this.checkPropertyProjection(item, cls, false);
+                        }
                     } else if (item instanceof PiEditSubProjection) {
                         this.checkSubProjection(item, cls);
                     }
                 });
+                // the projection for an instance of a limited concept has been parsed as PiEditPropertyProjection
+                // but it should be a PiEditInstanceProjection
+                for (let i of toBeReplaced) {
+                    const propProjection: PiEditPropertyProjection = line.items[i] as PiEditPropertyProjection;
+                    let instanceProjection = new PiEditInstanceProjection();
+                    instanceProjection.keyword = propProjection.keyword;
+                    instanceProjection.expression = new PiInstanceExp();
+                    instanceProjection.expression.sourceName = cls.name;
+                    instanceProjection.expression.instanceName = propProjection.expression.sourceName;
+                    instanceProjection.expression.language = this.language;
+                    // TODO find out why the following statement is needed. otherwise instanceProjection.expression.referredElement results in undefined
+                    this.myExpressionChecker.checkInstanceExpression(instanceProjection.expression, cls);
+                    line.items[i] = instanceProjection;
+                }
             });
         }
     }
 
-    private checkPropertyProjection(projection: PiEditPropertyProjection, cls: PiConcept) {
-        this.myExpressionChecker.checkLangExp(projection.expression, cls);
-        const myprop = projection.expression.findRefOfLastAppliedFeature();
-        this.nestedCheck({ // TODO this check is done by myExpressionChecker, remove
-            check: !!myprop,
-            error: `No property '${projection.expression.toPiString()}' found in ${cls.name} [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`,
-            whenOk: () => {
+    private checkPropertyProjection(projection: PiEditPropertyProjection, cls: PiConcept, optional: boolean) {
+        if (cls instanceof PiLimitedConcept && projection.expression.sourceName !== "self") {
+            this.checkLimitedProjection(projection, cls);
+        } else {
+            this.myExpressionChecker.checkLangExp(projection.expression, cls);
+            const myprop = projection.expression.findRefOfLastAppliedFeature();
+            if (!!myprop) {
                 if (!myprop.isList) {
                     this.simpleCheck(!(!!projection.listJoin),
-                        `Projection for property '${myprop.name}' should not define a terminator or separator [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`);
+                        `A terminator or separator may not be used in a non-list property '${myprop.name}' ${this.location(projection)}`);
+                    if (!!projection.keyword) {
+                        this.simpleCheck(myprop instanceof PiPrimitiveProperty && myprop.primType === "boolean",
+                            `Property '${myprop.name}' may not have a keyword projection, because it is not of boolean type ${this.location(projection)}`);
+                        this.simpleCheck(!this.includesWhitespace(projection.keyword), `The text for a keyword projection should not include any whitespace ${this.location(projection)}`);
+                    }
+                    // if (optional) {
+                    //     // TODO this error should be a warning only
+                    //     // TODO think through this error message
+                    //     this.simpleCheck(myprop.isOptional,
+                    //         `Property '${myprop.name}' is not optional, therefore it should not have an optional projection ${this.location(projection)}`)
+                    // }
                 } else {
                     // create default listJoin if not present
                     if (!(!!projection.listJoin)) {
@@ -104,11 +142,11 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         projection.listJoin.joinText = ", ";
                     } else {
                         const text = projection.listJoin.joinType === ListJoinType.Separator ? `@separator` : `@terminator`;
-                        this.simpleCheck(!!projection.listJoin.joinText, `${text} should be followed by a string between '[' and ']' [line: ${projection.location?.start.line}, column: ${projection.location?.start.column}].`);
+                        this.simpleCheck(!!projection.listJoin.joinText, `${text} should be followed by a string between '[' and ']' ${this.location(projection)}`);
                     }
                 }
             }
-        });
+        }
     }
 
     private resolveReferences(editorDef: PiEditUnit) {
@@ -131,12 +169,37 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkSubProjection(item: PiEditSubProjection, cls: PiConcept) {
-        item.items.forEach(item => {
-            if (item instanceof PiEditPropertyProjection) {
-                this.checkPropertyProjection(item, cls);
-            } else if (item instanceof PiEditSubProjection) {
-                this.checkSubProjection(item, cls);
+        // TODO kijk of item.optional juist gebruikt wordt
+        item.items.forEach(sub => {
+            if (sub instanceof PiEditPropertyProjection) {
+                this.checkPropertyProjection(sub, cls, item.optional);
+            } else if (sub instanceof PiEditSubProjection) {
+                this.checkSubProjection(sub, cls);
             }
         });
+    }
+
+    private checkLimitedProjection(projection: PiEditPropertyProjection, cls: PiLimitedConcept) {
+        // a limited concept can have an alternative projection: "${INSTANCE @keyword [text]}"
+        // this alternative is being checked in this method
+        const myinstance = cls.findInstance(projection.expression.sourceName);
+        this.nestedCheck({
+            check: !!myinstance,
+            error: `Cannot find instance ${projection.expression.sourceName} of limited concept ${cls.name} ${this.location(projection)}`,
+            whenOk: () => {
+                // should have a '@keyword'
+                this.simpleCheck(!!projection.keyword,`Instance '${myinstance.name}' of a limited concept should be projected using a keyword ${this.location(projection)}`);
+                this.simpleCheck(!this.includesWhitespace(projection.keyword), `The text for a keyword projection should not include any whitespace ${this.location(projection)}`);
+            }
+        });
+    }
+
+    private includesWhitespace(keyword: string) {
+        let result: boolean = keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r");
+        return result;
+    }
+
+    private location(elem: PiEditElement): string {
+        return `[line: ${elem.location?.start.line}, column: ${elem.location?.start.column}]`;
     }
 }

@@ -84,3 +84,9 @@ concept MultiplicityKind {
     lowerBound: number;
     upperBound: number;
 }
+
+limited VisibilityKind {
+	PUBLIC = { name: "public" }
+	PRIVATE = { name: "private" }
+	PROTECTED = { name: "protected" }
+}
