@@ -348,19 +348,19 @@ export class UnparserTemplate {
         const elemStr = langExpToTypeScript(item.expression);
         if (myElem.isList) {
             // TODO remove this hack when the edit def holds lists of primitive values
-            result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, ", ", SeparatorType.Separator, false, 
-                    this.output[this.currentLine].length,
-                    short
-                );`;
-            // should be:
-            // let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-            // let joinType = this.getJoinType(item);
             // result += `this.unparseListOfPrimitiveValues(
-            //         ${elemStr}, "${item.listJoin.joinText}", ${joinType}, ${vertical},
+            //         ${elemStr}, ", ", SeparatorType.Separator, false,
             //         this.output[this.currentLine].length,
             //         short
             //     );`;
+            // should be:
+            let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+            let joinType = this.getJoinType(item);
+            result += `this.unparseListOfPrimitiveValues(
+                    ${elemStr}, "${item.listJoin.joinText}", ${joinType}, ${vertical},
+                    this.output[this.currentLine].length,
+                    short
+                );`;
             // end hack
         } else {
             let myCall: string = ``;

@@ -139,7 +139,7 @@ export class PiEditSubProjection {
     items: PiEditProjectionItem[];
 }
 
-type PiEditProjectionItem = PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection;
+export type PiEditProjectionItem = PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection;
 
 export class PiEditProjectionLine {
     location: ParseLocation;

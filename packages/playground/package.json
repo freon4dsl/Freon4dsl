@@ -19,6 +19,7 @@
     "heating":      "ts-node ../meta/src/commandline/projectit all -d src/heating/defs -o src/heating",
     "json": 	    "ts-node ../meta/src/commandline/projectit all -d src/json/defs -o src/json",
     "expressions":  "ts-node ../meta/src/commandline/projectit all -d src/mps-expressions/defs -o src/mps-expressions",
+    "octopus": 	    "ts-node ../meta/src/commandline/projectit all -d src/octopus/defs -o src/octopus",
     "openhab":      "ts-node ../meta/src/commandline/projectit -v all -d src/openhab/defs -o src/openhab",
     "pi-languages": "ts-node ../meta/src/commandline/projectit -v all -d src/pi-languages/defs -o src/pi-languages",
     "pi-struc-parser": "pegjs src/pi-languages/parser/gen/PiStructureDefUnitParser.pegjs",

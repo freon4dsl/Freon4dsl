@@ -368,6 +368,6 @@ export class ProjectionTemplate {
                                 // TODO  Create Action for the role to actually add an element.
                                 new AliasBox(${element}, "new-${Roles.property(property)}-hlist", "<+>")
                             ])
-                        ),`;
+                        )`;
     }
 }

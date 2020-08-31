@@ -1,6 +1,14 @@
 import { PiConcept, PiLangExpressionChecker, PiLanguage } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
-import { ListJoin, ListJoinType, PiEditConcept, PiEditProjection, PiEditPropertyProjection, PiEditUnit } from "./PiEditDefLang";
+import {
+    ListJoin,
+    ListJoinType,
+    PiEditConcept,
+    PiEditProjection,
+    PiEditPropertyProjection,
+    PiEditSubProjection,
+    PiEditUnit
+} from "./PiEditDefLang";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
@@ -69,6 +77,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             projection.lines.forEach(line => {
                 line.items.forEach(item => {
                     if (item instanceof PiEditPropertyProjection) {
+                        this.checkPropertyProjection(item, cls);
+                    } else if (item instanceof PiEditSubProjection) {
                         this.checkSubProjection(item, cls);
                     }
                 });
@@ -76,7 +86,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkSubProjection(projection: PiEditPropertyProjection, cls: PiConcept) {
+    private checkPropertyProjection(projection: PiEditPropertyProjection, cls: PiConcept) {
         this.myExpressionChecker.checkLangExp(projection.expression, cls);
         const myprop = projection.expression.findRefOfLastAppliedFeature();
         this.nestedCheck({ // TODO this check is done by myExpressionChecker, remove
@@ -120,4 +130,13 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
+    private checkSubProjection(item: PiEditSubProjection, cls: PiConcept) {
+        item.items.forEach(item => {
+            if (item instanceof PiEditPropertyProjection) {
+                this.checkPropertyProjection(item, cls);
+            } else if (item instanceof PiEditSubProjection) {
+                this.checkSubProjection(item, cls);
+            }
+        });
+    }
 }

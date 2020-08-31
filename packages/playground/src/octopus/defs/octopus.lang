@@ -1,0 +1,167 @@
+language octopus
+
+model OctopusModel {
+    name: string;
+    umlParts: UmlPart[];
+    oclParts: OclPart[];
+}
+
+modelunit UmlPart {
+    name: string;
+    packages: UmlPackage[];
+}
+
+modelunit OclPart {
+    name: string;
+}
+
+// the uml concepts
+concept Association implements IClassifier {
+    end1: AssociationEnd;
+    end2: AssociationEnd;
+    isClass: boolean;
+}
+
+concept AssociationClass base Association implements IClass {
+}
+
+concept AssociationEnd base StructuralFeature {
+    reference baseType: IClassifier;
+    isNavigable: boolean;
+    reference myAssociation: Association;
+}
+
+concept Attribute base StructuralFeature {
+    isOClDef: boolean;
+}
+
+interface IClass base IClassifier {
+}
+
+concept UmlClass implements IClass {
+}
+
+interface IClassifier base IPackagableElement {
+    attributes: Attribute[];
+    operations: Operation[];
+    navigations: AssociationEnd[];
+    reference generalizations: IClassifier[];
+    reference subClasses: IClassifier[];
+    reference interfaces: UmlInterface[];
+    states: State[];
+    classAttributes: Attribute[];
+    classOperations: Operation[];
+    isCollectionKind: boolean;
+    reference owner: UmlPackage;
+    isAbstract: boolean;
+    stereotype: string;
+}
+
+concept CollectionType {
+    reference elementType: IClassifier;
+    metatype: CollectionMetaType;
+    isSet: boolean;
+    isOrderedSet: boolean;
+    isBag: boolean;
+    isSequence: boolean;
+}
+limited CollectionMetaType {
+    COLLECTION 		= { name: "Collection" }
+    SET 			= { name: "Set" }
+    ORDEREDSET 		= { name: "OrderedSet" }
+    BAG 			= { name: "Bag" }
+    SEQUENCE 		= { name: "Sequence" }
+}
+concept DataType implements IClassifier {
+}
+concept EnumerationType base DataType {
+    literals: EnumLiteral[];
+}
+concept EnumLiteral implements IModelElement {
+    reference enumeration: EnumerationType;
+}
+concept ImportedElement implements IModelElement {
+    pathName: PathName;
+    element: IModelElement;
+    isReference: boolean;
+}
+concept UmlInterface implements IClassifier {
+}
+interface IModelElement {
+    name: string;
+    pathName: PathName;
+}
+concept MultiplicityKind {
+    isSingleObject: boolean;
+    lowerBound: number;
+    upperBound: number;
+}
+concept Operation implements IPackagableElement {
+    parameters: Parameter[];
+    reference returnType: IClassifier;
+    reference owner: IClassifier;
+    hasClassScope: boolean;
+    isOClDef: boolean;
+    isAbstract: boolean;
+    isInfix: boolean;
+    isPrefix: boolean;
+}
+concept UmlPackage implements IModelElement {
+    subpackages: UmlPackage[];
+    reference parent: UmlPackage;
+    reference root: UmlPackage;
+    classifiers: IClassifier[];
+    interfaces: UmlInterface[];
+    associations: Association[];
+    imports: ImportedElement[];
+}
+
+interface IPackagableElement base IModelElement {
+    visibility: VisibilityKind;
+}
+concept Parameter implements IModelElement {
+    reference type: IClassifier;
+    reference owner: Operation;
+    directionKind: ParameterDirectionKind;
+}
+concept PathName {
+    names: string[];
+    // first = names[0];
+    // last  = names[names.length-1]
+}
+concept PrimitiveType base DataType {
+}
+concept State implements IPackagableElement {
+    reference owner: Operation;
+    subStates: State[];
+    reference enclosingState: State;
+}
+concept StructuralFeature implements IPackagableElement {
+    reference type: IClassifier;
+    reference owner: IClassifier;
+    multiplicity: MultiplicityKind;
+    isOrdered: boolean;
+    isDerived: boolean;
+    isUnique: boolean;
+    isComposite: boolean;
+    isAggregate: boolean;
+    hasClassScope: boolean;
+}
+//concept TupleType base DataType {
+//    parts: VariableDeclaration[];
+//}
+limited ParameterDirectionKind {
+    IN    = { name: "in" }
+    OUT   = { name: "out" }
+    INOUT = { name: "inout" }
+}
+//concept VariableDeclaration implements IModelElement {
+//    reference type: IClassifier;
+//    // initExpression: OclExpression;
+//    isIteratorVar: boolean;
+//}
+limited VisibilityKind {
+	PUBLIC = { name: "public" }
+	PRIVATE = { name: "private" }
+	PROTECTED = { name: "protected" }
+}

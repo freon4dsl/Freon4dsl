@@ -8,7 +8,15 @@ import {
     PiPrimitiveProperty,
     PiProperty
 } from "../../../languagedef/metalanguage";
-import { ListJoin, ListJoinType, PiEditConcept, PiEditProjectionText, PiEditPropertyProjection, PiEditUnit } from "../../metalanguage";
+import {
+    ListJoin,
+    ListJoinType,
+    PiEditConcept, PiEditProjectionItem,
+    PiEditProjectionText,
+    PiEditPropertyProjection,
+    PiEditSubProjection,
+    PiEditUnit
+} from "../../metalanguage";
 import { findAllImplementorsAndSubs, findImplementors, Names } from "../../../utils";
 
 export const referencePostfix = "PiElemRef";
@@ -127,6 +135,7 @@ HEXDIG = [0-9a-f]
         } else if (piClassifier instanceof PiBinaryExpressionConcept) {
             return this.makeBinaryExpressionRule(conceptDef, piClassifier);
         } else {
+            // determine which properties of the concept will get a value through this parse rule
             const propsToSet: PiProperty[] = [];
 
             conceptDef.projection.lines.forEach(l => {
@@ -134,82 +143,141 @@ HEXDIG = [0-9a-f]
                     if (item instanceof PiEditPropertyProjection) {
                         propsToSet.push(item.expression.findRefOfLastAppliedFeature());
                     }
+                    if (item instanceof PiEditSubProjection) {
+                        item.items.forEach(sub => {
+                            if (sub instanceof PiEditPropertyProjection) {
+                                propsToSet.push(sub.expression.findRefOfLastAppliedFeature());
+                            }
+                        });
+                    }
                 });
             });
 
-            // TODO escape all quotes in a text string
+            // now we have enough information to create the parse rule
             return `${myName} = ${conceptDef.projection.lines.map(l =>
-                `${l.items.map(item =>
-                    `${(item instanceof PiEditProjectionText) ?
-                        `\"${item.text.trim()}\" ws `
-                        :
-                        `${(item instanceof PiEditPropertyProjection) ?
-                            `${this.makeSubProjectionRule(item)} ws `
-                            :
-                            ``}`
-                    }`).join("")}`
+                `${this.doAllItems(l.items)}`
             ).join("\n\t")}\n\t{ return creator.create${myName}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
         }
     }
 
-    private makeSubProjectionRule(item: PiEditPropertyProjection): string {
-        const myElem = item.expression.findRefOfLastAppliedFeature();
-        if (myElem.isList) {
-            this.listNumber++;
-            let listRuleName: string;
-            if (myElem instanceof PiPrimitiveProperty) {
-                listRuleName = Names.startWithUpperCase(myElem.primType) + "List" + this.listNumber;
-                // TODO remove this hack when the edit definition includes lists of primitives
-                item.listJoin = new ListJoin();
-                item.listJoin.joinText = ", ";
-                item.listJoin.joinType = ListJoinType.Separator;
-                // end hack
-            } else {
-                if (item.listJoin?.joinType === ListJoinType.Separator) {
-                    listRuleName = Names.startWithUpperCase(myElem.type.referred.name) + "List" + this.listNumber;
-                } else {
-                    listRuleName = Names.startWithUpperCase(myElem.type.referred.name);
-                }
-            }
+    private doAllItems(list: PiEditProjectionItem[]): string {
+        if (!!list && list.length > 0) {
+            // console.log("doAllItems van line " + list[0]?.location?.start.line + ", column: " + list[0]?.location?.start.column);
+            return `${list.map(item =>
+                `${(item instanceof PiEditProjectionText) ?
+                    `${this.makeTextProjection(item)}`
+                    :
+                    `${(item instanceof PiEditPropertyProjection) ?
+                        `${this.makePropertyProjection(item, item.expression.findRefOfLastAppliedFeature().name)} ws `
+                        :
+                        `${(item instanceof PiEditSubProjection) ?
+                            `${this.makeSubProjection(item)} ws `
+                            :
+                            ``}`
+                    }`
+                }`).join("")}`;
+        } else {
+            return "";
+        }
+    }
 
-            if (item.listJoin?.joinType === ListJoinType.Separator) {
-                this.makeRuleForList(item, myElem, listRuleName);
-                return `${myElem.name}:${listRuleName} ws `;
-            } else {
-                if (!myElem.isPart) {
-                    listRuleName += referencePostfix;
-                    if (!this.referredClassifiers.includes(myElem.type.referred)) {
-                        this.referredClassifiers.push(myElem.type.referred);
+    private makeSubProjection(item: PiEditSubProjection): string {
+        // TODO check: I expect only one property projection in a sub projection
+        if (item.optional) {
+            let parseText = "";
+            let propName = "";
+            let subName = "";
+            item.items.forEach(sub => {
+                if (sub instanceof PiEditSubProjection) {
+                    parseText += this.makeSubProjection(sub);
+                }
+                if (sub instanceof PiEditPropertyProjection) {
+                    propName = sub.expression.findRefOfLastAppliedFeature().name;
+                    subName = propName + "Sub";
+                    parseText += `${this.makePropertyProjection(sub, subName)}`;
+                }
+                if (sub instanceof PiEditProjectionText) {
+                    parseText += `${this.makeTextProjection(sub)}`;
+                }
+            });
+            return `${propName}:(${parseText} { return ${subName}; })?`;
+        } else {
+            return `${this.doAllItems(item.items)}`;
+        }
+    }
+
+    private makePropertyProjection(item: PiEditPropertyProjection, variableName: string): string {
+        const myElem = item.expression.findRefOfLastAppliedFeature();
+        // console.log("makePropertyProjection: " + item.expression.toPiString());
+        // if (!!!myElem) {
+        //     console.log("makePropertyProjection: no ELEM");
+        // }
+        if (!!myElem) {
+            if (myElem.isList) {
+                let listRuleName = this.makeNameOfListRule(myElem, item);
+
+                if (item.listJoin?.joinType === ListJoinType.Separator) {
+                    this.makeRuleForList(item, myElem, listRuleName);
+                    return `${variableName}:${listRuleName} ws `;
+                } else {
+                    const subName = variableName + "List";
+                    if (!myElem.isPart) {
+                        listRuleName += referencePostfix;
+                        if (!this.referredClassifiers.includes(myElem.type.referred)) {
+                            this.referredClassifiers.push(myElem.type.referred);
+                        }
+                    }
+                    let joinText = this.makeListJoinText(item.listJoin?.joinText);
+                    if (joinText.length > 0) {
+                        return `${variableName}:(${subName}:${listRuleName} ws "${joinText}" ws { return ${subName}; } )* `;
+                    } else {
+                        return `${variableName}:(${listRuleName})* `;
                     }
                 }
-                return `${myElem.name}:(${listRuleName} ws "${item.listJoin?.joinText}" ws)* `;
+            } else {
+                if (myElem instanceof PiPrimitiveProperty) {
+                    if (myElem.name === "name") {
+                        return `${variableName}:variable`;
+                    }
+                    switch (myElem.primType) {
+                        case "string":
+                            return `${variableName}:stringLiteral ws`;
+                        case "boolean":
+                            return `${variableName}:booleanLiteral ws`;
+                        case "number":
+                            return `${variableName}:numberLiteral ws`;
+                    }
+                    return ``;
+                } else {
+                    const typeName = Names.classifier(myElem.type.referred);
+                    if (myElem.isPart) {
+                        return `${variableName}:${typeName}`;
+                    } else { // the property is a reference
+                        if (!this.referredClassifiers.includes(myElem.type.referred)) {
+                            this.referredClassifiers.push(myElem.type.referred);
+                        }
+                        return `${variableName}:${typeName}${referencePostfix} ws `;
+                    }
+                }
             }
         } else {
-            if (myElem instanceof PiPrimitiveProperty) {
-                if (myElem.name === "name") {
-                    return `${myElem.name}:variable`;
-                }
-                switch (myElem.primType) {
-                    case "string":
-                        return `${myElem.name}:stringLiteral ws`;
-                    case "boolean":
-                        return `${myElem.name}:booleanLiteral ws`;
-                    case "number":
-                        return `${myElem.name}:numberLiteral ws`;
-                }
-                return ``;
+            return "";
+        }
+    }
+
+    private makeNameOfListRule(myElem: PiProperty | PiPrimitiveProperty, item: PiEditPropertyProjection) {
+        this.listNumber++;
+        let listRuleName: string;
+        if (myElem instanceof PiPrimitiveProperty) {
+            listRuleName = Names.startWithUpperCase(myElem.primType) + "List" + this.listNumber;
+        } else {
+            if (item.listJoin?.joinType === ListJoinType.Separator) {
+                listRuleName = Names.startWithUpperCase(myElem.type.referred.name) + "List" + this.listNumber;
             } else {
-                const typeName = Names.classifier(myElem.type.referred);
-                if (myElem.isPart) {
-                    return `${myElem.name}:${typeName}`;
-                } else { // the property is a reference
-                    if (!this.referredClassifiers.includes(myElem.type.referred)) {
-                        this.referredClassifiers.push(myElem.type.referred);
-                    }
-                    return `${myElem.name}:${typeName}${referencePostfix} ws `;
-                }
+                listRuleName = Names.startWithUpperCase(myElem.type.referred.name);
             }
         }
+        return listRuleName;
     }
 
     private makeReferenceRule(piClassifier: PiClassifier): string {
@@ -259,11 +327,15 @@ HEXDIG = [0-9a-f]
         }
 
         // create the right separator text
-        const joinText = (item.listJoin?.joinText ? `${item.listJoin?.joinText.trimRight()}` : " ");
-
+        let joinText = this.makeListJoinText(item.listJoin?.joinText);
         // push the rule to the textForListConcepts to be added to the template later
-        this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
+        if (joinText.length > 0) {
+            this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
     { return [head].concat(tail); }\n`);
+        } else {
+            this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:(v:${typeName} { return v; })*
+    { return [head].concat(tail); }\n`);
+        }
     }
 
     // this method returns a list of classifiers that are used as types of parts of 'piClassifier'
@@ -327,7 +399,8 @@ HEXDIG = [0-9a-f]
         let implementors: PiClassifier[] = [];
         if (piClassifier instanceof PiInterface) {
             // TODO should we include a reference to a limited concept in the parse rule for an interface?
-            implementors = findImplementors(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
+            implementors.push(...piClassifier.allSubInterfacesDirect());
+            implementors.push(...findImplementors(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept)));
         } else if (piClassifier instanceof PiConcept) {
             implementors = piClassifier.allSubConceptsDirect().filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
         }
@@ -350,5 +423,37 @@ HEXDIG = [0-9a-f]
         return `${myName} = "(" ws left:${leftRule} ws "${symbol}" ws right:${rightRule} ws ")"
     { return creator.create${myName}({left: left, right: right}); }
     `;
+    }
+
+    private makeListJoinText(joinText: string): string {
+        let result: string = "";
+        if (!!joinText) {
+            result = joinText.trimRight();
+            // console.log("trimmed: " + result);
+        }
+        // TODO should test on all manners of whitespace
+        if (result == "\\n" || result == "\\n\\n" || result == "\\t" || result == "\\r") {
+            // console.log("found \\n: " + result);
+            result = "";
+        }
+        // console.log("makeListJoinText, input: " + joinText + "output: " + result);
+        return result;
+    }
+
+    private makeTextProjection(item: PiEditProjectionText): string {
+        // TODO escape all quotes in a text string in a PiEditProjectionText
+        // const escaped = trimmed.split("\"").join("\\\"");
+        const trimmed = item.text.trim();
+        let splitted: string[];
+        if (trimmed.includes(" ")) {
+            splitted = trimmed.split(" "); //.join(" ws ");
+            let result: string = "";
+            splitted.forEach(str => {
+                result += `\"${str}\" ws `
+            });
+            return result;
+        } else {
+            return `\"${trimmed}\" ws `;
+        }
     }
 }
