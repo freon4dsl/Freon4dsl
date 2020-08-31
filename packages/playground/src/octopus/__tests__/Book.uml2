@@ -49,7 +49,8 @@
      + transformToTwoColumn();
 <endinterface>
  + <associationclass> ChapterDependency
-     + Chapter.sourceChapter [0..1]    <->  + Chapter.dependantChapters [0..*]
+ // The number 100 should be '*
+     + Chapter.sourceChapter [0..1]    <->  + Chapter.dependantChapters [0..100]
     <attributes>
      + sameAuthor: Boolean;
      + sameSubject: Boolean;

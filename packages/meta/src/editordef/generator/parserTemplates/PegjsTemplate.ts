@@ -153,8 +153,16 @@ HEXDIG = [0-9a-f]
                 });
             });
 
+            // see if this concept has subconcepts
+            const subs = piClassifier.allSubConceptsDirect();
+            let prefix = "";
+            if (subs.length > 0) {
+                prefix = `${subs.map((implementor, index) =>
+                    `var${index}:${Names.classifier(implementor)} { return var${index}; }`).join("\n\t/ ")}\n\t/ `;
+            }
+
             // now we have enough information to create the parse rule
-            return `${myName} = ${conceptDef.projection.lines.map(l =>
+            return `${myName} =${prefix} ${conceptDef.projection.lines.map(l =>
                 `${this.doAllItems(l.items)}`
             ).join("\n\t")}\n\t{ return creator.create${myName}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
         }

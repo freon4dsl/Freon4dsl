@@ -13,14 +13,12 @@ Association {
 
 AssociationClass {
     @projection normal
-        [<associationclass> ${self.name}
+        [${self.visibility} <associationclass> ${self.name}
         ${self.end1} <-> ${self.end2}
         <attributes>
-        ${self.attributes @vertical @terminator [\n\n] }
-        <operations>
-        ${self.operations @vertical @terminator [\n\n] }
-        <states>
-        ${self.states @vertical @terminator [\n\n] }
+        ${self.attributes @vertical @terminator [;] }
+        [?<operations> ${self.operations @vertical @terminator [;] }]
+        [?<states> ${self.states @vertical @terminator [;] }]
         <endassociationclass>
         ]
 }
@@ -35,23 +33,7 @@ Attribute {
         [${self.visibility} ${self.name}[?${self.multiplicity}] : ${self.type}]
 }
 
-// below '+' is short for visibility PUBLIC
-// should have different solution!!!
 UmlClass {
-//    @projection normal
-//        [${self.visibility} ${self.isAbstract} <class> ${self.name}
-//        <specializes> ${self.generalizations @horizontal @separator [, ] }
-//        <implements> ${self.interfaces @horizontal @separator [, ] }
-//        <attributes>
-//        ${self.attributes @vertical @terminator [;] }
-//        <operations>
-//        ${self.operations @vertical @terminator [;] }
-//        <states>
-//        ${self.states @vertical @terminator [;] }
-//        <endclass>
-//        ]
-
-//        [${self.visibility} [?${self.isAbstract @keyword <abstract>}] <class> ${self.name}
     @projection normal
         [${self.visibility} [?${self.isAbstract @keyword [<abstract>]}] <class> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
@@ -81,20 +63,19 @@ UmlClass {
 //}
 DataType {
     @projection normal
-        [<datatype> ${self.name}
-        <specializes> ${self.generalizations @horizontal @separator [, ] }
-        <implements> ${self.interfaces @horizontal @separator [, ] }
+        [${self.visibility} <datatype> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
+        [?<implements> ${self.interfaces @horizontal @separator [, ] }]
         <attributes>
-        ${self.attributes @vertical @terminator [\n\n] }
-        <operations>
-        ${self.operations @vertical @terminator [\n\n] }
+        ${self.attributes @vertical @terminator [;] }
+        [?<operations> ${self.operations @vertical @terminator [;] }]
         <enddatatype>
         ]
 }
 
 EnumerationType {
     @projection normal
-        [<enumeration> ${self.name}
+        [${self.visibility} <enumeration> ${self.name}
         <values> ${self.literals @vertical @terminator [;] }
         <endenumeration>
         ]
@@ -111,9 +92,8 @@ ImportedElement { // implements IModelElement {
 
 UmlInterface  {
     @projection normal
-        [<interface> ${self.name}
-        <specializes> ${self.generalizations @horizontal @separator [, ] }
-        <implements> ${self.interfaces @horizontal @separator [, ] }
+        [${self.visibility} <interface> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         <operations>
         ${self.operations @vertical @terminator [;] }
         <endinterface>
@@ -121,12 +101,12 @@ UmlInterface  {
 }
 
 MultiplicityKind {
-    @projection normal [\[ ${self.lowerBound}..${self.upperBound}]
+    @projection normal [\[ ${self.lowerBound}..${self.upperBound}\]]
 }
 
 Operation {
     @projection normal
-    [${self.visibility} ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) : ${self.returnType}]
+    [${self.visibility} ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}]]
 }
 
 UmlPackage {
@@ -134,7 +114,8 @@ UmlPackage {
         [<package> ${self.name}
         [?${ self.imports @vertical @separator [\n] }]
         ${ self.classifiers @vertical @separator [\n] }
-        ${ self.associations @vertical @separator [\n] }
+        <associations>
+        ${ self.associations @vertical @terminator [;] }
         <endpackage>
         ]
 }

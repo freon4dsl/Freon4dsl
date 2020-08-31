@@ -9,6 +9,7 @@ model OctopusModel {
 modelunit UmlPart {
     name: string;
     packages: UmlPackage[];
+    associations: Association[];
 }
 
 modelunit OclPart {
