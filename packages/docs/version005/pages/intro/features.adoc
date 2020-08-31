@@ -20,7 +20,7 @@ Currently ProjectIt comes with the following features.
 | parser | yes | .edit | yes (using _pegjs_)
 | unparser | yes | .edit | not yet
 | json exporter/importer | yes | .lang | no
-| visitor pattern implementation | yes | .lang | no
+| visitor pattern implementation | yes | .lang | can be extended
 | web application | yes | none | can be changed or replaced
 | ability to split large models into units | no | .lang | no
 |===

@@ -2,7 +2,7 @@ import {
     Names,
     PROJECTITCORE,
     EDITOR_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER, VALIDATOR_GEN_FOLDER
+    VALIDATOR_GEN_FOLDER
 } from "../../../utils/";
 import { PiLanguage } from "../../metalanguage";
 
