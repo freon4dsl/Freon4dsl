@@ -134,6 +134,8 @@ export class PiEditPropertyProjection extends PiEditElement {
 export class PiEditSubProjection extends PiEditElement {
     optional: boolean;
     items: PiEditProjectionItem[];
+    // TODO it is easier is the projected language element is directly referable from this object
+    // TODO what about sub-sub-sub... projections: will they all have one language element?
 }
 
 export class PiEditInstanceProjection { // instances of this class are created by the checker

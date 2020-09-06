@@ -99,7 +99,7 @@ concept MultiplicityKind {
 }
 concept Operation implements IPackagableElement {
     parameters: Parameter[];
-    reference returnType: IClassifier;
+    reference returnType?: IClassifier;
     reference owner: IClassifier;
     hasClassScope: boolean;
     isOClDef: boolean;
@@ -162,7 +162,7 @@ limited ParameterDirectionKind {
 //    isIteratorVar: boolean;
 //}
 limited VisibilityKind {
-	PUBLIC = { name: "public" }
-	PRIVATE = { name: "private" }
-	PROTECTED = { name: "protected" }
+	PUBLIC = { name: "PUBLIC" }
+	PRIVATE = { name: "PRIVATE" }
+	PROTECTED = { name: "PROTECTED" }
 }

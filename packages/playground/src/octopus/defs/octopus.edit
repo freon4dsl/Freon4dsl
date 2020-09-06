@@ -110,6 +110,7 @@ Operation {
 }
 
 UmlPackage {
+// TODO subprojection self.imports removes newline between self.name and self.classifiers
     @projection normal
         [<package> ${self.name}
         [?${ self.imports @vertical @separator [\n] }]
@@ -122,7 +123,7 @@ UmlPackage {
 
 Parameter {
     @projection normal
-        [<${self.directionKind}> ${self.name} : ${self.type}]
+        [${self.directionKind} ${self.name} : ${self.type}]
 }
 
 PathName {

@@ -2,7 +2,7 @@ import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 import {
     PiBinaryExpressionConcept,
     PiConcept,
-    PiLanguage,
+    PiLanguage, PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty
 } from "../../../languagedef/metalanguage";
@@ -14,7 +14,7 @@ import {
     PiEditPropertyProjection,
     PiEditProjectionDirection,
     ListJoinType,
-    PiEditProjectionLine
+    PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../metalanguage";
 
 export class UnparserTemplate {
@@ -241,11 +241,62 @@ export class UnparserTemplate {
 
     /**
      * Creates a method that unparses the concept in 'conceptDef' based on the projection in
-     * 'conceptDef'.
+     * 'conceptDef'. If the concept is a limited concept it is treated differently, because
+     * limited concepts can only be used as a reference.
      * @param conceptDef
      */
     private makeConceptMethod (conceptDef: PiEditConcept ): string {
         const myConcept: PiConcept = conceptDef.concept.referred;
+        if (myConcept instanceof PiLimitedConcept){
+            let result = this.makeLimitedConceptMethod(conceptDef, myConcept);
+            // a limited can have a '@keyword' projection or a normal one
+            if (result.length > 0) { // it was a `@keyword` projection
+                return result;
+            } else {
+                return this.makeNormalConceptMethod(conceptDef, myConcept);
+            }
+        } else {
+            return this.makeNormalConceptMethod(conceptDef, myConcept);
+        }
+    }
+
+    private makeLimitedConceptMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
+        const name: string = Names.concept(myConcept);
+        const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
+        const comment = `/**
+                          * The limited concept '${myConcept.name}' is unparsed according to the keywords
+                          * in the editor definition.
+                          */`;
+
+        // if the special '@keyword' construct is used, we create an extra method with a switch statement
+        // if not, do nothing, the limited concept is being referred to by its name
+        if (!!lines) {
+            let cases: string = "";
+            lines.map(line => line.items.map(item => {
+                // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
+                if (item instanceof PiEditInstanceProjection) {
+                    cases += `case ${item.expression.sourceName}.${item.expression.instanceName}: {
+                                this.output[this.currentLine] += "${item.keyword} ";
+                                break;
+                                }
+                                `
+                }
+            }));
+            if (cases.length > 0) {
+                return `
+                    ${comment}
+                        private unparse${name}(modelelement: ${name}, short: boolean): string {
+                            switch (modelelement) {
+                                ${cases}                  
+                            }
+                            return modelelement.name + " ";
+                        }`;
+            }
+        }
+        return "";
+    }
+
+    private makeNormalConceptMethod(conceptDef: PiEditConcept, myConcept: PiConcept) {
         const name: string = Names.concept(myConcept);
         const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
         const comment = `/**
@@ -297,26 +348,49 @@ export class UnparserTemplate {
      * Creates the statements needed to unparse a single line in an editor projection definition
      * @param line
      */
+    // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
     private makeLine (line: PiEditProjectionLine): string {
         let result: string = ``;
-        // TODO indents are not completely correct because tabs are not yet recognised by the .edit parser
-
         line.items.forEach(item => {
-            if (item instanceof PiEditProjectionText) {
-                // TODO escape all quotes in the text string, when we know how they are stored in the projection
-                result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
-            } else if (item instanceof PiEditPropertyProjection) {
-                const myElem = item.expression.findRefOfLastAppliedFeature();
-                if (myElem instanceof PiPrimitiveProperty) {
-                    result += this.makeItemWithPrimitiveType(myElem, item);
-                } else {
-                    result += this.makeItemWithConceptType(myElem, item, line.indent);
-                }
-            }
+            result += this.makeItem(item, line.indent);
         });
         return result;
     }
 
+    private makeItem(item: PiEditProjectionItem, indent: number): string {
+        let result: string = ``;
+        if (item instanceof PiEditProjectionText) {
+            // TODO escape all quotes in the text string, when we know how they are stored in the projection
+            result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
+        } else if (item instanceof PiEditPropertyProjection) {
+            const myElem = item.expression.findRefOfLastAppliedFeature();
+            if (myElem instanceof PiPrimitiveProperty) {
+                result += this.makeItemWithPrimitiveType(myElem, item);
+            } else {
+                result += this.makeItemWithConceptType(myElem, item, indent);
+            }
+        } else if (item instanceof PiEditSubProjection){
+            let myTypeScript: string = "";
+            let subresult: string = "";
+            item.items.forEach(sub => {
+                subresult += this.makeItem(sub, indent);
+                if (sub instanceof PiEditPropertyProjection) {
+                    myTypeScript = langExpToTypeScript(sub.expression);
+                    if (sub.expression.findRefOfLastAppliedFeature().isList) {
+                        myTypeScript = `${myTypeScript}.length > 0`;
+                    } else {
+                        myTypeScript = `!!${myTypeScript}`;
+                    }
+                }
+            });
+            if (item.optional && myTypeScript.length > 0) { // surround whole sub-projection with an if-statement
+                result += `if (${myTypeScript}) { ${subresult} }`;
+            } else {
+                result += subresult;
+            }
+        }
+        return result;
+    }
     /**
      * Creates the statements needed to unparse lines[1] till lines[lines.length -1], as well as
      * the statements needed to generate newlines and indentation.
@@ -347,13 +421,6 @@ export class UnparserTemplate {
         let result: string = ``;
         const elemStr = langExpToTypeScript(item.expression);
         if (myElem.isList) {
-            // TODO remove this hack when the edit def holds lists of primitive values
-            // result += `this.unparseListOfPrimitiveValues(
-            //         ${elemStr}, ", ", SeparatorType.Separator, false,
-            //         this.output[this.currentLine].length,
-            //         short
-            //     );`;
-            // should be:
             let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
             let joinType = this.getJoinType(item);
             result += `this.unparseListOfPrimitiveValues(
@@ -367,6 +434,10 @@ export class UnparserTemplate {
             // TODO remove this hack: test on "myElem.name !== "name" ", when a difference is made between identifiers and strings
             if (myElem.primType === "string" && myElem.name !== "name") {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
+            } else if (myElem.primType === "boolean" && !!item.keyword) {
+                myCall = `if (${elemStr}) { 
+                              this.output[this.currentLine] += \`${item.keyword} \`
+                          }`;
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
@@ -403,7 +474,7 @@ export class UnparserTemplate {
                 }
             } else {
                 let myCall: string = "";
-                if (myElem.isPart) {
+                if (myElem.isPart || type instanceof PiLimitedConcept) {
                     myCall += `this.unparsePrivate(${myTypeScript}, short) `;
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
@@ -413,7 +484,7 @@ export class UnparserTemplate {
                     } else if (myTypeScript.endsWith(".referred") ) {
                         myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
                     }
-
+                    // end hack
                     myCall += `this.output[this.currentLine] += \`\$\{${myTypeScript}.name\} \``;
                 }
                 if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
