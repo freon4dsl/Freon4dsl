@@ -1,10 +1,13 @@
-import { PiClassifier, PiConcept, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiInstanceExp, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 import { Roles } from "../../utils/Roles";
 import { ParseLocation } from "../../utils";
 
-export class PiEditUnit {
+export class PiEditElement {
     location: ParseLocation;
+}
+
+export class PiEditUnit extends PiEditElement {
     name: string;
     language: PiLanguage;
     languageName: string;
@@ -16,8 +19,7 @@ export class PiEditUnit {
     }
 }
 
-export class PiEditConcept {
-    location: ParseLocation;
+export class PiEditConcept extends PiEditElement {
     languageEditor: PiEditUnit;
 
     concept: PiElementReference<PiConcept>;
@@ -51,8 +53,7 @@ export class PiEditParsedNewline {
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
-export class PiEditParsedProjectionIndent {
-    location: ParseLocation;
+export class PiEditParsedProjectionIndent extends PiEditElement {
     indent: string = "";
     amount: number = 0;
 
@@ -76,8 +77,7 @@ export class PiEditParsedProjectionIndent {
     }
 }
 
-export class PiEditProjectionText {
-    location: ParseLocation;
+export class PiEditProjectionText extends PiEditElement {
     text: string = "";
     style: string = "propertykeyword";
 
@@ -104,8 +104,7 @@ export enum ListJoinType {
     Separator = "Separator"
 }
 
-export class ListJoin {
-    location: ParseLocation;
+export class ListJoin extends PiEditElement {
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     joinType?: ListJoinType = ListJoinType.NONE;
     joinText?: string = ", ";
@@ -115,34 +114,41 @@ export class ListJoin {
     }
 }
 
-export class PiEditPropertyProjection {
-    location: ParseLocation;
+export class PiEditPropertyProjection extends PiEditElement {
     propertyName: string = "";
     listJoin: ListJoin;
+    keyword?: string;
     expression: PiLangExp;
 
     toString(): string {
         return (
             "${" +
-            this.expression.sourceName +
-            "." +
-            this.expression.appliedfeature.sourceName +
+            this.expression.toPiString() + " " +
             (!!this.listJoin ? " " + this.listJoin.toString() : "") +
+            (!!this.keyword ? " @keyword [" + this.keyword + "]" : "") +
             "}"
         );
     }
 }
 
-export class PiEditSubProjection {
-    location: ParseLocation;
+export class PiEditSubProjection extends PiEditElement {
     optional: boolean;
     items: PiEditProjectionItem[];
+    // TODO it is easier is the projected language element is directly referable from this object
+    // TODO what about sub-sub-sub... projections: will they all have one language element?
 }
 
-type PiEditProjectionItem = PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection;
+export class PiEditInstanceProjection { // instances of this class are created by the checker
+    keyword: string;
+    expression: PiInstanceExp;
+    toString(): string {
+        return `${this.expression.toPiString()} @keyword ${this.keyword}`;
+    }
+}
 
-export class PiEditProjectionLine {
-    location: ParseLocation;
+export type PiEditProjectionItem = PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection | PiEditInstanceProjection;
+
+export class PiEditProjectionLine extends PiEditElement {
     items: PiEditProjectionItem[] = [];
     indent: number = 0;
 
@@ -155,8 +161,7 @@ export class PiEditProjectionLine {
     }
 }
 
-export class PiEditProjection {
-    location: ParseLocation;
+export class PiEditProjection extends PiEditElement {
     name: string;
     conceptEditor: PiEditConcept;
     lines: PiEditProjectionLine[] = [];

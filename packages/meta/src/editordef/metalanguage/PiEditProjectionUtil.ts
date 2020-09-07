@@ -1,15 +1,23 @@
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { PiLangAppliedFeatureExp,
-    PiLangSelfExp,
+import {
     PiBinaryExpressionConcept,
     PiConcept,
-    PiConceptProperty } from "../../languagedef/metalanguage";
-import { PiEditUnit, PiEditConcept, PiEditParsedProjectionIndent, PiEditParsedNewline } from "./PiEditDefLang";
+    PiConceptProperty,
+    PiLangAppliedFeatureExp,
+    PiLangSelfExp
+} from "../../languagedef/metalanguage";
 import {
-    PiEditProjectionText,
-    PiEditPropertyProjection, PiEditProjectionDirection, ListJoin, ListJoinType,
+    ListJoin,
+    ListJoinType,
+    PiEditConcept,
+    PiEditParsedNewline,
+    PiEditParsedProjectionIndent,
     PiEditProjection,
-    PiEditProjectionLine
+    PiEditProjectionDirection,
+    PiEditProjectionLine,
+    PiEditProjectionText,
+    PiEditPropertyProjection,
+    PiEditUnit
 } from "./PiEditDefLang";
 
 export class PiEditProjectionUtil {
@@ -62,7 +70,7 @@ export class PiEditProjectionUtil {
                 const text = PiEditProjectionText.create(con.name);
                 text.style = "conceptkeyword";
                 startLine.items.push(text);
-                // find unitName property is available
+                // find name property if available
                 const nameProp = con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
                 if (!!nameProp) {
                     const exp = PiLangSelfExp.create(con);
@@ -80,6 +88,11 @@ export class PiEditProjectionUtil {
                     exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
                     const sub = new PiEditPropertyProjection();
                     sub.expression = exp;
+                    if (prop.isList) {
+                        sub.listJoin = new ListJoin();
+                        sub.listJoin.joinType = ListJoinType.Separator;
+                        sub.listJoin.joinText = ", ";
+                    }
                     line.items.push(sub);
                     coneditor.projection.lines.push(line);
                 }

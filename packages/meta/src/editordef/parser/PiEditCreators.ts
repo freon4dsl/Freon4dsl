@@ -21,6 +21,7 @@ import { PiElementReference } from "../../languagedef/metalanguage/PiElementRefe
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 
 const LOGGER = new PiLogger("EditorCreators").mute();
+
 // Functions used to create instances of the language classes from the parsed data objects.
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
@@ -84,17 +85,17 @@ export function createLanguageEditor(data: Partial<PiEditUnit>): PiEditUnit {
 
 export function createProjection(data: Partial<PiEditProjection>): PiEditProjection {
     const result = new PiEditProjection();
-    if (!!data.lines) {
-        result.lines = data.lines;
-    }
     if (!!data.name) {
         result.name = data.name;
     } else {
         // create default
         result.name = "normal";
     }
-    // Now cleanup the parsed projection
-    PiEditProjectionUtil.normalize(result);
+    if (!!data.lines) {
+        result.lines = data.lines;
+        // Now cleanup the parsed projection
+        PiEditProjectionUtil.normalize(result);
+    }
     if (!!data.location) {
         result.location = data.location;
     }
@@ -114,7 +115,7 @@ export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectio
 }
 
 export function createSubProjection(data: Partial<PiEditSubProjection>): PiEditSubProjection {
-    console.log("Create SUBPROJECTION ");// + JSON.stringify(data));
+    // console.log("Create SUBPROJECTION ");// + JSON.stringify(data));
     const result = new PiEditSubProjection();
     if (!!data.optional) {
         result.optional = data.optional;
@@ -157,6 +158,9 @@ export function createPropertyProjection(data: Partial<PiEditPropertyProjection>
     }
     if (!!data.listJoin) {
         result.listJoin = data.listJoin;
+    }
+    if (!!data.keyword) {
+        result.keyword = data.keyword;
     }
     if (!!data.expression) {
         result.expression = data.expression;

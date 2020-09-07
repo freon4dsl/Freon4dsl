@@ -33,9 +33,9 @@ export class PiError {
     locationdescription: string;            // human-readable indication of 'reportedOn'
     severity: PiErrorSeverity;              // indication of how serious the error is, default is 'ToDo'
 
-    constructor(mess: string, elem: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity) {
-        this.message = mess;
-        this.reportedOn = elem;
+    constructor(message: string, element: PiElement | PiElement[], locationdescription: string, severity?: PiErrorSeverity) {
+        this.message = message;
+        this.reportedOn = element;
         this.locationdescription = locationdescription;
         if (!!severity) {
             this.severity = severity;

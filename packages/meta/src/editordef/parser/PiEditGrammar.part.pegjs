@@ -41,11 +41,11 @@ templateSpace = s:[ ]+
                     return creator.createIndent( { "indent": s.join(""), "location": location() });
                 }
 
-property_projection = subProjectionStart ws
-                     exp:expression ws join:listJoin? ws
-                 subProjectionEnd
+property_projection = propProjectionStart ws
+                     exp:expression ws join:listJoin? keyword:keywordDecl? ws
+                 propProjectionEnd
             {
-                return creator.createPropertyProjection( {  "expression": exp, "listJoin": join, "location": location() });
+                return creator.createPropertyProjection( {  "expression": exp, "listJoin": join, "keyword":keyword, "location": location() });
             }
 
 //property_projection = "[[" ws "this" ws "." ws prop:var ws
@@ -54,6 +54,7 @@ property_projection = subProjectionStart ws
 //            {
 //                return creator.createSubProjection( { "propertyName": prop, "listJoin": join, "location": location() });
 //            }
+keywordDecl = "@keyword" ws text:joinText {return text;}
 
 listJoin =  l:listJoinSimple+
                 {
@@ -91,8 +92,8 @@ listJoinType = joinType:("@separator" / "@terminator") ws
 //                    return creator.createPropertyRef( { "propertyName": t, "location": location() });
 //                }
 
-subProjectionStart = "${"
-subProjectionEnd = "}"
+propProjectionStart = "${"
+propProjectionEnd = "}"
 
 text        = chars:anythingBut+
             {

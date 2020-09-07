@@ -1,0 +1,177 @@
+editor XXX for language octopus
+
+UmlPart {
+    @projection normal
+        [${self.packages}]
+}
+
+// the uml concepts
+Association {
+    @projection normal
+        [${self.end1} <-> ${self.end2}]
+}
+
+AssociationClass {
+    @projection normal
+        [${self.visibility} <associationclass> ${self.name}
+        ${self.end1} <-> ${self.end2}
+        <attributes>
+        ${self.attributes @vertical @terminator [;] }
+        [?<operations> ${self.operations @vertical @terminator [;] }]
+        [?<states> ${self.states @vertical @terminator [;] }]
+        <endassociationclass>
+        ]
+}
+
+AssociationEnd {
+    @projection normal
+        [${self.visibility} ${self.baseType}.${self.name}${self.multiplicity}]
+}
+
+Attribute {
+    @projection normal
+        [${self.visibility} ${self.name}[?${self.multiplicity}] : ${self.type}]
+}
+
+UmlClass {
+    @projection normal
+        [${self.visibility} [?${self.isAbstract @keyword [<abstract>]}] <class> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
+        [?<implements> ${self.interfaces @horizontal @separator [, ] }]
+        <attributes>
+        ${self.attributes @vertical @terminator [;] }
+        <operations>
+        ${self.operations @vertical @terminator [;] }
+        <endclass>
+        ]
+}
+
+//concept CollectionType {
+//    reference elementType: IClassifier;
+//    metatype: CollectionMetaType;
+//    isSet: boolean;
+//    isOrderedSet: boolean;
+//    isBag: boolean;
+//    isSequence: boolean;
+//}
+//limited CollectionMetaType {
+//    COLLECTION 		= { name: "Collection" }
+//    SET 			= { name: "Set" }
+//    ORDEREDSET 		= { name: "OrderedSet" }
+//    BAG 			= { name: "Bag" }
+//    SEQUENCE 		= { name: "Sequence" }
+//}
+DataType {
+    @projection normal
+        [${self.visibility} <datatype> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
+        [?<implements> ${self.interfaces @horizontal @separator [, ] }]
+        <attributes>
+        ${self.attributes @vertical @terminator [;] }
+        [?<operations> ${self.operations @vertical @terminator [;] }]
+        <enddatatype>
+        ]
+}
+
+EnumerationType {
+    @projection normal
+        [${self.visibility} <enumeration> ${self.name}
+        <values> ${self.literals @vertical @terminator [;] }
+        <endenumeration>
+        ]
+}
+
+EnumLiteral {
+    @projection normal
+            [${self.name}]
+}
+
+ImportedElement { // implements IModelElement {
+    @projection normal [<import> ${self.pathName};]
+}
+
+UmlInterface  {
+    @projection normal
+        [${self.visibility} <interface> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
+        <operations>
+        ${self.operations @vertical @terminator [;] }
+        <endinterface>
+        ]
+}
+
+MultiplicityKind {
+    @projection normal [\[ ${self.lowerBound}..${self.upperBound}\]]
+}
+
+Operation {
+    @projection normal
+    [${self.visibility} ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}]]
+}
+
+UmlPackage {
+// TODO subprojection self.imports removes newline between self.name and self.classifiers
+    @projection normal
+        [<package> ${self.name}
+        [?${ self.imports @vertical @separator [\n] }]
+        ${ self.classifiers @vertical @separator [\n] }
+        <associations>
+        ${ self.associations @vertical @terminator [;] }
+        <endpackage>
+        ]
+}
+
+Parameter {
+    @projection normal
+        [${self.directionKind} ${self.name} : ${self.type}]
+}
+
+PathName {
+    @projection normal
+        [${self.names @horizontal @separator [::] }]
+}
+
+//concept PrimitiveType base DataType {
+//}
+//concept State implements IPackagableElement {
+//    reference owner: Operation;
+//    subStates: State[];
+//    reference enclosingState: State;
+//}
+//concept StructuralFeature implements IPackagableElement {
+//    reference type: IClassifier;
+//    reference owner: IClassifier;
+//    multiplicity: MultiplicityKind;
+//    isOrdered: boolean;
+//    isDerived: boolean;
+//    isUnique: boolean;
+//    isComposite: boolean;
+//    isAggregate: boolean;
+//    hasClassScope: boolean;
+//}
+//concept TupleType base DataType {
+//    parts: VariableDeclaration[];
+//}
+//concept VariableDeclaration implements IModelElement {
+//    reference type: IClassifier;
+//    // initExpression: OclExpression;
+//    isIteratorVar: boolean;
+//}
+//VisibilityKind {
+//    @projection normal [${self.visibility}]
+//}
+// for limited concepts
+VisibilityKind {
+    @projection normal [
+        ${PUBLIC @keyword [+]}
+        ${PRIVATE @keyword [-]}
+        ${PROTECTED @keyword [#]}
+    ]
+}
+ParameterDirectionKind {
+    @projection normal [
+        ${IN @keyword [<in>]}
+        ${OUT @keyword [<out>]}
+        ${INOUT @keyword [<inout>]}
+    ]
+}

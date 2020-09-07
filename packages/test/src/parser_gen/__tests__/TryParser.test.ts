@@ -1,4 +1,4 @@
-import { DemoParser } from "../parser/gen/DemoParser";
+import { DemoFileReader } from "../parser/gen/DemoFileReader";
 import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { Demo, DemoUnit } from "../language/gen";
 
@@ -6,9 +6,9 @@ const demoParser = require("../parser/gen/DemoUnitUnitParser");
 
 describe("Test the parser", () => {
     test( "XXX", () => {
-        const parser = new DemoParser<DemoUnit>();
-        parser.parser = demoParser;
-        const unit1 = parser.parse("src/parser_gen/__tests__/ParserInput1.txt");
+        const reader = new DemoFileReader<DemoUnit>();
+        reader.parser = demoParser;
+        const unit1 = reader.parse("src/parser_gen/__tests__/ParserInput1.txt");
         //
         unit1.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();
@@ -19,7 +19,7 @@ describe("Test the parser", () => {
             expect(attr.declaredType).not.toBeNull();
         });
         //
-        const unit2 = parser.parse("src/parser_gen/__tests__/ParserInput1.txt");
+        const unit2 = reader.parse("src/parser_gen/__tests__/ParserInput1.txt");
         //
         unit2.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();
@@ -33,7 +33,7 @@ describe("Test the parser", () => {
         const myModels: DemoUnit[] = [];
         myModels.push(unit1);
         myModels.push(unit2);
-        const model = Demo.create({ name: "ANNEKE_IS_LIEF", models: myModels });
+        const model = Demo.create({ name: "SOME_MODEL", models: myModels });
 
         // resolve all references
         // const resolver = new DemoChecker();
@@ -43,6 +43,7 @@ describe("Test the parser", () => {
         // }
         //
         const unparser = new DemoUnparser();
-        console.log(unparser.unparse(model, 0, false));
+        let text = unparser.unparse(model, 0, false);
+        expect(text.length).toBe(1104);
     });
 });

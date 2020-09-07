@@ -1,0 +1,92 @@
+language octopus
+
+model OctopusModel {
+    name: string;
+    umlParts: UmlPart[];
+    oclParts: OclPart[];
+}
+
+modelunit UmlPart {
+    name: string;
+    packages: UmlPackage[];
+}
+
+modelunit OclPart {
+    name: string;
+}
+concept UmlPackage implements IModelElement {
+//    subpackages: UmlPackage[];
+//    reference parent: UmlPackage;
+//    reference root: UmlPackage;
+    classifiers: IClassifier[];
+//    interfaces: UmlInterface[];
+//    associations: Association[];
+//    imports: ImportedElement[];
+}
+concept PathName {
+    names: string[];
+    // first = names[0];
+    // last  = names[names.length-1]
+}
+interface IModelElement {
+    name: string;
+    pathName: PathName;
+}
+interface IClassifier base IPackagableElement {
+    attributes: Attribute[];
+//    operations: Operation[];
+//    navigations: AssociationEnd[];
+//    reference generalizations: IClassifier[];
+//    subClasses: IClassifier[];
+//    reference interfaces: UmlInterface[];
+//    states: State[];
+//    classAttributes: Attribute[];
+//    classOperations: Operation[];
+//    isCollectionKind: boolean;
+//    reference owner: UmlPackage;
+//    isAbstract: boolean;
+//    stereotype: string;
+}
+interface IPackagableElement base IModelElement {
+//    visibility: VisibilityKind;
+}
+interface IClass base IClassifier {
+}
+concept DataType implements IClassifier {
+}
+concept UmlInterface implements IClassifier {
+}
+concept Association implements IClassifier {
+//    end1: AssociationEnd;
+//    end2: AssociationEnd;
+//    isClass: boolean;
+}
+concept UmlClass implements IClass {
+}
+concept AssociationClass base Association implements IClass {
+}
+concept Attribute base StructuralFeature {
+    isOClDef: boolean;
+}
+concept StructuralFeature implements IPackagableElement {
+    reference type: IClassifier;
+//    reference owner: IClassifier;
+    multiplicity: MultiplicityKind;
+//    isOrdered: boolean;
+//    isDerived: boolean;
+//    isUnique: boolean;
+//    isComposite: boolean;
+//    isAggregate: boolean;
+//    hasClassScope: boolean;
+}
+concept MultiplicityKind {
+//    isSingleObject: boolean;
+    lowerBound: number;
+    upperBound: number;
+}
+
+limited VisibilityKind {
+	PUBLIC = { name: "public" }
+	PRIVATE = { name: "private" }
+	PROTECTED = { name: "protected" }
+}

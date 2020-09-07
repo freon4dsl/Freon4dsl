@@ -401,12 +401,12 @@ export class ConceptTemplate {
                     const result = new ${myName}();
                     ${concept.allProperties().map(property =>
                         `${(property.isList && !(property instanceof PiPrimitiveProperty)) ? 
-                            `if (data.${property.name}) {
+                            `if (!!data.${property.name}) {
                                 data.${property.name}.forEach(x =>
                                     result.${property.name}.push(x)
                                 );
                             }`
-                        : `if (data.${property.name}) { 
+                        : `if (!!data.${property.name}) { 
                                 result.${property.name} = data.${property.name};
                             }`
                         }`).join("\n")

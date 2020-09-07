@@ -1,6 +1,6 @@
 import { DemoModelCreator } from "./DemoModelCreator";
 import * as fs from "fs";
-import { DemoParser } from "../parser/gen/DemoParser";
+import { DemoFileReader } from "../parser/gen/DemoFileReader";
 import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { DemoUnit } from "../../parser_gen/language/gen";
 import { DemoValidator } from "../validator/gen";
@@ -11,7 +11,7 @@ describe("Testing Parser", () => {
     test("complete example model unparsed and parsed again", () => {
         const model = new DemoModelCreator().createCorrectModel();
         const unparser = new DemoUnparser();
-        const parser = new DemoParser<DemoUnit>();
+        const parser = new DemoFileReader<DemoUnit>();
         parser.parser = demoParser;
         const validator = new DemoValidator();
 
@@ -24,7 +24,7 @@ describe("Testing Parser", () => {
 
         const errors = validator.validate(model);
         for (const e of errors) {
-            console.log(e.message + "=>" + e.locationdescription);
+            console.log(e.message + " => " + e.locationdescription);
         }
         // do not unparse if there are errors
         if (errors.length > 4) { // the custom validator adds 4 unneccessary errors

@@ -195,8 +195,8 @@ export class Names {
         return this.startWithUpperCase(unit?.name) + "UnitParser";
     }
 
-    public static parser(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "Parser";
+    public static fileReader(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "FileReader";
     }
 
     public static parserCreator(language: PiLanguage): string {

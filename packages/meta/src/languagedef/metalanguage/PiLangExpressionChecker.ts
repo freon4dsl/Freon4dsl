@@ -87,6 +87,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
 
     // exp
     public checkLangExp(langExp: PiLangExp, enclosingConcept: PiClassifier) {
+        langExp.language = this.language;
         LOGGER.log("checkLangExp " + langExp.toPiString() );
         if (langExp instanceof PiInstanceExp) {
             this.checkInstanceExpression(langExp, enclosingConcept);

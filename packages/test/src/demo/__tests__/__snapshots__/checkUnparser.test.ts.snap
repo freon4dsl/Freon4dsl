@@ -14,8 +14,12 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"\\" 
                 attributes 
-                    brand : String
-                    type : String
+                    brand : DemoAttributeType String 
+                                extra 199 
+                                baseInterface_attr 0
+                    type : DemoAttributeType String 
+                               extra 199 
+                               baseInterface_attr 0
                 entAttributes 
                     
                 functions 
@@ -41,8 +45,12 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"\\" 
                 attributes 
-                    numberplate : Integer
-                    make : String
+                    numberplate : DemoAttributeType Integer 
+                                      extra 240261 
+                                      baseInterface_attr 0
+                    make : DemoAttributeType String 
+                               extra 199 
+                               baseInterface_attr 0
                 entAttributes 
                     
                 functions 
@@ -68,8 +76,12 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"\\" 
                 attributes 
-                    backseat : Boolean
-                    gears : Integer
+                    backseat : DemoAttributeType Boolean 
+                                   extra 5479 
+                                   baseInterface_attr 0
+                    gears : DemoAttributeType Integer 
+                                extra 240261 
+                                baseInterface_attr 0
                 entAttributes 
                     
                 functions 
@@ -95,8 +107,12 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"\\" 
                 attributes 
-                    color : String
-                    wheelsize : Integer
+                    color : DemoAttributeType String 
+                                extra 199 
+                                baseInterface_attr 0
+                    wheelsize : DemoAttributeType Integer 
+                                    extra 240261 
+                                    baseInterface_attr 0
                 entAttributes 
                     
                 functions 
@@ -139,8 +155,12 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"\\" 
                 attributes 
-                    foundedIn : Integer
-                    name : String
+                    foundedIn : DemoAttributeType Integer 
+                                    extra 240261 
+                                    baseInterface_attr 0
+                    name : DemoAttributeType String 
+                               extra 199 
+                               baseInterface_attr 0
                 entAttributes 
                     
                 functions 
@@ -163,8 +183,12 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"\\" 
                 attributes 
-                    name : String
-                    VAT_Number : Integer
+                    name : DemoAttributeType String 
+                               extra 199 
+                               baseInterface_attr 0
+                    VAT_Number : DemoAttributeType Integer 
+                                     extra 240261 
+                                     baseInterface_attr 0
                 entAttributes 
                     
                 functions 

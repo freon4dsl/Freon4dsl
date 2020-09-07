@@ -4,7 +4,7 @@ import {
     PiExpressionConcept,
     PiPrimitiveProperty,
     PiProperty,
-    PiLanguage
+    PiLanguage, PiLimitedConcept
 } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { Roles } from "../../../utils/Roles";
@@ -140,6 +140,9 @@ export class ProjectionTemplate {
     }
 
     private generateUserProjection(language: PiLanguage, concept: PiConcept, editor: PiEditConcept) {
+        // TODO for now: do not do anything for a limited concept
+        if (editor.concept instanceof PiLimitedConcept) return ``;
+
         let result: string = "";
         const element = Roles.elementName(concept);
         const projection: PiEditProjection = editor.projection;
@@ -368,6 +371,6 @@ export class ProjectionTemplate {
                                 // TODO  Create Action for the role to actually add an element.
                                 new AliasBox(${element}, "new-${Roles.property(property)}-hlist", "<+>")
                             ])
-                        ),`;
+                        )`;
     }
 }

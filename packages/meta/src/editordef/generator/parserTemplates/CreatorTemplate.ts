@@ -1,4 +1,4 @@
-import { PiConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { PiConcept, PiInterface, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, STDLIB_GEN_FOLDER } from "../../../utils";
 import { PiLangUtil } from "../../../languagedef/metalanguage";
@@ -13,10 +13,12 @@ export class CreatorTemplate {
      */
     public generateCreatorPart(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const stdlibName = Names.stdlib(language);
+        const imports = language.concepts.map(concept => Names.concept(concept))
+            .concat(language.interfaces.map(intf => Names.interface(intf)));
+
         // Template starts here
         return `
-        import { PiElementReference, ${language.concepts.map(concept => `
-                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
+        import { PiElementReference, ${imports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         import { ${stdlibName} } from "${relativePath}${STDLIB_GEN_FOLDER}/${stdlibName}";
         
         const stdlib = ${stdlibName}.getInstance();
@@ -31,6 +33,7 @@ export class CreatorTemplate {
         */
 
         ${language.concepts.map(con => this.makeConceptFunctions(con)).join("\n")}
+        ${language.interfaces.map(con => this.makeInterfaceFunctions(con)).join("\n")}
         `;
         // end Template
     }
@@ -64,6 +67,27 @@ export class CreatorTemplate {
         }        
         ${addReferenceFunction ? `
             ${referenceFunction}` : ``}`;
+        }
+    }
+
+    /**
+     * Creates one exported functions for PiInterface 'piInterface'. It creates a
+     * PiElementReference to an object that implements 'piInterface'.
+     * @param piInterface
+     */
+    private makeInterfaceFunctions(piInterface: PiInterface): string {
+        const intfName: string = Names.interface(piInterface);
+
+        // check if the concept has a name property, otherwise we cannot create a reference function
+        const nameProperty: PiPrimitiveProperty = PiLangUtil.findNameProp(piInterface);
+        const addReferenceFunction: boolean = !!nameProperty;
+        if (!!addReferenceFunction) {
+            return `export function create${intfName}${referencePostfix}(data: Name): PiElementReference<${intfName}> {
+                return PiElementReference.create<${intfName}>(data.name, "${intfName}");
+            }
+            `;
+        } else {
+            return "";
         }
     }
 }
