@@ -169,8 +169,9 @@ VisibilityKind {
     ]
 }
 ParameterDirectionKind {
-    @projection normal [<${self.name}>]
-//    IN    = { name: "in" }
-//    OUT   = { name: "out" }
-//    INOUT = { name: "inout" }
+    @projection normal [
+        ${IN @keyword [<in>]}
+        ${OUT @keyword [<out>]}
+        ${INOUT @keyword [<inout>]}
+    ]
 }

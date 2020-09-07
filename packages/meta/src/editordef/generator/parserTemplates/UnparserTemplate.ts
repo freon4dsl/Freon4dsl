@@ -428,7 +428,6 @@ export class UnparserTemplate {
                     this.output[this.currentLine].length,
                     short
                 );`;
-            // end hack
         } else {
             let myCall: string = ``;
             // TODO remove this hack: test on "myElem.name !== "name" ", when a difference is made between identifiers and strings
@@ -507,6 +506,9 @@ export class UnparserTemplate {
             joinType = "SeparatorType.Separator";
         } else if (item.listJoin.joinType === ListJoinType.Terminator) {
             joinType = "SeparatorType.Terminator";
+        } else if (item.listJoin.joinType === ListJoinType.NONE) {
+            // TODO is this the correct default jointype?
+            joinType = "SeparatorType.Separator";
         }
         return joinType;
     }

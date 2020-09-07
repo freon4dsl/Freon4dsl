@@ -43,9 +43,9 @@ export class ParserGenerator {
         const creatorFile = Helpers.pretty(creatorTemplate.generateCreatorPart(this.language, editDef, relativePath), "Creator Functions", generationStatus);
         fs.writeFileSync(`${this.parserGenFolder}/${Names.parserCreator(this.language)}.ts`, creatorFile);
 
-        LOGGER.log(`Generating language parser: ${this.parserGenFolder}/${Names.parser(this.language)}.ts`);
+        LOGGER.log(`Generating language parser: ${this.parserGenFolder}/${Names.fileReader(this.language)}.ts`);
         const parserFile = Helpers.pretty(parserTemplate.generateParser(this.language, editDef, relativePath), "Parser Class", generationStatus);
-        fs.writeFileSync(`${this.parserGenFolder}/${Names.parser(this.language)}.ts`, parserFile);
+        fs.writeFileSync(`${this.parserGenFolder}/${Names.fileReader(this.language)}.ts`, parserFile);
 
         this.language.units.forEach(unit => {
             LOGGER.log(`Generating language parser pegjs input: ${this.parserGenFolder}/${Names.pegjs(unit)}.pegjs`);
@@ -58,7 +58,9 @@ export class ParserGenerator {
                 fs.writeFileSync(`${this.parserGenFolder}/${Names.pegjs(unit)}.js`, pegjsParser);
             } catch (e) {
                 generationStatus.numberOfErrors += 1;
-                LOGGER.error(this, `Error in call to pegjs: file '${Names.pegjs(unit)}' returns '${e.message}'.`);
+
+                // we remove the last dot of the error message, because the message is contained in another sentence
+                LOGGER.error(this, `Error in call to pegjs: '${e.message.replace(/\.$/, '')}' [line: ${e.location?.start.line}, column: ${e.location?.start.column}] in file '${Names.pegjs(unit)}'.`);
             }
         });
 

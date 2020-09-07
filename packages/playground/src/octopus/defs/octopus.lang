@@ -152,9 +152,9 @@ concept StructuralFeature implements IPackagableElement {
 //    parts: VariableDeclaration[];
 //}
 limited ParameterDirectionKind {
-    IN    = { name: "in" }
-    OUT   = { name: "out" }
-    INOUT = { name: "inout" }
+    IN    = { name: "IN" }
+    OUT   = { name: "OUT" }
+    INOUT = { name: "INOUT" }
 }
 //concept VariableDeclaration implements IModelElement {
 //    reference type: IClassifier;

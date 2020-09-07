@@ -9,7 +9,6 @@ import {
     PiProperty
 } from "../../../languagedef/metalanguage";
 import {
-    ListJoin,
     ListJoinType,
     PiEditConcept, PiEditInstanceProjection, PiEditProjectionItem,
     PiEditProjectionText,
@@ -37,7 +36,8 @@ export class PegjsTemplate {
 
         // Note that the order in which the rules are stated, determines whether the parser is functioning or not
         // first create a rule for the unit, next for its children, etc.
-        // the following method stores its result in two lists: one for all editor definitions found, one for all used interfaces
+        // the following method sorts the elements in the editor definition and
+        // stores its result in two lists: one for all editor definitions found, one for all used interfaces
         const sortedEditorDefs: PiEditConcept[] = [];
         const sortedInterfaces: PiInterface[] = [];
         this.findEditorDefsForUnit(langUnit, editDef.conceptEditors, sortedEditorDefs, sortedInterfaces);
@@ -124,69 +124,79 @@ HEXDIG = [0-9a-f]
         // end Template
     }
 
+    /**
+     * This method creates a parsing rule for the concept in 'conceptDef'
+     * except for models and limited concepts. A complete model can not be parsed,
+     * only its units, and limited concepts can not be created in a parse rule,
+     * they can only be referred to.
+     * @param conceptDef
+     * @private
+     */
     private makeConceptRule(conceptDef: PiEditConcept): string {
         const piClassifier: PiConcept = conceptDef.concept.referred;
         if (piClassifier.isModel || piClassifier instanceof PiLimitedConcept) {
             return ``;
         }
-        const myName = Names.classifier(piClassifier);
+
         if (piClassifier.isAbstract) {
             return this.makeChoiceRule(piClassifier);
         } else if (piClassifier instanceof PiBinaryExpressionConcept) {
             return this.makeBinaryExpressionRule(conceptDef, piClassifier);
         } else {
-            // determine which properties of the concept will get a value through this parse rule
-            const propsToSet: PiProperty[] = [];
-
-            conceptDef.projection.lines.forEach(l => {
-                l.items.forEach(item => {
-                    if (item instanceof PiEditPropertyProjection) {
-                        propsToSet.push(item.expression.findRefOfLastAppliedFeature());
-                    }
-                    if (item instanceof PiEditSubProjection) {
-                        item.items.forEach(sub => {
-                            if (sub instanceof PiEditPropertyProjection) {
-                                propsToSet.push(sub.expression.findRefOfLastAppliedFeature());
-                            }
-                        });
-                    }
-                });
-            });
-
-            // see if this concept has subconcepts
-            const subs = piClassifier.allSubConceptsDirect();
-            let prefix = "";
-            if (subs.length > 0) {
-                prefix = `${subs.map((implementor, index) =>
-                    `var${index}:${Names.classifier(implementor)} { return var${index}; }`).join("\n\t/ ")}\n\t/ `;
-            }
-
-            // now we have enough information to create the parse rule
-            return `${myName} =${prefix} ${conceptDef.projection.lines.map(l =>
-                `${this.doAllItems(l.items)}`
-            ).join("\n\t")}\n\t{ return creator.create${myName}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
+            return this.makeOrdinaryRule(conceptDef, piClassifier);
         }
     }
 
-    private doAllItems(list: PiEditProjectionItem[]): string {
-        if (!!list && list.length > 0) {
-            // console.log("doAllItems van line " + list[0]?.location?.start.line + ", column: " + list[0]?.location?.start.column);
-            return `${list.map((item, index) =>
-                `${(item instanceof PiEditProjectionText) ?
-                    `${this.makeTextProjection(item)}`
-                    :
-                    `${(item instanceof PiEditPropertyProjection) ?
-                        `${this.makePropertyProjection(item, item.expression.findRefOfLastAppliedFeature().name)} ws `
-                        :
-                        `${(item instanceof PiEditSubProjection) ?
-                            `${this.makeSubProjection(item)} ws `
-                            :
-                            ``}`
-                    }`
-                }`).join("")}`;
-        } else {
-            return "";
+    private makeOrdinaryRule(conceptDef: PiEditConcept, piClassifier: PiConcept) {
+        const myName = Names.classifier(piClassifier);
+        // determine which properties of the concept will get a value through this parse rule
+        const propsToSet: PiProperty[] = [];
+
+        conceptDef.projection.lines.forEach(l => {
+            l.items.forEach(item => {
+                if (item instanceof PiEditPropertyProjection) {
+                    propsToSet.push(item.expression.findRefOfLastAppliedFeature());
+                }
+                if (item instanceof PiEditSubProjection) {
+                    item.items.forEach(sub => {
+                        if (sub instanceof PiEditPropertyProjection) {
+                            propsToSet.push(sub.expression.findRefOfLastAppliedFeature());
+                        }
+                    });
+                }
+            });
+        });
+
+        // see if this concept has subconcepts
+        const subs = piClassifier.allSubConceptsDirect();
+        let choiceBetweenSubconcepts = "";
+        if (subs.length > 0) {
+            choiceBetweenSubconcepts = `${subs.map((implementor, index) =>
+                `var${index}:${Names.classifier(implementor)} { return var${index}; }`).join("\n\t/ ")}\n\t/ `;
         }
+
+        // now we have enough information to create the parse rule
+        // which is a choice between the rules for the direct sub-concepts
+        // and a rule where every property mentioned in the editor definition is set.
+        return `${myName} =${choiceBetweenSubconcepts} ${conceptDef.projection.lines.map(l =>
+            `${this.doAllItems(l.items)}`
+        ).join("\n\t")}\n\t{ return creator.create${myName}({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}}); }\n`;
+    }
+
+    private doAllItems(list: PiEditProjectionItem[]): string {
+        let result = "";
+        if (!!list && list.length > 0) {
+            list.forEach((item, index) => {
+                if (item instanceof PiEditProjectionText) {
+                    result += `${this.makeTextProjection(item)}`
+                } else if (item instanceof PiEditPropertyProjection) {
+                    result += `${this.makePropertyProjection(item, item.expression.findRefOfLastAppliedFeature().name)} ws `
+                } else if (item instanceof PiEditSubProjection) {
+                    result += `${this.makeSubProjection(item)} ws `
+                }
+            });
+        }
+        return result;
     }
 
     private makeSubProjection(item: PiEditSubProjection): string {
@@ -216,19 +226,14 @@ HEXDIG = [0-9a-f]
 
     private makePropertyProjection(item: PiEditPropertyProjection, variableName: string): string {
         const myElem = item.expression.findRefOfLastAppliedFeature();
-        // console.log("makePropertyProjection: " + item.expression.toPiString());
-        // if (!!!myElem) {
-        //     console.log("makePropertyProjection: no ELEM");
-        // }
         if (!!myElem) {
             if (myElem.isList) {
                 let listRuleName = this.makeNameOfListRule(myElem, item);
 
                 if (item.listJoin?.joinType === ListJoinType.Separator) {
-                    this.makeRuleForList(item, myElem, listRuleName);
                     return `${variableName}:${listRuleName} ws `;
                 } else {
-                    const subName = variableName + "List";
+                    const subName = variableName + "ListElem";
                     if (!myElem.isPart) {
                         listRuleName += referencePostfix;
                         if (!this.referredClassifiers.includes(myElem.type.referred)) {
@@ -263,16 +268,19 @@ HEXDIG = [0-9a-f]
         }
     }
 
-    private makeNameOfListRule(myElem: PiProperty | PiPrimitiveProperty, item: PiEditPropertyProjection) {
+    private makeNameOfListRule(myElem: PiProperty, item: PiEditPropertyProjection) {
         this.listNumber++;
         let listRuleName: string;
         if (myElem instanceof PiPrimitiveProperty) {
             listRuleName = Names.startWithUpperCase(myElem.primType) + "List" + this.listNumber;
+            this.makeRuleForList(item, myElem, listRuleName);
         } else {
             if (item.listJoin?.joinType === ListJoinType.Separator) {
                 listRuleName = Names.startWithUpperCase(myElem.type.referred.name) + "List" + this.listNumber;
+                this.makeRuleForList(item, myElem, listRuleName);
             } else {
                 listRuleName = Names.startWithUpperCase(myElem.type.referred.name);
+                // no extra list rule needed
             }
         }
         return listRuleName;
@@ -333,16 +341,6 @@ HEXDIG = [0-9a-f]
     }
 
     private makeRuleForList(item: PiEditPropertyProjection, myElem: PiProperty, listRuleName: string) {
-        // the following test should have been performed before calling this method
-        // we only need a separate rule for list with a separator, example:
-        // VariableList = head:Variable tail:("separator" ws v:Variable { return v; })*
-        // without separator we write, for example
-        // SomeRule = ".. anything" (Variable "terminator")*
-        if (item.listJoin?.joinType !== ListJoinType.Separator) {
-            console.log("rejecting rule " + listRuleName);
-            return;
-        }
-        // now make the rule
         // find the right typeName
         let typeName: string = "";
         if (myElem instanceof PiPrimitiveProperty) {
@@ -359,6 +357,7 @@ HEXDIG = [0-9a-f]
 
         // create the right separator text
         let joinText = this.makeListJoinText(item.listJoin?.joinText);
+
         // push the rule to the textForListConcepts to be added to the template later
         if (joinText.length > 0) {
             this.textForListConcepts.push(`${listRuleName} = head:${typeName} tail:("${joinText}" ws v:${typeName} { return v; })*
