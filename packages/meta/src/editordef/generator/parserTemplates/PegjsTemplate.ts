@@ -231,7 +231,7 @@ HEXDIG = [0-9a-f]
                 let listRuleName = this.makeNameOfListRule(myElem, item);
 
                 if (item.listJoin?.joinType === ListJoinType.Separator) {
-                    return `${variableName}:${listRuleName} ws `;
+                    return `${variableName}:${listRuleName}`;
                 } else {
                     const subName = variableName + "ListElem";
                     if (!myElem.isPart) {
@@ -242,15 +242,15 @@ HEXDIG = [0-9a-f]
                     }
                     let joinText = this.makeListJoinText(item.listJoin?.joinText);
                     if (joinText.length > 0) {
-                        return `${variableName}:(${subName}:${listRuleName} ws "${joinText}" ws { return ${subName}; } )* `;
+                        return `${variableName}:(${subName}:${listRuleName} ws "${joinText}" ws { return ${subName}; } )*`;
                     } else {
-                        return `${variableName}:(${listRuleName})* `;
+                        return `${variableName}:(${listRuleName})*`;
                     }
                 }
             } else {
                 if (myElem instanceof PiPrimitiveProperty) {
                     const typeName = this.makeTypeName(myElem, item);
-                    return `${variableName}:${typeName} ws`;
+                    return `${variableName}:${typeName}`;
                 } else {
                     const typeName = Names.classifier(myElem.type.referred);
                     if (myElem.isPart) {
@@ -259,7 +259,7 @@ HEXDIG = [0-9a-f]
                         if (!this.referredClassifiers.includes(myElem.type.referred)) {
                             this.referredClassifiers.push(myElem.type.referred);
                         }
-                        return `${variableName}:${typeName}${referencePostfix} ws `;
+                        return `${variableName}:${typeName}${referencePostfix}`;
                     }
                 }
             }
@@ -505,7 +505,7 @@ HEXDIG = [0-9a-f]
         // const escaped = trimmed.split("\"").join("\\\"");
         const trimmed = item.text.trim();
         let splitted: string[];
-        if (trimmed.includes(" ")) {
+        if (trimmed.includes(" ")) { // we need to add a series of texts with whitespace between them
             splitted = trimmed.split(" "); //.join(" ws ");
             let result: string = "";
             splitted.forEach(str => {
