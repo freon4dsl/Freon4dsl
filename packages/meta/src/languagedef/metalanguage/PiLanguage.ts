@@ -1,4 +1,4 @@
-import { PiElementReference } from "./PiElementReference";
+import { PiElementReference } from "./internal";
 import { ParseLocation } from "../../utils";
 
 const primitiveTypeName = "PiPrimitiveType";
@@ -13,7 +13,7 @@ export abstract class PiLangElement {
 export class PiLanguage extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
-    predefInstances: PiInstance[] = [];
+    // predefInstances: PiInstance[] = [];
     modelConcept: PiConcept; // set by the checker
 
     constructor() {
@@ -54,29 +54,29 @@ export class PiLanguage extends PiLangElement {
         return result as PiExpressionConcept;
     }
 
-    private addPredefinedElements() {
-        // make the primitive types
-        const primitiveTypeConcept = new PiLimitedConcept();
-        primitiveTypeConcept.name = "PiPrimitiveType";
-        primitiveTypeConcept.language = this;
-        this.concepts.push(primitiveTypeConcept);
-        const STRING = new PiInstance();
-        STRING.name = "string";
-        STRING.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
-        STRING.concept.owner = STRING;
-        this.predefInstances.push(STRING);
-        const NUMBER = new PiInstance();
-        NUMBER.name = "number";
-        NUMBER.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
-        NUMBER.concept.owner = NUMBER;
-        this.predefInstances.push(NUMBER);
-        const BOOLEAN = new PiInstance();
-        BOOLEAN.name = "boolean";
-        BOOLEAN.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
-        BOOLEAN.concept.owner = BOOLEAN;
-        this.predefInstances.push(BOOLEAN);
-        // TODO make the predefined functions
-    }
+    // private addPredefinedElements() {
+    //     // make the primitive types
+    //     const primitiveTypeConcept = new PiLimitedConcept();
+    //     primitiveTypeConcept.name = "PiPrimitiveType";
+    //     primitiveTypeConcept.language = this;
+    //     this.concepts.push(primitiveTypeConcept);
+    //     const STRING = new PiInstance();
+    //     STRING.name = "string";
+    //     STRING.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
+    //     STRING.concept.owner = STRING;
+    //     this.predefInstances.push(STRING);
+    //     const NUMBER = new PiInstance();
+    //     NUMBER.name = "number";
+    //     NUMBER.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
+    //     NUMBER.concept.owner = NUMBER;
+    //     this.predefInstances.push(NUMBER);
+    //     const BOOLEAN = new PiInstance();
+    //     BOOLEAN.name = "boolean";
+    //     BOOLEAN.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
+    //     BOOLEAN.concept.owner = BOOLEAN;
+    //     this.predefInstances.push(BOOLEAN);
+    //     // TODO make the predefined functions
+    // }
 }
 
 export abstract class PiClassifier extends PiLangElement {

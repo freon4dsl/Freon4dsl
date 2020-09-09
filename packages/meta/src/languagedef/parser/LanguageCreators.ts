@@ -7,11 +7,16 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiClassifier, PiProperty
+    PiLimitedConcept, PiConcept, PiProperty
 } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
 
 // Functions used to create instances of the language classes from the parsed data objects.
+let currentFileName: string = "SOME_FILENAME";
+
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
 
 export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     // console.log("createLanguage " + data.name);
@@ -26,11 +31,13 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
             } else {
                 result.concepts.push(con);
             }
+            // TODO is the next statement still needed after multi-file merge?
             con.language = result;
         }
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -96,6 +103,7 @@ export function createInterface(data: Partial<PiInterface>): PiInterface {
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     result.isPublic = !!data.isPublic;
     return result;
@@ -128,6 +136,7 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
 }
 
@@ -163,6 +172,7 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
     result.isList = !!data.isList;
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
 }
 
@@ -206,6 +216,7 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
     const result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -215,6 +226,7 @@ export function createClassifierReference(data: Partial<PiElementReference<PiCon
     const result = PiElementReference.createNamed<PiConcept>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -224,6 +236,7 @@ export function createInterfaceReference(data: Partial<PiElementReference<PiInte
     const result = PiElementReference.createNamed<PiInterface>(data.name, "PiInterface");
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -252,6 +265,7 @@ export function createInstance(data: Partial<PiInstance>) : PiInstance {
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -270,6 +284,7 @@ export function createPropDef(data: Partial<PiPropertyInstance>) : PiPropertyIns
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }

@@ -22,6 +22,11 @@ import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 
 const LOGGER = new PiLogger("EditorCreators").mute();
 
+let currentFileName: string = "SOME_FILENAME";
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
+
 // Functions used to create instances of the language classes from the parsed data objects.
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
@@ -32,6 +37,7 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -54,6 +60,7 @@ export function createConceptEditor(data: Partial<PiEditConcept>): PiEditConcept
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -79,6 +86,7 @@ export function createLanguageEditor(data: Partial<PiEditUnit>): PiEditUnit {
     });
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -98,6 +106,7 @@ export function createProjection(data: Partial<PiEditProjection>): PiEditProject
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -110,6 +119,7 @@ export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectio
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -125,6 +135,7 @@ export function createSubProjection(data: Partial<PiEditSubProjection>): PiEditS
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -137,6 +148,7 @@ export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEdi
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -146,7 +158,7 @@ export function createText(data: string): PiEditProjectionText {
     if (!!data) {
         result.text = data;
     }
-    // if (!!data.location) { result.location = data.location; }
+    // if (!!data.location) { result.location = data.location;         result.location.filename = currentFileName;}
     return result;
 }
 
@@ -167,6 +179,7 @@ export function createPropertyProjection(data: Partial<PiEditPropertyProjection>
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -195,6 +208,7 @@ export function createListJoin(data: Partial<ListJoin>): ListJoin {
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }

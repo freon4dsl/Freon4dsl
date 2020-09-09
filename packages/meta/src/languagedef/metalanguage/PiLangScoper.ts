@@ -1,6 +1,4 @@
-import { PiLangElement } from "./PiLanguage";
-import { PiClassifier, PiConcept, PiConceptProperty, PiInterface, PiLanguage, PiProperty } from "./PiLanguage";
-import { PiLangAppliedFeatureExp } from "./PiLangExpressions";
+import { PiLangElement, PiClassifier, PiConcept, PiConceptProperty, PiInterface, PiLanguage, PiProperty, PiLangAppliedFeatureExp } from "./internal";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("PiLangScoper"); // .mute();

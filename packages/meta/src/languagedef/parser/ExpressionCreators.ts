@@ -18,6 +18,11 @@ import { PiElementReference } from "../metalanguage/PiElementReference";
 
 const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
 
+let currentFileName: string = "SOME_FILENAME";
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
+
 export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");
     const result = new LanguageExpressionTester();
@@ -29,6 +34,7 @@ export function createTest(data: Partial<LanguageExpressionTester>): LanguageExp
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -46,6 +52,7 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -55,6 +62,7 @@ export function createClassifierReference(data: Partial<PiElementReference<PiCla
     const result = PiElementReference.createNamed<PiClassifier>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -79,6 +87,7 @@ export function createExpression(data: Partial<PiLangExp>): PiLangExp {
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -97,6 +106,7 @@ export function createAppliedFeatureExp(data: Partial<PiLangAppliedFeatureExp>):
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -112,6 +122,7 @@ export function createInstanceExp(data: Partial<PiInstanceExp>): PiInstanceExp {
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -131,6 +142,7 @@ export function createFunctionCall(data: Partial<PiLangFunctionCallExp>): PiLang
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }

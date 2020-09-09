@@ -37,7 +37,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         if (this.language === null || this.language === undefined) {
             throw new Error(`Editor definition checker does not known the language.`);
         }
-
+        editor.language = this.language;
         this.nestedCheck(
             {
                 check: this.language.name === editor.languageName,
@@ -199,7 +199,4 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         return result;
     }
 
-    private location(elem: PiEditElement): string {
-        return `[line: ${elem.location?.start.line}, column: ${elem.location?.start.column}]`;
-    }
 }

@@ -26,7 +26,7 @@ export class EditorGenerator {
         if (editDef === null || editDef === undefined) {
             editDef = this.createDefaultEditorDefinition();
         }
-        editDef.language = this.language;
+
         // add default values if they are not present in the editor definition
         PiEditProjectionUtil.addDefaults(editDef);
 

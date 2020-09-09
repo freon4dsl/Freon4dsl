@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiInterface, PiPrimitiveProperty, PiProperty } from "./index";
+import { PiClassifier, PiConcept, PiInterface, PiPrimitiveProperty, PiProperty } from "./internal";
 
 // TODO add all find methods from PiLanguage.ts to this util module
 // TODO add all methods from util/ModelHelpers.ts to this module

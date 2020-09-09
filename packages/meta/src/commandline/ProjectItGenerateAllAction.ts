@@ -25,7 +25,6 @@ const LOGGER = new PiLogger("ProjectItGenerateAllAction"); //.mute();
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
 
-    private defFolder: CommandLineStringParameter;
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
@@ -33,6 +32,13 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected validatorGenerator: ValidatorGenerator; // constructor needs language
     protected typerGenerator: PiTyperGenerator; // constructor needs language
     protected language: PiLanguage;
+
+    private defFolder: CommandLineStringParameter;
+    private languageFiles: string[] = [];
+    private editFiles: string[] = [];
+    private validFile: string = "";
+    private scopeFile: string = "";
+    private typerFile: string = "";
 
     public constructor() {
         super({
@@ -44,12 +50,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         });
     }
 
-    private languageFile: string = "";
-    private editFile: string = "";
-    private validFile: string = "";
-    private scopeFile: string = "";
-    private typerFile: string = "";
-
     generate(): void {
         LOGGER.info(this, "Starting generation of all parts of your language as defined in " + this.defFolder.value);
         // LOGGER.log("Output will be generated in: " + this.outputFolder);
@@ -57,15 +57,13 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         try {
             this.findDefinitionFiles();
 
-            // LOGGER.log("languageFile: " + this.languageFile);
-            // LOGGER.log("editFile: " + this.editFile);
-            // LOGGER.log("validFile: " + this.validFile);
-            // LOGGER.log("scopeFile: " + this.scopeFile);
-            // LOGGER.log("typerFile: " + this.typerFile);
-
             if (this.watch) {
-                if (!!this.languageFile) new FileWatcher(this.languageFile, this.generateLanguage);
-                if (!!this.editFile) new FileWatcher(this.editFile, this.generateEditorAndParser);
+                for (const file of this.languageFiles) {
+                    new FileWatcher(file, this.generateLanguage);
+                }
+                for (const file of this.editFiles) {
+                    new FileWatcher(file, this.generateEditorAndParser);
+                }
                 if (!!this.typerFile) new FileWatcher(this.typerFile, this.generateTyper);
                 if (!!this.scopeFile) new FileWatcher(this.scopeFile, this.generateScoper);
                 if (!!this.validFile) new FileWatcher(this.validFile, this.generateValidator);
@@ -150,8 +148,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.parserGenerator.outputfolder = this.outputFolder;
             this.parserGenerator.language = this.language;
 
-            if (this.editFile.length > 0) {
-                editor = new PiEditParser(this.language).parse(this.editFile);
+            if (this.editFiles.length > 0) {
+                editor = new PiEditParser(this.language).parseMulti(this.editFiles);
             } else {
                 LOGGER.log("Generating default editor");
                 editor = this.editorGenerator.createDefaultEditorDefinition();
@@ -168,7 +166,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     private generateLanguage = () => {
         // generate the language
         LOGGER.info(this, "Generating language structure");
-        this.language = new LanguageParser().parse(this.languageFile);
+        this.language = new LanguageParser().parseMulti(this.languageFiles);
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);
     };
@@ -185,9 +183,9 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         for (const filename of myFileSet) {
             // TODO take into account multiple files with the same extension
             if (/\.lang$/.test(filename)) {
-                this.languageFile = filename;
+                this.languageFiles.push(filename);
             } else if (/\.edit$/.test(filename)) {
-                this.editFile = filename;
+                this.editFiles.push(filename);
             } else if (/\.valid$/.test(filename)) {
                 this.validFile = filename;
             } else if (/\.scope$/.test(filename)) {

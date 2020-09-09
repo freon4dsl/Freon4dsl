@@ -3,6 +3,8 @@ import { PiParser } from "../../utils";
 import { PiEditChecker, PiEditUnit } from "../metalanguage";
 
 const editorParser = require("./PiEditGrammar");
+import { setCurrentFileName as editFileName } from "./PiEditCreators";
+import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
 export class PiEditParser extends PiParser<PiEditUnit> {
     language: PiLanguage;
@@ -12,5 +14,28 @@ export class PiEditParser extends PiParser<PiEditUnit> {
         this.language = language;
         this.parser = editorParser;
         this.checker = new PiEditChecker(language);
+    }
+
+    protected merge(submodels: PiEditUnit[]): PiEditUnit {
+        if (submodels.length > 0) {
+            let result: PiEditUnit = submodels[0];
+            submodels.forEach((sub, index) => {
+                if (index > 0) {
+                    if (sub.name === result.name) { // all submodels should be of the same model
+                        result.conceptEditors.push(...sub.conceptEditors);
+                    } else {
+                        // TODO error message
+                    }
+                }
+            });
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    protected setCurrentFileName(file: string) {
+        editFileName(file);
+        expressionFileName(file);
     }
 }
