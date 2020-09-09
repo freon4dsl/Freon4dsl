@@ -41,7 +41,7 @@ concept TaxID {
 concept TaxRule { 
     name: string;
 //    parameters: RuleParameter[]
-    expression: Expression;
+    expression: TaxExpression;
 //    result : Money
 }
 
@@ -50,8 +50,8 @@ concept RuleParameter {
     type : IncomePart;
 }
 
-expression PercentageExpression base Expression {
-    inner: Expression;
+expression PercentageExpression base TaxExpression {
+    inner: TaxExpression;
     priority = 2;
 }
 
@@ -77,17 +77,17 @@ limited TaxPayerType {
     Person = {"name": "Person"}
 }
 
-//expression FunctionCallExpression base Expression {
+//expression FunctionCallExpression base TaxExpression {
 //    reference functionDefinition: Function
 //}
 
-//expression VariableRef base Expression {
+//expression VariableRef base TaxExpression {
 //    referredName: string
 //    reference attribute: Attribute
 //}
 
-// import Expression lib
-abstract expression Expression {
+// import TaxExpression lib
+abstract expression TaxExpression {
     //appliedfeature?: AppliedFeature;
 }
 /*
@@ -102,7 +102,7 @@ expression AppliedFeature {
 //    appliedfeature: AppliedFeature;
 // }
 
-abstract expression LiteralExpression base Expression {
+abstract expression LiteralExpression base TaxExpression {
     value: string;
 }
 
@@ -115,13 +115,13 @@ expression NumberLiteralExpression base LiteralExpression {
 expression BooleanLiteralExpression base LiteralExpression {
 }
 
-expression AbsExpression base Expression {
-    expr: Expression;
+expression AbsExpression base TaxExpression {
+    expr: TaxExpression;
 }
 
-abstract binary expression BinaryExpression base Expression {
-    left: Expression;
-    right: Expression;
+abstract binary expression BinaryExpression base TaxExpression {
+    left: TaxExpression;
+    right: TaxExpression;
 }
 
 binary expression MultiplyExpression base BinaryExpression {
@@ -159,13 +159,13 @@ binary expression EqualsExpression base ComparisonExpression {
     priority = 10;
 }
 
-expression IfExpression base Expression {
-    condition: Expression;
-    whenTrue: Expression;
-    whenFalse: Expression;
+expression IfExpression base TaxExpression {
+    condition: TaxExpression;
+    whenTrue: TaxExpression;
+    whenFalse: TaxExpression;
 }
 
-// end import Expression lib
+// end import TaxExpression lib
 
 
 // in Scope Def: langscope generalDeduction : Money = 3000,-

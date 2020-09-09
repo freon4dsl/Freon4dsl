@@ -15,10 +15,10 @@ concept InputField  implements INamedConcept {
 }
 
 concept OutputField  {
-	expression: Expression;
+	expression: CalcExpression;
 }
 
-expression InputFieldReference base Expression {
+expression InputFieldReference base CalcExpression {
 	reference field: InputField;
 }
 
@@ -27,17 +27,17 @@ interface INamedConcept {
 }
 
 // add Simple Numeric Expression from library
-abstract expression Expression {}
+abstract expression CalcExpression {}
 
-abstract expression LiteralExpression base Expression {}
+abstract expression LiteralExpression base CalcExpression {}
 
 expression NumberLiteralExpression base LiteralExpression {
     value: string;
 }
 
-abstract binary expression BinaryExpression base Expression {
-    left: Expression;
-    right: Expression;
+abstract binary expression BinaryExpression base CalcExpression {
+    left: CalcExpression;
+    right: CalcExpression;
 }
 
 binary expression MultiplyExpression base BinaryExpression {

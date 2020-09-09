@@ -11,15 +11,15 @@ import {
     PiElementReference
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import * as fs from "fs";
 import { DemoValidator } from "../validator/gen";
+import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
         const model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
-        const unparser = new DemoUnparser();
+        const unparser = DemoEnvironment.getInstance().writer;
 
         beforeEach(done => {
             done();
@@ -29,7 +29,7 @@ describe("Testing Unparser", () => {
             let result: string = "";
             let left = new DemoNumberLiteralExpression();
             left.value = 3;
-            result = unparser.unparse(left, 0);
+            result = unparser.writeToString(left, 0);
             expect(result).toBe("3");
         });
 
@@ -38,7 +38,7 @@ describe("Testing Unparser", () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
-            result = unparser.unparse(mult, 0);
+            result = unparser.writeToString(mult, 0);
             expect(result).toBe("( 3 * 10 )");
         });
 
@@ -47,7 +47,7 @@ describe("Testing Unparser", () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
-            result = unparser.unparse(mult, 0);
+            result = unparser.writeToString(mult, 0);
             expect(result).toBe("( 3 * ' \"temp\" ' )");
         });
 
@@ -59,7 +59,7 @@ describe("Testing Unparser", () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = div;
             mult.right = makeLiteralExp("temp");
-            result = unparser.unparse(mult, 0);
+            result = unparser.writeToString(mult, 0);
             expect(result).toBe("( ( 3 / 4 ) * ' \"temp\" ' )");
         });
 
@@ -78,7 +78,7 @@ describe("Testing Unparser", () => {
 
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
-            result = unparser.unparse(multiplyExpression, 0, true);
+            result = unparser.writeToString(multiplyExpression, 0, true);
             expect(result).toBe("( ( 1 + 2 ) * DemoVariableRef )");
         });
 
@@ -91,7 +91,7 @@ describe("Testing Unparser", () => {
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
             // determine.declaredType = DemoAttributeType.Boolean;
             // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
-            result = unparser.unparse(determine, 0);
+            result = unparser.writeToString(determine, 0);
             expect(result).toBe("DemoFunction determine");
             // expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
         });
@@ -117,7 +117,7 @@ describe("Testing Unparser", () => {
             // Resultvar.declaredType = DemoAttributeType.Boolean;
             // Person { unitName, age, first(Resultvar) = 5 + 24 }
 
-            result = unparser.unparse(personEnt, 0, true);
+            result = unparser.writeToString(personEnt, 0, true);
             expect(result).toBe("DemoEntity Person");
             // expect(result).toBe("DemoEntity Person{ age : Boolean, unitName : String, first( Resultvar : Boolean ): Boolean = 5 + 24}");
         });
@@ -134,7 +134,7 @@ describe("Testing Unparser", () => {
             // the custom validation adds error message to an otherwise correct model
             expect(errors.length).toBe(9);
 
-            result = unparser.unparse(model, 0, false);
+            result = unparser.writeToString(model, 0, false);
             let path: string = "./unparsedDemoModel.txt";
             if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, result);
@@ -142,6 +142,7 @@ describe("Testing Unparser", () => {
                 console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
             }
 
+            console.log(result);
             expect(result).toMatchSnapshot();
         });
     });

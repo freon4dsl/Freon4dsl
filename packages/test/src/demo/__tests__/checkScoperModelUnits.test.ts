@@ -1,16 +1,15 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
-import { DemoModel, DemoFunction, Demo } from "../language/gen";
+import { DemoModel, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 import { DemoUnitCreator } from "./DemoUnitCreator";
 import { initializeLanguage } from "../language/gen/DemoLanguage";
+import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 
 describe("testing Scoper on model units", () => {
     describe("Scoper.getVisibleElements from DemoModel with Units", () => {
         let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
-        let scoper = new DemoScoper();
-        let unparser = new DemoUnparser();
+        let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
         initializeLanguage();    // needed for conversion to json
 

@@ -18,7 +18,7 @@ import { GenerationStatus, Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
-import { ParserGenerator } from "../editordef/generator/ParserGenerator";
+import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenerator";
 
 const LOGGER = new PiLogger("ProjectItGenerateAllAction"); //.mute();
 
@@ -28,7 +28,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     private defFolder: CommandLineStringParameter;
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
-    protected parserGenerator: ParserGenerator = new ParserGenerator();
+    protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
     protected scoperGenerator: ScoperGenerator; // constructor needs language
     protected validatorGenerator: ValidatorGenerator; // constructor needs language
     protected typerGenerator: PiTyperGenerator; // constructor needs language

@@ -23,12 +23,13 @@
     "defaultscoper":"ts-node ../meta/src/commandline/projectit all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper":"cp src/testDefaultScoper/defs/Language.lang src/testDefinedScoper/defs/Language.lang && cp src/testDefaultScoper/__tests__/ModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && ts-node ../meta/src/commandline/projectit all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
     "parsergen":    "ts-node ../meta/src/commandline/projectit all -d src/parser_gen/defs -o src/parser_gen",
-    "build":        "yarn run imports && yarn run langconstr && yarn run testproject && yarn run defaultscoper && yarn run definedscoper && yarn run demo && yarn run parsergen && tsc",
+    "build":        "yarn run imports && yarn run langconstr && yarn run testproject && yarn run defaultscoper && yarn run definedscoper && yarn run demo && yarn run parsergen && yarn run octopus && tsc",
     "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-init":   "rm */*/*/*Initialization.ts",
+    "clean-parser": "rm -r */*/*parse*",
     "clean":        "yarn run clean-config && yarn run clean-custom && yarn run clean-init",
-    "test":         "yarn run build && jest"
+    "test":         "jest"
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.9",

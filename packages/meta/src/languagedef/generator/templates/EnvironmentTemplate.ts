@@ -5,7 +5,7 @@ import {
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
     EDITOR_FOLDER,
-    EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, UNPARSER_GEN_FOLDER
+    EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, WRITER_GEN_FOLDER, READER_GEN_FOLDER
 } from "../../../utils/";
 import { PiLanguage } from "../../metalanguage";
 
@@ -14,9 +14,9 @@ export class EnvironmentTemplate {
     generateEnvironment(language: PiLanguage, relativePath: string): string {
         return `
         import { projectitConfiguration } from "../../projectit/ProjectitConfiguration";
-        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiProjection}, 
+        import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiUnparser}, ${Names.PiModelInitialization} 
+                    ${Names.PiWriter}, ${Names.PiModelInitialization} 
                } from "${PROJECTITCORE}";
         import { ${Names.ProjectionalEditor} } from "@projectit/core";
         import * as React from "react";
@@ -24,9 +24,9 @@ export class EnvironmentTemplate {
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
-        import { ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.customProjection(language)}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
-        import { ${Names.unparser(language)}  } from "${relativePath}${UNPARSER_GEN_FOLDER}/${Names.unparser(language)}";
+        import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
+        import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.initialization(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.initialization(language)}";
 
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
@@ -85,7 +85,8 @@ export class EnvironmentTemplate {
             typer: ${Names.PiTyper} = new ${Names.typer(language)}();
             stdlib: ${Names.PiStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
-            unparser: ${Names.PiUnparser} = new ${Names.unparser(language)}();
+            writer: ${Names.PiWriter} = new ${Names.writer(language)}();
+            reader: ${Names.PiReader} = new ${Names.reader(language)}();
             initializer: ${Names.PiModelInitialization} = new ${Names.initialization(language)}();
             languageName: string = "${language.name}";
             unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];

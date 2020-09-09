@@ -1,6 +1,6 @@
 language test3
 
-model Model {
+model ROOT {
     name: string;
     unit: AA;
 }

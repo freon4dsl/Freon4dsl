@@ -17,7 +17,7 @@ import {
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../metalanguage";
 
-export class UnparserTemplate {
+export class WriterTemplate {
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
@@ -25,11 +25,13 @@ export class UnparserTemplate {
      */
     public generateUnparser(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
-        const generatedClassName: String = Names.unparser(language);
+        const generatedClassName: String = Names.writer(language);
+        const writerInterfaceName: string = Names.PiWriter;
 
         // Template starts here
         return `
-        import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import * as fs from "fs";
+        import { ${Names.PiNamedElement}, ${writerInterfaceName} } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         
@@ -50,7 +52,7 @@ export class UnparserTemplate {
          * elements of language ${language.name}.
          * It is, amongst others, used to create error messages in the validator.
          */
-        export class ${generatedClassName}  {
+        export class ${generatedClassName} implements ${writerInterfaceName} {
             output: string[] = [];      // stores the result, one line per array element
             currentLine: number = 0;   // keeps track of the element in 'output' that we are working on
 
@@ -65,8 +67,8 @@ export class UnparserTemplate {
              * @param startIndent
              * @param short
              */
-            public unparse(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean) : string {
-                this.unparseToLines(modelelement, startIndent, short);
+            public writeToString(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean) : string {
+                this.writeToLines(modelelement, startIndent, short);
                 return \`\$\{this.output.map(line => \`\$\{line\}\`).join("\\n").trimRight()}\`;
             }
  
@@ -80,7 +82,7 @@ export class UnparserTemplate {
              * @param startIndent
              * @param short
              */
-            public unparseToLines(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean): string[] {
+            public writeToLines(modelelement: ${allLangConcepts}, startIndent?: number, short?: boolean): string[] {
                 // set default for optional parameters
                 if (startIndent === undefined) {
                     startIndent = 0;
@@ -101,11 +103,28 @@ export class UnparserTemplate {
                 this.output[this.currentLine] = indentString;
         
                 // do the actual work
-                this.unparsePrivate(modelelement, short);
+                this.unparse(modelelement, short);
                 return this.output;
             }
+            
+            /**
+             * Writes a string representation of 'modelelement' to the file located at 'filepath'. If the
+             * file is not present it will be created.
+             * May throw an Error if the file cannot be written or created.
+             * @param filepath
+             * @param modelelement
+             * @param startIndent
+             */
+            public writeToFile(filepath: string, modelelement: ${allLangConcepts}, startIndent?: number) {
+                const result = this.writeToString(modelelement, startIndent, false);
+                if (fs.existsSync(filepath)) {
+                    // TODO see if we should handle this differently
+                    console.log(this, "model unit writer: file " + filepath + " already exists, overwriting it.");
+                }
+                fs.writeFileSync(filepath, result);
+            }
         
-            private unparsePrivate(modelelement: ${allLangConcepts}, short: boolean) {
+            private unparse(modelelement: ${allLangConcepts}, short: boolean) {
                 ${sortClasses(language.concepts).map(concept => `
                 if(modelelement instanceof ${Names.concept(concept)}) {
                     this.unparse${Names.concept(concept)}(modelelement, short);
@@ -129,7 +148,7 @@ export class UnparserTemplate {
             private unparseList(list: ${allLangConcepts}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
-                    this.unparsePrivate(listElem, short);
+                    this.unparse(listElem, short);
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
             }
@@ -211,6 +230,8 @@ export class UnparserTemplate {
                         break;
                     }
                 }
+                
+                // then add newline and indentation
                 if (vertical && !isLastInList) {
                     if (!short) {
                         this.newlineAndIndentation(indent);
@@ -328,9 +349,9 @@ export class UnparserTemplate {
                 return `${comment}
                     private unparse${name}(modelelement: ${name}, short: boolean) {
                         this.output[this.currentLine] += "( ";
-                        this.unparsePrivate(modelelement.left, short);
+                        this.unparse(modelelement.left, short);
                         this.output[this.currentLine] += "${conceptDef.symbol} ";
-                        this.unparsePrivate(modelelement.right, short);
+                        this.unparse(modelelement.right, short);
                         this.output[this.currentLine] += ") ";
                 }`;
             }
@@ -474,7 +495,7 @@ export class UnparserTemplate {
             } else {
                 let myCall: string = "";
                 if (myElem.isPart || type instanceof PiLimitedConcept) {
-                    myCall += `this.unparsePrivate(${myTypeScript}, short) `;
+                    myCall += `this.unparse(${myTypeScript}, short) `;
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
                     // remove only the last ".referred"

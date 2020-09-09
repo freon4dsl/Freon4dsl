@@ -1,6 +1,6 @@
 language test3
 
-model Model {
+model ROOT {
     name: string;
     unit: AA;
 }
@@ -25,7 +25,7 @@ concept BaseBaseBB {
     AAprop5: boolean;
     AAprop6: boolean[];
     // properties with concept as type
-    AAprop7: BB;
+    AAprop7?: BB;
     AAprop8: BB[];
     reference AAprop9: CC;
     reference AAprop10: CC[];

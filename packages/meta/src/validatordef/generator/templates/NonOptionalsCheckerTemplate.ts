@@ -1,4 +1,4 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -20,12 +20,12 @@ export class NonOptionalsCheckerTemplate {
         const errorSeverityName: string = Names.PiErrorSeverity;
         const checkerClassName: string = Names.nonOptionalsChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
-        const unparserInterfaceName: string = Names.PiUnparser;
+        const writerInterfaceName: string = Names.PiWriter;
         this.done = [];
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
@@ -39,8 +39,8 @@ export class NonOptionalsCheckerTemplate {
          * the actual checking of each node in the tree.
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
-            // 'myUnparser' is used to provide error messages on the nodes in the model tree
-            myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
+            // 'myWriter' is used to provide error messages on the nodes in the model tree
+            myWriter: ${writerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 

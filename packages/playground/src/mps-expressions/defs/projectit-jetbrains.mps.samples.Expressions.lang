@@ -2,10 +2,10 @@ language MpsExpressions // jetbrains.mps.samples.Expressions
 
 model MpsExpressionModel {
     name: string;
-    expressions: Expression[];
+    expressions: MpsExpression[];
 }
 
-modelunit Expression {
+modelunit MpsExpression {
     name: string;
     expression: SimpleMathExpression;
 }

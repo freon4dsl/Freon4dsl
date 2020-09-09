@@ -25,7 +25,9 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static PiStdlib = "PiStdlib";
     // tslint:disable-next-line:variable-name
-    public static PiUnparser = "PiUnparser";
+    public static PiWriter = "PiWriter";
+    // tslint:disable-next-line:variable-name
+    public static PiReader = "PiReader";
     // tslint:disable-next-line:variable-name
     public static PiError = "PiError";
     // tslint:disable-next-line:variable-name
@@ -52,7 +54,7 @@ export class Names {
     public static styles = "projectitStyles";
     public static nameForSelf = "self";
 
-    // because the below Names are used to generate TypeScript classes
+    // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character
 
     // TODO see if we can remove this parameter
@@ -113,7 +115,7 @@ export class Names {
     }
 
     public static metaType(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "ConceptType";
+        return this.startWithUpperCase(language?.name) + "MetaType";
     }
 
     public static allConcepts(language: PiLanguage): string {
@@ -187,16 +189,16 @@ export class Names {
         return "get" + Names.concept(c) + "Box";
     }
 
-    public static unparser(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "Unparser";
+    public static writer(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
     public static pegjs(unit: PiConcept): string {
-        return this.startWithUpperCase(unit?.name) + "UnitParser";
+        return this.startWithUpperCase(unit?.name) + "Parser";
     }
 
-    public static fileReader(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "FileReader";
+    public static reader(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
 
     public static parserCreator(language: PiLanguage): string {

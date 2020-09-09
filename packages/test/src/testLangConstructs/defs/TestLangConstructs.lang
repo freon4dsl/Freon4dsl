@@ -160,13 +160,13 @@ interface interfaceWithPrimProps {
 interface interfaceWithNonPrimProps {
     name: string;
     // properties with concept as type
-    conceptProp7: conceptWithAllProps;
-    conceptProp8: conceptWithAllProps[];
+    conceptProp7?: conceptWithAllProps;
+    conceptProp8?: conceptWithAllProps[];
     reference conceptProp9: conceptWithAllProps;
     reference conceptProp10: conceptWithAllProps[];
     // properties with interface as type
-    conceptProp11: interfaceWithNonPrimProps;
-    conceptProp12: interfaceWithNonPrimProps[];
+    conceptProp11?: interfaceWithNonPrimProps;
+    conceptProp12?: interfaceWithNonPrimProps[];
     reference conceptProp13: interfaceWithNonPrimProps;
     reference conceptProp14: interfaceWithNonPrimProps[];
     // properties with limited concept as type
