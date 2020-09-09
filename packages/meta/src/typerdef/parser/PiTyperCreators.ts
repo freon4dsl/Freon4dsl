@@ -2,6 +2,11 @@ import { PiTypeDefinition, PiTypeIsTypeRule, PiTypeStatement, PiTypeClassifierRu
 
 // Functions used to create instances of the language classes (in TyperDefLang) from the parsed data objects (from TyperGrammar.pegjs).
 
+let currentFileName: string = "SOME_FILENAME";
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
+
 export function createTyperDef(data: Partial<PiTypeDefinition>): PiTypeDefinition {
     const result = new PiTypeDefinition();
 

@@ -11,6 +11,11 @@ import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metala
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).
 
+let currentFileName: string = "SOME_FILENAME";
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
+
 export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDef {
     const result = new PiValidatorDef();
 
