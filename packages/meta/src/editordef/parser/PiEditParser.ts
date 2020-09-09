@@ -5,9 +5,6 @@ import { PiEditChecker, PiEditUnit } from "../metalanguage";
 const editorParser = require("./PiEditGrammar");
 import { setCurrentFileName as editFileName } from "./PiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
-
-const LOGGER = new PiLogger("PiEditParser"); //.mute();
 
 export class PiEditParser extends PiParser<PiEditUnit> {
     language: PiLanguage;
@@ -24,12 +21,7 @@ export class PiEditParser extends PiParser<PiEditUnit> {
             let result: PiEditUnit = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
-                    if (sub.name === result.name) { // all submodels should be of the same model
-                        result.conceptEditors.push(...sub.conceptEditors);
-                    } else {
-                        // TODO error message: is this really wrong???
-                        LOGGER.error(this, "Submodels do not have the same name");
-                    }
+                    result.conceptEditors.push(...sub.conceptEditors);
                 }
             });
             return result;
