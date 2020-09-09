@@ -34,9 +34,9 @@ export class PegjsTemplate {
         this.listNumber = 0;
         const creatorName = Names.parserCreator(language);
 
-        // Note that the order in which the rules are stated, determines whether the parser is functioning or not
-        // first create a rule for the unit, next for its children, etc.
-        // the following method sorts the elements in the editor definition and
+        // Note that the order in which the rules are stated, determines whether the parser is functioning or not.
+        // So first we create a rule for the unit, next for its children, etc.
+        // The following method sorts the elements in the editor definition and
         // stores its result in two lists: one for all editor definitions found, one for all used interfaces
         const sortedEditorDefs: PiEditConcept[] = [];
         const sortedInterfaces: PiInterface[] = [];
@@ -171,7 +171,7 @@ HEXDIG = [0-9a-f]
         const subs = piClassifier.allSubConceptsDirect();
         let choiceBetweenSubconcepts = "";
         if (subs.length > 0) {
-            choiceBetweenSubconcepts = `${subs.map((implementor, index) =>
+            choiceBetweenSubconcepts = ` ${subs.map((implementor, index) =>
                 `var${index}:${Names.classifier(implementor)} { return var${index}; }`).join("\n\t/ ")}\n\t/ `;
         }
 
@@ -423,12 +423,11 @@ HEXDIG = [0-9a-f]
                     const type = part.type.referred;
                     this.addPartConcepts(type, result, typesDone);
                 });
-            } else {
-                // for abstract concepts include all direct subconcepts
-                piClassifier.allSubConceptsDirect().forEach(type2 => {
-                    this.addPartConcepts(type2, result, typesDone);
-                });
             }
+            // for any concept: add all direct subconcepts
+            piClassifier.allSubConceptsDirect().forEach(type2 => {
+                this.addPartConcepts(type2, result, typesDone);
+            });
         } else if (piClassifier instanceof PiInterface) {
             // for interfaces include all implementors and subinterfaces
             findAllImplementorsAndSubs(piClassifier).forEach(type2 => {
