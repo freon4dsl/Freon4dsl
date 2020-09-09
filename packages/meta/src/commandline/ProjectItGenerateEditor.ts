@@ -3,14 +3,14 @@ import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { PiLogger } from "../../../core/src/util/PiLogging";
-import { ParserGenerator } from "../editordef/generator/ParserGenerator";
+import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenerator";
 
 const LOGGER = new PiLogger("ProjectItGenerateEditor"); // .mute();
 
 export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
     private editorFile: CommandLineStringParameter;
     protected editorGenerator: EditorGenerator = new EditorGenerator();
-    protected parserGenerator: ParserGenerator = new ParserGenerator();
+    protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
 
     public constructor() {
         super({

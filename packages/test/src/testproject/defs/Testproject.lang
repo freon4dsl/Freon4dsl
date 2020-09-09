@@ -29,8 +29,8 @@ concept AA  {
     AAprop16: ZZ[];
     reference AAprop17: ZZ;
     reference AAprop18: ZZ[];
-    AAprop19: AA;
-    AAprop20: AA[];
+//    AAprop19: AA;
+//    AAprop20: AA[];
     AAprop21: CC;
 }
 

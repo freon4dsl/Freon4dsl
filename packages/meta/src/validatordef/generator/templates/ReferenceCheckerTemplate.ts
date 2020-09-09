@@ -1,4 +1,4 @@
-import { Names, PathProvider, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
@@ -11,7 +11,7 @@ export class ReferenceCheckerTemplate {
         const errorSeverityName: string = Names.PiErrorSeverity;
         const checkerClassName: string = Names.referenceChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
-        const unparserInterfaceName: string = Names.PiUnparser;
+        const writerInterfaceName: string = Names.PiWriter;
         const environmentName: string = Names.environment(language);
         const overallTypeName: string = Names.allConcepts(language);
 
@@ -25,7 +25,7 @@ export class ReferenceCheckerTemplate {
 
         // the template starts here
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${unparserInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${overallTypeName}, ${Names.PiElementReference}, ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${environmentName} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${environmentName}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
@@ -39,8 +39,8 @@ export class ReferenceCheckerTemplate {
          * the actual checking of each node in the tree.
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
-            // 'myUnparser' is used to provide error messages on the nodes in the model tree
-            myUnparser: ${unparserInterfaceName} = (${environmentName}.getInstance() as ${environmentName}).unparser;
+            // 'myWriter' is used to provide error messages on the nodes in the model tree
+            myWriter: ${writerInterfaceName} = (${environmentName}.getInstance() as ${environmentName}).writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 

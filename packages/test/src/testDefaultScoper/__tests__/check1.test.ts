@@ -1,7 +1,5 @@
 import { DSmodel } from "../language/gen";
 import { ModelCreator } from "./ModelCreator";
-import { ScoperTestScoper } from "../scoper/gen";
-import { ScoperTestUnparser } from "../unparser/gen/ScoperTestUnparser";
 import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
 import * as fs from "fs";
 
@@ -29,7 +27,7 @@ describe("Testing Default Scoper", () => {
     const creator = new ModelCreator();
     const environment = ScoperTestEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
     const scoper = environment.scoper;
-    const unparser = environment.unparser;
+    const unparser = environment.writer;
 
     test("names in model with 1 unit of depth 2", () => {
         const model: DSmodel = creator.createModel(1, 2 );
@@ -40,7 +38,7 @@ describe("Testing Default Scoper", () => {
             expect(visibleNames).toContain(x);
         }
         // run unparser to inspect model
-        const unparsed: string = unparser.unparse(model, 0, false);
+        const unparsed: string = unparser.writeToString(model, 0, false);
         const path: string = "./unparsedGeneratedModel.txt";
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, unparsed);

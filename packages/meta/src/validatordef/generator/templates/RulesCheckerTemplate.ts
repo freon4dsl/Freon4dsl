@@ -34,7 +34,7 @@ export class RulesCheckerTemplate {
         const errorClassName: string = Names.PiError;
         const checkerClassName: string = Names.rulesChecker(language);
         const typerInterfaceName: string = Names.PiTyper;
-        const unparserInterfaceName: string = Names.PiUnparser;
+        const writerInterfaceName: string = Names.PiWriter;
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const commentBefore = `/**
                                 * Checks 'modelelement' before checking its children.
@@ -42,7 +42,7 @@ export class RulesCheckerTemplate {
                                 * @param modelelement
                                 */`;
         return `
-        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${unparserInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
@@ -56,8 +56,8 @@ export class RulesCheckerTemplate {
          * the actual checking of each node in the tree.
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
-            // 'myUnparser' is used to provide error messages on the nodes in the model tree
-            myUnparser: ${unparserInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).unparser;
+            // 'myWriter' is used to provide error messages on the nodes in the model tree
+            myWriter: ${writerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).writer;
             // 'typer' is used to implement the 'typecheck' rules in the validator definition 
             typer: ${typerInterfaceName} = (${Names.environment(language)}.getInstance() as ${Names.environment(language)}).typer;
             // 'errorList' holds the errors found while traversing the model tree
@@ -201,8 +201,8 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '" + this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) + 
-                         "' does not conform to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
+                         "' does not conform to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
         }
         return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
@@ -212,8 +212,8 @@ export class RulesCheckerTemplate {
 
     private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '"+ this.myUnparser.unparse(${langExpToTypeScript(r.type1)}, 0, true) 
-                        + "' should be equal to (the type of) '" + this.myUnparser.unparse(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type of '"+ this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) 
+                        + "' should be equal to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
         }
         return `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));

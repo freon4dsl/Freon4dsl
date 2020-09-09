@@ -1,8 +1,9 @@
 import { PiElement } from "../language";
 
 // Part of the ProjectIt Framework.
+// TODO change tags
 // tag::unparser-interface[]
-export interface PiUnparser {
+export interface PiWriter {
 
     /**
      * Returns a string representation of 'modelelement'.
@@ -11,7 +12,7 @@ export interface PiUnparser {
      * @param modelelement
      * @param short
      */
-    unparse(modelelement: PiElement, startIndent?: number, short?: boolean): string;
+    writeToString(modelelement: PiElement, startIndent?: number, short?: boolean): string;
 
     /**
      * Returns a string representation of 'modelelement', divided into an array of strings,
@@ -21,6 +22,16 @@ export interface PiUnparser {
      * @param modelelement
      * @param short
      */
-    unparseToLines(modelelement: PiElement, startIndent?: number, short?: boolean): string[];
+    writeToLines(modelelement: PiElement, startIndent?: number, short?: boolean): string[];
+
+    /**
+     * Writes a string representation of 'modelelement' to the file located at 'filepath'. If the
+     * file is not present it will be created.
+     * May throw an Error if the file cannot be written or created.
+     * @param filepath
+     * @param modelelement
+     * @param startIndent
+     */
+    writeToFile(filepath: string, modelelement: PiElement, startIndent?: number);
 }
 // end::unparser-interface[]

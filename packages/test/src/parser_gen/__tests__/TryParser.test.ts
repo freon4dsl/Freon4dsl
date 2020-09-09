@@ -1,14 +1,11 @@
-import { DemoFileReader } from "../parser/gen/DemoFileReader";
-import { DemoUnparser } from "../unparser/gen/DemoUnparser";
 import { Demo, DemoUnit } from "../language/gen";
-
-const demoParser = require("../parser/gen/DemoUnitUnitParser");
+import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 
 describe("Test the parser", () => {
     test( "XXX", () => {
-        const reader = new DemoFileReader<DemoUnit>();
-        reader.parser = demoParser;
-        const unit1 = reader.parse("src/parser_gen/__tests__/ParserInput1.txt");
+        const reader = DemoEnvironment.getInstance().reader;
+        const writer = DemoEnvironment.getInstance().writer;
+        const unit1: DemoUnit = reader.readFromFile("src/parser_gen/__tests__/ParserInput1.txt", "DemoUnit") as DemoUnit;
         //
         unit1.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();
@@ -19,7 +16,7 @@ describe("Test the parser", () => {
             expect(attr.declaredType).not.toBeNull();
         });
         //
-        const unit2 = reader.parse("src/parser_gen/__tests__/ParserInput1.txt");
+        const unit2 = reader.readFromFile("src/parser_gen/__tests__/ParserInput1.txt", "DemoUnit") as DemoUnit;
         //
         unit2.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();
@@ -42,8 +39,8 @@ describe("Test the parser", () => {
         //     console.log(e.message + " in " + e.locationdescription);
         // }
         //
-        const unparser = new DemoUnparser();
-        let text = unparser.unparse(model, 0, false);
+        let text = writer.writeToString(model, 0, false);
+        // TODO use snapshot
         expect(text.length).toBe(1104);
     });
 });

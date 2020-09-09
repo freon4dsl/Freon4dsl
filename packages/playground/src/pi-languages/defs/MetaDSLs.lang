@@ -53,7 +53,7 @@ abstract concept PiProperty base PiLangElement {
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     reference type: PiClassifier;
-    owningConcept: PiClassifier; // should this be a reference?
+    reference owningConcept: PiClassifier;
 }
 concept PiConceptProperty base PiProperty {
     hasLimitedType: boolean;

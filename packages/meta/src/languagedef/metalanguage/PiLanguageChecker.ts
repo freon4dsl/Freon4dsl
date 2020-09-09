@@ -13,7 +13,7 @@ import { PiLangUtil } from "./PiLangUtil";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
-const piReservedWords = ["model", "modelunit", "abstract", "limited", "interface", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
+const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
 
 // TODO add check: priority error from parser into checker => only for expression concepts
 
@@ -24,7 +24,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         LOGGER.info(this, "Checking language '" + language.name + "'");
         this.foundModel = false;
         this.errors = [];
-        this.simpleCheck(!!language.name && !piReservedWords.includes(language.name) ,
+        this.simpleCheck(!!language.name && !piReservedWords.includes(language.name.toLowerCase()) ,
             `Language should have a name ${this.location(language)}.`);
 
         this.language = language;
@@ -58,6 +58,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         // unique names, that there are no circular inheritance or interface relationships,
         // and that all their properties have unique names
         const names: string[] = [];
+        let foundSomeCircularity: boolean = false;
         language.concepts.forEach(con => {
             // check unique names, disregarding upper/lower case of first character
             if (names.includes(con.name)) {
@@ -69,10 +70,14 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             }
             // check circularity
             const circularNames: string[] = [];
-            const foundCircularity = this.checkCircularInheritance(circularNames, con);
+            const conceptIsCircular = this.checkCircularInheritance(circularNames, con);
+            // remember that we found circularity for one of the concepts
+            if (conceptIsCircular) {
+                foundSomeCircularity = true;
+            }
             // check that all properties have unique names
             // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
-            if (!foundCircularity) {
+            if (!conceptIsCircular) {
                 this.checkPropertyUniqueNames(con, true);
                 // check that modelunits have a name property and that they are not marked as 'model'
                 if ( con.isUnit ) {
@@ -86,6 +91,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                 }
             }
         });
+        let interfaceIsCircular: boolean = false;
         language.interfaces.forEach(intf => {
             if (names.includes(intf.name)) {
                 this.simpleCheck(false,
@@ -95,13 +101,23 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             }
             // check circularity
             const circularNames: string[] = [];
-            const foundCircularity = this.checkCircularInheritance(circularNames, intf);
-            // check that all properties have unique names
-            // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
-            if (!foundCircularity) {
+            interfaceIsCircular = this.checkCircularInheritance(circularNames, intf);
+            // remember that we found circularity for one of the interfaces
+            if (interfaceIsCircular) {
+                foundSomeCircularity = true;
+            }
+            if (!interfaceIsCircular) {
+                // check that all properties have unique names
+                // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
                 this.checkPropertyUniqueNames(intf, false);
             }
         });
+        if (!foundSomeCircularity) {
+            // check if there are no infinite loops in the model, i.e.
+            // A has part b: B and B has part a: A and both are mandatory
+            // Note: this can be done only after checking for circular inheritance, because we need to look at allParts.
+            this.checkInfiniteLoops(language);
+        }
     }
 
     private checkUnitConceptName(con: PiConcept) {
@@ -186,8 +202,9 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             // this filtering is ok, i.e. the type of both properties should be the same
             if (propnames.includes(prop.name)) {
                 if (strict) {
+                    const previous = propsDone.find(prevProp => prevProp.name === prop.name);
                     this.simpleCheck(false,
-                        `Property with name '${prop.name}' already exists in ${con.name} ${this.location(prop)}.`);
+                        `Property with name '${prop.name}' already exists in ${con.name} ${this.location(previous)} and ${this.location(prop)}.`);
                 } else {
                     // in non-strict mode properties with the same name are allowed, but only if they have the same type
                     // find the first property with this name
@@ -205,8 +222,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
     private checkConcept(piConcept: PiConcept): void {
         LOGGER.log("Checking concept '" + piConcept.name + "' of type " + piConcept.constructor.name);
         this.simpleCheck(!!piConcept.name, `Concept should have a name ${this.location(piConcept)}.`);
-        this.simpleCheck(!(piReservedWords.includes(piConcept.name)), `Concept may not have a name that is equal to a reserved word ('${piConcept.name}') ${this.location(piConcept)}.`);
-        this.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name)),
+        this.simpleCheck(!(piReservedWords.includes(piConcept.name.toLowerCase())), `Concept may not have a name that is equal to a reserved word ('${piConcept.name}') ${this.location(piConcept)}.`);
+        this.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name.toLowerCase())),
             `Concept may not have a name that is equal to a reserved word in TypeScript ('${piConcept.name}') ${this.location(piConcept)}.`);
 
         if ( piConcept.isModel ) {
@@ -460,8 +477,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
 
     checkInterface(piInterface: PiInterface) {
         this.simpleCheck(!!piInterface.name, `Interface should have a name ${this.location(piInterface)}.`);
-        this.simpleCheck(!(piReservedWords.includes(piInterface.name)), `Interface may not have a name that is equal to a reserved word ('${piInterface.name}') ${this.location(piInterface)}.`);
-        this.simpleCheck(!(reservedWordsInTypescript.includes(piInterface.name)),
+        this.simpleCheck(!(piReservedWords.includes(piInterface.name.toLowerCase())), `Interface may not have a name that is equal to a reserved word ('${piInterface.name}') ${this.location(piInterface)}.`);
+        this.simpleCheck(!(reservedWordsInTypescript.includes(piInterface.name.toLowerCase())),
             `Interface may not have a name that is equal to a reserved word in TypeScript ('${piInterface.name}') ${this.location(piInterface)}.`);
 
         for (const intf of piInterface.base) {
@@ -499,5 +516,26 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
 
     private location(elem: PiLangElement): string {
         return `[line: ${elem.location?.start.line}, column: ${elem.location?.start.column}]`;
+    }
+
+    // check if there are no infinite loops in the model, i.e.
+    // A has part b: B and B has part a: A and both are mandatory
+    private checkInfiniteLoops(language: PiLanguage) {
+        language.conceptsAndInterfaces().forEach(classifier => {
+           classifier.allParts().forEach(aPart => {
+               if (!aPart.isPrimitive && !aPart.isOptional && !aPart.isList) {
+                   const aPartType = aPart.type.referred;
+                   if (!!aPartType) {
+                       aPartType.allParts().forEach(bPart => {
+                           if (!bPart.isOptional && !bPart.isList) {
+                               const bPartType = bPart.type.referred;
+                               this.simpleCheck(bPartType !== classifier,
+                                   `Language contains an infinite loop: mandatory part '${aPart.name}' has mandatory property '${bPart.name}' of type ${bPart.type.name} ${this.location(aPart)}.`);
+                           }
+                       });
+                   }
+               }
+           });
+        });
     }
 }

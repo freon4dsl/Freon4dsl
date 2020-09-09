@@ -1,6 +1,6 @@
 validator ExampleValidator for language Example
 
-Model {
+ExModel {
     notEmpty self.entities;
     isunique name in self.entities;
     notEmpty self.methods;

@@ -16,7 +16,7 @@ Entity {
     @trigger "entity"
 }
 
-Model {
+ExModel {
     @projection Model
         [
         model ${self.name} {

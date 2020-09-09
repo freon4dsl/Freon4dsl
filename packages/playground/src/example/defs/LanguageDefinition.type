@@ -27,7 +27,7 @@ Attribute {
 Method {
     infertype self.declaredType;
 }
-Expression {
+ExExpression {
     abstract infertype  ;
 }
 StringLiteralExpression {

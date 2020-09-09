@@ -4,6 +4,7 @@ import { PiLanguage } from "../../metalanguage";
 export class AllConceptsTemplate {
 
     generateAllConceptsClass(language: PiLanguage): string {
+        const unitNames = language.units.map(unit => Names.concept(unit));
         // sort all names alphabetically
         let tmp: string[] = [];
         language.concepts.map(c =>
@@ -33,7 +34,13 @@ export class AllConceptsTemplate {
         ${tmp.map(c =>
             `${c}`
         ).join(" | ")}
-        ;`;
+        ;
+        
+                
+        /**
+         * Type MODELUNIT combines the metatype of all possible modelunits of language ${language.name}
+         */
+        export type MODELUNIT = ${unitNames.map(name => `${name}`).join("| ")};`;
     }
 
 }

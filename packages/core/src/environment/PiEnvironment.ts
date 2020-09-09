@@ -4,7 +4,8 @@ import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
 import { PiTyper } from "../typer";
 import { PiStdlib } from "../stdlib";
-import { PiUnparser } from "../unparser";
+import { PiWriter } from "../writer";
+import { PiReader } from "../reader";
 
 // tag::environment-interface[]
 export interface PiEnvironment {
@@ -13,7 +14,8 @@ export interface PiEnvironment {
     validator: PiValidator;
     editor: PiEditor;
     stdlib: PiStdlib;
-    unparser: PiUnparser;
+    writer: PiWriter;
+    reader: PiReader;
 
     projectionalEditorComponent: ProjectionalEditor;
     initializer: PiModelInitialization;

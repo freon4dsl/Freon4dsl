@@ -2,10 +2,10 @@ language Example
 
 model Demo {
     name: string;
-    models: Model[];
+    models: ExModel[];
 }
 
-modelunit Model {
+modelunit ExModel {
     name: string;
     entities: Entity[];
     methods: Method[];
@@ -25,7 +25,7 @@ concept Entity implements Type {
 concept Method {
     name: string;
     reference declaredType : Type;
-    body: Expression;
+    body: ExExpression;
     parameters: Parameter[];
 }
 
@@ -52,11 +52,11 @@ concept Parameter  {
 //       Expressions
 ////////////////////////////////////
 
-abstract expression Expression {
+abstract expression ExExpression {
     appliedfeature?: AppliedFeature;
 }
 
-abstract expression LiteralExpression base Expression {}
+abstract expression LiteralExpression base ExExpression {}
 
 expression StringLiteralExpression base LiteralExpression {
     value: string;
@@ -70,8 +70,8 @@ expression BooleanLiteralExpression base LiteralExpression {
     value: string; // TODO should be changed to type boolean
 }
 
-expression AbsExpression base Expression {
-    expr: Expression;
+expression AbsExpression base ExExpression {
+    expr: ExExpression;
 }
 
 abstract concept AppliedFeature {
@@ -82,7 +82,7 @@ concept AttributeRef base AppliedFeature {
     reference attribute: Attribute;
 }
 
-expression ParameterRef base Expression {
+expression ParameterRef base ExExpression {
     reference parameter: Parameter;
 }
 
@@ -90,33 +90,33 @@ concept LoopVariable {
     name: string;
 }
 
-expression LoopVariableRef base Expression {
+expression LoopVariableRef base ExExpression {
     reference variable: LoopVariable;
 }
 
-expression SumExpression base Expression {
+expression SumExpression base ExExpression {
     variable: LoopVariable;
-    from: Expression;
-    to  : Expression;
-    body: Expression;
+    from: ExExpression;
+    to  : ExExpression;
+    body: ExExpression;
 }
 
-expression MethodCallExpression base Expression {
+expression MethodCallExpression base ExExpression {
     reference methodDefinition: Method;
 }
 
-expression IfExpression base Expression {
-    condition: Expression;
-    whenTrue: Expression;
-    whenFalse: Expression;
+expression IfExpression base ExExpression {
+    condition: ExExpression;
+    whenTrue: ExExpression;
+    whenFalse: ExExpression;
 }
 
 ////////////////////////////////////
-//    Binary Expressions
+//    Binary ExExpressions
 ////////////////////////////////////
-abstract binary expression BinaryExpression base Expression {
-    left: Expression;
-    right: Expression;
+abstract binary expression BinaryExpression base ExExpression {
+    left: ExExpression;
+    right: ExExpression;
 }
 
 binary expression MultiplyExpression base BinaryExpression {
