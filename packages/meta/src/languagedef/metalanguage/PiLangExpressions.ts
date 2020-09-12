@@ -1,11 +1,10 @@
-import { PiClassifier, PiConcept, PiConceptProperty, PiFunction, PiInstance, PiLanguage, PiProperty } from ".";
+import { PiLangElement, PiClassifier, PiConcept, PiConceptProperty, PiFunction, PiInstance, PiLanguage, PiProperty } from "./internal";
 import { Names, ParseLocation } from "../../utils";
-import { PiLangElement } from "./PiLanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiElementReference } from ".";
 
 /** This module contains classes that implement Expressions over the PiLanguage structure.
  *  There are five types of Expressions:

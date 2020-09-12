@@ -3,6 +3,11 @@ import { PiLogger } from "../../../../core/src/util/PiLogging";
 
 const LOGGER = new PiLogger("ScoperCreator").mute();
 
+let currentFileName: string = "SOME_FILENAME";
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
+
 export function createScopeDef(data: Partial<PiScopeDef>): PiScopeDef {
     LOGGER.log("createScopeDef");
     const result = new PiScopeDef();

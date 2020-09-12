@@ -1,19 +1,9 @@
 language octopus
 
-model OctopusModel {
-    name: string;
-    umlParts: UmlPart[];
-    oclParts: OclPart[];
-}
-
 modelunit UmlPart {
     name: string;
     packages: UmlPackage[];
     associations: Association[];
-}
-
-modelunit OclPart {
-    name: string;
 }
 
 // the uml concepts

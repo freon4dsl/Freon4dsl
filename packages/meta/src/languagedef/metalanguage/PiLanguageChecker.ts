@@ -4,12 +4,9 @@ import {
     PiBinaryExpressionConcept,
     PiExpressionConcept,
     PiPrimitiveProperty,
-    PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveType, PiLangElement
-} from "./PiLanguage";
+    PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveType,
+    PiElementReference, PiMetaEnvironment, PiLangUtil } from "./internal";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiElementReference } from "./PiElementReference";
-import { PiMetaEnvironment } from "./PiMetaEnvironment";
-import { PiLangUtil } from "./PiLangUtil";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
 const LOGGER = new PiLogger("PiLanguageChecker").mute();
@@ -36,19 +33,21 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         language.interfaces.forEach(concept => this.checkInterface(concept));
 
         const myModel = language.concepts.find(c => c.isModel);
-        // language.concepts.forEach(c => {if (c.isModel) console.log(c.name + " is a model.")});
+        // language.modelConcept should be  set in 'checkConcept'
+        if (myModel != language.modelConcept) {
+            LOGGER.error(this, "Internal error: language.modelConcept is not set correctly");
+        }
         this.nestedCheck({check: !!myModel,
             error: `There should be a model in your language ${this.location(language)}.`,
             whenOk: () => {
                 // models may not be modelunits
-                this.simpleCheck(!myModel.isUnit, `A model may not be a modelunit ${this.location(language.modelConcept)}.`);
-                // language.modelConcept is set in 'checkConcept'
+                this.simpleCheck(!myModel.isUnit, `A model may not be a modelunit ${this.location(myModel)}.`);
                 this.nestedCheck({
-                    check: language.modelConcept.primProperties.some(prop => prop.name === "name"),
-                    error: `The model should have a 'name' property ${this.location(language.modelConcept)}.`,
+                    check: myModel.primProperties.some(prop => prop.name === "name"),
+                    error: `The model should have a 'name' property ${this.location(myModel)}.`,
                     whenOk: () => {
-                        this.simpleCheck(language.modelConcept.parts().length > 0,
-                            `The model should have at least one unit type ${this.location(language.modelConcept)}.`);
+                        this.simpleCheck(myModel.parts().length > 0,
+                            `The model should have at least one unit type ${this.location(myModel)}.`);
                     }
                 });
             },
@@ -512,10 +511,6 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             return true;
         }
         return false;
-    }
-
-    private location(elem: PiLangElement): string {
-        return `[line: ${elem.location?.start.line}, column: ${elem.location?.start.column}]`;
     }
 
     // check if there are no infinite loops in the model, i.e.

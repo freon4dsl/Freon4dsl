@@ -1,4 +1,5 @@
-import { PiLanguage } from "../languagedef/metalanguage";
+import { PiLangElement, PiLanguage } from "../languagedef/metalanguage";
+import { PiEditElement } from "../editordef/metalanguage";
 
 export type CheckB = { check: boolean; error: string; whenOk?: () => void };
 
@@ -34,5 +35,13 @@ export abstract class Checker<DEFINITION> {
                 }
             }
         }
+    }
+
+    // TODO find better way to type this parameter
+    protected location(elem: PiLangElement | PiEditElement): string {
+        if (!!elem.location) {
+            return `[file: ${elem.location.filename}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
+        }
+        return `[no location]`;
     }
 }

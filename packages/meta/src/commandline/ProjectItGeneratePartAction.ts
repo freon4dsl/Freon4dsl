@@ -21,6 +21,7 @@ export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
     }
 
     generate(): void {
+        // TODO adjust this to multi file arguments
         this.languageFile = this.languageFileArg.value;
         // we only read the .lang file, no need to generate
         // the actual generation, when needed, is done by subclasses

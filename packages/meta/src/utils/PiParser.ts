@@ -1,12 +1,14 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
-import { Parser } from "pegjs";
+import { Parser, PEG } from "pegjs";
 import { PiLogger } from "../../../core/src/util/PiLogging";
+// import SyntaxError = PEG.SyntaxError;
 
 const LOGGER = new PiLogger("PiParser").mute();
 
 // the following two types are used to store the location information from the parser
 export type ParseLocation = {
+    filename: string;
     start: Location;
     end: Location;
 };
@@ -36,12 +38,13 @@ export class PiParser<DEFINITION> {
         // Parse Language file
         let model: DEFINITION = null;
         try {
+            this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parser.parse(langSpec);
         } catch (e) {
             // syntax error
-            const errorstr = `${definitionFile}: ${e} 
+            const errorstr = `${e} 
                 ${e.location && e.location.start ?
-                    `[line ${e.location.start.line}, column ${e.location.start.column}]`
+                    `[file: ${definitionFile}, line ${e.location.start.line}, column ${e.location.start.column}]`
                 :
                     ``}`;
             LOGGER.error(this, errorstr);
@@ -58,5 +61,59 @@ export class PiParser<DEFINITION> {
         } else {
             throw new Error("parser does not return a language definition.");
         }
+    }
+
+    parseMulti(filePaths: string[]): DEFINITION {
+        let model: DEFINITION;
+        let submodels: DEFINITION[] = [];
+        // read the files and parse them separately
+        for (const file of filePaths) {
+            if (!fs.existsSync(file)) {
+                LOGGER.error(this, "definition file '" + file + "' does not exist, exiting.");
+                throw new Error("definition file '" + file + "' does not exist, exiting.");
+            } else {
+                let langSpec: string = "";
+                langSpec += fs.readFileSync(file, { encoding: "UTF8" }) + "\n";
+                try {
+                    this.setCurrentFileName(file); // sets the filename in the creator functions to the right value
+                    submodels.push(this.parser.parse(langSpec));
+                } catch (e) {
+                    // throw syntax error, but adjust the location first
+                    const errorstr = `${e} ${e.location && e.location.start ?
+                        `[file: ${file}, line ${e.location.start.line}, column ${e.location.start.column}]`
+                        :
+                        ``}`;
+                    LOGGER.error(this, errorstr);
+                    throw new Error("syntax error.");
+                }
+            }
+        }
+
+        // combine the submodels into one
+        model = this.merge(submodels);
+
+        // run the checker
+        if (model !== null) {
+            this.checker.check(model);
+            if (this.checker.hasErrors()) {
+                this.checker.errors.forEach(error => LOGGER.error(this, `${error}`));
+                // TODO maybe we should add the number of errors to this Error
+                throw new Error("checking errors."); // error message
+            }
+            return model;
+        } else {
+            throw new Error("parser does not return a language definition.");
+        }
+    }
+
+    protected merge(submodels: DEFINITION[]): DEFINITION {
+        if (submodels.length > 0) {
+            throw Error("PiParser.merge should be implemented by its subclasses.");
+        }
+        return null;
+    }
+
+    protected setCurrentFileName(file: string) {
+        throw Error("PiParser.setCurrentFileName should be implemented by its subclasses.");
     }
 }

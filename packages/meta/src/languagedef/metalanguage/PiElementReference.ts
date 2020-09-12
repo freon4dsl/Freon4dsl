@@ -1,7 +1,6 @@
-import { PiLangElement } from "./PiLanguage";
-import { PiLangConceptType } from "./PiLangConceptType";
+import { PiLangElement, PiLangConceptType, PiMetaEnvironment } from "./internal";
 import { ParseLocation } from "../../utils";
-import { PiMetaEnvironment } from "./PiMetaEnvironment";
+
 /**
  * Implementation for a (named) reference in ProjectIt.
  * Reference can be set with either a referred object, or with a unitName.

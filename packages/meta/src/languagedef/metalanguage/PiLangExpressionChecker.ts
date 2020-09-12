@@ -1,18 +1,16 @@
 import { Checker } from "../../utils/Checker";
-import { PiLanguage, PiConcept, PiClassifier, PiProperty, PiLimitedConcept, PiInstance } from "./PiLanguage";
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../../languagedef/parser/LanguageExpressionTester";
-import {
-    PiLangExp,
+import { PiLanguage, PiClassifier, PiProperty, PiLimitedConcept, PiInstance, PiLangExp,
     PiLangSelfExp,
     PiLangAppliedFeatureExp,
     PiLangConceptExp,
     PiLangFunctionCallExp,
     PiInstanceExp,
-    PiLangSimpleExp
-} from "./PiLangExpressions";
+    PiLangSimpleExp,
+    PiMetaEnvironment,
+    PiElementReference
+} from "./internal";
 import { PiLogger } from "../../../../core/src/util/PiLogging";
-import { PiMetaEnvironment } from "./PiMetaEnvironment";
-import { PiElementReference } from "./PiElementReference";
 
 const LOGGER = new PiLogger("PiLangExpressionChecker").mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof"];
@@ -29,7 +27,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         LOGGER.log("Checking test expressions");
         if ( this.language === null || this.language === undefined ) {
             throw new Error(`Expression Tester definition checker does not known the language, exiting ` +
-                        `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`);
+                        `${this.location(definition)}.`);
         }
         // Note: this should be done first, otherwise the references will not be resolved
         PiMetaEnvironment.metascoper.language = this.language;
@@ -38,7 +36,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             {
                 check: this.language.name === definition.languageName,
                 error: `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' ` +
-                        `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
+                        `${this.location(definition)}.`,
                 whenOk: () => {
                     definition.language = this.language;
                     definition.conceptExps.forEach(rule => {
@@ -74,12 +72,12 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         this.nestedCheck(
             {
                 check: reference.name !== undefined,
-                error: `Concept reference should have a name [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`,
+                error: `Concept reference should have a name ${this.location(reference)}.`,
                 whenOk: () => {
                     this.nestedCheck(
                     {
                         check: reference.referred !== undefined,
-                        error: `Concept reference to '${reference.name}' cannot be resolved [line: ${reference.location?.start.line}, column: ${reference.location?.start.column}].`
+                        error: `Concept reference to '${reference.name}' cannot be resolved ${this.location(reference)}.`
                     });
                 }
             });
@@ -112,20 +110,20 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
 
         this.nestedCheck( {
             check: !!myLimitedConcept,
-            error: `Cannot find limited concept ${langExp.sourceName} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+            error: `Cannot find limited concept ${langExp.sourceName} ${this.location(langExp)}.`,
             whenOk: () => {
                 this.nestedCheck( {
                     check: myLimitedConcept instanceof PiLimitedConcept,
-                    error: `Concept ${langExp.sourceName} does not defined any instances [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                    error: `Concept ${langExp.sourceName} does not defined any instances ${this.location(langExp)}.`,
                     whenOk: () => {
                         this.nestedCheck( {
                             check: !!langExp.instanceName,
-                            error: `A limited concept expression should have an instance name [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                            error: `A limited concept expression should have an instance name ${this.location(langExp)}.`,
                             whenOk: () => {
                                 const foundInstance = (myLimitedConcept as PiLimitedConcept).instances.find(l => l.name === langExp.instanceName);
                                 this.simpleCheck(!!foundInstance,
                                     `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept.name} ` +
-                                            `[line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`
+                                            `${this.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
                                     langExp.referredElement = PiElementReference.create<PiInstance>(foundInstance, "PiInstance");
@@ -147,7 +145,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
             this.nestedCheck(
                 {
                     check: langExp.appliedfeature !== null,
-                    error: `'self' should be followed by '.', followed by a property [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                    error: `'self' should be followed by '.', followed by a property ${this.location(langExp)}.`,
                     whenOk: () => {
                         langExp.appliedfeature.language = langExp.language;
                         this.checkAppliedFeatureExp(langExp.appliedfeature, enclosingConcept);
@@ -163,7 +161,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         // check if the keyword 'container' was used
         this .nestedCheck( {
             check: langExp.sourceName === containerKeyword,
-            error: `Expression should start with 'self' [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+            error: `Expression should start with 'self' ${this.location(langExp)}.`,
             whenOk: () => {
                 langExp.referredElement = PiElementReference.create<PiClassifier>(enclosingConcept, "PiConcept");
                 langExp.referredElement.owner = langExp;
@@ -178,13 +176,13 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         // TODO ??? set langRef.referredElement to one of the predefined functions
         this.nestedCheck({
             check: !!functionName,
-            error: `${langExp.sourceName} is not a valid function [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+            error: `${langExp.sourceName} is not a valid function ${this.location(langExp)}.`,
             whenOk: () => {
                 if (langExp.sourceName === validFunctionNames[2]) { // "typeof"
                     this.nestedCheck({
                         check: langExp.actualparams.length === 1,
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
-                            `found ${langExp.actualparams.length} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                            `found ${langExp.actualparams.length} ${this.location(langExp)}.`,
                         whenOk: () => langExp.actualparams?.forEach( p => {
                                 p.language = this.language;
                                 this.checkLangExp(p, enclosingConcept);
@@ -195,7 +193,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
                     this.nestedCheck({
                         check: langExp.actualparams.length === 2,
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, ` +
-                            `found ${langExp.actualparams.length} [line: ${langExp.location?.start.line}, column: ${langExp.location?.start.column}].`,
+                            `found ${langExp.actualparams.length} ${this.location(langExp)}.`,
                         whenOk: () => langExp.actualparams?.forEach( p => {
                                 p.language = this.language;
                                 this.checkLangExp(p, enclosingConcept);
@@ -219,13 +217,12 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         }
         this.nestedCheck({
             check: !!feat.referredElement && !!feat.referredElement.referred,
-            error: `Cannot find property '${feat.sourceName}' in '${enclosingConcept.name}'` +
-                ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}].`,
+            error: `Cannot find property '${feat.sourceName}' in '${enclosingConcept.name}' ${this.location(feat)}.`,
             whenOk: () => {
                 if (!!feat.appliedfeature) {
                     this.simpleCheck(!feat.referredElement.referred.isList,
                         `List property '${feat.referredElement.name}' should not have an applied expression (.${feat.appliedfeature.toPiString()})` +
-                        ` [line: ${feat.location?.start.line}, column: ${feat.location?.start.column}].`);
+                        ` ${this.location(feat)}.`);
                     feat.appliedfeature.language = feat.language;
                     this.checkAppliedFeatureExp(feat.appliedfeature, feat.referredElement.referred.type.referred);
                 }

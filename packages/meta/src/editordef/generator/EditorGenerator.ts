@@ -23,10 +23,14 @@ export class EditorGenerator {
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
         const name = editDef ? editDef.name : "";
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder + " for language " + this.language?.name);
+
+        // TODO the following should already have been set by the edit checker, but it seems to be needed here
+        editDef.language = this.language;
+
         if (editDef === null || editDef === undefined) {
             editDef = this.createDefaultEditorDefinition();
         }
-        editDef.language = this.language;
+
         // add default values if they are not present in the editor definition
         PiEditProjectionUtil.addDefaults(editDef);
 

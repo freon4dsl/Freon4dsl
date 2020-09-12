@@ -12,9 +12,9 @@ import {
     PiPrimitiveProperty,
     PiProperty,
     PiPropertyInstance,
-    PiClassifier
-} from "./PiLanguage";
-import { PiLangElement } from "./PiLanguage";
+    PiClassifier,
+    PiLangElement
+} from "./internal";
 
 export type PiLangEveryConcept =
     | PiLangElement
