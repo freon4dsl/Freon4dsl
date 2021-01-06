@@ -1,8 +1,7 @@
 import * as fs from "fs";
-import { STYLES_ORIGIN } from "../../../utils";
 
-const constFile = STYLES_ORIGIN + "/styles.ts";
-const cssFile = STYLES_ORIGIN + "/style.scss";
+const constFile = __dirname + "/styles/styles.ts";
+const cssFile = __dirname + "/styles/style.scss";
 
 export class StylesTemplate {
 

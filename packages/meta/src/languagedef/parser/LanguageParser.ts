@@ -1,6 +1,7 @@
 import { PiLanguage, PiLanguageChecker } from "../metalanguage/";
 import { PiParser } from "../../utils/PiParser";
-let pegjsParser = require("./LanguageGrammar");
+// let pegjsParser = require("./LanguageGrammar");
+import * as pegjsParser from "./LanguageGrammar";
 import { setCurrentFileName } from "./LanguageCreators";
 
 export class LanguageParser extends PiParser<PiLanguage> {

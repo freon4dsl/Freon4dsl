@@ -1,7 +1,6 @@
 import * as fs from "fs";
-import { RESERVED_WORDS_ORIGIN } from "../../../utils";
 
-const constFile = RESERVED_WORDS_ORIGIN + "/ReservedWords.ts";
+const constFile = __dirname + "/ReservedWords.ts";
 
 export class ReservedWordsTemplate {
 

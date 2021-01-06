@@ -10,7 +10,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "bin": {
-    "projectit": "dist/bin/projectit-generate-editor.js"
+    "projectit": "dist/meta/src/bin/projectit-generate-editor.js"
   },
   "scripts": {
     "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
@@ -28,11 +28,12 @@
     "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-typer && yarn pegjs-concat-scoper",
     "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-scss1": "cp src/editordef/styles/*.scss ./dist/styles",
-    "copy-scss2": "cp ./src/editor/*.scss ./dist/editor",
+    "copy-templates": "cp src/editordef/generator/templates/styles/* ./dist/meta/src/editordef/generator/templates/styles",
+    "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/meta/src/validatordef/generator/templates/ReservedWords.ts",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "test": "jest"
+    "test": "jest",
+    "build-release": "yarn build && yarn copy-templates && yarn copy-validtemplates"
   },
   "devDependencies": {
     "@types/pegjs": "^0.10.1",

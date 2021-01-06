@@ -11,6 +11,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server.ts",
     "build": "tsc",
+    "build-release": "yarn build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
