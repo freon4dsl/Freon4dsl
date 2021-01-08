@@ -26,7 +26,7 @@ DemoStringLiteralExpression {
         ]
     @trigger "'"
 }
-DemoAttribute {
+DemoAttributeWithLimitedType {
 // in this projection the indentation is taken into account
     @projection attribuut
         [

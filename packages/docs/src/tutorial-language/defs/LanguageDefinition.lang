@@ -14,14 +14,14 @@ interface BaseType {
 // tag::interface[]
 interface Type base BaseType {
     simpleprop: string;
-    int_attrs: DemoAttribute[];
+    int_attrs: DemoAttributeWithLimitedType[];
     int_functions: DemoFunction[];
     reference baseInterface: DemoEntity;
 }
 // end::interface[]
 // tag::concept[]
 concept DemoEntity implements Type {
-    attributes: DemoAttribute[];
+    attributes: DemoAttributeWithLimitedType[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
     reference baseEntity: DemoEntity;
@@ -74,7 +74,7 @@ concept DemoFunction {
 }
 // end::simpleprop[]
 // tag::referenceprop[]
-concept DemoAttribute {
+concept DemoAttributeWithLimitedType {
     reference declaredType: DemoAttributeType;
 // end::referenceprop[]
     name: string;
