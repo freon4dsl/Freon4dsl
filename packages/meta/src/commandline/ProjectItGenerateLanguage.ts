@@ -1,8 +1,8 @@
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new PiLogger("ProjectItGenerateLanguage"); // .mute();
+const LOGGER = new MetaLogger("ProjectItGenerateLanguage"); // .mute();
 export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
     private languageGenerator: LanguageGenerator = new LanguageGenerator();
 

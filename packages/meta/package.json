@@ -44,7 +44,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@microsoft/ts-command-line": "4.3.10",
+    "@rushstack/ts-command-line": "4.7.8",
     "@projectit/core": "^0.0.5",
     "@types/lodash": "4.14.73",
     "axios": "0.18.1",

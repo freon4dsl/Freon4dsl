@@ -1,4 +1,4 @@
-import { CommandLineAction, ICommandLineActionOptions, CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { CommandLineAction, ICommandLineActionOptions, CommandLineStringParameter } from "@rushstack/ts-command-line";
 
 /**
  * Generic generator action. The only option defined here is the -o flag for the output folder.

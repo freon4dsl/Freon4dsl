@@ -1,10 +1,10 @@
-import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new PiLogger("ProjectItGenerateScoper"); // .mute();
+const LOGGER = new MetaLogger("ProjectItGenerateScoper"); // .mute();
 export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
     private scopeFile: CommandLineStringParameter;
     protected scoperGenerator: ScoperGenerator;

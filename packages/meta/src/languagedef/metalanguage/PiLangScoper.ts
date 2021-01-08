@@ -1,7 +1,7 @@
 import { PiLangElement, PiClassifier, PiConcept, PiConceptProperty, PiInterface, PiLanguage, PiProperty, PiLangAppliedFeatureExp } from "./internal";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new PiLogger("PiLangScoper"); // .mute();
+const LOGGER = new MetaLogger("PiLangScoper"); // .mute();
 const anyElement = "_$anyElement";
 
 export class PiLangScoper {

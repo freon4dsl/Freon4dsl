@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils";
 import { PiValidatorDef } from "../metalanguage";
@@ -9,7 +9,7 @@ import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate";
 
-const LOGGER = new PiLogger("ValidatorGenerator"); // .mute();
+const LOGGER = new MetaLogger("ValidatorGenerator"); // .mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;

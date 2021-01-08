@@ -1,7 +1,7 @@
 import { PiScopeDef, ScopeConceptDef, PiNamespaceAddition, PiAlternativeScope } from "../metalanguage";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new PiLogger("ScoperCreator").mute();
+const LOGGER = new MetaLogger("ScoperCreator").mute();
 
 let currentFileName: string = "SOME_FILENAME";
 export function setCurrentFileName(newName: string) {

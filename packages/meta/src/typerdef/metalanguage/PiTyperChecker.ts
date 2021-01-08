@@ -6,9 +6,9 @@ import { PiLanguage,
     PiLangExpressionChecker,
     PiLangUtil } from "../../languagedef/metalanguage";
 import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeClassifierRule, PiTypeStatement } from "./PiTyperDefLang";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new PiLogger("PiTyperChecker").mute();
+const LOGGER = new MetaLogger("PiTyperChecker").mute();
 const infertypeName = "infertype";
 
 export class PiTyperChecker extends Checker<PiTypeDefinition> {

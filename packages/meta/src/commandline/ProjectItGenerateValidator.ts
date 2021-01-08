@@ -1,10 +1,10 @@
-import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new PiLogger("ProjectItGenerateValidator"); // .mute();
+const LOGGER = new MetaLogger("ProjectItGenerateValidator"); // .mute();
 export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
     private validdefFile: CommandLineStringParameter;
     protected validatorGenerator: ValidatorGenerator;

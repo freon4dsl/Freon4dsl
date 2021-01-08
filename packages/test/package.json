@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@projectit/tests",
+  "name": "@projectit/test",
   "version": "0.0.5",
   "license": "MIT",
   "main": "dist/index.js",

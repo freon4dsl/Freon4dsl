@@ -7,7 +7,7 @@ import {
     PiInstanceExp,
     PiLangConceptExp, PiLangSimpleExp
 } from "../../languagedef/metalanguage/PiLangExpressions";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { Names } from "../../utils";
 import { PiClassifier } from "../metalanguage/PiLanguage";
 // The next import should be separate and the last of the imports.
@@ -16,7 +16,7 @@ import { PiClassifier } from "../metalanguage/PiLanguage";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../metalanguage/PiElementReference";
 
-const LOGGER = new PiLogger("PiLanguageExpressionCreator").mute();
+const LOGGER = new MetaLogger("PiLanguageExpressionCreator").mute();
 
 let currentFileName: string = "SOME_FILENAME";
 export function setCurrentFileName(newName: string) {

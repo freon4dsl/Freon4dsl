@@ -13,8 +13,7 @@ export class WalkerTemplate {
         import { ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
-        // TODO change import to @project/core
-        import { PiLogger } from "../../../../../core/src/util/PiLogging";
+        import { PiLogger } from "@projectit/core";
                 
         const LOGGER = new PiLogger("${generatedClassName}");
 

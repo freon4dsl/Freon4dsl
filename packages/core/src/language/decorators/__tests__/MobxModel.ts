@@ -21,10 +21,6 @@ export class MobxTestElement extends MobxModelElementImpl {
     }
 }
 
-export class MobxTestRoot extends MobxTestElement {
-    @observablepart element: MobxTestParts;
-}
-
 export class ModelContext {
     @observable root: MobxTestElement;
 }
@@ -56,6 +52,10 @@ export class MobxTestParts extends MobxTestElement {
     toString(): string {
         return "FunctionCallExpression";
     }
+}
+
+export class MobxTestRoot extends MobxTestElement {
+    @observablepart element: MobxTestParts;
 }
 
 export class MobxTestReferences extends MobxTestElement {

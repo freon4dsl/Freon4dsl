@@ -1,4 +1,4 @@
-import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
@@ -13,14 +13,15 @@ import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { PiLogger } from "../../../core/src/util/PiLogging";
 import { GenerationStatus, Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenerator";
 
-const LOGGER = new PiLogger("ProjectItGenerateAllAction"); //.mute();
+import { MetaLogger } from "../utils/MetaLogger";
+
+const LOGGER = new MetaLogger("ProjectItGenerateAllAction"); //.mute();
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;

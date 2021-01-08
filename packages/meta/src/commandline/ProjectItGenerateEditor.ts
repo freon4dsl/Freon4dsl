@@ -1,11 +1,11 @@
-import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenerator";
 
-const LOGGER = new PiLogger("ProjectItGenerateEditor"); // .mute();
+const LOGGER = new MetaLogger("ProjectItGenerateEditor"); // .mute();
 
 export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
     private editorFile: CommandLineStringParameter;

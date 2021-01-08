@@ -11,7 +11,7 @@ import {
     PiEditProjectionText,
     PiEditPropertyProjection, PiEditSubProjection
 } from "../metalanguage";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { PiConcept } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -20,7 +20,7 @@ import { PiConcept } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 
-const LOGGER = new PiLogger("EditorCreators").mute();
+const LOGGER = new MetaLogger("EditorCreators").mute();
 
 let currentFileName: string = "SOME_FILENAME";
 export function setCurrentFileName(newName: string) {

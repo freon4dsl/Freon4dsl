@@ -38,7 +38,7 @@ export class ReaderTemplate {
                     console.error(this, "File '" + filepath + "' does not exist, exiting.");
                     throw new Error(\`File '\${filepath}' not found.\`);
                 }
-                const langSpec: string = fs.readFileSync(filepath, { encoding: "UTF8" });
+                const langSpec: string = fs.readFileSync(filepath, { encoding: "utf8" });
                 return ${Names.reader(language)}.parse(langSpec, metatype, filepath);
             }
 

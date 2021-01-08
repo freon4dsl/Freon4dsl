@@ -1,11 +1,11 @@
 import * as fs from "fs";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiTypeDefinition } from "../metalanguage";
 import { GenerationStatus, Helpers, Names, TYPER_FOLDER, TYPER_GEN_FOLDER } from "../../utils";
 import { PiTyperTemplate } from "./templates/PiTyperTemplate";
 
-const LOGGER = new PiLogger("PiTyperGenerator"); // .mute();
+const LOGGER = new MetaLogger("PiTyperGenerator"); // .mute();
 export class PiTyperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;

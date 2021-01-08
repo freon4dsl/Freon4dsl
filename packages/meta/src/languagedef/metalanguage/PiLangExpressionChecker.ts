@@ -10,9 +10,9 @@ import { PiLanguage, PiClassifier, PiProperty, PiLimitedConcept, PiInstance, PiL
     PiMetaEnvironment,
     PiElementReference
 } from "./internal";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new PiLogger("PiLangExpressionChecker").mute();
+const LOGGER = new MetaLogger("PiLangExpressionChecker").mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof"];
 const containerKeyword: string = "container";
 

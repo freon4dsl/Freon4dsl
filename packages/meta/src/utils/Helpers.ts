@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import parserTypeScript = require("prettier/parser-typescript");
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new PiLogger("FileHelpers").mute();
+const LOGGER = new MetaLogger("FileHelpers").mute();
 const prettier = require("prettier/standalone");
 const path = require("path");
 

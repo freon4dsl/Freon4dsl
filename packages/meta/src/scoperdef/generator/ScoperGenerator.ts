@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
@@ -9,7 +9,7 @@ import { PiElementReference } from "../../languagedef/metalanguage/PiElementRefe
 import { ScoperUtilsTemplate } from "./templates/ScoperUtilsTemplate";
 import { NamesCollectorTemplate } from "./templates/NamesCollectorTemplate";
 
-const LOGGER = new PiLogger("ScoperGenerator"); // .mute();
+const LOGGER = new MetaLogger("ScoperGenerator"); // .mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;

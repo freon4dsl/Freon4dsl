@@ -16,9 +16,9 @@ import {
     PiEditSubProjection,
     PiEditUnit
 } from "./PiEditDefLang";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new PiLogger("DefEditorChecker"); //.mute();
+const LOGGER = new MetaLogger("DefEditorChecker"); //.mute();
 
 export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;

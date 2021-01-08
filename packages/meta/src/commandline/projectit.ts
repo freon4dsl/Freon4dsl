@@ -1,13 +1,13 @@
-import { CommandLineParser, CommandLineFlagParameter } from "@microsoft/ts-command-line";
+import { CommandLineParser, CommandLineFlagParameter } from "@rushstack/ts-command-line";
 import { ProjectItGenerateLanguage } from "./ProjectItGenerateLanguage";
 import { ProjectItGenerateAllAction } from "./ProjectItGenerateAllAction";
 import { ProjectItGenerateEditor } from "./ProjectItGenerateEditor";
 import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new PiLogger("ProjectItParser"); // .mute();
+const LOGGER = new MetaLogger("ProjectItParser"); // .mute();
 
 export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
@@ -55,10 +55,10 @@ export class ProjectItParser extends CommandLineParser {
 
     protected onExecute(): Promise<void> {
         if (!this.verboseArg.value) {
-            PiLogger.muteAllLogs();
+            MetaLogger.muteAllLogs();
         }
         if (this.verboseArg.value) {
-            PiLogger.unmuteAllLogs();
+            MetaLogger.unmuteAllLogs();
         }
         if (!!this.watchArg.value) {
             this.allGenerator.watch = true;

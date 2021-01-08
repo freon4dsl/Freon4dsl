@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
@@ -7,7 +7,7 @@ import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, InitalizationTemplate, StylesTemplate } from "./templates";
 
-const LOGGER = new PiLogger("EditorGenerator"); // .mute();
+const LOGGER = new MetaLogger("EditorGenerator"); // .mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";

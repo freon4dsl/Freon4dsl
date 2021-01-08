@@ -1,10 +1,10 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser, PEG } from "pegjs";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 // import SyntaxError = PEG.SyntaxError;
 
-const LOGGER = new PiLogger("PiParser").mute();
+const LOGGER = new MetaLogger("PiParser").mute();
 
 // the following two types are used to store the location information from the parser
 export type ParseLocation = {
@@ -34,7 +34,7 @@ export class PiParser<DEFINITION> {
             LOGGER.error(this, "definition file '" + definitionFile + "' does not exist, exiting.");
             throw new Error("file not found.");
         }
-        const langSpec: string = fs.readFileSync(definitionFile, { encoding: "UTF8" });
+        const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
         // Parse Language file
         let model: DEFINITION = null;
         try {
@@ -73,7 +73,7 @@ export class PiParser<DEFINITION> {
                 throw new Error("definition file '" + file + "' does not exist, exiting.");
             } else {
                 let langSpec: string = "";
-                langSpec += fs.readFileSync(file, { encoding: "UTF8" }) + "\n";
+                langSpec += fs.readFileSync(file, { encoding: "utf8" }) + "\n";
                 try {
                     this.setCurrentFileName(file); // sets the filename in the creator functions to the right value
                     submodels.push(this.parser.parse(langSpec));

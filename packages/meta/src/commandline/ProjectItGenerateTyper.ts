@@ -1,10 +1,10 @@
-import { CommandLineStringParameter } from "@microsoft/ts-command-line";
+import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
 import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 
-const LOGGER = new PiLogger("ProjectItGenerateTyper"); // .mute();
+const LOGGER = new MetaLogger("ProjectItGenerateTyper"); // .mute();
 export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
     private typerdefFile: CommandLineStringParameter;
     protected typerGenerator: PiTyperGenerator;

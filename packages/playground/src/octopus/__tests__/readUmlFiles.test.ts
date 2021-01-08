@@ -29,7 +29,7 @@ describe("Testing Parser", () => {
     });
 
     test("book model STRING unparsed and parsed again", () => {
-        const langSpec: string = fs.readFileSync("src/octopus/__tests__/orders.uml2", { encoding: "UTF8" });
+        const langSpec: string = fs.readFileSync("src/octopus/__tests__/orders.uml2", { encoding: "utf8" });
         const unit1 = reader.readFromString(langSpec, "UmlPart");
         console.log(writer.writeToString(unit1, 0, false));
     });

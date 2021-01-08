@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import {
     CONFIGURATION_FOLDER,
     ENVIRONMENT_GEN_FOLDER,
@@ -27,7 +27,7 @@ import {
 } from "./templates";
 import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
 
-const LOGGER = new PiLogger("LanguageGenerator"); // .mute();
+const LOGGER = new MetaLogger("LanguageGenerator"); // .mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
     protected languageGenFolder: string;

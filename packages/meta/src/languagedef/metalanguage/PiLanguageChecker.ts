@@ -6,10 +6,10 @@ import {
     PiPrimitiveProperty,
     PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveType,
     PiElementReference, PiMetaEnvironment, PiLangUtil } from "./internal";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
-const LOGGER = new PiLogger("PiLanguageChecker").mute();
+const LOGGER = new MetaLogger("PiLanguageChecker").mute();
 const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
 
 // TODO add check: priority error from parser into checker => only for expression concepts

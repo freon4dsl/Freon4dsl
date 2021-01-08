@@ -1,11 +1,11 @@
 import * as fs from "fs";
-import { PiLogger } from "../../../../core/src/util/PiLogging";
+import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, READER_GEN_FOLDER, WRITER_GEN_FOLDER } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
 import { WriterTemplate, PegjsTemplate, CreatorTemplate, ReaderTemplate } from "./parserTemplates";
 
-const LOGGER = new PiLogger("ParserGenerator"); // .mute();
+const LOGGER = new MetaLogger("ParserGenerator"); // .mute();
 const peg = require("pegjs");
 
 export class ReaderWriterGenerator {

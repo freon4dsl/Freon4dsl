@@ -1,10 +1,10 @@
-import { CommandLineStringParameter, ICommandLineActionOptions } from "@microsoft/ts-command-line";
+import { CommandLineStringParameter, ICommandLineActionOptions } from "@rushstack/ts-command-line";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { ProjectItGenerateAction } from "./ProjectitGenerateAction";
 import { PiLanguage } from "../languagedef/metalanguage/PiLanguage";
-import { PiLogger } from "../../../core/src/util/PiLogging";
+import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new PiLogger("ProjectItGeneratePartAction"); // .mute();
+const LOGGER = new MetaLogger("ProjectItGeneratePartAction"); // .mute();
 /**
  * Generic generator action for generating part of the language, e.g. only the typer.
  * The only option defined here is the -l flag for the language file.

@@ -6,10 +6,10 @@ const cssFile = __dirname + "/styles/style.scss";
 export class StylesTemplate {
 
     generateConst(): string {
-        return fs.readFileSync(constFile, { encoding: "UTF8" });
+        return fs.readFileSync(constFile, { encoding: "utf8" });
     }
 
     generateSCSS() {
-        return fs.readFileSync(cssFile, { encoding: "UTF8" });
+        return fs.readFileSync(cssFile, { encoding: "utf8" });
     }
 }
