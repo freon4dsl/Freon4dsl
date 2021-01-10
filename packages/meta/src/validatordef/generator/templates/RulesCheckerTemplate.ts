@@ -1,6 +1,6 @@
 // TODO note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
-import { PiErrorSeverity } from "../../../../../core/src/validator/PiValidator";
+import { PiErrorSeverity } from "@projectit/core/dist/validator/PiValidator";
 import {
     ENVIRONMENT_GEN_FOLDER,
     langExpToTypeScript,

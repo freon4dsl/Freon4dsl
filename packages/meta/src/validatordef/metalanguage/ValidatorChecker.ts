@@ -24,7 +24,8 @@ import {
 // TODO note that the following imports cannot be from "@projectit/core", because
 // this leads to a load error
 import { MetaLogger } from "../../utils/MetaLogger";
-import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
+import { PiErrorSeverity } from "@projectit/core/dist/validator/PiValidator";
+// import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
 
 const LOGGER = new MetaLogger("ValidatorChecker"); // .mute();
 const equalsTypeName = "equalsType";

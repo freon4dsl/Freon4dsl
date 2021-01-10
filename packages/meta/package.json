@@ -10,7 +10,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "bin": {
-    "projectit": "dist/meta/src/bin/projectit-generate-editor.js"
+    "projectit": "dist/bin/projectit-generate-editor.js"
   },
   "scripts": {
     "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
@@ -28,8 +28,8 @@
     "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-typer && yarn pegjs-concat-scoper",
     "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc ",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-templates": "cp src/editordef/generator/templates/styles/* ./dist/meta/src/editordef/generator/templates/styles",
-    "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/meta/src/validatordef/generator/templates/ReservedWords.ts",
+    "copy-templates": "cp src/editordef/generator/templates/styles/* ./dist/editordef/generator/templates/styles",
+    "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "test": "jest",

@@ -15,5 +15,10 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.story.tsx"
-  ]
+  ],
+  "paths": {
+    "@projectit/core/*": [
+      "../../node_modules/@projectit/core/dist/*"
+    ]
+  }
 }
