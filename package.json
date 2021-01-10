@@ -49,7 +49,7 @@
     "jest-enzyme": "^7.0.2",
     "js-yaml": "3.13.1",
     "mobx-react-devtools": "^4.2.15",
-    "node-sass": "^4.5.3",
+    "node-sass": "^5.0.0",
     "nodemon": "^1.19.0",
     "parjs": "0.12.0",
     "postcss": "^6.0.13",
