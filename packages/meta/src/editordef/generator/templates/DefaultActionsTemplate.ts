@@ -177,7 +177,7 @@ export class DefaultActionsTemplate {
                 }
             }));
         for (const elem of behaviorMap.map.values()) {
-            console.log("FOUND "+ elem.trigger + " roles: " + elem.activeInBoxRoles.length + " ==> " + elem.activeInBoxRoles);
+            // console.log("FOUND "+ elem.trigger + " roles: " + elem.activeInBoxRoles.length + " ==> " + elem.activeInBoxRoles);
             result += `
                     {
                         activeInBoxRoles: [${elem.activeInBoxRoles.map(role => `"${role}"`).join(",")}],
