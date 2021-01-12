@@ -1,6 +1,6 @@
 import { Toolbar, Alert } from "@fluentui/react-northstar";
 import * as React from 'react';
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { IIconProps } from "office-ui-fabric-react";

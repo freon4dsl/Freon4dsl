@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box, Grid } from "@fluentui/react-northstar";
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { Navigator } from "./Navigator";
 import { ErrorList } from "./ErrorList";
 import { observable } from "mobx";

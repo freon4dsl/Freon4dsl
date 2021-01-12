@@ -3,7 +3,7 @@ import { Flex, Image, Header } from "@fluentui/react-northstar";
 import Menubar from "./Menubar";
 import { EditorArea } from "./EditorArea";
 import { PiToolbar } from "./PiToolbar";
-import { editorEnvironment } from "../gateway-to-projectit/WebappConfiguration";
+import { editorEnvironment } from "../WebappConfiguration";
 const Logo = require("../images/inverse-colors.png");
 const headerText = "ProjectIt Language Environment for " + editorEnvironment.languageName;
 export const headerHeight = "40px";

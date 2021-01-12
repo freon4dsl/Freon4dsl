@@ -7,8 +7,8 @@ import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 
 // TODO try to make dependence of gateway-to-projectit as small as possible
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
-import { IModelUnitData } from "../gateway-to-projectit/IServerCommunication";
+import { EditorCommunication } from "./EditorCommunication";
+import { IModelUnitData } from "./IServerCommunication";
 
 // This component holds the navigator, which shows all available models sorted by language
 

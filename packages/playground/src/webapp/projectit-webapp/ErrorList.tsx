@@ -7,7 +7,7 @@ import { Sticky, StickyPositionType } from "office-ui-fabric-react/lib/Sticky";
 import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { IDetailsColumnRenderTooltipProps } from "office-ui-fabric-react/lib/DetailsList";
 import { SelectionMode } from "office-ui-fabric-react/lib/Selection";
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { PiError } from "@projectit/core";

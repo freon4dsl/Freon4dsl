@@ -1,7 +1,7 @@
 import { GenericModelSerializer, PiLogger } from "@projectit/core";
 import axios from "axios";
 import { PiElement } from "@projectit/core";
-import { SERVER_URL } from "./WebappConfiguration";
+import { SERVER_URL } from "../WebappConfiguration";
 import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
 
 const LOGGER = new PiLogger("ServerCommunication"); // TODO show errors to user

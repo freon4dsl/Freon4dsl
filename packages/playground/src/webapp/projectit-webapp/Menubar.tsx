@@ -1,18 +1,16 @@
 import * as React from "react";
-import { Menu, Tooltip, Icon, Flex, Text, Input, Segment, FlexItem, Divider, RadioGroup } from "@fluentui/react-northstar";
+import { Menu, Tooltip, Icon, Flex, Text, Input, Segment, FlexItem, RadioGroup } from "@fluentui/react-northstar";
 import { Link } from "@fluentui/react";
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { App } from "./App";
-import { CanvasAddPageIcon, SearchIcon } from "@fluentui/react-icons-northstar";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { SearchIcon } from "@fluentui/react-icons-northstar";
 
-const versionNumber = "0.0.5";
+const versionNumber = "0.1.0";
 
 export default class Menubar extends React.Component {
     modelName: string = "";
-    documentName: string = "";
-    documentType: string = "";
+    unitName: string = "";
+    modelUnitType: string = "";
 
     private setModelName = (element: any | null) => {
         if (!!element && !!element.value) {
@@ -23,15 +21,15 @@ export default class Menubar extends React.Component {
 
     private setDocumentName = (element: any | null) => {
         if (!!element && !!element.value) {
-            this.documentName = element?.value;
-            // console.log("Document name set to : " + this.documentName);
+            this.unitName = element?.value;
+            // console.log("Unit name set to : " + this.unitName);
         }
     };
 
-    private setDocumentType = (e, props) => {
+    private setUnitType = (e, props) => {
         if (!!props && !!props.value) {
-            this.documentType = props?.value;
-            console.log("Document type set to : " + this.documentType);
+            this.modelUnitType = props?.value;
+            // console.log("Model unit type set to : " + this.modelUnitType);
         }
     };
 
@@ -55,10 +53,10 @@ export default class Menubar extends React.Component {
                     },
                     {
                         key: 'filenewdocument',
-                        content: 'new document ...',
+                        content: 'new model unit ...',
                         // TODO different icon for new document
                         icon: "add",
-                        tooltip: "Create a new document",
+                        tooltip: "Create a new model unit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
@@ -70,29 +68,29 @@ export default class Menubar extends React.Component {
                         key: "fileopen",
                         content: "open ...",
                         icon: "download",
-                        tooltip: "Open an existing document",
+                        tooltip: "Open an existing model unit",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="opentip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => this.openModel()
+                        onClick: () => this.openUnit()
                     },
                     {
                         key: "filesave",
                         content: "save",
                         icon: "open-outside",
-                        tooltip: "Save the current document on the server",
+                        tooltip: "Save the current model unit on the server",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="savetip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => this.save() //EditorCommunication.save()
+                        onClick: () => this.save()
                     },
                     {
                         key: "filesaveas",
                         content: "save as ...",
                         icon: "files-txt",
-                        tooltip: "Save the current document with a different name",
+                        tooltip: "Save the current model unit with a different name",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />}/>;
@@ -103,7 +101,7 @@ export default class Menubar extends React.Component {
                         key: "filedelete",
                         content: "delete",
                         icon: "files-txt",
-                        tooltip: "Delete the current document",
+                        tooltip: "Delete the current model unit",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="deleteastip" content={tooltip} trigger={<Component {...props} />}/>;
@@ -156,6 +154,7 @@ export default class Menubar extends React.Component {
                         key: "searchstring",
                         content: "search (not yet implemented)",
                         icon: "search",
+                        disabled: true,
                         tooltip: "Search in the document",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
@@ -264,7 +263,7 @@ export default class Menubar extends React.Component {
         return <Menu defaultActiveIndex={0} items={this.menuItems}/>;
     }
 
-    makeModelDocumentForm(disabledModelName: boolean, placeHolderModelName: string, placeHolderDocumentName: string ): JSX.Element {
+    makeModelUnitForm(disabledModelName: boolean, placeHolderModelName: string, placeHolderDocumentName: string ): JSX.Element {
         return <Flex column={true}>
             <Text content="Model name: "/>
             <Input clearable fluid placeholder={placeHolderModelName} disabled={disabledModelName} inputRef={this.setModelName}/>
@@ -279,16 +278,16 @@ export default class Menubar extends React.Component {
     }
 
     delete() {
-        App.setDialogTitle("Delete Document ...");
-        if (EditorCommunication.currentDocumentName.length > 0) {
-            App.setDialogSubText("Are you sure you want to delete the current document?");
-            App.setDialogContent(this.makeModelDocumentForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+        App.setDialogTitle("Delete model unit ...");
+        if (EditorCommunication.currentUnitName.length > 0) {
+            App.setDialogSubText("Are you sure you want to delete the current model unit?");
+            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
             App.useDefaultButton();
             App.showDialogWithCallback(() => {
                 EditorCommunication.deleteCurrentModel();
             });
         } else {
-            App.setDialogSubText("Cannot delete, because there is no document selected.");
+            App.setDialogSubText("Cannot delete, because there is no model unit selected.");
             // TODO set different content
             App.setDialogContent(<SearchIcon/> );
             App.showDialog();
@@ -300,13 +299,13 @@ export default class Menubar extends React.Component {
         // as well as in the save and cancel callbacks
         if (EditorCommunication.hasChanges) {
             // console.log("HAS CHANGES");
-            App.setDialogTitle(`Document '${EditorCommunication.currentModelName}/${EditorCommunication.currentDocumentName}' has unsaved changes.`);
+            App.setDialogTitle(`Model unit '${EditorCommunication.currentModelName}/${EditorCommunication.currentUnitName}' has unsaved changes.`);
             App.setDialogSubText("Do you want to save it? If so, please, enter a name. ");
             App.useDefaultButton();
-            App.setDialogContent(this.makeModelDocumentForm(false, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+            App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
             await App.showDialogWithCallback( () => {
-                    if (!!this.documentName) {
-                        EditorCommunication.saveAs(this.modelName, this.documentName);
+                    if (!!this.unitName) {
+                        EditorCommunication.saveAs(this.modelName, this.unitName);
                     }
                     EditorCommunication.newModel();
                 },
@@ -314,34 +313,41 @@ export default class Menubar extends React.Component {
                     EditorCommunication.newModel();
                 });
         } else {
+            // TODO
+            // ask the user for the name of the new model
+            // get server to create a new folder for this model
+            // show the model in the navigator
+            // create the internal structure
+            // ask the user for the first model unit - type and name
+            // open the editor
             EditorCommunication.newModel();
         }
     }
 
     newDocument() {
-        console.log("new Document called");
+        console.log("new Model unit called");
         // get the list of document types
-        const documentTypes = EditorCommunication.getModelUnitTypes();
-        if (documentTypes.length === 0) {
+        const modelUnitTypes = EditorCommunication.getModelUnitTypes();
+        if (modelUnitTypes.length === 0) {
             // error
             return;
         }
-        this.documentType = documentTypes[0];
+        this.modelUnitType = modelUnitTypes[0];
         // create a list of document types => radio group with document type name as label
         // and show this in a dialog
-        App.setDialogTitle(`Select the type of the new document:`);
+        App.setDialogTitle(`Select the type of the new model unit:`);
         App.setDialogSubText("");
         App.setDialogContent(<div>
             <RadioGroup
                 vertical
-                defaultCheckedValue={documentTypes[0]}
-                items={this.getItems(documentTypes)}
-                onCheckedValueChange={this.setDocumentType}
+                defaultCheckedValue={modelUnitTypes[0]}
+                items={this.getItems(modelUnitTypes)}
+                onCheckedValueChange={this.setUnitType}
             />
         </div>);
         App.showDialogWithCallback( () => {
             // get the selected document type and let EditorCommunication do the rest
-            EditorCommunication.newDocument(this.documentType);
+            EditorCommunication.newUnit(this.modelUnitType);
         });
     }
 
@@ -358,18 +364,18 @@ export default class Menubar extends React.Component {
         return result;
     }
 
-    async openModel() {
+    async openUnit() {
         // because of asynchronicity the method 'internalOpen' is called in the else branche
         // as well as in the save and cancel callbacks
         if (EditorCommunication.hasChanges) {
             // console.log("HAS CHANGES");
-            App.setDialogTitle(`Document '${this.modelName}/${this.documentName}' has unsaved changes.`);
+            App.setDialogTitle(`Model Unit '${this.modelName}/${this.unitName}' has unsaved changes.`);
             App.setDialogSubText("Do you want it saved? If so, please, enter a name. ");
             App.useDefaultButton();
-            App.setDialogContent(this.makeModelDocumentForm(true, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
             await App.showDialogWithCallback( () => {
-                if (!!this.documentName) {
-                    EditorCommunication.saveAs(this.modelName, this.documentName);
+                if (!!this.unitName) {
+                    EditorCommunication.saveAs(this.modelName, this.unitName);
                 }
                 this.internalOpen();
                 },
@@ -382,23 +388,23 @@ export default class Menubar extends React.Component {
     }
 
     private internalOpen() {
-        App.setDialogTitle("Open Document ...");
+        App.setDialogTitle("Open Model Unit ...");
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(this.makeModelDocumentForm(false, EditorCommunication.currentModelName, ""));
+        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModelName, ""));
         App.showDialogWithCallback(() => {
-            if (!!this.documentName) {
-                const documentToOpen = this.documentName;
+            if (!!this.unitName) {
+                const unitToOpen = this.unitName;
                 const modelToOpen = (!!this.modelName ? this.modelName : EditorCommunication.currentModelName);
-                // console.log(`Opening document '${modelToOpen}/${documentToOpen}`);
-                EditorCommunication.open(modelToOpen, documentToOpen);
+                // console.log(`Opening unit '${modelToOpen}/${unitToOpen}`);
+                EditorCommunication.open(modelToOpen, unitToOpen);
             }
         });
     }
 
     save() {
         // if name is not already known use saveAs
-        if (EditorCommunication.currentModelName.length === 0 || EditorCommunication.currentDocumentName.length === 0) {
+        if (EditorCommunication.currentModelName.length === 0 || EditorCommunication.currentUnitName.length === 0) {
             this.saveAs("Current document does not yet have a name ...");
         } else { // else let EditorCommunication do the job
             EditorCommunication.save();
@@ -409,12 +415,12 @@ export default class Menubar extends React.Component {
         App.setDialogTitle((title? title : "Save as ..."));
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(this.makeModelDocumentForm(false, EditorCommunication.currentModelName, EditorCommunication.currentDocumentName));
+        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
         App.showDialogWithCallback( () => {
-            if (!!this.documentName) {
-                EditorCommunication.saveAs(this.modelName, this.documentName);
+            if (!!this.unitName) {
+                EditorCommunication.saveAs(this.modelName, this.unitName);
             }
-            // console.log("model: " + EditorCommunication.currentModelName + ", document: " + EditorCommunication.currentDocumentName);
+            // console.log("model: " + EditorCommunication.currentModelName + ", unit: " + EditorCommunication.currentUnitName);
         });
     }
 
