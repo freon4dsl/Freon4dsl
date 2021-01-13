@@ -9,7 +9,7 @@ import {
     Box, PiTriggerType, PiEditor, AliasBox, isAliasBox, isOptionalBox, PiElement
 } from "@projectit/core";
 import { PiCaret } from "@projectit/core";
-import { NumberLiteralExpression } from "../language/gen";
+import { AppliedFeature, AttributeRef, NumberLiteralExpression, ParameterRef } from "../language/gen";
 
 /**
  * Class CustomExampleActions provides an entry point for the language engineer to
@@ -64,6 +64,19 @@ export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
             return null;
         },
         trigger: "add-base"
+    },
+    {
+        trigger: ".",
+        activeInBoxRoles: ["ExExpression-appliedfeature"],
+        action: (box, trigger, editor): PiElement => {
+            let elem = box.element;
+            if( elem instanceof ParameterRef) {
+                const applied = new AttributeRef();
+                elem.appliedfeature = applied;
+                return applied;
+            }
+            return null;
+        }
     }
 ];
 

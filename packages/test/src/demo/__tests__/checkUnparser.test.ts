@@ -142,9 +142,8 @@ describe("Testing Unparser", () => {
                 console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
             }
 
-            console.log(result);
-            // TODO Es6 problem
-            // expect(result).toMatchSnapshot();
+            // console.log(result);
+            expect(result).toMatchSnapshot();
         });
     });
 });

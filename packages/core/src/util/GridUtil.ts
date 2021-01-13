@@ -111,6 +111,7 @@ export class GridUtil {
     ): KeyboardShortcutBehavior {
         const listKeyboardShortcut: KeyboardShortcutBehavior = {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
+            // TODO The new-0... should become more generic.
             activeInBoxRoles: ["new-0", "new-1", "new-2", "new-3", "new-4", "new-5", "new-6", "new-7", "new-8", "new-9", "new-10"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;

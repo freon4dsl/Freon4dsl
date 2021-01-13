@@ -144,7 +144,7 @@ export class ProjectionTemplate {
         if (editor.concept instanceof PiLimitedConcept) return ``;
 
         let result: string = "";
-        const element = Roles.elementName(concept);
+        const element = Roles.elementVarName(concept);
         const projection: PiEditProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if (multiLine) {

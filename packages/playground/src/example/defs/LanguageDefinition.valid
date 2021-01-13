@@ -13,7 +13,12 @@ Entity {
     isunique name in self.attributes;
     notEmpty self.methods;
     isunique name in self.methods;
-    validIdentifier;
+    validIdentifier
+    {
+        message: "De naam ${self.name} is geen correcte identifier",
+        severity: error
+    }
+    ;
 }
 
 //Attribute {

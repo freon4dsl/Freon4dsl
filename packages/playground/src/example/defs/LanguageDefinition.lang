@@ -5,25 +5,25 @@ model Demo {
     models: ExModel[];
 }
 
-modelunit ExModel {
+public modelunit ExModel {
     public name: string;
-    entities: Entity[];
-    methods: Method[];
+    public entities: Entity[];
+    public methods: Method[];
 }
 interface BaseType {
-    name: string;
+    public name: string;
 }
 interface Type base BaseType {
 }
 
-concept Entity implements Type {
+public concept Entity implements Type {
     attributes: Attribute[];
     methods: Method[];
-    reference baseEntity: Entity;
+    reference baseEntity?: Entity;
 }
 
-concept Method {
-    name: string;
+public concept Method {
+    public name: string;
     reference declaredType : Type;
     body: ExExpression;
     parameters: Parameter[];
@@ -103,6 +103,7 @@ expression SumExpression base ExExpression {
 
 expression MethodCallExpression base ExExpression {
     reference methodDefinition: Method;
+    args: ExExpression[];
 }
 
 expression IfExpression base ExExpression {

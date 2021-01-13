@@ -47,7 +47,7 @@ Parameter {
 MethodCallExpression {
     @projection MethodCallExpression
         [
-        CALL ${self.methodDefinition} ( ... )
+        CALL ${self.methodDefinition} ( ${self.args @separator[,] } )
         ]
     @trigger "method"
 }

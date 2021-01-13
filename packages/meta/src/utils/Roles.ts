@@ -1,10 +1,14 @@
-import { PiClassifier, PiConcept, PiProperty } from "../languagedef/metalanguage";
+import { PiBinaryExpressionConcept, PiClassifier, PiConcept, PiProperty } from "../languagedef/metalanguage";
 import { Names } from "./Names";
 
 export class Roles {
 
-    public static elementName(concept: PiClassifier): string {
+    public static elementVarName(concept: PiClassifier): string {
         return Names.classifier(concept).toLowerCase();
+    }
+
+    public static elementName(concept: PiClassifier): string {
+        return Names.classifier(concept);//.toLowerCase();
     }
 
     public static property(property: PiProperty): string {
@@ -12,11 +16,19 @@ export class Roles {
     }
 
     public static newPart(property: PiProperty): string {
-        return Roles.property(property);
+        return Roles.newConceptPart(property.owningConcept, property)
+        // return Roles.property(property);
     }
 
-    public static newConceptPart(concept: PiConcept, property: PiProperty): string {
-        return Roles.elementName(concept) + "-" + property.name;
+    public static newConceptPart(concept: PiClassifier, property: PiProperty): string {
+        if( concept instanceof PiBinaryExpressionConcept) {
+            if( !!(concept.base.referred) ){
+                if( !(concept.base.referred instanceof PiBinaryExpressionConcept)){
+                    return "PiBinaryExpression" + "-" + property.name;
+                }
+            }
+        }
+        return Names.classifier(concept) + "-" + property.name;
     }
 
 }
