@@ -72,6 +72,7 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
+    // TODO should delete both unit and unit-interface
     async deleteModelUnit(modelInfo: IModelUnitData ) {
         console.log(`ServerCommunication.deleteModelUnit ${modelInfo.language}/${modelInfo.model}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {

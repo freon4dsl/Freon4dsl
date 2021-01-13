@@ -281,7 +281,7 @@ export default class Menubar extends React.Component {
         App.setDialogTitle("Delete model unit ...");
         if (EditorCommunication.currentUnitName.length > 0) {
             App.setDialogSubText("Are you sure you want to delete the current model unit?");
-            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
+            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
             App.useDefaultButton();
             App.showDialogWithCallback(() => {
                 EditorCommunication.deleteCurrentModel();
@@ -299,10 +299,10 @@ export default class Menubar extends React.Component {
         // as well as in the save and cancel callbacks
         if (EditorCommunication.hasChanges) {
             // console.log("HAS CHANGES");
-            App.setDialogTitle(`Model unit '${EditorCommunication.currentModelName}/${EditorCommunication.currentUnitName}' has unsaved changes.`);
+            App.setDialogTitle(`Model unit '${EditorCommunication.currentModel.name}/${EditorCommunication.currentUnitName}' has unsaved changes.`);
             App.setDialogSubText("Do you want to save it? If so, please, enter a name. ");
             App.useDefaultButton();
-            App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
+            App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
             await App.showDialogWithCallback( () => {
                     if (!!this.unitName) {
                         EditorCommunication.saveAs(this.modelName, this.unitName);
@@ -372,7 +372,7 @@ export default class Menubar extends React.Component {
             App.setDialogTitle(`Model Unit '${this.modelName}/${this.unitName}' has unsaved changes.`);
             App.setDialogSubText("Do you want it saved? If so, please, enter a name. ");
             App.useDefaultButton();
-            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
+            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
             await App.showDialogWithCallback( () => {
                 if (!!this.unitName) {
                     EditorCommunication.saveAs(this.modelName, this.unitName);
@@ -391,11 +391,11 @@ export default class Menubar extends React.Component {
         App.setDialogTitle("Open Model Unit ...");
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModelName, ""));
+        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModel.name, ""));
         App.showDialogWithCallback(() => {
             if (!!this.unitName) {
                 const unitToOpen = this.unitName;
-                const modelToOpen = (!!this.modelName ? this.modelName : EditorCommunication.currentModelName);
+                const modelToOpen = (!!this.modelName ? this.modelName : EditorCommunication.currentModel.name);
                 // console.log(`Opening unit '${modelToOpen}/${unitToOpen}`);
                 EditorCommunication.open(modelToOpen, unitToOpen);
             }
@@ -404,7 +404,7 @@ export default class Menubar extends React.Component {
 
     save() {
         // if name is not already known use saveAs
-        if (EditorCommunication.currentModelName.length === 0 || EditorCommunication.currentUnitName.length === 0) {
+        if (EditorCommunication.currentModel.name.length === 0 || EditorCommunication.currentUnitName.length === 0) {
             this.saveAs("Current document does not yet have a name ...");
         } else { // else let EditorCommunication do the job
             EditorCommunication.save();
@@ -415,7 +415,7 @@ export default class Menubar extends React.Component {
         App.setDialogTitle((title? title : "Save as ..."));
         App.setDialogSubText("");
         App.useDefaultButton();
-        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModelName, EditorCommunication.currentUnitName));
+        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
         App.showDialogWithCallback( () => {
             if (!!this.unitName) {
                 EditorCommunication.saveAs(this.modelName, this.unitName);

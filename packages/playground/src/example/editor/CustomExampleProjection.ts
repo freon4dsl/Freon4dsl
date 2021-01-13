@@ -17,8 +17,7 @@ import {
     VerticalListBox,
     PiProjection,
     PiElement,
-    PiEditor,
-    PiEnvironment
+    PiEditor
 } from "@projectit/core";
 import { projectitStyles } from "./styles/styles";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
@@ -26,8 +25,6 @@ import { Attribute, AttributeType, Entity, NumberLiteralExpression, OrExpression
 import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
 import { sumIcon } from "./Icons";
 import { exampleStyles } from "./examplestyles";
-
-const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 const OPERATOR_COLUMN = 1;
 const OPERAND_COLUM = 2;
@@ -509,7 +506,7 @@ export class CustomExampleProjection implements PiProjection {
             (box: Box, editor: PiEditor) => {
                 return new Attribute();
             },
-            editorEnvironment.editor
+            ExampleEnvironment.getInstance().editor
         );
     }
 

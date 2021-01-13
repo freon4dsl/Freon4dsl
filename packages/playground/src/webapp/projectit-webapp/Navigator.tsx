@@ -36,7 +36,7 @@ const titleRenderer = (Component, { content, open, hasSubtree, selected, ...rest
 export class Navigator extends React.Component<{}, {}> {
     // TODO keep current selection
     private _selection: Selection;
-    @observable _allDocuments: IModelUnitData[] = [];
+    @observable _allUnits: IModelUnitData[] = [];
     private _activeItemId: string = "-1";
 
     constructor(props: {}) {
@@ -50,7 +50,7 @@ export class Navigator extends React.Component<{}, {}> {
     @computed get buildTree(): TreeElement[] {
         let tree: TreeElement[] = [];
         let modelMap = new Map();
-        this._allDocuments.forEach((model, index) => {
+        this._allUnits.forEach((model, index) => {
             let modelGroup: TreeElement = modelMap.get(model.model);
             if (!(!!modelGroup)) {
                 // not yet encountered, so create a tree element for this model
@@ -82,15 +82,15 @@ export class Navigator extends React.Component<{}, {}> {
 
     public removeName(name: string) {
         // TODO this method is not functioning correctly yet
-        const index = this._allDocuments.findIndex(elem  => elem.unitName = name);
-        console.log(`length: ${this._allDocuments.length}, index: ${index}`);
-        this._allDocuments.splice(index-1 , 1);
+        const index = this._allUnits.findIndex(elem  => elem.unitName = name);
+        console.log(`length: ${this._allUnits.length}, index: ${index}`);
+        this._allUnits.splice(index-1 , 1);
     }
 
     private _onTitleClick = (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
         if (!!item.id && item.items.length === 0 ) { // every model unit is a leaf in the navigation tree
             // get from item.id the right names to put through to the open request
-            let modelInfo: IModelUnitData = this._allDocuments[item.id];
+            let modelInfo: IModelUnitData = this._allUnits[item.id];
             if (!!modelInfo) {
                 EditorCommunication.open(modelInfo.model, modelInfo.unitName);
                 // TODO show selection with grey background (or something)
@@ -124,9 +124,9 @@ export class Navigator extends React.Component<{}, {}> {
         );
     }
 
-    private setAllDocuments = (documents: IModelUnitData[]) => {
+    public setAllDocuments = (documents: IModelUnitData[]) => {
         if (!!documents && documents.length > 0) {
-            this._allDocuments = documents;
+            this._allUnits = documents;
             if (!(!!this._activeItemId)) {
                 this._activeItemId = documents[0].model;
             }

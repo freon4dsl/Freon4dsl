@@ -11,30 +11,40 @@ import { IModelUnitData } from "./IServerCommunication";
 
 export class EditorCommunication {
     static currentUnitName = '';
-    static currentModelName = '';
+    static currentModel: PiNamedElement = null; // models should have a name property
+    // static currentModel.name = '';
     static hasChanges: boolean = true;
     static editorArea: EditorArea;
 
-    // used from the editor area
+    // called from the editor area
     static getEditor(): ProjectionalEditor {
         const currentUnit = editorEnvironment.editor.rootElement;
         if (!!currentUnit) {
+            // units should have a name property
             this.currentUnitName = (currentUnit as PiNamedElement).name;
+            
+            // check whether the current model is still the same
+            const model: PiElement = currentUnit.piContainer()?.container;
+            if (!!model) { // should not be null or undefined
+                if (model !== this.currentModel) {
+                    this.currentModel = model as PiNamedElement;
+                    // ask the server for units and show them in the navigator
+                    // this.getModelUnits(this.editorArea.navigator.setAllDocuments);
+                }
+            }
+            
+            // console.log(`unit '${this.currentUnitName}' has model '${this.currentModel.name}'`);
+            return editorEnvironment.projectionalEditorComponent;
+        } else {
+            return null;
         }
-        const model: PiElement = currentUnit.piContainer()?.container;
-        if (!!model) { // should not be null or undefined
-            // models should have a name property
-            this.currentModelName = (model as PiNamedElement).name;
-        }
-        // console.log(`unit '${this.currentUnitName}' has model '${this.currentModelName}'`);
-        return editorEnvironment.projectionalEditorComponent;
     }
 
     // used from the menubar
     static newModel() {
         console.log("EditorCommunication new model called");
         editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
-        EditorCommunication.currentModelName = "";
+        EditorCommunication.currentModel.name = "";
         EditorCommunication.currentUnitName = "";
     }
 
@@ -58,7 +68,7 @@ export class EditorCommunication {
         let model: PiModel = (parentOfCurrentDocument.piIsModel() ? (parentOfCurrentDocument as PiModel) : null);
         if (!!model) { // else internal error
             let oldUnit = editorEnvironment.editor.rootElement;
-            if (model.name === modelName && modelName === this.currentModelName) { // we are opening another unit of the same model
+            if (model.name === modelName && modelName === this.currentModel.name) { // we are opening another unit of the same model
                 console.log("opening another unit of the same model: " + model.name);
                 await this.openUnitOfCurrentModel(model, documentName, oldUnit, modelName);
             } else {
@@ -98,7 +108,7 @@ export class EditorCommunication {
                     console.log(`setting the editor to the new unit`);
                     editorEnvironment.editor.rootElement = unit;
                     EditorCommunication.currentUnitName = documentName;
-                    EditorCommunication.currentModelName = modelName;
+                    EditorCommunication.currentModel.name = modelName;
                     console.log("validating the new unit");
                     EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
                     // test
@@ -124,7 +134,7 @@ export class EditorCommunication {
         await ServerCommunication.getInstance().loadModelUnitInterface({
                 language: editorEnvironment.languageName,
                 unitName: this.currentUnitName,
-                model: this.currentModelName
+                model: this.currentModel.name
             },
             (oldUnitInterface: PiElement) => {
                 if (!!oldUnitInterface) {
@@ -133,7 +143,7 @@ export class EditorCommunication {
                 } else {
                     allright = false;
                     // give error message to user
-                    PiToolbar.instance.alertContent = `Document interface for '${this.currentModelName}/${this.currentUnitName}' could not be found on the server.`;
+                    PiToolbar.instance.alertContent = `Document interface for '${this.currentModel.name}/${this.currentUnitName}' could not be found on the server.`;
                     PiToolbar.instance.alertIsVisible = true;
                 }
             });
@@ -143,7 +153,7 @@ export class EditorCommunication {
             ServerCommunication.getInstance().loadModelUnit({
                     language: editorEnvironment.languageName,
                     unitName: documentName,
-                    model: this.currentModelName
+                    model: this.currentModel.name
                 },
                 (newUnit: PiElement) => {
                     if (!!newUnit) {
@@ -162,7 +172,7 @@ export class EditorCommunication {
                             editorEnvironment.editor.rootElement = newUnit;
                             EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
                             EditorCommunication.currentUnitName = documentName;
-                            EditorCommunication.currentModelName = modelName;
+                            EditorCommunication.currentModel.name = modelName;
                             // test
                             if (newUnit.piContainer()?.container !== model) {
                                 console.log(`openUnitAndModel: ERROR the container of unit ${(newUnit as PiNamedElement).name} is not equal to the model ${model.name}`);
@@ -171,7 +181,7 @@ export class EditorCommunication {
                         }
                     } else {
                         // give error message to user
-                        PiToolbar.instance.alertContent = `Document '${this.currentModelName}/${documentName}' could not be found on the server.`;
+                        PiToolbar.instance.alertContent = `Document '${this.currentModel.name}/${documentName}' could not be found on the server.`;
                         PiToolbar.instance.alertIsVisible = true;
                     }
                 });
@@ -185,7 +195,7 @@ export class EditorCommunication {
             // save the document under the current name
             ServerCommunication.getInstance().putModelUnit({
                 unitName: EditorCommunication.currentUnitName,
-                model: EditorCommunication.currentModelName,
+                model: EditorCommunication.currentModel.name,
                 language: editorEnvironment.languageName
             }, editorEnvironment.editor.rootElement);
         } else {
@@ -196,23 +206,23 @@ export class EditorCommunication {
     // we assume that newDocumentName is always set, but newModelName need not be set.
     static saveAs(newModelName: string, newDocumentName: string) {
         console.log("EditorCommunication save as called, new model name: " + newModelName + ", new document name: " + newDocumentName);
-        if (newModelName !== EditorCommunication.currentModelName && newDocumentName !== EditorCommunication.currentUnitName) {
+        if (newModelName !== EditorCommunication.currentModel.name && newDocumentName !== EditorCommunication.currentUnitName) {
             if (!!editorEnvironment.editor.rootElement) {
                 // save the document under the new name
                 ServerCommunication.getInstance().putModelUnit({
                     unitName: newDocumentName,
-                    model: (!!newModelName? newModelName : EditorCommunication.currentModelName),
+                    model: (!!newModelName? newModelName : EditorCommunication.currentModel.name),
                     language: editorEnvironment.languageName
                 }, editorEnvironment.editor.rootElement);
                 // add the name to the navigator
-                EditorCommunication.editorArea.navigator._allDocuments.push({
+                EditorCommunication.editorArea.navigator._allUnits.push({
                     unitName: newDocumentName,
                     model: newModelName,
                     language: editorEnvironment.languageName
                 });
                 // remember the new names
                 EditorCommunication.currentUnitName = newDocumentName;
-                EditorCommunication.currentModelName = (!!newModelName? newModelName : EditorCommunication.currentModelName);
+                EditorCommunication.currentModel.name = (!!newModelName? newModelName : EditorCommunication.currentModel.name);
             } else {
                 console.log("NO rootElement in editor");
             }
@@ -222,7 +232,7 @@ export class EditorCommunication {
     static deleteCurrentModel() {
         console.log("EditorCommunication delete called, current document: " + EditorCommunication.currentUnitName);
         if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: EditorCommunication.currentUnitName, model: EditorCommunication.currentModelName});
+            ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: EditorCommunication.currentUnitName, model: EditorCommunication.currentModel.name});
             editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
             EditorCommunication.editorArea.navigator.removeName(EditorCommunication.currentUnitName);
             EditorCommunication.currentUnitName = "";
