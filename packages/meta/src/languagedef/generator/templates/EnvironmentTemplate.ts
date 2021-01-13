@@ -63,7 +63,7 @@ export class EnvironmentTemplate {
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");
                 rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(rootProjection, actions);
-                this.editor.rootElement = projectitConfiguration.customInitialization.initialize();
+                this.editor.rootElement = null;
                 initializeLanguage();
             }
             
