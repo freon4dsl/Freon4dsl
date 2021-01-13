@@ -43,7 +43,7 @@ export interface IErrorItem {
 
 @observer
 export class ErrorList extends React.Component<{}, {}> {
-    @observable allItems: PiError[];
+    @observable allItems: PiError[]=[];
     private _columns: IColumn[];
 
     constructor(props: {}) {
