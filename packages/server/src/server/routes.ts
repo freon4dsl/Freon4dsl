@@ -13,7 +13,7 @@ router.get("/getModel", async (ctx: Router.IRouterContext) => {
     const name = ctx.query["name"];
     console.log("GetModel: " + folder + "/" + name);
     if (!!name || folder) {
-        ModelRequests.getModel(folder, name, ctx);
+        ModelRequests.getModelUnit(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
@@ -50,7 +50,7 @@ router.put("/putModel", async (ctx: Router.IRouterContext) => {
     const name = ctx.query["name"];
     console.log("PutModel: " + folder + "/" + name);
     if (!!name || !!folder) {
-        ModelRequests.putModel(folder, name, ctx);
+        ModelRequests.putModelUnit(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
@@ -64,7 +64,7 @@ router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
     const name = ctx.query["name"];
     console.log("DeleteModel: " + folder + "/" + name);
     if (!!name || !! folder) {
-        ModelRequests.deleteModel(folder, name, ctx);
+        ModelRequests.deleteModelUnit(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
