@@ -8,7 +8,7 @@ Attribute {
 
 Entity {
     @projection [
-        Entity ${self.name} base ${self.baseEntity}  {
+        Entity ${self.name} [?optbase ${self.baseEntity}] {
             ${self.attributes @vertical @separator [\n]}
             ${self.methods @vertical @separator [\n]}
         }
