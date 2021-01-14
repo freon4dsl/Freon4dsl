@@ -1,7 +1,7 @@
 language octopus
 
 modelunit UmlPart {
-    name: string;
+    public name: string;
     packages: UmlPackage[];
     associations: Association[];
 }

@@ -277,7 +277,7 @@ export class ConceptTemplate {
         const myName = Names.concept(concept);
         const hasReferences = concept.implementedReferences().length > 0;
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = findMobxImports(false, concept).concat(["PiModel", "Language"]);
+        const coreImports = findMobxImports(false, concept).concat(["PiModel", "PiNamedElement", "Language"]);
         const metaType = Names.metaType(language);
         const imports = this.findModelImports(concept, myName, hasReferences);
 
@@ -387,6 +387,41 @@ export class ConceptTemplate {
                             }`).join("\n")}
                         }
                         return false;                 
+                    }
+                    
+                    /**
+                     * Removes a model unit. Returns false if anything goes wrong.
+                     *
+                     * @param oldUnit
+                     */
+                    removeUnit(oldUnit: PiNamedElement): boolean {
+                        const myMetatype = oldUnit.piLanguageConcept();
+                        switch (myMetatype) {
+                        ${language.modelConcept.allParts().map(part =>
+                            `case "${Names.classifier(part.type.referred)}": {
+                                ${part.isList ?
+                                    `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)}), 1);`
+                                :
+                                    `this.${part.name} = null;`
+                                }
+                                return true;
+                            }`).join("\n")}
+                        }
+                        return false;
+                    }
+                    
+                    /**
+                     * Returns a list of model units.
+                     */
+                    getUnits(): PiNamedElement[] {
+                        let result : PiNamedElement[] = [];
+                        ${language.modelConcept.allParts().map(part =>
+                            `${part.isList ?
+                                `result = result.concat(this.${part.name});`
+                                :
+                                `result.push(this.${part.name});`
+                            }`).join("\n")}
+                        return result;
                     }
                 }`;
     }

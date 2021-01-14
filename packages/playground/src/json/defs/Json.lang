@@ -6,7 +6,7 @@ model Json {
 }
 
 modelunit JsonFile  implements INamedConcept {
-    name: string;
+    public name: string;
 	contents: IJsonValue;
 }
 

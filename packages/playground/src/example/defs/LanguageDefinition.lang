@@ -6,7 +6,7 @@ model Demo {
 }
 
 modelunit ExModel {
-    name: string;
+    public name: string;
     entities: Entity[];
     methods: Method[];
 }

@@ -236,6 +236,14 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             });
         }
 
+        if ( piConcept.isUnit ) {
+            // find its name property
+            const nameProp: PiPrimitiveProperty = piConcept.allPrimProperties().find(p => p.name == "name");
+            this.simpleCheck(
+                nameProp.isPublic,
+                `The name property of a model unit should be public ${this.location(piConcept)}.`);
+        }
+
         if (!!piConcept.base) {
             this.checkConceptReference(piConcept.base);
             if (!!piConcept.base.referred) { // error message taken care of by checkClassifierReference
@@ -393,7 +401,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                 whenOk: () => {
                     this.checkConceptReference(piProperty.type);
                     const realType = piProperty.type.referred;
-                    if (!!realType) { // error message handle by checkConceptReference
+                    if (!!realType) { // error message handled by checkConceptReference
                         const owningClassifier = piProperty.owningConcept;
                         this.checkPropertyType(piProperty, realType);
 

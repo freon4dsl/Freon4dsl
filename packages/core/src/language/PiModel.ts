@@ -49,6 +49,18 @@ export interface PiModel extends PiNamedElement {
      * @param newUnit
      */
     addUnit(newUnit: PiElement): boolean;
+
+    /**
+     * Removes a model unit. Returns false if anything goes wrong.
+     *
+     * @param oldUnit
+     */
+    removeUnit(oldUnit: PiElement): boolean;
+
+    /**
+     * Returns a list of model units.
+     */
+    getUnits(): PiNamedElement[];
 }
 // end::model-interface[]
 
