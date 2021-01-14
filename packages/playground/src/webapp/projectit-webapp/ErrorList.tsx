@@ -49,11 +49,11 @@ export class ErrorList extends React.Component<{}, {}> {
     constructor(props: {}) {
         super(props);
 
-        EditorCommunication.editorArea.errorlist = this;
+        EditorCommunication.getInstance().editorArea.errorlist = this;
         this.makeColumns(props);
         // the next statement must always occur after setting
         // EditorCommunication.editorArea.errorlist
-        EditorCommunication.getErrors();
+        EditorCommunication.getInstance().getErrors();
     }
 
     @computed get getErrors(): IErrorItem[] {
@@ -136,7 +136,7 @@ export class ErrorList extends React.Component<{}, {}> {
 
 function _onItemInvoked(item: IErrorItem): void {
     // give signal to editor
-    EditorCommunication.errorSelected(item.error);
+    EditorCommunication.getInstance().errorSelected(item.error);
 }
 
 function _onActiveItemChanged(item: IErrorItem): void {

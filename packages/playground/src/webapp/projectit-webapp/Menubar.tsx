@@ -4,6 +4,8 @@ import { Link } from "@fluentui/react";
 import { EditorCommunication } from "./EditorCommunication";
 import { App } from "./App";
 import { SearchIcon } from "@fluentui/react-icons-northstar";
+import { PiElement, PiNamedElement } from "@projectit/core";
+import { ServerCommunication } from "./ServerCommunication";
 
 const versionNumber = "0.1.0";
 
@@ -19,7 +21,7 @@ export default class Menubar extends React.Component {
         }
     };
 
-    private setDocumentName = (element: any | null) => {
+    private setUnitName = (element: any | null) => {
         if (!!element && !!element.value) {
             this.unitName = element?.value;
             // console.log("Unit name set to : " + this.unitName);
@@ -30,6 +32,20 @@ export default class Menubar extends React.Component {
         if (!!props && !!props.value) {
             this.modelUnitType = props?.value;
             // console.log("Model unit type set to : " + this.modelUnitType);
+        }
+    };
+
+    private setModelNameFromProps = (e, props) => {
+        if (!!props && !!props.value) {
+            this.modelName = props?.value;
+            // console.log("Model name set to : " + this.modelName);
+        }
+    };
+
+    private setUnitNameFromProps = (e, props) => {
+        if (!!props && !!props.value) {
+            this.unitName = props?.value;
+            // console.log("Unit name set to : " + this.unitName);
         }
     };
 
@@ -52,61 +68,62 @@ export default class Menubar extends React.Component {
                         onClick: () => this.newModel()
                     },
                     {
-                        key: 'filenewdocument',
+                        key: "fileopen",
+                        content: "open model ...",
+                        icon: "download",
+                        tooltip: "Open an existing model",
+                        children: (Component, props) => {
+                            const { tooltip, ...rest } = props;
+                            return <Tooltip key="opentip" content={tooltip} trigger={<Component {...props} />}/>;
+                        },
+                        onClick: () => this.openModel()
+                    },
+                    {
+                        key: 'filenewunit',
                         content: 'new model unit ...',
-                        // TODO different icon for new document
+                        // TODO different icon for new modelunit
                         icon: "add",
                         tooltip: "Create a new model unit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
-                            return <Tooltip key="newdocumenttip" content={tooltip} trigger={<Component {...props} />}/>;
+                            return <Tooltip key="newmodelunittip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => this.newDocument()
+                        onClick: () => this.newModelUnit()
                     },
                     {
-                        key: "fileopen",
-                        content: "open ...",
+                        key: 'fileopenunit',
+                        content: 'open model unit ...',
+                        // TODO different icon for new modelunit
                         icon: "download",
                         tooltip: "Open an existing model unit",
                         children: (Component, props) => {
+                            /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
-                            return <Tooltip key="opentip" content={tooltip} trigger={<Component {...props} />}/>;
+                            return <Tooltip key="openmodelunittip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => this.openUnit()
-                    },
-                    {
-                        key: "filesave",
-                        content: "save",
+                        onClick: () => this.openModelUnit()
+                    },                    {
+                        key: "filesaveunit",
+                        content: "save model unit",
                         icon: "open-outside",
                         tooltip: "Save the current model unit on the server",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="savetip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => this.save()
+                        onClick: () => this.saveModelUnit()
                     },
                     {
-                        key: "filesaveas",
-                        content: "save as ...",
+                        key: "filedeleteunit",
+                        content: "delete model unit",
                         icon: "files-txt",
-                        tooltip: "Save the current model unit with a different name",
-                        children: (Component, props) => {
-                            const { tooltip, ...rest } = props;
-                            return <Tooltip key="saveastip" content={tooltip} trigger={<Component {...props} />}/>;
-                        },
-                        onClick: () => this.saveAs()
-                    },
-                    {
-                        key: "filedelete",
-                        content: "delete",
-                        icon: "files-txt",
-                        tooltip: "Delete the current model unit",
+                        tooltip: "Delete the current model unit from the server",
                         children: (Component, props) => {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="deleteastip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => this.delete()
+                        onClick: () => this.deleteModelUnit()
                     }
                 ]
             }
@@ -127,7 +144,7 @@ export default class Menubar extends React.Component {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="undotip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => EditorCommunication.undo()
+                        onClick: () => EditorCommunication.getInstance().undo()
                     },
                     {
                         key: "editredo",
@@ -140,7 +157,7 @@ export default class Menubar extends React.Component {
                             const { tooltip, ...rest } = props;
                             return <Tooltip key="redotip" content={tooltip} trigger={<Component {...props} />}/>;
                         },
-                        onClick: () => EditorCommunication.redo()
+                        onClick: () => EditorCommunication.getInstance().redo()
                     }
                 ]
             }
@@ -155,7 +172,7 @@ export default class Menubar extends React.Component {
                         content: "search (not yet implemented)",
                         icon: "search",
                         disabled: true,
-                        tooltip: "Search in the document",
+                        tooltip: "Search in the modelunit",
                         children: (Component, props) => {
                             /* ☝️ `tooltip` comes from shorthand object */
                             const { tooltip, ...rest } = props;
@@ -172,7 +189,7 @@ export default class Menubar extends React.Component {
             content: "Projection",
             menu: {
                 items:
-                    EditorCommunication.getProjectionNames().map(name => {
+                    EditorCommunication.getInstance().getProjectionNames().map(name => {
                         return {
                             key: name,
                             content: name,
@@ -182,7 +199,7 @@ export default class Menubar extends React.Component {
                                 return <Tooltip key={"projection" + name} content={tooltip} trigger={<Component {...props} />}/>;
                             },
                             onClick: () => {
-                                EditorCommunication.setProjection(name);
+                                EditorCommunication.getInstance().setProjection(name);
                             }
                         };
                     })
@@ -263,99 +280,120 @@ export default class Menubar extends React.Component {
         return <Menu defaultActiveIndex={0} items={this.menuItems}/>;
     }
 
-    makeModelUnitForm(disabledModelName: boolean, placeHolderModelName: string, placeHolderDocumentName: string ): JSX.Element {
-        return <Flex column={true}>
-            <Text content="Model name: "/>
-            <Input clearable fluid placeholder={placeHolderModelName} disabled={disabledModelName} inputRef={this.setModelName}/>
-            {/*<Input clearable fluid placeholder={placeHolderModelName} icon={<SearchIcon />} disabled={disabledModelName} inputRef={this.setModelName}/>*/}
-
-            <FlexItem push>
-                <Text content="Document name: "/>
-            </FlexItem>
-            <Input clearable fluid placeholder={placeHolderDocumentName} inputRef={this.setDocumentName}/>
-            {/*<Input clearable fluid placeholder={placeHolderDocumentName} icon={<CanvasAddPageIcon />} inputRef={this.setDocumentName}/>*/}
-        </Flex>;
-    }
-
-    delete() {
-        App.setDialogTitle("Delete model unit ...");
-        if (EditorCommunication.currentUnitName.length > 0) {
-            App.setDialogSubText("Are you sure you want to delete the current model unit?");
-            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
-            App.useDefaultButton();
-            App.showDialogWithCallback(() => {
-                EditorCommunication.deleteCurrentModel();
-            });
-        } else {
-            App.setDialogSubText("Cannot delete, because there is no model unit selected.");
-            // TODO set different content
-            App.setDialogContent(<SearchIcon/> );
-            App.showDialog();
-        }
-    }
-
     async newModel() {
-        // because of asynchronicity the method 'internalOpen' is called in the else branche
+        // because of asynchronicity the method 'internalNewModel' is called in the else branche
         // as well as in the save and cancel callbacks
-        if (EditorCommunication.hasChanges) {
+        if (EditorCommunication.getInstance().hasChanges) {
             // console.log("HAS CHANGES");
-            App.setDialogTitle(`Model unit '${EditorCommunication.currentModel.name}/${EditorCommunication.currentUnitName}' has unsaved changes.`);
+            App.setDialogTitle(`Current model unit '${EditorCommunication.getInstance().currentUnit.name}' has unsaved changes.`);
             App.setDialogSubText("Do you want to save it? If so, please, enter a name. ");
             App.useDefaultButton();
-            App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
+            App.setDialogContent(<Flex column={true}>
+                <FlexItem push>
+                    <Text content="Model Unit name: "/>
+                </FlexItem>
+                <Input clearable fluid placeholder={EditorCommunication.getInstance().currentUnit.name} inputRef={this.setUnitName}/>
+                {/*<Input clearable fluid placeholder={placeHoldermodelunitName} icon={<CanvasAddPageIcon />} inputRef={this.setUnitName}/>*/}
+            </Flex>);
             await App.showDialogWithCallback( () => {
                     if (!!this.unitName) {
-                        EditorCommunication.saveAs(this.modelName, this.unitName);
+                        EditorCommunication.getInstance().saveCurrentUnit();
                     }
-                    EditorCommunication.newModel();
+                    this.internalNewModel();
                 },
                 () => {
-                    EditorCommunication.newModel();
+                    this.internalNewModel();
                 });
         } else {
-            // TODO
-            // ask the user for the name of the new model
-            // get server to create a new folder for this model
-            // show the model in the navigator
-            // create the internal structure
-            // ask the user for the first model unit - type and name
-            // open the editor
-            EditorCommunication.newModel();
+            // console.log("NEW WITHOUT CHANGES");
+            await this.internalNewModel();
+        }
+        this.modelName = "";
+    }
+
+    private async internalNewModel() {
+        // ask the user for the name of the new model
+        App.setDialogTitle(`Creating a new model.`);
+        App.setDialogSubText("Please, enter a name for the new model. ");
+        App.setDialogContent(<Flex column={true}>
+            <Text content="Model name: "/>
+            <Input clearable fluid inputRef={this.setModelName}/>
+            {/*<Input clearable fluid placeholder={placeHolderModelName} icon={<SearchIcon />} disabled={disabledModelName} inputRef={this.setModelName}/>*/}
+        </Flex>);
+        await App.showDialogWithCallback(() => {
+            if (this.modelName.length > 0 ) {
+                EditorCommunication.getInstance().newModel(this.modelName);
+                // ask the user for the type of the first model unit
+                this.newModelUnit();
+            }
+        });
+    }
+
+    async newModelUnit() {
+        // console.log("new Model unit called");
+        if (EditorCommunication.getInstance().hasChanges) {
+            await this.saveChangesBeforeCallback(this.internalNewModelUnit);
+        } else {
+            this.internalNewModelUnit(this);
+        }
+        this.unitName = "";
+    }
+
+    private async saveChangesBeforeCallback(callback: (menubar: Menubar) => void) {
+        const unitName = EditorCommunication.getInstance().currentUnit?.name;
+        if (!!unitName && unitName.length > 0) {
+            App.setDialogTitle(`Current model unit '${unitName}' has unsaved changes.`);
+            App.setDialogSubText("Do you want to save it?");
+            App.useDefaultButton();
+            await App.showDialogWithCallback(() => {
+                    EditorCommunication.getInstance().saveCurrentUnit();
+                    callback(this);
+                },
+                () => {
+                    callback(this);
+                });
+        } else {
+            App.setDialogTitle(`Current model unit has unsaved changes.`);
+            App.setDialogSubText("The model unit cannot be saved because it is unnamed. Do you want to revert and name it?");
+            App.useDefaultButton();
+            await App.showDialogWithCallback(() => {
+                },
+                () => {
+                    callback(this);
+                });
         }
     }
 
-    newDocument() {
-        console.log("new Model unit called");
-        // get the list of document types
-        const modelUnitTypes = EditorCommunication.getModelUnitTypes();
+    private internalNewModelUnit(menubar: Menubar) {
+        // create a list of model unit types => radio group with unit type name as label
+        // and show this in a dialog
+        const modelUnitTypes: string[] = EditorCommunication.getInstance().getModelUnitTypes();
         if (modelUnitTypes.length === 0) {
             // error
             return;
         }
-        this.modelUnitType = modelUnitTypes[0];
-        // create a list of document types => radio group with document type name as label
-        // and show this in a dialog
-        App.setDialogTitle(`Select the type of the new model unit:`);
-        App.setDialogSubText("");
+        menubar.modelUnitType = modelUnitTypes[0];
+        App.setDialogTitle(`Creating new model unit`);
+        App.setDialogSubText("Select the type of the new model unit:");
         App.setDialogContent(<div>
             <RadioGroup
                 vertical
                 defaultCheckedValue={modelUnitTypes[0]}
-                items={this.getItems(modelUnitTypes)}
-                onCheckedValueChange={this.setUnitType}
+                items={menubar.stringToRadioGroupItems(modelUnitTypes)}
+                onCheckedValueChange={menubar.setUnitType}
             />
         </div>);
-        App.showDialogWithCallback( () => {
-            // get the selected document type and let EditorCommunication do the rest
-            EditorCommunication.newUnit(this.modelUnitType);
+        App.showDialogWithCallback(() => {
+            // get the selected modelunit type and let EditorCommunication.getInstance() do the rest
+            EditorCommunication.getInstance().newUnit(menubar.modelUnitType);
         });
     }
 
-    getItems(labels: string[]) {
+    private stringToRadioGroupItems(labels: string[]) {
         let result = [];
         labels.forEach(label => {
            result.push({
-               name: 'documentType',
+               name: 'modelunitType',
                key: label,
                label: label,
                value: label,
@@ -364,65 +402,145 @@ export default class Menubar extends React.Component {
         return result;
     }
 
-    async openUnit() {
-        // because of asynchronicity the method 'internalOpen' is called in the else branche
-        // as well as in the save and cancel callbacks
-        if (EditorCommunication.hasChanges) {
-            // console.log("HAS CHANGES");
-            App.setDialogTitle(`Model Unit '${this.modelName}/${this.unitName}' has unsaved changes.`);
-            App.setDialogSubText("Do you want it saved? If so, please, enter a name. ");
-            App.useDefaultButton();
-            App.setDialogContent(this.makeModelUnitForm(true, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
+    async saveModelUnit() {
+        const unitName = EditorCommunication.getInstance().currentUnit.name;
+        if (unitName.length === 0) {
+            App.setDialogTitle(`Current model unit cannot be saved.`);
+            App.setDialogSubText("The model unit cannot be saved because it is unnamed. Please, name it, and try again.");
             await App.showDialogWithCallback( () => {
-                if (!!this.unitName) {
-                    EditorCommunication.saveAs(this.modelName, this.unitName);
-                }
-                this.internalOpen();
                 },
                 () => {
-                    this.internalOpen();
+                    this.internalNewModelUnit(this);
                 });
         } else {
-            this.internalOpen();
+            // else let EditorCommunication.getInstance() do the job
+            EditorCommunication.getInstance().saveCurrentUnit();
         }
     }
 
-    private internalOpen() {
-        App.setDialogTitle("Open Model Unit ...");
-        App.setDialogSubText("");
-        App.useDefaultButton();
-        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModel.name, ""));
-        App.showDialogWithCallback(() => {
-            if (!!this.unitName) {
-                const unitToOpen = this.unitName;
-                const modelToOpen = (!!this.modelName ? this.modelName : EditorCommunication.currentModel.name);
-                // console.log(`Opening unit '${modelToOpen}/${unitToOpen}`);
-                EditorCommunication.open(modelToOpen, unitToOpen);
+    deleteModelUnit() {
+        App.setDialogTitle("Delete model unit ...");
+        if (!!EditorCommunication.getInstance().currentUnit) {
+            App.setDialogSubText("Are you sure you want to delete the current model unit?");
+            App.useDefaultButton();
+            App.setDialogContent(null);
+            App.showDialogWithCallback(() => {
+                EditorCommunication.getInstance().deleteCurrentUnit();
+            });
+        } else { // this should never happen
+            App.setDialogSubText("Cannot delete, because there is no model unit selected.");
+            App.showDialog();
+        }
+    }
+
+    async openModel() {
+        // because of asynchronicity the method 'internalOpen' is called in the else branche
+        // as well as in the save and cancel callbacks
+        if (EditorCommunication.getInstance().hasChanges) {
+            await this.saveChangesBeforeCallback(this.internalOpenModel);
+        } else {
+            this.internalOpenModel(this);
+        }
+    }
+
+    private internalOpenModel(menubar: Menubar) {
+        // get all model names from the server and show a dialog where the user can choose the model to open
+        ServerCommunication.getInstance().loadModelList((modelNames: string[]) => {
+            if (modelNames.length > 0) {
+                // set the default value
+                menubar.modelName = modelNames[0];
+                // open a selection dialog
+                App.setDialogTitle("Open Model ...");
+                App.setDialogSubText("");
+                App.useDefaultButton();
+                App.setDialogContent(<div>
+                    <RadioGroup
+                        vertical
+                        defaultCheckedValue={modelNames[0]}
+                        items={menubar.stringToRadioGroupItems(modelNames)}
+                        onCheckedValueChange={this.setModelNameFromProps}
+                    />
+                </div>);
+                App.showDialogWithCallback(() => {
+                    console.log("Modelname: " + menubar.modelName);
+                    if (!!this.modelName && this.modelName.length > 0) {
+                        EditorCommunication.getInstance().openModel(menubar.modelName);
+                    }
+                });
+            } else {
+                App.setDialogTitle("No models found on server.");
+                App.setDialogSubText("");
+                App.setDialogContent(null);
+                App.showDialog();
             }
         });
     }
 
-    save() {
-        // if name is not already known use saveAs
-        if (EditorCommunication.currentModel.name.length === 0 || EditorCommunication.currentUnitName.length === 0) {
-            this.saveAs("Current document does not yet have a name ...");
-        } else { // else let EditorCommunication do the job
-            EditorCommunication.save();
+    async openModelUnit() {
+        // because of asynchronicity the method 'internalOpen' is called in the else branche
+        // as well as in the save and cancel callbacks
+        if (EditorCommunication.getInstance().hasChanges) {
+            // console.log("HAS CHANGES");
+            await this.saveChangesBeforeCallback(this.internalOpenModelUnit);
+        } else {
+            this.internalOpenModelUnit(this);
         }
     }
 
-    saveAs(title?: string) {
-        App.setDialogTitle((title? title : "Save as ..."));
-        App.setDialogSubText("");
-        App.useDefaultButton();
-        App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.currentModel.name, EditorCommunication.currentUnitName));
-        App.showDialogWithCallback( () => {
-            if (!!this.unitName) {
-                EditorCommunication.saveAs(this.modelName, this.unitName);
+    private internalOpenModelUnit(menubar: Menubar) {
+        // get all model names from the current model and show a dialog where the user can choose the unit to open
+        if (!!EditorCommunication.getInstance().currentModel) {
+            const availableUnits: PiNamedElement[] = EditorCommunication.getInstance().currentModel.getUnits();
+            const unitNames: string[] = availableUnits.map(u => u.name);
+            if (unitNames.length > 0) {
+                // set the default value
+                menubar.unitName = unitNames[0];
+                // open a selection dialog
+                App.setDialogTitle("Open Model Unit ...");
+                App.setDialogSubText("");
+                App.useDefaultButton();
+                App.setDialogContent(<div>
+                    <RadioGroup
+                        vertical
+                        defaultCheckedValue={unitNames[0]}
+                        items={menubar.stringToRadioGroupItems(unitNames)}
+                        onCheckedValueChange={menubar.setUnitNameFromProps}
+                    />
+                </div>);
+                App.showDialogWithCallback(() => {
+                    console.log("unitname: " + menubar.unitName);
+                    if (!!menubar.unitName && menubar.unitName.length > 0) {
+                        EditorCommunication.getInstance().openModelUnit(menubar.unitName);
+                    }
+                });
+            } else {
+                App.setDialogTitle("No units available.");
+                App.setDialogSubText("");
+                App.setDialogContent(null);
+                App.showDialog();
             }
-            // console.log("model: " + EditorCommunication.currentModelName + ", unit: " + EditorCommunication.currentUnitName);
-        });
+        } else {
+            // warning that there is no current model
+            App.setDialogTitle("There is no model available.");
+            App.setDialogSubText("Please, open a model before opening a model unit.");
+            App.setDialogContent(null);
+            App.showDialog();
+        }
     }
+
+    // the following is unused, for now
+    // saveModelUnitAs(title?: string) {
+    //     App.setDialogTitle((title? title : "Save as ..."));
+    //     App.setDialogSubText("");
+    //     App.useDefaultButton();
+    //     App.setDialogContent(this.makeModelUnitForm(false, EditorCommunication.getInstance().currentModel.name, EditorCommunication.getInstance().currentUnit.name));
+    //     App.showDialogWithCallback( () => {
+    //         if (!!this.unitName) {
+    //             EditorCommunication.getInstance().saveUnitAs(this.unitName);
+    //         }
+    //         // console.log("model: " + EditorCommunication.getInstance().currentModelName + ", unit: " + EditorCommunication.getInstance().currentUnit.name);
+    //     });
+    // }
 
     search() {
         App.setDialogTitle("Search");

@@ -1,39 +1,30 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiElement, PiCompositeProjection, ProjectionalEditor, PiError, PiNamedElement, PiModel } from "@projectit/core";
+import { PiCompositeProjection, ProjectionalEditor, PiError, PiNamedElement, PiModel } from "@projectit/core";
 import { editorEnvironment } from "../WebappConfiguration";
 import { ServerCommunication } from "./ServerCommunication";
 import { EditorArea } from "../projectit-webapp/EditorArea";
 import * as React from "react";
 import { PiToolbar } from "../projectit-webapp/PiToolbar";
-import { IModelUnitData } from "./IServerCommunication";
-
-// TODO make this a singleton, no static methods
+import { observable } from "mobx";
 
 export class EditorCommunication {
-    static currentUnitName = '';
-    static currentModel: PiNamedElement = null; // models should have a name property
-    // static currentModel.name = '';
-    static hasChanges: boolean = true;
-    static editorArea: EditorArea;
+    currentUnit: PiNamedElement = null;
+    @observable currentModel: PiModel = null;
+    hasChanges: boolean = false; // TODO get the value from the editor
+    editorArea: EditorArea;
+    private static instance: EditorCommunication = null;
+    
+    static getInstance(): EditorCommunication {
+        if( EditorCommunication.instance === null){
+            EditorCommunication.instance = new EditorCommunication();
+        }
+        return EditorCommunication.instance;
+    }
 
     // called from the editor area
-    static getEditor(): ProjectionalEditor {
+    getEditor(): ProjectionalEditor {
         const currentUnit = editorEnvironment.editor.rootElement;
         if (!!currentUnit) {
-            // units should have a name property
-            this.currentUnitName = (currentUnit as PiNamedElement).name;
-            
-            // check whether the current model is still the same
-            const model: PiElement = currentUnit.piContainer()?.container;
-            if (!!model) { // should not be null or undefined
-                if (model !== this.currentModel) {
-                    this.currentModel = model as PiNamedElement;
-                    // ask the server for units and show them in the navigator
-                    // this.getModelUnits(this.editorArea.navigator.setAllDocuments);
-                }
-            }
-            
-            // console.log(`unit '${this.currentUnitName}' has model '${this.currentModel.name}'`);
             return editorEnvironment.projectionalEditorComponent;
         } else {
             return null;
@@ -41,219 +32,154 @@ export class EditorCommunication {
     }
 
     // used from the menubar
-    static newModel() {
-        console.log("EditorCommunication new model called");
-        editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
-        EditorCommunication.currentModel.name = "";
-        EditorCommunication.currentUnitName = "";
+    newModel(newName: string) {
+        console.log("EditorCommunication new model called: " + newName);
+        this.currentModel = editorEnvironment.initializer.newModel(newName);
     }
 
-    static newUnit(documentType: string) {
-        console.log("EditorCommunication new document called, documentType: " + documentType);
-        // add new model unit of right type to current model
-        let unit = editorEnvironment.initializer.newUnit(editorEnvironment.editor.rootElement.piContainer().container, documentType);
-        if (!!unit){
-            editorEnvironment.editor.rootElement = unit;
-            EditorCommunication.currentUnitName = (unit as PiNamedElement).name;    // this is save, because all units must have a name
-        } else {
-            // error message
-            PiToolbar.instance.alertContent = `Document type '${documentType}' could not be created.`;
-            PiToolbar.instance.alertIsVisible = true;
-        }
-    }
-
-    static async open(modelName: string, documentName: string) {
-        console.log("Open document '" + modelName + "/" + documentName + "'");
-        const parentOfCurrentDocument = editorEnvironment.editor.rootElement.piContainer().container;
-        let model: PiModel = (parentOfCurrentDocument.piIsModel() ? (parentOfCurrentDocument as PiModel) : null);
-        if (!!model) { // else internal error
-            let oldUnit = editorEnvironment.editor.rootElement;
-            if (model.name === modelName && modelName === this.currentModel.name) { // we are opening another unit of the same model
-                console.log("opening another unit of the same model: " + model.name);
-                await this.openUnitOfCurrentModel(model, documentName, oldUnit, modelName);
-            } else {
-                console.log(`opening a unit of a different model than the current`);
-                await this.openUnitAndModel(modelName, documentName);
-            }
-        }
-    }
-
-    private static async openUnitAndModel(modelName: string, documentName: string) {
-        // TODO remember old situation: make this atomic
-        // create new model instance and set its name
-        let model: PiModel = editorEnvironment.initializer.newModel(modelName);
-        // create the requested unit
-        await ServerCommunication.getInstance().loadModelUnit({
-                language: editorEnvironment.languageName,
-                unitName: documentName,
-                model: modelName
-            },
-            async (unit: PiElement) => {
-                console.log("loadModelUnitInEditor");
-                let allright: boolean = true;
-                if (!!unit) {
-                    console.log(`adding the complete unit (${(unit as PiNamedElement).name}) `);
-                    allright = model.addUnit(unit);
-
-                    // create the other units as interfaces
-                    await ServerCommunication.getInstance().getInterfacesForModel(editorEnvironment.languageName, modelName, (muInterface: PiElement) => {
-
-                        if ((muInterface as PiNamedElement).name !== (unit as PiNamedElement).name) {
-                            console.log(`adding unit interface ${(muInterface as PiNamedElement)?.name}`);
-                            model.addUnit(muInterface);
-                        }
-                    });
-
-                    // now set the editor to show the new unit and current names
-                    console.log(`setting the editor to the new unit`);
-                    editorEnvironment.editor.rootElement = unit;
-                    EditorCommunication.currentUnitName = documentName;
-                    EditorCommunication.currentModel.name = modelName;
-                    console.log("validating the new unit");
-                    EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
-                    // test
-                    if (unit.piContainer()?.container !== model) {
-                        console.log(`openUnitAndModel: ERROR the container of unit ${(unit as PiNamedElement).name} is not equal to the model ${model.name}`);
-                    }
-                    // end test
-                } else {
-                    // give error message to user
-                    PiToolbar.instance.alertContent = `Document '${modelName}/${documentName}' could not be found on the server.`;
-                    PiToolbar.instance.alertIsVisible = true;
-                }
-            });
-    }
-
-    private static async openUnitOfCurrentModel(model: PiModel, documentName: string, oldUnit: PiElement, modelName: string) {
-        let allright: boolean = true;
-        // make whole operation atomic, i.e. it can be reversed if anything in the process goes wrong
-        // so remember both old unit and new unit interface
-        let newUnitInterface = model.findUnit(documentName);
-
-        // remove old unit and add old unit model unit interface, if present
-        await ServerCommunication.getInstance().loadModelUnitInterface({
-                language: editorEnvironment.languageName,
-                unitName: this.currentUnitName,
-                model: this.currentModel.name
-            },
-            (oldUnitInterface: PiElement) => {
+    newUnit(unitType: string) {
+        console.log("EditorCommunication new document called, unitType: " + unitType);
+        // get the interface of the current unit from the server
+        ServerCommunication.getInstance().loadModelUnitInterface(
+            EditorCommunication.getInstance().currentModel.name,
+            EditorCommunication.getInstance().currentUnit.name,
+            (oldUnitInterface: PiNamedElement) => {
                 if (!!oldUnitInterface) {
-                    console.log(`we are replacing old unit (${(oldUnit as PiNamedElement).name}) by its interface (${(oldUnitInterface as PiNamedElement).name}) `);
-                    allright = model.replaceUnit(oldUnit, oldUnitInterface);
-                } else {
-                    allright = false;
-                    // give error message to user
-                    PiToolbar.instance.alertContent = `Document interface for '${this.currentModel.name}/${this.currentUnitName}' could not be found on the server.`;
-                    PiToolbar.instance.alertIsVisible = true;
-                }
-            });
-        // TODO allright will not be set correctly, it should be a param of loadCallback
-        // remove model unit interface of new unit, if present, and add the new complete unit
-        if (allright) { // only set the new unit if the replacement of the old one was executed correctly
-            ServerCommunication.getInstance().loadModelUnit({
-                    language: editorEnvironment.languageName,
-                    unitName: documentName,
-                    model: this.currentModel.name
-                },
-                (newUnit: PiElement) => {
+                    // swap current unit with its interface in the in-memory model
+                    EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                    // create a new unit and add it to the current model
+                    // TODO remove typecast
+                    let newUnit = editorEnvironment.initializer.newUnit(this.currentModel, unitType) as PiNamedElement; // this is a safe typecast, because all units must have a name
                     if (!!newUnit) {
-                        let allright: boolean = true;
-                        if (!!newUnitInterface) {
-                            console.log(`XXX we are replacing new unit interface (${(newUnitInterface as PiNamedElement).name}) by the complete unit (${(newUnit as PiNamedElement).name}) `);
-                            // TODO replace does not seem to work correctly
-                            allright = model.replaceUnit(newUnitInterface, newUnit);
-                        } else {
-                            console.log(`Interface was not loaded before, so we are adding complete unit (${(newUnit as PiNamedElement).name}) `);
-                            model.addUnit(newUnit);
-                        }
-                        if (allright) {
-                            console.log(`we are setting the root element of the editor to the new complete unit (${(newUnit as PiNamedElement).name}) `);
-                            // if everything goes well, show the new unit in the editor
-                            editorEnvironment.editor.rootElement = newUnit;
-                            EditorCommunication.editorArea.errorlist.allItems = editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
-                            EditorCommunication.currentUnitName = documentName;
-                            EditorCommunication.currentModel.name = modelName;
-                            // test
-                            if (newUnit.piContainer()?.container !== model) {
-                                console.log(`openUnitAndModel: ERROR the container of unit ${(newUnit as PiNamedElement).name} is not equal to the model ${model.name}`);
-                            }
-                            // end test
-                        }
+                        // show the new unit in the editor
+                        this.showUnitAndErrors(newUnit);
                     } else {
-                        // give error message to user
-                        PiToolbar.instance.alertContent = `Document '${this.currentModel.name}/${documentName}' could not be found on the server.`;
+                        // error message
+                        PiToolbar.instance.alertContent = `Model unit of type '${unitType}' could not be created.`;
                         PiToolbar.instance.alertIsVisible = true;
                     }
-                });
-        }
+                }
+            });
     }
 
-// we assume that elsewhere (in Menubar) it is checked that both modelName and documentName are present
-    static save() {
-        console.log("EditorCommunication save called");
+    saveCurrentUnit() {
+        console.log("EditorCommunication save current unit called");
         if (!!editorEnvironment.editor.rootElement) {
-            // save the document under the current name
             ServerCommunication.getInstance().putModelUnit({
-                unitName: EditorCommunication.currentUnitName,
-                model: EditorCommunication.currentModel.name,
+                unitName: this.currentUnit.name,
+                modelName: this.currentModel.name,
                 language: editorEnvironment.languageName
-            }, editorEnvironment.editor.rootElement);
-        } else {
+            }, editorEnvironment.editor.rootElement as PiNamedElement);
+        } else { // error
             console.log("NO rootElement in editor");
         }
     }
 
-    // we assume that newDocumentName is always set, but newModelName need not be set.
-    static saveAs(newModelName: string, newDocumentName: string) {
-        console.log("EditorCommunication save as called, new model name: " + newModelName + ", new document name: " + newDocumentName);
-        if (newModelName !== EditorCommunication.currentModel.name && newDocumentName !== EditorCommunication.currentUnitName) {
-            if (!!editorEnvironment.editor.rootElement) {
-                // save the document under the new name
-                ServerCommunication.getInstance().putModelUnit({
-                    unitName: newDocumentName,
-                    model: (!!newModelName? newModelName : EditorCommunication.currentModel.name),
-                    language: editorEnvironment.languageName
-                }, editorEnvironment.editor.rootElement);
-                // add the name to the navigator
-                EditorCommunication.editorArea.navigator._allUnits.push({
-                    unitName: newDocumentName,
-                    model: newModelName,
-                    language: editorEnvironment.languageName
-                });
-                // remember the new names
-                EditorCommunication.currentUnitName = newDocumentName;
-                EditorCommunication.currentModel.name = (!!newModelName? newModelName : EditorCommunication.currentModel.name);
-            } else {
-                console.log("NO rootElement in editor");
-            }
-        }
-    }
-
-    static deleteCurrentModel() {
-        console.log("EditorCommunication delete called, current document: " + EditorCommunication.currentUnitName);
+    deleteCurrentUnit() {
+        console.log("EditorCommunication delete called, current unit: " + this.currentUnit.name);
         if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: EditorCommunication.currentUnitName, model: EditorCommunication.currentModel.name});
-            editorEnvironment.editor.rootElement = editorEnvironment.initializer.initialize();
-            EditorCommunication.editorArea.navigator.removeName(EditorCommunication.currentUnitName);
-            EditorCommunication.currentUnitName = "";
-        } else {
+            ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: this.currentUnit.name, modelName: this.currentModel.name});
+            // get rid of old model unit from memory
+            const freshUnit: PiNamedElement = editorEnvironment.initializer.initialize() as PiNamedElement;
+            this.currentModel.removeUnit(this.currentUnit);
+            this.currentModel.addUnit(freshUnit);
+            // show the new unit in the editor
+            this.showUnitAndErrors(freshUnit);
+        } else { // error
             console.log("NO rootElement in editor");
         }
     }
 
-    static getModelUnitTypes(): string[] {
+    async openModel(modelName: string) {
+        console.log("EditorCommunication openModel called, modelName: " + modelName);
+        // create new model instance and set its name
+        let model: PiModel = editorEnvironment.initializer.newModel(modelName);
+        ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
+            // load the first unit completely and show it
+            // load all others units as interfaces
+            let first: boolean = true;
+            for (const unitName of unitNames) {
+                if (first) {
+                    ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
+                        model.addUnit(unit);
+                        EditorCommunication.getInstance().currentUnit = unit;
+                        editorEnvironment.editor.rootElement = unit;
+                    });
+                    first = false;
+                } else {
+                    ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
+                        model.addUnit(unit);
+                    });
+                }
+            }
+        });
+        this.currentModel = model;
+    }
+
+    async openModelUnit(newUnitName: string) {
+        console.log("EditorCommunication openModelUnit called, unitName: " + newUnitName);
+        if (newUnitName == this.currentUnit.name ) {
+            return;
+        }
+
+        // find the requested unit interface in the model
+        let newUnitInterface: PiNamedElement = this.currentModel.findUnit(newUnitName);
+        // get the full unit from the server
+        await ServerCommunication.getInstance().loadModelUnit(EditorCommunication.getInstance().currentModel.name, newUnitName, (newUnit: PiNamedElement) => {
+            // get the interface of the current unit from the server
+            ServerCommunication.getInstance().loadModelUnitInterface(
+                        EditorCommunication.getInstance().currentModel.name,
+                        EditorCommunication.getInstance().currentUnit.name,
+                        (oldUnitInterface: PiNamedElement) => {
+                // swap current unit with its interface in the in-memory model
+                EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                // swap the new unit interface with the full unit in the in-memory model
+                EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
+                // show the new unit in the editor
+                this.showUnitAndErrors(newUnit);
+             });
+        });
+    }
+
+    private showUnitAndErrors(newUnit: PiNamedElement) {
+        editorEnvironment.editor.rootElement = newUnit;
+        EditorCommunication.getInstance().currentUnit = newUnit;
+        EditorCommunication.getInstance().hasChanges = true;
+        EditorCommunication.getInstance().getErrors();
+    }
+
+// we assume that newDocumentName is always set, but newModelName need not be set.
+    // saveUnitAs(newDocumentName: string) {
+    //     console.log("EditorCommunication save as called, new document name: " + newDocumentName);
+    //     if (newDocumentName !== this.currentUnit.name) {
+    //         if (!!editorEnvironment.editor.rootElement) {
+    //             // save the document under the new name
+    //             ServerCommunication.getInstance().putModelUnit({
+    //                 unitName: newDocumentName,
+    //                 modelName: this.currentModel.name,
+    //                 language: editorEnvironment.languageName
+    //             }, editorEnvironment.editor.rootElement);
+    //             // add the name to the navigator
+    //             this.editorArea.navigator._allUnits.push({
+    //                 unitName: newDocumentName,
+    //                 modelName: this.currentModel.name,
+    //                 language: editorEnvironment.languageName
+    //             });
+    //             // remember the new name
+    //             this.currentUnit.name = newDocumentName;
+    //         } else {
+    //             console.log("NO rootElement in editor");
+    //         }
+    //     }
+    // }
+
+    getModelUnitTypes(): string[] {
         return editorEnvironment.unitNames;
     }
-
-    // used from the navigator:
-    static getModelUnits(modelListCallback: (names: IModelUnitData[]) => void) {
-        ServerCommunication.getInstance().loadModelUnitList(editorEnvironment.languageName, modelListCallback);
-    }
-
     // END OF: for the communication with the navigator
 
     // for the communication with the error list:
-    static errorSelected(error: PiError) {
+    errorSelected(error: PiError) {
         console.log("Error selected: '" + error.message + "', location:  '" + error.reportedOn + "'");
         if (Array.isArray(error.reportedOn)) {
             editorEnvironment.editor.selectElement(error.reportedOn[0]);
@@ -262,34 +188,32 @@ export class EditorCommunication {
         }
     }
 
-    static getErrors() {
-        if (editorEnvironment.editor.rootElement !== null) {
-            console.log("EditorCommunication.getErrors() for " + editorEnvironment.editor.rootElement.piLanguageConcept());
-            EditorCommunication.editorArea.errorlist.allItems =  editorEnvironment.validator.validate(editorEnvironment.editor.rootElement);
+    getErrors() {
+        if (!!this.currentUnit) {
+            console.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
+            this.editorArea.errorlist.allItems =  editorEnvironment.validator.validate(this.currentUnit);
         }
-
     }
-
     // END OF: for the communication with the error list
 
-    static getProjectionNames(): string[] {
+    getProjectionNames(): string[] {
         const proj = editorEnvironment.editor.projection;
         return (proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name]);
     }
 
-    static setProjection(name: string): void {
+    setProjection(name: string): void {
         const proj = editorEnvironment.editor.projection;
         if (proj instanceof PiCompositeProjection) {
             proj.projectiontoFront(name);
         }
     }
 
-    static redo() {
+    redo() {
         // TODO implement redo()
         return undefined;
     }
 
-    static undo() {
+    undo() {
         // TODO implement undo()
         return undefined;
     }

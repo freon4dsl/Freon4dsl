@@ -4,7 +4,7 @@ import { PiElement } from "@projectit/core";
 export interface IModelUnitData {
     // id: number;
     unitName: string;
-    model: string;
+    modelName: string;
     language: string;
     // url?: string;
 }
@@ -27,7 +27,7 @@ export interface IServerCommunication {
      * @param modelInfo
      * @param loadCallback
      */
-    loadModelUnit(modelInfo: IModelUnitData, loadCallback: (piUnit: PiElement) => void);
+    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
 
     /**
      * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
@@ -35,7 +35,7 @@ export interface IServerCommunication {
      * @param modelInfo
      * @param loadCallback
      */
-    loadModelUnitInterface(modelInfo: IModelUnitData, loadCallback: (piUnit: PiElement) => void);
+    loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
 
     /**
      * Deletes the model according to the data in 'modelInfo' from the server
@@ -56,7 +56,7 @@ export interface IServerCommunication {
      * @param languageName
      * @param modelListCallback
      */
-    loadModelUnitList(languageName: string, modelListCallback: (names: IModelUnitData[]) => void);
+    loadModelList(modelListCallback: (names: string[]) => void);
 
     /**
      * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.
@@ -64,5 +64,5 @@ export interface IServerCommunication {
      * @param modelName
      * @param loadCallback
      */
-    getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: PiElement) => void);
+    // getInterfacesForModel(languageName: string, modelName: string, loadCallback: (piModel: PiElement) => void);
 }

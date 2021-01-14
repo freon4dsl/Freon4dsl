@@ -8,10 +8,10 @@ router.get("/", async (ctx: Router.IRouterContext) => {
     ctx.body = "ProjectIt Model Server";
 });
 
-router.get("/getModel", async (ctx: Router.IRouterContext) => {
+router.get("/getModelUnit", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
     const name = ctx.query["name"];
-    console.log("GetModel: " + folder + "/" + name);
+    console.log("GetModelUnit: " + folder + "/" + name);
     if (!!name || folder) {
         ModelRequests.getModelUnit(folder, name, ctx);
         ctx.status = 201;
@@ -22,30 +22,24 @@ router.get("/getModel", async (ctx: Router.IRouterContext) => {
 });
 
 router.get("/getModelList", async (ctx: Router.IRouterContext) => {
-    const folder = ctx.query["folder"];
-    console.log("getModelList: " + folder);
-    if (!!folder) {
-        ModelRequests.getModelList(folder, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'folder'";
-    }
+    console.log("getModelList");
+    ModelRequests.getModelList(ctx);
+    ctx.status = 201;
 });
 
 router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
-    const subfolder = ctx.query["subfolder"];
-    console.log("getUnitList: " + folder + "/" + subfolder);
+    // const subfolder = ctx.query["subfolder"];
+    console.log("getUnitList: " + folder) ;
     if (!!folder) {
-        ModelRequests.getUnitList(folder, subfolder, ctx);
+        ModelRequests.getUnitList(folder, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
         ctx.message = "Missing query parameter 'folder'";
     }
 });
-router.put("/putModel", async (ctx: Router.IRouterContext) => {
+router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
     const name = ctx.query["name"];
     console.log("PutModel: " + folder + "/" + name);
@@ -59,7 +53,7 @@ router.put("/putModel", async (ctx: Router.IRouterContext) => {
     ctx.body = { massage: (ctx.request as any).body };
 });
 
-router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
+router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
     const name = ctx.query["name"];
     console.log("DeleteModel: " + folder + "/" + name);

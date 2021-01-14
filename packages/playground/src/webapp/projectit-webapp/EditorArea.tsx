@@ -19,7 +19,7 @@ export class EditorArea extends React.Component<{}, {}> {
 
     constructor(props: {}) {
         super(props);
-        EditorCommunication.editorArea = this;
+        EditorCommunication.getInstance().editorArea = this;
     }
 
     render () {
@@ -65,7 +65,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                     <Box
                         // content="errorList"
@@ -115,7 +115,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                 </Grid>
             </div>
@@ -137,7 +137,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                 </Grid>
             </div>
@@ -159,7 +159,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                     <Box
                         // content="errorList"

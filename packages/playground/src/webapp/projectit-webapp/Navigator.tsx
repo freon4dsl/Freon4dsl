@@ -6,9 +6,10 @@ import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selecti
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 
-// TODO try to make dependence of gateway-to-projectit as small as possible
-import { EditorCommunication } from "./EditorCommunication";
+// TODO try to make dependence of EditorCommunication as small as possible
+import { EditorCommunication} from "./EditorCommunication";
 import { IModelUnitData } from "./IServerCommunication";
+import { PiNamedElement } from "@projectit/core";
 
 // This component holds the navigator, which shows all available models sorted by language
 
@@ -36,63 +37,53 @@ const titleRenderer = (Component, { content, open, hasSubtree, selected, ...rest
 export class Navigator extends React.Component<{}, {}> {
     // TODO keep current selection
     private _selection: Selection;
-    @observable _allUnits: IModelUnitData[] = [];
+    private _indexToTree: Map<number, PiNamedElement> = new Map<number, PiNamedElement>();
     private _activeItemId: string = "-1";
 
     constructor(props: {}) {
         super(props);
 
         this._selection = new Selection();
-        EditorCommunication.editorArea.navigator = this;
-        EditorCommunication.getModelUnits(this.setAllDocuments);
+        EditorCommunication.getInstance().editorArea.navigator = this;
     }
 
     @computed get buildTree(): TreeElement[] {
         let tree: TreeElement[] = [];
-        let modelMap = new Map();
-        this._allUnits.forEach((model, index) => {
-            let modelGroup: TreeElement = modelMap.get(model.model);
-            if (!(!!modelGroup)) {
-                // not yet encountered, so create a tree element for this model
-                modelGroup = {
-                    id: model.model,
-                    title: model.model,
-                    items: [],
-                    onTitleClick: this._onTitleClick,
-                    as: "h5",
-                    parent : "",
-                    // selectable: "false"
-                };
-                modelMap.set(model.model, modelGroup);
-                tree.push(modelGroup);
-            }
-            let elem: TreeElement = {
-                id: index.toString(10),
-                title: model.unitName,
+        let model = EditorCommunication.getInstance().currentModel;
+        if(!!model) {
+            let modelGroup: TreeElement = {
+                id: model.name,
+                title: model.name,
                 items: [],
                 onTitleClick: this._onTitleClick,
                 as: "h5",
-                parent: modelGroup.id,
-                // selectable: "true"
+                parent: "",
+                // selectable: "false"
             };
-            modelGroup.items.push(elem);
-        });
+            tree.push(modelGroup);
+            EditorCommunication.getInstance().currentModel.getUnits().forEach((unit, index) => {
+                this._indexToTree.set(index, unit);
+                let elem: TreeElement = {
+                    id: index.toString(10),
+                    title: unit.name,
+                    items: [],
+                    onTitleClick: this._onTitleClick,
+                    as: "h5",
+                    parent: modelGroup.id,
+                    // selectable: "true"
+                };
+                modelGroup.items.push(elem);
+            });
+        }
         return tree;
     }
 
-    public removeName(name: string) {
-        // TODO this method is not functioning correctly yet
-        const index = this._allUnits.findIndex(elem  => elem.unitName = name);
-        console.log(`length: ${this._allUnits.length}, index: ${index}`);
-        this._allUnits.splice(index-1 , 1);
-    }
-
     private _onTitleClick = (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
-        if (!!item.id && item.items.length === 0 ) { // every model unit is a leaf in the navigation tree
-            // get from item.id the right names to put through to the open request
-            let modelInfo: IModelUnitData = this._allUnits[item.id];
-            if (!!modelInfo) {
-                EditorCommunication.open(modelInfo.model, modelInfo.unitName);
+        if (!!item.id ) { // every model unit is a leaf in the navigation tree
+            // get from item.id the right name to put through to the open request
+            let selectedModelUnit: PiNamedElement = this._indexToTree.get(Number(item.id));
+            if (!!selectedModelUnit) {
+                EditorCommunication.getInstance().openModelUnit(selectedModelUnit.name);
                 // TODO show selection with grey background (or something)
             }
         }
@@ -122,15 +113,6 @@ export class Navigator extends React.Component<{}, {}> {
                 {/*</SelectionZone>*/}
             </Box>
         );
-    }
-
-    public setAllDocuments = (documents: IModelUnitData[]) => {
-        if (!!documents && documents.length > 0) {
-            this._allUnits = documents;
-            if (!(!!this._activeItemId)) {
-                this._activeItemId = documents[0].model;
-            }
-        }
     }
 }
 
