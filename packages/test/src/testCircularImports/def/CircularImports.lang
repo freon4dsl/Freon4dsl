@@ -9,7 +9,7 @@ model X {
 
 // contains only parts
 modelunit unitA {
-    name: string;
+    public name: string;
     Apart1: conceptBaseA;
     Apart2: conceptBaseB;
     Apart3: conceptWithInheritanceTree1;
