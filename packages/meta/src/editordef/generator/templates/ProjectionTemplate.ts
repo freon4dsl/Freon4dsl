@@ -169,35 +169,12 @@ export class ProjectionTemplate {
                         result += ",";
                     }
                 } else if (item instanceof PiEditPropertyProjection) {
-                    const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
-                    if (appliedFeature instanceof PiPrimitiveProperty) {
-                        result += this.primitivePropertyProjection(appliedFeature, element);
-                    } else if (appliedFeature instanceof PiConceptProperty) {
-                        if (appliedFeature.isPart) {
-                            if (appliedFeature.isList) {
-                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
-                                result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
-
-                            } else {
-                                result += `((!!${element}.${appliedFeature.name}) ?
-                                                this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
-                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
-                            }
-                        } else { // reference
-                            if (appliedFeature.isList) {
-                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
-                                result += this.conceptReferenceListProjection(direction, appliedFeature, element);
-                            }else {
-                                result += this.conceptReferenceProjection(language, appliedFeature, element) ;
-                            }
-                        }
-                    } else {
-                        result += `/* ERROR unknown property box here for ${appliedFeature.name} */ `;
-                    }
+                    result += this.propertyProjection(item, element, concept, language);
                     if(itemIndex !== line.items.length -1 ){
                         result += ", "
                     }
                 } else if (item instanceof PiEditSubProjection) {
+
                     result += ` new LabelBox(${element}, "${element}-label-line-${index}-item-${itemIndex}", "OPTIONAL ${item.optional}", {
                             selectable: false
                         })  `
@@ -244,6 +221,46 @@ export class ProjectionTemplate {
                     return ${result};
                 }`;
         }
+    }
+
+    /**
+     * Projection template for a property.
+     *
+     * @param item      The property projection
+     * @param result
+     * @param element
+     * @param concept
+     * @param language
+     * @private
+     */
+    private propertyProjection(item: PiEditPropertyProjection, element: string, concept: PiConcept, language: PiLanguage) {
+        let result: string = ""
+        const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
+        if (appliedFeature instanceof PiPrimitiveProperty) {
+            result += this.primitivePropertyProjection(appliedFeature, element);
+        } else if (appliedFeature instanceof PiConceptProperty) {
+            if (appliedFeature.isPart) {
+                if (appliedFeature.isList) {
+                    const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
+                    result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
+
+                } else {
+                    result += `((!!${element}.${appliedFeature.name}) ?
+                                                this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
+                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
+                }
+            } else { // reference
+                if (appliedFeature.isList) {
+                    const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
+                    result += this.conceptReferenceListProjection(direction, appliedFeature, element);
+                } else {
+                    result += this.conceptReferenceProjection(language, appliedFeature, element);
+                }
+            }
+        } else {
+            result += `/* ERROR unknown property box here for ${appliedFeature.name} */ `;
+        }
+        return result;
     }
 
     /**
