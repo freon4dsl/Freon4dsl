@@ -311,12 +311,10 @@ export class ConceptTemplate {
                 findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit(language)} {
                     let result: ${Names.modelunit(language)} = null;
                     ${concept.parts().map(p => 
-                        `if (result !== null) {
-                            ${p.isList ?
-                                `result = this.${p.name}.find(mod => mod.name === name);`
-                                :
-                                `if (this.${p.name}.name === name ) result = this.${p.name}`
-                            }
+                        `${p.isList ?
+                            `result = this.${p.name}.find(mod => mod.name === name);`
+                        :
+                            `if (this.${p.name}.name === name ) result = this.${p.name}`
                         }`
                         ).join("\n")}
                     if (!!result && !!metatype) {
@@ -373,18 +371,20 @@ export class ConceptTemplate {
                      * @param newUnit
                      */
                     addUnit(newUnit: ${Names.modelunit(language)}): boolean {
-                        const myMetatype = newUnit.piLanguageConcept();
-                        // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
-                        switch (myMetatype) {
-                        ${language.modelConcept.allParts().map(part =>
-                            `case "${Names.classifier(part.type.referred)}": {
-                                ${part.isList ? 
-                                    `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` 
-                                : 
-                                    `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`
-                                }
-                                return true;
-                            }`).join("\n")}
+                        if (!!newUnit) {
+                            const myMetatype = newUnit.piLanguageConcept();
+                            // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
+                            switch (myMetatype) {
+                            ${language.modelConcept.allParts().map(part =>
+                                `case "${Names.classifier(part.type.referred)}": {
+                                    ${part.isList ? 
+                                        `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` 
+                                    : 
+                                        `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`
+                                    }
+                                    return true;
+                                }`).join("\n")}
+                            }
                         }
                         return false;                 
                     }
@@ -395,18 +395,20 @@ export class ConceptTemplate {
                      * @param oldUnit
                      */
                     removeUnit(oldUnit: ${Names.modelunit(language)}): boolean {
-                        const myMetatype = oldUnit.piLanguageConcept();
-                        switch (myMetatype) {
-                        ${language.modelConcept.allParts().map(part =>
-                            `case "${Names.classifier(part.type.referred)}": {
-                                ${part.isList ?
-                                    `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)}), 1);`
-                                :
-                                    `this.${part.name} = null;`
-                                }
-                                return true;
-                            }`).join("\n")}
-                        }
+                        if (!!oldUnit) {
+                            const myMetatype = oldUnit.piLanguageConcept();
+                            switch (myMetatype) {
+                            ${language.modelConcept.allParts().map(part =>
+                                `case "${Names.classifier(part.type.referred)}": {
+                                    ${part.isList ?
+                                        `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)}), 1);`
+                                    :
+                                        `this.${part.name} = null;`
+                                    }
+                                    return true;
+                                }`).join("\n")}
+                            }
+                        } 
                         return false;
                     }
                     
