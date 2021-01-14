@@ -237,7 +237,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         }
 
         if ( piConcept.isUnit ) {
-            // find its name property
+            // find its name property and check whether it is public
             const nameProp: PiPrimitiveProperty = piConcept.allPrimProperties().find(p => p.name == "name");
             this.simpleCheck(
                 nameProp.isPublic,
