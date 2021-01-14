@@ -277,14 +277,14 @@ export class ConceptTemplate {
         const myName = Names.concept(concept);
         const hasReferences = concept.implementedReferences().length > 0;
         const needsObservable = concept.implementedPrimProperties().length > 0;
-        const coreImports = findMobxImports(false, concept).concat(["PiModel", "PiNamedElement", "Language"]);
+        const coreImports = findMobxImports(false, concept).concat(["PiModel", "Language"]);
         const metaType = Names.metaType(language);
         const imports = this.findModelImports(concept, myName, hasReferences);
 
         // Template starts here
         return `
             ${makeImportStatements(false, needsObservable, coreImports, imports)}
-            import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";
+            import { ${Names.allConcepts(language)}, ${Names.modelunit(language)} } from "./${Names.allConcepts(language)}";
             
             /**
              * Class ${myName} is the implementation of the model with the same name in the language definition file.
@@ -308,8 +308,8 @@ export class ConceptTemplate {
                  * @param name
                  * @param metatype
                  */
-                findUnit(name: string, metatype?: ${metaType} ): ${Names.allConcepts(language)} {
-                    let result: ${Names.allConcepts(language)} = null;
+                findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit(language)} {
+                    let result: ${Names.modelunit(language)} = null;
                     ${concept.parts().map(p => 
                         `if (result !== null) {
                             ${p.isList ?
@@ -336,7 +336,7 @@ export class ConceptTemplate {
                  * @param oldUnit
                  * @param newUnit
                  */
-                replaceUnit(oldUnit: ${Names.allConcepts(language)}, newUnit: ${Names.allConcepts(language)}): boolean {
+                replaceUnit(oldUnit: ${Names.modelunit(language)}, newUnit: ${Names.modelunit(language)}): boolean {
                     if ( oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
                         return false;
                     }
@@ -372,7 +372,7 @@ export class ConceptTemplate {
                      *
                      * @param newUnit
                      */
-                    addUnit(newUnit: ${Names.allConcepts(language)}): boolean {
+                    addUnit(newUnit: ${Names.modelunit(language)}): boolean {
                         const myMetatype = newUnit.piLanguageConcept();
                         // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
                         switch (myMetatype) {
@@ -394,7 +394,7 @@ export class ConceptTemplate {
                      *
                      * @param oldUnit
                      */
-                    removeUnit(oldUnit: PiNamedElement): boolean {
+                    removeUnit(oldUnit: ${Names.modelunit(language)}): boolean {
                         const myMetatype = oldUnit.piLanguageConcept();
                         switch (myMetatype) {
                         ${language.modelConcept.allParts().map(part =>
@@ -413,8 +413,8 @@ export class ConceptTemplate {
                     /**
                      * Returns a list of model units.
                      */
-                    getUnits(): PiNamedElement[] {
-                        let result : PiNamedElement[] = [];
+                    getUnits(): ${Names.modelunit(language)}[] {
+                        let result : ${Names.modelunit(language)}[] = [];
                         ${language.modelConcept.allParts().map(part =>
                             `${part.isList ?
                                 `result = result.concat(this.${part.name});`

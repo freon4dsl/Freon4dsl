@@ -31,7 +31,7 @@ export interface PiModel extends PiNamedElement {
      * @param name
      * @param metatype
      */
-    findUnit(name: string, metatype?: string): PiElement;
+    findUnit(name: string, metatype?: string): PiNamedElement;
 
     /**
      * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
@@ -40,7 +40,7 @@ export interface PiModel extends PiNamedElement {
      * @param oldUnit
      * @param newUnit
      */
-    replaceUnit(oldUnit: PiElement, newUnit: PiElement): boolean;
+    replaceUnit(oldUnit: PiNamedElement, newUnit: PiNamedElement): boolean;
 
     /**
      * Adds a model unit. Returns false if anything goes wrong.
@@ -48,14 +48,14 @@ export interface PiModel extends PiNamedElement {
      * @param oldUnit
      * @param newUnit
      */
-    addUnit(newUnit: PiElement): boolean;
+    addUnit(newUnit: PiNamedElement): boolean;
 
     /**
      * Removes a model unit. Returns false if anything goes wrong.
      *
      * @param oldUnit
      */
-    removeUnit(oldUnit: PiElement): boolean;
+    removeUnit(oldUnit: PiNamedElement): boolean;
 
     /**
      * Returns a list of model units.

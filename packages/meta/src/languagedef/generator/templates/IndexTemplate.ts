@@ -12,7 +12,7 @@ export class IndexTemplate {
         language.interfaces.map(c =>
             tmp.push(Names.interface(c))
         );
-        tmp.push("MODELUNIT");
+        tmp.push(Names.modelunit(language));
         tmp.push("ModelUnitMetaType");
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
