@@ -239,9 +239,11 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         if ( piConcept.isUnit ) {
             // find its name property and check whether it is public
             const nameProp: PiPrimitiveProperty = piConcept.allPrimProperties().find(p => p.name == "name");
-            this.simpleCheck(
-                nameProp.isPublic,
-                `The name property of a model unit should be public ${this.location(piConcept)}.`);
+            if (!!nameProp) { // the check that units should have a name property is done elsewhere
+                this.simpleCheck(
+                    nameProp.isPublic,
+                    `The name property of a model unit should be public ${this.location(piConcept)}.`);
+            }
         }
 
         if (!!piConcept.base) {

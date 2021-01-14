@@ -7,7 +7,7 @@ model ROOT {
 }
 
 modelunit AA  {
-    name: string;
+    publicname: string;
     // the possibilities for primitive properties
     AAprop1: string;
     AAprop2: string[];
