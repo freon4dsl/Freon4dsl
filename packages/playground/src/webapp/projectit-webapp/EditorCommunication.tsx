@@ -35,31 +35,40 @@ export class EditorCommunication {
     newModel(newName: string) {
         console.log("EditorCommunication new model called: " + newName);
         this.currentModel = editorEnvironment.newModel(newName);
+        this.currentUnit = null;
+        this.hasChanges = false;
     }
 
     newUnit(unitType: string) {
-        console.log("EditorCommunication new document called, unitType: " + unitType);
-        // get the interface of the current unit from the server
-        ServerCommunication.getInstance().loadModelUnitInterface(
-            EditorCommunication.getInstance().currentModel.name,
-            EditorCommunication.getInstance().currentUnit.name,
-            (oldUnitInterface: PiNamedElement) => {
-                if (!!oldUnitInterface) {
-                    // swap current unit with its interface in the in-memory model
-                    EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
-                    // create a new unit and add it to the current model
-                    // TODO remove typecast
-                    let newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType) as PiNamedElement; // this is a safe typecast, because all units must have a name
-                    if (!!newUnit) {
-                        // show the new unit in the editor
-                        this.showUnitAndErrors(newUnit);
-                    } else {
-                        // error message
-                        PiToolbar.instance.alertContent = `Model unit of type '${unitType}' could not be created.`;
-                        PiToolbar.instance.alertIsVisible = true;
+        console.log("EditorCommunication new unit called, unitType: " + unitType);
+        if (!!this.currentUnit) {
+            // get the interface of the current unit from the server
+            ServerCommunication.getInstance().loadModelUnitInterface(
+                EditorCommunication.getInstance().currentModel.name,
+                EditorCommunication.getInstance().currentUnit.name,
+                (oldUnitInterface: PiNamedElement) => {
+                    if (!!oldUnitInterface) {
+                        // swap current unit with its interface in the in-memory model
+                        EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                        this.createNewUnit(unitType);
                     }
-                }
-            });
+                });
+        } else {
+            this.createNewUnit(unitType);
+        }
+    }
+
+    private createNewUnit(unitType: string) {
+        // create a new unit and add it to the current model
+        let newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType);
+        if (!!newUnit) {
+            // show the new unit in the editor
+            this.showUnitAndErrors(newUnit);
+        } else {
+            // error message
+            PiToolbar.instance.alertContent = `Model unit of type '${unitType}' could not be created.`;
+            PiToolbar.instance.alertIsVisible = true;
+        }
     }
 
     saveCurrentUnit() {
@@ -70,6 +79,7 @@ export class EditorCommunication {
                 modelName: this.currentModel.name,
                 language: editorEnvironment.languageName
             }, editorEnvironment.editor.rootElement as PiNamedElement);
+            this.hasChanges = false;
         } else {
             console.log("No current model unit");
         }
@@ -100,8 +110,7 @@ export class EditorCommunication {
                 if (first) {
                     ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
                         model.addUnit(unit);
-                        EditorCommunication.getInstance().currentUnit = unit;
-                        editorEnvironment.editor.rootElement = unit;
+                        EditorCommunication.getInstance().showUnitAndErrors(unit);
                     });
                     first = false;
                 } else {

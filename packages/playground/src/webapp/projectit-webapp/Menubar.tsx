@@ -251,20 +251,19 @@ export default class Menubar extends React.Component {
         if (EditorCommunication.getInstance().hasChanges) {
             // console.log("HAS CHANGES");
             App.setDialogTitle(`Current model unit '${EditorCommunication.getInstance().currentUnit.name}' has unsaved changes.`);
-            App.setDialogSubText("Do you want to save it? If so, please, enter a name. ");
+            App.setDialogSubText("Do you want to save it?");
             App.useDefaultButton();
-            App.setDialogContent(<Flex column={true}>
-                <FlexItem push>
-                    <Text content="Model Unit name: "/>
-                </FlexItem>
-                <Input clearable fluid placeholder={EditorCommunication.getInstance().currentUnit.name} inputRef={this.dialogData.setUnitName}/>
-                {/*<Input clearable fluid placeholder={placeHoldermodelunitName} icon={<CanvasAddPageIcon />} inputRef={this.setUnitName}/>*/}
-            </Flex>);
+            App.setDialogContent(null);
             await App.showDialogWithCallback( () => {
-                    if (!!this.dialogData.unitName) {
+                    if (!!EditorCommunication.getInstance().currentUnit && EditorCommunication.getInstance().currentUnit.name.length > 0) {
                         EditorCommunication.getInstance().saveCurrentUnit();
+                        this.internalNewModel();
+                    } else {
+                        App.setDialogTitle("Model unit must have a name before saving.");
+                        App.setDialogSubText("");
+                        App.setDialogContent(null);
+                        App.showDialog();
                     }
-                    this.internalNewModel();
                 },
                 () => {
                     this.internalNewModel();
@@ -287,9 +286,21 @@ export default class Menubar extends React.Component {
         </Flex>);
         await App.showDialogWithCallback(() => {
             if (this.dialogData.modelName.length > 0 ) {
-                EditorCommunication.getInstance().newModel(this.dialogData.modelName);
-                // ask the user for the type of the first model unit
-                this.newModelUnit();
+                // check wether the given name is already in use
+                let newName = this.dialogData.modelName;
+                ServerCommunication.getInstance().loadModelList((names) => {
+                    if (names.includes(newName)) {
+                        // error
+                        App.setDialogTitle(`Model name '${newName}' already exists on the server.`);
+                        App.setDialogSubText("");
+                        App.setDialogContent(null);
+                        App.showDialog();
+                    } else {
+                        EditorCommunication.getInstance().newModel(this.dialogData.modelName);
+                        // ask the user for the type of the first model unit
+                        this.newModelUnit();
+                    }
+                })
             }
         });
     }

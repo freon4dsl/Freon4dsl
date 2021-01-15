@@ -13,6 +13,7 @@ export default class CommonOperations {
     }
 
     public async saveChangesBeforeCallback(dialogData: DialogData, callback: (dialogData: DialogData) => void) {
+        App.setDialogContent(null);
         const unitName = EditorCommunication.getInstance().currentUnit?.name;
         if (!!unitName && unitName.length > 0) {
             App.setDialogTitle(`Current model unit '${unitName}' has unsaved changes.`);

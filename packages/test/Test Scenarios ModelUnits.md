@@ -43,10 +43,8 @@
 * **Dialog** with model names *Model1*  and *Model2* : select *Model1* 
   * **NB** Should the currently open model (*Model2*) be shown in the above list?
 
+* **Select** *Model1*
+
 * **Expect** navigator to show *Model1* with modelunit *unit1*
 
-* **Expect**  Editor to be empty
-
-* **Select** *unit1* in the navigator
-
-* **Expect** *unit1* the editor to show *unit1*
+* **Expect** the editor to show *unit1*

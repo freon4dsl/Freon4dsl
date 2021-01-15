@@ -13,12 +13,12 @@ export default class DialogData {
         }
     };
 
-    public setUnitName = (element: any | null) => {
-        if (!!element && !!element.value) {
-            this.unitName = element?.value;
-            // console.log("Unit name set to : " + this.unitName);
-        }
-    };
+    // public setUnitName = (element: any | null) => {
+    //     if (!!element && !!element.value) {
+    //         this.unitName = element?.value;
+    //         // console.log("Unit name set to : " + this.unitName);
+    //     }
+    // };
 
     public setUnitType = (e, props) => {
         if (!!props && !!props.value) {
