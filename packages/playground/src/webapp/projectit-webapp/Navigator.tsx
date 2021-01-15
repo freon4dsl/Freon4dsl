@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Selection } from "office-ui-fabric-react/lib/DetailsList";
-import { Icon, Tree, Box } from "@fluentui/react-northstar";
+import { Icon, Tree, Box, RadioGroup } from "@fluentui/react-northstar";
 import { ComponentEventHandler } from "@fluentui/react-northstar/";
 import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selection";
 import { computed, observable } from "mobx";
@@ -10,6 +10,10 @@ import { observer } from "mobx-react";
 import { EditorCommunication} from "./EditorCommunication";
 import { IModelUnitData } from "./IServerCommunication";
 import { PiNamedElement } from "@projectit/core";
+import CommonOperations from "./CommonOperations";
+import DialogData from "./DialogData";
+import { ServerCommunication } from "./ServerCommunication";
+import { App } from "./App";
 
 // This component holds the navigator, which shows all available models sorted by language
 
@@ -36,6 +40,7 @@ const titleRenderer = (Component, { content, open, hasSubtree, selected, ...rest
 @observer
 export class Navigator extends React.Component<{}, {}> {
     // TODO keep current selection
+    private dialogData: DialogData = new DialogData(); // used for saving previously change data in the editor
     private _selection: Selection;
     private _indexToTree: Map<number, PiNamedElement> = new Map<number, PiNamedElement>();
     private _activeItemId: string = "-1";
@@ -78,15 +83,20 @@ export class Navigator extends React.Component<{}, {}> {
         return tree;
     }
 
-    private _onTitleClick = (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
-        if (!!item.id ) { // every model unit is a leaf in the navigation tree
+    private _onTitleClick = async (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
+        if (!!item.id) { // every model unit is a leaf in the navigation tree
             // get from item.id the right name to put through to the open request
-            let selectedModelUnit: PiNamedElement = this._indexToTree.get(Number(item.id));
-            if (!!selectedModelUnit) {
-                EditorCommunication.getInstance().openModelUnit(selectedModelUnit.name);
+            this.dialogData.selectedTreeItem = this._indexToTree.get(Number(item.id));
+            if (!!this.dialogData.selectedTreeItem) {
+                // save changes of old unit
+                await CommonOperations.getInstance().saveChangesBeforeCallback(this.dialogData, this.internalOpenModel);
                 // TODO show selection with grey background (or something)
             }
         }
+    }
+
+    private internalOpenModel(dialogData: DialogData) {
+        EditorCommunication.getInstance().openModelUnit(dialogData.selectedTreeItem.name);
     }
 
     render(): JSX.Element {

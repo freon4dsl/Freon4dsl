@@ -4,50 +4,15 @@ import { Link } from "@fluentui/react";
 import { EditorCommunication } from "./EditorCommunication";
 import { App } from "./App";
 import { SearchIcon } from "@fluentui/react-icons-northstar";
-import { PiElement, PiNamedElement } from "@projectit/core";
+import { PiNamedElement } from "@projectit/core";
 import { ServerCommunication } from "./ServerCommunication";
+import DialogData from "./DialogData";
+import CommonOperations from "./CommonOperations";
 
 const versionNumber = "0.1.0";
 
 export default class Menubar extends React.Component {
-    modelName: string = "";
-    unitName: string = "";
-    modelUnitType: string = "";
-
-    private setModelName = (element: any | null) => {
-        if (!!element && !!element.value) {
-            this.modelName = element?.value;
-            // console.log("model name set to : " + this.modelName);
-        }
-    };
-
-    private setUnitName = (element: any | null) => {
-        if (!!element && !!element.value) {
-            this.unitName = element?.value;
-            // console.log("Unit name set to : " + this.unitName);
-        }
-    };
-
-    private setUnitType = (e, props) => {
-        if (!!props && !!props.value) {
-            this.modelUnitType = props?.value;
-            // console.log("Model unit type set to : " + this.modelUnitType);
-        }
-    };
-
-    private setModelNameFromProps = (e, props) => {
-        if (!!props && !!props.value) {
-            this.modelName = props?.value;
-            // console.log("Model name set to : " + this.modelName);
-        }
-    };
-
-    private setUnitNameFromProps = (e, props) => {
-        if (!!props && !!props.value) {
-            this.unitName = props?.value;
-            // console.log("Unit name set to : " + this.unitName);
-        }
-    };
+    private dialogData: DialogData = new DialogData();
 
     menuItems = [
         {
@@ -292,11 +257,11 @@ export default class Menubar extends React.Component {
                 <FlexItem push>
                     <Text content="Model Unit name: "/>
                 </FlexItem>
-                <Input clearable fluid placeholder={EditorCommunication.getInstance().currentUnit.name} inputRef={this.setUnitName}/>
+                <Input clearable fluid placeholder={EditorCommunication.getInstance().currentUnit.name} inputRef={this.dialogData.setUnitName}/>
                 {/*<Input clearable fluid placeholder={placeHoldermodelunitName} icon={<CanvasAddPageIcon />} inputRef={this.setUnitName}/>*/}
             </Flex>);
             await App.showDialogWithCallback( () => {
-                    if (!!this.unitName) {
+                    if (!!this.dialogData.unitName) {
                         EditorCommunication.getInstance().saveCurrentUnit();
                     }
                     this.internalNewModel();
@@ -308,7 +273,7 @@ export default class Menubar extends React.Component {
             // console.log("NEW WITHOUT CHANGES");
             await this.internalNewModel();
         }
-        this.modelName = "";
+        this.dialogData.modelName = "";
     }
 
     private async internalNewModel() {
@@ -317,12 +282,12 @@ export default class Menubar extends React.Component {
         App.setDialogSubText("Please, enter a name for the new model. ");
         App.setDialogContent(<Flex column={true}>
             <Text content="Model name: "/>
-            <Input clearable fluid inputRef={this.setModelName}/>
+            <Input clearable fluid inputRef={this.dialogData.setModelName}/>
             {/*<Input clearable fluid placeholder={placeHolderModelName} icon={<SearchIcon />} disabled={disabledModelName} inputRef={this.setModelName}/>*/}
         </Flex>);
         await App.showDialogWithCallback(() => {
-            if (this.modelName.length > 0 ) {
-                EditorCommunication.getInstance().newModel(this.modelName);
+            if (this.dialogData.modelName.length > 0 ) {
+                EditorCommunication.getInstance().newModel(this.dialogData.modelName);
                 // ask the user for the type of the first model unit
                 this.newModelUnit();
             }
@@ -332,39 +297,14 @@ export default class Menubar extends React.Component {
     async newModelUnit() {
         // console.log("new Model unit called");
         if (EditorCommunication.getInstance().hasChanges) {
-            await this.saveChangesBeforeCallback(this.internalNewModelUnit);
+            await CommonOperations.getInstance().saveChangesBeforeCallback(this.dialogData, this.internalNewModelUnit);
         } else {
-            this.internalNewModelUnit(this);
+            this.internalNewModelUnit(this.dialogData);
         }
-        this.unitName = "";
+        this.dialogData.unitName = "";
     }
 
-    private async saveChangesBeforeCallback(callback: (menubar: Menubar) => void) {
-        const unitName = EditorCommunication.getInstance().currentUnit?.name;
-        if (!!unitName && unitName.length > 0) {
-            App.setDialogTitle(`Current model unit '${unitName}' has unsaved changes.`);
-            App.setDialogSubText("Do you want to save it?");
-            App.useDefaultButton();
-            await App.showDialogWithCallback(() => {
-                    EditorCommunication.getInstance().saveCurrentUnit();
-                    callback(this);
-                },
-                () => {
-                    callback(this);
-                });
-        } else {
-            App.setDialogTitle(`Current model unit has unsaved changes.`);
-            App.setDialogSubText("The model unit cannot be saved because it is unnamed. Do you want to revert and name it?");
-            App.useDefaultButton();
-            await App.showDialogWithCallback(() => {
-                },
-                () => {
-                    callback(this);
-                });
-        }
-    }
-
-    private internalNewModelUnit(menubar: Menubar) {
+    private internalNewModelUnit(dialogData: DialogData) {
         // create a list of model unit types => radio group with unit type name as label
         // and show this in a dialog
         const modelUnitTypes: string[] = EditorCommunication.getInstance().getModelUnitTypes();
@@ -372,34 +312,21 @@ export default class Menubar extends React.Component {
             // error
             return;
         }
-        menubar.modelUnitType = modelUnitTypes[0];
+        dialogData.modelUnitType = modelUnitTypes[0];
         App.setDialogTitle(`Creating new model unit`);
         App.setDialogSubText("Select the type of the new model unit:");
         App.setDialogContent(<div>
             <RadioGroup
                 vertical
                 defaultCheckedValue={modelUnitTypes[0]}
-                items={menubar.stringToRadioGroupItems(modelUnitTypes)}
-                onCheckedValueChange={menubar.setUnitType}
+                items={dialogData.stringToRadioGroupItems(modelUnitTypes)}
+                onCheckedValueChange={dialogData.setUnitType}
             />
         </div>);
         App.showDialogWithCallback(() => {
             // get the selected modelunit type and let EditorCommunication.getInstance() do the rest
-            EditorCommunication.getInstance().newUnit(menubar.modelUnitType);
+            EditorCommunication.getInstance().newUnit(dialogData.modelUnitType);
         });
-    }
-
-    private stringToRadioGroupItems(labels: string[]) {
-        let result = [];
-        labels.forEach(label => {
-           result.push({
-               name: 'modelunitType',
-               key: label,
-               label: label,
-               value: label,
-           })
-        });
-        return result;
     }
 
     async saveModelUnit() {
@@ -410,7 +337,7 @@ export default class Menubar extends React.Component {
             await App.showDialogWithCallback( () => {
                 },
                 () => {
-                    this.internalNewModelUnit(this);
+                    this.internalNewModelUnit(this.dialogData);
                 });
         } else {
             // else let EditorCommunication.getInstance() do the job
@@ -437,18 +364,18 @@ export default class Menubar extends React.Component {
         // because of asynchronicity the method 'internalOpen' is called in the else branche
         // as well as in the save and cancel callbacks
         if (EditorCommunication.getInstance().hasChanges) {
-            await this.saveChangesBeforeCallback(this.internalOpenModel);
+            await CommonOperations.getInstance().saveChangesBeforeCallback(this.dialogData, this.internalOpenModel);
         } else {
-            this.internalOpenModel(this);
+            this.internalOpenModel(this.dialogData);
         }
     }
 
-    private internalOpenModel(menubar: Menubar) {
+    private internalOpenModel(dialogData: DialogData) {
         // get all model names from the server and show a dialog where the user can choose the model to open
         ServerCommunication.getInstance().loadModelList((modelNames: string[]) => {
             if (modelNames.length > 0) {
                 // set the default value
-                menubar.modelName = modelNames[0];
+                dialogData.modelName = modelNames[0];
                 // open a selection dialog
                 App.setDialogTitle("Open Model ...");
                 App.setDialogSubText("");
@@ -457,14 +384,14 @@ export default class Menubar extends React.Component {
                     <RadioGroup
                         vertical
                         defaultCheckedValue={modelNames[0]}
-                        items={menubar.stringToRadioGroupItems(modelNames)}
-                        onCheckedValueChange={this.setModelNameFromProps}
+                        items={dialogData.stringToRadioGroupItems(modelNames)}
+                        onCheckedValueChange={dialogData.setModelNameFromProps}
                     />
                 </div>);
                 App.showDialogWithCallback(() => {
-                    console.log("Modelname: " + menubar.modelName);
-                    if (!!this.modelName && this.modelName.length > 0) {
-                        EditorCommunication.getInstance().openModel(menubar.modelName);
+                    console.log("Modelname: " + dialogData.modelName);
+                    if (!!dialogData.modelName && dialogData.modelName.length > 0) {
+                        EditorCommunication.getInstance().openModel(dialogData.modelName);
                     }
                 });
             } else {
@@ -481,20 +408,20 @@ export default class Menubar extends React.Component {
         // as well as in the save and cancel callbacks
         if (EditorCommunication.getInstance().hasChanges) {
             // console.log("HAS CHANGES");
-            await this.saveChangesBeforeCallback(this.internalOpenModelUnit);
+            await CommonOperations.getInstance().saveChangesBeforeCallback(this.dialogData, this.internalOpenModelUnit);
         } else {
-            this.internalOpenModelUnit(this);
+            this.internalOpenModelUnit(this.dialogData);
         }
     }
 
-    private internalOpenModelUnit(menubar: Menubar) {
+    private internalOpenModelUnit(dialogData: DialogData) {
         // get all model names from the current model and show a dialog where the user can choose the unit to open
         if (!!EditorCommunication.getInstance().currentModel) {
             const availableUnits: PiNamedElement[] = EditorCommunication.getInstance().currentModel.getUnits();
             const unitNames: string[] = availableUnits.map(u => u.name);
             if (unitNames.length > 0) {
                 // set the default value
-                menubar.unitName = unitNames[0];
+                dialogData.unitName = unitNames[0];
                 // open a selection dialog
                 App.setDialogTitle("Open Model Unit ...");
                 App.setDialogSubText("");
@@ -503,14 +430,14 @@ export default class Menubar extends React.Component {
                     <RadioGroup
                         vertical
                         defaultCheckedValue={unitNames[0]}
-                        items={menubar.stringToRadioGroupItems(unitNames)}
-                        onCheckedValueChange={menubar.setUnitNameFromProps}
+                        items={dialogData.stringToRadioGroupItems(unitNames)}
+                        onCheckedValueChange={dialogData.setUnitNameFromProps}
                     />
                 </div>);
                 App.showDialogWithCallback(() => {
-                    console.log("unitname: " + menubar.unitName);
-                    if (!!menubar.unitName && menubar.unitName.length > 0) {
-                        EditorCommunication.getInstance().openModelUnit(menubar.unitName);
+                    console.log("unitname: " + dialogData.unitName);
+                    if (!!dialogData.unitName && dialogData.unitName.length > 0) {
+                        EditorCommunication.getInstance().openModelUnit(dialogData.unitName);
                     }
                 });
             } else {

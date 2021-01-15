@@ -34,7 +34,7 @@ export class EditorCommunication {
     // used from the menubar
     newModel(newName: string) {
         console.log("EditorCommunication new model called: " + newName);
-        this.currentModel = editorEnvironment.initializer.newModel(newName);
+        this.currentModel = editorEnvironment.newModel(newName);
     }
 
     newUnit(unitType: string) {
@@ -49,7 +49,7 @@ export class EditorCommunication {
                     EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
                     // create a new unit and add it to the current model
                     // TODO remove typecast
-                    let newUnit = editorEnvironment.initializer.newUnit(this.currentModel, unitType) as PiNamedElement; // this is a safe typecast, because all units must have a name
+                    let newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType) as PiNamedElement; // this is a safe typecast, because all units must have a name
                     if (!!newUnit) {
                         // show the new unit in the editor
                         this.showUnitAndErrors(newUnit);
@@ -91,7 +91,7 @@ export class EditorCommunication {
     async openModel(modelName: string) {
         console.log("EditorCommunication openModel called, modelName: " + modelName);
         // create new model instance and set its name
-        let model: PiModel = editorEnvironment.initializer.newModel(modelName);
+        let model: PiModel = editorEnvironment.newModel(modelName);
         ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
             // load the first unit completely and show it
             // load all others units as interfaces
