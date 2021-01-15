@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box, Grid } from "@fluentui/react-northstar";
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { Navigator } from "./Navigator";
 import { ErrorList } from "./ErrorList";
 import { observable } from "mobx";
@@ -19,7 +19,7 @@ export class EditorArea extends React.Component<{}, {}> {
 
     constructor(props: {}) {
         super(props);
-        EditorCommunication.editorArea = this;
+        EditorCommunication.getInstance().editorArea = this;
     }
 
     render () {
@@ -65,7 +65,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                     <Box
                         // content="errorList"
@@ -115,7 +115,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                 </Grid>
             </div>
@@ -137,7 +137,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                 </Grid>
             </div>
@@ -159,7 +159,7 @@ export class EditorArea extends React.Component<{}, {}> {
                             overflowX: "auto"
                         }}
                     >
-                        {EditorCommunication.getEditor()}
+                        {EditorCommunication.getInstance().getEditor()}
                     </Box>
                     <Box
                         // content="errorList"

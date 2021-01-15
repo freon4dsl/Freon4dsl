@@ -284,7 +284,7 @@ export class ConceptTemplate {
         // Template starts here
         return `
             ${makeImportStatements(false, needsObservable, coreImports, imports)}
-            import { ${Names.allConcepts(language)} } from "./${Names.allConcepts(language)}";
+            import { ${Names.allConcepts(language)}, ${Names.modelunit(language)} } from "./${Names.allConcepts(language)}";
             
             /**
              * Class ${myName} is the implementation of the model with the same name in the language definition file.
@@ -308,15 +308,13 @@ export class ConceptTemplate {
                  * @param name
                  * @param metatype
                  */
-                findUnit(name: string, metatype?: ${metaType} ): ${Names.allConcepts(language)} {
-                    let result: ${Names.allConcepts(language)} = null;
+                findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit(language)} {
+                    let result: ${Names.modelunit(language)} = null;
                     ${concept.parts().map(p => 
-                        `if (result !== null) {
-                            ${p.isList ?
-                                `result = this.${p.name}.find(mod => mod.name === name);`
-                                :
-                                `if (this.${p.name}.name === name ) result = this.${p.name}`
-                            }
+                        `${p.isList ?
+                            `result = this.${p.name}.find(mod => mod.name === name);`
+                        :
+                            `if (this.${p.name}.name === name ) result = this.${p.name}`
                         }`
                         ).join("\n")}
                     if (!!result && !!metatype) {
@@ -336,7 +334,7 @@ export class ConceptTemplate {
                  * @param oldUnit
                  * @param newUnit
                  */
-                replaceUnit(oldUnit: ${Names.allConcepts(language)}, newUnit: ${Names.allConcepts(language)}): boolean {
+                replaceUnit(oldUnit: ${Names.modelunit(language)}, newUnit: ${Names.modelunit(language)}): boolean {
                     if ( oldUnit.piLanguageConcept() !== newUnit.piLanguageConcept()) {
                         return false;
                     }
@@ -372,21 +370,84 @@ export class ConceptTemplate {
                      *
                      * @param newUnit
                      */
-                    addUnit(newUnit: ${Names.allConcepts(language)}): boolean {
-                        const myMetatype = newUnit.piLanguageConcept();
-                        // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
-                        switch (myMetatype) {
-                        ${language.modelConcept.allParts().map(part =>
-                            `case "${Names.classifier(part.type.referred)}": {
-                                ${part.isList ? 
-                                    `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` 
-                                : 
-                                    `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`
-                                }
-                                return true;
-                            }`).join("\n")}
+                    addUnit(newUnit: ${Names.modelunit(language)}): boolean {
+                        if (!!newUnit) {
+                            const myMetatype = newUnit.piLanguageConcept();
+                            // TODO this depends on the fact the only one part of the model concept has the same type, should we allow differently???
+                            switch (myMetatype) {
+                            ${language.modelConcept.allParts().map(part =>
+                                `case "${Names.classifier(part.type.referred)}": {
+                                    ${part.isList ? 
+                                        `this.${part.name}.push(newUnit as ${Names.classifier(part.type.referred)});` 
+                                    : 
+                                        `this.${part.name} = newUnit as ${Names.classifier(part.type.referred)}`
+                                    }
+                                    return true;
+                                }`).join("\n")}
+                            }
                         }
                         return false;                 
+                    }
+                    
+                    /**
+                     * Removes a model unit. Returns false if anything goes wrong.
+                     *
+                     * @param oldUnit
+                     */
+                    removeUnit(oldUnit: ${Names.modelunit(language)}): boolean {
+                        if (!!oldUnit) {
+                            const myMetatype = oldUnit.piLanguageConcept();
+                            switch (myMetatype) {
+                            ${language.modelConcept.allParts().map(part =>
+                                `case "${Names.classifier(part.type.referred)}": {
+                                    ${part.isList ?
+                                        `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type.referred)}), 1);`
+                                    :
+                                        `this.${part.name} = null;`
+                                    }
+                                    return true;
+                                }`).join("\n")}
+                            }
+                        } 
+                        return false;
+                    }
+                    
+                /** 
+                 * Returns an empty model unit of type 'unitTypeName' within 'model'. 
+                 * 
+                 * @param model
+                 * @param unitTypeName
+                 */
+                newUnit(typename: ${Names.metaType(language)}) : ${Names.modelunit(language)}  {
+                    switch (typename) {
+                        ${language.modelConcept.allParts().map(part =>
+                            `case "${Names.classifier(part.type.referred)}": {
+                                const unit: ${Names.classifier(part.type.referred)} = new ${Names.classifier(part.type.referred)}();
+                                    ${part.isList ? 
+                                        `this.${part.name}.push(unit as ${Names.classifier(part.type.referred)});` 
+                                    : 
+                                        `this.${part.name} = unit as ${Names.classifier(part.type.referred)}`
+                                    }
+                                    return unit;
+                                }`
+                        ).join("\n")
+                        }
+                    }
+                    return null;
+                } 
+                                    
+                    /**
+                     * Returns a list of model units.
+                     */
+                    getUnits(): ${Names.modelunit(language)}[] {
+                        let result : ${Names.modelunit(language)}[] = [];
+                        ${language.modelConcept.allParts().map(part =>
+                            `${part.isList ?
+                                `result = result.concat(this.${part.name});`
+                                :
+                                `result.push(this.${part.name});`
+                            }`).join("\n")}
+                        return result;
                     }
                 }`;
     }

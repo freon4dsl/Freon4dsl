@@ -26,6 +26,6 @@ limited AA base RRRR {
 }
 
 modelunit NameNotStringType {
-    name: boolean;
+    public name: boolean;
 }
 

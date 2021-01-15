@@ -35,7 +35,7 @@ concept AA  {
 }
 
 modelunit BB {
-    name: string;
+    public name: string;
     supers: AA[];
 }
 

@@ -179,8 +179,8 @@ export class App extends React.Component<{}, IDialogState> {
     static onOkCallBack: () => void;
     static onCancelCallBack: () => void;
 
-    public static showDialogWithCallback(onSave: () => void, onCancel?: () => void) {
-        App.onOkCallBack = onSave;
+    public static showDialogWithCallback(onOk: () => void, onCancel?: () => void) {
+        App.onOkCallBack = onOk;
         App.onCancelCallBack = (!!onCancel? onCancel : null);
         !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
     }

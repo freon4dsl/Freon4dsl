@@ -17,7 +17,6 @@ export class EditorIndexTemplate {
         export * from "./gen";
         export * from "./${Names.customProjection(language)}";
         export * from "./${Names.customActions(language)}";
-        export * from "./${Names.initialization(language)}";
         `;
     }
 

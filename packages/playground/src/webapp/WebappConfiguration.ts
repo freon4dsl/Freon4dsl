@@ -4,7 +4,7 @@ import { PiEnvironment } from "@projectit/core";
  * The one and only reference to the actual language for which this editor runs
  */
 
-import { ExampleEnvironment } from "../../example/environment/gen/ExampleEnvironment";
+import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
 export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../../calculator/environment/gen/CalculatorEnvironment";

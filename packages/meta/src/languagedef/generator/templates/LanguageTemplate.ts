@@ -29,6 +29,8 @@ export class LanguageTemplate {
                 function describe${Names.concept(concept)}(): Concept {
                     const concept =             {
                         typeName: "${Names.concept(concept)}",
+                        isModel: ${concept.isModel},
+                        isUnit: ${concept.isUnit},
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },

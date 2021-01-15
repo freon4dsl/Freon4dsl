@@ -55,7 +55,7 @@ binary expression DemoMultiplyExpression base DemoBinaryExpression {
 // tag::partprop[]
 modelunit DemoModel {
 // end::partprop[]
-    name: string;
+    public name: string;
 // tag::partprop[]
     functions: DemoFunction[];
     entities: DemoEntity[];

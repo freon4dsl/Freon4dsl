@@ -7,12 +7,12 @@ model OctopusModel {
 }
 
 modelunit UmlPart {
-    name: string;
+    public name: string;
     packages: UmlPackage[];
 }
 
 modelunit OclPart {
-    name: string;
+    public name: string;
 }
 concept UmlPackage implements IModelElement {
 //    subpackages: UmlPackage[];

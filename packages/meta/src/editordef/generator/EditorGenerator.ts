@@ -5,7 +5,7 @@ import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STY
 import { PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers } from "./templates";
-import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, InitalizationTemplate, StylesTemplate } from "./templates";
+import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 
 const LOGGER = new MetaLogger("EditorGenerator"); // .mute();
 
@@ -41,7 +41,6 @@ export class EditorGenerator {
         const customProjectiontemplate = new CustomProjectionTemplate();
         const enumProjection = new SelectionHelpers();
         const editorIndexTemplate = new EditorIndexTemplate();
-        const initializationTemplate = new InitalizationTemplate();
         const stylesTemplate = new StylesTemplate();
 
         // Prepare folders
@@ -67,11 +66,6 @@ export class EditorGenerator {
         LOGGER.log(`Generating default actions: ${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`);
         const defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
-
-        // use different relative path
-        LOGGER.log(`Generating initialization: ${this.editorFolder}${Names.initialization(this.language)}.ts`);
-        const initializationFile = Helpers.pretty(initializationTemplate.generate(this.language, "../"), "Initialization", generationStatus);
-        Helpers.generateManualFile(`${this.editorFolder}/${Names.initialization(this.language)}.ts`, initializationFile, "Initialization");
 
         // the following do not need the relativePath for imports
         LOGGER.log(`Generating actions: ${this.editorGenFolder}/${Names.actions(this.language)}.ts`);

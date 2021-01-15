@@ -112,10 +112,10 @@ export class GenericModelSerializer {
      */
     convertToJSON(tsObject: PiElement, publicOnly?: boolean): Object {
         const typename = tsObject.piLanguageConcept();
-        // console.log("start converting concept name " + typename);
+        // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
         var result: Object;
         if (publicOnly !== undefined && publicOnly) {
-            if (this.language.concept(typename).isPublic) {
+            if (this.language.concept(typename).isPublic || this.language.concept(typename).isUnit) {
                 result = this.convertToJSONinternal(tsObject, true, typename);
             }
         } else {

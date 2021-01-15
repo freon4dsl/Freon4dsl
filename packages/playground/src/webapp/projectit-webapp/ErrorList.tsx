@@ -7,7 +7,7 @@ import { Sticky, StickyPositionType } from "office-ui-fabric-react/lib/Sticky";
 import { mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { IDetailsColumnRenderTooltipProps } from "office-ui-fabric-react/lib/DetailsList";
 import { SelectionMode } from "office-ui-fabric-react/lib/Selection";
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { PiError } from "@projectit/core";
@@ -43,17 +43,17 @@ export interface IErrorItem {
 
 @observer
 export class ErrorList extends React.Component<{}, {}> {
-    @observable allItems: PiError[];
+    @observable allItems: PiError[]=[];
     private _columns: IColumn[];
 
     constructor(props: {}) {
         super(props);
 
-        EditorCommunication.editorArea.errorlist = this;
+        EditorCommunication.getInstance().editorArea.errorlist = this;
         this.makeColumns(props);
         // the next statement must always occur after setting
         // EditorCommunication.editorArea.errorlist
-        EditorCommunication.getErrors();
+        EditorCommunication.getInstance().getErrors();
     }
 
     @computed get getErrors(): IErrorItem[] {
@@ -136,7 +136,7 @@ export class ErrorList extends React.Component<{}, {}> {
 
 function _onItemInvoked(item: IErrorItem): void {
     // give signal to editor
-    EditorCommunication.errorSelected(item.error);
+    EditorCommunication.getInstance().errorSelected(item.error);
 }
 
 function _onActiveItemChanged(item: IErrorItem): void {

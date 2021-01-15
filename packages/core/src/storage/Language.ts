@@ -1,7 +1,7 @@
 import { PiElement } from "../language/PiModel";
 
-// TODO remove enumeration and see if other types need to be added
-export type PropertyType = "primitive" | "enumeration" | "part" | "reference";
+// TODO see if other types need to be added
+export type PropertyType = "primitive" | "part" | "reference";
 
 export type Property = {
     name: string;
@@ -12,7 +12,8 @@ export type Property = {
 };
 
 export type Concept = {
-    // TODO add isUnit and isModel
+    isUnit: boolean;
+    isModel: boolean;
     isAbstract: boolean;
     isPublic: boolean;
     typeName: string;
@@ -29,10 +30,6 @@ export type Interface = {
     properties: Map<string, Property>;
 };
 
-// export type Enumeration = {
-//     typeName: string;
-//     literal: (literal: string) => PiElement;
-// };
 
 export class Language {
     private static theInstance: Language = null;

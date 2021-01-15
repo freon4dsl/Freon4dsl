@@ -40,7 +40,7 @@ export class AllConceptsTemplate {
         /**
          * Type MODELUNIT combines the metatype of all possible modelunits of language ${language.name}
          */
-        export type MODELUNIT = ${unitNames.map(name => `${name}`).join("| ")};`;
+        export type ${Names.modelunit(language)} = ${unitNames.map(name => `${name}`).join("| ")};`;
     }
 
 }

@@ -122,6 +122,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "EveryConcept";
     }
 
+    public static modelunit(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "ModelUnit";
+    }
+
     public static namespace(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Namespace";
     }

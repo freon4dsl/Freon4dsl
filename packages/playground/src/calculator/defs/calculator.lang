@@ -6,7 +6,7 @@ model CalculatorModel {
 }
 
 modelunit Calculator  implements INamedConcept {
-    name: string;
+    public name: string;
 	inputFields: InputField[];
 	outputFields: OutputField[];
 }

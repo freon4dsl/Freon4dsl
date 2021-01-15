@@ -1,6 +1,6 @@
 import { Toolbar, Alert } from "@fluentui/react-northstar";
 import * as React from 'react';
-import { EditorCommunication } from "../gateway-to-projectit/EditorCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { IIconProps } from "office-ui-fabric-react";
@@ -94,18 +94,18 @@ export class PiToolbar extends React.Component<{}, {}> {
     changeShowNavigator = () => {
         // console.log("setting showNavigator to " + !this.showNavigator);
         this.showNavigator = !this.showNavigator;
-        EditorCommunication.editorArea.showNavigator = this.showNavigator;
+        EditorCommunication.getInstance().editorArea.showNavigator = this.showNavigator;
     };
 
     changeShowErrorlist = () => {
         // console.log("setting showErrorlist to " + !this.showErrorlist);
         this.showErrorlist = !this.showErrorlist;
-        EditorCommunication.editorArea.showErrorlist = this.showErrorlist;
+        EditorCommunication.getInstance().editorArea.showErrorlist = this.showErrorlist;
     }
 
     validateModel = () => {
         console.log("validate model");
-        EditorCommunication.getErrors();
+        EditorCommunication.getInstance().getErrors();
     }
 
     private setAlertVisible = (ev: React.MouseEvent<HTMLElement>) => {
