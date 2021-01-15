@@ -1,3 +1,5 @@
+import { Demo, ExampleMetaType } from "@projectit/playground/dist/example/language/gen";
+
 /**
  * You can either directly implement these interfaces, or use `Module Augmentation`,
  * as described in `https://www.typescriptlang.org/docs/handbook/declaration-merging.html`.
@@ -56,6 +58,14 @@ export interface PiModel extends PiNamedElement {
      * @param oldUnit
      */
     removeUnit(oldUnit: PiNamedElement): boolean;
+
+    /**
+     * Returns an empty model unit of type 'unitTypeName' and adds it to this model.
+     *
+     * @param model
+     * @param unitTypeName
+     */
+    newUnit(typename: string): PiNamedElement;
 
     /**
      * Returns a list of model units.

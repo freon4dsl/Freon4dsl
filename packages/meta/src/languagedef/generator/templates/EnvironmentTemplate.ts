@@ -16,7 +16,7 @@ export class EnvironmentTemplate {
         import { projectitConfiguration } from "../../projectit/ProjectitConfiguration";
         import { ${Names.PiEditor}, ${Names.CompositeProjection}, ${Names.PiEnvironment}, ${Names.PiReader}, 
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
-                    ${Names.PiWriter}, ${Names.PiModelInitialization} 
+                    ${Names.PiWriter}
                } from "${PROJECTITCORE}";
         import { ${Names.ProjectionalEditor} } from "@projectit/core";
         import * as React from "react";
@@ -27,7 +27,7 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
-        import { ${Names.initialization(language)} } from "${relativePath}${EDITOR_FOLDER}/${Names.initialization(language)}";
+        import { ${Names.concept(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.concept(language.modelConcept)}";
 
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
         
@@ -78,7 +78,18 @@ export class EnvironmentTemplate {
                 }
                 return this._projectionalEditorComponent;
             }    
-            
+
+            /**
+             * Returns an empty model with name 'modelName'.
+             * 
+             * @param modelName
+             */
+             newModel(modelName: string) : ${Names.concept(language.modelConcept)} {
+                const model = new ${Names.concept(language.modelConcept)}();
+                model.name = modelName;
+                return model;
+             }  
+                            
             // the parts of the language environment              
             editor: ${Names.PiEditor};
             scoper: ${Names.PiScoper} = new ${Names.scoper(language)}();
@@ -87,7 +98,6 @@ export class EnvironmentTemplate {
             validator: ${Names.PiValidator} = new ${Names.validator(language)}();
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
-            initializer: ${Names.PiModelInitialization} = new ${Names.initialization(language)}();
             languageName: string = "${language.name}";
             unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
             private _projectionalEditorComponent : ${Names.ProjectionalEditor} = null;

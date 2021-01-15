@@ -412,6 +412,30 @@ export class ConceptTemplate {
                         return false;
                     }
                     
+                /** 
+                 * Returns an empty model unit of type 'unitTypeName' within 'model'. 
+                 * 
+                 * @param model
+                 * @param unitTypeName
+                 */
+                newUnit(typename: ${Names.metaType(language)}) : ${Names.modelunit(language)}  {
+                    switch (typename) {
+                        ${language.modelConcept.allParts().map(part =>
+                            `case "${Names.classifier(part.type.referred)}": {
+                                const unit: ${Names.classifier(part.type.referred)} = new ${Names.classifier(part.type.referred)}();
+                                    ${part.isList ? 
+                                        `this.${part.name}.push(unit as ${Names.classifier(part.type.referred)});` 
+                                    : 
+                                        `this.${part.name} = unit as ${Names.classifier(part.type.referred)}`
+                                    }
+                                    return unit;
+                                }`
+                        ).join("\n")
+                        }
+                    }
+                    return null;
+                } 
+                                    
                     /**
                      * Returns a list of model units.
                      */
