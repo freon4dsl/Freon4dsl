@@ -33,15 +33,11 @@ export class DefaultActionsTemplate {
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
             
-            import { PiElementReference, ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { PiElementReference, ${language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
-             * This module implements ... TODO.
-             * These custom build additions are merged with the default and definition-based editor parts 
-             * in a three-way manner. For each modelelement, 
-             * (1) if a custom build creator/behavior is present, this is used,
-             * (2) if a creator/behavior based on the editor definition is present, this is used,
-             * (3) if neither (1) nor (2) yields a result, the default is used.  
+             * This module implements all default actions for the editor.
+             * These default actions are merged with custom actions.
              */ 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c instanceof PiExpressionConcept && !(c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
@@ -83,6 +79,7 @@ export class DefaultActionsTemplate {
             
             export const CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
                 ${this.customActionForParts(language, editorDef)}
+                ${this.customActionForReferences(language, editorDef)}
             ];
             
             export const KEYBOARD: KeyboardShortcutBehavior[] = [
@@ -112,16 +109,16 @@ export class DefaultActionsTemplate {
         language.concepts.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
                 const referredConcept = reference.type.referred;
                 const conceptEditor = editorDef.findConceptEditor(referredConcept);
-                const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : reference.name;
+                const trigger = (!!conceptEditor && !!conceptEditor.trigger) ? conceptEditor.trigger : reference.name;
                 result += `
-                {
-                    activeInBoxRoles: ["${Roles.newPart(reference)}"],
+                {   // HELP
+                    activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
                     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                         const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
                         const newBase: PiElementReference< ${Names.classifier(referredConcept)}> = PiElementReference.createNamed("", null);
                         parent.${reference.name}.push(newBase);
-                        return newBase;
+                        return newBase.referred;
                     },
                     boxRoleToSelect: "${this.cursorLocation(editorDef, concept)}"  /* CURSOR 1 */
                 }

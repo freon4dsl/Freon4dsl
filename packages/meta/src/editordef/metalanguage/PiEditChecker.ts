@@ -97,6 +97,8 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 });
                 // the projection for an instance of a limited concept has been parsed as PiEditPropertyProjection
                 // but it should be a PiEditInstanceProjection
+                // TODO LimitedConcepts can never be created in a model (they are all predefined).
+                //      Therefore this is never used, until we start showing the predefined elements in the editor.
                 for (let i of toBeReplaced) {
                     const propProjection: PiEditPropertyProjection = line.items[i] as PiEditPropertyProjection;
                     let instanceProjection = new PiEditInstanceProjection();

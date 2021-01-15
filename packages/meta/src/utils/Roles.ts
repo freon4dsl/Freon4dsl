@@ -1,4 +1,10 @@
-import { PiBinaryExpressionConcept, PiClassifier, PiConcept, PiProperty } from "../languagedef/metalanguage";
+import {
+    PiBinaryExpressionConcept,
+    PiClassifier,
+    PiConcept,
+    PiConceptProperty,
+    PiProperty
+} from "../languagedef/metalanguage";
 import { Names } from "./Names";
 
 export class Roles {
@@ -29,6 +35,10 @@ export class Roles {
             }
         }
         return Names.classifier(concept) + "-" + property.name;
+    }
+
+    public static newConceptReferencePart(reference: PiConceptProperty): string {
+        return reference.name;
     }
 
 }

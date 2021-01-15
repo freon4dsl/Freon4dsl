@@ -71,11 +71,11 @@ export class CustomExampleProjection implements PiProjection {
         if (element instanceof ParameterRef) {
             return this.getParameterRefBox(element);
         }
-        if (element instanceof Entity) {
-            // return this.createEntityBox(element);
-            // return this.createEntityBox2(element);
-            return this.getEntityBox(element)
-        }
+        // if (element instanceof Entity) {
+        //     // return this.createEntityBox(element);
+        //     // return this.createEntityBox2(element);
+        //     return this.getEntityBox(element)
+        // }
 
         return null;
     }

@@ -53,7 +53,7 @@ export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
 export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
     // Add your own custom behavior here
     {
-        activeInBoxRoles: [],//["optional-base-optional"],
+        activeInBoxRoles: ["optional-baseEntity"],
         action: (box, trigger, editor): PiElement => {
             if( isAliasBox(box)){
                 const parent = box.parent;
