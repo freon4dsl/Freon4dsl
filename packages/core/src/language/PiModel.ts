@@ -1,5 +1,3 @@
-import { Demo, ExampleMetaType } from "@projectit/playground/dist/example/language/gen";
-
 /**
  * You can either directly implement these interfaces, or use `Module Augmentation`,
  * as described in `https://www.typescriptlang.org/docs/handbook/declaration-merging.html`.
