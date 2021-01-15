@@ -34,6 +34,9 @@ export class GenericModelSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     private toTypeScriptInstanceInternal(jsonObject: Object): any {
+        if(jsonObject === null){
+            throw new Error("jsonObject is null, cannot convert to TypeScript");
+        }
         const type: string = jsonObject["$typename"];
         if (!(!!type)) {
             // console.log("type is not found");

@@ -53,6 +53,8 @@ MultiplyExpression {
 }
 PlusExpression {
     infertype self.left;
+//    infertype self.left == AttributeType:Number && self.right == AttributeType:Number then self.left == AttributeType:Number ;
+//    infertype self.left == AttributeType:String && self.right == AttributeType:String then self.left == AttributeType:String ;
 }
 DivideExpression {
     infertype self.left;

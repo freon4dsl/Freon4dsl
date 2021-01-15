@@ -8,6 +8,7 @@ import {
     SelectOption,
     IndentBox,
     OptionalBox,
+    NBSP,
     HorizontalListBox,
     LabelBox,
     SvgBox,
@@ -21,7 +22,17 @@ import {
 } from "@projectit/core";
 import { projectitStyles } from "./styles/styles";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
-import { Attribute, AttributeType, Entity, NumberLiteralExpression, OrExpression, PiElementReference, SumExpression } from "../language/gen";
+import {
+    Attribute,
+    AttributeType,
+    Entity,
+    NumberLiteralExpression,
+    OrExpression,
+    Parameter, ParameterRef,
+    PiElementReference,
+    SumExpression
+} from "../language/gen";
+import { projectitConfiguration } from "../projectit/ProjectitConfiguration";
 import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
 import { sumIcon } from "./Icons";
 import { exampleStyles } from "./examplestyles";
@@ -57,11 +68,14 @@ export class CustomExampleProjection implements PiProjection {
         if (element instanceof OrExpression) {
             return this.createOrBoxGrid(element);
         }
-        if (element instanceof Entity) {
-            // return this.createEntityBox(element);
-            // return this.createEntityBox2(element);
-            return this.getEntityBox(element)
+        if (element instanceof ParameterRef) {
+            return this.getParameterRefBox(element);
         }
+        // if (element instanceof Entity) {
+        //     // return this.createEntityBox(element);
+        //     // return this.createEntityBox2(element);
+        //     return this.getEntityBox(element)
+        // }
 
         return null;
     }
@@ -86,10 +100,10 @@ export class CustomExampleProjection implements PiProjection {
                             style: projectitStyles.placeholdertext,
                         }
                     ),
-                    new LabelBox(entity, "entity-label-line-0-item-2", "base ", {
+                    (!!entity.baseEntity ? new LabelBox(entity, "entity-label-line-0-item-2", "base ", {
                         style: projectitStyles.propertykeyword,
                         selectable: false,
-                    }),
+                    }) : null),
                     new OptionalBox(entity, "optional-base", () => (!!entity.baseEntity),
                         this.helpers.getReferenceBox(
                             entity,
@@ -337,7 +351,7 @@ export class CustomExampleProjection implements PiProjection {
                         () => entity.name,
                         (c: string) => (entity.name = c as string),
                         {
-                            placeHolder: "text",
+                            placeHolder: "entity name",
                             style: projectitStyles.placeholdertext,
                         }
                     ),
@@ -348,7 +362,7 @@ export class CustomExampleProjection implements PiProjection {
                     this.helpers.getReferenceBox(
                         entity,
                         "Entity-baseEntity",
-                        "<select baseEntity>",
+                        "<select base entity>",
                         "Entity",
                         () => {
                             if (!!entity.baseEntity) {
@@ -510,7 +524,59 @@ export class CustomExampleProjection implements PiProjection {
         );
     }
 
-
+    public getParameterRefBox(ParameterRef: ParameterRef): Box {
+        return createDefaultExpressionBox(
+            ParameterRef,
+            "default-expression-box",
+            [
+                new HorizontalListBox(
+                    ParameterRef,
+                    "ParameterRef-hlist-line-0",
+                    [
+                        this.helpers.getReferenceBox(
+                            ParameterRef,
+                            "ParameterRef-parameter",
+                            "<select parameter>",
+                            "Parameter",
+                            () => {
+                                if (!!ParameterRef.parameter) {
+                                    return { id: ParameterRef.parameter.name, label: ParameterRef.parameter.name };
+                                } else {
+                                    return null;
+                                }
+                            },
+                            (option: SelectOption) => {
+                                if (!!option) {
+                                    ParameterRef.parameter = PiElementReference.create<Parameter>(
+                                        ExampleEnvironment.getInstance().scoper.getFromVisibleElements(
+                                            ParameterRef,
+                                            option.label,
+                                            "Parameter"
+                                        ) as Parameter,
+                                        "Parameter"
+                                    );
+                                } else {
+                                    ParameterRef.parameter = null;
+                                }
+                            }
+                        ),
+                        (!!ParameterRef.appliedfeature ?
+                            new LabelBox(ParameterRef, "ParameterRef-label-line-0-item-1", ".", {
+                                style: projectitStyles.propertykeyword,
+                                selectable: false
+                            })
+                        : new AliasBox(ParameterRef, "ExExpression-appliedfeature", NBSP, { propertyName: "appliedfeature" })
+                        ),
+                        !!ParameterRef.appliedfeature
+                            ? this.rootProjection.getBox(ParameterRef.appliedfeature)
+                            : null
+                    ],
+                    { selectable: true }
+                )
+            ],
+            { selectable: false }
+        );
+    }
 }
 
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {

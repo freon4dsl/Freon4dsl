@@ -26,16 +26,17 @@ export class OptionalComponent extends React.Component<OptionalComponentProps, {
         RENDER_LOG.info(this, "Alternate");
         const box = this.props.box;
 
-        if( box.mustShow || box.showByCondition ) {
+        if (box.mustShow || box.showByCondition) {
             return (
-            <div id={this.props.box.id}  tabIndex={0}>
-                <RenderBox key={box.box.id} box={box.box} editor={this.props.editor} />
-            </div>
+                <div id={this.props.box.id} tabIndex={0}>
+                    <RenderBox key={box.box.id} box={box.box} editor={this.props.editor} />
+                </div>
             );
         } else {
             return (
                 <div id={this.props.box.id} tabIndex={0}>
-                    <RenderBox key={box.whenNoShowingAlias.id} box={box.whenNoShowingAlias} editor={this.props.editor}/>
+                    <RenderBox key={box.whenNoShowingAlias.id} box={box.whenNoShowingAlias}
+                               editor={this.props.editor} />
                 </div>
             );
         }

@@ -9,7 +9,7 @@ import {
     Box, PiTriggerType, PiEditor, AliasBox, isAliasBox, isOptionalBox, PiElement
 } from "@projectit/core";
 import { PiCaret } from "@projectit/core";
-import { NumberLiteralExpression } from "../language/gen";
+import { AppliedFeature, AttributeRef, NumberLiteralExpression, ParameterRef } from "../language/gen";
 
 /**
  * Class CustomExampleActions provides an entry point for the language engineer to
@@ -33,7 +33,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     {
         trigger: /[0-9]/,
         activeInBoxRoles: ["PiBinaryExpression-right", "PiBinaryExpression-left", "Method-body", "OrExpression-left", "OrExpression-right",
-        "IfExpression-condition", "IfExpression-whenTrue", "IfExpression-whenFalse", "SumExpression-from", "SumExpression-to", "SumExpression-body"],
+        "IfExpression-condition", "IfExpression-whenTrue", "IfExpression-whenFalse", "SumExpression-from", "SumExpression-to", "SumExpression-body", "AbsExpression-expr"],
         expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
@@ -53,7 +53,7 @@ export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
 export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
     // Add your own custom behavior here
     {
-        activeInBoxRoles: ["optional-base-optional"],
+        activeInBoxRoles: ["optional-baseEntity"],
         action: (box, trigger, editor): PiElement => {
             if( isAliasBox(box)){
                 const parent = box.parent;
@@ -64,6 +64,19 @@ export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
             return null;
         },
         trigger: "add-base"
+    },
+    {
+        trigger: ".",
+        activeInBoxRoles: ["ExExpression-appliedfeature"],
+        action: (box, trigger, editor): PiElement => {
+            let elem = box.element;
+            if( elem instanceof ParameterRef) {
+                const applied = new AttributeRef();
+                elem.appliedfeature = applied;
+                return applied;
+            }
+            return null;
+        }
     }
 ];
 

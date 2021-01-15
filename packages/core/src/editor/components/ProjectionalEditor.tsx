@@ -24,10 +24,8 @@ export class ProjectionalEditor extends React.Component<ProjectionalEditorProps,
         // RENDER_LOG.info(this, "root recalculated");
         // this.props.editor.rootBox = root;
         return (
-            <div>
-                <div className={STYLES.projectionalEditor} onBlur={this.onBlur} onFocus={this.onFocus}>
-                    <PiComponent editor={this.props.editor} />
-                </div>
+            <div className={STYLES.projectionalEditor} onBlur={this.onBlur} onFocus={this.onFocus}>
+                <PiComponent editor={this.props.editor} />
             </div>
         );
     }

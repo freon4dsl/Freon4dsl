@@ -8,7 +8,7 @@ Attribute {
 
 Entity {
     @projection [
-        Entity ${self.name} base ${self.baseEntity}  {
+        Entity ${self.name} [? base ${self.baseEntity}] {
             ${self.attributes @vertical @separator [\n]}
             ${self.methods @vertical @separator [\n]}
         }
@@ -47,7 +47,7 @@ Parameter {
 MethodCallExpression {
     @projection MethodCallExpression
         [
-        CALL ${self.methodDefinition} ( ... )
+        CALL ${self.methodDefinition} ( ${self.args @separator[,] } )
         ]
     @trigger "method"
 }

@@ -20,7 +20,7 @@ export class OptionalBox extends Box {
         super(exp, role);
         this.box = box;
         box.parent = this;
-        this.whenNoShowingAlias = new AliasBox(exp, role + "-optional", aliasText);
+        this.whenNoShowingAlias = new AliasBox(exp, role, aliasText);
         this.whenNoShowingAlias.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;

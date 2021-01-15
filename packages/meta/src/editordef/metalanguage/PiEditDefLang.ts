@@ -134,7 +134,22 @@ export class PiEditPropertyProjection extends PiEditElement {
 export class PiEditSubProjection extends PiEditElement {
     optional: boolean;
     items: PiEditProjectionItem[];
-    // TODO it is easier is the projected language element is directly referable from this object
+
+    /**
+     * Return the first property projection inside this sub projection
+     */
+    public optionalProperty(): PiEditPropertyProjection {
+        for (const item of this.items) {
+            if( item instanceof PiEditPropertyProjection){
+                return item;
+            }
+        }
+        return undefined;
+        // return this.items.find((value, index, obj) => {
+        //     value instanceof PiEditPropertyProjection
+        // }) as PiEditPropertyProjection;
+    }
+
     // TODO what about sub-sub-sub... projections: will they all have one language element?
 }
 

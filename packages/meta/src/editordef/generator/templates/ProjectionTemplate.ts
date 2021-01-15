@@ -13,7 +13,11 @@ import {
     PiEditUnit,
     PiEditProjection,
     PiEditProjectionText,
-    PiEditPropertyProjection, PiEditProjectionDirection, PiEditParsedProjectionIndent, PiEditSubProjection
+    PiEditPropertyProjection,
+    PiEditProjectionDirection,
+    PiEditParsedProjectionIndent,
+    PiEditSubProjection,
+    PiEditInstanceProjection, PiEditProjectionLine
 } from "../../metalanguage";
 
 export class ProjectionTemplate {
@@ -56,6 +60,7 @@ export class ProjectionTemplate {
                 LabelBox,
                 ${Names.PiElement},
                 ${Names.PiProjection},
+                OptionalBox,
                 TextBox,
                 VerticalListBox,
                 VerticalPiElementListBox,
@@ -144,66 +149,26 @@ export class ProjectionTemplate {
         if (editor.concept instanceof PiLimitedConcept) return ``;
 
         let result: string = "";
-        const element = Roles.elementName(concept);
+        const elementVarName = Roles.elementVarName(concept);
         const projection: PiEditProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if (multiLine) {
-            result += `new VerticalListBox(${element}, "${concept.name}-overall", [
+            result += `new VerticalListBox(${elementVarName}, "${concept.name}-overall", [
             `;
         }
 
         projection.lines.forEach( (line, index) => {
             if (line.indent > 0) {
-                result += `new IndentBox(${element}, "${concept.name}-indent-line-${index}", ${line.indent}, `;
+                result += `new IndentBox(${elementVarName}, "${concept.name}-indent-line-${index}", ${line.indent}, `;
             }
             if (line.items.length > 1) {
-                result += `new HorizontalListBox(${element}, "${concept.name}-hlist-line-${index}", [ `;
+                result += `new HorizontalListBox(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
             }
+            // Now all projection items in the line
             line.items.forEach((item, itemIndex) => {
-                if (item instanceof PiEditProjectionText ) {
-                    result += ` new LabelBox(${element}, "${element}-label-line-${index}-item-${itemIndex}", "${item.text}", {
-                            style: projectitStyles.${item.style},
-                            selectable: false
-                        }) `;
-                    if (itemIndex < line.items.length - 1) {
-                        result += ",";
-                    }
-                } else if (item instanceof PiEditPropertyProjection) {
-                    const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
-                    if (appliedFeature instanceof PiPrimitiveProperty) {
-                        result += this.primitivePropertyProjection(appliedFeature, element);
-                    } else if (appliedFeature instanceof PiConceptProperty) {
-                        if (appliedFeature.isPart) {
-                            if (appliedFeature.isList) {
-                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
-                                result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
-
-                            } else {
-                                result += `((!!${element}.${appliedFeature.name}) ?
-                                                this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
-                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
-                            }
-                        } else { // reference
-                            if (appliedFeature.isList) {
-                                const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
-                                result += this.conceptReferenceListProjection(direction, appliedFeature, element);
-                            }else {
-                                result += this.conceptReferenceProjection(language, appliedFeature, element) ;
-                            }
-                        }
-                    } else {
-                        result += `/* ERROR unknown property box here for ${appliedFeature.name} */ `;
-                    }
-                    if(itemIndex !== line.items.length -1 ){
-                        result += ", "
-                    }
-                } else if (item instanceof PiEditSubProjection) {
-                    result += ` new LabelBox(${element}, "${element}-label-line-${index}-item-${itemIndex}", "OPTIONAL ${item.optional}", {
-                            selectable: false
-                        })  `
-                    if (itemIndex < line.items.length-1 ) {
-                        result += ",";
-                    }
+                result += this.itemProjection(item, elementVarName, index, itemIndex, concept, language);
+                if (! (item instanceof PiEditParsedProjectionIndent) && itemIndex < line.items.length - 1) {
+                    result += ",";
                 }
             });
             if (line.items.length > 1) {
@@ -225,8 +190,8 @@ export class ProjectionTemplate {
         }
         if (result === "") { result = "null"; }
         if (concept instanceof PiExpressionConcept) {
-            return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
-                    return createDefaultExpressionBox( ${element}, "default-expression-box", [
+            return `public ${Names.projectionFunction(concept)} (${elementVarName}: ${Names.concept(concept)}) : Box {
+                    return createDefaultExpressionBox( ${elementVarName}, "default-expression-box", [
                             ${result}
                         ],
                         { selectable: false }
@@ -240,10 +205,95 @@ export class ProjectionTemplate {
                 // console.log("FOUND NEWLINE");
                 result = result.substr(1);
             }
-            return `public ${Names.projectionFunction(concept)} (${element}: ${Names.concept(concept)}) : Box {
+            return `public ${Names.projectionFunction(concept)} (${elementVarName}: ${Names.concept(concept)}) : Box {
                     return ${result};
                 }`;
         }
+    }
+
+    private itemProjection(item: PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection | PiEditInstanceProjection,
+                           elementVarName: string,
+                           index: number,
+                           itemIndex: number,
+                           concept: PiConcept,
+                           language: PiLanguage) {
+        let result: string = "";
+        if (item instanceof PiEditProjectionText) {
+            result += ` new LabelBox(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
+                            style: projectitStyles.${item.style},
+                            selectable: false
+                        }) `;
+        } else if (item instanceof PiEditPropertyProjection) {
+            result += this.propertyProjection(item, elementVarName, concept, language);
+        } else if (item instanceof PiEditSubProjection) {
+            result += this.optionalProjection(item, elementVarName, index, itemIndex, concept, language);
+        }
+        return result;
+    }
+
+    private optionalProjection(item: PiEditSubProjection, elementVarName: string, index: number, itemIndex: number, concept: PiConcept,
+                               language: PiLanguage): string {
+        let result = "";
+        item.items.forEach((subitem, subitemIndex) => {
+            result += this.itemProjection(subitem, elementVarName, index, subitemIndex, concept, language);
+            // Add a comma if there was a projection and its in the middel of the list
+            if (! (subitem instanceof PiEditParsedProjectionIndent) && subitemIndex < item.items.length - 1) {
+                result += ", ";
+            }
+        });
+
+        // If there are more items, surround with horizontal list
+        if( item.items.length > 1) {
+            result = `new HorizontalListBox(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
+        }
+
+        const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
+        // TODO The subString is needed to remove `self.`, this should be more generic and more failsafe.
+        const optionalPropertyName = (propertyProjection === undefined ?  "UNKNOWN" : propertyProjection.expression.toPiString().substring(5));
+        return `new OptionalBox(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
+            ${ result},
+            false, "<+>"
+        ),`
+    }
+
+    /**
+     * Projection template for a property.
+     *
+     * @param item      The property projection
+     * @param result
+     * @param element
+     * @param concept
+     * @param language
+     * @private
+     */
+    private propertyProjection(item: PiEditPropertyProjection, element: string, concept: PiConcept, language: PiLanguage) {
+        let result: string = ""
+        const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
+        if (appliedFeature instanceof PiPrimitiveProperty) {
+            result += this.primitivePropertyProjection(appliedFeature, element);
+        } else if (appliedFeature instanceof PiConceptProperty) {
+            if (appliedFeature.isPart) {
+                if (appliedFeature.isList) {
+                    const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
+                    result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
+
+                } else {
+                    result += `((!!${element}.${appliedFeature.name}) ?
+                                                this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
+                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
+                }
+            } else { // reference
+                if (appliedFeature.isList) {
+                    const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
+                    result += this.conceptReferenceListProjection(direction, appliedFeature, element);
+                } else {
+                    result += this.conceptReferenceProjection(language, appliedFeature, element);
+                }
+            }
+        } else {
+            result += `/* ERROR unknown property box here for ${appliedFeature.name} */ `;
+        }
+        return result;
     }
 
     /**
@@ -316,7 +366,13 @@ export class ProjectionTemplate {
                     "${Roles.property(reference)}",
                     ${element}.${reference.name}.map((ent, index) => {
                         return ${this.conceptReferenceProjectionInList(reference, element) }
-                    }), //  this one?
+                    }).concat(
+                        new AliasBox(${element}, "${Roles.newConceptReferencePart(reference)}", "<+>" , { //  add ${reference.name}
+                            style: ${Names.styles}.placeholdertext,
+                            propertyName: "${reference.name}"
+                        })
+                    )
+                    , //  this one?
                     {
                         style: ${Names.styles}.indent
                     }
