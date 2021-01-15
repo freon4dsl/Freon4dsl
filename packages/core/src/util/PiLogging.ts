@@ -6,7 +6,7 @@ type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
 export class PiLogger {
-    private static muteAll: boolean = false;
+    private static muteAll: boolean = true;
     private static FgRed = "\x1b[31m";
     private static FgBlack = "\x1b[30m";
     private static FgBlue = "\x1b[34m";
@@ -33,7 +33,7 @@ export class PiLogger {
     }
 
     info(o: any, msg: LogMessage) {
-        if (this.active) {
+        if (this.active && !PiLogger.muteAll) {
             const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
             this.logToConsole(PiLogger.FgBlue, type + ": " + this.message(msg));
         }

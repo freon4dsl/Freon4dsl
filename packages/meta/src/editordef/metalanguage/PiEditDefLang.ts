@@ -140,7 +140,6 @@ export class PiEditSubProjection extends PiEditElement {
      */
     public optionalProperty(): PiEditPropertyProjection {
         for (const item of this.items) {
-            console.log("!!!!! "+ item)
             if( item instanceof PiEditPropertyProjection){
                 return item;
             }
