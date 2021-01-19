@@ -1,6 +1,9 @@
 import DialogData from "./DialogData";
 import { EditorCommunication } from "./EditorCommunication";
 import { App } from "./App";
+import { PiLogger } from "@projectit/core";
+
+const LOGGER = new PiLogger("CommonOperations");
 
 export default class CommonOperations {
     private static instance: CommonOperations = null;
@@ -24,8 +27,11 @@ export default class CommonOperations {
             App.useDefaultButton();
             await App.showDialogWithCallback(() => {
                     // do nothing, wait for the user to choose another user action
+                    LOGGER.log("Reverting to current model unit");
                 },
                 () => {
+                    LOGGER.log("removing unnamed unit");
+                    EditorCommunication.getInstance().deleteCurrentUnit();
                     callback(dialogData);
                 });
         }

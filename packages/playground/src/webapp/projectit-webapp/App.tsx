@@ -4,6 +4,9 @@ import { PrimaryButton, DefaultButton } from "@fluentui/react";
 import { ContextualMenu } from "@fluentui/react";
 import { Text, Flex, Box } from "@fluentui/react-northstar";
 import { MainGrid } from "./MainGrid";
+import { PiLogger } from "@projectit/core";
+
+const LOGGER = new PiLogger("App").mute();
 
 // This component holds the MainGrid and the Dialog
 export const footerheight = "25px";
@@ -151,9 +154,7 @@ export class App extends React.Component<{}, IDialogState> {
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
         if (!!App.onOkCallBack) {
-            // console.log("Calling ok callBack");
             await App.onOkCallBack();
-            // console.log("Ready calling ok callBack");
         }
     };
 
@@ -161,9 +162,7 @@ export class App extends React.Component<{}, IDialogState> {
         this.setState({ hideDialog: true });
         this.useDefaultButton = false;
         if (!!App.onCancelCallBack) {
-            // console.log("Calling cancel callBack");
             await App.onCancelCallBack();
-            // console.log("Ready calling cancel callBack");
         }
     };
 
@@ -182,32 +181,32 @@ export class App extends React.Component<{}, IDialogState> {
     public static showDialogWithCallback(onOk: () => void, onCancel?: () => void) {
         App.onOkCallBack = onOk;
         App.onCancelCallBack = (!!onCancel? onCancel : null);
-        !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
+        !!App.thisApp ? App.thisApp._showDialog() : LOGGER.error(null, "No App object found");
     }
 
     public static showDialog = (): void => {
         App.onOkCallBack = null;
         App.onCancelCallBack = null;
-        !!App.thisApp ? App.thisApp._showDialog() : console.error("No App object found");
+        !!App.thisApp ? App.thisApp._showDialog() : LOGGER.error(null, "No App object found");
     };
 
     public static closeDialog = (): void => {
-        !!App.thisApp ? App.thisApp._cancelPushed() : console.error("No App object found");
+        !!App.thisApp ? App.thisApp._cancelPushed() : LOGGER.error(null, "No App object found");
     };
 
     public static useDefaultButton = (): void => {
-        !!App.thisApp ? (App.thisApp.useDefaultButton = true) : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.useDefaultButton = true) : LOGGER.error(null, "No App object found");
     };
 
     public static setDialogTitle = (newTitle: string): void => {
-        !!App.thisApp ? (App.thisApp.state.title = newTitle) : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.state.title = newTitle) : LOGGER.error(null, "No App object found");
     };
 
     public static setDialogSubText = (newSubText: string): void => {
-        !!App.thisApp ? (App.thisApp.state.subText = newSubText) : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.state.subText = newSubText) : LOGGER.error(null, "No App object found");
     };
 
     public static setDialogContent = (newContent: JSX.Element): void => {
-        !!App.thisApp ? (App.thisApp.state.content = newContent) : console.error("No App object found");
+        !!App.thisApp ? (App.thisApp.state.content = newContent) : LOGGER.error(null, "No App object found");
     };
 }

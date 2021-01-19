@@ -5,7 +5,9 @@ import { Navigator } from "./Navigator";
 import { ErrorList } from "./ErrorList";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
+import { PiLogger } from "@projectit/core";
 
+const LOGGER = new PiLogger("EditorArea").mute();
 // This component holds the navigator to the left side, and
 // the editor and error list to the right.
 // The editor and error list are laid-out vertically.
@@ -24,16 +26,16 @@ export class EditorArea extends React.Component<{}, {}> {
 
     render () {
         if (this.showNavigator && this.showErrorlist) {
-            // console.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
+            // LOGGER.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
             return this.showAll();
         } else if (!this.showNavigator && this.showErrorlist) {
-            // console.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
+            // LOGGER.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
             return this.showEditorAndErrors();
         } else if (this.showNavigator && !this.showErrorlist) {
-            // console.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
+            // LOGGER.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
             return this.showEditorAndNavigator();
         } else {
-            // console.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
+            // LOGGER.log("nav: " + this.showNavigator + ", error: " + this.showErrorlist);
             return this.showEditorOnly();
         }
     }
@@ -88,7 +90,7 @@ export class EditorArea extends React.Component<{}, {}> {
     }
 
     private showEditorAndNavigator() {
-        // console.log("showEditorAndNavigator");
+        // LOGGER.log("showEditorAndNavigator");
         return (
             <div>
                 <Grid styles={{ gridTemplateColumns: "1fr 7fr" }}>
@@ -123,7 +125,7 @@ export class EditorArea extends React.Component<{}, {}> {
     }
 
     private showEditorOnly() {
-        // console.log("showEditorOnly");
+        // LOGGER.log("showEditorOnly");
         return (
             <div>
                 <Grid styles={{ gridTemplateColumns: "1fr 7fr" }}>
@@ -145,7 +147,7 @@ export class EditorArea extends React.Component<{}, {}> {
     }
 
     private showEditorAndErrors() {
-        // console.log("showEditorAndErrors");
+        // LOGGER.log("showEditorAndErrors");
         return (
             <div>
                 <Grid styles={{ gridTemplateColumns: "1fr 7fr" }}>

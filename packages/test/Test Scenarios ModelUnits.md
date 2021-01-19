@@ -61,3 +61,11 @@
 * **Expect**: Dialog "Do you really want to delete current unit?"
 * **Select**: Yes
 * **Expect**: *unit3a* to be removed from navigator (and server) and empty editor shown
+
+-----
+
+* **Select** `Open Model`
+* **Dialog** with model names *Model1*  and *Model2* : select *Model2* 
+* **Expect**: *Model2* shown in navigator with *unitA* in editor 
+* **Click**: on *unitB* in navigator
+* **Expect**: *unitB* to be shown in editor

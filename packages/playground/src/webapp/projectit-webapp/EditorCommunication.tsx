@@ -6,6 +6,9 @@ import { EditorArea } from "../projectit-webapp/EditorArea";
 import * as React from "react";
 import { PiToolbar } from "../projectit-webapp/PiToolbar";
 import { observable } from "mobx";
+import { PiLogger } from "@projectit/core";
+
+const LOGGER = new PiLogger("EditorCommunication").mute();
 
 export class EditorCommunication {
     currentUnit: PiNamedElement = null;
@@ -33,14 +36,14 @@ export class EditorCommunication {
 
     // used from the menubar
     newModel(newName: string) {
-        console.log("EditorCommunication new model called: " + newName);
+        LOGGER.log("new model called: " + newName);
         this.currentModel = editorEnvironment.newModel(newName);
         this.currentUnit = null;
         this.hasChanges = false;
     }
 
     newUnit(unitType: string) {
-        console.log("EditorCommunication new unit called, unitType: " + unitType);
+        LOGGER.log("new unit called, unitType: " + unitType);
         if (!!this.currentUnit) {
             // get the interface of the current unit from the server
             ServerCommunication.getInstance().loadModelUnitInterface(
@@ -72,7 +75,7 @@ export class EditorCommunication {
     }
 
     saveCurrentUnit() {
-        console.log("EditorCommunication save current unit called");
+        LOGGER.log("save current unit called");
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.getInstance().putModelUnit({
                 unitName: this.currentUnit.name,
@@ -81,12 +84,12 @@ export class EditorCommunication {
             }, editorEnvironment.editor.rootElement as PiNamedElement);
             this.hasChanges = false;
         } else {
-            console.log("No current model unit");
+            LOGGER.log("No current model unit");
         }
     }
 
     deleteCurrentUnit() {
-        console.log("EditorCommunication delete called, current unit: " + this.currentUnit.name);
+        LOGGER.log("delete called, current unit: " + this.currentUnit.name);
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.getInstance().deleteModelUnit({language: editorEnvironment.languageName, unitName: this.currentUnit.name, modelName: this.currentModel.name});
             // get rid of old model unit from memory
@@ -94,12 +97,12 @@ export class EditorCommunication {
             // show nothing in the editor and error list
             this.showUnitAndErrors(null);
         } else {
-            console.log("No current model unit");
+            LOGGER.log("No current model unit");
         }
     }
 
     async openModel(modelName: string) {
-        console.log("EditorCommunication openModel called, modelName: " + modelName);
+        LOGGER.log("openModel called, modelName: " + modelName);
         // create new model instance and set its name
         let model: PiModel = editorEnvironment.newModel(modelName);
         ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
@@ -124,8 +127,9 @@ export class EditorCommunication {
     }
 
     async openModelUnit(newUnitName: string) {
-        console.log("EditorCommunication openModelUnit called, unitName: " + newUnitName);
+        LOGGER.log("openModelUnit called, unitName: " + newUnitName);
         if (!!this.currentUnit && newUnitName == this.currentUnit.name ) {
+            LOGGER.log("openModelUnit doing NOTHING");
             return;
         }
 
@@ -169,7 +173,7 @@ export class EditorCommunication {
 
 // we assume that newDocumentName is always set, but newModelName need not be set.
     // saveUnitAs(newDocumentName: string) {
-    //     console.log("EditorCommunication save as called, new document name: " + newDocumentName);
+    //     LOGGER.log("save as called, new document name: " + newDocumentName);
     //     if (newDocumentName !== this.currentUnit.name) {
     //         if (!!editorEnvironment.editor.rootElement) {
     //             // save the document under the new name
@@ -187,7 +191,7 @@ export class EditorCommunication {
     //             // remember the new name
     //             this.currentUnit.name = newDocumentName;
     //         } else {
-    //             console.log("No current model unit");
+    //             LOGGER.log("No current model unit");
     //         }
     //     }
     // }
@@ -199,7 +203,7 @@ export class EditorCommunication {
 
     // for the communication with the error list:
     errorSelected(error: PiError) {
-        console.log("Error selected: '" + error.message + "', location:  '" + error.reportedOn + "'");
+        LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.reportedOn + "'");
         if (Array.isArray(error.reportedOn)) {
             editorEnvironment.editor.selectElement(error.reportedOn[0]);
         } else {
@@ -209,7 +213,7 @@ export class EditorCommunication {
 
     getErrors() {
         if (!!this.currentUnit) {
-            console.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
+            LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
             this.editorArea.errorlist.allItems = editorEnvironment.validator.validate(this.currentUnit);
         }
     }
@@ -236,5 +240,6 @@ export class EditorCommunication {
         // TODO implement undo()
         return undefined;
     }
+
 }
 
