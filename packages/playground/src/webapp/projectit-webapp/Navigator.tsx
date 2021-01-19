@@ -30,6 +30,7 @@ type TreeElement = {
 
 const titleRenderer = (Component, { content, open, hasSubtree, selected, ...restProps }) => (
     // TODO icons do not work
+    // TODO tree should open when there are subtrees
     <Component open={open} hasSubtree={hasSubtree} {...restProps}>
         {hasSubtree && <Icon name={open ? "triangle-down" : "triangle-right"} />}
         {!hasSubtree && <Icon name={selected ? "add" : "Add"} />}

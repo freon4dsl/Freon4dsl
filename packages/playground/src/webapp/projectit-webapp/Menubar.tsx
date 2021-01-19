@@ -249,27 +249,23 @@ export default class Menubar extends React.Component {
         // because of asynchronicity the method 'internalNewModel' is called in the else branche
         // as well as in the save and cancel callbacks
         if (EditorCommunication.getInstance().hasChanges) {
-            // console.log("HAS CHANGES");
-            App.setDialogTitle(`Current model unit '${EditorCommunication.getInstance().currentUnit.name}' has unsaved changes.`);
-            App.setDialogSubText("Do you want to save it?");
-            App.useDefaultButton();
             App.setDialogContent(null);
-            await App.showDialogWithCallback( () => {
-                    if (!!EditorCommunication.getInstance().currentUnit && EditorCommunication.getInstance().currentUnit.name.length > 0) {
-                        EditorCommunication.getInstance().saveCurrentUnit();
+            const unitName = EditorCommunication.getInstance().currentUnit?.name;
+            if (!!unitName && unitName.length > 0) {
+                EditorCommunication.getInstance().saveCurrentUnit();
+                this.internalNewModel();
+            } else {
+                App.setDialogTitle(`Current model unit has unsaved changes.`);
+                App.setDialogSubText("The model unit cannot be saved because it is unnamed. Do you want to revert and name it?");
+                App.useDefaultButton();
+                await App.showDialogWithCallback(() => {
+                        // do nothing, wait for the user to choose another user action
+                    },
+                    () => {
                         this.internalNewModel();
-                    } else {
-                        App.setDialogTitle("Model unit must have a name before saving.");
-                        App.setDialogSubText("");
-                        App.setDialogContent(null);
-                        App.showDialog();
-                    }
-                },
-                () => {
-                    this.internalNewModel();
-                });
+                    });
+            }
         } else {
-            // console.log("NEW WITHOUT CHANGES");
             await this.internalNewModel();
         }
         this.dialogData.modelName = "";
