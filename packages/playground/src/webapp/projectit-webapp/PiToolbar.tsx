@@ -6,6 +6,9 @@ import { observer } from "mobx-react";
 import { IIconProps } from "office-ui-fabric-react";
 import { DefaultButton } from "@fluentui/react";
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
+import { PiLogger } from "@projectit/core";
+
+const LOGGER = new PiLogger("PiToolbar").mute();
 
 const navNotShown: IIconProps = { iconName: 'FlickLeft' };
 const navShown: IIconProps = { iconName: 'FlickRight' };
@@ -92,24 +95,24 @@ export class PiToolbar extends React.Component<{}, {}> {
     }
 
     changeShowNavigator = () => {
-        // console.log("setting showNavigator to " + !this.showNavigator);
+        LOGGER.log("setting showNavigator to " + !this.showNavigator);
         this.showNavigator = !this.showNavigator;
         EditorCommunication.getInstance().editorArea.showNavigator = this.showNavigator;
     };
 
     changeShowErrorlist = () => {
-        // console.log("setting showErrorlist to " + !this.showErrorlist);
+        LOGGER.log("setting showErrorlist to " + !this.showErrorlist);
         this.showErrorlist = !this.showErrorlist;
         EditorCommunication.getInstance().editorArea.showErrorlist = this.showErrorlist;
     }
 
     validateModel = () => {
-        console.log("validate model");
+        LOGGER.log("validate model");
         EditorCommunication.getInstance().getErrors();
     }
 
     private setAlertVisible = (ev: React.MouseEvent<HTMLElement>) => {
-        // console.log("setAlertVisible called");
+        LOGGER.log("setAlertVisible called");
         this.alertIsVisible = false;
     }
 }

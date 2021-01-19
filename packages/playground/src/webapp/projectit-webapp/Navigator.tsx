@@ -28,14 +28,15 @@ type TreeElement = {
     as: string; // TODO add styling
 };
 
-const titleRenderer = (Component, { content, open, hasSubtree, selected, ...restProps }) => (
-    // TODO icons do not work
-    <Component open={open} hasSubtree={hasSubtree} {...restProps}>
-        {hasSubtree && <Icon name={open ? "triangle-down" : "triangle-right"} />}
-        {!hasSubtree && <Icon name={selected ? "add" : "Add"} />}
-        <span>{content}</span>
-    </Component>
-);
+// const titleRenderer = (Component, { content, open, hasSubtree, selected, ...restProps }) => (
+//     // TODO icons do not work
+//     // TODO tree should open when there are subtrees
+//     <Component open={open} hasSubtree={hasSubtree} {...restProps}>
+//         {hasSubtree && <Icon name={open ? "triangle-down" : "triangle-right"} />}
+//         {!hasSubtree && <Icon name={selected ? "add" : "Add"} />}
+//         <span>{content}</span>
+//     </Component>
+// );
 
 @observer
 export class Navigator extends React.Component<{}, {}> {
@@ -44,6 +45,7 @@ export class Navigator extends React.Component<{}, {}> {
     private _selection: Selection;
     private _indexToTree: Map<number, PiNamedElement> = new Map<number, PiNamedElement>();
     private _activeItemId: string = "-1";
+    private modelId: string = "-1";
 
     constructor(props: {}) {
         super(props);
@@ -65,18 +67,26 @@ export class Navigator extends React.Component<{}, {}> {
                 parent: "",
                 // selectable: "false"
             };
+            this.modelId = modelGroup.id;
             tree.push(modelGroup);
             EditorCommunication.getInstance().currentModel.getUnits().forEach((unit, index) => {
                 this._indexToTree.set(index, unit);
+                let unitNameToShow: string = "<unnamed>";
+                if (unit.name.length > 0) { unitNameToShow = unit.name}
                 let elem: TreeElement = {
                     id: index.toString(10),
-                    title: unit.name,
+                    title: unitNameToShow,
                     items: [],
                     onTitleClick: this._onTitleClick,
                     as: "h5",
                     parent: modelGroup.id,
                     // selectable: "true"
                 };
+                // if (unit == EditorCommunication.getInstance().currentUnit) {
+                //     // set the active item to the current unit
+                //     this._activeItemId = elem.id;
+                //     elem.as = "h1";
+                // }
                 modelGroup.items.push(elem);
             });
         }
@@ -84,10 +94,11 @@ export class Navigator extends React.Component<{}, {}> {
     }
 
     private _onTitleClick = async (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
-        if (!!item.id) { // every model unit is a leaf in the navigation tree
+        if (!!item.id) {
+            // every model unit is a leaf in the navigation tree
             // get from item.id the right name to put through to the open request
             this.dialogData.selectedTreeItem = this._indexToTree.get(Number(item.id));
-            if (!!this.dialogData.selectedTreeItem) {
+            if (!!this.dialogData.selectedTreeItem && this.dialogData.selectedTreeItem !== EditorCommunication.getInstance().currentUnit) {
                 // save changes of old unit
                 await CommonOperations.getInstance().saveChangesBeforeCallback(this.dialogData, this.internalOpenModel);
                 // TODO show selection with grey background (or something)
@@ -116,9 +127,9 @@ export class Navigator extends React.Component<{}, {}> {
                 <Tree
                     items={this.buildTree}
                     title="Model Units"
-                    renderItemTitle={titleRenderer}
+                    // renderItemTitle={titleRenderer}
                     aria-label="Initially open"
-                    defaultActiveItemIds={[this._activeItemId]}
+                    defaultActiveItemIds={[this.modelId, this._activeItemId]}
                 />
                 {/*</SelectionZone>*/}
             </Box>

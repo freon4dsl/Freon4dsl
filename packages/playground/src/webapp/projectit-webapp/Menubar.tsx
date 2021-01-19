@@ -8,7 +8,9 @@ import { PiNamedElement } from "@projectit/core";
 import { ServerCommunication } from "./ServerCommunication";
 import DialogData from "./DialogData";
 import CommonOperations from "./CommonOperations";
+import { PiLogger } from "@projectit/core";
 
+const LOGGER = new PiLogger("Menubar").mute();
 const versionNumber = "0.1.0";
 
 export default class Menubar extends React.Component {
@@ -246,30 +248,27 @@ export default class Menubar extends React.Component {
     }
 
     async newModel() {
+        LOGGER.log("newModel called");
         // because of asynchronicity the method 'internalNewModel' is called in the else branche
         // as well as in the save and cancel callbacks
         if (EditorCommunication.getInstance().hasChanges) {
-            // console.log("HAS CHANGES");
-            App.setDialogTitle(`Current model unit '${EditorCommunication.getInstance().currentUnit.name}' has unsaved changes.`);
-            App.setDialogSubText("Do you want to save it?");
-            App.useDefaultButton();
             App.setDialogContent(null);
-            await App.showDialogWithCallback( () => {
-                    if (!!EditorCommunication.getInstance().currentUnit && EditorCommunication.getInstance().currentUnit.name.length > 0) {
-                        EditorCommunication.getInstance().saveCurrentUnit();
+            const unitName = EditorCommunication.getInstance().currentUnit?.name;
+            if (!!unitName && unitName.length > 0) {
+                EditorCommunication.getInstance().saveCurrentUnit();
+                this.internalNewModel();
+            } else {
+                App.setDialogTitle(`Current model unit has unsaved changes.`);
+                App.setDialogSubText("The model unit cannot be saved because it is unnamed. Do you want to revert and name it?");
+                App.useDefaultButton();
+                await App.showDialogWithCallback(() => {
+                        // do nothing, wait for the user to choose another user action
+                    },
+                    () => {
                         this.internalNewModel();
-                    } else {
-                        App.setDialogTitle("Model unit must have a name before saving.");
-                        App.setDialogSubText("");
-                        App.setDialogContent(null);
-                        App.showDialog();
-                    }
-                },
-                () => {
-                    this.internalNewModel();
-                });
+                    });
+            }
         } else {
-            // console.log("NEW WITHOUT CHANGES");
             await this.internalNewModel();
         }
         this.dialogData.modelName = "";
@@ -306,7 +305,7 @@ export default class Menubar extends React.Component {
     }
 
     async newModelUnit() {
-        // console.log("new Model unit called");
+        LOGGER.log("newModelUnit called");
         if (EditorCommunication.getInstance().hasChanges) {
             await CommonOperations.getInstance().saveChangesBeforeCallback(this.dialogData, this.internalNewModelUnit);
         } else {
@@ -341,6 +340,7 @@ export default class Menubar extends React.Component {
     }
 
     async saveModelUnit() {
+        LOGGER.log("saveModelUnit called");
         const unitName = EditorCommunication.getInstance().currentUnit.name;
         if (unitName.length === 0) {
             App.setDialogTitle(`Current model unit cannot be saved.`);
@@ -356,7 +356,8 @@ export default class Menubar extends React.Component {
         }
     }
 
-    deleteModelUnit() {
+    async deleteModelUnit() {
+        LOGGER.log("deleteModelUnit called");
         App.setDialogTitle("Delete model unit ...");
         if (!!EditorCommunication.getInstance().currentUnit) {
             App.setDialogSubText("Are you sure you want to delete the current model unit?");
@@ -372,6 +373,7 @@ export default class Menubar extends React.Component {
     }
 
     async openModel() {
+        LOGGER.log("openModel called");
         // because of asynchronicity the method 'internalOpen' is called in the else branche
         // as well as in the save and cancel callbacks
         if (EditorCommunication.getInstance().hasChanges) {
@@ -400,7 +402,7 @@ export default class Menubar extends React.Component {
                     />
                 </div>);
                 App.showDialogWithCallback(() => {
-                    console.log("Modelname: " + dialogData.modelName);
+                    LOGGER.log("Modelname: " + dialogData.modelName);
                     if (!!dialogData.modelName && dialogData.modelName.length > 0) {
                         EditorCommunication.getInstance().openModel(dialogData.modelName);
                     }
@@ -415,10 +417,10 @@ export default class Menubar extends React.Component {
     }
 
     async openModelUnit() {
+        LOGGER.log("openModelUnit called");
         // because of asynchronicity the method 'internalOpen' is called in the else branche
         // as well as in the save and cancel callbacks
         if (EditorCommunication.getInstance().hasChanges) {
-            // console.log("HAS CHANGES");
             await CommonOperations.getInstance().saveChangesBeforeCallback(this.dialogData, this.internalOpenModelUnit);
         } else {
             this.internalOpenModelUnit(this.dialogData);
@@ -446,7 +448,7 @@ export default class Menubar extends React.Component {
                     />
                 </div>);
                 App.showDialogWithCallback(() => {
-                    console.log("unitname: " + dialogData.unitName);
+                    LOGGER.log("unitname: " + dialogData.unitName);
                     if (!!dialogData.unitName && dialogData.unitName.length > 0) {
                         EditorCommunication.getInstance().openModelUnit(dialogData.unitName);
                     }
@@ -476,7 +478,7 @@ export default class Menubar extends React.Component {
     //         if (!!this.unitName) {
     //             EditorCommunication.getInstance().saveUnitAs(this.unitName);
     //         }
-    //         // console.log("model: " + EditorCommunication.getInstance().currentModelName + ", unit: " + EditorCommunication.getInstance().currentUnit.name);
+    //         LOGGER.log("model: " + EditorCommunication.getInstance().currentModelName + ", unit: " + EditorCommunication.getInstance().currentUnit.name);
     //     });
     // }
 

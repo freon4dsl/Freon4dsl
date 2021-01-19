@@ -3,7 +3,7 @@ import axios from "axios";
 import { SERVER_URL } from "../WebappConfiguration";
 import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
 
-const LOGGER = new PiLogger("ServerCommunication"); // TODO show errors to user
+const LOGGER = new PiLogger("ServerCommunication").mute(); // TODO show errors to user
 const ModelUnitInterfacePostfix: string = "Public";
 
 // TODO remove interface IModelUnitData
@@ -26,7 +26,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param piUnit
      */
     async putModelUnit(modelInfo: IModelUnitData, piUnit: PiNamedElement) {
-        // console.log(`ServerCommunication.putModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
+        LOGGER.log(`ServerCommunication.putModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "" && modelInfo.unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piUnit);
             const publicModel = ServerCommunication.serial.convertToJSON(piUnit, true);
@@ -42,7 +42,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     async deleteModelUnit(modelInfo: IModelUnitData ) {
-        // console.log(`ServerCommunication.deleteModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
+        LOGGER.log(`ServerCommunication.deleteModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
                 const res1 = await axios.get(`${SERVER_URL}deleteModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}`);
@@ -58,12 +58,12 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelListCallback
      */
     async loadModelList(modelListCallback: (names: string[]) => void) {
-        // console.log(`ServerCommunication.loadModelList`);
+        LOGGER.log(`ServerCommunication.loadModelList`);
         try {
             const models = await axios.get(`${SERVER_URL}getModelList`);
             modelListCallback(models.data);
         } catch (e) {
-            console.log(e.message);
+            LOGGER.log(e.message);
             LOGGER.error(this, "line 66, " + e.toString());
         }
     }
@@ -73,7 +73,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelListCallback
      */
     async loadUnitList(modelName: string, modelListCallback: (names: string[]) => void) {
-        // console.log(`ServerCommunication.loadUnitList`);
+        LOGGER.log(`ServerCommunication.loadUnitList`);
         try {
             let result: string[] = [];
             const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${modelName}`);
@@ -83,7 +83,7 @@ export class ServerCommunication implements IServerCommunication {
             }
             modelListCallback(result);
         } catch (e) {
-            console.log(e.message);
+            LOGGER.log(e.message);
             LOGGER.error(this, "line 86, " + e.toString());
         }
     }
@@ -95,7 +95,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param loadCallback
      */
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiNamedElement) => void) {
-        // console.log(`ServerCommunication.loadModelUnit ${unitName}`);
+        // LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}getModelUnit?folder=${modelName}&name=${unitName}`);
@@ -108,7 +108,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: PiNamedElement) => void) {
-        // console.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
+        // LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         if (!!unitName && unitName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}getModelUnit?folder=${modelName}&name=${unitName}${ModelUnitInterfacePostfix}`);
