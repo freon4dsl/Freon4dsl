@@ -12,42 +12,45 @@
 [#installation]
 == Installation
 
-For now (release candidate 0.05), if you want to use ProjectIt, you have to check out the release candidate branch from github.
-The main prerequisites are: link:https://nodejs.org/[Node.js, window=_blank], link:https://yarnpkg.com/[yarn, window=_blank],
-and link:https://lerna.js.org/[lerna, window=_blank].
-
-We are typically using the latest versions of all, although older versions likely work just as well.
+Please, be sure to have link:https://nodejs.org/[node.js, window=_blank], link:https://yarnpkg.com/[yarn, window=_blank],
+and link:https://lerna.js.org/[lerna, window=_blank] running. We are typically using the latest versions of all,
+although older versions likely work just as well.
 You could also try and use link:https://www.npmjs.com/[NPM, window=_blank] instead of yarn.
 
-*	The code can be found at link:https://github.com/projectit-org/ProjectIt[https://github.com/projectit-org/ProjectIt, window=_blank].
-*   Clone branche `development/release-candidate`.
-*   If not installed, install lerna:
+The simplest manner to start working with ProjectIt is to clone our
+link:https://github.com/projectit-org/ProjectIt-example[example project, window=_blank]
+from github.
 
-    yarn global add lerna
+*   Clone branche `master` from https://github.com/projectit-org/ProjectIt-example.
+*   First, install all necessary packages:
 
-*   Setup the lerna structure:
+    yarn install
 
-    lerna bootstrap
+*   Run the generator and see extra files appearing in the folder /src/picode:
 
-*   Build ProjectIt:
+    yarn generate
 
-    lerna run build
+*   Start the server:
 
-*	Run the example Demo language that is included in the build:
+    yarn model-server
 
-    lerna run start
+*	Open another (bash) terminal, and start the generated editor from it:
+
+    yarn start
 
 +
-(The command opens a browser with an editor for the Demo language on
-`link:http://localhost:3000/[http://localhost:3000/, window=_blank]`. If you are
-having trouble using the editor, have a look a the key-bindings under the *Help* menu.)
-
-// TODO check the chain of commands
+This command opens your preferred browser with an editor for the Entity language on
+`link:http://localhost:3000/[http://localhost:3000/, window=_blank]`. If Chrome is not
+your preferred browser, please open the above page using Chrome, because we cannot
+ensure that the editor functions completely in other browsers.
++
+If you are
+having trouble using the editor, have a look at the key-bindings under the *Help* menu.
 
 Now you are ready for a closer look at ProjectIt. You can for instance:
 
 * Have a look at how the example language is defined by browsing through the language definition files in
-`packages/playground/src/demo/defs`.
-* Create your xref:./first-language.adoc[own language].
-* Have a look at the xref:./code-organisation.adoc[source code organisation].
+`/src/defs`,
+* Or follow our tutorial to create your xref:./first-language.adoc[own language],
+* Have a look at the xref:./code-organisation.adoc[source code organisation],
 * See how you can xref:./commandline.adoc[use ProjectIt from the commandline].

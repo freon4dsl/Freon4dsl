@@ -11,30 +11,34 @@
 
 Naturally, you will want to create your own language definitions. To do so, follows these steps.
 
-.	Add a new folder for your language in `packages/playground/src`. Next, create a dedicated folder within it, to hold
-the definition files for your language. We usually call it _defs_, but any name will do. Next, adjust
-the scripts in playground’s _package.json_. In the following screenshot, we show how to create a script for the language
-`taxrules`. Use the name of your language and your own folders instead of `src/taxrules/defs` and `src/taxtrules`.
+.	Create a new project by cloning ProjectIt template project. The template project contains a generic
+web application that acts as a shell for your generated editor.
+
+.   Create a folder for your language in `/src`, to hold the definition files for your language.
+We usually call it _defs_, but any name will do. (In this tutorial, the name _defs_ will be used.)
+
+.   Next, adjust the `scripts` entry in the _package.json_ file. The `generate`
+script should include your _defs_ folder and the folder where you want the generated code to be stored.
+In the following screenshot, we use `src/defs` and `src/picode`.
 
 ====
 [#img-package-json-adjustment]
-.Screenshot of package.json for TaxRules Example
+.Screenshot of package.json
 image::package-json-adjustment.png[package-json-adjustment]
 ====
 
-[start=2]
-.	Create a (set of) language definition(s). To start with, you only need to define the language structure,
-defaults will be generated for the editor, scoper, typer, and validator. You can start by copying `TaxRules.lang`
-to your own `defs`-folder. See the xref:../tutorials/tutorials.adoc[tutorials]
-to find out how to write the definitions for the language structure, editor, scoper, typer, and validator.
+[start=4]
+.	Create a language definition. To start with, you only need to define the language structure,
+defaults will be generated for the editor, scoper, typer, and validator. You can, for instance, copy
+`EntityLanguage.lang` from the ProjectIt example to your own `defs`-folder. Or you can follow the
+tutorial on the xref:../tutorials/langdef-tutorial.adoc[language structure definition].
 
-.	Generate the code using the adjusted script in _package.json_. In the above example this would be done by:
+.	Generate the code:
 
-    yarn taxrules
+    yarn generate
 
-.   Adjust the configuration file in *playground/src/webapp/gateway-to-projectit/WebappConfiguration.ts* to use the
-newly generated editor instead of the editor for the 'Demo' example. Again, we show how to do this for the taxrules
-example, in the following screenshot.
+.   Adjust the configuration file in */src/webapp/WebappConfiguration.ts* to use the
+newly generated editor. Be sure to uncomment the lines as well.
 
 ====
 [#img-webapp-config]
@@ -45,15 +49,23 @@ image::webapp-configuration.png[webapp-configuration]
 [start=5]
 .   Try it out:
 
-    yarn start or lerna run start
+    yarn start
 
 .	Next, it's playtime:
-.. Add other definitions or change the existing ones, and generate another time. (Again,
-see the xref:../tutorials/tutorials.adoc[tutorials] to find out more about the definitions, and maybe you want to use
-the -w flag to watch changes to your definition files.)
+.. Add other definitions or change the existing ones, and generate another time. See the
+xref:../tutorials/tutorials.adoc[tutorials]
+to find out how to write the definitions for the language structure, editor, scoper, typer, and validator.
+Also, you may want to add the -w flag to the generate script to
+watch changes to your definition files.
+====
+[#img-webapp-config]
+.Screenshot of package.json with -w flag
+image::webapp-configuration.png[webapp-configuration]
+====
 [NOTE]
 Be careful with handmade changes, all files in
 any folder called _gen_ will be deleted during the next generation.
-..	Have a look at the generated code (see also xref:../meta-documentation/generated-code/structure-generated-code.adoc[structure of the generated code]).
+[start=2]
+..	Have a look at the generated code (see xref:../meta-documentation/generated-code/structure-generated-code.adoc[structure of the generated code]).
 ..	Add handwritten code to improve the result (see xref:../meta-documentation/framework/editor-framework.adoc[editor framework]).
 ..  And have fun ...
