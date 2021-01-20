@@ -7,9 +7,7 @@
 :source-language: javascript
 = ProjectIt - Introduction
 
-_Documentation for (release candidate) version 0.0.5_
-
-ProjectIt is a Language Workbench (...in the making). It is a tool for creating mini-languages,
+ProjectIt is a Language Workbench (...in the making :-) ). It is a tool for creating mini-languages,
 which are also known as link:https://en.wikipedia.org/wiki/Domain-specific_language[Domain Specific Languages (DSLs), window=_blank]. ProjectIt is able to generate an integrated
 set of editor, scoper, typer, and validator for your mini-language from a small set of definitions.
 

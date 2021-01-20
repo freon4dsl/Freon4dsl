@@ -9,28 +9,31 @@
 :listing-caption: Code Sample
 = Installing and Using ProjectIt
 
-[#installation]
-== Installation
-
-Please, be sure to have link:https://nodejs.org/[node.js, window=_blank], link:https://yarnpkg.com/[yarn, window=_blank],
-and link:https://lerna.js.org/[lerna, window=_blank] running. We are typically using the latest versions of all,
+Please, be sure to have link:https://nodejs.org/[node.js, window=_blank] and link:https://yarnpkg.com/[yarn, window=_blank]
+running. We are typically using the latest versions of all,
 although older versions likely work just as well.
 You could also try and use link:https://www.npmjs.com/[NPM, window=_blank] instead of yarn.
 
-The simplest manner to start working with ProjectIt is to clone our
-link:https://github.com/projectit-org/ProjectIt-example[example project, window=_blank]
-from github.
+There are two ways to start with ProjectIt, either use our
+xref:example[Example project] or use our xref:template[Template project].
 
-*   Clone branche `master` from https://github.com/projectit-org/ProjectIt-example.
-*   First, install all necessary packages:
+[[example]]
+== Start with the Example Project
+The simplest manner to start working with ProjectIt is to clone our example project from github.
+In the following the root of your project will be indicated with '~'.
+
+*   Clone branche `master` from link:https://github.com/projectit-org/ProjectIt-example[https://github.com/projectit-org/ProjectIt-example, window=_blank].
+(For an explanation of the content of the project see xref:code-organisation.adoc[source code organisation].)
+
+*   Next, install all necessary packages by running:
 
     yarn install
 
-*   Run the generator and see extra files appearing in the folder /src/picode:
+*   Run the generator and see the generated files appearing in the folder ~/src/picode:
 
     yarn generate
 
-*   Start the server:
+*   Start the server (note that anything that is saved in the editor will be stored in ~/modelstore):
 
     yarn model-server
 
@@ -39,18 +42,89 @@ from github.
     yarn start
 
 +
-This command opens your preferred browser with an editor for the Entity language on
+This command opens your preferred browser with the generated editor for the language `Entity` on
 `link:http://localhost:3000/[http://localhost:3000/, window=_blank]`. If Chrome is not
-your preferred browser, please open the above page using Chrome, because we cannot
-ensure that the editor functions completely in other browsers.
+your preferred browser, please open the above page in Chrome, because we cannot
+ensure that the editor functions as it should in other browsers.
+
+*   Try out the editor
 +
 If you are
 having trouble using the editor, have a look at the key-bindings under the *Help* menu.
 
+[[template]]
+== Start with the Template project
+Another way to start working with ProjectIt is to clone our template project from github. The template project provides
+a shell for the generated editor that enables the user to work with multiple models and
+xref:../tutorials/modelunits.adoc[model units].
+In the following the root of the project will be indicated with '~'.
+
+*   Clone branche `master` from link:https://github.com/projectit-org/ProjectIt-template[https://github.com/projectit-org/ProjectIt-template, window=_blank].
+(For an explanation of the content of the project see xref:code-organisation.adoc[source code organisation].)
+
+*   Next, install all necessary packages by running:
+
+    yarn install
+
+*   Create a folder for your language in `~/src`, to hold the definition files for your language.
+We usually call it _defs_, but any name will do. (Here the name _defs_ will be used.)
+
+*	Create a language definition file which defines the structure of your language. The
+extension of this file must be `.lang`. You can, for instance, copy
+`EntityLanguage.lang` from the ProjectIt example to your own `defs`-folder. Or, you can follow the
+tutorial on xref:../tutorials/langdef-tutorial.adoc[language structure definition].
++
+To start with, you only need to define the language structure,
+defaults will be generated for the editor, scoper, typer, and validator.
+
+*   Next, adjust the `scripts` entry in the _package.json_ file. The `generate`
+script should include your _defs_ folder and the folder where you want the generated code to be stored.
+In the following screenshot, we use `~/src/defs` and `~/src/picode`, respectively.
+
+====
+[#img-package-json-adjustment]
+.Screenshot of package.json
+image::package-json-adjustment.png[package-json-adjustment]
+====
+
+*   Run the generator and see the generated files appearing in the folder where you
+decided to store the generated code (in the screenshot we use `~/src/picode`):
+
+    yarn generate
+
+*   Adjust the configuration of the web application by changing the two lines in the file
+`~/src/webapp/WebappConfiguration.ts`.
+
+====
+[#img-package-json-adjustment]
+.Screenshot of package.json
+image::package-json-adjustment.png[package-json-adjustment]
+====
+
+*   Start the server (note that anything that is saved in the editor will be stored in `~/modelstore`):
+
+    yarn model-server
+
+*	Open another (bash) terminal, and start the generated editor from it:
+
+    yarn start
+
++
+This command opens your preferred browser with the generated editor for your language on
+`link:http://localhost:3000/[http://localhost:3000/, window=_blank]`. If Chrome is not
+your preferred browser, please open the above page in Chrome, because we cannot
+ensure that the editor functions as it should in other browsers.
+
+* Try out the editor
++
+If you are
+having trouble using the editor, have a look at the key-bindings under the *Help* menu.
+
+== Next steps
 Now you are ready for a closer look at ProjectIt. You can for instance:
 
-* Have a look at how the example language is defined by browsing through the language definition files in
-`/src/defs`,
-* Or follow our tutorial to create your xref:./first-language.adoc[own language],
+* Have a look at how the example language is defined by browsing through the language definition
+files in the ProjectIt Example project. You can find them in `~/src/defs`,
+* Or, follow our xref:../tutorials/tutorials.adoc[tutorials] to create your own language,
 * Have a look at the xref:./code-organisation.adoc[source code organisation],
 * See how you can xref:./commandline.adoc[use ProjectIt from the commandline].

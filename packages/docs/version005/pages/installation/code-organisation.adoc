@@ -8,23 +8,33 @@
 :listing-caption: Code Sample
 = Source code organisation
 
-The source code in this project is organised into the following packages.
+The source code (`~/src`) in this project is organised into the following subfolders. (Note that the _defs_ and _picode_
+folders can have any name as long as both the `generate` script in `package.json`, and the configuration of
+the web application in the file `~/src/webapp/WebappConfiguration.ts`, are adjusted.)
 
-* _docs_: documentation, i.e. this website
-* _packages/core_: framework source code.
-** _packages/core/src/editor_: the editor framework source code.
-** _packages/core/src/language/decorators_: source code for link:https://mobx.js.org/[MobX, window=_blank] decorators that can be used to easily implement a language that can be
-directly used by ProjectIt.
-* _packages/meta_: source code that reads the language definition files and generates the language environment.
-** _packages/meta/src/languagedef_: source code that generates code from a language structure definition (_.lang_) file.
-** _packages/meta/src/editordef_: source code that generates code from an editor definition (_.edit_) file.
-** _packages/meta/src/scoperdef_: source code that generates code from a scoper definition (_.scope_) file.
-** _packages/meta/src/typerdef_: source code that generates code from a typer definition (_.type_) file.
-** _packages/meta/src/validatordef_: source code that generates code from a validator definition (_.valid_) file.
-* _packages/playground_: source code generated from the language definition files.
-** _packages/playground/src/webapp_: a copy of _packages/webapp_, for use within the playground.
-** _packages/playground/src/demo/defs_: the language definition files for the example language called 'demo'.
-* _packages/server_: source code for a minimalistic model-server used for demonstration purposes.
-* _packages/webapp_: source code for the web-application used for all generated languages.
-* _/*_: the usual suspects.
+* _defs_: the language definition files.
+* _picode_: the generated source code.
+[NOTE]
+Be careful with handmade changes in _picode_, all files in
+any folder called _gen_ will be deleted during the next generation.
+
+** _picode/editor_: code for the editor.
+** _picode/environment_: code that provides the coupling between all parts of the generated workbench.
+** _picode/language_: code that implements the language structure.
+** _picode/projectit_: code that enables the language engineer to configure the workbench.
+** _picode/reader_: a parser that is able to read xref:../tutorials/modelunits.adoc[model units] from a text string or file.
+** _picode/scoper_: code for that determines which elements are visible for a certain element in the user's model.
+** _picode/stdlib_: code that implements some standard elements of your language, for instance xref:../tutorials/langdef-tutorial.adoc[limited concepts].
+** _picode/typer_: code that that determines which type is associated with a certain element in the user's model.
+** _picode/utils_: a default implementation of a visitor for your user's model.
+** _picode/validator_: code that determines whether or not certain parts of your user's model contain errors.
+** _picode/writer_: code that is able to write your user's xref:../tutorials/modelunits.adoc[model units] in string format to a file.
+* _picode/webapp_: source code for the web-application used for all generated languages.
+** Note worthy is _picode/webapp/WebappConfiguration.ts_. This file holds the references to the generated language
+workbench and the web address of the server which stores your user's models.
+
+Another folder that can be found in the project is `~/modelstore`. This is the folder where
+the server stores all models. Each model is stored in a separate folder in which you can find its
+modelunits as `.json` files.
+
 
