@@ -18,28 +18,28 @@ that apply in this system.
 
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=model]
+include::{src-dir}/LanguageDefinition.ast[tag=model]
 ----
 
 A *modelunit* is a part of the model that can be edited independently from the rest of the model. A modelunit is
 always a direct child of a model.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
+include::{src-dir}/LanguageDefinition.ast[tag=rootconcept]
 ----
 
 A *concept* is the basic element of your language definition. It defines which instances can be present in
 a model created by your users.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=concept]
+include::{src-dir}/LanguageDefinition.ast[tag=concept]
 ----
 
 An *expression concept* is a concept that is an expression. The editor will deal with these differently in
 order to give your user a more natural editing experience. Note that expression concepts need to have a priority.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=expression]
+include::{src-dir}/LanguageDefinition.ast[tag=expression]
 ----
 
 A *limited concept* is a concept that has a limited number of predefined instances. These instances are part
@@ -49,13 +49,13 @@ value for the name, the name of the instance is used. In this manner, you can de
 
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=limited]
+include::{src-dir}/LanguageDefinition.ast[tag=limited]
 ----
 
 An *interface* is a concept that has no instances.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=interface]
+include::{src-dir}/LanguageDefinition.ast[tag=interface]
 ----
 
 Concepts may extend one other concept, and implement multiple interfaces. This also holds for limited concepts and
@@ -70,21 +70,21 @@ following three types.
 *concept*. Simple properties may also be lists of string, number or boolean.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=simpleprop]
+include::{src-dir}/LanguageDefinition.ast[tag=simpleprop]
 ----
 
 *	*Parts*, which have as type one of the *concepts* in the language, are also contained in its *concept* (as in
 the UML composition relationship). Note that simple properties are always considered to be parts.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=partprop]
+include::{src-dir}/LanguageDefinition.ast[tag=partprop]
 ----
 
 *	*References*, which have as type one of the *concepts* in the language, are not contained in its *concept*
 (as in the UML association relationship).
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=referenceprop]
+include::{src-dir}/LanguageDefinition.ast[tag=referenceprop]
 ----
 
 == Public/private elements at the Language Level

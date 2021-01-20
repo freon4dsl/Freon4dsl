@@ -33,7 +33,7 @@ export class NonOptionalsCheckerTemplate {
 
         /**
          * Class ${checkerClassName} is part of the implementation of the default validator. 
-         * It checks whether non-optional properties, as such defined in the .lang definition, indeed
+         * It checks whether non-optional properties, as such defined in the .ast definition, indeed
          * have a value.
          * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements 
          * the actual checking of each node in the tree.

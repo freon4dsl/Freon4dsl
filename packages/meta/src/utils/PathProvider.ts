@@ -46,7 +46,7 @@ export class PathProvider {
 
     public static langFile(defFolder: string, languageFile: string): string {
         const languageName: string = languageFile.slice(0, languageFile.length - 5);
-        return defFolder + "/" + languageName + ".lang";
+        return defFolder + "/" + languageName + ".ast";
     }
 
     public static validFile(defFolder: string, languageFile: string): string {

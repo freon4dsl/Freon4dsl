@@ -14,7 +14,7 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
             actionName: "validate-it",
             summary: "Generates the TypeScript code for the validator for your language",
             documentation:
-                "Generates TypeScript code for the validator of language defined in the .lang file. The validator definition is found in the .valid file."
+                "Generates TypeScript code for the validator of language defined in the .ast file. The validator definition is found in the .valid file."
         });
     }
 

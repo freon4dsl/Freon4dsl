@@ -9,7 +9,7 @@ describe("Checking typer on checking errors", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/test/__tests__/typer-tests/test-language.lang");
+            language = new LanguageParser().parse("src/test/__tests__/typer-tests/test-language.ast");
             parser = new PiTyperParser(language);
         } catch (e) {
             console.log("Language could not be read");

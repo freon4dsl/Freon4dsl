@@ -23,7 +23,7 @@ export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
     generate(): void {
         // TODO adjust this to multi file arguments
         this.languageFile = this.languageFileArg.value;
-        // we only read the .lang file, no need to generate
+        // we only read the .ast file, no need to generate
         // the actual generation, when needed, is done by subclasses
         this.language = new LanguageParser().parse(this.languageFile);
         if (this.language === null) {
@@ -35,7 +35,7 @@ export class ProjectItGeneratePartAction extends ProjectItGenerateAction {
         super.onDefineParameters();
         this.languageFileArg = this.defineStringParameter({
             argumentName: "LANGUAGE",
-            defaultValue: "LanguageDefinition.lang",
+            defaultValue: "LanguageDefinition.ast",
             parameterLongName: "--language",
             parameterShortName: "-l",
             description: "Language Definition file",

@@ -6,14 +6,14 @@ describe("Checking expression parser on syntax errors", () => {
 
     beforeEach(() => {
         try {
-            const language = new LanguageParser().parse(testdir + "testLanguage.lang");
+            const language = new LanguageParser().parse(testdir + "testLanguage.ast");
         } catch (e) {
             console.log("Language could not be read");
         }
     });
 
     test("original test on demo language", () => {
-        const demoLanguage = new LanguageParser().parse(testdir + "demoLanguage.lang");
+        const demoLanguage = new LanguageParser().parse(testdir + "demoLanguage.ast");
         if (demoLanguage === null) {
             throw new Error("Demo Language could not be parsed, exiting.");
         }

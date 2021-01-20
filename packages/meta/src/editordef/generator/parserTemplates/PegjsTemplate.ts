@@ -369,7 +369,7 @@ HEXDIG = [0-9a-f]
     }
 
     private makeTypeName(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection): string {
-        // TODO make a difference between variables and stringLiterals in the .lang file
+        // TODO make a difference between variables and stringLiterals in the .ast file
         let typeName: string = "";
         if (myElem.name === "name") {
             typeName = "variable";

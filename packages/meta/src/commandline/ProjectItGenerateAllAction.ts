@@ -191,7 +191,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
         }
         for (const filename of myFileSet) {
-            if (/\.lang$/.test(filename)) {
+            if (/\.ast$/.test(filename)) {
                 this.languageFiles.push(filename);
             } else if (/\.edit$/.test(filename)) {
                 this.editFiles.push(filename);
