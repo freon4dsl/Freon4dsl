@@ -10,7 +10,7 @@ export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
         super({
             actionName: "meta-it",
             summary: "Generates the TypeScript code for your language",
-            documentation: "Generates TypeScript code for the language defined in the .lang file."
+            documentation: "Generates TypeScript code for the language defined in the .ast file."
         });
     }
 
