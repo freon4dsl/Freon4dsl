@@ -10,7 +10,7 @@ describe("Checking generator for language definition", () => {
     test.skip("generation of all kinds of properties", () => {
         const parser = new LanguageParser();
         const generator = new LanguageGenerator();
-        const parseFile = testdir + "test2.lang";
+        const parseFile = testdir + "test2.ast";
         let model: PiLanguage;
         try {
             model = parser.parse(parseFile);

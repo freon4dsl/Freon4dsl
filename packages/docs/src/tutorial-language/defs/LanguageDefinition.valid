@@ -27,7 +27,7 @@ DemoEntity {
     validIdentifier;
 }
 // tag::valididentifier[]
-DemoAttribute {
+DemoAttributeWithLimitedType {
     validIdentifier self.name;
 }
 DemoVariable {

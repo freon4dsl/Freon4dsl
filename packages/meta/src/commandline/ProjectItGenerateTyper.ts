@@ -13,7 +13,7 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
         super({
             actionName: "type-it",
             summary: "Generates the TypeScript code for the typer for your language",
-            documentation: "Generates TypeScript code for the typer of language defined in the .lang file. The typer definition is found in the .type file."
+            documentation: "Generates TypeScript code for the typer of language defined in the .ast file. The typer definition is found in the .type file."
         });
     }
 

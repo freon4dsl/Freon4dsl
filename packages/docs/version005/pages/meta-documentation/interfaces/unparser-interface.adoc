@@ -14,5 +14,5 @@ If you want to write your own unparser you will need to implement this interface
 
 [source]
 ----
-include::{src-dir}/unparser/PiUnparser.ts[tag=unparser-interface]
+include::{src-dir}/writer/PiWriter.ts[tag=unparser-interface]
 ----

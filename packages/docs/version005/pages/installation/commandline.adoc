@@ -1,24 +1,17 @@
 :imagesdir: ../images/
-:page-nav_order: 20
+:page-nav_order: 60
 :page-title: Commandline
 :page-parent: Installing and Using ProjectIt
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-= Use ProjectIt from the Commandline
+= Use of ProjectIt from the Commandline
 
-ProjectIt will be released as a commandline tool. If you look at the package.json file in `packages/playground/`
-you can find the commands that were used to run the Demo example.
-
-====
-[#img-package-json]
-.Screenshot of package.json
-image::package-json.png[projectit-package-json]
-====
-
-Go to folder `packages/playground` and type ‘`ts-node ../meta/src/commandline/projectit`’ to find out the different
-arguments that can be used.
+ProjectIt is a commandline tool. If you type ‘`projectit`’ in a (bash) terminal you will see
+an overview of the different
+arguments that can be used. For detailed help about a specific command, type: '`projectit <command>
+-h`'.
 
 ====
 [#img-commands]
@@ -26,10 +19,9 @@ arguments that can be used.
 image::projectit-commandline-options.png[projectit-commandline-options]
 ====
 
-
-Note that the commands _meta-it_ through to _type-it_, used solely (without the other commands) generate code that
+Note that every command except _all_, used solely (without the other commands) generates code that
 does not compile correctly. For instance, both the scoper and validator might need to use the typer, therefore the
 code seeks to include the typer class, which might not be generated yet. Likewise, the editor seeks to include
-the scoper. Best way to go about is to use the _all_ command. Next, when you focus on one of the aspects of your
+the scoper. Best way to go about is first to use the _all_ command. Next, when you focus on one of the aspects of your
 language, you can use the specific command for that aspect. Thus, you can keep regeneration-time as short as possible.
 

@@ -21,7 +21,7 @@ DemoStringLiteralExpression {
 }
 // end::conformance[]
 
-DemoAttribute {
+DemoAttributeWithLimitedType {
     infertype self.declaredType;
 }
 // tag::inference[]

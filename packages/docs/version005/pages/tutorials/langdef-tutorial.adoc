@@ -12,31 +12,34 @@ The ProjectIt language structure consists of a list of a *Model*, *ModelUnits*, 
 and/or *Interfaces*.
 
 A *model* is the complete description of a system specified by the user. The model serves as the root of the abstract syntax tree.
-It may hold any number of modelunits as children.
+It may hold any number of modelunits as children. These modelunits may be of different type. For instance, you
+can have modelunits that define the items in a home automation system, and other modelunits that define the rules
+that apply in this system.
+
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=model]
+include::{src-dir}/LanguageDefinition.ast[tag=model]
 ----
 
 A *modelunit* is a part of the model that can be edited independently from the rest of the model. A modelunit is
 always a direct child of a model.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=rootconcept]
+include::{src-dir}/LanguageDefinition.ast[tag=rootconcept]
 ----
 
 A *concept* is the basic element of your language definition. It defines which instances can be present in
 a model created by your users.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=concept]
+include::{src-dir}/LanguageDefinition.ast[tag=concept]
 ----
 
-An *expression concept* is a concept that is an expression. The editor will deal with them differently in
+An *expression concept* is a concept that is an expression. The editor will deal with these differently in
 order to give your user a more natural editing experience. Note that expression concepts need to have a priority.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=expression]
+include::{src-dir}/LanguageDefinition.ast[tag=expression]
 ----
 
 A *limited concept* is a concept that has a limited number of predefined instances. These instances are part
@@ -46,47 +49,48 @@ value for the name, the name of the instance is used. In this manner, you can de
 
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=limited]
+include::{src-dir}/LanguageDefinition.ast[tag=limited]
 ----
 
 An *interface* is a concept that has no instances.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=interface]
+include::{src-dir}/LanguageDefinition.ast[tag=interface]
 ----
 
-Concepts may extend another concept, and implement multiple interfaces. This also holds for limited concepts and
+Concepts may extend one other concept, and implement multiple interfaces. This also holds for limited concepts and
 expression concepts.
 
 == Properties
 
-Each of the four language structure elements have *Properties*, of which there are the
+Each of the language structure elements have *Properties*, of which there are the
 following three types.
 
 *	*Simple properties*, which have as type one of string, number, or boolean, and are always contained in its
 *concept*. Simple properties may also be lists of string, number or boolean.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=simpleprop]
+include::{src-dir}/LanguageDefinition.ast[tag=simpleprop]
 ----
 
 *	*Parts*, which have as type one of the *concepts* in the language, are also contained in its *concept* (as in
 the UML composition relationship). Note that simple properties are always considered to be parts.
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=partprop]
+include::{src-dir}/LanguageDefinition.ast[tag=partprop]
 ----
 
 *	*References*, which have as type one of the *concepts* in the language, are not contained in its *concept*
 (as in the UML association relationship).
 [source]
 ----
-include::{src-dir}/LanguageDefinition.lang[tag=referenceprop]
+include::{src-dir}/LanguageDefinition.ast[tag=referenceprop]
 ----
 
 == Public/private elements at the Language Level
 Concepts and properties can be defined to be public in the language definition. Only public parts of a modelunit
 can be referenced in another model unit.
 
-Note that this is a definition at the language level, similar to restrictions in a programming language that state that only certain elements may be exported.
+Note that this is a definition at the language level, similar to restrictions in a programming language that
+state that only certain elements may be exported/imported.
 // TODO finish this description

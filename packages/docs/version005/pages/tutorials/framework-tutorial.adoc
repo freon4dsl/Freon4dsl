@@ -119,7 +119,7 @@ Once again, the projection of an attribute is defined in its own function.
 .DemoAttribute Element
 [source]
 ----
-include::{src-dir}/defs/LanguageDefinition.lang[tag=referenceprop]
+include::{src-dir}/defs/LanguageDefinition.ast[tag=referenceprop]
 ----
 .Projection of DemoAttribute
 [source]

@@ -16,7 +16,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
         super({
             actionName: "edit-it",
             summary: "Generates the typeScript code for the projectional editor for your language",
-            documentation: "Generates TypeScript code for the projectional editor of language defined in the .lang file."
+            documentation: "Generates TypeScript code for the projectional editor of language defined in the .ast file."
         });
     }
 

@@ -1,0 +1,17 @@
+:imagesdir: ../images/
+:page-nav_order: 06
+:page-title: Create Your Own Language
+:page-parent: Tutorials
+:src-dir: ../../../src/tutorial-language/defs
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+:icons: font
+= Create Your Own Language
+
+TODO OVerview of the language definition possibilities
+
+[NOTE]
+Be careful with handmade changes, all files in
+any folder called _gen_ will be deleted during the next generation.
+
