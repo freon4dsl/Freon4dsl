@@ -7,9 +7,21 @@
 :source-language: javascript
 :listing-caption: Code Sample
 :icons: font
-= Create Your Own Language
+= How to Create your Own Language - an Overview
 
-TODO OVerview of the language definition possibilities
+== The Five Parts of a Language Definition
+A ProjectIt language consists of five parts:
+
+. The language structure, or abstract syntax tree (AST) is defined in files with extension `.ast`.
+. The concrete syntax of the language (CST) is defined in files with extension `.edit`.
+. The scoping is defined in files with extension `.scope`.
+. The typing is defined in files with extension `.type`.
+. The validation is defined in files with extension `.valid`.
+
+And yes, you can use multiple files to define one of the parts. For instance, projectit will combine
+multiple .ast files into one AST definition.
+
+== Three-tier Approach
 
 [NOTE]
 Be careful with handmade changes, all files in

@@ -7,14 +7,15 @@
 :listing-caption: Code Sample
 = Tutorials
 
-In all tutorials we will be using the _Demo_ Entity language as example. The gist of the _Demo_ language is that it defines
-a `Model`, which holds `Entities` and `Functions`. `Entities` can hold `Properties` and also hold `Functions`. Every `Function`
-has a list of `Parameters` and an `Expression`.
+In all tutorials we will be using the _Entity_ language as example. The gist of the _Entity_ language is that it defines
+serveral `EntityModelUnits`, each of which holds `Entities` and `Functions`. `Entities` can hold `Properties`
+and can hold `Functions` too. Every `Function` has a list of `Parameters` and an `Expression`.
 
 ====
 [#img-package-json]
-.UML diagram of Demo Language
-image::demo-uml.png[uml-diagram-of-demo-language]
+.UML diagram of Entity Language
+image::example-uml-diagram.png[uml-diagram-of-demo-language]
 ====
 
-We have a few other examples, for instance _TaxRules_, and _Heating_. You can find them in `/playground/src/`.
+We are working on a few other examples. You can find them in the
+development branche of link:https://github.com/projectit-org/ProjectIt[ProjectIt].
