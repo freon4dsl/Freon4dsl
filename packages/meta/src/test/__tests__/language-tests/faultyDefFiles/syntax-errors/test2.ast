@@ -1,0 +1,7 @@
+language XXXX.YYY
+model test {
+}
+
+modelunit testUnit {
+}
+

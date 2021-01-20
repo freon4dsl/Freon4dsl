@@ -1,0 +1,173 @@
+language Demo
+
+// tag::model[]
+model Demo {
+    name: string;
+    units: DemoModel[];
+}
+//end::model[]
+
+interface BaseType {
+    name: string;
+    baseInterface_attr: number;
+}
+// tag::interface[]
+interface Type base BaseType {
+    simpleprop: string;
+    int_attrs: DemoAttributeWithLimitedType[];
+    int_functions: DemoFunction[];
+    reference baseInterface: DemoEntity;
+}
+// end::interface[]
+// tag::concept[]
+concept DemoEntity implements Type {
+    attributes: DemoAttributeWithLimitedType[];
+    entAttributes: DemoAttributeWithEntityType[];
+    functions: DemoFunction[];
+    reference baseEntity: DemoEntity;
+}
+// end::concept[]
+// tag::limited[]
+limited DemoAttributeType implements BaseType {
+    // if the 'name' property was not provided, it would have been generated
+    name: string;
+    extra: number;
+    String = { name: "String", "extra": "199"}
+    // notations 'name:' and '"name":' are both correct
+    Integer = { "name": "Integer", "extra": "240261"}
+    Boolean = { name: "Boolean", "extra": "5479"}
+    // the following instance gets the name "ANY"
+    ANY = { "extra": "456"}
+}
+
+limited MockEnumeration { EnumValue1; EnumValue2; EnumValue3; }
+// end::limited[]
+expression DemoAbsExpression base DemoExpression {
+    expr: DemoExpression;
+}
+// tag::expression[]
+binary expression DemoMultiplyExpression base DemoBinaryExpression {
+    priority = 8;
+}
+// end::expression[]
+
+// tag::rootconcept[]
+// tag::partprop[]
+modelunit DemoModel {
+// end::partprop[]
+    public name: string;
+// tag::partprop[]
+    functions: DemoFunction[];
+    entities: DemoEntity[];
+}
+// end::partprop[]
+// end::rootconcept[]
+// tag::simpleprop[]
+concept DemoFunction {
+    name: string;
+//    aliases: string[];
+// end::simpleprop[]
+    reference declaredType : Type;
+    expression: DemoExpression;
+    parameters: DemoVariable[];
+// tag::simpleprop[]
+}
+// end::simpleprop[]
+// tag::referenceprop[]
+concept DemoAttributeWithLimitedType {
+    reference declaredType: DemoAttributeType;
+// end::referenceprop[]
+    name: string;
+// tag::referenceprop[]
+}
+// end::referenceprop[]
+
+
+concept DemoText {} // only defined to show that literal text can be part of a projection
+
+concept DemoAttributeWithEntityType {
+    reference declaredType: DemoEntity;
+    name: string;
+}
+
+concept DemoVariable {
+    name: string;
+    reference declaredType: DemoEntity;
+}
+
+abstract expression DemoExpression {
+    appliedfeature?: AppliedFeature;
+}
+
+abstract concept AppliedFeature {
+    appliedfeature?: AppliedFeature;
+}
+
+concept DemoAttributeRef base AppliedFeature {
+    reference attribute: DemoAttributeWithEntityType;
+}
+
+expression DemoVariableRef base DemoExpression {
+    reference variable: DemoVariable;
+}
+
+abstract expression DemoLiteralExpression base DemoExpression {}
+
+expression DemoStringLiteralExpression base DemoLiteralExpression {
+    value: string;
+}
+
+expression DemoNumberLiteralExpression base DemoLiteralExpression {
+    value: string; // TODO should be changed to type number
+}
+
+expression DemoBooleanLiteralExpression base DemoLiteralExpression {
+    value: string; // TODO should be changed to type boolean
+}
+
+abstract binary expression DemoBinaryExpression base DemoExpression {
+    left: DemoExpression;
+    right: DemoExpression;
+}
+
+binary expression DemoPlusExpression base DemoBinaryExpression {
+    priority = 4;
+}
+
+binary expression DemoDivideExpression base DemoBinaryExpression {
+    priority = 8;
+}
+
+binary expression DemoAndExpression base DemoBinaryExpression {
+    priority = 1;
+}
+
+binary expression DemoOrExpression base DemoBinaryExpression {
+    priority = 1;
+}
+
+abstract binary expression DemoComparisonExpression base DemoBinaryExpression {
+}
+
+binary expression DemoLessThenExpression base DemoComparisonExpression {
+    priority = 10;
+}
+
+binary expression DemoGreaterThenExpression base DemoComparisonExpression {
+    priority = 10;
+}
+
+binary expression DemoEqualsExpression base DemoComparisonExpression {
+    priority = 10;
+}
+
+expression DemoFunctionCallExpression base DemoExpression {
+    reference functionDefinition: DemoFunction;
+}
+
+expression DemoIfExpression base DemoExpression {
+    condition: DemoExpression;
+    whenTrue: DemoExpression;
+    whenFalse: DemoExpression;
+}
+
