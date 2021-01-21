@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Menu, Tooltip, Icon, Flex, Text, Input, Segment, FlexItem, RadioGroup } from "@fluentui/react-northstar";
+import { Menu, Tooltip, Icon, Flex, Text, Input, Segment, FlexItem, RadioGroup, List, ListItem } from "@fluentui/react-northstar";
 import { Link } from "@fluentui/react";
 import { EditorCommunication } from "./EditorCommunication";
 import { App } from "./App";
@@ -513,7 +513,15 @@ export default class Menubar extends React.Component {
     keybindings() {
         App.setDialogTitle("Keybindings for ProjectIt");
         App.setDialogSubText("");
-        App.setDialogContent(<Text align="center">This should be a list of keybindings</Text>);
+        App.setDialogContent(
+            <List >
+                <ListItem content={"Arrow Keys move in the expected directiom"}></ListItem>
+                    <ListItem content={"TAB key moves to next place where the user can type something"}></ListItem>
+                    <ListItem content={"Ctrl-UP selects the parent element in the AST"}></ListItem>
+                <ListItem content={"Ctrl-DOWN selects the first child element in the AST"}></ListItem>
+                <ListItem content={"Ctrl-SPACE shows popup menu of possible options"}></ListItem>
+                <ListItem content={"DEL deletes the next character or the currently selected item from the AST"}></ListItem>
+            </List>);
         App.showDialog();
     }
 
