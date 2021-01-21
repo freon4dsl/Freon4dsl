@@ -70,8 +70,8 @@ In the following the root of the project will be indicated with '~'.
 We usually call it _defs_, but any name will do. (Here the name _defs_ will be used.)
 
 *	Create a language definition file which defines the structure of your language. The
-extension of this file must be `.lang`. You can, for instance, copy
-`EntityLanguage.lang` from the ProjectIt example to your own `defs`-folder. Or, you can follow the
+extension of this file must be `.ast`. You can, for instance, copy
+`EntityLanguage.ast` from the ProjectIt example to your own `defs`-folder. Or, you can follow the
 tutorial on xref:../tutorials/langdef-tutorial.adoc[language structure definition].
 +
 To start with, you only need to define the language structure,
@@ -96,8 +96,8 @@ decided to store the generated code (in the screenshot we use `~/src/picode`):
 `~/src/webapp/WebappConfiguration.ts`.
 
 ====
-[#img-package-json-adjustment]
-.Screenshot of package.json
+[#img-webapp-config-adjustment]
+.Screenshot of WebappConfiguration
 image::package-json-adjustment.png[package-json-adjustment]
 ====
 
@@ -114,6 +114,9 @@ This command opens your preferred browser with the generated editor for your lan
 `link:http://localhost:3000/[http://localhost:3000/, window=_blank]`. If Chrome is not
 your preferred browser, please open the above page in Chrome, because we cannot
 ensure that the editor functions as it should in other browsers.
++
+We are sorry to say that webpack is usually slow, particurlarly around 10% of the inital
+building. Don't worry, just wait a bit longer.
 
 * Try out the editor
 +

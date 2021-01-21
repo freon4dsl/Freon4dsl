@@ -6,7 +6,7 @@
 :listing-caption: Code Sample
 = Source Code Documentation
 
-The source code in this project is organised into the following packages.
+The source code for the development of ProjectIt is organised into the following packages.
 
 * _docs_: documentation, i.e. this website
 * _packages/core_: framework source code.
@@ -14,7 +14,7 @@ The source code in this project is organised into the following packages.
 ** _packages/core/src/language/decorators_: source code for link:https://mobx.js.org/[MobX, window=_blank] decorators that can be used to easily implement a language that can be
 directly used by ProjectIt.
 * _packages/meta_: source code that reads the language definition files and generates the language environment.
-** _packages/meta/src/languagedef_: source code that generates code from a language structure definition (_.lang_) file.
+** _packages/meta/src/languagedef_: source code that generates code from a language structure definition (_.ast_) file.
 ** _packages/meta/src/editordef_: source code that generates code from an editor definition (_.edit_) file.
 ** _packages/meta/src/scoperdef_: source code that generates code from a scoper definition (_.scope_) file.
 ** _packages/meta/src/typerdef_: source code that generates code from a typer definition (_.type_) file.

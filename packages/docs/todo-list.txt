@@ -1,20 +1,20 @@
 Still to do in the documentation:
 
-1. add dedicated email address in 'index.adoc' and 'wish-list.adoc'
+DONE 1. add dedicated email address in 'index.adoc' and 'wish-list.adoc'
 2. improve pictures in 'projectional-editing.adoc'
-3. add branch name for release candidate in 'installing.adoc'
-4. check series of command in 'installing.adoc'
-5. DONE improve the jekyll generation of figures: like the asciidoc generation
+DONE 3. add branch name for release candidate in 'installing.adoc'
+DONE 4. check series of command in 'installing.adoc'
+DONE 5. improve the jekyll generation of figures: like the asciidoc generation
 6. the ascii-doc directive [start=5], where 5 can be any number, does not work in jekyll, but it does work in the preview
-7. in 'first-language.adoc' check whether "yarn start" or "lerna run start" can be used from any package
-8. in 'first-language.adoc' the [NOTE] directive does not work (it should add an icon from Font Awesome before the text block, jekyll-config is already adjusted)
-9. add demo-uml-diagram in 'tutorials.adoc'
-10. DONE improve styling of keywords, i.e. words between ``
+DONE 7. in 'first-language.adoc' check whether "yarn start" or "lerna run start" can be used from any package
+DONE 8. in 'first-language.adoc' the [NOTE] directive does not work (it should add an icon from Font Awesome before the text block, jekyll-config is already adjusted)
+DONE 9. add demo-uml-diagram in 'tutorials.adoc'
+DONE 10. improve styling of keywords, i.e. words between ``
 11. check all links
 12. make the page title in the tab of the browser to remain 'Projectit'
 13. make screenshots of the editor for every edit-def example
 14. check the use of capitals in headers
-15. DONE the names in the framework tutorial are CoreTest instead of Demo => moved custom-projections to playground/tutorial
+DONE 15. the names in the framework tutorial are CoreTest instead of Demo => moved custom-projections to playground/tutorial
 16. check the images in framework-tutorial.adoc
 17. define common asciidoc attributes in jekyll's config file
 18. make sure asciidoc knows how to display javescript source code (using pygments???)
@@ -26,3 +26,4 @@ Still to do in the documentation:
 24. See if the footer is ok
 25. sublijsten dicht kunnen klappen (b.v. under the hood - interfaces - *)
 26. JOS: de '>' marker in de navigator achter de titel zetten???
+27. verwerk alle TODOs die nog in de tekst staan

@@ -8,9 +8,11 @@
 :listing-caption: Code Sample
 = Source code organisation
 
-The source code (`~/src`) in this project is organised into the following subfolders. (Note that the _defs_ and _picode_
+The source code (`~/src`) in a ProjectIt project is organised into the following subfolders.
+
+Note that the _defs_ and _picode_
 folders can have any name as long as both the `generate` script in `package.json`, and the configuration of
-the web application in the file `~/src/webapp/WebappConfiguration.ts`, are adjusted.)
+the web application in the file `~/src/webapp/WebappConfiguration.ts`, are adjusted.
 
 * _defs_: the language definition files.
 * _picode_: the generated source code.
@@ -37,4 +39,24 @@ Another folder that can be found in the project is `~/modelstore`. This is the f
 the server stores all models. Each model is stored in a separate folder in which you can find its
 modelunits as `.json` files.
 
+== The `gen` subfolders
+The contents of all folders are divided into classes that are contained directly in the folder, and classes
+that are contained in the subfolder `gen`. The latter are always removed before regeneration, so be careful
+not to add important code to them. Code that is contained directly in each folder is not changed upon
+regeneration.
 
+== The webapp and server
+
+For the language environment to function, more is needed than the code for the editor, validator and such. In particular,
+there is a need for a server which can hold and provide stored users models, and for a small web application that
+is able to show the editor, errors message, models that are available form the server, and so on.
+
+Therefore, we provide a minimal *server* that stores your user models in a json format. You can use it through the commandline:
+
+    yarn model-server
+
+A simple *web application* is also provided. The code can be found in `~/webapp`.
+
+Note that both the server and the web application are provided for your convenience. We assume that when ProjectIt
+is used in a larger context, these two parts will be interchanged with suitable choices made by the language engineer
+and team.

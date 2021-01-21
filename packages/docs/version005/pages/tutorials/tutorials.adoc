@@ -7,6 +7,8 @@
 :listing-caption: Code Sample
 = Tutorials
 
+
+
 In all tutorials we will be using the _Entity_ language as example. The gist of the _Entity_ language is that it defines
 serveral `EntityModelUnits`, each of which holds `Entities` and `Functions`. `Entities` can hold `Properties`
 and can hold `Functions` too. Every `Function` has a list of `Parameters` and an `Expression`.
