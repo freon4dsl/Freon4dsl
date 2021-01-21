@@ -32,9 +32,14 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
+# generated docs
+docs/*
+
 # generated files
+**/gen/*
 packages/docs/.jekyll-cache/*
 packages/docs/*/_site/*
+packages/docs/src/tutorial-language/*/gen/*
 packages/meta/src/languagedef/parser/LanguageGrammar.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.js
 packages/meta/src/editordef/parser/EditorGrammar.js

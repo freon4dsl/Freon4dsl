@@ -37,7 +37,8 @@
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-init":   "rm */*/*/*Initialization.ts",
     "clean-parser": "rm -r */*/*parse*",
-    "clean":        "yarn run clean-config && yarn run clean-custom && yarn run clean-init"
+    "clean":        "yarn run clean-config && yarn run clean-custom && yarn run clean-init",
+    "clean-gen":    "rm -r */*/*/gen"
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.9",
