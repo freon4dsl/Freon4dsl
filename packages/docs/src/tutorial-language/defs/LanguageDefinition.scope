@@ -1,11 +1,11 @@
-scoper Demo for language Demo
+scoper Entity for language Entity
 
 // tag::namespaces[]
-isnamespace { DemoModel, DemoEntity, DemoFunction }
+isnamespace { EntUnit, Entity, EntityFunction }
 // end::namespaces[]
 
 // tag::namespace_addition[]
-DemoEntity {
+Entity {
     namespace_addition = self.baseEntity;
 }
 // end::namespace_addition[]

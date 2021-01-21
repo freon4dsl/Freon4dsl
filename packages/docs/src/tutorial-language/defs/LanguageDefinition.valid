@@ -1,14 +1,14 @@
-validator Demo for language Demo
+validator Entity for language Entity
 
 // tag::value[]
-DemoAttributeType  {
+AttributeType  {
 	self.extra >= 12;
 	self.extra <= 30;
 }
 // end::value[]
 
 // tag::lists[]
-DemoModel {
+EntUnit {
     notEmpty self.entities;
     isunique name in self.entities;
  // end::lists[]
@@ -19,7 +19,7 @@ DemoModel {
 }
 // end::lists[]
 
-DemoEntity {
+Entity {
     notEmpty self.attributes;
     isunique name in self.attributes;
     notEmpty self.functions;
@@ -27,61 +27,61 @@ DemoEntity {
     validIdentifier;
 }
 // tag::valididentifier[]
-DemoAttributeWithLimitedType {
+AttributeWithLimitedType {
     validIdentifier self.name;
 }
-DemoVariable {
+Variable {
     validIdentifier; // default is 'name'
 }
 // end::valididentifier[]
 
-DemoFunction {
+EntityFunction {
     typecheck conformsTo (self.expression, self.declaredType);
     isunique name in self.parameters;
     validIdentifier ;
 }
 
 
-DemoAbsExpression {
-    typecheck equalsType( self.expr, DemoAttributeType:Integer );
+AbsExpression {
+    typecheck equalsType( self.expr, AttributeType:Integer );
 }
 
 
 // tag::typecheck[]
-DemoMultiplyExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Integer );
-    typecheck equalsType( self.right, DemoAttributeType:Integer );
+MultiplyExpression {
+    typecheck equalsType( self.left, AttributeType:Integer );
+    typecheck equalsType( self.right, AttributeType:Integer );
     typecheck conformsTo( self.left, self.right );
 }
 // end::typecheck[]
 
-DemoPlusExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Integer );
-    typecheck equalsType( self.right, DemoAttributeType:Integer );
+PlusExpression {
+    typecheck equalsType( self.left, AttributeType:Integer );
+    typecheck equalsType( self.right, AttributeType:Integer );
     typecheck conformsTo( self.left, self.right );
 }
 
-DemoDivideExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Integer );
-    typecheck equalsType( self.right, DemoAttributeType:Integer );
+DivideExpression {
+    typecheck equalsType( self.left, AttributeType:Integer );
+    typecheck equalsType( self.right, AttributeType:Integer );
 }
 
-DemoAndExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Boolean );
-    typecheck equalsType( self.right, DemoAttributeType:Boolean );
+AndExpression {
+    typecheck equalsType( self.left, AttributeType:Boolean );
+    typecheck equalsType( self.right, AttributeType:Boolean );
 }
 
-DemoOrExpression {
-    typecheck equalsType( self.left, DemoAttributeType:Boolean );
-    typecheck equalsType( self.right, DemoAttributeType:Boolean );
+OrExpression {
+    typecheck equalsType( self.left, AttributeType:Boolean );
+    typecheck equalsType( self.right, AttributeType:Boolean );
 }
 
-DemoComparisonExpression {
+ComparisonExpression {
     typecheck equalsType( self.left, self.right );
 }
 
-DemoIfExpression {
-    typecheck equalsType( self.condition, DemoAttributeType:Boolean );
+IfExpression {
+    typecheck equalsType( self.condition, AttributeType:Boolean );
     typecheck conformsTo( self.whenTrue, self.whenFalse );
 }
 
