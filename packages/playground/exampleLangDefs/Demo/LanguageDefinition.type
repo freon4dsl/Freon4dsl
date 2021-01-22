@@ -62,5 +62,5 @@ DemoIfExpression {
 }
 
 DemoVariableRef {
-//    @inferType typeOf(attribute)  //not correct in .ast file
+//    @inferType typeOf(attribute)  //not correct in .lang file
 }
