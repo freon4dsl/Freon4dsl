@@ -26,7 +26,7 @@
     "pegjs-concat-typer": "cd src/typerdef/parser && bash ./concat.sh",
     "pegjs-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
     "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-typer && yarn pegjs-concat-scoper",
-    "build": "yarn copy-templates && yarn copy-validtemplates && yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc ",
+    "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc && yarn copy-templates && yarn copy-validtemplates",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-templates": "cp src/editordef/generator/templates/styles/* ./dist/editordef/generator/templates/styles",
     "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
