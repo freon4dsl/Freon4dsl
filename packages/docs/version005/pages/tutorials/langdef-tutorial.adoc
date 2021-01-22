@@ -8,89 +8,103 @@
 = The Language Structure Definition
 
 == Concepts
-The ProjectIt language structure consists of a list of a *Model*, *ModelUnits*, *Concepts*, *Expression Concepts*, *Limited Concepts*
-and/or *Interfaces*.
+The ProjectIt language structure, which describes the abstarct syntax tree (AST), consists of a
+list of a xref:Model[*Model*], xref:modelunit[*Model Units*], xref:concept[*Concepts*],
+xref:expression[*Expression Concepts*], xref:limited[*Limited Concepts*]
+and/or xref:interface[*Interfaces*].
 
-A *model* is the complete description of a system specified by the user. The model serves as the root of the abstract syntax tree.
-It may hold any number of modelunits as children. These modelunits may be of different type. For instance, you
-can have modelunits that define the items in a home automation system, and other modelunits that define the rules
+=== Model
+A *model* is the complete description specified by the user. The model is the root of the abstract syntax tree.
+It may hold any number of model units as children. These model units may be of different type. For instance, you
+can have model units that define the items in a home automation system, and other model units that define the rules
 that apply in this system.
-
+// TODO other example
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=model]
 ----
 
-A *modelunit* is a part of the model that can be edited independently from the rest of the model. A modelunit is
-always a direct child of a model.
+[[modelunit]]
+=== Model unit
+A *model unit* is a part of the model that can be edited independently from the rest of the model. A model unit is
+always a direct child of a model. The name of a model unit must always be xref:./first-language.adoc#public[public].
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=rootconcept]
 ----
 
+[[concept]]
+=== Concept
 A *concept* is the basic element of your language definition. It defines which instances can be present in
-a model created by your users.
+a model created by your users. Concepts may extend one other concept, and implement multiple interfaces.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=concept]
 ----
 
+[[expression]]
+=== Expression Concept
 An *expression concept* is a concept that is an expression. The editor will deal with these differently in
 order to give your user a more natural editing experience. Note that expression concepts need to have a priority.
+Expression concepts may extend one other concept, and implement multiple interfaces.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=expression]
 ----
 
-A *limited concept* is a concept that has a limited number of predefined instances. These instances are part
+[[limited]]
+=== Limited Concept
+A *limited concept* is a concept that has a limited number of predefined instances. Actually, it is an extended
+version of an enumeration. These instances become part
 of the standard library of your language. A limited concept must always have a name, but if this is not provided
 in the definition then it is automatically created. Furthermore, when a predefined instance does not provide a
-value for the name, the name of the instance is used. In this manner, you can define enumerations.
+value for the name, the name of the instance is used. In this manner, you can define simple enumerations.
+
+Limited concepts may extend one other concept, and implement multiple interfaces.
 
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=limited]
 ----
 
+[[interface]]
+=== Interface
 An *interface* is a concept that has no instances.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=interface]
 ----
 
-Concepts may extend one other concept, and implement multiple interfaces. This also holds for limited concepts and
-expression concepts.
-
 == Properties
 
 Each of the language structure elements have *Properties*, of which there are the
 following three types.
 
-*	*Simple properties*, which have as type one of string, number, or boolean, and are always contained in its
-*concept*. Simple properties may also be lists of string, number or boolean.
+*	*Simple properties* have as type `string`, `number`, or `boolean`, and are always contained in its
+*concept*. Simple properties may also be lists of `string`, `number`, or `boolean`.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=simpleprop]
 ----
 
-*	*Parts*, which have as type one of the *concepts* in the language, are also contained in its *concept* (as in
+*	*Parts* have as type one of the *concepts* (including _expression concepts_ and _limited concepts_)
+in the language, and are contained in the *concept* that holds the property (as in
 the UML composition relationship). Note that simple properties are always considered to be parts.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=partprop]
 ----
 
-*	*References*, which have as type one of the *concepts* in the language, are not contained in its *concept*
-(as in the UML association relationship).
+*	*References* also have as type one of the *concepts* in the language, but a reference is not contained
+in its *concept* (as in the UML association relationship).
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=referenceprop]
 ----
 
-== Public/private elements at the Language Level
-Concepts and properties can be defined to be public in the language definition. Only public parts of a modelunit
-can be referenced in another model unit.
-
-Note that this is a definition at the language level, similar to restrictions in a programming language that
-state that only certain elements may be exported/imported.
-// TODO finish this description
+=== Optional Properties
+Properties may be optional. This is indicated using a question mark after the property name.
+[source]
+----
+include::{src-dir}/LanguageDefinition.ast[tag=optionalprop]
+----

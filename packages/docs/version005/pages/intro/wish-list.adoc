@@ -25,4 +25,4 @@ types of expressions.
 *   Create a *diagrammatic view* of the language structure definition.
 *   ...
 
-If you like ProjectIt, and are missing a specific feature, please let us know through <TODO email addres>.
+If you like ProjectIt, and are missing a specific feature, please let us know through info AT projectit.org.

@@ -1,28 +1,29 @@
 :imagesdir: ../images/
 :page-nav_order: 80
-:page-title: ProjectIt features
+:page-title: Workbench Parts
+:page-parent: Installing and Using ProjectIt
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
-= Overview of ProjectIt features
+= Parts of the Generated workbench
 
-Currently ProjectIt comes with the following features.
+Currently ProjectIt generates the following parts of a language workbench.
 
 [cols="30,20,20,30",options="header", stripes=even]
 |===
 | Workbench Part | has Default | Specified by | can be Manually added to
-| language structure | no | .lang | no
+| language structure | no | .ast | no
 | projectional editor | yes | .edit | yes
 | scope provider | yes | .scope | not yet
 | validator | yes | .valid | yes
 | type provider | yes | .type | not yet
-| standard library | yes | .lang | not yet
+| standard library | yes | .ast | not yet
 | parser | yes | .edit | yes (using _pegjs_)
 | unparser | yes | .edit | not yet
-| json exporter/importer | yes | .lang | no
-| visitor pattern implementation | yes | .lang | can be extended
+| json exporter/importer | yes | .ast | no
+| visitor pattern implementation | yes | .ast | can be extended
 | web application | yes | none | can be changed or replaced
-| ability to split large models into units | no | .lang | no
+| ability to split large models into units | no | .ast | no
 |===
 
-If you like ProjectIt, and are missing a specific feature, please let us know through <TODO email addres>.
+If you like ProjectIt, and are missing a specific feature, please let us know through info AT projectit.org.
