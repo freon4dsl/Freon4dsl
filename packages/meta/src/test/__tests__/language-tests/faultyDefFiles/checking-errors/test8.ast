@@ -1,0 +1,22 @@
+language test1 // all kinds of limited concepts
+
+limited ZZ {
+    // primitive properties
+    ZZprop1: string;
+    ZZprop2: string[];
+    ZZprop3: number;
+    ZZprop4: number[];
+    ZZprop5: boolean;
+    ZZprop6: boolean[];
+    // properties with concept as type
+    ZZprop7: BB;
+}
+
+limited YY base ZZ {
+    YYinstance1 = { ZZprop7: "name" }
+    YYinstance2 = { ZZprop2: "10" }
+    YYinstance3 = { ZZprop1: "xxx" }
+}
+
+model BB {}
+

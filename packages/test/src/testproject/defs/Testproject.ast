@@ -1,0 +1,89 @@
+language Testproject
+
+model TestStart {
+    name: string;
+    bb: BB[];
+}
+
+concept AA  {
+    name: string;
+    // the possibilities for primitive properties
+    AAprop1: string;
+    AAprop2: string[];
+    AAprop3: number;
+    AAprop4: number[];
+    AAprop5: boolean;
+    AAprop6: boolean[];
+    // properties with concept as type
+    reference AAprop7: BB;
+    reference AAprop8: BB[];
+    AAprop9: CC;
+    AAprop10: CC[];
+    // properties with interface as type
+    AAprop11: DD;
+    AAprop12: DD[];
+    reference AAprop13: FF;
+    reference AAprop14: FF[];
+    // properties with limited concept as type
+    AAprop15: ZZ;
+    AAprop16: ZZ[];
+    reference AAprop17: ZZ;
+    reference AAprop18: ZZ[];
+//    AAprop19: AA;
+//    AAprop20: AA[];
+    AAprop21: CC;
+}
+
+modelunit BB {
+    public name: string;
+    supers: AA[];
+}
+
+concept CC implements FF {
+    name: string;
+}
+
+interface DD {}
+interface FF {
+    name: string;
+}
+
+limited ZZ {
+    name: string;
+    // the possibilities for primitive properties
+    ZZprop1: string;
+    ZZprop2: string[];
+    ZZprop3: number;
+    ZZprop4: number[];
+    ZZprop5: boolean;
+    ZZprop6: boolean[];
+    ZZinstance1 = { name: "ZZinstance1", ZZprop1: "sometext" }
+}
+
+limited XX { XXinstance1; XXinstance2; XXinstance3; }
+
+limited TestLimited {
+     name: string;
+     something: boolean;
+     Object1 = { name: "ONWAAR", something: "false" }
+     Object2 = { name: "WAAR",  something: "true" }
+}
+
+limited KK {
+     // the possibilities for primitive properties
+     AAprop1: string;
+     AAprop2: string[];
+     AAprop3: number;
+     AAprop4: number[];
+     AAprop5: boolean;
+     AAprop6: boolean[];
+     CC1 = {
+     AAprop1: "some_text",
+     AAprop2: [ "text1", "text2" ],
+     AAprop3: "78",
+     AAprop4: [ "102", "3489" ],
+     AAprop5: "true",
+     AAprop6: [ "false", "false" ]
+     }
+     CC2 = {AAprop1: "other_text", AAprop3: "99999", AAprop5: "false" }
+}

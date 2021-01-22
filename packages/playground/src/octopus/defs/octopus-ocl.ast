@@ -1,0 +1,5 @@
+language octopus
+
+modelunit OclPart {
+    public name: string;
+}

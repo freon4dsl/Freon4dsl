@@ -1,0 +1,197 @@
+/*
+    This language definition is meant to contain most of the constructs that are possible in PiLanguage.
+    Only Expressions are excluded. They should be tested elsewhere.
+*/
+language LangConstructs
+
+model all {
+    name: string;
+    myA_units: unitA[];
+    myB_units: unitB[];
+    myC_unit: unitC;
+    myD_unit: unitD;
+}
+
+// contains only parts
+modelunit unitA {
+    public name: string;
+    Apart1: conceptWithBasePrim;
+    Apart2: conceptWithBaseNonPrim;
+    Apart3: conceptWithInheritanceTree1;
+    Apart4: conceptWithInheritanceTree2;
+    Apart5: conceptWithInheritanceTree3;
+    Apart6: conceptWithAllProps;
+    Apart7: conceptWithBaseConceptAndInterface;
+    Apart8: conceptWithInterface;
+    Apart9: conceptWithMultipleInterfaces;
+    Apart10: interfaceWithPrimProps;
+    Apart11: interfaceWithNonPrimProps;
+    Apart12: interfaceWithBaseInterface;
+    Apart13: interfaceWithMultipleBaseInterfaces;
+    Apart14: interfaceWithInheritanceTree;
+}
+
+// contains only references
+modelunit unitB {
+    public name: string;
+    reference Bpart1: conceptWithBasePrim;
+    reference Bpart2: conceptWithBaseNonPrim;
+    reference Bpart3: conceptWithInheritanceTree1;
+    reference Bpart4: conceptWithInheritanceTree2;
+    reference Bpart5: conceptWithInheritanceTree3;
+    reference Bpart6: conceptWithAllProps;
+    reference Bpart7: conceptWithBaseConceptAndInterface;
+    reference Bpart8: conceptWithInterface;
+    reference Bpart9: conceptWithMultipleInterfaces;
+    reference Bpart10: interfaceWithPrimProps;
+    reference Bpart11: interfaceWithNonPrimProps;
+    reference Bpart12: interfaceWithBaseInterface;
+    reference Bpart13: interfaceWithMultipleBaseInterfaces;
+    reference Bpart14: interfaceWithInheritanceTree;
+}
+
+// contains only lists
+modelunit unitC {
+    public name: string;
+    Cpart1: conceptWithBasePrim;
+    Cpart2: conceptWithBaseNonPrim;
+    Cpart3: conceptWithInheritanceTree1;
+    Cpart4: conceptWithInheritanceTree2;
+    Cpart5: conceptWithInheritanceTree3;
+    Cpart6: conceptWithAllProps;
+    Cpart7: conceptWithBaseConceptAndInterface;
+    Cpart8: conceptWithInterface;
+    Cpart9: conceptWithMultipleInterfaces;
+    Cpart10: interfaceWithPrimProps;
+    Cpart11: interfaceWithNonPrimProps;
+    Cpart12: interfaceWithBaseInterface;
+    Cpart13: interfaceWithMultipleBaseInterfaces;
+    Cpart14: interfaceWithInheritanceTree;
+}
+
+// contains only reference lists
+modelunit unitD {
+    public name: string;
+    reference Cref1: conceptWithBasePrim;
+    reference Cref2: conceptWithBaseNonPrim;
+    reference Cref3: conceptWithInheritanceTree1;
+    reference Cref4: conceptWithInheritanceTree2;
+    reference Cref5: conceptWithInheritanceTree3;
+    reference Cref6: conceptWithAllProps;
+    reference Cref7: conceptWithBaseConceptAndInterface;
+    reference Cref8: conceptWithInterface;
+    reference Cref9: conceptWithMultipleInterfaces;
+    reference Cref10: interfaceWithPrimProps;
+    reference Cref11: interfaceWithNonPrimProps;
+    reference Cref12: interfaceWithBaseInterface;
+    reference Cref13: interfaceWithMultipleBaseInterfaces;
+    reference Cref14: interfaceWithInheritanceTree;
+}
+
+concept conceptWithPrimProps {
+    name: string;
+    // the possibilities for primitive properties
+    conceptProp1: string;
+    conceptProp2: string[];
+    conceptProp3: number;
+    conceptProp4: number[];
+    conceptProp5: boolean;
+    conceptProp6: boolean[];
+}
+
+concept conceptWithNonPrimProps {
+    name: string;
+    // properties with concept as type
+    conceptProp7: conceptWithAllProps;
+    conceptProp8: conceptWithAllProps[];
+    reference conceptProp9: conceptWithAllProps;
+    reference conceptProp10: conceptWithAllProps[];
+    // properties with interface as type
+    conceptProp11: interfaceWithNonPrimProps;
+    conceptProp12: interfaceWithNonPrimProps[];
+    reference conceptProp13: interfaceWithNonPrimProps;
+    reference conceptProp14: interfaceWithNonPrimProps[];
+    // properties with limited concept as type
+    reference conceptProp15: limitedConcept1;
+    reference conceptProp16: limitedConcept1[];
+}
+
+concept conceptWithBasePrim base conceptWithPrimProps {
+}
+
+concept conceptWithBaseNonPrim base conceptWithNonPrimProps {
+}
+
+concept conceptWithInheritanceTree1 base conceptWithBasePrim {
+}
+
+concept conceptWithInheritanceTree2 base conceptWithBaseNonPrim {
+}
+
+concept conceptWithInheritanceTree3 base conceptWithAllProps {
+}
+
+concept conceptWithAllProps base conceptWithPrimProps implements interfaceWithNonPrimProps {
+}
+
+concept conceptWithBaseConceptAndInterface base conceptWithNonPrimProps implements interfaceWithPrimProps {
+}
+       
+concept conceptWithInterface implements interfaceWithNonPrimProps {
+}
+
+concept conceptWithMultipleInterfaces implements interfaceWithNonPrimProps, interfaceWithInheritanceTree, interfaceWithMultipleBaseInterfaces {
+}
+
+interface interfaceWithBaseInterface base interfaceWithPrimProps {
+}
+
+interface interfaceWithPrimProps {
+    name: string;
+    // the possibilities for primitive properties
+    conceptProp1: string;
+    conceptProp2: string[];
+    conceptProp3: number;
+    conceptProp4: number[];
+    conceptProp5: boolean;
+    conceptProp6: boolean[];
+}
+
+interface interfaceWithNonPrimProps {
+    name: string;
+    // properties with concept as type
+    conceptProp7?: conceptWithAllProps;
+    conceptProp8?: conceptWithAllProps[];
+    reference conceptProp9: conceptWithAllProps;
+    reference conceptProp10: conceptWithAllProps[];
+    // properties with interface as type
+    conceptProp11?: interfaceWithNonPrimProps;
+    conceptProp12?: interfaceWithNonPrimProps[];
+    reference conceptProp13: interfaceWithNonPrimProps;
+    reference conceptProp14: interfaceWithNonPrimProps[];
+    // properties with limited concept as type
+    reference conceptProp15: limitedConcept1;
+    reference conceptProp16: limitedConcept1[];
+}
+
+interface interfaceWithMultipleBaseInterfaces base interfaceWithNonPrimProps, interfaceWithPrimProps {
+}
+
+interface interfaceWithInheritanceTree base interfaceWithMultipleBaseInterfaces {
+}
+
+limited limitedConcept1 { FIRST; SECOND; THIRD; FOURTH; }
+
+limited limitedWithBase base limitedConcept1 {
+    extraProp1: string;
+    extraProp2: number;
+    extraProp3: boolean;
+    eersteB = { extraProp1 : "xxx"}
+    tweedeB = { extraProp2 : "1247"}
+    derdeB = { extraProp3 : "false"}
+    FOURTH;     // TODO issue 120: maybe we should give a warning that this is the same name as in the base concept
+}
+
+limited limitedWithInheritanceTree base limitedWithBase { TREE1; TREE2; THIRD; }
+
+limited limitedWithInterface implements interfaceWithPrimProps { limIntf1; limIntf2; }

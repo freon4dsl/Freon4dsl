@@ -1,0 +1,10 @@
+language XXXX
+model test {
+}
+
+modelunit testUnit {
+}
+
+
+interface RRRR implements WWWW, YYYY {
+}

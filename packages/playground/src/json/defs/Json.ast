@@ -1,0 +1,59 @@
+language Json
+
+model Json {
+    name: string;
+    files: JsonFile[];
+}
+
+modelunit JsonFile  implements INamedConcept {
+    public name: string;
+	contents: IJsonValue;
+}
+
+concept JsonObject  implements IJsonValue {
+
+	pairs: JsonPair[];
+}
+
+interface IJsonValue {
+
+
+}
+
+concept JsonArray  implements IJsonValue {
+
+	items: IJsonValue[];
+}
+
+
+
+concept JsonNumber  implements IJsonValue {
+	value: string;
+
+}
+
+concept JsonString  implements IJsonValue {
+	value: string;
+
+}
+
+concept JsonNull  implements IJsonValue {
+
+
+}
+
+concept JsonPair  implements INamedConcept {
+
+	value: IJsonValue;
+}
+
+concept JsonBoolean  implements IJsonValue {
+	value: boolean;
+
+}
+
+interface INamedConcept {
+	name: string;
+
+}
+
