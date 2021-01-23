@@ -24,7 +24,7 @@ Currently, ProjectIt does not support the creation of debuggers, interpreters, g
 such. Indeed, we have a (large) xref:version005/pages/intro/wish-list.adoc[wish list] of extra features
 that we would like to implement in
 the future. Given time, we hope to realize many of these extra items. If you want to know why
-we have chosen this development route, read our statement on the xref:version005/pages/meta-documentation/philosophy.adoc[philosophy]
+we have chosen this development route, read our statement on the xref:version005/pages/intro/philosophy.adoc[philosophy]
 behind the tool.
 
 We assume that people that want to use ProjectIt know all about making mini-languages. For instance,
@@ -36,10 +36,10 @@ So welcome, language engineer, to the world of ProjectIt. In this website you ca
 on many subjects. You could ..
 
 * .. start by finding out what xref:version005/pages/intro/projectional-editing.adoc[projectional editing] is.
-* .. see how you can xref:version005/pages/installation/installing.adoc[install and use] ProjectIt.
-* .. find out how to define a language and its editor, etc. in the xref:version005/pages/tutorials/tutorials.adoc[tutorials].
-* .. dive deeper into the xref:version005/pages/meta-documentation/generated-code/structure-generated-code.adoc[structure of the generated code].
-* .. get to know more about the xref:version005/pages/meta-documentation/meta-documentation.adoc[meta-code] of ProjectIt.
+* .. see how you can xref:version005/pages/starting/installing.adoc[install and use] ProjectIt.
+* .. find out how to define a language and its editor, etc. in the xref:version005/pages/tutorials/tutorials-intro.adoc[tutorials].
+* .. dive deeper into the xref:version005/pages/starting/code-organisation.adoc[structure of the generated code].
+* .. get to know more about the xref:version005/pages/meta-documentation/meta-documentation-intro.adoc[meta-code] of ProjectIt.
 
-Have fun! If you have questions that are not answered in this documentation, please email us at <TODO>.
+Have fun! If you have questions that are not answered in this documentation, please email us at info AT projectit.org.
 

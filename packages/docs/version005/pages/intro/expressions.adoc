@@ -1,6 +1,6 @@
 :imagesdir: ../../images
-:page-nav_order: 20
-:page-parent: Under the Hood
+:page-nav_order: 70
+:page-parent: ProjectIt - Introduction
 :src-dir: ../../../../core/src
 :source-language: javascript
 :listing-caption: Code Sample

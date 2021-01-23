@@ -8,7 +8,7 @@
 = The Editor Definition
 
 == Three-tier definition
-As explained in xref:./first-language.adoc#tiers[Your Own Language - Overview] the generated editor can be defined in three tiers.
+As explained in xref:../intro/three-layers.adoc#tiers[Three-layers to Define your Pi-tools] the generated editor can be defined in three tiers.
 For each *concept* in the AST the editor will
 
 . use the _hand-made projection_, when this is present. Otherwise the editor will
@@ -20,7 +20,7 @@ because of the extra xref:../meta-documentation/expressions.adoc[support for exp
 
 The rest of this tutorial explains the second tier: how to write an editor definition (`.edit` file).
 For making more adjustments to the projection by adding hand-made projections, see the
-tutorial on xref:framework-tutorial.adoc[using the framework].
+tutorial on xref:../third-layer/editor-third-layer.adoc[using the framework].
 
 == The Editor Definition File
 In the editor definition file (`.edit` file) you can define a ProjectIt editor by providing extra information

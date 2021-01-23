@@ -1,8 +1,7 @@
 :imagesdir: ../images/
-:page-nav_order: 30
+:page-nav_order: 10
 :page-title: Installing and Using ProjectIt
-:page-has_children: true
-:page-has_toc: false
+:page-parent: Getting Started
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript

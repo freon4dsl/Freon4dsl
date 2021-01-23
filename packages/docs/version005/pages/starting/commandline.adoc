@@ -1,12 +1,12 @@
 :imagesdir: ../images/
-:page-nav_order: 60
-:page-title: Commandline
-:page-parent: Installing and Using ProjectIt
+:page-nav_order: 30
+:page-title: Calling The Generator
+:page-parent: Getting Started
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-= Use of ProjectIt from the Commandline
+= Use of the ProjectIt Generator
 
 ProjectIt is a commandline tool. If you type ‘`projectit`’ in a (bash) terminal you will see
 an overview of the different

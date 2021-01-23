@@ -1,12 +1,12 @@
 :imagesdir: ../images/
 :page-nav_order: 40
-:page-title: Source Code Organisation
-:page-parent: Installing and Using ProjectIt
+:page-title: Project Structure
+:page-parent: Getting Started
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
 :listing-caption: Code Sample
-= Source code organisation
+= Project Structure
 
 The source code (`~/src`) in a ProjectIt project is organised into the following subfolders.
 

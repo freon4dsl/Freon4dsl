@@ -1,0 +1,14 @@
+:imagesdir: ../images/
+:page-nav_order: 30
+:page-title: Getting Started
+:page-has_children: true
+:page-has_toc: false
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+= Getting Started with ProjectIt
+
+* xref:./installing.adoc[Installation]
+* xref:./code-organisation.adoc[Project Structure]
+* xref:./commandline.adoc[Calling the Generator]
+* xref:./adaptability.adoc[Adapting the Generated Pi-tools]

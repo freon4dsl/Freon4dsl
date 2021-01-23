@@ -1,11 +1,27 @@
 :imagesdir: ../images/
 :page-nav_order: 80
-:page-title: Workbench Parts
-:page-parent: Installing and Using ProjectIt
+:page-title: Adaptability
+:page-parent: Getting Started
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
-= Parts of the Generated workbench
+= Adaptability
+
+== The Five Parts of a Language Definition
+A ProjectIt language definition consists of five parts:
+
+. The language structure, or abstract syntax tree (AST) is defined in files with extension `.ast`.
+. The concrete syntax of the language (CST), or editor definition, is defined in files with extension `.edit`.
+. The scoping is defined in files with extension `.scope`.
+. The typing is defined in files with extension `.type`.
+. The validation is defined in files with extension `.valid`.
+
+And yes, you can use multiple files to define one of the parts. For instance, ProjectIt will combine
+multiple .ast files into one AST definition.
+
+More on the content of each of these files can be found in the respective tutorials.
+
+== Overview of the Generated Pi-tools
 
 Currently ProjectIt generates the following parts of a language workbench.
 
@@ -27,3 +43,5 @@ Currently ProjectIt generates the following parts of a language workbench.
 |===
 
 If you like ProjectIt, and are missing a specific feature, please let us know through info AT projectit.org.
+
+
