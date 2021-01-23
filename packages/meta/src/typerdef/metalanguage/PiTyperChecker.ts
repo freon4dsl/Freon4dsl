@@ -89,36 +89,38 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         let typeroot: PiClassifier = null;
         for (const t of rule.types) {
             this.myExpressionChecker.checkClassifierReference(t);
-            this.typeConcepts.push(t.referred);
-            if (first) {
-                this.definition.typeroot = t;
-                typeroot = t.referred;
-                first = false;
-                this.definition.types.push(t);
-            } else {
-                // check the new type against the root of the type hierarchy
-                // there are two assumptions: (1) the typeroot is the common super concept of all types
-                // or (2) the typeroot is an interface that is implemented by all types
-                if (typeroot instanceof PiConcept) { // check (1)
-                    const base = PiLangUtil.superConcepts(t.referred);
-                    this.nestedCheck({
+            if (!!t.referred) { // error message given by myExpressionChecker
+                this.typeConcepts.push(t.referred);
+                if (first) {
+                    this.definition.typeroot = t;
+                    typeroot = t.referred;
+                    first = false;
+                    this.definition.types.push(t);
+                } else {
+                    // check the new type against the root of the type hierarchy
+                    // there are two assumptions: (1) the typeroot is the common super concept of all types
+                    // or (2) the typeroot is an interface that is implemented by all types
+                    if (typeroot instanceof PiConcept) { // check (1)
+                        const base = PiLangUtil.superConcepts(t.referred);
+                        this.nestedCheck({
                             check: base.includes(typeroot),
                             error: `The root type concept (${typeroot.name}) should be a base concept of '${t.referred.name}' `
                                 + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`,
                             whenOk: () => {
                                 this.definition.types.push(t);
                             }
-                    });
-                } else if (typeroot instanceof PiInterface) { // check (2)
-                    const base = PiLangUtil.superInterfaces(t.referred);
-                    this.nestedCheck({
-                        check: base.includes(typeroot),
-                        error: `The root type interface (${typeroot.name}) should be implemented by '${t.referred.name}' `
-                            + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`,
-                        whenOk: () => {
-                            this.definition.types.push(t);
-                        }
-                    });
+                        });
+                    } else if (typeroot instanceof PiInterface) { // check (2)
+                        const base = PiLangUtil.superInterfaces(t.referred);
+                        this.nestedCheck({
+                            check: base.includes(typeroot),
+                            error: `The root type interface (${typeroot.name}) should be implemented by '${t.referred.name}' `
+                                + `[line: ${t.location?.start.line}, column: ${t.location?.start.column}].`,
+                            whenOk: () => {
+                                this.definition.types.push(t);
+                            }
+                        });
+                    }
                 }
             }
         }

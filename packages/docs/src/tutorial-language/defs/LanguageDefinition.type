@@ -1,74 +1,74 @@
-typer Demo for language Demo
+typer Entity for language Entity
 
 // tag::types[]
 // 'BaseType' is the root of the type hierarchy
-istype { BaseType, Type, DemoEntity, DemoAttributeType }
+istype { BaseType, Type, Entity, AttributeType }
 // end::types[]
 
 // tag::anytype[]
 anytype {
-    conformsto DemoAttributeType:ANY;
-    equalsto DemoAttributeType:ANY;
+    conformsto AttributeType:ANY;
+    equalsto AttributeType:ANY;
 }
 // end::anytype[]
 
 // tag::conformance[]
-DemoEntity {
+Entity {
     conformsto self.baseEntity;
 }
-DemoStringLiteralExpression {
-    infertype DemoAttributeType:String;
+StringLiteralExpression {
+    infertype AttributeType:String;
 }
 // end::conformance[]
 
-DemoAttributeWithLimitedType {
+AttributeWithLimitedType {
     infertype self.declaredType;
 }
 // tag::inference[]
-DemoFunction {
+EntityFunction {
     infertype self.declaredType;
 }
 // end::inference[]
 // tag::abstract[]
-DemoExpression {
+EntityExpression {
     abstract infertype ;
 }
 // end::abstract[]
 
-DemoNumberLiteralExpression {
-    infertype DemoAttributeType:Integer;
+NumberLiteralExpression {
+    infertype AttributeType:Integer;
 }
-DemoBooleanLiteralExpression {
-    infertype DemoAttributeType:Boolean;
+BooleanLiteralExpression {
+    infertype AttributeType:Boolean;
 }
-DemoAbsExpression {
+AbsExpression {
     infertype self.expr;
 }
-DemoMultiplyExpression {
+MultiplyExpression {
     infertype self.left;
 }
-DemoPlusExpression {
+PlusExpression {
     infertype self.left;
 }
-DemoDivideExpression {
+DivideExpression {
     infertype self.left;
 }
-DemoComparisonExpression {
-    infertype DemoAttributeType:Boolean;
+ComparisonExpression {
+    infertype AttributeType:Boolean;
 }
-DemoFunctionCallExpression {
+FunctionCallExpression {
     infertype self.functionDefinition;
 }
-DemoIfExpression    {
+IfExpression    {
     infertype self.whenTrue;
 }
-DemoVariable {
+Variable {
     infertype self.declaredType;
 }
-DemoVariableRef   {
+VariableRef   {
     infertype self.variable.declaredType;
 }
-DemoAttributeRef   {
+AttributeRef   {
     infertype self.attribute.declaredType;
 }
 

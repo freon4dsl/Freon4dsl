@@ -1,32 +1,32 @@
-editor StartEditor for language Demo
+editor StartEditor for language Entity
 
 // tag::literal[]
-DemoText {
+Text {
     @projection
         [This is
                 literal text
          that is projected in the
 
                 editor
-        for every concept of type DemoText.]
+        for every concept of type Text.]
 }
 // end::literal[]
 // tag::projection[]
-DemoNumberLiteralExpression {
+NumberLiteralExpression {
     @projection normal
         [${self.value}]
 }
 // end::projection[]
 // tag::indentation[]
-DemoStringLiteralExpression {
+StringLiteralExpression {
 // in this projection the indentation is not taken into account
-    @projection DemoStringLiteralExpression
+    @projection StringLiteralExpression
         [
         '${self.value}'
         ]
     @trigger "'"
 }
-DemoAttributeWithLimitedType {
+AttributeWithLimitedType {
 // in this projection the indentation is taken into account
     @projection attribuut
         [
@@ -35,8 +35,8 @@ DemoAttributeWithLimitedType {
 }
 // end::indentation[]
 // tag::subprojection[]
-DemoIfExpression {
-    @projection DemoIfExpression
+IfExpression {
+    @projection IfExpression
         [
         if (${self.condition}) then
                   ${self.whenTrue}
@@ -50,8 +50,8 @@ DemoIfExpression {
 }
 // end::subprojection[]
 /*
-DemoIfExpression {
-    @projection DemoIfExpression
+IfExpression {
+    @projection IfExpression
         [
         (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
         ]
@@ -60,32 +60,30 @@ DemoIfExpression {
     @symbol "if"
 }
 */
-DemoPlusExpression {
+PlusExpression {
     @symbol "+"
 }
 
-DemoMultiplyExpression {
+MultiplyExpression {
     @symbol "*"
 }
 
-DemoDivideExpression {
+DivideExpression {
     @symbol "/"
 }
-DemoLessThenExpression {
+LessThenExpression {
     @symbol "<"
 }
-DemoOrExpression {
+OrExpression {
     @symbol "or"
 }
 
-
-
-DemoEntity {
+Entity {
     @trigger "entity"
 }
 
 /*
-DemoFunctionCallExpression {
+FunctionCallExpression {
     @projection gewoon
         [
         ${self.name} (  )
@@ -95,8 +93,8 @@ DemoFunctionCallExpression {
 */
 
 // tag::newlines[]
-DemoFunctionCallExpression {
-    @projection DemoFunctionCallExpression
+FunctionCallExpression {
+    @projection FunctionCallExpression
         [+
         CALL ${self.functionDefinition} (  )
         ]
@@ -104,8 +102,8 @@ DemoFunctionCallExpression {
 }
 // end::newlines[]
 // tag::lists[]
-DemoModel {
-    @projection DemoModel
+EntUnit {
+    @projection EntUnit
         [
         model ${self.name} {
         entities:

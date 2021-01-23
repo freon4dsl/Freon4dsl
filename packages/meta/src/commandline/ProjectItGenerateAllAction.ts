@@ -111,7 +111,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
-            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+            // LOGGER.error(this, "Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message);
         }
     };
 
@@ -128,7 +129,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e) {
-            LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
+            // LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message);
         }
     };
 
@@ -145,7 +147,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {
-            LOGGER.error(this, "Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+            // LOGGER.error(this, "Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error(this, "Stopping validator generation because of errors: " + e.message);
         }
     };
 
@@ -168,7 +171,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);
         } catch (e) {
-            LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
+            // LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message);
         }
         return editor;
     };

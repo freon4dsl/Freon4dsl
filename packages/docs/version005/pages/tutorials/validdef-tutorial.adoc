@@ -7,47 +7,70 @@
 :listing-caption: Code Sample
 = The Validator Definition
 
-The validator definitions defines the constraints that should be true in the models build by your users. Currently,
-there are the five types of rules.
+== Three-tier definition
+As explained in xref:./first-language.adoc#tiers[Your Own Language - Overview] the generated validator can
+be defined in three tiers.
+For each *concept* in the AST the validator will
 
-== Valid Identifier Rules
+. use the _hand-made validation rule(s)_, when present. Otherwise the validator will
+. use to the _validation rule(s) generated from the validator definition_, when this definition is present.
+Finally, the validator will
+. use the xref:default[_default validation rule(s)_].
 
-Given a simple property of type string, a `valid-identifier-rule` can be given. The property complies with the
+The rest of this tutorial explains the second tier: how to write a validator definition (`.valid` file).
+
+== The Validator Definition File
+The validator definition defines the constraints that should be true in the models build by your users. Currently,
+there are four types of rules.
+
+=== Valid Identifier Rules
+
+Given a simple property of type string, a _valid-identifier-rule_ can be given. The property complies with the
 rule if it is a valid identifier according to the TypeScript definition.
 [indent=1]
-For a `valid-identifier-rule` the `validIdentifier` keyword is used followed by an optional simple property. When the
+For a _valid-identifier-rule_ the `validIdentifier` keyword is used followed by an optional simple property. When the
 property is present, this property is checked. When the property is not present, ProjectIt assumes that the
-`concept` has a simple property named ‘`name`’ of type ‘`string`’, and it will check this property.
+concept has a simple property named ‘`name`’ of type ‘`string`’, and it will check this property.
+
 [source]
 ----
 include::{src-dir}/LanguageDefinition.valid[tag=valididentifier]
 ----
 
-== Simple Value Rules
+=== Simple Value Rules
 Given a simple property, its value can be limited to certain values.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.valid[tag=value]
 ----
 
-== Rule of Lists
-Given a list property, a `not-empty rule` can be stated. The list complies with the rule if it is not empty.
+=== List Rules
+Given a list property, a _not-empty rule_ can be stated. The list complies with the rule if it is not empty.
 
-Given a list property, an `is-unique rule` can be stated on a property of the elements in the list. The list
+Given a list property, an _is-unique rule_ can be stated on a property of the elements in the list. The list
 complies when the value of the property is unique for every element in the list.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.valid[tag=lists]
 ----
 
-== Type Check Rules
+=== Type Check Rules
 Given the rules in the typer definition, rules can be stated to ensure type compliance.
-To indicate a `type checking rule` the keyword `typecheck` is used, followed by either `equalsType` or `conformsTo`.
+To indicate a _type checking rule_ the keyword `typecheck` is used, followed by either `equalsType` or `conformsTo`.
 The first demands that the types of the two properties given are equal. The second demands that the type of the first
 conforms to the type of the second.
 
-In the type checking rules it is possible to use the predefined instances of a limited concept.
+In the type checking rules it is possible to use predefined instances of a limited concept.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.valid[tag=typecheck]
 ----
+
+[[default]]
+== The Default Validation Rules
+
+There are just a few default validation rules:
+
+. Non optional properties must be set.
+. Non optional lists must include one element.
+. Names of model units should be valid identifiers.
