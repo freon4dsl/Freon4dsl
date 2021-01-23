@@ -10,7 +10,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "tutorial": "ts-node ../meta/src/commandline/projectit all -d src/tutorial-language/defs -o src/tutorial-language",
+    "tutorial": "bash ../../scripts/projectit-dev.sh all -d src/tutorial-language/defs -o src/tutorial-language",
     "build":    "yarn run tutorial && tsc"
   },
   "devDependencies": {
