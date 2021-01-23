@@ -31,7 +31,7 @@ PG_Variable {
 @conformanceRule 'primRule3' PG_PrimitiveType.Boolean !<=>! PG_PrimitiveType.Integer // meaning that Boolean and Integer do NOT conform to eachother
 
 @conformanceRule 'entityRule1' e1:PG_Entity <= e2:PG_Entity { // meaning that Entity e2 conforms to Entity e1 if the following holds
-    e2.inheritsFrom(e1) // needs inheritance relationship between PG_Entities in .lang, this is currently not defined
+    e2.inheritsFrom(e1) // needs inheritance relationship between PG_Entities in .ast, this is currently not defined
     or 
     e2.functions.equals(e1.functions) // effectively, only this condition will be tested
 }

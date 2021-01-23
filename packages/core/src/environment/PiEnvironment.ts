@@ -11,7 +11,7 @@ import { PiModel } from "../language";
 // tag::environment-interface[]
 export interface PiEnvironment {
     /**
-     * Creates a new model, an implementation of the language defined in the .lang file
+     * Creates a new model, an implementation of the language defined in the .ast file
      * @param name
      */
     newModel(name: string): PiModel;
