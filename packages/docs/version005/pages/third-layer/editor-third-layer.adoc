@@ -1,0 +1,18 @@
+:page-title: Customization of the Editor
+:page-nav_order: 10
+:page-parent: Third Layer Customization
+:imagesdir: ../images/
+:src-dir: ../../../src/tutorial-language/
+:source-language: javascript
+:listing-caption: Code Sample
+= Third Layer Customization of the Editor
+
+== What?
+PiEditor interface
+
+== Where?
+In ProjectitConfiguration in `~/picode/projectit`. File wil not be overwritten on regeneration.
+
+== How?
+TODO explanation
+xref:framework-tutorial.adoc[ProjectIt Editor Customization]

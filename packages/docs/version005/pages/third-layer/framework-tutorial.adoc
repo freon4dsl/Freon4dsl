@@ -1,13 +1,13 @@
-:page-title: The Third Tier
+:page-title: ProjectIt Editor Customization
 :page-nav_order: 60
-:page-parent: Tutorials
+:page-parent: Third layer Customization
 :imagesdir: ../images/
 :src-dir: ../../../src/tutorial-language/
 :source-language: javascript
 :listing-caption: Code Sample
-= The Third Tier
+= ProjectIt Editor Customization
 
-As explained in xref:./first-language.adoc#tiers[Your Own Language - Overview] the five aspects of the generated workbench
+As explained in xref:../intro/three-layers.adoc#tiers[Your Own Language - Overview] the five aspects of the generated workbench
 can be defined in three tiers.
 
 This tutorial explains the third tier, i.e. creating handwritten code, of the definition of the editor.

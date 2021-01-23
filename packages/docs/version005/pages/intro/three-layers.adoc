@@ -1,0 +1,38 @@
+:imagesdir: ../images/
+:page-nav_order: 50
+:page-title: Three-layers to Define your Pi-tools
+:page-parent: ProjectIt - Introduction
+:src-dir: ../../../src/tutorial-language/defs
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+:icons: font
+[[tiers]]
+= Three-layers to Define your Pi-tools
+
+From the five parts of the language definition ProjectIt generates a workbench containing an editor, scoper, typer,
+and validator, and some utilities like a parser/deparser. All of these are called Pi-tools.
+You, the language engineer, can fine-tune the generated Pi-tools. We call this manner of fine-tuning: working in three layers.
+(Read our xref:../meta-documentation/philosophy.adoc[philosophy] to understand why we have choosen these tiers.)
+
+. In the first tier, based solely on the AST, defaults are generated for every part of the workbench. For instance, the default scoper
+simply finds that every name in a model is visible everywhere.
+. In the second tier, the other definitions are taken into account. When the definitions for editor,
+scoper etc. are present, they are used to generate a more suitable solution. For instance,
+the presentation in the editor can be more concise, using certain keywords etc.
+. The third tier takes some hand-coding, but produces a result that is extremely adjusted to your needs. More
+on how to use the third tier can be found in the tutorial on xref:../tutorials/framework-tutorial.adoc[Using the Framework].
+
+ProjectIt is able to combine definitions in each tier into one application, where the third tier proceeds the second, and
+the second tier proceeds the first. For instance,
+the generated editor will per *concept*
+
+. use the _hand-made projection_, when this is present. Otherwise, the editor will
+. use the _projection generated from the editor definition_, when this definition is present. Finally, the editor will
+. use the _default projection_, the one that is generated when no `.edit` definition file is present.
+
+This three-tier approach makes it possible to create your language step-by-step, in an agile fashion. If you
+want to implement custom code, please check the information on the xref:../meta-documentation/philosophy.adoc/interfaces.adoc[interfaces].
+
+For now this approach is implemented for the editor and validator, in future this will also apply to the
+scoper and typer.

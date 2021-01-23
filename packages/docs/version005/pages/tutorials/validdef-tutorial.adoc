@@ -8,8 +8,9 @@
 = The Validator Definition
 
 == Three-tier definition
-As explained in xref:./first-language.adoc#tiers[Your Own Language - Overview] the generated validator can
-be defined in three tiers.
+As explained in xref:../intro/three-layers.adoc#tiers[Three-layers to Define your Pi-tools]
+the generated validator can
+be defined in three layers.
 For each *concept* in the AST the validator will
 
 . use the _hand-made validation rule(s)_, when present. Otherwise the validator will
