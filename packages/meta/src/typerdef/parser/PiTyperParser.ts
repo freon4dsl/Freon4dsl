@@ -5,6 +5,7 @@ import { PiTyperChecker } from "../metalanguage";
 
 const typerParser = require("./PiTyperGrammar");
 import { setCurrentFileName } from "./PiTyperCreators";
+import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
 export class PiTyperParser extends PiParser<PiTypeDefinition> {
     public language: PiLanguage;
@@ -33,5 +34,6 @@ export class PiTyperParser extends PiParser<PiTypeDefinition> {
 
     protected setCurrentFileName(file: string) {
         setCurrentFileName(file);
+        expressionFileName(file);
     }
 }
