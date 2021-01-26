@@ -12,33 +12,33 @@ Contrary to what is common in the world of
 link:https://en.wikipedia.org/wiki/Domain-specific_language[Domain Specific Languages (DSLs)] we believe that a model
 is often too large to handle. When dealing with source code, the times have long gone that a complete
 application was written in a single file. Since the 1980s every self-respecting programming language has supported modules.
-We believe that this approach should also be taken when dealing with models.
+It is our strong conviction that this approach should also be taken when dealing with models.
 
 Similar to how the source code for a single application is split into modules, every model in ProjectIt is split
-into model units. Each model may contain units of multiple types, either an array of units or a single unit.
+into *model units*. Each model may contain units of multiple types, either an array of units, or a single unit.
 
 [source]
 ----
 include::{src-dir}/defs/LanguageDefinition.ast[tag=model]
 ----
 
-Note that, for now, ProjectIt expects that every unit type is used a single time. In the above example it would
-have been wrong when `extraUnit` was of type `EntityModelUnit`.
+Note that, for now, ProjectIt expects that every unit type is used a single time. The above example would
+have been wrong when `extraUnit` was also of type `EntityModelUnit`.
 
-For more in-depth information about model units (or partial models, as they were called earlier) we refer you to ...
+For more formal information about model units (or partial models, as they were called earlier) we refer you to ...
 // TODO
 <TODO add some references to publications>
 
 [[public]]
 == Model Unit Interfaces
-Another trick that we owe to ordinary programming is information hiding. In ProjectIt this means that every
-Model Unit defines
+Another trick that we owe to ordinary programming is _information hiding_. In ProjectIt this means that every
+model unit defines
 an interface. The interface determines which elements from the unit are visible to other units in the same model.
 
 In the definition of the language structure, or AST, concepts and properties can be defined to be public.
 Only these public parts of a model unit can be referenced in another model unit. The default scoper (the one
-from xref:tiers[tier 1]) already takes
+from xref:./three-levels#levels[level 1]) already takes
 the difference between public and private concepts and properties into account.
 
-Note that for your user this amount to a definition at the language level, similar to restrictions in a
+Note that for your user this amounts to a definition at the language level, similar to restrictions in a
 programming language that state that only certain types of elements may be exported/imported.

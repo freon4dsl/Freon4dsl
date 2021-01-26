@@ -1,5 +1,6 @@
 import { PiElement } from "../language/index";
 
+// tag::reader-interface[]
 export interface PiReader {
     /**
      * Reads the contents of the file located at 'filepath' and
@@ -19,3 +20,4 @@ export interface PiReader {
      */
     readFromString(input: string, metatype: string): PiElement;
 }
+// end::reader-interface[]

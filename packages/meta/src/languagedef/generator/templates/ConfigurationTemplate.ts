@@ -20,8 +20,11 @@ export class ConfigurationTemplate {
              * Class ${configurationName} is TODO add comment
              */
             class ${configurationName} {
+                // add your custom editor projections here
                 customProjection: ${Names.PiProjection}[] = [new ${Names.customProjection(language)}("manual")];
+                // add your custom editor actions here
                 customActions: ${Names.PiActions}[] = [new ${Names.customActions(language)}()];
+                // add your custom validations here
                 customValidations: ${workerName}[] = [];
             }
             

@@ -8,7 +8,9 @@
 :source-language: javascript
 = Getting Started with ProjectIt
 
-* xref:./installing.adoc[Installation]
-* xref:./code-organisation.adoc[Project Structure]
-* xref:./commandline.adoc[Calling the Generator]
-* xref:./adaptability.adoc[Adapting the Generated Pi-tools]
+To become familiar with *ProjectIt*, please, read the following pages in order.
+
+. xref:./installing.adoc[Installation]
+. xref:./code-organisation.adoc[Project Structure]
+. xref:./commandline.adoc[Calling the Generator]
+. xref:./adaptability.adoc[Adapting the Generated Pi-tools]

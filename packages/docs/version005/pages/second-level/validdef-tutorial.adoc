@@ -7,10 +7,10 @@
 :listing-caption: Code Sample
 = The Validator Definition
 
-== Three-tier definition
-As explained in xref:../intro/three-layers.adoc#tiers[Three-layers to Define your Pi-tools]
+== Three-level definition
+As explained in xref:../intro/three-levels.adoc#levels[Three-levels to Define your Pi-tools]
 the generated validator can
-be defined in three layers.
+be defined in three levels.
 For each *concept* in the AST the validator will
 
 . use the _hand-made validation rule(s)_, when present. Otherwise the validator will
@@ -18,7 +18,7 @@ For each *concept* in the AST the validator will
 Finally, the validator will
 . use the xref:default[_default validation rule(s)_].
 
-The rest of this tutorial explains the second tier: how to write a validator definition (`.valid` file).
+The rest of this tutorial explains the second level: how to write a validator definition (`.valid` file).
 
 == The Validator Definition File
 The validator definition defines the constraints that should be true in the models build by your users. Currently,

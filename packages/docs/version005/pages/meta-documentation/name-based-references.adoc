@@ -36,5 +36,5 @@ which holds:
 This means that the AST is truly a tree, not a graph.
 
 The advantage is that we are not obliged to have the complete model in memory. Our use of
-multi-file models is explained in xref:../tutorials/first-language.adoc#modelunits[Models and Model Units].
+multi-file models is explained in xref:../second-level/first-language.adoc#modelunits[Models and Model Units].
 

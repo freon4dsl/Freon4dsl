@@ -1,47 +1,33 @@
 :imagesdir: ../images/
 :page-nav_order: 80
-:page-title: Adaptability
+:page-title: Generated Tools
 :page-parent: Getting Started
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
-= Adaptability
+= Overview of the Generated Pi-tools and Their Adaptability
 
-== The Five Parts of a Language Definition
-A ProjectIt language definition consists of five parts:
-
-. The language structure, or abstract syntax tree (AST) is defined in files with extension `.ast`.
-. The concrete syntax of the language (CST), or editor definition, is defined in files with extension `.edit`.
-. The scoping is defined in files with extension `.scope`.
-. The typing is defined in files with extension `.type`.
-. The validation is defined in files with extension `.valid`.
-
-And yes, you can use multiple files to define one of the parts. For instance, ProjectIt will combine
-multiple .ast files into one AST definition.
-
-More on the content of each of these files can be found in the respective tutorials.
-
-== Overview of the Generated Pi-tools
-
-Currently ProjectIt generates the following parts of a language workbench.
+ProjectIt generates an integrated set of tools that support the language that you are creating. This page gives
+an overview of these tools, and shows how you can adjust them to your needs. See
+xref:../second-level/tutorials-intro.adoc#def-files[The Five Definition Files] for an explanation of the level 2
+definitions.
 
 [cols="30,20,20,30",options="header", stripes=even]
 |===
-| Workbench Part | has Default | Specified by | can be Manually added to
+| Workbench Part | has Default | level 2 definition | level 3 definition
 | language structure | no | .ast | no
 | projectional editor | yes | .edit | yes
 | scope provider | yes | .scope | not yet
 | validator | yes | .valid | yes
 | type provider | yes | .type | not yet
 | standard library | yes | .ast | not yet
-| parser | yes | .edit | yes (using _pegjs_)
+| parser | yes | .edit | yes (using link:https://pegjs.org/[pegjs, window=_blank])
 | unparser | yes | .edit | not yet
 | json exporter/importer | yes | .ast | no
 | visitor pattern implementation | yes | .ast | can be extended
 | web application | yes | none | can be changed or replaced
-| ability to split large models into units | no | .ast | no
 |===
 
-If you like ProjectIt, and are missing a specific feature, please let us know through info AT projectit.org.
+If you are using ProjectIt, and are missing a specific tool or feature, please let us know through info AT projectit.org.
 
 

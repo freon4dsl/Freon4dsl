@@ -37,7 +37,7 @@ on many subjects. You could ..
 
 * .. start by finding out what xref:version005/pages/intro/projectional-editing.adoc[projectional editing] is.
 * .. see how you can xref:version005/pages/starting/installing.adoc[install and use] ProjectIt.
-* .. find out how to define a language and its editor, etc. in the xref:version005/pages/tutorials/tutorials-intro.adoc[tutorials].
+* .. find out how to define a language and its editor, etc. in the xref:version005/pages/second-level/tutorials-intro.adoc[tutorials].
 * .. dive deeper into the xref:version005/pages/starting/code-organisation.adoc[structure of the generated code].
 * .. get to know more about the xref:version005/pages/meta-documentation/meta-documentation-intro.adoc[meta-code] of ProjectIt.
 

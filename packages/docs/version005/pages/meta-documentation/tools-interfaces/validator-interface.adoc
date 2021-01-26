@@ -1,7 +1,8 @@
 :imagesdir: ../../images
 :page-nav_order: 10
-:page-parent: The ProjectIt Interfaces
+:page-parent: The Pi-tool Interfaces
 :page-grand_parent: Under the Hood
+:nav_exclude: true
 :src-dir: ../../../../../core/src
 :source-language: javascript
 :listing-caption: Code Sample
@@ -18,4 +19,11 @@ If you want to write your own validator you will need to implement this interfac
 [source]
 ----
 include::{src-dir}/validator/PiValidator.ts[tag=validator-interface]
+----
+
+== PiError
+
+[source]
+----
+include::{src-dir}/validator/PiValidator.ts[tag=error-interface]
 ----

@@ -7,7 +7,7 @@
 :listing-caption: Code Sample
 = The Typer Definition
 
-For now, the typer definition does not support our xref:../intro/three-layers.adoc[three-layer approach]. This tutorial
+For now, the typer definition does not support our xref:../intro/three-levels.adoc[three-level approach]. This tutorial
 describes the possibilities of defining a typer in the typer definition file (with extension `.type`).
 
 In the typer definition you provide the information necessary to do type checking.

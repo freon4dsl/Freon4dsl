@@ -13,17 +13,14 @@ task at the moment the need for it arises (or, simply when we like doing it).
 
 *	Add the possibility in the validator definition for language engineers to state
 their *own error messages* with each rule, instead of using the predefined messages.
-*	Support models that can be split into separate units using a reference and *import/export
-mechanism*. This will make it easier for multiple users to work on a model simultaneously.
-Standard version control systems can in that case be used for storage of the models.
-*	Support *multiple definition files* for one element of the work environment, e.g. for
-defining the language structure.
+*   Allow for *pathname references*, i.e. references that are not a single name but a list of names (pathname).
 *	Support *libraries* for language development, like a library with definitions for different
 types of expressions.
+*   *Third level adaptability* per concept for both the *scoper* and *typer*.
 *	Create an *interpreter generator*.
 *   Provide a coupling to a *model-to-model generator*.
 *   Add an *importer* for link:https://www.jetbrains.com/mps/[Jetbrains MPS, window=_blank] structure models.
 *   Create a *diagrammatic view* of the language structure definition.
 *   ...
 
-If you like ProjectIt, and are missing a specific feature, please let us know through info AT projectit.org.
+If you are using ProjectIt, and are missing a specific feature, please let us know through info AT projectit.org.
