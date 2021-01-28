@@ -1,0 +1,18 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The Pi-tool Interfaces
+:page-grand_parent: Under the Hood
+:nav_exclude: true
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+=  PiWriter
+
+An object that implements `PiWriter` is able to build a string representation of a node in the AST.
+
+If you want to write your own unparser/writer you will need to implement this interface.
+
+[source]
+----
+include::{src-dir}/writer/PiWriter.ts[tag=writer-interface]
+----

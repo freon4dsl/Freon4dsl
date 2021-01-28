@@ -2,7 +2,7 @@ import { PiElement } from "../language";
 
 // Part of the ProjectIt Framework.
 // TODO change tags
-// tag::unparser-interface[]
+// tag::writer-interface[]
 export interface PiWriter {
 
     /**
@@ -34,4 +34,4 @@ export interface PiWriter {
      */
     writeToFile(filepath: string, modelelement: PiElement, startIndent?: number);
 }
-// end::unparser-interface[]
+// end::writer-interface[]

@@ -1,16 +1,16 @@
 :page-title: ProjectIt Editor Customization
 :page-nav_order: 60
-:page-parent: Third layer Customization
+:page-parent: Third level Customization
 :imagesdir: ../images/
 :src-dir: ../../../src/tutorial-language/
 :source-language: javascript
 :listing-caption: Code Sample
 = ProjectIt Editor Customization
 
-As explained in xref:../intro/three-layers.adoc#tiers[Your Own Language - Overview] the five aspects of the generated workbench
-can be defined in three tiers.
+As explained in xref:../intro/three-levels.adoc#levels[Your Own Language - Overview] the five aspects of the generated workbench
+can be defined in three levels.
 
-This tutorial explains the third tier, i.e. creating handwritten code, of the definition of the editor.
+This tutorial explains the third level, i.e. creating handwritten code, of the definition of the editor.
 
 == How to Use the ProjectIt Editor Framework
 The ProjectIt Editor Framework can be used directly, by writing Typescript that uses the classes in `@projectit/core`.

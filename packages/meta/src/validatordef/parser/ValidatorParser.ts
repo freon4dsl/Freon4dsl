@@ -5,6 +5,7 @@ import { PiValidatorDef } from "../metalanguage";
 
 const validatorParser = require("./ValidatorGrammar");
 import { setCurrentFileName } from "./ValidatorCreators";
+import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
 export class ValidatorParser extends PiParser<PiValidatorDef> {
     public language: PiLanguage;
@@ -33,5 +34,6 @@ export class ValidatorParser extends PiParser<PiValidatorDef> {
 
     protected setCurrentFileName(file: string) {
         setCurrentFileName(file);
+        expressionFileName(file);
     }
 }

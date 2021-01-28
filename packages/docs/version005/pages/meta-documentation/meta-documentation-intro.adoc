@@ -18,6 +18,6 @@ With these in mind, you are welcome to find out more, for example on the followi
 * See how you can define xref:framework/defining_actions.adoc[custom projections and actions].
 * Find out more about the xref:expressions.adoc[build-in support for expressions].
 * Explore why we use xref:name-based-references.adoc[name based references].
-* Note how the generated code is easily extendable using the xref:interfaces/interfaces.adoc[ProjectIt interfaces].
+* Note how the generated code is easily extendable using the xref:interfaces/core-interfaces-intro.adoc[ProjectIt interfaces].
 * Browse through the xref:code-documentation.adoc[source code documentation].
 

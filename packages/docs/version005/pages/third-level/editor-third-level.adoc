@@ -1,11 +1,11 @@
 :page-title: Customization of the Editor
 :page-nav_order: 10
-:page-parent: Third Layer Customization
+:page-parent: Third Level Customization
 :imagesdir: ../images/
 :src-dir: ../../../src/tutorial-language/
 :source-language: javascript
 :listing-caption: Code Sample
-= Third Layer Customization of the Editor
+= Third Level Customization of the Editor
 
 == What?
 PiEditor interface

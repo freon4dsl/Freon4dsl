@@ -7,7 +7,7 @@
 :listing-caption: Code Sample
 = The Scoper Definition
 
-For now, the scoper definition does not support our xref:../intro/three-layers.adoc[three-layer approach].
+For now, the scoper definition does not support our xref:../intro/three-levels.adoc[three-level approach].
 This tutorial
 describes the possibilities of defining a scoper in the scoper definition file (with extension `.scope`).
 

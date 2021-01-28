@@ -2,6 +2,7 @@ import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiParser } from "../../utils";
 import { PiScopeDef, ScoperChecker } from "../metalanguage";
 import { setCurrentFileName } from "./ScoperCreators";
+import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
 const scoperParser = require("./ScoperGrammar");
 
@@ -31,5 +32,6 @@ export class ScoperParser extends PiParser<PiScopeDef> {
 
     protected setCurrentFileName(file: string) {
         setCurrentFileName(file);
+        expressionFileName(file);
     }
 }

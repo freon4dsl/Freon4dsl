@@ -1,0 +1,24 @@
+:imagesdir: ../../images
+:page-nav_order: 55
+:page-title: The Pi-tool Interfaces
+:page-parent: Under the Hood
+:page-has_children: true
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+= The Pi-tool Interfaces
+
+There are two series of interfaces that make ProjectIt and its generated code extensible and flexible. The first
+series are the interfaces implemented by the generated code:
+
+. xref:environment-interface.adoc[PiEnvironment]
+. xref:scoper-interface.adoc[PiScoper]
+. xref:validator-interface.adoc[PiValidator]
+. xref:typer-interface.adoc[PiTyper]
+. xref:reader-interface.adoc[PiReader]
+. xref:writer-interface.adoc[PiWriter]
+. xref:standardlib-interface.adoc[PiStdlib]
+
+The second series of interfaces are those that define parts of the
+xref:../interfaces/core-interfaces-intro.adoc[core of the ProjectIt framework].
+

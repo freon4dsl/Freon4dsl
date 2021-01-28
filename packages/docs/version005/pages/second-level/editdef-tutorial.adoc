@@ -7,8 +7,8 @@
 :listing-caption: Code Sample
 = The Editor Definition
 
-== Three-tier definition
-As explained in xref:../intro/three-layers.adoc#tiers[Three-layers to Define your Pi-tools] the generated editor can be defined in three tiers.
+== Three-level definition
+As explained in xref:../intro/three-levels.adoc#levels[Three-levels to Define your Pi-tools] the generated editor can be defined in three levels.
 For each *concept* in the AST the editor will
 
 . use the _hand-made projection_, when this is present. Otherwise the editor will
@@ -18,9 +18,9 @@ For each *concept* in the AST the editor will
 When a *concept* is marked as an *expression concept*, its default projection is usually the one you want to go with,
 because of the extra xref:../meta-documentation/expressions.adoc[support for expressions] that is incorporated in it.
 
-The rest of this tutorial explains the second tier: how to write an editor definition (`.edit` file).
+The rest of this tutorial explains the second level: how to write an editor definition (`.edit` file).
 For making more adjustments to the projection by adding hand-made projections, see the
-tutorial on xref:../third-layer/editor-third-layer.adoc[using the framework].
+tutorial on xref:../third-level/editor-third-level.adoc[using the framework].
 
 == The Editor Definition File
 In the editor definition file (`.edit` file) you can define a ProjectIt editor by providing extra information

@@ -13,30 +13,39 @@ The source code (`~/src`) in a ProjectIt project is organised into the following
 Note that the _defs_ and _picode_
 folders can have any name as long as both the `generate` script in `package.json`, and the configuration of
 the web application in the file `~/src/webapp/WebappConfiguration.ts`, are adjusted.
+(See xref:./installing.adoc#template[Start with the Template project].)
 
 * _defs_: the language definition files.
 * _picode_: the generated source code.
+
 [NOTE]
 Be careful with handmade changes in _picode_, all files in
-any folder called _gen_ will be deleted during the next generation.
+any folder called *_gen_* will be *deleted* during the next generation.
 
-** _picode/editor_: code for the editor.
+** _picode/editor_: code for the editor. This folder contains two files that will not be overwritten at regeneration: *Custom<yourLanguageName>Actions.ts*
+and *Custom<yourLanguageName>Projection.ts*. These are the placeholders for any
+xref:../third-level/third-level-intro.adoc[third-level customization] that you
+would like to do.
 ** _picode/environment_: code that provides the coupling between all parts of the generated workbench.
 ** _picode/language_: code that implements the language structure.
-** _picode/projectit_: code that enables the language engineer to configure the workbench.
-** _picode/reader_: a parser that is able to read xref:../tutorials/modelunits.adoc[model units] from a text string or file.
+** _picode/projectit_: code that enables the language engineer to configure the workbench. This folder contains one file that will not be overwritten at regeneration: *ProjectitConfiguration.ts*.
+Here you can configure any xref:../third-level/third-level-intro.adoc[third-level customization] that you want the
+generated code to take into account.
+** _picode/reader_: a parser that is able to read xref:../intro/modelunits.adoc[model units] from a text string or file.
 ** _picode/scoper_: code for that determines which elements are visible for a certain element in the user's model.
-** _picode/stdlib_: code that implements some standard elements of your language, for instance xref:../tutorials/langdef-tutorial.adoc[limited concepts].
+** _picode/stdlib_: code that implements some standard elements of your language, for instance xref:../second-level/langdef-tutorial.adoc[limited concepts].
 ** _picode/typer_: code that that determines which type is associated with a certain element in the user's model.
 ** _picode/utils_: a default implementation of a visitor for your user's model.
 ** _picode/validator_: code that determines whether or not certain parts of your user's model contain errors.
-** _picode/writer_: code that is able to write your user's xref:../tutorials/modelunits.adoc[model units] in string format to a file.
+** _picode/writer_: code that is able to write your user's xref:../intro/modelunits.adoc[model units] in string format to a file.
+
 * _picode/webapp_: source code for the web-application used for all generated languages.
-** Note worthy is _picode/webapp/WebappConfiguration.ts_. This file holds the references to the generated language
+** Note worthy is the file _picode/webapp/WebappConfiguration.ts_. This file holds the references to the generated language
 workbench and the web address of the server which stores your user's models.
 
 Another folder that can be found in the project is `~/modelstore`. This is the folder where
-the server stores all models. Each model is stored in a separate folder in which you can find its
+the server stores all models, and is created at the moment that the server is started.
+Each model is stored in a separate folder in which you can find its
 modelunits as `.json` files.
 
 == The `gen` subfolders
