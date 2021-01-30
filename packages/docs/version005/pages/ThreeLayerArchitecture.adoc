@@ -1,0 +1,62 @@
+= Three Layer Architecture
+
+The design filosophy that we follow in ProjectIt is base on the following quiote from Alan Kay.
+
+[verse, Alan Kay]
+Simple things should be simple,
+complex things should be possible
+
+ProjectIt uses the following three layer architecture for all language aspects.
+
+Default::
+    For each aspect there is an automatic default implementation.
+    Tis ensures that a language is working right from the start.
+Definitions::
+    Each aspect can be specified in so-called definition files.
+    These specifications are easy to use and allow for quick customization
+    of the various aspects.
+TypeScript::
+    Each aspect can also be programmed in TypeScript, allowing full customization.
+    This is more time consuming, but you can basically do anything you want.
+
+Only the core aspect, being the Abstract Syntax Tree definition is specified completely
+using the definition files.
+
+[cols="h,a,a,a,a"]
+|===
+| 4+|Abstract Syntax Tree Definition (`.ast`) as the base aspect
+
+|Default Layer
+|Default Editor
+|Default Scoper
+|Default Typer
+|Default Validator
+
+|Specification Layer
+|`.edit` file with Editor Definition
+|`.scop` file with Scoper Definition
+|`.type` file with Typer Definition
+|`.valid` filew with Validator Definition
+
+|TypeScript Layer
+|TypeScript Code
+|TypeScript Code
+|TypeScript Code
+|TypeScript Code
+
+|===
+
+Each layer extends the previous layer.
+For every feature ProjectIt will first check whether there is a TypeScript
+implementation. If so, this will be used.
+If there is no TypeScript implementation ProjectIt will search for
+a specification of the feature in a definition file.
+If it's there, this dspecificaton will be used.
+If there is no specifcication, then ProjectIt will fall back upon the defaults.
+
+This support the language engineer to start quickly ith the defaults and then
+incrementally customize separate features at the appropriate level.
+
+Our goal is to enable 80% of the functionality of a language by using the
+definition files, with 20-% of the efffort.
+
