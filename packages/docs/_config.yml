@@ -39,10 +39,9 @@ heading_anchors: true
 
 # Aux links for the upper right navigation
 aux_links:
-  "Home":
-    - "https://www.projectit.org"
   ProjectIt on Github:
     - "https://github.com/projectit-org/ProjectIt"
+aux_links_new_tab: true
 
 # Footer content appears at the bottom of every page's main content
 footer_content: "Copyright &copy; 2020-2021 Jos Warmer. Distributed by an <a class=\"text-small text-grey-dk-200 mb-0\" href=\"https://github.com/projectit-org/ProjectIt/blob/development/LICENSE\" target=\"_blank\">MIT license.</a> This project is supported by <a class=\"text-small text-grey-dk-200 mb-0\" href=\"https://openmodeling.nl\" target=\"_blank\">Openmodeling.nl.</a>"
