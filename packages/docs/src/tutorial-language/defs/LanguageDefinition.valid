@@ -8,7 +8,7 @@ AttributeType  {
 // end::value[]
 
 // tag::lists[]
-EntUnit {
+EntityModelUnit {
     notEmpty self.entities;
     isunique name in self.entities;
  // end::lists[]

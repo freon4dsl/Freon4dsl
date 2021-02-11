@@ -7,11 +7,13 @@
 :listing-caption: Code Sample
 = The Language Structure Definition
 
+The abstract syntax tree (AST) of the language is described in files with the extension `.ast`.
+
 == Concepts
 The ProjectIt language structure, which describes the abstarct syntax tree (AST), consists of a
-list of a xref:Model[*Model*], xref:modelunit[*Model Units*], xref:concept[*Concepts*],
-xref:expression[*Expression Concepts*], xref:limited[*Limited Concepts*]
-and/or xref:interface[*Interfaces*].
+list of a xref:Model[Model], xref:modelunit[Model Units], xref:concept[Concepts],
+xref:expression[Expression Concepts], xref:limited[Limited Concepts]
+and/or xref:interface[Interfaces].
 
 === Model
 A *model* is the complete description specified by the user. The model is the root of the abstract syntax tree.
@@ -27,7 +29,7 @@ include::{src-dir}/LanguageDefinition.ast[tag=model]
 [[modelunit]]
 === Model unit
 A *model unit* is a part of the model that can be edited independently from the rest of the model. A model unit is
-always a direct child of a model. The name of a model unit must always be xref:./first-language.adoc#public[public].
+always a direct child of a model. The name of a model unit must always be xref:../intro/modelunits.adoc#public[public].
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=rootconcept]
@@ -88,7 +90,7 @@ include::{src-dir}/LanguageDefinition.ast[tag=simpleprop]
 ----
 
 *	*Parts* have as type one of the *concepts* (including _expression concepts_ and _limited concepts_)
-in the language, and are contained in the *concept* that holds the property (as in
+in the language, and are *contained in the concept* that holds the property (as in
 the UML composition relationship). Note that simple properties are always considered to be parts.
 [source]
 ----
@@ -97,6 +99,7 @@ include::{src-dir}/LanguageDefinition.ast[tag=partprop]
 
 *	*References* also have as type one of the *concepts* in the language, but a reference is not contained
 in its *concept* (as in the UML association relationship).
+References are always by name, therefore the referred concect must have a `name`  property of type `string`.
 [source]
 ----
 include::{src-dir}/LanguageDefinition.ast[tag=referenceprop]

@@ -28,6 +28,7 @@ export interface PiActions {
 }
 // end::action-interface[]
 
+// tag::PiBehavior[]
 export interface PiBehavior {
     /**
      * The trigger to activate this behavior
@@ -46,6 +47,7 @@ export interface PiBehavior {
     boxRoleToSelect?: string;
     caretPosition?: PiCaret;
 }
+// end::PiBehavior[]
 
 /**
  * Special behavior for creating an expression.

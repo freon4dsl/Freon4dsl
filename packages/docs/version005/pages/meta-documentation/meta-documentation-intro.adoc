@@ -10,13 +10,13 @@
 = Under the Hood
 
 Before you dive deeper under the hood of this project, we invite you to read about the
-xref:philosophy.adoc[philosophy] (and design guidelines) used during the creation of this tool.
+xref:../intro/philosophy.adoc[philosophy] (and design guidelines) used during the creation of this tool.
 
 With these in mind, you are welcome to find out more, for example on the following subjects.
 
 * Learn about the xref:framework/editor-framework.adoc[framework] used for projectional editing.
-* See how you can define xref:framework/defining_actions.adoc[custom projections and actions].
-* Find out more about the xref:expressions.adoc[build-in support for expressions].
+* See how you can define xref:../third-level/editor-third-level.adoc[custom projections and actions].
+* Find out more about the xref:../intro/expressions.adoc[build-in support for expressions].
 * Explore why we use xref:name-based-references.adoc[name based references].
 * Note how the generated code is easily extendable using the xref:interfaces/core-interfaces-intro.adoc[ProjectIt interfaces].
 * Browse through the xref:code-documentation.adoc[source code documentation].

@@ -1,17 +1,17 @@
 :imagesdir: ../../images
 :page-nav_order: 60
 :page-parent: Under the Hood
-:page-title: The ProjectIt Framework
+:page-title: The Editor Framework
 :page-has_children: true
 :page-has_toc: false
 :src-dir: ../../../../../core/src
 :page-source-language: javascript
 :listing-caption: Code Sample
-= The ProjectIt Framework
+= The Projectional Editor Framework
 
-The ProjectIt Editor Framework is written in TypeScript and based on the React Framework. This page provides
+The Projectional Editor Framework is written in TypeScript and based on React. This page provides
 an overview of the Framework. If you want to get deeper into this, see the tutorial
-xref:../framework-tutorial.adoc[How to Use the ProjectIt Framework].
+xref:../../third-level/framework-tutorial.adoc[How to Use the ProjectIt Framework].
 
 == Projection Layout Based on Boxes
 The layout of every visible element in the editor is based on _boxes_. A box is a rectangular area
@@ -33,10 +33,10 @@ In TypeScript this projection might look something like:
 [source]
 ----
 new HorizontalListBox( [
-        new LabelBox("\""),
-        new TextBox(stringLiteral.value),
-        new LabelBox("\"")
-    ]);
+    new LabelBox("\""),
+    new TextBox(stringLiteral.value),
+    new LabelBox("\"")
+]);
 ----
 There are a large number of different types of boxes. See xref:different-boxes.adoc[Boxes] for an overview.
 
@@ -57,7 +57,16 @@ We can now show the full typescript code for this projection. Given that `litera
 
 [source]
 ----
-include::{src-dir}/test/testeditor/CoreTestProjection.ts[tag=StringLiteral]
+new HorizontalListBox(literal, "string-literal", [      // <1>
+    new LabelBox(literal, "start-quote", '"'),          // <2>
+    new TextBox(                                        // <3>
+        literal,
+        "string-value",
+        () => literal.value,
+        (v: string) => (literal.value = v)
+    ),
+    new LabelBox(literal, "end-quote", '"')             // <4>
+])
 ----
 
 <1> The overall horizontal list box to group everything

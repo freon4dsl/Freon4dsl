@@ -22,10 +22,12 @@ reference {
 .stringLiteral {
     color: green;
 }
+// tag::StyleKeyword[]
 .keyword {
     font-weight: bold;
     color: blue;
 }
+// end::StyleKeyword[]
 .propertykeyword {
     font-weight: normal;
     color: blue;

@@ -8,6 +8,9 @@
 = The Scoper Definition
 
 For now, the scoper definition does not support our xref:../intro/three-levels.adoc[three-level approach].
+You can manually code your own scoper on the 3rd level, but it is not possible to combine this with the
+scopers on the 1st and 2nd levels.
+
 This tutorial
 describes the possibilities of defining a scoper in the scoper definition file (with extension `.scope`).
 

@@ -102,8 +102,8 @@ FunctionCallExpression {
 }
 // end::newlines[]
 // tag::lists[]
-EntUnit {
-    @projection EntUnit
+EntityModelUnit {
+    @projection EntityModelUnit
         [
         model ${self.name} {
         entities:
