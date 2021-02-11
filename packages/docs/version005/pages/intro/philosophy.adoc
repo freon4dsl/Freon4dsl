@@ -7,20 +7,27 @@
 :listing-caption: Code Sample
 = ProjectIt Philosophy
 
+The design filosophy that we follow in ProjectIt can best be described by the following quote from Alan Kay
+
+[quote, Alan Kay]
+_Simple things should be simple,
+complex things should be possible_
+
+== The Pareto Principle
 ProjectIt is a minimal viable product which supports the
 language engineer in creating a work environment for a mini-language. A key principle
 is the xref:https://en.wikipedia.org/wiki/Pareto_principle[Pareto principle, window=_blank] (or 80%-20% rule),
-which states that for many events, roughly
-80% of the effects come from 20% of the causes. For example, it is an axiom of business
-management that "80% of sales come from 20% of clients".
+which states that for many events, roughly 80% of the effects come from 20% of the causes.
+For example, it is an axiom of business  management that "80% of sales come from 20% of clients".
 
-In language development the Pareto principle translates to “80% of the development
-effort is spend on 20% of the application”, this 20% being the more complex parts.
+In language development the Pareto principle translates to “_80% of the development
+effort is spend on 20% of the application_”, this 20% being the more complex parts.
 Still, the other 80% of the application needs to be created as well. ProjectIt aims to
 make the latter *as simple as possible*, while keeping the generated code *open* for the
 language engineer to code the more complex parts by hand. One of our use cases is the
 creation of a prototype language in a day or in a couple of days at most.
 
+== Other Guidelines
 // TODO use smiley icon
 Other guidelines have been *ease of use*, and *flexibility*. ProjectIt may not (yet :-)) do
 everything you need, but what it does, should be very easy to get into. Furthermore,

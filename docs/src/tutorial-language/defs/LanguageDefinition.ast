@@ -3,7 +3,7 @@ language Entity
 // tag::model[]
 model EntityModel {
     name: string;
-    units: EntUnit[];
+    units: EntityModelUnit[];
     extraUnit: SomeOtherModelUnit;
 }
 //end::model[]
@@ -60,7 +60,7 @@ binary expression MultiplyExpression base BinaryExpression {
 
 // tag::rootconcept[]
 // tag::partprop[]
-modelunit EntUnit {
+modelunit EntityModelUnit {
 // end::partprop[]
     public name: string;
 // tag::partprop[]

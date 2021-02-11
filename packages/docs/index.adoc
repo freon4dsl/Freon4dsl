@@ -17,17 +17,26 @@ ProjectIt framework unique is the fact that it has built-in support for expressi
 easily make a projectional editor that allows for a natural manner of editing.
 
 On top of the core framework there are five generators, each of which generates part
-of the work environment for your mini-language: the language structure, the editor, the scoper,
-the typer, and the validator.
+of the work environment for your mini-language:
+
+* The *language structure* defines all the concept, properties and relationshipos in the language.
+* The *editor* defines how a model in the lamnguage looks like on the screen.
+  It also defines what editing commands can be used to chnage the model.
+* The *scoper* defines how names that refer to other elements are being resolved.
+* The *typer* defines what the type of an element is.
+* The *validator* defines what a correct model looks like and wil provide errors whenever a model breaks these rules.
 
 Currently, ProjectIt does not support the creation of debuggers, interpreters, generators, and
 such. Indeed, we have a (large) xref:version005/pages/intro/wish-list.adoc[wish list] of extra features
 that we would like to implement in
-the future. Given time, we hope to realize many of these extra items. If you want to know why
+the future.
+In some cases,like e.g code generators, we think that integration  with existing tools is the best solution.
+In other cases we plan to provide ProjectIt components for specific functionality.
+Given time, we hope to realize many of these extra items. If you want to know why
 we have chosen this development route, read our statement on the xref:version005/pages/intro/philosophy.adoc[philosophy]
 behind the tool.
 
-We assume that people that want to use ProjectIt know all about making mini-languages. For instance,
+We assume that people that want to use ProjectIt know the basic about making mini-languages. For instance,
 the terms metamodel, abstract syntax tree, etc, should be familiar. When we address the ProjectIt
 user we call him or her a *language engineer*. The people that will be using the generated editor
 and its environment are simply called *users*.

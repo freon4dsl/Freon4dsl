@@ -2,10 +2,10 @@
 :page-nav_order: 20
 :page-parent: The ProjectIt Framework
 :page-grand_parent: Under the Hood
-:src-dir: ../../../../core/src
+:src-dir: ../../../../../core/src
 :source-language: javascript
 :listing-caption: Code Sample
-= Defining Actions
+= Writing Actions in TypeScript
 
 In the ProjectIt editor all behavior is defined using actions.
 Although ProjectIt is implemented using React, actions abstract away from this implementation.
@@ -21,24 +21,7 @@ Let's take a look at the definition of a behavior:
 
 [source]
 ----
-export interface PiBehavior {
-    /**
-     * The trigger to activate this behavior
-     */
-    trigger: PiTriggerType;
-
-    /**
-     * The box roles in which this trigger is active
-     */
-    activeInBoxRoles: string[];
-
-    /**
-     * Optional callback function that returns whether the trigger is applicable for the specific box.
-     */
-    isApplicable?: (box: Box) => boolean;
-    boxRoleToSelect?: string;
-    caretPosition?: PiCaret;
-}
+include::{src-dir}/editor/PiAction.ts[tag=PiBehavior]
 ----
 
 User actions are attached to boxes.
@@ -50,6 +33,7 @@ The `trigger` defines the keys that will trigger execution of the action.
 
 == Custom Actions
 // TODO document custom actions
+To Be Done
 
 == Expressions and Binary Expressions
 Advanced expression editing is described in xref:../expressions.adoc[Expressions].

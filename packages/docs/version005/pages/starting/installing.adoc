@@ -18,27 +18,23 @@ xref:example[Example project] or use our xref:template[Template project].
 
 [[example]]
 == Start with the Example Project
-The simplest manner to start working with ProjectIt is to clone our example project from github.
+The simplest manner to start working with ProjectIt is to clone the example project from github.
 In the following the root of your project will be indicated with '~'.
 
 *   Clone branche `master` from link:https://github.com/projectit-org/ProjectIt-example[https://github.com/projectit-org/ProjectIt-example, window=_blank].
 (For an explanation of the content of the project see xref:code-organisation.adoc[source code organisation].)
 
-*   Next, install all necessary packages by running:
+*   Next, install all necessary packages by running: +
+    `yarn install`
 
-    yarn install
+*   Run the generator and see the generated files appearing in the folder ~/src/picode: +
+    `yarn generate`
 
-*   Run the generator and see the generated files appearing in the folder ~/src/picode:
+*   Start the server (note that anything that is saved in the editor will be stored in ~/modelstore): +
+    `yarn model-server`
 
-    yarn generate
-
-*   Start the server (note that anything that is saved in the editor will be stored in ~/modelstore):
-
-    yarn model-server
-
-*	Open another (bash) terminal, and start the generated editor from it:
-
-    yarn start
+*	Open another (bash) terminal, and start the generated editor from it: +
+    `yarn start`
 
 +
 This command opens your preferred browser with the generated editor for the language `Entity` on
@@ -64,9 +60,8 @@ In the following the root of the project will be indicated with '~'.
 *   Clone branche `master` from link:https://github.com/projectit-org/ProjectIt-template[https://github.com/projectit-org/ProjectIt-template, window=_blank].
 (For an explanation of the content of the project see xref:code-organisation.adoc[source code organisation].)
 
-*   Next, install all necessary packages by running:
-
-    yarn install
+*   Next, install all necessary packages by running: +
+    `yarn install`
 
 *   Create a folder for your language in `~/src`, to hold the definition files for your language.
 We usually call it _defs_, but any name will do. (Here the name _defs_ will be used.)
@@ -90,9 +85,8 @@ image::package-json-adjustment.png[package-json-adjustment]
 ====
 
 *   Run the generator and see the generated files appearing in the folder where you
-decided to store the generated code (in the screenshot we use `~/src/picode`):
-
-    yarn generate
+decided to store the generated code (in the screenshot we use `~/src/picode`): +
+    `yarn generate`
 
 *   Adjust the configuration of the web application by changing the two lines in the file
 `~/src/webapp/WebappConfiguration.ts`.
@@ -103,13 +97,11 @@ decided to store the generated code (in the screenshot we use `~/src/picode`):
 image::webapp-configuration.png[webapp-configuration]
 ====
 
-*   Start the server (note that anything that is saved in the editor will be stored in `~/modelstore`):
+*   Start the server (note that anything that is saved in the editor will be stored in `~/modelstore`): +
+    `yarn model-server`
 
-    yarn model-server
-
-*	Open another (bash) terminal, and start the generated editor from it:
-
-    yarn start
+*	Open another (bash) terminal, and start the generated editor from it: +
+    `yarn start`
 
 +
 This command opens your preferred browser with the generated editor for your language on

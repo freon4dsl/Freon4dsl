@@ -8,29 +8,34 @@
 :listing-caption: Code Sample
 = Third Level Customization
 
-Please, become acquainted with the xref:../intro/three-levels.adoc[three levels of language definitions] used by ProjectIt.
-This section explains the third of these three levels.
+Please, become acquainted with the xref:../intro/three-levels.adoc[Three levels to Customize ProjectIt] used by ProjectIt.
+This section explains the 3rd of these three levels where you can customize ProjectIt in TypeScript..
 
-Third level adaptability *per concept* is currently possible for:
+== Customize a Pi-tool
+Third level full adaptability *per concept* is currently possible for:
 
-* xref:./framework-tutorial.adoc[editor]
-* xref:./validator-third-level.adoc[validator]
+* xref:./editor-third-level.adoc[Editor]
+* xref:./validator-third-level.adoc[Validator]
 
 To add third level adaptability for both scoper and typer is one of the
 entries in our xref:../intro/wish-list.adoc[wish list].
 
 == Replacing a Pi-tool
-All parts can be completely replaced. This is done by implementing the respective interface.
+All parts can be _completely replaced_ at the 3rd level, thereby completely
+disregarding the 1st and 2nd level..
+This is done by implementing their respective interfaces.
+
+For the scoper and typer this is currently the only way to customize.
 
 * xref:./typer-third-level.adoc[typer]
 * xref:./scoper-third-level.adoc[scoper]
 
 == Pi-tool Interfaces
-* xref:../meta-documentation/scoper-interface.adoc[PiScoper]
-* xref:../meta-documentation/typer-interface.adoc[PiTyper]
-* xref:../meta-documentation/validator-interface.adoc[PiValidator]
-* xref:../meta-documentation/reader-interface.adoc[PiReader]
-* xref:../meta-documentation/writer-interface.adoc[PiWriter]
-* xref:../meta-documentation/standardlib-interface.adoc[PiStdlib]
+* xref:../meta-documentation/tools-interfaces/scoper-interface.adoc[PiScoper]
+* xref:../meta-documentation/tools-interfaces/typer-interface.adoc[PiTyper]
+* xref:../meta-documentation/tools-interfaces/validator-interface.adoc[PiValidator]
+* xref:../meta-documentation/tools-interfaces/reader-interface.adoc[PiReader]
+* xref:../meta-documentation/tools-interfaces/writer-interface.adoc[PiWriter]
+* xref:../meta-documentation/tools-interfaces/standardlib-interface.adoc[PiStdlib]
 
 

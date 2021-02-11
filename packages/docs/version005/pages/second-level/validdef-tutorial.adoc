@@ -13,6 +13,7 @@ the generated validator can
 be defined in three levels.
 For each *concept* in the AST the validator will
 
+// TODO Doesn't the validator comcine all three levels?
 . use the _hand-made validation rule(s)_, when present. Otherwise the validator will
 . use to the _validation rule(s) generated from the validator definition_, when this definition is present.
 Finally, the validator will

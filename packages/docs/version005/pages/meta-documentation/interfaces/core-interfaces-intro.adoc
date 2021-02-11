@@ -5,6 +5,7 @@
 :page-has_children: true
 :src-dir: ../../../../../core/src
 :source-language: javascript
+:page-has_toc: false
 :listing-caption: Code Sample
 = The ProjectIt Core Interfaces
 

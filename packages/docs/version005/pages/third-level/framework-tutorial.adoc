@@ -1,11 +1,11 @@
-:page-title: ProjectIt Editor Customization
+:page-title: Writing Projections in TypeScript
 :page-nav_order: 60
 :page-parent: Third level Customization
 :imagesdir: ../images/
-:src-dir: ../../../src/tutorial-language/
+:src-dir: ../../../src/tutorial-language
 :source-language: javascript
 :listing-caption: Code Sample
-= ProjectIt Editor Customization
+= Writing Projections in TypeScript
 
 As explained in xref:../intro/three-levels.adoc#levels[Your Own Language - Overview] the five aspects of the generated workbench
 can be defined in three levels.
@@ -33,16 +33,16 @@ link:https://github.com/projectit-org/ProjectIt-example[ProjectIt-example, windo
 === Step 1 - Projecting a Simple Attribute
 
 We start with building the projection for a simple attribute of type `string`:
-the name of the unit in our EntityLanguage. In the metamodel this is represented by the value of
-the attribute _name_ of class _EntUnit_
+the name of the unit in our Entity language. In the metamodel this is represented by the value of
+the attribute _name_ of class _EntityModelUnit_
 
-.EntUnit Element
+.EntityModelUnit Element
 [source]
 ----
 include::{src-dir}/editor/CustomEntityProjection.ts[tag=ModelBox1]
 ----
 
-An obivous choice for the projection of this attribute is a `HorizontalListBox` which holds a `LabelBox` with
+An obvious choice for the projection of this attribute is a `HorizontalListBox` which holds a `LabelBox` with
 the name of the class, followed by the value stored in the variable _unit.name_. In the tutorial
 example this value is "EntityModel". When we start the editor based on this projection, we see the following:
 
@@ -84,19 +84,12 @@ The style is defined in a css (or actually scss) as follows. In principle all CS
 .CSS for Styled Projection
 [source, language=css]
 ----
-include::{src-dir}editor/styles/style.scss[tag=StyleKeyword]
+include::{src-dir}/editor/styles/style.scss[tag=StyleKeyword]
 ----
 
-== Step 2 - Projecting a List Attribute
-Next we will add the `entities` attribute owned by the `EntityModel` to the projection. Let's again look at the definition in the metamodel.
-
-.EntityModel Element
-[source]
-----
-include::{src-dir}/language/gen/EntityModel.ts
-----
-
-We see that the `entities` attribute is a list of `EntityEntities`. Now take a look at the projection.
+== Step 2 - Projecting a List
+Next we will add the `entities` attribute owned by the `EntityModelUnit` to the projection.
+The `entities` attribute is a list of `Entity`. Now take a look at the projection.
 
 .Projection of Child Elements
 [source]
@@ -104,17 +97,14 @@ We see that the `entities` attribute is a list of `EntityEntities`. Now take a l
 include::{src-dir}/editor/CustomEntityProjection.ts[tag=ModelBox3]
 ----
 
-The `entities` attribute is to be shown as a vertical list, therefore we use a _VerticalListBox_. The first element of this list is a label, like the `LabelBox` in the previous step, styled as a keyword. The entities themselves are projected in another `VerticalListBox`.
+The `entities` attribute is to be shown as a vertical list, therefore we use a _VerticalListBox_.
+The first element of this list is a label, like the `LabelBox` in the previous step, styled as a keyword. The entities themselves are projected in another `VerticalListBox`.
 
-The projection of a single `EntityEntity` is defined in a separate function, thus building a hierarchy of boxes.
+The projection of a single `Entity` is defined in a separate function, thus building a hierarchy of boxes.
+Note that the projection of the `Entity` is done using `this.rootPrtojection.getBox(ent)`,.
+This ensures that the proper projection for entity is used, see xref:../second-level/editdef-tutorial.adoc[customize projections]
 
-.EntityEntity Element
-[source]
-----
-include::{src-dir}/language/gen/EntityEntity.ts
-----
-
-.Projection of EntityEntity
+.Projection of Entity
 [source]
 ----
 include::{src-dir}/editor/CustomEntityProjection.ts[tag=EntityBox]
@@ -130,14 +120,14 @@ Once again, the projection of an attribute is defined in its own function.
 ----
 include::{src-dir}/defs/LanguageDefinition.ast[tag=referenceprop]
 ----
+
 .Projection of EntityAttribute
 [source]
 ----
 include::{src-dir}/editor/CustomEntityProjection.ts[tag=AttributeBox]
 ----
 Here, we use a `HorizontalListBox` to show the attribute name, followed by a colon,
-followed by its type. Note that we use an indentation style to take care of the
-correct level of indentation.
+followed by its type.
 
 == Step 3 - Allow Creation of New Elements
 
@@ -169,14 +159,12 @@ Then we create the actual action and attach it to the role of the `AliasBox`.
 .Attach Create Attribute Action to AliasBox
 [source]
 ----
-include::{src-dir}editor/CustomEntityActions.ts[tag=CreateAttributeAction]
+include::{src-dir}/editor/CustomEntityActions.ts[tag=CreateAttributeAction]
 ----
+
 <1> The action is attached to each box with the role "end-of-attribute-list".
-
 <2> The action will be triggered when the user types `"attribute"` inside the.alias box.
-
 <3> The executable code for the action. It creates a new `EntityEntity` and attaches is to the `EntityModel`
-
 <4> The focus of the editor is returned to the `Box` with the role `"attribute-name"`
 within the entity. This ensures that the user can immediately start typing the name of the entity after it has been created.
 
@@ -185,5 +173,6 @@ This way,  the above action is available for each attribute list in each entity.
 
 [[actions]]
 === Define your own Actions
-TODO write Define your own Actions
+Tbis section needs to be written.
+See xref:../meta-documentation/framework/defining_actions.adoc[Defining Actions]
 // TODO write Define your own Actions

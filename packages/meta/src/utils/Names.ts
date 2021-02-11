@@ -123,7 +123,7 @@ export class Names {
     }
 
     public static modelunit(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "ModelUnit";
+        return this.startWithUpperCase(language?.name) + "ModelUnitType";
     }
 
     public static namespace(language: PiLanguage): string {

@@ -20,6 +20,8 @@ types of expressions.
 *	Create an *interpreter generator*.
 *   Provide a coupling to a *model-to-model generator*.
 *   Add an *importer* for link:https://www.jetbrains.com/mps/[Jetbrains MPS, window=_blank] structure models.
+    We already have a prototype based on the https://github.com/dslmeinte/mps-open-source/tree/master/mps-analyser[MPS Analyser]
+    from Meinte Broersma.
 *   Create a *diagrammatic view* of the language structure definition.
 *   ...
 

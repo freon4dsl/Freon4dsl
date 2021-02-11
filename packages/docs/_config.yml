@@ -55,6 +55,7 @@ keep_files:
 
 # Asciidoctor
 asciidoctor:
+  processor: asciidoctor
   base_dir: :docdir
   safe: unsafe
   attributes:

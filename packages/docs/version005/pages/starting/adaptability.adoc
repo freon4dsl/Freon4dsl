@@ -1,15 +1,18 @@
 :imagesdir: ../images/
 :page-nav_order: 80
-:page-title: Generated Tools
+:page-title: Customizability
 :page-parent: Getting Started
 :src-dir: ../../../core/src
 :projectitdir: ../../../core
 :source-language: javascript
-= Overview of the Generated Pi-tools and Their Adaptability
+= Overview of the Generated Pi-tools and Their Customizability
 
-ProjectIt generates an integrated set of tools that support the language that you are creating. This page gives
-an overview of these tools, and shows how you can adjust them to your needs. See
-xref:../second-level/tutorials-intro.adoc#def-files[The Five Definition Files] for an explanation of the level 2
+ProjectIt generates an integrated set of tools that support the language that you are creating.
+As described in xref:../intro/three-levels.adoc[Three :Levels to Customize ProjectIt] these
+tools can be customized.
+
+This page gives an overview of these tools, and shows how you can adjust them to your needs.
+See xref:../second-level/tutorials-intro.adoc#def-files[The Five Definition Files] for an explanation of the level 2
 definitions.
 
 [cols="30,20,20,30",options="header", stripes=even]
