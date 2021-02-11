@@ -7,7 +7,6 @@ import {
     PiActions,
     Box, PiTriggerType, PiEditor, PiElement
 } from "@projectit/core";
-import { Attribute } from "../../../../test/dist/octopus-small/language/gen/Attribute";
 import { AttributeWithLimitedType } from "../language/gen/AttributeWithLimitedType";
 import { Entity } from "../language/gen/Entity";
 

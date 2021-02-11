@@ -9,13 +9,10 @@ import {
     VerticalListBox,
     AliasBox, SelectOption, SelectBox
 } from "@projectit/core";
-import { Attribute } from "../../../../test/dist/octopus-small/language/gen/Attribute";
-import { DemoModelUnit } from "../../../dist/docs/src/tutorial-language/language/gen/DemoEveryConcept";
 import { EntityEnvironment } from "../environment/gen/EntityEnvironment";
 import { AttributeType } from "../language/gen/AttributeType";
 import { AttributeWithLimitedType } from "../language/gen/AttributeWithLimitedType";
 import { Entity } from "../language/gen/Entity";
-import { EntityModel } from "../language/gen/EntityModel";
 import { EntityModelUnit } from "../language/gen/EntityModelUnit";
 import { PiElementReference } from "../language/gen/PiElementReference";
 
@@ -73,7 +70,7 @@ export class CustomEntityProjection implements PiProjection {
 
     // ModelBox with placeholder for the name and a list of entities
     // tag::ModelBox3[]
-    private createModelBox3(model: DemoModelUnit): Box {
+    private createModelBox3(model: EntityModelUnit): Box {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "Model", {
