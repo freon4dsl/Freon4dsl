@@ -23,10 +23,10 @@ theme: "just-the-docs"
 
 # permalink: pretty
 permalink: none
-exclude: ["version004", "old", "*.txt", "node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
+exclude: ["version004", "src", "old", "*.txt", "node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
 
 # Set a path/url to a logo that will be displayed instead of the title
-logo: "/version005/images/logo-inverse-colors.png"
+logo: "/version-0.1.0/images/logo-inverse-colors.png"
 
 # Enable or disable the site search
 search_enabled: true
@@ -59,7 +59,7 @@ asciidoctor:
   safe: unsafe
   attributes:
     - showtitle=@
-    - imagesdir=/version005/images
+    - imagesdir=/version-0.1.0/images
     - icons=font
     - source-language=javascript
 

@@ -2,10 +2,10 @@
 :page-title: ProjectIt - Introduction
 :page-has_children: true
 :page-has_toc: false
-:imagesdir: version005/images/
+:imagesdir: version-0.1.0/images/
 :src-dir: ../../../../..
 :source-language: javascript
-= ProjectIt - Introduction
+= ProjectIt -- A Projectional Editor for the Web
 
 ProjectIt is a Language Workbench (...in the making :-) ). It is a tool for creating mini-languages,
 which are also known as link:https://en.wikipedia.org/wiki/Domain-specific_language[Domain Specific Languages (DSLs), window=_blank]. ProjectIt is able to generate an integrated
@@ -27,13 +27,13 @@ of the work environment for your mini-language:
 * The *validator* defines what a correct model looks like and wil provide errors whenever a model breaks these rules.
 
 Currently, ProjectIt does not support the creation of debuggers, interpreters, generators, and
-such. Indeed, we have a (large) xref:version005/pages/intro/wish-list.adoc[wish list] of extra features
+such. Indeed, we have a (large) xref:version-0.1.0/pages/intro/wish-list.adoc[wish list] of extra features
 that we would like to implement in
 the future.
 In some cases,like e.g code generators, we think that integration  with existing tools is the best solution.
 In other cases we plan to provide ProjectIt components for specific functionality.
 Given time, we hope to realize many of these extra items. If you want to know why
-we have chosen this development route, read our statement on the xref:version005/pages/intro/philosophy.adoc[philosophy]
+we have chosen this development route, read our statement on the xref:version-0.1.0/pages/intro/philosophy.adoc[philosophy]
 behind the tool.
 
 We assume that people that want to use ProjectIt know the basic about making mini-languages. For instance,
@@ -44,11 +44,11 @@ and its environment are simply called *users*.
 So welcome, language engineer, to the world of ProjectIt. In this website you can find information
 on many subjects. You could ..
 
-* .. start by finding out what xref:version005/pages/intro/projectional-editing.adoc[projectional editing] is.
-* .. see how you can xref:version005/pages/starting/installing.adoc[install and use] ProjectIt.
-* .. find out how to define a language and its editor, etc. in the xref:version005/pages/second-level/tutorials-intro.adoc[tutorials].
-* .. dive deeper into the xref:version005/pages/starting/code-organisation.adoc[structure of the generated code].
-* .. get to know more about the xref:version005/pages/meta-documentation/meta-documentation-intro.adoc[meta-code] of ProjectIt.
+* .. start by finding out what xref:version-0.1.0/pages/intro/projectional-editing.adoc[projectional editing] is.
+* .. see how you can xref:version-0.1.0/pages/starting/installing.adoc[install and use] ProjectIt.
+* .. find out how to define a language and its editor, etc. in the xref:version-0.1.0/pages/second-level/tutorials-intro.adoc[tutorials].
+* .. dive deeper into the xref:version-0.1.0/pages/starting/code-organisation.adoc[structure of the generated code].
+* .. get to know more about the xref:version-0.1.0/pages/meta-documentation/meta-documentation-intro.adoc[meta-code] of ProjectIt.
 
 Have fun! If you have questions that are not answered in this documentation, please email us at info AT projectit.org.
 
