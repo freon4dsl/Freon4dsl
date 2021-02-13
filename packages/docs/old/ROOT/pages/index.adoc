@@ -21,7 +21,7 @@ The choice not to tie up ProjectIt to any existing Language Workbench, has a dow
 == An Example of the Kind of Editor Can You Make
 The projectional editors that can be created using ProjectIt are all based on the xref:projectit-main:Framework-Description.adoc[ProjectIt Framework], written in TypeScript/Javascript. 
 
-Using the ProjectIt Framework you can build your editor by hand. An example of this can be found in https://github.com/projectit-org/ProjectIt-example[DemoLanguage]. In version 0.0.5 we have added a generator that can do this task for you. We simply needed a point to start. Actually, we have used this example to decide what our generator should produce.
+Using the ProjectIt Framework you can build your editor by hand. An example of this can be found in https://github.com/projectit-org/ProjectIt-example[DemoLanguage]. In version 0.1.0 we have added a generator that can do this task for you. We simply needed a point to start. Actually, we have used this example to decide what our generator should produce.
 
 == How to Generate an Editor
 The typical workflow for creating an editor is:

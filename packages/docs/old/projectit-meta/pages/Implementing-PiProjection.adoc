@@ -9,7 +9,7 @@ _PiProjection_ interface:
 
 [source]
 ----
-include::0.0.5@projectit-main:{src-dir}/core/src/language/PiProjection.ts[tag=PiProjection]
+include::0.1.0@projectit-main:{src-dir}/core/src/language/PiProjection.ts[tag=PiProjection]
 ----
 
 Implementing this interface should return a _Box_ for each `element` in the AST.
@@ -42,7 +42,7 @@ This interface is kept as small as possible, to allow ProjectIt to be used for a
 
 [source]
 ----
-include::0.0.5@projectit-main:{src-dir}/core/src/language/PiModel.ts[tag=PiElement]
+include::0.1.0@projectit-main:{src-dir}/core/src/language/PiModel.ts[tag=PiElement]
 ----
 
 The main two elements in this interface are:

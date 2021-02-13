@@ -27,7 +27,7 @@ new HorizontalListBox( [
     ]);
 ----
 The user needs to be able to interact with the projected AST. Thus we need to know which part of the projection represents the AST node that the user is working with. For this purpose we give each `Box` in the projection a _role_, which is unique within its parent box. This way we can identify every box by its model element plus its role.
-(By the way, interaction with the AST is controlled by Actions. For more see xref:0.0.5@projectit-main:tutorials/Action_Tutorial.adoc[Actions].)
+(By the way, interaction with the AST is controlled by Actions. For more see xref:0.1.0@projectit-main:tutorials/Action_Tutorial.adoc[Actions].)
 
 image::mapping-example-stringliteral-with-roles.svg[]
 
