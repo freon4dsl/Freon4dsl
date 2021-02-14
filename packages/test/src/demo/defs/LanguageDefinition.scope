@@ -1,0 +1,19 @@
+scoper Demo for language Demo
+
+isnamespace { DemoModel, DemoEntity, DemoFunction }
+
+// Inheritance scope
+DemoEntity {
+    namespace_addition = self.baseEntity;
+}
+/*
+Type {
+    namespace_addition = self.baseInterface
+}
+*/
+AppliedFeature {
+	scope = typeof( container );
+}
+
+//    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'
+//    include: if( t.friends.includes(context)) then t.attributes where visibility = 'friends'

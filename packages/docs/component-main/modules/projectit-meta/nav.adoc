@@ -1,2 +1,0 @@
-//* ProjectIt Meta helpers
-** xref:project-meta.adoc[Meta model helper]

@@ -1,0 +1,27 @@
+language XXX
+
+model YYY {
+}
+model ZZZ { // just one model is allowed
+}
+concept ZZZ {
+    simple: string; // properties must have unique names
+    simple: number;
+    reference xx: number; // references must have concept as type
+}
+expression YYY {
+}
+limited AAA {
+}
+interface AAA {
+}
+
+concept string { }
+
+concept number { }
+
+concept boolean { }
+
+concept lowerCase { }
+
+concept LowerCase { }

@@ -1,30 +1,62 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "downlevelIteration": true,
+    "declarationMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": ["dom", "es6", "es2016.array.include"],
+    "lib": [
+      "dom",
+      "es6",
+      "es2016.array.include"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
+    "newLine": "lf",
     "noEmit": false,
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
-    "noImplicitReturns": false,
+    "noImplicitReturns": true,
     "removeComments": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": false,
-    "target": "es5",
-    "types": ["node", "jest", "jest-enzyme"],
+    "target": "es6",
+    "types": [
+      "node",
+      "jest",
+      "jest-enzyme"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@projectit/core/*": ["packages/core/src/*"],
-      "@projectit/model/*": ["packages/model/src/*"],
-      "@projectit/meta/*": ["packages/meta/src/*"],
-      "@projectit/demo/*": ["packages/demo/src/*"],
-      "@projectit/demo/*": ["packages/server/src/*"]
+      "@projectit/core": [
+        "packages/core/src"
+      ],
+      "@projectit/meta": [
+        "packages/meta/src"
+      ],
+      "@projectit/test": [
+        "packages/test/src"
+      ],
+      "@projectit/docs": [
+        "packages/docs/src"
+      ],
+      "@projectit/playground": [
+        "packages/playground/src"
+      ],
+      "@projectit/server": [
+        "packages/server/src"
+      ]
     }
-  }
+  },
+  "exclude": [
+    "../../packages/core/dist",
+    "../../packages/core/dist/*",
+    "packages/core/dist",
+    "packages/core/dist/*",
+    "packages/**/dist"
+  ]
 }

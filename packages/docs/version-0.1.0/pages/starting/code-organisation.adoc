@@ -1,0 +1,77 @@
+:imagesdir: ../images/
+:page-nav_order: 40
+:page-title: Project Structure
+:page-parent: Getting Started
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+= Project Structure
+
+This description of the project structure of a ProjectIt project is based om the link:https://github.com/projectit-org/ProjectIt-example[https://github.com/projectit-org/ProjectIt-example, window=_blank] project which
+you can clone from github.
+
+The source code (`~/src`) in a ProjectIt project is organised into the following subfolders.
+
+Note that the _defs_ and _picode_
+folders can have any name as long as both the `generate` script in `package.json`, and the configuration of
+the web application in the file `~/src/webapp/WebappConfiguration.ts`, are adjusted.
+(See xref:./installing.adoc#template[Start with the Template project].)
+
+* *_defs_*: the language definition files.
+* *_picode_*: the generated source code.
+
+** _picode/editor_: code for the editor. This folder contains two files that will not be overwritten at regeneration: `Custom<yourLanguageName>Actions.ts`
+and `Custom<yourLanguageName>Projection.ts`. These are the placeholders for any
+xref:../third-level/third-level-intro.adoc[third-level customization] that you
+would like to do.
+** _picode/environment_: code that provides the coupling between all parts of the generated workbench.
+** _picode/language_: code that implements the language structure.
+** _picode/projectit_: code that enables the language engineer to configure the workbench.
+   This folder contains one file that will not be overwritten at regeneration: `ProjectitConfiguration.ts`.
+   Here you can configure any xref:../third-level/third-level-intro.adoc[third-level customization] that you want the
+   generated code to take into account.
+** _picode/reader_: a parser that is able to read xref:../intro/modelunits.adoc[model units] from a text string or file.
+** _picode/scoper_: code for that determines which elements are visible for a certain element in the user's model.
+** _picode/stdlib_: code that implements some standard elements of your language, for instance xref:../second-level/langdef-tutorial.adoc[limited concepts].
+** _picode/typer_: code that that determines which type is associated with a certain element in the user's model.
+** _picode/utils_: a default implementation of a visitor for your user's model.
+** _picode/validator_: code that determines whether or not certain parts of your user's model contain errors.
+** _picode/writer_: code that is able to write your user's xref:../intro/modelunits.adoc[model units] in string format to a file.
+
+* *_webapp_*: source code for the web-application used for all generated languages.
+** Note worthy is the file `picode/webapp/WebappConfiguration.ts`. This file holds the references to the generated language
+workbench and the web address of the server which stores your user's models.
+
+[NOTE]
+Be careful with handmade changes in _picode_, all files in
+any folder called *_gen_* will be *deleted* during the next generation.
+
+Another folder that can be found in the project is `~/modelstore`. This is the folder where
+the server stores all models, and it is created at the moment that the server is started.
+Each model is stored in a separate folder in which you can find its
+modelunits as `.json` files.
+
+== The `gen` subfolders
+The contents of all folders in ` picode` is divided into classes that are contained directly in the folder, and classes
+that are contained in the subfolder `gen`. The latter are always removed before regeneration, so be careful
+not to add important code to the `gen` folder.
+Code that is contained directly in each folder is not changed upon regeneration.
+
+== The webapp and server
+
+For the language environment to function, more is needed than the code for the editor, validator and such. In particular,
+there is a need for a server which can hold and provide stored users models, and for a small web application that
+is able to show the editor, errors message, models that are available form the server, and so on.
+
+Therefore, we provide a minimal *server* that stores your user models in a json format.
+You can start it through the commandline:
+
+    yarn model-server
+
+A simple *web application* where you can see your  language in action is also provided.
+The code can be found in `~/webapp`.
+
+Note that both the server and the web application are provided for your convenience. We assume that when ProjectIt
+is used in a larger context, these two parts will be interchanged with suitable choices made by the language engineer
+and team.

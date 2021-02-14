@@ -1,0 +1,48 @@
+:imagesdir: ../images/
+:page-nav_order: 20
+:page-parent: ProjectIt - Introduction
+:src-dir: ../../../core/src
+:projectitdir: ../../../core
+:source-language: javascript
+:listing-caption: Code Sample
+= ProjectIt Philosophy
+
+The design filosophy that we follow in ProjectIt can best be described by the following quote from Alan Kay
+
+[quote, Alan Kay]
+_Simple things should be simple,
+complex things should be possible_
+
+== The Pareto Principle
+ProjectIt is a minimal viable product which supports the
+language engineer in creating a work environment for a mini-language. A key principle
+is the xref:https://en.wikipedia.org/wiki/Pareto_principle[Pareto principle, window=_blank] (or 80%-20% rule),
+which states that for many events, roughly 80% of the effects come from 20% of the causes.
+For example, it is an axiom of business  management that "80% of sales come from 20% of clients".
+
+In language development the Pareto principle translates to “_80% of the development
+effort is spend on 20% of the application_”, this 20% being the more complex parts.
+Still, the other 80% of the application needs to be created as well. ProjectIt aims to
+make the latter *as simple as possible*, while keeping the generated code *open* for the
+language engineer to code the more complex parts by hand. One of our use cases is the
+creation of a prototype language in a day or in a couple of days at most.
+
+== Other Guidelines
+// TODO use smiley icon
+Other guidelines have been *ease of use*, and *flexibility*. ProjectIt may not (yet :-)) do
+everything you need, but what it does, should be very easy to get into. Furthermore,
+ProjectIt is designed to be *extendable*, and *easy to integrate with other tooling*. Every
+part of the work environment that is generated, can be taken out and, provided the right
+interface is implemented, be exchanged for one that suits the language engineer better.
+Every part of the work environment is made by its own generator, so you can adjust which
+parts you do and do not want to generate. With our choice for TypeScript as base language,
+we believe that it will be possible for the different parts of the work environment to run
+on either the server or the client. Thus creating *multiple deployment options*.
+
+With these principles in mind, we have started of small and simple. Every definition language,
+from the language structure to the validation rules, is kept *minimal*. Over time, in an *agile*
+fashion, these will be extended whenever the need arises. Furthermore, we want to use *bootstrapping*
+to create editors for every one of the definition languages. If you are interested, you can
+check out our xref:../intro/wish-list.adoc[wish list] of features to be developed in the future.
+
+

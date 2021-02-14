@@ -1,0 +1,56 @@
+validator heat for language heat // long name: jetbrains.mps.samples.heating
+/*
+HeatingPlan {
+	dailyPlans: DailyPlan[];
+}
+*/
+DailyPlan {
+	isunique start in self.items;
+}
+
+ChangeEvent  {
+	self.temperature >= 12;
+	self.temperature <= 30;
+}
+/*
+abstract Applicability  {
+}
+
+NotSpecified base Applicability {
+}
+
+WeekendDay base Applicability {
+}
+
+WeekDays base Applicability {
+}
+
+SpecificDay base Applicability {
+	reference day: DayDataType;
+}
+
+DayRange base Applicability {
+	start: DayDataType;
+	end: DayDataType;
+}
+*/
+Slot  {
+	self.start >= 0;
+	self.start <= 24;
+}
+/*
+interface INamedConcept {
+	name: string;
+}
+
+limited DayDataType {
+    name: string;
+	monday = { "name": "monday" }
+	tuesday = { "name": "tuesday" }
+	wednesday = { "name": "wednesday" }
+	thursday = { "name": "thursday" }
+	friday = { "name": "friday" }
+	saturday = { "name": "saturday" }
+	sunday = { "name": "sunday" }
+}
+*/

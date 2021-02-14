@@ -1,0 +1,7 @@
+language XXXX
+
+model ZZ {}
+
+binary expression YYY {
+    simple: string;
+}

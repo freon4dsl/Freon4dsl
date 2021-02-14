@@ -1,0 +1,44 @@
+// This is the definition of an editor for the language
+language PlayGroundLanguage
+
+PG_Module {
+    @projection =
+    "Module" {this.name}
+        {this.entities} as verticalList
+        {this.functions} as verticalList 
+    "EndModule"
+}
+
+PG_Entity {
+    @horizontalList attributes
+    @verticalList functions
+    @trigger = "entity"
+}
+
+PG_Variable {
+    @trigger = "attribute"
+}
+
+PG_Function {
+    @trigger = "function"
+}
+
+PG_StringLiteralExpression base PG_LiteralExpression {
+    @projection = ' {this.value} '
+    @trigger = "'"
+}
+
+PG_NumberLiteralExpression base PG_LiteralExpression {
+    @trigger: regexp = "[0-9]"
+}
+
+PG_MultiplyExpression base PG_BinaryExpression {
+    @priority = "8"
+    @projection = {this.left} "*" {this.right}
+}
+
+// extras for 
+// -projections
+// -editor actions
+// -intentions
+// -refactorings

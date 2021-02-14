@@ -1,29 +1,24 @@
 import { observable, computed, action } from "mobx";
+import { MobxModelElementImpl } from "../language/decorators";
 
-import { PiContainerDescriptor } from "../language/PiModel";
-import {
-    InternalBehavior,
-    InternalBinaryBehavior,
-    InternalCustomBehavior,
-    InternalExpressionBehavior
-} from "./InternalBehavior";
+import { PiContainerDescriptor, PiExpression } from "../language/PiModel";
+import { InternalBehavior, InternalBinaryBehavior, InternalCustomBehavior, InternalExpressionBehavior } from "./InternalBehavior";
 import { PiCaret } from "../util/BehaviorUtils";
 import { PiElement, isPiExpression } from "../language/PiModel";
-import { PiProjection } from "../language/PiProjection";
-import { isAliasBox } from "../boxes/AliasBox";
-import { isSelectBox } from "../boxes/SelectBox";
-import { isTextBox } from "../boxes/TextBox";
-import { Box } from "../boxes/Box";
+import { PiProjection } from "./PiProjection";
+import { isAliasBox } from "./boxes/AliasBox";
+import { isSelectBox } from "./boxes/SelectBox";
+import { isTextBox } from "./boxes/TextBox";
+import { Box } from "./boxes/Box";
 import { KeyboardShortcutBehavior, PiActions } from "./PiAction";
-import { PiContext } from "./PiContext";
 import { PiLogger } from "../util/PiLogging";
 import { PiUtils, wait } from "../util/PiUtils";
 
-const LOGGER = new PiLogger("PiEditor");
+const LOGGER = new PiLogger("PiEditor").mute();
 
 export class PiEditor {
+    @observable private _rootElement: PiElement;
     readonly actions?: PiActions;
-    readonly context: PiContext;
     readonly projection: PiProjection;
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
@@ -36,9 +31,8 @@ export class PiEditor {
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
     private selectedRole: string = null;
 
-    constructor(context: PiContext, projection: PiProjection, actions?: PiActions) {
+    constructor(projection: PiProjection, actions?: PiActions) {
         this.actions = actions;
-        this.context = context;
         this.projection = projection;
         this.initializeAliases(actions);
     }
@@ -121,8 +115,8 @@ export class PiEditor {
 
     @computed
     get rootBox(): Box {
-        LOGGER.info(this, "RECALCULATING ROOT");
-        return this.projection.getBox(this.context.rootElement);
+        LOGGER.info(this, "RECALCULATING ROOT [" + this.rootElement + "]");
+        return this.projection.getBox(this.rootElement);
         // return this.$rootBox;
     }
 
@@ -130,8 +124,13 @@ export class PiEditor {
         LOGGER.info(this, "==> SelectParent");
         const parent = this.selectedBox.parent;
         if (parent) {
-            this.selectBox(parent);
-            parent.setFocus();
+            if (parent.selectable) {
+                this.selectBox(parent);
+                parent.setFocus();
+            } else {
+                this.selectBox(parent);
+                this.selectParentBox();
+            }
         }
     }
 
@@ -170,11 +169,11 @@ export class PiEditor {
         LOGGER.info(this, "deleteBox");
         const exp: PiElement = box.element;
         const container: PiContainerDescriptor = exp.piContainer();
-        if (isPiExpression(exp)) {
-            const newExp = this.context.getPlaceHolderExpression();
-            PiUtils.replaceExpression(exp, newExp, this);
-            await this.selectElement(newExp);
-        } else {
+        // if (isPiExpression(exp)) {
+        //     const newExp = this.getPlaceHolderExpression();
+        //     PiUtils.replaceExpression(exp, newExp, this);
+        //     await this.selectElement(newExp);
+        // } else {
             if (container !== null) {
                 LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
                 const propertyIndex = container.propertyIndex;
@@ -185,26 +184,44 @@ export class PiEditor {
                     let length = arrayProperty.length;
                     if (length === 0) {
                         // TODO Maybe we should select the element (or leaf) just before the list.
-                        await this.selectElement(parentElement);
+                        await this.selectElement(parentElement,`${container.container.piLanguageConcept()}-${container.propertyName}`);
                     } else if (length <= propertyIndex) {
                         await this.selectElement(arrayProperty[propertyIndex - 1]);
                     } else {
                         await this.selectElement(arrayProperty[propertyIndex]);
                     }
+                } else {
+                    container.container[container.propertyName] = null;
+                    // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
+                    await this.selectElement(container.container,
+                        (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`))
                 }
             }
-        }
+        // }
     }
 
     async selectFirstEditableChildBox() {
         const first = this.selectedBox.firstEditableChild;
-        LOGGER.info(
-            this,
-            "selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role
-        );
+        LOGGER.info(this, "selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
         if (first) {
             LOGGER.info(this, "selectFirstEditableChildBox: first found with role " + first.role);
             this.selectBox(first);
         }
     }
+
+    set rootElement(exp: PiElement) {
+        this._rootElement = exp;
+        // if (exp instanceof MobxModelElementImpl) {
+        //     exp.container = this;
+        //     exp.propertyIndex = undefined;
+        //     exp.propertyName = "rootElement";
+        //     // not a PiElement , therefore no root.
+        //     // exp.container = null;
+        // }
+    }
+
+    get rootElement(): PiElement {
+        return this._rootElement;
+    }
+
 }

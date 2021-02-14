@@ -1,0 +1,17 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The Pi-tool Interfaces
+:page-grand_parent: Under the Hood
+:nav_exclude: true
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+=  PiEnvironment
+
+An object that implements `PiEnvironment` holds the information about where to find all parts
+of the language environment. It is usually a singleton object.
+
+[source]
+----
+include::{src-dir}/environment/PiEnvironment.ts[tag=environment-interface]
+----

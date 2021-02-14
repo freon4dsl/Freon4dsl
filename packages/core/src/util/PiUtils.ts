@@ -1,6 +1,6 @@
 import { action } from "mobx";
 import { PiLogger } from "./PiLogging";
-import { Box } from "../boxes/Box";
+import { Box } from "../editor/boxes/Box";
 import { isPiExpression } from "../language/PiModel";
 import { PiKey } from "../util/Keys";
 import { PiContainerDescriptor, PiElement, PiExpression } from "../language/PiModel";
@@ -12,10 +12,10 @@ export type DynamicBoolean = BooleanCallback | boolean;
 export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
-const LOGGER = new PiLogger("PiUtils").mute();
+const LOGGER = new PiLogger("PiUtils"); //.mute();
 
 export class PiUtils {
-    /** Iniyialize an object with a JSON object
+    /** Initialize an object with a JSON object
      */
     static initializeObject<TTarget, TSource>(target: TTarget, source: TSource) {
         if (!(target && source)) {
@@ -36,27 +36,21 @@ export class PiUtils {
 
     @action
     static setContainer(exp: PiElement, piContainer: PiContainerDescriptor | null, editor: PiEditor): void {
-        if (piContainer) {
+        if (!!piContainer) {
             if (piContainer.propertyIndex === undefined) {
                 piContainer.container[piContainer.propertyName] = exp;
             } else {
                 piContainer.container[piContainer.propertyName][piContainer.propertyIndex] = exp;
             }
         } else {
-            editor.context.rootElement = exp;
+            editor.rootElement = exp;
         }
     }
 
     @action
     static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: PiEditor) {
-        PiUtils.CHECK(
-            isPiExpression(oldExpression),
-            "replaceExpression: old element should be a ProExpression, but it isn't"
-        );
-        PiUtils.CHECK(
-            isPiExpression(newExpression),
-            "replaceExpression: new element should be a ProExpression, but it isn't"
-        );
+        PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a ProExpression, but it isn't");
+        PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a ProExpression, but it isn't");
         PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
     }
 
@@ -71,7 +65,7 @@ export class PiUtils {
      */
     static async handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): Promise<boolean> {
         for (const act of editor.keyboardActions) {
-            LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
+            // LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
             if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
                 if (act.activeInBoxRoles.includes(box.role)) {
                     LOGGER.log("handleKeyboardShortcut: executing keyboard action");

@@ -1,0 +1,11 @@
+language XXXX
+model test {
+}
+
+modelunit testUnit {
+}
+
+
+concept YYY {
+    reference partRef[] = [];
+}

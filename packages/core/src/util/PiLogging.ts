@@ -6,6 +6,25 @@ type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
 export class PiLogger {
+    private static muteAll: boolean = true;
+    private static FgRed = "\x1b[31m";
+    private static FgBlack = "\x1b[30m";
+    private static FgBlue = "\x1b[34m";
+
+    static muteAllLogs() {
+        PiLogger.muteAll = true;
+    }
+
+    static unmuteAllLogs() {
+        PiLogger.muteAll = false;
+    }
+
+    static filter: string = null;
+
+    static showString(s: string | null) {
+        PiLogger.filter = s;
+    }
+
     category: string;
     active: boolean = true;
 
@@ -16,19 +35,19 @@ export class PiLogger {
     info(o: any, msg: LogMessage) {
         if (this.active && !PiLogger.muteAll) {
             const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-            this.logToConsole(this.category + " " + type + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FgBlue, type + ": " + this.message(msg));
         }
     }
 
     log(msg: LogMessage) {
         if (this.active && !PiLogger.muteAll) {
-            this.logToConsole(this.category + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FgBlack, this.category + ": " + this.message(msg));
         }
     }
 
     error(o: any, msg: LogMessage) {
-        const type = Object.getPrototypeOf(o).constructor.name;
-        console.log("ERROR: " + this.category + " " + type + ": " + this.message(msg));
+        const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
+        console.log(PiLogger.FgRed, "ERROR: " + type + ": " + this.message(msg));
     }
 
     mute(): PiLogger {
@@ -45,25 +64,34 @@ export class PiLogger {
         return typeof msg === "string" ? msg : msg();
     }
 
-    protected logToConsole(message: string): void {
+    protected logToConsole(color: string, message: string): void {
         if (PiLogger.filter === null) {
-            console.log(message);
+            console.log(color, message, PiLogger.FgBlack, "");
+            // this.colorMyText();
         } else {
             if (message.includes(PiLogger.filter)) {
-                console.log(message);
+                console.log(color, message, PiLogger.FgBlack, "");
             }
         }
     }
 
-    private static muteAll: boolean = false;
-    static muteAllLogs() {
-        PiLogger.muteAll = true;
-    }
-    static filter: string = null;
-    static showString(s: string | null) {
-        PiLogger.filter = s;
+    // following does not work
+    colorMyText() {
+        var text = "some text with some {special} formatting on this {keyword} and this {keyword}";
+        var splitText = text.split(" ");
+        var cssRules = [];
+        var styledText = "";
+        for (var split of splitText) {
+            if (/^\{/.test(split)) {
+                cssRules.push(PiLogger.FgBlue);
+            } else {
+                cssRules.push("color:inherit");
+            }
+            styledText += `%c${split} `;
+        }
+        console.log(styledText, ...cssRules);
     }
 }
 
-export const EVENT_LOG = new PiLogger("EVENT");
+export const EVENT_LOG = new PiLogger("EVENT").mute();
 export const RENDER_LOG = new PiLogger("RENDER").mute();

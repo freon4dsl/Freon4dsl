@@ -1,17 +1,24 @@
 {
   "private": false,
   "name": "@projectit/server",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "license": "MIT",
-  "source": "pkg/dist-src/index.js",
-  "types": "pkg/dist-types/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "model-server": "./dist/bin/start-server.js"
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server.ts",
     "build": "tsc",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'"
+    "build-release": "yarn build",
+    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "release": "npm publish",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",

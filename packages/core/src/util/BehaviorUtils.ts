@@ -1,10 +1,10 @@
 import { LEFT_MOST } from "../";
 import { isRegExp, isString } from "../editor/PiAction";
 import { PiLogger } from "./PiLogging";
-import { Box } from "../boxes/Box";
+import { Box } from "../editor/boxes/Box";
 import { PiEditor } from "../editor/PiEditor";
 
-const LOGGER = new PiLogger("BehaviorUtils").mute();
+const LOGGER = new PiLogger("BehaviorUtils"); //.mute();
 
 export enum PiCaretPosition {
     UNSPECIFIED,
@@ -14,20 +14,20 @@ export enum PiCaretPosition {
 }
 
 export class PiCaret {
-    position: PiCaretPosition;
-    index: number;
-
-    constructor(p: PiCaretPosition, i: number) {
-        this.position = p;
-        this.index = i;
-    }
-
     static RIGHT_MOST = new PiCaret(PiCaretPosition.RIGHT_MOST, 0);
     static LEFT_MOST = new PiCaret(PiCaretPosition.LEFT_MOST, 0);
     static UNSPECIFIED = new PiCaret(PiCaretPosition.UNSPECIFIED, 0);
 
     static IndexPosition(i: number): PiCaret {
         return new PiCaret(PiCaretPosition.INDEX, i);
+    }
+
+    position: PiCaretPosition;
+    index: number;
+
+    constructor(p: PiCaretPosition, i: number) {
+        this.position = p;
+        this.index = i;
     }
 }
 
@@ -47,29 +47,30 @@ export enum BehaviorExecutionResult {
  */
 export async function executeBehavior(box: Box, text: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
     let partialMatch: boolean = false;
-    LOGGER.log("MATCH EXECUTE BEHAVIOR");
+    // LOGGER.log("MATCH EXECUTE BEHAVIOR");
 
     for (const a of editor.behaviors) {
         const trigger = a.trigger;
         if (a.activeInBoxRoles.includes(box.role)) {
             if (isRegExp(trigger)) {
                 const matchArray = text.match(trigger);
-                LOGGER.log(
-                    "MATCH " +
-                        text +
-                        " against " +
-                        trigger +
-                        "  results in " +
-                        (!!matchArray ? matchArray.length : "null")
-                );
+                LOGGER.log("MATCH " + text + " against " + trigger + "  results in " + (!!matchArray ? matchArray.length : "null"));
                 if (matchArray !== null && text === matchArray[0]) {
-                    a.execute(box, text, editor);
+                    const execresult = await a.execute(box, text, editor);
+                    // if( !!execresult){
+                    //     editor.selectElement(execresult);
+                    //     editor.selectFirstLeafChildBox();
+                    // }
                     return BehaviorExecutionResult.EXECUTED;
                 }
             } else if (isString(trigger)) {
                 if (trigger === text) {
                     LOGGER.log("MATCH FULL TEXT");
-                    a.execute(box, text, editor);
+                    const execresult = await a.execute(box, text, editor);
+                    // if( !!execresult){
+                    //     await editor.selectElement(execresult, LEFT_MOST);
+                    //     editor.selectFirstLeafChildBox();
+                    // }
                     return BehaviorExecutionResult.EXECUTED;
                 } else if (trigger.startsWith(text)) {
                     LOGGER.log("MATCH PARTIAL TEXT");

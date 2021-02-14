@@ -1,0 +1,20 @@
+// This file specifies the validation of the SimpleNumericExpressions language
+// This language only knows five types of expression:
+// * plus ("25+86")
+// * minus ("68-72")
+// * multiply ("5*86")
+// * divide ("4/2")
+// * negate ("-45")
+
+// The user of this library should provide SNE_LiteralExpression subtypes for the library to function.
+// If these subthese are not numeric, the user should override the behavior of this library.
+
+language SimpleNumericExpressions
+
+SNE_BinaryExpression {
+    if (ROOTMODULE.Expression.hasType) {
+        check ((this.left.type conformsTo this.right.type ) or ( this.right.type conformsTo this.left.type )) {
+            Error("Types " + this.right.type " and " + type.left.type + " do not conform.")
+        }
+    }
+}

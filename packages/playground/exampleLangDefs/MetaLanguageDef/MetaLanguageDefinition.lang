@@ -1,0 +1,65 @@
+// tag::MetametaModel[]
+language PiLanguage
+
+root concept PiLanguageUnit {
+    name: string;
+    @part concepts: PiLangConcep[];
+    @part enumerations: PiLangEnumeration[];
+    @part unions: PiLangUnion[];
+}
+
+abstract concept PiLangElement {
+    name: string
+}
+
+concept PiLangEnumeration base PiLangElement {
+    @part literals: string[];
+}
+
+concept PiLangUnion base PiLangElement {
+    name: string;
+    @reference parts: PiLangConcept[];
+}
+
+concept PiLangConcept base PiLangElement {
+    //readonly language: PiLanguageUnit;
+    name: string;
+    isAbstract: boolean;
+    isRoot:boolean;
+
+    isExpression: boolean;
+    isBinaryExpression: boolean;
+    isExpressionPlaceHolder: boolean;
+    symbol?: string;
+    priority?: number;
+
+    @part properties: PiLangPrimitiveProperty[];
+    @part parts: PiLangConceptProperty[];
+    @part references: PiLangConceptProperty[];
+
+    @reference base?: PiLangConcept;
+
+    @reference left?: PiLangConcept;
+    @reference right?: PiLangConcept;
+}
+
+abstract concept PiLangProperty {
+    name: string;
+    isList: boolean;
+}
+
+concept PiLangPrimitiveProperty base PiLangProperty {
+    name: string;
+    isStatic: boolean;
+    initialValue?: string;
+    type: string;
+    @reference owningConcept: PiLangConcept;
+}
+
+concept PiLangConceptProperty base PiLangProperty {
+    name: string;
+    @reference type: PiLangConcept;
+    @reference owningConcept: PiLangConcept;
+}
+
+// end::MetametaModel[]

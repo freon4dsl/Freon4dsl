@@ -1,0 +1,137 @@
+language Demo
+
+root concept DemoModel {
+    name: string
+    @part entities: DemoEntity[]
+    @part functions: DemoFunction[]
+}
+
+concept DemoEntity {
+    name: string
+    @part attributes: DemoAttribute[]
+    @part functions: DemoFunction[]
+    @editor trigger: string = "entity"
+}
+
+concept DemoAttribute {
+    name: string
+    declaredType: enum DemoAttributeType
+    @editor trigger: string = "attribute"
+}
+
+concept DemoFunction {
+    name: string
+    declaredType : enum DemoAttributeType
+    @part expression: DemoExpression
+    @part parameters: DemoVariable[]
+    @editor trigger: string = "function"
+}
+
+concept DemoVariable {
+    name: string
+    declaredType: enum DemoAttributeType
+    @editor trigger: string = "var"
+}
+
+abstract expression concept DemoExpression {}
+
+expression placeholder concept DemoPlaceholderExpression {}
+
+abstract expression concept DemoLiteralExpression base DemoExpression {}
+
+concept DemoStringLiteralExpression base DemoLiteralExpression {
+    value: string
+    @editor trigger: string = "'"
+}
+
+concept DemoNumberLiteralExpression base DemoLiteralExpression {
+    value: string
+    @editor trigger: regexp = "[0-9]"
+}
+
+concept DemoBooleanLiteralExpression base DemoLiteralExpression {
+    value: string
+    @editor trigger: regexp = "[TF]"
+}
+
+concept DemoAbsExpression base DemoExpression {
+    @part expr: DemoExpression
+    @editor trigger: string = "abs"
+}
+
+abstract binary expression concept DemoBinaryExpression base DemoExpression {
+    @part left: DemoExpression
+    @part right: DemoExpression
+    @editor symbol: string = "unknown"
+}
+
+concept DemoMultiplyExpression base DemoBinaryExpression {
+    @editor symbol: string = "*"
+    @editor priority: number = "8"
+}
+
+concept DemoPlusExpression base DemoBinaryExpression {
+    @editor symbol: string = "+"
+    @editor priority: number = "4"
+}
+
+concept DemoDivideExpression base DemoBinaryExpression {
+    @editor symbol: string = "/"
+    @editor priority: number = "8"
+}
+
+concept DemoAndExpression base DemoBinaryExpression {
+    @editor symbol: string = "and"
+    @editor priority: number = "1"
+}
+
+concept DemoOrExpression base DemoBinaryExpression {
+    @editor symbol: string = "or"
+    @editor priority: number = "1"
+}
+
+abstract concept DemoComparisonExpression base DemoBinaryExpression {
+}
+
+concept DemoLessThenExpression base DemoComparisonExpression {
+    @editor symbol: string = "<"
+    @editor priority: number = "10"
+}
+
+concept DemoGreaterThenExpression base DemoComparisonExpression {
+    @editor symbol: string = ">"
+    @editor priority: number = "10"
+}
+
+concept DemoEqualsExpression base DemoComparisonExpression {
+    @editor symbol: string = "="
+    @editor priority: number = "10"
+}
+
+concept DemoFunctionCallExpression base DemoExpression {
+    @reference functionDefinition: DemoFunction
+}
+
+concept DemoIfExpression base DemoExpression {
+    @part condition: DemoExpression
+    @part whenTrue: DemoExpression
+    @part whenFalse: DemoExpression
+    @editor trigger : string = "if"
+}
+
+concept DemoVariableRef base DemoExpression {
+    referredName: string
+    @reference attribute: DemoAttribute
+}
+
+enumeration DemoAttributeType {
+    String
+    Integer
+    Boolean
+}
+
+union DemoType {
+    DemoEntity
+    DemoAttributeType
+}
+

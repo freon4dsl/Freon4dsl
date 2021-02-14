@@ -1,0 +1,4 @@
+validator XX for language openhab
+
+// item name must be unique across all .items files
+// item name may contain only letters, numbers and the underscore character. Names must not begin with numbers. Spaces and special characters are not permitted.

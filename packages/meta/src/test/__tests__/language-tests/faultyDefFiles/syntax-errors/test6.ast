@@ -1,0 +1,12 @@
+language XXXX
+model test {
+}
+
+modelunit testUnit {
+}
+
+
+concept RRRR {
+    simple: number
+    part: RRRR
+}

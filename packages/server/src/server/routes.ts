@@ -8,32 +8,61 @@ router.get("/", async (ctx: Router.IRouterContext) => {
     ctx.body = "ProjectIt Model Server";
 });
 
-router.get("/getModel", async (ctx: Router.IRouterContext) => {
+router.get("/getModelUnit", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
     const name = ctx.query["name"];
-    console.log("GetModel: " + name);
-    if (!!name) {
-        ModelRequests.getModel(name, ctx);
+    console.log("GetModelUnit: " + folder + "/" + name);
+    if (!!name || folder) {
+        ModelRequests.getModelUnit(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name'";
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
     }
 });
 
 router.get("/getModelList", async (ctx: Router.IRouterContext) => {
+    console.log("getModelList");
     ModelRequests.getModelList(ctx);
     ctx.status = 201;
 });
 
-router.put("/putModel", async (ctx: Router.IRouterContext) => {
-    const name = ctx.query["name"];
-    console.log("PutModel: " + name);
-    if (!!name) {
-        ModelRequests.putModel(name, ctx);
+router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
+    // const subfolder = ctx.query["subfolder"];
+    console.log("getUnitList: " + folder) ;
+    if (!!folder) {
+        ModelRequests.getUnitList(folder, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'name'";
+        ctx.message = "Missing query parameter 'folder'";
+    }
+});
+router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
+    const name = ctx.query["name"];
+    console.log("PutModel: " + folder + "/" + name);
+    if (!!name || !!folder) {
+        ModelRequests.putModelUnit(folder, name, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+
+router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
+    const name = ctx.query["name"];
+    console.log("DeleteModel: " + folder + "/" + name);
+    if (!!name || !! folder) {
+        ModelRequests.deleteModelUnit(folder, name, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
     }
     ctx.body = { massage: (ctx.request as any).body };
 });

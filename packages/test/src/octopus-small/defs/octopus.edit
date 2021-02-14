@@ -1,0 +1,71 @@
+editor XXX for language octopus
+
+UmlPart {
+    @projection normal
+        [${self.packages}]
+}
+
+UmlPackage {
+    @projection normal
+        [<package> ${self.pathName}
+            ${ self.classifiers @vertical @separator [\n] }
+        <endpackage>
+        ]
+}
+
+PathName {
+    @projection normal
+        [${self.names @horizontal @separator [::] }]
+}
+
+Association {
+    @projection normal
+        [<->]
+}
+
+DataType {
+    @projection normal
+        [<datatype> ${self.name}
+        <enddatatype>
+        ]
+}
+
+UmlInterface  {
+    @projection normal
+        [<interface> ${self.name}
+        <endinterface>
+        ]
+}
+
+UmlClass {
+    @projection normal
+        [+ <class> ${self.name}
+            <attributes>
+            ${self.attributes @vertical @terminator [;] }
+        <endclass>
+        ]
+}
+
+AssociationClass {
+    @projection normal
+        [<associationclass> ${self.name}
+        <endassociationclass>
+        ]
+}
+
+Attribute {
+    @projection normal
+        [+ ${self.name}[?${self.multiplicity}] : ${self.type}]
+}
+
+MultiplicityKind {
+    @projection normal [\[ ${self.lowerBound}..${self.upperBound}]
+}
+
+VisibilityKind {
+    @projection normal [
+        ${PUBLIC @keyword [+]}
+        ${PRIVATE @keyword [-]}
+        ${PROTECTED @keyword [#]}
+    ]
+}

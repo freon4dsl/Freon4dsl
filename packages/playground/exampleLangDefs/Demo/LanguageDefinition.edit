@@ -1,0 +1,57 @@
+editor StartEditor for language Demo
+
+IfExpression {
+    @projection <name>
+        [+
+        if( [[this.condition]] ) then
+            [[this.whenTrue]]
+        ${this.whenFalse is not empty ?
+        [-
+        else
+            [[this.whenfalse]]
+        -] }
+        endif
+        +]
+
+    @trigger "if"
+    @symbol "+"
+}
+
+functioncallexpression {
+    @projection gewoon
+        [
+        [[this.name]] ( ${ param not empty ? [tekst [[this.param:projectienaam]] } )
+        ]
+    @trigger "function"
+}
+
+Parameter {
+    @projection params
+        [[this.name] : [this.type]]
+    @trigger "param"
+}
+
+// lists
+
+functioncallexpression {
+    @projection gewoon
+        [
+        [[this.name]] ( [[this.params @separator [, ] ]] )
+        ]
+    @trigger "function"
+}
+
+DemoModel {
+    @projection
+        [
+        model [[this.name]] {
+        entities:
+            [[this.entities
+                @vertical
+                @terminator [\n\n]
+            ]]
+        functions:
+            [[this.functions @vertical @terminator [\n] ]]
+        }
+        ]
+ }

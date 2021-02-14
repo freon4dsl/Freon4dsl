@@ -1,0 +1,22 @@
+<package> trainWagon
+
+<class> Train
+<operations> 
++ unlink(w:Wagon);
+<endclass> 
+
+<class> Wagon
+<attributes> 
++ id: String;
++ bar: Boolean;
+<endclass> 
+
+<class> SleepingCar <specializes> Wagon
+<attributes> 
++ numberOfBeds: Integer;
+<endclass>
+
+<associations> 
++ Train.train[1] <-> + Wagon.wagon[0..*];
++ Wagon.pred[0..1] <-> + Wagon.succ[0..1];
+<endpackage> 

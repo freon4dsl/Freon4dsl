@@ -1,0 +1,29 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The Pi-tool Interfaces
+:page-grand_parent: Under the Hood
+:nav_exclude: true
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+=  PiValidator
+
+An object that implements `PiValidator` is able to validate a node in the AST. The
+validation can be only on the node itself or it can include all child-nodes resursively.
+
+The errors that are found are returned in the form of a list of `PiError` objects. Every `PiError`
+holds a message and a reference to the node that is faulty.
+
+If you want to write your own validator you will need to implement this interface.
+
+[source]
+----
+include::{src-dir}/validator/PiValidator.ts[tag=validator-interface]
+----
+
+== PiError
+
+[source]
+----
+include::{src-dir}/validator/PiValidator.ts[tag=error-interface]
+----

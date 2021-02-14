@@ -1,0 +1,87 @@
+validator Entity for language Entity
+
+// tag::value[]
+AttributeType  {
+	self.extra >= 12;
+	self.extra <= 30;
+}
+// end::value[]
+
+// tag::lists[]
+EntityModelUnit {
+    notEmpty self.entities;
+    isunique name in self.entities;
+ // end::lists[]
+    notEmpty self.functions;
+    isunique name in self.functions;
+    validIdentifier; // default is 'name'
+// tag::lists[]
+}
+// end::lists[]
+
+Entity {
+    notEmpty self.attributes;
+    isunique name in self.attributes;
+    notEmpty self.functions;
+    isunique name in self.functions;
+    validIdentifier;
+}
+// tag::valididentifier[]
+AttributeWithLimitedType {
+    validIdentifier self.name;
+}
+Variable {
+    validIdentifier; // default is 'name'
+}
+// end::valididentifier[]
+
+EntityFunction {
+    typecheck conformsTo (self.expression, self.declaredType);
+    isunique name in self.parameters;
+    validIdentifier ;
+}
+
+
+AbsExpression {
+    typecheck equalsType( self.expr, AttributeType:Integer );
+}
+
+
+// tag::typecheck[]
+MultiplyExpression {
+    typecheck equalsType( self.left, AttributeType:Integer );
+    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck conformsTo( self.left, self.right );
+}
+// end::typecheck[]
+
+PlusExpression {
+    typecheck equalsType( self.left, AttributeType:Integer );
+    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck conformsTo( self.left, self.right );
+}
+
+DivideExpression {
+    typecheck equalsType( self.left, AttributeType:Integer );
+    typecheck equalsType( self.right, AttributeType:Integer );
+}
+
+AndExpression {
+    typecheck equalsType( self.left, AttributeType:Boolean );
+    typecheck equalsType( self.right, AttributeType:Boolean );
+}
+
+OrExpression {
+    typecheck equalsType( self.left, AttributeType:Boolean );
+    typecheck equalsType( self.right, AttributeType:Boolean );
+}
+
+ComparisonExpression {
+    typecheck equalsType( self.left, self.right );
+}
+
+IfExpression {
+    typecheck equalsType( self.condition, AttributeType:Boolean );
+    typecheck conformsTo( self.whenTrue, self.whenFalse );
+}
+

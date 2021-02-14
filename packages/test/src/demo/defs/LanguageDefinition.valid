@@ -1,0 +1,82 @@
+validator Demo for language Demo
+
+DemoModel {
+    notEmpty self.entities;
+    isunique name in self.entities;
+    notEmpty self.functions;
+    isunique name in self.functions;
+    validIdentifier; // default is 'name'
+}
+
+DemoEntity {
+    notEmpty self.attributes;
+    isunique name in self.attributes;
+    notEmpty self.functions;
+    isunique name in self.functions;
+    validIdentifier    {
+                       message:
+                       "iets met ${self.name} en nog een ${self.simpleprop} enzo",
+                       severity: eRRor
+                       };
+}
+
+DemoAttribute {
+    validIdentifier self.name
+    {severity: Info,
+    message:
+    "iets met ${self.name} enzo"
+    };
+}
+
+DemoFunction {
+    typecheck conformsTo (self.expression, self.declaredType) {severity: improvement, message: "${self.name} IS NOT CORRECT!!"};
+    isunique name in self.parameters         {severity: improvement};
+    validIdentifier;
+}
+
+DemoVariable {
+    validIdentifier     {
+                        message:
+                        "iets met ${self.name} enzo"
+                        };
+}
+
+DemoAbsExpression {
+    typecheck equalsType( self.expr, DemoAttributeType:Integer );
+}
+
+DemoMultiplyExpression {
+    typecheck equalsType( self.left, DemoAttributeType:Integer );
+    typecheck equalsType( self.right, DemoAttributeType:Integer );
+}
+
+DemoPlusExpression {
+    typecheck equalsType( self.left, DemoAttributeType:Integer )  {severity: improvement};
+    typecheck equalsType( self.right, DemoAttributeType:Integer )  {severity: improvement};
+    typecheck conformsTo( self.left, self.right )  {severity: info, message: "WAT IS DIT LEUK!!"};
+}
+
+DemoDivideExpression {
+    typecheck equalsType( self.left, DemoAttributeType:Integer );
+    typecheck equalsType( self.right, DemoAttributeType:Integer );
+}
+
+DemoAndExpression {
+    typecheck equalsType( self.left, DemoAttributeType:Boolean );
+    typecheck equalsType( self.right, DemoAttributeType:Boolean );
+}
+
+DemoOrExpression {
+    typecheck equalsType( self.left, DemoAttributeType:Boolean );
+    typecheck equalsType( self.right, DemoAttributeType:Boolean );
+}
+
+DemoComparisonExpression {
+    typecheck equalsType( self.left, self.right );
+}
+
+DemoIfExpression {
+    typecheck equalsType( self.condition, DemoAttributeType:Boolean );
+    typecheck conformsTo( self.whenTrue, self.whenFalse );
+}
+

@@ -1,5 +1,5 @@
 import { Box, SelectBox } from "../";
-import { TextBox } from "../boxes/TextBox";
+import { TextBox } from "../editor/boxes/TextBox";
 import { PiElement } from "../language/PiModel";
 import { PiUtils } from "./PiUtils";
 
@@ -7,14 +7,10 @@ export class PiProjectionUtil {
     static textBox(element: PiElement, property: string): TextBox {
         let result: TextBox = null;
         const value = element[property];
-        if (value !== undefined && value != null && typeof value === "string") {
-            result = new TextBox(
-                element,
-                "textbox-" + property,
-                () => element[property],
-                (v: string) => (element[property] = v),
-                { placeHolder: `<${property}>` }
-            );
+        if (value !== undefined && value !== null && typeof value === "string") {
+            result = new TextBox(element, "textbox-" + property, () => element[property], (v: string) => (element[property] = v), {
+                placeHolder: `<${property}>`
+            });
         } else {
             PiUtils.CHECK(false, "Property " + property + " does not exist or is not a string: " + value);
         }

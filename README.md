@@ -3,6 +3,10 @@
 # ProjectIt
 Projectional Editor for the Web.
 
+**NOTE**: ProjectIt has changed significantly since the last release and includes quite a lot more functionality
+for developing languages.
+You should look into the _development_ branch to see the current state of ProjectIt.
+
 ![logo](/public/images/projectit.png)
 
 ## What is ProjectIt

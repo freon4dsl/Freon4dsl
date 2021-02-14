@@ -22,7 +22,7 @@ async function putData() {
 async function getData() {
     console.log("Ha get");
     try {
-        const res = await axios.get("/getModel", {
+        const res = await axios.get("/getModelList", {
             proxy: { host: "127.0.0.1", port: 3001 }
         });
         console.log(res.data + " is " + typeof res.data);

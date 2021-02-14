@@ -1,0 +1,67 @@
+typer Demo for language Demo
+
+// for now: first is considered to be the root of the type hierarchy
+istype { BaseType }
+// TODO: remove errors when this statement is used: istype { DemoEntity, DemoAttributeType, Type }
+
+anytype {
+    // conformsto self.base
+    //conformsto self.implements
+    conformsto DemoAttributeType:ANY;
+    equalsto DemoAttributeType:ANY;
+}
+
+DemoEntity {
+    conformsto self.baseEntity;
+}
+
+DemoAttribute {
+    infertype self.declaredType;
+}
+
+DemoFunction {
+    infertype self.declaredType;
+}
+DemoExpression {
+    abstract infertype ;
+}
+DemoStringLiteralExpression {
+    infertype DemoAttributeType:String;
+}
+DemoNumberLiteralExpression {
+    infertype DemoAttributeType:Integer;
+}
+DemoBooleanLiteralExpression {
+    infertype DemoAttributeType:Boolean;
+}
+DemoAbsExpression {
+    infertype self.expr;
+}
+DemoMultiplyExpression {
+    infertype self.left;
+}
+DemoPlusExpression {
+    infertype self.left;
+}
+DemoDivideExpression {
+    infertype self.left;
+}
+DemoComparisonExpression {
+    infertype DemoAttributeType:Boolean;
+}
+DemoFunctionCallExpression {
+    infertype self.functionDefinition;
+}
+DemoIfExpression    {
+    infertype self.whenTrue;
+}
+DemoVariable {
+    infertype self.declaredType;
+}
+DemoVariableRef   {
+    infertype self.variable.declaredType;
+}
+DemoAttributeRef   {
+    infertype self.attribute.declaredType;
+}
+

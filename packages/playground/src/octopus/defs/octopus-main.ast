@@ -1,0 +1,7 @@
+language octopus
+
+model OctopusModel {
+    name: string;
+    umlParts: UmlPart[];
+    oclParts: OclPart[];
+}

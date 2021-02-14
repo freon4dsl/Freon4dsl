@@ -1,0 +1,73 @@
+{
+  "private": true,
+  "name": "@projectit/test",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joswarmer/ProjectIt.git"
+  },
+  "scripts": {
+    "demo": 	    "bash ../../scripts/projectit-dev.sh all -d src/demo/defs -o src/demo",
+    "meta-it": 		"bash ../../scripts/projectit-dev.sh -v meta-it -l src/demo/defs/LanguageDefinition.ast -o src/demo",
+    "scope-it":     "bash ../../scripts/projectit-dev.sh -v scope-it -l src/demo/defs/LanguageDefinition.ast -s src/demo/defs/LanguageDefinition.scope -o src/demo",
+    "edit-it": 		"bash ../../scripts/projectit-dev.sh -v edit-it -l src/demo/defs/LanguageDefinition.ast -e src/demo/defs/LanguageDefinition.edit -o src/demo",
+    "validate-it": 	"bash ../../scripts/projectit-dev.sh -v validate-it -l src/demo/defs/LanguageDefinition.ast -c src/demo/defs/LanguageDefinition.valid -o src/demo",
+    "type-it": 	    "bash ../../scripts/projectit-dev.sh -v type-it -l src/demo/defs/LanguageDefinition.ast -t src/demo/defs/LanguageDefinition.type -o src/demo",
+    "octopus":      "bash ../../scripts/projectit-dev.sh all -d src/octopus-small/defs -o src/octopus-small",
+    "imports":      "bash ../../scripts/projectit-dev.sh all -d src/testCircularImports/def -o src/testCircularImports",
+    "langconstr":   "bash ../../scripts/projectit-dev.sh all -d src/testLangConstructs/defs -o src/testLangConstructs",
+    "testproject":  "bash ../../scripts/projectit-dev.sh all -d src/testproject/defs -o src/testproject",
+    "defaultscoper":"bash ../../scripts/projectit-dev.sh all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
+    "definedscoper":"cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/ModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/projectit-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
+    "parsergen":    "bash ../../scripts/projectit-dev.sh all -d src/parser_gen/defs -o src/parser_gen",
+    "build":        "yarn run imports && yarn run langconstr && yarn run testproject && yarn run defaultscoper && yarn run definedscoper && yarn run demo && yarn run parsergen && yarn run octopus && tsc",
+    "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
+    "clean-custom": "rm */*/*/Custom*.ts",
+    "clean-init":   "rm */*/*/*Initialization.ts",
+    "clean-parser": "rm -r */*/*parse*",
+    "clean":        "yarn run clean-config && yarn run clean-custom && yarn run clean-init",
+    "test":         "jest"
+  },
+  "devDependencies": {
+    "@uifabric/example-data": "^7.0.9",
+    "@uifabric/fluent-theme": "^7.1.51",
+    "@fluentui/react": "^7.105.13",
+    "@fluentui/react-northstar": "^0.47.0",
+    "@fluentui/react-icons-northstar": "^0.49.0",
+    "@types/pegjs": "^0.10.1",
+    "@types/react": "16.8.15",
+    "@types/react-dom": "16.8.4",
+    "@types/react-router": "^5.1.4",
+    "@types/webpack": "^4.39.2",
+    "@types/webpack-env": "^1.14.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "html-webpack-plugin": "^3.2.0",
+    "mobx-devtools": "^0.9.21",
+    "ts-loader": "^6.2.0",
+    "ts-node": "^8.4.1",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2",
+    "prettier": "^2.0.4",
+    "typescript": "^3.8.3",
+    "@types/pegjs": "^0.10.1",
+    "pegjs": "^0.10.0",
+    "ts-pegjs": "^0.2.6"
+  },
+  "dependencies": {
+    "@projectit/core": "^0.1.0",
+    "@projectit/meta": "^0.1.0",
+    "@types/lodash": "4.14.73",
+    "@types/history": "^4.7.5",
+    "global": "^4.4.0",
+    "mobx": "^5.14.0",
+    "mobx-react": "6.1.3"
+  },
+  "publishConfig": {
+    "access": "private"
+  }
+}

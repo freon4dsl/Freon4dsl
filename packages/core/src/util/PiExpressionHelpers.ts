@@ -1,13 +1,14 @@
+import { LabelBox } from "../editor/boxes";
 import { PiCaret } from "./BehaviorUtils";
-import { STYLES } from "../components/styles/Styles";
-import { AliasBox } from "../boxes/AliasBox";
-import { Box } from "../boxes/Box";
-import { HorizontalListBox, isHorizontalBox } from "../boxes/ListBox";
-import { SelectBox } from "../boxes/SelectBox";
-import { SelectOption } from "../boxes/SelectOption";
+import { STYLES } from "../editor/components/styles/Styles";
+import { AliasBox } from "../editor/boxes/AliasBox";
+import { Box } from "../editor/boxes/Box";
+import { HorizontalListBox, isHorizontalBox } from "../editor/boxes/ListBox";
+import { SelectBox } from "../editor/boxes/SelectBox";
+import { SelectOption } from "../editor/boxes/SelectOption";
 import { PiEditor } from "../editor/PiEditor";
 import { PiBinaryExpression, PiExpression } from "../language/PiModel";
-import { PiProjection } from "../language/PiProjection";
+import { PiProjection } from "../editor/PiProjection";
 import {
     AFTER_BINARY_OPERATOR,
     BTREE,
@@ -22,12 +23,7 @@ import { NBSP, PiUtils } from "./PiUtils";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
-export function createDefaultExpressionBox(
-    exp: PiExpression,
-    role: string,
-    children: Box[],
-    initializer?: Partial<HorizontalListBox>
-): Box {
+export function createDefaultExpressionBox(exp: PiExpression, role: string, children: Box[], initializer?: Partial<HorizontalListBox>): Box {
     const leftMost = BTREE.isLeftMostChild(exp);
     const rightMost = BTREE.isRightMostChild(exp);
     if (leftMost || rightMost) {
@@ -53,23 +49,20 @@ export function createDefaultExpressionBox(
     }
 }
 
-export function createDefaultBinaryBox(
-    projection: PiProjection,
-    exp: PiBinaryExpression,
-    style?: string
-): HorizontalListBox {
+export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
+    const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
     result.addChildren([
-        projection.getBox(exp.piLeft()),
+        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, "PiBinaryExpression-left", "[add-left]", { propertyName: "left"})),
         new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        createOperatorBox(projection["editor"], exp),
+        createOperatorBox(editor, exp, symbol),
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        projection.getBox(exp.piRight())
+        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, "PiBinaryExpression-right", "[add-right]", { propertyName: "right"}))
     ]);
     return result;
 }
@@ -80,13 +73,13 @@ export function createDefaultBinaryBox(
  * @param exp
  * @param style
  */
-export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, style?: string): Box {
+export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: string): Box {
     const operatorBox = new SelectBox(
         exp,
         EXPRESSION_SYMBOL,
         "<...>",
         () => {
-            if (editor.actions && editor.actions.binaryExpressionCreators) {
+            if (!!editor.actions && editor.actions.binaryExpressionCreators) {
                 return editor.actions.binaryExpressionCreators
                     .filter(e => !e.isApplicable || e.isApplicable(operatorBox))
                     .map(e => ({
@@ -103,9 +96,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sty
         () => null,
         async (option: SelectOption) => {
             if (editor.actions && editor.actions.binaryExpressionCreators) {
-                const alias = editor.actions.binaryExpressionCreators.filter(
-                    e => (e.trigger as string) === option.id
-                )[0];
+                const alias = editor.actions.binaryExpressionCreators.filter(e => (e.trigger as string) === option.id)[0];
                 if (alias) {
                     const newExp = alias.expressionBuilder(operatorBox, alias.trigger, editor);
                     newExp.piSetLeft(exp.piLeft());
@@ -124,7 +115,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sty
     );
 
     operatorBox.getSelectedOption = () => {
-        return { id: exp.piSymbol(), label: exp.piSymbol() };
+        return { id: symbol, label: symbol };
     };
 
     return operatorBox;

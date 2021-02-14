@@ -1,0 +1,26 @@
+// This is the definition of the namescopes of the language
+language PlayGroundLanguage
+
+@namespace PG_Module 
+@namespace PG_Entity 
+@namespace PG_Function 
+
+@scopeDef PG_Visibility { public, private, whatever }
+// extra scopeDefs are possible
+
+PG_Variable {
+    @constrainScope this.visibility : PG_Visibility.public || PG_Visibility.whatever
+    @exported = if (this.visibility == public)
+}
+
+// the following can maybe be part of the standard library
+// but seems better placed here
+@langscope self : Entity {	
+	in c: Entity return c, 
+   	in m: Model return m.entities.first,
+  	in f: Function return f.parentEntity or f.parentModel.entities.first
+    // above is an example of possible different parent types for a model element
+}
+
+// extra: can be added if necessary
+@modulescope xx: TYPE {}

@@ -1,0 +1,21 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The Pi-tool Interfaces
+:page-grand_parent: Under the Hood
+:nav_exclude: true
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+=  PiScoper
+
+An object that implements `PiScoper` is able to return the named elements that are visible
+for a certain AST node. This node can be a 'normal' model element or it can be a namespace.
+If the node is a 'normal' element, the names visbible in its (lexical) surrounding namespace
+are returned.
+
+If you want to write your own scoper you will need to implement this interface.
+
+[source]
+----
+include::{src-dir}/scoper/PiScoper.ts[tag=scoper-interface]
+----

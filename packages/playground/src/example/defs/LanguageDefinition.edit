@@ -1,0 +1,161 @@
+editor User for language Example
+
+Attribute {
+    @projection attribuut [
+        ${self.name} : ${self.declaredType}
+    ]
+}
+
+Entity {
+    @projection [
+        Entity ${self.name} [? base ${self.baseEntity}] {
+            ${self.attributes @vertical @separator [\n]}
+            ${self.methods @vertical @separator [\n]}
+        }
+    ]
+    @trigger "entity"
+}
+
+ExModel {
+    @projection Model
+        [
+        model ${self.name} {
+            ${self.entities
+                @vertical
+                @terminator [\n]
+            }
+        model wide Methods:
+            ${self.methods @vertical @separator [\n] }
+        }
+        ]
+}
+
+Method {
+    @projection [
+        method ${self.name} ( ${self.parameters @separator[,] } ): ${self.declaredType} {
+            ${self.body}
+        }
+    ]
+}
+
+Parameter {
+    @projection attribuut [
+        ${self.name} : ${self.declaredType}
+    ]
+}
+
+MethodCallExpression {
+    @projection MethodCallExpression
+        [
+        CALL ${self.methodDefinition} ( ${self.args @separator[,] } )
+        ]
+    @trigger "method"
+}
+
+SumExpression {
+    @projection [
+        sum from ${self.variable} = ${self.from} to ${self.to} of ${self.body}
+    ]
+    @trigger "sum"
+}
+
+LoopVariableRef {
+    @projection [ ${self.variable} ]
+}
+
+LoopVariable {
+    @projection [ ${self.name} ]
+    @trigger    "var"
+}
+
+
+NumberLiteralExpression {
+    @projection normal
+        [${self.value}]
+}
+
+StringLiteralExpression {
+    @projection StringLiteralExpression
+        [
+        '${self.value}'
+        ]
+    @trigger "'"
+}
+
+PlusExpression {
+    @symbol "+"
+}
+
+MultiplyExpression {
+    @symbol "*"
+}
+
+DivideExpression {
+    @symbol "/"
+}
+
+LessThenExpression {
+    @symbol "<"
+}
+
+OrExpression {
+    @symbol "or"
+}
+AndExpression {
+    @symbol "and"
+}
+GreaterThenExpression {
+    @symbol ">"
+}
+EqualsExpression {
+    @symbol "=="
+}
+
+BooleanLiteralExpression {
+    @projection [ ${self.value} ]
+    @trigger "boolean"
+}
+
+
+AttributeRef {
+    @projection [ ${self.attribute} ]
+    @trigger "attribute"
+}
+
+ParameterRef {
+    @projection [ ${self.parameter} . ${self.appliedfeature} ]
+}
+
+
+IfExpression {
+    @projection IfExpression
+        [
+        if (${self.condition}) then
+            ${self.whenTrue}
+        else
+            ${self.whenFalse}
+        endif
+        ]
+    @trigger "if"
+}
+
+AbsExpression {
+    @projection default [
+        abs( ${self.expr} )
+    ]
+}
+/*
+
+//IfExpression {
+//    @projection IfExpression
+//        [
+//        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
+//        ]
+//    @trigger "if"
+//}
+/*
+
+/*
+*/
+/*
+*/

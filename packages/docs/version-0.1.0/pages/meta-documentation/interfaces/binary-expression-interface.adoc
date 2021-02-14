@@ -1,0 +1,19 @@
+:imagesdir: ../../images
+:page-nav_order: 10
+:page-parent: The ProjectIt Interfaces
+:page-grand_parent: Under the Hood
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:listing-caption: Code Sample
+=  PiBinaryExpression
+
+An object that implements `PiBinaryExpression` can be a node in the model AST. It represents
+an expression that has exactly two operands, which are usually written to the left and right of
+the operator symbol. For example, '4+5'.
+
+This interface extends the xref:expression-interface.adoc[`PiExpression`] interface.
+
+[source]
+----
+include::{src-dir}/language/PiModel.ts[tag=binary-expression-interface]
+----

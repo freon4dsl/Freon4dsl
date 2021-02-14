@@ -1,14 +1,7 @@
 {
-  "packages": [
-    "packages/core",
-    "packages/model",
-    "packages/meta",
-    "packages/demo",
-    "packages/server"
-  ],
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "version": "0.0.4",
+  "version": "0.1.0",
   "publishConfig": {
     "access": "public"
   }

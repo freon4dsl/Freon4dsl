@@ -1,0 +1,174 @@
+language TaxRules
+
+model RevenueService {
+    name: string;
+    rules: TaxRuleSet; //[]
+    payers: TaxPayer[];
+}
+
+modelunit TaxRuleSet {
+    public name: string;
+    year: string; //number
+    taxrules: TaxRule[];
+}
+
+modelunit TaxPayer {
+    public name: string;
+    address: string;
+    payerType: TaxPayerType;
+    taxId: TaxID;
+    incomeParts: IncomePart[];
+    totalIncome: Money;
+    totalTaxes: Money;
+}
+
+concept IncomePart {
+    incomeType: IncomeType;
+    deduction: Money;
+    amount: Money;
+    reference source: TaxPayer;
+}
+
+concept Money {
+    amount: string; //number
+    // currency: ???
+}
+
+concept TaxID {
+    id : string; //number
+}
+
+concept TaxRule { 
+    name: string;
+//    parameters: RuleParameter[]
+    expression: TaxExpression;
+//    result : Money
+}
+
+concept RuleParameter {
+    name : string;
+    type : IncomePart;
+}
+
+expression PercentageExpression base TaxExpression {
+    inner: TaxExpression;
+    priority = 2;
+}
+
+expression MoneyLiteralExp base LiteralExpression {
+}
+
+concept TaxRuleCall {//base FunctionCallExpression {
+    reference functionDefinition: TaxRule;
+}
+
+limited IncomeType {
+    name: string;
+    Salary  = {"name": "Salary"}
+    Royalties  = {"name": "Royalties"}
+    Gift  = {"name": "Gift"}
+}
+
+limited TaxPayerType {
+    name: string;
+    Company = {"name": "Company"}
+    NGO = {"name": "NGO"}
+    Goverment = {"name": "Goverment"}
+    Person = {"name": "Person"}
+}
+
+//expression FunctionCallExpression base TaxExpression {
+//    reference functionDefinition: Function
+//}
+
+//expression VariableRef base TaxExpression {
+//    referredName: string
+//    reference attribute: Attribute
+//}
+
+// import TaxExpression lib
+abstract expression TaxExpression {
+    //appliedfeature?: AppliedFeature;
+}
+/*
+TODO add appliedFeature when the editor is capable of working with placeholders in general
+expression AppliedFeature {
+    appliedfeature: AppliedFeature;
+    value: string;
+    // reference type: Entity;
+}
+*/
+// expression placeholder PlaceholderExpression {
+//    appliedfeature: AppliedFeature;
+// }
+
+abstract expression LiteralExpression base TaxExpression {
+    value: string;
+}
+
+expression StringLiteralExpression base LiteralExpression {
+}
+
+expression NumberLiteralExpression base LiteralExpression {
+}
+
+expression BooleanLiteralExpression base LiteralExpression {
+}
+
+expression AbsExpression base TaxExpression {
+    expr: TaxExpression;
+}
+
+abstract binary expression BinaryExpression base TaxExpression {
+    left: TaxExpression;
+    right: TaxExpression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression PlusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression AndExpression base BinaryExpression {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpression {
+    priority = 1;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpression {
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 10;
+}
+
+expression IfExpression base TaxExpression {
+    condition: TaxExpression;
+    whenTrue: TaxExpression;
+    whenFalse: TaxExpression;
+}
+
+// end import TaxExpression lib
+
+
+// in Scope Def: langscope generalDeduction : Money = 3000,-
+// in Scope Def: langscope toBePaid : Money // holds result for every TaxRule
+// in Type def: PercentageExpression { inner.type = number }
+// in Type def: MoneyLiteralExp  inferType = Money

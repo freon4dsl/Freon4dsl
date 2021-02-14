@@ -1,0 +1,25 @@
+:imagesdir: ../../images
+:page-nav_order: 50
+:page-title: The ProjectIt Core Interfaces
+:page-parent: Under the Hood
+:page-has_children: true
+:src-dir: ../../../../../core/src
+:source-language: javascript
+:page-has_toc: false
+:listing-caption: Code Sample
+= The ProjectIt Core Interfaces
+
+There are two series of interfaces that make ProjectIt and its generated code extensible and flexible. The first
+series are the xref:../tools-interfaces/tools-interfaces-intro.adoc[interfaces of the generated code].
+
+The second series of interfaces are those that define parts of the core of the ProjectIt framework:
+
+. xref:projection-interface.adoc[PiProjection]
+. xref:action-interface.adoc[PiActions]
+. xref:expression-interface.adoc[PiExpression]
+. xref:binary-expression-interface.adoc[PiBinaryExpression]
+
+In both series the following two interfaces are used:
+
+. xref:element-interface.adoc[PiElement]
+. xref:named-element-interface.adoc[PiNamedElement]

@@ -1,0 +1,46 @@
+model Script {
+	expressions: XExpressionOrVarDeclaration[];
+}
+
+concept XLiteral base XExpression {
+  XClosure |
+  XBooleanLiteral |
+  XNullLiteral |
+  XStringLiteral |
+  XNumberLiteral |
+  XTypeLiteral |
+  QuantityLiteral
+}
+
+concept QuantityLiteral base XExpression {
+    value: number;
+    unit: AbstractUnit;
+}
+
+abstract concept AbstractUnit {
+}
+
+concept StringUnit base AbstractUnit {
+    value: string;
+}
+
+concept IDUnit base AbstractUnit {
+    value: string; // ID
+}
+
+concept SpecificUnit base AbstractUnit {
+    value: COMMON_UNIT_SYMBOLS;
+}
+
+limited COMMON_UNIT_SYMBOLS {
+    name: string;
+    symbol: string;
+    Celsius = { name: "Celsius", symbol: "°C" }
+    Fahrenheit = { name: "Fahrenheit", symbol: "°F" }
+    Ohm = { name: "Ohm", symbol: "Ω" }
+    SomeOtherName = { name: "SomeOtherName", symbol: "℃" }
+    Angle = { name: "Angle", symbol: "°" }
+    Percentage = { name: "Percentage", symbol: "%" }
+    SquareMeters = { name: "SquareMeters", symbol: "m²" }
+    CubicMeters = { name: "CubicMeters", symbol: "m³" }
+}
