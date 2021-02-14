@@ -30,6 +30,7 @@
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-templates": "cp src/editordef/generator/templates/styles/* ./dist/editordef/generator/templates/styles",
     "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
+    "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "test": "jest",

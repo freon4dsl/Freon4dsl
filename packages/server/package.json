@@ -13,6 +13,7 @@
     "build": "tsc",
     "build-release": "yarn build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
+    "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
