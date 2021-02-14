@@ -33,7 +33,7 @@ yarn-debug.log
 yarn-error.log
 
 # generated docs
-docs/*
+# docs/*
 
 # generated files
 **/gen/*
