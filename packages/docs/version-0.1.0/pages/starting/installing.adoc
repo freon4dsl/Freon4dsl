@@ -21,7 +21,7 @@ xref:example[Example project] or use our xref:template[Template project].
 The simplest manner to start working with ProjectIt is to clone the example project from github.
 In the following the root of your project will be indicated with '~'.
 
-*   Clone branche `master` from link:https://github.com/projectit-org/ProjectIt-example[https://github.com/projectit-org/ProjectIt-example, window=_blank].
+*   Clone branch `master` from link:https://github.com/projectit-org/ProjectIt-example[https://github.com/projectit-org/ProjectIt-example, window=_blank].
 (For an explanation of the content of the project see xref:code-organisation.adoc[source code organisation].)
 
 *   Next, install all necessary packages by running: +
@@ -57,7 +57,7 @@ a shell for the generated editor that enables the user to work with multiple mod
 xref:../intro/modelunits.adoc[model units].
 In the following the root of the project will be indicated with '~'.
 
-*   Clone branche `master` from link:https://github.com/projectit-org/ProjectIt-template[https://github.com/projectit-org/ProjectIt-template, window=_blank].
+*   Clone branch `master` from link:https://github.com/projectit-org/ProjectIt-template[https://github.com/projectit-org/ProjectIt-template, window=_blank].
 (For an explanation of the content of the project see xref:code-organisation.adoc[source code organisation].)
 
 *   Next, install all necessary packages by running: +
@@ -122,6 +122,6 @@ Now you are ready for a closer look at ProjectIt. You can for instance:
 
 * Have a look at how the example language is defined by browsing through the language definition
 files in the ProjectIt Example project. You can find them in `~/src/defs`,
-* Or, follow our xref:../second-level/tutorials.adoc[tutorials] to create your own language,
+* Or, follow our xref:../second-level/tutorials-intro.adoc[tutorials] to create your own language,
 * Have a look at the xref:./code-organisation.adoc[source code organisation] of the generated project,
 * See what the different options are for calling the xref:./commandline.adoc[ProjectIt generator].
