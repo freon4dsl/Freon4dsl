@@ -187,8 +187,8 @@ limited limitedWithBase base limitedConcept1 {
     extraProp2: number;
     extraProp3: boolean;
     eersteB = { extraProp1 : "xxx"}
-    tweedeB = { extraProp2 : "1247"}
-    derdeB = { extraProp3 : "false"}
+    tweedeB = { extraProp2 : 1247}
+    derdeB = { extraProp3 : false}
     FOURTH;     // TODO issue 120: maybe we should give a warning that this is the same name as in the base concept
 }
 
