@@ -1,5 +1,5 @@
 import { DSmodel } from "../language/gen";
-import { ModelCreator } from "./ModelCreator";
+import { SimpleModelCreator } from "./SimpleModelCreator";
 import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
 import * as fs from "fs";
 
@@ -11,7 +11,7 @@ function print(prefix: string, visibleNames: string[]) {
     console.log(prefix + ": " + printable);
 }
 
-function printDifference(creator: ModelCreator, visibleNames: string[]) {
+function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
     const diff: string[] = [];
     for (const yy of creator.allNames) {
         if (!visibleNames.includes(yy)) {
@@ -24,7 +24,7 @@ function printDifference(creator: ModelCreator, visibleNames: string[]) {
 }
 
 describe("Testing Default Scoper", () => {
-    const creator = new ModelCreator();
+    const creator = new SimpleModelCreator();
     const environment = ScoperTestEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
     const scoper = environment.scoper;
     const unparser = environment.writer;
@@ -33,6 +33,7 @@ describe("Testing Default Scoper", () => {
         const model: DSmodel = creator.createModel(1, 2 );
         // run the scoper to test all names in the model
         const visibleNames = scoper.getVisibleNames( model );
+        printDifference(creator, visibleNames);
         // print("names in model of depth 2: ", visibleNames);
         for (const x of creator.allNames) {
             expect(visibleNames).toContain(x);
@@ -110,6 +111,8 @@ describe("Testing Default Scoper", () => {
             errorMessages.push(mess.message + " in " + mess.locationdescription);
         });
         print("found errors", errorMessages);
-        expect (errors.length).toBe(2);
+        expect(errors.length).toBe(2);
+        expect(errorMessages.includes("Reference 'unit16_OF_model' should have type 'DSref', but found type(s) [DSunit] in conceptRefs of public17_OF_unit16_OF_model")).toBeTruthy();
+        expect(errorMessages.includes("Cannot find reference 'private15_OF_private13_OF_private9_OF_unit1_OF_model' in conceptRefs of public17_OF_unit16_OF_model")).toBeTruthy();
     });
 });

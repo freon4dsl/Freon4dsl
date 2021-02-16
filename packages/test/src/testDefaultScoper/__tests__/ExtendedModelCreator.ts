@@ -1,12 +1,18 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
 import { GenericModelSerializer } from "@projectit/core";
+import { ScoperTestWalker } from "../utils/gen";
+import { RefCreator } from "./RefCreator";
 
-export class ModelCreator {
+// This class creates a model like SimpleModelCreator,
+// but adds more extensive references
+
+export class ExtendedModelCreator {
     private breadth = 1;
     private nameNumber: number = 0;
     public allNames: string[] = [];
     private serial: GenericModelSerializer = new GenericModelSerializer();
     private numberOfRefs: number = 0;
+    private allReferences: PiElementReference<DSref>[] = [];
 
     createName(parent: string, type: string): string {
         this.nameNumber += 1;
@@ -31,11 +37,13 @@ export class ModelCreator {
         for (let i = 0; i < nrOfUnits; i++) {
             modelUnits.push(this.createUnit("model", depth));
         }
-        // add references, after all names have been created
+        const model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+        this.makeAllReferences(model);
+        // add references
         for (let i = 0; i < nrOfUnits; i++) {
             this.addReferencesToUnit(modelUnits[i]);
         }
-        return DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+        return model;
     }
 
     /**
@@ -66,11 +74,13 @@ export class ModelCreator {
                 modelUnits.push(unitInterface);
             }
         }
-        // add references, after all names have been created
+        const model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+        this.makeAllReferences(model);
+        // add references
         for (let i = 0; i < nrOfUnits; i++) {
             this.addReferencesToUnit(modelUnits[i]);
         }
-        return DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+        return model;
     }
 
     createUnit(parent: string, depth: number): DSunit {
@@ -92,6 +102,12 @@ export class ModelCreator {
         return DSpublic.create({ name: partName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
     }
 
+    createPrivate(parentName: string, depth: number): DSprivate {
+        const privateName = this.createName(parentName, "private");
+        const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, privateName);
+        return DSprivate.create({ name: privateName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
+    }
+
     private makePublicsAndPrivates(depth: number, partName: string) {
         const dsPublics: DSpublic[] = [];
         const dsPrivates: DSprivate[] = [];
@@ -106,63 +122,36 @@ export class ModelCreator {
         return { dsPublics, dsPrivates };
     }
 
-    createPrivate(parent: string, depth: number): DSprivate {
-        const privateName = this.createName(parent, "private");
-        const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, privateName);
-        return DSprivate.create({ name: privateName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
-    }
-
     private addReferencesToUnit(dSunit: DSunit) {
-        const referedNames = this.allNames;
-        for (let i = 0; i < this.breadth * 2; i++) {
-            const index = this.makeReferenceIndex();
-            if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
-                dSunit.dsRefs.push(someReference);
-            } else {
-                console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
-            }
-            dSunit.dsPrivates.forEach(part => this.addReferencesToPrivate(part));
-            dSunit.dsPublics.forEach(part => this.addReferencesToPublic(part));
+        for (const ref of this.allReferences) {
+            // copy ref
+            const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(ref.pathname, "DSref");
+            dSunit.dsRefs.push(someReference);
+        }
+        dSunit.dsPrivates.forEach(part => this.addReferences(part));
+        dSunit.dsPublics.forEach(part => this.addReferences(part));
+    }
+
+    private addReferences(part: DSprivate) {
+        for (const ref of this.allReferences) {
+            // copy ref
+            const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(ref.pathname, "DSref");
+            part.conceptRefs.push(someReference);
         }
     }
 
-    private addReferencesToPrivate(part: DSprivate) {
-        for (let i = 0; i < this.breadth * 2; i++) {
-            const index = this.makeReferenceIndex();
-            if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
-                part.conceptRefs.push(someReference);
-            } else {
-                console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
-            }
-        }
-    }
-
-    private addReferencesToPublic(part: DSpublic) {
-        for (let i = 0; i < this.breadth * 2; i++) {
-            const index = this.makeReferenceIndex();
-            if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
-                part.conceptRefs.push(someReference);
-            } else {
-                console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
-            }
-        }
-    }
-
-    private makeReferenceIndex(): number {
-        let result: number;
-        result = this.allNames.length - this.numberOfRefs - 1;
-
-        if (result < 0 || result >= this.allNames.length) {
-            this.numberOfRefs = 0;
-            // console.log("replacing result " + result + " with " + this.allNames.length);
-            result = this.makeReferenceIndex();
-        }
-        this.numberOfRefs += 1;
-        return result;
+    private makeAllReferences(model: DSmodel) {
+        const walker: ScoperTestWalker = new ScoperTestWalker();
+        const worker: RefCreator = new RefCreator();
+        walker.myWorkers.push(worker);
+        walker.walk(model, () => {
+            return true;
+        });
+        let printStr: string = "";
+        worker.references.forEach(ref => {
+           printStr += ref.pathnameToString("/") + "\n";
+        });
+        console.log(printStr);
+        this.allReferences = worker.references;
     }
 }
-
-function isOdd(num) { return num % 2; }

@@ -47,12 +47,13 @@ export class ReferenceCheckerTemplate {
             ${allMethods}           
             
             private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
+                // TODO adjust this to pathnames in PiElementReference
                 const scoper = ${environmentName}.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
                         new PiError(                                       
-                            \`Reference '\${referredElem.name}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
+                            \`Reference '\${referredElem.pathnameToString("/")}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
                                 modelelement,
                                 \`\${propertyName} of \${locationDescription}\`,
                             PiErrorSeverity.Error
@@ -60,7 +61,7 @@ export class ReferenceCheckerTemplate {
                     );
                 } else {
                     this.errorList.push(
-                        new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, PiErrorSeverity.Error)
+                        new PiError(\`Cannot find reference '\${referredElem.pathnameToString("/")}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, PiErrorSeverity.Error)
                     );
                 }
             }
@@ -75,13 +76,13 @@ export class ReferenceCheckerTemplate {
                 if (prop.isList) {
                     result += `for (const referredElem of modelelement.${prop.name} ) {
                         if (referredElem.referred === null) {
-                            this.makeErrorMessage(modelelement, referredElem, "${prop.name}", "${locationdescription}");
+                            this.makeErrorMessage(modelelement, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
                             hasFatalError = true;
                         }
                     }`;
                 } else {
                     result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) {
-                            this.makeErrorMessage(modelelement, modelelement.${prop.name}, "${prop.name}", "${locationdescription}");
+                            this.makeErrorMessage(modelelement, modelelement.${prop.name}, "${prop.name}", \`\${${locationdescription}}\`);
                             hasFatalError = true;
                     }`;
                 }
