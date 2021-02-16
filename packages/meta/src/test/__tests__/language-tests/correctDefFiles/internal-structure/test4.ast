@@ -18,7 +18,7 @@ limited BB {
     AAprop4: number[];
     AAprop5: boolean;
     AAprop6: boolean[];
-    BB1 = {AAprop1: "some_text", AAprop3: "5", AAprop5: "true" }
+    BB1 = {AAprop1: "some_text", AAprop3: 5, AAprop5: true }
 }
 
 limited CC {
@@ -32,10 +32,10 @@ limited CC {
     CC1 = {
     AAprop1: "some_text",
     AAprop2: [ "text1", "text2" ],
-    AAprop3: "78",
-    AAprop4: [ "102", "3489" ],
-    AAprop5: "true",
-    AAprop6: [ "false", "false" ]
+    AAprop3: 78,
+    AAprop4: [ 102, 3489 ],
+    AAprop5: true,
+    AAprop6: [ false, false ]
     }
-    CC2 = {AAprop1: "other_text", AAprop3: "99999", AAprop5: "false" }
+    CC2 = {AAprop1: "other_text", AAprop3: 99999, AAprop5: false }
 }
