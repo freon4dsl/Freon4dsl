@@ -27,7 +27,7 @@ number              = [0-9]
 
 numberliteral     = nums:number+ { return nums.join(""); }
 
-// van javascript example
+// from javascript example
 SingleLineComment
   = "//" (!LineTerminator SourceCharacter)*
 

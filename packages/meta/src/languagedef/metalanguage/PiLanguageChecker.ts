@@ -10,7 +10,8 @@ import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
 const LOGGER = new MetaLogger("PiLanguageChecker").mute();
-const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements"];
+const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements", "in"];
+// "in" is reserved word in pegjs
 
 // TODO add check: priority error from parser into checker => only for expression concepts
 
@@ -377,12 +378,12 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                                     piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
                                     if (!myProp.isList) {
                                         this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myProp.primType),
-                                            `Type of '${piPropertyInstance.value}' does not equal type of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
+                                            `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myProp.primType}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
                                     } else {
                                         if (!!piPropertyInstance.valueList) {
                                             piPropertyInstance.valueList.forEach(value => {
                                                 this.simpleCheck(this.checkValueToType(value, myProp.primType),
-                                                    `Type of '${value}' does not equal type of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
+                                                    `Type of '${value}' (${typeof value}) does not fit type (${myProp.primType}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
                                             });
                                         }
                                     }
@@ -456,7 +457,28 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             {
                 check: !!element.primType,
                 error: `Property '${element.name}' should have a type ${this.location(element)}.`,
-                whenOk: () => this.checkPrimitiveType(element.primType, element)
+                whenOk: () => {
+                    this.checkPrimitiveType(element.primType, element);
+                    // check initial value(s)
+                    if (!element.isList) {
+                        this.simpleCheck(!element.initialValueList,
+                            `Initial value of property '${element.name}' should be a single value ${this.location(element)}.`);
+                        if (element.initialValue !== null && element.initialValue !== undefined) { // the property has an initial value, so check it
+                            this.simpleCheck(this.checkValueToType(element.initialValue, element.primType),
+                                `Type of '${element.initialValue}' (${typeof element.initialValue}) does not fit type (${element.primType}) of property '${element.name}' ${this.location(element)}.`);
+                        }
+                    } else {
+                        this.simpleCheck(element.initialValue == null || element.initialValue == undefined,
+                            `Initial value of property '${element.name}' should be a list value ${this.location(element)}.`);
+                        if (!!element.initialValueList) { // the property has an initial value, so check it
+                            element.initialValueList.forEach(value => {
+                                this.simpleCheck(this.checkValueToType(value, element.primType),
+                                    `Type of '${value}' (${typeof element.initialValue}) does not fit type (${element.primType}[]) of property '${element.name}' ${this.location(element)}.`);
+                            });
+                        }
+                    }
+                    // end check initial value(s)
+                }
             });
     }
 
@@ -509,17 +531,21 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
      * @param primType
      */
     private checkValueToType(value: PiPrimitiveType, primType: string): boolean {
-        if (primType === "number") {
-            if (!isNaN(Number(value)) ) {
-                return true;
-             }
-        } else if (primType === "boolean") {
-            if ((value === "false" || value === "true")) {
-                return true;
-            }
-        } else if (primType === "string") {
+        LOGGER.log("checkValueToType: " + value + ", " + primType + ", typeof " + typeof value);
+        if (typeof value === primType) {
             return true;
         }
+        // if (primType === "number") {
+        //     if (!isNaN(Number(value)) ) {
+        //         return true;
+        //     }
+        // } else if (primType === "boolean") {
+        //     if ((value === "false" || value === "true")) {
+        //         return true;
+        //     }
+        // } else if (primType === "string") {
+        //     return true;
+        // }
         return false;
     }
 

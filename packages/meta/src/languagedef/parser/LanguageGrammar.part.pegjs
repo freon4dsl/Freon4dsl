@@ -118,9 +118,7 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
 property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
-// TODO add initialvalue
-// partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
-partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? semicolon_separator
+partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
     {
         if (type === "string" || type === "boolean" || type === "number") {
             return create.createPrimitiveProperty({
@@ -129,6 +127,7 @@ partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? name_sepa
                 "primType": type,
                 "isOptional": (isOptional?true:false),
                 "isList": (isList?true:false),
+                "initialValue": initialvalue,
                 "location": location()
             });
         } else {
@@ -197,8 +196,8 @@ propDef = "\"" name:var "\"" name_separator value:propValue
     { return create.createPropDef( {"name": name, "value": value, "location": location() } ); }
 
 propValue = "\"" value:string "\""      { return value; }
-          / "false"                     { return "false"; }
-          / "true"                      { return "true"; }
+          / "false"                     { return false; }
+          / "true"                      { return true; }
           / number:numberliteral        { return Number.parseInt(number); }
           / "[" ws list:propValueList ws "]"  { return list; }
           / "[]"

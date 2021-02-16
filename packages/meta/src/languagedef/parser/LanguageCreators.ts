@@ -174,6 +174,8 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // TODO data.initialValue is ignored for Part and Reference Properties
+    // they should at least result in an error message
 }
 
 export function createPrimitiveProperty(data: Partial<PiPrimitiveProperty>): PiPrimitiveProperty {
@@ -182,6 +184,15 @@ export function createPrimitiveProperty(data: Partial<PiPrimitiveProperty>): PiP
     result.isPart = true;
     if (!!data.primType) {
         result.primType = data.primType;
+    }
+    // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
+    // we are not interested in its value, only whether it is present
+    if (data.initialValue !== null && data.initialValue !== undefined) {
+        if (Array.isArray(data.initialValue)) {
+            result.initialValueList = data.initialValue;
+        } else {
+            result.initialValue = data.initialValue;
+        }
     }
     createCommonPropertyAttrs(data, result);
     return result;
@@ -254,7 +265,7 @@ export function createInstance(data: Partial<PiInstance>) : PiInstance {
     }
     // if the user has not provided a value for the 'name' property,
     // or the instance was defined using the shorthand that simulates enumeration
-    // create a value for the 'name' property based on 'data.name
+    // create a value for the 'name' property based on 'data.name'
     if (!(!!data.props) || !data.props.some(prop => prop.name === "name")) {
         const prop = new PiPropertyInstance();
         prop.name = "name";
@@ -275,7 +286,9 @@ export function createPropDef(data: Partial<PiPropertyInstance>) : PiPropertyIns
     if (!!data.name) {
         result.name = data.name;
     }
-    if (!!data.value) {
+    // in the following statement we cannot use "!!data.value" because it could be a boolean
+    // we are not interested in its value, only whether it is present
+    if (data.value !== null && data.value !== undefined) {
         if (Array.isArray(data.value)) {
             result.valueList = data.value;
         } else {

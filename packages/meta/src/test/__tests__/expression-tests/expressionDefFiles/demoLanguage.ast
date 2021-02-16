@@ -71,10 +71,10 @@ expression DemoVariableRef base DemoExpression {
 limited DemoAttributeType implements BaseType {
     name: string;
     extra: number;
-    String = { name: "String", "extra": "199"}
-    Integer = { "name": "Integer", "extra": "240261"}
-    Boolean = { "name": "Boolean", "extra": "5479"}
-    ANY = { "name": "ANY", "extra": "456"}
+    String = { name: "String", "extra": 199}
+    Integer = { "name": "Integer", "extra": 240261}
+    Boolean = { "name": "Boolean", "extra": 5479}
+    ANY = { "name": "ANY", "extra": 456}
 }
 
 abstract expression DemoLiteralExpression base DemoExpression {}

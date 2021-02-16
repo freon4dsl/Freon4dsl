@@ -8,12 +8,22 @@ model TestStart {
 concept AA  {
     name: string;
     // the possibilities for primitive properties
-    AAprop1: string;
-    AAprop2: string[];
-    AAprop3: number;
-    AAprop4: number[];
-    AAprop5: boolean;
-    AAprop6: boolean[];
+    // incorrect
+//    AAprop1a: string = false;
+//    AAprop1b: string = 102;
+//    AAprop2a: string[] = [12, 24, 36, 48];
+//    AAprop3a: number = "102";
+//    AAprop4a: number[] = "AAP";
+//    AAprop5a: boolean = [true, false, true, false, true];
+//    AAprop6a: boolean[] = false;
+
+    // correct
+    AAprop1: string = "EEN TEKST";
+    AAprop2: string[] = ["AAP", "NOOT", "MIES"];
+    AAprop3: number = 102;
+    AAprop4: number[] = [12, 24, 36, 48];
+    AAprop5: boolean = false;
+    AAprop6: boolean[] = [true, false, true, false, true];
     // properties with concept as type
     reference AAprop7: BB;
     reference AAprop8: BB[];
@@ -65,8 +75,8 @@ limited XX { XXinstance1; XXinstance2; XXinstance3; }
 limited TestLimited {
      name: string;
      something: boolean;
-     Object1 = { name: "ONWAAR", something: "false" }
-     Object2 = { name: "WAAR",  something: "true" }
+     Object1 = { name: "ONWAAR", something: false }
+     Object2 = { name: "WAAR",  something: true }
 }
 
 limited KK {
@@ -80,10 +90,10 @@ limited KK {
      CC1 = {
      AAprop1: "some_text",
      AAprop2: [ "text1", "text2" ],
-     AAprop3: "78",
-     AAprop4: [ "102", "3489" ],
-     AAprop5: "true",
-     AAprop6: [ "false", "false" ]
+     AAprop3: 78,
+     AAprop4: [ 102, 3489 ],
+     AAprop5: true,
+     AAprop6: [ false, false ]
      }
-     CC2 = {AAprop1: "other_text", AAprop3: "99999", AAprop5: "false" }
+     CC2 = {AAprop1: "other_text", AAprop3: 99999, AAprop5: false }
 }
