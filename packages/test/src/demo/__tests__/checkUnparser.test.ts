@@ -69,7 +69,7 @@ describe("Testing Unparser", () => {
             const variable = new DemoVariable();
             variable.name = "Person";
             // variable.declaredType = DemoAttributeType.String;
-            variableExpression.variable = PiElementReference.createNamed<DemoVariable>(variable.name, "DemoVariable");
+            variableExpression.variable = PiElementReference.create<DemoVariable>(variable.name, "DemoVariable");
 
             // variableExpression.referredName = "Person";
             // variableExpression.attribute = new DemoAttribute();
