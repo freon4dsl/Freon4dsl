@@ -184,7 +184,7 @@ export class NamespaceTemplate {
                 const myWalker = new ${Names.walker(language)}();
                 myWalker.myWorkers.push( myNamesCollector );
                 
-                // collect the elements from the namespace
+                // collect the elements from the namespace, but not from any child namespace
                 myWalker.walk(this._myElem, (elem: ${Names.allConcepts(language)})=> { return !isNameSpace(elem); } );`;
         // for (let piConcept of scopedef.namespaces) {
         //     let myClassifier = piConcept.referred;
