@@ -81,7 +81,7 @@ In the following screenshot, we use `~/src/defs` and `~/src/picode`, respectivel
 ====
 [#img-package-json-adjustment]
 .Screenshot of package.json
-image::packagejson-adjustment.png[package-json-adjustment]
+image::packagejsonadjustment.png[package-json-adjustment]
 ====
 
 *   Run the generator and see the generated files appearing in the folder where you
@@ -94,7 +94,7 @@ decided to store the generated code (in the screenshot we use `~/src/picode`): +
 ====
 [#img-webapp-config-adjustment]
 .Screenshot of WebappConfiguration
-image::webapp-configuration.png[webapp-configuration]
+image::webappconfiguration.png[webapp-configuration]
 ====
 
 *   Start the server (note that anything that is saved in the editor will be stored in `~/modelstore`): +
