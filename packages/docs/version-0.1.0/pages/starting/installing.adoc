@@ -81,7 +81,7 @@ In the following screenshot, we use `~/src/defs` and `~/src/picode`, respectivel
 ====
 [#img-package-json-adjustment]
 .Screenshot of package.json
-image::package-json-adjustment.png[package-json-adjustment]
+image::packagejson-adjustment.png[package-json-adjustment]
 ====
 
 *   Run the generator and see the generated files appearing in the folder where you
