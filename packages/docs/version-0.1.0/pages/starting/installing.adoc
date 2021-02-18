@@ -1,4 +1,4 @@
-:imagesdir: ../images/
+:imagesdir: ../../images/
 :page-nav_order: 10
 :page-title: Installing and Using ProjectIt
 :page-parent: Getting Started
