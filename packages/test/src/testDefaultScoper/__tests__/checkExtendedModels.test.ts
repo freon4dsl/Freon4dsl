@@ -45,7 +45,7 @@ describe("Testing Default Scoper", () => {
         errors.forEach(mess => {
             errorMessages.push(mess.message + " in " + mess.locationdescription);
         });
-        print("found errors", errorMessages);
+        // print("found errors", errorMessages);
         expect (errors.length).toBe(0);
     });
 
