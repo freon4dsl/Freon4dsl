@@ -37,5 +37,5 @@ image::example-uml-diagram.png[uml-diagram-of-demo-language]
 ====
 
 We are working on a few other examples. You can find them in the
-development branche of link:https://github.com/projectit-org/ProjectIt[ProjectIt, window=_blank].
+development branch of link:https://github.com/projectit-org/ProjectIt[ProjectIt, window=_blank].
 
