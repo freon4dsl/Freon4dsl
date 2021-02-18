@@ -79,9 +79,9 @@ script should include your _defs_ folder and the folder where you want the gener
 In the following screenshot, we use `~/src/defs` and `~/src/picode`, respectively.
 
 ====
-[#img-package-json-adjustment]
+[#img-packagejsonadjustment]
 .Screenshot of package.json
-image::packagejsonadjustment.png[package-json-adjustment]
+image::packagejsonadjustment.png[packagejsonadjustment]
 ====
 
 *   Run the generator and see the generated files appearing in the folder where you
@@ -94,7 +94,7 @@ decided to store the generated code (in the screenshot we use `~/src/picode`): +
 ====
 [#img-webapp-config-adjustment]
 .Screenshot of WebappConfiguration
-image::webappconfiguration.png[webapp-configuration]
+image::webappconfiguration.png[webappconfiguration]
 ====
 
 *   Start the server (note that anything that is saved in the editor will be stored in `~/modelstore`): +
