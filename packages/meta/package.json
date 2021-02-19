@@ -13,6 +13,7 @@
     "projectit": "dist/bin/projectit-generate-editor.js"
   },
   "scripts": {
+    "cleanup": "bash ../../scripts/cleanup.sh",
     "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
     "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
     "edit-parser": "pegjs src/editordef/parser/PiEditGrammar.pegjs",
@@ -38,7 +39,6 @@
   },
   "devDependencies": {
     "@types/pegjs": "^0.10.1",
-    "parjs": "0.12.0",
     "pegjs": "^0.10.0",
     "ts-pegjs": "^0.2.6",
     "prettier": "^2.0.4",

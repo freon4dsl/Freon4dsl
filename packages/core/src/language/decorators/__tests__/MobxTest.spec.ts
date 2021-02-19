@@ -2,7 +2,6 @@ import { PiElementReferenceM } from "./PiElementReferenceM";
 import { TestScoper } from "./TestScoper";
 import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel";
 import { observe, reaction } from "mobx";
-import {} from "jasmine";
 
 describe("Mobx Model", () => {
     describe("container settings", () => {
