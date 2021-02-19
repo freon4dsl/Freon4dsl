@@ -12,6 +12,7 @@
   "scripts": {
     "build": "tsc && yarn run copy-scss && yarn run copy-fonts",
     "build-release": "yarn run build",
+    "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",

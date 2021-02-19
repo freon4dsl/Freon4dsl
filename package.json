@@ -16,8 +16,7 @@
   "devDependencies": {
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.0.0",
-    "@types/jasmine": "2.8.6",
-    "@types/jest": "^24.0.13",
+    "@types/jest": "26.0.20",
     "@types/koa": "^2.0.48",
     "@types/koa-bodyparser": "^4.2.2",
     "@types/koa-router": "^7.0.40",
@@ -42,16 +41,13 @@
     "html-loader": "^0.5.1",
     "html-webpack-plugin": "^3.2.0",
     "identity-obj-proxy": "^3.0.0",
-    "jasmine-core": "2.5.2",
-    "jasmine-reporters": "^2.2.0",
-    "jest": "^24.7.1",
+    "jest": "26.6.3",
     "jest-css-modules-transform": "^2.1.1",
     "jest-enzyme": "^7.0.2",
     "js-yaml": "3.13.1",
     "mobx-react-devtools": "^4.2.15",
     "node-sass": "^5.0.0",
     "nodemon": "^1.19.0",
-    "parjs": "0.12.0",
     "react-hot-loader": "^3.1.1",
     "react-tabs": "^2.2.2",
     "reflect-metadata": "^0.1.12",
@@ -94,7 +90,6 @@
     ]
   },
   "dependencies": {
-    "lerna": "^3.20.2",
-    "parjs": "0.12.0"
+    "lerna": "^3.20.2"
   }
 }
