@@ -1,10 +1,11 @@
 import * as Koa from "koa";
+import { ParsedUrlQuery } from "querystring";
 import { config } from "./config";
 
 interface ILogData {
     method: string;
     url: string;
-    query: string;
+    query: ParsedUrlQuery;
     remoteAddress: string;
     host: string;
     userAgent: string;
