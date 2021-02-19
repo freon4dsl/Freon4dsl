@@ -19,9 +19,9 @@ easily make a projectional editor that allows for a natural manner of editing.
 On top of the core framework there are five generators, each of which generates part
 of the work environment for your mini-language:
 
-* The *language structure* defines all the concept, properties and relationshipos in the language.
-* The *editor* defines how a model in the lamnguage looks like on the screen.
-  It also defines what editing commands can be used to chnage the model.
+* The *language structure* defines all the concept, properties and relationships in the language.
+* The *editor* defines how a model in the language looks like on the screen.
+  It also defines what editing commands can be used to change the model.
 * The *scoper* defines how names that refer to other elements are being resolved.
 * The *typer* defines what the type of an element is.
 * The *validator* defines what a correct model looks like and wil provide errors whenever a model breaks these rules.

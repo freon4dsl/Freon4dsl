@@ -23,7 +23,7 @@ theme: "just-the-docs"
 
 # permalink: pretty
 permalink: none
-exclude: ["version004", "src", "old", "*.txt", "node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
+exclude: ["dist", "fix-jekyll-lf.sh", "tsconfig.json", "version004", "src", "old", "*.txt", "node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
 
 # Set a path/url to a logo that will be displayed instead of the title
 logo: "/version-0.1.0/images/logo-inverse-colors.png"

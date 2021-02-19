@@ -46,7 +46,7 @@ An obvious choice for the projection of this attribute is a `HorizontalListBox` 
 the name of the class, followed by the value stored in the variable _unit.name_. In the tutorial
 example this value is "EntityModel". When we start the editor based on this projection, we see the following:
 
-image::{imagesdir}/demomodel-name.png[align="left"]
+image::{imagesdir}/demomodelname.png[align="left"]
 
 It doesn't look very nice currently:
 
@@ -77,7 +77,7 @@ is empty, giving the user a visual clue that a name could be entered.
 
 The result is:
 
-image::demomodel-name-with style.PNG[align="left"]
+image::demomodelname-with-style.png[align="left"]
 
 The style is defined in a css (or actually scss) as follows. In principle all CSS styles can be used here.
 
