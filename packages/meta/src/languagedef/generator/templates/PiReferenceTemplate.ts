@@ -100,37 +100,7 @@ export class PiReferenceTemplate {
                 if (!!this._PI_referred) {
                     return this._PI_referred;
                 } else {
-                    // return ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(this.piContainer().container, this._PI_name, this.typeName) as T;
-                    let container = this.piContainer()?.container;
-                    if (!!container) {
-                        let found: PiNamedElement = null;
-                        for (let index = 0; index < this._PI_pathname.length ; index++) {
-                            let str = this._PI_pathname[index];
-                            if (index === this._PI_pathname.length - 1) {
-                                // the last name in the pathname, therefore we must/can use the type information
-                                found = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                                    container,
-                                    str,
-                                    this.typeName
-                                );
-                            } else {
-                                // for all names in front of the last name of the pathname, we cannot use the type information
-                                // because the namespace(s) will not have the correct type
-                                found = ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                                    container,
-                                    str
-                                );
-                                if (!!found) {
-                                    // set the container for finding the next part of the pathname
-                                    container = found;
-                                } else {
-                                    return null;
-                                }
-                            }
-                        }
-                        return found as T;            
-                    }
-                    return null;
+                    return ${Names.environment(language)}.getInstance().scoper.resolvePathName(this.piContainer().container, this._PI_pathname, this.typeName) as T;
                 }
             }
         

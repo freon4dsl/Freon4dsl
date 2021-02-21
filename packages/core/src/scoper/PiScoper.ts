@@ -1,9 +1,21 @@
 import { PiElement, PiNamedElement } from "../language";
+import { ScoperTestEveryConcept, ScoperTestMetaType } from "@projectit/test/dist/testDefaultScoper/language/gen";
 
 // Part of the ProjectIt Framework
 
 // tag::scoper-interface[]
 export interface PiScoper {
+
+    /**
+     * Returns the element to which the 'pathname' refers. If the elment cannot be found, or if the element is
+     * not visible (private) from the location of 'modelelement', then null is returned.
+     * If present, then the search is limited to elements which type is 'metatype'.
+     *
+     * @param modelelement
+     * @param pathname
+     * @param metatype
+     */
+    resolvePathName(modelelement: PiElement, pathname: string[], metatype?: string): PiNamedElement;
 
     /**
      *   Returns true if 'name' is known in the namespace containing 'modelelement' or one

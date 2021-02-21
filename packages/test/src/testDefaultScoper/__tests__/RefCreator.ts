@@ -2,7 +2,7 @@ import { ScoperTestDefaultWorker } from "../utils/gen";
 import { DSmodel, DSprivate, DSpublic, DSref, DSunit, PiElementReference } from "../language/gen";
 
 // This class creates a series of references with correct pathnames
-// All pathnames contain three single names or less.
+// All pathnames contain at most three single names.
 
 export class RefCreator extends ScoperTestDefaultWorker {
     references: PiElementReference<DSref>[] = [];

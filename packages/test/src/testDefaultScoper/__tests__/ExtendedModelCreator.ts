@@ -43,6 +43,7 @@ export class ExtendedModelCreator {
         for (let i = 0; i < nrOfUnits; i++) {
             this.addReferencesToUnit(modelUnits[i]);
         }
+        // console.log("number of names created: " + this.nameNumber);
         return model;
     }
 
@@ -147,11 +148,11 @@ export class ExtendedModelCreator {
         walker.walk(model, () => {
             return true;
         });
-        let printStr: string = "";
-        worker.references.forEach(ref => {
-           printStr += ref.pathnameToString("/") + "\n";
-        });
-        console.log(printStr);
+        // let printStr: string = "All references in the model are:\n";
+        // worker.references.sort().forEach(ref => {
+        //    printStr += ref.pathnameToString("/") + "\n";
+        // });
+        // console.log(printStr);
         this.allReferences = worker.references;
     }
 }
