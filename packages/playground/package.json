@@ -10,6 +10,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
+    "cleanup":      "bash ../../scripts/cleanup.sh",
     "start":        "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
     "calculator":   "bash ../../scripts/projectit-dev.sh all -d src/calculator/defs -o src/calculator",
     "example": 	    "bash ../../scripts/projectit-dev.sh all -d src/example/defs -o src/example",

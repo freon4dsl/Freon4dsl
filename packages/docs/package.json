@@ -11,7 +11,8 @@
   },
   "scripts": {
     "tutorial": "bash ../../scripts/projectit-dev.sh all -d src/tutorial-language/defs -o src/tutorial-language",
-    "build":    "yarn run tutorial && tsc"
+    "build":    "yarn run tutorial && tsc",
+    "build-site": "jekyll build && bash fix-jekyll-lf.sh && cp .nojekyll ../../docs"
   },
   "devDependencies": {
     "@types/react": "16.8.15",

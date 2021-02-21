@@ -10,6 +10,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
+    "cleanup":      "bash ../../scripts/cleanup.sh",
     "demo": 	    "bash ../../scripts/projectit-dev.sh all -d src/demo/defs -o src/demo",
     "meta-it": 		"bash ../../scripts/projectit-dev.sh -v meta-it -l src/demo/defs/LanguageDefinition.ast -o src/demo",
     "scope-it":     "bash ../../scripts/projectit-dev.sh -v scope-it -l src/demo/defs/LanguageDefinition.ast -s src/demo/defs/LanguageDefinition.scope -o src/demo",
