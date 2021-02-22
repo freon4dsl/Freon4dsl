@@ -1,5 +1,4 @@
 import { PiElement, PiNamedElement } from "../language";
-import { ScoperTestEveryConcept, ScoperTestMetaType } from "@projectit/test/dist/testDefaultScoper/language/gen";
 
 // Part of the ProjectIt Framework
 
