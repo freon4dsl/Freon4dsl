@@ -12,6 +12,8 @@ export interface PiElement {
 
     piIsModel(): boolean;
 
+    piIsUnit(): boolean;
+
     piIsExpression(): boolean;
 
     piIsBinaryExpression(): boolean;

@@ -6,6 +6,7 @@ model DSmodel {
 }
 
 public modelunit DSunit {
+    public reference imports: DSunit[];
     public name: string;
     public dsPublics: DSpublic[];
     public reference dsRefs: DSref[];

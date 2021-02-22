@@ -74,7 +74,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
-                ${makeBasicMethods(hasSuper, metaType,false, isExpression, false)}                                   
+                ${makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)}                                   
             }
         `;
     }
@@ -122,7 +122,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
-                ${makeBasicMethods(hasSuper, metaType,false, true, true)}                    
+                ${makeBasicMethods(hasSuper, metaType,false, false,true, true)}                    
                 
                 /**
                  * Returns the priority of this expression instance.
@@ -208,7 +208,7 @@ export class ConceptTemplate {
                 ${makeBasicProperties(metaType, myName, hasSuper)}
                 ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
 
-                ${makeBasicMethods(hasSuper, metaType,false, false, false)}                
+                ${makeBasicMethods(hasSuper, metaType,false, false,false, false)}                
             }
                        
             // Because of mobx we need to generate the initialisations outside of the class,
@@ -260,7 +260,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
             
-                ${makeBasicMethods(hasSuper, metaType,false, false, false)}                
+                ${makeBasicMethods(hasSuper, metaType,false, true,false, false)}                
             }
             `;
     }
@@ -301,7 +301,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
             
-                ${makeBasicMethods(false, metaType,true, false, false)}
+                ${makeBasicMethods(false, metaType,true, false,false, false)}
                 
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.

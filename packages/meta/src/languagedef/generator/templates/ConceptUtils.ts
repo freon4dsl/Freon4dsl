@@ -77,7 +77,7 @@ export function makeReferenceProperty(property: PiConceptProperty): string {
     return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
 }
 
-export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isExpression: boolean, isBinaryExpression): string {
+export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
     return `constructor(id?: string) {
                     ${!hasSuper ? `
                         super();
@@ -113,6 +113,13 @@ export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: b
                     return ${isModel};
                 }
                 
+                /**
+                 * Returns true if this instance is a model unit.
+                 */                 
+                piIsUnit(): boolean {
+                    return ${isUnit};
+                }
+                                
                 /**
                  * Returns true if this instance is an expression concept.
                  */                 
