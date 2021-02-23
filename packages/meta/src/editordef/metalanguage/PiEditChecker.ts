@@ -10,7 +10,8 @@ import { Checker } from "../../utils";
 import {
     ListJoin,
     ListJoinType,
-    PiEditConcept, PiEditInstanceProjection,
+    PiEditConcept,
+    PiEditInstanceProjection,
     PiEditProjection,
     PiEditPropertyProjection,
     PiEditSubProjection,
