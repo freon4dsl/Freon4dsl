@@ -105,9 +105,9 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, internalIndexFile);
 
         // Generate projectit configuration if it isn't there
-        LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration(language)}.ts`);
+        LOGGER.log(`Generating ProjectIt Configuration: ${this.configurationFolder}/${Names.configuration()}.ts`);
         const configurationFile = Helpers.pretty(configurationTemplate.generate(language, relativePath), "Configuration", generationStatus);
-        Helpers.generateManualFile(`${this.configurationFolder}/${Names.configuration(language)}.ts`, configurationFile, "Configuration");
+        Helpers.generateManualFile(`${this.configurationFolder}/${Names.configuration()}.ts`, configurationFile, "Configuration");
 
         // set relative path to an extra level to get the imports right
         relativePath = "../../";

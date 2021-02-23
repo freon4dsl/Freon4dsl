@@ -26,7 +26,7 @@ export class ValidatorTemplate {
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";
         import { ${walkerClassName}, ${workerClassName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}"; 
-        import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration(language)}";
+        import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
  
         /**
          * Interface '${Names.checkerInterface(language)}' represents any object that traverses the model tree and checks

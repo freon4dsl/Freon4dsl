@@ -9,7 +9,7 @@ import { PiLanguage } from "../../metalanguage";
 export class ConfigurationTemplate {
 
     generate(language: PiLanguage, relativePath: string): string {
-        const configurationName = Names.configuration(language);
+        const configurationName = Names.configuration();
         const workerName = Names.checkerInterface(language);
         return `
             import { ${Names.PiProjection}, ${Names.PiActions}} from "${PROJECTITCORE}";
