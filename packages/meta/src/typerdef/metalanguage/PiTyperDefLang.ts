@@ -1,4 +1,4 @@
-import { ParseLocation } from "../../utils";
+import { PiDefinitionElement } from "../../utils";
 import { PiClassifier, PiLanguage, PiLangElement, PiLangExp } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -6,8 +6,7 @@ import { PiClassifier, PiLanguage, PiLangElement, PiLangExp } from "../../langua
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 
-export class PiTypeDefinition {
-    location: ParseLocation;
+export class PiTypeDefinition extends PiDefinitionElement {
     name: string;
     languageName: string;
     language: PiLanguage;
@@ -17,8 +16,7 @@ export class PiTypeDefinition {
     types: PiElementReference<PiClassifier>[] = [];
 }
 
-export abstract class PiTypeRule extends PiLangElement {
-    location: ParseLocation;
+export abstract class PiTypeRule extends PiDefinitionElement {
     toPiString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'PiTyperDefLang.PiTypeRule'";
     }
@@ -48,8 +46,7 @@ export class PiTypeClassifierRule extends PiTypeRule {
     }
 }
 
-export class PiTypeStatement {
-    location: ParseLocation;
+export class PiTypeStatement extends PiDefinitionElement {
     statementtype: string;
     exp: PiLangExp;
     isAbstract: boolean;

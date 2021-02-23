@@ -1,12 +1,12 @@
 import { PiElementReference } from "./internal";
 import { ParseLocation } from "../../utils";
+import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
 
 const primitiveTypeName = "PiPrimitiveType";
 export type PiPrimitiveType = string | boolean | number;
 
-// root of the inheritance structure of all language elements
-export abstract class PiLangElement {
-    location: ParseLocation;
+// root of the inheritance structure of all elements in a language definition
+export abstract class PiLangElement extends PiDefinitionElement {
     name: string;
 }
 
