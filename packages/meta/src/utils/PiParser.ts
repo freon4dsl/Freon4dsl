@@ -54,8 +54,7 @@ export class PiParser<DEFINITION> {
             this.checker.check(model);
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOGGER.error(this, `${definitionFile}: ${error}`));
-                // TODO maybe we should add the number of errors to this Error
-                throw new Error("checking errors."); // error message
+                throw new Error("checking errors (" + this.checker.errors.length + ").");
             }
             return model;
         } else {
@@ -97,8 +96,7 @@ export class PiParser<DEFINITION> {
             this.checker.check(model);
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOGGER.error(this, `${error}`));
-                // TODO maybe we should add the number of errors to this Error
-                throw new Error("checking errors."); // error message
+                throw new Error("checking errors (" + this.checker.errors.length + ").");
             }
             return model;
         } else {
