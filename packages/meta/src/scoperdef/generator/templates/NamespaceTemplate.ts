@@ -5,7 +5,7 @@ import {
     LANGUAGE_GEN_FOLDER,
     Names,
     PROJECTITCORE,
-    findImplementors,
+    findImplementorsRecursive,
     LANGUAGE_UTILS_GEN_FOLDER
 } from "../../../utils";
 
@@ -235,7 +235,7 @@ export class NamespaceTemplate {
                 let isDone: boolean = false;
                 const comment = "// based on namespace addition for " + myClassifier.name + "\n";
                 if (myClassifier instanceof PiInterface) {
-                    for (const implementor of findImplementors(myClassifier)) {
+                    for (const implementor of findImplementorsRecursive(myClassifier)) {
                         if ( !generatedConcepts.includes(implementor)) {
                             isDone = true;
                         }

@@ -16,7 +16,7 @@ import {
     PiEditSubProjection,
     PiEditUnit
 } from "../../metalanguage";
-import { findAllImplementorsAndSubs, findImplementors, Names } from "../../../utils";
+import { findAllImplementorsAndSubs, findImplementorsDirect, Names } from "../../../utils";
 
 export const referencePostfix = "PiElemRef";
 
@@ -459,7 +459,7 @@ HEXDIG = [0-9a-f]
         if (piClassifier instanceof PiInterface) {
             // TODO should we include a reference to a limited concept in the parse rule for an interface?
             implementors.push(...piClassifier.allSubInterfacesDirect());
-            implementors.push(...findImplementors(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept)));
+            implementors.push(...findImplementorsDirect(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept)));
         } else if (piClassifier instanceof PiConcept) {
             implementors = piClassifier.allSubConceptsDirect().filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
         }

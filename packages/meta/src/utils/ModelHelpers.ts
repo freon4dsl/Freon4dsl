@@ -132,14 +132,41 @@ export function replaceInterfacesWithImplementors(classifiers: PiClassifier[] | 
 }
 
 /**
- * Takes a PiInterface and returns a list of concepts that implement it.
+ * Takes a PiInterface and returns a list of concepts that directly implement it,
+ * without taking into account subinterfaces.
  *
  * @param piInterface
  */
-export function findImplementors(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
-    // TODO add implementors of sub-interfaces
+export function findImplementorsDirect(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
+    let implementors : PiConcept[] = [];
     const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
-    return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
+    const allConcepts = myInterface.language.concepts;
+    implementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
+    return implementors;
+}
+
+/**
+ * Takes a PiInterface and returns a list of concepts that implement it,
+ * inclusing the concepts that implement subinterfaces.
+ *
+ * @param piInterface
+ */
+export function findImplementorsRecursive(piInterface: PiInterface | PiElementReference<PiInterface>): PiConcept[] {
+    let implementors : PiConcept[] = [];
+    const myInterface = (piInterface instanceof PiElementReference ? piInterface.referred : piInterface);
+    const allConcepts = myInterface.language.concepts;
+    implementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
+
+    // add implementors of sub-interfaces
+    for (const sub of myInterface.allSubInterfacesRecursive()) {
+        const extraImplementors = allConcepts.filter(con => con.interfaces.some(intf => intf.referred === sub));
+        for (const concept of extraImplementors) {
+            if (!implementors.includes(concept)) {
+                implementors.push(concept);
+            }
+        }
+    }
+    return implementors;
 }
 
 /**
@@ -156,8 +183,10 @@ export function findAllImplementorsAndSubs(classifier: PiElementReference<PiClas
         result.push(myClassifier);
         if (myClassifier instanceof PiConcept) { // find all subclasses and mark them as namespace
             result = result.concat(myClassifier.allSubConceptsRecursive());
-        } else if (myClassifier instanceof PiInterface) { // find all implementors and their subclasses and mark them as namespace
-            for (const implementor of findImplementors(myClassifier)) {
+        } else if (myClassifier instanceof PiInterface) { // find all implementors and their subclasses
+            // we do not use findImplementorsRecursive(), because we not only add the implementing concepts,
+            // but the subinterfaces as well
+            for (const implementor of findImplementorsDirect(myClassifier)) {
                 if (!result.includes(implementor)) {
                     result.push(implementor);
                     result = result.concat(implementor.allSubConceptsRecursive());
@@ -167,7 +196,7 @@ export function findAllImplementorsAndSubs(classifier: PiElementReference<PiClas
             for (const subInterface of myClassifier.allSubInterfacesRecursive()) {
                 if (!result.includes(subInterface)) {
                     result.push(subInterface);
-                    for (const implementor of findImplementors(subInterface)) {
+                    for (const implementor of findImplementorsDirect(subInterface)) {
                         if (!result.includes(implementor)) {
                             result.push(implementor);
                             result = result.concat(implementor.allSubConceptsRecursive());
