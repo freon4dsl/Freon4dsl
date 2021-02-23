@@ -1,4 +1,3 @@
-// import { isNullOrUndefined } from "@projectit/core";
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
@@ -72,9 +71,9 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(this, `Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.log(`Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(this,`Succesfully generated scoper ${name}`);
+            LOGGER.log(`Succesfully generated scoper ${name}`);
         }
     }
 }

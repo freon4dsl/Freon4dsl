@@ -3,6 +3,9 @@ import { PiParser } from "../../utils/PiParser";
 // let pegjsParser = require("./LanguageGrammar");
 import * as pegjsParser from "./LanguageGrammar";
 import { setCurrentFileName } from "./LanguageCreators";
+import { MetaLogger } from "../../utils/MetaLogger";
+
+const LOGGER = new MetaLogger("LanguageParser").mute();
 
 export class LanguageParser extends PiParser<PiLanguage> {
     constructor() {
@@ -20,7 +23,7 @@ export class LanguageParser extends PiParser<PiLanguage> {
                     result.concepts.push(...sub.concepts);
                     result.interfaces.push(...sub.interfaces);
                 } else {
-                    // TODO error message
+                    LOGGER.error(this, "All submodels should be of the same model, found submodel: '" + sub.name + "' in '" + result.name + "'.")
                 }
             }
             result.conceptsAndInterfaces().forEach(classifier => {

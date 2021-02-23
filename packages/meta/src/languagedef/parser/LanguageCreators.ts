@@ -31,7 +31,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
             } else {
                 result.concepts.push(con);
             }
-            // TODO is the next statement still needed after multi-file merge?
+            // the next statement is not needed after multi-file merge, but remains for the single-file commands like 'meta-it'
             con.language = result;
         }
     }

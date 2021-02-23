@@ -66,8 +66,7 @@ export class ProjectItParser extends CommandLineParser {
         try {
             return super.onExecute();
         } catch (e) {
-            // TODO why do we use e.stack instead of e.message?
-            LOGGER.error(this, e.stack);
+            LOGGER.error(this, e.message + "\n" + e.stack);
         }
         return null;
     }

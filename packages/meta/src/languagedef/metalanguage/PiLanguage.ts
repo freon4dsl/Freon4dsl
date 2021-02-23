@@ -389,7 +389,6 @@ export class PiPrimitiveProperty extends PiProperty {
     // The inherited 'type' cannot be used, because 'this' has a primitive type,
     // which is not a subtype of PiElementReference<PiConcept>
     // Therefore, here we have:
-    // TODO dit moet beter worden!!!
     get type(): PiElementReference<PiConcept> {
         return PiElementReference.createNamed<PiConcept>(primitiveTypeName, "PiConcept");
     }

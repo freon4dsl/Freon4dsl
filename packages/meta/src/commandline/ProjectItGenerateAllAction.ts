@@ -46,7 +46,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         LOGGER.info(this, "Starting generation of all parts of your language as defined in " + this.defFolder.value);
         // LOGGER.log("Output will be generated in: " + this.outputFolder);
 
-        try {
+        // this try-catch is here for debugging purposes, should be removed from release
+        // try {
             this.findDefinitionFiles();
             this.addWatchers();
 
@@ -63,10 +64,11 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             if (this.watch) {
                 LOGGER.info(this, "Watching language definition files ...");
             }
-        } catch (e) {
-            // TODO this catch is here for debugging purposes, should be removed
-            LOGGER.error(this, e.stack);
-        }
+        // this try-catch is here for debugging purposes, should be removed from release
+        // } catch (e) {
+        //
+        //     LOGGER.error(this, e.stack);
+        // }
     }
 
     private addWatchers() {

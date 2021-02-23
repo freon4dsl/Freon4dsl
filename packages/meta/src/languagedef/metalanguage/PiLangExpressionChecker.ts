@@ -173,7 +173,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     private checkFunctionCallExpression(langExp: PiLangFunctionCallExp, enclosingConcept: PiClassifier) {
         LOGGER.log("checkFunctionCallExpression " + langExp?.toPiString());
         const functionName = validFunctionNames.find(name => name === langExp.sourceName);
-        // TODO ??? set langRef.referredElement to one of the predefined functions
+        // TODO ??? set langExp.referredElement to one of the predefined functions
         this.nestedCheck({
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function ${this.location(langExp)}.`,
