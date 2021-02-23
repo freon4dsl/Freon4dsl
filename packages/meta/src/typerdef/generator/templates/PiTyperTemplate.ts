@@ -22,6 +22,7 @@ export class PiTyperTemplate {
         const generatedClassName: string = Names.typer(language);
         const typerInterfaceName: string = Names.PiTyper;
         const defaultType: string = this.findDefault();
+        const allTypeConcepts: PiConcept[] = this.findAllConceptsThatAreTypes();
 
         // Template starts here
         return `
@@ -52,7 +53,7 @@ export class PiTyperTemplate {
              * See interface 
              */        
             public inferType(modelelement: ${allLangConcepts}): ${rootType} {
-                ${this.makeInferenceStatements()}
+                ${this.makeInferenceStatements(allTypeConcepts)}
                 return this.defaultType;
             }
             
@@ -82,8 +83,7 @@ export class PiTyperTemplate {
              * See interface 
              */        
             public isType(elem: ${allLangConcepts}): boolean { // entries for all types marked as @isType
-                ${this.makeIsType()}
-                return false;
+                ${this.makeIsType(allTypeConcepts)}
             } 
         }`;
     }
@@ -181,41 +181,18 @@ export class PiTyperTemplate {
         return result;
     }
 
-    private makeInferenceStatements(): string {
+    private makeInferenceStatements(allTypes: PiConcept[]): string {
+        // TODO check what to do with PiTypeAnyTypeRule
         let result: string = "";
-
-        for (const tr of this.typerdef.typerRules) {
-            if (tr instanceof PiTypeIsTypeRule) {
-                const typesAdded: PiClassifier[] = [];
-                for (const type of tr.types) {
-                    // TODO create a separate method to find all concepts that are marked 'isType',
-                    // this if-statement is also used in makeIsType
-                    const realType = type.referred;
-                    if (!!realType && (realType instanceof PiInterface)) {
-                        const yy = realType as PiInterface;
-                        // add a statement for all concepts that implement this interface
-                        this.language.concepts.filter(con => con.allInterfaces().some(intf => intf === yy)).map(implementor => {
-                            if (!typesAdded.includes(implementor)) {
-                                result = result.concat(`if (modelelement instanceof ${Names.concept(implementor)}) {
+        // first add statements for all concepts that are marked 'isType'
+        for (const type of allTypes) {
+            result = result.concat(`if (modelelement instanceof ${Names.concept(type)}) {
                                     return modelelement;
                                 }`);
-                                typesAdded.push(implementor);
-                            }
-                        });
-                    } else if (!!realType && (realType instanceof PiConcept)) {
-                         if (!typesAdded.includes(realType)) {
-                             const myConceptName = Names.concept(realType);
-                             result = result.concat(`if (modelelement instanceof ${myConceptName}) {
-                                return modelelement;
-                             }`);
-                             typesAdded.push(realType);
-                        }
-                    }
-                }
-            }
-            // TODO check what to do with PiTypeAnyTypeRule
         }
-        // change the order in which the statements are generated, because subclasses need to overwrite their super
+
+        // next, add statements for every 'infertype' rule in the typer definition
+        // beware of the order in which the statements are generated, because subclasses need to overwrite their super
         // and thus their statement needs to come before the super statement
         const myList = this.sortConceptRules(this.typerdef.classifierRules);
         for (const tr of myList) {
@@ -250,37 +227,45 @@ export class PiTyperTemplate {
         return sortedConceptRules;
     }
 
-    private makeIsType(): string {
+    private makeIsType(allTypes: PiConcept[]): string {
         let result: string = "";
+        // add statements for all concepts that are marked 'isType'
+        for (const type of allTypes) {
+            result = result.concat(`if (elem instanceof ${Names.concept(type)}) {
+                                    return true;
+                                }`);
+        }
+        result = result.concat(`return false;`);
+        return result;
+    }
+
+    /**
+     * Returns a list of all concepts that are marked 'isType',
+     * including all concepts that implement an interface marked 'isType'
+     */
+    private findAllConceptsThatAreTypes(): PiConcept[] {
+        let allTypes: PiConcept[] = [];
         for (const tr of this.typerdef.typerRules) {
             if (tr instanceof PiTypeIsTypeRule) {
-                const typesAdded: PiClassifier[] = [];
                 for (const type of tr.types) {
                     const realType = type.referred;
                     if (!!realType && (realType instanceof PiInterface)) {
                         const yy = realType as PiInterface;
-                        // add a statement for all concepts that implement this interface
+                        // add all concepts that implement this interface
                         this.language.concepts.filter(con => con.allInterfaces().some(intf => intf === yy )).map (implementor => {
-                            if (!typesAdded.includes(implementor)) {
-                                result = result.concat(`if (elem instanceof ${Names.concept(implementor)}) {
-                                    return true;
-                                }`);
-                                typesAdded.push(implementor);
+                            if (!allTypes.includes(implementor)) {
+                                allTypes.push(implementor);
                             }
                         });
                     } else if (!!realType && (realType instanceof PiConcept)) {
-                        if (!typesAdded.includes(realType)) {
-                            const myConceptName = realType.name;
-                            result = result.concat(`if (elem instanceof ${myConceptName}) {
-                                return true;
-                            }`);
-                            typesAdded.push(realType);
+                        if (!allTypes.includes(realType)) {
+                            allTypes.push(realType);
                         }
                     }
                 }
             }
         }
-        return result;
+        return allTypes;
     }
 
     private makeEqualsStatement(): string {
