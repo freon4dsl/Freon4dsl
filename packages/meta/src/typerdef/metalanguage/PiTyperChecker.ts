@@ -131,8 +131,11 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         LOGGER.log("Checking checkAnyTypeRule '" + rule.toPiString() + "'");
         // const myTypes: PiClassifier[] = [];
         for (const r of this.definition.typerRules) {
-            if ( r instanceof PiTypeAnyTypeRule ) {
-                // TODO see if there is anything to check
+            if (r instanceof PiTypeAnyTypeRule) {
+                r.statements.forEach(stat => {
+                    // check the statement, using the overall model as enclosing concept
+                    this.checkStatement(stat, this.language.modelConcept);
+                });
             }
         }
     }
