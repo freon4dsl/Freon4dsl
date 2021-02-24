@@ -12,7 +12,7 @@ export type DynamicBoolean = BooleanCallback | boolean;
 export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
-const LOGGER = new PiLogger("PiUtils"); //.mute();
+const LOGGER = new PiLogger("PiUtils"); // .mute();
 
 export class PiUtils {
     /** Initialize an object with a JSON object
@@ -71,7 +71,7 @@ export class PiUtils {
                     LOGGER.log("handleKeyboardShortcut: executing keyboard action");
                     const selected = await act.action(box, piKey, editor);
                     if (selected) {
-                        editor.selectElement(selected, act.boxRoleToSelect);
+                        await editor.selectElement(selected, act.boxRoleToSelect);
                     }
                     return true;
                 } else {
@@ -92,4 +92,8 @@ export function initializeObject<TTarget, TSource>(target: TTarget, source: TSou
             (target as any)[key] = (source as any)[key];
         }
     });
+}
+
+export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
+    return obj === undefined || obj === null;
 }

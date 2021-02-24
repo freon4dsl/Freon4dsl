@@ -67,7 +67,7 @@ export interface PiBinaryExpressionCreator extends PiBehavior {
  * Behavior with custom action, intended to be used to create non expression elements.
  */
 export interface PiCustomBehavior extends PiBehavior {
-    action: (box: Box, trigger: string | RegExp, editor: PiEditor, propertyName?: string) => PiElement | null;
+    action: (box: Box, trigger: PiTriggerType, editor: PiEditor, propertyName?: string) => PiElement | null;
 }
 
 // TODO Use this to replace KeyboardShortcutTrigger

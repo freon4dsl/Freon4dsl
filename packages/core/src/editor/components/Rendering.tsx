@@ -58,7 +58,7 @@ export function renderComponent(box: Box, editor: PiEditor): React.ReactElement<
         case "OptionalBox":
             return <OptionalComponent box={box as OptionalBox} editor={editor} />;
         default:
-            console.log("RenderComponent unknow box type: " + box);
+            console.log("RenderComponent unknown box type: " + box);
     }
     return <div>Rendering unknown box of kind {box.kind}</div>;
 }

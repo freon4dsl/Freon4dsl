@@ -26,7 +26,7 @@ export class ListComponent extends React.Component<ListComponentProps, {}> {
     }
 
     setFocus = () => {
-        EVENT_LOG.info(this, "FOPCUS");
+        EVENT_LOG.info(this, "FOCUS");
         if (this.element) {
             this.element.focus();
         }

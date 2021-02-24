@@ -132,7 +132,7 @@ export class DefaultActionsTemplate {
     customActionForParts(language: PiLanguage, editorDef: PiEditUnit): string {
         let result = "";
         const behaviorMap = new ActionMap();
-        let behaviorDescriptor: BehaviorDescription[] = [];
+        const behaviorDescriptor: BehaviorDescription[] = [];
         // All listy properties
         language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
             const childConcept = part.type.referred;
@@ -219,11 +219,11 @@ class ActionMap {
     map: Map<string, BehaviorDescription> = new Map<string, BehaviorDescription>();
 
     createOrAdd(classifier: PiClassifier, bd: BehaviorDescription): void {
-        let found: BehaviorDescription = this.map.get(classifier.name);
-        if( !!found){
+        const found: BehaviorDescription = this.map.get(classifier.name);
+        if (!!found) {
             found.activeInBoxRoles = found.activeInBoxRoles.concat(...bd.activeInBoxRoles);
         } else {
-            this.map.set(classifier.name, bd)
+            this.map.set(classifier.name, bd);
         }
     }
 }

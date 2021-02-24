@@ -45,7 +45,6 @@ export interface PiModel extends PiNamedElement {
     /**
      * Adds a model unit. Returns false if anything goes wrong.
      *
-     * @param oldUnit
      * @param newUnit
      */
     addUnit(newUnit: PiNamedElement): boolean;
@@ -58,10 +57,9 @@ export interface PiModel extends PiNamedElement {
     removeUnit(oldUnit: PiNamedElement): boolean;
 
     /**
-     * Returns an empty model unit of type 'unitTypeName' and adds it to this model.
+     * Returns an empty model unit of type 'typename' and adds it to this model.
      *
-     * @param model
-     * @param unitTypeName
+     * @param typename
      */
     newUnit(typename: string): PiNamedElement;
 

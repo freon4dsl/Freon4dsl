@@ -2,7 +2,7 @@ import { PiNamedElement } from "../language";
 
 // tag::stdlib-interface[]
 export interface PiStdlib {
-    elements: PiNamedElement[]
+    elements: PiNamedElement[];
 
 // end::stdlib-interface[]
 // tag::stdlib-interface[]
@@ -13,6 +13,6 @@ export interface PiStdlib {
      * @param name
      * @param metatype
      */
-    find(name: string, metatype?: string) : PiNamedElement;
+    find(name: string, metatype?: string): PiNamedElement;
 }
 // end::stdlib-interface[]

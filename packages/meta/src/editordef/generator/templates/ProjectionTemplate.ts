@@ -17,7 +17,7 @@ import {
     PiEditProjectionDirection,
     PiEditParsedProjectionIndent,
     PiEditSubProjection,
-    PiEditInstanceProjection, PiEditProjectionLine
+    PiEditInstanceProjection
 } from "../../metalanguage";
 
 export class ProjectionTemplate {
@@ -146,7 +146,9 @@ export class ProjectionTemplate {
 
     private generateUserProjection(language: PiLanguage, concept: PiConcept, editor: PiEditConcept) {
         // TODO for now: do not do anything for a limited concept
-        if (editor.concept instanceof PiLimitedConcept) return ``;
+        if (editor.concept instanceof PiLimitedConcept) {
+            return ``;
+        }
 
         let result: string = "";
         const elementVarName = Roles.elementVarName(concept);
@@ -243,31 +245,30 @@ export class ProjectionTemplate {
         });
 
         // If there are more items, surround with horizontal list
-        if( item.items.length > 1) {
+        if (item.items.length > 1) {
             result = `new HorizontalListBox(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
         }
 
         const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
         // TODO The subString is needed to remove `self.`, this should be more generic and more failsafe.
-        const optionalPropertyName = (propertyProjection === undefined ?  "UNKNOWN" : propertyProjection.expression.toPiString().substring(5));
+        const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.expression.toPiString().substring(5));
         return `new OptionalBox(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
             ${ result},
             false, "<+>"
-        ),`
+        ),`;
     }
 
     /**
      * Projection template for a property.
      *
      * @param item      The property projection
-     * @param result
      * @param element
      * @param concept
      * @param language
      * @private
      */
     private propertyProjection(item: PiEditPropertyProjection, element: string, concept: PiConcept, language: PiLanguage) {
-        let result: string = ""
+        let result: string = "";
         const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
         if (appliedFeature instanceof PiPrimitiveProperty) {
             result += this.primitivePropertyProjection(appliedFeature, element);
@@ -393,7 +394,7 @@ export class ProjectionTemplate {
         const listAddition: string = `${property.isList ? `[index]` : ``}`;
         switch (property.primType) {
             case "string":
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext
@@ -411,7 +412,7 @@ export class ProjectionTemplate {
                     style: ${Names.styles}.placeholdertext
                 })`;
             default:
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as ${"string"}),
+                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",
                     style: ${Names.styles}.placeholdertext

@@ -30,15 +30,8 @@ export type Interface = {
     properties: Map<string, Property>;
 };
 
-
 export class Language {
     private static theInstance: Language = null;
-    private concepts: Map<string, Concept> = new Map<string, Concept>();
-    private interfaces: Map<string, Interface> = new Map<string, Interface>();
-    // private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
-
-    private constructor() {
-    }
 
     static getInstance() {
         if (Language.theInstance === null) {
@@ -47,6 +40,13 @@ export class Language {
         return Language.theInstance;
     }
 
+    private concepts: Map<string, Concept> = new Map<string, Concept>();
+    private interfaces: Map<string, Interface> = new Map<string, Interface>();
+
+    // private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
+
+    private constructor() {
+    }
     concept(typeName): Concept {
         return this.concepts.get(typeName);
     }
@@ -82,7 +82,6 @@ export class Language {
 
     /**
      * Add a concept definition to this language
-     * @param conceptName
      * @param concept
      */
     addConcept(concept: Concept) {
@@ -100,11 +99,11 @@ export class Language {
     subConcepts(typeName: string): string[] {
         const concept = this.concept(typeName);
         if (!!concept) {
-            return concept.subConceptNames
+            return concept.subConceptNames;
         }
         const intface = this.interface(typeName);
         if (!!intface) {
-            return intface.subConceptNames
+            return intface.subConceptNames;
         }
         return [];
     }

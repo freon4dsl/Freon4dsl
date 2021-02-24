@@ -25,7 +25,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
         result.name = data.name;
     }
     if (!!data.concepts) {
-        for(let con of data.concepts) {
+        for (const con of data.concepts) {
             if (con instanceof PiInterface) {
                 result.interfaces.push(con);
             } else {
@@ -57,7 +57,7 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     const result = new PiLimitedConcept();
     if (!!data.instances) {
         result.instances = data.instances;
-        for (let inst of result.instances) {
+        for (const inst of result.instances) {
             inst.concept = PiElementReference.create<PiLimitedConcept>(result, "PiLimitedConcept");
             inst.concept.owner = inst;
         }
@@ -87,12 +87,12 @@ export function createInterface(data: Partial<PiInterface>): PiInterface {
     }
     if (!!data.base) {
         result.base = data.base;
-        for (let intf of result.base) {
+        for (const intf of result.base) {
             intf.owner = result;
         }
     }
     if (!!data.properties) {
-        for(let prop of data.properties) {
+        for (const prop of data.properties) {
             if (prop instanceof PiPrimitiveProperty) {
                 result.primProperties.push(prop);
             } else {
@@ -120,12 +120,12 @@ function createCommonConceptProps(data: Partial<PiExpressionConcept>, result: Pi
     }
     if (!!data.interfaces) {
         result.interfaces = data.interfaces;
-        for (let intf of result.interfaces) {
+        for (const intf of result.interfaces) {
             intf.owner = result;
         }
     }
     if (!!data.properties) {
-        for(let prop of data.properties) {
+        for (const prop of data.properties) {
             if (prop instanceof PiPrimitiveProperty) {
                 result.primProperties.push(prop);
             } else {
@@ -146,7 +146,7 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
     result.isPublic = !!data.isPublic;
     result.isModel = !!data.isModel;
     result.isAbstract = !!data.isAbstract;
-    if( !!data.priority ) {
+    if ( !!data.priority ) {
         result.priority = data.priority;
     }
     createCommonConceptProps(data, result);
@@ -252,14 +252,14 @@ export function createInterfaceReference(data: Partial<PiElementReference<PiInte
     return result;
 }
 
-export function createInstance(data: Partial<PiInstance>) : PiInstance {
+export function createInstance(data: Partial<PiInstance>): PiInstance {
     const result = new PiInstance();
     if (!!data.name) {
         result.name = data.name;
     }
     if (!!data.props) {
         result.props = data.props;
-        for (let p of result.props) {
+        for (const p of result.props) {
             p.owningInstance = PiElementReference.create<PiInstance>(result, "PiInstance");
         }
     }
@@ -281,7 +281,7 @@ export function createInstance(data: Partial<PiInstance>) : PiInstance {
     return result;
 }
 
-export function createPropDef(data: Partial<PiPropertyInstance>) : PiPropertyInstance {
+export function createPropDef(data: Partial<PiPropertyInstance>): PiPropertyInstance {
     const result = new PiPropertyInstance();
     if (!!data.name) {
         result.name = data.name;

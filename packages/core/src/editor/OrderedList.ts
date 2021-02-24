@@ -8,9 +8,6 @@ export interface NamedElement<T> {
 export class OrderedList<T> implements Iterable<T> {
     @observable protected elements: NamedElement<T>[] = [];
 
-    constructor() {
-    }
-
     toArray(): NamedElement<T>[] {
         return this.elements;
     }
@@ -24,7 +21,7 @@ export class OrderedList<T> implements Iterable<T> {
     }
 
     toFront(name: string) {
-        let index = this.elements.findIndex(np => np.name === name);
+        const index = this.elements.findIndex(np => np.name === name);
         if (index < 0) {
             return;
         }
@@ -36,7 +33,7 @@ export class OrderedList<T> implements Iterable<T> {
     }
 
     toBack(name: string) {
-        let index = this.elements.findIndex(np => np.name === name);
+        const index = this.elements.findIndex(np => np.name === name);
         if (index < 0) {
             return;
         }

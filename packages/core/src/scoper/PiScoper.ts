@@ -14,7 +14,7 @@ export interface PiScoper {
      *
      *   When parameter 'excludeSurrounding' is present, it returns true if the element named 'name'
      *   is known in the namespace containing 'modelelement', without looking in surrounding namespaces.
-     * 
+     *
      * @param modelElement
      * @param name
      * @param metatype

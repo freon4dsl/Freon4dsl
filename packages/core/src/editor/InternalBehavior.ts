@@ -40,7 +40,7 @@ export abstract class InternalBehavior implements PiBehavior {
 }
 
 export class InternalBinaryBehavior extends InternalBehavior implements PiBinaryExpressionCreator {
-    expressionBuilder: (box: Box, aliasId: string, editor: PiEditor) => PiBinaryExpression;
+    expressionBuilder: (box: Box, aliasId: PiTriggerType, editor: PiEditor) => PiBinaryExpression;
 
     constructor(initializer?: Partial<InternalBinaryBehavior>) {
         super();
@@ -51,12 +51,12 @@ export class InternalBinaryBehavior extends InternalBehavior implements PiBinary
     async execute(box: Box, aliasId: string, editor: PiEditor) {
         LOGGER.info(this, "execute binary expression alias ok");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, aliasId, editor), box, editor);
-        editor.selectElement(selected.element, selected.boxRoleToSelect, this.caretPosition);
+        await editor.selectElement(selected.element, selected.boxRoleToSelect, this.caretPosition);
     }
 }
 
 export class InternalExpressionBehavior extends InternalBehavior implements PiExpressionCreator {
-    expressionBuilder: (box: Box, aliasId: string, editor: PiEditor) => PiExpression;
+    expressionBuilder: (box: Box, aliasId: PiTriggerType, editor: PiEditor) => PiExpression;
 
     constructor(initializer?: Partial<InternalExpressionBehavior>) {
         super();
@@ -73,7 +73,7 @@ export class InternalExpressionBehavior extends InternalBehavior implements PiEx
 }
 
 export class InternalCustomBehavior extends InternalBehavior implements PiCustomBehavior {
-    action: (box: Box, aliasId: string, editor: PiEditor) => PiElement | null;
+    action: (box: Box, aliasId: PiTriggerType, editor: PiEditor) => PiElement | null;
 
     constructor(initializer?: Partial<InternalCustomBehavior>) {
         super();

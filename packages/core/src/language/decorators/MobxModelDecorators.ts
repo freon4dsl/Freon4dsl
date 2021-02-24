@@ -97,31 +97,6 @@ interface ctor {
     run: any;
 }
 
-export function model2(target: Function) {
-    ModelInfo.addClass(target.name, target);
-    // return (constructor: ctor ) => {
-    //     return constructor;
-    // };
-    return function(target: any): any {
-        // save a reference to the original constructor
-        var original = target;
-
-        // the new constructor behaviour
-        var f: any = function(...args) {
-            console.log("ClassWrapper: before class constructor", original.name);
-            let instance = original.apply(this, args);
-            console.log("ClassWrapper: after class constructor", original.name);
-            return instance;
-        };
-
-        // copy prototype so intanceof operator still works
-        f.prototype = original.prototype;
-
-        // return new constructor (will override original)
-        return f;
-    };
-}
-
 export function model(target: Function) {
     ModelInfo.addClass(target.name, target);
 }
@@ -140,7 +115,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
 
     const getter = function(this: any) {
         const storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
-        if(!!storedObserver) {
+        if (!!storedObserver) {
             return storedObserver.get();
         } else {
             this[privatePropertyKey] = observable.box(null);

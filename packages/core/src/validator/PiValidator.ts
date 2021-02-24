@@ -46,6 +46,6 @@ export enum PiErrorSeverity {
     Improvement = "Improvement",
     ToDo = "TODO",
     Info = "Info",
-    NONE = "NONE",
+    NONE = "NONE"
 }
 // end::error-interface[]

@@ -10,6 +10,7 @@ export interface PiWriter {
      * If 'short' is present and false, then a multi-line result will be given.
      * Otherwise, the result is always a single-line string.
      * @param modelelement
+     * @param startIndent
      * @param short
      */
     writeToString(modelelement: PiElement, startIndent?: number, short?: boolean): string;
@@ -20,6 +21,7 @@ export interface PiWriter {
      * If 'short' is present and false, then a multi-line result will be given.
      * Otherwise, the result is always a single-line string.
      * @param modelelement
+     * @param startIndent
      * @param short
      */
     writeToLines(modelelement: PiElement, startIndent?: number, short?: boolean): string[];

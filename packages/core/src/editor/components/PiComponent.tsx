@@ -26,7 +26,7 @@ export class PiComponent extends React.Component<PiComponentProps, {}> {
     render() {
         RENDER_LOG.info(this, "");
         // NB Stop if there is no rootbox (yet)
-        // Neede becaUSE SET ROOTBOX IS ASYNC.
+        // Needed because USE SET ROOTBOX IS ASYNC.
         if (this.props.editor.rootBox === undefined) {
             return null;
         }

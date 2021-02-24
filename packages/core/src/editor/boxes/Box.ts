@@ -58,7 +58,7 @@ export abstract class Box {
             return this;
         }
 
-        for (let child of this.children) {
+        for (const child of this.children) {
             const leafChild = child.firstLeaf;
             if (!!leafChild) {
                 return leafChild;
@@ -68,7 +68,7 @@ export abstract class Box {
     }
 
     isLeaf(): boolean {
-        return this.children.length == 0;
+        return this.children.length === 0;
     }
 
     /**
@@ -79,7 +79,7 @@ export abstract class Box {
             return this;
         }
         const childrenReversed = this.children.filter(ch => true).reverse();
-        for (let child of childrenReversed) {
+        for (const child of childrenReversed) {
             const leafChild = child.lastLeaf;
             if (!!leafChild) {
                 return leafChild;
@@ -93,8 +93,8 @@ export abstract class Box {
             return null;
         }
         const thisIndex = this.parent.children.indexOf(this);
-        let rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
-        for (let sibling of rightSiblings) {
+        const rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
+        for (const sibling of rightSiblings) {
             const siblingChild = sibling.firstLeaf;
             if (!!siblingChild) {
                 return siblingChild;
@@ -111,8 +111,8 @@ export abstract class Box {
             return null;
         }
         const thisIndex = this.parent.children.indexOf(this);
-        let leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
-        for (let sibling of leftSiblings) {
+        const leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
+        for (const sibling of leftSiblings) {
             const siblingChild = sibling.lastLeaf;
             if (!!siblingChild) {
                 return siblingChild;
@@ -196,7 +196,7 @@ export abstract class Box {
     }
 
     private getEditableChildren(): Box[] {
-        let result: Box[] = [];
+        const result: Box[] = [];
         this.getEditableChildrenRecursive(result);
         return result;
     }

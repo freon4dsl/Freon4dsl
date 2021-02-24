@@ -1,7 +1,7 @@
 import { PiClassifier, PiConcept, PiInstanceExp, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { Roles } from "../../utils/Roles";
 import { ParseLocation } from "../../utils";
+import { Roles } from "../../utils/Roles";
 
 export class PiEditElement {
     location: ParseLocation;
@@ -14,8 +14,7 @@ export class PiEditUnit extends PiEditElement {
     conceptEditors: PiEditConcept[] = [];
 
     findConceptEditor(cls: PiClassifier): PiEditConcept {
-        const result = this.conceptEditors.find(con => con.concept.referred === cls);
-        return result;
+        return this.conceptEditors.find(con => con.concept.referred === cls);
     }
 }
 
@@ -78,14 +77,14 @@ export class PiEditParsedProjectionIndent extends PiEditElement {
 }
 
 export class PiEditProjectionText extends PiEditElement {
-    text: string = "";
-    style: string = "propertykeyword";
-
     public static create(text: string): PiEditProjectionText {
         const result = new PiEditProjectionText();
         result.text = text;
         return result;
     }
+
+    text: string = "";
+    style: string = "propertykeyword";
 
     toString(): string {
         return this.text;
@@ -140,7 +139,7 @@ export class PiEditSubProjection extends PiEditElement {
      */
     public optionalProperty(): PiEditPropertyProjection {
         for (const item of this.items) {
-            if( item instanceof PiEditPropertyProjection){
+            if (item instanceof PiEditPropertyProjection) {
                 return item;
             }
         }

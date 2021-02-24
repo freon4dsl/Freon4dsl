@@ -1,5 +1,5 @@
 import { action, observable } from "mobx";
-import { PiBinaryExpression, PiExpression } from "../../language";
+import { PiBinaryExpression, PiElement, PiExpression } from "../../language";
 // tslint:disable-next-line:no-unused-variable
 // import * as expressionExtensions from "./CoreTestExpression"; // Workaround to compile the tests
 import {
@@ -19,16 +19,20 @@ import { CoreTestEntity } from "../testmodel/domain/CoreTestEntity";
 import { CoreTestAttribute } from "../testmodel/domain/CoreTestAttribute";
 import { CoreTestFunction } from "../testmodel/domain/CoreTestFunction";
 import { CoreTestVariable } from "../testmodel/domain/CoreTestVariable";
+import { DummyPiElement } from "./DummyPiElement";
 
 require("./CoreTestExpression");
 
-export class CoreTestContext {
+export class CoreTestContext extends DummyPiElement {
+
+
     @observable private _rootElement: CoreTestModelElement;
 
     model: CoreTestModel = CoreTestModel.create("CoreTestModel");
 
 
     constructor(initialExpression?: CoreTestModelElement) {
+        super();
         this.initialize();
         this.rootElement = initialExpression ? initialExpression : this.model;
     }

@@ -18,7 +18,7 @@ export class PiEditParser extends PiParser<PiEditUnit> {
 
     protected merge(submodels: PiEditUnit[]): PiEditUnit {
         if (submodels.length > 0) {
-            let result: PiEditUnit = submodels[0];
+            const result: PiEditUnit = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
                     result.conceptEditors.push(...sub.conceptEditors);

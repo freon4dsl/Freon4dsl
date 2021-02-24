@@ -292,10 +292,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
         if (e.altKey) {
             return true;
         }
-        if (e.keyCode === Keys.ENTER || e.keyCode === Keys.TAB) {
-            return true;
-        }
-        return false;
+        return e.keyCode === Keys.ENTER || e.keyCode === Keys.TAB;
     };
 
     startEditing = () => {
@@ -352,7 +349,7 @@ export class TextComponent extends React.Component<TextComponentProps, {}> {
             this.caretPosition = position;
             this.props.box.caretPosition = position;
         } catch (e) {
-            console.log("TextComponent.setCaretPosition ERROR: "+ e.toString());
+            console.log("TextComponent.setCaretPosition ERROR: " + e.toString());
         }
     };
 

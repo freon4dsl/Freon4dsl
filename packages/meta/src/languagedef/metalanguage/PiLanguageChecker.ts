@@ -35,7 +35,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
 
         const myModel = language.concepts.find(c => c.isModel);
         // language.modelConcept should be  set in 'checkConcept'
-        if (myModel != language.modelConcept) {
+        if (myModel !== language.modelConcept) {
             LOGGER.error(this, "Internal error: language.modelConcept is not set correctly");
         }
         this.nestedCheck({check: !!myModel,
@@ -51,7 +51,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                             `The model should have at least one unit type ${this.location(myModel)}.`);
                     }
                 });
-            },
+            }
         });
 
         // now everything has been resolved, check that all concepts and interfaces have
@@ -239,7 +239,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
 
         if ( piConcept.isUnit ) {
             // find its name property and check whether it is public
-            const nameProp: PiPrimitiveProperty = piConcept.allPrimProperties().find(p => p.name == "name");
+            const nameProp: PiPrimitiveProperty = piConcept.allPrimProperties().find(p => p.name === "name");
             if (!!nameProp) { // the check that units should have a name property is done elsewhere
                 this.simpleCheck(
                     nameProp.isPublic,
@@ -468,7 +468,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                                 `Type of '${element.initialValue}' (${typeof element.initialValue}) does not fit type (${element.primType}) of property '${element.name}' ${this.location(element)}.`);
                         }
                     } else {
-                        this.simpleCheck(element.initialValue == null || element.initialValue == undefined,
+                        this.simpleCheck(element.initialValue === null || element.initialValue === undefined,
                             `Initial value of property '${element.name}' should be a list value ${this.location(element)}.`);
                         if (!!element.initialValueList) { // the property has an initial value, so check it
                             element.initialValueList.forEach(value => {
