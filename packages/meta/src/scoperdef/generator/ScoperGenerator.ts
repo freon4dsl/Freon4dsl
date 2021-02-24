@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "@projectit/core";
+import { isNullOrUndefined } from "@projectit/core/dist/util/PiUtils";
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
