@@ -116,7 +116,7 @@ export class DefaultActionsTemplate {
                     trigger: "${trigger}",
                     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                         const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
-                        const newBase: PiElementReference< ${Names.classifier(referredConcept)}> = PiElementReference.createNamed("", null);
+                        const newBase: PiElementReference<${Names.classifier(referredConcept)}> = PiElementReference.create<${Names.classifier(referredConcept)}>("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;
                     },

@@ -65,6 +65,47 @@ export class ScoperTemplate {
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
     
+            public resolvePathName(basePosition: ${allLangConcepts}, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
+                // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
+                let elementsFromBasePosition: ${Names.PiNamedElement}[] = this.getVisibleElements(basePosition);
+                // start the loop over the set of names in the pathname
+                let previousFound: ${allLangConcepts} = basePosition;
+                let found: ${Names.PiNamedElement} = null;
+                for (let index = 0; index < pathname.length; index++) {
+                    if (index === pathname.length - 1) { // it is the last name in the path, use 'metatype'
+                        found = this.getFromVisibleElements(previousFound, pathname[index], metatype);
+                    } else {
+                        // search the next name of pathname in the namespace of 'previousFound'
+                        // but do not use the metatype information, because only the element with the last of the pathname will have the correct type
+                        found = this.getFromVisibleElements(previousFound, pathname[index]);
+                        if (found === null || found === undefined || !isNameSpace(found as ${allLangConcepts})) {
+                            return null;
+                        }
+                        previousFound = found as ${allLangConcepts};
+                    }
+                    // check if 'found' is public or 'found' is in the namespace of the basePosition
+                    if (!this.isPublic(found) && !elementsFromBasePosition.includes(found)) {
+                        return null;
+                    }
+                }
+                return found;
+            }
+ 
+            private isPublic(found: PiNamedElement) : boolean {
+                // find the information about whether this element is public or private within its parent from the its container:
+                // 1. check the language description to find the concept description of the parent
+                // 2. from the parent find the property description with the right name
+                // 3. check whether the found property is public
+                if (found === null || found === undefined) {
+                    return false;
+                }
+                const container = found.piContainer();
+                if (container === null || container === undefined) {
+                    return false;
+                }                
+                return Language.getInstance().concept(container.container.piLanguageConcept()).properties.get(container.propertyName).isPublic;
+            }   
+                    
             /**
              * See ${scoperInterfaceName}.
              */

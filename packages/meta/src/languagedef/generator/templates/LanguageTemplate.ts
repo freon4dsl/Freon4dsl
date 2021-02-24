@@ -20,7 +20,7 @@ export class LanguageTemplate {
                     `Language.getInstance().addInterface(describe${Names.interface(intface)}());`
                 ).join("\n")}
                 Language.getInstance().addReferenceCreator( (name: string, type: string) => {
-                    return (!!name ? PiElementReference.createNamed(name, type) : null);
+                    return (!!name ? PiElementReference.create(name, type) : null);
                 });
             }
             

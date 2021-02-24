@@ -1,7 +1,7 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit, PiElementReference } from "../language/gen";
 import { GenericModelSerializer } from "@projectit/core";
 
-export class ModelCreator {
+export class SimpleModelCreator {
     private breadth = 1;
     private nameNumber: number = 0;
     public allNames: string[] = [];
@@ -92,6 +92,12 @@ export class ModelCreator {
         return DSpublic.create({ name: partName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
     }
 
+    createPrivate(parentName: string, depth: number): DSprivate {
+        const privateName = this.createName(parentName, "private");
+        const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, privateName);
+        return DSprivate.create({ name: privateName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
+    }
+
     private makePublicsAndPrivates(depth: number, partName: string) {
         const dsPublics: DSpublic[] = [];
         const dsPrivates: DSprivate[] = [];
@@ -106,28 +112,22 @@ export class ModelCreator {
         return { dsPublics, dsPrivates };
     }
 
-    createPrivate(parent: string, depth: number): DSprivate {
-        const privateName = this.createName(parent, "private");
-        const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, privateName);
-        return DSprivate.create({ name: privateName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
-    }
-
     private addReferencesToUnit(dSunit: DSunit) {
         const referedNames = this.allNames;
         for (let i = 0; i < this.breadth * 2; i++) {
             const index = this.makeReferenceIndex();
             if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
+                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>([this.allNames[index]], "DSref");
                 dSunit.dsRefs.push(someReference);
             } else {
                 console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
             }
-            dSunit.dsPrivates.forEach(part => this.addReferencesToPrivate(part));
-            dSunit.dsPublics.forEach(part => this.addReferencesToPublic(part));
+            dSunit.dsPrivates.forEach(part => this.addReferences(part));
+            dSunit.dsPublics.forEach(part => this.addReferences(part));
         }
     }
 
-    private addReferencesToPrivate(part: DSprivate) {
+    private addReferences(part: DSprivate) {
         for (let i = 0; i < this.breadth * 2; i++) {
             const index = this.makeReferenceIndex();
             if (!!this.allNames[index] && this.allNames[index].length > 0) {
@@ -139,21 +139,13 @@ export class ModelCreator {
         }
     }
 
-    private addReferencesToPublic(part: DSpublic) {
-        for (let i = 0; i < this.breadth * 2; i++) {
-            const index = this.makeReferenceIndex();
-            if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: PiElementReference<DSref> = PiElementReference.create<DSref>(this.allNames[index], "DSref");
-                part.conceptRefs.push(someReference);
-            } else {
-                console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
-            }
-        }
-    }
-
+    /**
+     * returns an index number such that the list of all names is traversed from beginning
+     * till end multiple times.
+     * @private
+     */
     private makeReferenceIndex(): number {
-        let result: number;
-        result = this.allNames.length - this.numberOfRefs - 1;
+        let result: number = this.allNames.length - this.numberOfRefs - 1;
 
         if (result < 0 || result >= this.allNames.length) {
             this.numberOfRefs = 0;
@@ -164,5 +156,3 @@ export class ModelCreator {
         return result;
     }
 }
-
-function isOdd(num) { return num % 2; }
