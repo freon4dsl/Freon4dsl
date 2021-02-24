@@ -43,7 +43,7 @@ describe("Testing Default Scoper", () => {
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, unparsed);
         } else {
-            console.log(this, "test-unparser: user file " + path + " already exists, skipping it.");
+            console.log("check1.test: test-unparser: user file " + path + " already exists, skipping it.");
         }
         // run the validator to see if the references are ok
         const validator = environment.validator;

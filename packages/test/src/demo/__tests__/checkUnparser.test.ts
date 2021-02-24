@@ -27,7 +27,7 @@ describe("Testing Unparser", () => {
 
         test("3", () => {
             let result: string = "";
-            let left = new DemoNumberLiteralExpression();
+            const left = new DemoNumberLiteralExpression();
             left.value = 3;
             result = unparser.writeToString(left, 0);
             expect(result).toBe("3");
@@ -35,7 +35,7 @@ describe("Testing Unparser", () => {
 
         test("multiplication 3 * 10", () => {
             let result: string = "";
-            let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
+            const mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
             result = unparser.writeToString(mult, 0);
@@ -44,7 +44,7 @@ describe("Testing Unparser", () => {
 
         test("multiplication 3 * 'temp'", () => {
             let result: string = "";
-            let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
+            const mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.writeToString(mult, 0);
@@ -53,10 +53,10 @@ describe("Testing Unparser", () => {
 
         test("multiplication (3 / 4) * 'temp'", () => {
             let result: string = "";
-            let div: DemoDivideExpression = new DemoDivideExpression();
+            const div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
             div.right = makeLiteralExp("4");
-            let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
+            const mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.writeToString(mult, 0);
@@ -84,8 +84,8 @@ describe("Testing Unparser", () => {
 
         test('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
             let result: string = "";
-            const determine = DemoFunction.create({name: "determine"});
-            const AAP = DemoVariable.create({name: "AAP"});
+            const determine = DemoFunction.create({ name: "determine" });
+            const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
             // AAP.declaredType = DemoAttributeType.Integer;
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
@@ -98,15 +98,15 @@ describe("Testing Unparser", () => {
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {
             let result: string = "";
-            const personEnt = DemoEntity.create({name: "Person"});
-            const age = DemoAttribute.create({name: "age"});
+            const personEnt = DemoEntity.create({ name: "Person" });
+            const age = DemoAttribute.create({ name: "age" });
 
-            const personName = DemoAttribute.create({name: "name"});
+            const personName = DemoAttribute.create({ name: "name" });
             personEnt.attributes.push(age);
             personEnt.attributes.push(personName);
-            const first = DemoFunction.create({name: "first"});
-            const Resultvar = DemoVariable.create({name: "Resultvar"});
-            first.parameters.push(Resultvar);
+            const first = DemoFunction.create({ name: "first" });
+            const resultvar = DemoVariable.create({ name: "Resultvar" });
+            first.parameters.push(resultvar);
             first.expression = MakePlusExp("5", "24");
             personEnt.functions.push(first);
 
@@ -124,22 +124,22 @@ describe("Testing Unparser", () => {
 
         test("complete example model with simple attribute types", () => {
             let result: string = "";
-            const model = new DemoModelCreator().createModelWithMultipleUnits();
+            const testmodel = new DemoModelCreator().createModelWithMultipleUnits();
 
-            let validator = new DemoValidator();
-            let errors = validator.validate(model, true);
+            const validator = new DemoValidator();
+            const errors = validator.validate(testmodel, true);
             // errors.forEach(err =>{
             //    console.log((err.message + " in " + err.locationdescription))
             // });
             // the custom validation adds error message to an otherwise correct model
             expect(errors.length).toBe(9);
 
-            result = unparser.writeToString(model, 0, false);
-            let path: string = "./unparsedDemoModel.txt";
+            result = unparser.writeToString(testmodel, 0, false);
+            const path: string = "./unparsedDemoModel.txt";
             if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, result);
             } else {
-                console.log(this, "projectit-test-unparser: user file " + path + " already exists, skipping it.");
+                console.log("checkUnparser.test: projectit-test-unparser: user file " + path + " already exists, skipping it.");
             }
 
             // console.log(result);
