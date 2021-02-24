@@ -1,7 +1,6 @@
 // TODO Is only used in demo package, should be replaced by GenericModelSerializer
-import { Checker } from "awesome-typescript-loader/dist/checker";
-import { MODEL_PREFIX, MODEL_PREFIX_LENGTH } from "../language/decorators/MobxModelDecorators";
 import { DecoratedModelElement, MobxModelElementImpl } from "../language/decorators/DecoratedModelElement";
+import { MODEL_PREFIX, MODEL_PREFIX_LENGTH } from "../language/decorators/MobxModelDecorators";
 import { ModelInfo } from "../language/decorators/ModelInfo";
 
 type Constructors = { [name: string]: Function };
@@ -62,7 +61,7 @@ export class ModelSerializer {
         const result = Object.create((dummy as any).prototype);
         this.revivedTypeScriptObjects.set(id, result);
 
-        for (var key of Object.getOwnPropertyNames(jsonObject)) {
+        for (const key of Object.getOwnPropertyNames(jsonObject)) {
             if (key === MODEL_ID) {
                 continue;
             }
@@ -82,14 +81,13 @@ export class ModelSerializer {
                     if (result[key] === undefined) {
                         result[key] = [];
                     }
-                    for (var item in value) {
+                    for (const item in value) {
                         result[key].push(this.toTypeScriptInstance(value[item]));
                     }
                 } else {
                     if (ModelInfo.references.contains(type, key)) {
                         const refId: string = jsonObject[key]["idref"];
-                        const refObject = { reference: true, id: refId };
-                        result[key] = refObject;
+                        result[key] = { reference: true, id: refId };
                         this.unresolvedReferences.push({ object: result, key: key });
                     } else {
                         result[key] = this.toTypeScriptInstance(value);
@@ -149,17 +147,17 @@ export class ModelSerializer {
      * set to the ID of the referred object.
      */
     convertToJSON(tsObject: DecoratedModelElement, serialize: boolean): Object {
-        var result: Object = this.createJsonObjectFor(tsObject, serialize);
+        const result: Object = this.createJsonObjectFor(tsObject, serialize);
         Object.keys(tsObject).forEach(key => {
             console.log("    key " + key);
             if (key.startsWith(MODEL_PREFIX)) {
                 const simpleKey = key.substring(MODEL_PREFIX_LENGTH);
-                var value = tsObject[key.substring(MODEL_PREFIX_LENGTH)];
+                const value = tsObject[key.substring(MODEL_PREFIX_LENGTH)];
                 if (ModelInfo.listparts.contains(tsObject[MODEL_TYPE], simpleKey)) {
                     console.log("_PI_ prefix found for list");
                     const parts: Object[] = tsObject[simpleKey];
                     result[simpleKey] = [];
-                    for (var i: number = 0; i < parts.length; i++) {
+                    for (let i: number = 0; i < parts.length; i++) {
                         result[simpleKey][i] = this.convertToJSON(parts[i] as any, serialize);
                     }
                 } else {
@@ -172,7 +170,7 @@ export class ModelSerializer {
                 console.log("Skipping container/propertName/Index");
             } else {
                 console.log("Nortal property: " + key);
-                var value = tsObject[key];
+                const value = tsObject[key];
                 if (typeof value === "string") {
                     result[key] = value;
                 } else if (typeof value === "number") {

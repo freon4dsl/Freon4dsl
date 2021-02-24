@@ -7,7 +7,7 @@ import { model } from "./MobxModelDecorators";
  *  The decorators will set the values of these properties correctly at each change.
  */
 export interface DecoratedModelElement {
-    container: Object | null;
+    container: PiElement | null;
     propertyName: string;
     propertyIndex: number | undefined;
 }
@@ -18,7 +18,7 @@ export interface DecoratedModelElement {
  */
 @model
 export class MobxModelElementImpl implements DecoratedModelElement {
-    @observable container: Object | null;
+    @observable container: PiElement | null;
     @observable propertyName: string;
     @observable propertyIndex: number | undefined;
 

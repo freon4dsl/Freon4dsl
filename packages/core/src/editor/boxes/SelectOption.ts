@@ -1,5 +1,5 @@
 /**
- * Derscribes an option in a dropdown
+ * Describes an option in a dropdown
  */
 
 export type SelectOption = {

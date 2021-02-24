@@ -32,7 +32,6 @@ import {
     PiElementReference,
     SumExpression
 } from "../language/gen";
-import { projectitConfiguration } from "../projectit/ProjectitConfiguration";
 import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
 import { sumIcon } from "./Icons";
 import { exampleStyles } from "./examplestyles";
@@ -88,7 +87,7 @@ export class CustomExampleProjection implements PiProjection {
                 [
                     new LabelBox(entity, "entity-label-line-0-item-0", "Entity ", {
                         style: projectitStyles.propertykeyword,
-                        selectable: false,
+                        selectable: false
                     }),
                     new TextBox(
                         entity,
@@ -97,12 +96,12 @@ export class CustomExampleProjection implements PiProjection {
                         (c: string) => (entity.name = c as string),
                         {
                             placeHolder: "text",
-                            style: projectitStyles.placeholdertext,
+                            style: projectitStyles.placeholdertext
                         }
                     ),
                     (!!entity.baseEntity ? new LabelBox(entity, "entity-label-line-0-item-2", "base ", {
                         style: projectitStyles.propertykeyword,
-                        selectable: false,
+                        selectable: false
                     }) : null),
                     new OptionalBox(entity, "optional-base", () => (!!entity.baseEntity),
                         this.helpers.getReferenceBox(
@@ -136,8 +135,8 @@ export class CustomExampleProjection implements PiProjection {
                     ),
                     new LabelBox(entity, "entity-label-line-0-item-5", "{", {
                         style: projectitStyles.propertykeyword,
-                        selectable: false,
-                    }),
+                        selectable: false
+                    })
                 ],
                 { selectable: true }
             ),
@@ -149,14 +148,14 @@ export class CustomExampleProjection implements PiProjection {
                     entity,
                     "entity-attributes-list",
                     entity.attributes
-                        .map((feature) => {
+                        .map(feature => {
                             return this.rootProjection.getBox(feature);
                         })
                         .concat(
                             new AliasBox(entity, "entity-attributes", "<+>", {
                                 //  add attributes
                                 style: projectitStyles.placeholdertext,
-                                propertyName: "attributes",
+                                propertyName: "attributes"
                             })
                         )
                 )
@@ -169,25 +168,24 @@ export class CustomExampleProjection implements PiProjection {
                     entity,
                     "entity-methods-list",
                     entity.methods
-                        .map((feature) => {
+                        .map(feature => {
                             return this.rootProjection.getBox(feature);
                         })
                         .concat(
                             new AliasBox(entity, "entity-methods", "<+>", {
                                 //  add methods
                                 style: projectitStyles.placeholdertext,
-                                propertyName: "methods",
+                                propertyName: "methods"
                             })
                         )
                 )
             ),
             new LabelBox(entity, "entity-label-line-3-item-0", "}", {
                 style: projectitStyles.propertykeyword,
-                selectable: false,
-            }),
+                selectable: false
+            })
         ]);
     }
-
 
     public getDemoNumberLiteralExpressionBox(exp: NumberLiteralExpression): Box {
         return createDefaultExpressionBox(exp, "number-literal", [
@@ -201,7 +199,7 @@ export class CustomExampleProjection implements PiProjection {
         ]);
     }
 
-    optionalPartBox(element: PiElement, roleName: string, property: string){
+    optionalPartBox(element: PiElement, roleName: string, property: string): Box {
         const projectionToUse = !!this.rootProjection ? this.rootProjection : this;
         return !!element[property]
             ? projectionToUse.getBox(element[property])
@@ -209,7 +207,7 @@ export class CustomExampleProjection implements PiProjection {
     }
 
     public createSumBox(sum: SumExpression): Box {
-        let cells: GridCell[] = [
+        const cells: GridCell[] = [
             {
                 row: 3,
                 column: 1,
@@ -238,7 +236,7 @@ export class CustomExampleProjection implements PiProjection {
                 row: 1,
                 column: 1,
                 columnSpan: 2,
-                box: this.optionalPartBox(sum, "SumExpression-to","to"),
+                box: this.optionalPartBox(sum, "SumExpression-to", "to"),
                 style: exampleStyles.mycell
             },
             {
@@ -246,18 +244,17 @@ export class CustomExampleProjection implements PiProjection {
                 column: 2,
                 box: new HorizontalListBox(sum, "sum-body", [
                     new LabelBox(sum, "sum-body-open", "(", { style: exampleStyles.bracket }),
-                    this.optionalPartBox(sum, "SumExpression-body","body"),
+                    this.optionalPartBox(sum, "SumExpression-body", "body"),
                     new LabelBox(sum, "sum-body-close", ")", { style: exampleStyles.bracket })
                 ]),
                 style: exampleStyles.mycell
             }
         ];
-        let result = new GridBox(sum, "sum-all", cells, {
+        const result = new GridBox(sum, "sum-all", cells, {
             style: exampleStyles.mygrid
         });
         return createDefaultExpressionBox(sum, "sum-exp", [result]);
     }
-
 
     public createOrBoxGrid(exp: OrExpression): Box {
         const gridCells: GridCell[] = [];
@@ -316,7 +313,7 @@ export class CustomExampleProjection implements PiProjection {
     }
 
     private createEntityBox(entity: Entity): Box {
-        let cells: GridCell[] = [];
+        const cells: GridCell[] = [];
         cells.push({
             row: 1,
             column: 1,
@@ -343,7 +340,7 @@ export class CustomExampleProjection implements PiProjection {
                 [
                     new LabelBox(entity, "Entity-label-line-0-item-0", "entity ", {
                         style: projectitStyles.propertykeyword,
-                        selectable: false,
+                        selectable: false
                     }),
                     new TextBox(
                         entity,
@@ -352,12 +349,12 @@ export class CustomExampleProjection implements PiProjection {
                         (c: string) => (entity.name = c as string),
                         {
                             placeHolder: "entity name",
-                            style: projectitStyles.placeholdertext,
+                            style: projectitStyles.placeholdertext
                         }
                     ),
                     new LabelBox(entity, "Entity-label-line-0-item-2", "base ", {
                         style: projectitStyles.propertykeyword,
-                        selectable: false,
+                        selectable: false
                     }),
                     this.helpers.getReferenceBox(
                         entity,
@@ -372,7 +369,7 @@ export class CustomExampleProjection implements PiProjection {
                             }
                         },
                         (option: SelectOption) => {
-                            if( !!(option)) {
+                            if ( !!(option)) {
                                 entity.baseEntity = PiElementReference.create<Entity>(
                                     ExampleEnvironment.getInstance().scoper.getFromVisibleElements(entity, option.label, "Entity") as Entity,
                                     "Entity"
@@ -399,25 +396,25 @@ export class CustomExampleProjection implements PiProjection {
                     entity,
                     "Model-methods-list",
                     entity.methods
-                        .map((feature) => {
+                        .map(feature => {
                             return this.rootProjection.getBox(feature);
                         })
                         .concat(
                             new AliasBox(entity, "Entity-methods", "<+>", {
                                 //  add methods
                                 style: projectitStyles.placeholdertext,
-                                propertyName: "methods",
+                                propertyName: "methods"
                             })
                         )
                 )
-            ),
+            )
 
         ]);
     }
 
     private createEntityBoxGrid(entity: Entity): Box {
         // LOGGER.info(this, "createEntityBox: ");
-        let cells: GridCell[] = [
+        const cells: GridCell[] = [
             {
                 row: 1,
                 column: 1,
@@ -514,7 +511,7 @@ export class CustomExampleProjection implements PiProjection {
                                 attr.declaredType = null;
                             }
                         }
-                    )
+                    );
                 }
             ],
             (box: Box, editor: PiEditor) => {
@@ -524,51 +521,51 @@ export class CustomExampleProjection implements PiProjection {
         );
     }
 
-    public getParameterRefBox(ParameterRef: ParameterRef): Box {
+    public getParameterRefBox(parameterRef: ParameterRef): Box {
         return createDefaultExpressionBox(
-            ParameterRef,
+            parameterRef,
             "default-expression-box",
             [
                 new HorizontalListBox(
-                    ParameterRef,
+                    parameterRef,
                     "ParameterRef-hlist-line-0",
                     [
                         this.helpers.getReferenceBox(
-                            ParameterRef,
+                            parameterRef,
                             "ParameterRef-parameter",
                             "<select parameter>",
                             "Parameter",
                             () => {
-                                if (!!ParameterRef.parameter) {
-                                    return { id: ParameterRef.parameter.name, label: ParameterRef.parameter.name };
+                                if (!!parameterRef.parameter) {
+                                    return { id: parameterRef.parameter.name, label: parameterRef.parameter.name };
                                 } else {
                                     return null;
                                 }
                             },
                             (option: SelectOption) => {
                                 if (!!option) {
-                                    ParameterRef.parameter = PiElementReference.create<Parameter>(
+                                    parameterRef.parameter = PiElementReference.create<Parameter>(
                                         ExampleEnvironment.getInstance().scoper.getFromVisibleElements(
-                                            ParameterRef,
+                                            parameterRef,
                                             option.label,
                                             "Parameter"
                                         ) as Parameter,
                                         "Parameter"
                                     );
                                 } else {
-                                    ParameterRef.parameter = null;
+                                    parameterRef.parameter = null;
                                 }
                             }
                         ),
-                        (!!ParameterRef.appliedfeature ?
-                            new LabelBox(ParameterRef, "ParameterRef-label-line-0-item-1", ".", {
+                        (!!parameterRef.appliedfeature ?
+                            new LabelBox(parameterRef, "ParameterRef-label-line-0-item-1", ".", {
                                 style: projectitStyles.propertykeyword,
                                 selectable: false
                             })
-                        : new AliasBox(ParameterRef, "ExExpression-appliedfeature", NBSP, { propertyName: "appliedfeature" })
+                        : new AliasBox(parameterRef, "ExExpression-appliedfeature", NBSP, { propertyName: "appliedfeature" })
                         ),
-                        !!ParameterRef.appliedfeature
-                            ? this.rootProjection.getBox(ParameterRef.appliedfeature)
+                        !!parameterRef.appliedfeature
+                            ? this.rootProjection.getBox(parameterRef.appliedfeature)
                             : null
                     ],
                     { selectable: true }
@@ -603,4 +600,3 @@ function isName(currentText: string, key: string, index: number): KeyPressAction
         return KeyPressAction.OK;
     }
 }
-

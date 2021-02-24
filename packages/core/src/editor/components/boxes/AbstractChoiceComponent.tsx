@@ -1,4 +1,4 @@
-import { isAliasBox, isMetaKey, isSelectBox } from "../../../index";
+import { isAliasBox, isMetaKey } from "../../../index";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as classNames from "classnames";
@@ -207,7 +207,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
             this.dropdownIsOpen = true;
         }
         if (this.props.box.deleteWhenEmpty1() && this.element.innerText.length === 0) {
-            this.props.editor.deleteBox(this.props.box);
+            await this.props.editor.deleteBox(this.props.box);
         }
     };
 
@@ -248,7 +248,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
                     e.preventDefault();
                     const handled = false;
                     if (isAliasBox(this.props.box)) {
-                        PiUtils.handleKeyboardShortcut(Keys.reactToKey(e), this.props.box, this.props.editor);
+                        await PiUtils.handleKeyboardShortcut(Keys.reactToKey(e), this.props.box, this.props.editor);
                         // if (handled) {
                         e.stopPropagation();
                         // }
@@ -403,7 +403,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
         this.clearSelection();
         const range = document.createRange();
         // TODO sometimes childnodes tdo not exist,  is this ok?
-        try{
+        try {
             if (!!this.element && !!this.element.childNodes && this.element.childNodes[0]) {
                 range.setStart(this.element.childNodes[0], Math.min(position, this.element.innerText.length));
             } else {
@@ -412,7 +412,7 @@ export abstract class AbstractChoiceComponent extends React.Component<AbstractCh
                 }
             }
         } catch (e) {
-            console.log(e.toString())
+            console.log(e.toString());
         }
         range.collapse(true);
         window.getSelection().addRange(range);

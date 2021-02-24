@@ -39,7 +39,6 @@ export class PiProjectionUtil {
                     } else {
                         return { id: labels.no, label: labels.no };
                     }
-                    return null;
                 },
                 option => {
                     if (option.label === labels.yes) {

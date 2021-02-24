@@ -1,6 +1,6 @@
 import {
     PiConcept,
-    PiInstanceExp, PiLangElement,
+    PiInstanceExp,
     PiLangExpressionChecker,
     PiLanguage,
     PiLimitedConcept,
@@ -10,15 +10,15 @@ import { Checker } from "../../utils";
 import {
     ListJoin,
     ListJoinType,
-    PiEditConcept, PiEditElement, PiEditInstanceProjection,
-    PiEditProjection, PiEditProjectionLine,
+    PiEditConcept, PiEditInstanceProjection,
+    PiEditProjection,
     PiEditPropertyProjection,
     PiEditSubProjection,
     PiEditUnit
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("DefEditorChecker"); //.mute();
+const LOGGER = new MetaLogger("DefEditorChecker"); // .mute();
 
 export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;
@@ -82,7 +82,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     private checkProjection(projection: PiEditProjection, cls: PiConcept) {
         if (!!projection) {
             projection.lines.forEach(line => {
-                let toBeReplaced: number[] = [];
+                const toBeReplaced: number[] = [];
                 line.items.forEach((item, index) => {
                     if (item instanceof PiEditPropertyProjection) {
                         if (cls instanceof PiLimitedConcept && item.expression.sourceName !== "self") {
@@ -99,9 +99,9 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 // but it should be a PiEditInstanceProjection
                 // TODO LimitedConcepts can never be created in a model (they are all predefined).
                 //      Therefore this is never used, until we start showing the predefined elements in the editor.
-                for (let i of toBeReplaced) {
+                for (const i of toBeReplaced) {
                     const propProjection: PiEditPropertyProjection = line.items[i] as PiEditPropertyProjection;
-                    let instanceProjection = new PiEditInstanceProjection();
+                    const instanceProjection = new PiEditInstanceProjection();
                     instanceProjection.keyword = propProjection.keyword;
                     instanceProjection.expression = new PiInstanceExp();
                     instanceProjection.expression.sourceName = cls.name;
@@ -190,15 +190,14 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             error: `Cannot find instance ${projection.expression.sourceName} of limited concept ${cls.name} ${this.location(projection)}`,
             whenOk: () => {
                 // should have a '@keyword'
-                this.simpleCheck(!!projection.keyword,`Instance '${myinstance.name}' of a limited concept should be projected using a keyword ${this.location(projection)}`);
+                this.simpleCheck(!!projection.keyword, `Instance '${myinstance.name}' of a limited concept should be projected using a keyword ${this.location(projection)}`);
                 this.simpleCheck(!this.includesWhitespace(projection.keyword), `The text for a keyword projection should not include any whitespace ${this.location(projection)}`);
             }
         });
     }
 
     private includesWhitespace(keyword: string) {
-        let result: boolean = keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r");
-        return result;
+        return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r");
     }
 
 }

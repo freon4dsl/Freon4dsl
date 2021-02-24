@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import { MatchUtil } from "../../../util/MatchUtil";
 import * as React from "react";
 
-import { isString, triggerToString } from "../../PiAction";
+import { triggerToString } from "../../PiAction";
 import { SelectOption } from "../../boxes/SelectOption";
 import { AbstractChoiceComponent } from "./AbstractChoiceComponent";
 import { BehaviorExecutionResult, executeBehavior } from "../../../util/BehaviorUtils";

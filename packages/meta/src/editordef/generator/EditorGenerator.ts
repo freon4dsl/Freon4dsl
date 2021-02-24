@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from "@projectit/core/dist/util/PiUtils";
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
@@ -27,7 +28,7 @@ export class EditorGenerator {
         // TODO the following should already have been set by the edit checker, but it seems to be needed here
         editDef.language = this.language;
 
-        if (editDef === null || editDef === undefined) {
+        if (isNullOrUndefined(editDef)) {
             editDef = this.createDefaultEditorDefinition();
         }
 

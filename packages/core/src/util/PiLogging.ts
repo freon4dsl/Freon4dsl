@@ -7,9 +7,9 @@ type LogMessage = string | MessageFunction;
 
 export class PiLogger {
     private static muteAll: boolean = true;
-    private static FgRed = "\x1b[31m";
-    private static FgBlack = "\x1b[30m";
-    private static FgBlue = "\x1b[34m";
+    private static FG_RED = "\x1b[31m";
+    private static FG_BLACK = "\x1b[30m";
+    private static FG_BLUE = "\x1b[34m";
 
     static muteAllLogs() {
         PiLogger.muteAll = true;
@@ -35,19 +35,19 @@ export class PiLogger {
     info(o: any, msg: LogMessage) {
         if (this.active && !PiLogger.muteAll) {
             const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-            this.logToConsole(PiLogger.FgBlue, type + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FG_BLUE, type + ": " + this.message(msg));
         }
     }
 
     log(msg: LogMessage) {
         if (this.active && !PiLogger.muteAll) {
-            this.logToConsole(PiLogger.FgBlack, this.category + ": " + this.message(msg));
+            this.logToConsole(PiLogger.FG_BLACK, this.category + ": " + this.message(msg));
         }
     }
 
     error(o: any, msg: LogMessage) {
         const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-        console.log(PiLogger.FgRed, "ERROR: " + type + ": " + this.message(msg));
+        console.log(PiLogger.FG_RED, "ERROR: " + type + ": " + this.message(msg));
     }
 
     mute(): PiLogger {
@@ -66,24 +66,24 @@ export class PiLogger {
 
     protected logToConsole(color: string, message: string): void {
         if (PiLogger.filter === null) {
-            console.log(color, message, PiLogger.FgBlack, "");
+            console.log(color, message, PiLogger.FG_BLACK, "");
             // this.colorMyText();
         } else {
             if (message.includes(PiLogger.filter)) {
-                console.log(color, message, PiLogger.FgBlack, "");
+                console.log(color, message, PiLogger.FG_BLACK, "");
             }
         }
     }
 
     // following does not work
     colorMyText() {
-        var text = "some text with some {special} formatting on this {keyword} and this {keyword}";
-        var splitText = text.split(" ");
-        var cssRules = [];
-        var styledText = "";
-        for (var split of splitText) {
+        const text = "some text with some {special} formatting on this {keyword} and this {keyword}";
+        const splitText = text.split(" ");
+        const cssRules = [];
+        let styledText = "";
+        for (const split of splitText) {
             if (/^\{/.test(split)) {
-                cssRules.push(PiLogger.FgBlue);
+                cssRules.push(PiLogger.FG_BLUE);
             } else {
                 cssRules.push("color:inherit");
             }

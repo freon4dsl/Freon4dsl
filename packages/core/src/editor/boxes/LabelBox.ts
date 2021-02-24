@@ -7,7 +7,7 @@ import { PiElement } from "../../language/PiModel";
 export class LabelBox extends Box {
     readonly kind = "LabelBox";
 
-    @observable private $label: string;
+    @observable private readonly $label: string;
 
     constructor(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
         super(element, role);

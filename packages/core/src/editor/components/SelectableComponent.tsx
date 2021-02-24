@@ -18,7 +18,7 @@ export type SelectableComponentProps = {
 };
 
 /**
- * Wrapper for each component, to ansure each component is selectable.
+ * Wrapper for each component, to ensure each component is selectable.
  */
 @observer
 export class SelectableComponent extends React.Component<SelectableComponentProps, {}> {
@@ -46,7 +46,7 @@ export class SelectableComponent extends React.Component<SelectableComponentProp
     render() {
         const selectedBox = this.props.editor.selectedBox;
         let style: string;
-        let isSelected = !!this.props.box && !!selectedBox ? this.props.box.id === selectedBox.id : false;
+        const isSelected = !!this.props.box && !!selectedBox ? this.props.box.id === selectedBox.id : false;
         if (isSelected) {
             if (isTextBox(selectedBox) || isAliasBox(selectedBox) || isSelectBox(selectedBox)) {
                 style = STYLES.selectedTextComponent;
@@ -56,7 +56,7 @@ export class SelectableComponent extends React.Component<SelectableComponentProp
         } else {
             style = STYLES.unSelectedComponent;
         }
-        // Ensure that am Alias- or TextComponent can call the uodate nmethod, because this selectable
+        // Ensure that am Alias- or TextComponent can call the update method, because this selectable
         // component won;t be rendered.
         if (isTextBox(this.props.box) || isAliasBox(this.props.box) || isSelectBox(this.props.box)) {
             this.props.box.update = this.componentDidUpdate;

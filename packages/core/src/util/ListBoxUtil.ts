@@ -57,13 +57,13 @@ export function boxBelow(box: Box): Box {
         tmpResult = result;
         result = next;
     }
-    LOGGER.log("Found box below 3 [" + (!!result ? result.role : "null") + "]");
+    LOGGER.log("Found box below 3 [ null ]");
     return result;
 }
 
 function isOnPreviousLine(ref: Box, other: Box): boolean {
     const margin = 5;
-    return other.actualY + 5 < ref.actualY;
+    return other.actualY + margin < ref.actualY;
 }
 
 function isOnNextLine(ref: Box, other: Box): boolean {
@@ -92,7 +92,7 @@ export function createVerticalListBox<E extends PiElement>(
     elementCreator: (box: Box, editor: PiEditor) => E,
     editor: PiEditor
 ): Box {
-    LOGGER.info(this, "createVerticalListBox");
+    LOGGER.log("createVerticalListBox");
     const result = new VerticalListBox(element, role, []);
 
     for (let index = 0; index < list.length; index++) {

@@ -1,19 +1,15 @@
 import * as React from "react";
 import { Selection } from "office-ui-fabric-react/lib/DetailsList";
-import { Icon, Tree, Box, RadioGroup } from "@fluentui/react-northstar";
+import { Tree, Box, RadioGroup } from "@fluentui/react-northstar";
 import { ComponentEventHandler } from "@fluentui/react-northstar/";
-import { SelectionMode, SelectionZone } from "office-ui-fabric-react/lib/Selection";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 
 // TODO try to make dependence of EditorCommunication as small as possible
-import { EditorCommunication} from "./EditorCommunication";
-import { IModelUnitData } from "./IServerCommunication";
+import { EditorCommunication } from "./EditorCommunication";
 import { PiNamedElement } from "@projectit/core";
 import CommonOperations from "./CommonOperations";
 import DialogData from "./DialogData";
-import { ServerCommunication } from "./ServerCommunication";
-import { App } from "./App";
 
 // This component holds the navigator, which shows all available models sorted by language
 
@@ -55,16 +51,16 @@ export class Navigator extends React.Component<{}, {}> {
     }
 
     @computed get buildTree(): TreeElement[] {
-        let tree: TreeElement[] = [];
-        let model = EditorCommunication.getInstance().currentModel;
+        const tree: TreeElement[] = [];
+        const model = EditorCommunication.getInstance().currentModel;
         if(!!model) {
-            let modelGroup: TreeElement = {
+            const modelGroup: TreeElement = {
                 id: model.name,
                 title: model.name,
                 items: [],
                 onTitleClick: this._onTitleClick,
                 as: "h5",
-                parent: "",
+                parent: ""
                 // selectable: "false"
             };
             this.modelId = modelGroup.id;
@@ -72,14 +68,16 @@ export class Navigator extends React.Component<{}, {}> {
             EditorCommunication.getInstance().currentModel.getUnits().forEach((unit, index) => {
                 this._indexToTree.set(index, unit);
                 let unitNameToShow: string = "<unnamed>";
-                if (unit.name.length > 0) { unitNameToShow = unit.name}
-                let elem: TreeElement = {
+                if (unit.name.length > 0) {
+                    unitNameToShow = unit.name;
+                }
+                const elem: TreeElement = {
                     id: index.toString(10),
                     title: unitNameToShow,
                     items: [],
                     onTitleClick: this._onTitleClick,
                     as: "h5",
-                    parent: modelGroup.id,
+                    parent: modelGroup.id
                     // selectable: "true"
                 };
                 // if (unit == EditorCommunication.getInstance().currentUnit) {
@@ -93,7 +91,7 @@ export class Navigator extends React.Component<{}, {}> {
         return tree;
     }
 
-    private _onTitleClick = async (ev: React.MouseEvent<HTMLElement>, item?: TreeElement) => {
+    private _onTitleClick = async (ev: React.SyntheticEvent<HTMLElement>, item?: TreeElement) => {
         if (!!item.id) {
             // every model unit is a leaf in the navigation tree
             // get from item.id the right name to put through to the open request
@@ -136,4 +134,3 @@ export class Navigator extends React.Component<{}, {}> {
         );
     }
 }
-

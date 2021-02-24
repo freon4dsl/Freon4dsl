@@ -36,7 +36,7 @@ export class SelectComponent extends AbstractChoiceComponent {
     // set dropdownIsOpen(v: boolean) {
     //     this._dropdownIsOpen = v;
     //     this.OPEN = v && (this.getOptions().length !== 0)
-    //     // TODO:  This force update should not be neccesary, because OPEN is observable
+    //     // TODO:  This force update should not be necessary, because OPEN is observable
     //     this.forceUpdate();
     // }
 
@@ -59,13 +59,13 @@ export class SelectComponent extends AbstractChoiceComponent {
             return;
         }
         if (isSelectBox(this.props.box)) {
-            let option = (!!optionId ? this.getOptions()[findExactOptionId(this.getOptions(), optionId)] : null);
-            LOGGER.info(this, "handleSelected option: " + (!!option ? option.label: "null"));
+            const option = (!!optionId ? this.getOptions()[findExactOptionId(this.getOptions(), optionId)] : null);
+            LOGGER.info(this, "handleSelected option: " + (!!option ? option.label : "null"));
             this.props.box.setSelectedOption(option);
             LOGGER.info(this, "handleSelected option done");
             this.dropdownIsOpen = false;
-            this.element.innerText = (!!option ? option.label: "");
-            this.text = (!!option ? option.label: "");
+            this.element.innerText = (!!option ? option.label : "");
+            this.text = (!!option ? option.label : "");
             this.hasError = false;
             this.element.focus();
             this.setCaretToMostRight();

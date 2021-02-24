@@ -1,4 +1,3 @@
-import { LabelBox } from "../editor/boxes";
 import { PiCaret } from "./BehaviorUtils";
 import { STYLES } from "../editor/components/styles/Styles";
 import { AliasBox } from "../editor/boxes/AliasBox";
@@ -54,7 +53,7 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
     result.addChildren([
-        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, "PiBinaryExpression-left", "[add-left]", { propertyName: "left"})),
+        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, "PiBinaryExpression-left", "[add-left]", { propertyName: "left" })),
         new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
@@ -62,7 +61,7 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
             style: STYLES.aliasExpression
         }),
-        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, "PiBinaryExpression-right", "[add-right]", { propertyName: "right"}))
+        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, "PiBinaryExpression-right", "[add-right]", { propertyName: "right" }))
     ]);
     return result;
 }
@@ -71,6 +70,7 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
  * The creates an operator box as a selection to enable editing of operators.
  * @param editor
  * @param exp
+ * @param symbol
  * @param style
  */
 export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: string): Box {

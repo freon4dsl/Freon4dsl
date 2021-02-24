@@ -24,8 +24,7 @@ export class GenericModelSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     toTypeScriptInstance(jsonObject: Object): any {
-        const result: any = this.toTypeScriptInstanceInternal(jsonObject);
-        return result;
+        return this.toTypeScriptInstanceInternal(jsonObject);
     }
 
     /**
@@ -34,7 +33,7 @@ export class GenericModelSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     private toTypeScriptInstanceInternal(jsonObject: Object): any {
-        if(jsonObject === null){
+        if (jsonObject === null) {
             throw new Error("jsonObject is null, cannot convert to TypeScript");
         }
         const type: string = jsonObject["$typename"];
@@ -46,7 +45,7 @@ export class GenericModelSerializer {
         const result = this.language.createConcept(type);
         // console.log("Object created with [" + type + "]");
 
-        for (let property of this.language.allConceptProperties(type)) {
+        for (const property of this.language.allConceptProperties(type)) {
             const value = jsonObject[property.name];
             if (value === undefined) {
                 continue;
@@ -56,7 +55,7 @@ export class GenericModelSerializer {
                 case "primitive":
                     if (property.isList) {
                         result[property.name] = [];
-                        for (var item in value) {
+                        for (const item in value) {
                             result[property.name].push(value[item]);
                         }
                     } else {
@@ -84,7 +83,7 @@ export class GenericModelSerializer {
                     if (property.isList) {
                         // console.log("    list property of size "+ value.length);
                         // result[property.name] = [];
-                        for (var item in value) {
+                        for (const item in value) {
                             result[property.name].push(this.toTypeScriptInstance(value[item]));
                         }
                     } else {
@@ -96,7 +95,7 @@ export class GenericModelSerializer {
                     break;
                 case "reference":
                     if (property.isList) {
-                        for (var item in value) {
+                        for (const item in value) {
                             result[property.name].push(this.language.referenceCreator(value[item], property.type));
                         }
                     } else {
@@ -116,7 +115,7 @@ export class GenericModelSerializer {
     convertToJSON(tsObject: PiElement, publicOnly?: boolean): Object {
         const typename = tsObject.piLanguageConcept();
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
-        var result: Object;
+        let result: Object;
         if (publicOnly !== undefined && publicOnly) {
             if (this.language.concept(typename).isPublic || this.language.concept(typename).isUnit) {
                 result = this.convertToJSONinternal(tsObject, true, typename);
@@ -129,9 +128,9 @@ export class GenericModelSerializer {
     }
 
     private convertToJSONinternal(tsObject: PiElement, publicOnly: boolean, typename: string): Object {
-        var result: Object = { $typename: typename };
+        const result: Object = { $typename: typename };
         // console.log("typename: " + typename);
-        for (let p of this.language.allConceptProperties(typename)) {
+        for (const p of this.language.allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyType);
             if (publicOnly) {
                 if (p.isPublic) {
@@ -148,11 +147,11 @@ export class GenericModelSerializer {
     private convertPropertyToJSON(p: Property, tsObject: PiElement, publicOnly: boolean, result: Object) {
         switch (p.propertyType) {
             case "part":
-                var value = tsObject[p.name];
+                const value = tsObject[p.name];
                 if (p.isList) {
                     const parts: Object[] = tsObject[p.name];
                     result[p.name] = [];
-                    for (var i: number = 0; i < parts.length; i++) {
+                    for (let i: number = 0; i < parts.length; i++) {
                         result[p.name][i] = this.convertToJSON(parts[i] as PiElement, publicOnly);
                     }
                 } else {
@@ -164,13 +163,13 @@ export class GenericModelSerializer {
                 if (p.isList) {
                     const references: Object[] = tsObject[p.name];
                     result[p.name] = [];
-                    for (var i: number = 0; i < references.length; i++) {
+                    for (let i: number = 0; i < references.length; i++) {
                         result[p.name][i] = references[i]["name"];
                     }
                 } else {
                     // single reference
-                    const value = tsObject[p.name];
-                    result[p.name] = !!value ? tsObject[p.name]["name"] : null;
+                    const value1 = tsObject[p.name];
+                    result[p.name] = !!value1 ? tsObject[p.name]["name"] : null;
                 }
                 break;
             // case "enumeration": // TODO remove enumeration from Serializer
@@ -187,13 +186,13 @@ export class GenericModelSerializer {
             //     }
             //     break;
             case "primitive":
-                var value = tsObject[p.name];
-                if (typeof value === "string") {
-                    result[p.name] = value;
-                } else if (typeof value === "number") {
-                    result[p.name] = value;
-                } else if (typeof value === "boolean") {
-                    result[p.name] = value;
+                const value2 = tsObject[p.name];
+                if (typeof value2 === "string") {
+                    result[p.name] = value2;
+                } else if (typeof value2 === "number") {
+                    result[p.name] = value2;
+                } else if (typeof value2 === "boolean") {
+                    result[p.name] = value2;
                 }
                 break;
             default:

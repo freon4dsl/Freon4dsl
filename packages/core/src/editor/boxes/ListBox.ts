@@ -17,7 +17,7 @@ export abstract class ListBox extends Box {
     protected direction: Direction = Direction.HORIZONTAL;
     @observable protected _children: Box[] = [];
 
-    constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
+    protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
         PiUtils.initializeObject(this, initializer);
         if (children) {

@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from "@projectit/core/dist/util/PiUtils";
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
@@ -23,8 +24,7 @@ export class ScoperGenerator {
     generate(scopedef: PiScopeDef): void {
 
         // generate default, if the scoper definition is not present, i.e. was not read from file
-        // TODO check the difference between "===" and "=="
-        if (scopedef == null) {
+        if (isNullOrUndefined(scopedef)) {
             scopedef = new PiScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
