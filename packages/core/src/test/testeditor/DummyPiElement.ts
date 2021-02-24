@@ -6,6 +6,10 @@ export class DummyPiElement implements PiElement {
         return undefined;
     }
 
+    piIsUnit(): boolean {
+        return false;
+    }
+
     piId(): string {
         return "";
     }
