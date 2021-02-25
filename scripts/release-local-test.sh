@@ -16,7 +16,7 @@ cd ../tmp
 rm -rf ProjectIt-example
 git clone https://github.com/projectit-org/ProjectIt-example.git
 cd ProjectIt-example
-git checkout release-0.1.0-preparation
+git checkout release-0.1.1-preparation
 yarn install --registry http://localhost:4873
 yarn generate
 yarn build

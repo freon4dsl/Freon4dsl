@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/meta",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",
-    "@projectit/core": "^0.1.0",
+    "@projectit/core": "^0.1.1",
     "@types/lodash": "4.14.73",
     "axios": "0.18.1",
     "global": "^4.4.0",
