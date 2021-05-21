@@ -19,7 +19,7 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
     }
 
     generate(): void {
-        // LOGGER.log("Starting ProjectIt scoper generation ...");
+        LOGGER.log("Starting ProjectIt scoper generation ...");
         super.generate();
         this.scoperGenerator = new ScoperGenerator(this.language);
         this.scoperGenerator.outputfolder = this.outputFolder;
@@ -29,7 +29,6 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
             throw new Error("Scoper definition could not be parsed, exiting.");
         }
         this.scoperGenerator.generate(scoper);
-        // TODO add check on succesfullness
     }
 
     protected onDefineParameters(): void {

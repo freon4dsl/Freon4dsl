@@ -33,7 +33,6 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
         } catch (e) {
             LOGGER.log(e.stack);
         }
-        // TODO add check on succesfullness
     }
 
     protected onDefineParameters(): void {

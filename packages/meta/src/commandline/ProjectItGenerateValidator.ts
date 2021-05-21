@@ -30,7 +30,6 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
             throw new Error("Validator definition could not be parsed, cannot generate validator.");
         }
         this.validatorGenerator.generate(validator);
-        // TODO add check on succesfullness
     }
 
     protected onDefineParameters(): void {

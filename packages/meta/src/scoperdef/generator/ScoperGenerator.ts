@@ -72,9 +72,9 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.log(`Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(this, `Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.log(`Succesfully generated scoper ${name}`);
+            LOGGER.info(this,`Succesfully generated scoper ${name}`);
         }
     }
 }
