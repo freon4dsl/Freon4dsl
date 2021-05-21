@@ -1,4 +1,3 @@
-import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
@@ -13,7 +12,6 @@ import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { GenerationStatus, Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
@@ -33,13 +31,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected validatorGenerator: ValidatorGenerator; // constructor needs language
     protected typerGenerator: PiTyperGenerator; // constructor needs language
     protected language: PiLanguage;
-
-    private defFolder: CommandLineStringParameter;
-    private languageFiles: string[] = [];
-    private editFiles: string[] = [];
-    private validFiles: string[] = [];
-    private scopeFiles: string[] = [];
-    private typerFiles: string[] = [];
 
     public constructor() {
         super({
@@ -185,38 +176,4 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.languageGenerator.generate(this.language);
     };
 
-    private findDefinitionFiles() {
-        if (!this.defFolder.value) {
-            throw new Error("No definitions folder, exiting.");
-        }
-        const generationStatus = new GenerationStatus();
-        const myFileSet: string[] = Helpers.findFiles(this.defFolder.value, generationStatus);
-        if (myFileSet.length === 0) {
-            throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
-        }
-        for (const filename of myFileSet) {
-            if (/\.ast$/.test(filename)) {
-                this.languageFiles.push(filename);
-            } else if (/\.edit$/.test(filename)) {
-                this.editFiles.push(filename);
-            } else if (/\.valid$/.test(filename)) {
-                this.validFiles.push(filename);
-            } else if (/\.scope$/.test(filename)) {
-                this.scopeFiles.push(filename);
-            } else if (/\.type$/.test(filename)) {
-                this.typerFiles.push(filename);
-            }
-        }
-    }
-
-    protected onDefineParameters(): void {
-        super.onDefineParameters();
-        this.defFolder = this.defineStringParameter({
-            argumentName: "DEFINITIONS_DIR",
-            defaultValue: "defs",
-            parameterLongName: "--definitions",
-            parameterShortName: "-d",
-            description: "Folder where your language definition files can be found"
-        });
-    }
 }
