@@ -2,10 +2,10 @@ import { PiLanguage } from "../../languagedef/metalanguage/index";
 import { PiParser } from "../../utils";
 import { ValidatorChecker } from "../../validatordef/metalanguage";
 import { PiValidatorDef } from "../metalanguage";
-
-const validatorParser = require("./ValidatorGrammar");
 import { setCurrentFileName } from "./ValidatorCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
+
+const validatorParser = require("./ValidatorGrammar");
 
 export class ValidatorParser extends PiParser<PiValidatorDef> {
     public language: PiLanguage;
@@ -20,10 +20,14 @@ export class ValidatorParser extends PiParser<PiValidatorDef> {
     protected merge(submodels: PiValidatorDef[]): PiValidatorDef {
         if (submodels.length > 0) {
             let result: PiValidatorDef = submodels[0];
+            let validatorName: string = submodels[0].validatorName;
             submodels.forEach((sub, index) => {
                 if (index > 0) {
                      result.conceptRules.push(...sub.conceptRules);
-                     // TODO: include a check on validatorname???
+                    // check whether all validatornames are equal
+                    if (sub.validatorName !== validatorName) {
+                         this.checker.errors.push(`The name of the validator defined in '${sub.location.filename}' is different from other .valid files.`);
+                     }
                 }
             });
             return result;

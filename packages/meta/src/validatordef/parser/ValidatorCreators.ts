@@ -30,6 +30,7 @@ export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDe
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -45,6 +46,7 @@ export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -66,6 +68,7 @@ export function createValidNameRule(data: Partial<ValidNameRule>): ValidNameRule
     createRuleCommonParts(data, result);
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -78,6 +81,7 @@ export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
     createRuleCommonParts(data, result);
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -94,6 +98,7 @@ export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckE
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -110,6 +115,7 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -129,6 +135,7 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -155,6 +162,7 @@ export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -166,6 +174,7 @@ export function createSeverity(data: Partial<ValidationSeverity>): ValidationSev
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -177,6 +186,7 @@ export function createErrorMessage(data: Partial<ValidationMessage>): Validation
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -188,6 +198,7 @@ export function createValidationMessageReference(data: Partial<ValidationMessage
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -199,6 +210,7 @@ export function createValidationMessageText(data: Partial<ValidationMessageText>
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }

@@ -48,7 +48,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         LOGGER.log("Checking validator Definition '" + definition.validatorName + "'");
 
         if ( this.language === null || this.language === undefined ) {
-            throw new Error(`Validator definition checker does not known the language.`);
+            throw new Error(`Validator definition checker does not known the language ${this.location(definition)}.`);
         }
 
         this.nestedCheck(
@@ -56,7 +56,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                 check: this.language.name === definition.languageName,
                 error: `Language reference ('${definition.languageName}') in ` +
                     `validator definition '${definition.validatorName}' does not match language '${this.language.name}' ` +
-                    `[line: ${definition.location?.start.line}, column: ${definition.location?.start.column}].`,
+                    `${this.location(definition)}.`,
                 whenOk: () => {
                     definition.conceptRules.forEach(rule => {
                         this.checkConceptRule(rule);
@@ -110,8 +110,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             }
             this.nestedCheck({
                 check: !!myProp,
-                error: `Cannot find property 'name' in ${enclosingConcept.name} ` +
-                    `[line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                error: `Cannot find property 'name' in ${enclosingConcept.name} ${this.location(tr)}.`,
                 whenOk: () => {
                     tr.property = PiLangSelfExp.create(enclosingConcept);
                     tr.property.appliedfeature = PiLangAppliedFeatureExp.create(tr.property, "name", myProp);
@@ -125,8 +124,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
             this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.primType === "string",
-                `Validname rule expression '${tr.property.toPiString()}' should have type 'string' ` +
-                    `[line: ${tr.property.location?.start.line}, column: ${tr.property.location?.start.column}].`);
+                `Validname rule expression '${tr.property.toPiString()}' should have type 'string' ${this.location(tr.property)}.`);
         }
     }
 
@@ -135,8 +133,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.type1 !== null && tr.type2 !== null,
-                error: `Typecheck '${equalsTypeName}' should have two types to compare ` +
-                    `[line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                error: `Typecheck '${equalsTypeName}' should have two types to compare ${this.location(tr)}.`,
                 whenOk: () => {
                     // LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
@@ -150,8 +147,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.type1 !== null || tr.type2 !== null,
-                error: `Typecheck "${conformsToName}" should have two types to compare ` +
-                    `[line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                error: `Typecheck "${conformsToName}" should have two types to compare ${this.location(tr)}.`,
                 whenOk: () => {
                     this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
                     this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept);
@@ -165,8 +161,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         if (nr.property !== null) {
             this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
             this.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,
-                `NotEmpty rule '${nr.property.toPiString()}' should refer to a list ` +
-                    `[line: ${nr.location?.start.line}, column: ${nr.location?.start.column}].`);
+                `NotEmpty rule '${nr.property.toPiString()}' should refer to a list ${this.location(nr)}.`);
         }
     }
 
@@ -174,8 +169,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.exp1 !== null && tr.exp2 !== null,
-                error: `Expression rule '${tr.toPiString()}' should have two types to compare ` +
-                    `[line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                error: `Expression rule '${tr.toPiString()}' should have two types to compare ${this.location(tr)}.`,
                 whenOk: () => {
                     // exp1 and exp2 should refer to valid properties or be simple expressions
                     this.myExpressionChecker.checkLangExp(tr.exp1, enclosingConcept);
@@ -188,14 +182,11 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                     } else {
                         // compare both types
                         const type1 = tr.exp1.findRefOfLastAppliedFeature()?.type.referred;
-                        this.simpleCheck(type1 !== null, `Cannot find the type of ${tr.exp1.toPiString()} ` +
-                                    `[line: ${tr.exp1.location?.start.line}, column: ${tr.exp1.location?.start.column}].`);
+                        this.simpleCheck(type1 !== null, `Cannot find the type of ${tr.exp1.toPiString()} ${this.location(tr)}.`);
                         const type2 = tr.exp2.findRefOfLastAppliedFeature()?.type.referred;
-                        this.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2.toPiString()} ` +
-                                    `[line: ${tr.exp2.location?.start.line}, column: ${tr.exp2.location?.start.column}].`);
+                        this.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2.toPiString()} ${this.location(tr)}.`);
                         if (type1 !== null && type2 !== null) {
-                            this.simpleCheck(type1 === type2, `Types of expression rule '${tr.toPiString()}' should be equal ` +
-                                     `[line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`);
+                            this.simpleCheck(type1 === type2, `Types of expression rule '${tr.toPiString()}' should be equal ${this.location(tr)}.`);
                         }
                     }
                 }
@@ -206,8 +197,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         this.nestedCheck(
             {
                 check: tr.list !== null && tr.listproperty !== null,
-                error: `Isunique rule '${tr.toPiString()}' should have a list and a property of that list to compare the elements ` +
-                    `[line: ${tr.location?.start.line}, column: ${tr.location?.start.column}].`,
+                error: `Isunique rule '${tr.toPiString()}' should have a list and a property of that list to compare the elements ${this.location(tr)}.`,
                 whenOk: () => {
                     // list should refer to a valid property of enclosingConcept
                     this.myExpressionChecker.checkLangExp(tr.list, enclosingConcept);
@@ -216,37 +206,16 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                         this.nestedCheck(
                             {
                                 check: myProp.isList,
-                                error: `Isunique rule cannot be applied to a property that is not a list (${myProp.name}) ` +
-                                            `[line: ${tr.list.location?.start.line}, column: ${tr.list.location?.start.column}].`,
+                                error: `Isunique rule cannot be applied to a property that is not a list (${myProp.name}) ${this.location(tr.list)}.`,
                                 whenOk: () => {
                                     const myType = myProp.type?.referred;
                                     this.nestedCheck(
                                         {
                                             check: !!myType,
-                                            error: `List ${myProp.name} does not have a valid type ` +
-                                                `[line: ${tr.list.location?.start.line}, column: ${tr.list.location?.start.column}].`,
+                                            error: `List ${myProp.name} does not have a valid type ${this.location(tr.list)}.`,
                                             whenOk: () => {
                                                 // now check the property of the list against the type of the elements in the list
                                                 this.myExpressionChecker.checkLangExp(tr.listproperty, myType);
-                                                // let myListProperty = tr.listproperty.findRefOfLastAppliedFeature();
-                                                // if (!!myListProperty) {
-                                                //     console.log(`my list property: ${myListProperty.unitName},
-                                                //     type: ${myListProperty.type},
-                                                //     primType: ${(myListProperty instanceof PiPrimitiveProperty) ?
-                                                //     (myListProperty as PiPrimitiveProperty).primType
-                                                //     : ""}`);
-                                                //     if (myListProperty instanceof PiPrimitiveProperty) {
-                                                //         let t = myListProperty.type;
-                                                //         console.log("class of type: " + t.constructor.unitName +",
-                                                //         referred: " + t.referred?.unitName);
-                                                //     } else {
-                                                //         this.simpleCheck(!!myListProperty.type?.referred,
-                                                //         `Cannot find type of ${tr.listproperty.appliedfeature.toPiString()}
-                                                //         (${tr.listproperty.appliedfeature.referredElement.referred.unitName})` +
-                                                //             `[line: ${tr.listproperty.location?.start.line},
-                                                //             column: ${tr.listproperty.location?.start.column}].`);
-                                                //     }
-                                                // }
                                             }
                                         });
                                 }
@@ -262,7 +231,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
             {
                 check: severityLevels.includes(myValue),
                 error:`Severity '${severity.value}' should equal (disregarding case) one of the values (${severityLevels.map(elem => `${elem}`).join(", ")}) ` +
-                            `[line: ${severity.location?.start.line}, column: ${severity.location?.start.column}].`,
+                            `${this.location(severity)}.`,
                 whenOk: () => {
                     switch (myValue) {
                         case "error": {
@@ -293,7 +262,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
     }
 
     private checkValidationMessage(message: ValidationMessage) {
-        this.simpleCheck(!!message.content && !!message.content[0], `User defined error message should have a value` +
-            `[line: ${message.location?.start.line}, column: ${message.location?.start.column}].`);
+        this.simpleCheck(!!message.content && !!message.content[0],
+            `User defined error message should have a value ${this.location(message)}.`);
     }
 }
