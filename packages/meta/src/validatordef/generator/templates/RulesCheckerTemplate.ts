@@ -143,7 +143,7 @@ export class RulesCheckerTemplate {
 
     private makeSeverity(r: ValidationRule): string {
         // this method makes sure that we do not depend on the name of the severity to be the same as its value
-        // i.e. PiErrorSeverity.ToDo = "TODO",
+        // e.g. PiErrorSeverity.NONE = "none",
         let result: string = `PiErrorSeverity.`
         switch (r.severity.severity) {
             case PiErrorSeverity.Error: {

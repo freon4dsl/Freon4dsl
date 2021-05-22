@@ -7,6 +7,7 @@ import {
     ValidNameRule
 } from "../metalanguage";
 import { PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
+import { PiDefinitionElement } from "../../utils";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).
@@ -29,8 +30,7 @@ export function createValidatorDef(data: Partial<PiValidatorDef>): PiValidatorDe
         result.conceptRules = data.conceptRules;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -45,8 +45,7 @@ export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet
         result.rules = data.rules;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -67,8 +66,7 @@ export function createValidNameRule(data: Partial<ValidNameRule>): ValidNameRule
     }
     createRuleCommonParts(data, result);
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -80,8 +78,7 @@ export function createNotEmptyRule(data: Partial<NotEmptyRule>): NotEmptyRule {
     }
     createRuleCommonParts(data, result);
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -97,8 +94,7 @@ export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckE
         result.type2 = data.type2;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -114,8 +110,7 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
         result.type2 = data.type2;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -134,8 +129,7 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
         result.comparator = data.comparator;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -161,8 +155,7 @@ export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
         result.listproperty.appliedfeature.sourceExp = result.listproperty;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -173,8 +166,7 @@ export function createSeverity(data: Partial<ValidationSeverity>): ValidationSev
         result.value = data.value;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -185,8 +177,7 @@ export function createErrorMessage(data: Partial<ValidationMessage>): Validation
         result.content = data.content;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -197,8 +188,7 @@ export function createValidationMessageReference(data: Partial<ValidationMessage
         result.expression = data.expression;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
 }
@@ -209,8 +199,12 @@ export function createValidationMessageText(data: Partial<ValidationMessageText>
         result.value = data.value;
     }
     if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+        setLocationAndFileName(result, data);
     }
     return result;
+}
+
+function setLocationAndFileName(result: PiDefinitionElement, data: Partial<ValidationMessageText>) {
+    result.location = data.location;
+    result.location.filename = currentFileName;
 }
