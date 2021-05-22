@@ -69,14 +69,6 @@ export class PathProvider {
         return LANGUAGE_GEN_FOLDER + "/" + Names.concept(concept);
     }
 
-    // public static enumeration(enumeration: PiLangEnumeration): string {
-    //     return LANGUAGE_GEN_FOLDER + "/" + Names.enumeration(enumeration);
-    // }
-    //
-    // public static union(union: PiLangUnion): string {
-    //     return LANGUAGE_GEN_FOLDER + "/" + Names.union(union);
-    // }
-
     public static languageConceptType(language: PiLanguage): string {
         return LANGUAGE_GEN_FOLDER + "/" + Names.metaType(language);
     }
@@ -114,8 +106,7 @@ export class PathProvider {
         return EDITOR_GEN_FOLDER + "/" + Names.customProjection(language);
     }
 
-    // TODO see if we can remove this parameter
-    public static mainProjectionalEditor(language: PiLanguage): string {
+    public static mainProjectionalEditor(): string {
         return EDITOR_GEN_FOLDER + "/" + Names.mainProjectionalEditor;
     }
 

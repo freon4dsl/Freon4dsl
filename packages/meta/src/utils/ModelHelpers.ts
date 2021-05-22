@@ -48,7 +48,6 @@ export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcep
  */
 export function refListIncludes(list: PiElementReference<PiLangElement>[],
                                 element: PiElementReference<PiLangElement> | PiLangElement): boolean {
-    // TODO ??? should we add a check on the types of the list and the element?
     for (const xx of list) {
         if (element instanceof PiLangElement) {
             if (xx.referred === element) {
@@ -97,12 +96,6 @@ export function langExpToTypeScript(exp: PiLangExp): string {
 
 function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
     let isRef: boolean = false;
-    // if (!!exp.referredElement && !!exp.referredElement.referred) { // should be present, otherwise it is an incorrect model
-    //     // now see whether it is marked in the .ast file as 'reference'
-    //     const ref = exp.referredElement.referred;
-    //     isRef = (ref instanceof PiConceptProperty) && !ref.isPart && !ref.isList;
-    // }
-    // TODO check the change from the above to this code
     const ref = exp.referredElement?.referred;
     if (!!ref) { // should be present, otherwise it is an incorrect model
         // now see whether it is marked in the .ast file as 'reference'

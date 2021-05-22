@@ -5,7 +5,7 @@ export type CheckB = { check: boolean; error: string; whenOk?: () => void };
 
 export abstract class Checker<DEFINITION> {
     errors: string[] = [];
-    language: PiLanguage; // should be set in every checker, except the checker for the language definition langauge (LDL)
+    language: PiLanguage; // should be set in every checker, except the checker for the language definition language (LDL)
 
     constructor(language: PiLanguage) {
         this.language = language;
