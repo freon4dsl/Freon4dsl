@@ -33,7 +33,7 @@ yarn-debug.log
 yarn-error.log
 
 # generated docs
-# docs/*
+docs/*
 
 # generated files
 **/gen/*
@@ -79,3 +79,4 @@ packages/test/src/*/validator/gen/*
 packages/test/src/*/stdlib/gen/*
 /packages/test/src/testDefinedScoper/defs/Language.ast
 /packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts
+/docs/

@@ -27,3 +27,4 @@ DONE 24. See if the footer is ok
 LATER 25. sublijsten dicht kunnen klappen (b.v. under the hood - interfaces - *)
 26. JOS: de '>' marker in de navigator achter de titel zetten???
 27. verwerk alle TODOs die nog in de tekst staan
+28. de zoekbalk werkt niet
