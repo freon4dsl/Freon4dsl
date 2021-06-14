@@ -36,4 +36,8 @@ export class PiTyperParser extends PiParser<PiTypeDefinition> {
         setCurrentFileName(file);
         expressionFileName(file);
     }
+
+    protected getNonFatalParseErrors(): string[] {
+        return [];
+    }
 }

@@ -1,8 +1,7 @@
 import { PiLanguage, PiLanguageChecker } from "../metalanguage/";
 import { PiParser } from "../../utils/PiParser";
-// let pegjsParser = require("./LanguageGrammar");
 import * as pegjsParser from "./LanguageGrammar";
-import { setCurrentFileName } from "./LanguageCreators";
+import { getNonFatalParseErrors, setCurrentFileName } from "./LanguageCreators";
 import { MetaLogger } from "../../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("LanguageParser").mute();
@@ -37,5 +36,9 @@ export class LanguageParser extends PiParser<PiLanguage> {
 
     protected setCurrentFileName(file: string) {
         setCurrentFileName(file);
+    }
+
+    protected getNonFatalParseErrors() : string[] {
+        return getNonFatalParseErrors();
     }
 }

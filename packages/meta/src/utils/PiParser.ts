@@ -1,8 +1,7 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
-import { Parser, PEG } from "pegjs";
+import { Parser } from "pegjs";
 import { MetaLogger } from "../utils/MetaLogger";
-// import SyntaxError = PEG.SyntaxError;
 
 const LOGGER = new MetaLogger("PiParser").mute();
 
@@ -29,13 +28,14 @@ export class PiParser<DEFINITION> {
     // msg: string;
 
     parse(definitionFile: string): DEFINITION {
-        // Check language file
+        // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOGGER.error(this, "definition file '" + definitionFile + "' does not exist, exiting.");
             throw new Error("file not found.");
         }
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
-        // Parse Language file
+
+        // parse Language file
         let model: DEFINITION = null;
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
@@ -50,21 +50,18 @@ export class PiParser<DEFINITION> {
             LOGGER.error(this, errorstr);
             throw new Error("syntax error.");
         }
-        if (model !== null) {
-            this.checker.check(model);
-            if (this.checker.hasErrors()) {
-                this.checker.errors.forEach(error => LOGGER.error(this, `${definitionFile}: ${error}`));
-                throw new Error("checking errors (" + this.checker.errors.length + ").");
-            }
-            return model;
-        } else {
-            throw new Error("parser does not return a language definition.");
-        }
+
+        // run the checker
+        this.runChecker(model);
+
+        // return the model
+        return model;
     }
 
     parseMulti(filePaths: string[]): DEFINITION {
         let model: DEFINITION;
         let submodels: DEFINITION[] = [];
+
         // read the files and parse them separately
         for (const file of filePaths) {
             if (!fs.existsSync(file)) {
@@ -92,13 +89,23 @@ export class PiParser<DEFINITION> {
         model = this.merge(submodels);
 
         // run the checker
+        this.runChecker(model);
+
+        // return the model
+        return model;
+    }
+
+    private runChecker(model: DEFINITION) {
         if (model !== null) {
             this.checker.check(model);
+            // this.checker.check makes errorlist empty, thus we must
+            // add the non fatal parse errors after the call
+            this.checker.errors.push(...this.getNonFatalParseErrors());
+            console.log("ERRORS: " + this.checker.errors);
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOGGER.error(this, `${error}`));
                 throw new Error("checking errors (" + this.checker.errors.length + ").");
             }
-            return model;
         } else {
             throw new Error("parser does not return a language definition.");
         }
@@ -113,5 +120,9 @@ export class PiParser<DEFINITION> {
 
     protected setCurrentFileName(file: string) {
         throw Error("PiParser.setCurrentFileName should be implemented by its subclasses.");
+    }
+
+    protected getNonFatalParseErrors(): string[] {
+        throw Error("PiParser.getNonFatalParseErrors should be implemented by its subclasses.");
     }
 }

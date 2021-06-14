@@ -40,4 +40,8 @@ export class ValidatorParser extends PiParser<PiValidatorDef> {
         setCurrentFileName(file);
         expressionFileName(file);
     }
+
+    protected getNonFatalParseErrors(): string[] {
+        return [];
+    }
 }

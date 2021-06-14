@@ -200,52 +200,16 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // TODO data.initialValue is ignored for Part and Reference Properties
-    // they should at least result in an error message
 }
-
-// export function createPrimitiveProperty(data: Partial<ParsedProperty>): PiPrimitiveProperty {
-//     // console.log("createPrimitiveProperty " + data.name);
-//     const result = new PiPrimitiveProperty();
-//     result.isPart = true;
-//     if (!!data.typeName) {
-//         result.primType = data.typeName;
-//     }
-//     // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
-//     // we are not interested in its value, only whether it is present
-//     if (data.initialValue !== null && data.initialValue !== undefined) {
-//         if (Array.isArray(data.initialValue)) {
-//             result.initialValueList = data.initialValue;
-//         } else {
-//             result.initialValue = data.initialValue;
-//         }
-//     }
-//     createCommonPropertyAttrs(data, result);
-//     return result;
-// }
-//
-// export function createPartProperty(data: Partial<ParsedProperty>): PiConceptProperty {
-//     // console.log("createPartProperty " + data.name);
-//     const result = new PiConceptProperty();
-//     result.isPart = true;
-//     createCommonPropertyAttrs(data, result);
-//     if (!!data.type) {
-//         result.type = data.type;
-//         result.type.owner = result;
-//     }
-//     // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
-//     // we are not interested in its value, only whether it is present
-//     if (data.initialValue !== null && data.initialValue !== undefined) {
-//
-//     }
-//     return result;
-// }
 
 export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiProperty {
     // console.log("createPartOrPrimProperty " + data.name + " "+ data.type + " "+ data.typeName);
     let result1: PiProperty;
     // Note that data.type may not be set!
-    // In that case the property is primitve and we have to use data.typeName
+    // In that case the property is primitive and we have to use data.typeName.
+    // In the following we ignore data.initialValue is ignored for Part Properties (i.e. props where the type is a Concept).
+    // But we do add an error message to the list of non-fatal parse errors.
+    // This list of errors is added to the list of checking errors in the parse functions in PiParser.
     if (!!data.type) {
         const result = new PiConceptProperty();
         result.type = data.type;
@@ -254,7 +218,7 @@ export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiPrope
         // we are not interested in its value, only whether it is present
         if (data.initialValue !== null && data.initialValue !== undefined) {
             nonFatalParseErrors.push(`A non-primitive property may not have a initial value ` +
-            `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}]`)
+            `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
         }
         result1 = result;
     } else if (!!data.typeName && (data.typeName === "string" || data.typeName === "boolean" || data.typeName === "number")) {

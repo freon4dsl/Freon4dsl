@@ -34,4 +34,8 @@ export class PiEditParser extends PiParser<PiEditUnit> {
         editFileName(file);
         expressionFileName(file);
     }
+
+    protected getNonFatalParseErrors(): string[] {
+        return [];
+    }
 }

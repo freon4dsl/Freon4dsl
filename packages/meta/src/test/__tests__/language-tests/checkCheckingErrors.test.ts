@@ -150,4 +150,16 @@ describe("Checking language parser on checking errors", () => {
             expect(checker.errors.includes("There should be a model in your language [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test10.ast, line: 1, column: 1].")).toBeTruthy();
         }
     });
+
+    test("no initial value allowed in concept properties", () => {
+        const parseFile = testdir + "test11.ast";
+
+        try {
+            parser.parse(parseFile);
+        } catch (e) {
+            expect(e.message).toBe(`checking errors (1).`);
+            // console.log("ALL ERRORS: " + checker.errors);
+            expect(checker.errors.includes("A non-primitive property may not have a initial value [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test11.ast, line: 14, column: 5].")).toBeTruthy();
+        }
+    });
 });
