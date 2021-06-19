@@ -1,5 +1,4 @@
 import { PiElementReference } from "./internal";
-import { ParseLocation } from "../../utils";
 import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
 
 const primitiveTypeName = "PiPrimitiveType";
@@ -86,24 +85,11 @@ export abstract class PiClassifier extends PiLangElement {
     primProperties: PiPrimitiveProperty[] = [];
 
     parts(): PiConceptProperty[] {
-        // return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart);
-        const result: PiConceptProperty[] = [];
-        for (const prop of this.properties) {
-            if (prop instanceof PiConceptProperty && prop.isPart) {
-                result.push(prop);
-            }
-        }
-        return result;
+        return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart) as PiConceptProperty[];
     }
 
     references(): PiConceptProperty[] {
-        const result: PiConceptProperty[] = [];
-        for (const prop of this.properties) {
-            if (prop instanceof PiConceptProperty && !prop.isPart) {
-                result.push(prop);
-            }
-        }
-        return result;
+        return this.properties.filter(p => p instanceof PiConceptProperty && !p.isPart) as PiConceptProperty[];
     }
 
     allPrimProperties(): PiPrimitiveProperty[] {

@@ -1,11 +1,11 @@
-import { Checker, Names } from "../../utils";
+import { Checker, Names, LangUtil } from "../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
     PiExpressionConcept,
     PiPrimitiveProperty,
     PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveType,
-    PiElementReference, PiMetaEnvironment, PiLangUtil } from "./internal";
+    PiElementReference, PiMetaEnvironment } from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
@@ -198,8 +198,6 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         const propnames: string[] = [];
         const propsDone: PiProperty[] = [];
         con.allProperties().forEach(prop => {
-            // TODO allProperties() filters out names from implemented interfaces, but there should be a test that
-            // this filtering is ok, i.e. the type of both properties should be the same
             if (propnames.includes(prop.name)) {
                 if (strict) {
                     const previous = propsDone.find(prevProp => prevProp.name === prop.name);
@@ -209,7 +207,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                     // in non-strict mode properties with the same name are allowed, but only if they have the same type
                     // find the first property with this name
                     const otherProp = propsDone.find(p => p.name === prop.name);
-                    this.simpleCheck(PiLangUtil.compareTypes(prop, otherProp),
+                    this.simpleCheck(LangUtil.compareTypes(prop, otherProp),
                         `Property with name '${prop.name}' but different type already exists in ${con.name} ${this.location(prop)} and ${this.location(otherProp)}.`);
                 }
             } else {

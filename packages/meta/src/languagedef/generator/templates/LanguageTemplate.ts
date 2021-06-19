@@ -1,5 +1,5 @@
-import { PiLanguage, PiLangUtil } from "../../metalanguage";
-import { Names, PROJECTITCORE } from "../../../utils";
+import { PiLanguage } from "../../metalanguage";
+import { Names, PROJECTITCORE, LangUtil } from "../../../utils";
 
 export class LanguageTemplate {
 
@@ -36,7 +36,7 @@ export class LanguageTemplate {
                         constructor: () => { return ${ concept.isAbstract ? "null" : `new ${Names.concept(concept)}()`}; },
                         properties: new Map< string, Property>(),
                         baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "null"},
-                        subConceptNames: [${PiLangUtil.subConcepts(concept).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
+                        subConceptNames: [${LangUtil.subConcepts(concept).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
@@ -75,7 +75,7 @@ export class LanguageTemplate {
                         typeName: "${Names.interface(intface)}",
                         isPublic: ${intface.isPublic},
                         properties: new Map< string, Property>(),
-                        subConceptNames: [${PiLangUtil.subConcepts(intface).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
+                        subConceptNames: [${LangUtil.subConcepts(intface).map(sub => "\"" + Names.classifier(sub) + "\"").join(", ")}]
                     }
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {

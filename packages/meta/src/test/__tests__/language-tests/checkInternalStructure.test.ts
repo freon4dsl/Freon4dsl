@@ -1,5 +1,6 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { PiExpressionConcept, PiLanguage, PiLangUtil, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { PiExpressionConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { LangUtil } from "../../../utils";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
 
@@ -106,7 +107,7 @@ describe("Checking internal structure of language", () => {
         });
 
         // we can find all subconcepts, also recursive
-        let list = PiLangUtil.subConcepts(baseConcept);
+        let list = LangUtil.subConcepts(baseConcept);
         expect(list).toContain(piLanguage.findConcept("BaseBB"));
         expect(list).toContain(piLanguage.findConcept("DD"));
         expect(list).not.toContain(piLanguage.findConcept("Model"));
@@ -116,7 +117,7 @@ describe("Checking internal structure of language", () => {
         expect(list).not.toContain(piLanguage.findConcept("BaseBaseBB"));
 
         // we can find all superconcepts, also recursive
-        list = PiLangUtil.superConcepts(piConcept);
+        list = LangUtil.superConcepts(piConcept);
         expect(list).toContain(piLanguage.findConcept("BaseBB"));
         expect(list).not.toContain(piLanguage.findConcept("DD"));
         expect(list).not.toContain(piLanguage.findConcept("Model"));

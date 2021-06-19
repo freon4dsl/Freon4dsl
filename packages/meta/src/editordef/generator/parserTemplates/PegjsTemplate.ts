@@ -16,7 +16,7 @@ import {
     PiEditSubProjection,
     PiEditUnit
 } from "../../metalanguage";
-import { findAllImplementorsAndSubs, findImplementorsDirect, Names } from "../../../utils";
+import { LangUtil, Names } from "../../../utils";
 
 export const referencePostfix = "PiElemRef";
 
@@ -430,7 +430,7 @@ HEXDIG = [0-9a-f]
             });
         } else if (piClassifier instanceof PiInterface) {
             // for interfaces include all implementors and subinterfaces
-            findAllImplementorsAndSubs(piClassifier).forEach(type2 => {
+            LangUtil.findAllImplementorsAndSubs(piClassifier).forEach(type2 => {
                 this.addPartConcepts(type2, result, typesDone);
             });
         }
@@ -459,7 +459,7 @@ HEXDIG = [0-9a-f]
         if (piClassifier instanceof PiInterface) {
             // TODO should we include a reference to a limited concept in the parse rule for an interface?
             implementors.push(...piClassifier.allSubInterfacesDirect());
-            implementors.push(...findImplementorsDirect(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept)));
+            implementors.push(...LangUtil.findImplementorsDirect(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept)));
         } else if (piClassifier instanceof PiConcept) {
             implementors = piClassifier.allSubConceptsDirect().filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
         }

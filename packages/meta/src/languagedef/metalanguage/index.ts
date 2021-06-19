@@ -34,6 +34,5 @@ export {
     PiLangExpressionChecker,
     PiMetaEnvironment,
     PiLangScoper,
-    PiLangUtil,
     PiElementReference,
 } from "./internal";
