@@ -101,7 +101,6 @@ export class PiParser<DEFINITION> {
             // this.checker.check makes errorlist empty, thus we must
             // add the non fatal parse errors after the call
             this.checker.errors.push(...this.getNonFatalParseErrors());
-            console.log("ERRORS: " + this.checker.errors);
             if (this.checker.hasErrors()) {
                 this.checker.errors.forEach(error => LOGGER.error(this, `${error}`));
                 throw new Error("checking errors (" + this.checker.errors.length + ").");
