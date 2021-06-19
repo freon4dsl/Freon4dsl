@@ -1,7 +1,7 @@
 import { isAliasBox, isMetaKey } from "../../../index";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as classNames from "classnames";
+import classNames from "classnames";
 import { action, computed, observable } from "mobx";
 
 import { PiKey } from "../../../util/Keys";
