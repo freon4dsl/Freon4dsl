@@ -57,9 +57,10 @@ export class ModelRequests {
     public static async deleteModelUnit(foldername: string, name: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            ctx.request.body = fs.unlinkSync(path.join(`${storeFolder}`, foldername, `${name}.json`));
+            fs.unlinkSync(path.join(`${storeFolder}`, foldername, `${name}.json`));
         } catch (e) {
             console.log(e.message);
+            ctx.request.body = e.message
         }
     }
 
