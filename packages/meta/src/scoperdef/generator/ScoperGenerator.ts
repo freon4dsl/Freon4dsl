@@ -1,8 +1,8 @@
-import { isNullOrUndefined } from "@projectit/core";
+// import { isNullOrUndefined } from "@projectit/core";
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
-import { GenerationStatus, Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
+import { GenerationStatus, Helpers, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";

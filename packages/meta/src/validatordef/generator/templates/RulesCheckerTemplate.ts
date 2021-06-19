@@ -1,6 +1,6 @@
 // TODO note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
-import { PiErrorSeverity } from "@projectit/core/dist/validator/PiValidator";
+// import { PiErrorSeverity } from "@projectit/core";
 import {
     ENVIRONMENT_GEN_FOLDER,
     langExpToTypeScript,
@@ -24,6 +24,7 @@ import {
     ValidationRule,
     ValidNameRule
 } from "../../metalanguage";
+import { PiErrorSeverity } from "../../../utils/PiErrorSeverity";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {

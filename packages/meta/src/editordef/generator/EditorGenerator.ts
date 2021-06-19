@@ -1,8 +1,16 @@
-import { isNullOrUndefined } from "@projectit/core";
+// import { isNullOrUndefined } from "@projectit/core";
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
-import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER } from "../../utils";
+import {
+    EDITOR_FOLDER,
+    EDITOR_GEN_FOLDER,
+    GenerationStatus,
+    Helpers,
+    isNullOrUndefined,
+    Names,
+    STYLES_FOLDER
+} from "../../utils";
 import { PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers } from "./templates";

@@ -10,6 +10,10 @@ export class GenerationStatus {
     numberOfErrors: number = 0;
 }
 
+export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
+    return obj === undefined || obj === null;
+}
+
 export class Helpers {
     public static generateManualFile(pathName: string, contents: string, message: string) {
         if (!fs.existsSync(pathName)) {
