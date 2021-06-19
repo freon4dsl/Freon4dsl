@@ -1,4 +1,4 @@
-import * as classNames from "classnames";
+import classNames from "classnames";
 import { observer } from "mobx-react";
 import { SelectOption } from "../../boxes/SelectOption";
 import { EVENT_LOG } from "../../../util/PiLogging";
