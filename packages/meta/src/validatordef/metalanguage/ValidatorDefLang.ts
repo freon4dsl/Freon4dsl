@@ -1,14 +1,14 @@
-// TODO note that the following import cannot be from "@projectit/core", because
+// Note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
+import { PiErrorSeverity } from "../../utils/PiErrorSeverity";
+import { PiDefinitionElement } from "../../utils";
 import { PiLangExp, PiConcept } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { PiErrorSeverity } from "../../utils/PiErrorSeverity";
-import { PiDefinitionElement } from "../../utils";
 
 export class PiValidatorDef extends PiDefinitionElement {
     validatorName: string;

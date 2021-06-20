@@ -1,4 +1,8 @@
-import { Checker } from "../../utils";
+// Note that the following imports cannot be from "@projectit/core", because
+// this leads to a load error
+// import { PiErrorSeverity } from "@projectit/core";
+// import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
+import { Checker, PiErrorSeverity, MetaLogger } from "../../utils";
 import {
     PiConcept,
     PiLangAppliedFeatureExp,
@@ -9,7 +13,6 @@ import {
     PiPrimitiveProperty,
     PiProperty
 } from "../../languagedef/metalanguage";
-import { PiErrorSeverity } from "../../utils/PiErrorSeverity";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -22,11 +25,6 @@ import {
     ValidationSeverity,
     ValidNameRule
 } from "./ValidatorDefLang";
-// TODO note that the following imports cannot be from "@projectit/core", because
-// this leads to a load error
-import { MetaLogger } from "../../utils/MetaLogger";
-// import { PiErrorSeverity } from "@projectit/core";
-// import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
 
 const LOGGER = new MetaLogger("ValidatorChecker"); // .mute();
 const equalsTypeName = "equalsType";

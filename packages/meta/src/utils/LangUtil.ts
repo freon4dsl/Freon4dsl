@@ -21,16 +21,7 @@ export class LangUtil {
                 result.push(self.base.referred);
                 LangUtil.superConceptsRecursive(self.base.referred, result);
             }
-            // TODO jos, why did you put this here? It seems to work without it.
-            // for (let i of self.interfaces) {
-            //     PiLangUtil.superConceptsRecursive(i.referred, result);
-            // }
         }
-        // if (self instanceof PiInterface) {
-        //     for (let i of self.base) {
-        //         PiLangUtil.superConceptsRecursive(i.referred, result);
-        //     }
-        // }
     }
 
     /**

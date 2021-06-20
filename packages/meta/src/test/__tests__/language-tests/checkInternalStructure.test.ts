@@ -63,8 +63,7 @@ describe("Checking internal structure of language", () => {
         });
         piConcept.references().forEach(part => {
             expect(part.isPart).toBe(false);
-            // TODO Stoppeed working with es6: fixit
-            // expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
+            expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
         });
         piConcept.primProperties.forEach(part => {
             expect(part.isPart).toBe(true);
@@ -90,10 +89,9 @@ describe("Checking internal structure of language", () => {
         piConcept.allParts().forEach(part => {
             expect(part.isPart).toBe(true);
         });
-        piConcept.allReferences().forEach(part => {
-            expect(part.isPart).toBe(false);
-            // TODO Es6 problem
-            // expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
+        piConcept.allReferences().forEach(ref => {
+            expect(ref.isPart).toBe(false);
+            expect(ref).not.toBeInstanceOf(PiPrimitiveProperty);
         });
         piConcept.allPrimProperties().forEach(part => {
             expect(part.isPart).toBe(true);
@@ -150,8 +148,7 @@ describe("Checking internal structure of language", () => {
         // PiInstance.concept should be a limited property
         // let myLimited = piLanguage.findConcept("BB");
         list.forEach(myLimited => {
-            // TODO Es6 problem
-            // expect(myLimited).toBeInstanceOf(PiLimitedConcept);
+            expect(myLimited).toBeInstanceOf(PiLimitedConcept);
             // test PiInstance against its concept
             (myLimited as PiLimitedConcept).instances.forEach(inst => {
                 expect(inst.concept.referred).toBe(myLimited);

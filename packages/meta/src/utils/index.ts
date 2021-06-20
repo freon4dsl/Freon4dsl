@@ -5,6 +5,7 @@ export * from "./GenerationHelpers";
 export * from "./Names";
 export * from "./PathProvider";
 export * from "./PiDefinitionElement";
+export * from "./PiErrorSeverity";
 export * from "./LangUtil";
 export * from "./PiParser";
 export * from "./Roles";
