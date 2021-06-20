@@ -342,7 +342,6 @@ export class ConceptTemplate {
                         return false;
                     }
                     // we must store the interface in the same place as the old unit, which info is held in PiContainer()
-                    // TODO review this approach
                     ${concept.parts().map(part =>
                         `if ( oldUnit.piLanguageConcept() === "${Names.classifier(part.type.referred)}" && oldUnit.piContainer().propertyName === "${part.name}" ) {
                                 ${part.isList ?
@@ -354,14 +353,7 @@ export class ConceptTemplate {
                     ).join(" ")}                    
                     {
                         return false;
-                    }
-            
-                    // TODO maybe this is better?
-                    // if (oldUnit.piContainer().propertyIndex > -1) { // it is a list
-                    //     this[oldUnit.piContainer().propertyName].splice(oldUnit.piContainer().propertyIndex, 1, newUnit);
-                    // } else {
-                    //     this[oldUnit.piContainer().propertyName] = newUnit;
-                    // }
+                    }        
                     return  true;
                 }
                 
