@@ -9,6 +9,7 @@ import { MetaLogger } from "../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("ProjectItParser"); // .mute();
 
+// The main entry ppoint for the ProjectIt generator
 export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
     private allGenerator: ProjectItGenerateAllAction;
