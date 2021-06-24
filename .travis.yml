@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - "14.15.4"
 
+git:
+  depth: 120
+  quiet: false
+
 cache: yarn
 
 install:
