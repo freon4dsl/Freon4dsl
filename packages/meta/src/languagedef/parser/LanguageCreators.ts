@@ -7,15 +7,22 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty
+    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType
 } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
+import { ParseLocation } from "../../utils";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
 
 export function setCurrentFileName(newName: string) {
     currentFileName = newName;
+}
+
+let nonFatalParseErrors: string[] = [];
+
+export function getNonFatalParseErrors() : string[] {
+    return nonFatalParseErrors;
 }
 
 export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
@@ -31,7 +38,7 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
             } else {
                 result.concepts.push(con);
             }
-            // TODO is the next statement still needed after multi-file merge?
+            // the next statement is not needed after multi-file merge, but remains for the single-file commands like 'meta-it'
             con.language = result;
         }
     }
@@ -163,6 +170,25 @@ export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiE
     return result;
 }
 
+/**
+ * Class ParsedProperty is used to parsed either a PiPrimitiveProperty or
+ * a PiConceptProperty. The difference between the two is being made in the following
+ * functions.
+ * This enables us to give the user non-fatal parse errors.
+ */
+class ParsedProperty extends PiProperty {
+    typeName: string;
+    initialValue: PiPrimitiveType;
+    // inherited from PiProperty:
+        // isPublic: boolean;
+        // isOptional: boolean;
+        // isList: boolean;
+        // isPart: boolean; // if false then it is a reference property
+        // type: PiElementReference<PiClassifier>;
+        // owningConcept: PiClassifier;
+        // location: ParseLocation;
+}
+
 function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty) {
     if (!!data.name) {
         result.name = data.name;
@@ -174,40 +200,44 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // TODO data.initialValue is ignored for Part and Reference Properties
-    // they should at least result in an error message
 }
 
-export function createPrimitiveProperty(data: Partial<PiPrimitiveProperty>): PiPrimitiveProperty {
-    // console.log("createPrimitiveProperty " + data.name);
-    const result = new PiPrimitiveProperty();
-    result.isPart = true;
-    if (!!data.primType) {
-        result.primType = data.primType;
-    }
-    // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
-    // we are not interested in its value, only whether it is present
-    if (data.initialValue !== null && data.initialValue !== undefined) {
-        if (Array.isArray(data.initialValue)) {
-            result.initialValueList = data.initialValue;
-        } else {
-            result.initialValue = data.initialValue;
-        }
-    }
-    createCommonPropertyAttrs(data, result);
-    return result;
-}
-
-export function createPartProperty(data: Partial<PiConceptProperty>): PiConceptProperty {
-    // console.log("createPartProperty " + data.name);
-    const result = new PiConceptProperty();
-    result.isPart = true;
-    createCommonPropertyAttrs(data, result);
+export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiProperty {
+    // console.log("createPartOrPrimProperty " + data.name + " "+ data.type + " "+ data.typeName);
+    let result1: PiProperty;
+    // Note that data.type may not be set!
+    // In that case the property is primitive and we have to use data.typeName.
+    // In the following we ignore data.initialValue is ignored for Part Properties (i.e. props where the type is a Concept).
+    // But we do add an error message to the list of non-fatal parse errors.
+    // This list of errors is added to the list of checking errors in the parse functions in PiParser.
     if (!!data.type) {
+        const result = new PiConceptProperty();
         result.type = data.type;
         result.type.owner = result;
+        // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
+        // we are not interested in its value, only whether it is present
+        if (data.initialValue !== null && data.initialValue !== undefined) {
+            nonFatalParseErrors.push(`A non-primitive property may not have a initial value ` +
+            `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
+        }
+        result1 = result;
+    } else if (!!data.typeName && (data.typeName === "string" || data.typeName === "boolean" || data.typeName === "number")) {
+        const result = new PiPrimitiveProperty();
+        result.primType = data.typeName;
+        // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
+        // we are not interested in its value, only whether it is present
+        if (data.initialValue !== null && data.initialValue !== undefined) {
+            if (Array.isArray(data.initialValue)) {
+                result.initialValueList = data.initialValue;
+            } else {
+                result.initialValue = data.initialValue;
+            }
+        }
+        result1 = result;
     }
-    return result;
+    result1.isPart = true;
+    createCommonPropertyAttrs(data, result1);
+    return result1;
 }
 
 export function createReferenceProperty(data: Partial<PiConceptProperty>): PiConceptProperty {

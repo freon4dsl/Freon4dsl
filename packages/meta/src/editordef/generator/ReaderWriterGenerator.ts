@@ -65,7 +65,7 @@ export class ReaderWriterGenerator {
         });
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.info(this, `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(this, `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated reader and writer.`);
         }

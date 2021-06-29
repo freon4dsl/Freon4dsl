@@ -7,7 +7,7 @@ import {
     PiClassifier
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
-import { findAllImplementorsAndSubs } from "../../utils";
+import { LangUtil } from "../../utils";
 import { MetaLogger } from "../../utils/MetaLogger";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -92,7 +92,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             this.myExpressionChecker.checkClassifierReference(ref);
             const myClassifier = ref.referred;
             if (!!myClassifier) { // error message handled by checkClassifierReference()
-                result = result.concat(findAllImplementorsAndSubs(myClassifier));
+                result = result.concat(LangUtil.findAllImplementorsAndSubs(myClassifier));
             }
         });
         return result;

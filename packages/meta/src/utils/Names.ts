@@ -57,8 +57,7 @@ export class Names {
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character
 
-    // TODO see if we can remove this parameter
-    public static configuration(language: PiLanguage) {
+    public static configuration() {
         return "ProjectitConfiguration";
     }
 

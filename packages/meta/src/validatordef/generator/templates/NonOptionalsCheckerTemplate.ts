@@ -64,7 +64,6 @@ export class NonOptionalsCheckerTemplate {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
 
-        // TODO do not produce errors for non-optionals in a model-interface
         concept.allProperties().forEach(prop => {
             if (!prop.isOptional && !prop.isList) {
                 // empty lists can be checked using one of the validation rules

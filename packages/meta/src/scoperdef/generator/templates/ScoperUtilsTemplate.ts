@@ -1,4 +1,4 @@
-import { LANGUAGE_GEN_FOLDER, Names, replaceInterfacesWithImplementors } from "../../../utils";
+import { LANGUAGE_GEN_FOLDER, Names, LangUtil, replaceInterfacesWithImplementors } from "../../../utils";
 import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiScopeDef } from "../../metalanguage";
 

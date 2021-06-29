@@ -106,7 +106,7 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.info(this, `Generated editor '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(this, `Generated editor '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated editor ${name}`);
         }

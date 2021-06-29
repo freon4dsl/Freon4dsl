@@ -78,7 +78,7 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.info(this, `Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(this, `Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated validator ${name}`);
         }

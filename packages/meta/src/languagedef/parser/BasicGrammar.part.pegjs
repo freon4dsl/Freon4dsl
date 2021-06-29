@@ -8,8 +8,7 @@ round_begin    = ws "(" ws
 round_end      = ws ")" ws
 comma_separator = ws "," ws
 semicolon_separator = ws ";" ws
-// TODO rename the following to colon_separator
-name_separator  = ws ":" ws
+colon_separator  = ws ":" ws
 equals_separator  = ws "=" ws
 plus_separator = ws "+" ws
 ws "whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComment) )*

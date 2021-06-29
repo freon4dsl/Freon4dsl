@@ -4,7 +4,6 @@
  * in order to avoid problem with circular imports.
  */
 
-export * from "./PiLangUtil";
 export * from "./PiLangConceptType";
 export * from "./PiLangEveryConcept"
 export * from "./PiLangScoper";

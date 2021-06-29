@@ -10,7 +10,7 @@ export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
         super({
             actionName: "ast-it",
             summary: "Generates the TypeScript code for your language",
-            documentation: "Generates TypeScript code for the language defined in the .ast file."
+            documentation: "Generates TypeScript code for the language defined in the .ast files."
         });
     }
 
@@ -19,9 +19,5 @@ export class ProjectItGenerateLanguage extends ProjectItGeneratePartAction {
         super.generate();
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);
-    }
-
-    protected onDefineParameters(): void {
-        super.onDefineParameters();
     }
 }

@@ -10,7 +10,8 @@ import { Checker } from "../../utils";
 import {
     ListJoin,
     ListJoinType,
-    PiEditConcept, PiEditInstanceProjection,
+    PiEditConcept,
+    PiEditInstanceProjection,
     PiEditProjection,
     PiEditPropertyProjection,
     PiEditSubProjection,
@@ -171,7 +172,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkSubProjection(item: PiEditSubProjection, cls: PiConcept) {
-        // TODO kijk of item.optional juist gebruikt wordt
+        // TODO check whether item.optional is being used correctly
         item.items.forEach(sub => {
             if (sub instanceof PiEditPropertyProjection) {
                 this.checkPropertyProjection(sub, cls, item.optional);

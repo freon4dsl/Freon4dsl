@@ -34,4 +34,8 @@ export class ScoperParser extends PiParser<PiScopeDef> {
         setCurrentFileName(file);
         expressionFileName(file);
     }
+
+    protected getNonFatalParseErrors(): string[] {
+        return [];
+    }
 }

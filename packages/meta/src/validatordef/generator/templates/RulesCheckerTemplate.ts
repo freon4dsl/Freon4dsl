@@ -1,4 +1,4 @@
-// TODO note that the following import cannot be from "@projectit/core", because
+// Note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
 // import { PiErrorSeverity } from "@projectit/core";
 import {
@@ -7,6 +7,7 @@ import {
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
+    PiErrorSeverity,
     PROJECTITCORE
 } from "../../../utils";
 import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
@@ -24,7 +25,6 @@ import {
     ValidationRule,
     ValidNameRule
 } from "../../metalanguage";
-import { PiErrorSeverity } from "../../../utils/PiErrorSeverity";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class RulesCheckerTemplate {
@@ -143,7 +143,7 @@ export class RulesCheckerTemplate {
 
     private makeSeverity(r: ValidationRule): string {
         // this method makes sure that we do not depend on the name of the severity to be the same as its value
-        // i.e. PiErrorSeverity.ToDo = "TODO",
+        // e.g. PiErrorSeverity.NONE = "none",
         let result: string = `PiErrorSeverity.`
         switch (r.severity.severity) {
             case PiErrorSeverity.Error: {

@@ -23,7 +23,7 @@ describe("Checking expression parser on syntax errors", () => {
         try {
             const readTest = parser.parse(demoExpressionFile);
         } catch (e) {
-            expect(e.message).toBe(`checking errors.`);
+            expect(e.message).toBe(`checking errors (9).`);
             expect(checker.errors.includes("List property 'entities' should not have an applied expression (.expr) [file: src/test/__tests__/expression-tests/expressionDefFiles/demoExpressions.pitest, line: 5, column: 9].")).toBeTruthy();
             expect(checker.errors.includes("Cannot find property 'expr' in 'DemoEntity' [file: src/test/__tests__/expression-tests/expressionDefFiles/demoExpressions.pitest, line: 5, column: 18]."));
             expect(checker.errors.includes("Cannot find property 'int_attr' in 'DemoEntity' [file: src/test/__tests__/expression-tests/expressionDefFiles/demoExpressions.pitest, line: 11, column: 9].")).toBeTruthy();

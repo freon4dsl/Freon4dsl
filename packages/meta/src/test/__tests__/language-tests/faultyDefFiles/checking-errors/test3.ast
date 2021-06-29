@@ -12,12 +12,12 @@ limited BB base ZZ { // limited concept cannot inherit from normal concept
 }
 concept Z base AA { // concept cannot inherit from limited concept
 }
-// TODO is this legal?
+// TODO is this legal: expression with base normal concept?
 expression YYY base ZZ {
 }
 limited AA implements ZZ { // concept cannot implement another concept
 }
-// TODO is this legal?
+// TODO is this legal: concept with base expression?
 concept DDD base YYY {
 }
 

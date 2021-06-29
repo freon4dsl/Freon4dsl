@@ -23,4 +23,8 @@ export class LanguageExpressionParser extends PiParser<LanguageExpressionTester>
     protected setCurrentFileName(file: string) {
         setCurrentFileName(file);
     }
+
+    protected getNonFatalParseErrors(): string[] {
+        return [];
+    }
 }

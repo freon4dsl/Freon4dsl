@@ -1,12 +1,11 @@
 import { PiElementReference } from "./internal";
-import { ParseLocation } from "../../utils";
+import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
 
 const primitiveTypeName = "PiPrimitiveType";
 export type PiPrimitiveType = string | boolean | number;
 
-// root of the inheritance structure of all language elements
-export abstract class PiLangElement {
-    location: ParseLocation;
+// root of the inheritance structure of all elements in a language definition
+export abstract class PiLangElement extends PiDefinitionElement {
     name: string;
 }
 
@@ -86,24 +85,11 @@ export abstract class PiClassifier extends PiLangElement {
     primProperties: PiPrimitiveProperty[] = [];
 
     parts(): PiConceptProperty[] {
-        // return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart);
-        const result: PiConceptProperty[] = [];
-        for (const prop of this.properties) {
-            if (prop instanceof PiConceptProperty && prop.isPart) {
-                result.push(prop);
-            }
-        }
-        return result;
+        return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart) as PiConceptProperty[];
     }
 
     references(): PiConceptProperty[] {
-        const result: PiConceptProperty[] = [];
-        for (const prop of this.properties) {
-            if (prop instanceof PiConceptProperty && !prop.isPart) {
-                result.push(prop);
-            }
-        }
-        return result;
+        return this.properties.filter(p => p instanceof PiConceptProperty && !p.isPart) as PiConceptProperty[];
     }
 
     allPrimProperties(): PiPrimitiveProperty[] {
@@ -384,12 +370,10 @@ export class PiPrimitiveProperty extends PiProperty {
     // only one of 'initialValue' and 'initialValueList' may have a value
     initialValue: PiPrimitiveType;
     initialValueList: PiPrimitiveType[];
-	// TODO use PiPrimitiveType instead of 'string' as type of 'primType'
     primType: string;
     // The inherited 'type' cannot be used, because 'this' has a primitive type,
     // which is not a subtype of PiElementReference<PiConcept>
     // Therefore, here we have:
-    // TODO dit moet beter worden!!!
     get type(): PiElementReference<PiConcept> {
         return PiElementReference.createNamed<PiConcept>(primitiveTypeName, "PiConcept");
     }

@@ -118,34 +118,28 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
 property = part:partProperty      { return part; }
          / ref:referenceProperty  { return ref; }
 
-partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? name_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
+partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
     {
+        let ref = null;
+        let typeName = "";
         if (type === "string" || type === "boolean" || type === "number") {
-            return create.createPrimitiveProperty({
-                "isPublic": (!!isPublic),
-                "name": name,
-                "primType": type,
-                "isOptional": (isOptional?true:false),
-                "isList": (isList?true:false),
-                "initialValue": initialvalue,
-                "location": location()
-            });
+            typeName = type;
         } else {
-            const ref = create.createClassifierReference({"name": type, "location": location()});
-            return create.createPartProperty({
-                "isPublic": (!!isPublic),
-                "name": name,
-                "type": ref,
-                "isOptional": (isOptional?true:false),
-                "isList": (isList?true:false),
-                "location": location()
-            })
+            ref = create.createClassifierReference({"name": type, "location": location()});
         }
+        return create.createPartOrPrimProperty({
+            "isPublic": (!!isPublic),
+            "name": name,
+            "isOptional": (isOptional?true:false),
+            "isList": (isList?true:false),
+            "initialValue": initialvalue,
+            "typeName": typeName,
+            "type": ref,
+            "location": location()
+        });
     }
 
-// TODO add initialvalue
-// referenceProperty = referenceKey ws name:var ws isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
-referenceProperty = isPublic:publicKey? referenceKey ws name:var ws isOptional:optionalKey? name_separator ws type:classifierReference isList:"[]"? semicolon_separator
+referenceProperty = isPublic:publicKey? referenceKey ws name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? semicolon_separator
     { return create.createReferenceProperty({
         "isPublic": (!!isPublic),
         "name": name,
@@ -190,9 +184,9 @@ propDefList = head:propDef tail:(comma_separator v:propDef { return v; })*
     { return [head].concat(tail); }
 
 // the name may or may not be surrounded by quotes
-propDef = "\"" name:var "\"" name_separator value:propValue
+propDef = "\"" name:var "\"" colon_separator value:propValue
     { return create.createPropDef( {"name": name, "value": value, "location": location() } ); }
-    / name:var name_separator value:propValue
+    / name:var colon_separator value:propValue
     { return create.createPropDef( {"name": name, "value": value, "location": location() } ); }
 
 propValue = "\"" value:string "\""      { return value; }

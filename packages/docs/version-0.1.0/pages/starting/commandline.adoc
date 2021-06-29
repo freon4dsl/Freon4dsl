@@ -20,7 +20,7 @@ arguments that can be used. For detailed help about a specific command, type: â€
 image::projectit-command-line-options.png[projectit-command-line-options]
 ====
 
-Note that every command except _all_, used invididually (without the other commands) generates code that
+Note that every command except _all_, used invididually (i.e. without the other commands), generates code that
 does not compile correctly.
 
 For instance, both the scoper and validator might need to use the typer, therefore the

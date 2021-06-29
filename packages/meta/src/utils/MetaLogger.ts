@@ -5,7 +5,6 @@
 type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
-// TODO Refactor to combine with PiLogger from core
 export class MetaLogger {
     private static muteAll: boolean = false;
     private static FgRed = "\x1b[31m";

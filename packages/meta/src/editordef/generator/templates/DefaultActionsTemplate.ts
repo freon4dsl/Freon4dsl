@@ -1,7 +1,7 @@
 import { flatten } from "lodash";
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept, PiLangUtil, PiClassifier } from "../../../languagedef/metalanguage";
-import { Roles } from "../../../utils/Roles";
+import { PiLanguage, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept, PiClassifier } from "../../../languagedef/metalanguage";
+import { Roles, LangUtil } from "../../../utils";
 import { PiEditUnit } from "../../metalanguage";
 
 export class DefaultActionsTemplate {
@@ -137,7 +137,7 @@ export class DefaultActionsTemplate {
         language.concepts.forEach(concept => concept.allParts().filter(ref => ref.isList).forEach(part => {
             const childConcept = part.type.referred;
             // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.unitName
-            result += `${PiLangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
+            result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
@@ -156,7 +156,7 @@ export class DefaultActionsTemplate {
         language.concepts.forEach(concept => concept.allParts().filter(ref => !ref.isList).forEach(part => {
                 const childClassifier = part.type.referred;
                 if (childClassifier instanceof PiConcept) {
-                    PiLangUtil.subConceptsIncludingSelf(childClassifier).filter(cls => !cls.isAbstract).forEach(subClass => {
+                    LangUtil.subConceptsIncludingSelf(childClassifier).filter(cls => !cls.isAbstract).forEach(subClass => {
                         behaviorMap.createOrAdd(subClass,
                             {
                                     activeInBoxRoles: [`${Roles.newConceptPart(concept, part)}`],

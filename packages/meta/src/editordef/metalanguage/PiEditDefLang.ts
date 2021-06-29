@@ -1,13 +1,9 @@
 import { PiClassifier, PiConcept, PiInstanceExp, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { ParseLocation } from "../../utils";
+import { PiDefinitionElement } from "../../utils";
 import { Roles } from "../../utils/Roles";
 
-export class PiEditElement {
-    location: ParseLocation;
-}
-
-export class PiEditUnit extends PiEditElement {
+export class PiEditUnit extends PiDefinitionElement {
     name: string;
     language: PiLanguage;
     languageName: string;
@@ -18,7 +14,7 @@ export class PiEditUnit extends PiEditElement {
     }
 }
 
-export class PiEditConcept extends PiEditElement {
+export class PiEditConcept extends PiDefinitionElement {
     languageEditor: PiEditUnit;
 
     concept: PiElementReference<PiConcept>;
@@ -52,7 +48,7 @@ export class PiEditParsedNewline {
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
-export class PiEditParsedProjectionIndent extends PiEditElement {
+export class PiEditParsedProjectionIndent extends PiDefinitionElement {
     indent: string = "";
     amount: number = 0;
 
@@ -76,7 +72,7 @@ export class PiEditParsedProjectionIndent extends PiEditElement {
     }
 }
 
-export class PiEditProjectionText extends PiEditElement {
+export class PiEditProjectionText extends PiDefinitionElement {
     public static create(text: string): PiEditProjectionText {
         const result = new PiEditProjectionText();
         result.text = text;
@@ -103,7 +99,7 @@ export enum ListJoinType {
     Separator = "Separator"
 }
 
-export class ListJoin extends PiEditElement {
+export class ListJoin extends PiDefinitionElement {
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     joinType?: ListJoinType = ListJoinType.NONE;
     joinText?: string = ", ";
@@ -113,7 +109,7 @@ export class ListJoin extends PiEditElement {
     }
 }
 
-export class PiEditPropertyProjection extends PiEditElement {
+export class PiEditPropertyProjection extends PiDefinitionElement {
     propertyName: string = "";
     listJoin: ListJoin;
     keyword?: string;
@@ -130,7 +126,7 @@ export class PiEditPropertyProjection extends PiEditElement {
     }
 }
 
-export class PiEditSubProjection extends PiEditElement {
+export class PiEditSubProjection extends PiDefinitionElement {
     optional: boolean;
     items: PiEditProjectionItem[];
 
@@ -162,7 +158,7 @@ export class PiEditInstanceProjection { // instances of this class are created b
 
 export type PiEditProjectionItem = PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection | PiEditInstanceProjection;
 
-export class PiEditProjectionLine extends PiEditElement {
+export class PiEditProjectionLine extends PiDefinitionElement {
     items: PiEditProjectionItem[] = [];
     indent: number = 0;
 
@@ -175,7 +171,7 @@ export class PiEditProjectionLine extends PiEditElement {
     }
 }
 
-export class PiEditProjection extends PiEditElement {
+export class PiEditProjection extends PiDefinitionElement {
     name: string;
     conceptEditor: PiEditConcept;
     lines: PiEditProjectionLine[] = [];

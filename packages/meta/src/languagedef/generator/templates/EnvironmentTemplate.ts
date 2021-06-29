@@ -70,7 +70,6 @@ export class EnvironmentTemplate {
             /**
              * Because the actual editor is an instance of a class from the ProjectIt core package,
              * this method provides an entry point to the content of the editor.
-             * TODO improve comment
              */
             get projectionalEditorComponent() : ${Names.ProjectionalEditor} {
                 if( this._projectionalEditorComponent === null ){

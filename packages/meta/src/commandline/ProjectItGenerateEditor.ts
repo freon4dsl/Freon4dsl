@@ -1,4 +1,3 @@
-import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
@@ -8,7 +7,6 @@ import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenera
 const LOGGER = new MetaLogger("ProjectItGenerateEditor"); // .mute();
 
 export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
-    private editorFile: CommandLineStringParameter;
     protected editorGenerator: EditorGenerator = new EditorGenerator();
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
 
@@ -16,41 +14,27 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
         super({
             actionName: "edit-it",
             summary: "Generates the typeScript code for the projectional editor for your language",
-            documentation: "Generates TypeScript code for the projectional editor of language defined in the .ast file."
+            documentation: "Generates TypeScript code for the projectional editor of language defined in the .ast files."
         });
     }
 
     generate(): void {
         LOGGER.log("Starting ProjectIt editor generation ...");
-        try {
-            super.generate();
+        super.generate();
 
-            this.editorGenerator.outputfolder = this.outputFolder;
-            this.editorGenerator.language = this.language;
+        this.editorGenerator.outputfolder = this.outputFolder;
+        this.editorGenerator.language = this.language;
+        this.parserGenerator.outputfolder = this.outputFolder;
+        this.parserGenerator.language = this.language;
 
-            const editor = new PiEditParser(this.language).parse(this.editorFile.value);
-            if (editor === null) {
-                // TODO should we generate a default editor???
-                throw new Error("Editor definition could not be parsed, exiting.");
-            }
-            this.editorGenerator.generate(editor);
-            this.parserGenerator.outputfolder = this.outputFolder;
-            this.parserGenerator.language = this.language;
-            this.parserGenerator.generate(editor);
-        } catch (e) {
-            LOGGER.error(this, e.stack);
+        const editor = new PiEditParser(this.language).parseMulti(this.editFiles);
+        // This command is being used to generate, specifically and only, the editor,
+        // and the reader/writer couple. Therefore we do not generate a default editor when
+        // no editor definition is found.
+        if (editor === null) {
+            throw new Error("Editor definition could not be parsed, exiting.");
         }
-        // TODO add check on success of generation
-    }
-
-    protected onDefineParameters(): void {
-        super.onDefineParameters();
-        this.editorFile = this.defineStringParameter({
-            argumentName: "EDITOR",
-            defaultValue: "LanguageDefinition.edit",
-            parameterLongName: "--editor",
-            parameterShortName: "-e",
-            description: "Editor Definition file"
-        });
+        this.editorGenerator.generate(editor);
+        this.parserGenerator.generate(editor);
     }
 }

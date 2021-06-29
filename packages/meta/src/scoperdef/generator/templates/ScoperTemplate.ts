@@ -6,7 +6,7 @@ import {
     TYPER_GEN_FOLDER,
     ENVIRONMENT_GEN_FOLDER,
     langExpToTypeScript,
-    replaceInterfacesWithImplementors
+    LangUtil, replaceInterfacesWithImplementors
 } from "../../../utils";
 import { PiScopeDef } from "../../metalanguage";
 

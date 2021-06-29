@@ -3,7 +3,6 @@ import { PiLanguage } from "../../metalanguage";
 
 export class PiReferenceTemplate {
 
-    // Clearer to have create(elem: T, ...)
     generatePiReference(language: PiLanguage, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";

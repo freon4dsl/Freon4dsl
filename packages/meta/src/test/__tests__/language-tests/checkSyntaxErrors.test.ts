@@ -4,6 +4,15 @@ describe("Checking language parser on syntax errors", () => {
     const parser = new LanguageParser();
     const testdir = "src/test/__tests__/language-tests/faultyDefFiles/syntax-errors/";
 
+    test("model and modelunit should have a name", () => {
+        const parseFile = testdir + "test1.ast";
+        try {
+            parser.parse(parseFile);
+        } catch (e) {
+            expect(e.message).toBe(`syntax error.`);
+        }
+    });
+
     test("language name should not contain a dot", () => {
         const parseFile = testdir + "test2.ast";
         try {
@@ -76,12 +85,4 @@ describe("Checking language parser on syntax errors", () => {
         }
     });
 
-    test("model and modelunit should have a name", () => {
-        const parseFile = testdir + "test1.ast";
-        try {
-            parser.parse(parseFile);
-        } catch (e) {
-            expect(e.message).toBe(`syntax error.`);
-        }
-    });
 });

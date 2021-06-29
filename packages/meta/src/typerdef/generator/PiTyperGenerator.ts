@@ -43,7 +43,7 @@ export class PiTyperGenerator {
         fs.writeFileSync(`${this.typerGenFolder}/index.ts`, typerIndexGenFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.info(this, `Generated typer '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(this, `Generated typer '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated typer ${name}`);
         }

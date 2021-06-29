@@ -48,14 +48,14 @@ ruleExtras = curly_begin severity:severity message:(comma_separator e:errormessa
     return { "severity": severity, "message": message };
 }
 
-severity = severityKey name_separator value:var {
+severity = severityKey colon_separator value:var {
   return create.createSeverity( {
     "value": value,
     "location": location()
   });
 }
 
-errormessage = messageKey name_separator "\"" content:messageContent "\"" {
+errormessage = messageKey colon_separator "\"" content:messageContent "\"" {
   return create.createErrorMessage( {
     "content": content,
     "location": location()
