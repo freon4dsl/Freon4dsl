@@ -14,7 +14,7 @@
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
   },
   "devDependencies": {
-    "@types/classnames": "^2.2.3",
+    "@types/classnames": "2.3.1",
     "@types/enzyme": "^3.0.0",
     "@types/jest": "26.0.20",
     "@types/koa": "^2.0.48",
@@ -53,14 +53,14 @@
     "reflect-metadata": "^0.1.12",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
-    "ts-jest": "^24.0.2",
+    "ts-jest": "24.3.0",
     "ts-node": "^6.2.0",
     "tslint": "^4.5.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^3.5.1",
     "tslint-microsoft-contrib": "5.0.3",
     "tslint-react": "^2.6.0",
-    "typescript": "^3.8.3",
+    "typescript": "4.1.6",
     "url-loader": "^0.6.2",
     "webpack-dev-server": "^3.10.3",
     "webpack-hot-middleware": "^2.25.0"
