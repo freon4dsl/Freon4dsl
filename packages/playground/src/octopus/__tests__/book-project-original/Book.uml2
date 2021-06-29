@@ -1,0 +1,78 @@
+--Example Model File
+<package> Book
+
+<class> Bookpart
+<attributes> + title: String;
+             + nrOfPages: Integer;
+             - /startPageNr: Integer;
+<operations> + determineStartPageNumber(): Integer;
+			 + getLastPageNumber(): Integer;
+			 + getNext(): Bookpart;
+<endclass>
+
+<class> Prependix  <specializes> Bookpart
+<attributes> + kind: PrependixKind; 
+<operations> + needsEmptyLastPage(): Boolean; 
+             + isFirstBookpart(): Boolean;
+<endclass>
+
+<class> Chapter <specializes> Bookpart
+<attributes> + author: String;
+			 + subject: String;
+<operations> + determineDurationTillFinished(from: Date): Period;
+<states> ready;
+         inwriting;
+         inwriting::draft;
+         inwriting::finaldraft;
+<endclass>
+
+<class> Appendix  <specializes> Bookpart <implements> TwoColumnPart
+<attributes> + kind: AppendixKind;
+             - twoColumn: Boolean;
+<operations> + needsEmptyLastPage(): Boolean;
+<endclass>
+
+<interface> TwoColumnPart
+<operations> + transformToTwoColumn();
+             + transformToOneColumn();
+<endinterface>
+
+<datatype> Period
+<attributes> + nrOfDays: Integer;
+             + nrOfWorkingDays: Integer;
+<enddatatype>
+
+<datatype> Date
+<attributes> + day: String;
+             + month: Real;
+             + year: Integer;
+             + another : Boolean;
+<enddatatype>
+
+<enumeration> PrependixKind
+<values> contents;
+         figures;
+         tables;
+         preface;
+<endenumeration>
+
+<enumeration> AppendixKind
+<values> index;
+         bibliography;
+         glossary;
+<endenumeration>
+
+<associationclass> ChapterDependency 
+                   + Chapter.sourceChapter[0..1]  <-> + Chapter.dependantChapters[0..*]
+<attributes> sameAuthor: Boolean;
+             sameSubject: Boolean;
+<endassociationclass> 
+                  
+<associations>
+    + Chapter.prevChap[0..1]   <-> + Chapter.nextChap[0..1];
+    + Chapter.prevChap[0..1]   <-> + Appendix.nextApp[0..1];
+    + Appendix.prevApp[0..1]  <-> + Appendix.nextApp[0..1];
+    + Prependix.prevPrep[0..1] <-> + Chapter.nextChap[0..1];
+    + Prependix.prevPrep[0..1] <-> + Prependix.nextPrep[0..1];
+  
+<endpackage>

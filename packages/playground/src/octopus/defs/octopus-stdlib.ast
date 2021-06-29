@@ -1,0 +1,11 @@
+language octopus
+
+concept OclIterator {
+    name: string;
+}
+
+concept PathName {
+    names: string[];
+    // first = names[0];
+    // last  = names[names.length-1]
+}
