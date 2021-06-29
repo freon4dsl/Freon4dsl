@@ -2,15 +2,15 @@
      + <class> Prependix // <specializes> Bookpart
         <attributes>
          + kind: PrependixKind;
-    //    <operations>
-    //     + isFirstBookpart(): Boolean;
-    //     + needsEmptyLastPage(): Boolean;
+        <operations>
+         + isFirstBookpart(): Boolean;
+         + needsEmptyLastPage(): Boolean;
     <endclass>
      + <class> Chapter // <specializes> Bookpart
         <attributes>
          + author: String;
          + subject: String;
-    //    <operations>
-    //     + determineDurationTillFinished(<inout> from: Date): Period;
+        <operations>
+         + determineDurationTillFinished(<inout> from: Date): Period;
     <endclass>
 <endpackage>

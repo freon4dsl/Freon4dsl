@@ -1,0 +1,6 @@
+editor YYY for language octopus
+
+OclPart {
+    @projection normal
+        [${self.name}]
+}
