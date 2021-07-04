@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "include": [
+    "src/**/*",
+    "src/@types/svg.d.ts",
+    "../example/**/*"
+  ],
+  "exclude": [
+    "node_modules/*",
+    "__sapper__/*",
+    "public/*"
+  ],
+
+  "compilerOptions": {
+    "importsNotUsedAsValues": "preserve"
+  }
+}
