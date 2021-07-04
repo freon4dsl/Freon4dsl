@@ -34,6 +34,6 @@ export interface PiWriter {
      * @param modelelement
      * @param startIndent
      */
-    writeToFile(filepath: string, modelelement: PiElement, startIndent?: number);
+    // TODO writeToFile(filepath: string, modelelement: PiElement, startIndent?: number);
 }
 // end::writer-interface[]

@@ -68,7 +68,8 @@ export class ProjectionTemplate {
                 createDefaultBinaryBox,
                 createDefaultExpressionBox,
                 isPiBinaryExpression,
-                ${Names.PiBinaryExpression}
+                ${Names.PiBinaryExpression},
+                BehaviorExecutionResult
             } from "${PROJECTITCORE}";
             
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }/${Names.PiElementReference}";
@@ -329,7 +330,7 @@ export class ProjectionTemplate {
                             return null;
                         }
                     },
-                    (option: SelectOption) => {
+                    async (option: SelectOption): Promise<BehaviorExecutionResult> => {
                         if (!!option) {
                             ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                                 ${element},
@@ -339,6 +340,7 @@ export class ProjectionTemplate {
                         } else {
                             ${element}.${appliedFeature.name} = null;
                         }
+                        return BehaviorExecutionResult.EXECUTED;
                     }
                 )
             `;
@@ -354,8 +356,9 @@ export class ProjectionTemplate {
                             return null;
                         }
                     },
-                    (option: SelectOption) => {
+                    async (option: SelectOption): Promise<BehaviorExecutionResult> => {
                         ent.name = option.label;
+                        return BehaviorExecutionResult.EXECUTED;
                     }
                 )
             `;

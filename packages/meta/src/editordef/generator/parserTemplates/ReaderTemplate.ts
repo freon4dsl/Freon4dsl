@@ -14,7 +14,7 @@ export class ReaderTemplate {
         // Template starts here
         return `
         import { Parser } from "pegjs";
-        import * as fs from "fs";
+        // TODO import * as fs from "fs";
         import { ${Names.PiReader} } from "${PROJECTITCORE}";
         import { ${Names.modelunit(language)}, ModelUnitMetaType, ${unitNames.map(name => `${name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";   
               
@@ -32,6 +32,7 @@ export class ReaderTemplate {
         */
         export class ${Names.reader(language)} implements ${Names.PiReader} {
         
+        /*
             readFromFile(filepath: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
                 // read language file
                 if (!fs.existsSync(filepath)) {
@@ -41,7 +42,7 @@ export class ReaderTemplate {
                 const langSpec: string = fs.readFileSync(filepath, { encoding: "utf8" });
                 return ${Names.reader(language)}.parse(langSpec, metatype, filepath);
             }
-
+        */
             readFromString(input: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
                 return ${Names.reader(language)}.parse(input, metatype, "");
             }       
