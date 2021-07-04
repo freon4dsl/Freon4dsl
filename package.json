@@ -67,6 +67,7 @@
   },
   "workspaces": [
     "packages/core",
+    "packages/core-svelte",
     "packages/meta",
     "packages/playground",
     "packages/docs",
