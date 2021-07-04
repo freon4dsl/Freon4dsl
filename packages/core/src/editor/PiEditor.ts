@@ -5,6 +5,7 @@ import { PiContainerDescriptor, PiExpression } from "../language/PiModel";
 import { InternalBehavior, InternalBinaryBehavior, InternalCustomBehavior, InternalExpressionBehavior } from "./InternalBehavior";
 import { PiCaret } from "../util/BehaviorUtils";
 import { PiElement, isPiExpression } from "../language/PiModel";
+import { IPiEditor } from "./IPiEditor";
 import { PiProjection } from "./PiProjection";
 import { isAliasBox } from "./boxes/AliasBox";
 import { isSelectBox } from "./boxes/SelectBox";
@@ -12,11 +13,11 @@ import { isTextBox } from "./boxes/TextBox";
 import { Box } from "./boxes/Box";
 import { KeyboardShortcutBehavior, PiActions } from "./PiAction";
 import { PiLogger } from "../util/PiLogging";
-import { PiUtils, wait } from "../util/PiUtils";
+import { wait } from "../util/PiUtils";
 
-const LOGGER = new PiLogger("PiEditor").mute();
+const LOGGER = new PiLogger("PiEditor"); //.mute();
 
-export class PiEditor {
+export class PiEditor implements IPiEditor {
     @observable private _rootElement: PiElement;
     readonly actions?: PiActions;
     readonly projection: PiProjection;
@@ -77,12 +78,15 @@ export class PiEditor {
     }
 
     async selectBox(box: Box | null, caretPosition?: PiCaret) {
+        LOGGER.info(this, "selectBox "+ (!!box? box.role : box) );
         if (box === this.selectedBox) {
+            LOGGER.info(this, "box already selected");
             return;
         }
         this.selectedBox = box;
-        this.$projectedElement!.focus();
+        // this.$projectedElement!.focus();
         if (box === null) {
+            LOGGER.info(this, "box === null");
             return;
         }
 
@@ -95,9 +99,9 @@ export class PiEditor {
                 LOGGER.info(this, "caret position is empty");
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
-            LOGGER.info(this, "setting focus on box " + box.role);
-            await box.setFocus();
         }
+        LOGGER.info(this, "setting focus on box " + box.role);
+        await box.setFocus();
     }
 
     get selectedBox() {

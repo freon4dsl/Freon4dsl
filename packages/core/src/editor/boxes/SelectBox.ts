@@ -1,3 +1,5 @@
+import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
+import { PiEditor } from "../PiEditor";
 import { AbstractChoiceBox } from "./AbstractChoiceBox";
 import { SelectOption } from "./SelectOption";
 import { PiElement } from "../../language/PiModel";
@@ -5,9 +7,9 @@ import { Box } from "./Box";
 
 export class SelectBox extends AbstractChoiceBox {
     readonly kind = "SelectBox";
-    getOptions: () => SelectOption[];
-    getSelectedOption: () => SelectOption | null;
-    setSelectedOption: (option: SelectOption) => void;
+    // getOptions: () => SelectOption[];
+    // getSelectedOption: () => SelectOption | null;
+    // setSelectedOption: (option: SelectOption) => void;
     /**
      * If true,  the element will be deleted as soon as the text becomes
      * empty because of removing the last character in the text.
@@ -18,15 +20,15 @@ export class SelectBox extends AbstractChoiceBox {
         exp: PiElement,
         role: string,
         placeHolder: string,
-        getOptions: () => SelectOption[],
+        getOptions: (editor: PiEditor) => SelectOption[],
         getSelectedOption: () => SelectOption | null,
-        setSelectedOption: (option: SelectOption) => void,
+        selectOption: (editor: PiEditor, option: SelectOption) => Promise<BehaviorExecutionResult>,
         initializer?: Partial<SelectBox>
     ) {
         super(exp, role, placeHolder, initializer);
-        this.getOptions = getOptions;
+        this.getOptions= getOptions;
         this.getSelectedOption = getSelectedOption;
-        this.setSelectedOption = setSelectedOption;
+        this.selectOption = selectOption;
     }
 
     public deleteWhenEmpty1(): boolean {

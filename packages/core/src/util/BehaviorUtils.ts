@@ -2,7 +2,7 @@ import { LEFT_MOST } from "../";
 import { isRegExp, isString } from "../editor/PiAction";
 import { PiLogger } from "./PiLogging";
 import { Box } from "../editor/boxes/Box";
-import { PiEditor } from "../editor/PiEditor";
+import { IPiEditor } from "../editor/IPiEditor";
 
 const LOGGER = new PiLogger("BehaviorUtils"); // .mute();
 
@@ -32,6 +32,7 @@ export class PiCaret {
 }
 
 export enum BehaviorExecutionResult {
+    NULL,
     EXECUTED,
     PARTIAL_MATCH,
     NO_MATCH
@@ -42,10 +43,10 @@ export enum BehaviorExecutionResult {
  * Matching on full text only.
  * @param {Box} box
  * @param {string} text
- * @param {PiEditor} editor
+ * @param {IPiEditor} editor
  * @returns {boolean}
  */
-export async function executeBehavior(box: Box, text: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
+export async function executeBehavior(box: Box, text: string, editor: IPiEditor): Promise<BehaviorExecutionResult> {
     let partialMatch: boolean = false;
 
     for (const a of editor.behaviors) {
