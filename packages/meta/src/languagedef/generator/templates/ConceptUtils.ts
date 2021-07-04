@@ -20,7 +20,8 @@ export function makeImportStatements(hasSuper: boolean, needsObservable: boolean
             ${!hasSuper ? `import * as uuid from "uuid";` : ``}
             ${needsObservable ? `import { observable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
-            import { ${modelImports.join(", ")} } from "./internal";
+            // TODO import { ${modelImports.join(", ")} } from "./index";
+            ${modelImports.map(mi => `import { ${mi} } from "./${mi}";`).join("\n")} 
             `;
 }
 

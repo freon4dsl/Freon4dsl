@@ -46,12 +46,6 @@ export interface PiStyle {
     display?: string;
 }
 
-export interface PiAliasStyle extends PiStyle {
-}
-
-const keyword: PiAliasStyle = {
-}
-
 export function styleToCSS(style: PiStyle): string {
     let declarations = ''
     for (const property of Object.keys(style)) {
@@ -63,4 +57,3 @@ export function styleToCSS(style: PiStyle): string {
     }
     return declarations;
 }
-console.log(styleToCSS(keyword));

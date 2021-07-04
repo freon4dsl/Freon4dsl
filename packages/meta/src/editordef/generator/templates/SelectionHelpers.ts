@@ -9,8 +9,7 @@ export class SelectionHelpers {
         // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
-        import { ${Names.PiElement}, Box, SelectBox, SelectOption, BehaviorExecutionResult, PiEditor } from "${PROJECTITCORE}";
-        import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
+        import { ${Names.PiElement}, Box, SelectBox, SelectOption, BehaviorExecutionResult, PiEditor, styleToCSS } from "${PROJECTITCORE}";
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
         /**

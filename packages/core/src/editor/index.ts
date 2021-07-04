@@ -6,3 +6,4 @@ export * from "./PiCompositeProjection";
 export * from "./PiProjection";
 export * from "./PiEditor";
 export * from "./boxes";
+export * from "./PiStyle";
