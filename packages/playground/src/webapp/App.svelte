@@ -46,13 +46,13 @@
 	import {Icon} from 'svelte-mui';
 
 	import {arrowForward} from './assets/icons';
-	import AppBar from './projectit-webapp/side-elements/AppBar.svelte';
-	import LeftPanel from './projectit-webapp/side-elements/LeftPanel.svelte';
-	import RightPanel from './projectit-webapp/side-elements/RightPanel.svelte';
-	import LoginDialog from './projectit-webapp/side-elements/LoginDialog.svelte';
-	import Footer from "./projectit-webapp/side-elements/Footer.svelte";
-	import MainGrid from "./projectit-webapp/main/MainGrid.svelte";
-	import {EditorCommunication} from "./projectit-webapp/editor/EditorCommunication";
+	import AppBar from './side-elements/AppBar.svelte';
+	import LeftPanel from './side-elements/LeftPanel.svelte';
+	import RightPanel from './side-elements/RightPanel.svelte';
+	import LoginDialog from './side-elements/LoginDialog.svelte';
+	import Footer from "./side-elements/Footer.svelte";
+	import MainGrid from "./main/MainGrid.svelte";
+	import {EditorCommunication} from "./editor/EditorCommunication";
 
 	const MAX_WIDTH = 720;
 	let width = MAX_WIDTH;

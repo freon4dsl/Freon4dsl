@@ -53,11 +53,11 @@
 	import {onMount} from 'svelte';
 
 	import {Button, Icon} from 'svelte-mui';
-	import {menu, invertColors} from '../../assets/icons';
-	import question_mark from '../../assets/icons/svg/help_24px.svg';
-	import projectit_logo from '../../assets/icons/svg/projectit-logo.svg';
+	import {menu, invertColors} from '../assets/icons';
+	import question_mark from '../assets/icons/svg/help_24px.svg';
+	import projectit_logo from '../assets/icons/svg/projectit-logo.svg';
 
-	import {theme} from '../../store';
+	import {theme} from '../store';
 
 	let el;
 	let legacy = true;

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Button, Menu, Menuitem} from 'svelte-mui';
-    import type {MenuItem} from "../menu-ts-files/MenuItem";
+    import {MenuItem} from "../menu-ts-files/MenuItem";
     import {EditorCommunication} from "../editor/EditorCommunication";
 
     const myAction = (id: number) => {console.log("Edit menu " + id + " action performed");};

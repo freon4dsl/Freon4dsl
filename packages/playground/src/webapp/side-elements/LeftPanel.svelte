@@ -23,7 +23,7 @@
 <script>
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 
-	import {arrowBack} from '../../assets/icons';
+	import {arrowBack} from '../../webapp/assets/icons';
 	import MenuList from "../menu/MenuList.svelte";
 
 	export let visible = false;

@@ -1,6 +1,6 @@
 {
-  "name": "svelte-app",
-  "version": "1.0.0",
+  "name": "@projectit/core-svelte",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

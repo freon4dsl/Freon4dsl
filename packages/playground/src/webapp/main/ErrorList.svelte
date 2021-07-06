@@ -4,9 +4,9 @@
 <script lang="ts">
 
     import { Icon } from "svelte-mui";
-    import arrowUp from '../../assets/icons/svg/arrow-up.svg';
-    import arrowDown from '../../assets/icons/svg/arrow-down.svg';
-    import import_export from '../../assets/icons/svg/import_export_24px.svg';
+    import arrowUp from '../../webapp/assets/icons/svg/arrow-up.svg';
+    import arrowDown from '../../webapp/assets/icons/svg/arrow-down.svg';
+    import import_export from '../../webapp/assets/icons/svg/import_export_24px.svg';
 
     import sortErrors from "../main-ts-files/SortErrors";
     import type {ErrorMessage} from "../main-ts-files/ErrorMessage";
