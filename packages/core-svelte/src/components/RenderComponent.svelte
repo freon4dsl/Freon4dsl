@@ -11,7 +11,6 @@
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
     import { afterUpdate, beforeUpdate, onDestroy } from "svelte";
-    import { isSvgBox } from "../model/Example";
 
     import type { Box } from "@projectit/core";
     import {
@@ -24,6 +23,7 @@
         isTextBox,
         isVerticalBox,
         isHorizontalBox,
+        isSvgBox,
         LabelBox, PiEditor
     } from "@projectit/core";
 

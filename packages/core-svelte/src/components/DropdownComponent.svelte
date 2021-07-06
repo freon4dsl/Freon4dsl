@@ -2,7 +2,7 @@
     import { clickOutside } from "./clickOutside"
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
-    import { findOption } from "../boxes/SvelteSelectOption";
+    import { findOption } from "@projectit/core";
     import DropdownItemComponent from "./DropdownItemComponent.svelte";
     import type { SelectOption } from "@projectit/core";
     import {

@@ -17,3 +17,7 @@ export class SvgBox extends Box {
         this.svgPath = svgPath;
     }
 }
+
+export function isSvgBox(box: Box): box is SvgBox {
+    return box.kind === "SvgBox";
+}

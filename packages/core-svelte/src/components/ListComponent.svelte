@@ -5,7 +5,6 @@
     import RenderComponent from "./RenderComponent.svelte";
     import { Box, HorizontalListBox, PiEditor, PiLogger } from "@projectit/core";
     import { isHorizontalBox } from "@projectit/core";
-    import { log } from "../model/Example";
 
     // Parameters
     export let list = new HorizontalListBox(null, "l1");
@@ -60,14 +59,12 @@
     {#if isHorizontalBox(svList) }
         <div class="horizontalList"  on:click>
             {#each svList.children as box (box.id)}
-                {log("    horizontal-list box "+ box.role)}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>
     {:else}
         <div class="verticalList"  on:click>
-            {#each svList.children as box (box.id)}{
-                log("    vertical-list box "+ box.role)}
+            {#each svList.children as box (box.id)}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>
