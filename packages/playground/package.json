@@ -3,12 +3,14 @@
   "version": "0.1.1",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c",
+    "build": "yarn example && yarn build-app",
+    "build-app": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
     "install-local": "yarn install --registry http://localhost:4873",
-    "clean": "rm src/example/*/*/*.js && rm src/example/*/*/*.js.map"
+    "clean": "rm src/example/*/*/*.js && rm src/example/*/*/*.js.map",
+    "example": 	    "bash ../../scripts/projectit-dev.sh all -d src/example/defs -o src/example"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
