@@ -3,7 +3,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   modulePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/coverage/'],
-  setupFilesAfterEnv: ["<rootDir>/../../jestSetupReact.js"],
+  // setupFilesAfterEnv: ["<rootDir>/../../jestSetupReact.js"],
   testURL: "http://localhost/",
   transform: {
     "\\.tsx?$": "ts-jest"
@@ -11,9 +11,9 @@ module.exports = {
   },
   testMatch: null,
   testRegex: "(/__tests__/.*spec)\\.(jsx?|tsx?)$",
-  snapshotSerializers: [
-    "enzyme-to-json/serializer"
-  ],
+  // snapshotSerializers: [
+  //   "enzyme-to-json/serializer"
+  // ],
   collectCoverageFrom: [
     "<rootDir>/src/**/*.{ts,tsx,js,jsx}"
   ],
@@ -33,7 +33,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/../../__mocks__/fileMock.js",
-    "\\.(css|scss)$": "identity-obj-proxy",
-    "\\.svg$": "@svgr/webpack"
+    "\\.(css|scss)$": "identity-obj-proxy"
+    // "\\.svg$": "@svgr/webpack"
   }
 };
