@@ -44,8 +44,10 @@ export class ProjectionTemplate {
         return `
             import { observable } from "mobx";
 
-            import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
+            import * as ${Names.styles} from "${relativePath}${EDITORSTYLES}";
+            // TODO import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
             import {
+                styleToCSS,
                 AliasBox,
                 Box,
                 GridBox,
@@ -68,7 +70,8 @@ export class ProjectionTemplate {
                 createDefaultBinaryBox,
                 createDefaultExpressionBox,
                 isPiBinaryExpression,
-                ${Names.PiBinaryExpression}
+                ${Names.PiBinaryExpression},
+                BehaviorExecutionResult
             } from "${PROJECTITCORE}";
             
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }/${Names.PiElementReference}";
@@ -222,7 +225,7 @@ export class ProjectionTemplate {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
             result += ` new LabelBox(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
-                            style: projectitStyles.${item.style},
+                            style: styleToCSS(${Names.styles}.${item.style}),
                             selectable: false
                         }) `;
         } else if (item instanceof PiEditPropertyProjection) {
@@ -312,7 +315,7 @@ export class ProjectionTemplate {
                     return this.rootProjection.getBox(feature);
                 }).concat(
                     new AliasBox(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
-                        style: ${Names.styles}.placeholdertext,
+                        style: styleToCSS(${Names.styles}.placeholdertext),
                         propertyName: "${propertyConcept.name}"
                     })
                 )
@@ -329,7 +332,7 @@ export class ProjectionTemplate {
                             return null;
                         }
                     },
-                    (option: SelectOption) => {
+                    async (option: SelectOption): Promise<BehaviorExecutionResult> => {
                         if (!!option) {
                             ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                                 ${element},
@@ -339,6 +342,7 @@ export class ProjectionTemplate {
                         } else {
                             ${element}.${appliedFeature.name} = null;
                         }
+                        return BehaviorExecutionResult.EXECUTED;
                     }
                 )
             `;
@@ -354,8 +358,9 @@ export class ProjectionTemplate {
                             return null;
                         }
                     },
-                    (option: SelectOption) => {
+                    async (option: SelectOption): Promise<BehaviorExecutionResult> => {
                         ent.name = option.label;
+                        return BehaviorExecutionResult.EXECUTED;
                     }
                 )
             `;
@@ -369,14 +374,15 @@ export class ProjectionTemplate {
                         return ${this.conceptReferenceProjectionInList(reference, element) }
                     }).concat(
                         new AliasBox(${element}, "${Roles.newConceptReferencePart(reference)}", "<+>" , { //  add ${reference.name}
-                            style: ${Names.styles}.placeholdertext,
+                            style: styleToCSS(${Names.styles}.placeholdertext),
                             propertyName: "${reference.name}"
                         })
                     )
                     , //  this one?
-                    {
-                        style: ${Names.styles}.indent
-                    }
+                    // TODO Change into an IndentComponent
+                    // {
+                    //     style: styleToCSS(${Names.styles}.indent)
+                    // }
                 )
             `;
     }
@@ -397,25 +403,25 @@ export class ProjectionTemplate {
                 return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",
-                    style: ${Names.styles}.placeholdertext
+                    style: styleToCSS(${Names.styles}.placeholdertext)
                 })`;
             case "number":
                 return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
                 {
                     placeHolder: "text",
-                    style: ${Names.styles}.placeholdertext
+                    style: styleToCSS(${Names.styles}.placeholdertext)
                 })`;
             case "boolean":
                 return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
                 {
                     placeHolder: "text",
-                    style: ${Names.styles}.placeholdertext
+                    style: styleToCSS(${Names.styles}.placeholdertext)
                 })`;
             default:
                 return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",
-                    style: ${Names.styles}.placeholdertext
+                    style: styleToCSS(${Names.styles}.placeholdertext)
                 })`;
         }
     }

@@ -1,5 +1,4 @@
-import { PiEditor } from "../editor";
-import { ProjectionalEditor } from "../editor/components";
+import { IPiEditor } from "../editor";
 import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
 import { PiTyper } from "../typer";
@@ -19,12 +18,12 @@ export interface PiEnvironment {
     scoper: PiScoper;
     typer: PiTyper;
     validator: PiValidator;
-    editor: PiEditor;
+    editor: IPiEditor;
     stdlib: PiStdlib;
     writer: PiWriter;
     reader: PiReader;
 
-    projectionalEditorComponent: ProjectionalEditor;
+    // projectionalEditorComponent: ProjectionalEditor;
     languageName: string;
     unitNames: string[];
 }

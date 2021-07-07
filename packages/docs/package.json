@@ -15,10 +15,6 @@
     "build-site": "jekyll build && bash fix-jekyll-lf.sh && cp .nojekyll ../../docs"
   },
   "devDependencies": {
-    "@types/react": "16.8.15",
-    "@types/react-dom": "16.8.4",
-    "@types/react-router": "^5.1.4",
-    "mobx-devtools": "^0.9.21",
     "ts-loader": "^6.2.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.8.3"
@@ -29,7 +25,6 @@
     "@types/lodash": "4.14.73",
     "@types/history": "^4.7.5",
     "global": "^4.4.0",
-    "mobx": "^5.14.0",
-    "mobx-react": "6.1.3"
+    "mobx": "^5.14.0"
   }
 }

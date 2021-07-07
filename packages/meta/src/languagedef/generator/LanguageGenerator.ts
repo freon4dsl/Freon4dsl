@@ -120,9 +120,9 @@ export class LanguageGenerator {
         const structureFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language Structure", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, structureFile);
 
-        LOGGER.log(`Generating language environment: ${this.environmentGenFolder}/${Names.environment(language)}.tsx`);
+        LOGGER.log(`Generating language environment: ${this.environmentGenFolder}/${Names.environment(language)}.ts`);
         const environmentFile = Helpers.pretty(environmentTemplate.generateEnvironment(language, relativePath), "Language Environment", generationStatus);
-        fs.writeFileSync(`${this.environmentGenFolder}/${Names.environment(language)}.tsx`, environmentFile);
+        fs.writeFileSync(`${this.environmentGenFolder}/${Names.environment(language)}.ts`, environmentFile);
 
         LOGGER.log(`Generating standard library: ${this.stdlibGenFolder}/${Names.stdlib(language)}.ts`);
         const stdlibFile = Helpers.pretty(stdlibTemplate.generateStdlibClass(language, relativePath), "Language Standard Library", generationStatus);

@@ -10,7 +10,7 @@
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "build": "tsc && yarn run copy-scss && yarn run copy-fonts",
+    "build": "tsc",
     "build-release": "yarn run build",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
@@ -21,18 +21,14 @@
     "dummy": "echo DUMMY",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "republish-local": "yarn unpublish-local && yarn publish-local"
   },
   "dependencies": {
-    "classnames": "^2.2.5",
-    "click-outside": "1.0.4",
-    "mobx": "5.14.0",
-    "mobx-react": "6.1.3",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "@types/react": "16.8.15",
-    "@types/react-dom": "16.8.4",
-    "uuid": "^3.3.2"
+    "mobx": "5.15.4",
+    "uuid": "^3.3.2",
+    "csstype": "3.0.8",
+    "typestyle": "2.1.0"
   },
   "publishConfig": {
     "access": "public"

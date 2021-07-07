@@ -1,14 +1,33 @@
 {
-  "extends": "../../tsconfig-base.json",
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "include": [
+    "src",
+    "src/**/*",
+    "src/@types/svg.d.ts"
+  ],
+  "exclude": [
+    "node_modules/*",
+    "__sapper__/*",
+    "public/*"
+  ],
 
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "isolatedModules": false,
+    "importsNotUsedAsValues": "preserve",
     "outDir": "dist",
     "target": "es6",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "lib": [
+      "dom",
+      "es6",
+      "es2019"
+    ],
+    "types": [
+      "node",
+      "svelte"
+     ]
   },
-  "include": [
-    "src"
-  ],
 
   "exclude": [
     "dist",
@@ -19,6 +38,4 @@
     "src/**/*.test.tsx",
     "src/**/*.story.tsx"
   ]
-
-
 }

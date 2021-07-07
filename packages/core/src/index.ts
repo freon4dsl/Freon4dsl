@@ -1,5 +1,4 @@
 export * from "./editor";
-export * from "./editor/components";
 export * from "./environment";
 export * from "./language";
 export * from "./reader";

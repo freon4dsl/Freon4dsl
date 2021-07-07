@@ -3,7 +3,7 @@ import { isPiExpression } from "../language/PiModel";
 import { PiLogger } from "./PiLogging";
 import { Box } from "../editor/boxes/Box";
 import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression } from "../language/PiModel";
-import { PiEditor } from "../editor/PiEditor";
+import { IPiEditor } from "../editor/IPiEditor";
 import { PiUtils } from "./PiUtils";
 
 // reserved role names for expressions, use with care.
@@ -61,7 +61,7 @@ class BTree {
     }
 
     @action
-    setRightExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
+    setRightExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: IPiEditor) {
         const right = exp.piRight();
         exp.piSetRight(newExp);
         newExp.piSetRight(right);
@@ -69,7 +69,7 @@ class BTree {
     }
 
     @action
-    setLeftExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
+    setLeftExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: IPiEditor) {
         const left = exp.piLeft();
         exp.piSetLeft(newExp);
         newExp.piSetLeft(left);
@@ -77,7 +77,7 @@ class BTree {
     }
 
     @action
-    insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: PiEditor): Selected | null {
+    insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: IPiEditor): Selected | null {
         LOGGER.log("insertBinaryExpression for " + box.element);
         let selectedElement: Selected | null = null;
         PiUtils.CHECK(isPiExpression(box.element), "insertBinaryExpression: current element should be a PiExpression, but it isn't");
@@ -128,7 +128,7 @@ class BTree {
      * Balances the tree according to operator precedence.
      * Works when `exp` has just been added to the tree.
      */
-    balanceTree(exp: PiBinaryExpression, editor: PiEditor) {
+    balanceTree(exp: PiBinaryExpression, editor: IPiEditor) {
         const expContainer = exp.piContainer();
         const left = exp.piLeft();
         if (isPiBinaryExpression(left)) {

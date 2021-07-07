@@ -5,7 +5,6 @@
     "declarationMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "jsx": "react",
     "lib": [
       "dom",
       "es6",
@@ -25,13 +24,15 @@
     "target": "es6",
     "types": [
       "node",
-      "jest",
-      "jest-enzyme"
+      "jest"
     ],
     "baseUrl": ".",
     "paths": {
       "@projectit/core/*": [
         "packages/core/src/*"
+      ],
+      "@projectit/core-svelte/*": [
+        "packages/core-svelte/src/*"
       ],
       "@projectit/meta/*": [
         "packages/meta/src/*"

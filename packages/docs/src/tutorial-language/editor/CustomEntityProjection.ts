@@ -7,7 +7,7 @@ import {
     LabelBox,
     TextBox,
     VerticalListBox,
-    AliasBox, SelectOption, SelectBox
+    AliasBox, SelectOption, SelectBox, styleToCSS, PiEditor, BehaviorExecutionResult
 } from "@projectit/core";
 import { EntityEnvironment } from "../environment/gen/EntityEnvironment";
 import { AttributeType } from "../language/gen/AttributeType";
@@ -16,7 +16,7 @@ import { Entity } from "../language/gen/Entity";
 import { EntityModelUnit } from "../language/gen/EntityModelUnit";
 import { PiElementReference } from "../language/gen/PiElementReference";
 
-import { projectitStyles } from "./styles/styles";
+import * as projectitStyles from "../editor/styles/styles";
 /**
  * Class CustomEntityProjection provides an entry point for the language engineer to
  * define custom build additions to the editor.
@@ -59,7 +59,7 @@ export class CustomEntityProjection implements PiProjection {
     private createModelBox2(model: EntityModelUnit): Box {
         return new HorizontalListBox(model, "model", [
             new LabelBox(model, "model-label", "Model", {
-                style: projectitStyles.keyword
+                style: styleToCSS(projectitStyles.keyword)
             }),
             new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
                 placeHolder: "<name>"
@@ -74,14 +74,14 @@ export class CustomEntityProjection implements PiProjection {
         return new VerticalListBox(model, "model", [
             new HorizontalListBox(model, "model-info", [
                 new LabelBox(model, "model-keyword", "Model", {
-                    style: projectitStyles.keyword
+                    style: styleToCSS(projectitStyles.keyword)
                 }),
                 new TextBox(model, "model-name", () => model.name, (c: string) => (model.name = c), {
                     placeHolder: "<name>"
                 })
             ]),
             new LabelBox(model, "entity-keyword", "Entities", {
-                style: projectitStyles.keyword
+                style: styleToCSS(projectitStyles.keyword)
             }),
             new VerticalListBox(
                 model,
@@ -99,7 +99,7 @@ export class CustomEntityProjection implements PiProjection {
         return new VerticalListBox(entity, "entity", [
             new HorizontalListBox(entity, "entity-keyword", [
                 new LabelBox(entity, "entity-label", "entity", {
-                    style: projectitStyles.keyword
+                    style: styleToCSS(projectitStyles.keyword)
                 }),
                 new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
             ]),
@@ -121,7 +121,7 @@ export class CustomEntityProjection implements PiProjection {
             [
                 new HorizontalListBox(entity, "entity-info", [
                     new LabelBox(entity, "entity-keyword", "Entity", {
-                        style: projectitStyles.keyword
+                        style: styleToCSS(projectitStyles.keyword)
                     }),
                     new TextBox(entity, "entity-name",
                         () => entity.name,
@@ -146,7 +146,7 @@ export class CustomEntityProjection implements PiProjection {
             [
                 new HorizontalListBox(entity, "entity-keyword", [
                     new LabelBox(entity, "entity-label", "entity", {
-                        style: projectitStyles.keyword
+                        style: styleToCSS(projectitStyles.keyword)
                     }),
                     new TextBox(entity, "entity-name", () => entity.name, (c: string) => (entity.name = c))
                 ]),
@@ -205,7 +205,7 @@ export class CustomEntityProjection implements PiProjection {
                             return null;
                         }
                     },
-                    (option: SelectOption) => {
+                    async (option: SelectOption): Promise<BehaviorExecutionResult>  => {
                         if (!!option) {
                             attribute.declaredType = PiElementReference.create<AttributeType>(
                                 EntityEnvironment.getInstance().scoper.getFromVisibleElements(attribute, option.label, "AttributeType") as AttributeType,
@@ -214,6 +214,7 @@ export class CustomEntityProjection implements PiProjection {
                         } else {
                             attribute.declaredType = null;
                         }
+                        return BehaviorExecutionResult.EXECUTED;
                     }
                 )
             ]
@@ -227,8 +228,8 @@ export class CustomEntityProjection implements PiProjection {
         placeholder: string,
         metaType: string,
         getAction: () => SelectOption,
-        setAction: (o: SelectOption) => void
-    ): Box {
+        setAction: (o: SelectOption) => Promise<BehaviorExecutionResult>
+): Box {
         return new SelectBox(
             element,
             role,
@@ -242,7 +243,7 @@ export class CustomEntityProjection implements PiProjection {
                     }));
             },
             () => getAction(),
-            (option: SelectOption) => setAction(option)
+            (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => setAction(option)
         );
     }
 

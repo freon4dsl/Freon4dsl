@@ -7,3 +7,8 @@ export type SelectOption = {
     label: string;
     description?: string;
 };
+
+export function findOption(options: SelectOption[], id: string): SelectOption | null {
+    const index = options.findIndex( option => option.id === id);
+    return (index === -1 ? null : options[index]);
+}

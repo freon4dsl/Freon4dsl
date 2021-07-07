@@ -6,7 +6,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
     "lib": [
       "dom",
       "es6",
@@ -27,8 +26,7 @@
     "target": "es6",
     "types": [
       "node",
-      "jest",
-      "jest-enzyme"
+      "jest"
     ],
     "baseUrl": ".",
     "paths": {

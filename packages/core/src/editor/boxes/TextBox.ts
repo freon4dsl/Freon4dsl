@@ -13,7 +13,7 @@ export enum KeyPressAction {
 }
 
 export class TextBox extends Box {
-    readonly kind = "TextBox";
+    kind = "TextBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.

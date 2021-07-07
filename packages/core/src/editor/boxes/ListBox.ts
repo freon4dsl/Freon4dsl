@@ -4,7 +4,7 @@ import { NBSP } from "../../util/PiUtils";
 import { createKeyboardShortcutForList } from "../../util/ListBoxUtil";
 import { Box } from "./Box";
 import { AliasBox } from "./AliasBox";
-import { PiEditor } from "../PiEditor";
+import { IPiEditor } from "../IPiEditor";
 import { PiElement } from "../../language/PiModel";
 import { PiUtils } from "../../util/PiUtils";
 
@@ -106,7 +106,7 @@ export class VerticalPiElementListBox extends VerticalListBox {
     insertElement: () => PiElement;
     listPropertyName: string;
     list: PiElement[];
-    editor: PiEditor;
+    editor: IPiEditor;
     roleToSelectAfterCreation: string;
 
     constructor(
@@ -115,7 +115,7 @@ export class VerticalPiElementListBox extends VerticalListBox {
         list: PiElement[],
         listPropertyName: string,
         builder: () => PiElement,
-        editor: PiEditor,
+        editor: IPiEditor,
         initializer?: Partial<VerticalPiElementListBox>
     ) {
         super(element, role, [], initializer);

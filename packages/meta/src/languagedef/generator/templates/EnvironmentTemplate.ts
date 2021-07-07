@@ -18,8 +18,6 @@ export class EnvironmentTemplate {
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
                     ${Names.PiWriter}
                } from "${PROJECTITCORE}";
-        import { ${Names.ProjectionalEditor} } from "@projectit/core";
-        import * as React from "react";
         import { ${Names.actions(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
@@ -68,17 +66,6 @@ export class EnvironmentTemplate {
             }
             
             /**
-             * Because the actual editor is an instance of a class from the ProjectIt core package,
-             * this method provides an entry point to the content of the editor.
-             */
-            get projectionalEditorComponent() : ${Names.ProjectionalEditor} {
-                if( this._projectionalEditorComponent === null ){
-                    this._projectionalEditorComponent = \< ${Names.ProjectionalEditor} editor={this.editor} /\> as any as ${Names.ProjectionalEditor};
-                }
-                return this._projectionalEditorComponent;
-            }    
-
-            /**
              * Returns an empty model with name 'modelName'.
              * 
              * @param modelName
@@ -99,7 +86,6 @@ export class EnvironmentTemplate {
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
             languageName: string = "${language.name}";
             unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
-            private _projectionalEditorComponent : ${Names.ProjectionalEditor} = null;
         }`;
     }
 }

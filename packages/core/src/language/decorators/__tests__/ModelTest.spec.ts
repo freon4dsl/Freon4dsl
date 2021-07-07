@@ -1,5 +1,5 @@
-import { BinExpression, Expression, ModelContext } from "./Model";
-import { observe, reaction } from "mobx";
+// import { BinExpression, Expression, ModelContext } from "./Model";
+// import { observe, reaction } from "mobx";
 
 // TODO remove or improve this test
 describe("Model", () => {

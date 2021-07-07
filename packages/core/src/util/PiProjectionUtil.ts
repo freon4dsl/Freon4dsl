@@ -1,6 +1,8 @@
-import { Box, SelectBox } from "../";
+import { Box, SelectBox, SelectOption } from "../editor/boxes";
 import { TextBox } from "../editor/boxes/TextBox";
+import { PiEditor } from "../editor/PiEditor";
 import { PiElement } from "../language/PiModel";
+import { BehaviorExecutionResult } from "./BehaviorUtils";
 import { PiUtils } from "./PiUtils";
 
 export class PiProjectionUtil {
@@ -40,12 +42,13 @@ export class PiProjectionUtil {
                         return { id: labels.no, label: labels.no };
                     }
                 },
-                option => {
-                    if (option.label === labels.yes) {
+                async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                    if (option.id === labels.yes) {
                         elem[propertyName] = true;
-                    } else if (option.label === labels.no) {
+                    } else if (option.id === labels.no) {
                         elem[propertyName] = false;
                     }
+                    return BehaviorExecutionResult.NULL
                 }
             );
         } else {
