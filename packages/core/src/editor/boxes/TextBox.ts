@@ -81,5 +81,5 @@ export class TextBox extends Box {
 }
 
 export function isTextBox(b: Box): b is TextBox {
-    return b instanceof TextBox;
+    return b.kind === "TextBox"; // b instanceof TextBox;
 }

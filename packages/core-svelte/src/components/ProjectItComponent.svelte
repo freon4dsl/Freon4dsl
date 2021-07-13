@@ -104,5 +104,59 @@
         overflow-x: auto;
     }
 
+    input, button, select, textarea {
+        font-family: inherit;
+        font-size: inherit;
+        -webkit-padding: 0.4em 0;
+        padding: 0.4em;
+        margin: 0 0 0.5em 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+
+    input:disabled {
+        color: #ccc;
+    }
+
+    button {
+        color: #333;
+        background-color: #f4f4f4;
+        outline: none;
+    }
+
+    button:disabled {
+        color: #999;
+    }
+
+    button:not(:disabled):active {
+        background-color: #ddd;
+    }
+
+    button:focus {
+        border-color: #666;
+    }
+    .grid {
+        display: inline-grid;
+        grid-gap: 10px;
+        align-items: center;
+        align-content: center;
+        justify-items: stretch;
+    }
+
+    .gridcell {
+        padding: 4px;
+        border-left: lightgrey;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-right: lightgrey;
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom: lightgrey;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+    }
+
+
 
 </style>

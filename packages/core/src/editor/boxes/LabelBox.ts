@@ -27,5 +27,5 @@ export class LabelBox extends Box {
 }
 
 export function isLabelBox(b: Box): b is LabelBox {
-    return b instanceof LabelBox;
+    return b.kind === "LabelBox"; // b instanceof LabelBox;
 }

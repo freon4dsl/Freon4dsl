@@ -36,7 +36,8 @@
     //     aliasBox.textBox.placeHolder = event.detail.label
     //     open = false;
     // }
-    const setFocus = (): void => {
+    const setFocus = async (): Promise<void> => {
+        console.log("AliasComponent set focus " + aliasBox.role);
         LOGGER.log("AliasComponent set focus " + aliasBox.role);
         textcomponent.focus();
         // this.startEditing();
@@ -45,7 +46,7 @@
     onMount( () => {
         LOGGER.log("AliasComponent.onMount for role [" + aliasBox.role + "]");
         aliasBox.textBox.setFocus = setFocus;
-        aliasBox.setFocus = focus;
+        aliasBox.setFocus = setFocus;
         // textBox.setCaret = setCaret;
         // caretPosition = textBox.caretPosition;
     });

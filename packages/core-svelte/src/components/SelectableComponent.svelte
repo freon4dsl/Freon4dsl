@@ -10,6 +10,7 @@
         PiEditor,
         TAB, PiLogger
     } from "@projectit/core";
+    import { autorun } from "mobx";
     import { afterUpdate, tick } from "svelte";
 
     // Parameters
@@ -46,6 +47,10 @@
             LOGGER.log("   actual is "+ box.actualWidth)
         }
     });
+
+    autorun( () => {
+        isSelected = editor.selectedBox === box;
+    })
 
     $: className = (isSelected ? "selectedComponent" : "unSelectedComponent");
 </script>

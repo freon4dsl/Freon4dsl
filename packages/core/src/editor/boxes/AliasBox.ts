@@ -39,5 +39,5 @@ export class AliasBox extends AbstractChoiceBox {
 }
 
 export function isAliasBox(b: Box): b is AliasBox {
-    return b instanceof AliasBox;
+    return b.kind === "AliasBox"; //  b instanceof AliasBox;
 }

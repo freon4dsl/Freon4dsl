@@ -53,5 +53,5 @@ export class OptionalBox extends Box {
 }
 
 export function isOptionalBox(b: Box): b is OptionalBox {
-    return b instanceof OptionalBox;
+    return b.kind === "OptionalBox"; // b instanceof OptionalBox;
 }

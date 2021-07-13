@@ -37,5 +37,5 @@ export class SelectBox extends AbstractChoiceBox {
 }
 
 export function isSelectBox(b: Box): b is SelectBox {
-    return b instanceof SelectBox;
+    return b.kind === "SelectBox"; // b instanceof SelectBox;
 }

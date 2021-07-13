@@ -78,6 +78,8 @@ export class PiEditor implements IPiEditor {
     }
 
     async selectBox(box: Box | null, caretPosition?: PiCaret) {
+        LOGGER.show();
+        console.log("selectBox "+ (!!box? box.role : box) );
         LOGGER.info(this, "selectBox "+ (!!box? box.role : box) );
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");

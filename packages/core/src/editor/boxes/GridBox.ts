@@ -76,5 +76,5 @@ function compare(a: GridCell, b: GridCell): number {
 }
 
 export function isGridBox(box: Box): box is GridBox {
-    return box instanceof GridBox;
+    return box.kind === "GridBox"; //  box instanceof GridBox;
 }

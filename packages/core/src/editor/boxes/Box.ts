@@ -6,7 +6,6 @@ import { PiLogger } from "../../util/PiLogging";
 import { PiUtils } from "../../util/PiUtils";
 
 const LOGGER = new PiLogger("Box"); // .mute();
-let id = 0;
 
 export abstract class Box {
     $id: string;

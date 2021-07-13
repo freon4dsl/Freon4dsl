@@ -41,5 +41,5 @@ export class IndentBox extends Box {
 }
 
 export function isIndentBox(b: Box): b is IndentBox {
-    return b instanceof IndentBox;
+    return b.kind === "IndentBox"; // " b instanceof IndentBox;
 }
