@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "mobx": "5.15.4",
-    "uuid": "^3.3.2",
     "csstype": "3.0.8",
     "typestyle": "2.1.0",
     "typescript": "^4.3.5",

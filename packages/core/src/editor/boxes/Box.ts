@@ -1,10 +1,12 @@
 import { observable } from "mobx";
-import * as uuid from "uuid";
+// import * as uuid from "uuid";
 
 import { PiElement } from "../../language/PiModel";
 import { PiLogger } from "../../util/PiLogging";
+import { PiUtils } from "../../util/PiUtils";
 
 const LOGGER = new PiLogger("Box"); // .mute();
+let id = 0;
 
 export abstract class Box {
     $id: string;
@@ -27,7 +29,7 @@ export abstract class Box {
         // ProUtil.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
-        this.$id = uuid.v4();
+        this.$id = PiUtils.ID(); //uuid.v4();
     }
 
     get id(): string {

@@ -2,6 +2,7 @@
     import {
         AliasBox, ARROW_DOWN, ARROW_UP, BehaviorExecutionResult,
         DELETE,
+        AbstractChoiceBox,
         ENTER, ESCAPE,
         EVENT_LOG, executeBehavior,
         isAliasBox, isMetaKey,
@@ -11,7 +12,6 @@
         PiUtils,SPACEBAR, TAB, toPiKey
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
-    import { AbstractChoiceBox } from "@projectit/core/dist/editor/boxes/AbstractChoiceBox";
     import { autorun } from "mobx";
     import { afterUpdate, onMount } from "svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
