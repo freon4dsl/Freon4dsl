@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-const constFile = __dirname + "/styles/styles.ts.template";
+const constFile = __dirname + "/styles.ts.template";
 
 export class StylesTemplate {
 
