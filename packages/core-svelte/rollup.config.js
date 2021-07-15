@@ -4,8 +4,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
-import css from 'rollup-plugin-css-only';
+// import css from 'rollup-plugin-css-only';
 import pkg from './package.json';
+import autoExternal from 'rollup-plugin-auto-external';
 
 // const production = !process.env.ROLLUP_WATCH;
 const production = false;
@@ -21,12 +22,20 @@ export default {
 			file: pkg.module,
 			format: 'es',
 			sourcemap: !production,
+			globals: {
+				'@projectit/core': '@projectit/core',
+				'mobx': 'mobx'
+			}
 		},
 		{
 			file: pkg.main,
 			format: 'umd',
 			name,
 			sourcemap: !production,
+			globals: {
+				'@projectit/core': '@projectit/core',
+				'mobx': 'mobx'
+			}
 		}
 	],
 	plugins: [
@@ -50,8 +59,9 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte', '@projectit/core']
 		}),
+		autoExternal(),
 		commonjs(),
 		typescript({
 			sourceMap: !production,

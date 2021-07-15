@@ -11,20 +11,15 @@
   },
   "scripts": {
     "tutorial": "bash ../../scripts/projectit-dev.sh all -d src/tutorial-language/defs -o src/tutorial-language",
-    "build":    "yarn run tutorial && tsc",
+    "build": "yarn run tutorial && tsc",
     "build-site": "jekyll build && bash fix-jekyll-lf.sh && cp .nojekyll ../../docs"
   },
-  "devDependencies": {
-    "ts-loader": "^6.2.0",
-    "ts-node": "^8.4.1",
-    "typescript": "^3.8.3"
-  },
   "dependencies": {
-    "@projectit/core": "^0.1.1",
-    "@projectit/meta": "^0.1.1",
-    "@types/lodash": "4.14.73",
+    "@projectit/core": "0.1.1",
+    "@projectit/meta": "0.1.1",
     "@types/history": "^4.7.5",
+    "@types/lodash": "4.14.73",
     "global": "^4.4.0",
-    "mobx": "^5.14.0"
+    "mobx": "^5.15.4"
   }
 }

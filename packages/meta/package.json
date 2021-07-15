@@ -38,17 +38,9 @@
     "test": "jest",
     "build-release": "yarn build && yarn copy-templates && yarn copy-validtemplates"
   },
-  "devDependencies": {
-    "@types/pegjs": "^0.10.1",
-    "pegjs": "^0.10.0",
-    "ts-pegjs": "^0.2.6",
-    "prettier": "^2.0.4",
-    "typescript": "^3.8.3"
-  },
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",
     "@types/lodash": "4.14.73",
-    "axios": "0.18.1",
     "global": "^4.4.0",
     "pegjs": "^0.10.0"
   },

@@ -2,40 +2,22 @@
   "name": "@projectit/playground",
   "version": "0.1.1",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "build": "yarn example && yarn build-app",
+    "build": "yarn example && tsc",
     "build-app": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
     "install-local": "yarn install --registry http://localhost:4873",
     "clean": "rm src/example/*/*/*.js && rm src/example/*/*/*.js.map",
-    "example": 	    "bash ../../scripts/projectit-dev.sh all -d src/example/defs -o src/example"
-  },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
-    "@rollup/plugin-typescript": "^8.0.0",
-    "@tsconfig/svelte": "^1.0.0",
-    "@types/lodash": "4.14.73",
-    "lodash": "^4.17.21",
-    "rollup": "^2.3.4",
-    "rollup-plugin-css-only": "^3.1.0",
-    "rollup-plugin-livereload": "^2.0.0",
-    "rollup-plugin-svelte": "^7.0.0",
-    "rollup-plugin-terser": "^7.0.0",
-    "svelte": "^3.0.0",
-    "svelte-check": "^1.0.0",
-    "svelte-mui": "^0.3.3-7",
-    "svelte-preprocess": "^4.0.0",
-    "tslib": "^2.0.0",
-    "typescript": "4.1.6"
+    "example": "bash ../../scripts/projectit-dev.sh all -d src/example/defs -o src/example"
   },
   "dependencies": {
-    "@types/node": "^14.14.31",
-    "@projectit/core": "^0.1.1",
+    "@projectit/core": "0.1.1",
     "@projectit/core-svelte": "0.1.1",
-    "@projectit/server": "^0.1.0",
+    "@projectit/server": "0.1.1",
+    "@types/node": "^14.14.31",
     "pegjs": "0.10.0",
     "sirv-cli": "^1.0.0"
   }
