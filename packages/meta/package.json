@@ -40,8 +40,6 @@
   },
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",
-    "@types/lodash": "4.14.73",
-    "global": "^4.4.0",
     "pegjs": "^0.10.0"
   },
   "publishConfig": {
