@@ -20,7 +20,7 @@
     let LOGGER = new PiLogger("SelectableComponent").mute();
     let isSelected: boolean = false;
     let className: string;
-    let element: HTMLDivElement;
+    let element: HTMLDivElement = null;
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("SelectableComponent.onClick:n "+ event);
@@ -38,6 +38,9 @@
     afterUpdate ( async () => {
         LOGGER.log("!!!!! SelectableComponent.afterupdate, box="+ box);
         // await tick();
+        if(element === null){
+            return;
+        }
         const rect: ClientRect = element.getBoundingClientRect();
         if(box !== null){
             box.actualX = rect.left;

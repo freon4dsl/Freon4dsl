@@ -7,8 +7,6 @@
     <br>
     <button name="name change" on:click={update}>name change</button>
     <button on:click={addEntity}>add entity</button>
-    <button on:click={delEntity}>delete entity</button>
-    <button on:click={addAttribute}>add attribute</button>
     <br/>
     Aantal: {kids}
     <DropdownComponent
@@ -66,22 +64,6 @@
             console.log("AddEntity " + ent.name);
         })();
     };
-    const addAttribute = () => {
-        // Inside action or multiple updates will be triggered by mobx.
-        action(() => {
-            // const att = SvelteAttribute.create({ name: "Attribute " + x++ })
-            // model.modelUnits[0].entities[0].attributes.push(att);
-            console.log("addAttribute ");
-        })();
-    };
-    const delEntity = () => {
-        action(() => {
-            // model.modelUnits[0].entities.splice(1, 1);
-            // console.log("delete [" + model.modelUnits[0].entities.length + "]");
-            console.log("delEntity called");
-        })();
-    };
-
     const selected = (event: CustomEvent) => {
         console.log("ExmpleApp.selected " + event.detail.label);
     }
