@@ -40,7 +40,8 @@
   },
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",
-    "pegjs": "^0.10.0"
+    "pegjs": "^0.10.0",
+    "tslib": "^2.3.0"
   },
   "publishConfig": {
     "access": "public"

@@ -17,6 +17,7 @@
   "dependencies": {
     "@projectit/core": "0.1.1",
     "@projectit/meta": "0.1.1",
-    "mobx": "^5.15.4"
+    "mobx": "^5.15.4",
+    "tslib": "^2.3.0"
   }
 }
