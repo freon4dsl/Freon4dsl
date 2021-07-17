@@ -26,11 +26,9 @@
     "republish-local": "yarn unpublish-local && yarn publish-local"
   },
   "dependencies": {
-    "csstype": "3.0.8",
     "lodash": "^4.17.21",
     "mobx": "5.15.4",
     "reflect-metadata": "^0.1.13",
-    "typestyle": "2.1.0"
   },
   "publishConfig": {
     "access": "public"
