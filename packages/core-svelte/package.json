@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@projectit/core": "0.1.1",
+    "click-outside": "1.0.4",
+    "svelte": "^3.38.3",
     "mobx": "5.15.4"
   }
 }
