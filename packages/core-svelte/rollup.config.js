@@ -61,7 +61,7 @@ export default {
 			browser: true,
 			dedupe: ['svelte', '@projectit/core']
 		}),
-		autoExternal(),
+		autoExternal(), /* plugin to automatically exclude package.json dependencies and peerDependencies from your bundle. */
 		commonjs(),
 		typescript({
 			sourceMap: !production,
