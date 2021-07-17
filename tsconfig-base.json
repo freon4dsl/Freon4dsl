@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@projectit/core/*": [
+        "packages/core/src/*"
+      ],
+      "@projectit/core-svelte/*": [
+        "packages/core-svelte/src/*"
+      ],
+      "@projectit/meta/*": [
+        "packages/meta/src/*"
+      ],
+      "@projectit/playground/*": [
+        "packages/playground/src/*"
+      ],
+      "@projectit/server/*": [
+        "packages/server/src/*"
+      ]
+    }
+  }
+}
