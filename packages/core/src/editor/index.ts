@@ -1,9 +1,7 @@
-export * from "./IPiEditor";
-export * from "./InternalBehavior";
-export * from "./OrderedList";
-export * from "./PiAction";
-export * from "./PiCompositeProjection";
-export * from "./PiProjection";
-export * from "./PiEditor";
-export * from "./boxes";
-export * from "./PiStyle";
+/**
+ * This index deploys the pattern from Michael Weststrate
+ * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
+ * in order to avoid problem with circular imports.
+ */
+
+export * from "./internal";

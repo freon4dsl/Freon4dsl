@@ -1,10 +1,8 @@
 import { observable } from "mobx";
-import { PiCaretPosition } from "../../util/BehaviorUtils";
-import { PiCaret } from "../../util/BehaviorUtils";
+import { PiCaretPosition, PiCaret, PiUtils } from "../../util";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
-import { PiUtils } from "../../util/PiUtils";
 
 export enum KeyPressAction {
     OK,

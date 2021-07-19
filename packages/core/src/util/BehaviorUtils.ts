@@ -1,8 +1,5 @@
-import { LEFT_MOST } from "../";
-import { isRegExp, isString } from "../editor/PiAction";
-import { PiLogger } from "./PiLogging";
-import { Box } from "../editor/boxes/Box";
-import { IPiEditor } from "../editor/IPiEditor";
+import { isRegExp, isString, Box, PiEditor } from "../editor";
+import { PiLogger } from "./internal";
 
 const LOGGER = new PiLogger("BehaviorUtils"); // .mute();
 
@@ -43,10 +40,10 @@ export enum BehaviorExecutionResult {
  * Matching on full text only.
  * @param {Box} box
  * @param {string} text
- * @param {IPiEditor} editor
+ * @param {PiEditor} editor
  * @returns {boolean}
  */
-export async function executeBehavior(box: Box, text: string, editor: IPiEditor): Promise<BehaviorExecutionResult> {
+export async function executeBehavior(box: Box, text: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
     let partialMatch: boolean = false;
 
     for (const a of editor.behaviors) {

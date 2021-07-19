@@ -1,5 +1,5 @@
-import { Box } from "./boxes";
-import { PiElement } from "../language/PiModel";
+import { Box } from "./internal";
+import { PiElement } from "../language";
 
 /**
  * Interface for the projection.

@@ -1,4 +1,4 @@
-import { PiElement } from "../language/index";
+import { PiElement } from "../language";
 
 // tag::reader-interface[]
 export interface PiReader {

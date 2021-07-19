@@ -1,8 +1,8 @@
 import { observable } from "mobx";
 
-import { Box } from "./Box";
-import { PiUtils } from "../../util/PiUtils";
-import { PiElement } from "../../language/PiModel";
+import { Box } from "./internal";
+import { PiUtils } from "../../util";
+import { PiElement } from "../../language";
 
 export class LabelBox extends Box {
     readonly kind = "LabelBox";

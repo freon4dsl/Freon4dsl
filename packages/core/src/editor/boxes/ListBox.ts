@@ -1,12 +1,8 @@
 import { observable } from "mobx";
 
-import { NBSP } from "../../util/PiUtils";
-import { createKeyboardShortcutForList } from "../../util/ListBoxUtil";
-import { Box } from "./Box";
-import { AliasBox } from "./AliasBox";
-import { IPiEditor } from "../IPiEditor";
-import { PiElement } from "../../language/PiModel";
-import { PiUtils } from "../../util/PiUtils";
+import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
+import { Box, AliasBox, PiEditor } from "../internal";
+import { PiElement } from "../../language";
 
 enum Direction {
     HORIZONTAL = "Horizontal",
@@ -106,7 +102,7 @@ export class VerticalPiElementListBox extends VerticalListBox {
     insertElement: () => PiElement;
     listPropertyName: string;
     list: PiElement[];
-    editor: IPiEditor;
+    editor: PiEditor;
     roleToSelectAfterCreation: string;
 
     constructor(
@@ -115,7 +111,7 @@ export class VerticalPiElementListBox extends VerticalListBox {
         list: PiElement[],
         listPropertyName: string,
         builder: () => PiElement,
-        editor: IPiEditor,
+        editor: PiEditor,
         initializer?: Partial<VerticalPiElementListBox>
     ) {
         super(element, role, [], initializer);

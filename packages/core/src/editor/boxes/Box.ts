@@ -1,9 +1,7 @@
 import { observable } from "mobx";
-// import * as uuid from "uuid";
 
-import { PiElement } from "../../language/PiModel";
-import { PiLogger } from "../../util/PiLogging";
-import { PiUtils } from "../../util/PiUtils";
+import { PiElement } from "../../language";
+import { PiLogger, PiUtils } from "../../util";
 
 const LOGGER = new PiLogger("Box"); // .mute();
 

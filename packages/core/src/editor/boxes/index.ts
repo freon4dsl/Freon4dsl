@@ -1,12 +1,7 @@
-export * from "./Box";
-export * from "./LabelBox";
-export * from "./ListBox";
-export * from "./TextBox";
-export * from "./AbstractChoiceBox";
-export * from "./AliasBox";
-export * from "./SelectBox";
-export * from "./GridBox";
-export * from "./SvgBox";
-export * from "./SelectOption";
-export * from "./IndentBox";
-export * from "./OptionalBox";
+/**
+ * This index deploys the pattern from Michael Weststrate
+ * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
+ * in order to avoid problem with circular imports.
+ */
+
+export * from "./internal";

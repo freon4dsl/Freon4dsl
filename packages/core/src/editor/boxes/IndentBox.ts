@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
 /**
  * Box to indent another box with parameter "indent".

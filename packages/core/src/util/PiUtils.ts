@@ -1,10 +1,9 @@
 import { action } from "mobx";
-import { PiLogger } from "./PiLogging";
-import { Box } from "../editor/boxes/Box";
-import { isPiExpression } from "../language/PiModel";
-import { PiKey } from "../util/Keys";
-import { PiContainerDescriptor, PiElement, PiExpression } from "../language/PiModel";
-import { IPiEditor } from "../editor/IPiEditor";
+import { PiLogger } from "./internal";
+// the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
+import { PiKey } from "./Keys";
+import { Box, PiEditor } from "../editor";
+import { PiContainerDescriptor, PiElement, PiExpression, isPiExpression } from "../language";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;
@@ -45,7 +44,7 @@ export class PiUtils {
     }
 
     @action
-    static setContainer(exp: PiElement, piContainer: PiContainerDescriptor | null, editor: IPiEditor): void {
+    static setContainer(exp: PiElement, piContainer: PiContainerDescriptor | null, editor: PiEditor): void {
         if (!!piContainer) {
             if (piContainer.propertyIndex === undefined) {
                 piContainer.container[piContainer.propertyName] = exp;
@@ -58,7 +57,7 @@ export class PiUtils {
     }
 
     @action
-    static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: IPiEditor) {
+    static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: PiEditor) {
         PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a ProExpression, but it isn't");
         PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a ProExpression, but it isn't");
         PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
@@ -73,7 +72,7 @@ export class PiUtils {
      * @param box
      * @param editor
      */
-    static async handleKeyboardShortcut(piKey: PiKey, box: Box, editor: IPiEditor): Promise<boolean> {
+    static async handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): Promise<boolean> {
         for (const act of editor.keyboardActions) {
             // LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
             if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {

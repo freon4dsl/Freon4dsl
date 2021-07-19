@@ -1,8 +1,8 @@
 import { observable } from "mobx";
 
-import { Box } from "./Box";
-import { PiElement } from "../../language/PiModel";
-import { PiUtils } from "../../util/PiUtils";
+import { Box } from "./internal";
+import { PiElement } from "../../language";
+import { PiUtils } from "../../util";
 
 export type GridCell = {
     row: number;

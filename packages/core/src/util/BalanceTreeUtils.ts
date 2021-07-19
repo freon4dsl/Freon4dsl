@@ -1,10 +1,7 @@
 import { action } from "mobx";
-import { isPiExpression } from "../language/PiModel";
-import { PiLogger } from "./PiLogging";
-import { Box } from "../editor/boxes/Box";
-import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression } from "../language/PiModel";
-import { IPiEditor } from "../editor/IPiEditor";
-import { PiUtils } from "./PiUtils";
+import { PiLogger, PiUtils } from "./internal";
+import { Box, PiEditor } from "../editor";
+import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression, isPiExpression } from "../language";
 
 // reserved role names for expressions, use with care.
 export const BEFORE_BINARY_OPERATOR = "binary-pre";
@@ -61,7 +58,7 @@ class BTree {
     }
 
     @action
-    setRightExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: IPiEditor) {
+    setRightExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
         const right = exp.piRight();
         exp.piSetRight(newExp);
         newExp.piSetRight(right);
@@ -69,7 +66,7 @@ class BTree {
     }
 
     @action
-    setLeftExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: IPiEditor) {
+    setLeftExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
         const left = exp.piLeft();
         exp.piSetLeft(newExp);
         newExp.piSetLeft(left);
@@ -77,7 +74,7 @@ class BTree {
     }
 
     @action
-    insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: IPiEditor): Selected | null {
+    insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: PiEditor): Selected | null {
         LOGGER.log("insertBinaryExpression for " + box.element);
         let selectedElement: Selected | null = null;
         PiUtils.CHECK(isPiExpression(box.element), "insertBinaryExpression: current element should be a PiExpression, but it isn't");
@@ -128,7 +125,7 @@ class BTree {
      * Balances the tree according to operator precedence.
      * Works when `exp` has just been added to the tree.
      */
-    balanceTree(exp: PiBinaryExpression, editor: IPiEditor) {
+    balanceTree(exp: PiBinaryExpression, editor: PiEditor) {
         const expContainer = exp.piContainer();
         const left = exp.piLeft();
         if (isPiBinaryExpression(left)) {
