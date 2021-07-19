@@ -1,10 +1,10 @@
-import { PiLogger } from "../stubs/PiLogger";
-import { PiNamedElement } from "../stubs/PiModel";
+import { PiLogger } from "@projectit/core";
+import { PiNamedElement } from "@projectit/core";
+import { GenericModelSerializer } from "@projectit/core";
 import axios from "axios";
 import { SERVER_URL } from "../WebappConfiguration";
 // TODO remove interface IModelUnitData
 import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
-import {GenericModelSerializer} from "../stubs/GenericModelSerializer";
 
 // needed to show errors to the user
 import {showError, errorMessage, severity, severityType} from "../menu-ts-files/WebappStore";

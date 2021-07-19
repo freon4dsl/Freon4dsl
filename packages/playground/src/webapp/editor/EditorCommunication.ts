@@ -1,10 +1,10 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel } from "../stubs/PiModel";
+import { PiNamedElement, PiModel } from "@projectit/core";
+import { PiLogger } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
-// import { observable } from "mobx";
-import { PiLogger } from "../stubs/PiLogger";
 import { currentModelName, currentUnitName, unitTypes } from "../menu-ts-files/WebappStore";
-import {get} from "svelte/store";
+import { get } from "svelte/store";
+import { editorEnvironment } from "webapp/WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
 
@@ -31,8 +31,7 @@ export class EditorCommunication {
         currentModelName.set(unnamed);
         currentUnitName.set(unnamed);
         // unitTypes are the same for every model in the language
-        // unitTypes.set(editorEnvironment.unitNames);
-        unitTypes.set( ["test1", "test2", "test3"] );
+        unitTypes.set(editorEnvironment.unitNames);
     }
 
     // called from the editor area
@@ -48,8 +47,8 @@ export class EditorCommunication {
     // used from the menubar
     newModel(newName: string) {
         LOGGER.log("new model called: " + newName);
-        // this.currentModel = editorEnvironment.newModel(newName);
-        // this.currentUnit = null;
+        this.currentModel = editorEnvironment.newModel(newName);
+        this.currentUnit = null;
         currentModelName.set(newName);
         this.hasChanges = false;
     }
