@@ -26,25 +26,13 @@
     import {Entity, ExModel} from "../../example/language/gen";
     import {createModel} from "../ExampleModel";
     import {action} from "mobx";
-
-    // const createModel= (): ExModel => {
-    //     console.log("createModel called");
-    //     const result = new ExModel();
-    //     result.name = "My First Svelte Example Model";
-    //     console.log("setting model name");
-    //     currentModelName.set(result.name);
-    //     const e1 = new  Entity();
-    //     e1.name = "SvelteEntity"
-    //     result.entities.push(e1)
-    //     return result;
-    // }
+    import { editorEnvironment } from "../WebappConfiguration";
 
     // added to get real editor view inserted
     console.log("DOING IT");
-    console.log("\n");
     const model: ExModel = createModel();
     console.log("DONE");
-    const env = new ExampleEnvironment();
+    const env = editorEnvironment;
     const editor: PiEditor = env.editor;
     editor.rootElement = model;
 
