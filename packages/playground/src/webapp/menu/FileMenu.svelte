@@ -1,3 +1,37 @@
+
+<!-- first make sure all dialogs and the error message are present -->
+
+<NewModelDialog bind:visible={newModelDialogVisible} modelNames={modelNames}/>
+<OpenModelDialog bind:visible={openModelDialogVisible} modelNames={modelNames}/>
+<NewUnitDialog bind:visible={newUnitDialogVisible} unitNames={unitNames} />
+<OpenUnitDialog bind:visible={openUnitDialogVisible} unitNames={unitNames}/>
+<SaveUnitDialog bind:visible={saveUnitDialogVisible} unitNames={unitNames}/>
+<NameModelDialog bind:visible={nameModelDialogVisible} modelNames={modelNames}/>
+<DeleteUnitDialog bind:visible={deleteUnitDialogVisible}/>
+
+<UserMessage />
+
+<!-- next define the menu -->
+<Menu style="border-radius: 2px;" origin="top left" dy="50px">
+		<span slot="activator" style="margin-right: 0px; display:block;">
+			<Button {...props}  title="File menu">{activatorTitle}</Button>
+		</span>
+    <!--  here the list of menu options should be placed -->
+    {#each menuItems as item (item.id)}
+        <!-- style needs to be added here, not as class -->
+        <Menuitem style="font-size: var(--menuitem-font-size);
+                margin: 4px 10px;
+                padding: 2px;
+                height: 28px;"
+                  on:click={() => handleClick(item.id)}>
+            {item.title}
+        </Menuitem>
+    {:else}
+        <p>There are no items to show...</p>
+    {/each}
+</Menu>
+
+
 <script lang="ts">
     import {Button, Menu, Menuitem} from 'svelte-mui';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
@@ -10,6 +44,8 @@
     import NewModelDialog from "./NewModelDialog.svelte";
     import NewUnitDialog from "./NewUnitDialog.svelte";
     import SaveUnitDialog from "./SaveUnitDialog.svelte";
+    import NameModelDialog from "./NameModelDialog.svelte";
+    import DeleteUnitDialog from "./DeleteUnitDialog.svelte";
     import {EditorCommunication, unnamed} from "../editor/EditorCommunication";
 
     // when a menu-item is clicked, this function is executed
@@ -63,7 +99,7 @@
     // let unitTypes: string[];
 
     const newUnit = () => {
-        if (get(currentModelName).length <= 0) {
+        if (!EditorCommunication.getInstance().isModelNamed()) {
             errorMessage.set("Please, select or create a model before creating a new model unit");
             severity.set(severityType.error);
             showError.set(true);
@@ -98,12 +134,24 @@
 
     // elements for save unit menuitem
     let saveUnitDialogVisible: boolean = false;
+    let nameModelDialogVisible: boolean = false;
 
     const saveUnit = () => {
-        console.log("FileMneu.saveUnit: " + get(currentUnitName));
-        // get list of units from server
+        console.log("FileMenu.saveUnit: " + get(currentUnitName));
+        // first check whether the model to which the unit belongs has a name,
+        // units can not be saved if the model has no name.
+        if (!EditorCommunication.getInstance().isModelNamed()) {
+            // get list of models from server
+            ServerCommunication.getInstance().loadModelList((names: string[]) => {
+                // list may be empty => this is the first model to be stored
+                modelNames = names;
+                nameModelDialogVisible = true;
+            });
+        }
+        // get list of units from server, because a new name must not be identical to an existing one
         ServerCommunication.getInstance().loadUnitList(get(currentModelName), (names: string[]) => {
-            if (get(currentUnitName).length <= 0 || get(currentUnitName) === unnamed) {
+            // only show the dialog if the name is empty or unknown
+            if (!EditorCommunication.getInstance().isUnitNamed()) {
                 unitNames = names;
                 saveUnitDialogVisible = true;
             } else {
@@ -116,7 +164,14 @@
     let deleteUnitDialogVisible: boolean = false;
 
     const deleteUnit = () => {
-        EditorCommunication.getInstance().deleteCurrentUnit();
+        if (EditorCommunication.getInstance().isModelNamed() || EditorCommunication.getInstance().isUnitNamed()) {
+            deleteUnitDialogVisible = true;
+        } else {
+            // if list is empty show error message
+            errorMessage.set("Cannot delete an unnamed unit or model");
+            severity.set(severityType.error);
+            showError.set(true);
+        }
     }
 
     // the content of this menu
@@ -134,32 +189,3 @@
     export let props;
 </script>
 
-<!-- first make sure all dialogs and the error message are present -->
-
-<NewModelDialog bind:visible={newModelDialogVisible} modelNames={modelNames}/>
-<OpenModelDialog bind:visible={openModelDialogVisible} modelNames={modelNames}/>
-<NewUnitDialog bind:visible={newUnitDialogVisible} unitNames={unitNames} />
-<OpenUnitDialog bind:visible={openUnitDialogVisible} unitNames={unitNames}/>
-<SaveUnitDialog bind:visible={saveUnitDialogVisible} unitNames={unitNames}/>
-
-<UserMessage />
-
-<!-- next define the menu -->
-<Menu style="border-radius: 2px;" origin="top left" dy="50px">
-		<span slot="activator" style="margin-right: 0px; display:block;">
-			<Button {...props}  title="File menu">{activatorTitle}</Button>
-		</span>
-        <!--  here the list of menu options should be placed -->
-        {#each menuItems as item (item.id)}
-            <!-- style needs to be added here, not as class -->
-            <Menuitem style="font-size: var(--menuitem-font-size);
-                margin: 4px 10px;
-                padding: 2px;
-                height: 28px;"
-                      on:click={() => handleClick(item.id)}>
-                {item.title}
-            </Menuitem>
-        {:else}
-            <p>There are no items to show...</p>
-        {/each}
-</Menu>

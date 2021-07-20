@@ -90,7 +90,7 @@ export class ServerCommunication implements IServerCommunication {
             let result: string[] = [];
             const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${modelName}`);
             // filter out the modelUnitInterfaces
-            if (!!modelUnits) {
+            if (!!modelUnits&& Array.isArray(modelUnits.data)) {
                 result = modelUnits.data.filter( (name: string) => name.indexOf(ModelUnitInterfacePostfix) === -1)
             }
             modelListCallback(result);

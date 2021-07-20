@@ -1,5 +1,23 @@
 <div class="editorArea">
 <!--    tmp to see whether the names are set-->
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
     <h5>Showing unit <i>{unitName}</i> of model <i>{modelName}</i></h5>
 <!--    end tmp-->
     <ProjectItComponent editor={editorEnvironment.editor}/>
@@ -13,7 +31,7 @@
     import { EditorCommunication } from "../editor/EditorCommunication";
 
     // initialize content in the ProjectItComponent
-    EditorCommunication.getInstance().newModel("<unnamedModel>");
+    EditorCommunication.getInstance().newModel("<unnamed>");
 
     // tmp to see whether the names are set
     let modelName: string;
