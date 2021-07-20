@@ -1,4 +1,4 @@
-<!-- this component shows message to the user -->
+<!-- this component shows a message to the user in a snackbar at the top of the page -->
 <!-- the content, severity, and whether or not the message is shown is triggered by the elements in WebappStore -->
 
 <Snackbar bind:visible bg={bgs[colorpicker]} {timeout}>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
     import { Snackbar, Button } from 'svelte-mui';
-    import {showError, errorMessage, severity} from "../menu-ts-files/WebappStore.ts";
+    import {showError, errorMessage, severity} from "../menu-ts-files/WebappStore";
     import {get} from "svelte/store";
 
     let visible: boolean;

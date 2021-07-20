@@ -1,11 +1,7 @@
-import { BehaviorExecutionResult, executeBehavior } from "../../util/BehaviorUtils";
-import { MatchUtil } from "../../util/MatchUtil";
-import { triggerToString } from "../PiAction";
-import { PiEditor } from "../PiEditor";
-import { Box } from "./Box";
-import { AbstractChoiceBox } from "./AbstractChoiceBox";
-import { PiElement } from "../../language/PiModel";
-import { SelectOption } from "./SelectOption";
+import { BehaviorExecutionResult, executeBehavior, MatchUtil } from "../../util";
+import { triggerToString, PiEditor } from "../internal";
+import { Box, AbstractChoiceBox, SelectOption } from "./internal";
+import { PiElement } from "../../language";
 
 export class AliasBox extends AbstractChoiceBox {
     readonly kind = "AliasBox";
@@ -39,5 +35,6 @@ export class AliasBox extends AbstractChoiceBox {
 }
 
 export function isAliasBox(b: Box): b is AliasBox {
-    return b instanceof AliasBox;
+    return b.kind === "AliasBox"; //  b instanceof AliasBox;
 }
+

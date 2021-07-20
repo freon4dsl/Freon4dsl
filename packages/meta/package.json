@@ -30,7 +30,7 @@
     "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc && yarn copy-templates && yarn copy-validtemplates",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "build2": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc",
-    "copy-templates": "cp src/editordef/generator/templates/styles/* ./dist/editordef/generator/templates/styles",
+    "copy-templates": "cp src/editordef/generator/templates/styles.ts.template ./dist/editordef/generator/templates/styles.ts.template",
     "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
@@ -38,19 +38,10 @@
     "test": "jest",
     "build-release": "yarn build && yarn copy-templates && yarn copy-validtemplates"
   },
-  "devDependencies": {
-    "@types/pegjs": "^0.10.1",
-    "pegjs": "^0.10.0",
-    "ts-pegjs": "^0.2.6",
-    "prettier": "^2.0.4",
-    "typescript": "^3.8.3"
-  },
   "dependencies": {
     "@rushstack/ts-command-line": "4.7.8",
-    "@types/lodash": "4.14.73",
-    "axios": "0.18.1",
-    "global": "^4.4.0",
-    "pegjs": "^0.10.0"
+    "pegjs": "^0.10.0",
+    "tslib": "^2.3.0"
   },
   "publishConfig": {
     "access": "public"

@@ -2,6 +2,7 @@
     import {
         AliasBox, ARROW_DOWN, ARROW_UP, BehaviorExecutionResult,
         DELETE,
+        AbstractChoiceBox,
         ENTER, ESCAPE,
         EVENT_LOG, executeBehavior,
         isAliasBox, isMetaKey,
@@ -11,7 +12,6 @@
         PiUtils,SPACEBAR, TAB, toPiKey
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
-    import { AbstractChoiceBox } from "@projectit/core/dist/editor/boxes/AbstractChoiceBox";
     import { autorun } from "mobx";
     import { afterUpdate, onMount } from "svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
@@ -36,7 +36,8 @@
     //     aliasBox.textBox.placeHolder = event.detail.label
     //     open = false;
     // }
-    const setFocus = (): void => {
+    const setFocus = async (): Promise<void> => {
+        console.log("AliasComponent set focus " + aliasBox.role);
         LOGGER.log("AliasComponent set focus " + aliasBox.role);
         textcomponent.focus();
         // this.startEditing();
@@ -45,7 +46,7 @@
     onMount( () => {
         LOGGER.log("AliasComponent.onMount for role [" + aliasBox.role + "]");
         aliasBox.textBox.setFocus = setFocus;
-        aliasBox.setFocus = focus;
+        aliasBox.setFocus = setFocus;
         // textBox.setCaret = setCaret;
         // caretPosition = textBox.caretPosition;
     });

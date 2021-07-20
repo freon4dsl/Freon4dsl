@@ -1,13 +1,17 @@
-import { PiUtils, wait } from "./PiUtils";
+// the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import { MetaKey, PiKey } from "./Keys";
-import { KeyboardShortcutBehavior } from "../editor/PiAction";
-import { AliasBox } from "../editor/boxes/AliasBox";
-import { Box } from "../editor/boxes/Box";
-import { HorizontalListBox, VerticalListBox } from "../editor/boxes/ListBox";
-import { IPiEditor } from "../editor/IPiEditor";
-import { PiElement } from "../language/PiModel";
-import { PiLogger } from "./PiLogging";
 import * as Keys from "./Keys";
+import { PiUtils, wait, PiLogger } from "./internal";
+import {
+    AliasBox,
+    Box,
+    HorizontalListBox,
+    VerticalListBox,
+    PiEditor,
+    KeyboardShortcutBehavior
+} from "../editor";
+import { PiElement } from "../language";
+
 
 const LOGGER = new PiLogger("ListBoxUtil");
 
@@ -89,8 +93,8 @@ export function createVerticalListBox<E extends PiElement>(
     role: string,
     list: E[],
     placeholderRole: string,
-    elementCreator: (box: Box, editor: IPiEditor) => E,
-    editor: IPiEditor
+    elementCreator: (box: Box, editor: PiEditor) => E,
+    editor: PiEditor
 ): Box {
     LOGGER.log("createVerticalListBox");
     const result = new VerticalListBox(element, role, []);
@@ -115,13 +119,13 @@ export function createVerticalListBox<E extends PiElement>(
  */
 export function createKeyboardShortcutForList<ELEMENT_TYPE extends PiElement>(
     collectionRole: string,
-    elementCreator: (box: Box, editor: IPiEditor) => ELEMENT_TYPE,
+    elementCreator: (box: Box, editor: PiEditor) => ELEMENT_TYPE,
     roleToSelect: string
 ): KeyboardShortcutBehavior {
     const listKeyboardShortcut: KeyboardShortcutBehavior = {
         trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
         activeInBoxRoles: ["list-for-" + collectionRole],
-        action: async (box: Box, key: PiKey, editor: IPiEditor): Promise<PiElement> => {
+        action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
             LOGGER.log("createKeyboardShortcutForList: Action: list-for-" + collectionRole);
             const element = box.element;
             const proc = element.piContainer();

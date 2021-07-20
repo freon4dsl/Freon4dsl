@@ -1,10 +1,8 @@
 import { observable } from "mobx";
-import { PiCaretPosition } from "../../util/BehaviorUtils";
-import { PiCaret } from "../../util/BehaviorUtils";
+import { PiCaretPosition, PiCaret, PiUtils } from "../../util";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
-import { PiUtils } from "../../util/PiUtils";
 
 export enum KeyPressAction {
     OK,
@@ -81,5 +79,5 @@ export class TextBox extends Box {
 }
 
 export function isTextBox(b: Box): b is TextBox {
-    return b instanceof TextBox;
+    return b.kind === "TextBox"; // b instanceof TextBox;
 }

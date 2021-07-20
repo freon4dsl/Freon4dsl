@@ -1,4 +1,5 @@
-import { PiBehavior, PiTriggerType } from "../editor/PiAction";
+import { PiBehavior, PiTriggerType } from "../editor";
+// the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
 import { PiKey } from "./Keys";
 import { remove, union } from "lodash";
 

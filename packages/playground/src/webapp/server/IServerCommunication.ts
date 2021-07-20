@@ -1,6 +1,8 @@
-import { PiElement } from "../stubs/PiModel";
+
 
 // TODO rethink these interfaces
+import { PiElement } from "@projectit/core";
+
 export interface IModelUnitData {
     // id: number;
     unitName: string;

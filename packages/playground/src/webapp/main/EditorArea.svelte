@@ -1,95 +1,44 @@
 <div class="editorArea">
-    <h4>Showing unit <i>{unitName}</i> of model <i>{modelName}</i></h4>
-<!--    <img src ="/img/editor-screenshot-april-6-2020.png" alt ="Editor Content">-->
-    <ProjectItComponent  editor={editor}/>
-    <LabelComponent editor={editor}/>
-<!--    <OptionalComponent editor={editor}/> TODO this one makes the size of the view too small to show an editor-->
-    <br>
-    <button name="name change" on:click={update}>name change</button>
-    <button on:click={addEntity}>add entity</button>
-    <button on:click={delEntity}>delete entity</button>
-    <button on:click={addAttribute}>add attribute</button>
-    <br/>
-    Aantal: {kids}
-    <DropdownComponent
-            getOptions={() => {return [{id: "1", label:"one"}, {id: "2", label:"two"}, {id: "3", label: "drie"}]}}
-            on:pi-ItemSelected={selected}
-            selectedOptionId="2"
-            open={true}
-    />
+<!--    tmp to see whether the names are set-->
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <div>
+        This is a large div to make room for the menus.
+    </div>
+    <h5>Showing unit <i>{unitName}</i> of model <i>{modelName}</i></h5>
+<!--    end tmp-->
+    <ProjectItComponent editor={editorEnvironment.editor}/>
 </div>
 
 <script lang="ts">
-    import { ProjectItComponent, DropdownComponent, LabelComponent, OptionalComponent } from "@projectit/core-svelte";
+    import { ProjectItComponent } from "@projectit/core-svelte";
     import { currentUnitName, currentModelName } from "../menu-ts-files/WebappStore";
-    import {get} from 'svelte/store';
-    import {ExampleEnvironment} from "../../example/environment/gen/ExampleEnvironment";
-    import {PiEditor} from "@projectit/core";
-    import {Entity, ExModel} from "../../example/language/gen";
-    import {createModel} from "../ExampleModel";
-    import {action} from "mobx";
+    import { get } from 'svelte/store';
+    import { editorEnvironment } from "../WebappConfiguration";
+    import { EditorCommunication } from "../editor/EditorCommunication";
 
-    // const createModel= (): ExModel => {
-    //     console.log("createModel called");
-    //     const result = new ExModel();
-    //     result.name = "My First Svelte Example Model";
-    //     console.log("setting model name");
-    //     currentModelName.set(result.name);
-    //     const e1 = new  Entity();
-    //     e1.name = "SvelteEntity"
-    //     result.entities.push(e1)
-    //     return result;
-    // }
+    // initialize content in the ProjectItComponent
+    EditorCommunication.getInstance().newModel("<unnamed>");
 
-    // added to get real editor view inserted
-    console.log("DOING IT");
-    console.log("\n");
-    const model: ExModel = createModel();
-    console.log("DONE");
-    const env = new ExampleEnvironment();
-    const editor: PiEditor = env.editor;
-    editor.rootElement = model;
-
-    let x = 1;
-    let kids: number = 122;
-    const update = () => {
-        console.log("Changing model name")
-        x++;
-        model.name = "+" + model.name + "_!";
-    };
-    const addEntity = () => {
-        // Inside action or multiple updates will be triggered by mobx.
-        action(() => {
-            const ent = Entity.create({ name: "Entity next " + x })
-            model.entities.push(ent);
-            model.name = model.name + "_!";
-            console.log("AddEntity " + ent.name);
-        })();
-    };
-    const addAttribute = () => {
-        // Inside action or multiple updates will be triggered by mobx.
-        action(() => {
-            // const att = SvelteAttribute.create({ name: "Attribute " + x++ })
-            // model.modelUnits[0].entities[0].attributes.push(att);
-            console.log("addAttribute ");
-        })();
-    };
-    const delEntity = () => {
-        action(() => {
-            // model.modelUnits[0].entities.splice(1, 1);
-            // console.log("delete [" + model.modelUnits[0].entities.length + "]");
-            console.log("delEntity called");
-        })();
-    };
-
-    const selected = (event: CustomEvent) => {
-        console.log("ExmpleApp.selected " + event.detail.label);
-    }
-    //
+    // tmp to see whether the names are set
     let modelName: string;
     let unitName: string;
     currentModelName.subscribe(() => {modelName = get(currentModelName)})
     currentUnitName.subscribe(() => {unitName = get(currentUnitName)})
+    // end tmp
 
 </script>
 <style>

@@ -1,12 +1,8 @@
-import { PiElement } from "../../language/PiModel";
-import { BehaviorExecutionResult, PiCaret } from "../../util/BehaviorUtils";
-import { PiKey } from "../../util/Keys";
-import { initializeObject } from "../../util/PiUtils";
-import { PiEditor } from "../PiEditor";
-import { Box } from "./Box";
-import { ChoiceTextHelper } from "./ChoiceTextHelper";
-import { SelectOption } from "./SelectOption";
-import { TextBox } from "./TextBox";
+import { PiElement } from "../../language";
+import { BehaviorExecutionResult, PiCaret, PiKey } from "../../util";
+import { initializeObject } from "../../util";
+import { PiEditor } from "../internal";
+import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
 export abstract class AbstractChoiceBox extends Box {
     kind = "AbstractChoiceBox";

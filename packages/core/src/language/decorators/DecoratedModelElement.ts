@@ -17,7 +17,7 @@ export interface DecoratedModelElement {
  * the above interface and be able to use the decorators.
  */
 @model
-export class MobxModelElementImpl implements DecoratedModelElement {
+export class    MobxModelElementImpl implements DecoratedModelElement {
     @observable container: PiElement | null;
     @observable propertyName: string;
     @observable propertyIndex: number | undefined;

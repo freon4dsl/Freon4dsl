@@ -1,12 +1,10 @@
 <Dialog width="290" bind:visible>
-	<div slot="title">Save unit:</div>
-
-	<p>Unit is unnamed. Please, enter a name.</p>
+	<div slot="title" class="title">Give name to model</div>
 
 	<Textfield
-			name="unitname"
+			name="modelname"
 			autocomplete="off"
-			bind:value={newName}
+			bind:value={modelName}
 			bind:error="{localErrorMessage}"
 			outlined="true"
 	/>
@@ -17,20 +15,19 @@
 	</div>
 
 	<div slot="footer" class="footer">
-		Under what name should the unit be saved?
+		Please enter a name for the model
 	</div>
 </Dialog>
 
 <script lang="ts">
-	import {Button, Textfield, Dialog} from 'svelte-mui';
-	import {currentUnitName} from "../menu-ts-files/WebappStore";
+	import {Button, Dialog, Textfield} from 'svelte-mui';
+	import {currentModelName} from "../menu-ts-files/WebappStore";
 	import {get} from 'svelte/store';
 	import {EditorCommunication} from "../editor/EditorCommunication";
 
 	export let visible: boolean = false;
-	// get the unit names because all unit names in a model must be unique
-	export let unitNames: string[];
-	let newName: string;
+	export let modelNames: string[];
+	let modelName: string;
 	let localErrorMessage: string = "";
 
 	let props = {
@@ -38,25 +35,28 @@
 		ripple: true,
 		disabled: false,
 	};
+
+	// TODO dialog must also respond to enter key: submit
+
 	const handleCancel = () => {
-		console.log("Cancel called, unit called: " + newName);
+		// reset all variables
+		modelName = "";
 		localErrorMessage = "";
-		newName = "";
 		visible = false;
 	}
 
 	const handleSubmit = () => {
-		if (unitNames.includes(newName)) {
-			localErrorMessage = "Unit with this name already exists";
-		} else if (!newName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
+		if (modelNames.includes(modelName)) {
+			localErrorMessage = "Model with this name already exists";
+		} else if (!modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
 			// TODO this message is too long, must use wrap
 			localErrorMessage = "Name may contain only characters and numbers, and must start with a character.";
 		} else {
-			EditorCommunication.getInstance().setUnitName(newName);
-			EditorCommunication.getInstance().saveCurrentUnit();
-			console.log("Submit called, unit name: " + get(currentUnitName));
+			EditorCommunication.getInstance().setModelName(modelName);
+			console.log("NameModelDialog::submit called, model is named: " + get(currentModelName));
+			// reset all variables
+			modelName = "";
 			localErrorMessage = "";
-			newName = "";
 			visible = false;
 		}
 	}
@@ -67,9 +67,9 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
+		color: var(--pi-darkblue);
 	}
-	/*.footer a {*/
-	/*	color: #f50057;*/
-	/*	padding-left: 1rem;*/
-	/*}*/
+	.title {
+		background: var(--pi-darkblue);
+	}
 </style>

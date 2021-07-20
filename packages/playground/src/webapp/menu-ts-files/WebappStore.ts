@@ -1,7 +1,7 @@
 import {Writable, writable} from 'svelte/store';
 
 // info about ProjectIt
-export const versionNumber = "0.1.0";
+export const versionNumber = "0.1.1";
 
 // info about the language
 export let unitTypes: Writable<string[]> = writable<string[]>([]);

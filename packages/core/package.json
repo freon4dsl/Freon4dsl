@@ -4,13 +4,14 @@
   "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rollup -c",
     "build-release": "yarn run build",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
@@ -25,10 +26,10 @@
     "republish-local": "yarn unpublish-local && yarn publish-local"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "mobx": "5.15.4",
-    "uuid": "^3.3.2",
-    "csstype": "3.0.8",
-    "typestyle": "2.1.0"
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^2.3.0"
   },
   "publishConfig": {
     "access": "public"

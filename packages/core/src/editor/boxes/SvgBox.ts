@@ -1,8 +1,8 @@
 import { observable } from "mobx";
 
-import { PiUtils } from "../../util/PiUtils";
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
+import { PiUtils } from "../../util";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
 export class SvgBox extends Box {
     readonly kind = "SvgBox";

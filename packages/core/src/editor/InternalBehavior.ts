@@ -1,13 +1,21 @@
 import { action } from "mobx";
 
-import { PiCustomBehavior, PiBehavior, PiTriggerType, PiBinaryExpressionCreator, PiExpressionCreator } from "./PiAction";
-import { isPiExpression, PiElement, PiExpression, PiBinaryExpression } from "../language/PiModel";
-import { Box } from "./boxes/Box";
-import { IPiEditor } from "./IPiEditor";
-import { PiCaret } from "../util/BehaviorUtils";
-import { BTREE } from "../util/BalanceTreeUtils";
-import { PiLogger } from "../util/PiLogging";
-import { PiUtils } from "../util/PiUtils";
+import {
+    PiCustomBehavior,
+    PiBehavior,
+    PiTriggerType,
+    PiBinaryExpressionCreator,
+    PiExpressionCreator
+} from "./PiAction";
+import {
+    isPiExpression,
+    PiElement,
+    PiExpression,
+    PiBinaryExpression
+} from "../language/PiModel";
+import { Box } from "./internal";
+import { PiEditor } from "./internal";
+import { PiCaret, BTREE, PiLogger, PiUtils } from "../util";
 
 const LOGGER = new PiLogger("InternalBehavior");
 
@@ -36,11 +44,11 @@ export abstract class InternalBehavior implements PiBehavior {
      */
     caretPosition?: PiCaret;
 
-    abstract execute(box: Box, aliasId: string, editor: IPiEditor);
+    abstract execute(box: Box, aliasId: string, editor: PiEditor);
 }
 
 export class InternalBinaryBehavior extends InternalBehavior implements PiBinaryExpressionCreator {
-    expressionBuilder: (box: Box, aliasId: PiTriggerType, editor: IPiEditor) => PiBinaryExpression;
+    expressionBuilder: (box: Box, aliasId: PiTriggerType, editor: PiEditor) => PiBinaryExpression;
 
     constructor(initializer?: Partial<InternalBinaryBehavior>) {
         super();
@@ -48,7 +56,7 @@ export class InternalBinaryBehavior extends InternalBehavior implements PiBinary
     }
 
     @action
-    async execute(box: Box, aliasId: string, editor: IPiEditor) {
+    async execute(box: Box, aliasId: string, editor: PiEditor) {
         LOGGER.info(this, "execute binary expression alias ok");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, aliasId, editor), box, editor);
         await editor.selectElement(selected.element, selected.boxRoleToSelect, this.caretPosition);
@@ -56,7 +64,7 @@ export class InternalBinaryBehavior extends InternalBehavior implements PiBinary
 }
 
 export class InternalExpressionBehavior extends InternalBehavior implements PiExpressionCreator {
-    expressionBuilder: (box: Box, aliasId: PiTriggerType, editor: IPiEditor) => PiExpression;
+    expressionBuilder: (box: Box, aliasId: PiTriggerType, editor: PiEditor) => PiExpression;
 
     constructor(initializer?: Partial<InternalExpressionBehavior>) {
         super();
@@ -64,7 +72,7 @@ export class InternalExpressionBehavior extends InternalBehavior implements PiEx
     }
 
     @action
-    async execute(box: Box, aliasId: string, editor: IPiEditor) {
+    async execute(box: Box, aliasId: string, editor: PiEditor) {
         LOGGER.info(this, "execute expression alias ok");
         const selected = this.expressionBuilder(box, aliasId, editor);
         PiUtils.CHECK(isPiExpression(selected), "execute: expecting new element to be a PiExpression");
@@ -73,7 +81,7 @@ export class InternalExpressionBehavior extends InternalBehavior implements PiEx
 }
 
 export class InternalCustomBehavior extends InternalBehavior implements PiCustomBehavior {
-    action: (box: Box, aliasId: PiTriggerType, editor: IPiEditor) => PiElement | null;
+    action: (box: Box, aliasId: PiTriggerType, editor: PiEditor) => PiElement | null;
 
     constructor(initializer?: Partial<InternalCustomBehavior>) {
         super();
@@ -81,7 +89,7 @@ export class InternalCustomBehavior extends InternalBehavior implements PiCustom
     }
 
     @action
-    async execute(box: Box, aliasId: string, editor: IPiEditor) {
+    async execute(box: Box, aliasId: string, editor: PiEditor) {
         LOGGER.info(this, "execute custom alias ok");
         const selected = this.action(box, aliasId, editor);
         if (selected) {

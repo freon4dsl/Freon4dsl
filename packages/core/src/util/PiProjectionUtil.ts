@@ -1,9 +1,6 @@
-import { Box, SelectBox, SelectOption } from "../editor/boxes";
-import { TextBox } from "../editor/boxes/TextBox";
-import { PiEditor } from "../editor/PiEditor";
-import { PiElement } from "../language/PiModel";
-import { BehaviorExecutionResult } from "./BehaviorUtils";
-import { PiUtils } from "./PiUtils";
+import { Box, SelectBox, SelectOption, TextBox, PiEditor } from "../editor";
+import { PiElement } from "../language";
+import { BehaviorExecutionResult, PiUtils } from "./internal";
 
 export class PiProjectionUtil {
     static textBox(element: PiElement, property: string): TextBox {

@@ -4,7 +4,34 @@
   "compilerOptions": {
     "outDir": "dist",
     "target": "es6",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "declaration": true,
+    "downlevelIteration": true,
+    "declarationMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "dom",
+      "es6",
+      "es2016.array.include"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "newLine": "lf",
+    "noEmit": false,
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": false,
+    "types": [
+      "node",
+      "jest"
+    ]
   },
   "include": [
     "src"

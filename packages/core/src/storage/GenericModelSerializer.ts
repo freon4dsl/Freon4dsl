@@ -1,4 +1,4 @@
-import { PiElement } from "../language/PiModel";
+import { PiElement } from "../language";
 import { Language, Property } from "./Language";
 
 // const MODEL_TYPE = "$typename";

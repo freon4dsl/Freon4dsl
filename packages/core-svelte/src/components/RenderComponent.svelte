@@ -34,7 +34,7 @@
     export let box: Box;
     export let editor: PiEditor;
 
-    const UNKNOWN = new LabelBox(null, "role", "UNKNOWN");
+    const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)));
 
     afterUpdate(() => {
         // console.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");

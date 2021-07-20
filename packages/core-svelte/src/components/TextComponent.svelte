@@ -32,7 +32,7 @@
         return textOnScreen;
     }
 
-    const setFocus = (): void => {
+    const setFocus = async (): Promise<void> => {
         LOGGER.log("TextComponent set focus " + textBox.role);
         element.focus();
         // this.startEditing();
@@ -316,7 +316,7 @@
     }
 
     .text {
-        background-color: lightblue;
+        /*background-color: lightblue;*/
         padding: 3px;
         white-space: normal;
         display: inline-block;

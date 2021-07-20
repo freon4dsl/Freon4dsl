@@ -1,5 +1,37 @@
 <!-- this file contains the code for a list of elements that need to shown in a table -->
 
+<div class="list-viewport">
+    <div class="list">
+        {#each headers as column, index}
+            <div
+                    class="header"
+                    on:click={() => {sortOnColumn(index)} }
+            >
+                {#if sortedBy === index}
+                    <!-- compiled svg -->
+                    <Icon>
+                        <svelte:component this={asc ? arrowUp : arrowDown} />
+                    </Icon>
+                {:else}
+                    <Icon><svelte:component this={import_export}/></Icon>
+                {/if}
+                <span class={sortedBy === index ? "underline" : ""}>{column}</span>
+            </div>
+        {/each}
+        {#each data as item}
+            <div class="item">
+                {item.message}
+            </div>
+            <div class="item">
+                {item.foundIn}
+            </div>
+            <div class="item">
+                {item.severity}
+            </div>
+        {/each}
+    </div>
+</div>
+
 <!-- todo use 'fly' to delete this view: https://svelte.dev/tutorial/adding-parameters-to-transitions -->
 <script lang="ts">
 
@@ -38,38 +70,6 @@
     }
 
 </script>
-
-<div class="list-viewport">
-    <div class="list">
-        {#each headers as column, index}
-            <div
-                    class="header"
-                    on:click={() => {sortOnColumn(index)} }
-            >
-                {#if sortedBy === index}
-                    <!-- compiled svg -->
-                    <Icon>
-                        <svelte:component this={asc ? arrowUp : arrowDown} />
-                    </Icon>
-                {:else}
-                    <Icon><svelte:component this={import_export}/></Icon>
-                {/if}
-                <span class={sortedBy === index ? "underline" : ""}>{column}</span>
-            </div>
-        {/each}
-        {#each data as item}
-            <div class="item">
-                {item.message}
-            </div>
-            <div class="item">
-                {item.foundIn}
-            </div>
-            <div class="item">
-                {item.severity}
-            </div>
-        {/each}
-    </div>
-</div>
 
 <style>
     .list-viewport{

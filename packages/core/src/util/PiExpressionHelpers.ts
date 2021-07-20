@@ -1,12 +1,14 @@
-import { AliasBox } from "../editor/boxes/AliasBox";
-import { Box } from "../editor/boxes/Box";
-import { HorizontalListBox, isHorizontalBox } from "../editor/boxes/ListBox";
-import { SelectBox } from "../editor/boxes/SelectBox";
-import { SelectOption } from "../editor/boxes/SelectOption";
-import { IPiEditor } from "../editor/IPiEditor";
-import { PiEditor } from "../editor/PiEditor";
-import { PiProjection } from "../editor/PiProjection";
-import { PiBinaryExpression, PiExpression } from "../language/PiModel";
+import {
+    AliasBox,
+    Box,
+    HorizontalListBox,
+    isHorizontalBox,
+    SelectBox,
+    SelectOption,
+    PiEditor,
+    PiProjection
+} from "../editor";
+import { PiBinaryExpression, PiExpression } from "../language";
 import {
     AFTER_BINARY_OPERATOR,
     BEFORE_BINARY_OPERATOR,
@@ -15,10 +17,12 @@ import {
     EXPRESSION,
     EXPRESSION_SYMBOL,
     LEFT_MOST,
-    RIGHT_MOST
-} from "./BalanceTreeUtils";
-import { BehaviorExecutionResult, PiCaret } from "./BehaviorUtils";
-import { NBSP, PiUtils } from "./PiUtils";
+    RIGHT_MOST,
+    BehaviorExecutionResult,
+    PiCaret,
+    NBSP,
+    PiUtils
+} from "./internal";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
@@ -52,7 +56,7 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
     }
 }
 
-export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, editor: IPiEditor, style?: string): HorizontalListBox {
+export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
@@ -75,7 +79,7 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
  * @param symbol
  * @param style
  */
-export function createOperatorBox(editor: IPiEditor, exp: PiBinaryExpression, symbol: string, style?: string): Box {
+export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: string): Box {
     const operatorBox = new SelectBox(
         exp,
         EXPRESSION_SYMBOL,

@@ -1,10 +1,10 @@
-import { PiLogger } from "../stubs/PiLogger";
-import { PiNamedElement } from "../stubs/PiModel";
+import { PiLogger } from "@projectit/core";
+import { PiNamedElement } from "@projectit/core";
+import { GenericModelSerializer } from "@projectit/core";
 import axios from "axios";
 import { SERVER_URL } from "../WebappConfiguration";
 // TODO remove interface IModelUnitData
 import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
-import {GenericModelSerializer} from "../stubs/GenericModelSerializer";
 
 // needed to show errors to the user
 import {showError, errorMessage, severity, severityType} from "../menu-ts-files/WebappStore";
@@ -90,7 +90,7 @@ export class ServerCommunication implements IServerCommunication {
             let result: string[] = [];
             const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${modelName}`);
             // filter out the modelUnitInterfaces
-            if (!!modelUnits) {
+            if (!!modelUnits&& Array.isArray(modelUnits.data)) {
                 result = modelUnits.data.filter( (name: string) => name.indexOf(ModelUnitInterfacePostfix) === -1)
             }
             modelListCallback(result);
@@ -122,7 +122,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: PiNamedElement) => void) {
-        // LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
+        console.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         if (!!unitName && unitName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}getModelUnit?folder=${modelName}&name=${unitName}${ModelUnitInterfacePostfix}`);

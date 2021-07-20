@@ -1,8 +1,7 @@
 import { computed, observable } from "mobx";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
-import { AliasBox } from "./AliasBox";
+import { PiElement } from "../../language/";
+import { Box, AliasBox } from "./internal";
 
 type BoolFunctie = () => boolean;
 /**
@@ -53,5 +52,5 @@ export class OptionalBox extends Box {
 }
 
 export function isOptionalBox(b: Box): b is OptionalBox {
-    return b instanceof OptionalBox;
+    return b.kind === "OptionalBox"; // b instanceof OptionalBox;
 }
