@@ -25,7 +25,7 @@ export default function sortErrors(data: ErrorMessage[], col: number, asc: boole
         const first = asc ? valA : valB;
         const second = asc ? valB : valA;
 
-        console.log("valA: " + valA + ", valB: " + valB + ", asc: " + asc);
+        // console.log("valA: " + valA + ", valB: " + valB + ", asc: " + asc);
         return (first).localeCompare(second);
     });
 

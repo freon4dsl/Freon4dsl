@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel } from "@projectit/core";
+import { PiNamedElement, PiModel, PiError } from "@projectit/core";
 import { PiLogger } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
 import {
@@ -13,6 +13,7 @@ import {
 } from "../menu-ts-files/WebappStore";
 import { get } from "svelte/store";
 import { editorEnvironment } from "webapp/WebappConfiguration";
+import { ErrorMessage } from "../main-ts-files/ErrorMessage";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
 
@@ -276,11 +277,13 @@ export class EditorCommunication {
     //     }
     // }
 
-    getErrors() {
-        // if (!!this.currentUnit) {
-        //     LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
-        //     this.editorArea.errorlist.allItems = editorEnvironment.validator.validate(this.currentUnit);
-        // }
+    getErrors(): PiError[] {
+        if (!!this.currentUnit) {
+            LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
+            return editorEnvironment.validator.validate(this.currentUnit);
+        } else {
+            return [];
+        }
     }
     // END OF: for the communication with the error list
 

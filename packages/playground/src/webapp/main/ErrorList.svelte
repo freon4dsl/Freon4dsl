@@ -43,9 +43,7 @@
     import sortErrors from "../main-ts-files/SortErrors";
     import type {ErrorMessage} from "../main-ts-files/ErrorMessage";
 
-    export let headers: string[] = [ "Error message", "Found in", "Severity"];
-
-    let data: ErrorMessage[] = [
+    let internaldata: ErrorMessage[] = [
         {message: 'error message1', foundIn: 'model part A', severity: 'error', id:1},
         {message: 'error message2', foundIn: 'model part A', severity: 'error', id:2},
         {message: 'error message3', foundIn: 'model part C', severity: 'error', id:3},
@@ -57,6 +55,8 @@
         {message: 'error message9', foundIn: 'model part B', severity: 'warning', id:9},
         {message: 'error message10', foundIn: 'model part A', severity: 'error', id:10}
     ];
+    export let headers: string[] = [ "Error message", "Found in", "Severity"];
+    export let data: ErrorMessage[] = internaldata;
 
     let sortedBy: number = 0; // stores the column id by which the table is currently sorted, minus means unsorted
     let asc = false;
@@ -65,7 +65,7 @@
     const sortOnColumn = (index: number) => {
         asc = sortedBy === index ? !asc : false;
         sortedBy = index;
-        console.log("columnId: " + index);
+        // console.log("columnId: " + index);
         data = sortErrors(data, index, asc);
     }
 

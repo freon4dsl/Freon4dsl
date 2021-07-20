@@ -1,11 +1,15 @@
-<script>
+<script lang="ts">
     import EditorArea from "./EditorArea.svelte";
     import ErrorList from "./ErrorList.svelte";
+    import { EditorCommunication } from "../editor/EditorCommunication";
+    import { ErrorMessage } from "../main-ts-files/ErrorMessage";
+
+    let errors : ErrorMessage[] = EditorCommunication.getInstance().getErrors();
 </script>
 
 <div id="grid">
     <div class="editor"><EditorArea/></div>
-    <div class="errorlist"><ErrorList/></div>
+    <div class="errorlist"><ErrorList bind:data={errors}/></div>
 </div>
 
 <style>
