@@ -13,7 +13,6 @@
     import { EditorCommunication } from "../editor/EditorCommunication";
 
     // initialize content in the ProjectItComponent
-    // TODO change name
     EditorCommunication.getInstance().newModel("<unnamedModel>");
 
     // tmp to see whether the names are set
