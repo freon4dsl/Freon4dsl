@@ -122,7 +122,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: PiNamedElement) => void) {
-        // LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
+        console.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         if (!!unitName && unitName !== "") {
             try {
                 const res = await axios.get(`${SERVER_URL}getModelUnit?folder=${modelName}&name=${unitName}${ModelUnitInterfacePostfix}`);

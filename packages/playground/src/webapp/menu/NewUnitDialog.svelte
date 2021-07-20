@@ -35,7 +35,7 @@
 	// boolean to determine whether this dialog is visible or not
 	export let visible: boolean = false;
 
-	// get the unit names because all unit names in a model must be unique
+	// all unit names in a model must be unique
 	export let unitNames: string[];
 	let newName: string = "";
 
@@ -69,7 +69,7 @@
 			if (newName?.length > 0) {
 				EditorCommunication.getInstance().newUnit(newName, group);
 			}
-			console.log("Submit called, unit created: " + get(currentUnitName));
+			// console.log("Submit called, unit created: " + get(currentUnitName));
 			visible = false;
 		}
 	}

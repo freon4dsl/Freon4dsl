@@ -60,7 +60,7 @@
     // elements for new unit menuitem
     let newUnitDialogVisible: boolean = false;
     let unitNames: string[];
-    let unitTypes: string[];
+    // let unitTypes: string[];
 
     const newUnit = () => {
         if (get(currentModelName).length <= 0) {
