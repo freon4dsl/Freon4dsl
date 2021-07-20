@@ -75,7 +75,7 @@ export class EnvironmentTemplate {
                 unit.name = "<unnamed>";
                 const model = new ${Names.concept(language.modelConcept)}();
                 model.name = modelName;
-                model.models.push(unit);
+                model.addUnit(unit);
                 return model;
              }  
                             
