@@ -1,6 +1,6 @@
 export type ErrorMessage = {
     message: string;
-    foundIn: string;
+    locationdescription: string;
     severity: string;
     id: number;
 }

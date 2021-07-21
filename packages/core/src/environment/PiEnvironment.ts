@@ -13,7 +13,7 @@ export interface PiEnvironment {
      * Creates a new model, an implementation of the language defined in the .ast file
      * @param name
      */
-    newModel(name: string): PiModel;
+    newModel(modelName: string, unitName?: string): PiModel;
 
     scoper: PiScoper;
     typer: PiTyper;

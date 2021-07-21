@@ -66,16 +66,21 @@ export class EnvironmentTemplate {
             }
             
             /**
-             * Returns an empty model with name 'modelName'.
+             * Returns a new model with name 'modelName'.
+             * When 'unitName' is present, an empty unit
+             * named 'unitName' is added to the model.
              * 
              * @param modelName
+             * @param unitName
              */
-             newModel(modelName: string) : ${Names.concept(language.modelConcept)} {
-                const unit = new ${Names.concept(language.units[0])}();
-                unit.name = "<unnamed>";
+             newModel(modelName: string, unitName?: string) : ${Names.concept(language.modelConcept)} {        
                 const model = new ${Names.concept(language.modelConcept)}();
                 model.name = modelName;
-                model.addUnit(unit);
+                if (!(unitName == null)) {
+                    const unit = new ${Names.concept(language.units[0])}();
+                    unit.name = unitName;
+                    model.addUnit(unit);
+                }
                 return model;
              }  
                             

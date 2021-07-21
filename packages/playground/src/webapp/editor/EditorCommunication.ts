@@ -1,7 +1,7 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel, PiError } from "@projectit/core";
-import { PiLogger } from "@projectit/core";
+import { PiNamedElement, PiModel, PiLogger } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
+import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
@@ -9,17 +9,13 @@ import {
     severity,
     severityType,
     showError,
-    unitTypes
+    unitTypes,
+    unnamed
 } from "../menu-ts-files/WebappStore";
-import { get } from "svelte/store";
+import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
 import { editorEnvironment } from "webapp/WebappConfiguration";
-import { ErrorMessage } from "../main-ts-files/ErrorMessage";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
-
-// TODO find different place for this constant => Environment or ProjectItConfiguration, WebappStore???
-// It is also used in ...Environment.newModel()
-export const unnamed: string = "<unnamed>";
 
 export class EditorCommunication {
     currentUnit: PiNamedElement = null;
@@ -95,11 +91,11 @@ export class EditorCommunication {
     }
 
     // used from the menubar and as initialization
-    newModel(newName: string) {
-        LOGGER.log("new model called: " + newName);
-        this.currentModel = editorEnvironment.newModel(newName);
+    newModel(modelName: string, unitName?: string) {
+        LOGGER.log("new model called: " + modelName);
+        this.currentModel = editorEnvironment.newModel(modelName, unitName);
         this.currentUnit = this.currentModel.getUnits()[0];
-        currentModelName.set(newName);
+        currentModelName.set(modelName);
         if ( !!this.currentUnit && !!this.currentUnit.name) {
             currentUnitName.set(this.currentUnit.name);
         } else {
@@ -166,7 +162,7 @@ export class EditorCommunication {
     }
 
     deleteCurrentUnit() {
-        LOGGER.log("delete called, current unit: CCCC" + get(currentUnitName));
+        LOGGER.log("delete called, current unit: " + get(currentUnitName));
         this.hasChanges = false;
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.getInstance().deleteModelUnit({
@@ -193,8 +189,9 @@ export class EditorCommunication {
         LOGGER.log("openModel called, modelName: " + modelName);
         console.log("EditorCommunication.openmodel("+ modelName + ")");
         // TODO this method should take care of storing any changes in the previous model
-        // create new model instance and set its name
+        // create new model instance in memory and set its name
         let model: PiModel = editorEnvironment.newModel(modelName);
+        // fill the new model with the units loaded from the server
         ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
             // load the first unit completely and show it
             // load all others units as interfaces
@@ -261,11 +258,8 @@ export class EditorCommunication {
             EditorCommunication.getInstance().getErrors();
         } else {
             EditorCommunication.getInstance().hasChanges = false;
-            // this.editorArea.errorlist.allItems = [];
         }
     }
-
-    // END OF: for the communication with the navigator
 
     // for the communication with the error list:
     // errorSelected(error: PiError) {
@@ -277,12 +271,12 @@ export class EditorCommunication {
     //     }
     // }
 
-    getErrors(): PiError[] {
+    getErrors() {
+        console.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
         if (!!this.currentUnit) {
-            LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
-            return editorEnvironment.validator.validate(this.currentUnit);
-        } else {
-            return [];
+            let list = editorEnvironment.validator.validate(this.currentUnit);
+            modelErrrors.set(list);
+            // list.forEach(err => console.log(err.message));
         }
     }
     // END OF: for the communication with the error list

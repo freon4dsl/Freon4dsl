@@ -1,7 +1,7 @@
 <svelte:window on:scroll|passive={onScroll} on:resize|passive={onResize} />
 
 <svelte:head>
-	<title>ProjectIt Test3</title>
+	<title>ProjectIt</title>
 </svelte:head>
 
 <AppBar
@@ -53,6 +53,7 @@
 	import Footer from "./side-elements/Footer.svelte";
 	import MainGrid from "./main/MainGrid.svelte";
 	import {EditorCommunication} from "./editor/EditorCommunication";
+	import { unnamed } from "./menu-ts-files/WebappStore";
 
 	const MAX_WIDTH = 720;
 	let width = MAX_WIDTH;
@@ -63,7 +64,11 @@
 	let username = '';
 	let password = '';
 
+	// initialize defaults for the current language
 	EditorCommunication.initialize();
+
+	// initialize content in the ProjectItComponent
+	EditorCommunication.getInstance().newModel(unnamed, unnamed);
 
 	onMount(async () => {
 		onResize();

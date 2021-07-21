@@ -23,7 +23,7 @@
                 {item.message}
             </div>
             <div class="item">
-                {item.foundIn}
+                {item.locationdescription}
             </div>
             <div class="item">
                 {item.severity}
@@ -36,27 +36,18 @@
 <script lang="ts">
 
     import { Icon } from "svelte-mui";
-    import arrowUp from '../../webapp/assets/icons/svg/arrow-up.svg';
-    import arrowDown from '../../webapp/assets/icons/svg/arrow-down.svg';
-    import import_export from '../../webapp/assets/icons/svg/import_export_24px.svg';
+    import arrowUp from "../../webapp/assets/icons/svg/arrow-up.svg";
+    import arrowDown from "../../webapp/assets/icons/svg/arrow-down.svg";
+    import import_export from "../../webapp/assets/icons/svg/import_export_24px.svg";
 
     import sortErrors from "../main-ts-files/SortErrors";
-    import type {ErrorMessage} from "../main-ts-files/ErrorMessage";
+    import { PiError } from "@projectit/core";
+    import { get } from "svelte/store";
+    import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
 
-    let internaldata: ErrorMessage[] = [
-        {message: 'error message1', foundIn: 'model part A', severity: 'error', id:1},
-        {message: 'error message2', foundIn: 'model part A', severity: 'error', id:2},
-        {message: 'error message3', foundIn: 'model part C', severity: 'error', id:3},
-        {message: 'error message4', foundIn: 'model part B', severity: 'warning', id:4},
-        {message: 'error message5', foundIn: 'model part A', severity: 'error', id:5},
-        {message: 'error message6', foundIn: 'model part A', severity: 'error', id:6},
-        {message: 'error message7', foundIn: 'model part A', severity: 'error', id:7},
-        {message: 'error message8', foundIn: 'model part C', severity: 'error', id:8},
-        {message: 'error message9', foundIn: 'model part B', severity: 'warning', id:9},
-        {message: 'error message10', foundIn: 'model part A', severity: 'error', id:10}
-    ];
-    export let headers: string[] = [ "Error message", "Found in", "Severity"];
-    export let data: ErrorMessage[] = internaldata;
+    export let headers: string[] = [ "Error message", "Location", "Severity"];
+    let data: PiError[] = [];
+    modelErrrors.subscribe(() => {data = get(modelErrrors)});
 
     let sortedBy: number = 0; // stores the column id by which the table is currently sorted, minus means unsorted
     let asc = false;
@@ -75,7 +66,7 @@
     .list-viewport{
         border: 2px solid black;
         overflow: auto;
-        max-height: 15vh;
+        max-height: 25vh;
     }
     .header{
         font-weight: bold;

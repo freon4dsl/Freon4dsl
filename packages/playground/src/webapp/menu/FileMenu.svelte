@@ -46,7 +46,7 @@
     import SaveUnitDialog from "./SaveUnitDialog.svelte";
     import NameModelDialog from "./NameModelDialog.svelte";
     import DeleteUnitDialog from "./DeleteUnitDialog.svelte";
-    import {EditorCommunication, unnamed} from "../editor/EditorCommunication";
+    import {EditorCommunication} from "../editor/EditorCommunication";
 
     // when a menu-item is clicked, this function is executed
     const handleClick = (id: number) => {
