@@ -1,12 +1,18 @@
 :root {
+	/* ProjectIt colors */
 	--pi-darkblue: darkblue; /* #00008b */
 	--pi-lightblue: #d3e3fd;
 	--pi-header-height: 36px;
 	--pi-menu-height: 24px;
+	/* colors defined in terms of ProjectIt colors */
 	--color: var(--pi-darkblue);
-	--inverse-color: white;
-	--alternate: #fff;
+	--inverse-color: var(--pi-lightblue);
+	--bg-app-bar: var(--pi-darkblue);
 	--bg-color: var(--pi-lightblue);
+	--bg-panel: var(--pi-lightblue);
+	--list-divider: var(--pi-darkblue);
+	/* other colors */
+	--alternate: #fff;
 	--primary: #1976d2;
 	--accent: #f50057;
 	--divider: rgba(0, 0, 0, 0.1);
@@ -14,11 +20,10 @@
 	--border: #dfdfdf;
 	--label: rgba(0, 0, 0, 0.3755);
 	--bg-input-filled: rgba(0, 0, 0, 0.0555);
+	--focus-color: rgba(25, 118, 210, 0.5); /* primary with alpha */
 
-	--bg-app-bar: var(--pi-darkblue);
-	--bg-panel: var(--pi-lightblue);
+	/* fonts, etc */
 	--font-family: Roboto, Helvetica, sans-serif;
-
 	--heading-font-family: var(--font-family);
 	--header-font-size: 16px;
 	--button-font-family: var(--font-family);
@@ -27,7 +32,6 @@
 	--menuitem-font-size: 14px;
 	--code-font-family: 'Roboto Mono', Menlo, Consolas, monospace;
 
-	--focus-color: rgba(25, 118, 210, 0.5); /* primary with alpha */
 }
 
 * {

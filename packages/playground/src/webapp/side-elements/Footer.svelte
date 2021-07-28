@@ -27,6 +27,6 @@
         bottom: 6px;
     }
     .link{
-        color: white;
+        color: var(--inverse-color);
     }
 </style>

@@ -12,7 +12,7 @@
 				visible = false;
 			}}
 		>
-			<Icon path={arrowBack} />
+			<Icon style="color:var(--inverse-color)" path={arrowBack} />
 		</Button>
 	</div>
 
