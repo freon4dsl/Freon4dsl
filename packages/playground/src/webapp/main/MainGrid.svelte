@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import EditorArea from "./EditorArea.svelte";
     import ErrorList from "./ErrorList.svelte";
 </script>

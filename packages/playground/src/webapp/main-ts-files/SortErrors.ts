@@ -1,9 +1,9 @@
 // function to sort the data in a DataTable
 // used to sort errors in the ErrorList
 
-import type {ErrorMessage} from "./ErrorMessage";
+import { PiError } from "@projectit/core";
 
-export default function sortErrors(data: ErrorMessage[], col: number, asc: boolean) {
+export default function sortErrors(data: PiError[], col: number, asc: boolean) {
     if (col < 0 || col > 2) return data;
 
     const sorted = data.sort((a, b) => {
@@ -14,8 +14,8 @@ export default function sortErrors(data: ErrorMessage[], col: number, asc: boole
             valB = b.message;
         }
         if (col === 1) {
-            valA = a.foundIn;
-            valB = b.foundIn;
+            valA = a.locationdescription;
+            valB = b.locationdescription;
         }
         if (col === 2) {
             valA = a.severity;
@@ -25,7 +25,7 @@ export default function sortErrors(data: ErrorMessage[], col: number, asc: boole
         const first = asc ? valA : valB;
         const second = asc ? valB : valA;
 
-        console.log("valA: " + valA + ", valB: " + valB + ", asc: " + asc);
+        // console.log("valA: " + valA + ", valB: " + valB + ", asc: " + asc);
         return (first).localeCompare(second);
     });
 

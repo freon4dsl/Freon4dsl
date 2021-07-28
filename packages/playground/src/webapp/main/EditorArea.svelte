@@ -25,13 +25,10 @@
 
 <script lang="ts">
     import { ProjectItComponent } from "@projectit/core-svelte";
-    import { currentUnitName, currentModelName } from "../menu-ts-files/WebappStore";
+    import { currentUnitName, currentModelName, unnamed } from "../menu-ts-files/WebappStore";
     import { get } from 'svelte/store';
     import { editorEnvironment } from "../WebappConfiguration";
     import { EditorCommunication } from "../editor/EditorCommunication";
-
-    // initialize content in the ProjectItComponent
-    EditorCommunication.getInstance().newModel("<unnamed>");
 
     // tmp to see whether the names are set
     let modelName: string;
