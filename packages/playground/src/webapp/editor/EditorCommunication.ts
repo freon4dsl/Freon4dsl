@@ -5,7 +5,7 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
-    errorMessage,
+    errorMessage, languageName,
     severity,
     severityType,
     showError,
@@ -36,6 +36,7 @@ export class EditorCommunication {
     static initialize(): void {
         currentModelName.set(unnamed);
         currentUnitName.set(unnamed);
+        languageName.set(editorEnvironment.languageName);
         // unitTypes are the same for every model in the language
         unitTypes.set(editorEnvironment.unitNames);
     }

@@ -16,11 +16,11 @@
 		>
 			<Icon style="color:var(--inverse-color)" path={menu} />
 		</Button>
-		<div class="title">PLE for ...</div>
+		<div class="title">PLE for <i>{$languageName}</i></div>
 	{:else}
 		<!-- normally, the MenuGroup and a long title are shown-->
 		<MenuGroup/>
-		<div class="title">ProjectIt Language Environment for language ...</div>
+		<div class="title">ProjectIt Language Environment for language <i>{$languageName}</i></div>
 	{/if}
 
 	<Button icon on:click={() => setTheme($theme === 'dark' ? 'light' : 'dark')}>
@@ -62,6 +62,7 @@
 	import question_mark from '../assets/icons/svg/help_24px.svg';
 	import {menu, invertColors} from '../assets/icons';
 	import {theme, darkTheme, miniWindow} from '../store';
+	import { languageName } from "../menu-ts-files/WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
 
 	export let leftPanelVisible: boolean = false;
