@@ -16,6 +16,15 @@ const name = pkg.name
 	.replace(/-\w/g, m => m[1].toUpperCase());
 
 export default {
+	external: [
+		'svelte',
+		'svelte/animate',
+		'svelte/easing',
+		'svelte/internal',
+		'svelte/motion',
+		'svelte/store',
+		'svelte/transition'
+	],
 	input: 'src/index.ts',
 	output: [
 		{

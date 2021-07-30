@@ -5,6 +5,18 @@
 <Sidepanel right bind:visible>
 	<div class="logo" style="padding-left: 1rem;">Help</div>
 	<p>
+		<a id="brand" class="icon" target="_blank" href="http://www.projectit.org">
+			<!-- compiled svg does not work, because the path is too complex-->
+			<!--			<Icon>-->
+			<!--				<svelte:component this={projectit_logo} />-->
+			<!--			</Icon>-->
+			{#if $theme === 'light'}
+				<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
+			{:else if ($theme === 'dark')}
+				<img src="/img/projectit-logo.png" alt="ProjectIt Logo">
+			{/if}
+		</a>
+		<br>
 		<i style="padding: 12px;">Add some help info here ...</i>
 	</p>
 </Sidepanel>
@@ -13,6 +25,7 @@
 	export let visible = false;
 
 	import { Sidepanel } from 'svelte-mui';
+	import { theme} from "../store";
 </script>
 
 <style>
@@ -21,7 +34,15 @@
 		padding: 0 4px;
 		display: flex;
 		align-items: center;
-		color: #fff;
+		color: var(--color);
 		background: var(--bg-app-bar);
+	}
+	img{
+		max-width: 180px;
+		max-height: calc(var(--pi-header-height) - 5px);
+		margin-top: 3px;
+		margin-bottom: 3px;
+		margin-left: auto;
+		margin-right: 10px;
 	}
 </style>

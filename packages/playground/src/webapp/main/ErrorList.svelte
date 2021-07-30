@@ -64,9 +64,9 @@
 
 <style>
     .list-viewport{
-        border: 2px solid black;
+        border: 2px solid var(--list-divider);
         overflow: auto;
-        max-height: 25vh;
+        max-height: 15vh;
     }
     .header{
         font-weight: bold;
@@ -83,7 +83,7 @@
         grid-gap: 1px;
         max-width: 100%;
         margin: 0 auto;
-        background-color: black;
+        background-color: var(--list-divider);
         font-size: var(--error-font-size);
     }
     .list div{

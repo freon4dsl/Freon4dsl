@@ -1,95 +1,75 @@
 <!-- The AppBar is always shown at the top of the viewport -->
 <!-- It contains the menus, the name of the language, and ... -->
 
-<div class="app-bar" bind:this={el}>
-	<!-- this button is shown only when the viewport is small -->
-	<!-- it is used to open the left panel which shows the navigator -->
-	<Button
-		icon
-		id="hamburger"
-		color="inherit"
-		on:click={() => {
-			leftPanelVisible = true;
-		}}
-	>
-		<Icon path={menu} />
-	</Button>
-
-	<MenuGroup/>
-
-	<div class="title">ProjectIt Language Environment for language ...</div>
-
-	{#if !legacy}
-		<Button icon on:click={() => setTheme($theme === 'dark' ? 'light' : 'dark')}>
-			<Icon style="color:var(--inverse-color)" path={invertColors} />
+<div class="app-bar">
+	{#if !$miniWindow}
+		<!-- this button is shown only when the viewport is small -->
+		<!-- it is used to open the left panel which shows the navigator -->
+		<!-- the title is also smaller in a small viewport		-->
+		<Button
+			icon
+			id="hamburger"
+			color="inherit"
+			on:click={() => {
+				leftPanelVisible = true;
+			}}
+		>
+			<Icon style="color:var(--inverse-color)" path={menu} />
 		</Button>
+		<div class="title">PLE for <i>{$languageName}</i></div>
+	{:else}
+		<!-- normally, the MenuGroup and a long title are shown-->
+		<MenuGroup/>
+		<div class="title">ProjectIt Language Environment for language <i>{$languageName}</i></div>
 	{/if}
-	<Button icon color="inherit"
-			on:click={() => (rightPanelVisible = true)}
-			ripple={false}
-	>
-		<!-- <Icon path={search} />-->
-		<Icon>
-			<svelte:component this={question_mark} />
-		</Icon>
+
+	<Button icon on:click={() => setTheme($theme === 'dark' ? 'light' : 'dark')}>
+		<Icon style="color:var(--inverse-color)" path={invertColors} />
 	</Button>
-	<a id="brand" class="icon" target="_blank" href="http://www.projectit.org">
-		<!-- compiled svg -->
-<!--		<Icon viewBox="0 0  24 24" color="red">-->
-<!--			<svelte:component this={projectit_logo} />-->
-<!--		</Icon>-->
-		<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
-	</a>
+
+	{#if !$miniWindow}
+	<!-- help button is only shown in small viewport, in large viewport the help menu is directly visible	-->
+		<Button icon color="inherit"
+				on:click={() => (rightPanelVisible = true)}
+				ripple={false}
+		>
+			<Icon style="color:var(--inverse-color)">
+				<svelte:component this={question_mark} />
+			</Icon>
+		</Button>
+	{:else}
+		<!-- normally, the brand icon is shown-->
+		<a id="brand" class="icon" target="_blank" href="http://www.projectit.org">
+			<!-- compiled svg does not work, because the path is too complex-->
+<!--			<Icon>-->
+<!--				<svelte:component this={projectit_logo} />-->
+<!--			</Icon>-->
+			{#if $theme === 'light'}
+				<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
+				{:else if ($theme === 'dark')}
+				<img src="/img/projectit-logo.png" alt="ProjectIt Logo">
+			{/if}
+		</a>
+	{/if}
 
 </div>
 
-<script>
+<script lang="ts">
+	import {onMount} from 'svelte';
+	import {Button, Icon} from 'svelte-mui';
+
+	import projectit_logo from '../assets/icons/svg/projectit-logo.svg';
+	import question_mark from '../assets/icons/svg/help_24px.svg';
+	import {menu, invertColors} from '../assets/icons';
+	import {theme, darkTheme, miniWindow} from '../store';
+	import { languageName } from "../menu-ts-files/WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
 
-	export let fade = false;
-	export let leftPanelVisible = false;
-	export let rightPanelVisible = false;
-
-	import {onMount} from 'svelte';
-
-	import {Button, Icon} from 'svelte-mui';
-	import {menu, invertColors} from '../assets/icons';
-	import question_mark from '../assets/icons/svg/help_24px.svg';
-	import projectit_logo from '../assets/icons/svg/projectit-logo.svg';
-
-	import {theme} from '../store';
-
-	let el;
-	let legacy = true;
-
-	const darkTheme = {
-		'--color': '#eee',
-		'--alternate': '#000',
-		'--bg-color': '#303134',
-		'--primary': '#3ea6ff',
-		'--accent': '#ff6fab',
-		'--divider': 'rgba(255,255,255,0.175)',
-		'--bg-popover': '#3f3f3f',
-		'--border': '#555',
-		'--label': 'rgba(255,255,255,0.5)',
-		'--bg-input-filled': 'rgba(255,255,255,0.1)',
-
-		'--bg-app-bar': '#838383',
-		'--bg-panel': '#434343',
-
-		'--focus-color': 'rgba(62, 166, 255, 0.5)', // primary with alpha
-	};
-
-	$: if (el) {
-		fade
-				? (el.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,.2), 0 2px 6px 2px rgba(0,0,0,.18)')
-				: (el.style.boxShadow = '');
-	}
+	export let leftPanelVisible: boolean = false;
+	export let rightPanelVisible: boolean = false;
 
 	onMount(async () => {
 		try {
-			legacy = !(window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)'));
-
 			let mql = window.matchMedia('(prefers-color-scheme: dark)');
 			mql.matches && setTheme('dark');
 		} catch (err) {
@@ -129,6 +109,7 @@
 		flex: 1;
 		margin-left: 0.5rem;
 		white-space: nowrap;
+		color: var(--inverse-color);
 		/*text-align: left;*/
 	}
 
