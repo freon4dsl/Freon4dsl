@@ -1,4 +1,5 @@
 export { default as arrowBack } from './arrow-back';
+export { default as arrowDropDown } from './arrow-drop-down';
 export { default as arrowForward } from './arrow-forward';
 export { default as checkbox } from './checkbox';
 export { default as invertColors } from './invert-colors';

@@ -12,35 +12,36 @@
 <UserMessage />
 
 <!-- next define the menu -->
-<Menu style="border-radius: 2px;" origin="top left" dy="50px">
+<Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">
-			<Button {...props}  title="File menu">{activatorTitle}</Button>
+			<Button {...props}  title="File menu">{activatorTitle} <Icon path={arrowDropDown}/></Button>
 		</span>
     <!--  here the list of menu options should be placed -->
-    {#each menuItems as item (item.id)}
-        <!-- style needs to be added here, not as class -->
-        <Menuitem style="font-size: var(--menuitem-font-size);
-                margin: 4px 10px;
-                padding: 2px;
-                height: 28px;"
-                  on:click={() => handleClick(item.id)}>
-            {item.title}
-        </Menuitem>
-    {:else}
-        <p>There are no items to show...</p>
-    {/each}
+    <div class="menu-list">
+        {#each menuItems as item (item.id)}
+            <!-- style needs to be added here, not as class -->
+            <Menuitem style="font-size: var(--menuitem-font-size);
+                    margin: 4px 10px;
+                    padding: 2px;
+                    height: 28px;"
+                      on:click={() => handleClick(item.id)}>
+                {item.title}
+            </Menuitem>
+        {:else}
+            <p>There are no items to show...</p>
+        {/each}
+    </div>
 </Menu>
 
-
 <script lang="ts">
-    import {Button, Menu, Menuitem} from 'svelte-mui';
+    import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
+    import { arrowDropDown } from '../assets/icons';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import UserMessage from "../side-elements/UserMessage.svelte";
     import OpenModelDialog from "./OpenModelDialog.svelte";
     import OpenUnitDialog from "./OpenUnitDialog.svelte";
     import {ServerCommunication} from "../server/ServerCommunication";
     import {currentModelName, currentUnitName} from "../menu-ts-files/WebappStore";
-    import {get} from 'svelte/store';
     import NewModelDialog from "./NewModelDialog.svelte";
     import NewUnitDialog from "./NewUnitDialog.svelte";
     import SaveUnitDialog from "./SaveUnitDialog.svelte";
@@ -106,7 +107,7 @@
             return;
         }
         // get list of units from server, because new unit may not have the same name as an existing one
-        ServerCommunication.getInstance().loadUnitList(get(currentModelName), (names: string[]) => {
+        ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // list may be empty => this is the first unit to be stored
             unitNames = names;
             newUnitDialogVisible = true;
@@ -118,14 +119,14 @@
 
     const openUnit = () => {
         // get list of units from server
-        ServerCommunication.getInstance().loadUnitList(get(currentModelName), (names: string[]) => {
+        ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // if list not empty, show dialog
             if (names.length > 0) {
                 unitNames = names;
                 openUnitDialogVisible = true;
             } else {
                 // if list is empty show error message
-                errorMessage.set("No units for " + get(currentModelName) + " found on the server");
+                errorMessage.set("No units for " + $currentModelName + " found on the server");
                 severity.set(severityType.error);
                 showError.set(true);
             }
@@ -137,7 +138,7 @@
     let nameModelDialogVisible: boolean = false;
 
     const saveUnit = () => {
-        console.log("FileMenu.saveUnit: " + get(currentUnitName));
+        console.log("FileMenu.saveUnit: " + $currentUnitName);
         // first check whether the model to which the unit belongs has a name,
         // units can not be saved if the model has no name.
         if (!EditorCommunication.getInstance().isModelNamed()) {
@@ -149,7 +150,7 @@
             });
         }
         // get list of units from server, because a new name must not be identical to an existing one
-        ServerCommunication.getInstance().loadUnitList(get(currentModelName), (names: string[]) => {
+        ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // only show the dialog if the name is empty or unknown
             if (!EditorCommunication.getInstance().isUnitNamed()) {
                 unitNames = names;
@@ -189,3 +190,8 @@
     export let props;
 </script>
 
+<style>
+    .menu-list {
+        background-color: var(--inverse-color);
+    }
+</style>

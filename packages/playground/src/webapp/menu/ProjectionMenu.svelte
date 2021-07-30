@@ -1,7 +1,8 @@
 
 <!-- todo when a checkbox is activated, the menu is not closed -->
 <script lang="ts">
-    import { Button, Menu, Menuitem} from 'svelte-mui';
+    import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
+    import { arrowDropDown } from '../assets/icons';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import {EditorCommunication} from "../editor/EditorCommunication";
 
@@ -42,11 +43,12 @@
     });
 </script>
 
-<Menu style="border-radius: 2px;" origin="top left" dy="50px">
+<Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">
-			<Button {...props}  title="File menu">{activatorTitle}</Button>
+			<Button {...props}  title="Projection menu">{activatorTitle} <Icon path={arrowDropDown}/></Button>
 		</span>
-        <!--  here the list of menu options should be placed -->
+    <!--  here the list of menu options should be placed -->
+    <div class="menu-list">
         {#each menuItems as item (item.id)}
             {#if item.id === 0}
                 <!-- style needs to be added here, not as class -->
@@ -73,4 +75,11 @@
         {:else}
             <p>There are no items to show...</p>
         {/each}
+    </div>
 </Menu>
+
+<style>
+    .menu-list {
+        background-color: var(--inverse-color);
+    }
+</style>
