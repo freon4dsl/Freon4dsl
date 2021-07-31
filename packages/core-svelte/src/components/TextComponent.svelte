@@ -32,6 +32,11 @@
         return textOnScreen;
     }
 
+    export const focus = async (): Promise<void> => {
+        LOGGER.log("TextComponent focus " + textBox.role);
+        element.focus();
+        // this.startEditing();
+    };
     const setFocus = async (): Promise<void> => {
         LOGGER.log("TextComponent set focus " + textBox.role);
         element.focus();

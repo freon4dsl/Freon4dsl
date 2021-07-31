@@ -61,7 +61,7 @@
 
     afterUpdate( () => {
         choiceBox.textBox.setFocus = setFocus;
-        choiceBox.setFocus = focus;
+        choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         if( !! selected) {
             choiceBox.textBox.setText(selected.label)

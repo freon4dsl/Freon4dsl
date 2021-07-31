@@ -136,7 +136,7 @@ export class PiEditor {
     selectParentBox() {
         LOGGER.info(this, "==> SelectParent");
         const parent = this.selectedBox.parent;
-        if (parent) {
+        if (!!parent) {
             if (parent.selectable) {
                 this.selectBox(parent);
                 parent.setFocus();
@@ -149,14 +149,14 @@ export class PiEditor {
 
     selectFirstLeafChildBox() {
         const first = this.selectedBox.firstLeaf;
-        if (first) {
+        if (!!first) {
             this.selectBox(first);
         }
     }
 
     selectNextLeaf() {
         const next = this.selectedBox.nextLeafRight;
-        if (next) {
+        if (!!next) {
             this.selectBox(next);
             next.setFocus();
             if (isTextBox(next) || isSelectBox(next)) {
@@ -167,7 +167,7 @@ export class PiEditor {
 
     async selectPreviousLeaf() {
         const previous = this.selectedBox.nextLeafLeft;
-        if (previous) {
+        if (!!previous) {
             await this.selectBox(previous);
             previous.setFocus();
             if (isTextBox(previous) || isSelectBox(previous)) {
