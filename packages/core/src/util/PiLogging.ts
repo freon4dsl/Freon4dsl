@@ -6,7 +6,7 @@ type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
 export class PiLogger {
-    private static muteAll: boolean = true;
+    private static muteAll: boolean = false;
     private static FG_RED = "\x1b[31m";
     private static FG_BLACK = "\x1b[30m";
     private static FG_BLUE = "\x1b[34m";
