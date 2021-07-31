@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { ChangeNotifier } from "./ChangeNotifier";
     import { clickOutside } from "./clickOutside"
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
@@ -20,14 +21,16 @@
     export let selectedOptionId: string = "1";
     export let open: boolean;
     export let handleSelectedOption: (option: SelectOption) => void;
+    export let notifier;
+
 
     const LOGGER = new PiLogger("DropdownComponent");
 
     const getOptionsLogged = (): SelectOption[] => {
         const options = getOptions();
-        LOGGER.log("getOptions");
+        LOGGER.log("getOptions size "+ options.length);
         options.forEach(o => LOGGER.log("     Option ["+ o.id + "]"));
-        return options.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
+        return options;//.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
     }
     /** Supports Arrow up and down keys, Enter for selection
      * Escape is forwarded to owning component, so it may use it to close the dropdown.
@@ -109,12 +112,20 @@
         dispatcher("pi-ItemSelected", event.detail)
     }
 
+    let getOptionsForHtml : SelectOption[];
+    autorun(()=> {
+        const dummy = notifier.dummy;
+        getOptionsForHtml = getOptionsLogged();
+        LOGGER.log("AUTORUN " + getOptionsForHtml.map(o => o.id) );
+        getOptionsLogged().forEach( option => LOGGER.log("OPTION "+ option.label));
+    });
+
 </script>
 
 <div class="dropdown"  on:keydown={onKeydown} >
     <div tabIndex={0}  />
     <div class="popupWrapper" use:clickOutside on:click_outside={handleClickOutside}>
-        {#each getOptionsLogged() as option (option.id)}
+        {#each getOptionsForHtml as option (option.id)}
             <div class="popup">
                 <div>
                     <DropdownItemComponent on:pi-ItemSelected option={option} isSelected={option.id === selectedOptionId} />

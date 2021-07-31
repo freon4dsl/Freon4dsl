@@ -251,13 +251,14 @@
 
    textBox.update = () => {
         LOGGER.log("Update called for textBox ["+ textOnScreen + "]") ;
-        if( textBox.getText() !== textOnScreen) {
+        if( textBox.getText() !== textOnScreen  && (textOnScreen !== undefined)) {
             LOGGER.log("    ==> value changed");
             textBox.setText(textOnScreen);
         }
     };
 
-    let text: string;
+    let text: string = textBox.getText();
+    textOnScreen = text;
     let element: HTMLDivElement;
     let placeholder: string;
 
@@ -288,9 +289,10 @@
     };
 
     autorun( () => {
-        text = textBox.getText();
-        textOnScreen = text;
-        AUTO_LOGGER.log("AUTO TEXT COMPONENT ["+ text + "]")
+        // LOGGER.log("AUTO start text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
+        text = textOnScreen;
+        // textOnScreen = text;
+        // AUTO_LOGGER.log("AUTO TEXT COMPONENT ["+ text + "]")
         placeholder = textBox.placeHolder
     });
 </script>

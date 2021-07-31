@@ -68,11 +68,11 @@
         </SelectableComponent>
     {:else if isAliasBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
-        	<AliasComponent aliasBox={showBox} editor={editor}/>
+        	<AliasComponent choiceBox={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isSelectBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>
-        	<AliasComponent aliasBox={showBox} editor={editor}/>
+        	<AliasComponent choiceBox={showBox} editor={editor}/>
         </SelectableComponent>
     {:else if isTextBox(showBox) }
         <SelectableComponent box={showBox} editor={editor}>

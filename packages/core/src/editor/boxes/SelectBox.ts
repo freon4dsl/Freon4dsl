@@ -37,11 +37,6 @@ export class SelectBox extends AbstractChoiceBox {
     getOptions(editor: PiEditor):  SelectOption[]  {
         const matchingOptions: SelectOption[] = this.getAllOptions(editor)
             .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
-        // if (matchingOptions.length === 0) {
-        //     return BehaviorExecutionResult.NO_MATCH;
-        // }else {
-        //     return BehaviorExecutionResult.PARTIAL_MATCH;
-        // }
         return matchingOptions
     }
 
