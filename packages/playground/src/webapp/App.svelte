@@ -49,7 +49,7 @@
 	import {EditorCommunication} from "./editor/EditorCommunication";
 	import { unnamed } from "./menu-ts-files/WebappStore";
 
-	const MAX_WIDTH_SMALL_VIEWPORT = 900;
+	const MAX_WIDTH_SMALL_VIEWPORT = 400;
 	let leftPanelVisible = false;
 	let rightPanelVisible = false;
 
