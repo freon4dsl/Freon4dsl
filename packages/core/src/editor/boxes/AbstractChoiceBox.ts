@@ -13,6 +13,7 @@ export abstract class AbstractChoiceBox extends Box {
     getSelectedOption(): SelectOption | null { return null; };
     getOptions(editor: PiEditor): SelectOption[] { return [] };
     async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
+        console.error("AbstractChoiceBox.selectOption")
         return BehaviorExecutionResult.NULL;
     };
 
