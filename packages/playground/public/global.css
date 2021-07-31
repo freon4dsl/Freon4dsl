@@ -1,4 +1,10 @@
 :root {
+	--pi-selected-background-color: rgba(211, 227, 253, 255);
+	--pi-popup-border: #d7d7d7;
+	--pi-popup-background: #fff;
+	--pi-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+
+
 	/* ProjectIt colors */
 	--pi-darkblue: darkblue; /* #00008b */
 	--pi-lightblue: #d3e3fd;
