@@ -309,7 +309,7 @@
     {#if openInHtml}
         <DropdownComponent
                 bind:this="{dropdown}"
-                bind:openInHtml
+                bind:open={openInHtml}
                 handleSelectedOption={selectOption}
                 on:pi-ItemSelected={selectedEvent}
                 getOptions={getAliasOptions}
