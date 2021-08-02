@@ -3,7 +3,18 @@
 <!-- It shows Help Info -->
 
 <Sidepanel right bind:visible>
-	<div class="logo" style="padding-left: 1rem;">Help</div>
+	<!-- icon  button to close the side panel -->
+	<div class="logo">
+		<Button
+				icon
+				color="inherit"
+				on:click={() => {
+				visible = false;
+			}}
+		>
+			<Icon style="color:var(--inverse-color)" path={arrowForward} />
+		</Button>
+	</div>
 	<p>
 		<a id="brand" class="icon" target="_blank" href="http://www.projectit.org">
 			<!-- compiled svg does not work, because the path is too complex-->
@@ -24,7 +35,8 @@
 <script>
 	export let visible = false;
 
-	import { Sidepanel } from 'svelte-mui';
+	import {Button, Icon, Sidepanel} from 'svelte-mui';
+	import {arrowForward} from '../assets/icons';
 	import { theme} from "../store";
 </script>
 
