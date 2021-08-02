@@ -32,6 +32,11 @@
         return textOnScreen;
     }
 
+    export const focus = async (): Promise<void> => {
+        LOGGER.log("TextComponent focus " + textBox.role);
+        element.focus();
+        // this.startEditing();
+    };
     const setFocus = async (): Promise<void> => {
         LOGGER.log("TextComponent set focus " + textBox.role);
         element.focus();
@@ -221,7 +226,7 @@
 
     const onKeyPress = async (event: KeyboardEvent) => {
         LOGGER.log("TextComponent.onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
-        const insertionIndex = 0; // TODO getCaretPosition();
+        const insertionIndex = getCaretPosition(); // 0; // TODO getCaretPosition();
         // await wait(0);
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
@@ -251,22 +256,25 @@
 
    textBox.update = () => {
         LOGGER.log("Update called for textBox ["+ textOnScreen + "]") ;
-        if( textBox.getText() !== textOnScreen) {
+        if( textBox.getText() !== textOnScreen  && (textOnScreen !== undefined)) {
             LOGGER.log("    ==> value changed");
             textBox.setText(textOnScreen);
         }
     };
 
-    let text: string;
+    let text: string = textBox.getText();
+    textOnScreen = text;
     let element: HTMLDivElement;
     let placeholder: string;
 
     const onInput = async (e: InputEvent) => {
+        const value = e.target.innerText;
+
         LOGGER.log("onInput `" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
         // textBox.caretPosition = getCaretPosition();
         // caretPosition = textBox.caretPosition;
         // editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
-        if (textBox.deleteWhenEmpty && textBox.getText().length === 0) {
+        if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
             editor.deleteBox(textBox);
         }
@@ -288,9 +296,10 @@
     };
 
     autorun( () => {
-        text = textBox.getText();
-        textOnScreen = text;
-        AUTO_LOGGER.log("AUTO TEXT COMPONENT ["+ text + "]")
+        // LOGGER.log("AUTO start text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
+        text = textOnScreen;
+        // textOnScreen = text;
+        // AUTO_LOGGER.log("AUTO TEXT COMPONENT ["+ text + "]")
         placeholder = textBox.placeHolder
     });
 </script>
