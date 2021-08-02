@@ -75,6 +75,7 @@
     .list-component {
         --pi-list-grid-template-columns: "";
         --pi-list-grid-template-rows: "";
+        --pi-list-background-color: var(--inverse-color);
     }
     .horizontalList {
         grid-template-rows: var(--pi-list-grid-template-rows);

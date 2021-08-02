@@ -100,7 +100,7 @@
         height: 100%;
         font-size: 14px;
         width: 100%;
-        color: black;
+        color: var(--pi-darkblue);
         overflow-x: auto;
         background: var(--pi-editor-background);
         background-color: var(--pi-editor-background);

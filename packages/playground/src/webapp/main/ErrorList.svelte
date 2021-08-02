@@ -1,6 +1,6 @@
 <!-- this file contains the code for a list of elements that need to shown in a table -->
 
-<div class="list-viewport">
+<div>
     <div class="list">
         {#each headers as column, index}
             <div
@@ -18,7 +18,7 @@
                 <span class={sortedBy === index ? "underline" : ""}>{column}</span>
             </div>
         {/each}
-        {#each data as item}
+        {#each $modelErrrors as item}
             <div class="item">
                 {item.message}
             </div>
@@ -41,13 +41,9 @@
     import import_export from "../../webapp/assets/icons/svg/import_export_24px.svg";
 
     import sortErrors from "../main-ts-files/SortErrors";
-    import { PiError } from "@projectit/core";
-    import { get } from "svelte/store";
     import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
 
     export let headers: string[] = [ "Error message", "Location", "Severity"];
-    let data: PiError[] = [];
-    modelErrrors.subscribe(() => {data = get(modelErrrors)});
 
     let sortedBy: number = 0; // stores the column id by which the table is currently sorted, minus means unsorted
     let asc = false;
@@ -57,29 +53,15 @@
         asc = sortedBy === index ? !asc : false;
         sortedBy = index;
         // console.log("columnId: " + index);
-        data = sortErrors(data, index, asc);
+        $modelErrrors = sortErrors($modelErrrors, index, asc);
     }
 
 </script>
 
 <style>
-    .list-viewport{
-        border: 2px solid var(--list-divider);
-        overflow: auto;
-        max-height: 15vh;
-    }
-    .header{
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .header .underline{
-        text-decoration: underline;
-        /*text-underline: #333333;*/
-    }
     .list {
         display: grid;
         grid-template-columns: auto 180px 150px;
-        /*grid-template-rows: repeat(6, minmax(150px, auto));*/
         grid-gap: 1px;
         max-width: 100%;
         margin: 0 auto;
@@ -90,10 +72,13 @@
         background: var(--bg-color);
         padding: 5px;
     }
-    /*.list div:nth-child(even){*/
-    /*    background: #666;*/
-    /*    padding: 10px;*/
-    /*}*/
+    .header{
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .header .underline{
+        text-decoration: underline;
+    }
     .item{
         text-align: left;
     }

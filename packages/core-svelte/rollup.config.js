@@ -34,7 +34,9 @@ export default {
 			sourcemap: !production,
 			globals: {
 				'@projectit/core': '@projectit/core',
-				'mobx': 'mobx'
+				'mobx': 'mobx',
+				'svelte/internal': 'svelte/internal',
+				'svelte': 'svelte'
 			}
 		},
 		{
@@ -45,8 +47,8 @@ export default {
 			globals: {
 				'@projectit/core': '@projectit/core',
 				'mobx': 'mobx',
-				"svelte": "svelte",
-				"svelte/internal": "svelte/internal",
+				'svelte/internal': 'svelte/internal',
+				'svelte': 'svelte',
 				"tslib": "tslib"
 			}
 		}

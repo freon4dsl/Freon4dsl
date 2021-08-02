@@ -14,7 +14,7 @@
         text-align: center;
         background: var(--bg-app-bar);
         color: #eeeeee;
-        height: 16px;
+        height: var(--pi-footer-height);
         width: 100%;
         position: fixed;
         left: 0px;
