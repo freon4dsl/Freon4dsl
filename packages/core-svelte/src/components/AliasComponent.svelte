@@ -47,6 +47,46 @@
         // this.startEditing();
     };
 
+    /**
+     * Trigger a key event for `key`.
+     * @param {string} key
+     * @returns {Promise<void>}
+     */
+    const triggerKeyPressEvent = async (key: string) => {
+        LOGGER.info(this, "triggerKeyPressEvent " + key);
+        const aliasResult = await handleStringInput(key);
+        if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
+            if (textcomponent) {
+                textcomponent.innerText = key;
+                this.setCaretPosition(textcomponent.innerText.length);
+                this.dropdownIsOpen = true;
+            }
+        }
+    };
+
+    const handleStringInput = async (s: string) => {
+        LOGGER.info(this, "handleStringInput for box " + choiceBox.role);
+        const aliasResult = await executeBehavior(choiceBox, s, editor);
+        switch (aliasResult) {
+            case BehaviorExecutionResult.EXECUTED:
+                if (textcomponent) {
+                    textcomponent.innerText = "";
+                }
+                open = false;
+                // this.hasError = false;
+                break;
+            case BehaviorExecutionResult.PARTIAL_MATCH:
+                LOGGER.info(this, "PARTIAL_MATCH");
+                // this.hasError = false;
+                break;
+            case BehaviorExecutionResult.NO_MATCH:
+                LOGGER.info(this, "NO MATCH");
+                // this.hasError = true;
+                break;
+        }
+        return aliasResult;
+    };
+
     onMount( () => {
         LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "]");
         choiceBox.textBox.setFocus = setFocus;
@@ -236,6 +276,7 @@
 
     let listForDropdown: SelectOption[];
     let notifier = new ChangeNotifier();
+    choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
 
     selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {

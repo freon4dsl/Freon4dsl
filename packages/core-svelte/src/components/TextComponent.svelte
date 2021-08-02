@@ -226,7 +226,7 @@
 
     const onKeyPress = async (event: KeyboardEvent) => {
         LOGGER.log("TextComponent.onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
-        const insertionIndex = 0; // TODO getCaretPosition();
+        const insertionIndex = getCaretPosition(); // 0; // TODO getCaretPosition();
         // await wait(0);
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
@@ -268,11 +268,13 @@
     let placeholder: string;
 
     const onInput = async (e: InputEvent) => {
+        const value = e.target.innerText;
+
         LOGGER.log("onInput `" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
         // textBox.caretPosition = getCaretPosition();
         // caretPosition = textBox.caretPosition;
         // editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
-        if (textBox.deleteWhenEmpty && textBox.getText().length === 0) {
+        if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
             editor.deleteBox(textBox);
         }
