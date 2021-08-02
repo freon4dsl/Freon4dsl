@@ -1,3 +1,4 @@
+import { PiLogger } from "@projectit/core";
 import App from './App.svelte';
 
 const app = new App({
@@ -8,3 +9,7 @@ const app = new App({
 });
 
 export default app;
+
+PiLogger.mute("TextComponent");
+PiLogger.mute("AUTORUN");
+PiLogger.mute("AFTER_UPDATE")
