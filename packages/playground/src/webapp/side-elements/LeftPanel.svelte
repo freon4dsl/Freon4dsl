@@ -2,14 +2,14 @@
 <!-- It is shown to the left, when activated by the button on the AppBar -->
 <!-- It shows menus that otherwise would be on the AppBar -->
 
-<Sidepanel style="width: 100px;" bind:visible disableScroll>
+<Sidepanel style="width: 100px;" bind:visible={$leftPanelVisible} disableScroll>
 	<!-- icon  button to close the side panel -->
 	<div class="logo">
 		<Button
 			icon
 			color="inherit"
 			on:click={() => {
-				visible = false;
+				$leftPanelVisible = false;
 			}}
 		>
 			<Icon style="color:var(--inverse-color)" path={arrowBack} />
@@ -20,13 +20,12 @@
 	<MenuList />
 </Sidepanel>
 
-<script>
+<script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 
 	import {arrowBack} from '../assets/icons';
 	import MenuList from "../menu/MenuList.svelte";
-
-	export let visible = false;
+	import { leftPanelVisible } from "../store";
 </script>
 
 <style>

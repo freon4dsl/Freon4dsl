@@ -22,3 +22,5 @@ export const darkTheme = {
 };
 
 export const miniWindow: Writable<boolean> = writable<boolean>(false);
+export const leftPanelVisible: Writable<boolean> = writable<boolean>(false);
+export const rightPanelVisible: Writable<boolean> = writable<boolean>(false);

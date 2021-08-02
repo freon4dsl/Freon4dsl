@@ -11,7 +11,7 @@
 			id="hamburger"
 			color="inherit"
 			on:click={() => {
-				leftPanelVisible = true;
+				$leftPanelVisible = true;
 			}}
 		>
 			<Icon style="color:var(--inverse-color)" path={menu} />
@@ -30,7 +30,7 @@
 	{#if !$miniWindow}
 	<!-- help button is only shown in small viewport, in large viewport the help menu is directly visible	-->
 		<Button icon color="inherit"
-				on:click={() => (rightPanelVisible = true)}
+				on:click={() => {$rightPanelVisible = true}}
 				ripple={false}
 		>
 			<Icon style="color:var(--inverse-color)">
@@ -61,12 +61,9 @@
 	import projectit_logo from '../assets/icons/svg/projectit-logo.svg';
 	import question_mark from '../assets/icons/svg/help_24px.svg';
 	import {menu, invertColors} from '../assets/icons';
-	import {theme, darkTheme, miniWindow} from '../store';
+	import {theme, darkTheme, miniWindow, leftPanelVisible, rightPanelVisible} from '../store';
 	import { languageName } from "../menu-ts-files/WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
-
-	export let leftPanelVisible: boolean = false;
-	export let rightPanelVisible: boolean = false;
 
 	onMount(async () => {
 		try {

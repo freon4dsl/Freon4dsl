@@ -4,10 +4,10 @@
 	<title>ProjectIt</title>
 </svelte:head>
 
-<LeftPanel bind:visible={leftPanelVisible} />
-<RightPanel bind:visible={rightPanelVisible} />
+<LeftPanel />
+<RightPanel />
 
-<AppBar	bind:leftPanelVisible bind:rightPanelVisible/>
+<AppBar/>
 <div class="main-window">
 	<MainGrid/>
 </div>
@@ -21,13 +21,12 @@
 	import RightPanel from './side-elements/RightPanel.svelte';
 	import Footer from "./side-elements/Footer.svelte";
 	import MainGrid from "./main/MainGrid.svelte";
-	import {miniWindow} from "./store";
+	import {miniWindow, leftPanelVisible} from "./store";
 	import {EditorCommunication} from "./editor/EditorCommunication";
 	import { unnamed } from "./menu-ts-files/WebappStore";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
-	let leftPanelVisible = false;
-	let rightPanelVisible = false;
+
 
 	// initialize defaults for the current language
 	EditorCommunication.initialize();
@@ -49,6 +48,18 @@
 			miniWindow.set(false);
 		}
 	}
+
+	// TODO not sure whether this function is useful
+	// function onKeyDown(e) {
+	// 	// e.keyCode === 13 => Enter or Return key
+	// 	// e.keyCode === 32 => Spacebar
+	// 	if (e.keyCode === 13 || e.keyCode === 32) {
+	// 		e.stopPropagation();
+	// 		e.preventDefault();
+	//
+	// 		leftPanelVisible.set(false);
+	// 	}
+	// }
 </script>
 
 <style>

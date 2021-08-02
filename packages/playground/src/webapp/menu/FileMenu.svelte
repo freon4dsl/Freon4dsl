@@ -55,10 +55,12 @@
         let menuItem = menuItems.find(item => item.id === id);
         // perform the action associated with the menu item
         menuItem.action(id);
+        $leftPanelVisible = false;
     };
 
     // elements for the error message are all imported from a common store
     import {showError, errorMessage, severity, severityType} from "../menu-ts-files/WebappStore";
+    import { leftPanelVisible } from "../store";
 
     // elements for new model menuitem
     let newModelDialogVisible: boolean = false;

@@ -32,12 +32,11 @@
 	</p>
 </Sidepanel>
 
-<script>
-	export let visible = false;
-
+<script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 	import {arrowForward} from '../assets/icons';
-	import { theme} from "../store";
+	import { rightPanelVisible, theme } from "../store";
+	let visible = $rightPanelVisible;
 </script>
 
 <style>

@@ -5,6 +5,7 @@
     import Keybindings from "./Keybindings.svelte";
     import AboutDialog from "./AboutDialog.svelte";
     import HelpDialog from "./HelpDialog.svelte";
+    import { leftPanelVisible } from "../store";
 
     const myAction = (id: number) => {
         console.log("Help menu " + id + " action performed");
@@ -33,6 +34,7 @@
         } else {
             menuItem.action(id);
         }
+        $leftPanelVisible = false;
     };
 
     let helpDialogVisible: boolean = false;
