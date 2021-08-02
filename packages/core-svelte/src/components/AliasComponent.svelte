@@ -22,7 +22,9 @@
     export let choiceBox: AbstractChoiceBox;
     export let editor: PiEditor;
 
+    let openInHtml: boolean ;
     let open: boolean = false;
+    $: openInHtml = open;
     let LOGGER = new PiLogger("AliasComponent");
 
     let dropdown: DropdownComponent;
@@ -58,8 +60,8 @@
         if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
             if (textcomponent) {
                 textcomponent.innerText = key;
-                this.setCaretPosition(textcomponent.innerText.length);
-                this.dropdownIsOpen = true;
+                // this.setCaretPosition(textcomponent.innerText.length);
+                // this.dropdownIsOpen = true;
             }
         }
     };
@@ -180,6 +182,10 @@
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
+        if( e.keyCode === SPACEBAR && e.ctrlKey) {
+            open = !open;
+            return;
+        }
         if (open ) { // && this.dropdown) {
             // Propagate key event to dropdown component
             LOGGER.log("Forwarding event to dropdown component");
@@ -217,6 +223,7 @@
                     LOGGER.log("onKeyDown Keys.SPACEBAR");
                     if (e.ctrlKey) {
                         open = !open;
+                        LOGGER.log("     open is now "+ open);
                     }
                     break;
             }
@@ -299,10 +306,10 @@
                    textBox={choiceBox.textBox}
                    bind:this={textcomponent}
     />
-    {#if open}
+    {#if openInHtml}
         <DropdownComponent
                 bind:this="{dropdown}"
-                bind:open
+                bind:openInHtml
                 handleSelectedOption={selectOption}
                 on:pi-ItemSelected={selectedEvent}
                 getOptions={getAliasOptions}
