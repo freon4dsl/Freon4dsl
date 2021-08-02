@@ -102,6 +102,8 @@
         width: 100%;
         color: black;
         overflow-x: auto;
+        background: var(--pi-editor-background);
+        background-color: var(--pi-editor-background);
     }
 
     input, button, select, textarea {

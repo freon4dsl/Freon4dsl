@@ -17,7 +17,7 @@ export class PiLogger {
         this.mutedLogs.push(t);
     }
     static unmute(t: string): void {
-        const index = this.mutedLogs.findIndex(item => item === t);
+        const index = this.mutedLogs.indexOf(t);
         if( index >= 0){
             this.mutedLogs.splice(index, 1);
         }
@@ -118,4 +118,3 @@ export class PiLogger {
 }
 
 export const EVENT_LOG = new PiLogger("EVENT").mute();
-export const RENDER_LOG = new PiLogger("RENDER").mute();

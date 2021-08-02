@@ -8,7 +8,7 @@
     export let label = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("LabelComponent").mute();
+    const LOGGER = new PiLogger("LabelComponent"); // .mute();
 
     onDestroy(() => {
         LOGGER.log("DESTROY LABEL  COMPONENT ["+ text + "]")

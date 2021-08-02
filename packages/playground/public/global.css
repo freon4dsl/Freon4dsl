@@ -3,7 +3,8 @@
 	--pi-popup-border: none;
 	--pi-popup-background: #fff;
 	--pi-popup-box-shadow: 0 0 0px 0 rgba(0, 0, 0, 0.5);
-
+	--pi-editor-background: white;
+	--pi-list-background-color: white;
 
 	/* ProjectIt colors */
 	--pi-darkblue: darkblue; /* #00008b */
