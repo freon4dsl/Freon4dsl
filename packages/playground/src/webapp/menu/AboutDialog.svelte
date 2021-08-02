@@ -1,8 +1,9 @@
-<Dialog width="80%"  bind:visible>
-    <div slot="title" class="title">About ProjectIt</div>
+<Dialog width="100%" bind:visible>
+    <div slot="title" class="dialog-title">About ProjectIt</div>
 
     <div class="content" >
         ProjectIt is an open source project which can be found at:
+        <br/>
         <br/>
         <div align="center" >
             <a href="http://projectit.org/" target="_blank">
@@ -17,16 +18,14 @@
     <hr>
     <div class="content">
         <p> Created by:
-            <div align="center" >
                 <a href="http://openmodeling.nl/" target="_blank">
                     www.openmodeling.nl.
                 </a>
-            </div>
     </div>
     <hr>
 
     <div slot="actions" class="actions center">
-        <Button color="primary" on:click={() => handleSubmit()}>Ok</Button>
+        <Button on:click={() => handleSubmit()}>Ok</Button>
     </div>
 
 </Dialog>
@@ -43,13 +42,18 @@
 </script>
 
 <style>
+    .dialog-title{
+        color: var(--inverse-color);
+        background-color: var(--bg-app-bar);
+    }
     .content{
         color: var(--pi-darkblue);
     }
-    .actions{
+    a{
         color: var(--pi-darkblue);
+        text-decoration: underline;
     }
-    .center{
-        color: var(--pi-darkblue);
-    }
+    /*.actions center{*/
+    /*    color: var(--pi-darkblue);*/
+    /*}*/
 </style>
