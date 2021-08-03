@@ -43,7 +43,6 @@
     //     open = false;
     // }
     const setFocus = async (): Promise<void> => {
-        console.log("AliasComponent set focus " + choiceBox.role);
         LOGGER.log("AliasComponent set focus " + choiceBox.role);
         textcomponent.focus();
         // this.startEditing();
@@ -58,7 +57,7 @@
         LOGGER.info(this, "triggerKeyPressEvent " + key);
         const aliasResult = await handleStringInput(key);
         if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
-            if (textcomponent) {
+            if (!!textcomponent) {
                 textcomponent.innerText = key;
                 // this.setCaretPosition(textcomponent.innerText.length);
                 // this.dropdownIsOpen = true;
@@ -71,7 +70,7 @@
         const aliasResult = await executeBehavior(choiceBox, s, editor);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
-                if (textcomponent) {
+                if (!!textcomponent) {
                     textcomponent.innerText = "";
                 }
                 open = false;
@@ -90,7 +89,7 @@
     };
 
     onMount( () => {
-        LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "]");
+        LOGGER.log("onMount for role [" + choiceBox.role + "] with textcomponent " + textcomponent);
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -102,6 +101,7 @@
     });
 
     afterUpdate( () => {
+        LOGGER.log("AfterUpdate")
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();

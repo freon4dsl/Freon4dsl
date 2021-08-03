@@ -30,7 +30,6 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
-        console.log("AliasBox.selectOption")
         return await executeBehavior(this, option.id, editor);
 
     }

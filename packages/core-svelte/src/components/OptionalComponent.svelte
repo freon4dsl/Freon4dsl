@@ -29,7 +29,7 @@
     let text: string;
     autorun( () => {
         text = "Dummy OptionalBox";
-        AUTO_LOGGER.log("AUTORUN OPTIONAL COMPONENT ["+ text + "]")
+        AUTO_LOGGER.log("OptionalComponent ["+ text + "]")
     });
 </script>
 

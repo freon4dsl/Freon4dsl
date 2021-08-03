@@ -1,4 +1,4 @@
-import { observable, computed, action } from "mobx";
+import { observable, computed, action, trace } from "mobx";
 
 import { PiContainerDescriptor, PiElement } from "../language";
 import { PiCaret, wait, PiLogger } from "../util";
@@ -82,6 +82,10 @@ export class PiEditor {
         }
     }
 
+    async selectBoxNew(element: PiElement, role: string, caretPosition?: PiCaret) {
+        this.selectBox(this.rootBox.findBox(element.piId(), role));
+    }
+
     async selectBox(box: Box | null, caretPosition?: PiCaret) {
         if (box === null || box === undefined) {
             console.error("PiEditor.selectBox is null !");
@@ -94,15 +98,10 @@ export class PiEditor {
         }
         this.selectedBox = box;
         // this.$projectedElement!.focus();
-        if (box === null) {
-            LOGGER.info(this, "box === null");
-            return;
-        }
-
-        LOGGER.info(this, "==> select box " + box.role + " caret position: " + caretPosition);
+        LOGGER.info(this, "==> select box " + box.role + " caret position: " + (!!caretPosition ?  caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
-            if (caretPosition) {
-                LOGGER.info(this, "caret position is " + caretPosition);
+            if (!!caretPosition) {
+                LOGGER.info(this, "caret position is " + caretPosition.position);
                 box.setCaret(caretPosition);
             } else {
                 LOGGER.info(this, "caret position is empty");
@@ -110,6 +109,7 @@ export class PiEditor {
             }
         }
         LOGGER.info(this, "setting focus on box " + box.role);
+        // TODO When replacing operator error: call focus on null textcomponent in AliasComponent
         await box.setFocus();
     }
 
@@ -129,6 +129,7 @@ export class PiEditor {
     @computed
     get rootBox(): Box {
         LOGGER.info(this, "RECALCULATING ROOT [" + this.rootElement + "]");
+        // trace(true);
         return this.projection.getBox(this.rootElement);
         // return this.$rootBox;
     }

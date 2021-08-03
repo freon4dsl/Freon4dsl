@@ -24,11 +24,13 @@
         isVerticalBox,
         isHorizontalBox,
         isSvgBox,
-        LabelBox, PiEditor
+        LabelBox, PiEditor, PiLogger
     } from "@projectit/core";
 
+    const LOGGER = new PiLogger("RenderComponent");
+
     onDestroy(() => {
-        console.log("DESTROY RENDER  COMPONENT");
+        LOGGER.log("DESTROY RENDER  COMPONENT");
     });
 
     export let box: Box;
@@ -47,7 +49,7 @@
 
     let showBox;
     autorun(() => {
-        AUTO_LOGGER.log("AUTO UPDATE Rendering: " + box.kind + " for element " + box.element.piLanguageConcept());
+        AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
         showBox = box;
         if (isVerticalBox(showBox) || isHorizontalBox(showBox)) {
             // console.log("    children " + showBox.children.length);

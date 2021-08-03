@@ -110,7 +110,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
                     PiUtils.replaceExpression(exp, newExp, editor);
                     BTREE.balanceTree(newExp, editor);
                     exp = newExp;
-                    await editor.selectElement(newExp.piRight());
+                    // await editor.selectElement(newExp.piRight());
                     await editor.selectBox(operatorBox.nextLeafRight.firstLeaf, PiCaret.LEFT_MOST);
                     return BehaviorExecutionResult.EXECUTED;
                 }

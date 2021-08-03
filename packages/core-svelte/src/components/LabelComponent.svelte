@@ -29,7 +29,7 @@
     let text: string;
     autorun( () => {
         text = label.getLabel();
-        AUTO_LOGGER.log("AUTORUN LABEL  COMPONENT ["+ text + "]")
+        AUTO_LOGGER.log("LabelComponent ["+ text + "]")
     });
 </script>
 
