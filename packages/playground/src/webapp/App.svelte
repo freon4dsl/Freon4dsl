@@ -19,6 +19,10 @@
 <SaveUnitDialog />
 <DeleteUnitDialog />
 
+<HelpDialog />
+<AboutDialog />
+<Keybindings />
+
 <UserMessage />
 
 <!-- the layout of the components that are rendered for this app -->
@@ -43,6 +47,10 @@
 	import SaveUnitDialog from "./menu/SaveUnitDialog.svelte";
 	import NameModelDialog from "./menu/NameModelDialog.svelte";
 	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
+	import AboutDialog from "./menu/AboutDialog.svelte";
+	import HelpDialog from "./menu/HelpDialog.svelte";
+	import Keybindings from "./menu/Keybindings.svelte";
+
 	import MainGrid from "./main/MainGrid.svelte";
 
 	import {miniWindow} from "./WebappStore";

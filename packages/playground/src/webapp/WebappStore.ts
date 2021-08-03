@@ -70,6 +70,9 @@ export const openUnitDialogVisible: Writable<boolean> = writable<boolean>(false)
 export const saveUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export const nameModelDialogVisible: Writable<boolean> = writable<boolean>(false);
 export const deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
+export const helpDialogVisible: Writable<boolean> = writable<boolean>(false);
+export const aboutDialogVisible: Writable<boolean> = writable<boolean>(false);
+export const keybindingsDialogVisible: Writable<boolean> = writable<boolean>(false);
 
 
 

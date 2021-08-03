@@ -2,10 +2,7 @@
     import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
     import { arrowDropDown } from '../assets/icons';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
-    import Keybindings from "./Keybindings.svelte";
-    import AboutDialog from "./AboutDialog.svelte";
-    import HelpDialog from "./HelpDialog.svelte";
-    import { leftPanelVisible } from "../WebappStore";
+    import { aboutDialogVisible, helpDialogVisible, keybindingsDialogVisible, leftPanelVisible } from "../WebappStore";
 
     const myAction = (id: number) => {
         console.log("Help menu " + id + " action performed");
@@ -26,25 +23,17 @@
         let menuItem = menuItems.find(item => item.id === id);
         // perform the action associated with the menu item
         if (id === 2) {
-            keybindingsDialogVisible = true;
+            $keybindingsDialogVisible = true;
         } else if (id === 3) {
-            aboutDialogVisible = true;
+            $aboutDialogVisible = true;
         } else if (id === 1) {
-            helpDialogVisible = true;
+            $helpDialogVisible = true;
         } else {
             menuItem.action(id);
         }
         $leftPanelVisible = false;
     };
-
-    let helpDialogVisible: boolean = false;
-    let aboutDialogVisible: boolean = false;
-    let keybindingsDialogVisible: boolean = false;
 </script>
-
-<HelpDialog bind:visible={helpDialogVisible}/>
-<AboutDialog bind:visible={aboutDialogVisible}/>
-<Keybindings bind:visible={keybindingsDialogVisible}/>
 
 <Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">

@@ -2,14 +2,14 @@
 <!-- It is shown to the right -->
 <!-- It shows Help Info -->
 
-<Sidepanel right bind:visible>
+<Sidepanel right bind:visible={$rightPanelVisible}>
 	<!-- icon  button to close the side panel -->
 	<div class="logo">
 		<Button
 				icon
 				color="inherit"
 				on:click={() => {
-				visible = false;
+				$rightPanelVisible = false;
 			}}
 		>
 			<Icon style="color:var(--inverse-color)" path={arrowForward} />
@@ -36,7 +36,6 @@
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 	import {arrowForward} from '../assets/icons';
 	import { rightPanelVisible, theme } from "../WebappStore";
-	let visible = $rightPanelVisible;
 </script>
 
 <style>
