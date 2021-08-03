@@ -3,7 +3,7 @@
     import { arrowDropDown } from '../assets/icons';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import {EditorCommunication} from "../editor/EditorCommunication";
-    import { leftPanelVisible } from "../store";
+    import { leftPanelVisible } from "../WebappStore";
 
     let activatorTitle: string= "Edit";
     let menuItems : MenuItem[] = [

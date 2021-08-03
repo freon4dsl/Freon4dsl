@@ -32,7 +32,7 @@
 
 <script>
     import {Button, Dialog} from 'svelte-mui';
-    import {versionNumber} from "../menu-ts-files/WebappStore";
+    import {versionNumber} from "../WebappStore";
 
     export let visible = false;
 

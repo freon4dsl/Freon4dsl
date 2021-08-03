@@ -35,7 +35,7 @@
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 	import {arrowForward} from '../assets/icons';
-	import { rightPanelVisible, theme } from "../store";
+	import { rightPanelVisible, theme } from "../WebappStore";
 	let visible = $rightPanelVisible;
 </script>
 

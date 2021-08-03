@@ -1,4 +1,4 @@
-<Dialog width="290" bind:visible>
+<Dialog width="290" bind:visible={$nameModelDialogVisible}>
 	<div slot="title" class="title">Give name to model</div>
 
 	<Textfield
@@ -21,12 +21,11 @@
 
 <script lang="ts">
 	import {Button, Dialog, Textfield} from 'svelte-mui';
-	import {currentModelName} from "../menu-ts-files/WebappStore";
+	import {currentModelName} from "../WebappStore";
 	import {get} from 'svelte/store';
 	import {EditorCommunication} from "../editor/EditorCommunication";
+	import { nameModelDialogVisible, modelNames } from "../WebappStore";
 
-	export let visible: boolean = false;
-	export let modelNames: string[];
 	let modelName: string;
 	let localErrorMessage: string = "";
 
@@ -42,11 +41,11 @@
 		// reset all variables
 		modelName = "";
 		localErrorMessage = "";
-		visible = false;
+		$nameModelDialogVisible = false;
 	}
 
 	const handleSubmit = () => {
-		if (modelNames.includes(modelName)) {
+		if ($modelNames.includes(modelName)) {
 			localErrorMessage = "Model with this name already exists";
 		} else if (!modelName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
 			// TODO this message is too long, must use wrap
@@ -57,7 +56,7 @@
 			// reset all variables
 			modelName = "";
 			localErrorMessage = "";
-			visible = false;
+			$nameModelDialogVisible = false;
 		}
 	}
 </script>

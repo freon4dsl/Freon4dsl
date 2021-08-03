@@ -5,7 +5,7 @@
     import Keybindings from "./Keybindings.svelte";
     import AboutDialog from "./AboutDialog.svelte";
     import HelpDialog from "./HelpDialog.svelte";
-    import { leftPanelVisible } from "../store";
+    import { leftPanelVisible } from "../WebappStore";
 
     const myAction = (id: number) => {
         console.log("Help menu " + id + " action performed");

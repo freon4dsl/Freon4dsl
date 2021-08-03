@@ -61,8 +61,8 @@
 	import projectit_logo from '../assets/icons/svg/projectit-logo.svg';
 	import question_mark from '../assets/icons/svg/help_24px.svg';
 	import {menu, invertColors} from '../assets/icons';
-	import {theme, darkTheme, miniWindow, leftPanelVisible, rightPanelVisible} from '../store';
-	import { languageName } from "../menu-ts-files/WebappStore";
+	import {theme, darkTheme, miniWindow, leftPanelVisible, rightPanelVisible} from '../WebappStore';
+	import { languageName } from "../WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
 
 	onMount(async () => {

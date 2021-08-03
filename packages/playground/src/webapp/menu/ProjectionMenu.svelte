@@ -5,7 +5,7 @@
     import { arrowDropDown } from '../assets/icons';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import {EditorCommunication} from "../editor/EditorCommunication";
-    import { leftPanelVisible } from "../store";
+    import { leftPanelVisible } from "../WebappStore";
 
     const myAction = (id: number) => {console.log("Projection menu " + id + " action performed");};
     let activatorTitle: string= "Projection";

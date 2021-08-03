@@ -1,12 +1,27 @@
+<!-- some administration -->
 <svelte:window on:resize={onResize} />
 
 <svelte:head>
 	<title>ProjectIt</title>
 </svelte:head>
 
+<!-- definitions of all components that may at some time be shown in this app -->
 <LeftPanel />
 <RightPanel />
 
+<!-- first make sure all dialogs and the error message are present -->
+
+<NewModelDialog />
+<OpenModelDialog />
+<NameModelDialog />
+<NewUnitDialog />
+<OpenUnitDialog />
+<SaveUnitDialog />
+<DeleteUnitDialog />
+
+<UserMessage />
+
+<!-- the layout of the components that are rendered for this app -->
 <AppBar/>
 <div class="main-window">
 	<MainGrid/>
@@ -17,16 +32,24 @@
 	import {onMount} from 'svelte';
 
 	import AppBar from './side-elements/AppBar.svelte';
+	import Footer from "./side-elements/Footer.svelte";
 	import LeftPanel from './side-elements/LeftPanel.svelte';
 	import RightPanel from './side-elements/RightPanel.svelte';
-	import Footer from "./side-elements/Footer.svelte";
+	import UserMessage from "./side-elements/UserMessage.svelte";
+	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
+	import OpenUnitDialog from "./menu/OpenUnitDialog.svelte";
+	import NewModelDialog from "./menu/NewModelDialog.svelte";
+	import NewUnitDialog from "./menu/NewUnitDialog.svelte";
+	import SaveUnitDialog from "./menu/SaveUnitDialog.svelte";
+	import NameModelDialog from "./menu/NameModelDialog.svelte";
+	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
 	import MainGrid from "./main/MainGrid.svelte";
-	import {miniWindow, leftPanelVisible} from "./store";
+
+	import {miniWindow} from "./WebappStore";
 	import {EditorCommunication} from "./editor/EditorCommunication";
-	import { unnamed } from "./menu-ts-files/WebappStore";
+	import { unnamed } from "./WebappStore";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
-
 
 	// initialize defaults for the current language
 	EditorCommunication.initialize();

@@ -25,7 +25,7 @@
 
 	import {arrowBack} from '../assets/icons';
 	import MenuList from "../menu/MenuList.svelte";
-	import { leftPanelVisible } from "../store";
+	import { leftPanelVisible } from "../WebappStore";
 </script>
 
 <style>
