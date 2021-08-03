@@ -29,7 +29,7 @@
         ripple: true,
         disabled: false,
         fullWidth: false,
-        style: "color: var(--color); height:var(--pi-menu-height); text-transform: none; font-size: var(--button-font-size); width: 68px; margin: 8px;"
+        style: "color: var(--color); height:var(--pi-menu-height); text-transform: none; font-size: var(--button-font-size); width: 96px; margin: 8px;"
     };
 </script>
 

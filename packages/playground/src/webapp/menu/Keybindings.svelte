@@ -1,4 +1,4 @@
-<Dialog width="80%"  bind:visible>
+<Dialog width="80%"  bind:visible={$keybindingsDialogVisible}>
     <div slot="title" class="title">Keybindings</div>
 
     <ul class="keybinding">
@@ -18,10 +18,10 @@
 
 <script>
     import {Button, Dialog} from 'svelte-mui';
-    export let visible = false;
+    import {keybindingsDialogVisible} from "../WebappStore";
 
     const handleSubmit = () => {
-        visible = false;
+        $keybindingsDialogVisible = false;
     }
 </script>
 

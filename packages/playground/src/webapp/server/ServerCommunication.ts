@@ -7,7 +7,7 @@ import { SERVER_URL } from "../WebappConfiguration";
 import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
 
 // needed to show errors to the user
-import {showError, errorMessage, severity, severityType} from "../menu-ts-files/WebappStore";
+import {showError, errorMessage, severity, severityType} from "../WebappStore";
 
 const LOGGER = new PiLogger("ServerCommunication"); //.mute();
 const ModelUnitInterfacePostfix: string = "Public";
@@ -53,7 +53,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     async deleteModelUnit(modelInfo: IModelUnitData ) {
-        LOGGER.log(`ServerCommunication.deleteModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
+        console.log(`ServerCommunication.deleteModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
         if (!!modelInfo.unitName && modelInfo.unitName !== "") {
             try {
                 const res1 = await axios.get(`${SERVER_URL}deleteModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}`);

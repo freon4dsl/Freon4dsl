@@ -1,17 +1,3 @@
-
-<!-- first make sure all dialogs and the error message are present -->
-
-<NewModelDialog bind:visible={newModelDialogVisible} modelNames={modelNames}/>
-<OpenModelDialog bind:visible={openModelDialogVisible} modelNames={modelNames}/>
-<NewUnitDialog bind:visible={newUnitDialogVisible} unitNames={unitNames} />
-<OpenUnitDialog bind:visible={openUnitDialogVisible} unitNames={unitNames}/>
-<SaveUnitDialog bind:visible={saveUnitDialogVisible} unitNames={unitNames}/>
-<NameModelDialog bind:visible={nameModelDialogVisible} modelNames={modelNames}/>
-<DeleteUnitDialog bind:visible={deleteUnitDialogVisible}/>
-
-<UserMessage />
-
-<!-- next define the menu -->
 <Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">
 			<Button {...props}  title="File menu">{activatorTitle} <Icon path={arrowDropDown}/></Button>
@@ -37,17 +23,22 @@
     import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
     import { arrowDropDown } from '../assets/icons';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
-    import UserMessage from "../side-elements/UserMessage.svelte";
-    import OpenModelDialog from "./OpenModelDialog.svelte";
-    import OpenUnitDialog from "./OpenUnitDialog.svelte";
     import {ServerCommunication} from "../server/ServerCommunication";
-    import {currentModelName, currentUnitName} from "../menu-ts-files/WebappStore";
-    import NewModelDialog from "./NewModelDialog.svelte";
-    import NewUnitDialog from "./NewUnitDialog.svelte";
-    import SaveUnitDialog from "./SaveUnitDialog.svelte";
-    import NameModelDialog from "./NameModelDialog.svelte";
-    import DeleteUnitDialog from "./DeleteUnitDialog.svelte";
     import {EditorCommunication} from "../editor/EditorCommunication";
+
+    import { currentModelName, currentUnitName, unitNames } from "../WebappStore";
+    import {showError, errorMessage, severity, severityType} from "../WebappStore";
+    import {
+        deleteUnitDialogVisible,
+        leftPanelVisible,
+        nameModelDialogVisible,
+        newModelDialogVisible,
+        newUnitDialogVisible,
+        openModelDialogVisible,
+        openUnitDialogVisible,
+        saveUnitDialogVisible,
+        modelNames
+    } from "../WebappStore";
 
     // when a menu-item is clicked, this function is executed
     const handleClick = (id: number) => {
@@ -55,36 +46,30 @@
         let menuItem = menuItems.find(item => item.id === id);
         // perform the action associated with the menu item
         menuItem.action(id);
+        // if the leftpanel is opened (is the case when this menu is used from MenuList), then close it
+        $leftPanelVisible = false;
     };
 
-    // elements for the error message are all imported from a common store
-    import {showError, errorMessage, severity, severityType} from "../menu-ts-files/WebappStore";
-
-    // elements for new model menuitem
-    let newModelDialogVisible: boolean = false;
-    let modelNames: string[];
+    // new model menuitem
     // TODO make sure the list of modelNames is emptied after the action
-
     const newModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
             // list may be empty => this is the first model to be stored
-            modelNames = names;
-            newModelDialogVisible = true;
+            $modelNames = names;
+            $newModelDialogVisible = true;
         });
     }
 
-    // elements for open model menuitem
-    let openModelDialogVisible: boolean = false;
+    // open model menuitem
     // TODO make sure the list of modelNames is emptied after the action
-
     const openModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
             // if list not empty, show dialog
             if (names.length > 0) {
-                modelNames = names;
-                openModelDialogVisible = true;
+                $modelNames = names;
+                $openModelDialogVisible = true;
             } else {
                 // if list is empty show error message
                 errorMessage.set("No models found on the server");
@@ -94,11 +79,7 @@
         });
     }
 
-    // elements for new unit menuitem
-    let newUnitDialogVisible: boolean = false;
-    let unitNames: string[];
-    // let unitTypes: string[];
-
+    // new unit menuitem
     const newUnit = () => {
         if (!EditorCommunication.getInstance().isModelNamed()) {
             errorMessage.set("Please, select or create a model before creating a new model unit");
@@ -109,21 +90,19 @@
         // get list of units from server, because new unit may not have the same name as an existing one
         ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // list may be empty => this is the first unit to be stored
-            unitNames = names;
-            newUnitDialogVisible = true;
+            $unitNames = names;
+            $newUnitDialogVisible = true;
         });
     }
 
-    // elements for open unit menuitem
-    let openUnitDialogVisible: boolean = false;
-
+    // open unit menuitem
     const openUnit = () => {
         // get list of units from server
         ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // if list not empty, show dialog
             if (names.length > 0) {
-                unitNames = names;
-                openUnitDialogVisible = true;
+                $unitNames = names;
+                $openUnitDialogVisible = true;
             } else {
                 // if list is empty show error message
                 errorMessage.set("No units for " + $currentModelName + " found on the server");
@@ -133,10 +112,7 @@
         });
     }
 
-    // elements for save unit menuitem
-    let saveUnitDialogVisible: boolean = false;
-    let nameModelDialogVisible: boolean = false;
-
+    // save unit menuitem
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
         // first check whether the model to which the unit belongs has a name,
@@ -145,28 +121,26 @@
             // get list of models from server
             ServerCommunication.getInstance().loadModelList((names: string[]) => {
                 // list may be empty => this is the first model to be stored
-                modelNames = names;
-                nameModelDialogVisible = true;
+                $modelNames = names;
+                $nameModelDialogVisible = true;
             });
         }
         // get list of units from server, because a new name must not be identical to an existing one
         ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // only show the dialog if the name is empty or unknown
             if (!EditorCommunication.getInstance().isUnitNamed()) {
-                unitNames = names;
-                saveUnitDialogVisible = true;
+                $unitNames = names;
+                $saveUnitDialogVisible = true;
             } else {
                 EditorCommunication.getInstance().saveCurrentUnit();
             }
         });
     }
 
-    // elements for delete unit menuitem
-    let deleteUnitDialogVisible: boolean = false;
-
+    // delete unit menuitem
     const deleteUnit = () => {
-        if (EditorCommunication.getInstance().isModelNamed() || EditorCommunication.getInstance().isUnitNamed()) {
-            deleteUnitDialogVisible = true;
+        if (EditorCommunication.getInstance().isModelNamed() && EditorCommunication.getInstance().isUnitNamed()) {
+            $deleteUnitDialogVisible = true;
         } else {
             // if list is empty show error message
             errorMessage.set("Cannot delete an unnamed unit or model");
