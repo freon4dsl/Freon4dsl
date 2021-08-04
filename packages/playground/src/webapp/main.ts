@@ -6,11 +6,11 @@ import App from './App.svelte';
 
 // PiLogger.muteAllLogs();
 PiLogger.mute("AUTORUN");
-PiLogger.mute("AliasComponent");
-PiLogger.mute("TextComponent");
+// PiLogger.mute("AliasComponent");
+// PiLogger.mute("TextComponent");
 PiLogger.mute("AFTER_UPDATE");
 PiLogger.mute("SelectOptionList");
-PiLogger.mute("DropdownComponent");
+// PiLogger.mute("DropdownComponent");
 // PiLogger.muteAllLogs()
 
 const app = new App({

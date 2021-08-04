@@ -178,7 +178,7 @@ export abstract class Box {
      * This function is called to set the focus on this element.
      */
     setFocus: () => void = async () => {
-        LOGGER.info(this, "setFocus not implemented for " + this.id + " id " + this.$id);
+        console.error(this, this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id);
         /* To be overwritten by `TextComponent` */
     };
 

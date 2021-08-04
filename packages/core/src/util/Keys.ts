@@ -75,7 +75,7 @@ export function isNumeric(event: KeyboardEvent): boolean {
 }
 
 export function isPrintable(event: KeyboardEvent): boolean {
-    // TODO Check new way of accessing key codes
+    // TODO Check new way of accessing key codes using event.key (keycode is deprecated), see https://github.com/ndrsn/is-printable-key-event
     const keyCode = event.keyCode;
     return (
         (!event.altKey &&

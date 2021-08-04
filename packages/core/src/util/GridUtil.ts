@@ -132,10 +132,10 @@ export class GridUtil {
                 parent[proc.propertyName].splice(proc.propertyIndex + 1, 0, newElement);
 
                 if (!!roleToSelect) {
-                    await editor.selectElement(newElement, roleToSelect);
+                    editor.selectElement(newElement, roleToSelect);
                 } else {
-                    await editor.selectElement(newElement);
-                    await editor.selectFirstEditableChildBox();
+                    editor.selectElement(newElement);
+                    editor.selectFirstEditableChildBox();
                     // await editor.selectFirstLeafChildBox();
                 }
                 return null;
@@ -159,10 +159,10 @@ export class GridUtil {
                 element[propertyRole].push(newElement);
 
                 if (!!roleToSelect) {
-                    await editor.selectElement(newElement, roleToSelect);
+                    editor.selectElement(newElement, roleToSelect);
                 } else {
-                    await editor.selectElement(newElement);
-                    await editor.selectFirstEditableChildBox();
+                    editor.selectElement(newElement);
+                    editor.selectFirstEditableChildBox();
                     // await editor.selectFirstLeafChildBox();
                 }
                 return null;
