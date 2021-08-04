@@ -1,4 +1,4 @@
-<Dialog width="290" bind:visible>
+<Dialog width="290" bind:visible={$newUnitDialogVisible}>
 	<div slot="title">New unit</div>
 
 	<Textfield
@@ -27,21 +27,18 @@
 </Dialog>
 
 <script lang="ts">
-	import {Button, Dialog, Radio, Textfield} from 'svelte-mui';
-	import {currentUnitName, unitTypes} from "../menu-ts-files/WebappStore";
-	import {get} from 'svelte/store';
-	import {EditorCommunication} from "../editor/EditorCommunication";
-
-	// boolean to determine whether this dialog is visible or not
-	export let visible: boolean = false;
+	import { Button, Dialog, Radio, Textfield } from 'svelte-mui';
+	import { unitNames, unitTypes } from "../WebappStore";
+	import { get } from 'svelte/store';
+	import { EditorCommunication } from "../editor/EditorCommunication";
+	import { newUnitDialogVisible } from "../WebappStore";
 
 	// all unit names in a model must be unique
-	export let unitNames: string[];
 	let newName: string = "";
 
 	// take care of the type of unit to be created
 	let group: string;
-	$: group = get(unitTypes)[0];
+	$: group = $unitTypes[0];
 
 	// if something is wrong show this message
 	let localErrorMessage: string = "";
@@ -54,13 +51,13 @@
 	};
 
 	const handleCancel = () => {
-		console.log("Cancel called");
-		visible = false;
+		// console.log("Cancel called");
+		$newUnitDialogVisible = false;
 	}
 
 	// TODO dialog must also respond to enter key: submit
 	const handleSubmit = () => {
-		if (unitNames.includes(newName)) {
+		if ($unitNames.includes(newName)) {
 			localErrorMessage = "Unit with this name already exists";
 		} else if (!newName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
 			// TODO this message is too long, must use wrap
@@ -70,7 +67,7 @@
 				EditorCommunication.getInstance().newUnit(newName, group);
 			}
 			// console.log("Submit called, unit created: " + get(currentUnitName));
-			visible = false;
+			$newUnitDialogVisible = false;
 		}
 	}
 </script>

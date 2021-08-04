@@ -3,6 +3,7 @@
     import { arrowDropDown } from '../assets/icons';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import {EditorCommunication} from "../editor/EditorCommunication";
+    import { leftPanelVisible } from "../WebappStore";
 
     let activatorTitle: string= "Edit";
     let menuItems : MenuItem[] = [
@@ -21,6 +22,7 @@
         let menuItem = menuItems.find(item => item.id === id);
         // perform the action associated with the menu item
         menuItem.action(id);
+        $leftPanelVisible = false;
     };
 </script>
 

@@ -1,4 +1,4 @@
-<Dialog width="100%" bind:visible>
+<Dialog width="100%" bind:visible={$aboutDialogVisible}>
     <div slot="title" class="dialog-title">About ProjectIt</div>
 
     <div class="content" >
@@ -32,12 +32,10 @@
 
 <script>
     import {Button, Dialog} from 'svelte-mui';
-    import {versionNumber} from "../menu-ts-files/WebappStore";
-
-    export let visible = false;
+    import {versionNumber, aboutDialogVisible} from "../WebappStore";
 
     const handleSubmit = () => {
-        visible = false;
+        $aboutDialogVisible = false;
     }
 </script>
 

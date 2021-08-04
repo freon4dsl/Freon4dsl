@@ -1,7 +1,8 @@
 <!-- copied from https://github.com/sveltejs/svelte-repl/blob/master/src/SplitPane.svelte -->
-<!-- with two changes: -->
+<!-- with three changes: -->
 <!-- verbatim inclusion of function clamp (line 23) -->
-<!-- change of background color in '.divider::after' (line 124) -->
+<!-- change of border value in '.pane' (line 108) -->
+<!-- change of background color in '.divider::after' (line 126) -->
 <script>
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
@@ -104,6 +105,7 @@
         width: 100%;
         height: 100%;
         overflow: auto;
+        border: var(--pi-darkblue) 1px solid;         /* difference with original */
     }
     .mousecatcher {
         position: absolute;
@@ -121,8 +123,7 @@
     .divider::after {
         content: '';
         position: absolute;
-        background-color: red; /* difference with original */
-        /*         background-color: var(--pi-darkblue); */
+        background-color: var(--pi-slider-color);         /* difference with original */
     }
     .horizontal {
         padding: 0 8px;

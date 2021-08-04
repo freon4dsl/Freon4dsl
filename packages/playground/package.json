@@ -9,6 +9,7 @@
     "dev": "rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
+    "errors-only": "svelte-check --threshold error",
     "install-local": "yarn install --registry http://localhost:4873",
     "clean": "rm src/example/*/*/*.js && rm src/example/*/*/*.js.map",
     "example": 	    "bash ../../scripts/projectit-dev.sh all -d src/example/defs -o src/example",

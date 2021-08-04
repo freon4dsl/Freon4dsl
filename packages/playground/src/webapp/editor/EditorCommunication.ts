@@ -11,9 +11,9 @@ import {
     showError,
     unitTypes,
     unnamed
-} from "../menu-ts-files/WebappStore";
+} from "../WebappStore";
 import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
-import { editorEnvironment } from "webapp/WebappConfiguration";
+import { editorEnvironment } from "../WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
 
@@ -51,6 +51,7 @@ export class EditorCommunication {
         if (!name || name.length <= 0 || name === unnamed) {
             return false;
         }
+        currentModelName.set(name);
         return true;
     }
 
@@ -88,20 +89,21 @@ export class EditorCommunication {
         if (!name || name.length <= 0 || name === unnamed) {
             return false;
         }
+        currentUnitName.set(name);
         return true;
     }
 
     // used from the menubar and as initialization
     newModel(modelName: string, unitName?: string) {
         LOGGER.log("new model called: " + modelName);
-        this.currentModel = editorEnvironment.newModel(modelName, unitName);
-        this.currentUnit = this.currentModel.getUnits()[0];
-        currentModelName.set(modelName);
-        if ( !!this.currentUnit && !!this.currentUnit.name) {
-            currentUnitName.set(this.currentUnit.name);
+        if (!unitName) {
+            this.currentModel = editorEnvironment.newModel(modelName, unnamed);
         } else {
-            currentUnitName.set(unnamed);
+            this.currentModel = editorEnvironment.newModel(modelName, unitName);
         }
+        this.currentUnit = this.currentModel.getUnits()[0];
+        currentModelName.set(this.currentModel.name);
+        currentUnitName.set(this.currentUnit.name);
         this.hasChanges = false;
         this.showUnitAndErrors(this.currentUnit);
     }
@@ -163,9 +165,9 @@ export class EditorCommunication {
     }
 
     deleteCurrentUnit() {
-        LOGGER.log("delete called, current unit: " + get(currentUnitName));
+        console.log("delete called, current unit: " + get(currentUnitName));
         this.hasChanges = false;
-        if (!!editorEnvironment.editor.rootElement) {
+        if (!!editorEnvironment.editor.rootElement || get(currentUnitName) == unnamed ) {
             ServerCommunication.getInstance().deleteModelUnit({
                 unitName: get(currentUnitName),
                 modelName: get(currentModelName),
@@ -175,14 +177,15 @@ export class EditorCommunication {
             this.currentModel.removeUnit(this.currentUnit);
             // find a new unit to show
             let newUnit = this.currentModel.getUnits()[0];
-            if (!!newUnit) {
-                this.currentModel.newUnit(unitTypes[0]);
+            if (!newUnit) {
+                this.currentModel.newUnit(get(unitTypes)[0]);
                 newUnit = this.currentModel.getUnits()[0];
+                newUnit.name = unnamed;
             }
             // show new unit in the editor and error list
             this.showUnitAndErrors(newUnit);
         } else {
-            LOGGER.log("No current model unit");
+            console.log("No current model unit");
         }
     }
 
@@ -217,7 +220,6 @@ export class EditorCommunication {
 
     async openModelUnit(newUnitName: string) {
         LOGGER.log("openModelUnit called, unitName: " + newUnitName);
-        console.log("openModelUnit called, unitName: " + newUnitName);
         if (!!this.currentUnit && newUnitName == this.currentUnit.name ) {
             LOGGER.log("openModelUnit doing NOTHING");
             return;
@@ -233,12 +235,16 @@ export class EditorCommunication {
                     EditorCommunication.getInstance().currentModel.name,
                     EditorCommunication.getInstance().currentUnit.name,
                     (oldUnitInterface: PiNamedElement) => {
-                        // swap current unit with its interface in the in-memory model
-                        EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
-                        // swap the new unit interface with the full unit in the in-memory model
-                        EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
-                        // show the new unit in the editor
-                        this.showUnitAndErrors(newUnit);
+                        if (!!newUnit) { // the new unit has been retrieved from the server
+                            if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+                                // swap old unit with its interface in the in-memory model
+                                EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                            }
+                            // swap the new unit interface with the full unit in the in-memory model
+                            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
+                            // show the new unit in the editor
+                            this.showUnitAndErrors(newUnit);
+                        }
                     });
             } else {
                 // swap the new unit interface with the full unit in the in-memory model

@@ -1,7 +1,7 @@
-<Dialog width="290" bind:visible>
+<Dialog width="290" bind:visible={$openModelDialogVisible}>
 	<div slot="title">Open model:</div>
 
-	{#each modelNames as name}
+	{#each $modelNames as name}
 		<Radio {...props} bind:group={internalSelected} value={name}>
 			<span>{name}</span>
 		</Radio>
@@ -19,13 +19,10 @@
 
 <script lang="ts">
 	import {Button, Radio, Dialog} from 'svelte-mui';
-	import {currentModelName} from "../menu-ts-files/WebappStore";
-	import {get} from 'svelte/store';
+	import {currentModelName, modelNames, openModelDialogVisible } from "../WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
 
-	export let visible: boolean = false;
-	export let modelNames: string[];
-	let internalSelected: string = get(currentModelName);
+	let internalSelected: string = $currentModelName;
 
 	let props = {
 		right: false,
@@ -34,15 +31,15 @@
 	};
 	const handleCancel = () => {
 		console.log("Cancel called, model selected: " + internalSelected);
-		visible = false;
+		$openModelDialogVisible = false;
 	}
 
 	const handleSubmit = () => {
 		if (internalSelected?.length > 0) {
 			EditorCommunication.getInstance().openModel(internalSelected);
 		}
-		console.log("Submit called, model selected: " + get(currentModelName));
-		visible = false;
+		console.log("Submit called, model selected: " + $currentModelName);
+		$openModelDialogVisible = false;
 	}
 </script>
 
@@ -52,8 +49,4 @@
 		margin-bottom: 1rem;
 		font-size: 13px;
 	}
-	/*.footer a {*/
-	/*	color: #f50057;*/
-	/*	padding-left: 1rem;*/
-	/*}*/
 </style>

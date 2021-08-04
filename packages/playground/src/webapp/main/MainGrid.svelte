@@ -6,7 +6,7 @@
 
     export let orientation = 'rows';
     export let fixed = false;
-    export let fixedPos = 50;
+    export let fixedPos = 80;
 
 </script>
 
@@ -16,7 +16,6 @@
         width: 100%;
         height: 100%;
     }
-
     .grid :global(section) {
         position: relative;
         height: 100%;
@@ -27,13 +26,13 @@
 <div class="grid" class:orientation>
     <SplitPane
             type="vertical"
-            pos="{fixed ? fixedPos : orientation === 'rows' ? 50 : 60}"
+            pos="{fixed ? fixedPos : orientation === 'rows' ? 80 : 80}"
     >
-        <section slot=a style="border: 2px solid darkblue">
+        <section slot=a>
             <ProjectItComponent editor={editorEnvironment.editor}/>
         </section>
 
-        <section slot=b style='border: 2px solid darkblue'>
+        <section slot=b>
             <ErrorList/>
         </section>
     </SplitPane>

@@ -1,8 +1,8 @@
-<Dialog width="350" bind:visible>
+<Dialog width="350" bind:visible={$deleteUnitDialogVisible}>
 	<div slot="title">Deleting unit:</div>
 
 	<div>
-		"{get(currentUnitName)}" of model "{get(currentModelName)}"
+		"{$currentUnitName}" of model "{$currentModelName}"
 	</div>
 
 	<div slot="actions" class="actions center">
@@ -16,13 +16,10 @@
 </Dialog>
 
 <script lang="ts">
-	import {Button, Radio, Dialog} from 'svelte-mui';
-	import {currentModelName} from "../menu-ts-files/WebappStore";
-	import {get} from 'svelte/store';
+	import {Button, Dialog} from 'svelte-mui';
+	import {currentModelName, deleteUnitDialogVisible} from "../WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
-	import { currentUnitName } from "../menu-ts-files/WebappStore";
-
-	export let visible: boolean = false;
+	import { currentUnitName } from "../WebappStore";
 
 	let props = {
 		right: false,
@@ -31,13 +28,13 @@
 	};
 	const handleCancel = () => {
 		console.log("Cancel called ");
-		visible = false;
+		$deleteUnitDialogVisible = false;
 	}
 
 	const handleSubmit = () => {
-		console.log("Submit called, unit to be deleted: " + get(currentUnitName) + "." + get(currentModelName));
+		console.log("Submit called, unit to be deleted: " + $currentUnitName + "." + $currentModelName);
 		EditorCommunication.getInstance().deleteCurrentUnit();
-		visible = false;
+		$deleteUnitDialogVisible = false;
 	}
 </script>
 
@@ -47,8 +44,4 @@
 		margin-bottom: 1rem;
 		font-size: 13px;
 	}
-	/*.footer a {*/
-	/*	color: #f50057;*/
-	/*	padding-left: 1rem;*/
-	/*}*/
 </style>

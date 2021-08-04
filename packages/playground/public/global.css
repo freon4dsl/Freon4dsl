@@ -9,6 +9,7 @@
 	/* ProjectIt colors */
 	--pi-darkblue: darkblue; /* #00008b */
 	--pi-lightblue: #d3e3fd;
+	--pi-slider-color: #455a64;
 	--pi-header-height: 36px;
 	--pi-footer-height: 16px;
 	--pi-menu-height: 24px;

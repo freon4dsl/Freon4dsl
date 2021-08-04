@@ -9,7 +9,7 @@
             >
                 {#if sortedBy === index}
                     <!-- compiled svg -->
-                    <Icon>
+                    <Icon color="black">
                         <svelte:component this={asc ? arrowUp : arrowDown} />
                     </Icon>
                 {:else}
@@ -37,13 +37,13 @@
 
     import { Icon } from "svelte-mui";
     import arrowUp from "../../webapp/assets/icons/svg/arrow-up.svg";
-    import arrowDown from "../../webapp/assets/icons/svg/arrow-down.svg";
+    import arrowDown from "../../webapp/assets/icons/svg/arrow_downward.svg";
     import import_export from "../../webapp/assets/icons/svg/import_export_24px.svg";
 
     import sortErrors from "../main-ts-files/SortErrors";
     import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
 
-    export let headers: string[] = [ "Error message", "Location", "Severity"];
+    let headers: string[] = [ "Error message", "Location", "Severity"];
 
     let sortedBy: number = 0; // stores the column id by which the table is currently sorted, minus means unsorted
     let asc = false;
@@ -67,6 +67,7 @@
         margin: 0 auto;
         background-color: var(--list-divider);
         font-size: var(--error-font-size);
+        border-bottom: var(--pi-darkblue) 1px solid;
     }
     .list div{
         background: var(--bg-color);

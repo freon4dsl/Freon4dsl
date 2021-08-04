@@ -1,4 +1,4 @@
-<Dialog width="50%"  bind:visible>
+<Dialog width="50%"  bind:visible={$helpDialogVisible}>
     <div slot="title" class="title">Help for ProjectIt</div>
 
     <div class="content">
@@ -16,10 +16,10 @@
 
 <script>
     import {Button, Dialog} from 'svelte-mui';
-    export let visible = false;
+    import {helpDialogVisible} from "../WebappStore";
 
     const handleSubmit = () => {
-        visible = false;
+        $helpDialogVisible = false;
     }
 </script>
 
