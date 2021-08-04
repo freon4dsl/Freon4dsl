@@ -7,6 +7,7 @@
 			bind:value={modelName}
 			bind:error="{localErrorMessage}"
 			outlined="true"
+			{...props}
 	/>
 
 	<div slot="actions" class="actions center">

@@ -14,7 +14,7 @@
 				$leftPanelVisible = true;
 			}}
 		>
-			<Icon style="color:var(--inverse-color)" path={menu} />
+			<Icon style="color:var(--inverse-color)"> <svelte:component this={menu} /> </Icon>
 		</Button>
 		<div class="title">PLE for <i>{$languageName}</i></div>
 	{:else}
@@ -24,7 +24,7 @@
 	{/if}
 
 	<Button icon on:click={() => setTheme($theme === 'dark' ? 'light' : 'dark')}>
-		<Icon style="color:var(--inverse-color)" path={invertColors} />
+		<Icon style="color:var(--inverse-color)"> <svelte:component this={invertColors} /> </Icon>
 	</Button>
 
 	{#if !$miniWindow}
@@ -60,7 +60,8 @@
 
 	import projectit_logo from '../assets/icons/svg/projectit-logo.svg';
 	import question_mark from '../assets/icons/svg/help_24px.svg';
-	import {menu, invertColors} from '../assets/icons';
+	import menu from '../assets/icons/svg/menu_black_24dp.svg';
+	import invertColors from '../assets/icons/svg/invert_colors.svg';
 	import {theme, darkTheme, miniWindow, leftPanelVisible, rightPanelVisible} from '../WebappStore';
 	import { languageName } from "../WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";

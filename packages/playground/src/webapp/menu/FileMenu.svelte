@@ -1,6 +1,6 @@
 <Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">
-			<Button {...props}  title="File menu">{activatorTitle} <Icon path={arrowDropDown}/></Button>
+			<Button {...props}  title="File menu">{activatorTitle} <Icon> <svelte:component this={arrowDropDown}/> </Icon></Button>
 		</span>
     <!--  here the list of menu options should be placed -->
     <div class="menu-list">
@@ -21,7 +21,7 @@
 
 <script lang="ts">
     import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
-    import { arrowDropDown } from '../assets/icons';
+    import arrowDropDown from '../assets/icons/svg/arrow_drop_down.svg';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import {ServerCommunication} from "../server/ServerCommunication";
     import {EditorCommunication} from "../editor/EditorCommunication";
@@ -55,8 +55,10 @@
     const newModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
-            // list may be empty => this is the first model to be stored
-            $modelNames = names;
+            // names list may be empty => this is the first model to be stored
+            if (!names || names.length == 0) {
+                $modelNames = names;
+            }
             $newModelDialogVisible = true;
         });
     }

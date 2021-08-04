@@ -45,12 +45,12 @@ export const darkTheme = {
     '--bg-app-bar': 'var(--pi-lightblue)',
     '--bg-color': 'var(--pi-darkblue)',
     '--bg-panel': 'var(--pi-darkblue)',
+    '--divider': 'var(--pi-lightblue)',
     '--list-divider': 'var(--pi-lightblue)',
     // other colors
     '--alternate': '#000',
     '--primary': '#3ea6ff',
     '--accent': '#ff6fab',
-    '--divider': 'rgba(255,255,255,0.175)',
     '--bg-popover': '#3f3f3f',
     '--border': '#555',
     '--label': 'rgba(255,255,255,0.5)',

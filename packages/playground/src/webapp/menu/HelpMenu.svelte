@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
-    import { arrowDropDown } from '../assets/icons';
+    import arrowDropDown from '../assets/icons/svg/arrow_drop_down.svg';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import { aboutDialogVisible, helpDialogVisible, keybindingsDialogVisible, leftPanelVisible } from "../WebappStore";
 
@@ -37,7 +37,7 @@
 
 <Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">
-			<Button {...props}  title="Help menu">{activatorTitle} <Icon path={arrowDropDown}/></Button>
+			<Button {...props}  title="Help menu">{activatorTitle} <Icon> <svelte:component this={arrowDropDown}/> </Icon></Button>
 		</span>
     <!--  here the list of menu options should be placed -->
     <div class="menu-list">

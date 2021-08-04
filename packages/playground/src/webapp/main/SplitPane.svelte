@@ -105,8 +105,8 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: var(--pi-lightblue);        /* difference with original */
-        border: var(--pi-darkblue) 1px solid;         /* difference with original */
+        background-color: var(--inverse-color);        /* difference with original */
+        border: var(--color) 1px solid;         /* difference with original */
     }
     .mousecatcher {
         position: absolute;

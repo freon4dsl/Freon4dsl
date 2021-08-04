@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection } from "@projectit/core";
+import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
@@ -267,21 +267,21 @@ export class EditorCommunication {
     }
 
     // for the communication with the error list:
-    // errorSelected(error: PiError) {
-    //     LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.reportedOn + "'");
-    //     if (Array.isArray(error.reportedOn)) {
-    //         editorEnvironment.editor.selectElement(error.reportedOn[0]);
-    //     } else {
-    //         editorEnvironment.editor.selectElement(error.reportedOn);
-    //     }
-    // }
+    errorSelected(error: PiError) {
+        LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.locationdescription + "'");
+        // TODO test this when editor setFocus is fully implemented
+        if (Array.isArray(error.reportedOn)) {
+            editorEnvironment.editor.selectElement(error.reportedOn[0]);
+        } else {
+            editorEnvironment.editor.selectElement(error.reportedOn);
+        }
+    }
 
     getErrors() {
         LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
         if (!!this.currentUnit) {
             let list = editorEnvironment.validator.validate(this.currentUnit);
             modelErrrors.set(list);
-            // list.forEach(err => LOGGER.log(err.message));
         }
     }
     // END OF: for the communication with the error list
@@ -338,7 +338,7 @@ export class EditorCommunication {
     validate() {
         // TODO implement validate()
         LOGGER.log("validate called");
-        return undefined;
+        EditorCommunication.getInstance().getErrors();
     }
 
     replace() {
