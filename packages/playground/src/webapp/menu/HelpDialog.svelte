@@ -9,7 +9,7 @@
     </div>
 
     <div slot="actions" class="actions center">
-        <Button color="var(--pi-darkblue)" on:click={() => handleSubmit()}>Ok</Button>
+        <Button color="var(--inverse-color)" on:click={() => handleSubmit()}>Ok</Button>
     </div>
 
 </Dialog>
@@ -25,13 +25,13 @@
 
 <style>
     .content{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
         margin: auto;
     }
     .actions{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
     }
     .center{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
     }
 </style>

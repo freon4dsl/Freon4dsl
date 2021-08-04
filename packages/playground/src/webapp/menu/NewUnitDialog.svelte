@@ -77,6 +77,6 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
-		color: var(--pi-darkblue);
+		color: var(--inverse-color);
 	}
 </style>

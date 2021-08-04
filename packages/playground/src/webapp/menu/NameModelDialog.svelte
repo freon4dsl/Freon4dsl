@@ -66,9 +66,9 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
-		color: var(--pi-darkblue);
+		color: var(--inverse-color);
 	}
 	.title {
-		background: var(--pi-darkblue);
+		background: var(--inverse-color);
 	}
 </style>

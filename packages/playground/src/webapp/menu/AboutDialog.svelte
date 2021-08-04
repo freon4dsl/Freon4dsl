@@ -45,13 +45,13 @@
         background-color: var(--bg-app-bar);
     }
     .content{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
     }
     a{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
         text-decoration: underline;
     }
     /*.actions center{*/
-    /*    color: var(--pi-darkblue);*/
+    /*    color: var(--inverse-color);*/
     /*}*/
 </style>
