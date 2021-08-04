@@ -22,12 +22,13 @@
 	--bg-color: var(--pi-lightblue);
 	--bg-panel: var(--pi-lightblue); 	/* Dialog background color */
 	--divider: var(--pi-darkblue); 	/* Dialog Title background color */
+	--primary: var(--pi-darkblue);  /* Dialog primary button text color */
+	--secondary: grey;
 	--list-divider: var(--pi-darkblue);
 	/* other colors */
 	--alternate: #fff;
 	--primary: #1976d2;
 	--accent: #f50057;
-	--divider: rgba(0, 0, 0, 0.1);
 	--bg-popover: #fff;
 	--border: #dfdfdf;
 	--label: rgba(0, 0, 0, 0.3755);

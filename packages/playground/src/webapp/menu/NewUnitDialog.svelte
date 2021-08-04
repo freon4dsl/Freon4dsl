@@ -1,5 +1,5 @@
 <Dialog width="290" bind:visible={$newUnitDialogVisible}>
-	<div slot="title">New unit</div>
+	<div slot="title" class="title">New unit</div>
 
 	<Textfield
 			name="unitname"
@@ -11,13 +11,14 @@
 
 	{#each get(unitTypes) as name}
 		<Radio {...props} bind:group={group} value={name}>
-			<span>{name}</span>
+			<span class="item-name">{name}</span>
 		</Radio>
 	{/each}
 
 	<div slot="actions" class="actions center">
-		<Button color="secondary" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="primary" on:click={() => handleSubmit()}>Submit</Button>
+		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
+		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
+
 	</div>
 
 	<div slot="footer" class="footer">
@@ -48,6 +49,7 @@
 		right: false,
 		ripple: true,
 		disabled: false,
+		color: "var(--color)"
 	};
 
 	const handleCancel = () => {
@@ -77,6 +79,12 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
+		color: var(--color);
+	}
+	.title {
 		color: var(--inverse-color);
+	}
+	.item-name {
+		color: var(--color);
 	}
 </style>
