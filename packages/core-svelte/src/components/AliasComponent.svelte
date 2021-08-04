@@ -9,26 +9,32 @@
         isPrintable,
         PiEditor,
         PiLogger,
-        PiUtils,SPACEBAR, TAB, toPiKey
+        PiUtils, SPACEBAR, TAB, toPiKey, isSelectBox, findOption
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate, onMount } from "svelte";
+    import { ChangeNotifier } from "./ChangeNotifier";
     import DropdownComponent from "./DropdownComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
+    import { SelectOptionList } from "./SelectableOptionList";
 
-    export let aliasBox: AbstractChoiceBox;
+    export let choiceBox: AbstractChoiceBox;
     export let editor: PiEditor;
 
+    let openInHtml: boolean ;
     let open: boolean = false;
+    $: openInHtml = open;
     let LOGGER = new PiLogger("AliasComponent");
 
     let dropdown: DropdownComponent;
     let textcomponent: TextComponent;
     let selectedOption: SelectOption;
 
+    const selectableOptionList = new SelectOptionList(editor)
+
     const getAliasOptions = (): SelectOption[] => {
-        return aliasBox.getOptions(editor);
+        return listForDropdown;
     };
 
     // const selected = (event: CustomEvent) => {
@@ -37,27 +43,75 @@
     //     open = false;
     // }
     const setFocus = async (): Promise<void> => {
-        console.log("AliasComponent set focus " + aliasBox.role);
-        LOGGER.log("AliasComponent set focus " + aliasBox.role);
+        console.log("AliasComponent set focus " + choiceBox.role);
+        LOGGER.log("AliasComponent set focus " + choiceBox.role);
         textcomponent.focus();
         // this.startEditing();
     };
 
+    /**
+     * Trigger a key event for `key`.
+     * @param {string} key
+     * @returns {Promise<void>}
+     */
+    const triggerKeyPressEvent = async (key: string) => {
+        LOGGER.info(this, "triggerKeyPressEvent " + key);
+        const aliasResult = await handleStringInput(key);
+        if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
+            if (textcomponent) {
+                textcomponent.innerText = key;
+                // this.setCaretPosition(textcomponent.innerText.length);
+                // this.dropdownIsOpen = true;
+            }
+        }
+    };
+
+    const handleStringInput = async (s: string) => {
+        LOGGER.info(this, "handleStringInput for box " + choiceBox.role);
+        const aliasResult = await executeBehavior(choiceBox, s, editor);
+        switch (aliasResult) {
+            case BehaviorExecutionResult.EXECUTED:
+                if (textcomponent) {
+                    textcomponent.innerText = "";
+                }
+                open = false;
+                // this.hasError = false;
+                break;
+            case BehaviorExecutionResult.PARTIAL_MATCH:
+                LOGGER.info(this, "PARTIAL_MATCH");
+                // this.hasError = false;
+                break;
+            case BehaviorExecutionResult.NO_MATCH:
+                LOGGER.info(this, "NO MATCH");
+                // this.hasError = true;
+                break;
+        }
+        return aliasResult;
+    };
+
     onMount( () => {
-        LOGGER.log("AliasComponent.onMount for role [" + aliasBox.role + "]");
-        aliasBox.textBox.setFocus = setFocus;
-        aliasBox.setFocus = setFocus;
+        LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "]");
+        choiceBox.textBox.setFocus = setFocus;
+        choiceBox.setFocus = setFocus;
+        const selected = choiceBox.getSelectedOption();
+        if( !! selected) {
+            choiceBox.textBox.setText(selected.label)
+        }
         // textBox.setCaret = setCaret;
         // caretPosition = textBox.caretPosition;
     });
 
     afterUpdate( () => {
-        aliasBox.textBox.setFocus = setFocus;
-        aliasBox.setFocus = focus;
+        choiceBox.textBox.setFocus = setFocus;
+        choiceBox.setFocus = setFocus;
+        const selected = choiceBox.getSelectedOption();
+        if( !! selected) {
+            choiceBox.textBox.setText(selected.label)
+        }
     })
 
     const onKeyPress = async (e: KeyboardEvent) => {
-        EVENT_LOG.log("onKeyPress: " + e.key + " for role " + aliasBox.role);
+        EVENT_LOG.log("onKeyPress: " + e.key + " for role " + choiceBox.role);
         // await wait(0);
 
         if (isPrintable(e) && !e.ctrlKey) {
@@ -66,14 +120,27 @@
     };
     const onInput = async (e: InputEvent) => {
         const value = e.target.innerText;
-        LOGGER.log("onInput: [" + value + "] for role " + aliasBox.role + " with text ["+ textcomponent.getText() + "]");
+        LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text ["+ textcomponent.getText() + "]");
         // const aliasResult = await executeBehavior(aliasBox, e.data, editor);
-        const aliasResult = await aliasBox.selectOption(editor, {id: value, label: value});
+        let aliasResult = undefined;
+        if( isAliasBox(choiceBox)) {
+            aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
+        } else if( isSelectBox(choiceBox)) {
+            const selected: SelectOption = findOption( choiceBox.getOptions(editor), value);
+            if( selected !== null ){
+                aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
+            } else {
+                aliasResult = BehaviorExecutionResult.NO_MATCH;
+            }
+        } else {
+          return BehaviorExecutionResult.NO_MATCH;
+        }
+        LOGGER.log("onInput aliasResult: [" + aliasResult + "]");
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
                 LOGGER.log("ALIAS MATCH");
                 if( !!textcomponent) {
-                    textcomponent.textOnScreen = "";
+                    textcomponent.textOnScreen = choiceBox.getSelectedOption().label;
                 }
                 open = false;
                 // this.hasError = false;
@@ -81,10 +148,15 @@
             case BehaviorExecutionResult.PARTIAL_MATCH:
                 LOGGER.log("PARTIAL_MATCH");
                 // this.hasError = false;
+                choiceBox.textBox.setText(value);
+                selectableOptionList.text = value;
+                notifier.notifyChange()
                 open = true;
                 break;
             case BehaviorExecutionResult.NO_MATCH:
                 LOGGER.log("NO MATCH");
+                selectableOptionList.text = value;
+                notifier.notifyChange()
                 // this.hasError = true;
                 // this.dropdownIsOpen = true;
                 break;
@@ -93,12 +165,12 @@
     };
 
     const onKeyDown = async (e: KeyboardEvent) => {
-        LOGGER.log("onKeyDown: " + e.key + " for role " + aliasBox.role);
+        LOGGER.log("onKeyDown: " + e.key + " for role " + choiceBox.role);
         if (isPrintable(e) && !e.ctrlKey) {
             LOGGER.log("Down: is printable, text is now [" + textcomponent.getText() + "]");
             open = true;
             if(dropdown !== null && dropdown !== undefined) {
-                dropdown.onKeydown(e);
+                dropdown.handleKeyDown(e);
             }
             e.stopPropagation();
 
@@ -109,6 +181,10 @@
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
+        }
+        if( e.keyCode === SPACEBAR && e.ctrlKey) {
+            open = !open;
+            return;
         }
         if (open ) { // && this.dropdown) {
             // Propagate key event to dropdown component
@@ -138,8 +214,8 @@
             switch (e.keyCode) {
                 case ENTER:
                     e.preventDefault();
-                    if (isAliasBox(aliasBox)) {
-                        await PiUtils.handleKeyboardShortcut(toPiKey(e), aliasBox, editor);
+                    if (isAliasBox(choiceBox)) {
+                        await PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
                         e.stopPropagation();
                     }
                     break;
@@ -147,6 +223,7 @@
                     LOGGER.log("onKeyDown Keys.SPACEBAR");
                     if (e.ctrlKey) {
                         open = !open;
+                        LOGGER.log("     open is now "+ open);
                     }
                     break;
             }
@@ -184,13 +261,18 @@
     const selectedEvent = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to "+ event.detail.id );
         selectOption(event.detail);
+        if (isSelectBox(choiceBox)) {
+            if (!!textcomponent) {
+                textcomponent.textOnScreen = choiceBox.getSelectedOption().label;
+            }
+        }
     }
 
     const selectOption = async (option: SelectOption) => {
         LOGGER.log("==> EXECUTING ALIAS " + option.label)
-        await aliasBox.selectOption(editor, option);
-        let selected = aliasBox.getSelectedOption();
-        aliasBox.textHelper.text = (!!selected ? selected.label : "");
+        await choiceBox.selectOption(editor, option);
+        let selected = choiceBox.getSelectedOption();
+        choiceBox.textHelper.text = (!!selected ? selected.label : "");
         open=false
     }
 
@@ -198,9 +280,19 @@
         LOGGER.log("onClick");
         open = !open;
     }
+
+    let listForDropdown: SelectOption[];
+    let notifier = new ChangeNotifier();
+    choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
+
+    selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {
-        selectedOption = aliasBox.getSelectedOption();
-        aliasBox.textBox.setText(!!selectedOption ? selectedOption.label : "");
+        listForDropdown = selectableOptionList.getFilteredOptions();
+        selectedOption = choiceBox.getSelectedOption();
+        LOGGER.log("AUTORUN selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
+        if( !!selectedOption) {
+            choiceBox.textBox.setText(selectedOption.label);
+        }
     });
 </script>
 
@@ -211,17 +303,18 @@
 >
     <TextComponent
                    editor={editor}
-                   textBox={aliasBox.textBox}
+                   textBox={choiceBox.textBox}
                    bind:this={textcomponent}
     />
-    {#if open}
+    {#if openInHtml}
         <DropdownComponent
                 bind:this="{dropdown}"
-                bind:open
+                bind:open={openInHtml}
                 handleSelectedOption={selectOption}
                 on:pi-ItemSelected={selectedEvent}
                 getOptions={getAliasOptions}
                 selectedOptionId="2"
+                notifier={notifier}
         />
     {/if}
 

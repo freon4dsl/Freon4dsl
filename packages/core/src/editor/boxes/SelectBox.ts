@@ -1,5 +1,5 @@
-import { BehaviorExecutionResult } from "../../util";
-import { PiEditor } from "../internal";
+import { BehaviorExecutionResult, MatchUtil } from "../../util";
+import { PiEditor, triggerToString } from "../internal";
 import { AbstractChoiceBox, SelectOption, Box } from "./internal";
 import { PiElement } from "../../language";
 
@@ -14,6 +14,11 @@ export class SelectBox extends AbstractChoiceBox {
      */
     deleteWhenEmpty: boolean = false;
 
+    private getAllOptions(editor: PiEditor): SelectOption[] {
+        return [];
+    };
+
+
     constructor(
         exp: PiElement,
         role: string,
@@ -24,9 +29,15 @@ export class SelectBox extends AbstractChoiceBox {
         initializer?: Partial<SelectBox>
     ) {
         super(exp, role, placeHolder, initializer);
-        this.getOptions= getOptions;
+        this.getAllOptions = getOptions;
         this.getSelectedOption = getSelectedOption;
         this.selectOption = selectOption;
+    }
+
+    getOptions(editor: PiEditor):  SelectOption[]  {
+        const matchingOptions: SelectOption[] = this.getAllOptions(editor)
+            .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
+        return matchingOptions
     }
 
     public deleteWhenEmpty1(): boolean {

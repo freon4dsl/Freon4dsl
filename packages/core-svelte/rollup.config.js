@@ -23,7 +23,8 @@ export default {
 		'svelte/internal',
 		'svelte/motion',
 		'svelte/store',
-		'svelte/transition'
+		'svelte/transition',
+		'@projectit/core'
 	],
 	input: 'src/index.ts',
 	output: [
@@ -47,7 +48,8 @@ export default {
 				'@projectit/core': '@projectit/core',
 				'mobx': 'mobx',
 				'svelte/internal': 'svelte/internal',
-				'svelte': 'svelte'
+				'svelte': 'svelte',
+				"tslib": "tslib"
 			}
 		}
 	],

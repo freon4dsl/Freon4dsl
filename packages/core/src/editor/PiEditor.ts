@@ -25,7 +25,7 @@ export class PiEditor {
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
 
-    // @observable private $rootBox: Box | null;
+    @observable private $rootBox: Box | null;
     @observable private $selectedBox: Box | null;
     private $projectedElement: HTMLDivElement | null;
 
@@ -58,6 +58,10 @@ export class PiEditor {
     }
 
     async selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
+        if (element === null || element === undefined) {
+            console.error("PiEditor.selectElement is null !");
+            return;
+        }
         this.selectedElement = element;
         this.selectedRole = role;
         this.selectedPosition = caretPosition;
@@ -79,8 +83,10 @@ export class PiEditor {
     }
 
     async selectBox(box: Box | null, caretPosition?: PiCaret) {
-        LOGGER.show();
-        console.log("selectBox "+ (!!box? box.role : box) );
+        if (box === null || box === undefined) {
+            console.error("PiEditor.selectBox is null !");
+            return;
+        }
         LOGGER.info(this, "selectBox "+ (!!box? box.role : box) );
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");
@@ -130,7 +136,7 @@ export class PiEditor {
     selectParentBox() {
         LOGGER.info(this, "==> SelectParent");
         const parent = this.selectedBox.parent;
-        if (parent) {
+        if (!!parent) {
             if (parent.selectable) {
                 this.selectBox(parent);
                 parent.setFocus();
@@ -143,14 +149,14 @@ export class PiEditor {
 
     selectFirstLeafChildBox() {
         const first = this.selectedBox.firstLeaf;
-        if (first) {
+        if (!!first) {
             this.selectBox(first);
         }
     }
 
     selectNextLeaf() {
         const next = this.selectedBox.nextLeafRight;
-        if (next) {
+        if (!!next) {
             this.selectBox(next);
             next.setFocus();
             if (isTextBox(next) || isSelectBox(next)) {
@@ -161,7 +167,7 @@ export class PiEditor {
 
     async selectPreviousLeaf() {
         const previous = this.selectedBox.nextLeafLeft;
-        if (previous) {
+        if (!!previous) {
             await this.selectBox(previous);
             previous.setFocus();
             if (isTextBox(previous) || isSelectBox(previous)) {
@@ -218,6 +224,7 @@ export class PiEditor {
 
     set rootElement(exp: PiElement) {
         this._rootElement = exp;
+        this.$rootBox = this.projection.getBox(this._rootElement)
         // if (exp instanceof MobxModelElementImpl) {
         //     exp.container = this;
         //     exp.propertyIndex = undefined;

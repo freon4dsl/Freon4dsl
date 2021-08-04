@@ -41,19 +41,19 @@ export class DefaultActionsTemplate {
              */ 
             export const EXPRESSION_CREATORS: PiExpressionCreator[] = [
                 ${language.concepts.filter(c => c instanceof PiExpressionConcept && !(c instanceof PiBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            `{
-                    trigger: ${c.triggerIsRegExp ? `/${editorDef.findConceptEditor(c).trigger}/` : `"${editorDef.findConceptEditor(c).trigger}"`},
-                    activeInBoxRoles: [
-                        "PiBinaryExpression-left", "PiBinaryExpression-right"
-                    ],
-                    expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
-                        const parent = box.element;
-                        const newExpression = new ${Names.concept(c)}();
-                        parent[(box as AliasBox).propertyName] = newExpression;
-                        return newExpression;
-                    },
-                    boxRoleToSelect: "${editorDef.findConceptEditor(c).projection.cursorLocation()}" /* CURSOR  0 */
-            }`
+            `//{
+             //       trigger: ${c.triggerIsRegExp ? `/${editorDef.findConceptEditor(c).trigger}/` : `"${editorDef.findConceptEditor(c).trigger}"`},
+             //       activeInBoxRoles: [
+             //           "PiBinaryExpression-left", "PiBinaryExpression-right"
+             //       ],
+             //       expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
+             //           const parent = box.element;
+             //          const newExpression = new ${Names.concept(c)}();
+             //           parent[(box as AliasBox).propertyName] = newExpression;
+             //           return newExpression;
+             //       },
+             //       boxRoleToSelect: "${editorDef.findConceptEditor(c).projection.cursorLocation()}" /* CURSOR  0 */
+            //}`
         )}
             ];
 
@@ -139,6 +139,7 @@ export class DefaultActionsTemplate {
             // const trigger = !!conceptEditor.trigger ? conceptEditor.trigger : part.unitName
             result += `${LangUtil.subConceptsIncludingSelf(childConcept).filter(cls => !cls.isAbstract).map(subClass => `
                     {
+                        // ProjectIt Generator: customActionForPart
                         activeInBoxRoles: ["${Roles.newConceptPart(concept, part)}"],
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
@@ -177,6 +178,7 @@ export class DefaultActionsTemplate {
             // console.log("FOUND "+ elem.trigger + " roles: " + elem.activeInBoxRoles.length + " ==> " + elem.activeInBoxRoles);
             result += `
                     {
+                        // ProjectIt Generator: customActionForPart behaviorMap
                         activeInBoxRoles: [${elem.activeInBoxRoles.map(role => `"${role}"`).join(",")}],
                         trigger: "${elem.trigger}",  // for single Concept part
                         action: ${elem.action},

@@ -17,7 +17,8 @@ export class AliasBox extends AbstractChoiceBox {
 
     getOptions(editor: PiEditor): SelectOption[] {
         const result = editor.behaviors
-            .filter(a => a.activeInBoxRoles.includes(this.role) && MatchUtil.partialMatch(this.textBox.getText(), a.trigger))
+            // .filter(a => a.activeInBoxRoles.includes(this.role) && MatchUtil.partialMatch(this.textBox.getText(), a.trigger))
+            .filter(a => a.activeInBoxRoles.includes(this.role) )
             .map(a => {
                 return {
                     id: triggerToString(a.trigger),
@@ -29,6 +30,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
+        console.log("AliasBox.selectOption")
         return await executeBehavior(this, option.id, editor);
 
     }
