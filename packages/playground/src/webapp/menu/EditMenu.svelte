@@ -9,9 +9,10 @@
     let menuItems : MenuItem[] = [
         { title: 'Undo', action: EditorCommunication.getInstance().undo, id: 1 },
         { title: 'Redo', action: EditorCommunication.getInstance().redo, id: 2 },
-        { title: 'Find Text', action: EditorCommunication.getInstance().findText, id: 3 },
-        { title: 'Find Element', action: EditorCommunication.getInstance().findElement, id: 4 },
-        { title: 'Replace', action: EditorCommunication.getInstance().replace, id: 5 },
+        { title: 'Validate', action: EditorCommunication.getInstance().validate, id: 3 },
+        { title: 'Find Text', action: EditorCommunication.getInstance().findText, id: 4 },
+        { title: 'Find Element', action: EditorCommunication.getInstance().findElement, id: 5 },
+        { title: 'Replace', action: EditorCommunication.getInstance().replace, id: 6 },
     ];
 
     export let props;

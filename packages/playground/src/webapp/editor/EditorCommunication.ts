@@ -322,6 +322,12 @@ export class EditorCommunication {
         return undefined;
     }
 
+    validate() {
+        // TODO implement validate()
+        console.log("validate called");
+        return undefined;
+    }
+
     replace() {
         // TODO implement replace()
         LOGGER.log("replace called");
