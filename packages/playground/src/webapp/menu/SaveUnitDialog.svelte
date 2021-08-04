@@ -1,7 +1,7 @@
 <Dialog width="290" bind:visible={$saveUnitDialogVisible}>
-	<div slot="title">Save unit:</div>
+	<div slot="title" class="title">Save unit:</div>
 
-	<p>Unit is unnamed. Please, enter a name.</p>
+	<p class="content">Unit is unnamed. Please, enter a name.</p>
 
 	<Textfield
 			name="unitname"
@@ -9,11 +9,13 @@
 			bind:value={newName}
 			bind:error="{localErrorMessage}"
 			outlined="true"
+			class="content"
 	/>
 
 	<div slot="actions" class="actions center">
-		<Button color="secondary" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="primary" on:click={() => handleSubmit()}>Submit</Button>
+		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
+		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
+
 	</div>
 
 	<div slot="footer" class="footer">
@@ -65,9 +67,12 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
+		color: var(--color);
 	}
-	/*.footer a {*/
-	/*	color: #f50057;*/
-	/*	padding-left: 1rem;*/
-	/*}*/
+	.title {
+		color: var(--inverse-color);
+	}
+	.content {
+		color: var(--color);
+	}
 </style>

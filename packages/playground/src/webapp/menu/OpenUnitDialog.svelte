@@ -1,15 +1,15 @@
 <Dialog width="290" bind:visible={$openUnitDialogVisible}>
-	<div slot="title">Open unit:</div>
+	<div slot="title" class="title">Open unit:</div>
 
 	{#each $unitNames as name}
 		<Radio {...props} bind:group={internalSelected} value={name}>
-			<span>{name}</span>
+			<span class="item-name">{name}</span>
 		</Radio>
 	{/each}
 
 	<div slot="actions" class="actions center">
-		<Button color="secondary" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="primary" on:click={() => handleSubmit()}>Submit</Button>
+		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
+		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
 
 	<div slot="footer" class="footer">
@@ -28,6 +28,7 @@
 		right: false,
 		ripple: true,
 		disabled: false,
+		color: "var(--color)"
 	};
 	const handleCancel = () => {
 		console.log("Cancel called, unit selected: " + internalSelected);
@@ -46,5 +47,12 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
+		color: var(--color);
+	}
+	.title {
+		color: var(--inverse-color);
+	}
+	.item-name {
+		color: var(--color);
 	}
 </style>

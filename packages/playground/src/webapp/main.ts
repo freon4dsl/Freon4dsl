@@ -3,7 +3,9 @@ import App from './App.svelte';
 
 // Mute or unmute logs here (in addition to elsewhere).
 
-// PiLogger.mute("TextComponent");
+PiLogger.mute("PiEditor");
+PiLogger.mute("TextComponent");
+PiLogger.mute("AliasComponent");
 PiLogger.mute("AUTORUN");
 PiLogger.mute("AFTER_UPDATE");
 PiLogger.mute("SelectOptionList");
@@ -14,6 +16,4 @@ const app = new App({
 });
 
 export default app;
-
-PiLogger.unmute("AUTORUN");
 
