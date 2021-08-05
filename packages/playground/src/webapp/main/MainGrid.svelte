@@ -24,7 +24,7 @@
     }
 </style>
 
-<div>showing unit {$currentUnitName} of model {$currentModelName}</div>
+<!--<div>showing unit {$currentUnitName} of model {$currentModelName}</div>-->
 <div class="grid" class:orientation>
     <SplitPane
             type="vertical"
