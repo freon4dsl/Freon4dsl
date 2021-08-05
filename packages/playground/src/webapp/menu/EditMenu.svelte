@@ -38,9 +38,8 @@
             <Menuitem style="font-size: var(--menuitem-font-size);
                 margin: 4px 10px;
                 padding: 2px;
-                height: 28px;"
-                on:click={() => handleClick(item.id)}
-                      disabled>
+                height: 28px;" disabled={item.id == 3 ? false : true}
+                      on:click={() => handleClick(item.id)}>
                 {item.title}
             </Menuitem>
         {:else}

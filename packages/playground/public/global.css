@@ -100,6 +100,7 @@ button {
 
 button:disabled {
 	color: #999;
+	pointer-events: none;
 }
 
 button:not(:disabled):active {
@@ -108,4 +109,18 @@ button:not(:disabled):active {
 
 button:focus {
 	border-color: #666;
+}
+
+/* the following is neccessary for buttons to be disabled! */
+.disabled,
+[disabled] {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.disabled .disabled,
+.disabled [disabled],
+[disabled] .disabled,
+[disabled] [disabled] {
+	opacity: 1;
 }
