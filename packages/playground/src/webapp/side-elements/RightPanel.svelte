@@ -12,7 +12,7 @@
 				$rightPanelVisible = false;
 			}}
 		>
-			<Icon style="color:var(--inverse-color)" path={arrowForward} />
+			<Icon> <svelte:component this={arrowForward}/> </Icon>
 		</Button>
 	</div>
 	<p>
@@ -34,7 +34,7 @@
 
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
-	import {arrowForward} from '../assets/icons';
+	import arrowForward from '../assets/icons/svg/arrow_forward.svg';
 	import { rightPanelVisible, theme } from "../WebappStore";
 </script>
 
@@ -44,7 +44,7 @@
 		padding: 0 4px;
 		display: flex;
 		align-items: center;
-		color: var(--color);
+		color: var(--inverse-color);
 		background: var(--bg-app-bar);
 	}
 	img{

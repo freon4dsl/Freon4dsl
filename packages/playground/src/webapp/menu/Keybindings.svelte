@@ -11,7 +11,7 @@
     </ul>
 
     <div slot="actions" class="actions center">
-        <Button color="var(--pi-darkblue)" on:click={() => handleSubmit()}>Ok</Button>
+        <Button color="var(--inverse-color)" on:click={() => handleSubmit()}>Ok</Button>
     </div>
 
 </Dialog>
@@ -27,18 +27,18 @@
 
 <style>
     .keybinding {
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
     }
     .keybinding li {
         padding: 10px;
     }
     .actions{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
     }
     .center{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
     }
     .title{
-        color: var(--pi-darkblue);
+        color: var(--inverse-color);
     }
 </style>

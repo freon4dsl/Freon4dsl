@@ -3,6 +3,7 @@
     import ErrorList from "./ErrorList.svelte";
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../WebappConfiguration";
+    import { currentModelName, currentUnitName } from "../WebappStore";
 
     export let orientation = 'rows';
     export let fixed = false;
@@ -23,6 +24,7 @@
     }
 </style>
 
+<!--<div>showing unit {$currentUnitName} of model {$currentModelName}</div>-->
 <div class="grid" class:orientation>
     <SplitPane
             type="vertical"

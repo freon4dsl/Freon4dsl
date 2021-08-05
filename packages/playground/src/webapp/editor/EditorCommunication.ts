@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel, PiLogger } from "@projectit/core";
+import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
@@ -45,7 +45,7 @@ export class EditorCommunication {
      * as side effect a check is done whether currentModelName is equal to that name.
         */
     isModelNamed(): boolean {
-        console.log("EditorCommunication.isModelNamed: " + get(currentModelName));
+        LOGGER.log("EditorCommunication.isModelNamed: " + get(currentModelName));
         this.checkGlobalsAgainstEditor();
         const name = this.currentModel.name;
         if (!name || name.length <= 0 || name === unnamed) {
@@ -66,12 +66,15 @@ export class EditorCommunication {
         this.checkGlobalsAgainstEditor();
         this.currentUnit.name = name;
         currentUnitName.set(name);
+        // TODO set name in editor as well
+        // const inEditor = editorEnvironment.editor.rootElement;
+        // (inEditor as PiNamedElement).name = name;
     }
 
     private checkGlobalsAgainstEditor() {
         const inEditor = editorEnvironment.editor.rootElement;
         if (inEditor !== this.currentUnit) {
-            console.log("ERROR: inEditor !== this.currentUnit");
+            LOGGER.log("ERROR: inEditor !== this.currentUnit");
             this.currentUnit = inEditor as PiNamedElement;
             currentUnitName.set(this.currentUnit.name);
             this.currentModel = this.currentUnit.piContainer().container as PiModel;
@@ -83,7 +86,7 @@ export class EditorCommunication {
      * as side effect a check is done whether currentUnitName is equal to that name.
      */
     isUnitNamed(): boolean {
-        console.log("EditorCommunication.isUnitNamed: " + get(currentUnitName));
+        LOGGER.log("EditorCommunication.isUnitNamed: " + get(currentUnitName));
         this.checkGlobalsAgainstEditor();
         const name = this.currentUnit.name;
         if (!name || name.length <= 0 || name === unnamed) {
@@ -101,8 +104,8 @@ export class EditorCommunication {
         } else {
             this.currentModel = editorEnvironment.newModel(modelName, unitName);
         }
-        this.currentUnit = this.currentModel.getUnits()[0];
         currentModelName.set(this.currentModel.name);
+        this.currentUnit = this.findFirstUnit();
         currentUnitName.set(this.currentUnit.name);
         this.hasChanges = false;
         this.showUnitAndErrors(this.currentUnit);
@@ -110,7 +113,6 @@ export class EditorCommunication {
 
     newUnit(newName: string, unitType: string) {
         LOGGER.log("new unit called, unitType: " + unitType + ", name: " + newName);
-        console.log("new unit called, unitType: " + unitType + ", name: " + newName);
         // replace the current unit by its interface
         // and create a new unit named 'newName'
 
@@ -133,7 +135,7 @@ export class EditorCommunication {
     }
 
     private createNewUnit(newName: string, unitType: string) {
-        console.log("private createNewUnit called, unitType: " + unitType);
+        LOGGER.log("private createNewUnit called, unitType: " + unitType);
         // create a new unit and add it to the current model
         let newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType);
         // TODO check whether the next statement is valid in all cases: units should have a name attribute called 'name'
@@ -151,7 +153,7 @@ export class EditorCommunication {
 
     saveCurrentUnit() {
         LOGGER.log("save current unit called");
-        console.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
+        LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
         if (!!editorEnvironment.editor.rootElement) {
             ServerCommunication.getInstance().putModelUnit({
                 unitName: this.currentUnit.name,
@@ -160,12 +162,12 @@ export class EditorCommunication {
             }, editorEnvironment.editor.rootElement as PiNamedElement);
             this.hasChanges = false;
         } else {
-            console.log("No current model unit");
+            LOGGER.log("No current model unit");
         }
     }
 
     deleteCurrentUnit() {
-        console.log("delete called, current unit: " + get(currentUnitName));
+        LOGGER.log("delete called, current unit: " + get(currentUnitName));
         this.hasChanges = false;
         if (!!editorEnvironment.editor.rootElement || get(currentUnitName) == unnamed ) {
             ServerCommunication.getInstance().deleteModelUnit({
@@ -176,46 +178,59 @@ export class EditorCommunication {
             // get rid of old model unit from memory
             this.currentModel.removeUnit(this.currentUnit);
             // find a new unit to show
-            let newUnit = this.currentModel.getUnits()[0];
-            if (!newUnit) {
-                this.currentModel.newUnit(get(unitTypes)[0]);
-                newUnit = this.currentModel.getUnits()[0];
-                newUnit.name = unnamed;
-            }
+            let newUnit = this.findFirstUnit();
             // show new unit in the editor and error list
             this.showUnitAndErrors(newUnit);
         } else {
-            console.log("No current model unit");
+            LOGGER.log("No current model unit");
         }
     }
 
+    private findFirstUnit()  {
+        let newUnit = this.currentModel.getUnits()[0];
+        if (!newUnit) {
+            this.currentModel.newUnit(get(unitTypes)[0]);
+            newUnit = this.currentModel.getUnits()[0];
+            newUnit.name = unnamed;
+        }
+        return newUnit;
+    }
+
     async openModel(modelName: string) {
-        LOGGER.log("openModel called, modelName: " + modelName);
-        console.log("EditorCommunication.openmodel("+ modelName + ")");
+        LOGGER.log("EditorCommunication.openmodel("+ modelName + ")");
         // TODO this method should take care of storing any changes in the previous model
         // create new model instance in memory and set its name
         let model: PiModel = editorEnvironment.newModel(modelName);
+        this.currentModel = model;
+        currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
         ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
-            // load the first unit completely and show it
-            // load all others units as interfaces
-            let first: boolean = true;
-            for (const unitName of unitNames) {
-                if (first) {
-                    ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
-                        model.addUnit(unit);
-                        EditorCommunication.getInstance().showUnitAndErrors(unit);
-                    });
-                    first = false;
-                } else {
-                    ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
-                        model.addUnit(unit);
-                    });
+            if (!unitNames || unitNames.length == 0) {
+                // set the defaults, no units are stored for this model
+                this.currentUnit = this.findFirstUnit();
+                currentUnitName.set(this.currentUnit.name);
+                EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
+            } else {
+                // load the first unit completely and show it
+                // load all others units as interfaces
+                let first: boolean = true;
+                for (const unitName of unitNames) {
+                    if (first) {
+                        ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
+                            model.addUnit(unit);
+                            this.currentUnit = unit;
+                            currentUnitName.set(this.currentUnit.name);
+                            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
+                        });
+                        first = false;
+                    } else {
+                        ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
+                            model.addUnit(unit);
+                        });
+                    }
                 }
             }
         });
-        this.currentModel = model;
-        currentModelName.set(modelName);
     }
 
     async openModelUnit(newUnitName: string) {
@@ -256,7 +271,7 @@ export class EditorCommunication {
     }
 
     private showUnitAndErrors(newUnit: PiNamedElement) {
-        console.log("showUnitAndErrors called, unitName: " + newUnit.name);
+        LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
         editorEnvironment.editor.rootElement = newUnit;
         EditorCommunication.getInstance().currentUnit = newUnit;
         currentUnitName.set(newUnit.name);
@@ -269,45 +284,60 @@ export class EditorCommunication {
     }
 
     // for the communication with the error list:
-    // errorSelected(error: PiError) {
-    //     LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.reportedOn + "'");
-    //     if (Array.isArray(error.reportedOn)) {
-    //         editorEnvironment.editor.selectElement(error.reportedOn[0]);
-    //     } else {
-    //         editorEnvironment.editor.selectElement(error.reportedOn);
-    //     }
-    // }
+    errorSelected(error: PiError) {
+        LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.locationdescription + "'");
+        // TODO test this when editor setFocus is fully implemented
+        if (Array.isArray(error.reportedOn)) {
+            editorEnvironment.editor.selectElement(error.reportedOn[0]);
+        } else {
+            editorEnvironment.editor.selectElement(error.reportedOn);
+        }
+    }
 
     getErrors() {
-        console.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
+        LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
         if (!!this.currentUnit) {
             let list = editorEnvironment.validator.validate(this.currentUnit);
             modelErrrors.set(list);
-            // list.forEach(err => console.log(err.message));
         }
     }
     // END OF: for the communication with the error list
 
     getProjectionNames(): string[] {
-        // const proj = editorEnvironment.editor.projection;
-        // return (proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name]);
-        return [ "default", "projectionA", "projectionB"];
+        const proj = editorEnvironment.editor.projection;
+        let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
+        // make sure 'default' is always the first name in the list
+        // to do this, first reverse the order of the names
+        nameList = nameList.reverse();
+        // next, check whether the first is 'default'
+        if (nameList[0] !== 'default') {
+            // find index
+            let i = nameList.indexOf('default');
+            // if already at start, nothing to do
+            // else remove old occurrency, if existing
+            if (i > 0) {
+                nameList.splice( i, 1 );
+            }
+            // add 'default' as first
+            nameList.unshift( 'default' );
+        }
+        return nameList;
     }
 
     setProjection(name: string): void {
         LOGGER.log("setting Projection " + name);
-        // const proj = editorEnvironment.editor.projection;
-        // if (proj instanceof PiCompositeProjection) {
-        //     proj.projectiontoFront(name);
-        // }
+        const proj = editorEnvironment.editor.projection;
+        if (proj instanceof PiCompositeProjection) {
+            proj.projectiontoFront(name);
+        }
     }
 
     unsetProjection(name: string): void {
         LOGGER.log("unsetting Projection " + name);
-        // const proj = editorEnvironment.editor.projection;
-        // if (proj instanceof PiCompositeProjection) {
-        //     proj.projectiontoFront(name);
-        // }
+        const proj = editorEnvironment.editor.projection;
+        if (proj instanceof PiCompositeProjection) {
+            proj.projectionToBack(name);
+        }
     }
 
     redo() {
@@ -320,6 +350,12 @@ export class EditorCommunication {
         // TODO implement undo()
         LOGGER.log("undo called");
         return undefined;
+    }
+
+    validate() {
+        // TODO implement validate()
+        LOGGER.log("validate called");
+        EditorCommunication.getInstance().getErrors();
     }
 
     replace() {

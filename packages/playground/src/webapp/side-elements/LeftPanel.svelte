@@ -12,7 +12,7 @@
 				$leftPanelVisible = false;
 			}}
 		>
-			<Icon style="color:var(--inverse-color)" path={arrowBack} />
+			<Icon> <svelte:component this={arrowBack}/> </Icon>
 		</Button>
 	</div>
 
@@ -23,7 +23,7 @@
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 
-	import {arrowBack} from '../assets/icons';
+	import arrowBack from '../assets/icons/svg/arrow_back.svg';
 	import MenuList from "../menu/MenuList.svelte";
 	import { leftPanelVisible } from "../WebappStore";
 </script>
@@ -34,7 +34,7 @@
 		padding: 0 4px;
 		display: flex;
 		align-items: center;
-		color: #fff;
+		color: var(--inverse-color);
 		background: var(--bg-app-bar);
 	}
 	/*.side-panel{*/

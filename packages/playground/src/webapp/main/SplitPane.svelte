@@ -2,7 +2,7 @@
 <!-- with three changes: -->
 <!-- verbatim inclusion of function clamp (line 23) -->
 <!-- change of border value in '.pane' (line 108) -->
-<!-- change of background color in '.divider::after' (line 126) -->
+<!-- change of background color in '.divider::after' (line 127) -->
 <script>
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
@@ -105,7 +105,8 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        border: var(--pi-darkblue) 1px solid;         /* difference with original */
+        background-color: var(--inverse-color);        /* difference with original */
+        border: var(--color) 1px solid;         /* difference with original */
     }
     .mousecatcher {
         position: absolute;

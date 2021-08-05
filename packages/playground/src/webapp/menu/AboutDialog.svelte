@@ -1,5 +1,5 @@
 <Dialog width="100%" bind:visible={$aboutDialogVisible}>
-    <div slot="title" class="dialog-title">About ProjectIt</div>
+    <div slot="title" class="title">About ProjectIt</div>
 
     <div class="content" >
         ProjectIt is an open source project which can be found at:
@@ -25,7 +25,7 @@
     <hr>
 
     <div slot="actions" class="actions center">
-        <Button on:click={() => handleSubmit()}>Ok</Button>
+        <Button color="var(--color)" on:click={() => handleSubmit()}>Ok</Button>
     </div>
 
 </Dialog>
@@ -40,18 +40,14 @@
 </script>
 
 <style>
-    .dialog-title{
+    .title {
         color: var(--inverse-color);
-        background-color: var(--bg-app-bar);
     }
     .content{
-        color: var(--pi-darkblue);
+        color: var(--color);
     }
     a{
-        color: var(--pi-darkblue);
+        color: var(--color);
         text-decoration: underline;
     }
-    /*.actions center{*/
-    /*    color: var(--pi-darkblue);*/
-    /*}*/
 </style>

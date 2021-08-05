@@ -4,7 +4,7 @@ import {Writable, writable} from 'svelte/store';
 export const versionNumber = "0.1.1";
 
 // a constant used to name new items, also used in ...Environment.newModel()
-export const unnamed: string = "<unnamed>";
+export let unnamed: string = "<unnamed>";
 
 // info about the language
 export let unitTypes: Writable<string[]> = writable<string[]>([]);
@@ -37,7 +37,7 @@ export enum severityType {
 }
 export let severity: Writable<number> = writable<number>(severityType.error);
 
-export const theme: Writable<string> = writable<string>('light');
+export let theme: Writable<string> = writable<string>('light');
 export const darkTheme = {
     // colors defined in terms of ProjectIt colors
     '--color': 'var(--pi-lightblue)',
@@ -45,12 +45,13 @@ export const darkTheme = {
     '--bg-app-bar': 'var(--pi-lightblue)',
     '--bg-color': 'var(--pi-darkblue)',
     '--bg-panel': 'var(--pi-darkblue)',
+    '--divider': 'var(--pi-lightblue)',
+    '--primary': 'var(--pi-lightblue)',
     '--list-divider': 'var(--pi-lightblue)',
     // other colors
     '--alternate': '#000',
-    '--primary': '#3ea6ff',
+    '--secondary': 'lightgrey',
     '--accent': '#ff6fab',
-    '--divider': 'rgba(255,255,255,0.175)',
     '--bg-popover': '#3f3f3f',
     '--border': '#555',
     '--label': 'rgba(255,255,255,0.5)',
@@ -58,21 +59,21 @@ export const darkTheme = {
     '--focus-color': 'rgba(62, 166, 255, 0.5)', // primary with alpha
 };
 
-export const miniWindow: Writable<boolean> = writable<boolean>(false);
+export let miniWindow: Writable<boolean> = writable<boolean>(false);
 
-export const leftPanelVisible: Writable<boolean> = writable<boolean>(false);
-export const rightPanelVisible: Writable<boolean> = writable<boolean>(false);
+export let leftPanelVisible: Writable<boolean> = writable<boolean>(false);
+export let rightPanelVisible: Writable<boolean> = writable<boolean>(false);
 
-export const newModelDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const openModelDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const newUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const openUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const saveUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const nameModelDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const helpDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const aboutDialogVisible: Writable<boolean> = writable<boolean>(false);
-export const keybindingsDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let newModelDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let openModelDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let newUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let openUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let saveUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let nameModelDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let helpDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let aboutDialogVisible: Writable<boolean> = writable<boolean>(false);
+export let keybindingsDialogVisible: Writable<boolean> = writable<boolean>(false);
 
 
 
