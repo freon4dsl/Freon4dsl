@@ -6,13 +6,11 @@
      <FileMenu {props}/>
      <EditMenu {props}/>
      <ProjectionMenu {props}/>
-     <HelpMenu {props}/>
  </div>
 
 <script>
     import FileMenu from "./FileMenu.svelte";
     import EditMenu from "./EditMenu.svelte";
-    import HelpMenu from "./HelpMenu.svelte";
     import ProjectionMenu from "./ProjectionMenu.svelte";
 
     // all activators for all menus in this group have the same props

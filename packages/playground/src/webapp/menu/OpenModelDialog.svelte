@@ -7,10 +7,9 @@
 		</Radio>
 	{/each}
 
-	<div slot="actions" class="actions center">
+	<div slot="actions" class="actions">
 		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
 		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
-
 	</div>
 
 	<div slot="footer" class="footer">
