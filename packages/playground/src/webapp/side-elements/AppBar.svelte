@@ -16,34 +16,30 @@
 		>
 			<Icon style="color:var(--inverse-color)"> <svelte:component this={menu} /> </Icon>
 		</Button>
-		<div class="title">PLE for <i>{$languageName}</i></div>
+		<div class="title">PIE for <i>{$languageName}</i></div>
 	{:else}
 		<!-- normally, the MenuGroup and a long title are shown-->
 		<MenuGroup/>
-		<div class="title">ProjectIt Language Environment for language <i>{$languageName}</i></div>
+		<div class="title">ProjectIt Environment for language <i>{$languageName}</i></div>
 	{/if}
 
 	<Button icon on:click={() => setTheme($theme === 'dark' ? 'light' : 'dark')}>
 		<Icon style="color:var(--inverse-color)"> <svelte:component this={invertColors} /> </Icon>
 	</Button>
 
-	{#if !$miniWindow}
-	<!-- help button is only shown in small viewport, in large viewport the help menu is directly visible	-->
-		<Button icon color="inherit"
-				on:click={() => {$rightPanelVisible = true}}
-				ripple={false}
-		>
-			<Icon style="color:var(--inverse-color)">
-				<svelte:component this={question_mark} />
-			</Icon>
-		</Button>
-	{:else}
+	<Button icon color="inherit"
+			on:click={() => {$rightPanelVisible = true}}
+			ripple={false}
+	>
+		<Icon style="color:var(--inverse-color)">
+			<svelte:component this={question_mark} />
+		</Icon>
+	</Button>
+
+	{#if $miniWindow}
 		<!-- normally, the brand icon is shown-->
-		<a id="brand" class="icon" target="_blank" href="http://www.projectit.org">
+		<a target="_blank" href="http://www.projectit.org">
 			<!-- compiled svg does not work, because the path is too complex-->
-<!--			<Icon>-->
-<!--				<svelte:component this={projectit_logo} />-->
-<!--			</Icon>-->
 			{#if $theme === 'light'}
 				<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
 				{:else if ($theme === 'dark')}
