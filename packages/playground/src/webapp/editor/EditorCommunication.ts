@@ -104,8 +104,8 @@ export class EditorCommunication {
         } else {
             this.currentModel = editorEnvironment.newModel(modelName, unitName);
         }
-        this.currentUnit = this.findFirstUnit();
         currentModelName.set(this.currentModel.name);
+        this.currentUnit = this.findFirstUnit();
         currentUnitName.set(this.currentUnit.name);
         this.hasChanges = false;
         this.showUnitAndErrors(this.currentUnit);
@@ -205,27 +205,31 @@ export class EditorCommunication {
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
         ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
-            // set the defaults, in case no units are stored
-            this.currentUnit = this.findFirstUnit();
-            currentUnitName.set(this.currentUnit.name);
-            // load the first unit completely and show it
-            // load all others units as interfaces
-            let first: boolean = true;
-            for (const unitName of unitNames) {
-                if (first) {
-                    ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
-                        model.addUnit(unit);
-                        this.currentUnit = unit;
-                        currentUnitName.set(this.currentUnit.name);
-                    });
-                    first = false;
-                } else {
-                    ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
-                        model.addUnit(unit);
-                    });
+            if (!unitNames || unitNames.length == 0) {
+                // set the defaults, no units are stored for this model
+                this.currentUnit = this.findFirstUnit();
+                currentUnitName.set(this.currentUnit.name);
+                EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
+            } else {
+                // load the first unit completely and show it
+                // load all others units as interfaces
+                let first: boolean = true;
+                for (const unitName of unitNames) {
+                    if (first) {
+                        ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
+                            model.addUnit(unit);
+                            this.currentUnit = unit;
+                            currentUnitName.set(this.currentUnit.name);
+                            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
+                        });
+                        first = false;
+                    } else {
+                        ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
+                            model.addUnit(unit);
+                        });
+                    }
                 }
             }
-            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
         });
     }
 
