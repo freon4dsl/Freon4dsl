@@ -140,12 +140,12 @@ export function createKeyboardShortcutForList<ELEMENT_TYPE extends PiElement>(
 
             if (!!roleToSelect) {
                 LOGGER.log("List select element for role " + roleToSelect);
-                await editor.selectElement(newElement, roleToSelect);
+                editor.selectElement(newElement, roleToSelect);
             } else {
                 LOGGER.log("List select first leaf " + roleToSelect);
-                await editor.selectElement(newElement);
+                editor.selectElement(newElement);
                 LOGGER.log("List select first editable leaf NOW " + roleToSelect);
-                await editor.selectFirstEditableChildBox();
+                editor.selectFirstEditableChildBox();
                 // await editor.selectFirstLeafChildBox();
             }
             // }

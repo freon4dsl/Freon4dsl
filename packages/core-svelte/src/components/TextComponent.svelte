@@ -20,23 +20,24 @@
     import { afterUpdate, beforeUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
+    const LOGGER = new PiLogger("TextComponent");//.mute();
+
     export let textBox = new TextBox(null, "role:", () => "Editable textbox", (v: string) => {});
     export let editor: PiEditor;
-
-    const LOGGER = new PiLogger("TextComponent");//.mute();
     export let textOnScreen: string;
-    let caretPosition: number = 0;
 
     export let getText = (): string => {
         // TODO loopt eentje achter tijdens onKeyDown
         return textOnScreen;
     }
-
     export const focus = async (): Promise<void> => {
+
         LOGGER.log("TextComponent focus " + textBox.role);
         element.focus();
         // this.startEditing();
     };
+
+    let caretPosition: number = 0;
     const setFocus = async (): Promise<void> => {
         LOGGER.log("TextComponent set focus " + textBox.role);
         element.focus();
@@ -268,7 +269,7 @@
     let placeholder: string;
 
     const onInput = async (e: InputEvent) => {
-        const value = e.target.innerText;
+        const value = (e.target as HTMLElement).innerText;
 
         LOGGER.log("onInput `" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
         // textBox.caretPosition = getCaretPosition();
@@ -276,7 +277,7 @@
         // editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
-            editor.deleteBox(textBox);
+            await editor.deleteBox(textBox);
         }
         LOGGER.log("END END text ["+ textOnScreen + "]");
         // await editor.selectElement(textBox.element, textBox.role, editor.selectedPosition);
@@ -287,6 +288,14 @@
         textBox.update();
             textBox.setFocus = setFocus;
             LOGGER.log("textbox is now [" + textBox.getText() + "]")
+        if( !!editor.selectedBox && !!textBox ) {
+            if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
+                LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+                if(!!element) {
+                    focus();
+                }
+            }
+        }
     });
 
     const getCaretPosition = (): number => {
@@ -296,11 +305,18 @@
     };
 
     autorun( () => {
-        // LOGGER.log("AUTO start text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
+        LOGGER.log("AUTORUN role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
         text = textOnScreen;
-        // textOnScreen = text;
-        // AUTO_LOGGER.log("AUTO TEXT COMPONENT ["+ text + "]")
         placeholder = textBox.placeHolder
+        LOGGER.log("==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
+        if( !!editor.selectedBox && !!textBox ) {
+            if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
+                LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+                if(!!element) {
+                    focus();
+                }
+            }
+        }
     });
 </script>
 

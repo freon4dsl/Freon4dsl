@@ -61,14 +61,14 @@
                     LOGGER.log("Down: " + editor.selectedBox.role);
                     const down = boxBelow(editor.selectedBox);
                     if (down !== null) {
-                        await editor.selectBox(down);
+                        editor.selectBoxNew(down);
                     }
                     break;
                 case ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
                     const up = boxAbove(editor.selectedBox);
                     if (up !== null) {
-                        editor.selectBox(up);
+                        editor.selectBoxNew(up);
                     }
                     break;
             }

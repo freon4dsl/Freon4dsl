@@ -23,11 +23,11 @@
     let element: HTMLDivElement = null;
 
     const onClick = (event: MouseEvent) => {
-        LOGGER.log("SelectableComponent.onClick:n "+ event);
+        LOGGER.log("SelectableComponent.onClick: "+ event + " for box " + box.role);
         isSelected = !isSelected;
 
         if (box.selectable) {
-            LOGGER.log("===> selected box " + box.role);
+            LOGGER.log("       ===> selected box " + box.role);
             editor.selectedBox = box;
             event.preventDefault();
             event.stopPropagation();
