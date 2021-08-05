@@ -71,9 +71,7 @@ export let openUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let saveUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let nameModelDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
-export let helpDialogVisible: Writable<boolean> = writable<boolean>(false);
-export let aboutDialogVisible: Writable<boolean> = writable<boolean>(false);
-export let keybindingsDialogVisible: Writable<boolean> = writable<boolean>(false);
+
 
 
 
