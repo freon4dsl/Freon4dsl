@@ -11,7 +11,7 @@
     </ul>
 
     <div slot="actions" class="actions center">
-        <Button color="var(--inverse-color)" on:click={() => handleSubmit()}>Ok</Button>
+        <Button color="var(--color)" on:click={() => handleSubmit()}>Ok</Button>
     </div>
 
 </Dialog>
@@ -27,7 +27,7 @@
 
 <style>
     .keybinding {
-        color: var(--inverse-color);
+        color: var(--color);
     }
     .keybinding li {
         padding: 10px;

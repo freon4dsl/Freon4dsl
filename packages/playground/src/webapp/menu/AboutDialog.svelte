@@ -18,7 +18,7 @@
     <hr>
     <div class="content">
         <p> Created by:
-                <a href="http://openmodeling.nl/" target="_blank">
+                <a href="http://www.openmodeling.nl/" target="_blank">
                     www.openmodeling.nl.
                 </a>
     </div>

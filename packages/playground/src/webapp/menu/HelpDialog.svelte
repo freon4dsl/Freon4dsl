@@ -2,14 +2,16 @@
     <div slot="title" class="title">Help for ProjectIt</div>
 
     <div class="content">
-    <p>Currently there is no in-build help functionality. We refer you to our website.
-        <a href="http://projectit.org/" target="_blank">
-            www.projectit.org.
+    Currently there is no in-build help functionality. We refer you to our website:
+        <br>
+        <br>
+        <a href="http://www.projectit.org/" target="_blank">
+            www.projectit.org
         </a>
     </div>
 
     <div slot="actions" class="actions center">
-        <Button color="var(--inverse-color)" on:click={() => handleSubmit()}>Ok</Button>
+        <Button color="var(--color)" on:click={() => handleSubmit()}>Ok</Button>
     </div>
 
 </Dialog>
@@ -25,13 +27,18 @@
 
 <style>
     .content{
-        color: var(--inverse-color);
+        color: var(--color);
+        text-align: center;
         margin: auto;
     }
     .actions{
+        color: var(--color);
+    }
+    .title {
         color: var(--inverse-color);
     }
-    .center{
-        color: var(--inverse-color);
+    a{
+        color: var(--color);
+        text-decoration: underline;
     }
 </style>
