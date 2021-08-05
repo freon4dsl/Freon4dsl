@@ -1,8 +1,5 @@
-import { LEFT_MOST } from "../";
-import { isRegExp, isString } from "../editor/PiAction";
-import { PiLogger } from "./PiLogging";
-import { Box } from "../editor/boxes/Box";
-import { PiEditor } from "../editor/PiEditor";
+import { isRegExp, isString, Box, PiEditor } from "../editor";
+import { PiLogger } from "./internal";
 
 const LOGGER = new PiLogger("BehaviorUtils"); // .mute();
 
@@ -32,6 +29,7 @@ export class PiCaret {
 }
 
 export enum BehaviorExecutionResult {
+    NULL,
     EXECUTED,
     PARTIAL_MATCH,
     NO_MATCH
@@ -46,6 +44,7 @@ export enum BehaviorExecutionResult {
  * @returns {boolean}
  */
 export async function executeBehavior(box: Box, text: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
+    LOGGER.log("Enter executeBehavior");
     let partialMatch: boolean = false;
 
     for (const a of editor.behaviors) {

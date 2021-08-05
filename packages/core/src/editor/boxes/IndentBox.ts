@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
 /**
  * Box to indent another box with parameter "indent".
@@ -41,5 +41,5 @@ export class IndentBox extends Box {
 }
 
 export function isIndentBox(b: Box): b is IndentBox {
-    return b instanceof IndentBox;
+    return b.kind === "IndentBox"; // " b instanceof IndentBox;
 }

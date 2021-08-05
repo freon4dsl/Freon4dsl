@@ -1,10 +1,8 @@
 import { observable } from "mobx";
-import { PiCaretPosition } from "../../util/BehaviorUtils";
-import { PiCaret } from "../../util/BehaviorUtils";
+import { PiCaretPosition, PiCaret, PiUtils } from "../../util";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
-import { PiUtils } from "../../util/PiUtils";
 
 export enum KeyPressAction {
     OK,
@@ -13,7 +11,7 @@ export enum KeyPressAction {
 }
 
 export class TextBox extends Box {
-    readonly kind = "TextBox";
+    kind = "TextBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.
@@ -81,5 +79,5 @@ export class TextBox extends Box {
 }
 
 export function isTextBox(b: Box): b is TextBox {
-    return b instanceof TextBox;
+    return b.kind === "TextBox"; // b instanceof TextBox;
 }

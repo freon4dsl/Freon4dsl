@@ -215,7 +215,7 @@ hr { height: 1px; padding: 0; margin: 2rem 0; background-color: #44434d; border:
 
 @media (min-width: 50rem) { .site-title { padding-top: 0.5rem; padding-bottom: 0.5rem; } }
 
-.site-logo { width: 100%; height: 100%; background-image: url("https://www.projectit.org/version-0.1.0/images/logo-inverse-colors.png"); background-repeat: no-repeat; background-position: left center; background-size: contain; }
+.site-logo { width: 100%; height: 100%; background-image: url("http://localhost:4000/version-0.1.0/images/logo-inverse-colors.png"); background-repeat: no-repeat; background-position: left center; background-size: contain; }
 
 .menu-button { appearance: none; display: flex; height: 100%; padding: 1rem; align-items: center; color: #2c84fa; text-transform: uppercase; background: transparent; border: 0; }
 

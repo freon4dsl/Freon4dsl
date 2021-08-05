@@ -1,0 +1,126 @@
+:root {
+	--pi-selected-background-color: rgba(211, 227, 253, 255);
+	--pi-selected-color: red; /* to be done */
+	--pi-popup-border: none;
+	--pi-popup-background: #fff;
+	--pi-popup-box-shadow: 0 0 0px 0 rgba(0, 0, 0, 0.5);
+	--pi-editor-background: var(--inverse-color);
+	--pi-list-background-color: white;
+
+	/* ProjectIt colors */
+	--pi-darkblue: darkblue; /* #00008b */
+	--pi-lightblue: #d3e3fd;
+	--pi-slider-color: #455a64;
+	--pi-header-height: 36px;
+	--pi-footer-height: 16px;
+	--pi-menu-height: 24px;
+
+	/* colors defined in terms of ProjectIt colors */
+	--color: var(--pi-darkblue);
+	--inverse-color: var(--pi-lightblue);
+	--bg-app-bar: var(--pi-darkblue);
+	--bg-color: var(--pi-lightblue);
+	--bg-panel: var(--pi-lightblue); 	/* Dialog background color */
+	--divider: var(--pi-darkblue); 	/* Dialog Title background color */
+	--primary: var(--pi-darkblue);  /* Dialog primary button text color */
+	--secondary: grey;
+	--list-divider: var(--pi-darkblue);
+	/* other colors */
+	--alternate: #fff;
+	--primary: #1976d2;
+	--accent: #f50057;
+	--bg-popover: #fff;
+	--border: #dfdfdf;
+	--label: rgba(0, 0, 0, 0.3755);
+	--bg-input-filled: rgba(0, 0, 0, 0.0555);
+	--focus-color: rgba(25, 118, 210, 0.5); /* primary with alpha */
+
+	/* fonts, etc */
+	--font-family: Roboto, Helvetica, sans-serif;
+	--heading-font-family: var(--font-family);
+	--header-font-size: 16px;
+	--button-font-family: var(--font-family);
+	--button-font-size: 12px;
+	--error-font-size: 14px;
+	--menuitem-font-size: 14px;
+	--code-font-family: 'Roboto Mono', Menlo, Consolas, monospace;
+
+}
+html, body {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	color: #333;
+	margin: 0;
+	padding: 8px;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+a {
+	color: rgb(0,100,200);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: rgb(0,80,160);
+}
+
+label {
+	display: block;
+}
+
+input, button, select, textarea {
+	font-family: inherit;
+	font-size: inherit;
+	-webkit-padding: 0.4em 0;
+	padding: 0.4em;
+	margin: 0 0 0.5em 0;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+}
+
+input:disabled {
+	color: #ccc;
+}
+
+button {
+	color: #333;
+	background-color: #f4f4f4;
+	outline: none;
+}
+
+button:disabled {
+	color: #999;
+	pointer-events: none;
+}
+
+button:not(:disabled):active {
+	background-color: #ddd;
+}
+
+button:focus {
+	border-color: #666;
+}
+
+/* the following is neccessary for buttons to be disabled! */
+.disabled,
+[disabled] {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.disabled .disabled,
+.disabled [disabled],
+[disabled] .disabled,
+[disabled] [disabled] {
+	opacity: 1;
+}

@@ -17,10 +17,11 @@ export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[]
 
 export function makeImportStatements(hasSuper: boolean, needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
     return `
-            ${!hasSuper ? `import * as uuid from "uuid";` : ``}
+            // ${!hasSuper ? `import * as uuid from "uuid";` : ``}
             ${needsObservable ? `import { observable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
-            import { ${modelImports.join(", ")} } from "./internal";
+            // TODO import { ${modelImports.join(", ")} } from "./index";
+            ${modelImports.map(mi => `import { ${mi} } from "./${mi}";`).join("\n")} 
             `;
 }
 
@@ -84,7 +85,7 @@ export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: b
                         if (!!id) { 
                             this.$id = id;
                         } else {
-                            this.$id = uuid.v4();
+                            this.$id = PiUtils.ID(); // uuid.v4();
                         }`
         : "super(id);"
     }                   

@@ -18,8 +18,6 @@ export class EnvironmentTemplate {
                     ${Names.PiScoper}, ${Names.PiTyper}, ${Names.PiValidator}, ${Names.PiStdlib}, 
                     ${Names.PiWriter}
                } from "${PROJECTITCORE}";
-        import { ${Names.ProjectionalEditor} } from "@projectit/core";
-        import * as React from "react";
         import { ${Names.actions(language)}, ${Names.projectionDefault(language)} } from "${relativePath}${EDITOR_GEN_FOLDER}";
         import { ${Names.scoper(language)} } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoper(language)}";
         import { ${Names.typer(language)}  } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typer(language)}";
@@ -27,7 +25,7 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
-        import { ${Names.concept(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.concept(language.modelConcept)}";
+        import { ${Names.concept(language.modelConcept)}, ${Names.concept(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
         
@@ -68,24 +66,21 @@ export class EnvironmentTemplate {
             }
             
             /**
-             * Because the actual editor is an instance of a class from the ProjectIt core package,
-             * this method provides an entry point to the content of the editor.
-             */
-            get projectionalEditorComponent() : ${Names.ProjectionalEditor} {
-                if( this._projectionalEditorComponent === null ){
-                    this._projectionalEditorComponent = \< ${Names.ProjectionalEditor} editor={this.editor} /\> as any as ${Names.ProjectionalEditor};
-                }
-                return this._projectionalEditorComponent;
-            }    
-
-            /**
-             * Returns an empty model with name 'modelName'.
+             * Returns a new model with name 'modelName'.
+             * When 'unitName' is present, an empty unit
+             * named 'unitName' is added to the model.
              * 
              * @param modelName
+             * @param unitName
              */
-             newModel(modelName: string) : ${Names.concept(language.modelConcept)} {
+             newModel(modelName: string, unitName?: string) : ${Names.concept(language.modelConcept)} {        
                 const model = new ${Names.concept(language.modelConcept)}();
                 model.name = modelName;
+                if (!(unitName == null)) {
+                    const unit = new ${Names.concept(language.units[0])}();
+                    unit.name = unitName;
+                    model.addUnit(unit);
+                }
                 return model;
              }  
                             
@@ -99,7 +94,6 @@ export class EnvironmentTemplate {
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
             languageName: string = "${language.name}";
             unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
-            private _projectionalEditorComponent : ${Names.ProjectionalEditor} = null;
         }`;
     }
 }

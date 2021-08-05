@@ -1,8 +1,7 @@
-import { Box } from "./boxes/Box";
-import { PiBinaryExpression, PiElement, PiExpression } from "../language/PiModel";
-import { PiCaret } from "../util/BehaviorUtils";
-import { PiKey } from "../util/Keys";
-import { PiEditor } from "./PiEditor";
+import { Box } from "./internal";
+import { PiBinaryExpression, PiElement, PiExpression } from "../language";
+import { PiCaret, PiKey } from "../util";
+import { PiEditor } from "./internal";
 
 export type PiTriggerType = string | RegExp | PiKey;
 

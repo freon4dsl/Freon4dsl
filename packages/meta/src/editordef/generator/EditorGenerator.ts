@@ -89,13 +89,9 @@ export class EditorGenerator {
         const customProjectionFile = Helpers.pretty(customProjectiontemplate.generate(this.language), "Custom Projection", generationStatus);
         Helpers.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`, customProjectionFile, "Custom Projection");
 
-        LOGGER.log(`Generating editor styles part 1: ${this.stylesFolder}/styles.ts`);
+        LOGGER.log(`Generating editor styles: ${this.stylesFolder}/styles.ts`);
         const editorStylesConst = Helpers.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
         Helpers.generateManualFile(`${this.stylesFolder}/styles.ts`, editorStylesConst, "Editor Styles Constant");
-
-        LOGGER.log(`Generating editor styles part 2: ${this.stylesFolder}/style.scss`);
-        const editorStylesCSS = stylesTemplate.generateSCSS();
-        Helpers.generateManualFile(`${this.stylesFolder}/style.scss`, editorStylesCSS, "Editor Styles scss");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
         const editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef), "Editor Gen Index", generationStatus);

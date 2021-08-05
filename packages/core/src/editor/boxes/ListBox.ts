@@ -1,12 +1,8 @@
 import { observable } from "mobx";
 
-import { NBSP } from "../../util/PiUtils";
-import { createKeyboardShortcutForList } from "../../util/ListBoxUtil";
-import { Box } from "./Box";
-import { AliasBox } from "./AliasBox";
-import { PiEditor } from "../PiEditor";
-import { PiElement } from "../../language/PiModel";
-import { PiUtils } from "../../util/PiUtils";
+import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
+import { Box, AliasBox, PiEditor } from "../internal";
+import { PiElement } from "../../language";
 
 enum Direction {
     HORIZONTAL = "Horizontal",
@@ -152,9 +148,9 @@ export class VerticalPiElementListBox extends VerticalListBox {
 }
 
 export function isHorizontalBox(b: Box): b is HorizontalListBox {
-    return b instanceof HorizontalListBox;
+    return b.kind === "HorizontalListBox"; // b instanceof HorizontalListBox;
 }
 
 export function isVerticalBox(b: Box): b is VerticalListBox {
-    return b instanceof VerticalListBox;
+    return b.kind === "VerticalListBox";//b instanceof VerticalListBox || b instanceof VerticalPiElementListBox;
 }

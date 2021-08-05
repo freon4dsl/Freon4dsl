@@ -1,5 +1,4 @@
-import { isProKey, isString, PiTriggerType, triggerToString } from "../";
-import { isRegExp } from "../editor/PiAction";
+import { isProKey, isString, PiTriggerType, isRegExp } from "../editor";
 
 export class MatchUtil {
     public static fullMatch(text: string, trigger: PiTriggerType): boolean {

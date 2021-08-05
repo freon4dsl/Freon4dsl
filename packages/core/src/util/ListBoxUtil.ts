@@ -1,13 +1,17 @@
-import { PiUtils, wait } from "./PiUtils";
+// the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import { MetaKey, PiKey } from "./Keys";
-import { KeyboardShortcutBehavior } from "../editor/PiAction";
-import { AliasBox } from "../editor/boxes/AliasBox";
-import { Box } from "../editor/boxes/Box";
-import { HorizontalListBox, VerticalListBox } from "../editor/boxes/ListBox";
-import { PiEditor } from "../editor/PiEditor";
-import { PiElement } from "../language/PiModel";
-import { PiLogger } from "./PiLogging";
 import * as Keys from "./Keys";
+import { PiUtils, wait, PiLogger } from "./internal";
+import {
+    AliasBox,
+    Box,
+    HorizontalListBox,
+    VerticalListBox,
+    PiEditor,
+    KeyboardShortcutBehavior
+} from "../editor";
+import { PiElement } from "../language";
+
 
 const LOGGER = new PiLogger("ListBoxUtil");
 

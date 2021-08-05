@@ -1,8 +1,7 @@
 import { observable } from "mobx";
-import * as uuid from "uuid";
 
-import { PiElement } from "../../language/PiModel";
-import { PiLogger } from "../../util/PiLogging";
+import { PiElement } from "../../language";
+import { PiLogger, PiUtils } from "../../util";
 
 const LOGGER = new PiLogger("Box"); // .mute();
 
@@ -27,7 +26,7 @@ export abstract class Box {
         // ProUtil.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
-        this.$id = uuid.v4();
+        this.$id = PiUtils.ID(); //uuid.v4();
     }
 
     get id(): string {
@@ -179,7 +178,7 @@ export abstract class Box {
      * This function is called to set the focus on this element.
      */
     setFocus: () => void = async () => {
-        LOGGER.info(this, "setFocus not set for " + this.id + " id " + this.$id);
+        LOGGER.info(this, "setFocus not implemented for " + this.id + " id " + this.$id);
         /* To be overwritten by `TextComponent` */
     };
 

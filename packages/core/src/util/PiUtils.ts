@@ -1,10 +1,9 @@
 import { action } from "mobx";
-import { PiLogger } from "./PiLogging";
-import { Box } from "../editor/boxes/Box";
-import { isPiExpression } from "../language/PiModel";
-import { PiKey } from "../util/Keys";
-import { PiContainerDescriptor, PiElement, PiExpression } from "../language/PiModel";
-import { PiEditor } from "../editor/PiEditor";
+import { PiLogger } from "./internal";
+// the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
+import { PiKey } from "./Keys";
+import { Box, PiEditor } from "../editor";
+import { PiContainerDescriptor, PiElement, PiExpression, isPiExpression } from "../language";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;
@@ -12,9 +11,19 @@ export type DynamicBoolean = BooleanCallback | boolean;
 export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
+let LATEST_ID = 0;
+
 const LOGGER = new PiLogger("PiUtils"); // .mute();
 
 export class PiUtils {
+
+    /**
+     *
+     */
+    static ID() {
+        LATEST_ID++;
+        return "ID-" + LATEST_ID;
+    }
     /** Initialize an object with a JSON object
      */
     static initializeObject<TTarget, TSource>(target: TTarget, source: TSource) {

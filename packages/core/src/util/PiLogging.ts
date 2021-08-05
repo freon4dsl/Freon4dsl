@@ -6,10 +6,24 @@ type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
 export class PiLogger {
-    private static muteAll: boolean = true;
+    private static muteAll: boolean = false;
     private static FG_RED = "\x1b[31m";
     private static FG_BLACK = "\x1b[30m";
     private static FG_BLUE = "\x1b[34m";
+
+    static mutedLogs: string[] = [];
+    // static shownLogs: string[] = [];
+    static mute(t: string): void {
+        this.mutedLogs.push(t);
+    }
+    static unmute(t: string): void {
+        const index = this.mutedLogs.indexOf(t);
+        if( index >= 0){
+            this.mutedLogs.splice(index, 1);
+        }
+    }
+
+
 
     static muteAllLogs() {
         PiLogger.muteAll = true;
@@ -26,7 +40,17 @@ export class PiLogger {
     }
 
     category: string;
-    active: boolean = true;
+
+    get active(): boolean {
+        return !PiLogger.mutedLogs.includes(this.category)
+    }
+    set active(value: boolean) {
+        if( value){
+            PiLogger.unmute(this.category)
+        } else {
+            PiLogger.mute(this.category)
+        }
+    }
 
     constructor(cat: string) {
         this.category = cat;
@@ -94,4 +118,3 @@ export class PiLogger {
 }
 
 export const EVENT_LOG = new PiLogger("EVENT").mute();
-export const RENDER_LOG = new PiLogger("RENDER").mute();

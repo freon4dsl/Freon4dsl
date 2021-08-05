@@ -1,13 +1,21 @@
 import { action } from "mobx";
 
-import { PiCustomBehavior, PiBehavior, PiTriggerType, PiBinaryExpressionCreator, PiExpressionCreator } from "./PiAction";
-import { isPiExpression, PiElement, PiExpression, PiBinaryExpression } from "../language/PiModel";
-import { Box } from "./boxes/Box";
-import { PiEditor } from "../editor/PiEditor";
-import { PiCaret } from "../util/BehaviorUtils";
-import { BTREE } from "../util/BalanceTreeUtils";
-import { PiLogger } from "../util/PiLogging";
-import { PiUtils } from "../util/PiUtils";
+import {
+    PiCustomBehavior,
+    PiBehavior,
+    PiTriggerType,
+    PiBinaryExpressionCreator,
+    PiExpressionCreator
+} from "./PiAction";
+import {
+    isPiExpression,
+    PiElement,
+    PiExpression,
+    PiBinaryExpression
+} from "../language/PiModel";
+import { Box } from "./internal";
+import { PiEditor } from "./internal";
+import { PiCaret, BTREE, PiLogger, PiUtils } from "../util";
 
 const LOGGER = new PiLogger("InternalBehavior");
 

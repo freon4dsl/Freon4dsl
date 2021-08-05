@@ -1,10 +1,7 @@
 import { action } from "mobx";
-import { isPiExpression } from "../language/PiModel";
-import { PiLogger } from "./PiLogging";
-import { Box } from "../editor/boxes/Box";
-import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression } from "../language/PiModel";
-import { PiEditor } from "../editor/PiEditor";
-import { PiUtils } from "./PiUtils";
+import { PiLogger, PiUtils } from "./internal";
+import { Box, PiEditor } from "../editor";
+import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression, isPiExpression } from "../language";
 
 // reserved role names for expressions, use with care.
 export const BEFORE_BINARY_OPERATOR = "binary-pre";

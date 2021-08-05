@@ -1,4 +1,4 @@
-import { PiElement } from "../language/index";
+import { PiElement } from "../language";
 
 // tag::reader-interface[]
 export interface PiReader {
@@ -10,7 +10,7 @@ export interface PiReader {
      * @param filepath
      * @param metatype
      */
-    readFromFile(filepath: string, metatype: string): PiElement;
+    // TODO readFromFile(filepath: string, metatype: string): PiElement;
 
     /**
      * Parses the 'input' into a model unit of type 'metatype'.

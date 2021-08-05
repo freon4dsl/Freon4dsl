@@ -1,13 +1,18 @@
-import { AliasBox, Box, HorizontalListBox, LabelBox, NBSP } from "../";
-import { GridBox, GridCell } from "../editor/boxes/GridBox";
-import { KeyboardShortcutBehavior } from "../editor/PiAction";
-import { PiEditor } from "../editor/PiEditor";
-import { PiElement } from "../language/PiModel";
-import { PiKey } from "../util/Keys";
-import * as Keys from "../util/Keys";
-import { MetaKey } from "../util/Keys";
-import { PiUtils, wait } from "./PiUtils";
-import { STYLES } from "../editor/components/styles/Styles";
+import {
+    AliasBox,
+    Box,
+    HorizontalListBox,
+    LabelBox,
+    GridBox,
+    GridCell,
+    KeyboardShortcutBehavior,
+    PiEditor
+} from "../editor";
+import { PiElement } from "../language";
+// the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
+import { MetaKey, PiKey } from "./Keys";
+import * as Keys from "./Keys";
+import { PiUtils, NBSP } from "./internal";
 
 export class GridUtil {
     /**
@@ -31,10 +36,12 @@ export class GridUtil {
                 row: 1,
                 column: index + 1,
                 box: new LabelBox(element, "header" + index, () => item, {
-                    style: STYLES.headerText,
+                    // TODO Change into Svelte Style
+                    // style: STYLES.headerText,
                     selectable: false
                 }),
-                style: STYLES.header
+                // TODO Change into Svelte Style
+                // style: STYLES.header
             });
         });
         list.forEach((item: ELEMENT_TYPE, rowIndex: number) => {
@@ -51,7 +58,8 @@ export class GridUtil {
             column: 1,
             columnSpan: columnBoxes.length,
             box: new AliasBox(element, "alias-add-row", "<add new row>"),
-            style: STYLES.header
+            // TODO Change into Svelte Style
+            // style: STYLES.header
         });
 
         // Add keyboard actions to grid such that new rows can be added by Return Key
@@ -78,9 +86,11 @@ export class GridUtil {
         columnNames.forEach((item: string, index: number) => {
             cells.push({
                 row: index + 1,
+
                 column: 1,
                 box: new LabelBox(element, "header" + index, () => item, {
-                    style: STYLES.header
+                    // TODO Change into Svelte Style
+                    // style: STYLES.header
                 })
             });
         });

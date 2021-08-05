@@ -1,7 +1,6 @@
-import { Box, SelectBox } from "../";
-import { TextBox } from "../editor/boxes/TextBox";
-import { PiElement } from "../language/PiModel";
-import { PiUtils } from "./PiUtils";
+import { Box, SelectBox, SelectOption, TextBox, PiEditor } from "../editor";
+import { PiElement } from "../language";
+import { BehaviorExecutionResult, PiUtils } from "./internal";
 
 export class PiProjectionUtil {
     static textBox(element: PiElement, property: string): TextBox {
@@ -40,12 +39,13 @@ export class PiProjectionUtil {
                         return { id: labels.no, label: labels.no };
                     }
                 },
-                option => {
-                    if (option.label === labels.yes) {
+                async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                    if (option.id === labels.yes) {
                         elem[propertyName] = true;
-                    } else if (option.label === labels.no) {
+                    } else if (option.id === labels.no) {
                         elem[propertyName] = false;
                     }
+                    return BehaviorExecutionResult.NULL
                 }
             );
         } else {

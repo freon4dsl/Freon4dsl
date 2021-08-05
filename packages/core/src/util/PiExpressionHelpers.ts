@@ -1,24 +1,28 @@
-import { PiCaret } from "./BehaviorUtils";
-import { STYLES } from "../editor/components/styles/Styles";
-import { AliasBox } from "../editor/boxes/AliasBox";
-import { Box } from "../editor/boxes/Box";
-import { HorizontalListBox, isHorizontalBox } from "../editor/boxes/ListBox";
-import { SelectBox } from "../editor/boxes/SelectBox";
-import { SelectOption } from "../editor/boxes/SelectOption";
-import { PiEditor } from "../editor/PiEditor";
-import { PiBinaryExpression, PiExpression } from "../language/PiModel";
-import { PiProjection } from "../editor/PiProjection";
+import {
+    AliasBox,
+    Box,
+    HorizontalListBox,
+    isHorizontalBox,
+    SelectBox,
+    SelectOption,
+    PiEditor,
+    PiProjection
+} from "../editor";
+import { PiBinaryExpression, PiExpression } from "../language";
 import {
     AFTER_BINARY_OPERATOR,
-    BTREE,
     BEFORE_BINARY_OPERATOR,
     BINARY_EXPRESSION,
+    BTREE,
     EXPRESSION,
     EXPRESSION_SYMBOL,
     LEFT_MOST,
-    RIGHT_MOST
-} from "./BalanceTreeUtils";
-import { NBSP, PiUtils } from "./PiUtils";
+    RIGHT_MOST,
+    BehaviorExecutionResult,
+    PiCaret,
+    NBSP,
+    PiUtils
+} from "./internal";
 
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
@@ -33,10 +37,14 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
             result = new HorizontalListBox(exp, EXPRESSION, children);
         }
         if (leftMost) {
-            result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP, { style: STYLES.aliasExpression }));
+            // TODO Change into Svelte Style
+            // result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP, { style: STYLES.aliasExpression }));
+            result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP));
         }
         if (rightMost) {
-            result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
+            // TODO Change into Svelte Style
+            // result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
+            result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP));
         }
         return result;
     } else {
@@ -54,13 +62,11 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
 
     result.addChildren([
         (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, "PiBinaryExpression-left", "[add-left]", { propertyName: "left" })),
-        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, {
-            style: STYLES.aliasExpression
-        }),
+        // TODO  Change into Svelte styles: style: STYLES.aliasExpression
+        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, ),
         createOperatorBox(editor, exp, symbol),
-        new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP, {
-            style: STYLES.aliasExpression
-        }),
+        // TODO  Change into Svelte styles: style: STYLES.aliasExpression
+        new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP),
         (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, "PiBinaryExpression-right", "[add-right]", { propertyName: "right" }))
     ]);
     return result;
@@ -94,7 +100,7 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
             }
         },
         () => null,
-        async (option: SelectOption) => {
+        async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
             if (editor.actions && editor.actions.binaryExpressionCreators) {
                 const alias = editor.actions.binaryExpressionCreators.filter(e => (e.trigger as string) === option.id)[0];
                 if (alias) {
@@ -106,8 +112,10 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
                     exp = newExp;
                     await editor.selectElement(newExp.piRight());
                     await editor.selectBox(operatorBox.nextLeafRight.firstLeaf, PiCaret.LEFT_MOST);
+                    return BehaviorExecutionResult.EXECUTED;
                 }
             }
+            return BehaviorExecutionResult.NO_MATCH;
         },
         {
             style: style

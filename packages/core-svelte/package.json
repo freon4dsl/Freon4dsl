@@ -1,0 +1,24 @@
+{
+  "name": "@projectit/core-svelte",
+  "version": "0.1.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "validate": "svelte-check",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "install-local": "yarn install --registry http://localhost:4873",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "republish-local": "yarn unpublish-local && yarn publish-local"
+  },
+  "dependencies": {
+    "@projectit/core": "0.1.1",
+    "click-outside": "1.0.4",
+    "mobx": "5.15.4",
+    "tslib": "^2.3.0"
+  }
+}
