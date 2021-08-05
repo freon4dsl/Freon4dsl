@@ -80,7 +80,7 @@ export class PiUtils {
                     LOGGER.log("handleKeyboardShortcut: executing keyboard action");
                     const selected = await act.action(box, piKey, editor);
                     if (selected) {
-                        await editor.selectElement(selected, act.boxRoleToSelect);
+                        editor.selectElement(selected, act.boxRoleToSelect);
                     }
                     return true;
                 } else {

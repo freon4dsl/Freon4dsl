@@ -54,7 +54,7 @@ export abstract class AbstractChoiceBox extends Box {
         initializeObject(this, initializer);
         this.textBox = new TextBox(
             exp,
-            "role" + "-textbox",
+            "alias-" + role + "-textbox",
             () => {
                 /* To be overwritten by `SelectComponent` */
                 return this.textHelper.text;

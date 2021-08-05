@@ -103,6 +103,7 @@
     }
 
     const handleClickOutside = (event): void => {
+        // TODO Inform parent AliasComponent
         open = false;
     }
 

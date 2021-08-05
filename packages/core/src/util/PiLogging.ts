@@ -57,14 +57,14 @@ export class PiLogger {
     }
 
     info(o: any, msg: LogMessage) {
-        if (this.active && !PiLogger.muteAll) {
+        if ((!PiLogger.muteAll) && this.active) {
             const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
             this.logToConsole(PiLogger.FG_BLUE, type + ": " + this.message(msg));
         }
     }
 
     log(msg: LogMessage) {
-        if (this.active && !PiLogger.muteAll) {
+        if ((!PiLogger.muteAll) && this.active) {
             this.logToConsole(PiLogger.FG_BLACK, this.category + ": " + this.message(msg));
         }
     }

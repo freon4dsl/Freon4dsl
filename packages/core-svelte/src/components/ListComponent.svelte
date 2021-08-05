@@ -27,21 +27,23 @@
     let gridStyle;
     let cssGrgVars: string;
     autorun(() => {
-        let boxes: ReadonlyArray<Box> = [];
-        AUTO_LOGGER.log("AUTO LIST COMPONENT["+ svNotifier.dummy + "] " + list.role + " children " + list.children.length)
+        svNotifier.dummy
+        // let boxes: ReadonlyArray<Box> = [];
+        AUTO_LOGGER.log("ListComponent[" + "] " + list.role + " children " + list.children.length)
         svList = list;
         // @ts-ignore
-        list.children.forEach(b => {
-            LOGGER.log("    list element is " + b.role)
-        });
-        boxes = svList.children;
+        // list.children.forEach(b => {
+        //     LOGGER.log("    list element is " + b.role)
+        // });
+        // boxes = svList.children;
+        const nrOfBoxes = svList.children.length;
         gridStyle =
             isHorizontalBox(svList)
                 ? {
-                    gridTemplateColumns: "repeat(" + boxes.length + ", auto)",
+                    gridTemplateColumns: "repeat(" + nrOfBoxes + ", auto)",
                 }
                 : {
-                    gridTemplateRows: "repeat(" + boxes.length + ", auto)",
+                    gridTemplateRows: "repeat(" + nrOfBoxes + ", auto)",
                     gridTemplateColumns: "repeat(1, auto)",
                     color: "red",
                     backgroundColor: "green"

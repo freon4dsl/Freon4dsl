@@ -43,7 +43,6 @@
     //     open = false;
     // }
     const setFocus = async (): Promise<void> => {
-        console.log("AliasComponent set focus " + choiceBox.role);
         LOGGER.log("AliasComponent set focus " + choiceBox.role);
         textcomponent.focus();
         // this.startEditing();
@@ -58,7 +57,7 @@
         LOGGER.info(this, "triggerKeyPressEvent " + key);
         const aliasResult = await handleStringInput(key);
         if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
-            if (textcomponent) {
+            if (!!textcomponent) {
                 textcomponent.innerText = key;
                 // this.setCaretPosition(textcomponent.innerText.length);
                 // this.dropdownIsOpen = true;
@@ -71,7 +70,7 @@
         const aliasResult = await executeBehavior(choiceBox, s, editor);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
-                if (textcomponent) {
+                if (!!textcomponent) {
                     textcomponent.innerText = "";
                 }
                 open = false;
@@ -90,7 +89,7 @@
     };
 
     onMount( () => {
-        LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "]");
+        LOGGER.log("onMount for role [" + choiceBox.role + "] with textcomponent " + textcomponent);
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -102,11 +101,19 @@
     });
 
     afterUpdate( () => {
+        LOGGER.log("AfterUpdate")
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         if( !! selected) {
             choiceBox.textBox.setText(selected.label)
+        }
+        LOGGER.log("afterupdate ==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
+        if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
+            if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
+                LOGGER.log("-----------------------------------------------")
+                setFocus();
+            }
         }
     })
 
@@ -118,8 +125,9 @@
             LOGGER.log("Press: is printable, text is now [" + textcomponent.getText() + "]");
         }
     };
+
     const onInput = async (e: InputEvent) => {
-        const value = e.target.innerText;
+        const value = (e.target as HTMLElement).innerText;
         LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text ["+ textcomponent.getText() + "]");
         // const aliasResult = await executeBehavior(aliasBox, e.data, editor);
         let aliasResult = undefined;
@@ -140,7 +148,7 @@
             case BehaviorExecutionResult.EXECUTED:
                 LOGGER.log("ALIAS MATCH");
                 if( !!textcomponent) {
-                    textcomponent.textOnScreen = choiceBox.getSelectedOption().label;
+                    textcomponent.textOnScreen = value; // choiceBox.getSelectedOption().label;
                 }
                 open = false;
                 // this.hasError = false;
@@ -173,7 +181,6 @@
                 dropdown.handleKeyDown(e);
             }
             e.stopPropagation();
-
             return;
         }
         if (e.keyCode === DELETE) {
@@ -193,7 +200,7 @@
                 const x = dropdown.handleKeyDown(e);
                 LOGGER.log("      handled result: " + x);
             } else {
-                LOGGER.log("      DROPDOWN UDEFINED")
+                console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ open + " openInHtml: "+ openInHtml);
             }
             // if (x) {
             //     e.preventDefault();
@@ -219,17 +226,9 @@
                         e.stopPropagation();
                     }
                     break;
-                case SPACEBAR:
-                    LOGGER.log("onKeyDown Keys.SPACEBAR");
-                    if (e.ctrlKey) {
-                        open = !open;
-                        LOGGER.log("     open is now "+ open);
-                    }
-                    break;
             }
         }
     };
-
 
     const shouldPropagate = (e: KeyboardEvent): boolean => {
         if (isMetaKey(e)) {
@@ -255,9 +254,6 @@
         return false;
     };
 
-    const me = () => {
-        return me.caller.name;
-    }
     const selectedEvent = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to "+ event.detail.id );
         selectOption(event.detail);
@@ -289,10 +285,18 @@
     autorun( ()=> {
         listForDropdown = selectableOptionList.getFilteredOptions();
         selectedOption = choiceBox.getSelectedOption();
-        LOGGER.log("AUTORUN selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
+        LOGGER.log("AUTORUN role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
+        LOGGER.log("==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
+        if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
+            if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
+                LOGGER.log("==============================================")
+                focus();
+            }
+        }
+
     });
 </script>
 
