@@ -6,11 +6,17 @@ import {
     createDefaultExpressionBox,
     TextBox,
     KeyPressAction,
-    PiLogger
+    PiLogger, HorizontalListBox, LabelBox, SvgBox, GridCell, AliasBox, styleToCSS, GridBox, PiStyle
 } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
+import { SumExpression } from "../language/gen/SumExpression";
+import { mycell, mygrid } from "./styles/styles";
 
 const LOGGER = new PiLogger("CustumProjection");
+
+const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
+
+
 /**
  * Class CustomExampleProjection provides an entry point for the language engineer to
  * define custom build additions to the editor.
@@ -35,6 +41,9 @@ export class CustomExampleProjection implements PiProjection {
         if( element instanceof NumberLiteralExpression){
             return this.getDemoNumberLiteralExpressionBox(element);
         }
+        if (element instanceof SumExpression) {
+            return this.createSumBox(element);
+        }
         return null;
     }
 
@@ -50,6 +59,63 @@ export class CustomExampleProjection implements PiProjection {
         ]);
     }
 
+    public createSumBox(sum: SumExpression): Box {
+        const cells: GridCell[] = [
+            {
+                row: 3,
+                column: 1,
+                columnSpan: 2,
+                box: new HorizontalListBox(sum, "Sum-from-part", [
+                    this.optionalPartBox(sum, "SumExpression-variable", "variable"),
+                    new LabelBox(sum, "sum-from-equals", "="),
+                    this.optionalPartBox(sum, "SumExpression-from", "from")
+                ]),
+                // !!sum.from
+                // ? this.rootProjection.getBox(sum.from)
+                // : new AliasBox(sum, "sum-from", "[from]", { propertyName: "from" }),
+                style: styleToCSS(mycell)
+            },
+            {
+                row: 2,
+                column: 1,
+                box: new SvgBox(sum, "sum-icon", sumIcon, {
+                    width: 50,
+                    height: 50,
+                    selectable: false
+                }),
+                style: styleToCSS(mycell)
+            },
+            {
+                row: 1,
+                column: 1,
+                columnSpan: 2,
+                box: this.optionalPartBox(sum, "SumExpression-to", "to"),
+                style: styleToCSS(mycell)
+            },
+            {
+                row: 2,
+                column: 2,
+                box: new HorizontalListBox(sum, "sum-body", [
+                    new LabelBox(sum, "sum-body-open", "["),
+                    this.optionalPartBox(sum, "SumExpression-body", "body"),
+                    new LabelBox(sum, "sum-body-close", "]")
+                ]),
+                style: styleToCSS(mycell)
+            }
+        ];
+        const result = new GridBox(sum, "sum-all", cells, {
+            style: styleToCSS(mygrid)
+        });
+        return createDefaultExpressionBox(sum, "sum-exp", [result]);
+    }
+
+
+    optionalPartBox(element: PiElement, roleName: string, property: string): Box {
+        const projectionToUse = !!this.rootProjection ? this.rootProjection : this;
+        return !!element[property]
+            ? projectionToUse.getBox(element[property])
+            : new AliasBox(element, roleName, "[" + property + "]", { propertyName: property });
+    }
 }
 
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {

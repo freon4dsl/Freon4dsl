@@ -23,8 +23,9 @@
     export let handleSelectedOption: (option: SelectOption) => void;
     export let notifier;
 
-
     const LOGGER = new PiLogger("DropdownComponent");
+
+    const dispatcher = createEventDispatcher();
 
     const getOptionsLogged = (): SelectOption[] => {
         const options = getOptions();
@@ -80,18 +81,15 @@
                 return true;
             case ENTER:
                 if (index >= 0 && index < options.length) {
-                    handleSelectedOption(options[index]);
-                    // initOption();
+                    dispatcher("pi-ItemSelected", options[index]);
+                    // handleSelectedOption(options[index]);
                     return true;
                 } else {
                     return false;
                 }
             case DELETE:
-                // handleSelectedOption(null);
                 return true;
             case ESCAPE:
-                // handleSelectedOption("ESCAPE");
-                // initOption();
                 return true;
         }
         return false;
@@ -107,11 +105,6 @@
         open = false;
     }
 
-    const dispatcher = createEventDispatcher();
-    const forward = (event: CustomEvent): void => {
-        LOGGER.log("set selected SVELTE option to "+ event.detail.id);
-        dispatcher("pi-ItemSelected", event.detail)
-    }
 
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {
