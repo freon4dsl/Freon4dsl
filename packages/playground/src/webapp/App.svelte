@@ -19,10 +19,6 @@
 <SaveUnitDialog />
 <DeleteUnitDialog />
 
-<HelpDialog />
-<AboutDialog />
-<Keybindings />
-
 <UserMessage />
 
 <!-- the layout of the components that are rendered for this app -->
@@ -38,7 +34,7 @@
 	import AppBar from './side-elements/AppBar.svelte';
 	import Footer from "./side-elements/Footer.svelte";
 	import LeftPanel from './side-elements/LeftPanel.svelte';
-	import RightPanel from './side-elements/RightPanel.svelte';
+	import RightPanel from './side-elements/HelpPanel.svelte';
 	import UserMessage from "./side-elements/UserMessage.svelte";
 	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
 	import OpenUnitDialog from "./menu/OpenUnitDialog.svelte";
@@ -47,9 +43,6 @@
 	import SaveUnitDialog from "./menu/SaveUnitDialog.svelte";
 	import NameModelDialog from "./menu/NameModelDialog.svelte";
 	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
-	import AboutDialog from "./menu/AboutDialog.svelte";
-	import HelpDialog from "./menu/HelpDialog.svelte";
-	import Keybindings from "./menu/Keybindings.svelte";
 
 	import MainGrid from "./main/MainGrid.svelte";
 

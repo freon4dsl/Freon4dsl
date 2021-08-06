@@ -1,0 +1,132 @@
+<!-- RightPanel shows a Panel that contains Help Info -->
+<!-- It is shown to the right -->
+
+<Sidepanel right bind:visible={$rightPanelVisible}>
+	<!-- icon  button to close the side panel -->
+	<div class="topbar">
+			<a display="inline-block" target="_blank" href="http://www.projectit.org">
+				<!-- compiled svg does not work, because the path is too complex-->
+				{#if $theme === 'light'}
+					<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
+				{:else if ($theme === 'dark')}
+					<img src="/img/projectit-logo.png" alt="ProjectIt Logo">
+				{/if}
+			</a>
+<!--		<div class="inbetween"></div>-->
+			<Button
+					icon
+					class="close-button"
+					color="inherit"
+					on:click={() => {
+				$rightPanelVisible = false;
+			}}
+			>
+				<Icon> <svelte:component this={arrowForward}/> </Icon>
+			</Button>
+	</div>
+	<div class="title">Help for ProjectIt</div>
+
+	<div class="content">
+		Currently there is no in-build help functionality, other than a list of keybindings. We refer you to our website:
+		<br>
+		<div align="center">
+			<a href="http://www.projectit.org/" target="_blank">
+				www.projectit.org
+			</a>
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="title">Keybindings</div>
+
+	<ul class="keybinding">
+		<li>Arrow Keys move in the expected direction</li>
+		<li>TAB key moves to next place where the user can type something</li>
+		<li>Ctrl-UP selects the parent element in the AST</li>
+		<li>Ctrl-DOWN selects the first child element in the AST</li>
+		<li>Ctrl-SPACE shows popup menu of possible options</li>
+		<li>DEL deletes the next character or the currently selected item from the AST</li>
+	</ul>
+
+	<hr>
+	<div class="title">About ProjectIt
+
+	</div>
+
+	<div class="content" >
+		ProjectIt is an open source project which can be found at:
+		<br>
+		<div align="center" >
+			<a href="https://github.com/projectit-org" target="_blank">
+				https://github.com/projectit-org.
+			</a>
+		</div>
+	</div>
+	<hr>
+	<div class="content">
+		Version: <b>{versionNumber}</b>
+	</div>
+	<hr>
+	<div class="content">
+		Created by:
+		<div align="center" >
+			<a href="http://www.openmodeling.nl/" target="_blank">
+				www.openmodeling.nl.
+			</a>
+		</div>
+	</div>
+
+</Sidepanel>
+
+<script lang="ts">
+	import {Button, Icon, Sidepanel} from 'svelte-mui';
+	import arrowForward from '../assets/icons/svg/arrow_forward.svg';
+	import { rightPanelVisible, theme, versionNumber} from "../WebappStore";
+</script>
+
+<style>
+	.topbar {
+		height: var(--pi-header-height);
+		padding: 0 4px;
+		color: var(--inverse-color);
+		background: var(--bg-app-bar);
+		display: flex;
+		justify-content: space-between;
+	}
+	.close-button {
+		/*display: inline-block;*/
+	}
+	img{
+		max-width: 180px;
+		max-height: calc(var(--pi-header-height) - 5px);
+		margin-top: 3px;
+		margin-bottom: 3px;
+		margin-left: auto;
+		margin-right: 10px;
+	}
+	.keybinding {
+		color: var(--color);
+	}
+	.keybinding li {
+		padding: 4px;
+	}
+	.content{
+		color: var(--color);
+		text-align: left;
+		margin: auto;
+		padding: 4px;
+	}
+	.title {
+		color: var(--color);
+		font-weight: bold;
+		padding: 4px;
+	}
+	a{
+		color: var(--color);
+		text-decoration: underline;
+		font-style: italic;
+		vertical-align: middle;
+	}
+
+</style>
