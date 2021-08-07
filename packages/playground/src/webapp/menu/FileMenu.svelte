@@ -39,6 +39,7 @@
         saveUnitDialogVisible,
         modelNames
     } from "../WebappStore";
+    import { ParserUsingAGL } from "../../example/reader/ParserUsingAGL";
 
     // when a menu-item is clicked, this function is executed
     const handleClick = (id: number) => {
@@ -151,9 +152,15 @@
         }
     }
 
+    const parse = () => {
+        let parser = new ParserUsingAGL();
+        let tree = parser.doIt();
+    }
+
     // the content of this menu
     let activatorTitle: string = "File";
     let menuItems: MenuItem[] = [
+        {title: "Parse from File", action: parse, id: 7},
         {title: "New Model", action: newModel, id: 1},
         {title: 'Open Model', action: openModel, id: 2},
         {title: 'New Model Unit', action: newUnit, id: 3},
