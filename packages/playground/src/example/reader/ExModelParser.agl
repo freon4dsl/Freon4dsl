@@ -1,29 +1,21 @@
-// adapted from "net.akehurst.language/examples/js/node/src/main.js"
-import agl_module from "net.akehurst.language-agl-processor";
-// import { SimpleExampleSyntaxAnalyser } from "./SimpleExampleSyntaxAnalyser";
+// This file contains the input to the AGL parser.
 
-export class ParserUsingAGL {
-    // without the following magic line, it does not work
-    Agl = agl_module.net.akehurst.language.agl.processor.Agl;
-    grammarStr = `
-namespace test
-grammar SimpleExample {
 ExModel = "model" variable "{"
-    (Entity)*
-    "model" "wide" "Methods:"
-    MethodList2
-    "}" ;
+	(Entity)*
+	"model" "wide" "Methods:"
+	MethodList2
+	"}" ;
 
 Entity = "Entity" variable ("base" EntityPiElemRef )? "{"
-    AttributeList3
-    MethodList4
-    "}" ;
+    	AttributeList3
+    	MethodList4
+    	"}" ;
 
 Attribute = variable ":" TypePiElemRef; 
 
 Method = "method" variable "(" ParameterList5 "):" TypePiElemRef "{" 
-    ExExpression 
-    "}" ;
+	ExExpression 
+	"}" ;
 
 ExExpression = LiteralExpression 
     | AbsExpression 
@@ -61,10 +53,10 @@ LoopVariable = variable;
 MethodCallExpression = "CALL" MethodPiElemRef "(" ExExpressionList6 ")" ;
 
 IfExpression = "if" "(" ExExpression ")" "then" 
-    ExExpression
-    "else" 
-    ExExpression
-    "endif";
+	ExExpression
+	"else" 
+	ExExpression
+	"endif";
 
 BinaryExpression = MultiplyExpression
     | PlusExpression
@@ -118,47 +110,68 @@ ParameterList5 = [Parameter / ',']*; // comma-separated list
 ExExpressionList6 = [ExExpression / ',']*; // comma-separated list
 
 varLetter           = "[a-zA-Z]";
-identifierChar      = "[a-zA-Z0-9_$]"; 
-
+identifierChar      = "[a-zA-Z0-9_$]"; // any char but not /.,!?@~%^&*-=+(){}"':;<>?[]"/
+anyChar             = "[a-zA-Z0-9' /\-\[\]\"+<>=#$_.,!?@~%^&\*-=+(){}:;<>?]";
 number              = "[0-9]";
 
-variable            = varLetter identifierChar*;
-leaf DOUBLE_QUOTE_STRING = "[\\"][^\\"]*[\\"]" ;
-leaf SINGLE_QUOTE_STRING = "['][^']*[']" ;
-
-leaf stringLiteral       = DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING;
+leaf variable            = varLetter identifierChar*;
+leaf stringLiteral       = """ anyChar* """;
 leaf numberLiteral       = number+;
 leaf booleanLiteral      = "false"
                     | "true";
 
 // TODO see whether the stuff under LINE can be replaced by
-    skip leaf WHITESPACE = "\s+" ;
-	skip leaf MULTI_LINE_COMMENT = "/\*[^*]*\*+(?:[^*/][^*]*\*+)*/" ;
-	skip leaf SINGLE_LINE_COMMENT = "//.*?$" ;
+            skip WHITE_SPACE = "\s+" ;
+	        skip MULTI_LINE_COMMENT = "/\*[^*]*\*+(?:[^*/][^*]*\*+)*/" ;
+	        skip SINGLE_LINE_COMMENT = "//.*?${'$'}" ;
+// LINE LINE
+"whitespace" = (([ \t\n\r]") | (SingleLineComment) | (MultiLineComment) )*
+r"required whitespace" = (([ \t\n\r]") | (SingleLineComment) | (MultiLineComment) )+
 
-}
-`;
-    // analyser = new SimpleExampleSyntaxAnalyser();
-    // proc = this.Agl.processorFromString(this.grammarStr, this.analyser);
-    proc = this.Agl.processorFromString(this.grammarStr);
+SingleLineComment
+  = "//" (!LineTerminator SourceCharacter)*
 
-    doIt() {
-        let sentence = `
-model XX {
-model wide Methods:
-}
-`;
-        let sppt = this.proc.parse(sentence);
-        console.info(sppt);
-
-        let asm = this.proc.process(sentence);
-        console.info(typeof asm);
-        console.info(asm);
-
-        let formatted = this.proc.formatAsm(asm)
-        console.info("formatted: " + formatted);
-    }
-}
+LineTerminator
+  = "[\n\r\u2028\u2029]"
 
 
+Comment "comment"
+  = MultiLineComment
+  | SingleLineComment
 
+// TODO Jos: why this rule?
+MultiLineComment
+  = "/*" (!"*/" SourceCharacter)* "*/"
+
+leaf SourceCharacter
+  = ".";
+  
+char
+  = unescaped
+  | escape
+    sequence:(
+        '"'
+      | "\\"
+      | "/"
+      | "\["
+      | "\]"
+      | "$"
+      | "b"
+      | "f"
+      | "n"
+      | "r"
+      | "t"
+      | "u" (HEXDIG HEXDIG HEXDIG HEXDIG)
+    );
+
+leaf escape
+  = "\\";
+
+leaf unescaped
+  = "[^\0-\x1F\x22\x5C]";
+
+// ----- Core ABNF Rules -----
+
+// See RFC 4234, Appendix B (http://tools.ietf.org/html/rfc4234).
+leaf DIGIT  = "[0-9]";
+leaf HEXDIG = "[0-9a-f]";
