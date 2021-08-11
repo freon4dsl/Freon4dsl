@@ -86,7 +86,7 @@ expression OclExpression {
 
 expression OclMessageExp base OclExpression {
     target: OclExpression;
-    arguments: OclExpression[];
+    args: OclExpression[];
     reference calledOperation: Operation;
 }
 
@@ -104,7 +104,7 @@ expression OclUndefinedLiteralExp base PrimitiveLiteralExp {
 
 expression OperationCallExp base ModelPropertyCallExp {
     reference referredOperation: Operation;
-    arguments: OclExpression[];
+    args: OclExpression[];
 }
 
 expression PrimitiveLiteralExp base LiteralExp {

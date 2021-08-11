@@ -17,11 +17,9 @@ export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[]
 
 export function makeImportStatements(hasSuper: boolean, needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
     return `
-            // ${!hasSuper ? `import * as uuid from "uuid";` : ``}
             ${needsObservable ? `import { observable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
-            // TODO import { ${modelImports.join(", ")} } from "./index";
-            ${modelImports.map(mi => `import { ${mi} } from "./${mi}";`).join("\n")} 
+            import { ${modelImports.join(", ")} } from "./internal";
             `;
 }
 

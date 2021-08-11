@@ -27,7 +27,7 @@ export class EnvironmentTemplate {
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.concept(language.modelConcept)}, ${Names.concept(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
-        import { initializeLanguage } from  "${relativePath}${LANGUAGE_GEN_FOLDER}/${Names.language(language)}";
+        import { ${Names.initializeLanguage} } from  "${relativePath}${LANGUAGE_GEN_FOLDER}";
         
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.

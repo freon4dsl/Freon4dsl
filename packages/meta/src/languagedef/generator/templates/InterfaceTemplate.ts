@@ -31,7 +31,7 @@ export class InterfaceTemplate {
         return `
             ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
             import { ${Names.PiElement} } from "${PROJECTITCORE}";
-            ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
+            import { ${imports.join(", ")} } from "./internal";
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
