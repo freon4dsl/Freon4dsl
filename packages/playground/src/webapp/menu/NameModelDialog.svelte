@@ -21,6 +21,8 @@
 	</div>
 </Dialog>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <script lang="ts">
 	import {Button, Dialog, Textfield} from 'svelte-mui';
 	import {currentModelName} from "../WebappStore";
@@ -59,6 +61,14 @@
 			modelName = "";
 			localErrorMessage = "";
 			$nameModelDialogVisible = false;
+		}
+	}
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
 		}
 	}
 </script>

@@ -40,7 +40,18 @@
 		console.log("Submit called, unit selected: " + $currentUnitName);
 		$openUnitDialogVisible = false;
 	}
+
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
+		}
+	}
 </script>
+
+<svelte:window on:keydown={handleKeydown}/>
 
 <style>
 	.footer {

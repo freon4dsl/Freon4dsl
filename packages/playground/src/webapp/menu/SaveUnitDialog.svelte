@@ -23,6 +23,8 @@
 	</div>
 </Dialog>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <script lang="ts">
 	import {Button, Textfield, Dialog} from 'svelte-mui';
 	// get the unit names because all unit names in a model must be unique
@@ -58,6 +60,15 @@
 			localErrorMessage = "";
 			newName = "";
 			$saveUnitDialogVisible = false;
+		}
+	}
+
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
 		}
 	}
 </script>
