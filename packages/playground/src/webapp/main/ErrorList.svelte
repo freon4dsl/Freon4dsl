@@ -35,6 +35,9 @@
             </div>
         {/each}
     </div>
+    <div>
+        Showing unit {$currentUnitName} of model {$currentModelName}
+    </div>
 </div>
 
 <!-- todo use 'fly' to delete this view: https://svelte.dev/tutorial/adding-parameters-to-transitions -->
@@ -47,6 +50,7 @@
 
     import sortErrors from "../main-ts-files/SortErrors";
     import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
+    import { currentUnitName, currentModelName } from "../WebappStore";
     import { PiError } from "@projectit/core";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
