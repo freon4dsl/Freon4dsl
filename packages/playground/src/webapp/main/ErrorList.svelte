@@ -40,7 +40,6 @@
     </div>
 </div>
 
-<!-- todo use 'fly' to delete this view: https://svelte.dev/tutorial/adding-parameters-to-transitions -->
 <script lang="ts">
 
     import { Icon } from "svelte-mui";
