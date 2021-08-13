@@ -76,7 +76,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
-                ${makeConstructor(hasSuper, concept.implementedParts())}
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)}                                   
             }
         `;
@@ -125,7 +125,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
-                ${makeConstructor(hasSuper, concept.implementedParts())}
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, false,true, true)}                    
                 
                 /**
@@ -212,7 +212,7 @@ export class ConceptTemplate {
                 ${makeBasicProperties(metaType, myName, hasSuper)}
                 ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
 
-                ${makeConstructor(hasSuper, concept.implementedParts())}
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, false,false, false)}                
             }
                        
@@ -265,7 +265,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
             
-                ${makeConstructor(hasSuper, concept.implementedParts())}
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, true,false, false)}                
             }
             `;
@@ -307,7 +307,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
 
-                ${makeConstructor(false, concept.implementedParts())}            
+                ${makeConstructor(false, concept.implementedProperties())}            
                 ${makeBasicMethods(false, metaType,true, false,false, false)}
                 
                 /**

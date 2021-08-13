@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import { PiConcept, PiConceptProperty, PiPrimitiveProperty } from "../../metalanguage";
+import { PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
 
 export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
     const mobxImports: string[] = ["model"];
@@ -78,7 +78,8 @@ export function makeReferenceProperty(property: PiConceptProperty): string {
     return `${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
 }
 
-export function makeConstructor(hasSuper: boolean, parts: PiConceptProperty[]): string {
+export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {
+    const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive) as PiConceptProperty[];
     return `constructor(id?: string) {
                     ${!hasSuper ? `
                         super();
@@ -89,11 +90,11 @@ export function makeConstructor(hasSuper: boolean, parts: PiConceptProperty[]): 
                         }`
                     : "super(id);"
                     }
-                    ${parts.length !== 0 ? 
-                        `// 'observablepart' changes the get and set of an attribute 
+                    ${allButPrimitiveProps.length !== 0 ? 
+                        `// both 'observablepart' and 'observablelistpart' change the get and set of an attribute 
                         // such that the parent-part relationship is consistently maintained, 
-                        // and it makes sure the part is observable
-                        ${parts.map(p => 
+                        // and make sure the part is observable
+                        ${allButPrimitiveProps.map(p => 
                             (p.isList ? 
                                 `observablelistpart(this, "${p.name}");`
                             :
