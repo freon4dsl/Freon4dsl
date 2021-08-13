@@ -15,6 +15,8 @@
 	</div>
 </Dialog>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <script lang="ts">
 	import {Button, Dialog} from 'svelte-mui';
 	import {currentModelName, deleteUnitDialogVisible} from "../WebappStore";
@@ -35,6 +37,15 @@
 		console.log("Submit called, unit to be deleted: " + $currentUnitName + "." + $currentModelName);
 		EditorCommunication.getInstance().deleteCurrentUnit();
 		$deleteUnitDialogVisible = false;
+	}
+
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
+		}
 	}
 </script>
 

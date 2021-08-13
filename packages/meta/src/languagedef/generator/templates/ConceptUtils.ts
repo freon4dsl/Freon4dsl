@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE } from "../../../utils";
-import { PiConcept, PiConceptProperty, PiPrimitiveProperty } from "../../metalanguage";
+import { PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
 
 export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
     const mobxImports: string[] = ["model"];
@@ -17,11 +17,9 @@ export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[]
 
 export function makeImportStatements(hasSuper: boolean, needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
     return `
-            // ${!hasSuper ? `import * as uuid from "uuid";` : ``}
             ${needsObservable ? `import { observable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
-            // TODO import { ${modelImports.join(", ")} } from "./index";
-            ${modelImports.map(mi => `import { ${mi} } from "./${mi}";`).join("\n")} 
+            import { ${modelImports.join(", ")} } from "./internal";
             `;
 }
 
@@ -64,21 +62,24 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
 }
 
 export function makePartProperty(property: PiConceptProperty): string {
-    const comment = "// implementation of " + property.name;
-    const decorator = property.isList ? "@observablelistpart" : "@observablepart";
+    const comment = "// implementation of part '" + property.name + "'";
+    // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
     const initializer = "";
-    return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
+    // return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
+    return `${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
 }
 
 export function makeReferenceProperty(property: PiConceptProperty): string {
-    const comment = "// implementation of " + property.name;
-    const decorator = property.isList ? "@observablelistpart" : "@observablepart";
+    const comment = "// implementation of reference '" + property.name + "'";
+    // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
-    return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
+    // return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
+    return `${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
 }
 
-export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
+export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {
+    const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive) as PiConceptProperty[];
     return `constructor(id?: string) {
                     ${!hasSuper ? `
                         super();
@@ -87,10 +88,26 @@ export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: b
                         } else {
                             this.$id = PiUtils.ID(); // uuid.v4();
                         }`
-        : "super(id);"
-    }                   
-                }
-                                
+                    : "super(id);"
+                    }
+                    ${allButPrimitiveProps.length !== 0 ? 
+                        `// both 'observablepart' and 'observablelistpart' change the get and set of an attribute 
+                        // such that the parent-part relationship is consistently maintained, 
+                        // and make sure the part is observable
+                        ${allButPrimitiveProps.map(p => 
+                            (p.isList ? 
+                                `observablelistpart(this, "${p.name}");`
+                            :
+                                `observablepart(this, "${p.name}");`
+                            )
+                        ).join("\n")}` 
+                    : ``
+                    }                    
+            }`;
+}
+
+export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
+    return `                                
                 /**
                  * Returns the metatype of this instance in the form of a string.
                  */               
