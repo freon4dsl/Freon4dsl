@@ -30,7 +30,7 @@
     const LOGGER = new PiLogger("RenderComponent");
 
     onDestroy(() => {
-        LOGGER.log("DESTROY RENDER  COMPONENT");
+        LOGGER.log("DESTROY RENDER  COMPONENT for box: " + box.role);
     });
 
     export let box: Box;
@@ -39,11 +39,12 @@
     const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)));
 
     afterUpdate(() => {
-        // console.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
+        // LOGGER.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
         showBox = box;
     })
     beforeUpdate(() => {
-        // console.log(">> RenderComponent.beforeUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
+        // LOGGER
+        // .log(">> RenderComponent.beforeUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
         showBox = box;
     })
 
@@ -52,7 +53,7 @@
         AUTO_LOGGER.log("RenderComponent: " + box.kind + " for element " + box.element.piLanguageConcept());
         showBox = box;
         if (isVerticalBox(showBox) || isHorizontalBox(showBox)) {
-            // console.log("    children " + showBox.children.length);
+            // LOGGER.log("    children " + showBox.children.length);
             // showBox.children.forEach(box => box.name);
         }
     });

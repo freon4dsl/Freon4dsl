@@ -37,11 +37,6 @@
         return listForDropdown;
     };
 
-    // const selected = (event: CustomEvent) => {
-    //     console.log("Alias.selected " + event.detail.label);
-    //     aliasBox.textBox.placeHolder = event.detail.label
-    //     open = false;
-    // }
     const setFocus = async (): Promise<void> => {
         LOGGER.log("AliasComponent set focus " + choiceBox.role);
         if( !!textcomponent) {

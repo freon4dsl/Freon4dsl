@@ -202,8 +202,8 @@
         try {
             if (position > textOnScreen.length) {
                 // TODO Fix the error below
-                console.log("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
-                console.log("TextComponent.setCaretPosition >length: " + position + " > " + textOnScreen.length);
+                console.error("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
+                console.error("TextComponent.setCaretPosition >length: " + position + " > " + textOnScreen.length);
                 // position = this.element.innerText.length;
             }
             clearSelection();
@@ -219,7 +219,7 @@
             caretPosition = position;
             textBox.caretPosition = position;
         } catch (e) {
-            console.log("TextComponent.setCaretPosition ERROR: " + e.toString());
+            console.error("TextComponent.setCaretPosition ERROR: " + e.toString());
         }
     };
 
