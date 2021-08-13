@@ -27,6 +27,8 @@
 
 </Dialog>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <script lang="ts">
 	import { Button, Dialog, Radio, Textfield } from 'svelte-mui';
 	import { unitNames, unitTypes } from "../WebappStore";
@@ -70,6 +72,15 @@
 			}
 			// console.log("Submit called, unit created: " + get(currentUnitName));
 			$newUnitDialogVisible = false;
+		}
+	}
+
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
 		}
 	}
 </script>
