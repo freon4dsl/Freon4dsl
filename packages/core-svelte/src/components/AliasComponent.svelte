@@ -44,7 +44,11 @@
     // }
     const setFocus = async (): Promise<void> => {
         LOGGER.log("AliasComponent set focus " + choiceBox.role);
-        textcomponent.focus();
+        if( !!textcomponent) {
+            textcomponent.focus();
+        } else {
+            LOGGER.log("?ERROR? textcomponent is null in setFopcus.")
+        }
         // this.startEditing();
     };
 

@@ -1,28 +1,10 @@
 <script lang="ts">
     import { PiLogger } from "@projectit/core";
-    import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
     import type { SelectOption } from "@projectit/core";
 
-    const dispatcher = createEventDispatcher();
-    export const ARROW_UP = 38;
-    export const ARROW_RIGHT = 39;
-    export const ARROW_DOWN = 40;
-
     const LOGGER: PiLogger = new PiLogger("DropdownItemComponent");
-    const onMouseDown = () => {};
-    /** Supports Arrow up and down keys, Enter for selection
-     * Escape is forwarded to owning component, so it may use it to close the dropdown.
-     *
-     * NB: Called by owning component to forward key event !!
-     * @param {React.KeyboardEvent<any>} e
-     * @returns {boolean}
-     */
-   const  handleKeyDown = (event: KeyboardEvent): void => {
-        // const index = options.findIndex(o => o.id === this.props.selectedOptionId);
-        switch (event.keyCode) {
-        }
-    }
+    const dispatcher = createEventDispatcher();
 
     export let isSelected: boolean = false;
     export let option: SelectOption;

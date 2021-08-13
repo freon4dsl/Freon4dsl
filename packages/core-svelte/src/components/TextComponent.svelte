@@ -3,24 +3,27 @@
 <script lang="ts">
     import { autorun } from "mobx";
     import {
-        ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT,
-        ARROW_UP,
-        BACKSPACE,
-        DELETE, ENTER,
+        KEY_BACKSPACE,
+        KEY_DELETE,
+        KEY_ARROW_DOWN,
+        KEY_ARROW_LEFT,
+        KEY_ARROW_RIGHT,
+        KEY_ARROW_UP,
+        KEY_ENTER, KEY_SPACEBAR,
+        KEY_TAB,
         EVENT_LOG,
-        TAB,
         isAliasBox,
         isMetaKey,
         KeyPressAction, PiUtils,
         TextBox,
         PiEditor,
         toPiKey,
-        wait, PiCaret, PiCaretPosition, PiLogger, SPACEBAR, isPrintable
+        PiCaret, PiCaretPosition, PiLogger, isPrintable
     } from "@projectit/core";
-    import { afterUpdate, beforeUpdate, onMount } from "svelte";
-    import { AUTO_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { afterUpdate, onMount } from "svelte";
+    import { UPDATE_LOGGER } from "./ChangeNotifier";
 
-    const LOGGER = new PiLogger("TextComponent");//.mute();
+    const LOGGER = new PiLogger("TextComponent");
 
     export let textBox = new TextBox(null, "role:", () => "Editable textbox", (v: string) => {});
     export let editor: PiEditor;
@@ -31,7 +34,6 @@
         return textOnScreen;
     }
     export const focus = async (): Promise<void> => {
-
         LOGGER.log("TextComponent focus " + textBox.role);
         element.focus();
         // this.startEditing();
@@ -52,7 +54,7 @@
         if (e.altKey) {
             return true;
         }
-        return e.keyCode === ENTER || e.keyCode === TAB;
+        return e.key === KEY_ENTER || e.key === KEY_TAB;
     };
 
     /**
@@ -64,20 +66,20 @@
             return true;
         }
         if (isMetaKey(e)) {
-            if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN || e.keyCode === TAB || e.keyCode === SPACEBAR) {
+            if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_TAB || e.key === KEY_SPACEBAR) {
                 return true;
             }
         }
-        if (e.keyCode === ENTER || e.keyCode === DELETE || e.keyCode === TAB) {
+        if (e.key === KEY_ENTER || e.key === KEY_DELETE || e.key === KEY_TAB) {
             return true;
         }
-        if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN) {
+        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN) {
             return true;
         }
         const caretPosition = getCaretPosition();
-        if (e.keyCode === ARROW_LEFT || e.keyCode === BACKSPACE) {
+        if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
             return caretPosition <= 0;
-        } else if (e.keyCode === ARROW_RIGHT || e.keyCode === DELETE) {
+        } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
             return caretPosition >= textOnScreen.length;
         } else {
             return false;
@@ -91,11 +93,15 @@
         caretPosition = textBox.caretPosition;
     });
 
+    /**
+     * Used to handle non-printing characters
+     * @param event
+     */
     const onKeyDown = async (event: KeyboardEvent) => {
-        LOGGER.log("onKeyDown: "+ event.key + " alt " + event.ctrlKey+  "]");
+        LOGGER.log("onKeyDown: ["+ event.key + "] alt [" + event.ctrlKey+  "] shift [" + event.shiftKey + "] key [" + event.key +"]");
         let handled: boolean = false;
         // const caretPosition = getCaretPosition();
-        if (event.keyCode === DELETE) {
+        if (event.key === KEY_DELETE) {
             if (textOnScreen === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     await editor.deleteBox(editor.selectedBox);
@@ -106,7 +112,7 @@
             event.stopPropagation();
             return;
         }
-        if (event.keyCode === BACKSPACE) {
+        if (event.key === KEY_BACKSPACE) {
             if (textOnScreen === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     await editor.deleteBox(editor.selectedBox);
@@ -126,11 +132,11 @@
             handled = true;
         }
         const piKey = toPiKey(event);
-        if (!handled && !isMetaKey(event)) {
+        if (!handled && isMetaKey(event)) {
             const isKeyboardShortcutForThis = await PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element " + textBox.element);
-                if(event.keyCode === ENTER){
+                if(event.key === KEY_ENTER){
                     LOGGER.log("   ENTER, so propagate");
                     return;
                 }
@@ -225,6 +231,10 @@
         // textBox.caretPosition = getCaretPosition();
     }
 
+    /**
+     * IS triggered for printable keys only,
+     * @param event
+     */
     const onKeyPress = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
         const insertionIndex = getCaretPosition(); // 0; // TODO getCaretPosition();
