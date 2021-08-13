@@ -62,21 +62,23 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
 }
 
 export function makePartProperty(property: PiConceptProperty): string {
-    const comment = "// implementation of " + property.name;
-    const decorator = property.isList ? "@observablelistpart" : "@observablepart";
+    const comment = "// implementation of part '" + property.name + "'";
+    // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
     const initializer = "";
-    return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
+    // return `${decorator} ${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
+    return `${property.name} : ${Names.classifier(property.type.referred)}${arrayType} ${initializer}; ${comment}`;
 }
 
 export function makeReferenceProperty(property: PiConceptProperty): string {
-    const comment = "// implementation of " + property.name;
-    const decorator = property.isList ? "@observablelistpart" : "@observablepart";
+    const comment = "// implementation of reference '" + property.name + "'";
+    // const decorator = property.isList ? "@observablelistpart" : "@observablepart";
     const arrayType = property.isList ? "[]" : "";
-    return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
+    // return `${decorator} ${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
+    return `${property.name} : PiElementReference<${Names.classifier(property.type.referred)}>${arrayType}; ${comment}`;
 }
 
-export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
+export function makeConstructor(hasSuper: boolean, parts: PiConceptProperty[]): string {
     return `constructor(id?: string) {
                     ${!hasSuper ? `
                         super();
@@ -85,10 +87,26 @@ export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: b
                         } else {
                             this.$id = PiUtils.ID(); // uuid.v4();
                         }`
-        : "super(id);"
-    }                   
-                }
-                                
+                    : "super(id);"
+                    }
+                    ${parts.length !== 0 ? 
+                        `// 'observablepart' changes the get and set of an attribute 
+                        // such that the parent-part relationship is consistently maintained, 
+                        // and it makes sure the part is observable
+                        ${parts.map(p => 
+                            (p.isList ? 
+                                `observablelistpart(this, "${p.name}");`
+                            :
+                                `observablepart(this, "${p.name}");`
+                            )
+                        ).join("\n")}` 
+                    : ``
+                    }                    
+            }`;
+}
+
+export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression): string {
+    return `                                
                 /**
                  * Returns the metatype of this instance in the form of a string.
                  */               
