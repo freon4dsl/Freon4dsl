@@ -39,6 +39,7 @@
         saveUnitDialogVisible,
         modelNames
     } from "../WebappStore";
+    import { saveUnitInternal } from "../menu-ts-files/MenuUtils";
 
     // when a menu-item is clicked, this function is executed
     const handleClick = (id: number) => {
@@ -51,7 +52,6 @@
     };
 
     // new model menuitem
-    // TODO make sure the list of modelNames is emptied after the action
     const newModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
@@ -64,7 +64,6 @@
     }
 
     // open model menuitem
-    // TODO make sure the list of modelNames is emptied after the action
     const openModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
@@ -89,6 +88,7 @@
             showError.set(true);
             return;
         }
+        saveUnitInternal();
         // get list of units from server, because new unit may not have the same name as an existing one
         ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // list may be empty => this is the first unit to be stored
@@ -127,16 +127,7 @@
                 $nameModelDialogVisible = true;
             });
         }
-        // get list of units from server, because a new name must not be identical to an existing one
-        ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
-            // only show the dialog if the name is empty or unknown
-            if (!EditorCommunication.getInstance().isUnitNamed()) {
-                $unitNames = names;
-                $saveUnitDialogVisible = true;
-            } else {
-                EditorCommunication.getInstance().saveCurrentUnit();
-            }
-        });
+        saveUnitInternal();
     }
 
     // delete unit menuitem
