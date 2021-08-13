@@ -12,9 +12,11 @@ import {
     findMobxImports,
     makeBasicMethods,
     makeBasicProperties,
+    makeConstructor,
     makeImportStatements,
     makePartProperty,
-    makePrimitiveProperty, makeReferenceProperty
+    makePrimitiveProperty,
+    makeReferenceProperty
 } from "./ConceptUtils";
 
 export class ConceptTemplate {
@@ -74,6 +76,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, false, isExpression, false)}                                   
             }
         `;
@@ -122,6 +125,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
                               
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, false,true, true)}                    
                 
                 /**
@@ -208,6 +212,7 @@ export class ConceptTemplate {
                 ${makeBasicProperties(metaType, myName, hasSuper)}
                 ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
 
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, false,false, false)}                
             }
                        
@@ -219,7 +224,7 @@ export class ConceptTemplate {
                     });` ). join(" ")}`;
     }
 
-    // the folowing template is based on assumptions about a 'unit' (i.e. a concept
+    // the following template is based on assumptions about a 'unit' (i.e. a concept
     // with concept.isUnit === true.
     // a unit has a name property
     // a unit is not an expression
@@ -260,6 +265,7 @@ export class ConceptTemplate {
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
             
+                ${makeConstructor(hasSuper, concept.implementedProperties())}
                 ${makeBasicMethods(hasSuper, metaType,false, true,false, false)}                
             }
             `;
@@ -300,7 +306,8 @@ export class ConceptTemplate {
                 ${concept.implementedPrimProperties().map(p => makePrimitiveProperty(p)).join("\n")}
                 ${concept.implementedParts().map(p => makePartProperty(p)).join("\n")}
                 ${concept.implementedReferences().map(p => makeReferenceProperty(p)).join("\n")}     
-            
+
+                ${makeConstructor(false, concept.implementedProperties())}            
                 ${makeBasicMethods(false, metaType,true, false,false, false)}
                 
                 /**
