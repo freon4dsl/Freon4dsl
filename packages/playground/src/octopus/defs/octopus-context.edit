@@ -1,0 +1,23 @@
+editor YYY for language octopus
+
+OclPart {
+    @projection normal
+        [OCL expressions for ${self.name}
+            ${self.constraints @vertical @separator[\n]}
+        ]
+}
+
+OclContext {
+    @projection normal
+    [
+    context ${self.owningModelelement}
+    inv: ${self.expression}
+    ]
+
+}
+
+IModelElementReference {
+    @projection normal
+    [ ${self.surroundingClassifier.name}[?::${self.feature.name}]]
+
+}

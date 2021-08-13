@@ -56,14 +56,14 @@ expression IteratorExp base LoopExp {
 }
 
 expression LetExp base OclExpression {
-    variable: VariableDeclaration;
+    variables: VariableDeclaration[];
     inExpression: OclExpression;
 }
 
 expression LiteralExp base OclExpression {
 }
 
-expression LoopExp base PropertyCallExp {
+abstract expression LoopExp base PropertyCallExp {
     body: OclExpression;
     iterators: VariableDeclaration[];
 }
@@ -78,7 +78,7 @@ expression NavigationCallExp base ModelPropertyCallExp {
 expression NumericLiteralExp base PrimitiveLiteralExp {
 }
 
-expression OclExpression {
+abstract expression OclExpression {
     isImplicit: boolean;
     appliedProperty?: PropertyCallExp;
     reference type: IClassifier;
@@ -110,7 +110,7 @@ expression OperationCallExp base ModelPropertyCallExp {
 expression PrimitiveLiteralExp base LiteralExp {
 }
 
-expression PropertyCallExp base OclExpression {
+abstract expression PropertyCallExp base OclExpression {
     source: OclExpression;
     isMarkedPre: boolean;
 }
