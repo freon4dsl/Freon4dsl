@@ -20,6 +20,8 @@
 	</div>
 </Dialog>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <script lang="ts">
 	import {Button, Dialog, Textfield} from 'svelte-mui';
 	import { currentModelName, modelNames, newModelDialogVisible } from "../WebappStore";
@@ -60,6 +62,16 @@
 			resetVariables();
 		}
 	}
+
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
+		}
+	}
+
 </script>
 
 <style>
