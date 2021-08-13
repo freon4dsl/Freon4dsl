@@ -186,10 +186,14 @@
         if (e.keyCode === DELETE) {
             e.stopPropagation();
         }
+        if( e.keyCode=== TAB){
+            open = false;
+            return;
+        }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
-        if( e.keyCode === SPACEBAR && e.ctrlKey) {
+        if( (e.keyCode === SPACEBAR && e.ctrlKey) || (e.keyCode === ESCAPE)) {
             open = !open;
             return;
         }

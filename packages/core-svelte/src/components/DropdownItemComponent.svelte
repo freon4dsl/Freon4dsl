@@ -21,30 +21,6 @@
    const  handleKeyDown = (event: KeyboardEvent): void => {
         // const index = options.findIndex(o => o.id === this.props.selectedOptionId);
         switch (event.keyCode) {
-            // case ARROW_DOWN:
-            //     if (index + 1 < options.length) {
-            //         this.props.setSelectedOption(options[index + 1].id);
-            //     }
-            //     return true;
-            // case ARROW_UP:
-            //     if (index > 0) {
-            //         this.props.setSelectedOption(options[index - 1].id);
-            //     }
-            //     return true;
-            // case Keys.ENTER:
-            //     if (index >= 0 && index < options.length) {
-            //         this.props.handleSelectedOption(options[index].id);
-            //         this.initOption();
-            //         return true;
-            //     } else {
-            //         return false;
-            //     }
-            // case Keys.DELETE:
-            //     this.props.handleSelectedOption(null);
-            //     return true;
-            // case Keys.ESCAPE:
-            //     this.props.handleSelectedOption("ESCAPE");
-            //     this.initOption();
         }
     }
 

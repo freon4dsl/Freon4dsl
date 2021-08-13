@@ -85,14 +85,14 @@
     };
 
     onMount( () => {
-        LOGGER.log("TextComponent.onMoiunt for role ["+ textBox.role + "]")
+        LOGGER.log("onMount for role ["+ textBox.role + "]")
         textBox.setFocus = setFocus;
         // textBox.setCaret = setCaret;
         caretPosition = textBox.caretPosition;
     });
 
     const onKeyDown = async (event: KeyboardEvent) => {
-        LOGGER.log("TextComponent.onKeyDown: "+ event.key + " alt " + event.ctrlKey+  "]");
+        LOGGER.log("onKeyDown: "+ event.key + " alt " + event.ctrlKey+  "]");
         let handled: boolean = false;
         // const caretPosition = getCaretPosition();
         if (event.keyCode === DELETE) {
@@ -226,7 +226,7 @@
     }
 
     const onKeyPress = async (event: KeyboardEvent) => {
-        LOGGER.log("TextComponent.onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
+        LOGGER.log("onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
         const insertionIndex = getCaretPosition(); // 0; // TODO getCaretPosition();
         // await wait(0);
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
