@@ -32,17 +32,6 @@ export class ReaderTemplate {
         */
         export class ${Names.reader(language)} implements ${Names.PiReader} {
         
-        /*
-            readFromFile(filepath: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
-                // read language file
-                if (!fs.existsSync(filepath)) {
-                    console.error(this, "File '" + filepath + "' does not exist, exiting.");
-                    throw new Error(\`File '\${filepath}' not found.\`);
-                }
-                const langSpec: string = fs.readFileSync(filepath, { encoding: "utf8" });
-                return ${Names.reader(language)}.parse(langSpec, metatype, filepath);
-            }
-        */
             readFromString(input: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
                 return ${Names.reader(language)}.parse(input, metatype, "");
             }       
