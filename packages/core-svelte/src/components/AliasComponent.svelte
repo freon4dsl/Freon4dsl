@@ -48,7 +48,7 @@
     const setFocus = async (): Promise<void> => {
         LOGGER.log("AliasComponent set focus " + choiceBox.role);
         if( !!textcomponent) {
-            textcomponent.focus();
+            textcomponent.setFocus();
         } else {
             LOGGER.log("?ERROR? textcomponent is null in setFopcus.")
         }
@@ -296,7 +296,7 @@
     autorun( ()=> {
         listForDropdown = selectableOptionList.getFilteredOptions();
         selectedOption = choiceBox.getSelectedOption();
-        AUTO_LOGGER.log("AUTORUN role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
+        AUTO_LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
@@ -304,7 +304,7 @@
         if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
             if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
                 AUTO_LOGGER.log("Focus ==============================================")
-                focus();
+                setFocus();
             }
         }
 

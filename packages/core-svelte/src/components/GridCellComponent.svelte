@@ -27,7 +27,7 @@
     let row: string;
     let column: string;
     autorun(() => {
-        AUTO_LOGGER.log("AUTORUN GridCellComponent["+ notifier.dummy + "] ");
+        AUTO_LOGGER.log("GridCellComponent["+ notifier.dummy + "] ");
         row = cell.row + (cell.rowSpan ? " / span " + cell.rowSpan : "");
         column = cell.column + (cell.columnSpan ? " / span " + cell.columnSpan : "");
     });

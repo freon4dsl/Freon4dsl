@@ -29,9 +29,9 @@ export class PiEditor {
     @observable private $selectedBox: Box | null;
     private $projectedElement: HTMLDivElement | null;
 
-    private selectedElement: PiElement = null;
+    @observable private selectedElement: PiElement = null;
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
-    private selectedRole: string = null;
+    @observable private selectedRole: string = null;
 
     constructor(projection: PiProjection, actions?: PiActions) {
         this.actions = actions;
@@ -176,7 +176,7 @@ export class PiEditor {
             this.selectBoxNew(previous);
             previous.setFocus();
             if (isTextBox(previous) || isSelectBox(previous)) {
-                LOGGER.info(this, "selectPreviousLeaf set caret to RIGHT_MOST");
+                LOGGER.info(this, "selectPreviousLeaf set caret to RIGHTMOST ");
                 previous.setCaret(PiCaret.RIGHT_MOST);
             }
         }

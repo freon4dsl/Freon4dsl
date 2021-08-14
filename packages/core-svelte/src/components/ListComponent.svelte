@@ -10,16 +10,23 @@
     export let list = new HorizontalListBox(null, "l1");
     export let editor: PiEditor;
 
+    // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent").mute()
     let svList: HorizontalListBox =list;
     let svNotifier = new ChangeNotifier();
+    let element: HTMLDivElement;
 
     onDestroy(() => {
         LOGGER.log("DESTROY LIST  COMPONENT")
     });
 
+    async function setFocus(): Promise<void> {
+        LOGGER.log("setFocus")
+        element.focus();
+    }
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
+        list.setFocus = setFocus;
         // NOTE: Triggers autorun whenever an element is added or delete from the list
         svNotifier.notifyChange();
     });
@@ -57,7 +64,11 @@
     // TODO Empty vertical list gives empty line, try to add entities in the example.
 </script>
 
-<span class="list-component" style="{cssGrgVars}" on:click tabIndex={0}>
+<span class="list-component"
+      style="{cssGrgVars}"
+      on:click tabIndex={0}
+      bind:this={element}
+>
     {#if isHorizontalBox(svList) }
         <div class="horizontalList"  on:click>
             {#each svList.children as box (box.id)}

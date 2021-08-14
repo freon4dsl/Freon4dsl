@@ -7,6 +7,7 @@
     } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate, tick } from "svelte";
+    import { AUTO_LOGGER } from "./ChangeNotifier";
 
     // Parameters
     export let box: Box = new LabelBox(null, "DUMMY", "LABEL");
@@ -47,10 +48,10 @@
     });
 
     autorun( () => {
+        LOGGER.log("AUITORYN SelectableComponent for box: " + box.role)
         isSelected = editor.selectedBox === box;
+        className = (isSelected ? "selectedComponent" : "unSelectedComponent");
     })
-
-    $: className = (isSelected ? "selectedComponent" : "unSelectedComponent");
 </script>
 
 <!-- NOTE The clientHeight binding is here to ensure that the afterUpdate is fired.
@@ -71,7 +72,7 @@
     }
     .unSelectedComponent {
         background: transparent;
-        border: 1px solid transparent;
+        border: none;
         display: inline-block;
         vertical-align: middle;
     }

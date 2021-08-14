@@ -124,3 +124,10 @@ button:focus {
 [disabled] [disabled] {
 	opacity: 1;
 }
+
+[contenteditable="true"]:focus {
+	outline: none;
+}
+:focus {
+	outline: none;
+}

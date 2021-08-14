@@ -24,7 +24,7 @@
     let broder = "red"
 
     autorun(() => {
-        AUTO_LOGGER.log("AUTORUN GridComponent[" + notifier.dummy + "] ");
+        AUTO_LOGGER.log("GridComponent[" + notifier.dummy + "] ");
         showgrid = gridBox;
         cells = showgrid.cells;
         cells.forEach(cell => {

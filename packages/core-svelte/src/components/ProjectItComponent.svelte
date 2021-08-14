@@ -16,7 +16,7 @@
     import { autorun } from "mobx";
     import RenderComponent from "./RenderComponent.svelte";
 
-    let LOGGER = new PiLogger("ProjectItComponent").mute();
+    let LOGGER = new PiLogger("ProjectItComponent");
     export let editor: PiEditor;
 
     function eventHandled(e: KeyboardEvent) {

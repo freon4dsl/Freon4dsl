@@ -33,15 +33,10 @@
         // TODO loopt eentje achter tijdens onKeyDown
         return textOnScreen;
     }
-    export const focus = async (): Promise<void> => {
-        LOGGER.log("focus: " + textBox.role);
-        element.focus();
-        // this.startEditing();
-    };
 
     let caretPosition: number = 0;
-    const setFocus = async (): Promise<void> => {
-        LOGGER.log("set focus: " + textBox.role);
+    export const setFocus = async (): Promise<void> => {
+        LOGGER.log("set focus: " + textBox.role + "  position " + textBox.caretPosition);
         element.focus();
         setCaretPosition(textBox.caretPosition)
         // this.startEditing();
@@ -305,7 +300,7 @@
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
                 LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
                 if(!!element) {
-                    focus();
+                    setFocus();
                     textBox.caretPosition = getCaretPosition();
                     caretPosition = textBox.caretPosition;
                     // setCaretPosition(textBox.caretPosition)
@@ -321,7 +316,7 @@
     };
 
     autorun( () => {
-        AUTO_LOGGER.log("AUTORUN role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
+        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
         text = textOnScreen;
         placeholder = textBox.placeHolder
         AUTO_LOGGER.log("==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
@@ -329,7 +324,7 @@
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
                 AUTO_LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
                 if(!!element) {
-                    focus();
+                    setFocus();
                 }
             }
         }
