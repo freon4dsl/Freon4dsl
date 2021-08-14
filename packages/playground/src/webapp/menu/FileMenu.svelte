@@ -142,9 +142,34 @@
         }
     }
 
+    const importFile = () => {
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+        if (window.FileList && window.File && window.FileReader) {
+            document.getElementById('file-selector').addEventListener('change', event => {
+                output.src = '';
+                status.textContent = '';
+                const file = event.target.files[0];
+                if (!file.type) {
+                    status.textContent = 'Error: The File.type property does not appear to be supported on this browser.';
+                    return;
+                }
+                if (!file.type.match('image.*')) {
+                    status.textContent = 'Error: The selected file does not appear to be an image.'
+                    return;
+                }
+                const reader = new FileReader();
+                reader.addEventListener('load', event => {
+                    output.src = event.target.result;
+                });
+                reader.readAsDataURL(file);
+            });
+        }
+    }
     // the content of this menu
     let activatorTitle: string = "File";
     let menuItems: MenuItem[] = [
+        {title: "Import from File", action: importFile, id: 7},
         {title: "New Model", action: newModel, id: 1},
         {title: 'Open Model', action: openModel, id: 2},
         {title: 'New Model Unit', action: newUnit, id: 3},

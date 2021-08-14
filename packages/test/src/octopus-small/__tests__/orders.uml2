@@ -1,4 +1,4 @@
-<package> orders
+<package> "orders"
  + <class> Creditcard
 <attributes>
  + expiration: java::lang::String;

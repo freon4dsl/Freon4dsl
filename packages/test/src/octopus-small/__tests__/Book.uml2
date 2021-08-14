@@ -1,4 +1,4 @@
-<package> Book
+<package> "Book"
  + <class> Prependix <specializes> Bookpart
     <attributes>
      + kind: PrependixKind;

@@ -125,7 +125,8 @@ StringLiteralExp {
 
 TupleLiteralExp {
 @projection normal
-    [Tuple {${self.tupleParts} @horizontal @separator[, ]}]
+// TODO add extra check on .edit file: @horizontal should be within brackets of a list
+    [Tuple { ${self.tupleParts @horizontal @separator[, ] } }]
 }
 
 //UnspecifiedValueExp {
