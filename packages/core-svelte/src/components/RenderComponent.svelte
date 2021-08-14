@@ -30,7 +30,7 @@
     const LOGGER = new PiLogger("RenderComponent");
 
     onDestroy(() => {
-        LOGGER.log("DESTROY RENDER  COMPONENT for box: " + box.role);
+        LOGGER.log("DESTROY for box: " + box.role);
     });
 
     export let box: Box;

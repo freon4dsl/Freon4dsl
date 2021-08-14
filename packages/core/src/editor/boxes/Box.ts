@@ -145,7 +145,7 @@ export abstract class Box {
     }
 
     /**
-     * Find first box for element with `proId()` equals elementId and with `role` inside `this`
+     * Find first box for element with `piId()` equals elementId and with `role` inside `this`
      * and all of its children recursively.
      * @param role
      */

@@ -103,15 +103,15 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
             if (editor.actions && editor.actions.binaryExpressionCreators) {
                 const alias = editor.actions.binaryExpressionCreators.filter(e => (e.trigger as string) === option.id)[0];
-                if (alias) {
+                if (!!alias) {
                     const newExp = alias.expressionBuilder(operatorBox, alias.trigger, editor);
                     newExp.piSetLeft(exp.piLeft());
                     newExp.piSetRight(exp.piRight());
                     PiUtils.replaceExpression(exp, newExp, editor);
                     BTREE.balanceTree(newExp, editor);
                     exp = newExp;
-                    // await editor.selectElement(newExp.piRight());
-                    editor.selectBoxNew(operatorBox.nextLeafRight.firstLeaf, PiCaret.LEFT_MOST);
+                    editor.selectElement(newExp, AFTER_BINARY_OPERATOR);
+                    // editor.selectBoxNew(operatorBox.nextLeafRight.firstLeaf, PiCaret.LEFT_MOST);
                     return BehaviorExecutionResult.EXECUTED;
                 }
             }

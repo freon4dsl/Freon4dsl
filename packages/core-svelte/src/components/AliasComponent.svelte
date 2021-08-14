@@ -12,9 +12,9 @@
         PiUtils, SPACEBAR, TAB, toPiKey, isSelectBox, findOption
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
-    import { autorun } from "mobx";
+    import { action, autorun } from "mobx";
     import { afterUpdate, onMount } from "svelte";
-    import { ChangeNotifier } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier } from "./ChangeNotifier";
     import DropdownComponent from "./DropdownComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import { SelectOptionList } from "./SelectableOptionList";
@@ -101,6 +101,7 @@
 
     afterUpdate( () => {
         LOGGER.log("AfterUpdate")
+        choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -110,7 +111,7 @@
         LOGGER.log("afterupdate ==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
         if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
             if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-                LOGGER.log("-----------------------------------------------")
+                LOGGER.log("Focus -----------------------------------------------")
                 setFocus();
             }
         }
@@ -267,13 +268,13 @@
         }
     }
 
-    const selectOption = async (option: SelectOption) => {
+    const selectOption = action ( async (option: SelectOption) => {
         LOGGER.log("==> EXECUTING ALIAS " + option.label)
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
         choiceBox.textHelper.text = (!!selected ? selected.label : "");
         open=false
-    }
+    });
 
     const onClick = (e: MouseEvent) => {
         LOGGER.log("onClick");
@@ -282,20 +283,19 @@
 
     let listForDropdown: SelectOption[];
     let notifier = new ChangeNotifier();
-    choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
 
     selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {
         listForDropdown = selectableOptionList.getFilteredOptions();
         selectedOption = choiceBox.getSelectedOption();
-        LOGGER.log("AUTORUN role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
+        AUTO_LOGGER.log("AUTORUN role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        LOGGER.log("==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
+        AUTO_LOGGER.log("==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
         if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
             if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-                LOGGER.log("==============================================")
+                AUTO_LOGGER.log("Focus ==============================================")
                 focus();
             }
         }

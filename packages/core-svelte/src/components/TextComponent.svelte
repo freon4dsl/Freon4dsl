@@ -21,7 +21,7 @@
         PiCaret, PiCaretPosition, PiLogger, isPrintable
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
-    import { UPDATE_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
 
@@ -100,7 +100,7 @@
     const onKeyDown = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: ["+ event.key + "] alt [" + event.ctrlKey+  "] shift [" + event.shiftKey + "] key [" + event.key +"]");
         let handled: boolean = false;
-        // const caretPosition = getCaretPosition();
+        const caretPosition = getCaretPosition();
         if (event.key === KEY_DELETE) {
             if (textOnScreen === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
@@ -142,15 +142,14 @@
                 }
                 // Try the key on next box, if at the end of this box.
                 // const insertionIndex = getCaretPosition();
-                // if (insertionIndex >= textBox.getText().length) {
-                //     editor.selectNextLeaf();
-                //     EVENT_LOG.log("KeyDownAction NEXT LEAF IS " + editor.selectedBox.role);
-                //     if (isAliasBox(editor.selectedBox)) {
-                //         editor.selectedBox.triggerKeyDownEvent(piKey);
-                //     }
-                //     event.preventDefault();
-                //     event.stopPropagation();
-                // }
+                if (caretPosition >= textBox.getText().length) {
+                    editor.selectNextLeaf();
+                    if (isAliasBox(editor.selectedBox)) {
+                        editor.selectedBox.triggerKeyDownEvent(piKey);
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
             }
         }
     };
@@ -315,13 +314,13 @@
     };
 
     autorun( () => {
-        LOGGER.log("AUTORUN role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
+        AUTO_LOGGER.log("AUTORUN role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
         text = textOnScreen;
         placeholder = textBox.placeHolder
-        LOGGER.log("==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
+        AUTO_LOGGER.log("==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
         if( !!editor.selectedBox && !!textBox ) {
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+                AUTO_LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
                 if(!!element) {
                     focus();
                 }

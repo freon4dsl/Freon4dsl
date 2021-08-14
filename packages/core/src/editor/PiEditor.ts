@@ -16,7 +16,7 @@ import {
     PiActions
 } from "./internal";
 
-const LOGGER = new PiLogger("PiEditor"); //.mute();
+const LOGGER = new PiLogger("PiEditor");
 
 export class PiEditor {
     @observable private _rootElement: PiElement;
@@ -83,7 +83,13 @@ export class PiEditor {
     }
 
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
+        LOGGER.log("SelectBoxNEW " + (box ? box.role : box));
         this.selectBox(this.rootBox.findBox(box.element.piId(), box.role));
+    }
+
+    selectBoxByRoleAndElementId(elementId: string, role: string, caretPosition?: PiCaret) {
+        LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role "+ role);
+        this.selectBox(this.rootBox.findBox(elementId, role));
     }
 
     private selectBox(box: Box | null, caretPosition?: PiCaret) {
@@ -97,7 +103,6 @@ export class PiEditor {
             return;
         }
         this.selectedBox = box;
-        // this.$projectedElement!.focus();
         LOGGER.info(this, "==> select box " + box.role + " caret position: " + (!!caretPosition ?  caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {

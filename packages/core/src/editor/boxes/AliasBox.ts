@@ -31,8 +31,11 @@ export class AliasBox extends AbstractChoiceBox {
 
     async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
         return await executeBehavior(this, option.id, editor);
-
     }
+
+    triggerKeyPressEvent = (key: string) => {
+        console.log("AliasBox " + this.role + " has empty triggerKeyPressEvent")
+    };
 }
 
 export function isAliasBox(b: Box): b is AliasBox {
