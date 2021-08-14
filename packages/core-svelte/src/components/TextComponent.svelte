@@ -34,15 +34,16 @@
         return textOnScreen;
     }
     export const focus = async (): Promise<void> => {
-        LOGGER.log("TextComponent focus " + textBox.role);
+        LOGGER.log("focus: " + textBox.role);
         element.focus();
         // this.startEditing();
     };
 
     let caretPosition: number = 0;
     const setFocus = async (): Promise<void> => {
-        LOGGER.log("TextComponent set focus " + textBox.role);
+        LOGGER.log("set focus: " + textBox.role);
         element.focus();
+        setCaretPosition(textBox.caretPosition)
         // this.startEditing();
     };
 
@@ -89,7 +90,7 @@
     onMount( () => {
         LOGGER.log("onMount for role ["+ textBox.role + "]")
         textBox.setFocus = setFocus;
-        // textBox.setCaret = setCaret;
+        textBox.setCaret = setCaret;
         caretPosition = textBox.caretPosition;
     });
 
@@ -99,8 +100,7 @@
      */
     const onKeyDown = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: ["+ event.key + "] alt [" + event.ctrlKey+  "] shift [" + event.shiftKey + "] key [" + event.key +"]");
-        let handled: boolean = false;
-        const caretPosition = getCaretPosition();
+        // const caretPosition = getCaretPosition();
         if (event.key === KEY_DELETE) {
             if (textOnScreen === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
@@ -127,12 +127,9 @@
         }
         if (shouldIgnore(event)) {
             event.preventDefault();
-        } else {
-            // E.g. for all printable keys.
-            handled = true;
         }
         const piKey = toPiKey(event);
-        if (!handled && isMetaKey(event)) {
+        if (isMetaKey(event)) {
             const isKeyboardShortcutForThis = await PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element " + textBox.element);
@@ -149,14 +146,17 @@
             case PiCaretPosition.RIGHT_MOST:
                 LOGGER.log("setCaretPosition RIGHT");
                 setCaretToMostRight();
+                textBox.caretPosition = textBox.getText().length;
                 break;
             case PiCaretPosition.LEFT_MOST:
                 LOGGER.log("setCaretPosition LEFT");
                 setCaretToMostLeft();
+                textBox.caretPosition = 0;
                 break;
             case PiCaretPosition.INDEX:
                 LOGGER.log("setCaretPosition INDEX");
                 setCaretPosition(caret.index);
+                textBox.caretPosition = caret.index;
                 break;
             case PiCaretPosition.UNSPECIFIED:
                 LOGGER.log("setCaretPosition UNSPECIFIED");
@@ -180,7 +180,7 @@
     };
 
     const setCaretPosition = (position: number) => {
-        LOGGER.log("TextComponent.setCaretPosition: " + position);
+        LOGGER.log("setCaretPosition: " + position);
         if (position === -1) {
             return;
         }
@@ -192,8 +192,8 @@
             if (position > textOnScreen.length) {
                 // TODO Fix the error below
                 console.error("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
-                console.error("TextComponent.setCaretPosition >length: " + position + " > " + textOnScreen.length);
-                // position = this.element.innerText.length;
+                console.error("TextComponent.setCaretPosition position: " + position + " length: " + textOnScreen.length);
+                position = this.element.innerText.length;
             }
             clearSelection();
             const range = document.createRange();
@@ -217,7 +217,9 @@
     };
 
     const onClick = (event: MouseEvent) => {
-        // textBox.caretPosition = getCaretPosition();
+        textBox.caretPosition = getCaretPosition();
+        caretPosition = textBox.caretPosition;
+        LOGGER.log("onClick caret position = " + textBox.caretPosition);
     }
 
     /**
@@ -226,7 +228,7 @@
      */
     const onKeyPress = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
-        const insertionIndex = getCaretPosition(); // 0; // TODO getCaretPosition();
+        const insertionIndex = getCaretPosition();
         // await wait(0);
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
@@ -296,12 +298,17 @@
         UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] caret [" + textBox.caretPosition + "]");
         textBox.update();
             textBox.setFocus = setFocus;
-            LOGGER.log("textbox is now [" + textBox.getText() + "]")
+            textBox.setCaret = setCaret;
+
+        LOGGER.log("after update: textbox with role " + textBox.role + " is now [" + textBox.getText() + "]")
         if( !!editor.selectedBox && !!textBox ) {
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
                 LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
                 if(!!element) {
                     focus();
+                    textBox.caretPosition = getCaretPosition();
+                    caretPosition = textBox.caretPosition;
+                    // setCaretPosition(textBox.caretPosition)
                 }
             }
         }
@@ -329,8 +336,7 @@
     });
 </script>
 
-<div    style="{textBox.style}"
-        class={"text"}
+<div    class={"text"}
         data-placeholdertext={placeholder}
         on:keypress={onKeyPress}
         on:keydown={onKeyDown}
