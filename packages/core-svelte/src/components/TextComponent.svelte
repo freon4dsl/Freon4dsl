@@ -140,16 +140,6 @@
                     LOGGER.log("   ENTER, so propagate");
                     return;
                 }
-                // Try the key on next box, if at the end of this box.
-                // const insertionIndex = getCaretPosition();
-                if (caretPosition >= textBox.getText().length) {
-                    editor.selectNextLeaf();
-                    if (isAliasBox(editor.selectedBox)) {
-                        editor.selectedBox.triggerKeyDownEvent(piKey);
-                    }
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
             }
         }
     };

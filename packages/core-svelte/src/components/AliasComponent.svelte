@@ -1,15 +1,23 @@
 <script lang="ts">
     import {
-        AliasBox, ARROW_DOWN, ARROW_UP, BehaviorExecutionResult,
-        DELETE,
+        BehaviorExecutionResult,
         AbstractChoiceBox,
-        ENTER, ESCAPE,
-        EVENT_LOG, executeBehavior,
-        isAliasBox, isMetaKey,
+        EVENT_LOG,
+        executeBehavior,
+        isAliasBox,
+        isMetaKey,
         isPrintable,
         PiEditor,
         PiLogger,
-        PiUtils, SPACEBAR, TAB, toPiKey, isSelectBox, findOption
+        PiUtils,
+        toPiKey,
+        isSelectBox,
+        findOption,
+        KEY_ENTER,
+        KEY_TAB,
+        KEY_ARROW_DOWN,
+        KEY_ARROW_UP,
+        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { action, autorun } from "mobx";
@@ -183,17 +191,17 @@
             e.stopPropagation();
             return;
         }
-        if (e.keyCode === DELETE) {
+        if (e.key === KEY_DELETE) {
             e.stopPropagation();
         }
-        if( e.keyCode=== TAB){
+        if( e.key === KEY_TAB){
             open = false;
             return;
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
-        if( (e.keyCode === SPACEBAR && e.ctrlKey) || (e.keyCode === ESCAPE)) {
+        if( (e.key === KEY_SPACEBAR && e.ctrlKey) || (e.key === KEY_ESCAPE)) {
             open = !open;
             return;
         }
@@ -222,8 +230,8 @@
             e.preventDefault();
             e.stopPropagation();
         } else {
-            switch (e.keyCode) {
-                case ENTER:
+            switch (e.key) {
+                case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
                         await PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
@@ -236,14 +244,14 @@
 
     const shouldPropagate = (e: KeyboardEvent): boolean => {
         if (isMetaKey(e)) {
-            if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN || e.keyCode === TAB) {
+            if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_TAB) {
                 return true;
             }
         }
-        if (e.keyCode === ENTER || e.keyCode === TAB) {
+        if (e.key === KEY_ENTER || e.key === KEY_TAB) {
             return true;
         }
-        if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN) {
+        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN) {
             return true;
         }
         // TODO

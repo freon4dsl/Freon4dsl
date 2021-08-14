@@ -170,7 +170,7 @@ export class PiEditor {
         }
     }
 
-    async selectPreviousLeaf() {
+    selectPreviousLeaf() {
         const previous = this.selectedBox.nextLeafLeft;
         if (!!previous) {
             this.selectBoxNew(previous);

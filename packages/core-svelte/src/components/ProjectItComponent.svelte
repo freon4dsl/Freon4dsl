@@ -41,8 +41,8 @@
         } else if (event.shiftKey) {
             switch (event.key) {
                 case KEY_TAB:
-                    await editor.selectPreviousLeaf();
-                    eventHandled(event);
+                    editor.selectPreviousLeaf();
+                    // eventHandled(event);
                     break;
             }
         } else if (event.altKey) {

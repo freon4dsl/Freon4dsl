@@ -1,14 +1,9 @@
 <script lang="ts">
     import {
-        ARROW_DOWN,
-        ARROW_LEFT, ARROW_RIGHT,
-        ARROW_UP,
-        BACKSPACE, boxAbove, boxBelow,
-        DELETE,
         Box,
         LabelBox,
         PiEditor,
-        TAB, PiLogger
+        PiLogger
     } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate, tick } from "svelte";
