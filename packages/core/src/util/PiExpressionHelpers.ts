@@ -63,7 +63,7 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
     result.addChildren([
         (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, "PiBinaryExpression-left", "[add-left]", { propertyName: "left" })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
-        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, ),
+        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP),

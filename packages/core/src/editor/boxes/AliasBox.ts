@@ -18,7 +18,7 @@ export class AliasBox extends AbstractChoiceBox {
     getOptions(editor: PiEditor): SelectOption[] {
         const result = editor.behaviors
             // .filter(a => a.activeInBoxRoles.includes(this.role) && MatchUtil.partialMatch(this.textBox.getText(), a.trigger))
-            .filter(a => a.activeInBoxRoles.includes(this.role) )
+            .filter(a => a.activeInBoxRoles.includes(this.role))
             .map(a => {
                 return {
                     id: triggerToString(a.trigger),
@@ -34,7 +34,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     triggerKeyPressEvent = (key: string) => {
-        console.log("AliasBox " + this.role + " has empty triggerKeyPressEvent")
+        console.log("AliasBox " + this.role + " has empty triggerKeyPressEvent");
     };
 }
 

@@ -88,7 +88,7 @@ export class PiEditor {
     }
 
     selectBoxByRoleAndElementId(elementId: string, role: string, caretPosition?: PiCaret) {
-        LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role "+ role);
+        LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role " + role);
         this.selectBox(this.rootBox.findBox(elementId, role));
     }
 
@@ -97,13 +97,13 @@ export class PiEditor {
             console.error("PiEditor.selectBox is null !");
             return;
         }
-        LOGGER.info(this, "selectBox "+ (!!box? box.role : box) );
+        LOGGER.info(this, "selectBox " + (!!box ? box.role : box));
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");
             return;
         }
         this.selectedBox = box;
-        LOGGER.info(this, "==> select box " + box.role + " caret position: " + (!!caretPosition ?  caretPosition.position : "undefined"));
+        LOGGER.info(this, "==> select box " + box.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
                 LOGGER.info(this, "caret position is " + caretPosition.position);
@@ -192,29 +192,29 @@ export class PiEditor {
         //     PiUtils.replaceExpression(exp, newExp, this);
         //     await this.selectElement(newExp);
         // } else {
-            if (container !== null) {
-                LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
-                const propertyIndex = container.propertyIndex;
-                const parentElement = container.container;
-                if (propertyIndex !== undefined) {
-                    let arrayProperty = (container.container as any)[container.propertyName] as any;
-                    arrayProperty.splice(propertyIndex, 1);
-                    let length = arrayProperty.length;
-                    if (length === 0) {
-                        // TODO Maybe we should select the element (or leaf) just before the list.
-                        this.selectElement(parentElement,`${container.container.piLanguageConcept()}-${container.propertyName}`);
-                    } else if (length <= propertyIndex) {
-                        this.selectElement(arrayProperty[propertyIndex - 1]);
-                    } else {
-                        this.selectElement(arrayProperty[propertyIndex]);
-                    }
+        if (container !== null) {
+            LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
+            const propertyIndex = container.propertyIndex;
+            const parentElement = container.container;
+            if (propertyIndex !== undefined) {
+                let arrayProperty = (container.container as any)[container.propertyName] as any;
+                arrayProperty.splice(propertyIndex, 1);
+                let length = arrayProperty.length;
+                if (length === 0) {
+                    // TODO Maybe we should select the element (or leaf) just before the list.
+                    this.selectElement(parentElement, `${container.container.piLanguageConcept()}-${container.propertyName}`);
+                } else if (length <= propertyIndex) {
+                    this.selectElement(arrayProperty[propertyIndex - 1]);
                 } else {
-                    container.container[container.propertyName] = null;
-                    // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
-                    this.selectElement(container.container,
-                        (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`))
+                    this.selectElement(arrayProperty[propertyIndex]);
                 }
+            } else {
+                container.container[container.propertyName] = null;
+                // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
+                this.selectElement(container.container,
+                    (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`));
             }
+        }
         // }
     }
 
@@ -229,7 +229,7 @@ export class PiEditor {
 
     set rootElement(exp: PiElement) {
         this._rootElement = exp;
-        this.$rootBox = this.projection.getBox(this._rootElement)
+        this.$rootBox = this.projection.getBox(this._rootElement);
         // if (exp instanceof MobxModelElementImpl) {
         //     exp.container = this;
         //     exp.propertyIndex = undefined;

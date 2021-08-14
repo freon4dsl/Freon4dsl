@@ -260,6 +260,16 @@
                 event.preventDefault();
                 event.stopPropagation();
                 break;
+            case KeyPressAction.GOTO_PREVIOUS:
+                LOGGER.log("KeyPressAction.GOTO_PREVIOUS");
+                editor.selectPreviousLeaf();
+                LOGGER.log("PREVIOUS LEAF IS " + editor.selectedBox.role);
+                if (isAliasBox(editor.selectedBox)) {
+                    editor.selectedBox.triggerKeyPressEvent(event.key);
+                }
+                event.preventDefault();
+                event.stopPropagation();
+                break;
         }
         // LOGGER.log("CARET POSITION ["+ textOnScreen + "]")
     };
