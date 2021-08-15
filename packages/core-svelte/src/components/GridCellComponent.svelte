@@ -11,7 +11,7 @@
     export let editor: PiEditor;
 
     //local variable
-    const LOGGER = new PiLogger("GridCellComponent").mute();
+    const LOGGER = new PiLogger("GridCellComponent");
     let cssVariables: string;
     let notifier = new ChangeNotifier();
     afterUpdate(() => {
