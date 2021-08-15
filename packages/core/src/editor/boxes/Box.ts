@@ -3,7 +3,7 @@ import { observable } from "mobx";
 import { PiElement } from "../../language";
 import { PiLogger, PiUtils } from "../../util";
 
-const LOGGER = new PiLogger("Box"); // .mute();
+const LOGGER = new PiLogger("Box");
 
 export abstract class Box {
     $id: string;
