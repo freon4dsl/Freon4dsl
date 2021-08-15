@@ -114,7 +114,7 @@ export class PiEditor {
             }
         }
         LOGGER.info(this, "setting focus on box " + box.role);
-        // await box.setFocus();
+        // box.setFocus();
     }
 
     get selectedBox() {
@@ -123,10 +123,14 @@ export class PiEditor {
 
     set selectedBox(box: Box) {
         LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null"));
-        this.$selectedBox = box;
+        if( isAliasBox(box)) {
+            this.$selectedBox = box.textBox;
+        } else {
+            this.$selectedBox = box;
+        }
         if (!!box) {
-            this.selectedElement = box.element;
-            this.selectedRole = box.role;
+            this.selectedElement = this.$selectedBox.element;
+            this.selectedRole = this.$selectedBox.role;
         }
     }
 
@@ -139,8 +143,11 @@ export class PiEditor {
     }
 
     selectParentBox() {
-        LOGGER.info(this, "==> SelectParent");
-        const parent = this.selectedBox.parent;
+        LOGGER.info(this, "==> SelectParent of " + this.selectedBox.role);
+        let parent = this.selectedBox.parent;
+        if( isAliasBox(parent) || isSelectBox(parent)) {
+            parent = parent.parent;
+        }
         if (!!parent) {
             if (parent.selectable) {
                 this.selectBoxNew(parent);

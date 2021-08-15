@@ -11,7 +11,7 @@
     export let editor: PiEditor;
 
     // Local state variables
-    let LOGGER: PiLogger = new PiLogger("ListComponent").mute()
+    let LOGGER: PiLogger = new PiLogger("ListComponent");
     let svList: HorizontalListBox =list;
     let svNotifier = new ChangeNotifier();
     let element: HTMLDivElement;
@@ -21,7 +21,7 @@
     });
 
     async function setFocus(): Promise<void> {
-        LOGGER.log("setFocus")
+        LOGGER.log("setFocus for box " + list.role);
         element.focus();
     }
     afterUpdate(() => {
@@ -62,11 +62,24 @@
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
+    const onFocusHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus for box " + list.role);
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    const onBlurHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus Blur for box " + list.role);
+        e.preventDefault();
+        e.stopPropagation();
+    }
 </script>
 
 <span class="list-component"
       style="{cssGrgVars}"
-      on:click tabIndex={0}
+      on:click
+      on:focus={onFocusHandler}
+      on:blur={onBlurHandler}
+      tabIndex={0}
       bind:this={element}
 >
     {#if isHorizontalBox(svList) }

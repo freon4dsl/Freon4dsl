@@ -21,6 +21,7 @@
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { action, autorun } from "mobx";
+    import SelectableComponent from "./SelectableComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier } from "./ChangeNotifier";
     import DropdownComponent from "./DropdownComponent.svelte";
@@ -300,27 +301,43 @@
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        AUTO_LOGGER.log("==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
+        AUTO_LOGGER.log("AliasComponent selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
         if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
-            if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
+            if (editor.selectedBox.role === choiceBox.textBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
                 AUTO_LOGGER.log("Focus ==============================================")
                 setFocus();
             }
         }
 
     });
+
+    const onFocusHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus for box " + choiceBox.role);
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    const onBlurHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus Blur for box " + choiceBox.role);
+        e.preventDefault();
+        e.stopPropagation();
+    }
 </script>
 
 <div on:keydown={onKeyDown}
      on:keypress={onKeyPress}
      on:input={onInput}
+     on:focus={onFocusHandler}
+     on:blur={onBlurHandler}
      on:click={onClick}
 >
-    <TextComponent
-                   editor={editor}
-                   textBox={choiceBox.textBox}
-                   bind:this={textcomponent}
-    />
+    <SelectableComponent box={choiceBox.textBox} editor={editor}>
+        <TextComponent
+            editor={editor}
+            textBox={choiceBox.textBox}
+            bind:this={textcomponent}
+        />
+    </SelectableComponent>
     {#if openInHtml}
         <DropdownComponent
                 bind:this="{dropdown}"

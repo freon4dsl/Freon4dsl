@@ -35,10 +35,11 @@
     }
 
     let caretPosition: number = 0;
-    export const setFocus = async (): Promise<void> => {
-        LOGGER.log("set focus: " + textBox.role + "  position " + textBox.caretPosition);
+    export const setFocus =  ():void => {
+        LOGGER.log("setFocus in setFocus for box " + textBox.role + "  position " + textBox.caretPosition);
         element.focus();
         setCaretPosition(textBox.caretPosition)
+        // console.log("windows.focus is on " + window.document.activeElement)
         // this.startEditing();
     };
 
@@ -160,6 +161,7 @@
                 LOGGER.log("setCaretPosition ERROR");
                 break;
         }
+        LOGGER.log("setFocus in setCaret for box " + textBox.role)
         element.focus();
     };
 
@@ -176,6 +178,8 @@
 
     const setCaretPosition = (position: number) => {
         LOGGER.log("setCaretPosition: " + position);
+        LOGGER.log("setFocus in setCaretPosition for box " + textBox.role);
+        // element.focus();
         if (position === -1) {
             return;
         }
@@ -292,13 +296,13 @@
     afterUpdate(  () => {
         UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] caret [" + textBox.caretPosition + "]");
         textBox.update();
-            textBox.setFocus = setFocus;
-            textBox.setCaret = setCaret;
+        textBox.setFocus = setFocus;
+        textBox.setCaret = setCaret;
 
         LOGGER.log("after update: textbox with role " + textBox.role + " is now [" + textBox.getText() + "]")
         if( !!editor.selectedBox && !!textBox ) {
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+                LOGGER.log("AfterUpdate " + element);
                 if(!!element) {
                     setFocus();
                     textBox.caretPosition = getCaretPosition();
@@ -319,22 +323,51 @@
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
         text = textOnScreen;
         placeholder = textBox.placeHolder
-        AUTO_LOGGER.log("==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
+        AUTO_LOGGER.log("TextComponent ==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
+        // if( !!editor.selectedBox && !!textBox ) {
+        //     if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
+        //         AUTO_LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+        //         if(!!element) {
+        //             setFocus();
+        //         }
+        //     }
+        // }
+    });
+
+    const onFocus = (e: FocusEvent) => {
+        LOGGER.log("onFocus for box " + textBox.role);
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    const onBlurHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus Blur for box " + textBox.role);
+        e.preventDefault();
+        e.stopPropagation();
         if( !!editor.selectedBox && !!textBox ) {
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                AUTO_LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+                LOGGER.log("onFocus Blur: attempting to set focus anyway :-) " + element);
                 if(!!element) {
                     setFocus();
+                } else {
+                    LOGGER.log("onFocus Blur: attempting to set focus on null element :-) ");
                 }
+            } else {
+                LOGGER.log("onFocus Blur: textbox is not selected selected role " + editor.selectedBox.role + " box role " + textBox.role + "+ sel id " + editor.selectedBox.element.piId() + " box id " + textBox.element.piId());
             }
+        } else {
+            LOGGER.log("onFocus Blur: something is null selectedBox " + editor.selectedBox + " textBox " + textBox);
         }
-    });
+
+    }
 </script>
 
 <div    class={"text"}
+        tabindex="0"
         data-placeholdertext={placeholder}
         on:keypress={onKeyPress}
         on:keydown={onKeyDown}
+        on:focus={onFocus}
+        on:blur={onBlurHandler}
         on:click={onClick}
         on:input={onInput}
         contenteditable="true"

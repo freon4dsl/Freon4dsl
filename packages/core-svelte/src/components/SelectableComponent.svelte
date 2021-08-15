@@ -13,7 +13,7 @@
     export let box: Box = new LabelBox(null, "DUMMY", "LABEL");
     export let editor: PiEditor ;
 
-    let LOGGER = new PiLogger("SelectableComponent").mute();
+    let LOGGER = new PiLogger("SelectableComponent");
     let isSelected: boolean = false;
     let className: string;
     let element: HTMLDivElement = null;
