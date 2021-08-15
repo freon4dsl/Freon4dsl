@@ -1,11 +1,11 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError } from "@projectit/core";
+import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError, PiElement } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
-    errorMessage, languageName,
+    errorMessage, fileExtensions, languageName,
     severity,
     severityType,
     showError,
@@ -39,6 +39,11 @@ export class EditorCommunication {
         languageName.set(editorEnvironment.languageName);
         // unitTypes are the same for every model in the language
         unitTypes.set(editorEnvironment.unitNames);
+        let tmp: string[] = [];
+        for (const val of editorEnvironment.fileExtensions.values()){
+            tmp.push(val);
+        }
+        fileExtensions.set(tmp);
     }
 
     /* returns true if the model has a name,
@@ -270,6 +275,30 @@ export class EditorCommunication {
         });
     }
 
+    unitFromFile(content: string, extension: string) {
+        let elem: PiElement = null;
+        let metaType: string = "";
+        for (let [key, value] of editorEnvironment.fileExtensions.entries()) {
+            if (value === extension)
+                metaType = key;
+        }
+        console.log(`metaType: ${metaType}`);
+        try {
+            elem = editorEnvironment.reader.readFromString(content, "ExModel");
+        } catch (e) {
+            console.log(`FOUTEN: ${e.message}`);
+        }
+    }
+
+    unitAsText() : string {
+        return editorEnvironment.writer.writeToString(this.currentUnit);
+    }
+
+    unitFileExtension() : string {
+        const unitType = this.currentUnit.piLanguageConcept();
+        return editorEnvironment.fileExtensions.get(unitType);
+    }
+
     private showUnitAndErrors(newUnit: PiNamedElement) {
         LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
         editorEnvironment.editor.rootElement = newUnit;
@@ -375,6 +404,5 @@ export class EditorCommunication {
         LOGGER.log("findElement called");
         return undefined;
     }
-
 }
 

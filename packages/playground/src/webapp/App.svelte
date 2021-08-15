@@ -29,12 +29,12 @@
 <Footer />
 
 <script lang="ts">
-	import {onMount} from 'svelte';
+	import { onMount } from "svelte";
 
-	import AppBar from './side-elements/AppBar.svelte';
+	import AppBar from "./side-elements/AppBar.svelte";
 	import Footer from "./side-elements/Footer.svelte";
-	import LeftPanel from './side-elements/LeftPanel.svelte';
-	import RightPanel from './side-elements/HelpPanel.svelte';
+	import LeftPanel from "./side-elements/LeftPanel.svelte";
+	import RightPanel from "./side-elements/HelpPanel.svelte";
 	import UserMessage from "./side-elements/UserMessage.svelte";
 	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
 	import OpenUnitDialog from "./menu/OpenUnitDialog.svelte";
@@ -46,8 +46,8 @@
 
 	import MainGrid from "./main/MainGrid.svelte";
 
-	import {miniWindow} from "./WebappStore";
-	import {EditorCommunication} from "./editor/EditorCommunication";
+	import { miniWindow } from "./WebappStore";
+	import { EditorCommunication } from "./editor/EditorCommunication";
 	import { unnamed } from "./WebappStore";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
