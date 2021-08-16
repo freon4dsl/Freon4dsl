@@ -20,7 +20,7 @@
         toPiKey,
         PiCaret, PiCaretPosition, PiLogger, isPrintable
     } from "@projectit/core";
-    import { afterUpdate, onMount } from "svelte";
+    import { afterUpdate, onMount, tick } from "svelte";
     import { AUTO_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
@@ -36,9 +36,13 @@
 
     let caretPosition: number = 0;
     export const setFocus =  ():void => {
-        LOGGER.log("setFocus in setFocus for box " + textBox.role + "  position " + textBox.caretPosition);
+        logBox("setFocus in setFocus");
+        if( document.activeElement === element){
+            LOGGER.log("    has focus already");
+            return;
+        }
         element.focus();
-        setCaretPosition(textBox.caretPosition)
+        // setCaretPosition(textBox.caretPosition)
         // console.log("windows.focus is on " + window.document.activeElement)
         // this.startEditing();
     };
@@ -161,7 +165,7 @@
                 LOGGER.log("setCaretPosition ERROR");
                 break;
         }
-        LOGGER.log("setFocus in setCaret for box " + textBox.role)
+        logBox("setFocus in setCaret")
         element.focus();
     };
 
@@ -177,8 +181,8 @@
     };
 
     const setCaretPosition = (position: number) => {
-        LOGGER.log("setCaretPosition: " + position + "  for box " + textBox.role);
-        LOGGER.log("setFocus in setCaretPosition");
+        logBox("setCaretPosition: " + position);
+        logBox("setFocus in setCaretPosition");
         // element.focus();
         if (position === -1) {
             return;
@@ -216,9 +220,15 @@
     };
 
     const onClick = (event: MouseEvent) => {
+        logBox("onClick before");
         textBox.caretPosition = getCaretPosition();
         caretPosition = textBox.caretPosition;
-        LOGGER.log("onClick caret position = " + textBox.caretPosition);
+        // setCaretPosition(caretPosition);
+        logBox("onClick after");
+    }
+
+    function logBox(message: string) {
+        LOGGER.log(message + ": box[" + textBox.role + ", " + textBox.caretPosition+ "]");
     }
 
     /**
@@ -234,7 +244,7 @@
                 // Not needed in Svelte, because of bind:
                 // textBox.update();
                 // textBox.caretPosition = getCaretPosition() + 1;
-                LOGGER.log("KeyPressAction.OK for boxn " + textBox.role + " position is now " + textBox.caretPosition);
+                logBox("KeyPressAction.OK");
                 break;
             case KeyPressAction.NOT_OK:
                 LOGGER.log("KeyPressAction.NOT_OK");
@@ -294,19 +304,20 @@
     };
 
     afterUpdate(  () => {
-        UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] caret [" + textBox.caretPosition + "]");
+        UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
         textBox.update();
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
 
-        LOGGER.log("after update: textbox with role " + textBox.role + " is now [" + textBox.getText() + "]")
+        LOGGER.log("after update: textbox with role " + textBox.role + " is now [" + textBox.getText() + "] at " + textBox.caretPosition)
         if( !!editor.selectedBox && !!textBox ) {
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("AfterUpdate " + element);
+                LOGGER.log("AfterUpdate is selected " + element);
                 if(!!element) {
                     setFocus();
                     textBox.caretPosition = getCaretPosition();
-                    caretPosition = textBox.caretPosition;
+                    logBox("AfterUpdate for selection");
+                    // caretPosition = textBox.caretPosition;
                     // setCaretPosition(textBox.caretPosition)
                 }
             }
@@ -315,7 +326,8 @@
 
     const getCaretPosition = (): number => {
         // TODO This causes an extra afterUpdate in Svelte, don't know why !
-        return window.getSelection().focusOffset;
+        // return window.getSelection().focusOffset;
+        return window.getSelection().getRangeAt(0).startOffset;
         // return 0
     };
 
@@ -335,7 +347,7 @@
     });
 
     const onFocus = (e: FocusEvent) => {
-        LOGGER.log("onFocus for box " + textBox.role);
+        logBox("onFocus for box");
         e.preventDefault();
         e.stopPropagation();
     }
@@ -359,6 +371,7 @@
         }
 
     }
+
 </script>
 
 <div    class={"text"}

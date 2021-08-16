@@ -302,12 +302,12 @@
             choiceBox.textBox.setText(selectedOption.label);
         }
         AUTO_LOGGER.log("AliasComponent selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
-        if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
-            if (editor.selectedBox.role === choiceBox.textBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-                AUTO_LOGGER.log("Focus ==============================================")
-                setFocus();
-            }
-        }
+        // if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
+        //     if (editor.selectedBox.role === choiceBox.textBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
+        //         AUTO_LOGGER.log("Focus ==============================================")
+        //         setFocus();
+        //     }
+        // }
 
     });
 
