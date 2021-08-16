@@ -49,10 +49,9 @@ export class ReaderTemplate {
                 try {
                     model = parser.parse(langSpec);
                 } catch (e) {
-                    // show syntax error
-                    // TODO find better way to handle error
+                    // throw syntax error, but with extra info
                     const errorstr = \`\${!!filepath ? \`\${filepath}:\` : \`\`} \${e} \${e.location && e.location.start ? \`[line \${e.location.start.line}, column \${e.location.start.column}]\` : \`\`}\`;
-                    console.error(errorstr);
+                    throw new Error(errorstr);
                 }
                 return model;
             }

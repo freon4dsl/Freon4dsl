@@ -250,22 +250,7 @@ export class EditorCommunication {
         // get the full unit from the server
         await ServerCommunication.getInstance().loadModelUnit(EditorCommunication.getInstance().currentModel.name, newUnitName, (newUnit: PiNamedElement) => {
             if (!!EditorCommunication.getInstance().currentUnit) {
-                // get the interface of the current unit from the server
-                ServerCommunication.getInstance().loadModelUnitInterface(
-                    EditorCommunication.getInstance().currentModel.name,
-                    EditorCommunication.getInstance().currentUnit.name,
-                    (oldUnitInterface: PiNamedElement) => {
-                        if (!!newUnit) { // the new unit has been retrieved from the server
-                            if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
-                                // swap old unit with its interface in the in-memory model
-                                EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
-                            }
-                            // swap the new unit interface with the full unit in the in-memory model
-                            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
-                            // show the new unit in the editor
-                            this.showUnitAndErrors(newUnit);
-                        }
-                    });
+                this.swapUnits(newUnit, newUnitInterface);
             } else {
                 // swap the new unit interface with the full unit in the in-memory model
                 EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
@@ -275,23 +260,50 @@ export class EditorCommunication {
         });
     }
 
-    unitFromFile(content: string, extension: string) {
-        let elem: PiElement = null;
-        let metaType: string = "";
-        for (let [key, value] of editorEnvironment.fileExtensions.entries()) {
-            if (value === extension)
-                metaType = key;
+    /**
+     * Get the interface of the current unit from the server and swap it for the complete unit
+     * May be called with null value for 'newUnitInterface'. In that case the current Model
+     * does not have an in-memory interface for 'newUnit'.
+     * @param newUnit
+     * @param newUnitInterface
+     * @private
+     */
+    private swapUnits(newUnit: PiNamedElement, newUnitInterface: PiNamedElement) {
+        // the new unit has been retrieved from the server or from file
+        if (!!newUnit && this.isModelNamed() && this.isUnitNamed()) {
+            ServerCommunication.getInstance().loadModelUnitInterface(
+                EditorCommunication.getInstance().currentModel.name,
+                EditorCommunication.getInstance().currentUnit.name,
+                (oldUnitInterface: PiNamedElement) => {
+                        if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+                            // swap old unit with its interface in the in-memory model
+                            EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                        }
+                        if (!!newUnitInterface) {
+                            // swap the new unit interface with the full unit in the in-memory model
+                            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
+                        }
+                        // show the new unit in the editor
+                        this.showUnitAndErrors(newUnit);
+
+            });
         }
-        console.log(`metaType: ${metaType}`);
-        try {
-            elem = editorEnvironment.reader.readFromString(content, "ExModel");
-        } catch (e) {
-            console.log(`FOUTEN: ${e.message}`);
+    }
+
+    unitFromFile(content: string, metaType: string) {
+        let elem: PiElement = null;
+        elem = editorEnvironment.reader.readFromString(content, metaType);
+        if (elem && this.isModelNamed()) {
+            console.log(`${(elem as PiNamedElement).name}`)
+            // TODO save old currentUnit
+            // TODO swap old unit with its interface in the in-memory model
+            // set elem in editor
+            this.showUnitAndErrors(elem as PiNamedElement);
         }
     }
 
     unitAsText() : string {
-        return editorEnvironment.writer.writeToString(this.currentUnit);
+        return editorEnvironment.writer.writeToString(this.currentUnit, 0, false);
     }
 
     unitFileExtension() : string {

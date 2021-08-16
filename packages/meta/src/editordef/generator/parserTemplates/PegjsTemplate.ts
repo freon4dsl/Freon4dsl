@@ -231,7 +231,7 @@ HEXDIG = [0-9a-f]
                 let listRuleName = this.makeNameOfListRule(myElem, item);
 
                 if (item.listJoin?.joinType === ListJoinType.Separator) {
-                    return `${variableName}:${listRuleName}`;
+                    return `${variableName}:${listRuleName}?`;
                 } else {
                     const subName = variableName + "ListElem";
                     if (!myElem.isPart) {
