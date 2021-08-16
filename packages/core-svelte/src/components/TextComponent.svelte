@@ -177,8 +177,8 @@
     };
 
     const setCaretPosition = (position: number) => {
-        LOGGER.log("setCaretPosition: " + position);
-        LOGGER.log("setFocus in setCaretPosition for box " + textBox.role);
+        LOGGER.log("setCaretPosition: " + position + "  for box " + textBox.role);
+        LOGGER.log("setFocus in setCaretPosition");
         // element.focus();
         if (position === -1) {
             return;
@@ -231,10 +231,10 @@
         // await wait(0);
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
-                LOGGER.log("KeyPressAction.OK");
                 // Not needed in Svelte, because of bind:
                 // textBox.update();
                 // textBox.caretPosition = getCaretPosition() + 1;
+                LOGGER.log("KeyPressAction.OK for boxn " + textBox.role + " position is now " + textBox.caretPosition);
                 break;
             case KeyPressAction.NOT_OK:
                 LOGGER.log("KeyPressAction.NOT_OK");
@@ -282,9 +282,9 @@
         const value = (e.target as HTMLElement).innerText;
 
         LOGGER.log("onInput `" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
-        // textBox.caretPosition = getCaretPosition();
-        // caretPosition = textBox.caretPosition;
-        // editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+        textBox.caretPosition = getCaretPosition();
+        caretPosition = textBox.caretPosition;
+        editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
             await editor.deleteBox(textBox);

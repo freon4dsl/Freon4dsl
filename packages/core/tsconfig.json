@@ -17,7 +17,7 @@
     "sourceMap": true,                              /* Generates corresponding '.map' file. */
     // "outFile": "./",                             /* Concatenate and emit output to single file. */
     // NB: If running tsc instead of rollup, next line should be outDir: "./dist" !!
-    "outDir": ".",                                  /* Redirect output structure to the directory. */
+    "outDir": ".",                                  /* Redirect output structure to the directory. NB: this works for rollup.,  for tsc it should be "./dist" !!! */
     "rootDir": "./src",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "composite": true,                           /* Enable project compilation */
     // "tsBuildInfoFile": "./",                     /* Specify file to store incremental compilation information */
