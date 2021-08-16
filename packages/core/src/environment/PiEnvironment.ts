@@ -26,5 +26,6 @@ export interface PiEnvironment {
     // projectionalEditorComponent: ProjectionalEditor;
     languageName: string;
     unitNames: string[];
+    fileExtensions: Map<string, string>;
 }
 // end::environment-interface[]

@@ -32,17 +32,6 @@ export class ReaderTemplate {
         */
         export class ${Names.reader(language)} implements ${Names.PiReader} {
         
-        /*
-            readFromFile(filepath: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
-                // read language file
-                if (!fs.existsSync(filepath)) {
-                    console.error(this, "File '" + filepath + "' does not exist, exiting.");
-                    throw new Error(\`File '\${filepath}' not found.\`);
-                }
-                const langSpec: string = fs.readFileSync(filepath, { encoding: "utf8" });
-                return ${Names.reader(language)}.parse(langSpec, metatype, filepath);
-            }
-        */
             readFromString(input: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
                 return ${Names.reader(language)}.parse(input, metatype, "");
             }       
@@ -60,10 +49,9 @@ export class ReaderTemplate {
                 try {
                     model = parser.parse(langSpec);
                 } catch (e) {
-                    // show syntax error
-                    // TODO find better way to handle error
+                    // throw syntax error, but with extra info
                     const errorstr = \`\${!!filepath ? \`\${filepath}:\` : \`\`} \${e} \${e.location && e.location.start ? \`[line \${e.location.start.line}, column \${e.location.start.column}]\` : \`\`}\`;
-                    console.error(errorstr);
+                    throw new Error(errorstr);
                 }
                 return model;
             }

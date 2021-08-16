@@ -74,7 +74,7 @@ export class ProjectionTemplate {
                 BehaviorExecutionResult
             } from "${PROJECTITCORE}";
             
-            import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }/${Names.PiElementReference}";
+            import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${language.interfaces.map(c => `${Names.interface(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";

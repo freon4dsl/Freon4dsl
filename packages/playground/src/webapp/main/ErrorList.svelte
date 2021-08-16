@@ -23,7 +23,7 @@
                 <span class={sortedBy === index ? "underline" : ""}>{column}</span>
             </div>
         {/each}
-        {#each $modelErrrors as item}
+        {#each $modelErrors as item}
             <div class="item" on:click={() => itemSelected(item)}>
                 {item.message}
             </div>
@@ -37,7 +37,6 @@
     </div>
 </div>
 
-<!-- todo use 'fly' to delete this view: https://svelte.dev/tutorial/adding-parameters-to-transitions -->
 <script lang="ts">
 
     import { Icon } from "svelte-mui";
@@ -46,7 +45,7 @@
     import import_export from "../../webapp/assets/icons/svg/import_export_24px.svg";
 
     import sortErrors from "../main-ts-files/SortErrors";
-    import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
+    import { modelErrors } from "../main-ts-files/ModelErrorsStore";
     import { PiError } from "@projectit/core";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
@@ -60,7 +59,7 @@
         asc = sortedBy === index ? !asc : false;
         sortedBy = index;
         // console.log("columnId: " + index);
-        $modelErrrors = sortErrors($modelErrrors, index, asc);
+        $modelErrors = sortErrors($modelErrors, index, asc);
     }
 
     const itemSelected = (item: PiError) => {

@@ -53,6 +53,7 @@ export class Names {
     public static mainProjectionalEditor = "MainProjectionalEditor";
     public static styles = "projectitStyles";
     public static nameForSelf = "self";
+    public static initializeLanguage = "initializeLanguage";
 
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character

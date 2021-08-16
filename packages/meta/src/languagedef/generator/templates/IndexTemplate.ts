@@ -17,6 +17,7 @@ export class IndexTemplate {
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
         tmp.push(Names.PiElementReference);
+        tmp.push(Names.initializeLanguage);
 
         // the template starts here
         return `
@@ -51,6 +52,7 @@ export class IndexTemplate {
 
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
+        tmp.push(Names.language(language));
 
         // the template starts here
         return `

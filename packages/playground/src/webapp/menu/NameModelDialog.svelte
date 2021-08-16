@@ -21,12 +21,13 @@
 	</div>
 </Dialog>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <script lang="ts">
 	import {Button, Dialog, Textfield} from 'svelte-mui';
-	import {currentModelName} from "../WebappStore";
-	import {get} from 'svelte/store';
 	import {EditorCommunication} from "../editor/EditorCommunication";
 	import { nameModelDialogVisible, modelNames } from "../WebappStore";
+	import { saveUnitInternal } from "../menu-ts-files/MenuUtils";
 
 	let modelName: string;
 	let localErrorMessage: string = "";
@@ -36,8 +37,6 @@
 		ripple: true,
 		disabled: false,
 	};
-
-	// TODO dialog must also respond to enter key: submit
 
 	const handleCancel = () => {
 		// reset all variables
@@ -54,11 +53,22 @@
 			localErrorMessage = "Name may contain only characters and numbers, and must start with a character.";
 		} else {
 			EditorCommunication.getInstance().setModelName(modelName);
-			console.log("NameModelDialog::submit called, model is named: " + get(currentModelName));
+			// console.log("NameModelDialog::submit called, model is named: " + get(currentModelName));
 			// reset all variables
 			modelName = "";
 			localErrorMessage = "";
 			$nameModelDialogVisible = false;
+			// back to normal flow
+			saveUnitInternal();
+		}
+	}
+
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
 		}
 	}
 </script>

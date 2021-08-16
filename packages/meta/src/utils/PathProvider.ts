@@ -66,15 +66,15 @@ export class PathProvider {
 
     // the generated classes that implement the language can be found in ...
     public static concept(concept: PiConcept): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.concept(concept);
+        return LANGUAGE_GEN_FOLDER;
     }
 
     public static languageConceptType(language: PiLanguage): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.metaType(language);
+        return LANGUAGE_GEN_FOLDER;
     }
 
     public static allConcepts(language: PiLanguage): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.allConcepts(language);
+        return LANGUAGE_GEN_FOLDER;
     }
 
     // the generated classes that implement the editor can be found in ...

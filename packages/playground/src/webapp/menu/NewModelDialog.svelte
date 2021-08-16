@@ -20,6 +20,8 @@
 	</div>
 </Dialog>
 
+<svelte:window on:keydown={handleKeydown}/>
+
 <script lang="ts">
 	import {Button, Dialog, Textfield} from 'svelte-mui';
 	import { currentModelName, modelNames, newModelDialogVisible } from "../WebappStore";
@@ -34,11 +36,10 @@
 		disabled: false,
 	};
 
-	// TODO dialog must also respond to enter key: submit
-
 	function resetVariables() {
 		modelName = "";
 		localErrorMessage = "";
+		$modelNames = [];
 		$newModelDialogVisible = false;
 	}
 
@@ -60,6 +61,16 @@
 			resetVariables();
 		}
 	}
+
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				handleSubmit();
+				break;
+			}
+		}
+	}
+
 </script>
 
 <style>
