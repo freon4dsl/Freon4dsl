@@ -32,10 +32,4 @@
     let timeout: number = 10;
 </script>
 
-<style>
-    .user-message {
-        font-size: 5px;
-        height: var(--pi-header-height);
-    }
-</style>
 
