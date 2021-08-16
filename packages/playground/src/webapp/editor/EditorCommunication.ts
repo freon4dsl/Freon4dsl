@@ -12,7 +12,7 @@ import {
     unitTypes,
     unnamed
 } from "../WebappStore";
-import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
+import { modelErrors } from "../main-ts-files/ModelErrorsStore";
 import { editorEnvironment } from "../WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
@@ -339,7 +339,7 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
         if (!!this.currentUnit) {
             let list = editorEnvironment.validator.validate(this.currentUnit);
-            modelErrrors.set(list);
+            modelErrors.set(list);
         }
     }
     // END OF: for the communication with the error list

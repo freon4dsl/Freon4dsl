@@ -1,11 +1,12 @@
 <script>
-    import SplitPane from './SplitPane.svelte';
+    import SplitPane from "./SplitPane.svelte";
     import ErrorList from "./ErrorList.svelte";
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../WebappConfiguration";
     import { currentModelName, currentUnitName } from "../WebappStore";
+    import StatusBar from "./StatusBar.svelte";
 
-    export let orientation = 'rows';
+    export let orientation = "rows";
     export let fixed = false;
     export let fixedPos = 80;
 
@@ -38,4 +39,5 @@
             <ErrorList/>
         </section>
     </SplitPane>
+    <StatusBar/>
 </div>
