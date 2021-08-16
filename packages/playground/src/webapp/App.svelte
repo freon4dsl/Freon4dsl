@@ -6,11 +6,11 @@
 </svelte:head>
 
 <!-- definitions of all components that may at some time be shown in this app -->
+<!-- left and right panels -->
 <LeftPanel />
 <RightPanel />
 
-<!-- first make sure all dialogs and the error message are present -->
-
+<!-- dialogs and the error message snackbar -->
 <NewModelDialog />
 <OpenModelDialog />
 <NameModelDialog />

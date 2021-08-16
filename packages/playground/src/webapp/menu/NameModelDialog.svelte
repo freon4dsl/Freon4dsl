@@ -25,8 +25,6 @@
 
 <script lang="ts">
 	import {Button, Dialog, Textfield} from 'svelte-mui';
-	import {currentModelName} from "../WebappStore";
-	import {get} from 'svelte/store';
 	import {EditorCommunication} from "../editor/EditorCommunication";
 	import { nameModelDialogVisible, modelNames } from "../WebappStore";
 	import { saveUnitInternal } from "../menu-ts-files/MenuUtils";
