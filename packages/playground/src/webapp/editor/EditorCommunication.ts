@@ -5,7 +5,9 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
-    errorMessage, fileExtensions, languageName,
+    errorMessage,
+    fileExtensions,
+    languageName,
     severity,
     severityType,
     showError,
@@ -250,7 +252,22 @@ export class EditorCommunication {
         // get the full unit from the server
         await ServerCommunication.getInstance().loadModelUnit(EditorCommunication.getInstance().currentModel.name, newUnitName, (newUnit: PiNamedElement) => {
             if (!!EditorCommunication.getInstance().currentUnit) {
-                this.swapUnits(newUnit, newUnitInterface);
+                // get the interface of the current unit from the server
+                ServerCommunication.getInstance().loadModelUnitInterface(
+                    EditorCommunication.getInstance().currentModel.name,
+                    EditorCommunication.getInstance().currentUnit.name,
+                    (oldUnitInterface: PiNamedElement) => {
+                        if (!!newUnit) { // the new unit has been retrieved from the server
+                            if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+                                // swap old unit with its interface in the in-memory model
+                                EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                            }
+                            // swap the new unit interface with the full unit in the in-memory model
+                            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
+                            // show the new unit in the editor
+                            this.showUnitAndErrors(newUnit);
+                        }
+                    });
             } else {
                 // swap the new unit interface with the full unit in the in-memory model
                 EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
@@ -258,36 +275,6 @@ export class EditorCommunication {
                 this.showUnitAndErrors(newUnit);
             }
         });
-    }
-
-    /**
-     * Get the interface of the current unit from the server and swap it for the complete unit
-     * May be called with null value for 'newUnitInterface'. In that case the current Model
-     * does not have an in-memory interface for 'newUnit'.
-     * @param newUnit
-     * @param newUnitInterface
-     * @private
-     */
-    private swapUnits(newUnit: PiNamedElement, newUnitInterface: PiNamedElement) {
-        // the new unit has been retrieved from the server or from file
-        if (!!newUnit && this.isModelNamed() && this.isUnitNamed()) {
-            ServerCommunication.getInstance().loadModelUnitInterface(
-                EditorCommunication.getInstance().currentModel.name,
-                EditorCommunication.getInstance().currentUnit.name,
-                (oldUnitInterface: PiNamedElement) => {
-                        if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
-                            // swap old unit with its interface in the in-memory model
-                            EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
-                        }
-                        if (!!newUnitInterface) {
-                            // swap the new unit interface with the full unit in the in-memory model
-                            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
-                        }
-                        // show the new unit in the editor
-                        this.showUnitAndErrors(newUnit);
-
-            });
-        }
     }
 
     unitFromFile(content: string, metaType: string) {

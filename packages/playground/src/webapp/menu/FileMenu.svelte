@@ -74,7 +74,6 @@
     };
 
     // new model menuitem
-    // TODO make sure the list of modelNames is emptied after the action
     const newModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
@@ -87,7 +86,6 @@
     }
 
     // open model menuitem
-    // TODO make sure the list of modelNames is emptied after the action
     const openModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {

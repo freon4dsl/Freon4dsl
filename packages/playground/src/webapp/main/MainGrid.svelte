@@ -3,7 +3,6 @@
     import ErrorList from "./ErrorList.svelte";
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../WebappConfiguration";
-    import { currentModelName, currentUnitName } from "../WebappStore";
     import StatusBar from "./StatusBar.svelte";
 
     export let orientation = "rows";
