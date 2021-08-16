@@ -151,12 +151,12 @@ model wide Methods:
         let sppt = this.proc.parse(sentence);
         console.info(sppt);
 
-        let asm = this.proc.process(sentence);
-        console.info(typeof asm);
-        console.info(asm);
-
-        let formatted = this.proc.formatAsm(asm)
-        console.info("formatted: " + formatted);
+        // let asm = this.proc.process(sentence);
+        // console.info(typeof asm);
+        // console.info(asm);
+        //
+        // let formatted = this.proc.formatAsm(asm)
+        // console.info("formatted: " + formatted);
     }
 }
 
