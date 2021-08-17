@@ -9,6 +9,7 @@ PiLogger.mute("AliasComponent");
 PiLogger.mute("AUTORUN");
 PiLogger.mute("AFTER_UPDATE");
 PiLogger.mute("SelectOptionList");
+PiLogger.mute("RenderComponent");
 // PiLogger.muteAllLogs()
 
 const app = new App({

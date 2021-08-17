@@ -8,6 +8,7 @@ export let unnamed: string = "<unnamed>";
 
 // info about the language
 export let unitTypes: Writable<string[]> = writable<string[]>([]);
+export let fileExtensions: Writable<string[]> = writable<string[]>([]);
 export let languageName: Writable<string> = writable<string>("");
 
 // info about the model and model unit shown

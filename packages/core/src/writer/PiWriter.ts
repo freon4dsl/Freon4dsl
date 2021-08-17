@@ -25,15 +25,5 @@ export interface PiWriter {
      * @param short
      */
     writeToLines(modelelement: PiElement, startIndent?: number, short?: boolean): string[];
-
-    /**
-     * Writes a string representation of 'modelelement' to the file located at 'filepath'. If the
-     * file is not present it will be created.
-     * May throw an Error if the file cannot be written or created.
-     * @param filepath
-     * @param modelelement
-     * @param startIndent
-     */
-    // TODO writeToFile(filepath: string, modelelement: PiElement, startIndent?: number);
 }
 // end::writer-interface[]

@@ -1,18 +1,20 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError } from "@projectit/core";
+import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError, PiElement } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
-    errorMessage, languageName,
+    errorMessage,
+    fileExtensions,
+    languageName,
     severity,
     severityType,
     showError,
     unitTypes,
     unnamed
 } from "../WebappStore";
-import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
+import { modelErrors } from "../main-ts-files/ModelErrorsStore";
 import { editorEnvironment } from "../WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
@@ -39,6 +41,11 @@ export class EditorCommunication {
         languageName.set(editorEnvironment.languageName);
         // unitTypes are the same for every model in the language
         unitTypes.set(editorEnvironment.unitNames);
+        let tmp: string[] = [];
+        for (const val of editorEnvironment.fileExtensions.values()){
+            tmp.push(val);
+        }
+        fileExtensions.set(tmp);
     }
 
     /* returns true if the model has a name,
@@ -270,6 +277,27 @@ export class EditorCommunication {
         });
     }
 
+    unitFromFile(content: string, metaType: string) {
+        let elem: PiElement = null;
+        elem = editorEnvironment.reader.readFromString(content, metaType);
+        if (elem && this.isModelNamed()) {
+            console.log(`${(elem as PiNamedElement).name}`)
+            // TODO save old currentUnit
+            // TODO swap old unit with its interface in the in-memory model
+            // set elem in editor
+            this.showUnitAndErrors(elem as PiNamedElement);
+        }
+    }
+
+    unitAsText() : string {
+        return editorEnvironment.writer.writeToString(this.currentUnit, 0, false);
+    }
+
+    unitFileExtension() : string {
+        const unitType = this.currentUnit.piLanguageConcept();
+        return editorEnvironment.fileExtensions.get(unitType);
+    }
+
     private showUnitAndErrors(newUnit: PiNamedElement) {
         LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
         editorEnvironment.editor.rootElement = newUnit;
@@ -298,7 +326,7 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
         if (!!this.currentUnit) {
             let list = editorEnvironment.validator.validate(this.currentUnit);
-            modelErrrors.set(list);
+            modelErrors.set(list);
         }
     }
     // END OF: for the communication with the error list
@@ -375,6 +403,5 @@ export class EditorCommunication {
         LOGGER.log("findElement called");
         return undefined;
     }
-
 }
 
