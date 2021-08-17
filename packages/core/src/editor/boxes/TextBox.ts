@@ -7,6 +7,7 @@ import { Box } from "./internal";
 export enum KeyPressAction {
     OK,
     GOTO_NEXT,
+    GOTO_PREVIOUS,
     NOT_OK
 }
 
@@ -42,6 +43,7 @@ export class TextBox extends Box {
     public deleteWhenEmpty1(): boolean {
         return this.deleteWhenEmpty;
     }
+
     // INTERNAL FUNCTIONS
 
     /** @internal

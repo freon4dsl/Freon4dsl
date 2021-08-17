@@ -3,24 +3,27 @@
 <script lang="ts">
     import { autorun } from "mobx";
     import {
-        ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT,
-        ARROW_UP,
-        BACKSPACE,
-        DELETE, ENTER,
+        KEY_BACKSPACE,
+        KEY_DELETE,
+        KEY_ARROW_DOWN,
+        KEY_ARROW_LEFT,
+        KEY_ARROW_RIGHT,
+        KEY_ARROW_UP,
+        KEY_ENTER, KEY_SPACEBAR,
+        KEY_TAB,
         EVENT_LOG,
-        TAB,
         isAliasBox,
         isMetaKey,
         KeyPressAction, PiUtils,
         TextBox,
         PiEditor,
         toPiKey,
-        wait, PiCaret, PiCaretPosition, PiLogger, SPACEBAR, isPrintable
+        PiCaret, PiCaretPosition, PiLogger, isPrintable
     } from "@projectit/core";
-    import { afterUpdate, beforeUpdate, onMount } from "svelte";
+    import { afterUpdate, onMount, tick } from "svelte";
     import { AUTO_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
-    const LOGGER = new PiLogger("TextComponent");//.mute();
+    const LOGGER = new PiLogger("TextComponent");
 
     export let textBox = new TextBox(null, "role:", () => "Editable textbox", (v: string) => {});
     export let editor: PiEditor;
@@ -30,17 +33,17 @@
         // TODO loopt eentje achter tijdens onKeyDown
         return textOnScreen;
     }
-    export const focus = async (): Promise<void> => {
-
-        LOGGER.log("TextComponent focus " + textBox.role);
-        element.focus();
-        // this.startEditing();
-    };
 
     let caretPosition: number = 0;
-    const setFocus = async (): Promise<void> => {
-        LOGGER.log("TextComponent set focus " + textBox.role);
+    export const setFocus =  ():void => {
+        logBox("setFocus in setFocus");
+        if( document.activeElement === element){
+            LOGGER.log("    has focus already");
+            return;
+        }
         element.focus();
+        // setCaretPosition(textBox.caretPosition)
+        // console.log("windows.focus is on " + window.document.activeElement)
         // this.startEditing();
     };
 
@@ -52,7 +55,7 @@
         if (e.altKey) {
             return true;
         }
-        return e.keyCode === ENTER || e.keyCode === TAB;
+        return e.key === KEY_ENTER || e.key === KEY_TAB;
     };
 
     /**
@@ -64,20 +67,20 @@
             return true;
         }
         if (isMetaKey(e)) {
-            if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN || e.keyCode === TAB || e.keyCode === SPACEBAR) {
+            if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_TAB || e.key === KEY_SPACEBAR) {
                 return true;
             }
         }
-        if (e.keyCode === ENTER || e.keyCode === DELETE || e.keyCode === TAB) {
+        if (e.key === KEY_ENTER || e.key === KEY_DELETE || e.key === KEY_TAB) {
             return true;
         }
-        if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN) {
+        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN) {
             return true;
         }
         const caretPosition = getCaretPosition();
-        if (e.keyCode === ARROW_LEFT || e.keyCode === BACKSPACE) {
+        if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
             return caretPosition <= 0;
-        } else if (e.keyCode === ARROW_RIGHT || e.keyCode === DELETE) {
+        } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
             return caretPosition >= textOnScreen.length;
         } else {
             return false;
@@ -85,17 +88,20 @@
     };
 
     onMount( () => {
-        LOGGER.log("TextComponent.onMoiunt for role ["+ textBox.role + "]")
+        LOGGER.log("onMount for role ["+ textBox.role + "]")
         textBox.setFocus = setFocus;
-        // textBox.setCaret = setCaret;
+        textBox.setCaret = setCaret;
         caretPosition = textBox.caretPosition;
     });
 
+    /**
+     * Used to handle non-printing characters
+     * @param event
+     */
     const onKeyDown = async (event: KeyboardEvent) => {
-        LOGGER.log("TextComponent.onKeyDown: "+ event.key + " alt " + event.ctrlKey+  "]");
-        let handled: boolean = false;
+        LOGGER.log("onKeyDown: ["+ event.key + "] alt [" + event.ctrlKey+  "] shift [" + event.shiftKey + "] key [" + event.key +"]");
         // const caretPosition = getCaretPosition();
-        if (event.keyCode === DELETE) {
+        if (event.key === KEY_DELETE) {
             if (textOnScreen === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     await editor.deleteBox(editor.selectedBox);
@@ -106,7 +112,7 @@
             event.stopPropagation();
             return;
         }
-        if (event.keyCode === BACKSPACE) {
+        if (event.key === KEY_BACKSPACE) {
             if (textOnScreen === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     await editor.deleteBox(editor.selectedBox);
@@ -121,30 +127,16 @@
         }
         if (shouldIgnore(event)) {
             event.preventDefault();
-        } else {
-            // E.g. for all printable keys.
-            handled = true;
         }
         const piKey = toPiKey(event);
-        if (!handled && !isMetaKey(event)) {
+        if (isMetaKey(event)) {
             const isKeyboardShortcutForThis = await PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element " + textBox.element);
-                if(event.keyCode === ENTER){
+                if(event.key === KEY_ENTER){
                     LOGGER.log("   ENTER, so propagate");
                     return;
                 }
-                // Try the key on next box, if at the end of this box.
-                // const insertionIndex = getCaretPosition();
-                // if (insertionIndex >= textBox.getText().length) {
-                //     editor.selectNextLeaf();
-                //     EVENT_LOG.log("KeyDownAction NEXT LEAF IS " + editor.selectedBox.role);
-                //     if (isAliasBox(editor.selectedBox)) {
-                //         editor.selectedBox.triggerKeyDownEvent(piKey);
-                //     }
-                //     event.preventDefault();
-                //     event.stopPropagation();
-                // }
             }
         }
     };
@@ -154,14 +146,17 @@
             case PiCaretPosition.RIGHT_MOST:
                 LOGGER.log("setCaretPosition RIGHT");
                 setCaretToMostRight();
+                textBox.caretPosition = textBox.getText().length;
                 break;
             case PiCaretPosition.LEFT_MOST:
                 LOGGER.log("setCaretPosition LEFT");
                 setCaretToMostLeft();
+                textBox.caretPosition = 0;
                 break;
             case PiCaretPosition.INDEX:
                 LOGGER.log("setCaretPosition INDEX");
                 setCaretPosition(caret.index);
+                textBox.caretPosition = caret.index;
                 break;
             case PiCaretPosition.UNSPECIFIED:
                 LOGGER.log("setCaretPosition UNSPECIFIED");
@@ -170,6 +165,7 @@
                 LOGGER.log("setCaretPosition ERROR");
                 break;
         }
+        logBox("setFocus in setCaret")
         element.focus();
     };
 
@@ -185,7 +181,9 @@
     };
 
     const setCaretPosition = (position: number) => {
-        LOGGER.log("TextComponent.setCaretPosition: " + position);
+        logBox("setCaretPosition: " + position);
+        logBox("setFocus in setCaretPosition");
+        // element.focus();
         if (position === -1) {
             return;
         }
@@ -196,9 +194,9 @@
         try {
             if (position > textOnScreen.length) {
                 // TODO Fix the error below
-                console.log("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
-                console.log("TextComponent.setCaretPosition >length: " + position + " > " + textOnScreen.length);
-                // position = this.element.innerText.length;
+                console.error("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
+                console.error("TextComponent.setCaretPosition position: " + position + " length: " + textOnScreen.length);
+                position = this.element.innerText.length;
             }
             clearSelection();
             const range = document.createRange();
@@ -213,7 +211,7 @@
             caretPosition = position;
             textBox.caretPosition = position;
         } catch (e) {
-            console.log("TextComponent.setCaretPosition ERROR: " + e.toString());
+            console.error("TextComponent.setCaretPosition ERROR: " + e.toString());
         }
     };
 
@@ -222,19 +220,31 @@
     };
 
     const onClick = (event: MouseEvent) => {
-        // textBox.caretPosition = getCaretPosition();
+        logBox("onClick before");
+        textBox.caretPosition = getCaretPosition();
+        caretPosition = textBox.caretPosition;
+        // setCaretPosition(caretPosition);
+        logBox("onClick after");
     }
 
+    function logBox(message: string) {
+        LOGGER.log(message + ": box[" + textBox.role + ", " + textBox.caretPosition+ "]");
+    }
+
+    /**
+     * IS triggered for printable keys only,
+     * @param event
+     */
     const onKeyPress = async (event: KeyboardEvent) => {
-        LOGGER.log("TextComponent.onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
-        const insertionIndex = getCaretPosition(); // 0; // TODO getCaretPosition();
+        LOGGER.log("onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
+        const insertionIndex = getCaretPosition();
         // await wait(0);
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
-                LOGGER.log("KeyPressAction.OK");
                 // Not needed in Svelte, because of bind:
                 // textBox.update();
                 // textBox.caretPosition = getCaretPosition() + 1;
+                logBox("KeyPressAction.OK");
                 break;
             case KeyPressAction.NOT_OK:
                 LOGGER.log("KeyPressAction.NOT_OK");
@@ -245,6 +255,16 @@
                 LOGGER.log("KeyPressAction.GOTO_NEXT");
                 editor.selectNextLeaf();
                 LOGGER.log("NEXT LEAF IS " + editor.selectedBox.role);
+                if (isAliasBox(editor.selectedBox)) {
+                    editor.selectedBox.triggerKeyPressEvent(event.key);
+                }
+                event.preventDefault();
+                event.stopPropagation();
+                break;
+            case KeyPressAction.GOTO_PREVIOUS:
+                LOGGER.log("KeyPressAction.GOTO_PREVIOUS");
+                editor.selectPreviousLeaf();
+                LOGGER.log("PREVIOUS LEAF IS " + editor.selectedBox.role);
                 if (isAliasBox(editor.selectedBox)) {
                     editor.selectedBox.triggerKeyPressEvent(event.key);
                 }
@@ -272,9 +292,9 @@
         const value = (e.target as HTMLElement).innerText;
 
         LOGGER.log("onInput `" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
-        // textBox.caretPosition = getCaretPosition();
-        // caretPosition = textBox.caretPosition;
-        // editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+        textBox.caretPosition = getCaretPosition();
+        caretPosition = textBox.caretPosition;
+        editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
             await editor.deleteBox(textBox);
@@ -284,15 +304,21 @@
     };
 
     afterUpdate(  () => {
-        UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] caret [" + textBox.caretPosition + "]");
+        UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
         textBox.update();
-            textBox.setFocus = setFocus;
-            LOGGER.log("textbox is now [" + textBox.getText() + "]")
+        textBox.setFocus = setFocus;
+        textBox.setCaret = setCaret;
+
+        LOGGER.log("after update: textbox with role " + textBox.role + " is now [" + textBox.getText() + "] at " + textBox.caretPosition)
         if( !!editor.selectedBox && !!textBox ) {
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+                LOGGER.log("AfterUpdate is selected " + element);
                 if(!!element) {
-                    focus();
+                    setFocus();
+                    textBox.caretPosition = getCaretPosition();
+                    logBox("AfterUpdate for selection");
+                    // caretPosition = textBox.caretPosition;
+                    // setCaretPosition(textBox.caretPosition)
                 }
             }
         }
@@ -300,31 +326,61 @@
 
     const getCaretPosition = (): number => {
         // TODO This causes an extra afterUpdate in Svelte, don't know why !
-        return window.getSelection().focusOffset;
+        // return window.getSelection().focusOffset;
+        return window.getSelection().getRangeAt(0).startOffset;
         // return 0
     };
 
     autorun( () => {
-        LOGGER.log("AUTORUN role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
+        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
         text = textOnScreen;
         placeholder = textBox.placeHolder
-        LOGGER.log("==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
+        AUTO_LOGGER.log("TextComponent ==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
+        // if( !!editor.selectedBox && !!textBox ) {
+        //     if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
+        //         AUTO_LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+        //         if(!!element) {
+        //             setFocus();
+        //         }
+        //     }
+        // }
+    });
+
+    const onFocus = (e: FocusEvent) => {
+        logBox("onFocus for box");
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    const onBlurHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus Blur for box " + textBox.role);
+        e.preventDefault();
+        e.stopPropagation();
         if( !!editor.selectedBox && !!textBox ) {
             if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
+                LOGGER.log("onFocus Blur: attempting to set focus anyway :-) " + element);
                 if(!!element) {
-                    focus();
+                    setFocus();
+                } else {
+                    LOGGER.log("onFocus Blur: attempting to set focus on null element :-) ");
                 }
+            } else {
+                LOGGER.log("onFocus Blur: textbox is not selected selected role " + editor.selectedBox.role + " box role " + textBox.role + "+ sel id " + editor.selectedBox.element.piId() + " box id " + textBox.element.piId());
             }
+        } else {
+            LOGGER.log("onFocus Blur: something is null selectedBox " + editor.selectedBox + " textBox " + textBox);
         }
-    });
+
+    }
+
 </script>
 
-<div    style="{textBox.style}"
-        class={"text"}
+<div    class={"text"}
+        tabindex="0"
         data-placeholdertext={placeholder}
         on:keypress={onKeyPress}
         on:keydown={onKeyDown}
+        on:focus={onFocus}
+        on:blur={onBlurHandler}
         on:click={onClick}
         on:input={onInput}
         contenteditable="true"

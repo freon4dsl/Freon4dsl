@@ -17,8 +17,6 @@
     "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "copy-scss": "cp src/editor/components/styles/*.scss ./dist/editor/components/styles",
-    "copy-fonts": "cp -r src/editor/components/styles/fonts ./dist/editor/components/styles",
     "dummy": "echo DUMMY",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",

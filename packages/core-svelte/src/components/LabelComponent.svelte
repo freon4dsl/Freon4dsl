@@ -8,7 +8,7 @@
     export let label = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("LabelComponent"); // .mute();
+    const LOGGER = new PiLogger("LabelComponent");
 
     onDestroy(() => {
         LOGGER.log("DESTROY LABEL  COMPONENT ["+ text + "]")
@@ -16,9 +16,9 @@
 
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
-        LOGGER.log("LabelComponent.set focus on " + element);
+        LOGGER.log("LabelComponent.setFocus on " + element);
         if (element !== null) {
-            element.focus();
+            // element.focus();
         }
     };
 
@@ -31,10 +31,28 @@
         text = label.getLabel();
         AUTO_LOGGER.log("LabelComponent ["+ text + "]")
     });
+
+    const onFocusHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus for box " + label.role);
+        if(!!e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+    const onBlurHandler = (e: FocusEvent) => {
+        LOGGER.log("onFocus Blur for box " + label.role);
+        if(!!e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+
 </script>
 
 <div class="label"
      tabIndex={0}
+     on:focus={onFocusHandler}
+     on:blur={onBlurHandler}
      bind:this={element}
 >
     {text}

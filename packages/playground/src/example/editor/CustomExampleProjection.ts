@@ -38,7 +38,7 @@ export class CustomExampleProjection implements PiProjection {
 
     getBox(element: PiElement): Box {
         // Add any handmade projections of your own before next statement
-        if( element instanceof NumberLiteralExpression){
+        if (element instanceof NumberLiteralExpression) {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
         if (element instanceof SumExpression) {
@@ -123,6 +123,8 @@ function isNumber(currentText: string, key: string, index: number): KeyPressActi
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
             return KeyPressAction.GOTO_NEXT;
+        } else if (index === 0) {
+            return KeyPressAction.GOTO_PREVIOUS;
         } else {
             return KeyPressAction.NOT_OK;
         }

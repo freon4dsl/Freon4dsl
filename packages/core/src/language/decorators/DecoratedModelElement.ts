@@ -1,5 +1,6 @@
 import { observable } from "mobx";
-import { PiContainerDescriptor, PiElement } from "../PiModel";
+import { PiContainerDescriptor } from "../PiContainerDescriptor";
+import { PiElement } from "../PiElement";
 import { model } from "./MobxModelDecorators";
 
 /**
