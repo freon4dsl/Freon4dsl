@@ -59,7 +59,6 @@
 		$newUnitDialogVisible = false;
 	}
 
-	// TODO dialog must also respond to enter key: submit
 	const handleSubmit = () => {
 		if ($unitNames.includes(newName)) {
 			localErrorMessage = "Unit with this name already exists";

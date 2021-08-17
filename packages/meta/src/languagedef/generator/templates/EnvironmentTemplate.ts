@@ -4,7 +4,6 @@ import {
     TYPER_GEN_FOLDER,
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
-    EDITOR_FOLDER,
     EDITOR_GEN_FOLDER, LANGUAGE_GEN_FOLDER, STDLIB_GEN_FOLDER, WRITER_GEN_FOLDER, READER_GEN_FOLDER
 } from "../../../utils/";
 import { PiLanguage } from "../../metalanguage";
@@ -94,6 +93,9 @@ export class EnvironmentTemplate {
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
             languageName: string = "${language.name}";
             unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
+            fileExtensions: Map<string, string> = new Map([
+                ${language.modelConcept.allParts().map(part => `["${part.type.referred.name}", ".${part.type.referred.name.substring(0,3).toLowerCase()}"]`)}
+            ]);
         }`;
     }
 }

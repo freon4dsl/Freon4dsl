@@ -106,25 +106,6 @@ export class WriterTemplate {
                 this.unparse(modelelement, short);
                 return this.output;
             }
-            
-            /**
-             * Writes a string representation of 'modelelement' to the file located at 'filepath'. If the
-             * file is not present it will be created.
-             * May throw an Error if the file cannot be written or created.
-             * @param filepath
-             * @param modelelement
-             * @param startIndent
-             */
-             /*
-            public writeToFile(filepath: string, modelelement: ${allLangConcepts}, startIndent?: number) {
-                const result = this.writeToString(modelelement, startIndent, false);
-                if (fs.existsSync(filepath)) {
-                    // TODO see if we should handle this differently
-                    console.log(this, "model unit writer: file " + filepath + " already exists, overwriting it.");
-                }
-                fs.writeFileSync(filepath, result);
-            }
-            */
         
             private unparse(modelelement: ${allLangConcepts}, short: boolean) {
                 ${sortClasses(language.concepts).map(concept => `

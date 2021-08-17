@@ -36,11 +36,10 @@
 		disabled: false,
 	};
 
-	// TODO dialog must also respond to enter key: submit
-
 	function resetVariables() {
 		modelName = "";
 		localErrorMessage = "";
+		$modelNames = [];
 		$newModelDialogVisible = false;
 	}
 

@@ -31,16 +31,17 @@
 		color: "var(--color)"
 	};
 	const handleCancel = () => {
-		console.log("Cancel called, model selected: " + internalSelected);
-		$openModelDialogVisible = false;
+		// console.log("Cancel called, model selected: " + internalSelected);
+		$modelNames = [];
+		resetVariables();
 	}
 
 	const handleSubmit = () => {
 		if (internalSelected?.length > 0) {
 			EditorCommunication.getInstance().openModel(internalSelected);
 		}
-		console.log("Submit called, model selected: " + $currentModelName);
-		$openModelDialogVisible = false;
+		// console.log("Submit called, model selected: " + $currentModelName);
+		resetVariables();
 	}
 
 	const handleKeydown = (event) => {
@@ -51,6 +52,12 @@
 			}
 		}
 	}
+
+	function resetVariables() {
+		$modelNames = [];
+		$openModelDialogVisible = false;
+	}
+
 </script>
 
 <svelte:window on:keydown={handleKeydown}/>
