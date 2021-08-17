@@ -257,8 +257,8 @@
         {title: 'Open Unit', action: openUnit, id: 4},
         {title: 'Save Current Unit', action: saveUnit, id: 5},
         {title: 'Delete Current Unit', action: deleteUnit, id: 6},
-        {title: 'Import Unit(s)...', action: importUnit, id: 7},
-        {title: 'Export Current Unit...', action: exportUnit, id: 8},
+        {title: '(Experimental) Import Unit(s)...', action: importUnit, id: 7},
+        {title: '(Experimental) Export Current Unit...', action: exportUnit, id: 8},
     ];
 
     // the styling of the menu activator
