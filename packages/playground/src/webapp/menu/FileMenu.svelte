@@ -48,7 +48,7 @@
         showError,
         unitNames
     } from "../WebappStore";
-    import { metaTypeForExtension, saveUnitInternal } from "../menu-ts-files/MenuUtils";
+    import { metaTypeForExtension } from "../menu-ts-files/MenuUtils";
 
     // variables for the file import
     let file_selector;
@@ -99,7 +99,7 @@
             // list may be empty => this is the first model to be stored
             $modelNames = names;
         });
-        saveUnitInternal();
+        EditorCommunication.getInstance().saveCurrentUnit();
     }
 
     // import model menuitem
