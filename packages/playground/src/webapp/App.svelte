@@ -22,11 +22,44 @@
 <UserMessage />
 
 <!-- the layout of the components that are rendered for this app -->
-<AppBar/>
-<div class="main-window">
-	<MainGrid/>
-</div>
-<Footer />
+<!--<AppBar/>-->
+<!--<div class="main-window">-->
+<!--	<MainGrid/>-->
+<!--</div>-->
+<!--<Footer />-->
+
+<ThemeContext>
+	<main class="main-window">
+		<AppBar/>
+
+		<div class="splitpane-container" >
+			<SplitPane type = 'vertical' pos="80">
+				<section class="splitpane-section" slot=a>
+					<div class="splitpane-container" >
+
+						<SplitPane type = 'horizontal' pos="20">
+							<section class="splitpane-section" slot=a>
+								<Navigator/>
+							</section>
+
+							<section class="splitpane-section" slot=b>
+								<div>
+									<EditorGrid/>
+								</div>
+							</section>
+						</SplitPane>
+					</div>
+				</section>
+
+				<section class="splitpane-section" slot=b>
+					<ErrorList/>
+				</section>
+			</SplitPane>
+
+		</div>
+		<Footer />
+	</main>
+</ThemeContext>
 
 <script lang="ts">
 	import { onMount } from "svelte";
@@ -49,6 +82,14 @@
 	import { miniWindow } from "./WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";
 	import { unnamed } from "./WebappStore";
+	import ThemeContext from "./theming/ThemeContext.svelte";
+	import SplitPane from "./main/SplitPane.svelte";
+	import Navigator from "./main/Navigator.svelte";
+	import ErrorList from "./main/ErrorList.svelte";
+	import StatusBar from "./main/StatusBar.svelte";
+	import { ProjectItComponent } from "@projectit/core-svelte";
+	import { editorEnvironment } from "./WebappConfiguration";
+	import EditorGrid from "./main/EditorGrid.svelte";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
 
@@ -94,5 +135,37 @@
 		width: 100%;
 		height: calc(100% - var(--pi-header-height) - var(--pi-footer-height) - 8px);
 		box-sizing: border-box;
+	}
+	.splitpane-container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+	}
+	.splitpane-section {
+			position: relative;
+			height: 100%;
+			box-sizing: border-box;
+	}
+	/* 	.splitpane-container :global(section) > :global(*):first-child {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 42px;
+			box-sizing: border-box;
+	} */
+	/* 	.splitpane-container :global(section) > :global(*):last-child {
+			width: 100%;
+			height: 100%;
+	} */
+	:global(html) {
+			background-color: var(--theme-background);
+			color: var(--theme-text);
+	}
+
+	main {
+			font-family: sans-serif;
+			text-align: center;
+			color: var(--theme-achtergrond);
 	}
 </style>

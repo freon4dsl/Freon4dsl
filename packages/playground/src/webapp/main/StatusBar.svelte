@@ -1,16 +1,11 @@
-<!-- The AppBar is always shown at the top of the viewport -->
-<!-- It contains the menus, the name of the language, and ... -->
-
 <div class="status-bar">
-    <div>
+    <div class="vl"></div>
+    unit <i>{$currentUnitName}</i> of model <i>{$currentModelName}</i>
+    {#if ($modelErrors.length > 0)}
         <div class="vl"></div>
-            unit <i>{$currentUnitName}</i> of model <i>{$currentModelName}</i>
-            {#if ($modelErrors.length > 0)}
-                <div class="vl"></div>
-                number of errors: {$modelErrors.length}
-            {/if}
-        <div class="vl"></div>
-    </div>
+        number of errors: {$modelErrors.length}
+    {/if}
+    <div class="vl"></div>
 </div>
 
 <script lang="ts">
@@ -20,26 +15,19 @@
 
 <style>
     .status-bar {
-        display: flex;
-        align-items: center;
-        height: var(--pi-header-height);
-        color: var(--pi-darkblue);
-        background: var(--pi-lightblue);
+        position: relative;
+        height: var(--pi-footer-height);
+        width: 100%;
+        color: var(--color);
+        background: var(--inverse-color);
         font-size: var(--button-font-size);
-        line-height: 1;
-        min-width: inherit;
-        padding: 0 4px 0 6px;
-        position: fixed;
-        left: 8px;
-        bottom: calc(var(--pi-footer-height) + 8px);
         border: var(--pi-darkblue) solid 1px;
-        right: 6px;
-        z-index: 20;
     }
     .vl {
         border-left: 1px solid var(--pi-darkblue);
         height: var(--pi-header-height);
         display:inline;
         margin: 6px;
+        position: relative;
     }
 </style>

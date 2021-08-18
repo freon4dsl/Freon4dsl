@@ -26,6 +26,7 @@
 	<Button icon on:click={() => setTheme($theme === 'dark' ? 'light' : 'dark')}>
 		<Icon style="color:var(--inverse-color)"> <svelte:component this={invertColors} /> </Icon>
 	</Button>
+	<ThemeToggle />
 
 	<Button icon color="inherit"
 			on:click={() => {$rightPanelVisible = true}}
@@ -51,34 +52,35 @@
 </div>
 
 <script lang="ts">
-	import {onMount} from 'svelte';
-	import {Button, Icon} from 'svelte-mui';
+	import { onMount } from "svelte";
+	import { Button, Icon } from "svelte-mui";
 
-	import projectit_logo from '../assets/icons/svg/projectit-logo.svg';
-	import question_mark from '../assets/icons/svg/help_24px.svg';
-	import menu from '../assets/icons/svg/menu_black_24dp.svg';
-	import invertColors from '../assets/icons/svg/invert_colors.svg';
-	import {theme, darkTheme, miniWindow, leftPanelVisible, rightPanelVisible} from '../WebappStore';
+	import projectit_logo from "../assets/icons/svg/projectit-logo.svg";
+	import question_mark from "../assets/icons/svg/help_24px.svg";
+	import menu from "../assets/icons/svg/menu_black_24dp.svg";
+	import invertColors from "../assets/icons/svg/invert_colors.svg";
+	import { theme, darkTheme, miniWindow, leftPanelVisible, rightPanelVisible } from "../WebappStore";
 	import { languageName } from "../WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
+	import ThemeToggle from "../theming/ThemeToggle.svelte";
 
 	onMount(async () => {
 		try {
-			let mql = window.matchMedia('(prefers-color-scheme: dark)');
-			mql.matches && setTheme('dark');
+			let mql = window.matchMedia("(prefers-color-scheme: dark)");
+			mql.matches && setTheme("dark");
 		} catch (err) {
 		} // eslint-disable-line
 	});
 
 	function setTheme(name) {
-		name = name.replace(/\s/g, '').toLowerCase();
+		name = name.replace(/\s/g, "").toLowerCase();
 
 		$theme = name;
-		$theme === 'dark'
+		$theme === "dark"
 				? Object.keys(darkTheme).map((key) => {
 					document.documentElement.style.setProperty(key, darkTheme[key]);
 				})
-				: document.documentElement.removeAttribute('style');
+				: document.documentElement.removeAttribute("style");
 	}
 </script>
 

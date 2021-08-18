@@ -1,42 +1,50 @@
 <script>
     import SplitPane from "./SplitPane.svelte";
     import ErrorList from "./ErrorList.svelte";
-    import { ProjectItComponent } from "@projectit/core-svelte";
-    import { editorEnvironment } from "../WebappConfiguration";
-    import StatusBar from "./StatusBar.svelte";
+    import EditorGrid from "./EditorGrid.svelte";
 
-    export let orientation = "rows";
-    export let fixed = false;
-    export let fixedPos = 80;
-
+    let orientation = "rows";
+    let fixed = false;
+    let fixedPos = 80;
 </script>
 
 <style>
-    .grid {
+    .maingrid {
         position: relative;
         width: 100%;
         height: 100%;
     }
-    .grid :global(section) {
+    .maingrid .section {
         position: relative;
         height: 100%;
         box-sizing: border-box;
     }
+    /*.container :global(section) > :global(*):first-child {*/
+    /*    position: absolute;*/
+    /*    top: 0;*/
+    /*    left: 0;*/
+    /*    width: 100%;*/
+    /*    height: 42px;*/
+    /*    box-sizing: border-box;*/
+    /*}*/
+    /*.container :global(section) > :global(*):last-child {*/
+    /*    width: 100%;*/
+    /*    height: 100%;*/
+    /*}*/
 </style>
 
-<!--<div>showing unit {$currentUnitName} of model {$currentModelName}</div>-->
-<div class="grid" class:orientation>
+<div class="maingrid">
     <SplitPane
-            type="vertical"
+            type="{orientation === 'rows' ? 'vertical' : 'horizontal'}"
             pos="{fixed ? fixedPos : orientation === 'rows' ? 80 : 80}"
+            {fixed}
     >
-        <section slot=a>
-            <ProjectItComponent editor={editorEnvironment.editor}/>
+        <section class="section" slot=a>
+            <EditorGrid/>
         </section>
 
-        <section slot=b>
+        <section class="section" slot=b>
             <ErrorList/>
         </section>
     </SplitPane>
-    <StatusBar/>
 </div>
