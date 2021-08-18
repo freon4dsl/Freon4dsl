@@ -2,7 +2,7 @@
     {$currentModelName}
     <ul class="list">
         {#each $unitTypes as name}
-            <li class="type-name">unit type <i>{name}</i>
+            <li class="type-name">Unit Type <i>{name}</i>
                 <ul class="bullet-list">
                     {#each $units as unit}
                         <Menu origin="top left">
@@ -95,9 +95,10 @@
         padding-left: 18px;
     }
     .type-name {
-        color: red;
+        color: var(--theme-colors-accent);
     }
     .item-name {
         display: block;
+        color: var(--theme-colors-color);
     }
 </style>

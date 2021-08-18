@@ -94,45 +94,7 @@
     // save unit menuitem
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
-        // get list of models from server
-        ServerCommunication.getInstance().loadModelList((names: string[]) => {
-            // list may be empty => this is the first model to be stored
-            $modelNames = names;
-        });
         EditorCommunication.getInstance().saveCurrentUnit();
-    }
-
-    // import model menuitem
-    const exportUnit = () => {
-        // create a text string from the current unit
-        let text: string = EditorCommunication.getInstance().unitAsText();
-        // get the default file name from the current unit and its unit meta type
-        const fileExtension: string = EditorCommunication.getInstance().unitFileExtension();
-        let defaultFileName: string = $currentUnitName + fileExtension;
-
-        // create a HTML element that contains the text string
-        let textFile = null;
-        var data = new Blob([text], {type: 'text/plain'});
-
-        // If we are replacing a previously generated file we need to
-        // manually revoke the object URL to avoid memory leaks.
-        if (textFile !== null) {
-            URL.revokeObjectURL(textFile);
-        }
-        textFile = URL.createObjectURL(data);
-
-        // create a link for the download
-        var link = document.createElement('a');
-        link.setAttribute('download', defaultFileName);
-        link.href = textFile;
-        document.body.appendChild(link);
-
-        // wait for the link to be added to the document
-        window.requestAnimationFrame(function () {
-            var event = new MouseEvent('click');
-            link.dispatchEvent(event);
-            document.body.removeChild(link);
-        });
     }
 
     // import model unit menuitem
@@ -192,7 +154,6 @@
         {title: 'New Unit', action: newUnit, id: 3},
         {title: 'Save Current Unit', action: saveUnit, id: 5},
         {title: '(Experimental) Import Unit(s)...', action: importUnit, id: 7},
-        {title: '(Experimental) Export Current Unit...', action: exportUnit, id: 8},
     ];
 
     // the styling of the menu activator
