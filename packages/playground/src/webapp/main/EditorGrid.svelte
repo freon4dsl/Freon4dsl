@@ -2,7 +2,7 @@
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../WebappConfiguration";
     import StatusBar from "./StatusBar.svelte";
-    import { initializing } from "../WebappStore";
+    import { noUnitAvailable } from "../WebappStore";
 </script>
 
 <style>
@@ -17,9 +17,9 @@
 </style>
 
 <div class="editor-grid">
-     {#if ($initializing)}
+     {#if ($noUnitAvailable)}
         <div class="message">
-            Please, select Model and Unit to be shown.
+            Please, select, create, or import Unit to be shown.
         </div>
     {:else}
         <StatusBar/>

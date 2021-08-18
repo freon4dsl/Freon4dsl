@@ -1,14 +1,20 @@
 <div class="navigator">
-    Model {$currentModelName}
+    {$currentModelName}
     <ul class="list">
         {#each $unitTypes as name}
-            <li class="item-name">units of type <i>{name}:</i></li>
+            <li class="item-name">unit type <i>{name}</i>
+                <ul class="bullet-list">
+                    {#each $units as unit}
+                        <li class="item-name"><i>{unit.name}</i></li>
+                    {/each}
+                </ul>
+            </li>
         {/each}
     </ul>
 </div>
 
 <script>
-    import { unitTypes } from "../WebappStore";
+    import { unitTypes, units } from "../WebappStore";
     import { currentModelName } from "../WebappStore";
 </script>
 
@@ -20,6 +26,10 @@
     }
     .list {
         list-style-type: none;
-        padding-left: 16px;
+        padding-left: 12px;
+    }
+    .bullet-list {
+        list-style-type: square;
+        padding-left: 18px;
     }
 </style>

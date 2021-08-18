@@ -28,11 +28,11 @@
 
 <script lang="ts">
 	import {Button, Radio, Dialog, Textfield} from 'svelte-mui';
-	import { currentModelName, initializing, modelNames, openModelDialogVisible } from "../WebappStore";
+	import { currentModelName, noUnitAvailable, modelNames, openModelDialogVisible, units } from "../WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
 
 	let modal: boolean = true; // TODO from FileMenu modal must be set to false
-	let internalSelected: string = $currentModelName;
+	let internalSelected: string = "";
 	let newName: string = "";
 	let localErrorMessage: string = "";
 
@@ -54,20 +54,21 @@
 	}
 
 	const handleSubmit = () => {
-		if (internalSelected?.length > 0) {
-			EditorCommunication.getInstance().openModel(internalSelected);
+		let comm = EditorCommunication.getInstance();
+		if (newNameOk()) {
+			comm.newModel(newName);
 			resetVariables();
-		} else {
-			if (newNameOk()) {
-				EditorCommunication.getInstance().newModel(newName);
-				resetVariables();
-			}
+		} else if (internalSelected?.length > 0) {
+			comm.openModel(internalSelected);
+			resetVariables();
 		}
 	}
 
 	const handleKeydown = (event) => {
 		switch (event.keyCode) {
 			case 13: { // Enter key
+				event.stopPropagation();
+				event.preventDefault();
 				handleSubmit();
 				break;
 			}
@@ -77,14 +78,11 @@
 	function newNameOk(): boolean {
 		if (newName.length > 0) {
 			if ($modelNames.includes(newName)) {
-				console.log("existing name")
 				localErrorMessage = "Model with this name already exists";
 			} else if (!newName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
-				console.log("error kind of name")
 				// TODO this message is too long, must use wrap
 				localErrorMessage = "Name may contain only characters and numbers, and must start with a character.";
-			}
-			else {
+			} else {
 				return true;
 			}
 		}
@@ -95,8 +93,8 @@
 		$modelNames = [];
 		$openModelDialogVisible = false;
 		newName = "";
+		internalSelected = "";
 		localErrorMessage = "";
-		$initializing = false;
 	}
 
 </script>

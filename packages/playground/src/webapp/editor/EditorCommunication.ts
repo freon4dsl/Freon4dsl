@@ -6,11 +6,11 @@ import {
     currentModelName,
     currentUnitName,
     errorMessage,
-    fileExtensions,
+    fileExtensions, noUnitAvailable,
     languageName,
     severity,
     severityType,
-    showError,
+    showError, units,
     unitTypes
 } from "../WebappStore";
 import { modelErrors } from "../main-ts-files/ModelErrorsStore";
@@ -20,7 +20,7 @@ const LOGGER = new PiLogger("EditorCommunication"); //.mute();
 
 export class EditorCommunication {
     currentUnit: PiNamedElement = null;
-    currentModel: PiModel = null;
+    public currentModel: PiModel = null;
     hasChanges: boolean = false; // TODO get the value from the editor
     private static instance: EditorCommunication = null;
     
@@ -32,11 +32,9 @@ export class EditorCommunication {
     }
 
     /**
-     * fills the WebappStore with initial values
+     * fills the WebappStore with initial values that describe the language
      */
     static initialize(): void {
-        // currentModelName.set(unnamed);
-        // currentUnitName.set(unnamed);
         languageName.set(editorEnvironment.languageName);
         // unitTypes are the same for every model in the language
         unitTypes.set(editorEnvironment.unitNames);
@@ -105,16 +103,11 @@ export class EditorCommunication {
     // used from the menubar and as initialization
     newModel(modelName: string, unitName?: string) {
         LOGGER.log("new model called: " + modelName);
-        if (!unitName) {
-            // TODO show message in editor view
-        } else {
-            this.currentModel = editorEnvironment.newModel(modelName, unitName);
-        }
+        // reset all visible information on the model and unit
+        this.resetGlobalVariables();
+        // create a new model
+        this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(this.currentModel.name);
-        this.currentUnit = this.findFirstUnit();
-        currentUnitName.set(this.currentUnit.name);
-        this.hasChanges = false;
-        this.showUnitAndErrors(this.currentUnit);
     }
 
     newUnit(newName: string, unitType: string) {
@@ -183,27 +176,16 @@ export class EditorCommunication {
             });
             // get rid of old model unit from memory
             this.currentModel.removeUnit(this.currentUnit);
-            // find a new unit to show
-            let newUnit = this.findFirstUnit();
-            // show new unit in the editor and error list
-            this.showUnitAndErrors(newUnit);
+            noUnitAvailable.set(true);
         } else {
             LOGGER.log("No current model unit");
         }
     }
 
-    private findFirstUnit()  {
-        let newUnit = this.currentModel.getUnits()[0];
-        // if (!newUnit) {
-        //     this.currentModel.newUnit(get(unitTypes)[0]);
-        //     newUnit = this.currentModel.getUnits()[0];
-        //     newUnit.name = unnamed;
-        // }
-        return newUnit;
-    }
-
     async openModel(modelName: string) {
         LOGGER.log("EditorCommunication.openmodel("+ modelName + ")");
+        this.resetGlobalVariables();
+
         // TODO this method should take care of storing any changes in the previous model
         // create new model instance in memory and set its name
         let model: PiModel = editorEnvironment.newModel(modelName);
@@ -211,19 +193,14 @@ export class EditorCommunication {
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
         ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
-            if (!unitNames || unitNames.length == 0) {
-                // set the defaults, no units are stored for this model
-                this.currentUnit = this.findFirstUnit();
-                currentUnitName.set(this.currentUnit.name);
-                EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
-            } else {
+            if (unitNames && unitNames.length > 0) {
                 // load the first unit completely and show it
                 // load all others units as interfaces
                 let first: boolean = true;
                 for (const unitName of unitNames) {
                     if (first) {
                         ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
-                            model.addUnit(unit);
+                            this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
                             currentUnitName.set(this.currentUnit.name);
                             EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
@@ -231,12 +208,20 @@ export class EditorCommunication {
                         first = false;
                     } else {
                         ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
-                            model.addUnit(unit);
+                            this.currentModel.addUnit(unit);
+                            // TODO find btter place for this next statement
+                            units.set(this.currentModel.getUnits());
                         });
                     }
                 }
             }
         });
+    }
+
+    private resetGlobalVariables() {
+        noUnitAvailable.set(true);
+        units.set([]);
+        modelErrors.set([]);
     }
 
     async openModelUnit(newUnitName: string) {
@@ -299,14 +284,16 @@ export class EditorCommunication {
 
     private showUnitAndErrors(newUnit: PiNamedElement) {
         LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
-        editorEnvironment.editor.rootElement = newUnit;
-        EditorCommunication.getInstance().currentUnit = newUnit;
-        currentUnitName.set(newUnit.name);
         if (!!newUnit) {
-            EditorCommunication.getInstance().hasChanges = true;
-            EditorCommunication.getInstance().getErrors();
+            noUnitAvailable.set(false);
+            editorEnvironment.editor.rootElement = newUnit;
+            this.currentUnit = newUnit;
+            currentUnitName.set(newUnit.name);
+            units.set(this.currentModel.getUnits());
+            this.hasChanges = true;
+            this.getErrors();
         } else {
-            EditorCommunication.getInstance().hasChanges = false;
+            this.hasChanges = false;
         }
     }
 
@@ -382,7 +369,7 @@ export class EditorCommunication {
     validate() {
         // TODO implement validate()
         LOGGER.log("validate called");
-        EditorCommunication.getInstance().getErrors();
+        this.getErrors();
     }
 
     replace() {

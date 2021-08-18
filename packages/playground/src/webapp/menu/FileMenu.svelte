@@ -42,8 +42,6 @@
         fileExtensions,
         leftPanelVisible,
         modelNames,
-        nameModelDialogVisible,
-        newModelDialogVisible,
         newUnitDialogVisible,
         openModelDialogVisible,
         openUnitDialogVisible,
@@ -74,29 +72,14 @@
     };
 
     // new model menuitem
-    const newModel = () => {
-        // get list of models from server
-        ServerCommunication.getInstance().loadModelList((names: string[]) => {
-            // names list may be empty => this is the first model to be stored
-            if (!names || names.length == 0) {
-                $modelNames = names;
-            }
-            $newModelDialogVisible = true;
-        });
-    }
-
-    // open model menuitem
-    const openModel = () => {
+    const changeModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
             // if list not empty, show dialog
             if (names.length > 0) {
                 $modelNames = names;
-                $openModelDialogVisible = true;
-            } else {
-                // if list is empty show error message
-                setErrorMessage("No models found on the server", severityType.error);
             }
+            $openModelDialogVisible = true;
         });
     }
 
@@ -139,7 +122,7 @@
             ServerCommunication.getInstance().loadModelList((names: string[]) => {
                 // list may be empty => this is the first model to be stored
                 $modelNames = names;
-                $nameModelDialogVisible = true;
+                // $nameModelDialogVisible = true;
             });
         }
         saveUnitInternal();
@@ -197,7 +180,7 @@
             ServerCommunication.getInstance().loadModelList((names: string[]) => {
                 // list may be empty => this is the first model to be stored
                 $modelNames = names;
-                $nameModelDialogVisible = true;
+                // $nameModelDialogVisible = true;
             });
         } else {
             // open the file browse dialog
@@ -251,8 +234,7 @@
     // the content of this menu
     let activatorTitle: string = "File";
     let menuItems: MenuItem[] = [
-        {title: "New Model", action: newModel, id: 1},
-        {title: 'Open Model', action: openModel, id: 2},
+        {title: "New or Open Model", action: changeModel, id: 1},
         {title: 'New Unit', action: newUnit, id: 3},
         {title: 'Open Unit', action: openUnit, id: 4},
         {title: 'Save Current Unit', action: saveUnit, id: 5},

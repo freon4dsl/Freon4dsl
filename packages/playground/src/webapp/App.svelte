@@ -11,9 +11,7 @@
 <RightPanel />
 
 <!-- dialogs and the error message snackbar -->
-<NewModelDialog />
 <OpenModelDialog />
-<NameModelDialog />
 <NewUnitDialog />
 <OpenUnitDialog />
 <SaveUnitDialog />
@@ -64,13 +62,11 @@
 	import UserMessage from "./side-elements/UserMessage.svelte";
 	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
 	import OpenUnitDialog from "./menu/OpenUnitDialog.svelte";
-	import NewModelDialog from "./menu/NewModelDialog.svelte";
 	import NewUnitDialog from "./menu/NewUnitDialog.svelte";
 	import SaveUnitDialog from "./menu/SaveUnitDialog.svelte";
-	import NameModelDialog from "./menu/NameModelDialog.svelte";
 	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
 
-	import { initializing, miniWindow, modelNames, openModelDialogVisible } from "./WebappStore";
+	import { miniWindow, modelNames, openModelDialogVisible } from "./WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";
 	import ThemeContext from "./theming/ThemeContext.svelte";
 	import SplitPane from "./main/SplitPane.svelte";
