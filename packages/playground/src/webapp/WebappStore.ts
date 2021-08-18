@@ -20,6 +20,7 @@ export let currentUnitName: Writable<string> = writable<string>('');
 export let modelNames: Writable<string[]> = writable<string[]>([]);
 export let unitNames: Writable<string[]> = writable<string[]>([]);
 export let units: Writable<PiNamedElement[]> = writable<PiNamedElement[]>([]);
+export let toBeDeleted: Writable<PiNamedElement> = writable<PiNamedElement>(null);
 
 // info about the error in the working of the webapp that needs to be shown to the user
 // this is shown in a snackbar on top of the page, and should not be confused
@@ -47,7 +48,6 @@ export let rightPanelVisible: Writable<boolean> = writable<boolean>(false);
 
 export let openModelDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let newUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
-export let openUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let saveUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 

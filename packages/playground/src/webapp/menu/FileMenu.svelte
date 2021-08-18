@@ -37,14 +37,12 @@
     import {
         currentModelName,
         currentUnitName,
-        deleteUnitDialogVisible,
         errorMessage,
         fileExtensions,
         leftPanelVisible,
         modelNames,
         newUnitDialogVisible,
         openModelDialogVisible,
-        openUnitDialogVisible,
         severity,
         severityType,
         showError,
@@ -97,21 +95,6 @@
         });
     }
 
-    // open unit menuitem
-    const openUnit = () => {
-        // get list of units from server
-        ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
-            // if list not empty, show dialog
-            if (names.length > 0) {
-                $unitNames = names;
-                $openUnitDialogVisible = true;
-            } else {
-                // if list is empty show error message
-                setErrorMessage("No units for " + $currentModelName + " found on the server", severityType.error);
-            }
-        });
-    }
-
     // save unit menuitem
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
@@ -126,16 +109,6 @@
             });
         }
         saveUnitInternal();
-    }
-
-    // delete unit menuitem
-    const deleteUnit = () => {
-        if (EditorCommunication.getInstance().isModelNamed() && EditorCommunication.getInstance().isUnitNamed()) {
-            $deleteUnitDialogVisible = true;
-        } else {
-            // if list is empty show error message
-            setErrorMessage("Cannot delete an unnamed unit or model", severityType.error);
-        }
     }
 
     // import model menuitem
@@ -236,9 +209,7 @@
     let menuItems: MenuItem[] = [
         {title: "New or Open Model", action: changeModel, id: 1},
         {title: 'New Unit', action: newUnit, id: 3},
-        {title: 'Open Unit', action: openUnit, id: 4},
         {title: 'Save Current Unit', action: saveUnit, id: 5},
-        {title: 'Delete Current Unit', action: deleteUnit, id: 6},
         {title: '(Experimental) Import Unit(s)...', action: importUnit, id: 7},
         {title: '(Experimental) Export Current Unit...', action: exportUnit, id: 8},
     ];

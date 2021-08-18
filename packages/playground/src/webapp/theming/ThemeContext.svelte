@@ -1,3 +1,4 @@
+<!-- copied from the sandbox belonging to https://josefaidt.dev/blog/2020/03/theming-in-svelte/-->
 <script>
     import { setContext, onMount } from "svelte";
     import { writable } from "svelte/store";

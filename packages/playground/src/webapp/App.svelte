@@ -13,7 +13,6 @@
 <!-- dialogs and the error message snackbar -->
 <OpenModelDialog />
 <NewUnitDialog />
-<OpenUnitDialog />
 <SaveUnitDialog />
 <DeleteUnitDialog />
 
@@ -61,10 +60,8 @@
 	import RightPanel from "./side-elements/HelpPanel.svelte";
 	import UserMessage from "./side-elements/UserMessage.svelte";
 	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
-	import OpenUnitDialog from "./menu/OpenUnitDialog.svelte";
 	import NewUnitDialog from "./menu/NewUnitDialog.svelte";
 	import SaveUnitDialog from "./menu/SaveUnitDialog.svelte";
-	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
 
 	import { miniWindow, modelNames, openModelDialogVisible } from "./WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";
@@ -74,6 +71,7 @@
 	import ErrorList from "./main/ErrorList.svelte";
 	import EditorGrid from "./main/EditorGrid.svelte";
 	import { ServerCommunication } from "./server/ServerCommunication";
+	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
 

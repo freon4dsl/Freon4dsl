@@ -69,7 +69,7 @@
 			if (newName?.length > 0) {
 				EditorCommunication.getInstance().newUnit(newName, group);
 			}
-			// console.log("Submit called, unit created: " + get(currentUnitName));
+			newName = "";
 			$newUnitDialogVisible = false;
 		}
 	}

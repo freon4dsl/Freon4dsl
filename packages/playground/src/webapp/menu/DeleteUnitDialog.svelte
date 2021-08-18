@@ -1,8 +1,8 @@
 <Dialog width="350" bind:visible={$deleteUnitDialogVisible}>
-	<div slot="title" class="title">Deleting unit:</div>
+	<div slot="title" class="title">Deleting unit</div>
 
 	<div class="content">
-		"{$currentUnitName}" of model "{$currentModelName}"
+		Do you really want to delete unit "{$toBeDeleted.name}" from the server?
 	</div>
 
 	<div slot="actions" class="actions center">
@@ -11,7 +11,7 @@
 	</div>
 
 	<div slot="footer" class="footer">
-		Do you really want to delete this unit from the server?
+		This action cannot be undone!
 	</div>
 </Dialog>
 
@@ -19,9 +19,10 @@
 
 <script lang="ts">
 	import {Button, Dialog} from 'svelte-mui';
-	import {currentModelName, deleteUnitDialogVisible} from "../WebappStore";
+	import { currentModelName, deleteUnitDialogVisible, toBeDeleted } from "../WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
 	import { currentUnitName } from "../WebappStore";
+	import type PiNamedElement from "@projectit/core";
 
 	let props = {
 		right: false,
@@ -30,12 +31,13 @@
 	};
 	const handleCancel = () => {
 		console.log("Cancel called ");
+		$toBeDeleted = null;
 		$deleteUnitDialogVisible = false;
 	}
 
 	const handleSubmit = () => {
-		console.log("Submit called, unit to be deleted: " + $currentUnitName + "." + $currentModelName);
-		EditorCommunication.getInstance().deleteCurrentUnit();
+		console.log("Submit called, unit to be deleted: " + $toBeDeleted.name + "." + $currentModelName);
+		EditorCommunication.getInstance().deleteModelUnit($toBeDeleted);
 		$deleteUnitDialogVisible = false;
 	}
 
