@@ -21,13 +21,6 @@
 
 <UserMessage />
 
-<!-- the layout of the components that are rendered for this app -->
-<!--<AppBar/>-->
-<!--<div class="main-window">-->
-<!--	<MainGrid/>-->
-<!--</div>-->
-<!--<Footer />-->
-
 <ThemeContext>
 	<main class="main-window">
 		<AppBar/>
@@ -77,30 +70,35 @@
 	import NameModelDialog from "./menu/NameModelDialog.svelte";
 	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
 
-	import MainGrid from "./main/MainGrid.svelte";
-
-	import { miniWindow } from "./WebappStore";
+	import { initializing, miniWindow, modelNames, openModelDialogVisible } from "./WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";
-	import { unnamed } from "./WebappStore";
 	import ThemeContext from "./theming/ThemeContext.svelte";
 	import SplitPane from "./main/SplitPane.svelte";
 	import Navigator from "./main/Navigator.svelte";
 	import ErrorList from "./main/ErrorList.svelte";
-	import StatusBar from "./main/StatusBar.svelte";
-	import { ProjectItComponent } from "@projectit/core-svelte";
-	import { editorEnvironment } from "./WebappConfiguration";
 	import EditorGrid from "./main/EditorGrid.svelte";
+	import { ServerCommunication } from "./server/ServerCommunication";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
 
 	// initialize defaults for the current language
 	EditorCommunication.initialize();
 
-	// initialize content in the ProjectItComponent
-	EditorCommunication.getInstance().newModel(unnamed, unnamed);
-
 	onMount(async () => {
+		// correct layout for the size of the window
 		onResize();
+		// open the app with the open/new model dialog
+		try {
+			// get list of models from server
+			ServerCommunication.getInstance().loadModelList((names: string[]) => {
+				if (names.length > 0) {
+					$modelNames = names;
+				}
+				$openModelDialogVisible = true;
+			});
+		} catch (e) {
+			$openModelDialogVisible = true;
+		}
 	});
 
 	async function onResize() {

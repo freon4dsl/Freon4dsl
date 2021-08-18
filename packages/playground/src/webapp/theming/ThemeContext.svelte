@@ -1,9 +1,9 @@
 <script>
     import { setContext, onMount } from "svelte";
     import { writable } from "svelte/store";
-    import { presets } from "../presets.ts";
+    import { themePresets } from "../Theme-presets.ts";
     // expose props for customization and set default values
-    export let themes = [...presets];
+    export let themes = [...themePresets];
     // set state of current theme's name
     let _current = themes[0].name;
 

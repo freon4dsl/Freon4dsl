@@ -1,6 +1,6 @@
 :root {
 	/* the following css properties are present in order for the text completion during development to function */
-	/* they are overwritten by the THEME values in 'presets.ts' */
+	/* they are overwritten by the THEME values in 'themePresets.ts' */
 	--theme-colors-color: darkblue;           /* Primary text color */
 	--theme-colors-inverse_color: #d3e3fd;    /* Text color on non_normal background */
 	--theme-colors-bg_app_bar: darkblue;      /* Color of header and footer */
@@ -10,6 +10,7 @@
 	--theme-colors-primary: darkblue;         /* Dialog primary button text color */
 	--theme-colors-list_divider: darkblue;    /* Color of lines between columns in the error list */
 	--theme-colors-slider: "red";			  /* Color of lines between views */
+	--theme-colors-accent: #f50057;			  /* Color to get attention to an element */
 
 	/* ProjectIt sizes */
 	--pi-header-height: 36px;
@@ -23,15 +24,15 @@
 	--pi-menuitem-font-size: 14px;
 
 	/* other colors */
-	/*--pi-selected-background-color: rgba(211, 227, 253, 255);*/
-	/*--pi-selected-color: red; !* to be done *!*/
-	/*--pi-popup-border: none;*/
-	/*--pi-popup-background: #fff;*/
-	/*--pi-popup-box-shadow: 0 0 0px 0 rgba(0, 0, 0, 0.5);*/
-	/*--pi-list-background-color: white;*/
+	--pi-selected-background-color: rgba(211, 227, 253, 255);
+	--pi-selected-color: red; /* to be done */
+	--pi-popup-border: none;
+	--pi-popup-background: #fff;
+	--pi-popup-box-shadow: 0 0 0px 0 rgba(0, 0, 0, 0.5);
+	--pi-list-background-color: white;
 	/*--alternate: #fff;*/
 	/*--primary: #1976d2;*/
-	/*--accent: #f50057;*/
+
 	/*--bg-popover: #fff;*/
 	/*--border: #dfdfdf;*/
 	/*--label: rgba(0, 0, 0, 0.3755);*/
@@ -39,10 +40,10 @@
 	/*--focus-color: rgba(25, 118, 210, 0.5); !* primary with alpha *!*/
 
 	/* fonts, etc */
-	/*--font-family: Roboto, Helvetica, sans-serif;*/
-	/*--heading-font-family: var(--font-family);*/
-	/*--button-font-family: var(--font-family);*/
-	/*--code-font-family: 'Roboto Mono', Menlo, Consolas, monospace;*/
+	--font-family: Roboto, Helvetica, sans-serif;
+	--heading-font-family: var(--font-family);
+	--button-font-family: var(--font-family);
+	--code-font-family: 'Roboto Mono', Menlo, Consolas, monospace;
 
 }
 html, body {

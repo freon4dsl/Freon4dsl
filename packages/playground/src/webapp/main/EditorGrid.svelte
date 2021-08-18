@@ -2,11 +2,7 @@
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../WebappConfiguration";
     import StatusBar from "./StatusBar.svelte";
-
-    let orientation = "rows";
-    let fixed = false;
-    let fixedPos = 20;
-
+    import { initializing } from "../WebappStore";
 </script>
 
 <style>
@@ -14,11 +10,19 @@
         position: relative;
         width: 100%;
         height: 100%;
-
+    }
+    .message {
+        padding: 12px;
     }
 </style>
 
 <div class="editor-grid">
-    <StatusBar/>
-    <ProjectItComponent editor={editorEnvironment.editor}/>
+     {#if ($initializing)}
+        <div class="message">
+            Please, select Model and Unit to be shown.
+        </div>
+    {:else}
+        <StatusBar/>
+        <ProjectItComponent editor={editorEnvironment.editor}/>
+    {/if}
 </div>

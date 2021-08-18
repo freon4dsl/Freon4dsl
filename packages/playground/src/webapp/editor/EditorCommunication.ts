@@ -11,8 +11,7 @@ import {
     severity,
     severityType,
     showError,
-    unitTypes,
-    unnamed
+    unitTypes
 } from "../WebappStore";
 import { modelErrors } from "../main-ts-files/ModelErrorsStore";
 import { editorEnvironment } from "../WebappConfiguration";
@@ -36,8 +35,8 @@ export class EditorCommunication {
      * fills the WebappStore with initial values
      */
     static initialize(): void {
-        currentModelName.set(unnamed);
-        currentUnitName.set(unnamed);
+        // currentModelName.set(unnamed);
+        // currentUnitName.set(unnamed);
         languageName.set(editorEnvironment.languageName);
         // unitTypes are the same for every model in the language
         unitTypes.set(editorEnvironment.unitNames);
@@ -55,7 +54,7 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.isModelNamed: " + get(currentModelName));
         this.checkGlobalsAgainstEditor();
         const name = this.currentModel.name;
-        if (!name || name.length <= 0 || name === unnamed) {
+        if (!name || name.length <= 0) {
             return false;
         }
         currentModelName.set(name);
@@ -96,7 +95,7 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.isUnitNamed: " + get(currentUnitName));
         this.checkGlobalsAgainstEditor();
         const name = this.currentUnit.name;
-        if (!name || name.length <= 0 || name === unnamed) {
+        if (!name || name.length <= 0) {
             return false;
         }
         currentUnitName.set(name);
@@ -107,7 +106,7 @@ export class EditorCommunication {
     newModel(modelName: string, unitName?: string) {
         LOGGER.log("new model called: " + modelName);
         if (!unitName) {
-            this.currentModel = editorEnvironment.newModel(modelName, unnamed);
+            // TODO show message in editor view
         } else {
             this.currentModel = editorEnvironment.newModel(modelName, unitName);
         }
@@ -124,7 +123,7 @@ export class EditorCommunication {
         // and create a new unit named 'newName'
 
         const oldName : string = get(currentUnitName);
-        if (!!oldName && oldName !== "" && oldName !== unnamed) {
+        if (!!oldName && oldName !== "") {
             // get the interface of the current unit from the server
             ServerCommunication.getInstance().loadModelUnitInterface(
                 get(currentModelName),
@@ -176,7 +175,7 @@ export class EditorCommunication {
     deleteCurrentUnit() {
         LOGGER.log("delete called, current unit: " + get(currentUnitName));
         this.hasChanges = false;
-        if (!!editorEnvironment.editor.rootElement || get(currentUnitName) == unnamed ) {
+        if (!!editorEnvironment.editor.rootElement ) {
             ServerCommunication.getInstance().deleteModelUnit({
                 unitName: get(currentUnitName),
                 modelName: get(currentModelName),
@@ -195,11 +194,11 @@ export class EditorCommunication {
 
     private findFirstUnit()  {
         let newUnit = this.currentModel.getUnits()[0];
-        if (!newUnit) {
-            this.currentModel.newUnit(get(unitTypes)[0]);
-            newUnit = this.currentModel.getUnits()[0];
-            newUnit.name = unnamed;
-        }
+        // if (!newUnit) {
+        //     this.currentModel.newUnit(get(unitTypes)[0]);
+        //     newUnit = this.currentModel.getUnits()[0];
+        //     newUnit.name = unnamed;
+        // }
         return newUnit;
     }
 

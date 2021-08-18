@@ -1,16 +1,24 @@
 <div class="status-bar">
-    <div class="vl"></div>
-    unit <i>{$currentUnitName}</i> of model <i>{$currentModelName}</i>
     {#if ($modelErrors.length > 0)}
-        <div class="vl"></div>
-        number of errors: {$modelErrors.length}
+        <Icon style="color:var(--theme-colors-accent); height: var(--pi-footer-height)">
+            <svelte:component this={error} />
+        </Icon>
+    {:else}
+        <Icon style="color:var(--theme-colors-color); height: var(--pi-footer-height)">
+            <svelte:component this={check} />
+        </Icon>
     {/if}
+    unit <i>{$currentUnitName}</i> of model <i>{$currentModelName}</i>
+
     <div class="vl"></div>
 </div>
 
 <script lang="ts">
     import { currentUnitName, currentModelName } from "../WebappStore";
     import { modelErrors } from "../main-ts-files/ModelErrorsStore";
+    import { Icon } from "svelte-mui";
+    import error from "../assets/icons/svg/error.svg";
+    import check from "../assets/icons/svg/check_circle.svg";
 </script>
 
 <style>

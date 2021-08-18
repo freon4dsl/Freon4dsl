@@ -1,14 +1,23 @@
-<Dialog width="290" bind:visible={$openModelDialogVisible}>
-	<div slot="title" class="title">Open model:</div>
+<Dialog width="290" bind:modal={modal} bind:visible={$openModelDialogVisible}>
+	<div slot="title" class="title">Open or new model:</div>
 
+	<Textfield
+			name="modelname"
+			autocomplete="off"
+			bind:value={newName}
+			bind:error="{localErrorMessage}"
+			outlined="true"
+			placeholder="name of new model"
+			class="content"
+	/>
 	{#each $modelNames as name}
-		<Radio {...props} bind:group={internalSelected} value={name}>
+		<Radio {...props} disabled={newName} bind:group={internalSelected} value={name}>
 			<span class="item-name">{name}</span>
 		</Radio>
 	{/each}
 
 	<div slot="actions" class="actions">
-		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
+		<Button color="var(--theme-secondary_button_text)" on:click={() => handleCancel()}>Cancel</Button>
 		<Button color="var(--theme-colors-color)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
 
@@ -18,11 +27,14 @@
 </Dialog>
 
 <script lang="ts">
-	import {Button, Radio, Dialog} from 'svelte-mui';
-	import {currentModelName, modelNames, openModelDialogVisible } from "../WebappStore";
+	import {Button, Radio, Dialog, Textfield} from 'svelte-mui';
+	import { currentModelName, initializing, modelNames, openModelDialogVisible } from "../WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
 
+	let modal: boolean = true; // TODO from FileMenu modal must be set to false
 	let internalSelected: string = $currentModelName;
+	let newName: string = "";
+	let localErrorMessage: string = "";
 
 	let props = {
 		right: false,
@@ -31,17 +43,26 @@
 		color: "var(--theme-colors-color)"
 	};
 	const handleCancel = () => {
-		// console.log("Cancel called, model selected: " + internalSelected);
-		$modelNames = [];
-		resetVariables();
+		console.log("Cancel called, model selected: " + internalSelected);
+		// only close when a model has been selected
+		if (internalSelected.length > 0 || newNameOk()) {
+			$modelNames = [];
+			resetVariables();
+		} else {
+			localErrorMessage = "You must select or create a model!";
+		}
 	}
 
 	const handleSubmit = () => {
 		if (internalSelected?.length > 0) {
 			EditorCommunication.getInstance().openModel(internalSelected);
+			resetVariables();
+		} else {
+			if (newNameOk()) {
+				EditorCommunication.getInstance().newModel(newName);
+				resetVariables();
+			}
 		}
-		// console.log("Submit called, model selected: " + $currentModelName);
-		resetVariables();
 	}
 
 	const handleKeydown = (event) => {
@@ -53,9 +74,29 @@
 		}
 	}
 
+	function newNameOk(): boolean {
+		if (newName.length > 0) {
+			if ($modelNames.includes(newName)) {
+				console.log("existing name")
+				localErrorMessage = "Model with this name already exists";
+			} else if (!newName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
+				console.log("error kind of name")
+				// TODO this message is too long, must use wrap
+				localErrorMessage = "Name may contain only characters and numbers, and must start with a character.";
+			}
+			else {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	function resetVariables() {
 		$modelNames = [];
 		$openModelDialogVisible = false;
+		newName = "";
+		localErrorMessage = "";
+		$initializing = false;
 	}
 
 </script>

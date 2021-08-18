@@ -3,17 +3,17 @@ import {Writable, writable} from 'svelte/store';
 // info about ProjectIt
 export const versionNumber = "0.1.1";
 
-// a constant used to name new items, also used in ...Environment.newModel()
-export let unnamed: string = "<unnamed>";
-
 // info about the language
 export let unitTypes: Writable<string[]> = writable<string[]>([]);
 export let fileExtensions: Writable<string[]> = writable<string[]>([]);
 export let languageName: Writable<string> = writable<string>("");
 
+// attribute to know whether or not the app is still initializing
+export let initializing: Writable<boolean> = writable<boolean>(true);
+
 // info about the model and model unit shown
-export let currentModelName: Writable<string> = writable<string>('<unnamed>');
-export let currentUnitName: Writable<string> = writable<string>('<unnamed>');
+export let currentModelName: Writable<string> = writable<string>('');
+export let currentUnitName: Writable<string> = writable<string>('');
 
 // info about all models stored on the server
 export let modelNames: Writable<string[]> = writable<string[]>([]);
@@ -37,28 +37,6 @@ export enum severityType {
     error= 3
 }
 export let severity: Writable<number> = writable<number>(severityType.error);
-
-// export let theme: Writable<string> = writable<string>('light');
-// export const darkTheme = {
-//     // colors defined in terms of ProjectIt colors
-//     '--color': 'var(--pi-lightblue)',
-//     '--inverse-color': 'var(--pi-darkblue)',
-//     '--bg-app-bar': 'var(--pi-lightblue)',
-//     '--bg-color': 'var(--pi-darkblue)',
-//     '--bg-panel': 'var(--pi-darkblue)',
-//     '--divider': 'var(--pi-lightblue)',
-//     '--primary': 'var(--pi-lightblue)',
-//     '--list-divider': 'var(--pi-lightblue)',
-//     // other colors
-//     '--alternate': '#000',
-//     '--secondary': 'lightgrey',
-//     '--accent': '#ff6fab',
-//     '--bg-popover': '#3f3f3f',
-//     '--border': '#555',
-//     '--label': 'rgba(255,255,255,0.5)',
-//     '--bg-input-filled': 'rgba(255,255,255,0.1)',
-//     '--focus-color': 'rgba(62, 166, 255, 0.5)', // primary with alpha
-// };
 
 export let miniWindow: Writable<boolean> = writable<boolean>(false);
 
