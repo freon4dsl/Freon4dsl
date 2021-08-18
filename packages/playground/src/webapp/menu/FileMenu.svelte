@@ -1,4 +1,4 @@
-<Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
+<Menu style="border-radius: 2px; background-color: var(--theme-colors-inverse_color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">
 			<Button {...props}  title="File menu">{activatorTitle} <Icon> <svelte:component this={arrowDropDown}/> </Icon></Button>
 		</span>
@@ -6,7 +6,7 @@
     <div class="menu-list">
         {#each menuItems as item (item.id)}
             <!-- style needs to be added here, not as class -->
-            <Menuitem style="font-size: var(--menuitem-font-size);
+            <Menuitem style="font-size: var(--pi-menuitem-font-size);
                     margin: 4px 10px;
                     padding: 2px;
                     height: 28px;"
@@ -267,7 +267,8 @@
 
 <style>
     .menu-list {
-        background-color: var(--inverse-color);
+        color: var(--theme-colors-color);
+        background-color: var(--theme-colors-inverse_color);
     }
     .file_selector {
         display:none;

@@ -2,7 +2,7 @@
 <!-- It is shown to the left, when activated by the button on the AppBar -->
 <!-- It shows menus that otherwise would be on the AppBar -->
 
-<Sidepanel style="width: 100px;" bind:visible={$leftPanelVisible} disableScroll>
+<Sidepanel style="width: 100px; color: var(--theme-colors-color); background: var(--theme-colors-bg_color);" bind:visible={$leftPanelVisible} disableScroll>
 	<!-- icon  button to close the side panel -->
 	<div class="logo">
 		<Button
@@ -34,10 +34,10 @@
 		padding: 0 4px;
 		display: flex;
 		align-items: center;
-		color: var(--inverse-color);
-		background: var(--bg-app-bar);
+		color: var(--theme-colors-inverse_color);
+		background: var(--theme-colors-bg_app_bar);
 	}
-	/*.side-panel{*/
-	/*	width: 100px;*/
-	/*}*/
+	.side-panel {
+		width: 100px; color: var(--theme-colors-color); --bg-color: var(--theme-colors-bg_color);
+	}
 </style>

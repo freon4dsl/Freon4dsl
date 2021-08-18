@@ -18,13 +18,13 @@
         position: relative;
         height: var(--pi-footer-height);
         width: 100%;
-        color: var(--color);
-        background: var(--inverse-color);
-        font-size: var(--button-font-size);
-        border: var(--pi-darkblue) solid 1px;
+        color: var(--theme-colors-color);
+        background: var(--theme-colors-inverse_color);
+        font-size: var(--pi-button-font-size);
+        border-bottom: var(--theme-colors-list_divider) solid 1px;
     }
     .vl {
-        border-left: 1px solid var(--pi-darkblue);
+        border-left: 1px solid var(--theme-colors-color);
         height: var(--pi-header-height);
         display:inline;
         margin: 6px;

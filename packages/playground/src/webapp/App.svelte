@@ -55,8 +55,8 @@
 					<ErrorList/>
 				</section>
 			</SplitPane>
-
 		</div>
+
 		<Footer />
 	</main>
 </ThemeContext>
@@ -135,6 +135,7 @@
 		width: 100%;
 		height: calc(100% - var(--pi-header-height) - var(--pi-footer-height) - 8px);
 		box-sizing: border-box;
+		border: var(--theme-colors-list_divider) 1px solid;
 	}
 	.splitpane-container {
 			position: relative;
@@ -145,27 +146,5 @@
 			position: relative;
 			height: 100%;
 			box-sizing: border-box;
-	}
-	/* 	.splitpane-container :global(section) > :global(*):first-child {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 42px;
-			box-sizing: border-box;
-	} */
-	/* 	.splitpane-container :global(section) > :global(*):last-child {
-			width: 100%;
-			height: 100%;
-	} */
-	:global(html) {
-			background-color: var(--theme-background);
-			color: var(--theme-text);
-	}
-
-	main {
-			font-family: sans-serif;
-			text-align: center;
-			color: var(--theme-achtergrond);
 	}
 </style>

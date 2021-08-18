@@ -1,16 +1,12 @@
 <!-- RightPanel shows a Panel that contains Help Info -->
 <!-- It is shown to the right -->
 
-<Sidepanel right bind:visible={$rightPanelVisible}>
+<Sidepanel class="panel" right bind:visible={$rightPanelVisible}>
 	<!-- icon  button to close the side panel -->
 	<div class="topbar">
 			<a display="inline-block" target="_blank" href="http://www.projectit.org">
 				<!-- compiled svg does not work, because the path is too complex-->
-				{#if $theme === 'light'}
-					<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
-				{:else if ($theme === 'dark')}
-					<img src="/img/projectit-logo.png" alt="ProjectIt Logo">
-				{/if}
+				<img src="/img/projectit-logo-inverse-colors.png"  style="color:var(--theme-colors-color)" alt="ProjectIt Logo">
 			</a>
 <!--		<div class="inbetween"></div>-->
 			<Button
@@ -82,15 +78,18 @@
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 	import arrowForward from '../assets/icons/svg/arrow_forward.svg';
-	import { rightPanelVisible, theme, versionNumber} from "../WebappStore";
+	import { rightPanelVisible, versionNumber} from "../WebappStore";
 </script>
 
 <style>
+	.panel {
+		background: var(--theme-colors-bg_color);
+	}
 	.topbar {
 		height: var(--pi-header-height);
 		padding: 0 4px;
-		color: var(--inverse-color);
-		background: var(--bg-app-bar);
+		color: var(--theme-colors-inverse_color);
+		background: var(--theme-colors-bg_app_bar);
 		display: flex;
 		justify-content: space-between;
 	}
@@ -106,24 +105,24 @@
 		margin-right: 10px;
 	}
 	.keybinding {
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 	.keybinding li {
 		padding: 4px;
 	}
 	.content{
-		color: var(--color);
+		color: var(--theme-colors-color);
 		text-align: left;
 		margin: auto;
 		padding: 4px;
 	}
 	.title {
-		color: var(--color);
+		color: var(--theme-colors-color);
 		font-weight: bold;
 		padding: 4px;
 	}
 	a{
-		color: var(--color);
+		color: var(--theme-colors-color);
 		text-decoration: underline;
 		font-style: italic;
 		vertical-align: middle;

@@ -1,12 +1,11 @@
 <script>
     import { getContext } from "svelte";
-    const { theme, toggle } = getContext("theme");
+    const { toggle } = getContext("theme");
+    import { Button, Icon } from "svelte-mui";
+    import invertColors from "../assets/icons/svg/invert_colors.svg";
 </script>
 
-<button on:click={toggle}
- class="but">{$theme.name}</button>
-<style>
-    .but {
-        color: var(--theme-buttontext);
-    }
-</style>
+<Button icon on:click={toggle}>
+    <Icon style="color:var(--theme-colors-inverse_color)"> <svelte:component this={invertColors} /> </Icon>
+</Button>
+

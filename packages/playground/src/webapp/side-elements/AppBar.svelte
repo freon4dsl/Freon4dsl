@@ -14,7 +14,7 @@
 				$leftPanelVisible = true;
 			}}
 		>
-			<Icon style="color:var(--inverse-color)"> <svelte:component this={menu} /> </Icon>
+			<Icon style="color:var(--theme-colors-inverse_color)"> <svelte:component this={menu} /> </Icon>
 		</Button>
 		<div class="title">PIE for <i>{$languageName}</i></div>
 	{:else}
@@ -23,16 +23,13 @@
 		<div class="title">ProjectIt Environment for language <i>{$languageName}</i></div>
 	{/if}
 
-	<Button icon on:click={() => setTheme($theme === 'dark' ? 'light' : 'dark')}>
-		<Icon style="color:var(--inverse-color)"> <svelte:component this={invertColors} /> </Icon>
-	</Button>
 	<ThemeToggle />
 
 	<Button icon color="inherit"
 			on:click={() => {$rightPanelVisible = true}}
 			ripple={false}
 	>
-		<Icon style="color:var(--inverse-color)">
+		<Icon style="color:var(--theme-colors-inverse_color)">
 			<svelte:component this={question_mark} />
 		</Icon>
 	</Button>
@@ -41,47 +38,23 @@
 		<!-- normally, the brand icon is shown-->
 		<a target="_blank" href="http://www.projectit.org">
 			<!-- compiled svg does not work, because the path is too complex-->
-			{#if $theme === 'light'}
-				<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
-				{:else if ($theme === 'dark')}
-				<img src="/img/projectit-logo.png" alt="ProjectIt Logo">
-			{/if}
+			<img src="/img/projectit-logo-inverse-colors.png"  style="color:var(--theme-colors-inverse_color)" alt="ProjectIt Logo">
 		</a>
 	{/if}
 
 </div>
 
 <script lang="ts">
-	import { onMount } from "svelte";
 	import { Button, Icon } from "svelte-mui";
 
 	import projectit_logo from "../assets/icons/svg/projectit-logo.svg";
 	import question_mark from "../assets/icons/svg/help_24px.svg";
 	import menu from "../assets/icons/svg/menu_black_24dp.svg";
-	import invertColors from "../assets/icons/svg/invert_colors.svg";
-	import { theme, darkTheme, miniWindow, leftPanelVisible, rightPanelVisible } from "../WebappStore";
+
+	import { miniWindow, leftPanelVisible, rightPanelVisible } from "../WebappStore";
 	import { languageName } from "../WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
 	import ThemeToggle from "../theming/ThemeToggle.svelte";
-
-	onMount(async () => {
-		try {
-			let mql = window.matchMedia("(prefers-color-scheme: dark)");
-			mql.matches && setTheme("dark");
-		} catch (err) {
-		} // eslint-disable-line
-	});
-
-	function setTheme(name) {
-		name = name.replace(/\s/g, "").toLowerCase();
-
-		$theme = name;
-		$theme === "dark"
-				? Object.keys(darkTheme).map((key) => {
-					document.documentElement.style.setProperty(key, darkTheme[key]);
-				})
-				: document.documentElement.removeAttribute("style");
-	}
 </script>
 
 <style>
@@ -90,8 +63,8 @@
 		align-items: center;
 		height: var(--pi-header-height);
 		color: #fff;
-		background: var(--bg-app-bar);
-		font-size: var(--header-font-size);
+		background: var(--theme-colors-bg_app_bar);
+		font-size: var(--pi-header-font-size);
 		line-height: 1;
 		min-width: inherit;
 		padding: 0 4px 0 6px;
@@ -105,8 +78,7 @@
 		flex: 1;
 		margin-left: 0.5rem;
 		white-space: nowrap;
-		color: var(--inverse-color);
-		/*text-align: left;*/
+		color: var(--theme-colors-inverse_color);
 	}
 
 	img{

@@ -12,7 +12,7 @@
 
 	<div slot="actions" class="actions center">
 		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
+		<Button color="var(--theme-colors-color)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
 
 	<div slot="footer" class="footer">
@@ -78,9 +78,9 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 	.title {
-		color: var(--inverse-color);
+		color: var(--theme-colors-inverse_color);
 	}
 </style>

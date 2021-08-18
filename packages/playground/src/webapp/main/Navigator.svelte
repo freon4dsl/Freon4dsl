@@ -14,8 +14,8 @@
 
 <style>
     .navigator {
-        color: var(--color);
-        font-size: var(--error-font-size);
+        color: var(--theme-colors-color);
+        font-size: var(--pi-error-font-size);
         padding: 6px;
     }
     .list {

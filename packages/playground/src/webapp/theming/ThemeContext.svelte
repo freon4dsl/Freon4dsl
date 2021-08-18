@@ -1,7 +1,7 @@
 <script>
     import { setContext, onMount } from "svelte";
     import { writable } from "svelte/store";
-    import { presets } from "../presets.js";
+    import { presets } from "../presets.ts";
     // expose props for customization and set default values
     export let themes = [...presets];
     // set state of current theme's name
@@ -27,16 +27,22 @@
         }
     });
 
-    onMount(() => {
+    onMount(async () => {
+        // try whether user has set preference for theme
+        try {
+            let mql = window.matchMedia("(prefers-color-scheme: dark)");
+            if (mql.matches) _current = "dark";
+        } catch (err) {
+        } // eslint-disable-line
         // set CSS vars on mount
         setRootColors(getCurrentTheme(_current));
     });
 
     // sets CSS vars for easy use in components
-    // ex: var(--theme-background)
+    // ex: var(--theme-colors-background)
     const setRootColors = theme => {
-        for (let [prop, color] of Object.entries(theme.kleuren)) {
-            let varString = `--theme-${prop}`;
+        for (let [prop, color] of Object.entries(theme.colors)) {
+            let varString = `--theme-colors-${prop}`;
             document.documentElement.style.setProperty(varString, color);
         }
         document.documentElement.style.setProperty("--theme-name", theme.name);

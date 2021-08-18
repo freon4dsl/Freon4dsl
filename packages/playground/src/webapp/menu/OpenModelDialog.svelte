@@ -9,7 +9,7 @@
 
 	<div slot="actions" class="actions">
 		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
+		<Button color="var(--theme-colors-color)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
 
 	<div slot="footer" class="footer">
@@ -28,7 +28,7 @@
 		right: false,
 		ripple: true,
 		disabled: false,
-		color: "var(--color)"
+		color: "var(--theme-colors-color)"
 	};
 	const handleCancel = () => {
 		// console.log("Cancel called, model selected: " + internalSelected);
@@ -67,12 +67,12 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 	.title {
-		color: var(--inverse-color);
+		color: var(--theme-colors-inverse_color);
 	}
 	.item-name {
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 </style>

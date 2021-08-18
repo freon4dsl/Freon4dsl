@@ -1,6 +1,4 @@
 <script>
-    import SplitPane from "./SplitPane.svelte";
-    import Navigator from "./Navigator.svelte";
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../WebappConfiguration";
     import StatusBar from "./StatusBar.svelte";
@@ -16,6 +14,7 @@
         position: relative;
         width: 100%;
         height: 100%;
+
     }
 </style>
 

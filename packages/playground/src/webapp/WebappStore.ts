@@ -38,27 +38,27 @@ export enum severityType {
 }
 export let severity: Writable<number> = writable<number>(severityType.error);
 
-export let theme: Writable<string> = writable<string>('light');
-export const darkTheme = {
-    // colors defined in terms of ProjectIt colors
-    '--color': 'var(--pi-lightblue)',
-    '--inverse-color': 'var(--pi-darkblue)',
-    '--bg-app-bar': 'var(--pi-lightblue)',
-    '--bg-color': 'var(--pi-darkblue)',
-    '--bg-panel': 'var(--pi-darkblue)',
-    '--divider': 'var(--pi-lightblue)',
-    '--primary': 'var(--pi-lightblue)',
-    '--list-divider': 'var(--pi-lightblue)',
-    // other colors
-    '--alternate': '#000',
-    '--secondary': 'lightgrey',
-    '--accent': '#ff6fab',
-    '--bg-popover': '#3f3f3f',
-    '--border': '#555',
-    '--label': 'rgba(255,255,255,0.5)',
-    '--bg-input-filled': 'rgba(255,255,255,0.1)',
-    '--focus-color': 'rgba(62, 166, 255, 0.5)', // primary with alpha
-};
+// export let theme: Writable<string> = writable<string>('light');
+// export const darkTheme = {
+//     // colors defined in terms of ProjectIt colors
+//     '--color': 'var(--pi-lightblue)',
+//     '--inverse-color': 'var(--pi-darkblue)',
+//     '--bg-app-bar': 'var(--pi-lightblue)',
+//     '--bg-color': 'var(--pi-darkblue)',
+//     '--bg-panel': 'var(--pi-darkblue)',
+//     '--divider': 'var(--pi-lightblue)',
+//     '--primary': 'var(--pi-lightblue)',
+//     '--list-divider': 'var(--pi-lightblue)',
+//     // other colors
+//     '--alternate': '#000',
+//     '--secondary': 'lightgrey',
+//     '--accent': '#ff6fab',
+//     '--bg-popover': '#3f3f3f',
+//     '--border': '#555',
+//     '--label': 'rgba(255,255,255,0.5)',
+//     '--bg-input-filled': 'rgba(255,255,255,0.1)',
+//     '--focus-color': 'rgba(62, 166, 255, 0.5)', // primary with alpha
+// };
 
 export let miniWindow: Writable<boolean> = writable<boolean>(false);
 
