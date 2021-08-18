@@ -17,12 +17,12 @@
 </style>
 
 <div class="editor-grid">
-    <!-- {#if ($noUnitAvailable)}-->
-    <!--    <div class="message">-->
-    <!--        Please, select, create, or import Unit to be shown.-->
-    <!--    </div>-->
-    <!--{:else}-->
-    <!--    <StatusBar/>-->
-    <!--    <ProjectItComponent editor={editorEnvironment.editor}/>-->
-    <!--{/if}-->
+     {#if ($noUnitAvailable)}
+        <div class="message">
+            Please, select, create, or import Unit to be shown.
+        </div>
+    {:else}
+        <StatusBar/>
+        <ProjectItComponent editor={editorEnvironment.editor}/>
+    {/if}
 </div>

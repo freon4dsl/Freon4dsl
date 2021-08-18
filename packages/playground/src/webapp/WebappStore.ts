@@ -48,7 +48,6 @@ export let rightPanelVisible: Writable<boolean> = writable<boolean>(false);
 
 export let openModelDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let newUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
-export let saveUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 export let deleteUnitDialogVisible: Writable<boolean> = writable<boolean>(false);
 
 

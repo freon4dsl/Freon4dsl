@@ -83,10 +83,6 @@
 
     // new unit menuitem
     const newUnit = () => {
-        if (!EditorCommunication.getInstance().isModelNamed()) {
-            setErrorMessage("Please, select or create a model before creating a new model unit", severityType.error);
-            return;
-        }
         // get list of units from server, because new unit may not have the same name as an existing one
         ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // list may be empty => this is the first unit to be stored
@@ -98,16 +94,11 @@
     // save unit menuitem
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
-        // first check whether the model to which the unit belongs has a name,
-        // units can not be saved if the model has no name.
-        if (!EditorCommunication.getInstance().isModelNamed()) {
-            // get list of models from server
-            ServerCommunication.getInstance().loadModelList((names: string[]) => {
-                // list may be empty => this is the first model to be stored
-                $modelNames = names;
-                // $nameModelDialogVisible = true;
-            });
-        }
+        // get list of models from server
+        ServerCommunication.getInstance().loadModelList((names: string[]) => {
+            // list may be empty => this is the first model to be stored
+            $modelNames = names;
+        });
         saveUnitInternal();
     }
 
@@ -146,19 +137,9 @@
 
     // import model unit menuitem
     const importUnit = () => {
-        // first check whether the current model has a name,
-        // units can not be imported into an unnamed model.
-        if (!EditorCommunication.getInstance().isModelNamed()) {
-            // get list of models from server
-            ServerCommunication.getInstance().loadModelList((names: string[]) => {
-                // list may be empty => this is the first model to be stored
-                $modelNames = names;
-                // $nameModelDialogVisible = true;
-            });
-        } else {
-            // open the file browse dialog
-            file_selector.click();
-        }
+        // todo check whether the name of the unit already exists in the model
+        // open the file browse dialog
+        file_selector.click();
     }
 
     function setErrorMessage(message: string, sever: severityType) {

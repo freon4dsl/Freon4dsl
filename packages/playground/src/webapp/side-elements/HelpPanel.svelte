@@ -4,7 +4,7 @@
 <Sidepanel class="panel" right bind:visible={$rightPanelVisible}>
 	<!-- icon  button to close the side panel -->
 	<div class="topbar">
-			<a display="inline-block" target="_blank" href="http://www.projectit.org">
+			<a target="_blank" href="http://www.projectit.org">
 				<!-- compiled svg does not work, because the path is too complex-->
 				<img src="/img/projectit-logo-inverse-colors.png"  style="color:var(--theme-colors-color)" alt="ProjectIt Logo">
 			</a>
@@ -25,7 +25,7 @@
 	<div class="content">
 		Currently there is no in-build help functionality, other than a list of keybindings. We refer you to our website:
 		<br>
-		<div align="center">
+		<div>
 			<a href="http://www.projectit.org/" target="_blank">
 				www.projectit.org
 			</a>
@@ -53,7 +53,7 @@
 	<div class="content" >
 		ProjectIt is an open source project which can be found at:
 		<br>
-		<div align="center" >
+		<div>
 			<a href="https://github.com/projectit-org" target="_blank">
 				https://github.com/projectit-org.
 			</a>
@@ -66,7 +66,7 @@
 	<hr>
 	<div class="content">
 		Created by:
-		<div align="center" >
+		<div >
 			<a href="http://www.openmodeling.nl/" target="_blank">
 				www.openmodeling.nl.
 			</a>
@@ -82,9 +82,6 @@
 </script>
 
 <style>
-	.panel {
-		background: var(--theme-colors-bg_color);
-	}
 	.topbar {
 		height: var(--pi-header-height);
 		padding: 0 4px;
@@ -92,9 +89,6 @@
 		background: var(--theme-colors-bg_app_bar);
 		display: flex;
 		justify-content: space-between;
-	}
-	.close-button {
-		/*display: inline-block;*/
 	}
 	img{
 		max-width: 180px;

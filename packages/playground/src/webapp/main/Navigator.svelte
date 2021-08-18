@@ -24,7 +24,14 @@
 </div>
 
 <script lang="ts">
-    import { unitTypes, units, currentModelName, toBeDeleted, deleteUnitDialogVisible } from "../WebappStore";
+    import {
+        unitTypes,
+        units,
+        currentModelName,
+        toBeDeleted,
+        deleteUnitDialogVisible,
+        currentUnitName
+    } from "../WebappStore";
     import { Menu, Menuitem } from "svelte-mui";
     import type PiNamedElement from "@projectit/core";
     import { EditorCommunication } from "../editor/EditorCommunication";
@@ -41,7 +48,36 @@
     };
     const exportUnit = (unit: PiNamedElement) => {
         console.log("export unit called:" + unit.name);
-    };
+        // create a text string from the unit
+        let text: string = EditorCommunication.getInstance().unitAsText();
+        // get the default file name from the current unit and its unit meta type
+        const fileExtension: string = EditorCommunication.getInstance().unitFileExtension();
+        let defaultFileName: string = unit.name + fileExtension;
+
+        // create a HTML element that contains the text string
+        let textFile = null;
+        var data = new Blob([text], {type: 'text/plain'});
+
+        // If we are replacing a previously generated file we need to
+        // manually revoke the object URL to avoid memory leaks.
+        if (textFile !== null) {
+            URL.revokeObjectURL(textFile);
+        }
+        textFile = URL.createObjectURL(data);
+
+        // create a link for the download
+        var link = document.createElement('a');
+        link.setAttribute('download', defaultFileName);
+        link.href = textFile;
+        document.body.appendChild(link);
+
+        // wait for the link to be added to the document
+        window.requestAnimationFrame(function () {
+            var event = new MouseEvent('click');
+            link.dispatchEvent(event);
+            document.body.removeChild(link);
+        });
+    }
 </script>
 
 <style>

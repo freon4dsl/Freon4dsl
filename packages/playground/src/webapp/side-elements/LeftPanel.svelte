@@ -37,7 +37,4 @@
 		color: var(--theme-colors-inverse_color);
 		background: var(--theme-colors-bg_app_bar);
 	}
-	.side-panel {
-		width: 100px; color: var(--theme-colors-color); --bg-color: var(--theme-colors-bg_color);
-	}
 </style>

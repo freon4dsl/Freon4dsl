@@ -13,7 +13,6 @@
 <!-- dialogs and the error message snackbar -->
 <OpenModelDialog />
 <NewUnitDialog />
-<SaveUnitDialog />
 <DeleteUnitDialog />
 
 <UserMessage />
@@ -23,11 +22,11 @@
 		<AppBar/>
 
 		<div class="splitpane-container" >
-			<SplitPane type = 'vertical' pos="80">
+			<SplitPane type='vertical' pos={80}>
 				<section class="splitpane-section" slot=a>
 					<div class="splitpane-container" >
 
-						<SplitPane type = 'horizontal' pos="20">
+						<SplitPane type='horizontal' pos={20}>
 							<section class="splitpane-section" slot=a>
 								<Navigator/>
 							</section>
@@ -61,7 +60,6 @@
 	import UserMessage from "./side-elements/UserMessage.svelte";
 	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
 	import NewUnitDialog from "./menu/NewUnitDialog.svelte";
-	import SaveUnitDialog from "./menu/SaveUnitDialog.svelte";
 
 	import { miniWindow, modelNames, openModelDialogVisible } from "./WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";

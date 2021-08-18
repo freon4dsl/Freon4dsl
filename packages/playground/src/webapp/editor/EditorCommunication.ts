@@ -48,23 +48,23 @@ export class EditorCommunication {
     /* returns true if the model has a name,
      * as side effect a check is done whether currentModelName is equal to that name.
         */
-    isModelNamed(): boolean {
-        LOGGER.log("EditorCommunication.isModelNamed: " + get(currentModelName));
-        // this.checkGlobalsAgainstEditor();
-        const name = this.currentModel.name;
-        if (!name || name.length <= 0) {
-            return false;
-        }
-        currentModelName.set(name);
-        return true;
-    }
-
-    setModelName(name: string) {
-        // this.checkGlobalsAgainstEditor();
-        this.currentModel = this.currentUnit.piContainer().container as PiModel;
-        this.currentModel.name = name;
-        currentModelName.set(this.currentModel.name);
-    }
+    // isModelNamed(): boolean {
+    //     LOGGER.log("EditorCommunication.isModelNamed: " + get(currentModelName));
+    //     // this.checkGlobalsAgainstEditor();
+    //     const name = this.currentModel.name;
+    //     if (!name || name.length <= 0) {
+    //         return false;
+    //     }
+    //     currentModelName.set(name);
+    //     return true;
+    // }
+    //
+    // setModelName(name: string) {
+    //     // this.checkGlobalsAgainstEditor();
+    //     this.currentModel = this.currentUnit.piContainer().container as PiModel;
+    //     this.currentModel.name = name;
+    //     currentModelName.set(this.currentModel.name);
+    // }
 
     setUnitName(name: string) {
         // this.checkGlobalsAgainstEditor();
@@ -268,8 +268,7 @@ export class EditorCommunication {
     unitFromFile(content: string, metaType: string) {
         let elem: PiElement = null;
         elem = editorEnvironment.reader.readFromString(content, metaType);
-        if (elem && this.isModelNamed()) {
-            console.log(`${(elem as PiNamedElement).name}`)
+        if (elem) {
             // TODO save old currentUnit
             // TODO swap old unit with its interface in the in-memory model
             // set elem in editor
