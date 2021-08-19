@@ -80,12 +80,13 @@ export class EditorCommunication {
      */
     newModel(modelName: string) {
         LOGGER.log("new model called: " + modelName);
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
         // reset all visible information on the model and unit
         this.resetGlobalVariables();
         // create a new model
         this.currentModel = editorEnvironment.newModel(modelName);
         currentModelName.set(this.currentModel.name);
-        // TODO this method should take care of storing any changes in the previous model
     }
 
     /**
@@ -95,10 +96,12 @@ export class EditorCommunication {
      */
     newUnit(newName: string, unitType: string) {
         LOGGER.log("new unit called, unitType: " + unitType + ", name: " + newName);
+
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+
         // replace the current unit by its interface
         // and create a new unit named 'newName'
-        // TODO this method should take care of storing any changes in the previous model
-
         const oldName : string = get(currentUnitName);
         if (!!oldName && oldName !== "") {
             // get the interface of the current unit from the server
@@ -126,7 +129,8 @@ export class EditorCommunication {
      */
     private createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType);
-        // TODO this method should take care of storing any changes in the previous model
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
         // create a new unit and add it to the current model
         let newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType);
         // TODO check whether the next statement is valid in all cases: units should have a name attribute called 'name'
@@ -209,7 +213,8 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.openmodel("+ modelName + ")");
         this.resetGlobalVariables();
 
-        // TODO this method should take care of storing any changes in the previous model
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
         // create new model instance in memory and set its name
         let model: PiModel = editorEnvironment.newModel(modelName);
         this.currentModel = model;
@@ -262,34 +267,48 @@ export class EditorCommunication {
             LOGGER.log("openModelUnit doing NOTHING");
             return;
         }
-        // TODO this method should take care of storing any changes in the previous model
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
-        // we must get the full unit from the server
+        // we must get the full unit from the server and make a swap
         await ServerCommunication.getInstance().loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: PiNamedElement) => {
-            if (!!EditorCommunication.getInstance().currentUnit) {
-                // get the interface of the current unit from the server
-                ServerCommunication.getInstance().loadModelUnitInterface(
-                    EditorCommunication.getInstance().currentModel.name,
-                    EditorCommunication.getInstance().currentUnit.name,
-                    (oldUnitInterface: PiNamedElement) => {
-                        if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
-                            if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
-                                // swap old unit with its interface in the in-memory model
-                                EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
-                            }
-                            // swap the new unit interface with the full unit in the in-memory model
-                            EditorCommunication.getInstance().currentModel.replaceUnit(newUnit, newCompleteUnit);
-                            // show the new unit in the editor
-                            this.showUnitAndErrors(newCompleteUnit);
-                        }
-                    });
-            } else {
-                // swap the new unit interface with the full unit in the in-memory model
-                EditorCommunication.getInstance().currentModel.replaceUnit(newUnit, newCompleteUnit);
-                // show the new unit in the editor
-                this.showUnitAndErrors(newCompleteUnit);
-            }
+            this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
         });
+    }
+
+    /**
+     * Swaps 'newUnitInterface', which is part of the in-memory current model, for the complete unit 'newCompleteUnit'.
+     * Next, the current -complete- unit is swapped with its interface from the server.
+     * This makes sure that the state of in-memory model is such that only the unit that is shown in the editor
+     * is fully present, all other units are interfaces only.
+     * @param newCompleteUnit
+     * @param newUnitInterface
+     * @private
+     */
+    private swapInterfaceAndUnits(newCompleteUnit: PiNamedElement, newUnitInterface: PiNamedElement) {
+        if (!!EditorCommunication.getInstance().currentUnit) {
+            // get the interface of the current unit from the server
+            ServerCommunication.getInstance().loadModelUnitInterface(
+                EditorCommunication.getInstance().currentModel.name,
+                EditorCommunication.getInstance().currentUnit.name,
+                (oldUnitInterface: PiNamedElement) => {
+                    if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
+                        if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+                            // swap old unit with its interface in the in-memory model
+                            EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                        }
+                        // swap the new unit interface with the full unit in the in-memory model
+                        EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
+                        // show the new unit in the editor
+                        this.showUnitAndErrors(newCompleteUnit);
+                    }
+                });
+        } else {
+            // swap the new unit interface with the full unit in the in-memory model
+            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
+            // show the new unit in the editor
+            this.showUnitAndErrors(newCompleteUnit);
+        }
     }
 
     /**
@@ -299,14 +318,29 @@ export class EditorCommunication {
      * @param metaType
      */
     unitFromFile(content: string, metaType: string) {
-        // TODO this method should take care of storing any changes in the previous model
-        let elem: PiElement = null;
-        elem = editorEnvironment.reader.readFromString(content, metaType);
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        let elem: PiNamedElement = null;
+        elem = editorEnvironment.reader.readFromString(content, metaType) as PiNamedElement;
         if (elem) {
-            // TODO save old currentUnit
-            // TODO swap old unit with its interface in the in-memory model
+            // save the old current unit, if there is one
+            this.saveCurrentUnit();
+            // TODO find way to get interface without use of the server
+            // swap old unit with its interface in the in-memory model
+            // ServerCommunication.getInstance().loadModelUnitInterface(
+            //     EditorCommunication.getInstance().currentModel.name,
+            //     EditorCommunication.getInstance().currentUnit.name,
+            //     (oldUnitInterface: PiNamedElement) => {
+            //         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+            //             // swap old unit with its interface in the in-memory model
+            //             EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+            //         }
+            //     });
+            this.currentModel.addUnit(elem);
+            // add the new unit to the navigator
+            this.setUnitLists();
             // set elem in editor
-            this.showUnitAndErrors(elem as PiNamedElement);
+            this.showUnitAndErrors(elem);
         }
     }
 
