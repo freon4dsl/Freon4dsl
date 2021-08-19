@@ -14,6 +14,11 @@
     .message {
         padding: 12px;
     }
+    .editor {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
 </style>
 
 <div class="editor-grid">
@@ -23,6 +28,6 @@
         </div>
     {:else}
         <StatusBar/>
-        <ProjectItComponent editor={editorEnvironment.editor}/>
+        <ProjectItComponent class="editor" editor={editorEnvironment.editor}/>
     {/if}
 </div>
