@@ -455,8 +455,16 @@ export class ConceptTemplate {
                     getUnitsForType(type: string): ${Names.modelunit(language)}[] {
                         switch (type) {
                         ${language.modelConcept.allParts().map(part =>
-                            `case "${part.type.referred.name}": {
-                                return this.${part.name};
+                            `${part.isList ?
+                                `case "${part.type.referred.name}": {
+                                    return this.${part.name};
+                                }`
+                                : 
+                                `case "${part.type.referred.name}": {
+                                    let result : ${Names.modelunit(language)}[] = [];
+                                    result.push(this.${part.name});
+                                    return result;
+                                }`
                              }`).join("\n")}
                         }
                         return [];
