@@ -8,6 +8,7 @@ export const versionNumber = "0.1.1";
 export let unitTypes: Writable<string[]> = writable<string[]>([]);
 export let fileExtensions: Writable<string[]> = writable<string[]>([]);
 export let languageName: Writable<string> = writable<string>("");
+export let projectionNames:  Writable<string[]> = writable<string[]>([]);
 
 // attribute to know whether or not the app is still initializing
 export let initializing: Writable<boolean> = writable<boolean>(true);
@@ -20,7 +21,8 @@ export let currentUnitName: Writable<string> = writable<string>('');
 // info about all models stored on the server
 export let modelNames: Writable<string[]> = writable<string[]>([]);
 export let unitNames: Writable<string[]> = writable<string[]>([]);
-export let units: Writable<PiNamedElement[]> = writable<PiNamedElement[]>([]);
+
+export let units: Writable<Array<PiNamedElement[]>> = writable<Array<PiNamedElement[]>>(null);
 export let toBeDeleted: Writable<PiNamedElement> = writable<PiNamedElement>(null);
 
 // info about the error in the working of the webapp that needs to be shown to the user

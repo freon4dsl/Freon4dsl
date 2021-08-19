@@ -5,7 +5,7 @@
     import arrowDropDown from '../assets/icons/svg/arrow_drop_down.svg';
     import type {MenuItem} from "../menu-ts-files/MenuItem";
     import {EditorCommunication} from "../editor/EditorCommunication";
-    import { leftPanelVisible } from "../WebappStore";
+    import { leftPanelVisible, projectionNames } from "../WebappStore";
 
     const myAction = (id: number) => {console.log("Projection menu " + id + " action performed");};
     let activatorTitle: string= "Projection";
@@ -35,7 +35,7 @@
         value: 'awesome',
     };
     //
-    EditorCommunication.getInstance().getProjectionNames().map((name, index) => {
+    $projectionNames.map((name, index) => {
         menuItems.push ({ title: name, action: myAction, id: index });
         if (index === 0) {
             checked.push(true);

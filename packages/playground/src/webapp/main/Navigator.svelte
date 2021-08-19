@@ -2,10 +2,10 @@
     <div class="nav-title">Model {$currentModelName}</div>
     <hr>
     <ul class="list">
-        {#each $unitTypes as name}
+        {#each $unitTypes as name, index}
             <li class="type-name">Unit Type <i>{name}</i>
                 <ul class="bullet-list">
-                    {#each $units as unit}
+                    {#each myUnits[index] as unit}
                         <Menu origin="top left">
                             <div class="item-name" slot="activator">
                                 <li>{unit.name}</li>
@@ -30,12 +30,24 @@
         units,
         currentModelName,
         toBeDeleted,
-        deleteUnitDialogVisible,
-        currentUnitName
+        deleteUnitDialogVisible
     } from "../WebappStore";
     import { Menu, Menuitem } from "svelte-mui";
     import type { PiNamedElement } from "@projectit/core";
     import { EditorCommunication } from "../editor/EditorCommunication";
+
+    let myUnits: Array<PiNamedElement[]> = [];
+    $: if ($units) {
+        // there are units, so fill the local data structure
+        $units.forEach((xx: PiNamedElement[], index) => {
+            myUnits[index] = xx;
+        });
+    } else {
+        // no units, so set the local data structure to empty
+        $unitTypes.forEach((name, index) => {
+            myUnits[index] = [];
+        })
+    }
 
     const openUnit = (unit: PiNamedElement) => {
         EditorCommunication.getInstance().openModelUnit(unit);
@@ -96,7 +108,7 @@
     }
     .bullet-list {
         list-style-type: square;
-        padding-left: 6px;
+        padding-left: 16px;
     }
     .type-name {
         color: var(--theme-colors-accent);
