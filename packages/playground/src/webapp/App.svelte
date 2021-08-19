@@ -101,17 +101,6 @@
 			miniWindow.set(false);
 		}
 	}
-
-	const handleKeydown = (event) => {
-		switch (event.keyCode) {
-			case 13: { // Enter key
-				event.stopPropagation();
-				event.preventDefault();
-				handleSubmit();
-				break;
-			}
-		}
-	}
 </script>
 
 <style>

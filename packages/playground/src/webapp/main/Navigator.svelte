@@ -34,19 +34,20 @@
         currentUnitName
     } from "../WebappStore";
     import { Menu, Menuitem } from "svelte-mui";
-    import type PiNamedElement from "@projectit/core";
+    import type { PiNamedElement } from "@projectit/core";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
-    // let unit;
     const openUnit = (unit: PiNamedElement) => {
         EditorCommunication.getInstance().openModelUnit(unit);
     };
+
     const deleteUnit = (unit: PiNamedElement) => {
         console.log("delete unit called: " + unit.name);
         // $toBeDeleted = unit;
         // $deleteUnitDialogVisible = true;
         EditorCommunication.getInstance().deleteModelUnit(unit);
     };
+
     const exportUnit = (unit: PiNamedElement) => {
         console.log("export unit called:" + unit.name);
         // create a text string from the unit
