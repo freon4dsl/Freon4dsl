@@ -43,9 +43,8 @@
 
     const deleteUnit = (unit: PiNamedElement) => {
         console.log("delete unit called: " + unit.name);
-        // $toBeDeleted = unit;
-        // $deleteUnitDialogVisible = true;
-        EditorCommunication.getInstance().deleteModelUnit(unit);
+        $toBeDeleted = unit;
+        $deleteUnitDialogVisible = true;
     };
 
     const exportUnit = (unit: PiNamedElement) => {
