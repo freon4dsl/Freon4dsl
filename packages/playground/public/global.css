@@ -11,6 +11,8 @@
 	--theme-colors-list_divider: darkblue;    /* Color of lines between columns in the error list */
 	--theme-colors-slider: "red";			  /* Color of lines between views */
 	--theme-colors-accent: #f50057;			  /* Color to get attention to an element */
+	--theme-colors-primary_button_text: black; /* Color of primary buttons in dialogs */
+	--theme-colors-secondary_button_text: grey; /* Color of non-primary buttons in dialogs */
 
 	/* ProjectIt sizes */
 	--pi-header-height: 36px;

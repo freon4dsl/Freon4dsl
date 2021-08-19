@@ -7,8 +7,8 @@
 	</div>
 
 	<div slot="actions" class="actions center">
-		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="var(--theme-colors-color)" on:click={() => handleSubmit()}>Submit</Button>
+		<Button style="color:var(--theme-colors-secondary_button_text)" on:click={() => handleCancel()}>Cancel</Button>
+		<Button style="color:var(--theme-colors-primary_button_text)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
 
 	<div slot="footer" class="footer">
