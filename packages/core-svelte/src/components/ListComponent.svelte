@@ -1,6 +1,6 @@
 <script lang="ts">
     import { autorun } from "mobx";
-    import { afterUpdate, onDestroy } from "svelte";
+    import { afterUpdate, onDestroy, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import { Box, HorizontalListBox, PiEditor, PiLogger } from "@projectit/core";
@@ -22,8 +22,13 @@
 
     async function setFocus(): Promise<void> {
         LOGGER.log("setFocus for box " + list.role);
-        element.focus();
+        if (!!element) {
+            element.focus();
+        }
     }
+    onMount( () => {
+        list.setFocus = setFocus;
+    });
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
         list.setFocus = setFocus;

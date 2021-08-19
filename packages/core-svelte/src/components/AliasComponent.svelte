@@ -121,7 +121,7 @@
         if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
             if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
                 LOGGER.log("Focus -----------------------------------------------")
-                setFocus();
+                // setFocus();
             }
         }
     })
@@ -301,26 +301,14 @@
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        AUTO_LOGGER.log("AliasComponent selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
-        // if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
-        //     if (editor.selectedBox.role === choiceBox.textBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-        //         AUTO_LOGGER.log("Focus ==============================================")
-        //         setFocus();
-        //     }
-        // }
-
     });
 
     const onFocusHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("AliasComponent.onFocus for box " + choiceBox.role);
-        // e.preventDefault();
-        // e.stopPropagation();
     }
 
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("AliasComponent.onBlur for box " + choiceBox.role);
-        // e.preventDefault();
-        // e.stopPropagation();
     }
 </script>
 

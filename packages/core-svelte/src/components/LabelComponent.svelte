@@ -17,8 +17,8 @@
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
         LOGGER.log("LabelComponent.setFocus on " + element);
-        if (element !== null) {
-            // element.focus();
+        if (!!element) {
+            element.focus();
         }
     };
 
