@@ -19,11 +19,11 @@
     let LOGGER = new PiLogger("ProjectItComponent");
     export let editor: PiEditor;
 
-    function eventHandled(e: KeyboardEvent) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    function stopEvent(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
 
+    }
     const onKeyDown = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + event.key);
         // event.persist();
@@ -31,18 +31,18 @@
             switch (event.key) {
                 case KEY_ARROW_UP:
                     editor.selectParentBox();
-                    eventHandled(event);
+                    event.preventDefault();
                     break;
                 case KEY_ARROW_DOWN:
                     editor.selectFirstLeafChildBox();
-                    eventHandled(event);
+                    event.preventDefault();
                     break;
             }
         } else if (event.shiftKey) {
             switch (event.key) {
                 case KEY_TAB:
                     editor.selectPreviousLeaf();
-                    // eventHandled(event);
+                    event.preventDefault();
                     break;
             }
         } else if (event.altKey) {
@@ -61,14 +61,15 @@
                 case KEY_TAB:
                 case KEY_ARROW_RIGHT:
                     editor.selectNextLeaf();
-                    // TODO this.eventHandled(event);
+                    stopEvent(event);
                     break;
                 case KEY_ARROW_DOWN:
-                    LOGGER.log("Down: " + editor.selectedBox.role);
                     const down = boxBelow(editor.selectedBox);
-                    if (down !== null) {
+                    LOGGER.log("!!!!!!! Select down box " + down?.role);
+                    if (down !== null && down !==  undefined) {
                         editor.selectBoxNew(down);
                     }
+                    stopEvent(event);
                     break;
                 case KEY_ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);

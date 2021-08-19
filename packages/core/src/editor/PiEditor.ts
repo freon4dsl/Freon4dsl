@@ -155,7 +155,7 @@ export class PiEditor {
         if (!!parent) {
             if (parent.selectable) {
                 this.selectBoxNew(parent);
-                parent.setFocus();
+                // parent.setFocus();
             } else {
                 this.selectBoxNew(parent);
                 this.selectParentBox();
@@ -167,17 +167,18 @@ export class PiEditor {
         const first = this.selectedBox.firstLeaf;
         if (!!first) {
             this.selectBoxNew(first);
+            // first.setFocus();
         }
     }
 
     selectNextLeaf() {
         const next = this.selectedBox.nextLeafRight;
+        LOGGER.log("!!!!!!! Select next leaf is box " + next?.role);
         if (!!next) {
             this.selectBoxNew(next);
-            next.setFocus();
-            if (isTextBox(next) || isSelectBox(next)) {
-                next.setCaret(PiCaret.LEFT_MOST);
-            }
+            // if (isTextBox(next) || isSelectBox(next)) {
+            //     next.setCaret(PiCaret.LEFT_MOST);
+            // }
         }
     }
 
@@ -185,9 +186,9 @@ export class PiEditor {
         const previous = this.selectedBox.nextLeafLeft;
         if (!!previous) {
             this.selectBoxNew(previous);
-            previous.setFocus();
+            // previous.setFocus();
             if (isTextBox(previous) || isSelectBox(previous)) {
-                LOGGER.info(this, "selectPreviousLeaf set caret to RIGHTMOST ");
+                LOGGER.info(this, "!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
                 previous.setCaret(PiCaret.RIGHT_MOST);
             }
         }

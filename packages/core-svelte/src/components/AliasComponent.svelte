@@ -23,7 +23,7 @@
     import { action, autorun } from "mobx";
     import SelectableComponent from "./SelectableComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import DropdownComponent from "./DropdownComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import { SelectOptionList } from "./SelectableOptionList";
@@ -121,7 +121,7 @@
         if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
             if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
                 LOGGER.log("Focus -----------------------------------------------")
-                setFocus();
+                // setFocus();
             }
         }
     })
@@ -301,26 +301,14 @@
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        AUTO_LOGGER.log("AliasComponent selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
-        // if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
-        //     if (editor.selectedBox.role === choiceBox.textBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-        //         AUTO_LOGGER.log("Focus ==============================================")
-        //         setFocus();
-        //     }
-        // }
-
     });
 
     const onFocusHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus for box " + choiceBox.role);
-        e.preventDefault();
-        e.stopPropagation();
+        FOCUS_LOGGER.log("AliasComponent.onFocus for box " + choiceBox.role);
     }
 
     const onBlurHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus Blur for box " + choiceBox.role);
-        e.preventDefault();
-        e.stopPropagation();
+        FOCUS_LOGGER.log("AliasComponent.onBlur for box " + choiceBox.role);
     }
 </script>
 

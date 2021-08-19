@@ -45,6 +45,11 @@
             box.actualWidth = rect.width;
             LOGGER.log("   actual is "+ box.actualWidth)
         }
+
+        if( isSelected) {
+            LOGGER.log("     setting focus from autpupdate")
+            box.setFocus();
+        }
     });
 
     autorun( () => {

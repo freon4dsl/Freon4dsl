@@ -4,7 +4,7 @@
 <div class="status-bar">
     <div>
         <div class="vl"></div>
-            unit <i>{$currentUnitName}</i> of model <i>{$currentModelName}</i>
+            unit <i>{$currentUnitName}</i> of model <i>{$currentModelName} box: {currentBox?.role} </i>
             {#if ($modelErrors.length > 0)}
                 <div class="vl"></div>
                 number of errors: {$modelErrors.length}
@@ -16,6 +16,15 @@
 <script lang="ts">
     import { currentUnitName, currentModelName } from "../WebappStore";
     import { modelErrors } from "../main-ts-files/ModelErrorsStore";
+    import { Box } from "@projectit/core";
+    import { autorun } from "mobx";
+    import { editorEnvironment } from "../WebappConfiguration";
+
+    let currentBox: Box = null;
+
+    autorun( () => {
+        currentBox = editorEnvironment.editor.selectedBox;
+    });
 </script>
 
 <style>
