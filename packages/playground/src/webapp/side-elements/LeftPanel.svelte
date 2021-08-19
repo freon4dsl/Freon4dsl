@@ -2,7 +2,11 @@
 <!-- It is shown to the left, when activated by the button on the AppBar -->
 <!-- It shows menus that otherwise would be on the AppBar -->
 
-<Sidepanel style="width: 100px;" bind:visible={$leftPanelVisible} disableScroll>
+<!-- It looks like it is impossible to styule the side-panel directly. -->
+<!-- Therefore we introduce another <div> to surround it. Here the --bg-color parameter -->
+<!-- of the side-panel is set. -->
+<div class="panel">
+<Sidepanel style="width: 100px; color: var(--theme-colors-color); background: var(--theme-colors-bg_color);" bind:visible={$leftPanelVisible} disableScroll>
 	<!-- icon  button to close the side panel -->
 	<div class="logo">
 		<Button
@@ -19,6 +23,7 @@
 	<!-- content of the side panel-->
 	<MenuList />
 </Sidepanel>
+</div>
 
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
@@ -29,15 +34,15 @@
 </script>
 
 <style>
+	.panel {
+		--bg-color: var(--theme-colors-inverse_color);
+	}
 	.logo {
 		height: var(--pi-header-height);
 		padding: 0 4px;
 		display: flex;
 		align-items: center;
-		color: var(--inverse-color);
-		background: var(--bg-app-bar);
+		color: var(--theme-colors-inverse_color);
+		background: var(--theme-colors-bg_app_bar);
 	}
-	/*.side-panel{*/
-	/*	width: 100px;*/
-	/*}*/
 </style>

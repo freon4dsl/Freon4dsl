@@ -1,0 +1,20 @@
+{
+   "$typename": "ExModel",
+   "name": "modelUnit2",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "ent45",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "age",
+               "declaredType": "Integer"
+            }
+         ],
+         "methods": [],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}

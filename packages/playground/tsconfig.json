@@ -83,6 +83,7 @@
     "baseUrl": "./src",
     "lib": [
       "dom",
+      "dom.iterable",
       "es6",
       "es2017", /* needed to use '.include()' for string[] array */
       "es2019"

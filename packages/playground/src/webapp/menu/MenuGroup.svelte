@@ -24,7 +24,7 @@
         ripple: true,
         disabled: false,
         fullWidth: false,
-        style: "color: var(--inverse-color); height:var(--pi-menu-height); text-transform: none; font-size: var(--button-font-size);"
+        style: "color: var(--theme-colors-inverse_color); height:var(--pi-menu-height); text-transform: none; font-size: var(--pi-button-font-size);"
     };
 </script>
 

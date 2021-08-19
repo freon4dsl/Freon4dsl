@@ -1,10 +1,10 @@
 <!-- this component shows a message to the user in a snackbar at the top of the page -->
 <!-- the content, severity, and whether or not the message is shown is triggered by the elements in WebappStore -->
 
-<Snackbar style="font-size:var(--error-font-size);" bind:visible bg={bgs[colorpicker]} {timeout}>
+<Snackbar style="font-size:var(--pi-error-font-size);" bind:visible bg={bgs[colorpicker]} {timeout}>
     {get(errorMessage)}
     <span slot="action">
-        <Button style="font-size:var(--button-font-size);" color={btcolors[colorpicker]} on:click={() => {visible=false}}>Close</Button>
+        <Button style="font-size:var(--pi-button-font-size);" color={btcolors[colorpicker]} on:click={() => {visible=false}}>Close</Button>
     </span>
 </Snackbar>
 

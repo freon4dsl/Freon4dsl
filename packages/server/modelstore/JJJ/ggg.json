@@ -1,0 +1,103 @@
+{
+   "$typename": "ExModel",
+   "name": "ggg",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "",
+               "declaredType": null
+            }
+         ],
+         "methods": [],
+         "baseEntity": null
+      }
+   ],
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "AA",
+         "body": {
+            "$typename": "MethodCallExpression",
+            "args": [],
+            "appliedfeature": null,
+            "methodDefinition": "HH"
+         },
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "BB",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "CC",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "DD",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "EE",
+         "body": null,
+         "parameters": [],
+         "declaredType": "Integer"
+      },
+      {
+         "$typename": "Method",
+         "name": "FF",
+         "body": {
+            "$typename": "SumExpression",
+            "variable": null,
+            "from": null,
+            "to": null,
+            "body": null,
+            "appliedfeature": null
+         },
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "GG",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "HH",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "FF",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      },
+      {
+         "$typename": "Method",
+         "name": "JJ",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      }
+   ]
+}

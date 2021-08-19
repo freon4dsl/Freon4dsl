@@ -2,20 +2,29 @@
 <!-- It contains the menus, the name of the language, and ... -->
 
 <div class="status-bar">
-    <div>
-        <div class="vl"></div>
-            unit <i>{$currentUnitName}</i> of model <i>{$currentModelName} box: {currentBox?.role} </i>
-            {#if ($modelErrors.length > 0)}
-                <div class="vl"></div>
-                number of errors: {$modelErrors.length}
-            {/if}
-        <div class="vl"></div>
-    </div>
+    {#if ($modelErrors.length > 0)}
+        <Icon class="icon" style="color:var(--theme-colors-accent);">
+            <svelte:component this={error} />
+        </Icon>
+    {:else}
+        <Icon class="icon">
+            <svelte:component this={check} />
+        </Icon>
+    {/if}
+    unit: <i>{$currentUnitName}</i>
+    <Icon class="icon">
+        <svelte:component this={arrowRight} />
+    </Icon>
+    box: <i>{currentBox?.role} </i>
 </div>
 
 <script lang="ts">
     import { currentUnitName, currentModelName } from "../WebappStore";
     import { modelErrors } from "../main-ts-files/ModelErrorsStore";
+    import { Icon } from "svelte-mui";
+    import error from "../assets/icons/svg/error.svg";
+    import check from "../assets/icons/svg/check_circle.svg";
+    import arrowRight from "../assets/icons/svg/keyboard_arrow_right.svg"
     import { Box } from "@projectit/core";
     import { autorun } from "mobx";
     import { editorEnvironment } from "../WebappConfiguration";
@@ -29,26 +38,22 @@
 
 <style>
     .status-bar {
-        display: flex;
-        align-items: center;
-        height: var(--pi-header-height);
-        color: var(--pi-darkblue);
-        background: var(--pi-lightblue);
-        font-size: var(--button-font-size);
-        line-height: 1;
-        min-width: inherit;
-        padding: 0 4px 0 6px;
-        position: fixed;
-        left: 8px;
-        bottom: calc(var(--pi-footer-height) + 8px);
-        border: var(--pi-darkblue) solid 1px;
-        right: 6px;
-        z-index: 20;
+        position: relative;
+        height: var(--pi-statusbar-height);
+        width: 100%;
+        color: var(--theme-colors-color);
+        background: var(--theme-colors-inverse_color);
+        font-size: var(--pi-button-font-size);
+        border-bottom: var(--theme-colors-list_divider) solid 1px;
     }
     .vl {
-        border-left: 1px solid var(--pi-darkblue);
+        border-left: 1px solid var(--theme-colors-color);
         height: var(--pi-header-height);
         display:inline;
         margin: 6px;
+        position: relative;
+    }
+    .icon {
+        vertical-align: top;
     }
 </style>
