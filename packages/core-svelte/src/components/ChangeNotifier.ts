@@ -3,6 +3,8 @@ import { observable } from "mobx";
 
 export const AUTO_LOGGER: PiLogger = new PiLogger("AUTORUN");
 export const UPDATE_LOGGER: PiLogger = new PiLogger("AFTER_UPDATE");
+export const FOCUS_LOGGER: PiLogger = new PiLogger("FOCUS");
+
 
 /**
  * Helper class to enforce change notification.

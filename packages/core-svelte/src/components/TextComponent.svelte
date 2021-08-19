@@ -21,7 +21,7 @@
         PiCaret, PiCaretPosition, PiLogger, isPrintable
     } from "@projectit/core";
     import { afterUpdate, onMount, tick } from "svelte";
-    import { AUTO_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
 
@@ -35,7 +35,8 @@
     }
 
     let caretPosition: number = 0;
-    export const setFocus =  ():void => {
+    export const setFocus =  async () => {
+        // await tick();
         logBox("setFocus in setFocus");
         if( document.activeElement === element){
             LOGGER.log("    has focus already");
@@ -219,8 +220,9 @@
         window.getSelection().removeAllRanges();
     };
 
-    const onClick = (event: MouseEvent) => {
+    const onClick = async (event: MouseEvent) => {
         logBox("onClick before");
+        // await tick();
         textBox.caretPosition = getCaretPosition();
         caretPosition = textBox.caretPosition;
         // setCaretPosition(caretPosition);
@@ -346,30 +348,31 @@
         // }
     });
 
-    const onFocus = (e: FocusEvent) => {
-        logBox("onFocus for box");
+    const onFocus = async (e: FocusEvent) => {
+        FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);
         // e.preventDefault();
         // e.stopPropagation();
     }
     const onBlurHandler = async (e: FocusEvent) => {
-        LOGGER.log("onFocus Blur for box " + textBox.role);
-        await tick();
-        e.preventDefault();
-        e.stopPropagation();
-        if( !!editor.selectedBox && !!textBox ) {
-            if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("onFocus Blur: attempting to set focus anyway :-) " + element);
-                if(!!element) {
-                    setFocus();
-                } else {
-                    LOGGER.log("onFocus Blur: attempting to set focus on null element :-) ");
-                }
-            } else {
-                LOGGER.log("onFocus Blur: textbox is not selected selected role " + editor.selectedBox.role + " box role " + textBox.role + "+ sel id " + editor.selectedBox.element.piId() + " box id " + textBox.element.piId());
-            }
-        } else {
-            LOGGER.log("onFocus Blur: something is null selectedBox " + editor.selectedBox + " textBox " + textBox);
-        }
+        FOCUS_LOGGER.log("TextComponent.onBlur for box " + textBox.role);
+        // await tick();
+        // e.preventDefault();
+        // e.stopPropagation();
+        // if( !!editor.selectedBox && !!textBox ) {
+        //     if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
+        //         LOGGER.log("onFocus Blur: attempting to set focus anyway :-) " + element);
+        //         if(!!element) {
+        //             LOGGER.log("     onFocus Blur: setting focus!!");
+        //             setFocus();
+        //         } else {
+        //             LOGGER.log("onFocus Blur: attempting to set focus on null element :-) ");
+        //         }
+        //     } else {
+        //         LOGGER.log("onFocus Blur: textbox is not selected selected role " + editor.selectedBox.role + " box role " + textBox.role + "+ sel id " + editor.selectedBox.element.piId() + " box id " + textBox.element.piId());
+        //     }
+        // } else {
+        //     LOGGER.log("onFocus Blur: something is null selectedBox " + editor.selectedBox + " textBox " + textBox);
+        // }
 
     }
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ChangeNotifier } from "./ChangeNotifier";
+    import { ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import { clickOutside } from "./clickOutside"
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
@@ -78,9 +78,16 @@
         getOptionsLogged().forEach( option => LOGGER.log("OPTION "+ option.label));
     });
 
+    const onFocus = (e: FocusEvent) =>  {
+        FOCUS_LOGGER.log("DropdownComponent.onFocus")
+    };
+    const onBlur = (e: FocusEvent) => {
+        FOCUS_LOGGER.log("DropdownComponent.onBlur")
+    }
 </script>
 
-<div class="dropdown">
+<div class="dropdown"
+        on:focus={onFocus}>
     <div tabIndex={0}  />
     <div class="popupWrapper" use:clickOutside on:click_outside={handleClickOutside}>
         {#each getOptionsForHtml as option (option.id)}

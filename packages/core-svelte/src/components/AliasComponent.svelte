@@ -23,7 +23,7 @@
     import { action, autorun } from "mobx";
     import SelectableComponent from "./SelectableComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import DropdownComponent from "./DropdownComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import { SelectOptionList } from "./SelectableOptionList";
@@ -312,15 +312,15 @@
     });
 
     const onFocusHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus for box " + choiceBox.role);
-        e.preventDefault();
-        e.stopPropagation();
+        FOCUS_LOGGER.log("AliasComponent.onFocus for box " + choiceBox.role);
+        // e.preventDefault();
+        // e.stopPropagation();
     }
 
     const onBlurHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus Blur for box " + choiceBox.role);
-        e.preventDefault();
-        e.stopPropagation();
+        FOCUS_LOGGER.log("AliasComponent.onBlur for box " + choiceBox.role);
+        // e.preventDefault();
+        // e.stopPropagation();
     }
 </script>
 
