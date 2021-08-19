@@ -1,16 +1,16 @@
 <!-- RightPanel shows a Panel that contains Help Info -->
 <!-- It is shown to the right -->
 
+<!-- It looks like it is impossible to styule the side-panel directly. -->
+<!-- Therefore we introduce another <div> to surround it. Here the --bg-color parameter -->
+<!-- of the side-panel is set. -->
+<div class="panel">
 <Sidepanel right bind:visible={$rightPanelVisible}>
 	<!-- icon  button to close the side panel -->
 	<div class="topbar">
-			<a display="inline-block" target="_blank" href="http://www.projectit.org">
+			<a target="_blank" href="http://www.projectit.org">
 				<!-- compiled svg does not work, because the path is too complex-->
-				{#if $theme === 'light'}
-					<img src="/img/projectit-logo-inverse-colors.png" alt="ProjectIt Logo">
-				{:else if ($theme === 'dark')}
-					<img src="/img/projectit-logo.png" alt="ProjectIt Logo">
-				{/if}
+				<img src="/img/projectit-logo-inverse-colors.png"  style="color:var(--theme-colors-color)" alt="ProjectIt Logo">
 			</a>
 <!--		<div class="inbetween"></div>-->
 			<Button
@@ -29,7 +29,7 @@
 	<div class="content">
 		Currently there is no in-build help functionality, other than a list of keybindings. We refer you to our website:
 		<br>
-		<div align="center">
+		<div>
 			<a href="http://www.projectit.org/" target="_blank">
 				www.projectit.org
 			</a>
@@ -57,7 +57,7 @@
 	<div class="content" >
 		ProjectIt is an open source project which can be found at:
 		<br>
-		<div align="center" >
+		<div>
 			<a href="https://github.com/projectit-org" target="_blank">
 				https://github.com/projectit-org.
 			</a>
@@ -70,7 +70,7 @@
 	<hr>
 	<div class="content">
 		Created by:
-		<div align="center" >
+		<div >
 			<a href="http://www.openmodeling.nl/" target="_blank">
 				www.openmodeling.nl.
 			</a>
@@ -78,24 +78,25 @@
 	</div>
 
 </Sidepanel>
+</div>
 
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 	import arrowForward from '../assets/icons/svg/arrow_forward.svg';
-	import { rightPanelVisible, theme, versionNumber} from "../WebappStore";
+	import { rightPanelVisible, versionNumber} from "../WebappStore";
 </script>
 
 <style>
+	.panel {
+		--bg-color: var(--theme-colors-inverse_color);
+	}
 	.topbar {
 		height: var(--pi-header-height);
 		padding: 0 4px;
-		color: var(--inverse-color);
-		background: var(--bg-app-bar);
+		color: var(--theme-colors-inverse_color);
+		background: var(--theme-colors-bg_app_bar);
 		display: flex;
 		justify-content: space-between;
-	}
-	.close-button {
-		/*display: inline-block;*/
 	}
 	img{
 		max-width: 180px;
@@ -106,24 +107,24 @@
 		margin-right: 10px;
 	}
 	.keybinding {
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 	.keybinding li {
 		padding: 4px;
 	}
 	.content{
-		color: var(--color);
+		color: var(--theme-colors-color);
 		text-align: left;
 		margin: auto;
 		padding: 4px;
 	}
 	.title {
-		color: var(--color);
+		color: var(--theme-colors-color);
 		font-weight: bold;
 		padding: 4px;
 	}
 	a{
-		color: var(--color);
+		color: var(--theme-colors-color);
 		text-decoration: underline;
 		font-style: italic;
 		vertical-align: middle;

@@ -10,6 +10,13 @@ PiLogger.mute("AUTORUN");
 PiLogger.mute("AFTER_UPDATE");
 PiLogger.mute("SelectOptionList");
 PiLogger.mute("RenderComponent");
+PiLogger.mute("SelectableComponent");
+PiLogger.mute("LabelComponent");
+PiLogger.mute("ListComponent");
+PiLogger.mute("SelectableComponent");
+PiLogger.mute("DropdownComponent");
+PiLogger.mute("DropdownItemComponent");
+
 // PiLogger.muteAllLogs()
 
 const app = new App({

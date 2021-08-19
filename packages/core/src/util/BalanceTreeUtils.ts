@@ -4,6 +4,8 @@ import { Box, PiEditor } from "../editor";
 import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression, isPiExpression } from "../language";
 
 // reserved role names for expressions, use with care.
+export const PI_BINARY_EXPRESSION_LEFT = "PiBinaryExpression-left";
+export const PI_BINARY_EXPRESSION_RIGHT = "PiBinaryExpression-right";
 export const BEFORE_BINARY_OPERATOR = "binary-pre";
 export const AFTER_BINARY_OPERATOR = "binary-post";
 export const LEFT_MOST = "exp-left";
@@ -81,20 +83,20 @@ class BTree {
         const exp = box.element as PiExpression;
         switch (box.role) {
             case LEFT_MOST:
-                selectedElement = { element: newBinExp, boxRoleToSelect: "PiBinaryExpression-left" };
+                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
                 PiUtils.replaceExpression(exp, newBinExp, editor);
                 newBinExp.piSetRight(exp);
                 this.balanceTree(newBinExp, editor);
                 break;
             case RIGHT_MOST:
-                selectedElement = { element: newBinExp, boxRoleToSelect: "PiBinaryExpression-right" };
+                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
                 PiUtils.replaceExpression(exp, newBinExp, editor);
                 newBinExp.piSetLeft(exp);
                 this.balanceTree(newBinExp, editor);
                 break;
             case BEFORE_BINARY_OPERATOR:
                 PiUtils.CHECK(isPiBinaryExpression(exp), "Operator alias only allowed in binary operator");
-                selectedElement = { element: newBinExp, boxRoleToSelect: "PiBinaryExpression-right" };
+                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_RIGHT };
                 const left = (exp as PiBinaryExpression).piLeft();
                 (exp as PiBinaryExpression).piSetLeft(newBinExp);
                 // PiUtils.replaceExpression(left as PiExpression, newBinExp, editor);
@@ -103,7 +105,7 @@ class BTree {
                 break;
             case AFTER_BINARY_OPERATOR:
                 PiUtils.CHECK(isPiBinaryExpression(exp), "Operator alias only allowed in binary operator");
-                selectedElement = { element: newBinExp, boxRoleToSelect: "PiBinaryExpression-left" };
+                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
                 const right = (exp as PiBinaryExpression).piRight();
                 (exp as PiBinaryExpression).piSetRight(newBinExp);
                 // PiUtils.replaceExpression(right, newBinExp, editor);
@@ -112,7 +114,7 @@ class BTree {
                 break;
             case EXPRESSION_PLACEHOLDER:
                 PiUtils.replaceExpression(exp, newBinExp, editor);
-                selectedElement = { element: newBinExp, boxRoleToSelect: "PiBinaryExpression-left" };
+                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
                 this.balanceTree(newBinExp, editor);
                 break;
             default:

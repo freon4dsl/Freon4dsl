@@ -10,6 +10,8 @@ import {
 } from "../editor";
 import { PiBinaryExpression, PiExpression } from "../language";
 import {
+    PI_BINARY_EXPRESSION_LEFT,
+    PI_BINARY_EXPRESSION_RIGHT,
     AFTER_BINARY_OPERATOR,
     BEFORE_BINARY_OPERATOR,
     BINARY_EXPRESSION,
@@ -61,13 +63,13 @@ export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryEx
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
     result.addChildren([
-        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, "PiBinaryExpression-left", "[add-left]", { propertyName: "left" })),
+        (!!exp.piLeft() ? projectionToUse.getBox(exp.piLeft()) : new AliasBox(exp, PI_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left" })),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
-        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP, ),
+        new AliasBox(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         new AliasBox(exp, AFTER_BINARY_OPERATOR, NBSP),
-        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, "PiBinaryExpression-right", "[add-right]", { propertyName: "right" }))
+        (!!exp.piRight() ? projectionToUse.getBox(exp.piRight()) : new AliasBox(exp, PI_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right" }))
     ]);
     return result;
 }
@@ -103,15 +105,15 @@ export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, sym
         async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
             if (editor.actions && editor.actions.binaryExpressionCreators) {
                 const alias = editor.actions.binaryExpressionCreators.filter(e => (e.trigger as string) === option.id)[0];
-                if (alias) {
+                if (!!alias) {
                     const newExp = alias.expressionBuilder(operatorBox, alias.trigger, editor);
                     newExp.piSetLeft(exp.piLeft());
                     newExp.piSetRight(exp.piRight());
                     PiUtils.replaceExpression(exp, newExp, editor);
                     BTREE.balanceTree(newExp, editor);
                     exp = newExp;
-                    // await editor.selectElement(newExp.piRight());
-                    editor.selectBoxNew(operatorBox.nextLeafRight.firstLeaf, PiCaret.LEFT_MOST);
+                    editor.selectElement(newExp, AFTER_BINARY_OPERATOR);
+                    // editor.selectBoxNew(operatorBox.nextLeafRight.firstLeaf, PiCaret.LEFT_MOST);
                     return BehaviorExecutionResult.EXECUTED;
                 }
             }

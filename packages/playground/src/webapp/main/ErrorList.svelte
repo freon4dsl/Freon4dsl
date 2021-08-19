@@ -9,11 +9,11 @@
             >
                 {#if sortedBy === index}
                     {#if asc}
-                        <Icon color="var(--color)">
+                        <Icon color="var(--theme-colors-color)">
                             <svelte:component this={arrowUp} />
                         </Icon>
                     {:else }
-                        <Icon color="var(--color)">
+                        <Icon color="var(--theme-colors-color)">
                             <svelte:component this={arrowDown} />
                         </Icon>
                     {/if}
@@ -76,25 +76,25 @@
         grid-gap: 1px;
         max-width: 100%;
         margin: 0 auto;
-        background-color: var(--list-divider);
-        font-size: var(--error-font-size);
-        border-bottom: var(--color) 1px solid;
+        background-color: var(--theme-colors-list_divider);
+        font-size: var(--pi-error-font-size);
+        border-bottom: var(--theme-colors-color) 1px solid;
     }
     .list div{
-        background: var(--bg-color); /* color of background of all grid elements */
+        background: var(--theme-colors-inverse_color); /* color of background of all grid elements */
         padding: 5px;
     }
     .header{
         font-weight: bold;
         cursor: pointer;
-        color: var(--color);
+        color: var(--theme-colors-color);
     }
     .header .underline{
         text-decoration: underline;
     }
     .item{
         text-align: left;
-        color: var(--color);
+        color: var(--theme-colors-color);
     }
 </style>
 

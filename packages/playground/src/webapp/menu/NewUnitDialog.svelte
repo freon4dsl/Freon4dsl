@@ -1,4 +1,5 @@
-<Dialog width="290" bind:visible={$newUnitDialogVisible}>
+<!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
+<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:visible={$newUnitDialogVisible} on:keydown={handleKeydown}>
 	<div slot="title" class="title">New unit</div>
 
 	<Textfield
@@ -7,6 +8,7 @@
 			bind:value={newName}
 			bind:error="{localErrorMessage}"
 			outlined="true"
+			style="--label: var(--theme-colors-divider); --color: var(--theme-colors-color)"
 	/>
 
 	{#each get(unitTypes) as name}
@@ -16,9 +18,8 @@
 	{/each}
 
 	<div slot="actions" class="actions center">
-		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
-
+		<Button style="color:var(--theme-colors-secondary_button_text)" on:click={() => handleCancel()}>Cancel</Button>
+		<Button style="color:var(--theme-colors-primary_button_text)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
 
 	<div slot="footer" class="footer">
@@ -27,7 +28,6 @@
 
 </Dialog>
 
-<svelte:window on:keydown={handleKeydown}/>
 
 <script lang="ts">
 	import { Button, Dialog, Radio, Textfield } from 'svelte-mui';
@@ -40,8 +40,7 @@
 	let newName: string = "";
 
 	// take care of the type of unit to be created
-	let group: string;
-	$: group = $unitTypes[0];
+	let group: string = $unitTypes[0];
 
 	// if something is wrong show this message
 	let localErrorMessage: string = "";
@@ -51,7 +50,7 @@
 		right: false,
 		ripple: true,
 		disabled: false,
-		color: "var(--color)"
+		color: "var(--theme-colors-color)"
 	};
 
 	const handleCancel = () => {
@@ -69,7 +68,7 @@
 			if (newName?.length > 0) {
 				EditorCommunication.getInstance().newUnit(newName, group);
 			}
-			// console.log("Submit called, unit created: " + get(currentUnitName));
+			newName = "";
 			$newUnitDialogVisible = false;
 		}
 	}
@@ -89,12 +88,12 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 	.title {
-		color: var(--inverse-color);
+		color: var(--theme-colors-inverse_color);
 	}
 	.item-name {
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 </style>

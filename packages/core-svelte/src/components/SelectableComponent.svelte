@@ -1,23 +1,19 @@
 <script lang="ts">
     import {
-        ARROW_DOWN,
-        ARROW_LEFT, ARROW_RIGHT,
-        ARROW_UP,
-        BACKSPACE, boxAbove, boxBelow,
-        DELETE,
         Box,
         LabelBox,
         PiEditor,
-        TAB, PiLogger
+        PiLogger
     } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate, tick } from "svelte";
+    import { AUTO_LOGGER } from "./ChangeNotifier";
 
     // Parameters
     export let box: Box = new LabelBox(null, "DUMMY", "LABEL");
     export let editor: PiEditor ;
 
-    let LOGGER = new PiLogger("SelectableComponent").mute();
+    let LOGGER = new PiLogger("SelectableComponent");
     let isSelected: boolean = false;
     let className: string;
     let element: HTMLDivElement = null;
@@ -49,13 +45,18 @@
             box.actualWidth = rect.width;
             LOGGER.log("   actual is "+ box.actualWidth)
         }
+
+        if( isSelected) {
+            LOGGER.log("     setting focus from autpupdate")
+            box.setFocus();
+        }
     });
 
     autorun( () => {
+        LOGGER.log("AUITORYN SelectableComponent for box: " + box.role)
         isSelected = editor.selectedBox === box;
+        className = (isSelected ? "selectedComponent" : "unSelectedComponent");
     })
-
-    $: className = (isSelected ? "selectedComponent" : "unSelectedComponent");
 </script>
 
 <!-- NOTE The clientHeight binding is here to ensure that the afterUpdate is fired.
@@ -76,7 +77,7 @@
     }
     .unSelectedComponent {
         background: transparent;
-        border: 1px solid transparent;
+        border: none;
         display: inline-block;
         vertical-align: middle;
     }

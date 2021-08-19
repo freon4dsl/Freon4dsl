@@ -86,19 +86,18 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadUnitList(modelName: string, modelListCallback: (names: string[]) => void) {
         LOGGER.log(`ServerCommunication.loadUnitList`);
+        let result: string[] = [];
         try {
-            let result: string[] = [];
             const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${modelName}`);
             // filter out the modelUnitInterfaces
             if (!!modelUnits&& Array.isArray(modelUnits.data)) {
                 result = modelUnits.data.filter( (name: string) => name.indexOf(ModelUnitInterfacePostfix) === -1)
             }
-            modelListCallback(result);
         } catch (e) {
-            LOGGER.log(e.message);
-            LOGGER.error(this, "loadUnitList, " + e.toString());
+            LOGGER.error(this, "loadUnitList, " + e.message);
             this.setError(e);
         }
+        modelListCallback(result);
     }
 
     /**

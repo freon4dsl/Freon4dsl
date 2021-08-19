@@ -16,7 +16,7 @@ import {
     PiActions
 } from "./internal";
 
-const LOGGER = new PiLogger("PiEditor"); //.mute();
+const LOGGER = new PiLogger("PiEditor");
 
 export class PiEditor {
     @observable private _rootElement: PiElement;
@@ -29,9 +29,9 @@ export class PiEditor {
     @observable private $selectedBox: Box | null;
     private $projectedElement: HTMLDivElement | null;
 
-    private selectedElement: PiElement = null;
+    @observable private selectedElement: PiElement = null;
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
-    private selectedRole: string = null;
+    @observable private selectedRole: string = null;
 
     constructor(projection: PiProjection, actions?: PiActions) {
         this.actions = actions;
@@ -66,7 +66,7 @@ export class PiEditor {
         this.selectedRole = role;
         this.selectedPosition = caretPosition;
         wait(0);
-        LOGGER.info(this, "==> selectElement " + (!!element && element) + " Role: " + role);
+        LOGGER.info(this, "==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
         const rootBox = this.rootBox;
         const box = rootBox.findBox(element.piId(), role);
         LOGGER.info(this, "-==> selectElement found box " + (!!box && box.kind));
@@ -83,7 +83,13 @@ export class PiEditor {
     }
 
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
-        this.selectBox(this.rootBox.findBox(box.element.piId(), box.role));
+        LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position);
+        this.selectBox(this.rootBox.findBox(box.element.piId(), box.role), caretPosition);
+    }
+
+    selectBoxByRoleAndElementId(elementId: string, role: string, caretPosition?: PiCaret) {
+        LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role " + role);
+        this.selectBox(this.rootBox.findBox(elementId, role));
     }
 
     private selectBox(box: Box | null, caretPosition?: PiCaret) {
@@ -91,14 +97,17 @@ export class PiEditor {
             console.error("PiEditor.selectBox is null !");
             return;
         }
-        LOGGER.info(this, "selectBox "+ (!!box? box.role : box) );
+        LOGGER.info(this, "selectBox " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");
             return;
         }
-        this.selectedBox = box;
-        // this.$projectedElement!.focus();
-        LOGGER.info(this, "==> select box " + box.role + " caret position: " + (!!caretPosition ?  caretPosition.position : "undefined"));
+        if (isAliasBox(box)) {
+            this.selectedBox = box.textBox;
+        } else {
+            this.selectedBox = box;
+        }
+        LOGGER.info(this, "==> select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
                 LOGGER.info(this, "caret position is " + caretPosition.position);
@@ -108,8 +117,8 @@ export class PiEditor {
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
         }
-        LOGGER.info(this, "setting focus on box " + box.role);
-        // await box.setFocus();
+        LOGGER.info(this, "setting focus on box " + this.selectedBox.role);
+        // box.setFocus();
     }
 
     get selectedBox() {
@@ -118,10 +127,14 @@ export class PiEditor {
 
     set selectedBox(box: Box) {
         LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null"));
-        this.$selectedBox = box;
+        if( isAliasBox(box)) {
+            this.$selectedBox = box.textBox;
+        } else {
+            this.$selectedBox = box;
+        }
         if (!!box) {
-            this.selectedElement = box.element;
-            this.selectedRole = box.role;
+            this.selectedElement = this.$selectedBox.element;
+            this.selectedRole = this.$selectedBox.role;
         }
     }
 
@@ -134,12 +147,15 @@ export class PiEditor {
     }
 
     selectParentBox() {
-        LOGGER.info(this, "==> SelectParent");
-        const parent = this.selectedBox.parent;
+        LOGGER.info(this, "==> SelectParent of " + this.selectedBox.role);
+        let parent = this.selectedBox.parent;
+        if( isAliasBox(parent) || isSelectBox(parent)) {
+            parent = parent.parent;
+        }
         if (!!parent) {
             if (parent.selectable) {
                 this.selectBoxNew(parent);
-                parent.setFocus();
+                // parent.setFocus();
             } else {
                 this.selectBoxNew(parent);
                 this.selectParentBox();
@@ -151,27 +167,28 @@ export class PiEditor {
         const first = this.selectedBox.firstLeaf;
         if (!!first) {
             this.selectBoxNew(first);
+            // first.setFocus();
         }
     }
 
     selectNextLeaf() {
         const next = this.selectedBox.nextLeafRight;
+        LOGGER.log("!!!!!!! Select next leaf is box " + next?.role);
         if (!!next) {
             this.selectBoxNew(next);
-            next.setFocus();
-            if (isTextBox(next) || isSelectBox(next)) {
-                next.setCaret(PiCaret.LEFT_MOST);
-            }
+            // if (isTextBox(next) || isSelectBox(next)) {
+            //     next.setCaret(PiCaret.LEFT_MOST);
+            // }
         }
     }
 
-    async selectPreviousLeaf() {
+    selectPreviousLeaf() {
         const previous = this.selectedBox.nextLeafLeft;
         if (!!previous) {
             this.selectBoxNew(previous);
-            previous.setFocus();
+            // previous.setFocus();
             if (isTextBox(previous) || isSelectBox(previous)) {
-                LOGGER.info(this, "selectPreviousLeaf set caret to RIGHT_MOST");
+                LOGGER.info(this, "!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
                 previous.setCaret(PiCaret.RIGHT_MOST);
             }
         }
@@ -187,29 +204,29 @@ export class PiEditor {
         //     PiUtils.replaceExpression(exp, newExp, this);
         //     await this.selectElement(newExp);
         // } else {
-            if (container !== null) {
-                LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
-                const propertyIndex = container.propertyIndex;
-                const parentElement = container.container;
-                if (propertyIndex !== undefined) {
-                    let arrayProperty = (container.container as any)[container.propertyName] as any;
-                    arrayProperty.splice(propertyIndex, 1);
-                    let length = arrayProperty.length;
-                    if (length === 0) {
-                        // TODO Maybe we should select the element (or leaf) just before the list.
-                        this.selectElement(parentElement,`${container.container.piLanguageConcept()}-${container.propertyName}`);
-                    } else if (length <= propertyIndex) {
-                        this.selectElement(arrayProperty[propertyIndex - 1]);
-                    } else {
-                        this.selectElement(arrayProperty[propertyIndex]);
-                    }
+        if (container !== null) {
+            LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
+            const propertyIndex = container.propertyIndex;
+            const parentElement = container.container;
+            if (propertyIndex !== undefined) {
+                let arrayProperty = (container.container as any)[container.propertyName] as any;
+                arrayProperty.splice(propertyIndex, 1);
+                let length = arrayProperty.length;
+                if (length === 0) {
+                    // TODO Maybe we should select the element (or leaf) just before the list.
+                    this.selectElement(parentElement, `${container.container.piLanguageConcept()}-${container.propertyName}`);
+                } else if (length <= propertyIndex) {
+                    this.selectElement(arrayProperty[propertyIndex - 1]);
                 } else {
-                    container.container[container.propertyName] = null;
-                    // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
-                    this.selectElement(container.container,
-                        (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`))
+                    this.selectElement(arrayProperty[propertyIndex]);
                 }
+            } else {
+                container.container[container.propertyName] = null;
+                // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
+                this.selectElement(container.container,
+                    (container.container.piIsBinaryExpression() ? `PiBinaryExpression-${container.propertyName}` : `${container.container.piLanguageConcept()}-${container.propertyName}`));
             }
+        }
         // }
     }
 
@@ -224,7 +241,7 @@ export class PiEditor {
 
     set rootElement(exp: PiElement) {
         this._rootElement = exp;
-        this.$rootBox = this.projection.getBox(this._rootElement)
+        this.$rootBox = this.projection.getBox(this._rootElement);
         // if (exp instanceof MobxModelElementImpl) {
         //     exp.container = this;
         //     exp.propertyIndex = undefined;

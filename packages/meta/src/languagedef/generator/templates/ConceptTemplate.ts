@@ -448,6 +448,27 @@ export class ConceptTemplate {
                             }`).join("\n")}
                         return result;
                     }
+                    
+                    /**
+                     * Returns a list of model units of type 'type'.
+                     */
+                    getUnitsForType(type: string): ${Names.modelunit(language)}[] {
+                        switch (type) {
+                        ${language.modelConcept.allParts().map(part =>
+                            `${part.isList ?
+                                `case "${part.type.referred.name}": {
+                                    return this.${part.name};
+                                }`
+                                : 
+                                `case "${part.type.referred.name}": {
+                                    let result : ${Names.modelunit(language)}[] = [];
+                                    result.push(this.${part.name});
+                                    return result;
+                                }`
+                             }`).join("\n")}
+                        }
+                        return [];
+                    }
                 }`;
     }
 
