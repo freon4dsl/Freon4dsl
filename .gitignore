@@ -80,3 +80,16 @@ packages/test/src/*/stdlib/gen/*
 /packages/test/src/testDefinedScoper/defs/Language.ast
 /packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts
 /docs/
+/packages/server/modelstore/APEKOOL/
+/packages/server/modelstore/EMPTY-MODEL/
+/packages/server/modelstore/ExtraModel/
+/packages/server/modelstore/JJJ/
+/packages/server/modelstore/Model2/
+/packages/server/modelstore/Model7/
+/packages/server/modelstore/Model8/
+/packages/server/modelstore/Model9/
+/packages/server/modelstore/myFirstModel/
+/packages/server/modelstore/mySecondModel/
+/packages/server/modelstore/NEXT/
+/packages/server/modelstore/QWER/
+/packages/server/modelstore/www/

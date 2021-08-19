@@ -1,4 +1,5 @@
-<Dialog width="350" bind:visible={$deleteUnitDialogVisible} on:keydown={handleKeydown}>
+<!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
+<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:visible={$deleteUnitDialogVisible} on:keydown={handleKeydown}>
 	<div slot="title" class="title">Deleting unit</div>
 
 	<div class="content">
@@ -56,7 +57,7 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
-		color: var(--theme-colors-color);
+		color: var(--theme-colors-accent);
 	}
 	.title {
 		color: var(--theme-colors-inverse_color);

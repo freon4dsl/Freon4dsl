@@ -1,4 +1,5 @@
-<Dialog width="290" bind:modal={modal} bind:visible={$openModelDialogVisible} on:keydown={handleKeydown}>
+<!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
+<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:modal={modal} bind:visible={$openModelDialogVisible} on:keydown={handleKeydown}>
 	<div slot="title" class="title">Open or new model:</div>
 
 	<Textfield

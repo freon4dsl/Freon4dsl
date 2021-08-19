@@ -1,0 +1,14 @@
+{
+   "$typename": "ExModel",
+   "name": "WORDUNIT",
+   "entities": [],
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "siliconMeth",
+         "body": null,
+         "parameters": [],
+         "declaredType": "Boolean"
+      }
+   ]
+}

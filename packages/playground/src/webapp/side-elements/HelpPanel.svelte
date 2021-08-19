@@ -1,7 +1,11 @@
 <!-- RightPanel shows a Panel that contains Help Info -->
 <!-- It is shown to the right -->
 
-<Sidepanel class="panel" right bind:visible={$rightPanelVisible}>
+<!-- It looks like it is impossible to styule the side-panel directly. -->
+<!-- Therefore we introduce another <div> to surround it. Here the --bg-color parameter -->
+<!-- of the side-panel is set. -->
+<div class="panel">
+<Sidepanel right bind:visible={$rightPanelVisible}>
 	<!-- icon  button to close the side panel -->
 	<div class="topbar">
 			<a target="_blank" href="http://www.projectit.org">
@@ -74,6 +78,7 @@
 	</div>
 
 </Sidepanel>
+</div>
 
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
@@ -82,6 +87,9 @@
 </script>
 
 <style>
+	.panel {
+		--bg-color: var(--theme-colors-inverse_color);
+	}
 	.topbar {
 		height: var(--pi-header-height);
 		padding: 0 4px;
