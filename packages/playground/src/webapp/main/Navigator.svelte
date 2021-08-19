@@ -6,14 +6,26 @@
             <li class="type-name">Unit Type <i>{name}</i>
                 <ul class="bullet-list">
                     {#each myUnits[index] as unit}
-                        <Menu origin="top left">
+                        <Menu style="border-radius: 2px; margin: 0px; background-color: var(--theme-colors-inverse_color)" origin="top left" dy="50px">
                             <div class="item-name" slot="activator">
                                 <li>{unit.name}</li>
                             </div>
 
-                            <Menuitem on:click={() => openUnit(unit)}>Open</Menuitem>
-                            <Menuitem on:click={() => exportUnit(unit)}>Export</Menuitem>
-                            <Menuitem on:click={() => deleteUnit(unit)}>Delete</Menuitem>
+                            <Menuitem style="font-size: var(--pi-menuitem-font-size);
+                                    margin: 4px 10px;
+                                    padding: 2px;
+                                    height: 18px;"
+                                      on:click={() => openUnit(unit)}>Open</Menuitem>
+                            <Menuitem style="font-size: var(--pi-menuitem-font-size);
+                                    margin: 4px 10px;
+                                    padding: 2px;
+                                    height: 18px;"
+                                      on:click={() => exportUnit(unit)}>Export</Menuitem>
+                            <Menuitem style="font-size: var(--pi-menuitem-font-size);
+                                    margin: 4px 10px;
+                                    padding: 2px;
+                                    height: 18px;"
+                                      on:click={() => deleteUnit(unit)}>Delete</Menuitem>
 
                         </Menu>
                         <br>
