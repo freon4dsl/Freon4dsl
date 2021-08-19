@@ -66,7 +66,7 @@ export class PiEditor {
         this.selectedRole = role;
         this.selectedPosition = caretPosition;
         wait(0);
-        LOGGER.info(this, "==> selectElement " + (!!element && element) + " Role: " + role);
+        LOGGER.info(this, "==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
         const rootBox = this.rootBox;
         const box = rootBox.findBox(element.piId(), role);
         LOGGER.info(this, "-==> selectElement found box " + (!!box && box.kind));
@@ -83,8 +83,8 @@ export class PiEditor {
     }
 
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
-        LOGGER.log("SelectBoxNEW " + (box ? box.role : box));
-        this.selectBox(this.rootBox.findBox(box.element.piId(), box.role));
+        LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position);
+        this.selectBox(this.rootBox.findBox(box.element.piId(), box.role), caretPosition);
     }
 
     selectBoxByRoleAndElementId(elementId: string, role: string, caretPosition?: PiCaret) {
@@ -97,13 +97,17 @@ export class PiEditor {
             console.error("PiEditor.selectBox is null !");
             return;
         }
-        LOGGER.info(this, "selectBox " + (!!box ? box.role : box));
+        LOGGER.info(this, "selectBox " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");
             return;
         }
-        this.selectedBox = box;
-        LOGGER.info(this, "==> select box " + box.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
+        if (isAliasBox(box)) {
+            this.selectedBox = box.textBox;
+        } else {
+            this.selectedBox = box;
+        }
+        LOGGER.info(this, "==> select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
                 LOGGER.info(this, "caret position is " + caretPosition.position);
@@ -113,7 +117,7 @@ export class PiEditor {
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
         }
-        LOGGER.info(this, "setting focus on box " + box.role);
+        LOGGER.info(this, "setting focus on box " + this.selectedBox.role);
         // box.setFocus();
     }
 

@@ -38,11 +38,7 @@
         // let boxes: ReadonlyArray<Box> = [];
         AUTO_LOGGER.log("ListComponent[" + "] " + list.role + " children " + list.children.length)
         svList = list;
-        // @ts-ignore
-        // list.children.forEach(b => {
-        //     LOGGER.log("    list element is " + b.role)
-        // });
-        // boxes = svList.children;
+
         const nrOfBoxes = svList.children.length;
         gridStyle =
             isHorizontalBox(svList)

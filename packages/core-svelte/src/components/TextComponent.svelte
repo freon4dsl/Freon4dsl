@@ -42,7 +42,7 @@
             return;
         }
         element.focus();
-        // setCaretPosition(textBox.caretPosition)
+        setCaretPosition(textBox.caretPosition)
         // console.log("windows.focus is on " + window.document.activeElement)
         // this.startEditing();
     };
@@ -348,11 +348,12 @@
 
     const onFocus = (e: FocusEvent) => {
         logBox("onFocus for box");
-        e.preventDefault();
-        e.stopPropagation();
+        // e.preventDefault();
+        // e.stopPropagation();
     }
-    const onBlurHandler = (e: FocusEvent) => {
+    const onBlurHandler = async (e: FocusEvent) => {
         LOGGER.log("onFocus Blur for box " + textBox.role);
+        await tick();
         e.preventDefault();
         e.stopPropagation();
         if( !!editor.selectedBox && !!textBox ) {
