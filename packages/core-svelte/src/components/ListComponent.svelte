@@ -1,7 +1,7 @@
 <script lang="ts">
     import { autorun } from "mobx";
-    import { afterUpdate, onDestroy } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { afterUpdate, onDestroy, onMount } from "svelte";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import { Box, HorizontalListBox, PiEditor, PiLogger } from "@projectit/core";
     import { isHorizontalBox } from "@projectit/core";
@@ -22,8 +22,13 @@
 
     async function setFocus(): Promise<void> {
         LOGGER.log("setFocus for box " + list.role);
-        element.focus();
+        if (!!element) {
+            element.focus();
+        }
     }
+    onMount( () => {
+        list.setFocus = setFocus;
+    });
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
         list.setFocus = setFocus;
@@ -38,11 +43,7 @@
         // let boxes: ReadonlyArray<Box> = [];
         AUTO_LOGGER.log("ListComponent[" + "] " + list.role + " children " + list.children.length)
         svList = list;
-        // @ts-ignore
-        // list.children.forEach(b => {
-        //     LOGGER.log("    list element is " + b.role)
-        // });
-        // boxes = svList.children;
+
         const nrOfBoxes = svList.children.length;
         gridStyle =
             isHorizontalBox(svList)
@@ -63,14 +64,14 @@
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
     const onFocusHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus for box " + list.role);
-        e.preventDefault();
-        e.stopPropagation();
+        FOCUS_LOGGER.log("ListComponent.onFocus for box " + list.role);
+        // e.preventDefault();
+        // e.stopPropagation();
     }
     const onBlurHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus Blur for box " + list.role);
-        e.preventDefault();
-        e.stopPropagation();
+        FOCUS_LOGGER.log("ListComponent.onBlur for box " + list.role);
+        // e.preventDefault();
+        // e.stopPropagation();
     }
 </script>
 

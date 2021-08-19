@@ -3,7 +3,7 @@
     import { autorun } from "mobx";
     import { LabelBox, PiLogger } from "@projectit/core";
     import type { PiEditor } from "@projectit/core";
-    import { AUTO_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
 
     export let label = new LabelBox(null, "boxRole", "This is a box");
     export let editor: PiEditor;
@@ -17,8 +17,8 @@
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
         LOGGER.log("LabelComponent.setFocus on " + element);
-        if (element !== null) {
-            // element.focus();
+        if (!!element) {
+            element.focus();
         }
     };
 
@@ -33,18 +33,18 @@
     });
 
     const onFocusHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus for box " + label.role);
-        if(!!e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+        FOCUS_LOGGER.log("onFocus for box " + label.role);
+        // if(!!e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        // }
     }
     const onBlurHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus Blur for box " + label.role);
-        if(!!e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+        FOCUS_LOGGER.log("onBlur for box " + label.role);
+        // if(!!e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        // }
     }
 
 </script>

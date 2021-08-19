@@ -21,7 +21,7 @@
         PiCaret, PiCaretPosition, PiLogger, isPrintable
     } from "@projectit/core";
     import { afterUpdate, onMount, tick } from "svelte";
-    import { AUTO_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
 
@@ -35,14 +35,15 @@
     }
 
     let caretPosition: number = 0;
-    export const setFocus =  ():void => {
+    export const setFocus =  async () => {
+        // await tick();
         logBox("setFocus in setFocus");
         if( document.activeElement === element){
             LOGGER.log("    has focus already");
             return;
         }
         element.focus();
-        // setCaretPosition(textBox.caretPosition)
+        setCaretPosition(textBox.caretPosition)
         // console.log("windows.focus is on " + window.document.activeElement)
         // this.startEditing();
     };
@@ -166,7 +167,7 @@
                 break;
         }
         logBox("setFocus in setCaret")
-        element.focus();
+        // element.focus();
     };
 
     const setCaretToMostLeft = () => {
@@ -219,8 +220,9 @@
         window.getSelection().removeAllRanges();
     };
 
-    const onClick = (event: MouseEvent) => {
+    const onClick = async (event: MouseEvent) => {
         logBox("onClick before");
+        // await tick();
         textBox.caretPosition = getCaretPosition();
         caretPosition = textBox.caretPosition;
         // setCaretPosition(caretPosition);
@@ -300,7 +302,6 @@
             await editor.deleteBox(textBox);
         }
         LOGGER.log("END END text ["+ textOnScreen + "]");
-        // await editor.selectElement(textBox.element, textBox.role, editor.selectedPosition);
     };
 
     afterUpdate(  () => {
@@ -308,68 +309,25 @@
         textBox.update();
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
-
-        LOGGER.log("after update: textbox with role " + textBox.role + " is now [" + textBox.getText() + "] at " + textBox.caretPosition)
-        if( !!editor.selectedBox && !!textBox ) {
-            if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("AfterUpdate is selected " + element);
-                if(!!element) {
-                    setFocus();
-                    textBox.caretPosition = getCaretPosition();
-                    logBox("AfterUpdate for selection");
-                    // caretPosition = textBox.caretPosition;
-                    // setCaretPosition(textBox.caretPosition)
-                }
-            }
-        }
     });
 
     const getCaretPosition = (): number => {
         // TODO This causes an extra afterUpdate in Svelte, don't know why !
         // return window.getSelection().focusOffset;
         return window.getSelection().getRangeAt(0).startOffset;
-        // return 0
     };
 
     autorun( () => {
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
         text = textOnScreen;
         placeholder = textBox.placeHolder
-        AUTO_LOGGER.log("TextComponent ==> selectedBox " + !!editor.selectedBox + " textBox" + !!textBox );
-        // if( !!editor.selectedBox && !!textBox ) {
-        //     if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-        //         AUTO_LOGGER.log("+++++++++++++++++++++++++++++++++++++++++++++ " + element);
-        //         if(!!element) {
-        //             setFocus();
-        //         }
-        //     }
-        // }
     });
 
-    const onFocus = (e: FocusEvent) => {
-        logBox("onFocus for box");
-        e.preventDefault();
-        e.stopPropagation();
+    const onFocus = async (e: FocusEvent) => {
+        FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);
     }
-    const onBlurHandler = (e: FocusEvent) => {
-        LOGGER.log("onFocus Blur for box " + textBox.role);
-        e.preventDefault();
-        e.stopPropagation();
-        if( !!editor.selectedBox && !!textBox ) {
-            if (editor.selectedBox.role === textBox.role && editor.selectedBox.element.piId() === textBox.element.piId()) {
-                LOGGER.log("onFocus Blur: attempting to set focus anyway :-) " + element);
-                if(!!element) {
-                    setFocus();
-                } else {
-                    LOGGER.log("onFocus Blur: attempting to set focus on null element :-) ");
-                }
-            } else {
-                LOGGER.log("onFocus Blur: textbox is not selected selected role " + editor.selectedBox.role + " box role " + textBox.role + "+ sel id " + editor.selectedBox.element.piId() + " box id " + textBox.element.piId());
-            }
-        } else {
-            LOGGER.log("onFocus Blur: something is null selectedBox " + editor.selectedBox + " textBox " + textBox);
-        }
-
+    const onBlurHandler = async (e: FocusEvent) => {
+        FOCUS_LOGGER.log("TextComponent.onBlur for box " + textBox.role);
     }
 
 </script>
