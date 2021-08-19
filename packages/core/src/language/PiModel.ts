@@ -43,5 +43,10 @@ export interface PiModel extends PiNamedElement {
      * Returns a list of model units.
      */
     getUnits(): PiNamedElement[];
+
+    /**
+     * Returns a list of model units of type 'type'.
+     */
+    getUnitsForType(type: string): PiNamedElement[];
 }
 // end::model-interface[]

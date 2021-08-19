@@ -4,8 +4,11 @@ import { PiEnvironment } from "@projectit/core";
  * The one and only reference to the actual language for which this editor runs
  */
 
-import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
+export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
+
+// import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();

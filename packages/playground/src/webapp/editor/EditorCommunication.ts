@@ -190,7 +190,7 @@ export class EditorCommunication {
 
     /**
      * Whenever there is a change in the units of the current model,
-     * this fucntion is called. It sets the store varible 'units' to the
+     * this function is called. It sets the store varible 'units' to the
      * right value.
      * @private
      */
@@ -198,8 +198,7 @@ export class EditorCommunication {
         console.log("setUnitLists");
         let newUnitList: Array<PiNamedElement[]> = [];
         for (const name of editorEnvironment.unitNames) {
-            // newUnitList.push(this.currentModel.getUnitsForType(name));
-            newUnitList.push(this.currentModel.getUnits());
+            newUnitList.push(this.currentModel.getUnitsForType(name));
         }
         units.set(newUnitList);
     }
@@ -325,6 +324,7 @@ export class EditorCommunication {
         if (elem) {
             // save the old current unit, if there is one
             this.saveCurrentUnit();
+
             // TODO find way to get interface without use of the server
             // swap old unit with its interface in the in-memory model
             // ServerCommunication.getInstance().loadModelUnitInterface(
@@ -336,6 +336,8 @@ export class EditorCommunication {
             //             EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
             //         }
             //     });
+
+            // add the new unit to the current model
             this.currentModel.addUnit(elem);
             // add the new unit to the navigator
             this.setUnitLists();

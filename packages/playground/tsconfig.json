@@ -81,13 +81,13 @@
     "forceConsistentCasingInFileNames": true,        /* Disallow inconsistently-cased references to the same file. */
     "importsNotUsedAsValues": "preserve",
     "baseUrl": "./src",
-//    "lib": [
-//      "dom",
-//      "dom.iterable",
-//      "es6",
-//      "es2017", /* needed to use '.include()' for string[] array */
-//      "es2019"
-//    ]
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es6",
+      "es2017", /* needed to use '.include()' for string[] array */
+      "es2019"
+    ]
   },
   "exclude": [
     "node_modules/*",

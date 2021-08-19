@@ -39,8 +39,7 @@
 	let newName: string = "";
 
 	// take care of the type of unit to be created
-	let group: string;
-	$: group = $unitTypes[0];
+	let group: string = $unitTypes[0];
 
 	// if something is wrong show this message
 	let localErrorMessage: string = "";
