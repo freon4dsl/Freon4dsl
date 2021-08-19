@@ -29,11 +29,8 @@
 <script lang="ts">
 	import {Button, Radio, Dialog, Textfield} from 'svelte-mui';
 	import {
-		currentModelName,
-		noUnitAvailable,
 		modelNames,
 		openModelDialogVisible,
-		units,
 		initializing
 	} from "../WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";

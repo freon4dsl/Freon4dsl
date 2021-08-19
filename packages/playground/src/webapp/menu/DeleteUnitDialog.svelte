@@ -28,6 +28,7 @@
 		ripple: true,
 		disabled: false,
 	};
+
 	const handleCancel = () => {
 		console.log("Cancel called ");
 		$toBeDeleted = null;
