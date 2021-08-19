@@ -79,18 +79,16 @@
 	onMount(async () => {
 		// correct layout for the size of the window
 		onResize();
+
+		// get list of models from server
+		await ServerCommunication.getInstance().loadModelList((names: string[]) => {
+			if (names.length > 0) {
+				$modelNames = names;
+			}
+		});
+
 		// open the app with the open/new model dialog
-		try {
-			// get list of models from server
-			ServerCommunication.getInstance().loadModelList((names: string[]) => {
-				if (names.length > 0) {
-					$modelNames = names;
-				}
-				$openModelDialogVisible = true;
-			});
-		} catch (e) {
-			$openModelDialogVisible = true;
-		}
+		$openModelDialogVisible = true;
 	});
 
 	async function onResize() {
@@ -104,17 +102,16 @@
 		}
 	}
 
-	// TODO not sure whether this function is useful
-	// function onKeyDown(e) {
-	// 	// e.keyCode === 13 => Enter or Return key
-	// 	// e.keyCode === 32 => Spacebar
-	// 	if (e.keyCode === 13 || e.keyCode === 32) {
-	// 		e.stopPropagation();
-	// 		e.preventDefault();
-	//
-	// 		leftPanelVisible.set(false);
-	// 	}
-	// }
+	const handleKeydown = (event) => {
+		switch (event.keyCode) {
+			case 13: { // Enter key
+				event.stopPropagation();
+				event.preventDefault();
+				handleSubmit();
+				break;
+			}
+		}
+	}
 </script>
 
 <style>

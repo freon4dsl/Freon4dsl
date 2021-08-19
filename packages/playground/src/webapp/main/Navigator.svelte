@@ -1,5 +1,6 @@
 <div class="navigator">
-    {$currentModelName}
+    <div class="nav-title">Model {$currentModelName}</div>
+    <hr>
     <ul class="list">
         {#each $unitTypes as name}
             <li class="type-name">Unit Type <i>{name}</i>
@@ -86,13 +87,16 @@
         font-size: var(--pi-error-font-size);
         padding: 6px;
     }
+    .nav-title {
+        font-weight: bold;
+    }
     .list {
         list-style-type: none;
-        padding-left: 12px;
+        padding-left: 0px;
     }
     .bullet-list {
         list-style-type: square;
-        padding-left: 18px;
+        padding-left: 6px;
     }
     .type-name {
         color: var(--theme-colors-accent);

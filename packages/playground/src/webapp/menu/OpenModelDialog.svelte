@@ -1,4 +1,4 @@
-<Dialog width="290" bind:modal={modal} bind:visible={$openModelDialogVisible}>
+<Dialog width="290" bind:modal={modal} bind:visible={$openModelDialogVisible} on:keydown={handleKeydown}>
 	<div slot="title" class="title">Open or new model:</div>
 
 	<Textfield
@@ -28,7 +28,14 @@
 
 <script lang="ts">
 	import {Button, Radio, Dialog, Textfield} from 'svelte-mui';
-	import { currentModelName, noUnitAvailable, modelNames, openModelDialogVisible, units } from "../WebappStore";
+	import {
+		currentModelName,
+		noUnitAvailable,
+		modelNames,
+		openModelDialogVisible,
+		units,
+		initializing
+	} from "../WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
 
 	let modal: boolean = true; // TODO from FileMenu modal must be set to false
@@ -45,7 +52,7 @@
 	const handleCancel = () => {
 		console.log("Cancel called, model selected: " + internalSelected);
 		// only close when a model has been selected
-		if (internalSelected.length > 0 || newNameOk()) {
+		if (!$initializing) {
 			$modelNames = [];
 			resetVariables();
 		} else {
@@ -66,7 +73,7 @@
 
 	const handleKeydown = (event) => {
 		switch (event.keyCode) {
-			case 13: { // Enter key
+			case 13: { // on Enter key try to submit
 				event.stopPropagation();
 				event.preventDefault();
 				handleSubmit();
@@ -90,6 +97,9 @@
 	}
 
 	function resetVariables() {
+		if ($initializing) {
+			$initializing = false;
+		}
 		$modelNames = [];
 		$openModelDialogVisible = false;
 		newName = "";

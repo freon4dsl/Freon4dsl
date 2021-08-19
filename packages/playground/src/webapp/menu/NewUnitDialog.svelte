@@ -1,4 +1,4 @@
-<Dialog width="290" bind:visible={$newUnitDialogVisible}>
+<Dialog width="290" bind:visible={$newUnitDialogVisible} on:keydown={handleKeydown}>
 	<div slot="title" class="title">New unit</div>
 
 	<Textfield
@@ -27,7 +27,6 @@
 
 </Dialog>
 
-<svelte:window on:keydown={handleKeydown}/>
 
 <script lang="ts">
 	import { Button, Dialog, Radio, Textfield } from 'svelte-mui';

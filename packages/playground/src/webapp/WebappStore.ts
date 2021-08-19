@@ -10,6 +10,7 @@ export let fileExtensions: Writable<string[]> = writable<string[]>([]);
 export let languageName: Writable<string> = writable<string>("");
 
 // attribute to know whether or not the app is still initializing
+export let initializing: Writable<boolean> = writable<boolean>(true);
 export let noUnitAvailable: Writable<boolean> = writable<boolean>(true);
 
 // info about the model and model unit shown

@@ -1,4 +1,4 @@
-<Dialog width="350" bind:visible={$deleteUnitDialogVisible}>
+<Dialog width="350" bind:visible={$deleteUnitDialogVisible} on:keydown={handleKeydown}>
 	<div slot="title" class="title">Deleting unit</div>
 
 	<div class="content">
@@ -15,7 +15,6 @@
 	</div>
 </Dialog>
 
-<svelte:window on:keydown={handleKeydown}/>
 
 <script lang="ts">
 	import {Button, Dialog} from 'svelte-mui';
