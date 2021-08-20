@@ -150,6 +150,7 @@ export class PiEditor {
         LOGGER.info(this, "==> SelectParent of " + this.selectedBox.role);
         let parent = this.selectedBox.parent;
         if( isAliasBox(parent) || isSelectBox(parent)) {
+            // Coming from (hidden) textbox in Select/Alias box
             parent = parent.parent;
         }
         if (!!parent) {
@@ -175,7 +176,7 @@ export class PiEditor {
         const next = this.selectedBox.nextLeafRight;
         LOGGER.log("!!!!!!! Select next leaf is box " + next?.role);
         if (!!next) {
-            this.selectBoxNew(next);
+            this.selectBoxNew(next, PiCaret.LEFT_MOST);
             // if (isTextBox(next) || isSelectBox(next)) {
             //     next.setCaret(PiCaret.LEFT_MOST);
             // }
@@ -185,7 +186,7 @@ export class PiEditor {
     selectPreviousLeaf() {
         const previous = this.selectedBox.nextLeafLeft;
         if (!!previous) {
-            this.selectBoxNew(previous);
+            this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
             // previous.setFocus();
             if (isTextBox(previous) || isSelectBox(previous)) {
                 LOGGER.info(this, "!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");

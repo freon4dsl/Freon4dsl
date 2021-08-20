@@ -54,7 +54,7 @@
 
     autorun( () => {
         LOGGER.log("AUITORYN SelectableComponent for box: " + box.role)
-        isSelected = editor.selectedBox === box;
+        isSelected = editor?.selectedBox === box;
         className = (isSelected ? "selectedComponent" : "unSelectedComponent");
     })
 </script>

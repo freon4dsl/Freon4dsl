@@ -21,7 +21,7 @@
     });
 
     async function setFocus(): Promise<void> {
-        LOGGER.log("setFocus for box " + list.role);
+        FOCUS_LOGGER.log("ListComponent.setFocus for box " + list.role);
         if (!!element) {
             element.focus();
         }

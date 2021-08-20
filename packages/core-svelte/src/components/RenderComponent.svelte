@@ -88,9 +88,13 @@
     {:else if isSvgBox(showBox) }
         <SvgComponent svgBox={showBox} editor={editor}/>
     {:else if isOptionalBox(showBox) }
-        <OptionalComponent optionalBox={showBox} editor={editor}/>
+        <SelectableComponent>
+            <OptionalComponent optionalBox={showBox} editor={editor}/>
+        </SelectableComponent>
     {:else}
-	    <LabelComponent label={UNKNOWN} editor={editor}/>
+        <SelectableComponent>
+            <LabelComponent label={UNKNOWN} editor={editor}/>
+        </SelectableComponent>
     {/if}
 </span>
 

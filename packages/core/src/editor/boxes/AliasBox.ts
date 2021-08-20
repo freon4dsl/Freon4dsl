@@ -34,7 +34,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     triggerKeyPressEvent = (key: string) => {
-        console.log("AliasBox " + this.role + " has empty triggerKeyPressEvent");
+        console.error("AliasBox " + this.role + " has empty triggerKeyPressEvent");
     };
 }
 
