@@ -18,7 +18,8 @@
         TextBox,
         PiEditor,
         toPiKey,
-        PiCaret, PiCaretPosition, PiLogger, isPrintable
+        isAliasTextBox,
+        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox
     } from "@projectit/core";
     import { afterUpdate, onMount, tick } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -256,9 +257,12 @@
             case KeyPressAction.GOTO_NEXT:
                 LOGGER.log("KeyPressAction.GOTO_NEXT");
                 editor.selectNextLeaf();
-                LOGGER.log("NEXT LEAF IS " + editor.selectedBox.role);
-                if (isAliasBox(editor.selectedBox)) {
-                    editor.selectedBox.triggerKeyPressEvent(event.key);
+                LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
+                if (isAliasTextBox(editor.selectedBox)) {
+                    LOGGER.log("     is an alias box");
+                    (editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
+                } else {
+                    LOGGER.log("     is NOT an alis box")
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -267,8 +271,8 @@
                 LOGGER.log("KeyPressAction.GOTO_PREVIOUS");
                 editor.selectPreviousLeaf();
                 LOGGER.log("PREVIOUS LEAF IS " + editor.selectedBox.role);
-                if (isAliasBox(editor.selectedBox)) {
-                    editor.selectedBox.triggerKeyPressEvent(event.key);
+                if (isAliasTextBox(editor.selectedBox)) {
+                    (editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
                 }
                 event.preventDefault();
                 event.stopPropagation();

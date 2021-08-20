@@ -1,5 +1,5 @@
 import { BehaviorExecutionResult, executeBehavior, MatchUtil } from "../../util";
-import { triggerToString, PiEditor } from "../internal";
+import { triggerToString, PiEditor, TextBox } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../language";
 
@@ -40,5 +40,10 @@ export class AliasBox extends AbstractChoiceBox {
 
 export function isAliasBox(b: Box): b is AliasBox {
     return b.kind === "AliasBox"; //  b instanceof AliasBox;
+}
+
+export function isAliasTextBox(b : Box): b is TextBox {
+    console.log(" =========== " + b.role + ", " + b.kind + " parent " + b.parent.role + ": " + b.parent.kind )
+    return b.kind === "TextBox" && isAliasBox(b.parent);
 }
 

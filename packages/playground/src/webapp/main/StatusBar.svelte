@@ -16,6 +16,7 @@
 <!--        <svelte:component this={arrowRight} />-->
 <!--    </Icon>-->
     box: <i>{currentBox?.role} </i>
+    kind: <i>{currentBox?.kind} </i>
 </div>
 
 <script lang="ts">
