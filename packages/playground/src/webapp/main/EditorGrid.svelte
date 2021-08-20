@@ -7,7 +7,7 @@
 
 <style>
     .editor-grid {
-        position: relative;
+        position: absolute;
         width: 100%;
         height: 100%;
     }
@@ -17,7 +17,7 @@
     .editor {
         position: relative;
         width: 100%;
-        height: 100%;
+        height: calc(100% - var(--pi-statusbar-height));
     }
 </style>
 
@@ -28,6 +28,8 @@
         </div>
     {:else}
         <StatusBar/>
-        <ProjectItComponent class="editor" editor={editorEnvironment.editor}/>
+         <div class="editor">
+           <ProjectItComponent editor={editorEnvironment.editor}/>
+         </div>
     {/if}
 </div>
