@@ -83,8 +83,8 @@
     }
 
     .selectedComponent {
-        background-color: var(--pi-selected-background-color);
-        border: 1px solid darkblue;
+        background-color: var(--theme-colors-bg_selected);
+        border: 1px solid var(--theme-colors-border_selected);
         box-sizing: border-box;
         display: inline-block;
         vertical-align: middle;

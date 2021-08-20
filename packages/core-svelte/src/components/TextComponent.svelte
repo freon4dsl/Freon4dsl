@@ -355,11 +355,13 @@
 <style>
     .text:empty:before {
         content: attr(data-placeholdertext);
-        background-color: #f4f4f4;
+        color: var(--theme-colors-color_empty_before_text_box);
+        background-color: var(--theme-colors-bg_empty_before_text_box);
     }
 
     .text {
-        /*background-color: lightblue;*/
+        background-color: var(--theme-colors-bg_text_box);
+        color: var(--theme-colors-color_text_box);
         padding: 3px;
         white-space: normal;
         display: inline-block;

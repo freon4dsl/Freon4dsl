@@ -48,7 +48,6 @@ export class OptionalBox extends Box {
         } else {
             return null;
         }
-        return this.box.lastLeaf ;
     }
 
     get firstEditableChild(): Box {

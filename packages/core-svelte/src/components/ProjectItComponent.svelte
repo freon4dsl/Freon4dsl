@@ -24,6 +24,7 @@
         event.stopPropagation();
 
     }
+
     const onKeyDown = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + event.key);
         // event.persist();
@@ -66,7 +67,7 @@
                 case KEY_ARROW_DOWN:
                     const down = boxBelow(editor.selectedBox);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
-                    if (down !== null && down !==  undefined) {
+                    if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
                     }
                     stopEvent(event);
@@ -84,7 +85,7 @@
     };
 
     let rootBox: Box;
-    autorun( () => {
+    autorun(() => {
         rootBox = editor.rootBox;
     });
 
@@ -105,46 +106,16 @@
 <style>
     .projectit {
         height: 100%;
-        font-size: 14px;
         width: 100%;
-        color: var(--pi-darkblue);
         overflow-x: auto;
-        background: var(--pi-editor-background);
-        background-color: var(--pi-editor-background);
+        font-size: var(--theme-fonts-size_editor);
+        font-style: var(--theme-fonts-style_editor);
+        font-weight: var(--theme-fonts-weight_editor);
+        font-family: var(--theme-fonts-family_editor);
+        color: var(--theme-colors-text_editor);
+        background-color: var(--theme-colors-bg_editor);
     }
 
-    input, button, select, textarea {
-        font-family: inherit;
-        font-size: inherit;
-        -webkit-padding: 0.4em 0;
-        padding: 0.4em;
-        margin: 0 0 0.5em 0;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 2px;
-    }
-
-    input:disabled {
-        color: #ccc;
-    }
-
-    button {
-        color: #333;
-        background-color: #f4f4f4;
-        outline: none;
-    }
-
-    button:disabled {
-        color: #999;
-    }
-
-    button:not(:disabled):active {
-        background-color: #ddd;
-    }
-
-    button:focus {
-        border-color: #666;
-    }
     .grid {
         display: inline-grid;
         grid-gap: 10px;
@@ -165,7 +136,6 @@
         border-bottom-style: solid;
         border-bottom-width: 1px;
     }
-
 
 
 </style>
