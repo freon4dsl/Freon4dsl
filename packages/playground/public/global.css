@@ -30,6 +30,10 @@
 	--theme-colors-bg_alias_box: white;
 	--theme-colors-color_alias_box: darkblue;
 	/* Dropdown */
+	--theme-colors-bg_dropdown_component: lightblue;
+	--theme-colors-border_dropdown_component: darkblue;
+	--theme-colors-color_dropdownitem_component: darkblue;
+	--theme-colors-border_dropdownitem_component: darkblue;
 	/* Selectable */
 	--theme-colors-bg_selected: rgba(211, 227, 253, 255);
 	--theme-colors-border_selected: darkblue;

@@ -28,7 +28,11 @@ export const themePresets = [
             color_alias_box: PI_DARKBLUE,               /* Color of text of aliasbox */
             /* Selection */
             bg_selected: "rgba(211, 227, 253, 255)",    /* Color of selected element */
-            border_selected: PI_DARKBLUE                /* Color of border of selected element */
+            border_selected: PI_DARKBLUE,                /* Color of border of selected element */
+            /* Dropdown Component */
+            bg_dropdown_component: "#f4f4f4",
+            border_dropdown_component: PI_DARKBLUE,
+            color_dropdownitem_component: PI_DARKBLUE,
         },
         fonts: {
             size_editor: "20px",
@@ -53,17 +57,21 @@ export const themePresets = [
             bg_editor: "darkblue", 			/* The background color of the editor */
             text_editor: "white",		    /* The color of the text, unless set otherwise by the projection */
             // TextBox
-            bg_empty_before_text_box: PI_LIGHTBLUE,
+            bg_empty_before_text_box: "rgba(1, 1, 150, 255)",
             bg_text_box: PI_DARKBLUE,
-            color_empty_before_text_box: PI_DARKBLUE,
+            color_empty_before_text_box: "white",
             color_text_box: "white",
             // AliasBox
             bg_empty_before_alias_box: "#f4f4f4",
             bg_alias_box: "white",
             color_alias_box: PI_DARKBLUE,
             // Selection
-            bg_selected: "rgba(111, 127, 253, 255)",
-            border_selected: PI_LIGHTBLUE
+            bg_selected: "rgba(21, 21, 250, 255)",
+            border_selected: PI_LIGHTBLUE,
+            // Dropdown Component
+            bg_dropdown_component: PI_DARKBLUE,
+            border_dropdown_component: PI_LIGHTBLUE,
+            color_dropdownitem_component: PI_LIGHTBLUE,
         },
         fonts: {
             size_editor: "14px",

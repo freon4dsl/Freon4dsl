@@ -357,6 +357,7 @@
         content: attr(data-placeholdertext);
         color: var(--theme-colors-color_empty_before_text_box);
         background-color: var(--theme-colors-bg_empty_before_text_box);
+        opacity: 70%;
     }
 
     .text {

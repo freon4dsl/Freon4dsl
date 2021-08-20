@@ -113,15 +113,16 @@
         padding: 4px;
 
         z-index: 99;
-        background: var(--pi-popup-background);
-        border: 1px solid var(--pi-popup-border);
-        box-shadow: var(--pi-popup-box-shadow);
-        border-radius: 2px;
+        background: var(--theme-colors-bg_dropdown_component);
     }
 
     .popupWrapper {
         position: absolute;
+        border: 1px solid var(--theme-colors-border_dropdown_component);
+        box-shadow: var(--pi-popup-box-shadow);
+        border-radius: 2px;
         top: 10px;
         left: -1px;
+        z-index: 95;
     }
 </style>
