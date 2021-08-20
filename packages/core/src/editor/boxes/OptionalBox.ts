@@ -35,19 +35,36 @@ export class OptionalBox extends Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box {
-        return this.box.firstLeaf;
+        if( this.condition()) {
+            return this.box.firstLeaf ;
+        } else {
+            return null;
+        }
     }
 
     get lastLeaf(): Box {
+        if( this.condition()) {
+            return this.box.lastLeaf ;
+        } else {
+            return null;
+        }
         return this.box.lastLeaf ;
     }
 
     get firstEditableChild(): Box {
-        return this.box.firstEditableChild ;
+        if( this.condition()) {
+            return this.box.firstEditableChild ;
+        } else {
+            return null;
+        }
     }
 
     get children(): ReadonlyArray<Box> {
-        return [this.box] ;
+        if( this.condition()) {
+            return [this.box];
+        } else {
+            return [];
+        }
     }
 }
 
