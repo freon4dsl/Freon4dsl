@@ -86,6 +86,7 @@
         height: 100%;
         background-color: var(--pi-selected-background-color);
         border: 1px solid darkblue;
+        box-sizing: border-box;
         display: inline-block;
         vertical-align: middle;
         border-radius: 3px;
