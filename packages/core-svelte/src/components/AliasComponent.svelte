@@ -295,6 +295,8 @@
 
     const onFocusHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("AliasComponent.onFocus for box " + choiceBox.role);
+        const options = choiceBox.getOptions(editor);
+        selectableOptionList.replaceOptions(options)
     }
 
     const onBlurHandler = (e: FocusEvent) => {
@@ -308,6 +310,7 @@
      on:input={onInput}
      on:focus={onFocusHandler}
      on:blur={onBlurHandler}
+     on:focusin={onFocusHandler}
      on:focusout={onBlurHandler}
      on:click={onClick}
 >
