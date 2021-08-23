@@ -64,7 +64,9 @@ describe("Testing Validator", () => {
 
     test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
         let errors: PiError[] = [];
-        errors = validator.validate(new DemoModel());
+        const model: DemoModel = new DemoModel();
+        model.name = "%$";
+        errors = validator.validate(model);
         // let text = "";
         // for (let e of errors) {
         //     text = text.concat(e.message + "\n");
