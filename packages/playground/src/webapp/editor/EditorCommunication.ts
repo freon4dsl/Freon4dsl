@@ -151,12 +151,16 @@ export class EditorCommunication {
      */
     saveCurrentUnit() {
         LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
-        if (!!editorEnvironment.editor.rootElement) {
+        let unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
+        if (!!unit) {
+            LOGGER.log("rootElement: " + unit.name);
+            currentUnitName.set(unit.name);
+            EditorCommunication.getInstance().setUnitLists();
             ServerCommunication.getInstance().putModelUnit({
                 unitName: this.currentUnit.name,
                 modelName: this.currentModel.name,
                 language: editorEnvironment.languageName
-            }, editorEnvironment.editor.rootElement as PiNamedElement);
+            }, unit);
             this.hasChanges = false;
         } else {
             LOGGER.log("No current model unit");
@@ -447,7 +451,7 @@ export class EditorCommunication {
     validate() {
         // TODO implement validate()
         LOGGER.log("validate called");
-        this.getErrors();
+        EditorCommunication.getInstance().getErrors();
     }
 
     replace() {
