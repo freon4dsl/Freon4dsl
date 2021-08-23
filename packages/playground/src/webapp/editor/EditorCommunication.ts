@@ -153,14 +153,21 @@ export class EditorCommunication {
         LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
         let unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
         if (!!unit) {
-            await ServerCommunication.getInstance().putModelUnit({
-                unitName: this.currentUnit.name,
-                modelName: this.currentModel.name,
-                language: editorEnvironment.languageName
-            }, unit);
-            currentUnitName.set(unit.name);
-            EditorCommunication.getInstance().setUnitLists();
-            this.hasChanges = false;
+            if (unit.name && unit.name.length> 0) {
+                await ServerCommunication.getInstance().putModelUnit({
+                    unitName: this.currentUnit.name,
+                    modelName: this.currentModel.name,
+                    language: editorEnvironment.languageName
+                }, unit);
+                currentUnitName.set(unit.name);
+                EditorCommunication.getInstance().setUnitLists();
+                this.hasChanges = false;
+            } else {
+                // TODO place setErrorMessage function at right place and use it where needed
+                errorMessage.set(`Unit without name cannot be saved. Please, name it and try again.`);
+                severity.set(severityType.error);
+                showError.set(true);
+            }
         } else {
             LOGGER.log("No current model unit");
         }
