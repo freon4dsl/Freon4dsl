@@ -12,7 +12,6 @@
         KEY_ENTER, KEY_SPACEBAR,
         KEY_TAB,
         EVENT_LOG,
-        isAliasBox,
         isMetaKey,
         KeyPressAction, PiUtils,
         TextBox,
@@ -21,7 +20,7 @@
         isAliasTextBox,
         PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox
     } from "@projectit/core";
-    import { afterUpdate, onMount, tick } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
@@ -31,13 +30,11 @@
     export let textOnScreen: string;
 
     export let getText = (): string => {
-        // TODO loopt eentje achter tijdens onKeyDown
+        // TODO loopt eentje achter tijdens onKeyDown, want we kunnen de key nog negeren.
         return textOnScreen;
     }
 
-    let caretPosition: number = 0;
     export const setFocus =  async () => {
-        // await tick();
         logBox("setFocus in setFocus");
         if( document.activeElement === element){
             LOGGER.log("    has focus already");
@@ -46,7 +43,6 @@
         element.focus();
         setCaretPosition(textBox.caretPosition)
         // console.log("windows.focus is on " + window.document.activeElement)
-        // this.startEditing();
     };
 
     /**
@@ -93,7 +89,6 @@
         LOGGER.log("onMount for role ["+ textBox.role + "]")
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
-        caretPosition = textBox.caretPosition;
     });
 
     /**
@@ -102,7 +97,6 @@
      */
     const onKeyDown = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: ["+ event.key + "] alt [" + event.ctrlKey+  "] shift [" + event.shiftKey + "] key [" + event.key +"]");
-        // const caretPosition = getCaretPosition();
         if (event.key === KEY_DELETE) {
             if (textOnScreen === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
@@ -172,33 +166,25 @@
     };
 
     const setCaretToMostLeft = () => {
-        // this.startEditing();
         setCaretPosition(0);
     };
 
     const setCaretToMostRight = () => {
-        // this.startEditing();
         LOGGER.log("setCaretPosition RIGHT: " + textBox.getText().length);
         setCaretPosition(textBox.getText().length);
     };
 
     const setCaretPosition = (position: number) => {
         logBox("setCaretPosition: " + position);
-        logBox("setFocus in setCaretPosition");
-        // element.focus();
         if (position === -1) {
             return;
         }
-        // if (!this.element.innerText) {
-        //     // TODO Find out why innertext can be falsy.
-        //     return;
-        // }
         try {
             if (position > textOnScreen.length) {
                 // TODO Fix the error below
                 console.error("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
                 console.error("TextComponent.setCaretPosition position: " + position + " length: " + textOnScreen.length);
-                position = this.element.innerText.length;
+                position = element.innerText.length;
             }
             clearSelection();
             const range = document.createRange();
@@ -210,7 +196,6 @@
             range.collapse(true);
             window.getSelection().addRange(range);
             LOGGER.log("New position is: "+ position)
-            caretPosition = position;
             textBox.caretPosition = position;
         } catch (e) {
             console.error("TextComponent.setCaretPosition ERROR: " + e.toString());
@@ -223,10 +208,7 @@
 
     const onClick = async (event: MouseEvent) => {
         logBox("onClick before");
-        // await tick();
         textBox.caretPosition = getCaretPosition();
-        caretPosition = textBox.caretPosition;
-        // setCaretPosition(caretPosition);
         logBox("onClick after");
     }
 
@@ -239,14 +221,10 @@
      * @param event
      */
     const onKeyPress = async (event: KeyboardEvent) => {
-        LOGGER.log("onKeyPress: " + event.key);// + " text binding [" + textOnScreen + "] w: " + textBox.actualWidth);
+        LOGGER.log("onKeyPress: " + event.key);
         const insertionIndex = getCaretPosition();
-        // await wait(0);
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
-                // Not needed in Svelte, because of bind:
-                // textBox.update();
-                // textBox.caretPosition = getCaretPosition() + 1;
                 logBox("KeyPressAction.OK");
                 break;
             case KeyPressAction.NOT_OK:
@@ -278,15 +256,6 @@
                 event.stopPropagation();
                 break;
         }
-        // LOGGER.log("CARET POSITION ["+ textOnScreen + "]")
-    };
-
-   textBox.update = () => {
-        LOGGER.log("Update called for textBox ["+ textOnScreen + "]") ;
-        if( textBox.getText() !== textOnScreen  && (textOnScreen !== undefined)) {
-            LOGGER.log("    ==> value changed");
-            textBox.setText(textOnScreen);
-        }
     };
 
     let text: string = textBox.getText();
@@ -295,11 +264,10 @@
     let placeholder: string;
 
     const onInput = async (e: InputEvent) => {
-        const value = (e.target as HTMLElement).innerText;
-
-        LOGGER.log("onInput `" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
+        let value = (e.target as HTMLElement).innerText;
+        LOGGER.log("onInput data" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
         textBox.caretPosition = getCaretPosition();
-        caretPosition = textBox.caretPosition;
+        textBox.setText(value);
         editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
@@ -309,13 +277,12 @@
     };
 
     afterUpdate(  () => {
-        UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
-        textBox.update();
+        UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] boxtext [" + textBox.getText() + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
     });
 
-    const getCaretPosition = (): number => {
+    export const getCaretPosition = (): number => {
         // TODO This causes an extra afterUpdate in Svelte, don't know why !
         // return window.getSelection().focusOffset;
         return window.getSelection().getRangeAt(0).startOffset;
@@ -323,7 +290,6 @@
 
     autorun( () => {
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
-        text = textOnScreen;
         placeholder = textBox.placeHolder
     });
 
@@ -347,7 +313,7 @@
         on:input={onInput}
         contenteditable="true"
         bind:textContent={textOnScreen}
-        bind:this={element} >
+        bind:this={element}
 >
     {text}
 </div>

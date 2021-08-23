@@ -53,11 +53,12 @@
             switch (event.key) {
                 case KEY_BACKSPACE:
                 case KEY_ARROW_LEFT:
-                    await editor.selectPreviousLeaf();
-                    // TODO this.eventHandled(event);
+                    editor.selectPreviousLeaf();
+                    stopEvent(event)
                     break;
                 case KEY_DELETE:
                     editor.deleteBox(editor.selectedBox);
+                    stopEvent(event);
                     break;
                 case KEY_TAB:
                 case KEY_ARROW_RIGHT:
@@ -78,6 +79,7 @@
                     if (up !== null) {
                         editor.selectBoxNew(up);
                     }
+                    stopEvent(event);
                     break;
             }
         }

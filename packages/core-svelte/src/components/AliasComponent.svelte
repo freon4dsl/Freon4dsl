@@ -1,3 +1,5 @@
+<!-- This component does all the screen handling for both an Alias and a Select Component.
+-->
 <script lang="ts">
     import {
         BehaviorExecutionResult,
@@ -17,16 +19,16 @@
         KEY_TAB,
         KEY_ARROW_DOWN,
         KEY_ARROW_UP,
-        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE
+        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { action, autorun } from "mobx";
-    import SelectableComponent from "./SelectableComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
-    import DropdownComponent from "./DropdownComponent.svelte";
-    import TextComponent from "./TextComponent.svelte";
     import { SelectOptionList } from "./SelectableOptionList";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
+    import SelectableComponent from "./SelectableComponent.svelte";
+    import TextComponent from "./TextComponent.svelte";
+    import DropdownComponent from "./DropdownComponent.svelte";
 
     export let choiceBox: AbstractChoiceBox;
     export let editor: PiEditor;
@@ -34,26 +36,26 @@
     let openInHtml: boolean ;
     let open: boolean = false;
     $: openInHtml = open;
-    let LOGGER = new PiLogger("AliasComponent");
 
-    let dropdown: DropdownComponent;
-    let textcomponent: TextComponent;
+    let LOGGER = new PiLogger("AliasComponent");
+    let dropdownComponent: DropdownComponent;
+    let textComponent: TextComponent;
     let selectedOption: SelectOption;
 
-    const selectableOptionList = new SelectOptionList(editor)
+    let selectableOptionList = new SelectOptionList(editor)
 
     const getAliasOptions = (): SelectOption[] => {
-        return listForDropdown;
+        return selectableOptionList.getFilteredOptions();
+        // return listForDropdown;
     };
 
     const setFocus = async (): Promise<void> => {
         LOGGER.log("AliasComponent set focus " + choiceBox.role);
-        if( !!textcomponent) {
-            textcomponent.setFocus();
+        if( !!textComponent) {
+            textComponent.setFocus();
         } else {
-            LOGGER.log("?ERROR? textcomponent is null in setFopcus.")
+            LOGGER.log("?ERROR? textComponent is null in setFocus.")
         }
-        // this.startEditing();
     };
 
     /**
@@ -65,10 +67,8 @@
         LOGGER.info(this, "triggerKeyPressEvent " + key);
         const aliasResult = await handleStringInput(key);
         if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
-            if (!!textcomponent) {
-                textcomponent.innerText = key;
-                // this.setCaretPosition(textcomponent.innerText.length);
-                // this.dropdownIsOpen = true;
+            if (!!textComponent) {
+                textComponent.innerText = key;
             }
         }
     };
@@ -78,8 +78,8 @@
         const aliasResult = await executeBehavior(choiceBox, s, editor);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
-                if (!!textcomponent) {
-                    textcomponent.innerText = "";
+                if (!!textComponent) {
+                    textComponent.innerText = "";
                 }
                 open = false;
                 // this.hasError = false;
@@ -97,15 +97,13 @@
     };
 
     onMount( () => {
-        LOGGER.log("onMount for role [" + choiceBox.role + "] with textcomponent " + textcomponent);
+        LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         if( !! selected) {
             choiceBox.textBox.setText(selected.label)
         }
-        // textBox.setCaret = setCaret;
-        // caretPosition = textBox.caretPosition;
     });
 
     afterUpdate( () => {
@@ -118,27 +116,18 @@
             choiceBox.textBox.setText(selected.label)
         }
         LOGGER.log("afterupdate ==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
-        if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
-            if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-                LOGGER.log("Focus -----------------------------------------------")
-                // setFocus();
-            }
-        }
     })
 
     const onKeyPress = async (e: KeyboardEvent) => {
         EVENT_LOG.log("onKeyPress: " + e.key + " for role " + choiceBox.role);
-        // await wait(0);
-
         if (isPrintable(e) && !e.ctrlKey) {
-            LOGGER.log("Press: is printable, text is now [" + textcomponent.getText() + "]");
+            LOGGER.log("Press: is printable, text is now [" + textComponent.getText() + "]");
         }
     };
 
     const onInput = async (e: InputEvent) => {
         const value = (e.target as HTMLElement).innerText;
-        LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text ["+ textcomponent.getText() + "]");
-        // const aliasResult = await executeBehavior(aliasBox, e.data, editor);
+        LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text ["+ textComponent.getText() + "]");
         let aliasResult = undefined;
         if( isAliasBox(choiceBox)) {
             aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
@@ -156,8 +145,8 @@
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
                 LOGGER.log("ALIAS MATCH");
-                if( !!textcomponent) {
-                    textcomponent.textOnScreen = value; // choiceBox.getSelectedOption().label;
+                if( !!textComponent) {
+                    textComponent.textOnScreen = value; // choiceBox.getSelectedOption().label;
                 }
                 open = false;
                 // this.hasError = false;
@@ -184,10 +173,10 @@
     const onKeyDown = async (e: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + e.key + " for role " + choiceBox.role);
         if (isPrintable(e) && !e.ctrlKey) {
-            LOGGER.log("Down: is printable, text is now [" + textcomponent.getText() + "]");
+            LOGGER.log("Down: is printable, text is now [" + textComponent.getText() + "]");
             open = true;
-            if(dropdown !== null && dropdown !== undefined) {
-                dropdown.handleKeyDown(e);
+            if(dropdownComponent !== null && dropdownComponent !== undefined) {
+                dropdownComponent.handleKeyDown(e);
             }
             e.stopPropagation();
             return;
@@ -199,6 +188,11 @@
             open = false;
             return;
         }
+        if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
+
+            // Handle in ProjectItComponent
+            return;
+        }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
@@ -206,28 +200,16 @@
             open = !open;
             return;
         }
-        if (open ) { // && this.dropdown) {
+        if (open ) { // && this.dropdownComponent) {
             // Propagate key event to dropdown component
             LOGGER.log("Forwarding event to dropdown component");
-            if( dropdown !== null && dropdown !== undefined){
-                const x = dropdown.handleKeyDown(e);
+            if( dropdownComponent !== null && dropdownComponent !== undefined){
+                const x = dropdownComponent.handleKeyDown(e);
                 LOGGER.log("      handled result: " + x);
             } else {
                 console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ open + " openInHtml: "+ openInHtml);
             }
-            // if (x) {
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            //     this.setCaretToMostRight();
-            //     this.props.box.caretPosition = this.getCaretPosition();
-            //     this.caretPosition = this.props.box.caretPosition;
-            //     LOGGER.info(this, "caret " + this.props.box.caretPosition);
-            // }
-            // switch (e.keyCode) {
-            //     case ENTER:
-            //         e.preventDefault();
-            //         break;
-            // }
+
             e.preventDefault();
             e.stopPropagation();
         } else {
@@ -256,14 +238,14 @@
             return true;
         }
         // TODO
-        // const caretPosition = this.getCaretPosition();
-        // if (e.keyCode === ARROW_LEFT || e.keyCode === BACKSPACE) {
-        //     return caretPosition <= 0;
-        // } else if (e.keyCode === Keys.ARROW_RIGHT || e.keyCode === Keys.DELETE) {
-        //     return caretPosition >= this.element.innerText.length;
-        // } else {
-        //     return false;
-        // }
+        const caretPosition = textComponent.getCaretPosition();
+        if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
+            return caretPosition <= 0;
+        } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
+            return caretPosition >= this.element.innerText.length;
+        } else {
+            return false;
+        }
         return false;
     };
 
@@ -271,8 +253,8 @@
         LOGGER.log("set selected SVELTE option to "+ event.detail.id );
         selectOption(event.detail);
         if (isSelectBox(choiceBox)) {
-            if (!!textcomponent) {
-                textcomponent.textOnScreen = choiceBox.getSelectedOption().label;
+            if (!!textComponent) {
+                textComponent.textOnScreen = choiceBox.getSelectedOption().label;
             }
         }
     }
@@ -286,8 +268,12 @@
     });
 
     const onClick = (e: MouseEvent) => {
-        LOGGER.log("onClick");
+        LOGGER.log("onClick before");
+        const opts: SelectOption[] = choiceBox.getOptions(editor);
+        LOGGER.log("   options are " + opts.length + " ==> " + opts.map(o => o.id))
+        selectableOptionList.replaceOptions(opts)
         open = !open;
+        LOGGER.log("onClick after");
     }
 
     let listForDropdown: SelectOption[];
@@ -295,9 +281,13 @@
 
     selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {
+        // const options = choiceBox.getOptions(editor);
+        // LOGGER.log("Calling autorun, optins are: " + options)
+        // selectableOptionList = new SelectOptionList(editor)
+        // selectableOptionList.replaceOptions(options)
         listForDropdown = selectableOptionList.getFilteredOptions();
         selectedOption = choiceBox.getSelectedOption();
-        AUTO_LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
+        LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
@@ -309,6 +299,7 @@
 
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("AliasComponent.onBlur for box " + choiceBox.role);
+        open = false;
     }
 </script>
 
@@ -317,18 +308,19 @@
      on:input={onInput}
      on:focus={onFocusHandler}
      on:blur={onBlurHandler}
+     on:focusout={onBlurHandler}
      on:click={onClick}
 >
     <SelectableComponent box={choiceBox.textBox} editor={editor}>
         <TextComponent
             editor={editor}
             textBox={choiceBox.textBox}
-            bind:this={textcomponent}
+            bind:this={textComponent}
         />
     </SelectableComponent>
     {#if openInHtml}
         <DropdownComponent
-                bind:this="{dropdown}"
+                bind:this="{dropdownComponent}"
                 bind:open={openInHtml}
                 handleSelectedOption={selectOption}
                 on:pi-ItemSelected={selectedEvent}

@@ -20,6 +20,7 @@
     const dispatcher = createEventDispatcher();
 
     const getOptionsLogged = (): SelectOption[] => {
+        LOGGER.log("Calling getoptions from Dropdowncomponent")
         const options = getOptions();
         LOGGER.log("getOptions size "+ options.length);
         options.forEach(o => LOGGER.log("     Option ["+ o.id + "]"));
@@ -74,7 +75,7 @@
     autorun(()=> {
         const dummy = notifier.dummy;
         getOptionsForHtml = getOptionsLogged();
-        LOGGER.log("AUTORUN " + getOptionsForHtml.map(o => o.id) );
+        LOGGER.log("AUTORUN " + getOptionsForHtml.map(o => o.id) + "  selected " + selectedOptionId );
         getOptionsLogged().forEach( option => LOGGER.log("OPTION "+ option.label));
     });
 

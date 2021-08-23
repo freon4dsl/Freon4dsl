@@ -35,7 +35,7 @@ export const themePresets = [
             color_dropdownitem_component: PI_DARKBLUE,
         },
         fonts: {
-            size_editor: "20px",
+            size_editor: "14px",
             style_editor: "normal",
             weight_editor: "normal",
             family_editor: "Arial"
