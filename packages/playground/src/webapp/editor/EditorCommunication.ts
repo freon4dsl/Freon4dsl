@@ -149,18 +149,17 @@ export class EditorCommunication {
     /**
      * Pushes the current unit to the server
      */
-    saveCurrentUnit() {
+    async saveCurrentUnit() {
         LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
         let unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
         if (!!unit) {
-            LOGGER.log("rootElement: " + unit.name);
-            currentUnitName.set(unit.name);
-            EditorCommunication.getInstance().setUnitLists();
-            ServerCommunication.getInstance().putModelUnit({
+            await ServerCommunication.getInstance().putModelUnit({
                 unitName: this.currentUnit.name,
                 modelName: this.currentModel.name,
                 language: editorEnvironment.languageName
             }, unit);
+            currentUnitName.set(unit.name);
+            EditorCommunication.getInstance().setUnitLists();
             this.hasChanges = false;
         } else {
             LOGGER.log("No current model unit");
@@ -171,11 +170,11 @@ export class EditorCommunication {
      * Deletes the unit 'unit', from the server and from the current in-memory model
      * @param unit
      */
-    deleteModelUnit(unit: PiNamedElement) {
+    async deleteModelUnit(unit: PiNamedElement) {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
-        ServerCommunication.getInstance().deleteModelUnit({
+        await ServerCommunication.getInstance().deleteModelUnit({
             unitName: unit.name,
             modelName: get(currentModelName),
             language: "languageName",
@@ -206,6 +205,7 @@ export class EditorCommunication {
         }
         units.set(newUnitList);
     }
+    // TODO check all calls to setUnitLists => probably to many
 
     /**
      * Reads the model with name 'modelName' from the server and makes this the current model.
@@ -383,6 +383,11 @@ export class EditorCommunication {
             this.hasChanges = true;
             this.getErrors();
         } else {
+            noUnitAvailable.set(true);
+            editorEnvironment.editor.rootElement = null;
+            this.currentUnit = null;
+            currentUnitName.set("<noUnit>");
+            this.setUnitLists();
             this.hasChanges = false;
         }
     }
