@@ -84,11 +84,14 @@
     };
     const onBlur = (e: FocusEvent) => {
         FOCUS_LOGGER.log("DropdownComponent.onBlur")
+        open = false;
     }
 </script>
 
 <div class="dropdown"
-        on:focus={onFocus}>
+        on:focus={onFocus}
+        on:blur={onBlur}
+>
     <div tabIndex={0}  />
     <div class="popupWrapper" use:clickOutside on:click_outside={handleClickOutside}>
         {#each getOptionsForHtml as option (option.id)}

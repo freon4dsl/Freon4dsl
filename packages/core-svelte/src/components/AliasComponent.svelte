@@ -23,7 +23,7 @@
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { action, autorun } from "mobx";
-    import { afterUpdate, onMount } from "svelte";
+    import { afterUpdate, onMount, tick } from "svelte";
     import { SelectOptionList } from "./SelectableOptionList";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
@@ -189,9 +189,11 @@
             return;
         }
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
-
-            // Handle in ProjectItComponent
-            return;
+            const caretPosition = textComponent.getCaretPosition();
+            if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
+                // Handle in ProjectItComponent
+                open = false;
+            }
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
@@ -242,7 +244,8 @@
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
             return caretPosition <= 0;
         } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
-            return caretPosition >= this.element.innerText.length;
+            const length: number = textComponent?.element?.innerText?.length;
+            return (!!length ? caretPosition >= length : true);
         } else {
             return false;
         }
@@ -301,7 +304,6 @@
 
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("AliasComponent.onBlur for box " + choiceBox.role);
-        open = false;
     }
 </script>
 
