@@ -105,8 +105,7 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: var(--inverse-color);        /* difference with original */
-        border: var(--color) 1px solid;         /* difference with original */
+        background-color: var(--theme-colors-inverse_color);        /* difference with original */
     }
     .mousecatcher {
         position: absolute;
@@ -124,7 +123,7 @@
     .divider::after {
         content: '';
         position: absolute;
-        background-color: var(--pi-slider-color);         /* difference with original */
+        background-color: var(--theme-colors-slider);         /* difference with original */
     }
     .horizontal {
         padding: 0 8px;

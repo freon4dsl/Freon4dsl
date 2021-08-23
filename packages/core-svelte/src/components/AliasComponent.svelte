@@ -1,20 +1,29 @@
 <script lang="ts">
     import {
-        AliasBox, ARROW_DOWN, ARROW_UP, BehaviorExecutionResult,
-        DELETE,
+        BehaviorExecutionResult,
         AbstractChoiceBox,
-        ENTER, ESCAPE,
-        EVENT_LOG, executeBehavior,
-        isAliasBox, isMetaKey,
+        EVENT_LOG,
+        executeBehavior,
+        isAliasBox,
+        isMetaKey,
         isPrintable,
         PiEditor,
         PiLogger,
-        PiUtils, SPACEBAR, TAB, toPiKey, isSelectBox, findOption
+        PiUtils,
+        toPiKey,
+        isSelectBox,
+        findOption,
+        KEY_ENTER,
+        KEY_TAB,
+        KEY_ARROW_DOWN,
+        KEY_ARROW_UP,
+        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
-    import { autorun } from "mobx";
+    import { action, autorun } from "mobx";
+    import SelectableComponent from "./SelectableComponent.svelte";
     import { afterUpdate, onMount } from "svelte";
-    import { ChangeNotifier } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import DropdownComponent from "./DropdownComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import { SelectOptionList } from "./SelectableOptionList";
@@ -37,14 +46,13 @@
         return listForDropdown;
     };
 
-    // const selected = (event: CustomEvent) => {
-    //     console.log("Alias.selected " + event.detail.label);
-    //     aliasBox.textBox.placeHolder = event.detail.label
-    //     open = false;
-    // }
     const setFocus = async (): Promise<void> => {
         LOGGER.log("AliasComponent set focus " + choiceBox.role);
-        textcomponent.focus();
+        if( !!textcomponent) {
+            textcomponent.setFocus();
+        } else {
+            LOGGER.log("?ERROR? textcomponent is null in setFopcus.")
+        }
         // this.startEditing();
     };
 
@@ -102,6 +110,7 @@
 
     afterUpdate( () => {
         LOGGER.log("AfterUpdate")
+        choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -111,8 +120,8 @@
         LOGGER.log("afterupdate ==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
         if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
             if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-                LOGGER.log("-----------------------------------------------")
-                setFocus();
+                LOGGER.log("Focus -----------------------------------------------")
+                // setFocus();
             }
         }
     })
@@ -183,13 +192,17 @@
             e.stopPropagation();
             return;
         }
-        if (e.keyCode === DELETE) {
+        if (e.key === KEY_DELETE) {
             e.stopPropagation();
+        }
+        if( e.key === KEY_TAB){
+            open = false;
+            return;
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
-        if( e.keyCode === SPACEBAR && e.ctrlKey) {
+        if( (e.key === KEY_SPACEBAR && e.ctrlKey) || (e.key === KEY_ESCAPE)) {
             open = !open;
             return;
         }
@@ -218,8 +231,8 @@
             e.preventDefault();
             e.stopPropagation();
         } else {
-            switch (e.keyCode) {
-                case ENTER:
+            switch (e.key) {
+                case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
                         await PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
@@ -232,14 +245,14 @@
 
     const shouldPropagate = (e: KeyboardEvent): boolean => {
         if (isMetaKey(e)) {
-            if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN || e.keyCode === TAB) {
+            if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_TAB) {
                 return true;
             }
         }
-        if (e.keyCode === ENTER || e.keyCode === TAB) {
+        if (e.key === KEY_ENTER || e.key === KEY_TAB) {
             return true;
         }
-        if (e.keyCode === ARROW_UP || e.keyCode === ARROW_DOWN) {
+        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN) {
             return true;
         }
         // TODO
@@ -264,13 +277,13 @@
         }
     }
 
-    const selectOption = async (option: SelectOption) => {
+    const selectOption = action ( async (option: SelectOption) => {
         LOGGER.log("==> EXECUTING ALIAS " + option.label)
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
         choiceBox.textHelper.text = (!!selected ? selected.label : "");
         open=false
-    }
+    });
 
     const onClick = (e: MouseEvent) => {
         LOGGER.log("onClick");
@@ -279,37 +292,40 @@
 
     let listForDropdown: SelectOption[];
     let notifier = new ChangeNotifier();
-    choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
 
     selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {
         listForDropdown = selectableOptionList.getFilteredOptions();
         selectedOption = choiceBox.getSelectedOption();
-        LOGGER.log("AUTORUN role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
+        AUTO_LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        LOGGER.log("==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
-        if( !!editor.selectedBox && !!choiceBox && !!choiceBox.textBox ) {
-            if (editor.selectedBox.role === choiceBox.role && editor.selectedBox.element.piId() === choiceBox.element.piId()) {
-                LOGGER.log("==============================================")
-                focus();
-            }
-        }
-
     });
+
+    const onFocusHandler = (e: FocusEvent) => {
+        FOCUS_LOGGER.log("AliasComponent.onFocus for box " + choiceBox.role);
+    }
+
+    const onBlurHandler = (e: FocusEvent) => {
+        FOCUS_LOGGER.log("AliasComponent.onBlur for box " + choiceBox.role);
+    }
 </script>
 
 <div on:keydown={onKeyDown}
      on:keypress={onKeyPress}
      on:input={onInput}
+     on:focus={onFocusHandler}
+     on:blur={onBlurHandler}
      on:click={onClick}
 >
-    <TextComponent
-                   editor={editor}
-                   textBox={choiceBox.textBox}
-                   bind:this={textcomponent}
-    />
+    <SelectableComponent box={choiceBox.textBox} editor={editor}>
+        <TextComponent
+            editor={editor}
+            textBox={choiceBox.textBox}
+            bind:this={textcomponent}
+        />
+    </SelectableComponent>
     {#if openInHtml}
         <DropdownComponent
                 bind:this="{dropdown}"

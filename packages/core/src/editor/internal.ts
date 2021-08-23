@@ -18,3 +18,6 @@ export * from "./PiStyle";
 export * from "./PiEditor";
 
 export * from "./InternalBehavior"; // needs PiEditor, so this is really the last
+export * from "./InternalBinaryBehavior";
+export * from "./InternalExpressionBehavior";
+export * from "./InternalCustomBehavior";

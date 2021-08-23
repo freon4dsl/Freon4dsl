@@ -1,4 +1,4 @@
-<Menu style="border-radius: 2px; background-color: var(--inverse-color)" origin="top left" dy="50px">
+<Menu style="border-radius: 2px; background-color: var(--theme-colors-inverse_color)" origin="top left" dy="50px">
 		<span slot="activator" style="margin-right: 0px; display:block;">
 			<Button {...props}  title="File menu">{activatorTitle} <Icon> <svelte:component this={arrowDropDown}/> </Icon></Button>
 		</span>
@@ -6,40 +6,58 @@
     <div class="menu-list">
         {#each menuItems as item (item.id)}
             <!-- style needs to be added here, not as class -->
-            <Menuitem style="font-size: var(--menuitem-font-size);
+            <Menuitem style="font-size: var(--pi-menuitem-font-size);
                     margin: 4px 10px;
                     padding: 2px;
                     height: 28px;"
                       on:click={() => handleClick(item.id)}>
                 {item.title}
             </Menuitem>
+            {#if (item.id == 6)}
+                <hr>
+            {/if}
         {:else}
             <p>There are no items to show...</p>
         {/each}
     </div>
 </Menu>
 
-<script lang="ts">
-    import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
-    import arrowDropDown from '../assets/icons/svg/arrow_drop_down.svg';
-    import type {MenuItem} from "../menu-ts-files/MenuItem";
-    import {ServerCommunication} from "../server/ServerCommunication";
-    import {EditorCommunication} from "../editor/EditorCommunication";
+<!-- `file_selector` is a hidden element to be able to show a file selection browser -->
+<!-- The `multiple` attribute lets users select multiple files. -->
+<!-- The `accept` attribute sets the file extensions that are allowed.  -->
+<input class:file_selector bind:this={file_selector} {...file_selector_props} on:change={process_files}>
 
-    import { currentModelName, currentUnitName, unitNames } from "../WebappStore";
-    import {showError, errorMessage, severity, severityType} from "../WebappStore";
+<script lang="ts">
+    import { Button, Icon, Menu, Menuitem } from "svelte-mui";
+    import arrowDropDown from "../assets/icons/svg/arrow_drop_down.svg";
+    import type { MenuItem } from "../menu-ts-files/MenuItem";
+    import { ServerCommunication } from "../server/ServerCommunication";
+    import { EditorCommunication } from "../editor/EditorCommunication";
+
     import {
-        deleteUnitDialogVisible,
+        currentModelName,
+        currentUnitName,
+        errorMessage,
+        fileExtensions,
         leftPanelVisible,
-        nameModelDialogVisible,
-        newModelDialogVisible,
+        modelNames,
         newUnitDialogVisible,
         openModelDialogVisible,
-        openUnitDialogVisible,
-        saveUnitDialogVisible,
-        modelNames
+        severity,
+        severityType,
+        showError,
+        unitNames
     } from "../WebappStore";
-    import { saveUnitInternal } from "../menu-ts-files/MenuUtils";
+    import { metaTypeForExtension } from "../menu-ts-files/MenuUtils";
+
+    // variables for the file import
+    let file_selector;
+    let file_extensions = `${$fileExtensions.map(entry => `${entry}`).join(", ")}`;
+    let file_selector_props = {
+        type: "file",
+        multiple: true,
+        accept: file_extensions,
+    };
 
     // when a menu-item is clicked, this function is executed
     const handleClick = (id: number) => {
@@ -52,43 +70,19 @@
     };
 
     // new model menuitem
-    const newModel = () => {
-        // get list of models from server
-        ServerCommunication.getInstance().loadModelList((names: string[]) => {
-            // names list may be empty => this is the first model to be stored
-            if (!names || names.length == 0) {
-                $modelNames = names;
-            }
-            $newModelDialogVisible = true;
-        });
-    }
-
-    // open model menuitem
-    const openModel = () => {
+    const changeModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
             // if list not empty, show dialog
             if (names.length > 0) {
                 $modelNames = names;
-                $openModelDialogVisible = true;
-            } else {
-                // if list is empty show error message
-                errorMessage.set("No models found on the server");
-                severity.set(severityType.error);
-                showError.set(true);
             }
+            $openModelDialogVisible = true;
         });
     }
 
     // new unit menuitem
     const newUnit = () => {
-        if (!EditorCommunication.getInstance().isModelNamed()) {
-            errorMessage.set("Please, select or create a model before creating a new model unit");
-            severity.set(severityType.error);
-            showError.set(true);
-            return;
-        }
-        saveUnitInternal();
         // get list of units from server, because new unit may not have the same name as an existing one
         ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
             // list may be empty => this is the first unit to be stored
@@ -97,60 +91,69 @@
         });
     }
 
-    // open unit menuitem
-    const openUnit = () => {
-        // get list of units from server
-        ServerCommunication.getInstance().loadUnitList($currentModelName, (names: string[]) => {
-            // if list not empty, show dialog
-            if (names.length > 0) {
-                $unitNames = names;
-                $openUnitDialogVisible = true;
-            } else {
-                // if list is empty show error message
-                errorMessage.set("No units for " + $currentModelName + " found on the server");
-                severity.set(severityType.error);
-                showError.set(true);
-            }
-        });
-    }
-
     // save unit menuitem
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
-        // first check whether the model to which the unit belongs has a name,
-        // units can not be saved if the model has no name.
-        if (!EditorCommunication.getInstance().isModelNamed()) {
-            // get list of models from server
-            ServerCommunication.getInstance().loadModelList((names: string[]) => {
-                // list may be empty => this is the first model to be stored
-                $modelNames = names;
-                $nameModelDialogVisible = true;
-            });
-        }
-        saveUnitInternal();
+        EditorCommunication.getInstance().saveCurrentUnit();
     }
 
-    // delete unit menuitem
-    const deleteUnit = () => {
-        if (EditorCommunication.getInstance().isModelNamed() && EditorCommunication.getInstance().isUnitNamed()) {
-            $deleteUnitDialogVisible = true;
-        } else {
-            // if list is empty show error message
-            errorMessage.set("Cannot delete an unnamed unit or model");
-            severity.set(severityType.error);
-            showError.set(true);
+    // import model unit menuitem
+    const importUnit = () => {
+        // todo check whether the name of the unit already exists in the model
+        // open the file browse dialog
+        file_selector.click();
+    }
+
+    function setErrorMessage(message: string, sever: severityType) {
+        errorMessage.set(message);
+        severity.set(sever);
+        showError.set(true);
+    }
+
+    const process_files = (event) => {
+        const fileList: FileList = event.target.files;
+        const reader = new FileReader();
+        for (let file of fileList) {
+            // todo async: wait for file to be uploaded before starting next
+            // todo do something with progress indicator
+            // reader.addEventListener('progress', (event) => {
+            //     if (event.loaded && event.total) {
+            //         const percent = (event.loaded / event.total) * 100;
+            //         console.log(`Progress: ${Math.round(percent)}`);
+            //     }
+            // });
+            // to check whether the file is recognisable as a model unit, we examine the file extension
+            const extension: string = file.name.slice(-4);
+            let metaType: string = metaTypeForExtension(extension);
+            // if the right extension has been found, continue
+            if (metaType.length > 0) {
+                reader.readAsText(file);
+                reader.onload = function() {
+                    const text = reader.result;
+                    if (typeof text == "string") {
+                        try {
+                            EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
+                        } catch (e) {
+                            setErrorMessage(`${e.message}`, severityType.error);
+                        }
+                    }
+                };
+                reader.onerror = function() {
+                    setErrorMessage(reader.error.message, severityType.error);
+                };
+            } else {
+                setErrorMessage(`File ${file.name} does not have the right (extension) type.`, severityType.error);
+            }
         }
     }
 
     // the content of this menu
     let activatorTitle: string = "File";
     let menuItems: MenuItem[] = [
-        {title: "New Model", action: newModel, id: 1},
-        {title: 'Open Model', action: openModel, id: 2},
-        {title: 'New Model Unit', action: newUnit, id: 3},
-        {title: 'Open Model Unit', action: openUnit, id: 4},
-        {title: 'Save Model Unit', action: saveUnit, id: 5},
-        {title: 'Delete Model Unit', action: deleteUnit, id: 6},
+        {title: "New or Open Model", action: changeModel, id: 1},
+        {title: 'New Unit', action: newUnit, id: 3},
+        {title: 'Save Current Unit', action: saveUnit, id: 5},
+        {title: '(Experimental) Import Unit(s)...', action: importUnit, id: 7},
     ];
 
     // the styling of the menu activator
@@ -159,6 +162,10 @@
 
 <style>
     .menu-list {
-        background-color: var(--inverse-color);
+        color: var(--theme-colors-color);
+        background-color: var(--theme-colors-inverse_color);
+    }
+    .file_selector {
+        display:none;
     }
 </style>

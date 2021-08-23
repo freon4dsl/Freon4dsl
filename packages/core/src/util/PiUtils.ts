@@ -13,7 +13,7 @@ export const NBSP: string = "".concat("\u00A0");
 
 let LATEST_ID = 0;
 
-const LOGGER = new PiLogger("PiUtils"); // .mute();
+const LOGGER = new PiLogger("PiUtils");
 
 export class PiUtils {
 
@@ -58,8 +58,8 @@ export class PiUtils {
 
     @action
     static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: PiEditor) {
-        PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a ProExpression, but it isn't");
-        PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a ProExpression, but it isn't");
+        PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a PiExpression, but it isn't");
+        PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a PiExpression, but it isn't");
         PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
     }
 

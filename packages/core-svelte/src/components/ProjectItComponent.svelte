@@ -1,70 +1,77 @@
 <script lang="ts">
     import {
-        ARROW_DOWN,
-        ARROW_LEFT, ARROW_RIGHT,
-        ARROW_UP,
-        BACKSPACE, boxAbove, boxBelow,
-        DELETE,
+        boxAbove,
+        boxBelow,
         PiEditor,
-        TAB, PiLogger, Box
+        PiLogger,
+        Box,
+        KEY_ARROW_UP,
+        KEY_ARROW_DOWN,
+        KEY_TAB,
+        KEY_BACKSPACE,
+        KEY_ARROW_LEFT,
+        KEY_DELETE,
+        KEY_ARROW_RIGHT
     } from "@projectit/core";
     import { autorun } from "mobx";
     import RenderComponent from "./RenderComponent.svelte";
 
-    let LOGGER = new PiLogger("ProjectItComponent").mute();
+    let LOGGER = new PiLogger("ProjectItComponent");
     export let editor: PiEditor;
 
-    function eventHandled(e: KeyboardEvent) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    function stopEvent(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
 
+    }
     const onKeyDown = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + event.key);
         // event.persist();
         if (event.ctrlKey) {
-            switch (event.keyCode) {
-                case ARROW_UP:
+            switch (event.key) {
+                case KEY_ARROW_UP:
                     editor.selectParentBox();
-                    eventHandled(event);
+                    event.preventDefault();
                     break;
-                case ARROW_DOWN:
+                case KEY_ARROW_DOWN:
                     editor.selectFirstLeafChildBox();
-                    eventHandled(event);
+                    event.preventDefault();
                     break;
             }
         } else if (event.shiftKey) {
-            switch (event.keyCode) {
-                case TAB:
-                    await editor.selectPreviousLeaf();
-                    eventHandled(event);
+            switch (event.key) {
+                case KEY_TAB:
+                    editor.selectPreviousLeaf();
+                    event.preventDefault();
                     break;
             }
         } else if (event.altKey) {
             // All alt keys here
         } else {
-            switch (event.keyCode) {
-                case BACKSPACE:
-                case ARROW_LEFT:
+            // No meta key pressed
+            switch (event.key) {
+                case KEY_BACKSPACE:
+                case KEY_ARROW_LEFT:
                     await editor.selectPreviousLeaf();
                     // TODO this.eventHandled(event);
                     break;
-                case DELETE:
+                case KEY_DELETE:
                     editor.deleteBox(editor.selectedBox);
                     break;
-                case TAB:
-                case ARROW_RIGHT:
+                case KEY_TAB:
+                case KEY_ARROW_RIGHT:
                     editor.selectNextLeaf();
-                    // TODO this.eventHandled(event);
+                    stopEvent(event);
                     break;
-                case ARROW_DOWN:
-                    LOGGER.log("Down: " + editor.selectedBox.role);
+                case KEY_ARROW_DOWN:
                     const down = boxBelow(editor.selectedBox);
-                    if (down !== null) {
+                    LOGGER.log("!!!!!!! Select down box " + down?.role);
+                    if (down !== null && down !==  undefined) {
                         editor.selectBoxNew(down);
                     }
+                    stopEvent(event);
                     break;
-                case ARROW_UP:
+                case KEY_ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
                     const up = boxAbove(editor.selectedBox);
                     if (up !== null) {

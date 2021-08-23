@@ -1,21 +1,14 @@
 <script lang="ts">
-    import { ChangeNotifier } from "./ChangeNotifier";
+    import { ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import { clickOutside } from "./clickOutside"
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
-    import { findOption } from "@projectit/core";
+    import {
+        findOption, PiLogger,
+        KEY_ESCAPE, KEY_ARROW_DOWN, KEY_ARROW_UP, KEY_DELETE, KEY_ENTER
+    } from "@projectit/core";
     import DropdownItemComponent from "./DropdownItemComponent.svelte";
     import type { SelectOption } from "@projectit/core";
-    import {
-        ARROW_LEFT,
-        ARROW_DOWN,
-        ARROW_UP,
-        ARROW_RIGHT,
-        ENTER,
-        DELETE,
-        ESCAPE,
-        PiLogger
-    } from "@projectit/core";
 
     export let getOptions: () => SelectOption[];
     export let selectedOptionId: string = "1";
@@ -24,7 +17,6 @@
     export let notifier;
 
     const LOGGER = new PiLogger("DropdownComponent");
-
     const dispatcher = createEventDispatcher();
 
     const getOptionsLogged = (): SelectOption[] => {
@@ -33,63 +25,36 @@
         options.forEach(o => LOGGER.log("     Option ["+ o.id + "]"));
         return options;//.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
     }
-    /** Supports Arrow up and down keys, Enter for selection
-     * Escape is forwarded to owning component, so it may use it to close the dropdown.
-     *
-     * NB: Called by owning component to forward key event !!
-     */
-    export const onKeydown = (event: KeyboardEvent): void => {
-        LOGGER.log("onKeydown: "+ event.key);
-        let index = getOptions().findIndex(o => o.id === selectedOptionId);
-        switch (event.keyCode) {
-            case ARROW_DOWN: {
-                index++;
-                selectedOptionId = getOptions()[index].id;
-                break;
-            }
-            case ARROW_UP: {
-                index--;
-                selectedOptionId = getOptions()[index].id;
-                break;
-            }
-            case ENTER: {
-                LOGGER.log("ENTER " + findOption(getOptions(), selectedOptionId).label)
-                break;
-            }
-        }
-    }
 
     /** Supports Arrow up and down keys, Enter for selection
      * Escape is forwarded to owning component, so it may use it to close the dropdown.
-     *
      * NB: Called by owning component to forward key event !!
      */
     export const handleKeyDown = (e: KeyboardEvent): boolean => {
         const options = getOptions();
         const index = options.findIndex(o => o.id === selectedOptionId);
         LOGGER.log("handleKeyDown " + e.key + " index="+ index);
-        switch (e.keyCode) {
-            case ARROW_DOWN:
+        switch (e.key) {
+            case KEY_ARROW_DOWN:
                 if (index + 1 < options.length) {
                     setSelectedOption(options[index + 1].id);
                 }
                 return true;
-            case ARROW_UP:
+            case KEY_ARROW_UP:
                 if (index > 0) {
                     setSelectedOption(options[index - 1].id);
                 }
                 return true;
-            case ENTER:
+            case KEY_ENTER:
                 if (index >= 0 && index < options.length) {
                     dispatcher("pi-ItemSelected", options[index]);
-                    // handleSelectedOption(options[index]);
                     return true;
                 } else {
                     return false;
                 }
-            case DELETE:
+            case KEY_DELETE:
                 return true;
-            case ESCAPE:
+            case KEY_ESCAPE:
                 return true;
         }
         return false;
@@ -105,7 +70,6 @@
         open = false;
     }
 
-
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {
         const dummy = notifier.dummy;
@@ -114,9 +78,16 @@
         getOptionsLogged().forEach( option => LOGGER.log("OPTION "+ option.label));
     });
 
+    const onFocus = (e: FocusEvent) =>  {
+        FOCUS_LOGGER.log("DropdownComponent.onFocus")
+    };
+    const onBlur = (e: FocusEvent) => {
+        FOCUS_LOGGER.log("DropdownComponent.onBlur")
+    }
 </script>
 
-<div class="dropdown"  on:keydown={onKeydown} >
+<div class="dropdown"
+        on:focus={onFocus}>
     <div tabIndex={0}  />
     <div class="popupWrapper" use:clickOutside on:click_outside={handleClickOutside}>
         {#each getOptionsForHtml as option (option.id)}

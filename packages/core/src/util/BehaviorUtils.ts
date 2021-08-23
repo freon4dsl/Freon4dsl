@@ -1,7 +1,7 @@
 import { isRegExp, isString, Box, PiEditor } from "../editor";
 import { PiLogger } from "./internal";
 
-const LOGGER = new PiLogger("BehaviorUtils"); // .mute();
+const LOGGER = new PiLogger("BehaviorUtils");
 
 export enum PiCaretPosition {
     UNSPECIFIED,
