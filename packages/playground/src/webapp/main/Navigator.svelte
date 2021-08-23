@@ -38,15 +38,20 @@
 
 <script lang="ts">
     import {
-        unitTypes,
-        units,
         currentModelName,
+        deleteUnitDialogVisible,
+        errorMessage,
+        severity,
+        severityType,
+        showError,
         toBeDeleted,
-        deleteUnitDialogVisible
+        units,
+        unitTypes
     } from "../WebappStore";
     import { Menu, Menuitem } from "svelte-mui";
     import type { PiNamedElement } from "@projectit/core";
     import { EditorCommunication } from "../editor/EditorCommunication";
+    import { modelErrors } from "../main-ts-files/ModelErrorsStore";
 
     let myUnits: Array<PiNamedElement[]> = [];
     $: if ($units) {
@@ -61,6 +66,12 @@
         })
     }
 
+    function setErrorMessage(message: string, sever: severityType) {
+        errorMessage.set(message);
+        severity.set(sever);
+        showError.set(true);
+    }
+
     const openUnit = (unit: PiNamedElement) => {
         EditorCommunication.getInstance().openModelUnit(unit);
     };
@@ -73,6 +84,12 @@
 
     const exportUnit = (unit: PiNamedElement) => {
         console.log("export unit called:" + unit.name);
+        // do not try to export a unit with errors
+        // parsing and unparsing will not proceed correctly
+        if ($modelErrors.length > 0) {
+            setErrorMessage(`Cannot export a unit that has errors`, severityType.error);
+            return;
+        }
         // create a text string from the unit
         let text: string = EditorCommunication.getInstance().unitAsText();
         // get the default file name from the current unit and its unit meta type
