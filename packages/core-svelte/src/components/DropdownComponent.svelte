@@ -1,6 +1,5 @@
 <script lang="ts">
     import { ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
-    // import { clickOutside } from "./clickOutside"
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
     import {
@@ -12,7 +11,6 @@
 
     export let getOptions: () => SelectOption[];
     export let selectedOptionId: string = "1";
-    export let open: boolean;
     export let handleSelectedOption: (option: SelectOption) => void;
     export let notifier: ChangeNotifier;
 
@@ -65,12 +63,6 @@
         LOGGER.log("set selected option to "+ index);
         selectedOptionId = index;
     }
-
-    // const handleClickOutside = (event): void => {
-    //     // TODO Inform parent AliasComponent
-    //     LOGGER.log("handleClickOutside SET OPEN to false")
-    //     open = false;
-    // }
 
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {

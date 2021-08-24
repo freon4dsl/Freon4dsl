@@ -23,9 +23,10 @@
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { action, autorun } from "mobx";
-    import { clickOutside } from "./clickOutside"
-    import { afterUpdate, onMount, tick } from "svelte";
-    import { MobxObservable } from "./MobxObservable";
+    import { clickOutside } from "./clickOutside";
+    import { afterUpdate, onMount } from "svelte";
+    import { writable } from 'svelte/store';
+    import type  { Writable } from 'svelte/store';
     import { SelectOptionList } from "./SelectableOptionList";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
@@ -35,13 +36,11 @@
     export let choiceBox: AbstractChoiceBox;
     export let editor: PiEditor;
 
-    let openInHtml: boolean ;
-    let open: MobxObservable<boolean> = new MobxObservable<boolean>(false);
-    // $: openInHtml = open;
+    let openStore: Writable<boolean> = writable<boolean>(false);
 
     function setOpen(msg: string, value: boolean) {
-        LOGGER.log("SET OPEN " + choiceBox?.role + " from " + open.value + " to " + value + " in " + msg );
-        open.value = value;
+        LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
+        $openStore = value;
     }
     let LOGGER = new PiLogger("AliasComponent");
     let dropdownComponent: DropdownComponent;
@@ -205,17 +204,17 @@
             e.stopPropagation();
         }
         if( (e.key === KEY_SPACEBAR && e.ctrlKey) || (e.key === KEY_ESCAPE)) {
-            setOpen("cltr-space or esacape", !open.value);
+            setOpen("cltr-space or esacape", !$openStore);
             return;
         }
-        if (open.value ) { // && this.dropdownComponent) {
+        if ($openStore ) { // && this.dropdownComponent) {
             // Propagate key event to dropdown component
             LOGGER.log("Forwarding event to dropdown component");
             if( dropdownComponent !== null && dropdownComponent !== undefined){
                 const x = dropdownComponent.handleKeyDown(e);
                 LOGGER.log("      handled result: " + x);
             } else {
-                console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ open.value + " openInHtml: "+ openInHtml);
+                console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ $openStore + " openInHtml: "+ openInHtml);
             }
 
             e.preventDefault();
@@ -277,12 +276,12 @@
     });
 
     const onClick = (e: MouseEvent) => {
-        LOGGER.log("onClick before open is " + open.value);
+        LOGGER.log("onClick before open is " + $openStore);
         const opts: SelectOption[] = choiceBox.getOptions(editor);
         LOGGER.log("   options are " + opts.length + " ==> " + opts.map(o => o.id))
         selectableOptionList.replaceOptions(opts)
-        setOpen("onClick", !open.value);
-        LOGGER.log("onClick after, open is " + open.value);
+        setOpen("onClick", !$openStore);
+        LOGGER.log("onClick after, open is " + $openStore);
     }
 
     let listForDropdown: SelectOption[];
@@ -290,7 +289,6 @@
 
     selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {
-        openInHtml = open.value;
         listForDropdown = selectableOptionList.getFilteredOptions();
         selectedOption = choiceBox.getSelectedOption();
         LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
@@ -300,8 +298,6 @@
     });
 
     const handleClickOutside = (event): void => {
-        // TODO Inform parent AliasComponent
-        // LOGGER.log("handleClickOutside SET OPEN to false")
         setOpen("clickOutside", false);
     }
 
@@ -333,10 +329,9 @@
             bind:this={textComponent}
         />
     </SelectableComponent>
-    {#if openInHtml}
+    {#if $openStore}
         <DropdownComponent
                 bind:this="{dropdownComponent}"
-                bind:open={open.value}
                 handleSelectedOption={selectOption}
                 on:pi-ItemSelected={selectedEvent}
                 getOptions={getAliasOptions}
