@@ -87,11 +87,31 @@ DemoFunctionCallExpression {
 
 
 DemoModel {
+// Note that self.type is optional, therefore this projection gives problems in the parser
+//    @projection DemoModel
+//        [
+//        model ${self.name} {
+//        main: ${self.main}
+//        type: ${self.type}
+//        types:
+//            ${self.types
+//                @vertical
+//                @terminator [\n\n]
+//            }
+//        entities:
+//            ${self.entities
+//                @vertical
+//                @terminator [\n\n]
+//            }
+//        model wide functions:
+//            ${self.functions @horizontal @separator [\n] }
+//        }
+//        ]
     @projection DemoModel
         [
         model ${self.name} {
         main: ${self.main}
-        type: ${self.type}
+        [?type: ${self.type}]
         types:
             ${self.types
                 @vertical

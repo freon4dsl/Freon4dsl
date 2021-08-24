@@ -64,7 +64,9 @@ describe("Testing Validator", () => {
 
     test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
         let errors: PiError[] = [];
-        errors = validator.validate(new DemoModel());
+        const model = new DemoModel();
+        model.name = "$%";
+        errors = validator.validate(model);
         // let text = "";
         // for (let e of errors) {
         //     text = text.concat(e.message + "\n");
@@ -165,7 +167,7 @@ describe("Testing Validator", () => {
             // console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
             expect(e.reportedOn === personEnt);
         });
-        expect(errors.length).toBe(2);
+        expect(errors.length).toBe(4);
     });
 
     test ("test isUnique rule for model entities", () => {
@@ -175,16 +177,16 @@ describe("Testing Validator", () => {
         // errors.forEach(e =>
         //     console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity)
         // );
-        expect(errors.length).toBe(10);
+        expect(errors.length).toBe(15);
     });
 
     test ("test correct model", () => {
         let correctModel = new DemoModelCreator().createCorrectModel();
         let errors: PiError[] = [];
         errors = validator.validate(correctModel, true);
-        // errors.forEach(e =>
-        //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
-        // );
+        errors.forEach(e =>
+            console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
+        );
         // the model is correct, but the custom validation gives an error on every function
         expect(errors.length).toBe(4);
     });

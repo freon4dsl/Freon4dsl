@@ -302,8 +302,15 @@ export class DemoModelCreator {
         companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         const VAT_Number = DemoAttribute.create({ name: "VAT_Number" });
         VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        const simpleprop = DemoAttribute.create({ name: "simpleprop" });
+        simpleprop.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        const xprop = DemoAttribute.create({ name: "x" });
+        xprop.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
+        companyEnt.attributes.push(simpleprop);
+        companyEnt.attributes.push(xprop);
+        console.log(`Adding simpleprop and xprop: ${companyEnt.attributes.find(atr =>atr.name == simpleprop.name).name}, ${xprop.name}, ${companyEnt.name}`);
         const work = DemoFunction.create({ name: "doClean" });
         const param = DemoVariable.create({ name: "at" });
         work.parameters.push(param);
