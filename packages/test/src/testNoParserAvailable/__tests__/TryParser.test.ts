@@ -12,7 +12,7 @@ describe("Test the STUB that replaces the parser", () => {
             let input = fileHandler.stringFromFile("src/testNoParserAvailable/__tests__/LargeUnit.exm");
             unit1 = reader.readFromString(input, "ExModel") as ExModel;
         } catch (e) {
-            expect(e.message).toBe("Not able to read ExampleModelUnitType, no parser(s) available.")
+            expect(e.message).toBe("Not able to read ExModel, no parser(s) available.")
         }
 
         expect(unit1).toBeNull();
