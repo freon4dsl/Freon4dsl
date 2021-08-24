@@ -56,13 +56,26 @@ router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
 router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
     const name = ctx.query["name"];
-    console.log("DeleteModel: " + folder + "/" + name);
-    if ((!!name || folder) && (typeof name === "string" && typeof folder === "string")) {
+    console.log("DeleteModelUnit: " + folder + "/" + name);
+    if ((!!name || !!folder) && (typeof name === "string" && typeof folder === "string")) {
         ModelRequests.deleteModelUnit(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
         ctx.message = "Missing query parameter 'unitName' or 'folder'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+
+router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
+    console.log("DeleteModel: " + folder);
+    if ((!!folder) && (typeof folder === "string")) {
+        ModelRequests.deleteModel(folder, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'folder'";
     }
     ctx.body = { massage: (ctx.request as any).body };
 });

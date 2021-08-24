@@ -44,7 +44,7 @@
         modelNames,
         newUnitDialogVisible,
         openModelDialogVisible,
-        severityType,
+        deleteModelDialogVisible,
         unitNames
     } from "../webapp-ts-utils/WebappStore";
     import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
@@ -72,7 +72,6 @@
     const changeModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
-            // if list not empty, show dialog
             if (names.length > 0) {
                 $modelNames = names;
             }
@@ -94,6 +93,20 @@
     const saveUnit = () => {
         console.log("FileMenu.saveUnit: " + $currentUnitName);
         EditorCommunication.getInstance().saveCurrentUnit();
+    }
+
+    // delete model menuitem
+    const deleteModel = () => {
+        console.log("FileMenu.deleteModel");
+        // get list of models from server
+        ServerCommunication.getInstance().loadModelList((names: string[]) => {
+            // if list not empty, show dialog
+            if (names.length > 0) {
+                $modelNames = names;
+                $deleteModelDialogVisible = true;
+                console.log("dialog visible is true")
+            }
+        });
     }
 
     // import model unit menuitem
@@ -147,6 +160,7 @@
         {title: "New or Open Model", action: changeModel, id: 1},
         {title: 'New Unit', action: newUnit, id: 3},
         {title: 'Save Current Unit', action: saveUnit, id: 5},
+        {title: 'Delete Model', action: deleteModel, id: 6},
         {title: '(Experimental) Import Unit(s)...', action: importUnit, id: 7},
     ];
 

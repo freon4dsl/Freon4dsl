@@ -1,9 +1,17 @@
 <!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
-<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:visible={$deleteUnitDialogVisible} on:keydown={handleKeydown}>
-	<div slot="title" class="title">Delete unit</div>
+<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:visible={$deleteModelDialogVisible} on:keydown={handleKeydown}>
+	<div slot="title" class="title">Delete model</div>
 
 	<div class="content">
-		Do you really want to delete unit "{$toBeDeleted.name}" from the server?
+		Select the model you want to delete. <br>
+		<i>Note that this action cannot be undone!</i>
+		{#each $modelNames as name}
+			{#if (name !== $currentModelName)}
+			<Radio {...props} bind:group={modelToBeDeleted} value={name}>
+				<span class="item-name">{name}</span>
+			</Radio>
+			{/if}
+		{/each}
 	</div>
 
 	<div slot="actions" class="actions center">
@@ -18,9 +26,9 @@
 
 
 <script lang="ts">
-	import {Button, Dialog} from 'svelte-mui';
-	import { currentModelName, deleteUnitDialogVisible, toBeDeleted } from "../webapp-ts-utils/WebappStore";
-	import {EditorCommunication} from "../editor/EditorCommunication";
+	import {Button, Dialog, Radio} from 'svelte-mui';
+	import { currentModelName, deleteModelDialogVisible, modelNames } from "../webapp-ts-utils/WebappStore";
+	import { ServerCommunication } from "../server/ServerCommunication";
 
 	let props = {
 		right: false,
@@ -28,16 +36,19 @@
 		disabled: false,
 	};
 
+	let modelToBeDeleted: string;
+
 	const handleCancel = () => {
 		console.log("Cancel called ");
-		$toBeDeleted = null;
-		$deleteUnitDialogVisible = false;
+		modelToBeDeleted = "";
+		$deleteModelDialogVisible = false;
 	}
 
 	const handleSubmit = () => {
-		console.log("Submit called, unit to be deleted: " + $toBeDeleted.name + "." + $currentModelName);
-		EditorCommunication.getInstance().deleteModelUnit($toBeDeleted);
-		$deleteUnitDialogVisible = false;
+		console.log("Submit called, model to be deleted: " + modelToBeDeleted);
+		ServerCommunication.getInstance().deleteModel(modelToBeDeleted);
+		modelToBeDeleted = "";
+		$deleteModelDialogVisible = false;
 	}
 
 	const handleKeydown = (event) => {

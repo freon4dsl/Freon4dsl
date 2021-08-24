@@ -57,6 +57,18 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
+    async deleteModel(modelName: string ) {
+        console.log(`ServerCommunication.deleteModel ${modelName}`);
+        if (!!modelName && modelName !== "") {
+            try {
+                const res1 = await axios.get(`${SERVER_URL}deleteModel?folder=${modelName}`);
+            } catch (e) {
+                LOGGER.error(this, "deleteModel, " + e.toString());
+                setUserMessage(e.message);
+            }
+        }
+    }
+
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback

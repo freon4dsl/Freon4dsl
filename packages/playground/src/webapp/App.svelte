@@ -14,6 +14,7 @@
 <OpenModelDialog />
 <NewUnitDialog />
 <DeleteUnitDialog />
+<DeleteModelDialog />
 
 <UserMessage />
 
@@ -86,6 +87,7 @@
 	import EditorGrid from "./main/EditorGrid.svelte";
 	import { ServerCommunication } from "./server/ServerCommunication";
 	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
+	import DeleteModelDialog from "./menu/DeleteModelDialog.svelte";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
 
