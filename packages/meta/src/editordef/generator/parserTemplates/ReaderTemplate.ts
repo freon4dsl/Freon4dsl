@@ -76,7 +76,7 @@ export class ReaderTemplate {
         export class ${Names.reader(language)} implements ${Names.PiReader} {
         
             readFromString(input: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
-                throw new Error("Not able to read ${Names.modelunit(language)}, no parser(s) available.");
+                throw new Error(\`Not able to read \${metatype}, no parser(s) available.\`);
                 return null;
             }       
                  

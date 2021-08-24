@@ -42,7 +42,6 @@
         modelNames,
         newUnitDialogVisible,
         openModelDialogVisible,
-        severityType,
         unitNames
     } from "../webapp-ts-utils/WebappStore";
     import { metaTypeForExtension } from "../webapp-ts-utils/MenuUtils";
@@ -97,7 +96,6 @@
 
     // import model unit menuitem
     const importUnit = () => {
-        // todo check whether the name of the unit already exists in the model
         // open the file browse dialog
         file_selector.click();
     }
@@ -105,6 +103,7 @@
     const process_files = (event) => {
         const fileList: FileList = event.target.files;
         const reader = new FileReader();
+        // todo check whether the name of the unit already exists in the model
         for (let file of fileList) {
             // todo async: wait for file to be uploaded before starting next
             // todo do something with progress indicator
@@ -126,15 +125,15 @@
                         try {
                             EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
                         } catch (e) {
-                            setUserMessage(`${e.message}`, severityType.error);
+                            setUserMessage(`${e.message}`);
                         }
                     }
                 };
                 reader.onerror = function() {
-                    setUserMessage(reader.error.message, severityType.error);
+                    setUserMessage(reader.error.message);
                 };
             } else {
-                setUserMessage(`File ${file.name} does not have the right (extension) type.`, severityType.error);
+                setUserMessage(`File ${file.name} does not have the right (extension) type.`);
             }
         }
     }
