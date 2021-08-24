@@ -64,8 +64,8 @@ describe("Testing Validator", () => {
 
     test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
         let errors: PiError[] = [];
-        const model: DemoModel = new DemoModel();
-        model.name = "%$";
+        const model = new DemoModel();
+        model.name = "$%";
         errors = validator.validate(model);
         // let text = "";
         // for (let e of errors) {
@@ -139,7 +139,7 @@ describe("Testing Validator", () => {
 
     test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
         let errors: PiError[] = [];
-        const personEnt = DemoEntity.create({  name: "Person" });
+        const personEnt = DemoEntity.create({  name: "Person", x: "xxx", simpleprop: "simple" });
         const age = DemoAttribute.create({ name: "age" });
         const personName = DemoAttribute.create({ name: "name" });
         personEnt.attributes.push(age);
