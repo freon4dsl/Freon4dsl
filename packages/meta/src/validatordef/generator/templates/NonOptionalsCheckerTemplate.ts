@@ -1,7 +1,6 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept, PiPrimitiveProperty, PiPrimitiveType } from "../../../languagedef/metalanguage";
+import { PiLanguage, PiConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
-import { PrimitiveType } from "@projectit/playground/dist/octopus/language/gen";
 
 const commentBefore = `/**
                         * Checks 'modelelement' before checking its children.
