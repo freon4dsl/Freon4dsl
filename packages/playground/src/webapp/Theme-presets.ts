@@ -8,6 +8,7 @@ export const themePresets = [
             color: PI_DARKBLUE,                     /* Primary text color */
             inverse_color: PI_LIGHTBLUE,            /* Text color on non_normal background */
             bg_app_bar: PI_DARKBLUE,                /* Color of header and footer background */
+            text_app_bar: "white",                  /* Color of header and footer text */
             bg_color: PI_LIGHTBLUE,                 /* Color of background of side panes */
             divider: PI_DARKBLUE, 	                /* Color of dialog title background */
             list_divider: PI_DARKBLUE,              /* Color of lines between columns in the error list */

@@ -34,7 +34,7 @@
 		</Icon>
 	</Button>
 
-	{#if $miniWindow}
+	{#if !$miniWindow}
 		<!-- normally, the brand icon is shown-->
 		<a target="_blank" href="http://www.projectit.org">
 			<!-- compiled svg does not work, because the path is too complex-->
@@ -62,7 +62,7 @@
 		display: flex;
 		align-items: center;
 		height: var(--pi-header-height);
-		color: #fff;
+		color: var(--theme-colors-text_app_bar);
 		background: var(--theme-colors-bg_app_bar);
 		font-size: var(--pi-header-font-size);
 		line-height: 1;

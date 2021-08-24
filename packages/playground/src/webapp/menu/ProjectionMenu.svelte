@@ -1,5 +1,3 @@
-
-<!-- todo when a checkbox is activated, the menu is not closed -->
 <script lang="ts">
     import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
     import arrowDropDown from '../assets/icons/svg/arrow_drop_down.svg';
