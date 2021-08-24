@@ -24,12 +24,13 @@
     "defaultscoper":"bash ../../scripts/projectit-dev.sh all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper":"cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/SimpleModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/projectit-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
     "parsergen":    "bash ../../scripts/projectit-dev.sh all -d src/parser_gen/defs -o src/parser_gen",
-    "build":        "yarn run imports && yarn run langconstr && yarn run testproject && yarn run defaultscoper && yarn run definedscoper && yarn run demo && yarn run parsergen && yarn run octopus && tsc",
+    "noparser":     "bash ../../scripts/projectit-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
+    "build":        "yarn imports && yarn langconstr && yarn testproject && yarn defaultscoper && yarn definedscoper && yarn demo && yarn parsergen && yarn octopus && yarn noparser && tsc",
     "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-init":   "rm */*/*/*Initialization.ts",
     "clean-parser": "rm -r */*/*parse*",
-    "clean":        "yarn run clean-config && yarn run clean-custom && yarn run clean-init",
+    "clean":        "yarn clean-config && yarn clean-custom && yarn clean-init",
     "test":         "jest"
   },
   "dependencies": {
