@@ -139,7 +139,7 @@ describe("Testing Validator", () => {
 
     test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
         let errors: PiError[] = [];
-        const personEnt = DemoEntity.create({  name: "Person" });
+        const personEnt = DemoEntity.create({  name: "Person", x: "xxx", simpleprop: "simple" });
         const age = DemoAttribute.create({ name: "age" });
         const personName = DemoAttribute.create({ name: "name" });
         personEnt.attributes.push(age);
@@ -167,7 +167,7 @@ describe("Testing Validator", () => {
             // console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
             expect(e.reportedOn === personEnt);
         });
-        expect(errors.length).toBe(4);
+        expect(errors.length).toBe(2);
     });
 
     test ("test isUnique rule for model entities", () => {
@@ -177,16 +177,16 @@ describe("Testing Validator", () => {
         // errors.forEach(e =>
         //     console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity)
         // );
-        expect(errors.length).toBe(15);
+        expect(errors.length).toBe(10);
     });
 
     test ("test correct model", () => {
         let correctModel = new DemoModelCreator().createCorrectModel();
         let errors: PiError[] = [];
         errors = validator.validate(correctModel, true);
-        errors.forEach(e =>
-            console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
-        );
+        // errors.forEach(e =>
+        //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
+        // );
         // the model is correct, but the custom validation gives an error on every function
         expect(errors.length).toBe(4);
     });

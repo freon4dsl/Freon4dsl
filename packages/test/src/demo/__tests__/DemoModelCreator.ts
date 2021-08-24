@@ -40,7 +40,7 @@ export class DemoModelCreator {
         let result = this.createCorrectModel();
         let unit: DemoModel = result.models.find(m => m.name === "CorrectUnit");
 
-        const companyEnt = DemoEntity.create({name: "Company"}); // another one with the same unitName
+        const companyEnt = DemoEntity.create({name: "Company", x: "xxx", simpleprop: "simple"}); // another one with the same unitName
         const VAT_Number = DemoAttribute.create({name: "VAT_Number", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
         const VAT_Number2 = DemoAttribute.create({name: "VAT_Number", declaredType: PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType")});
         companyEnt.attributes.push(VAT_Number2);
@@ -140,13 +140,13 @@ export class DemoModelCreator {
     private createInheritanceUnit() {
         let inheritanceModel: DemoModel = DemoModel.create({ name: "DemoModel_with_inheritance" });
 
-        const vehicleEnt = DemoEntity.create({ name: "Vehicle" });
+        const vehicleEnt = DemoEntity.create({ name: "Vehicle", x: "xxx", simpleprop: "simple" });
         const brand = DemoAttribute.create({ name: "brand", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
         const vehicleName = DemoAttribute.create({ name: "type", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
         vehicleEnt.attributes.push(brand);
         vehicleEnt.attributes.push(vehicleName);
 
-        const carEnt = DemoEntity.create({ name: "Car" });
+        const carEnt = DemoEntity.create({ name: "Car", x: "xxx", simpleprop: "simple" });
         const numberplate = DemoAttribute.create({ name: "numberplate", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
         const carType = DemoAttribute.create({ name: "make", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
         // carEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
@@ -154,7 +154,7 @@ export class DemoModelCreator {
         carEnt.attributes.push(numberplate);
         carEnt.attributes.push(carType);
 
-        const bikeEnt = DemoEntity.create({ name: "Bike" });
+        const bikeEnt = DemoEntity.create({ name: "Bike", x: "xxx", simpleprop: "simple" });
         const backseat = DemoAttribute.create({ name: "backseat", declaredType: PiElementReference.create<DemoAttributeType>("Boolean", "DemoAttributeType") });
         const gears = DemoAttribute.create({ name: "gears", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
         // bikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(vehicleEnt, "DemoEntity"));
@@ -162,7 +162,7 @@ export class DemoModelCreator {
         bikeEnt.attributes.push(backseat);
         bikeEnt.attributes.push(gears);
 
-        const racebikeEnt = DemoEntity.create({ name: "RaceBike" });
+        const racebikeEnt = DemoEntity.create({ name: "RaceBike", x: "xxx", simpleprop: "simple" });
         const color = DemoAttribute.create({ name: "color", declaredType: PiElementReference.create<DemoAttributeType>("String", "DemoAttributeType") });
         const wheelsize = DemoAttribute.create({ name: "wheelsize", declaredType: PiElementReference.create<DemoAttributeType>("Integer", "DemoAttributeType") });
         // racebikeEnt.baseEntity.push(PiElementReference.create<DemoEntity>(bikeEnt, "DemoEntity"));
@@ -219,7 +219,7 @@ export class DemoModelCreator {
         unit.functions.push(determine);
         unit.functions.push(last);
 
-        const personEnt = DemoEntity.create({name: "Person"});
+        const personEnt = DemoEntity.create({name: "Person", x: "xxx", simpleprop: "simple"});
         const age = DemoAttribute.create({name: "age"});
         const personName = DemoAttribute.create({name: "name"});
         personEnt.attributes.push(age);
@@ -231,7 +231,7 @@ export class DemoModelCreator {
         personEnt.functions.push(first);
         // Person { age, first(Resultvar) = 5 + 24 }
 
-        const companyEnt = DemoEntity.create({name: "Company"});
+        const companyEnt = DemoEntity.create({name: "Company", x: "xxx", simpleprop: "simple"});
         const companyName = DemoAttribute.create({name: "name"});
         const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
         companyEnt.attributes.push(companyName);
@@ -297,20 +297,13 @@ export class DemoModelCreator {
         unit.functions.push(ifFunction);
         unit.functions.push(helloFunction);
 
-        const companyEnt = DemoEntity.create({ name: "Company" });
+        const companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" });
         const companyName = DemoAttribute.create({ name: "name" });
         companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         const VAT_Number = DemoAttribute.create({ name: "VAT_Number" });
         VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
-        const simpleprop = DemoAttribute.create({ name: "simpleprop" });
-        simpleprop.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
-        const xprop = DemoAttribute.create({ name: "x" });
-        xprop.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
-        companyEnt.attributes.push(simpleprop);
-        companyEnt.attributes.push(xprop);
-        console.log(`Adding simpleprop and xprop: ${companyEnt.attributes.find(atr =>atr.name == simpleprop.name).name}, ${xprop.name}, ${companyEnt.name}`);
         const work = DemoFunction.create({ name: "doClean" });
         const param = DemoVariable.create({ name: "at" });
         work.parameters.push(param);
@@ -320,7 +313,7 @@ export class DemoModelCreator {
         companyEnt.functions.push(work);
         // Company { VAT_Number: Integer, unitName: String, doClean(at: School) = 5 + 24 }
 
-        const schoolEntity = DemoEntity.create({ name: "School" });
+        const schoolEntity = DemoEntity.create({ name: "School", x: "xxx", simpleprop: "simple" });
 
         const founded = DemoAttribute.create({ name: "foundedIn" });
         founded.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
