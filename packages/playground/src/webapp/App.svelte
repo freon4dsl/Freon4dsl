@@ -10,10 +10,11 @@
 <LeftPanel />
 <RightPanel />
 
-<!-- dialogs and the error message snackbar -->
+<!-- dialogs and the user message snackbar -->
 <OpenModelDialog />
 <NewUnitDialog />
 <DeleteUnitDialog />
+<DeleteModelDialog />
 
 <UserMessage />
 
@@ -21,30 +22,46 @@
 	<main class="main-window">
 		<AppBar/>
 
-		<div class="splitpane-container" >
-			<SplitPane type='vertical' pos={80}>
-				<section class="splitpane-section" slot=a>
-					<div class="splitpane-container" >
+		{#if ($miniWindow)}
+			<div class="splitpane-container" >
+				<SplitPane type='vertical' pos={80}>
+					<section class="splitpane-section" slot=a>
+						<div>
+							<EditorGrid/>
+						</div>
+					</section>
 
-						<SplitPane type='horizontal' pos={20}>
-							<section class="splitpane-section" slot=a>
-								<Navigator/>
-							</section>
+					<section class="splitpane-section" slot=b>
+						<ErrorList/>
+					</section>
+				</SplitPane>
+			</div>
+		{:else }
+			<div class="splitpane-container" >
+				<SplitPane type='vertical' pos={80}>
+					<section class="splitpane-section" slot=a>
+						<div class="splitpane-container" >
 
-							<section class="splitpane-section" slot=b>
-								<div>
-									<EditorGrid/>
-								</div>
-							</section>
-						</SplitPane>
-					</div>
-				</section>
+							<SplitPane type='horizontal' pos={20}>
+								<section class="splitpane-section" slot=a>
+									<Navigator/>
+								</section>
 
-				<section class="splitpane-section" slot=b>
-					<ErrorList/>
-				</section>
-			</SplitPane>
-		</div>
+								<section class="splitpane-section" slot=b>
+									<div>
+										<EditorGrid/>
+									</div>
+								</section>
+							</SplitPane>
+						</div>
+					</section>
+
+					<section class="splitpane-section" slot=b>
+						<ErrorList/>
+					</section>
+				</SplitPane>
+			</div>
+		{/if}
 
 		<Footer />
 	</main>
@@ -61,7 +78,7 @@
 	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
 	import NewUnitDialog from "./menu/NewUnitDialog.svelte";
 
-	import { miniWindow, modelNames, openModelDialogVisible } from "./WebappStore";
+	import { miniWindow, modelNames, openModelDialogVisible } from "./webapp-ts-utils/WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";
 	import ThemeContext from "./theming/ThemeContext.svelte";
 	import SplitPane from "./main/SplitPane.svelte";
@@ -70,6 +87,7 @@
 	import EditorGrid from "./main/EditorGrid.svelte";
 	import { ServerCommunication } from "./server/ServerCommunication";
 	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
+	import DeleteModelDialog from "./menu/DeleteModelDialog.svelte";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
 
@@ -96,9 +114,9 @@
 				window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
 		if (width > MAX_WIDTH_SMALL_VIEWPORT) {
-			miniWindow.set(true);
-		} else {
 			miniWindow.set(false);
+		} else {
+			miniWindow.set(true);
 		}
 	}
 </script>

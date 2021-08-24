@@ -19,8 +19,8 @@
 </div>
 
 <script lang="ts">
-    import { currentUnitName } from "../WebappStore";
-    import { modelErrors } from "../main-ts-files/ModelErrorsStore";
+    import { currentUnitName } from "../webapp-ts-utils/WebappStore";
+    import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
     import { Icon } from "svelte-mui";
     import error from "../assets/icons/svg/error.svg";
     import check from "../assets/icons/svg/check_circle.svg";

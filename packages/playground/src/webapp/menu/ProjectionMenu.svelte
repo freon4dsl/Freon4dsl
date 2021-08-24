@@ -1,11 +1,9 @@
-
-<!-- todo when a checkbox is activated, the menu is not closed -->
 <script lang="ts">
     import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
     import arrowDropDown from '../assets/icons/svg/arrow_drop_down.svg';
-    import type {MenuItem} from "../menu-ts-files/MenuItem";
+    import type {MenuItem} from "../webapp-ts-utils/MenuUtils";
     import {EditorCommunication} from "../editor/EditorCommunication";
-    import { leftPanelVisible, projectionNames } from "../WebappStore";
+    import { leftPanelVisible, projectionNames } from "../webapp-ts-utils/WebappStore";
 
     const myAction = (id: number) => {console.log("Projection menu " + id + " action performed");};
     let activatorTitle: string= "Projection";

@@ -1,5 +1,5 @@
 <div class="navigator">
-    <div class="nav-title">Model {$currentModelName}</div>
+    <div class="nav-title">{$currentModelName}</div>
     <hr>
     <ul class="list">
         {#each $unitTypes as name, index}
@@ -37,23 +37,23 @@
 </div>
 
 <script lang="ts">
+    import type { PiNamedElement } from "@projectit/core";
+    import { Menu, Menuitem } from "svelte-mui";
     import {
         currentModelName,
         deleteUnitDialogVisible,
-        errorMessage,
-        severity,
-        severityType,
-        showError,
         toBeDeleted,
         units,
         unitTypes
-    } from "../WebappStore";
-    import { Menu, Menuitem } from "svelte-mui";
-    import type { PiNamedElement } from "@projectit/core";
+    } from "../webapp-ts-utils/WebappStore";
+    import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
+    import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
     import { EditorCommunication } from "../editor/EditorCommunication";
-    import { modelErrors } from "../main-ts-files/ModelErrorsStore";
 
+    // initialize myUnits to something that will not break the app
     let myUnits: Array<PiNamedElement[]> = [];
+    myUnits[0] = [];
+    // set myUnits when model units are found
     $: if ($units) {
         // there are units, so fill the local data structure
         $units.forEach((xx: PiNamedElement[], index) => {
@@ -64,12 +64,6 @@
         $unitTypes.forEach((name, index) => {
             myUnits[index] = [];
         })
-    }
-
-    function setErrorMessage(message: string, sever: severityType) {
-        errorMessage.set(message);
-        severity.set(sever);
-        showError.set(true);
     }
 
     const openUnit = (unit: PiNamedElement) => {
@@ -87,7 +81,7 @@
         // do not try to export a unit with errors
         // parsing and unparsing will not proceed correctly
         if ($modelErrors.length > 0) {
-            setErrorMessage(`Cannot export a unit that has errors`, severityType.error);
+            setUserMessage(`Cannot export a unit that has errors`);
             return;
         }
         // create a text string from the unit
