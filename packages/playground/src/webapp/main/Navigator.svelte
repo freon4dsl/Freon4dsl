@@ -1,5 +1,5 @@
 <div class="navigator">
-    <div class="nav-title">Model {$currentModelName}</div>
+    <div class="nav-title">{$currentModelName}</div>
     <hr>
     <ul class="list">
         {#each $unitTypes as name, index}
@@ -50,7 +50,10 @@
     import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
+    // initialize myUnits to something that will not break the app
     let myUnits: Array<PiNamedElement[]> = [];
+    myUnits[0] = [];
+    // set myUnits when model units are found
     $: if ($units) {
         // there are units, so fill the local data structure
         $units.forEach((xx: PiNamedElement[], index) => {

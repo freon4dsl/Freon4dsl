@@ -10,7 +10,7 @@
 <LeftPanel />
 <RightPanel />
 
-<!-- dialogs and the error message snackbar -->
+<!-- dialogs and the user message snackbar -->
 <OpenModelDialog />
 <NewUnitDialog />
 <DeleteUnitDialog />
@@ -21,30 +21,46 @@
 	<main class="main-window">
 		<AppBar/>
 
-		<div class="splitpane-container" >
-			<SplitPane type='vertical' pos={80}>
-				<section class="splitpane-section" slot=a>
-					<div class="splitpane-container" >
+		{#if ($miniWindow)}
+			<div class="splitpane-container" >
+				<SplitPane type='vertical' pos={80}>
+					<section class="splitpane-section" slot=a>
+						<div>
+							<EditorGrid/>
+						</div>
+					</section>
 
-						<SplitPane type='horizontal' pos={20}>
-							<section class="splitpane-section" slot=a>
-								<Navigator/>
-							</section>
+					<section class="splitpane-section" slot=b>
+						<ErrorList/>
+					</section>
+				</SplitPane>
+			</div>
+		{:else }
+			<div class="splitpane-container" >
+				<SplitPane type='vertical' pos={80}>
+					<section class="splitpane-section" slot=a>
+						<div class="splitpane-container" >
 
-							<section class="splitpane-section" slot=b>
-								<div>
-									<EditorGrid/>
-								</div>
-							</section>
-						</SplitPane>
-					</div>
-				</section>
+							<SplitPane type='horizontal' pos={20}>
+								<section class="splitpane-section" slot=a>
+									<Navigator/>
+								</section>
 
-				<section class="splitpane-section" slot=b>
-					<ErrorList/>
-				</section>
-			</SplitPane>
-		</div>
+								<section class="splitpane-section" slot=b>
+									<div>
+										<EditorGrid/>
+									</div>
+								</section>
+							</SplitPane>
+						</div>
+					</section>
+
+					<section class="splitpane-section" slot=b>
+						<ErrorList/>
+					</section>
+				</SplitPane>
+			</div>
+		{/if}
 
 		<Footer />
 	</main>
@@ -96,9 +112,9 @@
 				window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
 		if (width > MAX_WIDTH_SMALL_VIEWPORT) {
-			miniWindow.set(true);
-		} else {
 			miniWindow.set(false);
+		} else {
+			miniWindow.set(true);
 		}
 	}
 </script>

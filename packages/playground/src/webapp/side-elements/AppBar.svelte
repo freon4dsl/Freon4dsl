@@ -2,7 +2,7 @@
 <!-- It contains the menus, the name of the language, and ... -->
 
 <div class="app-bar">
-	{#if !$miniWindow}
+	{#if $miniWindow}
 		<!-- this button is shown only when the viewport is small -->
 		<!-- it is used to open the left panel which shows the navigator -->
 		<!-- the title is also smaller in a small viewport		-->
