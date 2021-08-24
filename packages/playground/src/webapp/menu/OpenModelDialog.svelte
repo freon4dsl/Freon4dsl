@@ -34,7 +34,7 @@
 		modelNames,
 		openModelDialogVisible,
 		initializing
-	} from "../WebappStore";
+	} from "../webapp-ts-utils/WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
 
 	let modal: boolean = true; // TODO from FileMenu modal must be set to false

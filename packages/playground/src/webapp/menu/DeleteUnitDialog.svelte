@@ -19,9 +19,9 @@
 
 <script lang="ts">
 	import {Button, Dialog} from 'svelte-mui';
-	import { currentModelName, deleteUnitDialogVisible, toBeDeleted } from "../WebappStore";
+	import { currentModelName, deleteUnitDialogVisible, toBeDeleted } from "../webapp-ts-utils/WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
-	import { currentUnitName } from "../WebappStore";
+	import { currentUnitName } from "../webapp-ts-utils/WebappStore";
 	import type PiNamedElement from "@projectit/core";
 
 	let props = {

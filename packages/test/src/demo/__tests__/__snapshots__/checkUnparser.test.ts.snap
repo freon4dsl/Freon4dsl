@@ -4,9 +4,7 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 "Demo ModelWithUnits 
     models 
         model DemoModel_with_inheritance { 
-        main: 
-        type: 
-        types: 
+        main: types: 
             
         entities: 
             DemoEntity Vehicle 
@@ -145,9 +143,7 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 declaredType Integer
         }
         model CorrectUnit { 
-        main: 
-        type: 
-        types: 
+        main: types: 
             
         entities: 
             DemoEntity School 

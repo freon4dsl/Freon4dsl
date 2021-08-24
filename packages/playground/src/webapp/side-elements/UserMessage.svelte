@@ -10,7 +10,7 @@
 
 <script lang="ts">
     import { Snackbar, Button } from 'svelte-mui';
-    import {showError, errorMessage, severity} from "../WebappStore";
+    import {showError, errorMessage, severity} from "../webapp-ts-utils/WebappStore";
     import {get} from "svelte/store";
 
     let visible: boolean;

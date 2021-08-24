@@ -1,9 +1,9 @@
 <script lang="ts">
     import {Button, Menu, Menuitem, Icon} from 'svelte-mui';
     import arrowDropDown from '../assets/icons/svg/arrow_drop_down.svg';
-    import type {MenuItem} from "../menu-ts-files/MenuItem";
+    import type {MenuItem} from "../webapp-ts-utils/MenuUtils";
     import {EditorCommunication} from "../editor/EditorCommunication";
-    import { leftPanelVisible } from "../WebappStore";
+    import { leftPanelVisible } from "../webapp-ts-utils/WebappStore";
 
     let activatorTitle: string= "Edit";
     let menuItems : MenuItem[] = [

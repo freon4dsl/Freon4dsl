@@ -61,7 +61,7 @@
 	import OpenModelDialog from "./menu/OpenModelDialog.svelte";
 	import NewUnitDialog from "./menu/NewUnitDialog.svelte";
 
-	import { miniWindow, modelNames, openModelDialogVisible } from "./WebappStore";
+	import { miniWindow, modelNames, openModelDialogVisible } from "./webapp-ts-utils/WebappStore";
 	import { EditorCommunication } from "./editor/EditorCommunication";
 	import ThemeContext from "./theming/ThemeContext.svelte";
 	import SplitPane from "./main/SplitPane.svelte";

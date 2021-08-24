@@ -31,10 +31,10 @@
 
 <script lang="ts">
 	import { Button, Dialog, Radio, Textfield } from 'svelte-mui';
-	import { unitNames, unitTypes } from "../WebappStore";
+	import { unitNames, unitTypes } from "../webapp-ts-utils/WebappStore";
 	import { get } from 'svelte/store';
 	import { EditorCommunication } from "../editor/EditorCommunication";
-	import { newUnitDialogVisible } from "../WebappStore";
+	import { newUnitDialogVisible } from "../webapp-ts-utils/WebappStore";
 
 	// all unit names in a model must be unique
 	let newName: string = "";

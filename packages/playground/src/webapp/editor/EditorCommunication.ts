@@ -5,15 +5,15 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
-    errorMessage,
-    fileExtensions, noUnitAvailable,
+    fileExtensions,
+    noUnitAvailable,
     languageName,
-    severity,
-    severityType,
-    showError, units,
-    unitTypes, projectionNames
-} from "../WebappStore";
-import { modelErrors } from "../main-ts-files/ModelErrorsStore";
+    units,
+    unitTypes,
+    projectionNames
+} from "../webapp-ts-utils/WebappStore";
+import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
+import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 import { editorEnvironment } from "../WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
@@ -139,9 +139,7 @@ export class EditorCommunication {
             // show the new unit in the editor
             this.showUnitAndErrors(newUnit);
         } else {
-            errorMessage.set(`Model unit of type '${unitType}' could not be created.`);
-            severity.set(severityType.error);
-            showError.set(true);
+            setUserMessage(`Model unit of type '${unitType}' could not be created.`);
         }
         currentUnitName.set(newName);
     }
@@ -163,10 +161,7 @@ export class EditorCommunication {
                 EditorCommunication.getInstance().setUnitLists();
                 this.hasChanges = false;
             } else {
-                // TODO place setErrorMessage function at right place and use it where needed
-                errorMessage.set(`Unit without name cannot be saved. Please, name it and try again.`);
-                severity.set(severityType.error);
-                showError.set(true);
+                setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
             }
         } else {
             LOGGER.log("No current model unit");

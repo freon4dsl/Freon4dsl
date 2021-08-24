@@ -30,25 +30,23 @@
 <script lang="ts">
     import { Button, Icon, Menu, Menuitem } from "svelte-mui";
     import arrowDropDown from "../assets/icons/svg/arrow_drop_down.svg";
-    import type { MenuItem } from "../menu-ts-files/MenuItem";
+    import type { MenuItem } from "../webapp-ts-utils/MenuUtils";
     import { ServerCommunication } from "../server/ServerCommunication";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
     import {
         currentModelName,
         currentUnitName,
-        errorMessage,
         fileExtensions,
         leftPanelVisible,
         modelNames,
         newUnitDialogVisible,
         openModelDialogVisible,
-        severity,
         severityType,
-        showError,
         unitNames
-    } from "../WebappStore";
-    import { metaTypeForExtension } from "../menu-ts-files/MenuUtils";
+    } from "../webapp-ts-utils/WebappStore";
+    import { metaTypeForExtension } from "../webapp-ts-utils/MenuUtils";
+    import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
     // variables for the file import
     let file_selector;
@@ -104,12 +102,6 @@
         file_selector.click();
     }
 
-    function setErrorMessage(message: string, sever: severityType) {
-        errorMessage.set(message);
-        severity.set(sever);
-        showError.set(true);
-    }
-
     const process_files = (event) => {
         const fileList: FileList = event.target.files;
         const reader = new FileReader();
@@ -134,15 +126,15 @@
                         try {
                             EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
                         } catch (e) {
-                            setErrorMessage(`${e.message}`, severityType.error);
+                            setUserMessage(`${e.message}`, severityType.error);
                         }
                     }
                 };
                 reader.onerror = function() {
-                    setErrorMessage(reader.error.message, severityType.error);
+                    setUserMessage(reader.error.message, severityType.error);
                 };
             } else {
-                setErrorMessage(`File ${file.name} does not have the right (extension) type.`, severityType.error);
+                setUserMessage(`File ${file.name} does not have the right (extension) type.`, severityType.error);
             }
         }
     }

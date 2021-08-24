@@ -30,7 +30,7 @@
 
 	import arrowBack from '../assets/icons/svg/arrow_back.svg';
 	import MenuList from "../menu/MenuList.svelte";
-	import { leftPanelVisible } from "../WebappStore";
+	import { leftPanelVisible } from "../webapp-ts-utils/WebappStore";
 </script>
 
 <style>

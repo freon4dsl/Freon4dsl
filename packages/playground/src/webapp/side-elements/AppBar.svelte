@@ -51,8 +51,8 @@
 	import question_mark from "../assets/icons/svg/help_24px.svg";
 	import menu from "../assets/icons/svg/menu_black_24dp.svg";
 
-	import { miniWindow, leftPanelVisible, rightPanelVisible } from "../WebappStore";
-	import { languageName } from "../WebappStore";
+	import { miniWindow, leftPanelVisible, rightPanelVisible } from "../webapp-ts-utils/WebappStore";
+	import { languageName } from "../webapp-ts-utils/WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
 	import ThemeToggle from "../theming/ThemeToggle.svelte";
 </script>
