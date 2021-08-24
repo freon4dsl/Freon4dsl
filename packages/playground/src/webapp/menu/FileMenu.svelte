@@ -13,6 +13,7 @@
                       on:click={() => handleClick(item.id)}>
                 {item.title}
             </Menuitem>
+            <!-- show a line between the import and other menu items -->
             {#if (item.id == 6)}
                 <hr>
             {/if}
@@ -140,6 +141,7 @@
 
     // the content of this menu
     let activatorTitle: string = "File";
+    // TODO should we disable import when no parser is available??
     let menuItems: MenuItem[] = [
         {title: "New or Open Model", action: changeModel, id: 1},
         {title: 'New Unit', action: newUnit, id: 3},
