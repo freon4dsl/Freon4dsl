@@ -1,48 +1,52 @@
 :root {
+	/* the following css properties are present in order for the text completion during development to function */
+	/* they are overwritten by the THEME values in 'themePresets.ts' */
+	--theme-colors-color: darkblue;           /* Primary text color */
+	--theme-colors-inverse_color: #d3e3fd;    /* Text color on non_normal background */
+	--theme-colors-bg_app_bar: darkblue;      /* Color of header and footer */
+	--theme-colors-bg_color: #d3e3fd;         /* Background color */
+	--theme-colors-bg_panel: #d3e3fd; 	      /* Dialog background color */
+	--theme-colors-divider: darkblue; 	      /* Dialog Title background color */
+	--theme-colors-primary: darkblue;         /* Dialog primary button text color */
+	--theme-colors-list_divider: darkblue;    /* Color of lines between columns in the error list */
+	--theme-colors-slider: "red";			  /* Color of lines between views */
+	--theme-colors-accent: #f50057;			  /* Color to get attention to an element */
+	--theme-colors-primary_button_text: black; /* Color of primary buttons in dialogs */
+	--theme-colors-secondary_button_text: grey; /* Color of non-primary buttons in dialogs */
+	--theme-colors-text_app_bar: 'white';		/* Color of header and footer text */
+
+	/* ProjectIt sizes */
+	--pi-header-height: 36px;
+	--pi-footer-height: 16px;
+	--pi-menu-height: 24px;
+	--pi-statusbar-height: 24px;
+
+	/* ProjectIt font sizes */
+	--pi-header-font-size: 16px;
+	--pi-button-font-size: 12px;
+	--pi-error-font-size: 14px;
+	--pi-menuitem-font-size: 14px;
+
+	/* other colors */
 	--pi-selected-background-color: rgba(211, 227, 253, 255);
 	--pi-selected-color: red; /* to be done */
 	--pi-popup-border: none;
 	--pi-popup-background: #fff;
 	--pi-popup-box-shadow: 0 0 0px 0 rgba(0, 0, 0, 0.5);
-	--pi-editor-background: var(--inverse-color);
 	--pi-list-background-color: white;
+	/*--alternate: #fff;*/
+	/*--primary: #1976d2;*/
 
-	/* ProjectIt colors */
-	--pi-darkblue: darkblue; /* #00008b */
-	--pi-lightblue: #d3e3fd;
-	--pi-slider-color: #455a64;
-	--pi-header-height: 36px;
-	--pi-footer-height: 16px;
-	--pi-menu-height: 24px;
-
-	/* colors defined in terms of ProjectIt colors */
-	--color: var(--pi-darkblue);
-	--inverse-color: var(--pi-lightblue);
-	--bg-app-bar: var(--pi-darkblue);
-	--bg-color: var(--pi-lightblue);
-	--bg-panel: var(--pi-lightblue); 	/* Dialog background color */
-	--divider: var(--pi-darkblue); 	/* Dialog Title background color */
-	--primary: var(--pi-darkblue);  /* Dialog primary button text color */
-	--secondary: grey;
-	--list-divider: var(--pi-darkblue);
-	/* other colors */
-	--alternate: #fff;
-	--primary: #1976d2;
-	--accent: #f50057;
-	--bg-popover: #fff;
-	--border: #dfdfdf;
-	--label: rgba(0, 0, 0, 0.3755);
-	--bg-input-filled: rgba(0, 0, 0, 0.0555);
-	--focus-color: rgba(25, 118, 210, 0.5); /* primary with alpha */
+	/*--bg-popover: #fff;*/
+	/*--border: #dfdfdf;*/
+	/*--label: rgba(0, 0, 0, 0.3755);*/
+	/*--bg-input-filled: rgba(0, 0, 0, 0.0555);*/
+	/*--focus-color: rgba(25, 118, 210, 0.5); !* primary with alpha *!*/
 
 	/* fonts, etc */
 	--font-family: Roboto, Helvetica, sans-serif;
 	--heading-font-family: var(--font-family);
-	--header-font-size: 16px;
 	--button-font-family: var(--font-family);
-	--button-font-size: 12px;
-	--error-font-size: 14px;
-	--menuitem-font-size: 14px;
 	--code-font-family: 'Roboto Mono', Menlo, Consolas, monospace;
 
 }
@@ -123,4 +127,11 @@ button:focus {
 [disabled] .disabled,
 [disabled] [disabled] {
 	opacity: 1;
+}
+
+[contenteditable="true"]:focus {
+	outline: none;
+}
+:focus {
+	outline: none;
 }

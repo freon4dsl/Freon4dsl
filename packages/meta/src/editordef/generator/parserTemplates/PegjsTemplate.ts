@@ -218,7 +218,7 @@ HEXDIG = [0-9a-f]
                     parseText += `${this.makeTextProjection(sub)}`;
                 }
             });
-            return `${propName}:(${parseText} { return ${subName}; })?`;
+            return `${propName.length>0? `${propName}:` : ``}(${parseText} ${subName.length>0? `{ return ${subName}; }` : ``})?`;
         } else {
             return `${this.doAllItems(item.items)}`;
         }
@@ -231,7 +231,7 @@ HEXDIG = [0-9a-f]
                 let listRuleName = this.makeNameOfListRule(myElem, item);
 
                 if (item.listJoin?.joinType === ListJoinType.Separator) {
-                    return `${variableName}:${listRuleName}`;
+                    return `${variableName}:${listRuleName}?`;
                 } else {
                     const subName = variableName + "ListElem";
                     if (!myElem.isPart) {

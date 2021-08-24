@@ -1,41 +1,42 @@
-<Dialog width="350" bind:visible={$deleteUnitDialogVisible}>
-	<div slot="title" class="title">Deleting unit:</div>
+<!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
+<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:visible={$deleteUnitDialogVisible} on:keydown={handleKeydown}>
+	<div slot="title" class="title">Delete unit</div>
 
 	<div class="content">
-		"{$currentUnitName}" of model "{$currentModelName}"
+		Do you really want to delete unit "{$toBeDeleted.name}" from the server?
 	</div>
 
 	<div slot="actions" class="actions center">
-		<Button color="var(--secondary)" on:click={() => handleCancel()}>Cancel</Button>
-		<Button color="var(--color)" on:click={() => handleSubmit()}>Submit</Button>
+		<Button style="color:var(--theme-colors-secondary_button_text)" on:click={() => handleCancel()}>Cancel</Button>
+		<Button style="color:var(--theme-colors-primary_button_text)" on:click={() => handleSubmit()}>Submit</Button>
 	</div>
 
 	<div slot="footer" class="footer">
-		Do you really want to delete this unit from the server?
+		This action cannot be undone!
 	</div>
 </Dialog>
 
-<svelte:window on:keydown={handleKeydown}/>
 
 <script lang="ts">
 	import {Button, Dialog} from 'svelte-mui';
-	import {currentModelName, deleteUnitDialogVisible} from "../WebappStore";
+	import { currentModelName, deleteUnitDialogVisible, toBeDeleted } from "../webapp-ts-utils/WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
-	import { currentUnitName } from "../WebappStore";
 
 	let props = {
 		right: false,
 		ripple: true,
 		disabled: false,
 	};
+
 	const handleCancel = () => {
 		console.log("Cancel called ");
+		$toBeDeleted = null;
 		$deleteUnitDialogVisible = false;
 	}
 
 	const handleSubmit = () => {
-		console.log("Submit called, unit to be deleted: " + $currentUnitName + "." + $currentModelName);
-		EditorCommunication.getInstance().deleteCurrentUnit();
+		console.log("Submit called, unit to be deleted: " + $toBeDeleted.name + "." + $currentModelName);
+		EditorCommunication.getInstance().deleteModelUnit($toBeDeleted);
 		$deleteUnitDialogVisible = false;
 	}
 
@@ -54,12 +55,12 @@
 		text-align: center;
 		margin-bottom: 1rem;
 		font-size: 13px;
-		color: var(--color);
+		color: var(--theme-colors-accent);
 	}
 	.title {
-		color: var(--inverse-color);
+		color: var(--theme-colors-inverse_color);
 	}
 	.content {
-		color: var(--color);
+		color: var(--theme-colors-color);
 	}
 </style>

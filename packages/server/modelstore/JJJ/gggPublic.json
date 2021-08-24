@@ -1,0 +1,52 @@
+{
+   "$typename": "ExModel",
+   "name": "ggg",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "entity1"
+      },
+      {
+         "$typename": "Entity",
+         "name": "entityNoAttrs"
+      },
+      {
+         "$typename": "Entity",
+         "name": "entityNoMeths"
+      }
+   ],
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "AA"
+      },
+      {
+         "$typename": "Method",
+         "name": "BB"
+      },
+      {
+         "$typename": "Method",
+         "name": "CC"
+      },
+      {
+         "$typename": "Method",
+         "name": "DD"
+      },
+      {
+         "$typename": "Method",
+         "name": "EE"
+      },
+      {
+         "$typename": "Method",
+         "name": "FF"
+      },
+      {
+         "$typename": "Method",
+         "name": "GG"
+      },
+      {
+         "$typename": "Method",
+         "name": "HH"
+      }
+   ]
+}

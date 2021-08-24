@@ -1,12 +1,14 @@
 import { observable } from "mobx";
-import { PiCaretPosition, PiCaret, PiUtils } from "../../util";
+import { PiCaretPosition, PiCaret, PiUtils, PiLogger } from "../../util";
 import { PiElement } from "../../language";
 import { Box } from "./internal";
 
+const LOGGER = new PiLogger("TextBox");
 
 export enum KeyPressAction {
     OK,
     GOTO_NEXT,
+    GOTO_PREVIOUS,
     NOT_OK
 }
 
@@ -42,11 +44,13 @@ export class TextBox extends Box {
     public deleteWhenEmpty1(): boolean {
         return this.deleteWhenEmpty;
     }
+
     // INTERNAL FUNCTIONS
 
     /** @internal
      */
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
+        LOGGER.log("setCaret: " + caret.position)
         /* To be overwritten by `TextComponent` */
         switch (caret.position) {
             case PiCaretPosition.RIGHT_MOST:

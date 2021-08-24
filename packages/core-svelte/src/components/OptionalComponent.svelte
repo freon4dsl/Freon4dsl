@@ -8,7 +8,7 @@
     export let optionalBox = new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
 
-    const LOGGER = new PiLogger("OptionalComponent").mute();
+    const LOGGER = new PiLogger("OptionalComponent");
 
     onDestroy(() => {
         LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ text + "]")
@@ -16,7 +16,7 @@
 
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
-        LOGGER.log("OptionalComponent.set focus on " + element);
+        LOGGER.log("OptionalComponent.setFocus on " + element);
         if (element !== null) {
             element.focus();
         }

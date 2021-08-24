@@ -13,7 +13,7 @@ export interface PiEnvironment {
      * Creates a new model, an implementation of the language defined in the .ast file
      * @param name
      */
-    newModel(modelName: string, unitName?: string): PiModel;
+    newModel(modelName: string): PiModel;
 
     scoper: PiScoper;
     typer: PiTyper;
@@ -26,5 +26,6 @@ export interface PiEnvironment {
     // projectionalEditorComponent: ProjectionalEditor;
     languageName: string;
     unitNames: string[];
+    fileExtensions: Map<string, string>;
 }
 // end::environment-interface[]

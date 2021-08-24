@@ -1,9 +1,10 @@
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { DemoModel } from "../language/gen";
+import { FileHandler } from "../../utils/FileHandler";
 
 describe("Testing Parser", () => {
-    test.skip("complete example model unparsed and parsed again", () => {
+    test("complete example model unparsed and parsed again", () => {
         const model = new DemoModelCreator().createCorrectModel();
         const unparser = DemoEnvironment.getInstance().writer;
         const parser = DemoEnvironment.getInstance().reader;
@@ -22,11 +23,13 @@ describe("Testing Parser", () => {
         }
         // do not unparse if there are errors
         if (errors.length > 4) { // the custom validator adds 4 unneccessary errors
-            // unparse the first unit to a string and write it to File
             const path: string = "./unparsedDemoModel1.txt";
-            // TODO Redesign file interface
-            // unparser.writeToFile(path, model.models[0], 0);
-            const unit1 = null; // parser.readFromFile(path, "DemoModel") as DemoModel;
+            const fileHandler = new FileHandler();
+
+            // unparse the first unit to a string and write it to File
+            fileHandler.stringToFile(path, unparser.writeToString(model.models[0], 0, false));
+            // read it back in
+            const unit1 = parser.readFromString(fileHandler.stringFromFile(path), "DemoModel") as DemoModel;
 
             // compare the read unit with the original
             expect(model.models[0].name).toBe(unit1.name);

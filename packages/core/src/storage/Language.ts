@@ -1,4 +1,4 @@
-import { PiElement } from "../language/PiModel";
+import { PiElement } from "../language/PiElement";
 
 // TODO see if other types need to be added
 export type PropertyType = "primitive" | "part" | "reference";

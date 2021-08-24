@@ -1,7 +1,7 @@
 <script lang="ts">
     import { autorun } from "mobx";
-    import { afterUpdate, onDestroy } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { afterUpdate, onDestroy, onMount } from "svelte";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import { Box, HorizontalListBox, PiEditor, PiLogger } from "@projectit/core";
     import { isHorizontalBox } from "@projectit/core";
@@ -10,16 +10,28 @@
     export let list = new HorizontalListBox(null, "l1");
     export let editor: PiEditor;
 
-    let LOGGER: PiLogger = new PiLogger("ListComponent").mute()
+    // Local state variables
+    let LOGGER: PiLogger = new PiLogger("ListComponent");
     let svList: HorizontalListBox =list;
     let svNotifier = new ChangeNotifier();
+    let element: HTMLDivElement;
 
     onDestroy(() => {
         LOGGER.log("DESTROY LIST  COMPONENT")
     });
 
+    async function setFocus(): Promise<void> {
+        LOGGER.log("setFocus for box " + list.role);
+        if (!!element) {
+            element.focus();
+        }
+    }
+    onMount( () => {
+        list.setFocus = setFocus;
+    });
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
+        list.setFocus = setFocus;
         // NOTE: Triggers autorun whenever an element is added or delete from the list
         svNotifier.notifyChange();
     });
@@ -31,11 +43,7 @@
         // let boxes: ReadonlyArray<Box> = [];
         AUTO_LOGGER.log("ListComponent[" + "] " + list.role + " children " + list.children.length)
         svList = list;
-        // @ts-ignore
-        // list.children.forEach(b => {
-        //     LOGGER.log("    list element is " + b.role)
-        // });
-        // boxes = svList.children;
+
         const nrOfBoxes = svList.children.length;
         gridStyle =
             isHorizontalBox(svList)
@@ -55,9 +63,26 @@
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
+    const onFocusHandler = (e: FocusEvent) => {
+        FOCUS_LOGGER.log("ListComponent.onFocus for box " + list.role);
+        // e.preventDefault();
+        // e.stopPropagation();
+    }
+    const onBlurHandler = (e: FocusEvent) => {
+        FOCUS_LOGGER.log("ListComponent.onBlur for box " + list.role);
+        // e.preventDefault();
+        // e.stopPropagation();
+    }
 </script>
 
-<span class="list-component" style="{cssGrgVars}" on:click tabIndex={0}>
+<span class="list-component"
+      style="{cssGrgVars}"
+      on:click
+      on:focus={onFocusHandler}
+      on:blur={onBlurHandler}
+      tabIndex={0}
+      bind:this={element}
+>
     {#if isHorizontalBox(svList) }
         <div class="horizontalList"  on:click>
             {#each svList.children as box (box.id)}

@@ -1,0 +1,157 @@
+language Example
+
+model Demo {
+    name: string;
+    models: ExModel[];
+}
+
+public modelunit ExModel {
+    public name: string;
+    public entities: Entity[];
+    public methods: Method[];
+}
+interface BaseType {
+    public name: string;
+}
+interface Type base BaseType {
+}
+
+public concept Entity implements Type {
+    attributes: Attribute[];
+    methods: Method[];
+    reference baseEntity?: Entity;
+}
+
+public concept Method {
+    public name: string;
+    reference declaredType : Type;
+    body: ExExpression;
+    parameters: Parameter[];
+}
+
+concept Attribute {
+    reference declaredType: Type;
+    name: string;
+}
+
+limited AttributeType implements Type {
+    name: string;
+    extra: number;
+    String = { name: "String", "extra": 199}
+    Integer = { "name": "Integer", "extra": 240261}
+    Boolean = { "name": "Boolean", "extra": 5479}
+    ANY = { "name": "ANY", "extra": 456}
+}
+
+concept Parameter  {
+    name: string;
+    reference declaredType: Type;
+}
+
+////////////////////////////////////
+//       Expressions
+////////////////////////////////////
+
+abstract expression ExExpression {
+    appliedfeature?: AppliedFeature;
+}
+
+abstract expression LiteralExpression base ExExpression {}
+
+expression StringLiteralExpression base LiteralExpression {
+    value: string;
+}
+
+expression NumberLiteralExpression base LiteralExpression   {
+    value: string; // TODO should be changed to type number
+}
+
+expression BooleanLiteralExpression base LiteralExpression {
+    value: string; // TODO should be changed to type boolean
+}
+
+expression AbsExpression base ExExpression {
+    expr: ExExpression;
+}
+
+abstract concept AppliedFeature {
+    appliedfeature?: AppliedFeature;
+}
+
+concept AttributeRef base AppliedFeature {
+    reference attribute: Attribute;
+}
+
+expression ParameterRef base ExExpression {
+    reference parameter: Parameter;
+}
+
+concept LoopVariable {
+    name: string;
+}
+
+expression LoopVariableRef base ExExpression {
+    reference variable: LoopVariable;
+}
+
+expression SumExpression base ExExpression {
+    variable: LoopVariable;
+    from: ExExpression;
+    to  : ExExpression;
+    body: ExExpression;
+}
+
+expression MethodCallExpression base ExExpression {
+    reference methodDefinition: Method;
+    args: ExExpression[];
+}
+
+expression IfExpression base ExExpression {
+    condition: ExExpression;
+    whenTrue: ExExpression;
+    whenFalse: ExExpression;
+}
+
+////////////////////////////////////
+//    Binary ExExpressions
+////////////////////////////////////
+abstract binary expression BinaryExpression base ExExpression {
+    left: ExExpression;
+    right: ExExpression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression PlusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression AndExpression base BinaryExpression {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpression {
+    priority = 1;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpression {
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 10;
+}
+

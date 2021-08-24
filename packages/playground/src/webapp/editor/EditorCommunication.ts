@@ -1,18 +1,19 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError } from "@projectit/core";
+import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError, PiElement } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
-    errorMessage, languageName,
-    severity,
-    severityType,
-    showError,
+    fileExtensions,
+    noUnitAvailable,
+    languageName,
+    units,
     unitTypes,
-    unnamed
-} from "../WebappStore";
-import { modelErrrors } from "../main-ts-files/ModelErrorsStore";
+    projectionNames
+} from "../webapp-ts-utils/WebappStore";
+import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
+import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 import { editorEnvironment } from "../WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
@@ -31,279 +32,27 @@ export class EditorCommunication {
     }
 
     /**
-     * fills the WebappStore with initial values
+     * fills the WebappStore with initial values that describe the language
      */
     static initialize(): void {
-        currentModelName.set(unnamed);
-        currentUnitName.set(unnamed);
         languageName.set(editorEnvironment.languageName);
         // unitTypes are the same for every model in the language
         unitTypes.set(editorEnvironment.unitNames);
-    }
-
-    /* returns true if the model has a name,
-     * as side effect a check is done whether currentModelName is equal to that name.
-        */
-    isModelNamed(): boolean {
-        LOGGER.log("EditorCommunication.isModelNamed: " + get(currentModelName));
-        this.checkGlobalsAgainstEditor();
-        const name = this.currentModel.name;
-        if (!name || name.length <= 0 || name === unnamed) {
-            return false;
+        // file extension are the same for every model in the language
+        let tmp: string[] = [];
+        for (const val of editorEnvironment.fileExtensions.values()){
+            tmp.push(val);
         }
-        currentModelName.set(name);
-        return true;
+        fileExtensions.set(tmp);
+        // projectionNames are the same for every model in the language
+        EditorCommunication.setProjectionNames();
     }
 
-    setModelName(name: string) {
-        this.checkGlobalsAgainstEditor();
-        this.currentModel = this.currentUnit.piContainer().container as PiModel;
-        this.currentModel.name = name;
-        currentModelName.set(this.currentModel.name);
-    }
-
-    setUnitName(name: string) {
-        this.checkGlobalsAgainstEditor();
-        this.currentUnit.name = name;
-        currentUnitName.set(name);
-        // TODO set name in editor as well
-        // const inEditor = editorEnvironment.editor.rootElement;
-        // (inEditor as PiNamedElement).name = name;
-    }
-
-    private checkGlobalsAgainstEditor() {
-        const inEditor = editorEnvironment.editor.rootElement;
-        if (inEditor !== this.currentUnit) {
-            LOGGER.log("ERROR: inEditor !== this.currentUnit");
-            this.currentUnit = inEditor as PiNamedElement;
-            currentUnitName.set(this.currentUnit.name);
-            this.currentModel = this.currentUnit.piContainer().container as PiModel;
-            currentModelName.set(this.currentModel.name);
-        }
-    }
-
-    /* returns true if the unit has a name,
-     * as side effect a check is done whether currentUnitName is equal to that name.
+    /**
+     * Sets the list of projection names in the right order, such that it can
+     * be used in the projection menu.
      */
-    isUnitNamed(): boolean {
-        LOGGER.log("EditorCommunication.isUnitNamed: " + get(currentUnitName));
-        this.checkGlobalsAgainstEditor();
-        const name = this.currentUnit.name;
-        if (!name || name.length <= 0 || name === unnamed) {
-            return false;
-        }
-        currentUnitName.set(name);
-        return true;
-    }
-
-    // used from the menubar and as initialization
-    newModel(modelName: string, unitName?: string) {
-        LOGGER.log("new model called: " + modelName);
-        if (!unitName) {
-            this.currentModel = editorEnvironment.newModel(modelName, unnamed);
-        } else {
-            this.currentModel = editorEnvironment.newModel(modelName, unitName);
-        }
-        currentModelName.set(this.currentModel.name);
-        this.currentUnit = this.findFirstUnit();
-        currentUnitName.set(this.currentUnit.name);
-        this.hasChanges = false;
-        this.showUnitAndErrors(this.currentUnit);
-    }
-
-    newUnit(newName: string, unitType: string) {
-        LOGGER.log("new unit called, unitType: " + unitType + ", name: " + newName);
-        // replace the current unit by its interface
-        // and create a new unit named 'newName'
-
-        const oldName : string = get(currentUnitName);
-        if (!!oldName && oldName !== "" && oldName !== unnamed) {
-            // get the interface of the current unit from the server
-            ServerCommunication.getInstance().loadModelUnitInterface(
-                get(currentModelName),
-                get(currentUnitName),
-                (oldUnitInterface: PiNamedElement) => {
-                    if (!!oldUnitInterface) {
-                        // swap current unit with its interface in the in-memory model
-                        EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
-                    }
-                    this.createNewUnit(newName, unitType);
-                });
-        } else {
-            this.createNewUnit(newName, unitType);
-        }
-    }
-
-    private createNewUnit(newName: string, unitType: string) {
-        LOGGER.log("private createNewUnit called, unitType: " + unitType);
-        // create a new unit and add it to the current model
-        let newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType);
-        // TODO check whether the next statement is valid in all cases: units should have a name attribute called 'name'
-        newUnit.name = newName;
-        if (!!newUnit) {
-            // show the new unit in the editor
-            this.showUnitAndErrors(newUnit);
-        } else {
-            errorMessage.set(`Model unit of type '${unitType}' could not be created.`);
-            severity.set(severityType.error);
-            showError.set(true);
-        }
-        currentUnitName.set(newName);
-    }
-
-    saveCurrentUnit() {
-        LOGGER.log("save current unit called");
-        LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
-        if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.getInstance().putModelUnit({
-                unitName: this.currentUnit.name,
-                modelName: this.currentModel.name,
-                language: editorEnvironment.languageName
-            }, editorEnvironment.editor.rootElement as PiNamedElement);
-            this.hasChanges = false;
-        } else {
-            LOGGER.log("No current model unit");
-        }
-    }
-
-    deleteCurrentUnit() {
-        LOGGER.log("delete called, current unit: " + get(currentUnitName));
-        this.hasChanges = false;
-        if (!!editorEnvironment.editor.rootElement || get(currentUnitName) == unnamed ) {
-            ServerCommunication.getInstance().deleteModelUnit({
-                unitName: get(currentUnitName),
-                modelName: get(currentModelName),
-                language: "languageName",
-            });
-            // get rid of old model unit from memory
-            this.currentModel.removeUnit(this.currentUnit);
-            // find a new unit to show
-            let newUnit = this.findFirstUnit();
-            // show new unit in the editor and error list
-            this.showUnitAndErrors(newUnit);
-        } else {
-            LOGGER.log("No current model unit");
-        }
-    }
-
-    private findFirstUnit()  {
-        let newUnit = this.currentModel.getUnits()[0];
-        if (!newUnit) {
-            this.currentModel.newUnit(get(unitTypes)[0]);
-            newUnit = this.currentModel.getUnits()[0];
-            newUnit.name = unnamed;
-        }
-        return newUnit;
-    }
-
-    async openModel(modelName: string) {
-        LOGGER.log("EditorCommunication.openmodel("+ modelName + ")");
-        // TODO this method should take care of storing any changes in the previous model
-        // create new model instance in memory and set its name
-        let model: PiModel = editorEnvironment.newModel(modelName);
-        this.currentModel = model;
-        currentModelName.set(modelName);
-        // fill the new model with the units loaded from the server
-        ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
-            if (!unitNames || unitNames.length == 0) {
-                // set the defaults, no units are stored for this model
-                this.currentUnit = this.findFirstUnit();
-                currentUnitName.set(this.currentUnit.name);
-                EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
-            } else {
-                // load the first unit completely and show it
-                // load all others units as interfaces
-                let first: boolean = true;
-                for (const unitName of unitNames) {
-                    if (first) {
-                        ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
-                            model.addUnit(unit);
-                            this.currentUnit = unit;
-                            currentUnitName.set(this.currentUnit.name);
-                            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
-                        });
-                        first = false;
-                    } else {
-                        ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
-                            model.addUnit(unit);
-                        });
-                    }
-                }
-            }
-        });
-    }
-
-    async openModelUnit(newUnitName: string) {
-        LOGGER.log("openModelUnit called, unitName: " + newUnitName);
-        if (!!this.currentUnit && newUnitName == this.currentUnit.name ) {
-            LOGGER.log("openModelUnit doing NOTHING");
-            return;
-        }
-
-        // find the requested unit interface in the model
-        let newUnitInterface: PiNamedElement = this.currentModel.findUnit(newUnitName);
-        // get the full unit from the server
-        await ServerCommunication.getInstance().loadModelUnit(EditorCommunication.getInstance().currentModel.name, newUnitName, (newUnit: PiNamedElement) => {
-            if (!!EditorCommunication.getInstance().currentUnit) {
-                // get the interface of the current unit from the server
-                ServerCommunication.getInstance().loadModelUnitInterface(
-                    EditorCommunication.getInstance().currentModel.name,
-                    EditorCommunication.getInstance().currentUnit.name,
-                    (oldUnitInterface: PiNamedElement) => {
-                        if (!!newUnit) { // the new unit has been retrieved from the server
-                            if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
-                                // swap old unit with its interface in the in-memory model
-                                EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
-                            }
-                            // swap the new unit interface with the full unit in the in-memory model
-                            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
-                            // show the new unit in the editor
-                            this.showUnitAndErrors(newUnit);
-                        }
-                    });
-            } else {
-                // swap the new unit interface with the full unit in the in-memory model
-                EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newUnit);
-                // show the new unit in the editor
-                this.showUnitAndErrors(newUnit);
-            }
-        });
-    }
-
-    private showUnitAndErrors(newUnit: PiNamedElement) {
-        LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
-        editorEnvironment.editor.rootElement = newUnit;
-        EditorCommunication.getInstance().currentUnit = newUnit;
-        currentUnitName.set(newUnit.name);
-        if (!!newUnit) {
-            EditorCommunication.getInstance().hasChanges = true;
-            EditorCommunication.getInstance().getErrors();
-        } else {
-            EditorCommunication.getInstance().hasChanges = false;
-        }
-    }
-
-    // for the communication with the error list:
-    errorSelected(error: PiError) {
-        LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.locationdescription + "'");
-        // TODO test this when editor setFocus is fully implemented
-        if (Array.isArray(error.reportedOn)) {
-            editorEnvironment.editor.selectElement(error.reportedOn[0]);
-        } else {
-            editorEnvironment.editor.selectElement(error.reportedOn);
-        }
-    }
-
-    getErrors() {
-        LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
-        if (!!this.currentUnit) {
-            let list = editorEnvironment.validator.validate(this.currentUnit);
-            modelErrrors.set(list);
-        }
-    }
-    // END OF: for the communication with the error list
-
-    getProjectionNames(): string[] {
+    static setProjectionNames() {
         const proj = editorEnvironment.editor.projection;
         let nameList: string[] = proj instanceof PiCompositeProjection ? proj.projectionNames() : [proj.name];
         // make sure 'default' is always the first name in the list
@@ -321,9 +70,359 @@ export class EditorCommunication {
             // add 'default' as first
             nameList.unshift( 'default' );
         }
-        return nameList;
+        projectionNames.set(nameList);
     }
 
+    /**
+     * Creates a new model
+     * @param modelName
+     * @param unitName
+     */
+    newModel(modelName: string) {
+        LOGGER.log("new model called: " + modelName);
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        // reset all visible information on the model and unit
+        this.resetGlobalVariables();
+        // create a new model
+        this.currentModel = editorEnvironment.newModel(modelName);
+        currentModelName.set(this.currentModel.name);
+    }
+
+    /**
+     * Adds a new unit to the current model and shows it in the editor
+     * @param newName
+     * @param unitType
+     */
+    newUnit(newName: string, unitType: string) {
+        LOGGER.log("new unit called, unitType: " + unitType + ", name: " + newName);
+
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+
+        // replace the current unit by its interface
+        // and create a new unit named 'newName'
+        const oldName : string = get(currentUnitName);
+        if (!!oldName && oldName !== "") {
+            // get the interface of the current unit from the server
+            ServerCommunication.getInstance().loadModelUnitInterface(
+                get(currentModelName),
+                get(currentUnitName),
+                (oldUnitInterface: PiNamedElement) => {
+                    if (!!oldUnitInterface) {
+                        // swap current unit with its interface in the in-memory model
+                        EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                    }
+                    this.createNewUnit(newName, unitType);
+                });
+        } else {
+            this.createNewUnit(newName, unitType);
+        }
+    }
+
+    /**
+     * Because of the asynchronicity the true work of creating a new unit is done by this function
+     * which is called at various points in the code.
+     * @param newName
+     * @param unitType
+     * @private
+     */
+    private createNewUnit(newName: string, unitType: string) {
+        LOGGER.log("private createNewUnit called, unitType: " + unitType);
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        // create a new unit and add it to the current model
+        let newUnit = EditorCommunication.getInstance().currentModel.newUnit(unitType);
+        // TODO check whether the next statement is valid in all cases: units should have a name attribute called 'name'
+        newUnit.name = newName;
+        if (!!newUnit) {
+            // show the new unit in the editor
+            this.showUnitAndErrors(newUnit);
+        } else {
+            setUserMessage(`Model unit of type '${unitType}' could not be created.`);
+        }
+        currentUnitName.set(newName);
+    }
+
+    /**
+     * Pushes the current unit to the server
+     */
+    async saveCurrentUnit() {
+        LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
+        let unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
+        if (!!unit) {
+            if (unit.name && unit.name.length> 0) {
+                await ServerCommunication.getInstance().putModelUnit({
+                    unitName: this.currentUnit.name,
+                    modelName: this.currentModel.name,
+                    language: editorEnvironment.languageName
+                }, unit);
+                currentUnitName.set(unit.name);
+                EditorCommunication.getInstance().setUnitLists();
+                this.hasChanges = false;
+            } else {
+                setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
+            }
+        } else {
+            LOGGER.log("No current model unit");
+        }
+    }
+
+    /**
+     * Deletes the unit 'unit', from the server and from the current in-memory model
+     * @param unit
+     */
+    async deleteModelUnit(unit: PiNamedElement) {
+        LOGGER.log("delete called for unit: " + unit.name);
+
+        // get rid of the unit on the server
+        await ServerCommunication.getInstance().deleteModelUnit({
+            unitName: unit.name,
+            modelName: get(currentModelName),
+            language: "languageName",
+        });
+        // get rid of old model unit from memory
+        this.currentModel.removeUnit(unit);
+        // if the unit is shown in the editor, get rid of that one, as well
+        if (this.currentUnit == unit) {
+            editorEnvironment.editor.rootElement = null;
+            noUnitAvailable.set(true);
+            modelErrors.set([]);
+        }
+        // get rid of the name in the navigator
+        this.setUnitLists();
+    }
+
+    /**
+     * Whenever there is a change in the units of the current model,
+     * this function is called. It sets the store varible 'units' to the
+     * right value.
+     * @private
+     */
+    private setUnitLists() {
+        console.log("setUnitLists");
+        let newUnitList: Array<PiNamedElement[]> = [];
+        for (const name of editorEnvironment.unitNames) {
+            newUnitList.push(this.currentModel.getUnitsForType(name));
+        }
+        units.set(newUnitList);
+    }
+    // TODO check all calls to setUnitLists => probably to many
+
+    /**
+     * Reads the model with name 'modelName' from the server and makes this the current model.
+     * The first unit in the model is shown, if present.
+     * @param modelName
+     */
+    async openModel(modelName: string) {
+        LOGGER.log("EditorCommunication.openmodel("+ modelName + ")");
+        this.resetGlobalVariables();
+
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        // create new model instance in memory and set its name
+        let model: PiModel = editorEnvironment.newModel(modelName);
+        this.currentModel = model;
+        currentModelName.set(modelName);
+        // fill the new model with the units loaded from the server
+        ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
+            if (unitNames && unitNames.length > 0) {
+                // load the first unit completely and show it
+                // load all others units as interfaces
+                let first: boolean = true;
+                for (const unitName of unitNames) {
+                    if (first) {
+                        ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
+                            this.currentModel.addUnit(unit);
+                            this.currentUnit = unit;
+                            currentUnitName.set(this.currentUnit.name);
+                            EditorCommunication.getInstance().showUnitAndErrors(this.currentUnit);
+                        });
+                        first = false;
+                    } else {
+                        ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
+                            this.currentModel.addUnit(unit);
+                            this.setUnitLists();
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * When another unit is shown in th editor this function is called.
+     * It resets a series of global variables.
+     * @private
+     */
+    private resetGlobalVariables() {
+        noUnitAvailable.set(true);
+        units.set([]);
+        modelErrors.set([]);
+    }
+
+    /**
+     * Reads the unit called 'newUnit' from the server and shows it in the editor
+     * @param newUnit
+     */
+    async openModelUnit(newUnit: PiNamedElement) {
+        LOGGER.log("openModelUnit called, unitName: " + newUnit.name);
+        if (!!this.currentUnit && newUnit.name == this.currentUnit.name ) {
+            // the unit to open is the same as the unit in the editor, so we are doing nothing
+            LOGGER.log("openModelUnit doing NOTHING");
+            return;
+        }
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        // newUnit is stored in the in-memory model as an interface only
+        // we must get the full unit from the server and make a swap
+        await ServerCommunication.getInstance().loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: PiNamedElement) => {
+            this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
+        });
+    }
+
+    /**
+     * Swaps 'newUnitInterface', which is part of the in-memory current model, for the complete unit 'newCompleteUnit'.
+     * Next, the current -complete- unit is swapped with its interface from the server.
+     * This makes sure that the state of in-memory model is such that only the unit that is shown in the editor
+     * is fully present, all other units are interfaces only.
+     * @param newCompleteUnit
+     * @param newUnitInterface
+     * @private
+     */
+    private swapInterfaceAndUnits(newCompleteUnit: PiNamedElement, newUnitInterface: PiNamedElement) {
+        if (!!EditorCommunication.getInstance().currentUnit) {
+            // get the interface of the current unit from the server
+            ServerCommunication.getInstance().loadModelUnitInterface(
+                EditorCommunication.getInstance().currentModel.name,
+                EditorCommunication.getInstance().currentUnit.name,
+                (oldUnitInterface: PiNamedElement) => {
+                    if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
+                        if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+                            // swap old unit with its interface in the in-memory model
+                            EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+                        }
+                        // swap the new unit interface with the full unit in the in-memory model
+                        EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
+                        // show the new unit in the editor
+                        this.showUnitAndErrors(newCompleteUnit);
+                    }
+                });
+        } else {
+            // swap the new unit interface with the full unit in the in-memory model
+            EditorCommunication.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
+            // show the new unit in the editor
+            this.showUnitAndErrors(newCompleteUnit);
+        }
+    }
+
+    /**
+     * Parses the string 'content' to create a model unit. If the parsing is ok,
+     * then the unit is added to the current model.
+     * @param content
+     * @param metaType
+     */
+    unitFromFile(content: string, metaType: string) {
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        let elem: PiNamedElement = null;
+        elem = editorEnvironment.reader.readFromString(content, metaType) as PiNamedElement;
+        if (elem) {
+            // save the old current unit, if there is one
+            this.saveCurrentUnit();
+
+            // TODO find way to get interface without use of the server
+            // swap old unit with its interface in the in-memory model
+            // ServerCommunication.getInstance().loadModelUnitInterface(
+            //     EditorCommunication.getInstance().currentModel.name,
+            //     EditorCommunication.getInstance().currentUnit.name,
+            //     (oldUnitInterface: PiNamedElement) => {
+            //         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
+            //             // swap old unit with its interface in the in-memory model
+            //             EditorCommunication.getInstance().currentModel.replaceUnit(EditorCommunication.getInstance().currentUnit, oldUnitInterface);
+            //         }
+            //     });
+
+            // add the new unit to the current model
+            this.currentModel.addUnit(elem);
+            // add the new unit to the navigator
+            this.setUnitLists();
+            // set elem in editor
+            this.showUnitAndErrors(elem);
+        }
+    }
+
+    /**
+     * Unparses the current model unit to a string, which can be used as content in a
+     * downloadable file.
+     */
+    unitAsText() : string {
+        return editorEnvironment.writer.writeToString(this.currentUnit, 0, false);
+    }
+
+    /**
+     * Returns the right file extension for the current unit, based on the type of the unit.
+     */
+    unitFileExtension() : string {
+        const unitType = this.currentUnit.piLanguageConcept();
+        return editorEnvironment.fileExtensions.get(unitType);
+    }
+
+    /**
+     * This function takes care of actually showing the new unit in the editor
+     * and getting the validation errors, if any, and show them in the error list.
+     * @param newUnit
+     * @private
+     */
+    private showUnitAndErrors(newUnit: PiNamedElement) {
+        LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
+        if (!!newUnit) {
+            noUnitAvailable.set(false);
+            editorEnvironment.editor.rootElement = newUnit;
+            this.currentUnit = newUnit;
+            currentUnitName.set(newUnit.name);
+            this.setUnitLists();
+            this.hasChanges = true;
+            this.getErrors();
+        } else {
+            noUnitAvailable.set(true);
+            editorEnvironment.editor.rootElement = null;
+            this.currentUnit = null;
+            currentUnitName.set("<noUnit>");
+            this.setUnitLists();
+            this.hasChanges = false;
+        }
+    }
+
+    /**
+     * When an error in the errorlist is selected, the editor jumps to the faulty element.
+     * @param error
+     */
+    errorSelected(error: PiError) {
+        LOGGER.log("Error selected: '" + error.message + "', location:  '" + error.locationdescription + "'");
+        // TODO test this when editor setFocus is fully implemented
+        if (Array.isArray(error.reportedOn)) {
+            editorEnvironment.editor.selectElement(error.reportedOn[0]);
+        } else {
+            editorEnvironment.editor.selectElement(error.reportedOn);
+        }
+    }
+
+    /**
+     * Runs the validator for the current unit
+     */
+    getErrors() {
+        LOGGER.log("EditorCommunication.getErrors() for " + this.currentUnit.name);
+        if (!!this.currentUnit) {
+            let list = editorEnvironment.validator.validate(this.currentUnit);
+            modelErrors.set(list);
+        }
+    }
+
+    /**
+     * Makes sure that the editor show the current unit using the projections selected by the user
+     * @param name
+     */
     setProjection(name: string): void {
         LOGGER.log("setting Projection " + name);
         const proj = editorEnvironment.editor.projection;
@@ -332,6 +431,10 @@ export class EditorCommunication {
         }
     }
 
+    /**
+     * Makes sure that the editor show the current unit using the projections selected or unselected by the user
+     * @param name
+     */
     unsetProjection(name: string): void {
         LOGGER.log("unsetting Projection " + name);
         const proj = editorEnvironment.editor.projection;
@@ -375,6 +478,5 @@ export class EditorCommunication {
         LOGGER.log("findElement called");
         return undefined;
     }
-
 }
 
