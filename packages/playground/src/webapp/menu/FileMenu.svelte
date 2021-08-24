@@ -32,6 +32,7 @@
     import { Button, Icon, Menu, Menuitem } from "svelte-mui";
     import arrowDropDown from "../assets/icons/svg/arrow_drop_down.svg";
     import type { MenuItem } from "../webapp-ts-utils/MenuUtils";
+    import { metaTypeForExtension } from "../webapp-ts-utils/MenuUtils";
     import { ServerCommunication } from "../server/ServerCommunication";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
@@ -43,9 +44,9 @@
         modelNames,
         newUnitDialogVisible,
         openModelDialogVisible,
+        severityType,
         unitNames
     } from "../webapp-ts-utils/WebappStore";
-    import { metaTypeForExtension } from "../webapp-ts-utils/MenuUtils";
     import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
     // variables for the file import
