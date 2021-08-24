@@ -1,6 +1,6 @@
 <script lang="ts">
     import { ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
-    import { clickOutside } from "./clickOutside"
+    // import { clickOutside } from "./clickOutside"
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
     import {
@@ -14,7 +14,7 @@
     export let selectedOptionId: string = "1";
     export let open: boolean;
     export let handleSelectedOption: (option: SelectOption) => void;
-    export let notifier;
+    export let notifier: ChangeNotifier;
 
     const LOGGER = new PiLogger("DropdownComponent");
     const dispatcher = createEventDispatcher();
@@ -66,10 +66,11 @@
         selectedOptionId = index;
     }
 
-    const handleClickOutside = (event): void => {
-        // TODO Inform parent AliasComponent
-        open = false;
-    }
+    // const handleClickOutside = (event): void => {
+    //     // TODO Inform parent AliasComponent
+    //     LOGGER.log("handleClickOutside SET OPEN to false")
+    //     open = false;
+    // }
 
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {
@@ -84,7 +85,6 @@
     };
     const onBlur = (e: FocusEvent) => {
         FOCUS_LOGGER.log("DropdownComponent.onBlur")
-        open = false;
     }
 </script>
 
@@ -93,7 +93,7 @@
         on:blur={onBlur}
 >
     <div tabIndex={0}  />
-    <div class="popupWrapper" use:clickOutside on:click_outside={handleClickOutside}>
+    <div class="popupWrapper">
         {#each getOptionsForHtml as option (option.id)}
             <div class="popup">
                 <div>

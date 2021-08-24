@@ -23,7 +23,9 @@
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { action, autorun } from "mobx";
+    import { clickOutside } from "./clickOutside"
     import { afterUpdate, onMount, tick } from "svelte";
+    import { MobxObservable } from "./MobxObservable";
     import { SelectOptionList } from "./SelectableOptionList";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
@@ -34,9 +36,13 @@
     export let editor: PiEditor;
 
     let openInHtml: boolean ;
-    let open: boolean = false;
-    $: openInHtml = open;
+    let open: MobxObservable<boolean> = new MobxObservable<boolean>(false);
+    // $: openInHtml = open;
 
+    function setOpen(msg: string, value: boolean) {
+        LOGGER.log("SET OPEN " + choiceBox?.role + " from " + open.value + " to " + value + " in " + msg );
+        open.value = value;
+    }
     let LOGGER = new PiLogger("AliasComponent");
     let dropdownComponent: DropdownComponent;
     let textComponent: TextComponent;
@@ -68,7 +74,7 @@
         const aliasResult = await handleStringInput(key);
         if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
             if (!!textComponent) {
-                textComponent.innerText = key;
+                textComponent.element.innerText = key;
             }
         }
     };
@@ -79,9 +85,9 @@
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
                 if (!!textComponent) {
-                    textComponent.innerText = "";
+                    textComponent.element.innerText = "";
                 }
-                open = false;
+                setOpen("handleStringInput Alias executed", false);
                 // this.hasError = false;
                 break;
             case BehaviorExecutionResult.PARTIAL_MATCH:
@@ -148,7 +154,7 @@
                 if( !!textComponent) {
                     textComponent.textOnScreen = value; // choiceBox.getSelectedOption().label;
                 }
-                open = false;
+                setOpen("onInput alias executed", false);
                 // this.hasError = false;
                 break;
             case BehaviorExecutionResult.PARTIAL_MATCH:
@@ -157,12 +163,12 @@
                 choiceBox.textBox.setText(value);
                 selectableOptionList.text = value;
                 notifier.notifyChange()
-                open = true;
+                setOpen("onInput alias partial match", true);
                 break;
             case BehaviorExecutionResult.NO_MATCH:
                 LOGGER.log("NO MATCH");
                 selectableOptionList.text = value;
-                notifier.notifyChange()
+                notifier.notifyChange();
                 // this.hasError = true;
                 // this.dropdownIsOpen = true;
                 break;
@@ -174,7 +180,7 @@
         LOGGER.log("onKeyDown: " + e.key + " for role " + choiceBox.role);
         if (isPrintable(e) && !e.ctrlKey) {
             LOGGER.log("Down: is printable, text is now [" + textComponent.getText() + "]");
-            open = true;
+            setOpen("onKeyDown", true);
             if(dropdownComponent !== null && dropdownComponent !== undefined) {
                 dropdownComponent.handleKeyDown(e);
             }
@@ -185,31 +191,31 @@
             e.stopPropagation();
         }
         if( e.key === KEY_TAB){
-            open = false;
+            setOpen("TAB", false);
             return;
         }
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
             const caretPosition = textComponent.getCaretPosition();
             if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
                 // Handle in ProjectItComponent
-                open = false;
+                setOpen("arraow at the edges", false);
             }
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
         }
         if( (e.key === KEY_SPACEBAR && e.ctrlKey) || (e.key === KEY_ESCAPE)) {
-            open = !open;
+            setOpen("cltr-space or esacape", !open.value);
             return;
         }
-        if (open ) { // && this.dropdownComponent) {
+        if (open.value ) { // && this.dropdownComponent) {
             // Propagate key event to dropdown component
             LOGGER.log("Forwarding event to dropdown component");
             if( dropdownComponent !== null && dropdownComponent !== undefined){
                 const x = dropdownComponent.handleKeyDown(e);
                 LOGGER.log("      handled result: " + x);
             } else {
-                console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ open + " openInHtml: "+ openInHtml);
+                console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ open.value + " openInHtml: "+ openInHtml);
             }
 
             e.preventDefault();
@@ -267,16 +273,16 @@
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
         choiceBox.textHelper.text = (!!selected ? selected.label : "");
-        open=false
+        setOpen("selectOption", false);
     });
 
     const onClick = (e: MouseEvent) => {
-        LOGGER.log("onClick before");
+        LOGGER.log("onClick before open is " + open.value);
         const opts: SelectOption[] = choiceBox.getOptions(editor);
         LOGGER.log("   options are " + opts.length + " ==> " + opts.map(o => o.id))
         selectableOptionList.replaceOptions(opts)
-        open = !open;
-        LOGGER.log("onClick after");
+        setOpen("onClick", !open.value);
+        LOGGER.log("onClick after, open is " + open.value);
     }
 
     let listForDropdown: SelectOption[];
@@ -284,10 +290,7 @@
 
     selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {
-        // const options = choiceBox.getOptions(editor);
-        // LOGGER.log("Calling autorun, optins are: " + options)
-        // selectableOptionList = new SelectOptionList(editor)
-        // selectableOptionList.replaceOptions(options)
+        openInHtml = open.value;
         listForDropdown = selectableOptionList.getFilteredOptions();
         selectedOption = choiceBox.getSelectedOption();
         LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
@@ -296,8 +299,14 @@
         }
     });
 
+    const handleClickOutside = (event): void => {
+        // TODO Inform parent AliasComponent
+        // LOGGER.log("handleClickOutside SET OPEN to false")
+        setOpen("clickOutside", false);
+    }
+
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("AliasComponent.onFocus for box " + choiceBox.role);
+        FOCUS_LOGGER.log("SET OPEN AliasComponent.onFocus for box " + choiceBox.role);
         const options = choiceBox.getOptions(editor);
         selectableOptionList.replaceOptions(options)
     }
@@ -315,6 +324,7 @@
      on:focusin={onFocusHandler}
      on:focusout={onBlurHandler}
      on:click={onClick}
+     use:clickOutside on:click_outside={handleClickOutside}
 >
     <SelectableComponent box={choiceBox.textBox} editor={editor}>
         <TextComponent
@@ -326,7 +336,7 @@
     {#if openInHtml}
         <DropdownComponent
                 bind:this="{dropdownComponent}"
-                bind:open={openInHtml}
+                bind:open={open.value}
                 handleSelectedOption={selectOption}
                 on:pi-ItemSelected={selectedEvent}
                 getOptions={getAliasOptions}
