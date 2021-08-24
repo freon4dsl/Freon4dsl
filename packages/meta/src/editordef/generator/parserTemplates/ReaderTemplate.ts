@@ -14,7 +14,6 @@ export class ReaderTemplate {
         // Template starts here
         return `
         import { Parser } from "pegjs";
-        // TODO import * as fs from "fs";
         import { ${Names.PiReader} } from "${PROJECTITCORE}";
         import { ${Names.modelunit(language)}, ModelUnitMetaType, ${unitNames.map(name => `${name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";   
               
