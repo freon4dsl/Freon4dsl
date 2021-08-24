@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
     import {
@@ -18,10 +18,7 @@
     const dispatcher = createEventDispatcher();
 
     const getOptionsLogged = (): SelectOption[] => {
-        LOGGER.log("Calling getoptions from Dropdowncomponent")
         const options = getOptions();
-        LOGGER.log("getOptions size "+ options.length);
-        options.forEach(o => LOGGER.log("     Option ["+ o.id + "]"));
         return options;//.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
     }
 
@@ -66,10 +63,9 @@
 
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {
+        AUTO_LOGGER.log("autorun");
         const dummy = notifier.dummy;
         getOptionsForHtml = getOptionsLogged();
-        LOGGER.log("AUTORUN " + getOptionsForHtml.map(o => o.id) + "  selected " + selectedOptionId );
-        getOptionsLogged().forEach( option => LOGGER.log("OPTION "+ option.label));
     });
 
     const onFocus = (e: FocusEvent) =>  {
