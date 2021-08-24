@@ -1,5 +1,8 @@
 <!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
-<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:modal={modal} bind:visible={$openModelDialogVisible} on:keydown={handleKeydown}>
+<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)"
+		bind:modal={modal}
+		bind:visible={$openModelDialogVisible}
+		on:keydown={handleKeydown}>
 	<div slot="title" class="title">Open or new model:</div>
 
 	<Textfield
@@ -34,7 +37,7 @@
 		modelNames,
 		openModelDialogVisible,
 		initializing
-	} from "../WebappStore";
+	} from "../webapp-ts-utils/WebappStore";
 	import {EditorCommunication} from "../editor/EditorCommunication";
 
 	let modal: boolean = true; // TODO from FileMenu modal must be set to false

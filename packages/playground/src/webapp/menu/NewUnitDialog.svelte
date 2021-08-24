@@ -1,5 +1,7 @@
 <!-- --bg-panel and --divider are parameters set by the svelte-mui library -->
-<Dialog style="width:{290}; --bg-panel: var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)" bind:visible={$newUnitDialogVisible} on:keydown={handleKeydown}>
+<Dialog style="width:{290}; --bg-panel:var(--theme-colors-inverse_color); --divider:var(--theme-colors-color)"
+		bind:visible={$newUnitDialogVisible}
+		on:keydown={handleKeydown}>
 	<div slot="title" class="title">New unit</div>
 
 	<Textfield
@@ -31,10 +33,10 @@
 
 <script lang="ts">
 	import { Button, Dialog, Radio, Textfield } from 'svelte-mui';
-	import { unitNames, unitTypes } from "../WebappStore";
+	import { unitNames, unitTypes } from "../webapp-ts-utils/WebappStore";
 	import { get } from 'svelte/store';
 	import { EditorCommunication } from "../editor/EditorCommunication";
-	import { newUnitDialogVisible } from "../WebappStore";
+	import { newUnitDialogVisible } from "../webapp-ts-utils/WebappStore";
 
 	// all unit names in a model must be unique
 	let newName: string = "";

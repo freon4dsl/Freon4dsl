@@ -1,6 +1,6 @@
 {
    "$typename": "ExModel",
-   "name": "ggg",
+   "name": "LargeUnit",
    "entities": [
       {
          "$typename": "Entity",
@@ -28,7 +28,7 @@
             },
             {
                "$typename": "Attribute",
-               "name": "",
+               "name": "attr5",
                "declaredType": "ANY"
             }
          ],

@@ -13,6 +13,7 @@
                       on:click={() => handleClick(item.id)}>
                 {item.title}
             </Menuitem>
+            <!-- show a line between the import and other menu items -->
             {#if (item.id == 6)}
                 <hr>
             {/if}
@@ -30,25 +31,23 @@
 <script lang="ts">
     import { Button, Icon, Menu, Menuitem } from "svelte-mui";
     import arrowDropDown from "../assets/icons/svg/arrow_drop_down.svg";
-    import type { MenuItem } from "../menu-ts-files/MenuItem";
+    import type { MenuItem } from "../webapp-ts-utils/MenuUtils";
+    import { metaTypeForExtension } from "../webapp-ts-utils/MenuUtils";
     import { ServerCommunication } from "../server/ServerCommunication";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
     import {
         currentModelName,
         currentUnitName,
-        errorMessage,
         fileExtensions,
         leftPanelVisible,
         modelNames,
         newUnitDialogVisible,
         openModelDialogVisible,
-        severity,
-        severityType,
-        showError,
+        deleteModelDialogVisible,
         unitNames
-    } from "../WebappStore";
-    import { metaTypeForExtension } from "../menu-ts-files/MenuUtils";
+    } from "../webapp-ts-utils/WebappStore";
+    import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
     // variables for the file import
     let file_selector;
@@ -73,7 +72,6 @@
     const changeModel = () => {
         // get list of models from server
         ServerCommunication.getInstance().loadModelList((names: string[]) => {
-            // if list not empty, show dialog
             if (names.length > 0) {
                 $modelNames = names;
             }
@@ -97,22 +95,30 @@
         EditorCommunication.getInstance().saveCurrentUnit();
     }
 
-    // import model unit menuitem
-    const importUnit = () => {
-        // todo check whether the name of the unit already exists in the model
-        // open the file browse dialog
-        file_selector.click();
+    // delete model menuitem
+    const deleteModel = () => {
+        console.log("FileMenu.deleteModel");
+        // get list of models from server
+        ServerCommunication.getInstance().loadModelList((names: string[]) => {
+            // if list not empty, show dialog
+            if (names.length > 0) {
+                $modelNames = names;
+                $deleteModelDialogVisible = true;
+                console.log("dialog visible is true")
+            }
+        });
     }
 
-    function setErrorMessage(message: string, sever: severityType) {
-        errorMessage.set(message);
-        severity.set(sever);
-        showError.set(true);
+    // import model unit menuitem
+    const importUnit = () => {
+        // open the file browse dialog
+        file_selector.click();
     }
 
     const process_files = (event) => {
         const fileList: FileList = event.target.files;
         const reader = new FileReader();
+        // todo check whether the name of the unit already exists in the model
         for (let file of fileList) {
             // todo async: wait for file to be uploaded before starting next
             // todo do something with progress indicator
@@ -134,25 +140,27 @@
                         try {
                             EditorCommunication.getInstance().unitFromFile(reader.result as string, metaType);
                         } catch (e) {
-                            setErrorMessage(`${e.message}`, severityType.error);
+                            setUserMessage(`${e.message}`);
                         }
                     }
                 };
                 reader.onerror = function() {
-                    setErrorMessage(reader.error.message, severityType.error);
+                    setUserMessage(reader.error.message);
                 };
             } else {
-                setErrorMessage(`File ${file.name} does not have the right (extension) type.`, severityType.error);
+                setUserMessage(`File ${file.name} does not have the right (extension) type.`);
             }
         }
     }
 
     // the content of this menu
     let activatorTitle: string = "File";
+    // TODO should we disable import when no parser is available??
     let menuItems: MenuItem[] = [
         {title: "New or Open Model", action: changeModel, id: 1},
         {title: 'New Unit', action: newUnit, id: 3},
         {title: 'Save Current Unit', action: saveUnit, id: 5},
+        {title: 'Delete Model', action: deleteModel, id: 6},
         {title: '(Experimental) Import Unit(s)...', action: importUnit, id: 7},
     ];
 

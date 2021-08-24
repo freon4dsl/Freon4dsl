@@ -5,15 +5,15 @@ import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
-    errorMessage,
-    fileExtensions, noUnitAvailable,
+    fileExtensions,
+    noUnitAvailable,
     languageName,
-    severity,
-    severityType,
-    showError, units,
-    unitTypes, projectionNames
-} from "../WebappStore";
-import { modelErrors } from "../main-ts-files/ModelErrorsStore";
+    units,
+    unitTypes,
+    projectionNames
+} from "../webapp-ts-utils/WebappStore";
+import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
+import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 import { editorEnvironment } from "../WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); //.mute();
@@ -139,9 +139,7 @@ export class EditorCommunication {
             // show the new unit in the editor
             this.showUnitAndErrors(newUnit);
         } else {
-            errorMessage.set(`Model unit of type '${unitType}' could not be created.`);
-            severity.set(severityType.error);
-            showError.set(true);
+            setUserMessage(`Model unit of type '${unitType}' could not be created.`);
         }
         currentUnitName.set(newName);
     }
@@ -149,15 +147,22 @@ export class EditorCommunication {
     /**
      * Pushes the current unit to the server
      */
-    saveCurrentUnit() {
+    async saveCurrentUnit() {
         LOGGER.log("EditorCommunication.saveCurrentUnit: " + get(currentUnitName));
-        if (!!editorEnvironment.editor.rootElement) {
-            ServerCommunication.getInstance().putModelUnit({
-                unitName: this.currentUnit.name,
-                modelName: this.currentModel.name,
-                language: editorEnvironment.languageName
-            }, editorEnvironment.editor.rootElement as PiNamedElement);
-            this.hasChanges = false;
+        let unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
+        if (!!unit) {
+            if (unit.name && unit.name.length> 0) {
+                await ServerCommunication.getInstance().putModelUnit({
+                    unitName: this.currentUnit.name,
+                    modelName: this.currentModel.name,
+                    language: editorEnvironment.languageName
+                }, unit);
+                currentUnitName.set(unit.name);
+                EditorCommunication.getInstance().setUnitLists();
+                this.hasChanges = false;
+            } else {
+                setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
+            }
         } else {
             LOGGER.log("No current model unit");
         }
@@ -167,11 +172,11 @@ export class EditorCommunication {
      * Deletes the unit 'unit', from the server and from the current in-memory model
      * @param unit
      */
-    deleteModelUnit(unit: PiNamedElement) {
+    async deleteModelUnit(unit: PiNamedElement) {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
-        ServerCommunication.getInstance().deleteModelUnit({
+        await ServerCommunication.getInstance().deleteModelUnit({
             unitName: unit.name,
             modelName: get(currentModelName),
             language: "languageName",
@@ -202,6 +207,7 @@ export class EditorCommunication {
         }
         units.set(newUnitList);
     }
+    // TODO check all calls to setUnitLists => probably to many
 
     /**
      * Reads the model with name 'modelName' from the server and makes this the current model.
@@ -379,6 +385,11 @@ export class EditorCommunication {
             this.hasChanges = true;
             this.getErrors();
         } else {
+            noUnitAvailable.set(true);
+            editorEnvironment.editor.rootElement = null;
+            this.currentUnit = null;
+            currentUnitName.set("<noUnit>");
+            this.setUnitLists();
             this.hasChanges = false;
         }
     }
@@ -447,7 +458,7 @@ export class EditorCommunication {
     validate() {
         // TODO implement validate()
         LOGGER.log("validate called");
-        this.getErrors();
+        EditorCommunication.getInstance().getErrors();
     }
 
     replace() {

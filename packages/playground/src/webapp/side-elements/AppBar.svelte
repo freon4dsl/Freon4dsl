@@ -2,7 +2,7 @@
 <!-- It contains the menus, the name of the language, and ... -->
 
 <div class="app-bar">
-	{#if !$miniWindow}
+	{#if $miniWindow}
 		<!-- this button is shown only when the viewport is small -->
 		<!-- it is used to open the left panel which shows the navigator -->
 		<!-- the title is also smaller in a small viewport		-->
@@ -34,7 +34,7 @@
 		</Icon>
 	</Button>
 
-	{#if $miniWindow}
+	{#if !$miniWindow}
 		<!-- normally, the brand icon is shown-->
 		<a target="_blank" href="http://www.projectit.org">
 			<!-- compiled svg does not work, because the path is too complex-->
@@ -51,8 +51,8 @@
 	import question_mark from "../assets/icons/svg/help_24px.svg";
 	import menu from "../assets/icons/svg/menu_black_24dp.svg";
 
-	import { miniWindow, leftPanelVisible, rightPanelVisible } from "../WebappStore";
-	import { languageName } from "../WebappStore";
+	import { miniWindow, leftPanelVisible, rightPanelVisible } from "../webapp-ts-utils/WebappStore";
+	import { languageName } from "../webapp-ts-utils/WebappStore";
 	import MenuGroup from "../menu/MenuGroup.svelte";
 	import ThemeToggle from "../theming/ThemeToggle.svelte";
 </script>
@@ -62,7 +62,7 @@
 		display: flex;
 		align-items: center;
 		height: var(--pi-header-height);
-		color: #fff;
+		color: var(--theme-colors-text_app_bar);
 		background: var(--theme-colors-bg_app_bar);
 		font-size: var(--pi-header-font-size);
 		line-height: 1;

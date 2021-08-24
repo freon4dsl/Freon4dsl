@@ -22,15 +22,19 @@
 
 	<!-- content of the side panel-->
 	<MenuList />
+	<hr>
+	<Navigator />
 </Sidepanel>
 </div>
 
 <script lang="ts">
-	import {Button, Icon, Sidepanel} from 'svelte-mui';
+	import { Button, Icon, Sidepanel } from "svelte-mui";
 
-	import arrowBack from '../assets/icons/svg/arrow_back.svg';
+	import arrowBack from "../assets/icons/svg/arrow_back.svg";
 	import MenuList from "../menu/MenuList.svelte";
-	import { leftPanelVisible } from "../WebappStore";
+	import { leftPanelVisible } from "../webapp-ts-utils/WebappStore";
+	import Navigator from "../main/Navigator.svelte";
+	import MenuGroup from "../menu/MenuGroup.svelte";
 </script>
 
 <style>
