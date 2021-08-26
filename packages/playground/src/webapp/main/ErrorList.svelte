@@ -44,8 +44,8 @@
     import arrowDown from "../../webapp/assets/icons/svg/arrow_downward.svg";
     import import_export from "../../webapp/assets/icons/svg/import_export_24px.svg";
 
-    import sortErrors from "../main-ts-files/SortErrors";
-    import { modelErrors } from "../main-ts-files/ModelErrorsStore";
+    import { sortErrors } from "../webapp-ts-utils/ModelErrorsStore";
+    import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
     import { PiError } from "@projectit/core";
     import { EditorCommunication } from "../editor/EditorCommunication";
 

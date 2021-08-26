@@ -1,5 +1,5 @@
 <div class="navigator">
-    <div class="nav-title">Model {$currentModelName}</div>
+    <div class="nav-title">{$currentModelName}</div>
     <hr>
     <ul class="list">
         {#each $unitTypes as name, index}
@@ -37,18 +37,23 @@
 </div>
 
 <script lang="ts">
-    import {
-        unitTypes,
-        units,
-        currentModelName,
-        toBeDeleted,
-        deleteUnitDialogVisible
-    } from "../WebappStore";
-    import { Menu, Menuitem } from "svelte-mui";
     import type { PiNamedElement } from "@projectit/core";
+    import { Menu, Menuitem } from "svelte-mui";
+    import {
+        currentModelName,
+        deleteUnitDialogVisible,
+        toBeDeleted,
+        units,
+        unitTypes
+    } from "../webapp-ts-utils/WebappStore";
+    import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
+    import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
     import { EditorCommunication } from "../editor/EditorCommunication";
 
+    // initialize myUnits to something that will not break the app
     let myUnits: Array<PiNamedElement[]> = [];
+    myUnits[0] = [];
+    // set myUnits when model units are found
     $: if ($units) {
         // there are units, so fill the local data structure
         $units.forEach((xx: PiNamedElement[], index) => {
@@ -73,6 +78,12 @@
 
     const exportUnit = (unit: PiNamedElement) => {
         console.log("export unit called:" + unit.name);
+        // do not try to export a unit with errors
+        // parsing and unparsing will not proceed correctly
+        if ($modelErrors.length > 0) {
+            setUserMessage(`Cannot export a unit that has errors`);
+            return;
+        }
         // create a text string from the unit
         let text: string = EditorCommunication.getInstance().unitAsText();
         // get the default file name from the current unit and its unit meta type

@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage";
+import { PiLanguage, PiConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 const commentBefore = `/**
@@ -65,9 +65,17 @@ export class NonOptionalsCheckerTemplate {
         const locationdescription = ValidationUtils.findLocationDescription(concept);
 
         concept.allProperties().forEach(prop => {
+            // the following is added only for non-list properties
+            // empty lists should be checked using one of the validation rules
             if (!prop.isOptional && !prop.isList) {
-                // empty lists can be checked using one of the validation rules
-                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ) {
+                // if the property is of type `string`
+                // then add a check on the length of the string
+                let additionalStringCheck: string = null;
+                if (prop.isPrimitive && (prop as PiPrimitiveProperty).primType == "string") {
+                    additionalStringCheck = `|| modelelement.${prop.name}?.length == 0`;
+                }
+
+                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck? additionalStringCheck : ""}) {
                     hasFatalError = true;
                     this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, PiErrorSeverity.Error));
                 }

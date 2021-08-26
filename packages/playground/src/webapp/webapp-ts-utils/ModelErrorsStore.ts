@@ -1,9 +1,13 @@
+import {Writable, writable} from 'svelte/store';
+import { PiError } from "@projectit/core";
+
+// the current list of errors in the model unit that is shown in the editor
+export let modelErrors: Writable<PiError[]> = writable<PiError[]>([]);
+
 // function to sort the data in a DataTable
 // used to sort errors in the ErrorList
 
-import { PiError } from "@projectit/core";
-
-export default function sortErrors(data: PiError[], col: number, asc: boolean) {
+export function sortErrors(data: PiError[], col: number, asc: boolean) {
     if (col < 0 || col > 2) return data;
 
     const sorted = data.sort((a, b) => {
@@ -31,3 +35,6 @@ export default function sortErrors(data: PiError[], col: number, asc: boolean) {
 
     return sorted;
 }
+
+
+

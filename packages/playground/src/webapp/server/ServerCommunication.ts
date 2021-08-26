@@ -5,9 +5,7 @@ import axios from "axios";
 import { SERVER_URL } from "../WebappConfiguration";
 // TODO remove interface IModelUnitData
 import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
-
-// needed to show errors to the user
-import {showError, errorMessage, severity, severityType} from "../WebappStore";
+import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
 const LOGGER = new PiLogger("ServerCommunication"); //.mute();
 const ModelUnitInterfacePostfix: string = "Public";
@@ -21,12 +19,6 @@ export class ServerCommunication implements IServerCommunication {
             ServerCommunication.instance = new ServerCommunication();
         }
         return ServerCommunication.instance;
-    }
-
-    setError(e: any) {
-        errorMessage.set(e.message);
-        severity.set(severityType.error);
-        showError.set(true);
     }
 
     /**
@@ -45,7 +37,7 @@ export class ServerCommunication implements IServerCommunication {
                 const res2 = await axios.put(`${SERVER_URL}putModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}${ModelUnitInterfacePostfix}`, publicModel);
             } catch (e) {
                 LOGGER.error(this, "putModelUnit, " + e.toString());
-                this.setError(e);
+                setUserMessage(e.message);
             }
         } else {
             LOGGER.error(this, "Name of Unit '" + modelInfo.unitName + "' may contain only characters and numbers, and must start with a character.");
@@ -60,7 +52,19 @@ export class ServerCommunication implements IServerCommunication {
                 const res2 = await axios.get(`${SERVER_URL}deleteModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}${ModelUnitInterfacePostfix}`);
             } catch (e) {
                 LOGGER.error(this, "deleteModelUnit, " + e.toString());
-                this.setError(e);
+                setUserMessage(e.message);
+            }
+        }
+    }
+
+    async deleteModel(modelName: string ) {
+        console.log(`ServerCommunication.deleteModel ${modelName}`);
+        if (!!modelName && modelName !== "") {
+            try {
+                const res1 = await axios.get(`${SERVER_URL}deleteModel?folder=${modelName}`);
+            } catch (e) {
+                LOGGER.error(this, "deleteModel, " + e.toString());
+                setUserMessage(e.message);
             }
         }
     }
@@ -76,7 +80,7 @@ export class ServerCommunication implements IServerCommunication {
             modelListCallback(models.data);
         } catch (e) {
             LOGGER.error(this, "loadModelList, " + e.message);
-            this.setError(e);
+            setUserMessage(e.message);
         }
     }
 
@@ -95,7 +99,7 @@ export class ServerCommunication implements IServerCommunication {
             }
         } catch (e) {
             LOGGER.error(this, "loadUnitList, " + e.message);
-            this.setError(e);
+            setUserMessage(e.message);
         }
         modelListCallback(result);
     }
@@ -115,7 +119,7 @@ export class ServerCommunication implements IServerCommunication {
                 loadCallback(model);
             } catch (e) {
                 LOGGER.error(this, "loadModelUnit, " + e.toString());
-                this.setError(e);
+                setUserMessage(e.message);
             }
         }
     }
@@ -129,7 +133,7 @@ export class ServerCommunication implements IServerCommunication {
                 loadCallback(model);
             } catch (e) {
                 LOGGER.error(this, "loadModelUnitInterface, " + e.toString());
-                this.setError(e);
+                setUserMessage(e.message);
             }
         }
     }

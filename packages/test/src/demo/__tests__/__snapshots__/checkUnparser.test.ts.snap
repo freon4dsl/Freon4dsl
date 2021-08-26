@@ -4,15 +4,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 "Demo ModelWithUnits 
     models 
         model DemoModel_with_inheritance { 
-        main: 
-        type: 
-        types: 
+        main: types: 
             
         entities: 
             DemoEntity Vehicle 
-                simpleprop \\"\\" 
+                simpleprop \\"simple\\" 
                 baseInterface_attr 0 
-                x \\"\\" 
+                x \\"xxx\\" 
                 attributes 
                     brand : DemoAttributeType String 
                                 extra 199 
@@ -41,9 +39,9 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 
 
             DemoEntity Car 
-                simpleprop \\"\\" 
+                simpleprop \\"simple\\" 
                 baseInterface_attr 0 
-                x \\"\\" 
+                x \\"xxx\\" 
                 attributes 
                     numberplate : DemoAttributeType Integer 
                                       extra 240261 
@@ -72,9 +70,9 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 
 
             DemoEntity Bike 
-                simpleprop \\"\\" 
+                simpleprop \\"simple\\" 
                 baseInterface_attr 0 
-                x \\"\\" 
+                x \\"xxx\\" 
                 attributes 
                     backseat : DemoAttributeType Boolean 
                                    extra 5479 
@@ -103,9 +101,9 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 
 
             DemoEntity RaceBike 
-                simpleprop \\"\\" 
+                simpleprop \\"simple\\" 
                 baseInterface_attr 0 
-                x \\"\\" 
+                x \\"xxx\\" 
                 attributes 
                     color : DemoAttributeType String 
                                 extra 199 
@@ -145,15 +143,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 declaredType Integer
         }
         model CorrectUnit { 
-        main: 
-        type: 
-        types: 
+        main: types: 
             
         entities: 
             DemoEntity School 
-                simpleprop \\"\\" 
+                simpleprop \\"simple\\" 
                 baseInterface_attr 0 
-                x \\"\\" 
+                x \\"xxx\\" 
                 attributes 
                     foundedIn : DemoAttributeType Integer 
                                     extra 240261 
@@ -179,9 +175,9 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 
 
             DemoEntity Company 
-                simpleprop \\"\\" 
+                simpleprop \\"simple\\" 
                 baseInterface_attr 0 
-                x \\"\\" 
+                x \\"xxx\\" 
                 attributes 
                     name : DemoAttributeType String 
                                extra 199 

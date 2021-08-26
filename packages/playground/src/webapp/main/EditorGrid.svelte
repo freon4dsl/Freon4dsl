@@ -2,7 +2,7 @@
     import { ProjectItComponent } from "@projectit/core-svelte";
     import { editorEnvironment } from "../WebappConfiguration";
     import StatusBar from "./StatusBar.svelte";
-    import { noUnitAvailable } from "../WebappStore";
+    import { noUnitAvailable } from "../webapp-ts-utils/WebappStore";
 </script>
 
 <style>

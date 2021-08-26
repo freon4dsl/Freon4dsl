@@ -30,7 +30,6 @@ export class WriterTemplate {
 
         // Template starts here
         return `
-        // TODO import * as fs from "fs";
         import { ${Names.PiNamedElement}, ${writerInterfaceName} } from "${PROJECTITCORE}";
         import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.concepts.map(concept => `
                 ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     

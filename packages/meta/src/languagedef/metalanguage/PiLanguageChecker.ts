@@ -533,6 +533,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         if (typeof value === primType) {
             return true;
         }
+        // TODO add the following check
         // if (primType === "number") {
         //     if (!isNaN(Number(value)) ) {
         //         return true;

@@ -83,7 +83,7 @@
 <script lang="ts">
 	import {Button, Icon, Sidepanel} from 'svelte-mui';
 	import arrowForward from '../assets/icons/svg/arrow_forward.svg';
-	import { rightPanelVisible, versionNumber} from "../WebappStore";
+	import { rightPanelVisible, versionNumber} from "../webapp-ts-utils/WebappStore";
 </script>
 
 <style>

@@ -1,0 +1,80 @@
+typer ExampleTyper for language Example
+
+// for now: first is considered to be the root of the type hierarchy
+istype {  BaseType }
+
+anytype {
+    conformsto AttributeType:ANY;
+    equalsto AttributeType:ANY;
+}
+
+Parameter {
+    infertype self.declaredType;
+}
+
+ParameterRef   {
+    infertype self.parameter.declaredType;
+}
+
+Entity {
+    conformsto self.baseEntity;
+}
+
+Attribute {
+    infertype self.declaredType;
+}
+
+Method {
+    infertype self.declaredType;
+}
+ExExpression {
+    abstract infertype  ;
+}
+StringLiteralExpression {
+    infertype AttributeType:String;
+}
+NumberLiteralExpression {
+    infertype AttributeType:Integer;
+}
+BooleanLiteralExpression {
+    infertype AttributeType:Boolean;
+}
+AbsExpression {
+    infertype self.expr;
+}
+OrExpression {
+    infertype AttributeType:Boolean;
+}
+AndExpression {
+    infertype AttributeType:Boolean;
+}
+MultiplyExpression {
+    infertype self.left;
+}
+PlusExpression {
+    infertype self.left;
+//    infertype self.left == AttributeType:Number && self.right == AttributeType:Number then self.left == AttributeType:Number ;
+//    infertype self.left == AttributeType:String && self.right == AttributeType:String then self.left == AttributeType:String ;
+}
+DivideExpression {
+    infertype self.left;
+}
+ComparisonExpression {
+    infertype AttributeType:Boolean;
+}
+MethodCallExpression {
+    infertype self.methodDefinition;
+}
+IfExpression    {
+    infertype self.whenTrue;
+}
+AttributeRef   {
+    infertype self.attribute.declaredType;
+}
+
+SumExpression {
+    infertype AttributeType:Integer;
+}
+/*
+
+*/

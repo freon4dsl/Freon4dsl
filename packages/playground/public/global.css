@@ -13,6 +13,8 @@
 	--theme-colors-accent: #f50057;			  /* Color to get attention to an element */
 	--theme-colors-primary_button_text: black; /* Color of primary buttons in dialogs */
 	--theme-colors-secondary_button_text: grey; /* Color of non-primary buttons in dialogs */
+	--theme-colors-text_app_bar: 'white';		/* Color of header and footer text */
+
 	/* Projectional Editor "globals" */
 	--theme-colors-bg_editor: white;			/* The background color of the editor */
 	--theme-colors-text_editor: darkblue;		/* The color of the text, unless set otherwise by the projection */
