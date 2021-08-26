@@ -36,6 +36,7 @@ export default {
 				'@projectit/core': '@projectit/core',
 				'mobx': 'mobx',
 				'svelte/internal': 'svelte/internal',
+				'svelte/store': 'svelte/store',
 				'svelte': 'svelte'
 			}
 		},
@@ -48,6 +49,7 @@ export default {
 				'@projectit/core': '@projectit/core',
 				'mobx': 'mobx',
 				'svelte/internal': 'svelte/internal',
+				'svelte/store': 'svelte/store',
 				'svelte': 'svelte',
 				"tslib": "tslib"
 			}
@@ -55,6 +57,7 @@ export default {
 	],
 	plugins: [
 		svelte({
+			extensions: ['.svelte', '.svg'],
 			preprocess: sveltePreprocess({ sourceMap: !production }),
 			compilerOptions: {
 				// enable run-time checks when not in production
@@ -74,7 +77,7 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte', '@projectit/core']
+			dedupe: ['svelte', 'svelte/store', '@projectit/core']
 		}),
 		autoExternal(), /* plugin to automatically exclude package.json dependencies and peerDependencies from your bundle. */
 		commonjs(),

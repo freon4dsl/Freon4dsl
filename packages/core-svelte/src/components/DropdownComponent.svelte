@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
-    import { clickOutside } from "./clickOutside"
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
     import { autorun } from "mobx";
     import { createEventDispatcher } from "svelte";
     import {
@@ -12,17 +11,14 @@
 
     export let getOptions: () => SelectOption[];
     export let selectedOptionId: string = "1";
-    export let open: boolean;
     export let handleSelectedOption: (option: SelectOption) => void;
-    export let notifier;
+    export let notifier: ChangeNotifier;
 
     const LOGGER = new PiLogger("DropdownComponent");
     const dispatcher = createEventDispatcher();
 
     const getOptionsLogged = (): SelectOption[] => {
         const options = getOptions();
-        LOGGER.log("getOptions size "+ options.length);
-        options.forEach(o => LOGGER.log("     Option ["+ o.id + "]"));
         return options;//.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
     }
 
@@ -65,17 +61,11 @@
         selectedOptionId = index;
     }
 
-    const handleClickOutside = (event): void => {
-        // TODO Inform parent AliasComponent
-        open = false;
-    }
-
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {
+        AUTO_LOGGER.log("autorun");
         const dummy = notifier.dummy;
         getOptionsForHtml = getOptionsLogged();
-        LOGGER.log("AUTORUN " + getOptionsForHtml.map(o => o.id) );
-        getOptionsLogged().forEach( option => LOGGER.log("OPTION "+ option.label));
     });
 
     const onFocus = (e: FocusEvent) =>  {
@@ -87,9 +77,11 @@
 </script>
 
 <div class="dropdown"
-        on:focus={onFocus}>
+        on:focus={onFocus}
+        on:blur={onBlur}
+>
     <div tabIndex={0}  />
-    <div class="popupWrapper" use:clickOutside on:click_outside={handleClickOutside}>
+    <div class="popupWrapper">
         {#each getOptionsForHtml as option (option.id)}
             <div class="popup">
                 <div>
@@ -113,15 +105,16 @@
         padding: 4px;
 
         z-index: 99;
-        background: var(--pi-popup-background);
-        border: 1px solid var(--pi-popup-border);
-        box-shadow: var(--pi-popup-box-shadow);
-        border-radius: 2px;
+        background: var(--theme-colors-bg_dropdown_component);
     }
 
     .popupWrapper {
         position: absolute;
+        border: 1px solid var(--theme-colors-border_dropdown_component);
+        box-shadow: var(--pi-popup-box-shadow);
+        border-radius: 2px;
         top: 10px;
         left: -1px;
+        z-index: 95;
     }
 </style>

@@ -15,6 +15,30 @@
 	--theme-colors-secondary_button_text: grey; /* Color of non-primary buttons in dialogs */
 	--theme-colors-text_app_bar: 'white';		/* Color of header and footer text */
 
+	/* Projectional Editor "globals" */
+	--theme-colors-bg_editor: white;			/* The background color of the editor */
+	--theme-colors-text_editor: darkblue;		/* The color of the text, unless set otherwise by the projection */
+	--theme-fonts-size_editor: 14px;				/* The font size of the text, unless set otherwise by the projection */
+	--theme-fonts-style_editor: italic;				/* The font size of the text, unless set otherwise by the projection */
+	--theme-fonts-weight_editor: normal;				/* The font size of the text, unless set otherwise by the projection */
+	--theme-fonts-family_editor: "Arial";				/* The font size of the text, unless set otherwise by the projection */
+	/* TextBox */
+	--theme-colors-bg_empty_before_text_box: #f4f4f4;
+	--theme-colors-bg_text_box: white;
+	--theme-colors-color_text_box: darkblue;
+	--theme-colors-color_empty_before_text_box: darkblue;
+	/* AliasBox && SelectBox */
+	--theme-colors-bg_empty_before_alias_box: #f4f4f4;
+	--theme-colors-bg_alias_box: white;
+	--theme-colors-color_alias_box: darkblue;
+	/* Dropdown */
+	--theme-colors-bg_dropdown_component: lightblue;
+	--theme-colors-border_dropdown_component: darkblue;
+	--theme-colors-color_dropdownitem_component: darkblue;
+	--theme-colors-border_dropdownitem_component: darkblue;
+	/* Selectable */
+	--theme-colors-bg_selected: rgba(211, 227, 253, 255);
+	--theme-colors-border_selected: darkblue;
 	/* ProjectIt sizes */
 	--pi-header-height: 36px;
 	--pi-footer-height: 16px;
