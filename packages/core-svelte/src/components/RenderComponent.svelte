@@ -36,7 +36,9 @@
     export let box: Box;
     export let editor: PiEditor;
 
-    const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)));
+    const UNKNOWN = new LabelBox(null, "role", "UNKNOWN "+ (box == null ? "null": box.kind + "."+ box.role+ "." + isLabelBox(box)), {
+        selectable: false,
+    });
 
     afterUpdate(() => {
         // LOGGER.log("<< RenderComponent.afterUpdate() " + box.element.piLanguageConcept() + "[" + box.kind + "." + box.role + "]");
@@ -88,9 +90,13 @@
     {:else if isSvgBox(showBox) }
         <SvgComponent svgBox={showBox} editor={editor}/>
     {:else if isOptionalBox(showBox) }
-        <OptionalComponent optionalBox={showBox} editor={editor}/>
+        <SelectableComponent box={showBox} editor={editor}>
+            <OptionalComponent optionalBox={showBox} editor={editor}/>
+        </SelectableComponent>
     {:else}
-	    <LabelComponent label={UNKNOWN} editor={editor}/>
+        <SelectableComponent box={UNKNOWN} editor={editor}>
+            <LabelComponent label={UNKNOWN} editor={editor}/>
+        </SelectableComponent>
     {/if}
 </span>
 

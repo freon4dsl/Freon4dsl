@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { LabelBox, PiLogger } from "@projectit/core";
     import type { PiEditor } from "@projectit/core";
@@ -16,7 +16,7 @@
 
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
-        LOGGER.log("LabelComponent.setFocus on " + element);
+        FOCUS_LOGGER.log("LabelComponent.setFocus for box " + label?.role);
         if (!!element) {
             element.focus();
         }
@@ -24,6 +24,9 @@
 
     onMount( () => {
        label.setFocus = setFocus;
+    });
+    afterUpdate( () => {
+        label.setFocus = setFocus;
     });
 
     let text: string;
@@ -34,17 +37,9 @@
 
     const onFocusHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("onFocus for box " + label.role);
-        // if(!!e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        // }
     }
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("onBlur for box " + label.role);
-        // if(!!e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        // }
     }
 
 </script>

@@ -5,6 +5,8 @@
 	--pi-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 	--pi-editor-background: white;
 	--pi-list-background-color: white;
+	--theme-colors-bg_editor: white;			/* The background color of the editor */
+	--theme-colors-text_editor: darkblue;			/* The color of the text, unless set otherwise by the projection */
 }
 
 html, body {
