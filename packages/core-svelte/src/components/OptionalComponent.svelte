@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { OptionalBox, PiLogger } from "@projectit/core";
     import type { PiEditor } from "@projectit/core";
-    import { AUTO_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
 
     export let optionalBox = new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
@@ -16,13 +16,16 @@
 
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
-        LOGGER.log("OptionalComponent.setFocus on " + element);
-        if (element !== null) {
+        FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
+        if (!!element) {
             element.focus();
         }
     };
 
     onMount( () => {
+        optionalBox.setFocus = setFocus;
+    });
+    afterUpdate( () => {
         optionalBox.setFocus = setFocus;
     });
 

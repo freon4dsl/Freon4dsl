@@ -16,6 +16,8 @@
         <svelte:component this={arrowRight} />
     </Icon>
     box: <i>{currentBox?.role} </i>
+    kind: <i>{currentBox?.kind} </i>
+    elem: <i>{currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()} </i>
 </div>
 
 <script lang="ts">

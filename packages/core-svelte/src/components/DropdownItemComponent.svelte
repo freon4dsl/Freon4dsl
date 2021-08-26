@@ -28,11 +28,13 @@
 
 <style>
     .dropdownitem {
-        color: black;
+        color: var(--theme-colors-color_dropdownitem_component);
         display: block;
         white-space: nowrap;
+        border:none;
     }
     .isSelected {
+        border: none;
         background-color: lightblue;
     }
     .dropdownitem:hover {

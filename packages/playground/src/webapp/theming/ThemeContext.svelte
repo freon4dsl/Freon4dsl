@@ -46,6 +46,10 @@
             let varString = `--theme-colors-${prop}`;
             document.documentElement.style.setProperty(varString, color);
         }
+        for (let [prop, color] of Object.entries(theme.fonts)) {
+            let varString = `--theme-fonts-${prop}`;
+            document.documentElement.style.setProperty(varString, color);
+        }
         document.documentElement.style.setProperty("--theme-name", theme.name);
     };
 </script>
