@@ -91,14 +91,26 @@
         rootBox = editor.rootBox;
     });
 
+    /**
+     * The current main element os this component.
+     */
+    let element: HTMLDivElement;
+
+    /**
+     * Keep track of the scrolling position in the editor, so we know exactly where bozes are
+     * in relationship with each other.
+     */
+    function onScroll() {
+        editor.scrollX = element.scrollLeft;
+        editor.scrollY = element.scrollTop;
+    }
 </script>
 
-<!-- The clientHeight bindiong is here to ensure that the afterUpdate is fired.
-     If it isn't there, afterUpdate will never be fired.
--->
 <div class={"projectit"}
      tabIndex={0}
      on:keydown={onKeyDown}
+     on:scroll={onScroll}
+     bind:this={element}
 >
     <RenderComponent editor={editor}
                      box={rootBox}

@@ -33,6 +33,15 @@ export class PiEditor {
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
     @observable private selectedRole: string = null;
 
+    /**
+     * The amount of scrolling horizontally
+     */
+    scrollX: number = 0;
+    /**
+     * The amount of scrolling vertically
+     */
+    scrollY: number = 0;
+
     constructor(projection: PiProjection, actions?: PiActions) {
         this.actions = actions;
         this.projection = projection;

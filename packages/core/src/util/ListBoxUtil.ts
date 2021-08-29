@@ -1,4 +1,5 @@
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
+import { editorEnvironment } from "../../../playground/dist/webapp/WebappConfiguration";
 import { MetaKey, PiKey } from "./Keys";
 import * as Keys from "./Keys";
 import { PiUtils, wait, PiLogger } from "./internal";
@@ -8,7 +9,7 @@ import {
     HorizontalListBox,
     VerticalListBox,
     PiEditor,
-    KeyboardShortcutBehavior
+    KeyboardShortcutBehavior, isTextBox
 } from "../editor";
 import { PiElement } from "../language";
 
@@ -40,19 +41,20 @@ export function boxAbove(box: Box): Box {
 }
 
 export function boxBelow(box: Box): Box {
-    const x = box.actualX;
-    const y = box.actualY;
+    const x = box.actualX + editorEnvironment.editor.scrollX;
+    const y = box.actualY + editorEnvironment.editor.scrollX;
     let result: Box = box.nextLeafRight;
     let tmpResult = result;
-    LOGGER.log("boxBelow " + box.role + ": " + x + ", " + y);
+    LOGGER.log("boxBelow " + box.role + ": " + Math.round(x) + ", " + Math.round(y) + " text: " +
+        (isTextBox(box) ? box.getText() : "NotTextBox" ));
     while (result !== null) {
-        LOGGER.log("next : " + result.role + "  " + result.actualX + ", " + result.actualY);
+        LOGGER.log("next : " + result.role + "  " + Math.round(result.actualX + editorEnvironment.editor.scrollX) + ", " + Math.round(result.actualY+ editorEnvironment.editor.scrollY));
         if (isOnNextLine(tmpResult, result) && isOnNextLine(box, tmpResult)) {
             LOGGER.log("Found box below 1 [" + (!!tmpResult ? tmpResult.role : "null") + "]");
             return tmpResult;
         }
         if (isOnNextLine(box, result)) {
-            if (result.actualX + result.actualWidth >= x) {
+            if (result.actualX+ editorEnvironment.editor.scrollX + result.actualWidth >= x) {
                 LOGGER.log("Found box below 2 [" + (!!result ? result.role : "null") + "]");
                 return result;
             }
