@@ -1,7 +1,5 @@
 <script lang="ts">
     import {
-        boxAbove,
-        boxBelow,
         PiEditor,
         PiLogger,
         Box,
@@ -66,7 +64,7 @@
                     stopEvent(event);
                     break;
                 case KEY_ARROW_DOWN:
-                    const down = boxBelow(editor.selectedBox);
+                    const down = editor.boxBelow(editor.selectedBox);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
@@ -75,7 +73,7 @@
                     break;
                 case KEY_ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
-                    const up = boxAbove(editor.selectedBox);
+                    const up = editor.boxAbove(editor.selectedBox);
                     if (up !== null) {
                         editor.selectBoxNew(up);
                     }
