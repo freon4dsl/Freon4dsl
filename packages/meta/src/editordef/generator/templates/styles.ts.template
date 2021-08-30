@@ -24,6 +24,16 @@ export const propertykeyword: PiStyle = {
 };
 
 // Used by documentation
+export const numeric: PiStyle = {
+    color: "green"
+};
+
+export const reference: PiStyle = {
+    color: "darkorange"
+};
+export const stringLiteral: PiStyle = {
+    color: "green"
+};
 export const keyword: PiStyle = {
     "font-weight": "bold",
     color: "blue"
