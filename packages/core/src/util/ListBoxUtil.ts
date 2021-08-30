@@ -1,7 +1,7 @@
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import { MetaKey, PiKey } from "./Keys";
 import * as Keys from "./Keys";
-import { PiUtils, wait, PiLogger } from "./internal";
+import { PiUtils, PiLogger } from "./internal";
 import {
     AliasBox,
     Box,
@@ -12,67 +12,7 @@ import {
 } from "../editor";
 import { PiElement } from "../language";
 
-
 const LOGGER = new PiLogger("ListBoxUtil");
-
-export function boxAbove(box: Box): Box {
-    wait(0);
-    const x = box.actualX;
-    const y = box.actualY;
-    let result: Box = box.nextLeafLeft;
-    let tmpResult = result;
-    LOGGER.log("boxAbove: " + x + ", " + y);
-    while (result !== null) {
-        LOGGER.log("previous : " + result.role + "  " + result.actualX + ", " + result.actualY);
-        if (isOnPreviousLine(tmpResult, result) && isOnPreviousLine(box, tmpResult)) {
-            return tmpResult;
-        }
-        if (isOnPreviousLine(box, result)) {
-            if (result.actualX <= x) {
-                return result;
-            }
-        }
-        const next = result.nextLeafLeft;
-        tmpResult = result;
-        result = next;
-    }
-    return result;
-}
-
-export function boxBelow(box: Box): Box {
-    const x = box.actualX;
-    const y = box.actualY;
-    let result: Box = box.nextLeafRight;
-    let tmpResult = result;
-    LOGGER.log("boxBelow " + box.role + ": " + x + ", " + y);
-    while (result !== null) {
-        LOGGER.log("next : " + result.role + "  " + result.actualX + ", " + result.actualY);
-        if (isOnNextLine(tmpResult, result) && isOnNextLine(box, tmpResult)) {
-            LOGGER.log("Found box below 1 [" + (!!tmpResult ? tmpResult.role : "null") + "]");
-            return tmpResult;
-        }
-        if (isOnNextLine(box, result)) {
-            if (result.actualX + result.actualWidth >= x) {
-                LOGGER.log("Found box below 2 [" + (!!result ? result.role : "null") + "]");
-                return result;
-            }
-        }
-        const next = result.nextLeafRight;
-        tmpResult = result;
-        result = next;
-    }
-    LOGGER.log("Found box below 3 [ null ]");
-    return result;
-}
-
-function isOnPreviousLine(ref: Box, other: Box): boolean {
-    const margin = 5;
-    return other.actualY + margin < ref.actualY;
-}
-
-function isOnNextLine(ref: Box, other: Box): boolean {
-    return isOnPreviousLine(other, ref);
-}
 
 export function firstVerticalBoxParent(box: Box): Box[] {
     const resultL: Box[] = [];

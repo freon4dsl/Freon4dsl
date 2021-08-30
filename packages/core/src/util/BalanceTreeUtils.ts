@@ -10,7 +10,6 @@ export const BEFORE_BINARY_OPERATOR = "binary-pre";
 export const AFTER_BINARY_OPERATOR = "binary-post";
 export const LEFT_MOST = "exp-left";
 export const RIGHT_MOST = "exp-right";
-export const EXPRESSION_PLACEHOLDER = "expression-placeholder";
 export const BINARY_EXPRESSION = "binary-expression";
 export const EXPRESSION = "expression";
 export const EXPRESSION_SYMBOL = "symbol";
@@ -112,11 +111,12 @@ class BTree {
                 newBinExp.piSetRight(right);
                 this.balanceTree(newBinExp, editor);
                 break;
-            case EXPRESSION_PLACEHOLDER:
-                PiUtils.replaceExpression(exp, newBinExp, editor);
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
-                this.balanceTree(newBinExp, editor);
-                break;
+                // TODO This should not be needed anymore, need to test
+            // case EXPRESSION_PLACEHOLDER:
+            //     PiUtils.replaceExpression(exp, newBinExp, editor);
+            //     selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
+            //     this.balanceTree(newBinExp, editor);
+            //     break;
             default:
                 throw Error("Cannot insert binary expression");
         }

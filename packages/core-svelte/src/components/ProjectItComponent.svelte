@@ -1,7 +1,5 @@
 <script lang="ts">
     import {
-        boxAbove,
-        boxBelow,
         PiEditor,
         PiLogger,
         Box,
@@ -66,7 +64,7 @@
                     stopEvent(event);
                     break;
                 case KEY_ARROW_DOWN:
-                    const down = boxBelow(editor.selectedBox);
+                    const down = editor.boxBelow(editor.selectedBox);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
@@ -75,7 +73,7 @@
                     break;
                 case KEY_ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
-                    const up = boxAbove(editor.selectedBox);
+                    const up = editor.boxAbove(editor.selectedBox);
                     if (up !== null) {
                         editor.selectBoxNew(up);
                     }
@@ -91,14 +89,26 @@
         rootBox = editor.rootBox;
     });
 
+    /**
+     * The current main element os this component.
+     */
+    let element: HTMLDivElement;
+
+    /**
+     * Keep track of the scrolling position in the editor, so we know exactly where bozes are
+     * in relationship with each other.
+     */
+    function onScroll() {
+        editor.scrollX = element.scrollLeft;
+        editor.scrollY = element.scrollTop;
+    }
 </script>
 
-<!-- The clientHeight bindiong is here to ensure that the afterUpdate is fired.
-     If it isn't there, afterUpdate will never be fired.
--->
 <div class={"projectit"}
      tabIndex={0}
      on:keydown={onKeyDown}
+     on:scroll={onScroll}
+     bind:this={element}
 >
     <RenderComponent editor={editor}
                      box={rootBox}
