@@ -24,7 +24,7 @@ ExModel {
                 @vertical
                 @terminator [\n]
             }
-        model wide Methods:
+        model wide  Methods:
             ${self.methods @vertical @separator [\n] }
         }
         ]
@@ -116,7 +116,6 @@ BooleanLiteralExpression {
     @trigger "boolean"
 }
 
-
 AttributeRef {
     @projection [ ${self.attribute} ]
     @trigger "attribute"
@@ -125,7 +124,6 @@ AttributeRef {
 ParameterRef {
     @projection [ ${self.parameter} . ${self.appliedfeature} ]
 }
-
 
 IfExpression {
     @projection IfExpression
@@ -141,7 +139,7 @@ IfExpression {
 
 AbsExpression {
     @projection default [
-        abs( ${self.expr} )
+        | ${self.expr} |
     ]
 }
 /*
