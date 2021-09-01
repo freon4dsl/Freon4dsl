@@ -6,9 +6,9 @@
 export const grammarStr: string = `
 namespace test
 grammar PiExample {
-    skip WHITE_SPACE = "\\s+" ;
-    skip MULTI_LINE_COMMENT = "/\\*[^*]*\\*+(?:[^*/][^*]*\\*+)*/" ;
-    skip SINGLE_LINE_COMMENT = "//[^\\r\\n]*" ;
+    skip WHITE_SPACE = "\s+" ;
+    skip MULTI_LINE_COMMENT = "/\*[^*]*\*+(?:[^*/][^*]*\*+)*/" ;
+    skip SINGLE_LINE_COMMENT = "//[^\r\n]*" ;
 
 ExModel = 'model' identifier '{' Entity* 'model' 'wide' 'Methods:' Method* '}' ;
 
@@ -85,8 +85,7 @@ MethodPiElemRef = identifier;
 
 leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
 /* https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
-//leaf stringLiteral       = "[^\"\\]*(\\.[^\"\\]*)*";
-leaf stringLiteral          = ".*";
+leaf stringLiteral       = "[^\"\\]*(\\.[^\"\\]*)*";
 leaf numberLiteral       = "[0-9]+";
 leaf booleanLiteral      = 'false' | 'true';
 
