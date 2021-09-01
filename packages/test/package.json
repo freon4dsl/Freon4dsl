@@ -31,12 +31,14 @@
     "clean-init":   "rm */*/*/*Initialization.ts",
     "clean-parser": "rm -r */*/*parse*",
     "clean":        "yarn clean-config && yarn clean-custom && yarn clean-init",
-    "test":         "jest"
+    "test":         "jest",
+    "example":      "bash ../../scripts/projectit-dev.sh all -d src/example/defs -o src/example"
   },
   "dependencies": {
     "@projectit/core": "0.1.1",
     "@projectit/meta": "0.1.1",
     "@types/history": "^4.7.5",
+    "net.akehurst.language-agl-processor": "4.0.0-rc.2",
     "global": "^4.4.0",
     "mobx": "^5.14.0",
     "tslib": "^2.3.0"
