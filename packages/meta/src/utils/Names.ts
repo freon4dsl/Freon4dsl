@@ -54,6 +54,18 @@ export class Names {
     public static styles = "projectitStyles";
     public static nameForSelf = "self";
     public static initializeLanguage = "initializeLanguage";
+    // reserved role names for expressions, use with care.
+    // Should remain identical to the definitions in @projectit/core !!
+    public static PI_BINARY_EXPRESSION_LEFT = "PiBinaryExpression-left";
+    public static PI_BINARY_EXPRESSION_RIGHT = "PiBinaryExpression-right";
+    public static BEFORE_BINARY_OPERATOR = "binary-pre";
+    public static AFTER_BINARY_OPERATOR = "binary-post";
+    public static LEFT_MOST = "exp-left";
+    public static RIGHT_MOST = "exp-right";
+    public static BINARY_EXPRESSION = "binary-expression";
+    public static EXPRESSION = "expression";
+    public static EXPRESSION_SYMBOL = "symbol";
+
 
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character

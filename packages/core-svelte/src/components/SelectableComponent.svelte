@@ -11,15 +11,16 @@
 
     // Parameters
     export let box: Box = new LabelBox(null, "DUMMY", "LABEL");
-    export let editor: PiEditor ;
+    export let editor: PiEditor;
 
     let LOGGER = new PiLogger("SelectableComponent");
+    let XLOGGER = new PiLogger("X");
     let isSelected: boolean = false;
     let className: string;
     let element: HTMLDivElement = null;
 
     const onClick = (event: MouseEvent) => {
-        LOGGER.log("SelectableComponent.onClick: "+ event + " for box " + box.role);
+        LOGGER.log("SelectableComponent.onClick: " + event + " for box " + box.role);
         isSelected = !isSelected;
 
         if (box.selectable) {
@@ -28,35 +29,33 @@
             event.preventDefault();
             event.stopPropagation();
         }
-
     };
 
-    afterUpdate ( async () => {
-        LOGGER.log("!!!!! SelectableComponent.afterupdate, box="+ box);
-        // await tick();
-        if(element === null){
+    afterUpdate(async () => {
+        XLOGGER.log("!!!!! SelectableComponent.afterupdate for box " + box.role);
+        if (element === null) {
             return;
         }
         const rect: ClientRect = element.getBoundingClientRect();
-        if(box !== null){
+        if (box !== null && box !== undefined) {
             box.actualX = rect.left;
             box.actualY = rect.top;
             box.actualHeight = rect.height;
             box.actualWidth = rect.width;
-            LOGGER.log("   actual is "+ box.actualWidth)
+            XLOGGER.log("   actual is (" + Math.round(box.actualX) + ", " + Math.round(box.actualY) + ")");
         }
 
-        if( isSelected) {
-            LOGGER.log("     setting focus from autpupdate")
+        if (isSelected) {
+            LOGGER.log("     setting focus from autpupdate");
             box.setFocus();
         }
     });
 
-    autorun( () => {
-        LOGGER.log("AUITORYN SelectableComponent for box: " + box.role)
+    autorun(() => {
+        AUTO_LOGGER.log("SelectableComponent for box: " + box.role);
         isSelected = editor?.selectedBox === box;
         className = (isSelected ? "selectedComponent" : "unSelectedComponent");
-    })
+    });
 </script>
 
 <!-- NOTE The clientHeight binding is here to ensure that the afterUpdate is fired.
@@ -67,14 +66,15 @@
      on:click={onClick}
 
      bind:clientHeight={box.actualHeight}
-     bind:this={element} >
-    <slot class="slot" editor={editor}/>
+     bind:this={element}>
+    <slot class="slot" editor={editor} />
 </div>
 
 <style>
     .slot {
         display: inline;
     }
+
     .unSelectedComponent {
         background: transparent;
         border: none;

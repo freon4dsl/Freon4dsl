@@ -44,7 +44,7 @@ export class DefaultActionsTemplate {
             `//{
              //       trigger: ${c.triggerIsRegExp ? `/${editorDef.findConceptEditor(c).trigger}/` : `"${editorDef.findConceptEditor(c).trigger}"`},
              //       activeInBoxRoles: [
-             //           "PiBinaryExpression-left", "PiBinaryExpression-right"
+             //           PI_BINARY_EXPRESSION_LEFT, PI_BINARY_EXPRESSION_RIGHT
              //       ],
              //       expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
              //           const parent = box.element;
@@ -200,7 +200,7 @@ export class DefaultActionsTemplate {
             return projection.cursorLocation();
         } else {
             if (c instanceof PiBinaryExpressionConcept) {
-                return "PiBinaryExpression-left";
+                return Names.PI_BINARY_EXPRESSION_LEFT;
             }
         }
         return "===== " + c.name + " =====";
