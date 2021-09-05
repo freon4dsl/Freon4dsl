@@ -29,21 +29,21 @@ import {
 // const LOGGER = new PiLogger("PiExpressionHelpers");
 
 export function createDefaultExpressionBox(exp: PiExpression, role: string, children: Box[], initializer?: Partial<HorizontalListBox>): Box {
-    const leftMost = BTREE.isLeftMostChild(exp);
-    const rightMost = BTREE.isRightMostChild(exp);
-    if (leftMost || rightMost) {
+    const isLeftMost: Boolean = BTREE.isLeftMostChild(exp);
+    const isRightMost: Boolean = BTREE.isRightMostChild(exp);
+    if (isLeftMost || isRightMost) {
         let result: HorizontalListBox;
         if (children.length === 1 && isHorizontalBox(children[0])) {
             result = children[0] as HorizontalListBox;
         } else {
             result = new HorizontalListBox(exp, EXPRESSION, children);
         }
-        if (leftMost) {
+        if (isLeftMost) {
             // TODO Change into Svelte Style
             // result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP, { style: STYLES.aliasExpression }));
             result.insertChild(new AliasBox(exp, LEFT_MOST, NBSP));
         }
-        if (rightMost) {
+        if (isRightMost) {
             // TODO Change into Svelte Style
             // result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
             result.addChild(new AliasBox(exp, RIGHT_MOST, NBSP));
@@ -58,8 +58,17 @@ export function createDefaultExpressionBox(exp: PiExpression, role: string, chil
     }
 }
 
-export function createDefaultBinaryBox(projection: PiProjection, exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
+/**
+ * Create a binary box with eleft and right expression boxes, or alias boxes as placeholders for missing left and/or right children.
+ * Also add an alias box between the operator and the left and right child to enable the user to add more operators.
+ * @param exp
+ * @param symbol
+ * @param editor
+ * @param style
+ */
+export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, editor: PiEditor, style?: string): HorizontalListBox {
     const result = new HorizontalListBox(exp, BINARY_EXPRESSION);
+    const projection = editor.projection;
     const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
     result.addChildren([

@@ -249,6 +249,11 @@ export class PiEditor {
         }
     }
 
+    /**
+     * Return the box that is visually above `box`.
+
+     * @param box
+     */
     boxAbove(box: Box): Box {
         wait(0);
         const x = box.actualX + this.scrollX;

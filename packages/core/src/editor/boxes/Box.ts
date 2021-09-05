@@ -87,6 +87,9 @@ export abstract class Box {
         return null;
     }
 
+    /**
+     * Return the previous selectable leaf in the tree.
+     */
     get nextLeafRight(): Box {
         if (!this.parent) {
             return null;
@@ -105,6 +108,9 @@ export abstract class Box {
         return this.parent.nextLeafRight;
     }
 
+    /**
+     * Return the next selectable leaf in the tree.
+     */
     get nextLeafLeft(): Box {
         if (!this.parent) {
             return null;
