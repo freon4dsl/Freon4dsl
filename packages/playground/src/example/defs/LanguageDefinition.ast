@@ -63,11 +63,11 @@ expression StringLiteralExpression base LiteralExpression {
 }
 
 expression NumberLiteralExpression base LiteralExpression   {
-    value: string; // TODO should be changed to type number
+    value: number;
 }
 
 expression BooleanLiteralExpression base LiteralExpression {
-    value: string; // TODO should be changed to type boolean
+    value: boolean;
 }
 
 expression AbsExpression base ExExpression {
@@ -88,6 +88,10 @@ expression ParameterRef base ExExpression {
 
 concept LoopVariable {
     name: string;
+}
+
+expression GroupedExpression base ExExpression {
+    inner: ExExpression;
 }
 
 expression LoopVariableRef base ExExpression {

@@ -5,15 +5,15 @@
 
 
 
-export const grammarStr: string = `
+export const ExModelGrammarStr: string = `
 namespace test
 grammar PiExample {
 
 ExModel = 'model' identifier '{' Entity* 'model' 'wide' 'Methods:' Method* '}' ;
 
-Entity = 'Entity' identifier OptionalBaseEntity? '{' Attribute* Method* '}' ;
+Entity = 'Entity' identifier _OptionalBaseEntity? '{' Attribute* Method* '}' ;
 
-OptionalBaseEntity = 'base' EntityPiElemRef ;
+_OptionalBaseEntity = 'base' EntityPiElemRef ;
 
 Attribute = identifier ':' TypePiElemRef;
 

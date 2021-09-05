@@ -213,6 +213,18 @@ export class Names {
         return this.startWithUpperCase(unit?.name) + "Parser";
     }
 
+    public static grammar(unit: PiConcept): string {
+        return this.startWithUpperCase(unit?.name) + "Grammar";
+    }
+
+    public static grammarStr(unit: PiConcept): string {
+        return this.startWithUpperCase(unit?.name) + "GrammarStr";
+    }
+
+    public static syntaxAnalyser(unit: PiConcept): string {
+        return this.startWithUpperCase(unit?.name) + "SyntaxAnalyser";
+    }
+
     public static reader(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }

@@ -1,7 +1,7 @@
 import { PiConcept, PiInterface, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 import { findNameProp, LANGUAGE_GEN_FOLDER, Names, STDLIB_GEN_FOLDER } from "../../../utils";
-import { referencePostfix } from "./PegjsTemplate";
+import { referencePostfix2 } from "./PegjsTemplate";
 
 export class CreatorTemplate {
 
@@ -51,7 +51,7 @@ export class CreatorTemplate {
         const addReferenceFunction: boolean = !(con.isModel || con.isUnit) && !!nameProperty;
         let referenceFunction: string = "";
         if (!!addReferenceFunction) {
-            referenceFunction = `export function create${conceptName}${referencePostfix}(data: Name): PiElementReference<${conceptName}> {
+            referenceFunction = `export function create${conceptName}${referencePostfix2}(data: Name): PiElementReference<${conceptName}> {
                 return PiElementReference.create<${conceptName}>(data.name, "${conceptName}");
             }
             `;
@@ -81,7 +81,7 @@ export class CreatorTemplate {
         const nameProperty: PiPrimitiveProperty = findNameProp(piInterface);
         const addReferenceFunction: boolean = !!nameProperty;
         if (!!addReferenceFunction) {
-            return `export function create${intfName}${referencePostfix}(data: Name): PiElementReference<${intfName}> {
+            return `export function create${intfName}${referencePostfix2}(data: Name): PiElementReference<${intfName}> {
                 return PiElementReference.create<${intfName}>(data.name, "${intfName}");
             }
             `;

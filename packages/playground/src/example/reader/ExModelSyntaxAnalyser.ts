@@ -42,10 +42,14 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
 
     private transformNode(node: SPPTNode): any {
         // console.log(`transformNode: ${node.name}`)
-        if (node.isLeaf) {
-            return (node as SPPTLeaf).matchedText;
-        } else if (node.isBranch) {
-            return this.transformBranch(node as SPPTBranch);
+        try {
+            if (node.isLeaf) {
+                return (node as SPPTLeaf).matchedText;
+            } else if (node.isBranch) {
+                return this.transformBranch(node as SPPTBranch);
+            }
+        } catch (e) {
+            throw new Error(`Syntax error in "${node.matchedText}": ${e}`);
         }
     }
 
@@ -71,8 +75,8 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
             return this.numberLiteralExpression(branch);
         } else if ('BooleanLiteralExpression' == brName) {
             return this.booleanLiteralExpression(branch);
-        // } else if ('AbsExpression' == brName) {
-        //     return this.absExpression(branch);
+        } else if ('AbsExpression' == brName) {
+            return this.absExpression(branch);
         } else if ('ParameterRef' == brName) {
             return this.parameterRef(branch);
         } else if ('AttributeRef' == brName) {
@@ -139,17 +143,10 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
 
     // OptionalBaseEntity = 'base' EntityPiElemRef ;
     private optionalBaseEntity(branch: SPPTBranch): PiElementReference<Entity> {
-        // console.log(`executing optionalBaseEntity: ` + branch.matchedText);
-        // if (!branch.isEmptyMatch) {
-        //     // TODO ask David why the second nonSkipChildren is needed and why it is [1].
-        //     // JOS: Optional is equivalent to a List with 0 or 1 element, so you always have the list node in between.
-        //     //    As the optional is in the 'entity' rule, the check on `isEmptyMatch' would be more logical
-        //     //    in the entity rule, as I have done here
-        // return this.piElemRef<Entity>(branch.nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[1]);
+        // JOS: Optional is equivalent to a List with 0 or 1 element, so you always have the list node in between.
+        //     As the optional is in the 'entity' rule, the check on `isEmptyMatch' would be more logical
+        //        in the entity rule, as I have done here
         return this.piElemRef<Entity>(branch.nonSkipChildren.toArray()[1]);
-        // } else {
-        //     return null;
-        // }
     }
 
     // Attribute = identifier ':' TypePiElemRef;
@@ -233,7 +230,7 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
         return result;
     }
 
-    // AbsExpression = 'abs(' ExExpression ')' ;
+    // AbsExpression = '|' ExExpression '|' ;
     private absExpression(branch: SPPTBranch) : AbsExpression {
         // console.log(`executing absExpression`);
         let result = new AbsExpression();
@@ -247,7 +244,7 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
         return this.transformNode(branch.nonSkipChildren.toArray()[1]);
     }
 
-    // IfExpression = 'if' ExExpression 'then'
+    // IfExpression = 'if' '(' ExExpression ')' 'then'
     // ExExpression
     // 'else'
     // ExExpression
@@ -255,90 +252,98 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
     private ifExpression(branch: SPPTBranch) : IfExpression {
         console.log(`executing ifExpression`);
         let result = new IfExpression();
-        result.condition = this.transformNode(branch.nonSkipChildren.toArray()[1]);
-        result.whenTrue  = this.transformNode(branch.nonSkipChildren.toArray()[3]);
-        result.whenFalse = this.transformNode(branch.nonSkipChildren.toArray()[5]);
+        result.condition = this.transformNode(branch.nonSkipChildren.toArray()[2]);
+        result.whenTrue = this.transformNode(branch.nonSkipChildren.toArray()[5]);
+        result.whenFalse = this.transformNode(branch.nonSkipChildren.toArray()[7]);
         return result;
+
+        return null;
     }
 
     // MethodCallExpression = 'CALL' MethodPiElemRef '(' [ExExpression / ',']* ')' ;
     private methodCallExpression(branch: SPPTBranch) : MethodCallExpression {
         // console.log(`executing methodCallExpression`);
-        let result = new MethodCallExpression();
-        result.methodDefinition = this.piElemRef<Method>(branch.nonSkipChildren.toArray()[1]);
-        const argsBranch = branch.nonSkipChildren.toArray()[3];
+        const children = branch.nonSkipChildren.toArray();
+        const methodDefinition = this.piElemRef<Method>(children[1]);
+        const argsBranch = children[3];
+        let args: ExExpression[] = [];
         if (!argsBranch.isEmptyMatch) {
-            result.args.push(...this.transformList<ExExpression>(argsBranch, '*'));
+            args = this.transformList<ExExpression>(argsBranch, '*');
         }
-        return result;
+        return MethodCallExpression.create({methodDefinition:methodDefinition, args: args});
     }
 
     // SumExpression = 'sum' 'from' LoopVariable '=' ExExpression 'to' ExExpression 'of' ExExpression;
     private sumExpression(branch: SPPTBranch) : SumExpression {
         // console.log(`executing methodCallExpression`);
-        const variable = this.transformNode(branch.nonSkipChildren.toArray()[2]);
-        const from = this.transformNode(branch.nonSkipChildren.toArray()[4]);
-        const to = this.transformNode(branch.nonSkipChildren.toArray()[6]);
-        const body = this.transformNode(branch.nonSkipChildren.toArray()[8]);
+        const children = branch.nonSkipChildren.toArray();
+        const variable = this.transformNode(children[2]);
+        const from = this.transformNode(children[4]);
+        const to = this.transformNode(children[6]);
+        const body = this.transformNode(children[8]);
 
         return SumExpression.create({variable: variable, to: to, from: from, body: body});
     }
 
-    // BinaryExpression = [ExExpression / operator]2+ ;
+    //
+    /**
+     * Generic method to transform binary expressions.
+     * Binary expressions are parsed accordng to this rule:
+     * BinaryExpression = [ExExpression / operator]2+ ;
+     * In this method we build a skewed tree, which in a later phase needs to be balanced
+     * according to the priorities of the operators.
+     * @param branch
+     * @private
+     */
     private binaryExpression(branch: SPPTBranch) : BinaryExpression {
         console.log(`executing binaryExpression ${branch.matchedText}`);
-        try {
-            const actualList = branch.nonSkipChildren.toArray()[0].nonSkipChildren.toArray();
-            let index = 0;
-            let first = this.transformNode(actualList[index++]);
-            while (index < actualList.length) {
-                let operator = this.transformNode(actualList[index++]);
-                let second = this.transformNode(actualList[index++]);
-                let combined: BinaryExpression = null;
-                switch (operator) {
-                    case '*': {
-                        combined = MultiplyExpression.create({left: first, right: second});
-                        break;
-                    }
-                    case '/': {
-                        combined = DivideExpression.create({left: first, right: second});
-                        break;
-                    }
-                    case '+': {
-                        combined = PlusExpression.create({left: first, right: second});
-                        break;
-                    }
-                    case 'and': {
-                        combined = AndExpression.create({left: first, right: second});
-                        break;
-                    }
-                    case 'or': {
-                        combined = OrExpression.create({left: first, right: second});
-                        break;
-                    }
-                    case '<': {
-                        combined = LessThenExpression.create({left: first, right: second});
-                        break;
-                    }
-                    case '>': {
-                        combined = GreaterThenExpression.create({left: first, right: second});
-                        break;
-                    }
-                    case '==': {
-                        combined = EqualsExpression.create({left: first, right: second});
-                        break;
-                    }
-                    default: {
-                        combined = null;
-                    }
+        const actualList = branch.nonSkipChildren.toArray()[0].nonSkipChildren.toArray();
+        let index = 0;
+        let first = this.transformNode(actualList[index++]);
+        while (index < actualList.length) {
+            let operator = this.transformNode(actualList[index++]);
+            let second = this.transformNode(actualList[index++]);
+            let combined: BinaryExpression = null;
+            switch (operator) {
+                case '*': {
+                    combined = MultiplyExpression.create({left: first, right: second});
+                    break;
                 }
-                first = combined;
+                case '/': {
+                    combined = DivideExpression.create({left: first, right: second});
+                    break;
+                }
+                case '+': {
+                    combined = PlusExpression.create({left: first, right: second});
+                    break;
+                }
+                case 'and': {
+                    combined = AndExpression.create({left: first, right: second});
+                    break;
+                }
+                case 'or': {
+                    combined = OrExpression.create({left: first, right: second});
+                    break;
+                }
+                case '<': {
+                    combined = LessThenExpression.create({left: first, right: second});
+                    break;
+                }
+                case '>': {
+                    combined = GreaterThenExpression.create({left: first, right: second});
+                    break;
+                }
+                case '==': {
+                    combined = EqualsExpression.create({left: first, right: second});
+                    break;
+                }
+                default: {
+                    combined = null;
+                }
             }
-            return first;
-        } catch (e) {
-            console.log(`binaryexpression ERROR: ${e.message}`);
+            first = combined;
         }
-        return null;
+        return first;
     }
 
     // LoopVariable = variable;
@@ -392,17 +397,13 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
         // console.log(`executing parameter list`);
         let result: T[] = [];
         for (const child of branch.nonSkipChildren.toArray()) {
-            try {
-                let element: any = this.transformNode(child);
-                if (element) {
-                    if (!separator) {
-                        result.push(element);
-                    } else {
-                        if (element !== separator) result.push(element);
-                    }
+            let element: any = this.transformNode(child);
+            if (element) {
+                if (!separator) {
+                    result.push(element);
+                } else {
+                    if (element !== separator) result.push(element);
                 }
-            } catch (e) {
-                console.log(`list ERROR: ${e}`);
             }
         }
         return result;

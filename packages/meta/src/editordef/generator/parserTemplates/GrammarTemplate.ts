@@ -20,15 +20,12 @@ import { LangUtil, Names } from "../../../utils";
 
 export const referencePostfix = "PiElemRef";
 
-// there is no prettier for pegjs files, therefore we take indentation and other layout matters into account in this template
-// unfortunately, this makes things a little less legible :-(
-
-export class PegjsTemplate {
+export class GrammarTemplate {
     referredClassifiers: PiClassifier[] = [];
     textForListConcepts: string[] = [];
     listNumber: number = 0;
 
-    generatePegjsForUnit(language: PiLanguage, langUnit: PiConcept, editDef: PiEditUnit): string {
+    generateGrammarForUnit(language: PiLanguage, langUnit: PiConcept, editDef: PiEditUnit): string {
         this.referredClassifiers = [];
         this.textForListConcepts = [];
         this.listNumber = 0;
@@ -48,12 +45,11 @@ export class PegjsTemplate {
 // This file contains the input to the AGL parser generator (see https://https://github.com/dhakehurst/net.akehurst.language). 
 // The grammar in this file is read by ....
 
+export const grammarStr = \`
 namespace ${language.name}
 grammar ${language.modelConcept.name} {
         
 ${sortedEditorDefs.map(conceptDef => `${this.makeConceptRule(conceptDef)}`).join("\n")}
-${sortedInterfaces.length > 0 ? `${sortedInterfaces.map(intf => `${this.makeChoiceRule(intf)}`).join("\n")}` : `` }
-${this.referredClassifiers.map(piClassifier => `${this.makeReferenceRule(piClassifier, editDef)}`).join("\n")}
 ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
 
 // white space and comments
@@ -67,6 +63,8 @@ ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
     leaf stringLiteral       = "[^\\"\\\\]*(\\\\.[^\\"\\\\]*)*";
     leaf numberLiteral       = "[0-9]+";
     leaf booleanLiteral      = 'false' | 'true';
+    
+}\`    
 `;
         // end Template
     }
@@ -83,12 +81,13 @@ ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
         const piClassifier: PiConcept = conceptDef.concept.referred;
         if (piClassifier.isModel || piClassifier instanceof PiLimitedConcept) {
             return ``;
-        }
-
-        if (piClassifier.isAbstract) {
-            return this.makeChoiceRule(piClassifier);
         } else if (piClassifier instanceof PiBinaryExpressionConcept) {
-            return this.makeBinaryExpressionRule(conceptDef, piClassifier);
+            // do this before deciding it is a choice rule!!
+            // return this.makeBinaryExpressionRule(conceptDef, piClassifier);
+            return "";
+        } else if (piClassifier.isAbstract) {
+            // return this.makeChoiceRule(piClassifier);
+            return "";
         } else {
             return this.makeOrdinaryRule(conceptDef, piClassifier);
         }
@@ -233,59 +232,6 @@ ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
         return listRuleName;
     }
 
-    private makeReferenceRule(piClassifier: PiClassifier, editDef: PiEditUnit): string {
-        if (piClassifier instanceof PiLimitedConcept) {
-            // see if there is a projection defined
-            const conceptEditor = editDef.findConceptEditor(piClassifier);
-            if (conceptEditor) {
-                // make a rule according to the projection
-                const result = this.makeInstanceReferenceRule(piClassifier, conceptEditor);
-                if (result.length <=0) {
-                    return this.makeNormalReferenceRule(piClassifier);
-                } else {
-                    return result;
-                }
-            } else {
-                return this.makeNormalReferenceRule(piClassifier);
-            }
-        }
-        return this.makeNormalReferenceRule(piClassifier);
-    }
-
-    private makeInstanceReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
-        const myName = Names.classifier(piClassifier);
-        let noResult = false;
-        let result: string = `${myName}${referencePostfix} = `;
-        conceptEditor.projection.lines.forEach((line, index) => {
-            line.items.forEach(item => {
-                if (item instanceof PiEditInstanceProjection) {
-                    result += this.makeInstanceProjection(item, myName);
-                } else if (item instanceof PiEditPropertyProjection) {
-                    // TODO do we allow other projections for limited concepts????
-                    noResult = true;
-                }
-            });
-            if (index < conceptEditor.projection.lines.length -1) {
-                result += "\n\t/ ";
-            }
-        });
-        if (noResult) {
-            return "";
-        } else {
-            return result + "\n";
-        }
-    }
-
-    private makeNormalReferenceRule(piClassifier: PiClassifier) {
-        const myName = Names.classifier(piClassifier);
-        return `${myName}${referencePostfix} = variable\n`;
-    }
-
-    private makeInstanceProjection(item: PiEditInstanceProjection, conceptName: string): string {
-        const instanceName = item.expression.referredElement.name;
-        return `"${item.keyword}" `;
-    }
-
     private makeRuleForList(item: PiEditPropertyProjection, myElem: PiProperty, listRuleName: string) {
         // find the right typeName
         let typeName: string = "";
@@ -394,39 +340,6 @@ ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
         });
     }
 
-    private makeChoiceRule(piClassifier: PiClassifier): string {
-        // for interfaces we create a parse rule that is a choice between all classifiers that either implement or extend the interface
-        // because limited concepts can only be used as reference, these are excluded for this choice
-        // we also need to filter out the interface itself
-        // the same is done for abstract concepts
-        let implementors: PiClassifier[] = [];
-        if (piClassifier instanceof PiInterface) {
-            // TODO should we include a reference to a limited concept in the parse rule for an interface?
-            implementors.push(...piClassifier.allSubInterfacesDirect());
-            implementors.push(...LangUtil.findImplementorsDirect(piClassifier).filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept)));
-        } else if (piClassifier instanceof PiConcept) {
-            implementors = piClassifier.allSubConceptsDirect().filter(piCLassifier => !(piCLassifier instanceof PiLimitedConcept));
-        }
-
-        if (implementors.length > 0 ) {
-            return `${Names.classifier(piClassifier)} = ${implementors.map((implementor, index) =>
-                `${Names.classifier(implementor)} `).join("\n    | ")}\n`;
-        } else {
-            return `${Names.classifier(piClassifier)} = "ERROR: there are no concepts that implement this interface"\n`;
-        }
-    }
-
-    private makeBinaryExpressionRule(conceptDef: PiEditConcept, piClassifier: PiBinaryExpressionConcept) {
-        const left = piClassifier.allProperties().find(prop => prop.name === "left");
-        const right = piClassifier.allProperties().find(prop => prop.name === "right");
-        const leftRule = Names.classifier(left.type.referred);
-        const rightRule = Names.classifier(right.type.referred);
-        const symbol = conceptDef.symbol;
-        const myName = Names.classifier(piClassifier);
-        return `${myName} = "(" ${leftRule} "${symbol}" ${rightRule} ")"
-    `;
-    }
-
     private makeListJoinText(joinText: string): string {
         let result: string = "";
         if (!!joinText) {
@@ -459,4 +372,33 @@ ${this.textForListConcepts.map(listRule => `${listRule}`).join("\n")}
         }
     }
 
+    generateGrammar(languageName: string, unitName: string, generatedParseRules: string[]) {
+        // Template starts here, no prettier for pegjs files, therefore we take indentation into account in this template
+        return `// Generated by the ProjectIt Language Generator.
+
+// This file contains the input to the AGL parser generator (see https://https://github.com/dhakehurst/net.akehurst.language). 
+// The grammar in this file is read by ....
+
+export const ${unitName}GrammarStr = \`
+namespace ${languageName}
+grammar ${unitName} {
+        
+${generatedParseRules.map(ruleText => `${ruleText}`).join(" ;\n\n")} ;
+
+// white space and comments
+    skip WHITE_SPACE = "\\s+" ;
+    skip MULTI_LINE_COMMENT = "/\\*[^*]*\\*+(?:[^*/][^*]*\\*+)*/" ;
+    skip SINGLE_LINE_COMMENT = "//.*?$" ;
+
+// the predefined basic types   
+    leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
+    /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
+    leaf stringLiteral       = "[^\\"\\\\]*(\\\\.[^\\"\\\\]*)*";
+    leaf numberLiteral       = "[0-9]+";
+    leaf booleanLiteral      = 'false' | 'true';
+    
+}\`    
+`;
+        // end Template
+    }
 }

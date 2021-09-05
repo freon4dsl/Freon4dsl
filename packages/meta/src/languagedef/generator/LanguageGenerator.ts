@@ -27,7 +27,7 @@ import {
 } from "./templates";
 import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
 
-const LOGGER = new MetaLogger("LanguageGenerator"); // .mute();
+const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
     protected languageGenFolder: string;

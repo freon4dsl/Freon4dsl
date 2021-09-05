@@ -3,10 +3,11 @@ import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, READER_GEN_FOLDER, WRITER_GEN_FOLDER } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
-import { WriterTemplate, PegjsTemplate, CreatorTemplate, ReaderTemplate } from "./parserTemplates";
+import { WriterTemplate, ReaderTemplate, GrammarTemplate, SyntaxAnalyserTemplate } from "./parserTemplates";
+import { Analyser } from "./parserTemplates/Analyser";
+import { ParserGenerator } from "./parserTemplates/ParserGenerator";
 
-const LOGGER = new MetaLogger("ParserGenerator"); // .mute();
-const peg = require("pegjs");
+const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
 
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
@@ -21,9 +22,8 @@ export class ReaderWriterGenerator {
         LOGGER.log("Generating parser and unparser in folder " + this.writerGenFolder + " for language " + this.language?.name);
 
         const unparserTemplate = new WriterTemplate();
-        const pegjsTemplate = new PegjsTemplate();
-        const parserTemplate = new ReaderTemplate();
-        const creatorTemplate = new CreatorTemplate();
+        const readerTemplate = new ReaderTemplate();
+        const parserGenerator: ParserGenerator = new ParserGenerator();
 
         // Prepare folders
         Helpers.createDirIfNotExisting(this.writerGenFolder);
@@ -35,41 +35,43 @@ export class ReaderWriterGenerator {
         const relativePath = "../../";
 
         //  Generate it
-        LOGGER.log(`Generating language writer: ${this.writerGenFolder}/${Names.writer(this.language)}.ts`);
-        const unparserFile = Helpers.pretty(unparserTemplate.generateUnparser(this.language, editDef, relativePath), "Writer Class", generationStatus);
-        fs.writeFileSync(`${this.writerGenFolder}/${Names.writer(this.language)}.ts`, unparserFile);
+        let generatedFilePath = `${this.writerGenFolder}/${Names.writer(this.language)}.ts`;
+        let generatedContent  = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
+        let generationMessage = `language writer`;
+        this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
 
-        LOGGER.log(`Generating unit parsers creator part: ${this.readerGenFolder}/${Names.parserCreator(this.language)}.ts`);
-        const creatorFile = Helpers.pretty(creatorTemplate.generateCreatorPart(this.language, editDef, relativePath), "Creator Functions", generationStatus);
-        fs.writeFileSync(`${this.readerGenFolder}/${Names.parserCreator(this.language)}.ts`, creatorFile);
-
-        let noJsParser: boolean = false;
+        let noCorrectGrammar: boolean = false;
         this.language.units.forEach(unit => {
-            LOGGER.log(`Generating unit parser (pegjs input): ${this.readerGenFolder}/${Names.pegjs(unit)}.pegjs`);
-            const pegjsFile = pegjsTemplate.generatePegjsForUnit(this.language, unit, editDef);
-            fs.writeFileSync(`${this.readerGenFolder}/${Names.pegjs(unit)}.pegjs`, pegjsFile);
-
             try {
-                LOGGER.log(`Generating unit parser (pegjs output): ${this.readerGenFolder}/${Names.pegjs(unit)}.js`);
-                const pegjsParser = peg.generate(pegjsFile, { output: "source", format: "commonjs" });
-                fs.writeFileSync(`${this.readerGenFolder}/${Names.pegjs(unit)}.js`, pegjsParser);
+                parserGenerator.generateParserForUnit(this.language, unit, editDef);
+
+                generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
+                generatedContent  = parserGenerator.getGrammarContent();
+                generationMessage = `agl grammar for unit`;
+                this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+
+                generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(unit)}.ts`;
+                generatedContent  = parserGenerator.getSyntaxAnalyserContent(relativePath);
+                generationMessage = `syntax analyser for unit`;
+                this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+                // TODO test the generated grammar, if not ok create stub
             } catch (e) {
                 generationStatus.numberOfErrors += 1;
-                noJsParser = true;
+                noCorrectGrammar = true;
 
                 // we remove the last dot of the error message, because the message is contained in another sentence
-                LOGGER.error(this, `Error in call to pegjs: '${e.message.replace(/\.$/, '')}' [line: ${e.location?.start.line}, column: ${e.location?.start.column}] in file '${Names.pegjs(unit)}'.`);
+                LOGGER.error(this, `Error in creating parser for ${unit.name}: '${e.message.replace(/\.$/, '')}' [line: ${e.location?.start.line}, column: ${e.location?.start.column}]'.`);
             }
         });
 
-        if (!noJsParser) {
+        if (!noCorrectGrammar) {
             LOGGER.log(`Generating language reader: ${this.readerGenFolder}/${Names.reader(this.language)}.ts`);
-            const parserFile = Helpers.pretty(parserTemplate.generateParser(this.language, editDef, relativePath), "Reader Class", generationStatus);
-            fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, parserFile);
+            const readerFile = Helpers.pretty(readerTemplate.generateReader(this.language, editDef, relativePath), "Reader Class", generationStatus);
+            fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, readerFile);
         } else {
             LOGGER.log(`Generating STUB for language reader: ${this.readerGenFolder}/${Names.reader(this.language)}.ts`);
-            const parserFile = Helpers.pretty(parserTemplate.generateStub(this.language, editDef, relativePath), "Reader Class", generationStatus);
-            fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, parserFile);
+            const readerFile = Helpers.pretty(readerTemplate.generateStub(this.language, editDef, relativePath), "Reader Class", generationStatus);
+            fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, readerFile);
         }
 
         if (generationStatus.numberOfErrors > 0) {
@@ -77,5 +79,11 @@ export class ReaderWriterGenerator {
         } else {
             LOGGER.info(this, `Succesfully generated reader and writer.`);
         }
+    }
+
+    private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
+        LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`);
+        generatedContent = Helpers.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
+        fs.writeFileSync(`${generatedFilePath}`, generatedContent);
     }
 }

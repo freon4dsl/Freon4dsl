@@ -18,7 +18,7 @@ import {
 } from "../../metalanguage";
 import { LangUtil, Names } from "../../../utils";
 
-export const referencePostfix = "PiElemRef";
+export const referencePostfix2 = "PiElemRef";
 
 // there is no prettier for pegjs files, therefore we take indentation and other layout matters into account in this template
 // unfortunately, this makes things a little less legible :-(
@@ -235,7 +235,7 @@ HEXDIG = [0-9a-f]
                 } else {
                     const subName = variableName + "ListElem";
                     if (!myElem.isPart) {
-                        listRuleName += referencePostfix;
+                        listRuleName += referencePostfix2;
                         if (!this.referredClassifiers.includes(myElem.type.referred)) {
                             this.referredClassifiers.push(myElem.type.referred);
                         }
@@ -259,7 +259,7 @@ HEXDIG = [0-9a-f]
                         if (!this.referredClassifiers.includes(myElem.type.referred)) {
                             this.referredClassifiers.push(myElem.type.referred);
                         }
-                        return `${variableName}:${typeName}${referencePostfix}`;
+                        return `${variableName}:${typeName}${referencePostfix2}`;
                     }
                 }
             }
@@ -308,7 +308,7 @@ HEXDIG = [0-9a-f]
     private makeInstanceReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
         const myName = Names.classifier(piClassifier);
         let noResult = false;
-        let result: string = `${myName}${referencePostfix} = `;
+        let result: string = `${myName}${referencePostfix2} = `;
         conceptEditor.projection.lines.forEach((line, index) => {
             line.items.forEach(item => {
                 if (item instanceof PiEditInstanceProjection) {
@@ -331,13 +331,13 @@ HEXDIG = [0-9a-f]
 
     private makeNormalReferenceRule(piClassifier: PiClassifier) {
         const myName = Names.classifier(piClassifier);
-        return `${myName}${referencePostfix} = name:variable
-    { return creator.create${myName}${referencePostfix}({name: name}); }\n`;
+        return `${myName}${referencePostfix2} = name:variable
+    { return creator.create${myName}${referencePostfix2}({name: name}); }\n`;
     }
 
     private makeInstanceProjection(item: PiEditInstanceProjection, conceptName: string): string {
         const instanceName = item.expression.referredElement.name;
-        return `"${item.keyword}" { return creator.create${conceptName}${referencePostfix}({name: "${instanceName}"});}`;
+        return `"${item.keyword}" { return creator.create${conceptName}${referencePostfix2}({name: "${instanceName}"});}`;
     }
 
     private makeRuleForList(item: PiEditPropertyProjection, myElem: PiProperty, listRuleName: string) {
@@ -348,7 +348,7 @@ HEXDIG = [0-9a-f]
         } else {
             typeName = Names.classifier(myElem.type.referred);
             if (!myElem.isPart) { // it is a reference, so use the rule for creating a PiElementReference
-                typeName += referencePostfix;
+                typeName += referencePostfix2;
                 if (!this.referredClassifiers.includes(myElem.type.referred)) {
                     this.referredClassifiers.push(myElem.type.referred);
                 }

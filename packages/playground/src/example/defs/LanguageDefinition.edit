@@ -59,6 +59,10 @@ SumExpression {
     @trigger "sum"
 }
 
+GroupedExpression {
+    @projection [( ${self.inner} )]
+}
+
 LoopVariableRef {
     @projection [ ${self.variable} ]
 }

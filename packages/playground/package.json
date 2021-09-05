@@ -13,7 +13,7 @@
     "install-local": "yarn install --registry http://localhost:4873",
     "clean": "rm src/example/*/*/*.js && rm src/example/*/*/*.js.map",
     "clean-gen": "rm src/*/*/gen/*",
-    "example": 	    "bash ../../scripts/projectit-dev.sh all -d src/example/defs -o src/example",
+    "example": 	    "bash ../../scripts/projectit-dev.sh -v all -d src/example/defs -o src/example",
     "calculator":   "bash ../../scripts/projectit-dev.sh all -d src/calculator/defs -o src/calculator",
     "expressions":  "bash ../../scripts/projectit-dev.sh all -d src/mps-expressions/defs -o src/mps-expressions",
     "heating":      "bash ../../scripts/projectit-dev.sh all -d src/heating/defs -o src/heating",
