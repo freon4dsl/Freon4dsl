@@ -56,7 +56,7 @@ export class ReaderWriterGenerator {
                 // strip generated content
                 generatedContent = generatedContent.replace("export const", "// export const " );
                 generatedContent = generatedContent.replace("}\`; // end of grammar", "}" );
-                const testParser = Agl.processorFromString(generatedContent, null, null, null);
+                // const testParser = Agl.processorFromString(generatedContent, null, null, null);
                 // if all went well, we can conclude that the grammar for this unit is correct
                 correctUnits.push(unit);
             } catch (e) {

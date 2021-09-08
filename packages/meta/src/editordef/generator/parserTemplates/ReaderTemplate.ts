@@ -52,13 +52,18 @@ export class ReaderTemplate {
                 // parse the input
                 let model: ${Names.modelunit(language)} = null;
                 if (parser) {
-                    // NOTE: the following might throw a syntax or analysis error
-                    let sppt = parser.parse(sentence);
-                    console.log( "PARSETREE: " + sppt);
-                    let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
-                    // TODO return the asm that is created
-                    // reset parser
-                    parser = null;
+                    try {
+                        // NOTE: the following might throw a syntax or analysis error
+                        let sppt = parser.parse(sentence);
+                        console.log( "PARSETREE: " + sppt);
+                        let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                        // TODO return the asm that is created
+                        // reset parser
+                        parser = null;
+                    } catch (e) {
+                        let mess = e.message.replace("Could not match goal,", "Error");
+                        throw new Error(mess);
+                    }
                 } else {
                     throw new Error(\`No parser for \${metatype} available: grammar incorrect.\`);
                 }

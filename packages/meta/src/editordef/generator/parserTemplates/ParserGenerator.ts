@@ -614,7 +614,7 @@ export class ParserGenerator {
         ];
 
         regexSpecialCharacters.forEach(rgxSpecChar =>
-            input = input.replace(new RegExp("\\" + rgxSpecChar,"gm"), "\\" +
+            input = input.replace(new RegExp("\\" + rgxSpecChar,"gm"), "\\\\" +
                 rgxSpecChar));
         return input;
     }
