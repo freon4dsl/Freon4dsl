@@ -9,7 +9,6 @@ export class ReaderTemplate {
      * to handle every modelunit in the language.
      */
     public generateReader(language: PiLanguage, editDef: PiEditUnit, correctUnits: PiConcept[], relativePath: string): string {
-        // TODO adjust Names class and use it here
 
         // Template starts here
         return `
@@ -21,7 +20,7 @@ export class ReaderTemplate {
         import { ${Names.modelunit(language)}, ModelUnitMetaType } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         ${correctUnits.map(unit =>
         `import { ${Names.grammarStr(unit)} } from "./${Names.grammar(unit)}";
-        import { ${Names.syntaxAnalyser(unit)} } from "../${Names.syntaxAnalyser(unit)}";`).join("\n")
+        import { ${Names.syntaxAnalyser(unit)} } from "./${Names.syntaxAnalyser(unit)}";`).join("\n")
         }
         
         /**
@@ -55,15 +54,23 @@ export class ReaderTemplate {
                     try {
                         // NOTE: the following might throw a syntax or analysis error
                         let sppt = parser.parse(sentence);
-                        console.log( "PARSETREE: " + sppt);
-                        let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
-                        // TODO return the asm that is created
-                        // reset parser
-                        parser = null;
+                        //console.log("PARSETREE CORRECT!!!! ");
                     } catch (e) {
-                        let mess = e.message.replace("Could not match goal,", "Error");
+                        // strip the error message, otherwise it's too long for the webapp 
+                        let mess = e.message.replace("Could not match goal,", "Parse error");
                         throw new Error(mess);
                     }
+                    try {
+                        let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                        console.log("SYNTAX ANALYSIS CORRECT!!!! ");
+                        console.log(asm);
+                        // TODO return the asm that is created
+                    } catch (e) {
+                        console.log(e.message);
+                        throw e;
+                    }  
+                    // reset parser
+                    parser = null;                     
                 } else {
                     throw new Error(\`No parser for \${metatype} available: grammar incorrect.\`);
                 }

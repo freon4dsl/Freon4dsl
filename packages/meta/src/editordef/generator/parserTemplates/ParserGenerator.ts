@@ -36,6 +36,7 @@ export class ParserGenerator {
     private imports: PiClassifier[] = [];
     private currentIndex = 0;
     private specialBinaryRuleName = `__pi_binary_expression`;
+    private separatorToProp: Map<PiProperty, string> = new Map<PiProperty, string>();
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
         // reset all attributes that are global to this class
@@ -63,7 +64,7 @@ export class ParserGenerator {
     getSyntaxAnalyserContent(relativePath: string) : string {
         const analyserTemplate: SyntaxAnalyserTemplate = new SyntaxAnalyserTemplate();
         const imports: string[] = this.imports.map(concept => Names.classifier(concept));
-        return analyserTemplate.generateSyntaxAnalyser(this.language, this.branchNames, imports, this.generatedSyntaxAnalyserMethods, relativePath);
+        return analyserTemplate.generateSyntaxAnalyser(this.unit, this.branchNames, imports, this.generatedSyntaxAnalyserMethods, relativePath);
     }
 
     private reset() {
@@ -168,6 +169,7 @@ export class ParserGenerator {
          * @private
          */
         private transform${branchName}(branch: SPPTBranch) : ${Names.concept(expressionBase)} {
+            console.log("transform${branchName} called");
             const children = branch.nonSkipChildren.toArray();
             const actualList = children[0].nonSkipChildren.toArray();
             let index = 0;
@@ -289,6 +291,7 @@ export class ParserGenerator {
              * @private
              */
             private transform${branchName}(branch: SPPTBranch) : ${Names.classifier(piClassifier)} {
+                console.log("transform${branchName} called");
                 return this.transformNode(branch.nonSkipChildren.toArray()[0]);
             }`);
         }
@@ -354,7 +357,8 @@ export class ParserGenerator {
                 let propTypeName = (prop instanceof PiPrimitiveProperty)
                     ? `${prop.primType}`
                     : `${Names.classifier(propType)}`;
-                let innerText: string = "";
+                let innerText: string = ""; // holds name of correct transform... method
+                let separatorText: string = ""; // adds separator to call to transformList
                 if (!prop.isList && prop.isPart) {          // (non-list, part)
                     innerText = `this.transformNode`;
                 } else if (!prop.isList && !prop.isPart) {  // (non-list, reference)
@@ -362,6 +366,10 @@ export class ParserGenerator {
                     propTypeName = `${Names.PiElementReference}<${propTypeName}>`;
                 } else if (prop.isList && prop.isPart) {   // (list, part)
                     innerText = `this.transformList<${propTypeName}>`;
+                    let tmptext = this.separatorToProp.get(prop);
+                    if (tmptext.length > 0) {
+                        separatorText = `, "${tmptext}"`;
+                    }
                     propTypeName = `${propTypeName}[]`;
                 } else if (prop.isList && !prop.isPart) {    // (list, reference)
                     innerText = `this.transformList<${Names.PiElementReference}<${propTypeName}>>`;
@@ -377,7 +385,7 @@ export class ParserGenerator {
                             ${prop.name} = ${innerText}(${prop.name}Node.nonSkipChildren.toArray()[0]);
                         }`);
                 } else {
-                    propStatements.push(`const ${prop.name}: ${propTypeName} = ${innerText}(children[${indexToName.get(prop.name)}]);`);
+                    propStatements.push(`const ${prop.name}: ${propTypeName} = ${innerText}(children[${indexToName.get(prop.name)}]${separatorText});`);
                 }
             }
 
@@ -390,6 +398,7 @@ export class ParserGenerator {
              * @private
              */
             private transform${branchName} (branch: SPPTBranch) : ${branchName} {
+                console.log("transform${branchName} called");
                 const children = branch.nonSkipChildren.toArray();               
                 ${propStatements.map(stat => `${stat}`).join("\n")}      
                 return ${Names.concept(piClassifier)}.create({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
@@ -482,6 +491,7 @@ export class ParserGenerator {
                 * @private
                 */
                 private transform${ruleName}(branch: SPPTBranch): ${propType} {
+                    console.log("transform${ruleName} called");
                     // An optional branch is a List with 0 or 1 element, so you always have the list node in between.
                     return this.transformNode(branch.nonSkipChildren.toArray()[${propIndex-1}]);
                 }`);
@@ -500,6 +510,7 @@ export class ParserGenerator {
             if (myElem.isList) {
                 let propEntry: string = "";
                 let joinText = this.makeListJoinText(item.listJoin?.joinText);
+                this.separatorToProp.set(myElem, joinText);
 
                 // joinText can be (1) separator, (2) terminator, or (3) empty
                 if (joinText.length == 0) {

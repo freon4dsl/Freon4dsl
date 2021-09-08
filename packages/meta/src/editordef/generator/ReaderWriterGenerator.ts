@@ -7,6 +7,7 @@ import { WriterTemplate, ReaderTemplate } from "./parserTemplates";
 import { ParserGenerator } from "./parserTemplates/ParserGenerator";
 import { net } from "net.akehurst.language-agl-processor";
 import Agl = net.akehurst.language.agl.processor.Agl;
+import * as console from "console";
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
 
@@ -51,12 +52,13 @@ export class ReaderWriterGenerator {
             generatedContent  = parserGenerator.getGrammarContent();
             generationMessage = `agl grammar for unit`;
             this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
-            // test the generated grammar, if not ok error will be thrown, then add this unit to the list of incorrect units
+            // test the generated grammar, if not ok error will be thrown, otherwise add this unit to the list of correct units
             try {
-                // strip generated content
+                // strip generated content of stuff around the grammar
                 generatedContent = generatedContent.replace("export const", "// export const " );
                 generatedContent = generatedContent.replace("}\`; // end of grammar", "}" );
-                // const testParser = Agl.processorFromString(generatedContent, null, null, null);
+                generatedContent = generatedContent.replace(new RegExp("\\\\\\\\", "gm"), "\\" );
+                const testParser = Agl.processorFromString(generatedContent, null, null, null);
                 // if all went well, we can conclude that the grammar for this unit is correct
                 correctUnits.push(unit);
             } catch (e) {
