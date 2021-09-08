@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../../languagedef/metalanguage";
+import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, READER_GEN_FOLDER } from "../../../utils";
 
@@ -8,40 +8,45 @@ export class ReaderTemplate {
      * Returns a string representation of a generic parser for 'language'. This parser is able
      * to handle every modelunit in the language.
      */
-    public generateReader(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
-        const unitNames = language.units.map(unit => Names.concept(unit));
-
+    public generateReader(language: PiLanguage, editDef: PiEditUnit, correctUnits: PiConcept[], relativePath: string): string {
         // TODO adjust Names class and use it here
 
         // Template starts here
         return `
         import { ${Names.PiReader} } from "${PROJECTITCORE}";
-        import {net} from "net.akehurst.language-agl-processor";
+        import { net } from "net.akehurst.language-agl-processor";
         import LanguageProcessor = net.akehurst.language.api.processor.LanguageProcessor;
         import Agl = net.akehurst.language.agl.processor.Agl;
         import AutomatonKind_api = net.akehurst.language.api.processor.AutomatonKind_api;
         import { ${Names.modelunit(language)}, ModelUnitMetaType } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        ${language.units.map(unit =>
+        ${correctUnits.map(unit =>
         `import { ${Names.grammarStr(unit)} } from "./${Names.grammar(unit)}";
-        import { ${Names.concept(unit)}SyntaxAnalyser } from "../${Names.concept(unit)}SyntaxAnalyser";`).join("\n")
+        import { ${Names.syntaxAnalyser(unit)} } from "../${Names.syntaxAnalyser(unit)}";`).join("\n")
         }
         
         /**
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of
-        *   modelunits. It reads a file from disk, calls the javascript parser, and
-        *   shows any syntax errors on the console.
-        *   Note that property 'parser' should be set, before calling the method 'parse'.
+        *   modelunits. 
         */
         export class ${Names.reader(language)} implements ${Names.PiReader} {
-        ${language.units.map(unit =>
-            `${Names.concept(unit)}parser = Agl.processorFromString(${Names.grammarStr(unit)}, new ${Names.concept(unit)}SyntaxAnalyser(), null, null);`).join("\n")}
+        ${language.units.map(unit => `${correctUnits.includes(unit) 
+            ? `${Names.parser(unit)} = Agl.processorFromString(${Names.grammarStr(unit)}, new ${Names.syntaxAnalyser(unit)}(), null, null);`
+            : `${Names.parser(unit)} = null; // there are errors in the grammar in file '${Names.grammar(unit)}'`}`            
+            ).join("\n")}
 
+            /**
+             * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
+             * for 'metatype', if available. If 'sentence' is correct, a model unit will be created, 
+             * otherwise an error wil be thrown containing the parse or analysis error.
+             * @param sentence
+             * @param metatype
+             */
             readFromString(sentence: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
                 let parser: LanguageProcessor = null;
                 // choose the correct parser                
                 ${language.units.map(unit =>
                     `if (metatype === "${Names.concept(unit)}") {
-                        parser  = this.${Names.concept(unit)}parser;
+                        parser  = this.${Names.parser(unit)};
                     }`).join("\n")}
                     
                 // parse the input
@@ -49,13 +54,13 @@ export class ReaderTemplate {
                 if (parser) {
                     // NOTE: the following might throw a syntax or analysis error
                     let sppt = parser.parse(sentence);
-                    console.log(sppt);
+                    console.log( "PARSETREE: " + sppt);
                     let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
                     // TODO return the asm that is created
                     // reset parser
                     parser = null;
                 } else {
-                    throw new Error(\`Not able to read \${metatype}, no parser for this metatype available.\`);
+                    throw new Error(\`No parser for \${metatype} available: grammar incorrect.\`);
                 }
                 return model;        
             }
@@ -63,30 +68,13 @@ export class ReaderTemplate {
         `;
         // end Template
     }
-
-    generateStub(language: PiLanguage, editDef: PiEditUnit, relativePath: string) {
-        const unitNames = language.units.map(unit => Names.concept(unit));
-
-        // Template starts here
-        return `
-        import { ${Names.PiReader} } from "${PROJECTITCORE}";
-        import { ${Names.modelunit(language)}, ModelUnitMetaType, ${unitNames.map(name => `${name}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";   
-                    
-        /**
-        *   Class ${Names.reader(language)} is a STUB!!!
-        *
-        *   It should be a wrapper for the various parsers of modelunits,
-        *   but the parsers could not be created.
-        */
-        export class ${Names.reader(language)} implements ${Names.PiReader} {
-        
-            readFromString(input: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
-                throw new Error(\`Not able to read \${metatype}, no parser(s) available.\`);
-                return null;
-            }       
-                 
-        }
-        `;
-        // end Template
-    }
 }
+
+// to be added later:
+// if ( this.${Names.parser(unit)} == null ) {
+//     try {
+//         this.${Names.parser(unit)} = Agl.processorFromString(${Names.grammarStr(unit)}, new ${Names.syntaxAnalyser(unit)}(), null, null);
+//     } catch (e) {
+//         throw new Error(\`No parser for \${metatype} available:\\n\${e.message}.\`);
+//                             }
+//                         }

@@ -16,7 +16,7 @@ import {
     PiEditUnit
 } from "../../metalanguage";
 // import { findEditorDefsForUnit, findTypeNameForProperty } from "./ParserAnalyser";
-import { optionalRulePrefix } from "./ParserAnalyser";
+import { optionalRulePrefix } from "./ParserGenerator";
 
 export class SyntaxAnalyserTemplate {
     binaryExpressions: PiBinaryExpressionConcept[] = [];
@@ -52,7 +52,7 @@ export class SyntaxAnalyserTemplate {
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { PiElementReference, ${imports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";    
+        import { ${Names.PiElementReference}, ${imports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";    
         import {${Names.PiNamedElement}} from "@projectit/core";
         
         /**

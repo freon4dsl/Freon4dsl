@@ -209,7 +209,7 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static pegjs(unit: PiConcept): string {
+    public static parser(unit: PiConcept): string {
         return this.startWithUpperCase(unit?.name) + "Parser";
     }
 
@@ -229,8 +229,14 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
 
+    // the following two are old, and can be removed as soon as the pegjs parsers
+    // are definitely replaced
     public static parserCreator(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "CreatorPartOfParser";
+    }
+
+    public static pegjs(unit: PiConcept): string {
+        return this.startWithUpperCase(unit?.name) + "Parser";
     }
 
 }

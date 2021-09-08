@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
-import { PiLanguage } from "../../languagedef/metalanguage";
+import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, Names, READER_GEN_FOLDER, WRITER_GEN_FOLDER } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
-import { WriterTemplate, ReaderTemplate, GrammarTemplate, SyntaxAnalyserTemplate } from "./parserTemplates";
-import { Analyser } from "./parserTemplates/Analyser";
+import { WriterTemplate, ReaderTemplate } from "./parserTemplates";
 import { ParserGenerator } from "./parserTemplates/ParserGenerator";
+import { net } from "net.akehurst.language-agl-processor";
+import Agl = net.akehurst.language.agl.processor.Agl;
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
 
@@ -23,7 +24,8 @@ export class ReaderWriterGenerator {
 
         const unparserTemplate = new WriterTemplate();
         const readerTemplate = new ReaderTemplate();
-        const parserGenerator: ParserGenerator = new ParserGenerator();
+        const parserGenerator = new ParserGenerator();
+        let correctUnits: PiConcept[] = [];
 
         // Prepare folders
         Helpers.createDirIfNotExisting(this.writerGenFolder);
@@ -42,37 +44,35 @@ export class ReaderWriterGenerator {
 
         let noCorrectGrammar: boolean = false;
         this.language.units.forEach(unit => {
+            // analyse the unit an dgenerate the grammar and analyser together
+            parserGenerator.generateParserForUnit(this.language, unit, editDef);
+            // get the grammar and write it to file
+            generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
+            generatedContent  = parserGenerator.getGrammarContent();
+            generationMessage = `agl grammar for unit`;
+            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+            // test the generated grammar, if not ok error will be thrown, then add this unit to the list of incorrect units
             try {
-                parserGenerator.generateParserForUnit(this.language, unit, editDef);
-
-                generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
-                generatedContent  = parserGenerator.getGrammarContent();
-                generationMessage = `agl grammar for unit`;
-                this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
-
-                generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(unit)}.ts`;
-                generatedContent  = parserGenerator.getSyntaxAnalyserContent(relativePath);
-                generationMessage = `syntax analyser for unit`;
-                this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
-                // TODO test the generated grammar, if not ok create stub
+                // strip generated content
+                generatedContent = generatedContent.replace("export const", "// export const " );
+                generatedContent = generatedContent.replace("}\`; // end of grammar", "}" );
+                const testParser = Agl.processorFromString(generatedContent, null, null, null);
+                // if all went well, we can conclude that the grammar for this unit is correct
+                correctUnits.push(unit);
             } catch (e) {
                 generationStatus.numberOfErrors += 1;
-                noCorrectGrammar = true;
-
-                // we remove the last dot of the error message, because the message is contained in another sentence
-                LOGGER.error(this, `Error in creating parser for ${unit.name}: '${e.message.replace(/\.$/, '')}' [line: ${e.location?.start.line}, column: ${e.location?.start.column}]'.`);
+                LOGGER.error(this, `Error in creating parser for ${unit.name}: '${e.message}`);
             }
+            // get the analyser and write it to file
+            generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(unit)}.ts`;
+            generatedContent  = parserGenerator.getSyntaxAnalyserContent(relativePath);
+            generationMessage = `syntax analyser for unit`;
+            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
         });
 
-        if (!noCorrectGrammar) {
-            LOGGER.log(`Generating language reader: ${this.readerGenFolder}/${Names.reader(this.language)}.ts`);
-            const readerFile = Helpers.pretty(readerTemplate.generateReader(this.language, editDef, relativePath), "Reader Class", generationStatus);
-            fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, readerFile);
-        } else {
-            LOGGER.log(`Generating STUB for language reader: ${this.readerGenFolder}/${Names.reader(this.language)}.ts`);
-            const readerFile = Helpers.pretty(readerTemplate.generateStub(this.language, editDef, relativePath), "Reader Class", generationStatus);
-            fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, readerFile);
-        }
+        LOGGER.log(`Generating language reader: ${this.readerGenFolder}/${Names.reader(this.language)}.ts`);
+        const readerFile = Helpers.pretty(readerTemplate.generateReader(this.language, editDef, correctUnits, relativePath), "Reader Class", generationStatus);
+        fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, readerFile);
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(this, `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
