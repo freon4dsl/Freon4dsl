@@ -71,10 +71,13 @@ IfExpression    {
 AttributeRef   {
     infertype self.attribute.declaredType;
 }
-
 SumExpression {
     infertype AttributeType:Integer;
 }
+GroupedExpression {
+    infertype self.inner;
+}
+// TODO add LoopVariableRef
 /*
 
 */

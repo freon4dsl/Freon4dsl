@@ -18,6 +18,7 @@ import {
 } from "../../metalanguage";
 
 export class WriterTemplate {
+    // TODO unparse limited concepts differently, instead of 'AttributeType Integer' just 'Integer'
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of

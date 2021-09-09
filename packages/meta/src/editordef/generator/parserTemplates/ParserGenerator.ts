@@ -29,7 +29,7 @@ export class ParserGenerator {
     private binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
     private interfacesAndAbstractsUsed: PiClassifier[] = [];
     private typesReferred: PiClassifier[] = [];
-    private limitedsReferred: PiLimitedConcept[] = [];
+    // private limitedsReferred: PiLimitedConcept[] = [];
     private generatedParseRules: string[] = [];
     private generatedSyntaxAnalyserMethods: string[] = [];
     private branchNames: string[] = [];
@@ -53,7 +53,6 @@ export class ParserGenerator {
         this.generateReferences(editUnit);
         // do the binary expressions
         this.generateBinaryExpressions(language, editUnit);
-        // TODO do the limited concepts
     }
 
     getGrammarContent() : string {
@@ -74,7 +73,6 @@ export class ParserGenerator {
         this.binaryConceptsUsed = [];
         this.interfacesAndAbstractsUsed = [];
         this.typesReferred = [];
-        this.limitedsReferred = [];
         this.generatedParseRules = [];
         this.generatedSyntaxAnalyserMethods = [];
         this.branchNames = [];
@@ -99,7 +97,7 @@ export class ParserGenerator {
             });
         } else if (piClassifier instanceof PiConcept) {
             if (piClassifier instanceof PiLimitedConcept) {
-                this.limitedsReferred.push(piClassifier);
+                this.typesReferred.push(piClassifier);
             } else if (piClassifier instanceof PiBinaryExpressionConcept) {
                 if (!piClassifier.isAbstract) {
                     this.binaryConceptsUsed.push(piClassifier);
@@ -169,7 +167,7 @@ export class ParserGenerator {
          * @private
          */
         private transform${branchName}(branch: SPPTBranch) : ${Names.concept(expressionBase)} {
-            console.log("transform${branchName} called");
+            // console.log("transform${branchName} called");
             const children = branch.nonSkipChildren.toArray();
             const actualList = children[0].nonSkipChildren.toArray();
             let index = 0;
@@ -241,14 +239,14 @@ export class ParserGenerator {
         }
     }
 
-    // for interfaces we create a parse rule that is a choice between all classifiers that either implement or extend the interface
+    // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
+    // that either implement or extend the concept
     // because limited concepts can only be used as reference, these are excluded for this choice
-    // we also need to filter out the interface itself
-    // the same is done for abstract concepts
     private generateChoiceRules() {
         for (const piClassifier of this.interfacesAndAbstractsUsed) {
             // parse rule(s)
             const branchName = Names.classifier(piClassifier);
+            // find the choices for this rule: all concepts that implement or extend the concept
             let implementors: PiClassifier[] = [];
             if (piClassifier instanceof PiInterface) {
                 implementors.push(...piClassifier.allSubInterfacesDirect());
@@ -256,6 +254,8 @@ export class ParserGenerator {
             } else if (piClassifier instanceof PiConcept) {
                 implementors = piClassifier.allSubConceptsDirect().filter(sub => !(sub instanceof PiLimitedConcept));
             }
+            // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
+            implementors = this.sortImplementors(implementors);
 
             let rule: string = "";
             if (implementors.length > 0) {
@@ -263,7 +263,7 @@ export class ParserGenerator {
                 rule = `${branchName} = ${implementors.map(implementor =>
                     `${Names.classifier(implementor)} `).join("\n    | ")}`;
 
-                // test to see if there is a binary concept here
+                // test to see if there is a binary expression concept here
                 let implementorsNoBinaries = implementors.filter(sub => !(sub instanceof PiBinaryExpressionConcept));
                 if (implementors.length != implementorsNoBinaries.length) {
                     // override the choice rule to exclude binary expression concepts
@@ -271,7 +271,6 @@ export class ParserGenerator {
                         `${Names.classifier(implementor)} `).join("\n    | ")}`;
                     // add the special binary concept rule as choice
                     rule += `\n    | ${this.specialBinaryRuleName}`
-
                 }
                 this.generatedParseRules.push(rule);
             } else {
@@ -291,7 +290,7 @@ export class ParserGenerator {
              * @private
              */
             private transform${branchName}(branch: SPPTBranch) : ${Names.classifier(piClassifier)} {
-                console.log("transform${branchName} called");
+                // console.log("transform${branchName} called");
                 return this.transformNode(branch.nonSkipChildren.toArray()[0]);
             }`);
         }
@@ -352,6 +351,7 @@ export class ParserGenerator {
             // different statements needed for (1) optional, (2) list, (3) reference props
             // thus we have 8 possibilities
             for (const prop of propsToSet) {
+                // TODO sort this out => too messy
                 const propType = prop.type.referred; // more efficient to determine 'referred' only once
                 this.addToImports(propType);
                 let propTypeName = (prop instanceof PiPrimitiveProperty)
@@ -359,10 +359,12 @@ export class ParserGenerator {
                     : `${Names.classifier(propType)}`;
                 let innerText: string = ""; // holds name of correct transform... method
                 let separatorText: string = ""; // adds separator to call to transformList
+                let extraParam: string = ""; // extra parameter to call to piElemRef to set the correct Type
                 if (!prop.isList && prop.isPart) {          // (non-list, part)
                     innerText = `this.transformNode`;
                 } else if (!prop.isList && !prop.isPart) {  // (non-list, reference)
                     innerText = `this.piElemRef<${Names.classifier(propType)}>`;
+                    extraParam = `, "${Names.classifier(propType)}"`;
                     propTypeName = `${Names.PiElementReference}<${propTypeName}>`;
                 } else if (prop.isList && prop.isPart) {   // (list, part)
                     innerText = `this.transformList<${propTypeName}>`;
@@ -382,10 +384,10 @@ export class ParserGenerator {
                         let ${prop.name} = null;
                         if (!${prop.name}Node.isEmptyMatch) {
                             // transform the first element in the [0..1] optional collection
-                            ${prop.name} = ${innerText}(${prop.name}Node.nonSkipChildren.toArray()[0]);
+                            ${prop.name} = ${innerText}(${prop.name}Node.nonSkipChildren.toArray()[0]${extraParam});
                         }`);
                 } else {
-                    propStatements.push(`const ${prop.name}: ${propTypeName} = ${innerText}(children[${indexToName.get(prop.name)}]${separatorText});`);
+                    propStatements.push(`const ${prop.name}: ${propTypeName} = ${innerText}(children[${indexToName.get(prop.name)}]${separatorText}${extraParam});`);
                 }
             }
 
@@ -398,7 +400,7 @@ export class ParserGenerator {
              * @private
              */
             private transform${branchName} (branch: SPPTBranch) : ${branchName} {
-                console.log("transform${branchName} called");
+                // console.log("transform${branchName} called");
                 const children = branch.nonSkipChildren.toArray();               
                 ${propStatements.map(stat => `${stat}`).join("\n")}      
                 return ${Names.concept(piClassifier)}.create({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
@@ -491,7 +493,7 @@ export class ParserGenerator {
                 * @private
                 */
                 private transform${ruleName}(branch: SPPTBranch): ${propType} {
-                    console.log("transform${ruleName} called");
+                    // console.log("transform${ruleName} called");
                     // An optional branch is a List with 0 or 1 element, so you always have the list node in between.
                     return this.transformNode(branch.nonSkipChildren.toArray()[${propIndex-1}]);
                 }`);
@@ -628,5 +630,27 @@ export class ParserGenerator {
             input = input.replace(new RegExp("\\" + rgxSpecChar,"gm"), "\\\\" +
                 rgxSpecChar));
         return input;
+    }
+
+    /**
+     * returns the list of classifiers with all classifiers that have primitive properties
+     * as last
+     * @param implementors
+     * @private
+     */
+    private sortImplementors(implementors: PiClassifier[]): PiClassifier[] {
+        // TODO should be done recursively!!!
+        let result: PiClassifier[] = [];
+        let withPrims: PiClassifier[] = [];
+        for (const concept of implementors) {
+            if (concept.primProperties.length > 0 ) {
+                // there are primitive props, move this implementor to the end
+                withPrims.push(concept);
+            } else {
+                result.push(concept);
+            }
+        }
+        result.push(...withPrims);
+        return result;
     }
 }

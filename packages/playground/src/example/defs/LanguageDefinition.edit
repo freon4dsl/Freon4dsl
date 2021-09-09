@@ -24,7 +24,7 @@ ExModel {
                 @vertical
                 @terminator [\n]
             }
-        model wide  Methods:
+        model wide Methods:
             ${self.methods @vertical @separator [\n] }
         }
         ]

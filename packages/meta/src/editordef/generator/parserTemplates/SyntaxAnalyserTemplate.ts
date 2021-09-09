@@ -40,26 +40,44 @@ export class SyntaxAnalyserTemplate {
             private transformNode(node: SPPTNode): any {
                 try {
                     if (node.isLeaf) {
-                        return (node as SPPTLeaf).matchedText;
+                        return this.transformLeaf(node);
                     } else if (node.isBranch) {
                         return this.transformBranch(node as SPPTBranch);
                     }
                 } catch (e) {
-                    if (e.message.startsWith("Syntax error in ")) {
+                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${Names.syntaxAnalyser(langUnit)}")) {
                         throw e;
                     } else {
-                        throw new Error(\`Syntax error in "\${node.matchedText}": \${e}\`);
+                        // add more info to the error message 
+                        throw new Error(\`Syntax error in "\${node.matchedText}": \${e.message}\`);
                     }
                 }
             }
             
+            private transformLeaf(node: SPPTNode): any {
+                let tmp = (node as SPPTLeaf).matchedText;
+                if (tmp.startsWith("\\"")) { // stringLiteral
+                    // it is a stringLiteral, we should strip the surrounding quotes
+                    tmp = tmp.slice(1, tmp.length - 1);
+                    return tmp;
+                } else if (tmp == "true") { // booleanLiteral
+                    return true;
+                } else if (tmp == "false") { // booleanLiteral
+                    return false;
+                } else if (Number.isInteger(parseInt(tmp))) { // numberLiteral
+                    return parseInt(tmp);
+                } else { // identifier
+                    return tmp;
+                }
+            }      
+          
             private transformBranch(branch: SPPTBranch): any {
                 let brName: string = branch.name;
                 ${branchNames.map(name => `if ('${name}' == brName) {
                     return this.transform${name}(branch);
                     } else `).join("\n")}                
                 {
-                    throw \`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled\`;
+                    throw new Error(\`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled\`);
                 }
             }
             
@@ -69,9 +87,10 @@ export class SyntaxAnalyserTemplate {
              * Generic method to transform references
              * ...PiElemRef = identifier;
              */
-            private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch) : PiElementReference\<T\> {
+            private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let refName: string = this.transformNode(branch.nonSkipChildren.toArray()[0]);
-                return PiElementReference.create\<T\>(refName, "T");
+                if (!refName || refName.length == 0) throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
+                return PiElementReference.create\<T\>(refName, typeName );
             }
         
             /**

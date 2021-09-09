@@ -63,8 +63,7 @@ export class ReaderTemplate {
                     try {
                         let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
                         console.log("SYNTAX ANALYSIS CORRECT!!!! ");
-                        console.log(asm);
-                        // TODO return the asm that is created
+                        model = asm as ${Names.modelunit(language)};
                     } catch (e) {
                         console.log(e.message);
                         throw e;

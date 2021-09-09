@@ -43,12 +43,12 @@ export class RulesCheckerTemplate {
                                 * @param modelelement
                                 */`;
         return `
-        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
-        import { reservedWordsInTypescript } from "./ReservedWords";  
+        import { reservedWordsInTypescript } from "./ReservedWords";         
 
         /**
          * Class ${checkerClassName} is the part of validator that is generated from, if present, 
@@ -202,8 +202,8 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
-                         "' does not conform to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type [" + this.myWriter.writeToString(this.typer.inferType(modelelement), 0, true) + "] of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
+                         "' does not conform to (the type of) [" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "]"`;
         }
         return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
