@@ -6,7 +6,7 @@ import { PiElement } from "@projectit/core";
 export class ExampleRefCorrector {
 
     public correct(modelunit: ExampleEveryConcept) {
-        let changesToBeMade: Map<PiElement, ExampleEveryConcept> = new Map<PiElement, ExampleEveryConcept>();
+        let changesToBeMade: Map<ExampleEveryConcept, ExampleEveryConcept> = new Map<ExampleEveryConcept, ExampleEveryConcept>();
         // create the walker over the model tree
         const myWalker = new ExampleWalker();
 

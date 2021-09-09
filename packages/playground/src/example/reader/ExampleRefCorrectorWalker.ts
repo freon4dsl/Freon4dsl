@@ -27,12 +27,14 @@ export class ExampleRefCorrectorWalker extends ExampleDefaultWorker implements E
             const scoper = ExampleEnvironment.getInstance().scoper;
             const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
             if (possibles.length > 0) {
+                // element probably refers to something with another type
                 let replacement: ExampleEveryConcept = null;
                 possibles.map(elem => {
-                    if ( elem.piLanguageConcept() === "Parameter" ) {
-                        replacement = ParameterRef.create({parameter: PiElementReference.create<Parameter>(referredElem.name, elem.piLanguageConcept())});
-                    } else if ( elem.piLanguageConcept() === "Attribute" ) {
-                        replacement = AttributeRef.create({attribute: PiElementReference.create<Attribute>(referredElem.name, elem.piLanguageConcept())});
+                    const metatype = elem.piLanguageConcept();
+                    if ( metatype === "Parameter" ) {
+                        replacement = ParameterRef.create({parameter: PiElementReference.create<Parameter>(referredElem.name, metatype)});
+                    } else if ( metatype === "Attribute" ) {
+                        replacement = AttributeRef.create({attribute: PiElementReference.create<Attribute>(referredElem.name, metatype)});
                     }
                 });
                 this.changesToBeMade.set( modelelement, replacement );

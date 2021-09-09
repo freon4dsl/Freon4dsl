@@ -9,6 +9,8 @@ export class ReaderTemplate {
      * to handle every modelunit in the language.
      */
     public generateReader(language: PiLanguage, editDef: PiEditUnit, correctUnits: PiConcept[], relativePath: string): string {
+        // TODO adjust name of RefCorrector
+        const className: string = language.name + "RefCorrector";
 
         // Template starts here
         return `
@@ -22,6 +24,7 @@ export class ReaderTemplate {
         `import { ${Names.grammarStr(unit)} } from "./${Names.grammar(unit)}";
         import { ${Names.syntaxAnalyser(unit)} } from "./${Names.syntaxAnalyser(unit)}";`).join("\n")
         }
+        import { ${className } from "./${className}";
         
         /**
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of
@@ -68,6 +71,8 @@ export class ReaderTemplate {
                         console.log(e.message);
                         throw e;
                     }  
+                    const refCorr = new ${className}();
+                    refCorr.correct(model);
                     // reset parser
                     parser = null;                     
                 } else {

@@ -70,6 +70,14 @@ export class ReaderWriterGenerator {
             generatedContent  = parserGenerator.getSyntaxAnalyserContent(relativePath);
             generationMessage = `syntax analyser for unit`;
             this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+
+            // get the reference corrector and write it to file
+            // TODO adjust use of className
+            const className: string = this.language.name + "RefCorrector";
+            generatedFilePath = `${this.readerGenFolder}/${className}.ts`;
+            generatedContent  = parserGenerator.getRefCorrectorContent(relativePath);
+            generationMessage = `reference corrector for unit`;
+            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
         });
 
         LOGGER.log(`Generating language reader: ${this.readerGenFolder}/${Names.reader(this.language)}.ts`);

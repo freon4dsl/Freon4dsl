@@ -60,10 +60,10 @@ export class SyntaxAnalyserTemplate {
                     // it is a stringLiteral, we should strip the surrounding quotes
                     tmp = tmp.slice(1, tmp.length - 1);
                     return tmp;
-                } else if (tmp == "true") { // booleanLiteral
-                    return true;
-                } else if (tmp == "false") { // booleanLiteral
-                    return false;
+                // } else if (tmp == "true") { // booleanLiteral
+                //     return true;
+                // } else if (tmp == "false") { // booleanLiteral
+                //     return false;
                 } else if (Number.isInteger(parseInt(tmp))) { // numberLiteral
                     return parseInt(tmp);
                 } else { // identifier
@@ -89,7 +89,7 @@ export class SyntaxAnalyserTemplate {
              */
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let refName: string = this.transformNode(branch.nonSkipChildren.toArray()[0]);
-                if (!refName || refName.length == 0) throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
+                // if (!refName || refName.length == 0) throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
                 return PiElementReference.create\<T\>(refName, typeName );
             }
         

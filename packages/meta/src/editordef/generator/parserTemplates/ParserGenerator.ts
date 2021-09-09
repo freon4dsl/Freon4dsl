@@ -18,6 +18,7 @@ import {
 import { LangUtil, Names } from "../../../utils";
 import { GrammarTemplate } from "./GrammarTemplate";
 import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
+import { RefCorrectorTemplate } from "./RefCorrectorTemplate";
 
 export const referencePostfix = "PiElemRef";
 export const optionalRulePrefix = "_Optional";
@@ -64,6 +65,11 @@ export class ParserGenerator {
         const analyserTemplate: SyntaxAnalyserTemplate = new SyntaxAnalyserTemplate();
         const imports: string[] = this.imports.map(concept => Names.classifier(concept));
         return analyserTemplate.generateSyntaxAnalyser(this.unit, this.branchNames, imports, this.generatedSyntaxAnalyserMethods, relativePath);
+    }
+
+    getRefCorrectorContent(relativePath: string): string {
+        const refCorrectorMaker: RefCorrectorTemplate = new RefCorrectorTemplate();
+        return refCorrectorMaker.makeCorrector(this.language, this.unit, this.interfacesAndAbstractsUsed, relativePath);
     }
 
     private reset() {
@@ -640,6 +646,7 @@ export class ParserGenerator {
      */
     private sortImplementors(implementors: PiClassifier[]): PiClassifier[] {
         // TODO should be done recursively!!!
+        // TODO if this works then the ref-correction can be done differently
         let result: PiClassifier[] = [];
         let withPrims: PiClassifier[] = [];
         for (const concept of implementors) {
