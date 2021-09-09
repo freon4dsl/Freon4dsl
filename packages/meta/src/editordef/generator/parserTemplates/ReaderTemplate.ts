@@ -24,7 +24,7 @@ export class ReaderTemplate {
         `import { ${Names.grammarStr(unit)} } from "./${Names.grammar(unit)}";
         import { ${Names.syntaxAnalyser(unit)} } from "./${Names.syntaxAnalyser(unit)}";`).join("\n")
         }
-        import { ${className } from "./${className}";
+        import { ${className} } from "./${className}";
         
         /**
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of

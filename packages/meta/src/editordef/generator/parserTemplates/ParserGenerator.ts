@@ -38,6 +38,7 @@ export class ParserGenerator {
     private currentIndex = 0;
     private specialBinaryRuleName = `__pi_binary_expression`;
     private separatorToProp: Map<PiProperty, string> = new Map<PiProperty, string>();
+    private refCorrectorMaker: RefCorrectorTemplate = new RefCorrectorTemplate();
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
         // reset all attributes that are global to this class
@@ -54,6 +55,8 @@ export class ParserGenerator {
         this.generateReferences(editUnit);
         // do the binary expressions
         this.generateBinaryExpressions(language, editUnit);
+        // do analysis for semantic phase
+        this.refCorrectorMaker.analyse(this.interfacesAndAbstractsUsed);
     }
 
     getGrammarContent() : string {
@@ -68,8 +71,11 @@ export class ParserGenerator {
     }
 
     getRefCorrectorContent(relativePath: string): string {
-        const refCorrectorMaker: RefCorrectorTemplate = new RefCorrectorTemplate();
-        return refCorrectorMaker.makeCorrector(this.language, this.unit, this.interfacesAndAbstractsUsed, relativePath);
+        return this.refCorrectorMaker.makeCorrector(this.language, this.unit, relativePath);
+    }
+
+    getRefCorrectorWalkerContent(relativePath: string): string {
+        return this.refCorrectorMaker.makeWalker(this.language, relativePath);
     }
 
     private reset() {

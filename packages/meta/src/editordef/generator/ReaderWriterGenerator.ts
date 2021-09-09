@@ -73,9 +73,17 @@ export class ReaderWriterGenerator {
 
             // get the reference corrector and write it to file
             // TODO adjust use of className
-            const className: string = this.language.name + "RefCorrector";
+            let className: string = this.language.name + "RefCorrector";
             generatedFilePath = `${this.readerGenFolder}/${className}.ts`;
             generatedContent  = parserGenerator.getRefCorrectorContent(relativePath);
+            generationMessage = `reference corrector for unit`;
+            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+
+            // get the reference corrector and write it to file
+            // TODO adjust use of className
+            className = this.language.name + "RefCorrectorWalker";
+            generatedFilePath = `${this.readerGenFolder}/${className}.ts`;
+            generatedContent  = parserGenerator.getRefCorrectorWalkerContent(relativePath);
             generationMessage = `reference corrector for unit`;
             this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
         });

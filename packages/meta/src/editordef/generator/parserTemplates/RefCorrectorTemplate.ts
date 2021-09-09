@@ -1,40 +1,52 @@
-import { PiClassifier, PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../../utils";
+import { PiClassifier, PiConcept, PiExpressionConcept, PiLanguage } from "../../../languagedef/metalanguage";
+import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../../utils";
+
+// first call 'analyse' then the other methods as they depend on the global variables to be set
 
 export class RefCorrectorTemplate {
     imports: PiClassifier[] = [];
+    possibleProblems: PiConcept[] = [];
+    supersOfProblems: PiClassifier[] = [];
+    exprWithBooleanProp: PiClassifier[] = [];
 
-    makeCorrector(language: PiLanguage, langUnit: PiConcept, interfacesAndAbstractsUsed: PiClassifier[], relativePath: string) : string {
-        const everyConceptName: string = Names.allConcepts(language);
-        // TODO adjust Names class and use it here
-        const className: string = language.name + "RefCorrector";
-        const refWalkerName: string = language.name + "RefCorrectorWalker";
-
+    analyse(interfacesAndAbstractsUsed: PiClassifier[]) {
+        this.reset();
         // find which classifiers have possible problems
-        let possibleProblems: PiConcept[] = [];
-        let supersOfProblems: PiClassifier[] = [];
         for (const classifier of interfacesAndAbstractsUsed) {
             if (!((classifier as PiConcept).base)) {
                 let hasProblems: boolean = false;
                 for (const sub of LangUtil.subConcepts(classifier)) {
                     if (sub.allReferences().length > 0) {
-                        possibleProblems.push(sub);
+                        this.possibleProblems.push(sub);
                         hasProblems = true;
+                    }
+                    for (const prim of sub.allPrimProperties()) {
+                        if (prim.primType == "boolean") { // TODO do not depend on string literal
+                            this.exprWithBooleanProp.push(sub);
+                        }
                     }
                 }
                 if (hasProblems) {
-                    supersOfProblems.push(classifier);
+                    this.supersOfProblems.push(classifier);
                 }
-                console.log(`found possible problems for ${classifier.name}: ${possibleProblems.map(pos => `${pos.name}`).join(", ")}`);
+                // console.log(`found possible problems for ${classifier.name}: ${this.possibleProblems.map(pos => `${pos.name}`).join(", ")}`);
             }
         }
+    }
+
+    makeCorrector(language: PiLanguage, langUnit: PiConcept, relativePath: string) : string {
+        this.imports = [];
+        const everyConceptName: string = Names.allConcepts(language);
+        // TODO adjust Names class and use it here
+        const className: string = language.name + "RefCorrector";
+        const refWalkerName: string = language.name + "RefCorrectorWalker";
 
         // create the correct if-statement
         let stat: string = "";
-        if (supersOfProblems.length > 0) {
+        if (this.supersOfProblems.length > 0) {
             stat += `const propName: string = toBeReplaced.piContainer().propertyName;
                      const propIndex: number = toBeReplaced.piContainer().propertyIndex;`;
-            for (const piClassifier of supersOfProblems) {
+            for (const piClassifier of this.supersOfProblems) {
                 language.concepts.forEach(concept => {
                     concept.allParts().forEach(part => {
                         if (part.type.referred == piClassifier) {
@@ -56,7 +68,7 @@ export class RefCorrectorTemplate {
         }
 
         // start Template
-        return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}  } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER }";
                 import { ${refWalkerName} } from "./${refWalkerName}";
                 import { PiElement } from "@projectit/core";
@@ -89,6 +101,98 @@ export class RefCorrectorTemplate {
 `; // end Template
     }
 
+    makeWalker(language: PiLanguage, relativePath: string) : string {
+        this.imports = [];
+        const className = language.name + "RefCorrectorWalker";
+        const everyConceptName: string = Names.allConcepts(language);
+        this.addToImports(this.possibleProblems);
+        this.addToImports(this.exprWithBooleanProp);
+        // call this method before startign the template; it will fill the 'imports'
+        const replacementIfStat: string = this.makeReplacementIfStat();
+
+        return `
+            import {
+              ${Names.allConcepts(language)}, PiElementReference, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
+            } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER }";
+            import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
+            import { PiNamedElement } from "@projectit/core";
+            
+            export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
+                changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
+            
+                constructor(changesToBeMade: Map<${everyConceptName}, ${everyConceptName}>) {
+                    super();
+                    this.changesToBeMade = changesToBeMade;
+                }
+                
+                ${this.possibleProblems.map(poss => `${this.makeVistorMethod(language, poss)}`).join("\n")}
+                
+                private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: PiElementReference<PiNamedElement>) {
+                    const scoper = ExampleEnvironment.getInstance().scoper;
+                    const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
+                    if (possibles.length > 0) {
+                        // element probably refers to something with another type
+                        let replacement: ${Names.allConcepts(language)} = null;
+                        for (const elem of possibles) {
+                            const metatype = elem.piLanguageConcept();
+                            ${replacementIfStat}
+                        }
+                        this.changesToBeMade.set(modelelement, replacement);
+                    } else {
+                        // true error, or boolean "true" or "false"
+                        ${this.exprWithBooleanProp.map(concept =>`
+                            if (referredElem.name === "true") {
+                                this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ value: true }));
+                            } else if (referredElem.name === "false") {
+                                this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ value: false }));
+                            }
+                            `)}
+                    }
+                }
+            
+            }
+            `;
+    }
+
+    private makeReplacementIfStat() : string {
+        let result: string = '';
+        for (const poss of this.possibleProblems) {
+            let toBeCreated: string = Names.classifier(poss);
+            for(const ref of poss.allReferences()) {
+                let type: PiClassifier = ref.type.referred;
+                let metatype: string = Names.classifier(type);
+                this.addToImports(type);
+                let propName: string = ref.name;
+                result += `if (metatype === "${metatype}") {
+                        replacement = ${toBeCreated}.create({ ${propName}: PiElementReference.create<${metatype}>(referredElem.name, metatype) });
+                    } else `;
+            }
+        }
+        if (result.length > 0) {
+            result += `{ throw new Error("Semantic analysis error: cannot replace reference.") }`
+        }
+        return result;
+    }
+
+    private makeVistorMethod(language: PiLanguage, piClassifier: PiConcept) : string {
+        return `
+            /**
+             * Test whether the references in 'modelelement' are correct.
+             * If not, find possible replacements.
+             * @param modelelement
+             */
+            public execBefore${Names.concept(piClassifier)}(modelelement: ${Names.concept(piClassifier)}): boolean {
+                let referredElem: PiElementReference<PiNamedElement> = null;
+                ${piClassifier.allReferences().map(prop => 
+                `referredElem = modelelement.${prop.name};
+                if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a ${prop.name} with this name
+                    this.findReplacement(modelelement, referredElem);
+                }`)}                
+                return false;
+            }`;
+    }
+
     private addToImports(extra: PiClassifier | PiClassifier[]) {
         if (!!extra) {
             if (Array.isArray(extra)) {
@@ -102,4 +206,12 @@ export class RefCorrectorTemplate {
             }
         }
     }
+
+    private reset() {
+        this.supersOfProblems = [];
+        this.possibleProblems = [];
+        this.imports = [];
+        this.exprWithBooleanProp = [];
+    }
+
 }
