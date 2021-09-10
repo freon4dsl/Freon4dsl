@@ -202,7 +202,7 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type [" + this.myWriter.writeToString(this.typer.inferType(modelelement), 0, true) + "] of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
+            message = `"Type [" + this.myWriter.writeToString(this.typer.inferType(${langExpToTypeScript(r.type1)}), 0, true) + "] of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
                          "' does not conform to (the type of) [" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "]"`;
         }
         return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
