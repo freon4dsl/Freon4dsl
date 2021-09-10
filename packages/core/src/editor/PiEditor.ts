@@ -1,4 +1,5 @@
 import { observable, computed, action, trace } from "mobx";
+import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiContainerDescriptor, PiElement } from "../language";
 import { PiCaret, wait, PiLogger } from "../util";
@@ -34,11 +35,18 @@ export class PiEditor {
     @observable private selectedRole: string = null;
 
     /**
-     * The amount of scrolling horizontally
+     * Needed to find reference shortcuts in the Alias box
+     */
+    environment: PiEnvironment;
+
+    /**
+     * The amount of scrolling horizontally.
+     * Needed to find the element above and under.
      */
     scrollX: number = 0;
     /**
      * The amount of scrolling vertically
+     * Needed to find the element above and under.
      */
     scrollY: number = 0;
 

@@ -20,11 +20,13 @@ export class PiEditConcept extends PiDefinitionElement {
     concept: PiElementReference<PiConcept>;
     projection: PiEditProjection = null;
     _trigger: string = null;
+    // The name of the reference property for which a shortcut can be used
+    referenceShortcut: PiLangExp;
 
     symbol: string = null; // only for binary expressions
 
     get trigger(): string {
-        if (!!this._trigger) {
+        if (!!(this._trigger)) {
             return this._trigger;
         } else {
             return this.symbol;
@@ -110,7 +112,7 @@ export class ListJoin extends PiDefinitionElement {
 }
 
 export class PiEditPropertyProjection extends PiDefinitionElement {
-    propertyName: string = "";
+    // propertyName: string = "";
     listJoin: ListJoin;
     keyword?: string;
     expression: PiLangExp;

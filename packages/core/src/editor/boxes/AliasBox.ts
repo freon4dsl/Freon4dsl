@@ -16,16 +16,29 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     getOptions(editor: PiEditor): SelectOption[] {
-        const result = editor.behaviors
+        const referenceShortcuts: SelectOption[] = [];
+        const result: SelectOption[] = editor.behaviors
             // .filter(a => a.activeInBoxRoles.includes(this.role) && MatchUtil.partialMatch(this.textBox.getText(), a.trigger))
             .filter(a => a.activeInBoxRoles.includes(this.role))
             .map(a => {
+                if (!!(a.referenceShortcut)) {
+                    console.log("REFERENCE "+ a.referenceShortcut.propertyname + " TO " + a.referenceShortcut.metatype);
+                    referenceShortcuts.push({ id: a.referenceShortcut.propertyname + "-" + a.referenceShortcut.propertyname, label: "ref to " + a.referenceShortcut.propertyname, description: "REF"});
+                    referenceShortcuts.push(...
+                    editor.environment
+                        .scoper.getVisibleNames(this.element, a.referenceShortcut.metatype)
+                        .map(name => ({
+                            id: name,
+                            label: name
+                        })));
+                }
                 return {
                     id: triggerToString(a.trigger),
                     label: triggerToString(a.trigger),
                     description: "alias " + triggerToString(a.trigger)
                 };
             });
+        result.push(...referenceShortcuts);
         return result;
     }
 

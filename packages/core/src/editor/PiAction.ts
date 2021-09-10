@@ -1,4 +1,4 @@
-import { Box } from "./internal";
+import { Box, ReferenceShortcut } from "./internal";
 import { PiBinaryExpression, PiElement, PiExpression } from "../language";
 import { PiCaret, PiKey } from "../util";
 import { PiEditor } from "./internal";
@@ -45,6 +45,9 @@ export interface PiBehavior {
     isApplicable?: (box: Box) => boolean;
     boxRoleToSelect?: string;
     caretPosition?: PiCaret;
+
+    referenceShortcut?: ReferenceShortcut;
+
 }
 // end::PiBehavior[]
 
@@ -67,6 +70,8 @@ export interface PiBinaryExpressionCreator extends PiBehavior {
  */
 export interface PiCustomBehavior extends PiBehavior {
     action: (box: Box, trigger: PiTriggerType, editor: PiEditor, propertyName?: string) => PiElement | null;
+
+    referenceShortcut?: ReferenceShortcut;
 }
 
 // TODO Use this to replace KeyboardShortcutTrigger

@@ -3,6 +3,11 @@ import { Box } from "./internal";
 import { PiEditor } from "./internal";
 import { PiCaret } from "../util";
 
+export type ReferenceShortcut = {
+    propertyname: string;
+    metatype: string;
+}
+
 export abstract class InternalBehavior implements PiBehavior {
     trigger: PiTriggerType;
 
@@ -29,5 +34,7 @@ export abstract class InternalBehavior implements PiBehavior {
     caretPosition?: PiCaret;
 
     abstract execute(box: Box, aliasId: string, editor: PiEditor);
+
+    referenceShortcut?: ReferenceShortcut;
 }
 
