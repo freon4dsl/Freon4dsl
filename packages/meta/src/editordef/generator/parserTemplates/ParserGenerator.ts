@@ -468,13 +468,13 @@ export class ParserGenerator {
             // create an extra rule for the optional part, and an extra syntax analysis method
             let ruleName: string = "";
             let ruleText: string = "";
-            let propIndex: number = 0; // the index of the property within the new rule
+            let propIndex: number = -1; // the index of the property within the new rule
             let propType: string = "";
-            item.items.forEach((sub, index) => {
+            item.items.forEach((sub) => {
                 if (sub instanceof PiEditSubProjection) {
                     ruleText += this.makeSubProjection(branchName, sub, indexToName);
-                }
-                if (sub instanceof PiEditPropertyProjection) {
+                    propIndex += 1;
+                } else if (sub instanceof PiEditPropertyProjection) {
                     let prop = sub.expression.findRefOfLastAppliedFeature();
                     propType = Names.classifier(prop.type.referred);
                     ruleName = `${branchName}_${optionalRulePrefix}_${prop.name}`;
@@ -482,11 +482,12 @@ export class ParserGenerator {
                         propType = `${Names.PiElementReference}<${propType}>`
                     }
                     ruleText += `${this.makePropertyProjection(sub)}`;
-                    propIndex = index;
+                    propIndex += 1;
                     indexToName.set(prop.name, this.currentIndex); // the index of the complete optional part within the main rule
-                }
-                if (sub instanceof PiEditProjectionText) {
+                } else if (sub instanceof PiEditProjectionText) {
                     ruleText += `${this.makeTextProjection(sub)}`;
+                    propIndex += 1;
+                // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
                 }
             });
             this.generatedParseRules.push(`${ruleName} = ${ruleText}`);
@@ -495,10 +496,10 @@ export class ParserGenerator {
             this.branchNames.push(ruleName);
 
             // syntax analysis
-            let content: string = `this.transformNode(branch.nonSkipChildren.toArray()[${propIndex - 1}])`;
+            let content: string = `this.transformNode(branch.nonSkipChildren.toArray()[${propIndex}])`;
             if ( propType.length == 0 ) { // the rule is of the form 'UmlClass_optional_isAbstract = "<abstract>" '
                 propType = "boolean";
-                content = `this.transformNode(branch.nonSkipChildren.toArray()[${propIndex - 1}]).length > 0`;
+                content = `this.transformNode(branch.nonSkipChildren.toArray()[0]).length > 0`;
             }
             this.generatedSyntaxAnalyserMethods.push(
                 `/**
