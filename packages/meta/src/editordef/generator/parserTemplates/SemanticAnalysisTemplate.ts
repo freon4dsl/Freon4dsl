@@ -3,7 +3,7 @@ import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER,
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 
-export class RefCorrectorTemplate {
+export class SemanticAnalysisTemplate {
     imports: PiClassifier[] = [];
     possibleProblems: PiConcept[] = [];
     supersOfProblems: PiClassifier[] = [];
@@ -34,12 +34,11 @@ export class RefCorrectorTemplate {
         }
     }
 
-    makeCorrector(language: PiLanguage, langUnit: PiConcept, relativePath: string) : string {
+    makeCorrector(language: PiLanguage, relativePath: string) : string {
         this.imports = [];
         const everyConceptName: string = Names.allConcepts(language);
-        // TODO adjust Names class and use it here
-        const className: string = language.name + "RefCorrector";
-        const refWalkerName: string = language.name + "RefCorrectorWalker";
+        const className: string = Names.semanticAnalyser(language);
+        const refWalkerName: string = Names.semanticWalker(language);
 
         // create the correct if-statement
         let stat: string = "";
@@ -103,7 +102,7 @@ export class RefCorrectorTemplate {
 
     makeWalker(language: PiLanguage, relativePath: string) : string {
         this.imports = [];
-        const className = language.name + "RefCorrectorWalker";
+        const className: string = Names.semanticWalker(language);
         const everyConceptName: string = Names.allConcepts(language);
         this.addToImports(this.possibleProblems);
         this.addToImports(this.exprWithBooleanProp);
@@ -129,7 +128,7 @@ export class RefCorrectorTemplate {
                 ${this.possibleProblems.map(poss => `${this.makeVistorMethod(language, poss)}`).join("\n")}
                 
                 private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: PiElementReference<PiNamedElement>) {
-                    const scoper = ExampleEnvironment.getInstance().scoper;
+                    const scoper = ${Names.environment(language)}.getInstance().scoper;
                     const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type

@@ -81,7 +81,7 @@ export class SyntaxAnalyserTemplate {
                 }
             }
             
-            ${generatedSyntaxAnalyserMethods.map(method => `${method} ;`).join("\n\n")}
+            ${generatedSyntaxAnalyserMethods.map(method => `${method}`).join("\n\n")}
           
             /**
              * Generic method to transform references

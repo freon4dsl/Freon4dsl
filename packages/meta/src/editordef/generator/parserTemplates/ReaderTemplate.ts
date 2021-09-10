@@ -9,8 +9,7 @@ export class ReaderTemplate {
      * to handle every modelunit in the language.
      */
     public generateReader(language: PiLanguage, editDef: PiEditUnit, correctUnits: PiConcept[], relativePath: string): string {
-        // TODO adjust name of RefCorrector
-        const className: string = language.name + "RefCorrector";
+        const className: string = Names.semanticAnalyser(language);
 
         // Template starts here
         return `
@@ -55,24 +54,22 @@ export class ReaderTemplate {
                 let model: ${Names.modelunit(language)} = null;
                 if (parser) {
                     try {
-                        // NOTE: the following might throw a syntax or analysis error
                         let sppt = parser.parse(sentence);
-                        //console.log("PARSETREE CORRECT!!!! ");
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp 
                         let mess = e.message.replace("Could not match goal,", "Parse error");
+                        console.log(mess);
                         throw new Error(mess);
                     }
                     try {
                         let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
-                        console.log("SYNTAX ANALYSIS CORRECT!!!! ");
                         model = asm as ${Names.modelunit(language)};
+                        const semAnalyser = new ${className}();
+                        semAnalyser.correct(model);
                     } catch (e) {
                         console.log(e.message);
                         throw e;
                     }  
-                    const refCorr = new ${className}();
-                    refCorr.correct(model);
                     // reset parser
                     parser = null;                     
                 } else {

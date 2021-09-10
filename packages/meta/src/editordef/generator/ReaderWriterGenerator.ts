@@ -40,8 +40,7 @@ export class ReaderWriterGenerator {
         //  Generate it
         let generatedFilePath = `${this.writerGenFolder}/${Names.writer(this.language)}.ts`;
         let generatedContent  = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
-        let generationMessage = `language writer`;
-        this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+        this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
 
         let noCorrectGrammar: boolean = false;
         this.language.units.forEach(unit => {
@@ -50,8 +49,7 @@ export class ReaderWriterGenerator {
             // get the grammar and write it to file
             generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
             generatedContent  = parserGenerator.getGrammarContent();
-            generationMessage = `agl grammar for unit`;
-            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+            this.makeFile(`agl grammar for unit`, generatedFilePath, generatedContent, generationStatus);
             // test the generated grammar, if not ok error will be thrown, otherwise add this unit to the list of correct units
             try {
                 // strip generated content of stuff around the grammar
@@ -68,29 +66,23 @@ export class ReaderWriterGenerator {
             // get the analyser and write it to file
             generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(unit)}.ts`;
             generatedContent  = parserGenerator.getSyntaxAnalyserContent(relativePath);
-            generationMessage = `syntax analyser for unit`;
-            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
-
-            // get the reference corrector and write it to file
-            // TODO adjust use of className
-            let className: string = this.language.name + "RefCorrector";
-            generatedFilePath = `${this.readerGenFolder}/${className}.ts`;
-            generatedContent  = parserGenerator.getRefCorrectorContent(relativePath);
-            generationMessage = `reference corrector for unit`;
-            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
-
-            // get the reference corrector and write it to file
-            // TODO adjust use of className
-            className = this.language.name + "RefCorrectorWalker";
-            generatedFilePath = `${this.readerGenFolder}/${className}.ts`;
-            generatedContent  = parserGenerator.getRefCorrectorWalkerContent(relativePath);
-            generationMessage = `reference corrector for unit`;
-            this.makeFile(generationMessage, generatedFilePath, generatedContent, generationStatus);
+            this.makeFile(`syntax analyser for unit`, generatedFilePath, generatedContent, generationStatus);
         });
 
-        LOGGER.log(`Generating language reader: ${this.readerGenFolder}/${Names.reader(this.language)}.ts`);
-        const readerFile = Helpers.pretty(readerTemplate.generateReader(this.language, editDef, correctUnits, relativePath), "Reader Class", generationStatus);
-        fs.writeFileSync(`${this.readerGenFolder}/${Names.reader(this.language)}.ts`, readerFile);
+        // get the semantic analyser and write it to file
+        generatedFilePath = `${this.readerGenFolder}/${Names.semanticAnalyser(this.language)}.ts`;
+        generatedContent  = parserGenerator.getRefCorrectorContent(relativePath);
+        this.makeFile(`semantic analyser`, generatedFilePath, generatedContent, generationStatus);
+
+        // get the semantic analysis walker and write it to file
+        generatedFilePath = `${this.readerGenFolder}/${Names.semanticWalker(this.language)}.ts`;
+        generatedContent  = parserGenerator.getRefCorrectorWalkerContent(relativePath);
+        this.makeFile(`semantic analysis walker`, generatedFilePath, generatedContent, generationStatus);
+
+        // get the reader and write it to file
+        generatedFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
+        generatedContent  = readerTemplate.generateReader(this.language, editDef, correctUnits, relativePath);
+        this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(this, `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);

@@ -9,6 +9,7 @@
     "type": "git",
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
+  "type": "module",
   "scripts": {
     "cleanup":      "bash ../../scripts/cleanup.sh",
     "demo": 	    "bash ../../scripts/projectit-dev.sh all -d src/demo/defs -o src/demo",
@@ -37,6 +38,8 @@
     "@projectit/core": "0.1.1",
     "@projectit/meta": "0.1.1",
     "@types/history": "^4.7.5",
+    "net.akehurst.language-agl-processor": "4.0.0-rc.2",
+    "kotlin": "^1.5.21",
     "global": "^4.4.0",
     "mobx": "^5.14.0",
     "tslib": "^2.3.0"

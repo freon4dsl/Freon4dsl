@@ -225,6 +225,14 @@ export class Names {
         return this.startWithUpperCase(unit?.name) + "SyntaxAnalyser";
     }
 
+    public static semanticAnalyser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "SemanticAnalyser";
+    }
+
+    public static semanticWalker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "SemanticAnalysisWalker";
+    }
+
     public static reader(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }

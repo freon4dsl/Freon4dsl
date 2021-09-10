@@ -18,10 +18,10 @@ import {
 import { LangUtil, Names } from "../../../utils";
 import { GrammarTemplate } from "./GrammarTemplate";
 import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
-import { RefCorrectorTemplate } from "./RefCorrectorTemplate";
+import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 
 export const referencePostfix = "PiElemRef";
-export const optionalRulePrefix = "_Optional";
+export const optionalRulePrefix = "optional";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
@@ -38,7 +38,7 @@ export class ParserGenerator {
     private currentIndex = 0;
     private specialBinaryRuleName = `__pi_binary_expression`;
     private separatorToProp: Map<PiProperty, string> = new Map<PiProperty, string>();
-    private refCorrectorMaker: RefCorrectorTemplate = new RefCorrectorTemplate();
+    private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
         // reset all attributes that are global to this class
@@ -54,7 +54,9 @@ export class ParserGenerator {
         // do the referred types
         this.generateReferences(editUnit);
         // do the binary expressions
-        this.generateBinaryExpressions(language, editUnit);
+        if (this.binaryConceptsUsed.length > 0) {
+            this.generateBinaryExpressions(language, editUnit);
+        }
         // do analysis for semantic phase
         this.refCorrectorMaker.analyse(this.interfacesAndAbstractsUsed);
     }
@@ -71,7 +73,7 @@ export class ParserGenerator {
     }
 
     getRefCorrectorContent(relativePath: string): string {
-        return this.refCorrectorMaker.makeCorrector(this.language, this.unit, relativePath);
+        return this.refCorrectorMaker.makeCorrector(this.language, relativePath);
     }
 
     getRefCorrectorWalkerContent(relativePath: string): string {
@@ -147,6 +149,7 @@ export class ParserGenerator {
     }
 
     private generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit) {
+
         // common information
         const expressionBase: PiExpressionConcept = language.findExpressionBase();
         const editDefs: PiEditConcept[] = this.findEditDefs(this.binaryConceptsUsed, editUnit);
@@ -214,7 +217,7 @@ export class ParserGenerator {
                 const conceptEditor = editUnit.findConceptEditor(piClassifier);
                 if (conceptEditor) {
                     // make a rule according to the projection
-                    rule = this.makeInstanceReferenceRule(piClassifier, conceptEditor);
+                    rule = this.makeLimitedReferenceRule(piClassifier, conceptEditor);
                 }
             }
             // no special projection then make a 'normal' rule
@@ -227,21 +230,21 @@ export class ParserGenerator {
         // are not needed, because there is a generic method for references in the template
     }
 
-    private makeInstanceReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
+    private makeLimitedReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
         const myName = Names.classifier(piClassifier);
         let noResult = false;
         let result: string = `${myName}${referencePostfix} = `;
         conceptEditor.projection.lines.forEach((line, index) => {
             line.items.forEach(item => {
                 if (item instanceof PiEditInstanceProjection) {
-                    result += `"${item.keyword}" `;
+                    result += `\'${item.keyword}\' `;
                 } else if (item instanceof PiEditPropertyProjection) {
                     // TODO do we allow other projections for limited concepts????
                     noResult = true;
                 }
             });
             if (index < conceptEditor.projection.lines.length -1) {
-                result += "\n\t/ ";
+                result += "\n\t| ";
             }
         });
         if (noResult) {
@@ -335,13 +338,14 @@ export class ParserGenerator {
             // make the parse rule
             let rule: string = "";
 
+            // TODO test and rethink subconcepts AND concrete projection for one concept
             // see if this concept has subconcepts
             const subs = piClassifier.allSubConceptsDirect();
             let choiceBetweenSubconcepts = "";
             if (subs.length > 0) {
                 // TODO see if there are binary expressions amongst the implementors
                 choiceBetweenSubconcepts = ` ${subs.map((implementor, index) =>
-                    `${Names.classifier(implementor)} `).join("\n\t/ ")}\n\t| `;
+                    `${Names.classifier(implementor)} `).join("\n\t| ")}\n\t| `;
             }
 
             // now we have enough information to create the parse rule
@@ -350,7 +354,7 @@ export class ParserGenerator {
             // console.log(`doAllItems START`);
             this.currentIndex = 0;
             rule = `${branchName} =${choiceBetweenSubconcepts} ${conceptDef.projection.lines.map(l =>
-                `${this.doAllItems(l.items, indexToName)}`
+                `${this.doAllItems(branchName, l.items, indexToName)}`
             ).join("\n\t")}`
             this.generatedParseRules.push(rule);
 
@@ -442,7 +446,7 @@ export class ParserGenerator {
         return propsToSet;
     }
 
-    private doAllItems(list: PiEditProjectionItem[], indexToName: Map<string, number>): string {
+    private doAllItems(branchName: string, list: PiEditProjectionItem[], indexToName: Map<string, number>): string {
         // console.log(`doAllItems.mainIndex: ${this.currentIndex}`)
         let result = "";
         if (!!list && list.length > 0) {
@@ -455,7 +459,7 @@ export class ParserGenerator {
                     // console.log(`settingIndex: ${propName} => ${this.currentIndex}`);
                     indexToName.set(propName, this.currentIndex);
                 } else if (item instanceof PiEditSubProjection) {
-                    result += `${this.makeSubProjection(item, indexToName)} `
+                    result += `${this.makeSubProjection(branchName, item, indexToName)} `
                 }
                 this.currentIndex += 1;
             });
@@ -463,7 +467,7 @@ export class ParserGenerator {
         return result;
     }
 
-    private makeSubProjection(item: PiEditSubProjection, indexToName: Map<string, number>): string {
+    private makeSubProjection(branchName: string, item: PiEditSubProjection, indexToName: Map<string, number>): string {
         // console.log(`makeSubProjection().mainIndex: ${this.currentIndex}`)
         // TODO check: I expect exactly one property projection in a sub projection
         if (item.optional) {
@@ -474,15 +478,15 @@ export class ParserGenerator {
             let propType: string = "";
             item.items.forEach((sub, index) => {
                 if (sub instanceof PiEditSubProjection) {
-                    ruleText += this.makeSubProjection(sub, indexToName);
+                    ruleText += this.makeSubProjection(branchName, sub, indexToName);
                 }
                 if (sub instanceof PiEditPropertyProjection) {
                     let prop = sub.expression.findRefOfLastAppliedFeature();
                     propType = Names.classifier(prop.type.referred);
+                    ruleName = `${branchName}_${optionalRulePrefix}_${prop.name}`;
                     if (!prop.isPart) { // it's a reference
                         propType = `${Names.PiElementReference}<${propType}>`
                     }
-                    ruleName = optionalRulePrefix + prop.name;
                     ruleText += `${this.makePropertyProjection(sub)}`;
                     propIndex = index;
                     indexToName.set(prop.name, this.currentIndex); // the index of the complete optional part within the main rule
@@ -497,6 +501,11 @@ export class ParserGenerator {
             this.branchNames.push(ruleName);
 
             // syntax analysis
+            let content: string = `this.transformNode(branch.nonSkipChildren.toArray()[${propIndex - 1}])`;
+            if ( propType.length == 0 ) { // the rule is of the form 'UmlClass_optional_isAbstract = "<abstract>" '
+                propType = "boolean";
+                content = `this.transformNode(branch.nonSkipChildren.toArray()[${propIndex - 1}]).length > 0`;
+            }
             this.generatedSyntaxAnalyserMethods.push(
                 `/**
                 * Method to transform branches that match the following rule:
@@ -507,13 +516,13 @@ export class ParserGenerator {
                 private transform${ruleName}(branch: SPPTBranch): ${propType} {
                     // console.log("transform${ruleName} called");
                     // An optional branch is a List with 0 or 1 element, so you always have the list node in between.
-                    return this.transformNode(branch.nonSkipChildren.toArray()[${propIndex-1}]);
+                    return ${content};
                 }`);
 
             return `${ruleName}?`; // the 'call' to the new rule in the main rule
         } else {
             // console.log(`FOUND non-optional sub projection`);
-            return `${this.doAllItems(item.items, indexToName)}`;
+            return `${this.doAllItems(branchName, item.items, indexToName)}`;
         }
     }
 

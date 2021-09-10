@@ -202,8 +202,8 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type [" + this.myWriter.writeToString(this.typer.inferType(${langExpToTypeScript(r.type1)}), 0, true) + "] of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
-                         "' does not conform to (the type of) [" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "]"`;
+            message = `"Type " + this.myWriter.writeToString(this.typer.inferType(${langExpToTypeScript(r.type1)}), 0, true) + " of [" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
+                         "] does not conform to " + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true)`;
         }
         return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
@@ -213,8 +213,8 @@ export class RulesCheckerTemplate {
 
     private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '"+ this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) 
-                        + "' should be equal to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type of ["+ this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) 
+                        + "] should equal " + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true)`;
         }
         return `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
