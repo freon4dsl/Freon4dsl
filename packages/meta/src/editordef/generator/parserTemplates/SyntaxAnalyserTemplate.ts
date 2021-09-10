@@ -88,8 +88,10 @@ export class SyntaxAnalyserTemplate {
              * ...PiElemRef = identifier;
              */
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
-                let refName: string = this.transformNode(branch.nonSkipChildren.toArray()[0]);
-                // if (!refName || refName.length == 0) throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
+                let refName: string = this.transformNode(branch);
+                // if (refName == null || refName == undefined || refName.length == 0) {
+                //    throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
+                //}
                 return PiElementReference.create\<T\>(refName, typeName );
             }
         

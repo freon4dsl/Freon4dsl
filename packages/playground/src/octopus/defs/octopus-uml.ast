@@ -7,7 +7,7 @@ modelunit UmlPart {
 }
 
 // the uml concepts
-concept Association  { // TODO implements IClassifier ???
+concept Association implements IClassifier {
     end1: AssociationEnd;
     end2: AssociationEnd;
     isClass: boolean;

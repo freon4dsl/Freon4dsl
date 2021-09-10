@@ -20,7 +20,7 @@ import { GrammarTemplate } from "./GrammarTemplate";
 import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 
-export const referencePostfix = "PiElemRef";
+export const referencePostfix = "Ref";
 export const optionalRulePrefix = "optional";
 
 export class ParserGenerator {
@@ -29,8 +29,7 @@ export class ParserGenerator {
     private conceptsUsed: PiConcept[] = [];
     private binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
     private interfacesAndAbstractsUsed: PiClassifier[] = [];
-    private typesReferred: PiClassifier[] = [];
-    // private limitedsReferred: PiLimitedConcept[] = [];
+    private limitedsReferred: PiLimitedConcept[] = [];
     private generatedParseRules: string[] = [];
     private generatedSyntaxAnalyserMethods: string[] = [];
     private branchNames: string[] = [];
@@ -52,7 +51,7 @@ export class ParserGenerator {
         // do the interfaces
         this.generateChoiceRules();
         // do the referred types
-        this.generateReferences(editUnit);
+        this.generateLimitedRules(editUnit);
         // do the binary expressions
         if (this.binaryConceptsUsed.length > 0) {
             this.generateBinaryExpressions(language, editUnit);
@@ -86,7 +85,7 @@ export class ParserGenerator {
         this.conceptsUsed = [];
         this.binaryConceptsUsed = [];
         this.interfacesAndAbstractsUsed = [];
-        this.typesReferred = [];
+        this.limitedsReferred = [];
         this.generatedParseRules = [];
         this.generatedSyntaxAnalyserMethods = [];
         this.branchNames = [];
@@ -111,7 +110,7 @@ export class ParserGenerator {
             });
         } else if (piClassifier instanceof PiConcept) {
             if (piClassifier instanceof PiLimitedConcept) {
-                this.typesReferred.push(piClassifier);
+                this.limitedsReferred.push(piClassifier);
             } else if (piClassifier instanceof PiBinaryExpressionConcept) {
                 if (!piClassifier.isAbstract) {
                     this.binaryConceptsUsed.push(piClassifier);
@@ -140,8 +139,8 @@ export class ParserGenerator {
                 // and add all types of references to typesReferred
                 piClassifier.allReferences().forEach(part => {
                     const type = part.type.referred;
-                    if (!this.typesReferred.includes(type)) {
-                        this.typesReferred.push(type);
+                    if (type instanceof PiLimitedConcept && !this.limitedsReferred.includes(type)) {
+                        this.limitedsReferred.push(type);
                     }
                 });
             }
@@ -207,27 +206,20 @@ export class ParserGenerator {
         }`);
     }
 
-    private generateReferences(editUnit: PiEditUnit) {
-        for (const piClassifier of this.typesReferred) {
+    private generateLimitedRules(editUnit: PiEditUnit) {
+        for (const piClassifier of this.limitedsReferred) {
             // parse rule(s)
-            let rule: string = "";
-            // take care of the special projection for a limited concept
-            if (piClassifier instanceof PiLimitedConcept) {
-                // see if there is a projection defined
-                const conceptEditor = editUnit.findConceptEditor(piClassifier);
-                if (conceptEditor) {
-                    // make a rule according to the projection
-                    rule = this.makeLimitedReferenceRule(piClassifier, conceptEditor);
-                }
+            // see if there is a projection defined, so that we can take care
+            // of the special projection for a limited concept
+            const conceptEditor = editUnit.findConceptEditor(piClassifier);
+            if (conceptEditor) {
+                // make a rule according to the projection
+                this.generatedParseRules.push(this.makeLimitedReferenceRule(piClassifier, conceptEditor));
             }
-            // no special projection then make a 'normal' rule
-            if (rule.length == 0) {
-                rule = `${Names.classifier(piClassifier)}${referencePostfix} = identifier`;
-            }
-            this.generatedParseRules.push(rule);
         }
         // syntax analysis method(s)
-        // are not needed, because there is a generic method for references in the template
+        // TODO syntax anal method for limited projections
+        // only needed for special projections, because there is a generic method for references in the template
     }
 
     private makeLimitedReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
@@ -250,7 +242,7 @@ export class ParserGenerator {
         if (noResult) {
             return "";
         } else {
-            return result + "\n";
+            return result;
         }
     }
 
@@ -373,6 +365,8 @@ export class ParserGenerator {
                 let propTypeName = (prop instanceof PiPrimitiveProperty)
                     ? `${prop.primType}`
                     : `${Names.classifier(propType)}`;
+                //
+
                 let innerText: string = ""; // holds name of correct transform... method
                 let separatorText: string = ""; // adds separator to call to transformList
                 let extraParam: string = ""; // extra parameter to call to piElemRef to set the correct Type
@@ -535,7 +529,7 @@ export class ParserGenerator {
                 let joinText = this.makeListJoinText(item.listJoin?.joinText);
                 this.separatorToProp.set(myElem, joinText);
 
-                // joinText can be (1) separator, (2) terminator, or (3) empty
+                // joinText can be (1) empty, (2) separator, or (3) terminator
                 if (joinText.length == 0) {
                     propEntry = `${propTypeName}*`;
                 } else if (item.listJoin?.joinType === ListJoinType.Separator) {
@@ -617,9 +611,10 @@ export class ParserGenerator {
                 }
             }
         } else {
-            typeName = Names.classifier(myElem.type.referred);
-            if (!myElem.isPart) { // it is a reference, so use the rule for creating a PiElementReference
-                typeName += referencePostfix;
+            if (!myElem.isPart) { // it is a reference, so use an identifier
+                typeName = "identifier";
+            } else {
+                typeName = Names.classifier(myElem.type.referred);
             }
         }
         return typeName;

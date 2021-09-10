@@ -12,9 +12,7 @@ ExModel = 'model' identifier '{'
 	Method* 
 	'}'  ;
 
-_OptionalbaseEntity = 'base' EntityPiElemRef ;
-
-Entity = 'Entity' identifier _OptionalbaseEntity? '{' 
+Entity = 'Entity' identifier ('base' EntityPiElemRef)? '{' 
 	Attribute* 
 	Method* 
 	'}'  ;
