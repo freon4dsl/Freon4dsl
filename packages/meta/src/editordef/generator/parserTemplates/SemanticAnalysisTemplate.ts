@@ -40,32 +40,6 @@ export class SemanticAnalysisTemplate {
         const className: string = Names.semanticAnalyser(language);
         const refWalkerName: string = Names.semanticWalker(language);
 
-        // create the correct if-statement
-        let stat: string = "";
-        if (this.supersOfProblems.length > 0) {
-            stat += `const propName: string = toBeReplaced.piContainer().propertyName;
-                     const propIndex: number = toBeReplaced.piContainer().propertyIndex;`;
-            for (const piClassifier of this.supersOfProblems) {
-                language.concepts.forEach(concept => {
-                    concept.allParts().forEach(part => {
-                        if (part.type.referred == piClassifier) {
-                            // console.log(`type ${Names.classifier(piClassifier)} is used in ${Names.concept(concept)} as ${part.name}`);
-                            stat +=
-                                `if (parent instanceof ${Names.concept(concept)} && propName === "${part.name}") {
-                                    ${!part.isList ?
-                                    `(parent as ${Names.concept(concept)}).${part.name} = newObject as ${Names.classifier(piClassifier)};`
-                                    :
-                                    `(parent as ${Names.concept(concept)}).${part.name}.splice(propIndex, 1, newObject as ${Names.classifier(piClassifier)});`
-                                    }
-                                } else `;
-                            this.addToImports(concept);
-                        }
-                    });
-                });
-            }
-            stat += `{ throw new Error("Semantic Analysis Error: cannot replace incorrect reference."); }`;
-        }
-
         // start Template
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER }";
@@ -93,7 +67,13 @@ export class SemanticAnalysisTemplate {
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
                             let parent: PiElement = toBeReplaced.piContainer().container;
-                            ${stat}
+                            const propName: string = toBeReplaced.piContainer().propertyName;
+                            const propIndex: number = toBeReplaced.piContainer().propertyIndex;
+                            if (propIndex !== undefined) {
+                                parent[propName].splice(propIndex, 1, newObject);
+                            } else {
+                                parent[propName] = newObject;
+                            }
                         }
                     }
                 }
@@ -106,7 +86,7 @@ export class SemanticAnalysisTemplate {
         const everyConceptName: string = Names.allConcepts(language);
         this.addToImports(this.possibleProblems);
         this.addToImports(this.exprWithBooleanProp);
-        // call this method before startign the template; it will fill the 'imports'
+        // call this method before starting the template; it will fill the 'imports'
         const replacementIfStat: string = this.makeReplacementIfStat();
 
         return `

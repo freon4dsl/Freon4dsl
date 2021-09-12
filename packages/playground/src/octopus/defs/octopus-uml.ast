@@ -2,8 +2,7 @@ language octopus
 
 modelunit UmlPart {
     public name: string;
-    packages: UmlPackage[];
-    associations: Association[];
+    package: UmlPackage;
 }
 
 // the uml concepts
@@ -24,6 +23,8 @@ concept AssociationEnd base StructuralFeature {
 
 concept Attribute base StructuralFeature {
     isOClDef: boolean;
+    init?: OclStatement;
+    derive?: OclStatement;
 }
 
 interface IClass base IClassifier {
@@ -46,6 +47,7 @@ interface IClassifier base IPackagableElement {
     reference owner: UmlPackage;
     isAbstract: boolean;
     stereotype: string;
+    invariants: OclExpression[];
 }
 
 concept CollectionType {
@@ -96,6 +98,8 @@ concept Operation implements IPackagableElement {
     isAbstract: boolean;
     isInfix: boolean;
     isPrefix: boolean;
+    pre?: OclPreStatement[];
+    post?: OclPostStatement[];
 }
 concept UmlPackage implements IModelElement {
     subpackages: UmlPackage[];
@@ -138,6 +142,23 @@ concept StructuralFeature implements IPackagableElement {
     isAggregate: boolean;
     hasClassScope: boolean;
 }
+
+concept OclStatement {
+    name: string;
+    expr: OclExpression;
+}
+
+// TODO remove the following two concepts when we can cater for a prefix to lists
+concept OclPreStatement {
+    name: string;
+    expr: OclExpression;
+}
+
+concept OclPostStatement {
+    name: string;
+    expr: OclExpression;
+}
+
 //concept TupleType base DataType {
 //    parts: VariableDeclaration[];
 //}

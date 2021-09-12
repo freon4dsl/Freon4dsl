@@ -26,9 +26,10 @@ export const optionalRulePrefix = "optional";
 export class ParserGenerator {
     private language: PiLanguage = null;
     private unit: PiConcept = null;
+    private editUnit: PiEditUnit = null;
     private conceptsUsed: PiConcept[] = [];
     private binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
-    private interfacesAndAbstractsUsed: PiClassifier[] = [];
+    private interfacesAndAbstractsUsed: PiClassifier[] = [];        // all interfaces and abstract concepts that are mentioned in this unit
     private limitedsReferred: PiLimitedConcept[] = [];
     private generatedParseRules: string[] = [];
     private generatedSyntaxAnalyserMethods: string[] = [];
@@ -44,6 +45,7 @@ export class ParserGenerator {
         this.reset();
         this.language = language;
         this.unit = langUnit;
+        this.editUnit = editUnit;
         // analyse the language unit and store the results in the global attributes
         this.analyseUnit(langUnit, []);
         // do the concepts
@@ -82,6 +84,7 @@ export class ParserGenerator {
     private reset() {
         this.language = null;
         this.unit = null;
+        this.editUnit = null;
         this.conceptsUsed = [];
         this.binaryConceptsUsed = [];
         this.interfacesAndAbstractsUsed = [];
@@ -104,8 +107,8 @@ export class ParserGenerator {
         // determine in which list the piClassifier belongs
         if (piClassifier instanceof PiInterface) {
             this.interfacesAndAbstractsUsed.push(piClassifier);
-            // for interfaces search all implementors and subinterfaces
-            LangUtil.findAllImplementorsAndSubs(piClassifier).forEach(type => {
+            // for interfaces search all implementors
+            LangUtil.findImplementorsRecursive(piClassifier).forEach(type => {
                 this.analyseUnit(type, typesDone);
             });
         } else if (piClassifier instanceof PiConcept) {
@@ -215,11 +218,11 @@ export class ParserGenerator {
             if (conceptEditor) {
                 // make a rule according to the projection
                 this.generatedParseRules.push(this.makeLimitedReferenceRule(piClassifier, conceptEditor));
+                // syntax analysis method(s)
+                // TODO syntax anal method for limited projections
+                // only needed for special projections, because there is a generic method for references in the template
             }
         }
-        // syntax analysis method(s)
-        // TODO syntax anal method for limited projections
-        // only needed for special projections, because there is a generic method for references in the template
     }
 
     private makeLimitedReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
@@ -256,12 +259,17 @@ export class ParserGenerator {
             // find the choices for this rule: all concepts that implement or extend the concept
             let implementors: PiClassifier[] = [];
             if (piClassifier instanceof PiInterface) {
-                implementors.push(...piClassifier.allSubInterfacesDirect());
-                implementors.push(...LangUtil.findImplementorsDirect(piClassifier).filter(sub => !(sub instanceof PiLimitedConcept)));
+                // do not include sub-interfaces, because then we might have 'multiple inheritance' problems
+                // instead find the direct implementors and add them
+                for (const intf of piClassifier.allSubInterfacesDirect()) {
+                    implementors.push(...LangUtil.findImplementorsDirect(intf))
+                }
+                implementors.push(...LangUtil.findImplementorsDirect(piClassifier));
             } else if (piClassifier instanceof PiConcept) {
-                implementors = piClassifier.allSubConceptsDirect().filter(sub => !(sub instanceof PiLimitedConcept));
+                implementors = piClassifier.allSubConceptsDirect();
             }
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
+            implementors = implementors.filter(sub => !(sub instanceof PiLimitedConcept));
             implementors = this.sortImplementors(implementors);
 
             let rule: string = "";
@@ -326,6 +334,7 @@ export class ParserGenerator {
             // note: not all properties need to be present in a projection
             const propsToSet: PiProperty[] = this.findPropsToSet(conceptDef);
             let indexToName: Map<string, number> = new Map<string, number>();
+            let optionalIndexToName: Map<string, number> = new Map<string, number>();
 
             // make the parse rule
             let rule: string = "";
@@ -336,8 +345,8 @@ export class ParserGenerator {
             let choiceBetweenSubconcepts = "";
             if (subs.length > 0) {
                 // TODO see if there are binary expressions amongst the implementors
-                choiceBetweenSubconcepts = ` ${subs.map((implementor, index) =>
-                    `${Names.classifier(implementor)} `).join("\n\t| ")}\n\t| `;
+                choiceBetweenSubconcepts = `\n\t| ${subs.map((implementor, index) =>
+                    `${Names.classifier(implementor)} `).join("\n\t| ")}`;
             }
 
             // now we have enough information to create the parse rule
@@ -345,8 +354,8 @@ export class ParserGenerator {
             // and a rule where every property mentioned in the editor definition is set.
             // console.log(`doAllItems START`);
             this.currentIndex = 0;
-            rule = `${branchName} =${choiceBetweenSubconcepts} ${conceptDef.projection.lines.map(l =>
-                `${this.doAllItems(branchName, l.items, indexToName)}`
+            rule = `${branchName} = ${conceptDef.projection.lines.map(l =>
+                `${this.doAllItems(branchName, l.items, indexToName, optionalIndexToName)} ${choiceBetweenSubconcepts}`
             ).join("\n\t")}`
             this.generatedParseRules.push(rule);
 
@@ -389,12 +398,16 @@ export class ParserGenerator {
                 }
 
                 if (prop.isOptional ) { // now take into account the optionality
+                    const propIndex: number = optionalIndexToName.get(prop.name);
                     propStatements.push(
                         `const ${prop.name}Node = children[${indexToName.get(prop.name)}] as SPPTBranch;
                         let ${prop.name} = null;
                         if (!${prop.name}Node.isEmptyMatch) {
-                            // transform the first element in the [0..1] optional collection
-                            ${prop.name} = ${innerText}(${prop.name}Node.nonSkipChildren.toArray()[0]${extraParam});
+                            // take the first element in the [0..1] optional group
+                            // and the ${propIndex}(-st/nd/rd/th) element of that group  
+                            // hack: group has two occurences, therefore twice 'nonSkipChildren.toArray()[0]'
+                            let propNode = ${prop.name}Node.nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[${propIndex}];
+                            ${prop.name} = ${innerText}(propNode${extraParam});
                         }`);
                 } else {
                     propStatements.push(`const ${prop.name}: ${propTypeName} = ${innerText}(children[${indexToName.get(prop.name)}]${separatorText}${extraParam});`);
@@ -440,7 +453,7 @@ export class ParserGenerator {
         return propsToSet;
     }
 
-    private doAllItems(branchName: string, list: PiEditProjectionItem[], indexToName: Map<string, number>): string {
+    private doAllItems(branchName: string, list: PiEditProjectionItem[], indexToName: Map<string, number>, optionalIndexToName: Map<string, number>): string {
         // console.log(`doAllItems.mainIndex: ${this.currentIndex}`)
         let result = "";
         if (!!list && list.length > 0) {
@@ -449,11 +462,10 @@ export class ParserGenerator {
                     result += `${this.makeTextProjection(item)}`
                 } else if (item instanceof PiEditPropertyProjection) {
                     let propName: string = item.expression.findRefOfLastAppliedFeature().name;
-                    result += `${this.makePropertyProjection(item)} `
-                    // console.log(`settingIndex: ${propName} => ${this.currentIndex}`);
+                    result += `${this.makePropertyProjection(item, optionalIndexToName, false)} `
                     indexToName.set(propName, this.currentIndex);
                 } else if (item instanceof PiEditSubProjection) {
-                    result += `${this.makeSubProjection(branchName, item, indexToName)} `
+                    result += `${this.makeSubProjection(branchName, item, indexToName, optionalIndexToName)} `
                 }
                 this.currentIndex += 1;
             });
@@ -461,67 +473,57 @@ export class ParserGenerator {
         return result;
     }
 
-    private makeSubProjection(branchName: string, item: PiEditSubProjection, indexToName: Map<string, number>): string {
+    private makeSubProjection(branchName: string, item: PiEditSubProjection, indexToName: Map<string, number>, optionalIndexToName: Map<string, number>): string {
         // console.log(`makeSubProjection().mainIndex: ${this.currentIndex}`)
         // TODO check: I expect exactly one property projection in a sub projection
         if (item.optional) {
-            // create an extra rule for the optional part, and an extra syntax analysis method
-            let ruleName: string = "";
-            let ruleText: string = "";
-            let propIndex: number = -1; // the index of the property within the new rule
-            let propType: string = "";
-            item.items.forEach((sub) => {
-                if (sub instanceof PiEditSubProjection) {
-                    ruleText += this.makeSubProjection(branchName, sub, indexToName);
-                    propIndex += 1;
-                } else if (sub instanceof PiEditPropertyProjection) {
-                    let prop = sub.expression.findRefOfLastAppliedFeature();
-                    propType = Names.classifier(prop.type.referred);
-                    ruleName = `${branchName}_${optionalRulePrefix}_${prop.name}`;
-                    if (!prop.isPart) { // it's a reference
-                        propType = `${Names.PiElementReference}<${propType}>`
-                    }
-                    ruleText += `${this.makePropertyProjection(sub)}`;
-                    propIndex += 1;
-                    indexToName.set(prop.name, this.currentIndex); // the index of the complete optional part within the main rule
-                } else if (sub instanceof PiEditProjectionText) {
-                    ruleText += `${this.makeTextProjection(sub)}`;
-                    propIndex += 1;
-                // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
-                }
-            });
-            this.generatedParseRules.push(`${ruleName} = ${ruleText}`);
-
-            // to be used as part of the if-statement in transformBranch()
-            this.branchNames.push(ruleName);
-
-            // syntax analysis
-            let content: string = `this.transformNode(branch.nonSkipChildren.toArray()[${propIndex}])`;
-            if ( propType.length == 0 ) { // the rule is of the form 'UmlClass_optional_isAbstract = "<abstract>" '
-                propType = "boolean";
-                content = `this.transformNode(branch.nonSkipChildren.toArray()[0]).length > 0`;
-            }
-            this.generatedSyntaxAnalyserMethods.push(
-                `/**
-                * Method to transform branches that match the following rule:
-                * ${this.addCommentStars(`${ruleName} = ${ruleText}`)}
-                * @param branch
-                * @private
-                */
-                private transform${ruleName}(branch: SPPTBranch): ${propType} {
-                    // console.log("transform${ruleName} called");
-                    // An optional branch is a List with 0 or 1 element, so you always have the list node in between.
-                    return ${content};
-                }`);
-
-            return `${ruleName}?`; // the 'call' to the new rule in the main rule
+            // create a group for the optional part, and store the indexes op the group and of the property within the group
+            return this.makeOptionalRulePart(item, branchName, indexToName, optionalIndexToName);
         } else {
             // console.log(`FOUND non-optional sub projection`);
-            return `${this.doAllItems(branchName, item.items, indexToName)}`;
+            return `${this.doAllItems(branchName, item.items, indexToName, optionalIndexToName)}`;
         }
     }
 
-    private makePropertyProjection(item: PiEditPropertyProjection): string {
+    private makeOptionalRulePart(item: PiEditSubProjection, branchName: string, indexToName: Map<string, number>, optionalIndexToName: Map<string, number>) {
+        // let ruleName: string = "";
+        let ruleText: string = "";
+        let propIndex: number = -1; // the index of the property within the new rule
+        let propType: string = "";
+        let isList: boolean = false;
+        item.items.forEach((sub) => {
+            if (sub instanceof PiEditSubProjection) {
+                ruleText += this.makeSubProjection(branchName, sub, indexToName, optionalIndexToName);
+                propIndex += 1;
+            } else if (sub instanceof PiEditPropertyProjection) {
+                let prop = sub.expression.findRefOfLastAppliedFeature();
+                propType = Names.classifier(prop.type.referred);
+                if (!prop.isPart) { // it's a reference
+                    propType = `${Names.PiElementReference}<${propType}>`;
+                }
+                if (prop.isList) isList = true;
+                ruleText += `${this.makePropertyProjection(sub, optionalIndexToName, true)}`;
+                propIndex += 1;
+                indexToName.set(prop.name, this.currentIndex); // the index of the complete optional group within the main rule
+                optionalIndexToName.set(prop.name, propIndex); // the index of the property within the optional group
+            } else if (sub instanceof PiEditProjectionText) {
+                ruleText += `${this.makeTextProjection(sub)}`;
+                propIndex += 1;
+            // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
+            }
+        });
+
+        if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
+            ruleText = `( ${ruleText} )?`;
+        } else if (!isList) { // there is one element in the ruleText but it is not a list, so we need a '?'
+            ruleText = `${ruleText}?`;
+        }
+        return `${ruleText}`; // the 'call' to the optional prop in the main rule
+    }
+
+    // withInOptionalGroup: if this property projection is within an optional group,
+    // the rule should not add an extra '?'
+    private makePropertyProjection(item: PiEditPropertyProjection, optionalIndexToName: Map<string, number>, withinOptionalGroup: boolean ): string {
         const myElem = item.expression.findRefOfLastAppliedFeature();
         if (!!myElem) {
             let propTypeName = this.makeRuleName(myElem, item);
@@ -540,6 +542,11 @@ export class ParserGenerator {
                 }
                 return propEntry;
             } else {
+                if (myElem.isOptional && !withinOptionalGroup) {
+                    // make an extra group in the parse tree to simplify creation of syntax analysis methods
+                    optionalIndexToName.set(myElem.name, 0);
+                    return `( ${propTypeName} )?`
+                }
                 return `${propTypeName}`;
             }
         } else {
@@ -583,42 +590,52 @@ export class ParserGenerator {
         return result;
     }
 
+    // returns a string that is the name of the parse rule for myElem
+    // to be used in the both the 'call' and the 'definition' of the rule
     private makeRuleName(myElem: PiProperty, item: PiEditPropertyProjection): string {
-        // TODO make a difference between variables and stringLiterals in the .ast file
-        let typeName: string = "";
+        // TODO make a difference between variables and stringLiterals in the .ast file AND adjust here
+        let ruleName: string = "";
         if (myElem instanceof PiPrimitiveProperty) {
             if (myElem.name === "name") {
-                typeName = "identifier";
+                ruleName = "identifier";
             } else {
                 switch (myElem.primType) {
                     case "string": {
-                        typeName = "stringLiteral";
+                        ruleName = "stringLiteral";
                         break;
                     }
                     case "number": {
-                        typeName = "numberLiteral";
+                        ruleName = "numberLiteral";
                         break;
                     }
                     case "boolean": {
                         if (!!item.keyword) {
-                            typeName = `"${item.keyword}"`
+                            ruleName = `"${item.keyword}"`
                         } else {
-                            typeName = "booleanLiteral";
+                            ruleName = "booleanLiteral";
                         }
                         break;
                     }
                     default:
-                        typeName = "stringLiteral";
+                        ruleName = "stringLiteral";
                 }
             }
         } else {
-            if (!myElem.isPart) { // it is a reference, so use an identifier
-                typeName = "identifier";
+            const myType = myElem.type.referred;
+            if (!myElem.isPart) { // it is a reference, either use an identifier or the rule for limited concept
+                if (myType instanceof PiLimitedConcept) {
+                    const conceptEditor = this.editUnit.findConceptEditor(myType);
+                    if (conceptEditor) {
+                        ruleName = `${Names.classifier(myType)}${referencePostfix}`;
+                    }
+                }else {
+                    ruleName = "identifier";
+                }
             } else {
-                typeName = Names.classifier(myElem.type.referred);
+                ruleName = Names.classifier(myType);
             }
         }
-        return typeName;
+        return ruleName;
     }
 
     private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], editUnit: PiEditUnit): PiEditConcept[] {

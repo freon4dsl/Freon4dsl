@@ -77,7 +77,7 @@ export class SyntaxAnalyserTemplate {
                     return this.transform${name}(branch);
                     } else `).join("\n")}                
                 {
-                    throw new Error(\`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled\`);
+                    throw new Error(\`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled for node '\${branch.matchedText}'\`);
                 }
             }
             

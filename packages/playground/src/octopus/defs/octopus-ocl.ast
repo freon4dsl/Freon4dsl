@@ -3,3 +3,7 @@ language octopus
 modelunit OclPart {
     public name: string;
 }
+
+concept OclExpression {
+    expr: string;
+}
