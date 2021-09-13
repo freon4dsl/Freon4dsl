@@ -18,11 +18,11 @@ describe("Testing Parser", () => {
         });
 
         const errors = validator.validate(model);
-        for (const e of errors) {
-            console.log(e.message + " => " + e.locationdescription);
-        }
-        // do not unparse if there are errors
-        if (errors.length > 4) { // the custom validator adds 4 unneccessary errors
+        // for (const e of errors) {
+        //     console.log(e.message + " => " + e.locationdescription);
+        // }
+        // do not unparse if there are more errors than the four custom ones
+        if (errors.length == 4) { // the custom validator adds 4 unneccessary errors
             const path: string = "./unparsedDemoModel1.txt";
             const fileHandler = new FileHandler();
 
