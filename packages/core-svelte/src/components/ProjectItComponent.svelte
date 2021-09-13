@@ -12,6 +12,7 @@
         KEY_ARROW_RIGHT
     } from "@projectit/core";
     import { autorun } from "mobx";
+    import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
 
     let LOGGER = new PiLogger("ProjectItComponent");
@@ -86,6 +87,7 @@
 
     let rootBox: Box;
     autorun(() => {
+        AUTO_LOGGER.log("==================> ProjectItComponent")
         rootBox = editor.rootBox;
     });
 

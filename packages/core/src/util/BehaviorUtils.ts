@@ -1,4 +1,5 @@
 import { isRegExp, isString, Box, PiEditor } from "../editor";
+import { Language } from "../storage/Language";
 import { PiLogger } from "./internal";
 
 const LOGGER = new PiLogger("BehaviorUtils");
@@ -43,19 +44,19 @@ export enum BehaviorExecutionResult {
  * @param {PiEditor} editor
  * @returns {boolean}
  */
-export async function executeBehavior(box: Box, text: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
+export async function executeBehavior(box: Box, text: string, label: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
     LOGGER.log("Enter executeBehavior");
     let partialMatch: boolean = false;
 
-    for (const a of editor.behaviors) {
-        const trigger = a.trigger;
-        if (a.activeInBoxRoles.includes(box.role)) {
+    for (const behavior of editor.behaviors) {
+        const trigger = behavior.trigger;
+        if (behavior.activeInBoxRoles.includes(box.role)) {
             if (isRegExp(trigger)) {
                 const matchArray = text.match(trigger);
-                LOGGER.log("BehaviorUtils.executeBehavior: MATCH " + text + " against " + trigger +
+                LOGGER.log("executeBehavior: MATCH " + text + " against " + trigger +
                             "  results in " + (!!matchArray ? matchArray.length : "null"));
                 if (matchArray !== null && text === matchArray[0]) {
-                    const execresult = await a.execute(box, text, editor);
+                    const execresult = behavior.execute(box, text, editor);
                     // if( !!execresult){
                     //     editor.selectElement(execresult);
                     //     editor.selectFirstLeafChildBox();
@@ -64,21 +65,25 @@ export async function executeBehavior(box: Box, text: string, editor: PiEditor):
                 }
             } else if (isString(trigger)) {
                 if (trigger === text) {
-                    LOGGER.log("BehaviorUtils.executeBehavior: MATCH FULL TEXT");
-                    const execresult = await a.execute(box, text, editor);
+                    LOGGER.log("executeBehavior: MATCH FULL TEXT label [" + label + "] refShortcut [" + behavior.referenceShortcut + "]");
+                    const execresult = behavior.execute(box, text, editor);
+                    // If this is a referenceShortcut, fill in the selected reference, which is in the label
+                    if (!!label && !!behavior.referenceShortcut) {
+                        execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label.substr(0, label.indexOf(" ")), behavior.referenceShortcut.metatype);
+                    }
                     // if( !!execresult){
                     //     await editor.selectElement(execresult, LEFT_MOST);
                     //     editor.selectFirstLeafChildBox();
                     // }
                     return BehaviorExecutionResult.EXECUTED;
                 } else if (trigger.startsWith(text)) {
-                    LOGGER.log("BehaviorUtils.executeBehavior: MATCH PARTIAL TEXT");
+                    LOGGER.log("executeBehavior: MATCH PARTIAL TEXT");
                     partialMatch = true;
                 }
             }
         }
     }
-    LOGGER.log("BehaviorUtils.executeBehavior: no alias match");
+    LOGGER.log("executeBehavior: no alias match");
     if (partialMatch) {
         return BehaviorExecutionResult.PARTIAL_MATCH;
     } else {

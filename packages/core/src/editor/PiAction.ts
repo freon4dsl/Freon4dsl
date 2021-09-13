@@ -55,21 +55,22 @@ export interface PiBehavior {
  * Special behavior for creating an expression.
  */
 export interface PiExpressionCreator extends PiBehavior {
-    expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor, propertyName?: string) => PiExpression;
+    expressionBuilder: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiExpression;
 }
 
 /**
  * Special behavior for creating a binary expression.
  */
 export interface PiBinaryExpressionCreator extends PiBehavior {
-    expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor, propertyName?: string) => PiBinaryExpression;
+    expressionBuilder: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiBinaryExpression;
 }
 
 /**
  * Behavior with custom action, intended to be used to create non expression elements.
  */
 export interface PiCustomBehavior extends PiBehavior {
-    action: (box: Box, trigger: PiTriggerType, editor: PiEditor, propertyName?: string) => PiElement | null;
+    action: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiElement | null;
+    undo?: (box: Box, ed: PiEditor) => void;
 
     referenceShortcut?: ReferenceShortcut;
 }

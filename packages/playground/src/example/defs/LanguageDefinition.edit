@@ -50,6 +50,7 @@ MethodCallExpression {
         CALL ${self.methodDefinition} ( ${self.args @separator[,] } )
         ]
     @trigger "method"
+    @referenceShortcut self.methodDefinition
 }
 
 SumExpression {
