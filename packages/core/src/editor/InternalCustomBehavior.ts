@@ -1,11 +1,10 @@
 import { action } from "mobx";
-import { ParameterRef } from "../../../playground/dist/example/language/gen/ParameterRef";
 import { PiElement } from "../language/PiElement";
 import { PiLogger } from "../util/PiLogging";
 import { PiUtils } from "../util/PiUtils";
 import { Box } from "./boxes/Box";
 import { InternalBehavior } from "./InternalBehavior";
-import { PiCustomBehavior, PiTriggerType } from "./PiAction";
+import { PiCustomBehavior } from "./PiAction";
 import { PiEditor } from "./PiEditor";
 
 const LOGGER = new PiLogger("InternalCustomBehavior");
