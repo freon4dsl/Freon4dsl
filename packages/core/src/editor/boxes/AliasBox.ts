@@ -1,4 +1,3 @@
-import { ParameterRef } from "../../../../playground/dist/example/language/gen/ParameterRef";
 import { BehaviorExecutionResult, executeBehavior, MatchUtil } from "../../util";
 import { triggerToString, PiEditor, TextBox } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
