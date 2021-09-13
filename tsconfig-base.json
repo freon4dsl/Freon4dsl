@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true, /* here to make jest not complain */
     "paths": {
       "@projectit/core/*": [
         "packages/core/src/*"

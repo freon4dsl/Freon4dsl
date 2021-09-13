@@ -1,7 +1,7 @@
 import {
     PiBinaryExpressionConcept,
     PiClassifier,
-    PiConcept, PiExpressionConcept,
+    PiConcept, PiExpressionConcept, PiInstance,
     PiInterface,
     PiLanguage,
     PiLimitedConcept, PiPrimitiveProperty, PiProperty
@@ -39,6 +39,7 @@ export class ParserGenerator {
     private specialBinaryRuleName = `__pi_binary_expression`;
     private separatorToProp: Map<PiProperty, string> = new Map<PiProperty, string>();
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
+    private listWithExtras: PiProperty[] = [];
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
         // reset all attributes that are global to this class
@@ -94,6 +95,7 @@ export class ParserGenerator {
         this.branchNames = [];
         this.imports = [];
         this.currentIndex = 0;
+        this.listWithExtras = [];
     }
 
     private analyseUnit(piClassifier: PiClassifier, typesDone: PiClassifier[]) {
@@ -216,37 +218,42 @@ export class ParserGenerator {
             // of the special projection for a limited concept
             const conceptEditor = editUnit.findConceptEditor(piClassifier);
             if (conceptEditor) {
+                // find the mapping of keywords to predef instances
+                // fist is the name of the instance, second is the keyword
+                let myMap: Map<string, string> = new Map<string, string>();
+                conceptEditor.projection.lines.forEach(line => {
+                    line.items.forEach(item => {
+                        if (item instanceof PiEditInstanceProjection) {
+                            myMap.set(item.expression.instanceName, item.keyword);
+                        } else {
+                            // TODO do we allow other projections for limited concepts????
+                        }
+                    })
+                });
+                const myName = Names.classifier(piClassifier);
                 // make a rule according to the projection
-                this.generatedParseRules.push(this.makeLimitedReferenceRule(piClassifier, conceptEditor));
-                // syntax analysis method(s)
-                // TODO syntax anal method for limited projections
-                // only needed for special projections, because there is a generic method for references in the template
+                this.generatedParseRules.push(this.makeLimitedReferenceRule(myName, myMap));
+                // syntax analysis method(s) are only needed for special projections,
+                // because there is a generic method for references in the template
+                this.generatedSyntaxAnalyserMethods.push(this.makeLimitedSyntaxMethod(myName, myMap));
             }
         }
     }
 
-    private makeLimitedReferenceRule(piClassifier: PiLimitedConcept, conceptEditor: PiEditConcept) {
-        const myName = Names.classifier(piClassifier);
-        let noResult = false;
-        let result: string = `${myName}${referencePostfix} = `;
-        conceptEditor.projection.lines.forEach((line, index) => {
-            line.items.forEach(item => {
-                if (item instanceof PiEditInstanceProjection) {
-                    result += `\'${item.keyword}\' `;
-                } else if (item instanceof PiEditPropertyProjection) {
-                    // TODO do we allow other projections for limited concepts????
-                    noResult = true;
-                }
-            });
-            if (index < conceptEditor.projection.lines.length -1) {
+    private makeLimitedReferenceRule(myName: string, myMap: Map<string, string>) {
+        // knowing that we only have keywords in the parse rule, it can be prefixed with 'leaf'
+        let result: string = `leaf ${myName}${referencePostfix} = `;
+        let first = true;
+        for (const [key, value] of myMap) {
+            // prefix the second and all other choices with the '|' symbol
+            if (first) {
+                first = false;
+            } else {
                 result += "\n\t| ";
             }
-        });
-        if (noResult) {
-            return "";
-        } else {
-            return result;
+            result += `\'${value}\'`;
         }
+        return result;
     }
 
     // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
@@ -397,7 +404,7 @@ export class ParserGenerator {
                     propTypeName = `${Names.PiElementReference}<${propTypeName}>[]`;
                 }
 
-                if (prop.isOptional ) { // now take into account the optionality
+                if (prop.isOptional || !!this.listWithExtras.find(p => p = prop)) { // now take into account the optionality
                     const propIndex: number = optionalIndexToName.get(prop.name);
                     propStatements.push(
                         `const ${prop.name}Node = children[${indexToName.get(prop.name)}] as SPPTBranch;
@@ -486,17 +493,17 @@ export class ParserGenerator {
     }
 
     private makeOptionalRulePart(item: PiEditSubProjection, branchName: string, indexToName: Map<string, number>, optionalIndexToName: Map<string, number>) {
-        // let ruleName: string = "";
         let ruleText: string = "";
         let propIndex: number = -1; // the index of the property within the new rule
         let propType: string = "";
+        let prop: PiProperty = null;
         let isList: boolean = false;
         item.items.forEach((sub) => {
             if (sub instanceof PiEditSubProjection) {
                 ruleText += this.makeSubProjection(branchName, sub, indexToName, optionalIndexToName);
                 propIndex += 1;
             } else if (sub instanceof PiEditPropertyProjection) {
-                let prop = sub.expression.findRefOfLastAppliedFeature();
+                prop = sub.expression.findRefOfLastAppliedFeature();
                 propType = Names.classifier(prop.type.referred);
                 if (!prop.isPart) { // it's a reference
                     propType = `${Names.PiElementReference}<${propType}>`;
@@ -514,7 +521,8 @@ export class ParserGenerator {
         });
 
         if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
-            ruleText = `( ${ruleText} )?`;
+            this.listWithExtras.push(prop);
+            ruleText = `( ${ruleText} )?\n`;
         } else if (!isList) { // there is one element in the ruleText but it is not a list, so we need a '?'
             ruleText = `${ruleText}?`;
         }
@@ -673,6 +681,7 @@ export class ParserGenerator {
      * @private
      */
     private sortImplementors(implementors: PiClassifier[]): PiClassifier[] {
+        // TODO find out whether we can rwemove this method completely
         // TODO should be done recursively!!!
         // TODO if this works then the ref-correction can be done differently
         let result: PiClassifier[] = [];
@@ -687,5 +696,25 @@ export class ParserGenerator {
         }
         result.push(...withPrims);
         return result;
+    }
+
+    private makeLimitedSyntaxMethod(myName: string, myMap: Map<string, string>) {
+        let ifStat: string = '';
+        for (const [key, value] of myMap) {
+            ifStat += `if (choice == '${value}') {
+                return '${key}';
+            } else `
+        }
+        // close the ifStatement
+        ifStat += `{
+                return null;
+            }`;
+        this.branchNames.push(myName);
+        // TODO check comment
+        return `
+        private transform${myName}(branch: SPPTBranch): string {
+            let choice = this.transformNode(branch); // should be equal to branch.matchedText
+            ${ifStat}
+        }`;
     }
 }

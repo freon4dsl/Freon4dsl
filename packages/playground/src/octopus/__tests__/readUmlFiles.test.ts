@@ -11,7 +11,7 @@ describe("Testing Parser", () => {
     // piReader.piReader = umlParser;
     // TODO use snapshots
     test("book model unparsed and parsed again", () => {
-        const input = fileHandler.stringFromFile("src/octopus/__tests__/Book.uml2");
+        const input = fileHandler.stringFromFile("src/octopus/__tests__/Book.uml");
         const unit1 = reader.readFromString(input, "UmlPart");
         console.log(writer.writeToString(unit1, 0, false));
     });

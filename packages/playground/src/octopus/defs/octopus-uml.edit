@@ -2,7 +2,7 @@ editor XXX for language octopus
 
 UmlPart {
     @projection normal
-        [${self.package}]
+        [${self.umlPackage}]
 }
 
 // the uml concepts
