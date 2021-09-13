@@ -56,20 +56,19 @@ export class SyntaxAnalyserTemplate {
             
             private transformLeaf(node: SPPTNode): any {
                 let tmp = (node as SPPTLeaf).matchedText;
-                if (tmp.startsWith("\\"")) { // stringLiteral
-                    // it is a stringLiteral, we should strip the surrounding quotes
+                if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
                     tmp = tmp.slice(1, tmp.length - 1);
                     return tmp;
-                // } else if (tmp == "true") { // booleanLiteral
-                //     return true;
-                // } else if (tmp == "false") { // booleanLiteral
-                //     return false;
+                } else if (tmp == "false") { // booleanLiteral
+                    return false;
+                } else if (tmp == "true") { // booleanLiteral
+                    return true;
                 } else if (Number.isInteger(parseInt(tmp))) { // numberLiteral
                     return parseInt(tmp);
                 } else { // identifier
                     return tmp;
                 }
-            }      
+            }     
           
             private transformBranch(branch: SPPTBranch): any {
                 let brName: string = branch.name;
@@ -88,25 +87,27 @@ export class SyntaxAnalyserTemplate {
              * ...PiElemRef = identifier;
              */
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
-                let refName: string = this.transformNode(branch);
-                // if (refName == null || refName == undefined || refName.length == 0) {
-                //    throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
-                //}
-                return PiElementReference.create\<T\>(refName, typeName );
+                let refName: string = branch.matchedText;
+                if (refName == null || refName == undefined || refName.length == 0) {
+                    throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
+                }
+                return PiElementReference.create<T>(refName, typeName);
             }
         
             /**
              * Generic method to transform lists
              */
-            private transformList\<T\>(branch: SPPTBranch, separator?: string) : T[] {
+            private transformList<T>(branch: SPPTBranch, separator?: string): T[] {
                 let result: T[] = [];
                 for (const child of branch.nonSkipChildren.toArray()) {
                     let element: any = this.transformNode(child);
-                    if (element) {
-                        if (!separator) {
+                    if (element !== null || element !== undefined) {
+                        if (separator == null || separator == undefined) {
                             result.push(element);
                         } else {
-                            if (element !== separator) result.push(element);
+                            if (element != separator) {
+                                result.push(element);
+                            }
                         }
                     }
                 }

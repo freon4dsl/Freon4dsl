@@ -19,7 +19,6 @@
     "heating":      "bash ../../scripts/projectit-dev.sh all -d src/heating/defs -o src/heating",
     "json": 	    "bash ../../scripts/projectit-dev.sh all -d src/json/defs -o src/json",
     "octopus": 	    "bash ../../scripts/projectit-dev.sh all -d src/octopus/defs -o src/octopus",
-    "parserTest":   "bash ../../scripts/projectit-dev.sh all -d src/parser-test/defs -o src/parser-test",
     "openhab":      "bash ../../scripts/projectit-dev.sh -v all -d src/openhab/defs -o src/openhab",
     "pi-languages": "bash ../../scripts/projectit-dev.sh -v all -d src/pi-languages/defs -o src/pi-languages",
     "taxrules": 	"bash ../../scripts/projectit-dev.sh all -d src/taxrules/defs -o src/taxrules",

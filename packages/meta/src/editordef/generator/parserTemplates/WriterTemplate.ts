@@ -174,15 +174,17 @@ export class WriterTemplate {
                 indent: number,
                 short: boolean
             ) {
-                list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index === list.length - 1;
-                    if (typeof listElem === "string") {
-                        this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
-                    } else {
-                        this.output[this.currentLine] += \`\$\{listElem\}\`;
-                    }
-                    this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
-                });
+                if (!!list) {
+                    list.forEach((listElem, index) => {
+                        const isLastInList: boolean = index === list.length - 1;
+                        if (typeof listElem === "string") {
+                            this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
+                        } else {
+                            this.output[this.currentLine] += \`\$\{listElem\}\`;
+                        }
+                        this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
+                    });
+                }
             }
             
             /**
@@ -221,8 +223,9 @@ export class WriterTemplate {
                     } else { // stop after 1 line
                         // note that the following cannot be parsed
                         this.output[this.currentLine] += \` ...\`;
-                        return;
                     }
+                } else if (!vertical && isLastInList) {
+                    this.output[this.currentLine] += \` \`;
                 }
             }
         
@@ -381,7 +384,7 @@ export class WriterTemplate {
                 if (sub instanceof PiEditPropertyProjection) {
                     myTypeScript = langExpToTypeScript(sub.expression);
                     if (sub.expression.findRefOfLastAppliedFeature().isList) {
-                        myTypeScript = `${myTypeScript}.length > 0`;
+                        myTypeScript = `!!${myTypeScript} && ${myTypeScript}.length > 0`;
                     } else {
                         myTypeScript = `!!${myTypeScript}`;
                     }
@@ -444,11 +447,20 @@ export class WriterTemplate {
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
-            if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-                result += `if (!!${elemStr}) { ${myCall} }`;
-            } else {
+            // TODO check this solution: there is one if-stat too many in
+            // if (!!modelelement.primNumberWithExtra) {
+            //     this.output[this.currentLine] += `before `;
+            //     if (!!modelelement.primNumberWithExtra) {
+            //         this.output[this.currentLine] += `${modelelement.primNumberWithExtra} `;
+            //     }
+            //     this.output[this.currentLine] += `after `;
+            // }
+            // this seems to be the solution:
+            // if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
+            //     result += `if (!!${elemStr}) { ${myCall} }`;
+            // } else {
                 result += myCall;
-            }
+            // }
         }
         return result + ";\n";
     }

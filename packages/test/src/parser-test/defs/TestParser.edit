@@ -1,31 +1,44 @@
 editor XXX for language TestParser
 
-//VisibilityKind {
-//    @projection normal [
-//        ${PUBLIC @keyword [+]}
-//        ${PRIVATE @keyword [-]}
-//        ${PROTECTED @keyword [#]}
-//    ]
-//}
-
+// for testing primitibves
 PrimExtra {
     @projection normal [
-    before ${self.primNumberWithExtra}: number;
-    before ${self.primStringWithExtra}: string;
-    before ${self.primBooleanWithExtra}: boolean;
-//    before ${self.primListNumberWithExtra}: number\[\];
-//    before ${self.primListStringWithExtra}: string\[\];
-//    before ${self.primListBooleanWithExtra}: boolean\[\];
+    before ${self.primNumberWithExtra} after
+    before ${self.primStringWithExtra} after
+    before ${self.primBooleanWithExtra} after
+    before ${self.primListNumberWithExtra} after
+    before ${self.primListStringWithExtra} after
+    before ${self.primListBooleanWithExtra}    after
     ]
 }
-//
-//PrimExtraOptional {
-//    @projection normal [PrimExtraOptional
-//    [?before ${self.primNumberWithExtra} after]
-//    [?before ${self.primStringWithExtra} after]
-//    [?before ${self.primBooleanWithExtra} after]
-//    [?before ${self.primListNumberWithExtra} after]
-//    [?before ${self.primListStringWithExtra} after]
-//    [?before ${self.primListBooleanWithExtra} after]
-//    ]
-//}
+
+PrimExtraOptional {
+    @projection normal [PrimExtraOptional
+    [?before ${self.primNumberWithExtra} after]
+    [?before ${self.primStringWithExtra} after]
+    [?before ${self.primBooleanWithExtra} after]
+    [?before ${self.primListNumberWithExtra} after]
+    [?before ${self.primListStringWithExtra} after]
+    [?before ${self.primListBooleanWithExtra} after]
+    ]
+}
+
+// for limited concepts
+
+VisibilityKind {
+    @projection normal [
+        ${PUBLIC @keyword [+]}
+        ${PRIVATE @keyword [-]}
+        ${PROTECTED @keyword [#]}
+    ]
+}
+
+LimitedTest {
+    @projection normal [
+    LimitedTest ${self.name}
+    ${self.visibility}
+    ${self.visMulti @horizontal @separator[,]}
+    [before ${self.visWithExtra}]
+    [before ${self.visMultiWithExtra  @horizontal @separator[,]}]
+    ]
+}

@@ -12,52 +12,54 @@ modelunit PrimitivesTest {
     public name: string;
     prim: Prim;
     primExtra: PrimExtra;
-//    primOpt: PrimOptional;
-//    primExtraOpt: PrimExtraOptional;
+    primOpt: PrimOptional;
+    primExtraOpt: PrimExtraOptional;
+    primOptPresent: PrimOptional;
+    primExtraOptPresent: PrimExtraOptional;
 }
 concept Prim {
     primNumber: number;
     primString: string;
     primBoolean: boolean;
-//    primListNumber: number[];
-//    primListString: string[];
-//    primListBoolean: boolean[];
+    primListNumber: number[];
+    primListString: string[];
+    primListBoolean: boolean[];
 }
 concept PrimExtra {
     primNumberWithExtra: number;
     primStringWithExtra: string;
     primBooleanWithExtra: boolean;
-//    primListNumberWithExtra: number[];
-//    primListStringWithExtra: string[];
-//    primListBooleanWithExtra: boolean[];
+    primListNumberWithExtra: number[];
+    primListStringWithExtra: string[];
+    primListBooleanWithExtra: boolean[];
 }
-//concept PrimOptional {
-//    primNumber?: number;
-//    primString?: string;
-//    primBoolean?: boolean;
-//    primListNumber?: number[];
-//    primListString?: string[];
-//    primListBoolean?: boolean[];
-//}
-//concept PrimExtraOptional {
-//    primNumberWithExtra?: number;
-//    primStringWithExtra?: string;
-//    primBooleanWithExtra?: boolean;
-//    primListNumberWithExtra?: number[];
-//    primListStringWithExtra?: string[];
-//    primListBooleanWithExtra?: boolean[];
-//}
+concept PrimOptional {
+    primNumber?: number;
+    primString?: string;
+    primBoolean?: boolean;
+    primListNumber?: number[];
+    primListString?: string[];
+    primListBoolean?: boolean[];
+}
+concept PrimExtraOptional {
+    primNumberWithExtra?: number;
+    primStringWithExtra?: string;
+    primBooleanWithExtra?: boolean;
+    primListNumberWithExtra?: number[];
+    primListStringWithExtra?: string[];
+    primListBooleanWithExtra?: boolean[];
+}
 
-//modelunit LimitedTest {
-//    public name: string;
-//    visibility: VisibilityKind;
-////    visMulti: VisibilityKind[];
-////    visWithExtra: VisibilityKind;
-////    visMultiWithExtra: VisibilityKind[];
-//}
-//
-//limited VisibilityKind {
-//	PUBLIC = { name: "PUBLIC" }
-//	PRIVATE = { name: "PRIVATE" }
-//	PROTECTED = { name: "PROTECTED" }
-//}
+modelunit LimitedTest {
+    public name: string;
+    visibility: VisibilityKind;
+    visMulti: VisibilityKind[];
+    visWithExtra: VisibilityKind;
+    visMultiWithExtra: VisibilityKind[];
+}
+
+limited VisibilityKind {
+	PUBLIC = { name: "PUBLIC" }
+	PRIVATE = { name: "PRIVATE" }
+	PROTECTED = { name: "PROTECTED" }
+}

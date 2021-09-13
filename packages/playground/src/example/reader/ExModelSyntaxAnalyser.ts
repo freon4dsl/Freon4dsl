@@ -193,12 +193,11 @@ export class ExModelSyntaxAnalyser implements SyntaxAnalyser {
         const baseEntityNode = children[2] as SPPTBranch;
         let baseEntity = null;
         if (!baseEntityNode.isEmptyMatch) {
-            // transform the first element in the [0..1] optional collection
-            // the second in ('base' EntityPiElemRef)?
-            // the first in EntityPiElemRef
-            let refName: string = this.transformNode(baseEntityNode.nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[1].nonSkipChildren.toArray()[0]);
-            // if (!refName || refName.length == 0) throw new Error(`Syntax error in "${branch.matchedText}": cannot create empty reference`);
-            baseEntity = PiElementReference.create<Entity>(refName, "Entity");
+            // take the first element in the [0..1] optional group
+            // and the 1(-st/nd/rd/th) element of that group
+            // hack: group has two occurences, therefore twice 'nonSkipChildren.toArray()[0]'
+            let propNode = baseEntityNode.nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[1];
+            baseEntity = this.piElemRef<Entity>(propNode, "Entity");
         }
         const attributes: Attribute[] = this.transformList<Attribute>(children[4]);
         const methods: Method[] = this.transformList<Method>(children[5]);
