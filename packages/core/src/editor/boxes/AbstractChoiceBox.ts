@@ -1,6 +1,5 @@
 import { PiElement } from "../../language";
-import { BehaviorExecutionResult, PiCaret, PiKey } from "../../util";
-import { initializeObject } from "../../util";
+import { BehaviorExecutionResult, PiCaret, PiKey, PiUtils } from "../../util";
 import { PiEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
@@ -51,7 +50,7 @@ export abstract class AbstractChoiceBox extends Box {
         super(exp, role);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
-        initializeObject(this, initializer);
+        PiUtils.initializeObject(this, initializer);
         this.textBox = new TextBox(
             exp,
             "alias-" + role + "-textbox",

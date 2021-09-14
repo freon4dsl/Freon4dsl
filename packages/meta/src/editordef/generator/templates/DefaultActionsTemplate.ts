@@ -1,8 +1,15 @@
 import { flatten } from "lodash";
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiBinaryExpressionConcept, PiExpressionConcept, PiConcept, PiClassifier } from "../../../languagedef/metalanguage";
+import {
+    PiLanguage,
+    PiBinaryExpressionConcept,
+    PiExpressionConcept,
+    PiConcept,
+    PiClassifier,
+    PiLangSelfExp
+} from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
-import { PiEditUnit } from "../../metalanguage";
+import { PiEditConcept, PiEditUnit } from "../../metalanguage";
 
 export class DefaultActionsTemplate {
 
@@ -144,9 +151,9 @@ export class DefaultActionsTemplate {
                         trigger: "${editorDef.findConceptEditor(subClass).trigger}",  // for Concept part
                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                             const parent = box.element;
-                            const newExpression = new ${Names.concept(subClass)}();
-                            parent[(box as AliasBox).propertyName].push(newExpression);
-                            return newExpression;
+                            const newElement = new ${Names.concept(subClass)}();
+                            parent[(box as AliasBox).propertyName].push(newElement);
+                            return newElement;
                         },
                         boxRoleToSelect: "${this.cursorLocation(editorDef, subClass)}" /* CURSOR 2 */
                     },`).join("\n")}
@@ -158,16 +165,22 @@ export class DefaultActionsTemplate {
                 const childClassifier = part.type.referred;
                 if (childClassifier instanceof PiConcept) {
                     LangUtil.subConceptsIncludingSelf(childClassifier).filter(cls => !cls.isAbstract).forEach(subClass => {
+                        const conceptEditor: PiEditConcept = editorDef.findConceptEditor(subClass);
                         behaviorMap.createOrAdd(subClass,
                             {
                                     activeInBoxRoles: [`${Roles.newConceptPart(concept, part)}`],
-                                    trigger: `${editorDef.findConceptEditor(subClass).trigger}`,  // for single Concept part
+                                    trigger: `${conceptEditor.trigger}`,  // for single Concept part
                                     action: `(box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                                     const parent = box.element;
-                                                    const newExpression = new ${Names.concept(subClass)}();
-                                                    parent[(box as AliasBox).propertyName] = newExpression;
-                                                    return newExpression;
+                                                    const newElement = new ${Names.concept(subClass)}();
+                                                    parent[(box as AliasBox).propertyName] = newElement;
+                                                    return newElement;
                                               }`,
+                                    referenceShortcut: (!!conceptEditor.referenceShortcut ?
+                                                            `{
+                                                                  propertyname: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
+                                                                  metatype: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
+                                                             }` : undefined),
                                     boxRoleToSelect: `${this.cursorLocation(editorDef, subClass)}` /* CURSOR 4  ${subClass.name} */
                                 }
                         );
@@ -182,6 +195,7 @@ export class DefaultActionsTemplate {
                         activeInBoxRoles: [${elem.activeInBoxRoles.map(role => `"${role}"`).join(",")}],
                         trigger: "${elem.trigger}",  // for single Concept part
                         action: ${elem.action},
+                        ${!!elem.referenceShortcut  ? `referenceShortcut: ${elem.referenceShortcut},` : ``}
                         boxRoleToSelect: "${elem.boxRoleToSelect}" /* CURSOR 4 */
                     },
                     `;
@@ -211,6 +225,7 @@ class BehaviorDescription {
     activeInBoxRoles: string[];
     trigger: string;
     action: string;
+    referenceShortcut?: string;
     boxRoleToSelect: string;
 }
 

@@ -1,7 +1,7 @@
 import {
     PiConcept,
     PiInstanceExp,
-    PiLangExpressionChecker,
+    PiLangExpressionChecker, PiLangSelfExp,
     PiLanguage,
     PiLimitedConcept,
     PiPrimitiveProperty
@@ -68,8 +68,19 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             error: `Concept ${conceptEditor.concept.name} is unknown ${this.location(conceptEditor)}.`,
             whenOk: () => {
                 this.checkProjection(conceptEditor.projection, conceptEditor.concept.referred);
+                this.checkReferenceShortcut(conceptEditor);
             }
         });
+    }
+
+    private checkReferenceShortcut(conceptEditor: PiEditConcept) {
+        if (!!(conceptEditor.referenceShortcut)) {
+            this.myExpressionChecker.checkLangExp(conceptEditor.referenceShortcut, conceptEditor.concept.referred);
+            this.nestedCheck( {
+                check: conceptEditor.referenceShortcut instanceof PiLangSelfExp,
+                error: `referenceShortcut for concept ${conceptEditor.concept.name} should start with "self" ${this.location(conceptEditor)}.`,
+            })
+        }
     }
 
     private checkEditor(editor: PiEditUnit) {

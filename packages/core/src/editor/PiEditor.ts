@@ -1,4 +1,5 @@
 import { observable, computed, action, trace } from "mobx";
+import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiContainerDescriptor, PiElement } from "../language";
 import { PiCaret, wait, PiLogger } from "../util";
@@ -34,11 +35,18 @@ export class PiEditor {
     @observable private selectedRole: string = null;
 
     /**
-     * The amount of scrolling horizontally
+     * Needed to find reference shortcuts in the Alias box
+     */
+    environment: PiEnvironment;
+
+    /**
+     * The amount of scrolling horizontally.
+     * Needed to find the element above and under.
      */
     scrollX: number = 0;
     /**
      * The amount of scrolling vertically
+     * Needed to find the element above and under.
      */
     scrollY: number = 0;
 
@@ -66,7 +74,14 @@ export class PiEditor {
         this.$projectedElement = e;
     }
 
+    /**
+     * Do not accept "select" actions, used e.g. when an undo is going to come.
+     */
+    NOSELECT: Boolean = false;
+
     selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
+        LOGGER.log("selectElement");
+        if( this.NOSELECT) { return; }
         if (element === null || element === undefined) {
             console.error("PiEditor.selectElement is null !");
             return;
@@ -75,10 +90,10 @@ export class PiEditor {
         this.selectedRole = role;
         this.selectedPosition = caretPosition;
         wait(0);
-        LOGGER.info(this, "==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
+        LOGGER.log("  ==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
         const rootBox = this.rootBox;
         const box = rootBox.findBox(element.piId(), role);
-        LOGGER.info(this, "-==> selectElement found box " + (!!box && box.kind));
+        LOGGER.log("  ==> selectElement found box " + (!!box && box.kind));
         if (box) {
             this.selectBoxNew(box, caretPosition);
         } else {
@@ -93,20 +108,23 @@ export class PiEditor {
 
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
         LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position);
+        if( this.NOSELECT) { return; }
         this.selectBox(this.rootBox.findBox(box.element.piId(), box.role), caretPosition);
     }
 
     selectBoxByRoleAndElementId(elementId: string, role: string, caretPosition?: PiCaret) {
         LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role " + role);
+        if( this.NOSELECT) { return; }
         this.selectBox(this.rootBox.findBox(elementId, role));
     }
 
     private selectBox(box: Box | null, caretPosition?: PiCaret) {
+        if( this.NOSELECT) { return; }
         if (box === null || box === undefined) {
             console.error("PiEditor.selectBox is null !");
             return;
         }
-        LOGGER.info(this, "selectBox " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
+        LOGGER.log("selectBox " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");
             return;
@@ -116,17 +134,17 @@ export class PiEditor {
         } else {
             this.selectedBox = box;
         }
-        LOGGER.info(this, "==> select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
+        LOGGER.log("==> select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
-                LOGGER.info(this, "caret position is " + caretPosition.position);
+                LOGGER.log("caret position is " + caretPosition.position);
                 box.setCaret(caretPosition);
             } else {
-                LOGGER.info(this, "caret position is empty");
+                LOGGER.log("caret position is empty");
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
         }
-        LOGGER.info(this, "setting focus on box " + this.selectedBox.role);
+        LOGGER.log("setting focus on box " + this.selectedBox.role);
         // box.setFocus();
     }
 
@@ -136,6 +154,8 @@ export class PiEditor {
 
     set selectedBox(box: Box) {
         LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null"));
+        if( this.NOSELECT) { return; }
+
         if (isAliasBox(box)) {
             this.$selectedBox = box.textBox;
         } else {
@@ -149,14 +169,14 @@ export class PiEditor {
 
     @computed
     get rootBox(): Box {
-        LOGGER.info(this, "RECALCULATING ROOT [" + this.rootElement + "]");
+        LOGGER.log("RECALCULATING ROOT [" + this.rootElement + "]");
         // trace(true);
         return this.projection.getBox(this.rootElement);
         // return this.$rootBox;
     }
 
     selectParentBox() {
-        LOGGER.info(this, "==> SelectParent of " + this.selectedBox.role);
+        LOGGER.log("==> SelectParent of " + this.selectedBox.role);
         let parent = this.selectedBox.parent;
         if (isAliasBox(parent) || isSelectBox(parent)) {
             // Coming from (hidden) textbox in Select/Alias box
@@ -198,7 +218,7 @@ export class PiEditor {
             this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
             // previous.setFocus();
             if (isTextBox(previous) || isSelectBox(previous)) {
-                LOGGER.info(this, "!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
+                LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
                 previous.setCaret(PiCaret.RIGHT_MOST);
             }
         }
@@ -206,7 +226,7 @@ export class PiEditor {
 
     @action
     async deleteBox(box: Box) {
-        LOGGER.info(this, "deleteBox");
+        LOGGER.log("deleteBox");
         const exp: PiElement = box.element;
         const container: PiContainerDescriptor = exp.piContainer();
         // if (isPiExpression(exp)) {
@@ -215,7 +235,7 @@ export class PiEditor {
         //     await this.selectElement(newExp);
         // } else {
         if (container !== null) {
-            LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
+            LOGGER.log("remove from parent splice " + [container.propertyIndex] + ", 1");
             const propertyIndex = container.propertyIndex;
             const parentElement = container.container;
             if (propertyIndex !== undefined) {
@@ -242,13 +262,18 @@ export class PiEditor {
 
     async selectFirstEditableChildBox() {
         const first = this.selectedBox.firstEditableChild;
-        LOGGER.info(this, "selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
+        LOGGER.log("selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
         if (first) {
             LOGGER.info(this, "selectFirstEditableChildBox: first found with role " + first.role);
             this.selectBoxNew(first);
         }
     }
 
+    /**
+     * Return the box that is visually above `box`.
+
+     * @param box
+     */
     boxAbove(box: Box): Box {
         wait(0);
         const x = box.actualX + this.scrollX;

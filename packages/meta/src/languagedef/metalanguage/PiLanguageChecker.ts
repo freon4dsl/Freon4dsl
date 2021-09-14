@@ -38,7 +38,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         if (myModel !== language.modelConcept) {
             LOGGER.error(this, "Internal error: language.modelConcept is not set correctly");
         }
-        this.nestedCheck({check: !!myModel,
+        this.nestedCheck({
+            check: !!myModel,
             error: `There should be a model in your language ${this.location(language)}.`,
             whenOk: () => {
                 // models may not be modelunits
