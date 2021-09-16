@@ -91,4 +91,5 @@ concept WithDirectParts {
 concept PartConcept {
     visibility: VisibilityKind;
     content: string;
+    optContent?: number;
 }

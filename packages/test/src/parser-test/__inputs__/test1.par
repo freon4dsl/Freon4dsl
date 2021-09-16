@@ -2,14 +2,18 @@ PartsTest myName
 	directParts WithDirectParts
                   	part1 PartConcept
                             	content "stringLiteral"
+                            	optContent 10
                             	visibility +
                   	partList
                         PartConcept
                             content "otherString"
+                            optContent
                             visibility #
                         PartConcept
                             content "stringLiteralXXX"
+                            optContent 123
                             visibility -
                         PartConcept
                             content "stringLiteralYYY"
+                            optContent
                             visibility +
