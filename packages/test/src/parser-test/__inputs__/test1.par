@@ -1,0 +1,15 @@
+PartsTest myName
+	directParts WithDirectParts
+                  	part1 PartConcept
+                            	content "stringLiteral"
+                            	visibility +
+                  	partList
+                        PartConcept
+                            content "otherString"
+                            visibility #
+                        PartConcept
+                            content "stringLiteralXXX"
+                            visibility -
+                        PartConcept
+                            content "stringLiteralYYY"
+                            visibility +

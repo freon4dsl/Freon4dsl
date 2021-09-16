@@ -1,6 +1,6 @@
 import { TestParserEnvironment } from "../environment/gen/TestParserEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-import { LimitedTest, PrimitivesTest } from "../language/gen";
+import { LimitedTest, PartsTest, PrimitivesTest } from "../language/gen";
 
 describe("Test the parser", () => {
     const reader = TestParserEnvironment.getInstance().reader;
@@ -23,6 +23,17 @@ describe("Test the parser", () => {
             const unit1: LimitedTest = reader.readFromString(input, "LimitedTest") as LimitedTest;
             // console.log(writer.writeToString(unit1, 0, false));
             expect(unit1).toMatchSnapshot();
+        } catch (e) {
+            expect(e).toBeNaN();
+        }
+    });
+
+    test( " on Parts ", () => {
+        try {
+            let input = fileHandler.stringFromFile("src/parser-test/__inputs__/test1.par");
+            const unit1: PartsTest = reader.readFromString(input, "PartsTest") as PartsTest;
+            console.log(writer.writeToString(unit1, 0, false));
+            // expect(unit1).toMatchSnapshot();
         } catch (e) {
             expect(e).toBeNaN();
         }

@@ -5,7 +5,7 @@ language TestParser
 model TestParserModel {
     name: string;
     prim: PrimitivesTest;
-//    lim: LimitedTest;
+    lim: LimitedTest;
 }
 
 modelunit PrimitivesTest {
@@ -75,4 +75,20 @@ limited VisibilityKind {
 	PUBLIC = { name: "PUBLIC" }
 	PRIVATE = { name: "PRIVATE" }
 	PROTECTED = { name: "PROTECTED" }
+}
+
+modelunit PartsTest {
+    public name: string;
+    directParts: WithDirectParts;
+//    partsOfParts: IndirectParts;
+}
+
+concept WithDirectParts {
+    part1: PartConcept;
+    partList: PartConcept[];
+}
+
+concept PartConcept {
+    visibility: VisibilityKind;
+    content: string;
 }
