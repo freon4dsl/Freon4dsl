@@ -87,7 +87,7 @@ export class SyntaxAnalyserTemplate {
              * ...PiElemRef = identifier;
              */
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
-                let refName: string = branch.matchedText;
+                let refName: string = this.transformNode(branch);
                 if (refName == null || refName == undefined || refName.length == 0) {
                     throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
                 }
@@ -97,7 +97,7 @@ export class SyntaxAnalyserTemplate {
             /**
              * Generic method to transform lists
              */
-            private transformList<T>(branch: SPPTBranch, separator?: string): T[] {
+            private transformList\<T\>(branch: SPPTBranch, separator?: string): T[] {
                 let result: T[] = [];
                 for (const child of branch.nonSkipChildren.toArray()) {
                     let element: any = this.transformNode(child);
@@ -109,6 +109,28 @@ export class SyntaxAnalyserTemplate {
                                 result.push(element);
                             }
                         }
+                    } 
+                }
+                return result;
+            }
+
+            /**
+             * Generic method to transform lists of references
+             */            
+            private transformRefList\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string, separator?: string): PiElementReference\<T\>[] {
+                let result: PiElementReference\<T\>[] = [];
+                for (const child of branch.nonSkipChildren.toArray()) {
+                    let refName: any = this.transformNode(child);
+                    if (refName !== null && refName !== undefined && refName.length > 0) {
+                        if (separator === null || separator === undefined) {
+                            result.push(PiElementReference.create<T>(refName, typeName));
+                        } else {
+                            if (refName !== separator) {
+                                result.push(PiElementReference.create<T>(refName, typeName));
+                            }
+                        }
+                    } else {
+                        throw new Error(\`Syntax error in "\${child.matchedText}": cannot create empty reference\`);
                     }
                 }
                 return result;

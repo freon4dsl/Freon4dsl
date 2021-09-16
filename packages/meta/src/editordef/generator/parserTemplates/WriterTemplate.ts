@@ -19,6 +19,7 @@ import {
 
 export class WriterTemplate {
     // TODO unparse limited concepts differently, instead of 'AttributeType Integer' just 'Integer'
+    // TODO make different method 'write' without extra optional pars (I always forget to pu them in)
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
@@ -28,6 +29,16 @@ export class WriterTemplate {
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
+        let limitedConcepts: PiLimitedConcept[] = [];
+
+        // find all limited concepts used, the are treated differently in both (1) the creation of unparse method
+        // (2) in the generic method 'unparseReferenceList'
+        for (const conceptDef of editDef.conceptEditors) {
+            const myConcept: PiConcept = conceptDef.concept.referred;
+            if (myConcept instanceof PiLimitedConcept) {
+                limitedConcepts.push(myConcept);
+            }
+        }
 
         // Template starts here
         return `
@@ -149,8 +160,14 @@ export class WriterTemplate {
              */
             private unparseReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index === list.length - 1;
-                    this.output[this.currentLine] += listElem.name;
+                    const isLastInList: boolean = index === list.length - 1;                   
+                    // for limited concepts use keyword here!!!
+                    ${limitedConcepts.map(lim => `if (listElem.referred instanceof ${Names.concept(lim)}) {
+                        this.unparse${Names.concept(lim)}(listElem.referred, false);
+                    } else `).join("\n")} 
+                    {
+                        this.output[this.currentLine] += listElem.name;
+                    }                  
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
             }

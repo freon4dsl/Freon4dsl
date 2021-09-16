@@ -33,12 +33,22 @@ VisibilityKind {
     ]
 }
 
-LimitedTest {
+LimitedNonOptional {
     @projection normal [
-    LimitedTest ${self.name}
-    ${self.visibility}
-    ${self.visMulti @horizontal @separator[,]}
-    [before ${self.visWithExtra}]
-    [before ${self.visMultiWithExtra  @horizontal @separator[,]}]
+    LimitedNonOptional
+    ${self.visibility} ;
+    ${self.visMulti @horizontal @separator[, ]} ;
+    before ${self.visWithExtra} after ;
+    before ${self.visMultiWithExtra  @horizontal @separator[, ]} after ;
+    ]
+}
+
+LimitedOptional {
+    @projection normal [
+    LimitedOptional
+    [?${self.visibility} ;]
+    [?${self.visMulti @horizontal @separator[, ]} ;]
+    [?before ${self.visWithExtra} after ;]
+    [?before ${self.visMultiWithExtra  @horizontal @separator[, ]} after ;]
     ]
 }

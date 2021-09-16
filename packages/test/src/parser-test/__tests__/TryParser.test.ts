@@ -12,9 +12,8 @@ describe("Test the parser", () => {
             let input = fileHandler.stringFromFile("src/parser-test/__inputs__/test1.pri");
             const unit1: PrimitivesTest = reader.readFromString(input, "PrimitivesTest") as PrimitivesTest;
             expect(unit1).toMatchSnapshot();
-            // console.log(writer.writeToString(unit1, 0, false));
         } catch (e) {
-            console.log(e);
+            expect(e).toBeNaN();
         }
     });
 
@@ -22,10 +21,10 @@ describe("Test the parser", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-test/__inputs__/test1.lim");
             const unit1: LimitedTest = reader.readFromString(input, "LimitedTest") as LimitedTest;
-            // expect(unit1).toMatchSnapshot();
             console.log(writer.writeToString(unit1, 0, false));
+            // expect(unit1).toMatchSnapshot();
         } catch (e) {
-            console.log(e);
+            expect(e).toBeNaN();
         }
     });
 });

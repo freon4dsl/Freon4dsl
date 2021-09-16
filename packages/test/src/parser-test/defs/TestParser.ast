@@ -52,10 +52,23 @@ concept PrimExtraOptional {
 
 modelunit LimitedTest {
     public name: string;
+    limitedNonOpt: LimitedNonOptional;
+    limitedOpt: LimitedOptional;
+    limitedOpt2: LimitedOptional;
+}
+
+concept LimitedNonOptional {
     visibility: VisibilityKind;
     visMulti: VisibilityKind[];
     visWithExtra: VisibilityKind;
     visMultiWithExtra: VisibilityKind[];
+}
+
+concept LimitedOptional {
+    visibility?: VisibilityKind;
+    visMulti?: VisibilityKind[];
+    visWithExtra?: VisibilityKind;
+    visMultiWithExtra?: VisibilityKind[];
 }
 
 limited VisibilityKind {
