@@ -32,8 +32,8 @@ describe("Test the parser", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-test/__inputs__/test1.par");
             const unit1: PartsTest = reader.readFromString(input, "PartsTest") as PartsTest;
-            console.log(writer.writeToString(unit1, 0, false));
-            // expect(unit1).toMatchSnapshot();
+            // console.log(writer.writeToString(unit1, 0, false));
+            expect(unit1).toMatchSnapshot();
         } catch (e) {
             expect(e).toBeNaN();
         }
