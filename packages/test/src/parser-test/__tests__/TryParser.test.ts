@@ -21,8 +21,8 @@ describe("Test the parser", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-test/__inputs__/test1.lim");
             const unit1: LimitedTest = reader.readFromString(input, "LimitedTest") as LimitedTest;
-            console.log(writer.writeToString(unit1, 0, false));
-            // expect(unit1).toMatchSnapshot();
+            // console.log(writer.writeToString(unit1, 0, false));
+            expect(unit1).toMatchSnapshot();
         } catch (e) {
             expect(e).toBeNaN();
         }

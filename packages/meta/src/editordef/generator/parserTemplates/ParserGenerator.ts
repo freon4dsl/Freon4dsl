@@ -484,18 +484,18 @@ export class ParserGenerator {
                     let extraResult: string[] = this.makeTextProjection(item);  // a text projection can result in more than 1 item
                     result += `${extraResult.map(extr => `${extr}`).join(" ")}`;
                     this.currentIndex += extraResult.length;
-                    console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
+                    // console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
                 } else if (item instanceof PiEditPropertyProjection) {
                     let prop: PiProperty = item.expression.findRefOfLastAppliedFeature();
                     let propName: string = prop.name;
                     result += `${this.makePropertyProjection(item, optionalIndexToName, false)} `
                     indexToProp.set(prop, this.currentIndex);
                     this.currentIndex += 1;
-                    console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
+                    // console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
                 } else if (item instanceof PiEditSubProjection) {
                     result += `${this.makeSubProjection(branchName, item, indexToProp, optionalIndexToName)} `;
                     this.currentIndex += 1;
-                    console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
+                    // console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
                 // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
                 // do not increase currentIndex!!!
                 }
