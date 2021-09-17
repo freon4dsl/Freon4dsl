@@ -61,6 +61,7 @@ export class EnvironmentTemplate {
                 rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(rootProjection, actions);
                 this.editor.rootElement = null;
+                this.editor.environment = this;
                 initializeLanguage();
             }
             

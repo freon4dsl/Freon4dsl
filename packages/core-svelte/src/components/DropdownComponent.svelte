@@ -82,7 +82,7 @@
 >
     <div tabIndex={0}  />
     <div class="popupWrapper">
-        {#each getOptionsForHtml as option (option.id)}
+        {#each getOptionsForHtml as option (option.id + option.label)}
             <div class="popup">
                 <div>
                     <DropdownItemComponent on:pi-ItemSelected option={option} isSelected={option.id === selectedOptionId} />

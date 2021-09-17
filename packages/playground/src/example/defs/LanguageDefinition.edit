@@ -50,6 +50,7 @@ MethodCallExpression {
         CALL ${self.methodDefinition} ( ${self.args @separator[,] } )
         ]
     @trigger "method"
+    @referenceShortcut self.methodDefinition
 }
 
 SumExpression {
@@ -123,10 +124,12 @@ BooleanLiteralExpression {
 AttributeRef {
     @projection [ ${self.attribute} ]
     @trigger "attribute"
+    @referenceShortcut self.attribute
 }
 
 ParameterRef {
     @projection [ ${self.parameter} . ${self.appliedfeature} ]
+    @referenceShortcut self.parameter
 }
 
 IfExpression {

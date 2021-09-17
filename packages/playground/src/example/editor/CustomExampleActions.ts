@@ -59,7 +59,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
             "EqualsExpression-left",
             "EqualsExpression-right"
         ],
-        expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
+        expressionBuilder: (box: Box, trigger: string, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
             x.value = Number.parseInt(trigger.toString());

@@ -92,17 +92,6 @@ export class PiUtils {
     }
 }
 
-export function initializeObject<TTarget, TSource>(target: TTarget, source: TSource) {
-    if (!(target && source)) {
-        return;
-    }
-    Object.keys(source).forEach(key => {
-        if (source.hasOwnProperty(key)) {
-            (target as any)[key] = (source as any)[key];
-        }
-    });
-}
-
 export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
     return obj === undefined || obj === null;
 }

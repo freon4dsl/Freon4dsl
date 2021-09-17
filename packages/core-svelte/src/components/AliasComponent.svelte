@@ -28,7 +28,7 @@
     import { writable } from 'svelte/store';
     import type  { Writable } from 'svelte/store';
     import { SelectOptionList } from "./SelectableOptionList";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
@@ -39,7 +39,7 @@
     let openStore: Writable<boolean> = writable<boolean>(false);
 
     function setOpen(msg: string, value: boolean) {
-        LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
+        // LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
         $openStore = value;
     }
     let LOGGER = new PiLogger("AliasComponent");
@@ -80,7 +80,7 @@
 
     const handleStringInput = async (s: string) => {
         LOGGER.info(this, "handleStringInput for box " + choiceBox.role);
-        const aliasResult = await executeBehavior(choiceBox, s, editor);
+        const aliasResult = await executeBehavior(choiceBox, s, null, editor);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
                 if (!!textComponent) {
@@ -102,7 +102,7 @@
     };
 
     onMount( () => {
-        LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
+        MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -112,7 +112,7 @@
     });
 
     afterUpdate( () => {
-        LOGGER.log("AfterUpdate")
+        UPDATE_LOGGER.log("AfterUpdate")
         choiceBox.triggerKeyPressEvent = triggerKeyPressEvent;
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
@@ -120,13 +120,13 @@
         if( !! selected) {
             choiceBox.textBox.setText(selected.label)
         }
-        LOGGER.log("afterupdate ==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
+        UPDATE_LOGGER.log("afterupdate ==> selectedBox " + !!editor.selectedBox + " choiceBox " + !!choiceBox + " choiceBox.textbox " + !!choiceBox.textBox);
     })
 
     const onKeyPress = async (e: KeyboardEvent) => {
         EVENT_LOG.log("onKeyPress: " + e.key + " for role " + choiceBox.role);
         if (isPrintable(e) && !e.ctrlKey) {
-            LOGGER.log("Press: is printable, text is now [" + textComponent.getText() + "]");
+            EVENT_LOG.log("Press: is printable, text is now [" + textComponent.getText() + "]");
         }
     };
 
@@ -277,9 +277,9 @@
 
     const onClick = (e: MouseEvent) => {
         LOGGER.log("onClick before open is " + $openStore);
-        const opts: SelectOption[] = choiceBox.getOptions(editor);
-        LOGGER.log("   options are " + opts.length + " ==> " + opts.map(o => o.id))
-        selectableOptionList.replaceOptions(opts)
+        // const opts: SelectOption[] = choiceBox.getOptions(editor);
+        // LOGGER.log("   options are " + opts.length + " ==> " + opts.map(o => o.id))
+        // selectableOptionList.replaceOptions(opts)
         setOpen("onClick", !$openStore);
         LOGGER.log("onClick after, open is " + $openStore);
     }
@@ -287,11 +287,13 @@
     let listForDropdown: SelectOption[];
     let notifier = new ChangeNotifier();
 
-    selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
+    // selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun( ()=> {
-        listForDropdown = selectableOptionList.getFilteredOptions();
+        if ($openStore) {
+            listForDropdown = selectableOptionList.getFilteredOptions();
+        }
         selectedOption = choiceBox.getSelectedOption();
-        LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
+        AUTO_LOGGER.log("AliasComponent role " + choiceBox.role + " selectOption: " + selectedOption + " label " + selectedOption?.label + "  id "+ selectedOption?.id);
         if( !!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
@@ -302,7 +304,7 @@
     }
 
     const onFocusHandler = (e: FocusEvent) => {
-        FOCUS_LOGGER.log("SET OPEN AliasComponent.onFocus for box " + choiceBox.role);
+        FOCUS_LOGGER.log("AliasComponent.onFocus for box " + choiceBox.role);
         const options = choiceBox.getOptions(editor);
         selectableOptionList.replaceOptions(options)
     }

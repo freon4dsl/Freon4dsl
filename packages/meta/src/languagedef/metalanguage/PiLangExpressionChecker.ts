@@ -12,7 +12,7 @@ import { PiLanguage, PiClassifier, PiProperty, PiLimitedConcept, PiInstance, PiL
 } from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("PiLangExpressionChecker").mute();
+const LOGGER = new MetaLogger("PiLangExpressionChecker");//.mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof"];
 const containerKeyword: string = "container";
 
@@ -144,7 +144,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         if (this.strictUseOfSelf) {
             this.nestedCheck(
                 {
-                    check: langExp.appliedfeature !== null,
+                    check: !!langExp.appliedfeature,
                     error: `'self' should be followed by '.', followed by a property ${this.location(langExp)}.`,
                     whenOk: () => {
                         langExp.appliedfeature.language = langExp.language;

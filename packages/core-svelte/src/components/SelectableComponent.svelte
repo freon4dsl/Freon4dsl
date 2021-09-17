@@ -32,7 +32,7 @@
     };
 
     afterUpdate(async () => {
-        XLOGGER.log("!!!!! SelectableComponent.afterupdate for box " + box.role);
+        LOGGER.log("!!!!! SelectableComponent.afterupdate for box " + box.role);
         if (element === null) {
             return;
         }
@@ -42,7 +42,7 @@
             box.actualY = rect.top;
             box.actualHeight = rect.height;
             box.actualWidth = rect.width;
-            XLOGGER.log("   actual is (" + Math.round(box.actualX) + ", " + Math.round(box.actualY) + ")");
+            // XLOGGER.log("   actual is (" + Math.round(box.actualX) + ", " + Math.round(box.actualY) + ")");
         }
 
         if (isSelected) {
