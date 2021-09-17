@@ -1,6 +1,6 @@
 editor XXX for language TestParser
 
-// for testing primitibves
+// for testing primitives
 PrimExtra {
     @projection normal [
     before ${self.primNumberWithExtra} after
@@ -24,7 +24,6 @@ PrimExtraOptional {
 }
 
 // for limited concepts
-
 VisibilityKind {
     @projection normal [
         ${PUBLIC @keyword [+]}
@@ -51,4 +50,14 @@ LimitedOptional {
     [?before ${self.visWithExtra} after ;]
     [?before ${self.visMultiWithExtra  @horizontal @separator[, ]} after ;]
     ]
+}
+
+// for part properties
+WithDirectParts { 
+    @projection normal [
+    WithDirectParts part ${self.part}
+	[?optPart ${self.optPart}]
+	partList ${self.partList}
+	[?optList ${self.optList} ]
+	]
 }

@@ -2,6 +2,7 @@ language TestParser
 
 // focuses on the different type of properties and how to parse them
 
+// TEST PROPERTIES WITH PRIMITVE TYPES
 model TestParserModel {
     name: string;
     prim: PrimitivesTest;
@@ -50,6 +51,7 @@ concept PrimExtraOptional {
     primListBooleanWithExtra?: boolean[];
 }
 
+// TEST PROPERTIES WITH TYPES THTA ARE LIMITED CONCEPTS
 modelunit LimitedTest {
     public name: string;
     limitedNonOpt: LimitedNonOptional;
@@ -77,6 +79,7 @@ limited VisibilityKind {
 	PROTECTED = { name: "PROTECTED" }
 }
 
+// TEST PROPERTIES THAT ARE PARTS WHICH HAVE CONCEPT TYPES
 modelunit PartsTest {
     public name: string;
     directParts: WithDirectParts;
@@ -84,8 +87,10 @@ modelunit PartsTest {
 }
 
 concept WithDirectParts {
-    part1: PartConcept;
+    part: PartConcept;
+    optPart?: PartConcept;
     partList: PartConcept[];
+    optList?: PartConcept[];
 }
 
 concept PartConcept {
@@ -95,8 +100,10 @@ concept PartConcept {
 }
 
 concept WithSubSubParts {
-    part1: SubConcept;
+    part: SubConcept;
+    optPart?: SubConcept;
     partList: SubConcept[];
+    optList?: SubConcept[];
 }
 
 concept SubConcept {
@@ -105,3 +112,29 @@ concept SubConcept {
     listSub: WithDirectParts[];
     optListSub?: WithDirectParts[];
 }
+
+// TEST PROPERTIES THAT ARE REFERENCES TO CONCEPT TYPES
+modelunit RefsTest {
+    public name: string;
+    directRefs: WithDirectRefs;
+    indirectRefs?: WithSubSubRefs;
+}
+
+concept WithDirectRefs {
+    reference ref: RefConcept;
+    reference optRef?: RefConcept;
+    reference refList: RefConcept[];
+    reference optRefList?: RefConcept[];
+}
+
+concept RefConcept {
+    name: string;
+}
+
+concept WithSubSubRefs {
+    part: WithDirectRefs;
+    optPart?: WithDirectRefs;
+    partList: WithDirectRefs[];
+    optList?: WithDirectRefs[];
+}
+

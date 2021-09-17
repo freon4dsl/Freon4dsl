@@ -15,20 +15,20 @@ primExtra
     before "stringLiteral", "/ , ]*"  after
     before false, true, false  after
 primOpt PrimOptional 
-	primNumber
-	primString
-	primBoolean
-	primListNumber
-	primListString
-	primListBoolean
-primExtraOpt PrimExtraOptional
+	primNumber // not present
+	primString // not present
+	primBoolean // not present
+	primListNumber // not present
+	primListString // not present
+	primListBoolean // not present
+primExtraOpt PrimExtraOptional // not present
 primOptPresent PrimOptional
-	primNumber
-	primString
-	primBoolean
-	primListNumber
-	primListString
-	primListBoolean
+	primNumber // not present
+	primString // not present
+	primBoolean // not present
+	primListNumber // not present
+	primListString // not present
+	primListBoolean // not present
 primExtraOptPresent PrimExtraOptional
     before 45 after
     before "stringLiteral" after

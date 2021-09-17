@@ -555,7 +555,6 @@ export class ParserGenerator {
 
         if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
             this.listWithExtras.push(prop);
-            console.log(`group for ${prop.name}: ${optionalIndexToName.get(prop)}`);
             ruleText = `( ${ruleText} )?\n`;
         } else if (!isList) { // there is one element in the ruleText but it is not a list, so we need a '?'
             ruleText = `${ruleText}?`;

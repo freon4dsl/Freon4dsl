@@ -1,0 +1,81 @@
+RefsTest myName
+	directRefs WithDirectRefs
+                  	ref someName
+                  	optRef nameA
+                  	refList
+                        name1
+                        name2
+                        name3
+                        name4
+                    optRefList nameZ
+                    nameY
+                    nameX
+    indirectRefs WithSubSubRefs 
+                 	part WithDirectRefs
+                                           	ref someName
+                                           	optRef nameA
+                                           	refList
+                                                 name1
+                                                 name2
+                                                 name3
+                                                 name4
+                                             optRefList nameZ
+                                             nameY
+                                             nameX
+                 	optPart WithDirectRefs
+                                              	ref someName
+                                              	optRef nameA
+                                              	refList
+                                                    name1
+                                                    name2
+                                                    name3
+                                                    name4
+                                                optRefList nameZ
+                                                nameY
+                                                nameX
+                            WithDirectRefs
+                                              	ref someName
+                                              	optRef nameA
+                                              	refList
+                                                    name1
+                                                    name2
+                                                    name3
+                                                    name4
+                                                optRefList nameZ
+                                                nameY
+                                                nameX
+                 	partList 
+                        WithDirectRefs
+                                            ref someName
+                                            optRef nameA
+                                            refList
+                                                name1
+                                                name2
+                                                name3
+                                                name4
+                                            optRefList nameZ
+                                            nameY
+                                            nameX
+                        WithDirectRefs
+                                            ref someName
+                                            optRef nameA
+                                            refList
+                                                name1
+                                                name2
+                                                name3
+                                                name4
+                                            optRefList nameZ
+                                            nameY
+                                            nameX
+                 	optList 
+                        WithDirectRefs
+                                            ref someName
+                                            optRef nameA
+                                            refList
+                                                name1
+                                                name2
+                                                name3
+                                                name4
+                                            optRefList nameZ
+                                            nameY
+                                            nameX

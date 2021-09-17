@@ -103,10 +103,14 @@ export class SyntaxAnalyserTemplate {
                 let group: any = branch;
                 let stop: boolean = false;
                 while (!stop) {
-                    let nextOne = group.nonSkipChildren.toArray()[0];
+                    let nextOne: any = null;
+                    try {
+                        nextOne = group.nonSkipChildren.toArray()[0]; 
+                    } catch (e) {
+                        throw new Error(\`Cannot find children of \${group.matchedText}: \${e.message}\`);
+                    }
                     if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
-                        stop = true; // found a branch with actual content!
-                        console.log(\`STOPPING WITH: \${group.name}\`);
+                        stop = true; // found a branch with actual content, return its parent!
                     } else {
                         group = nextOne;
                     }
@@ -121,7 +125,7 @@ export class SyntaxAnalyserTemplate {
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let refName: string = this.transformNode(branch);
                 if (refName == null || refName == undefined || refName.length == 0) {
-                    throw new Error(\`Syntax error in "\${branch?.matchedText}": cannot create empty reference\`);
+                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                 }
                 return PiElementReference.create<T>(refName, typeName);
             }
@@ -166,8 +170,6 @@ export class SyntaxAnalyserTemplate {
                                     result.push(PiElementReference.create<T>(refName, typeName));
                                 }
                             }
-                        } else {
-                            throw new Error(\`Syntax error in "\${child?.matchedText}": cannot create empty reference\`);
                         }
                     }
                 }

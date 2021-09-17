@@ -1,0 +1,11 @@
+RefsTest myName
+	directRefs WithDirectRefs
+                  	ref someName
+                  	optRef // not present
+                  	refList
+                        name1
+                        name2
+                        name3
+                        name4
+                    optRefList // not present
+    indirectRefs
