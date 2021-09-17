@@ -80,7 +80,7 @@ limited VisibilityKind {
 modelunit PartsTest {
     public name: string;
     directParts: WithDirectParts;
-//    partsOfParts: IndirectParts;
+    partsOfParts?: WithSubSubParts;
 }
 
 concept WithDirectParts {
@@ -92,4 +92,16 @@ concept PartConcept {
     visibility: VisibilityKind;
     content: string;
     optContent?: number;
+}
+
+concept WithSubSubParts {
+    part1: SubConcept;
+    partList: SubConcept[];
+}
+
+concept SubConcept {
+    normalSub: WithDirectParts;
+    optionalSub?: WithDirectParts;
+    listSub: WithDirectParts[];
+    optListSub?: WithDirectParts[];
 }

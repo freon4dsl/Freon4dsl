@@ -49,13 +49,13 @@ export class SyntaxAnalyserTemplate {
                         throw e;
                     } else {
                         // add more info to the error message 
-                        throw new Error(\`Syntax error in "\${node.matchedText}": \${e.message}\`);
+                        throw new Error(\`Syntax error in "\${node?.matchedText}": \${e.message}\`);
                     }
                 }
             }
             
             private transformLeaf(node: SPPTNode): any {
-                let tmp = (node as SPPTLeaf).matchedText;
+                let tmp = (node as SPPTLeaf)?.matchedText;
                 if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
                     tmp = tmp.slice(1, tmp.length - 1);
                     return tmp;
@@ -76,12 +76,44 @@ export class SyntaxAnalyserTemplate {
                     return this.transform${name}(branch);
                     } else `).join("\n")}                
                 {
-                    throw new Error(\`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled for node '\${branch.matchedText}'\`);
+                    throw new Error(\`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled for node '\${branch?.matchedText}'\`);
                 }
             }
             
             ${generatedSyntaxAnalyserMethods.map(method => `${method}`).join("\n\n")}
-          
+
+            /**
+             * Generic method to get the children of a branch. Throws an error if no children can be found.
+             */
+            private getChildren(branch: SPPTBranch, methodName: string): any {
+                let children: any = null;
+                try {
+                    return branch.nonSkipChildren.toArray();
+                } catch (e) {
+                    throw new Error(\`In \${methodName}: cannot find children: \${branch?.matchedText}\`);
+                }
+                return children;
+            }
+
+            /**
+             * Generic method to get the optional group of a branch. Throws an error if no group can be found.
+             */            
+            private getGroup(branch: SPPTBranch, methodName: string) {
+                // take the first element in the [0..1] optional group or multi branch
+                let group: any = branch;
+                let stop: boolean = false;
+                while (!stop) {
+                    let nextOne = group.nonSkipChildren.toArray()[0];
+                    if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
+                        stop = true; // found a branch with actual content!
+                        console.log(\`STOPPING WITH: \${group.name}\`);
+                    } else {
+                        group = nextOne;
+                    }
+                }
+                return group;
+            }
+              
             /**
              * Generic method to transform references
              * ...PiElemRef = identifier;
@@ -89,7 +121,7 @@ export class SyntaxAnalyserTemplate {
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let refName: string = this.transformNode(branch);
                 if (refName == null || refName == undefined || refName.length == 0) {
-                    throw new Error(\`Syntax error in "\${branch.matchedText}": cannot create empty reference\`);
+                    throw new Error(\`Syntax error in "\${branch?.matchedText}": cannot create empty reference\`);
                 }
                 return PiElementReference.create<T>(refName, typeName);
             }
@@ -99,17 +131,20 @@ export class SyntaxAnalyserTemplate {
              */
             private transformList\<T\>(branch: SPPTBranch, separator?: string): T[] {
                 let result: T[] = [];
-                for (const child of branch.nonSkipChildren.toArray()) {
-                    let element: any = this.transformNode(child);
-                    if (element !== null || element !== undefined) {
-                        if (separator == null || separator == undefined) {
-                            result.push(element);
-                        } else {
-                            if (element != separator) {
+                const children = this.getChildren(branch, "transformList");
+                if (!!children) {
+                    for (const child of children) {
+                        let element: any = this.transformNode(child);
+                        if (element !== null || element !== undefined) {
+                            if (separator == null || separator == undefined) {
                                 result.push(element);
+                            } else {
+                                if (element != separator) {
+                                    result.push(element);
+                                }
                             }
-                        }
-                    } 
+                        } 
+                    }
                 }
                 return result;
             }
@@ -119,18 +154,21 @@ export class SyntaxAnalyserTemplate {
              */            
             private transformRefList\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string, separator?: string): PiElementReference\<T\>[] {
                 let result: PiElementReference\<T\>[] = [];
-                for (const child of branch.nonSkipChildren.toArray()) {
-                    let refName: any = this.transformNode(child);
-                    if (refName !== null && refName !== undefined && refName.length > 0) {
-                        if (separator === null || separator === undefined) {
-                            result.push(PiElementReference.create<T>(refName, typeName));
-                        } else {
-                            if (refName !== separator) {
+                const children = this.getChildren(branch, "transformRefList");
+                if (!!children) {
+                    for (const child of children) {
+                        let refName: any = this.transformNode(child);
+                        if (refName !== null && refName !== undefined && refName.length > 0) {
+                            if (separator === null || separator === undefined) {
                                 result.push(PiElementReference.create<T>(refName, typeName));
+                            } else {
+                                if (refName !== separator) {
+                                    result.push(PiElementReference.create<T>(refName, typeName));
+                                }
                             }
+                        } else {
+                            throw new Error(\`Syntax error in "\${child?.matchedText}": cannot create empty reference\`);
                         }
-                    } else {
-                        throw new Error(\`Syntax error in "\${child.matchedText}": cannot create empty reference\`);
                     }
                 }
                 return result;

@@ -1,0 +1,124 @@
+PartsTest myName
+	directParts WithDirectParts
+                  	part1 PartConcept
+                            	content "stringLiteral"
+                            	optContent 10
+                            	visibility +
+                  	partList
+                        PartConcept
+                            content "otherString"
+                            optContent
+                            visibility #
+                        PartConcept
+                            content "stringLiteralXXX"
+                            optContent 123
+                            visibility -
+                        PartConcept
+                            content "stringLiteralYYY"
+                            optContent
+                            visibility +
+    partsOfParts
+        WithSubSubParts
+        	part1 SubConcept
+                    	normalSub WithDirectParts
+                    	                  	part1 PartConcept
+                                                    	content "stringLiteral"
+                                                    	optContent 10
+                                                    	visibility +
+                                          	partList
+                    	optionalSub
+                    	listSub
+                    	WithDirectParts
+                            part1 PartConcept
+                                        content "stringLiteralFGT"
+                                        optContent 10
+                                        visibility +
+                            partList
+                                PartConcept
+                                    content "otherStringZZZ"
+                                    optContent
+                                    visibility #
+                    	WithDirectParts
+                            part1 PartConcept
+                                        content "stringLiteralZZZ"
+                                        optContent 1045
+                                        visibility -
+                            partList
+                                PartConcept
+                                    content "otherString"
+                                    optContent
+                                    visibility #
+                    	optListSub
+        	partList
+                SubConcept
+                    normalSub WithDirectParts
+                                    part1 PartConcept
+                                                content "stringLiteral"
+                                                optContent 10
+                                                visibility +
+                                    partList
+                                        PartConcept
+                                            content "otherString"
+                                            optContent
+                                            visibility #
+                                        PartConcept
+                                            content "stringLiteralXXX"
+                                            optContent 123
+                                            visibility -
+                                        PartConcept
+                                            content "stringLiteralYYY"
+                                            optContent
+                                            visibility +
+                    optionalSub WithDirectParts
+                                    part1 PartConcept
+                                                content "stringLiteral"
+                                                optContent 10
+                                                visibility +
+                                    partList
+                                        PartConcept
+                                            content "otherString"
+                                            optContent
+                                            visibility #
+                                        PartConcept
+                                            content "stringLiteralXXX"
+                                            optContent 123
+                                            visibility -
+                                        PartConcept
+                                            content "stringLiteralYYY"
+                                            optContent
+                                            visibility +
+                    listSub
+                    WithDirectParts
+                        part1 PartConcept
+                            content "stringLiteral"
+                            optContent 10
+                            visibility +
+                        partList
+                    optListSub
+                SubConcept
+                    normalSub WithDirectParts
+                        part1 PartConcept
+                            content "stringLiteral"
+                            optContent 10
+                            visibility +
+                        partList
+                    optionalSub WithDirectParts
+                        part1 PartConcept
+                            content "stringLiteral"
+                            optContent 10
+                            visibility #
+                        partList
+                    listSub
+                    WithDirectParts
+                        part1 PartConcept
+                            content "stringLiteral"
+                            optContent 10
+                            visibility +
+                        partList
+                    optListSub
+                    WithDirectParts
+                        part1 PartConcept
+                            content "stringLit"
+                            optContent 1440
+                            visibility +
+                        partList

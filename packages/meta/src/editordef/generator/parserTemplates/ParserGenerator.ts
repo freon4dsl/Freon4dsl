@@ -384,7 +384,7 @@ export class ParserGenerator {
              */
             private transform${branchName} (branch: SPPTBranch) : ${branchName} {
                 // console.log("transform${branchName} called");
-                const children = branch.nonSkipChildren.toArray();               
+                const children = this.getChildren(branch, 'transform${branchName}');              
                 ${propStatements.map(stat => `${stat}`).join("\n")}      
                 return ${Names.concept(piClassifier)}.create({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
             }`);
@@ -406,27 +406,14 @@ export class ParserGenerator {
         const optionalPropIndex: number = optionalIndexToProp.get(prop); // index of this property within an optional sub-branch
         // the second part of the following statement is needed because sometimes optional props are not parsed in a separate group
         // TODO example
-        const isOptional: boolean = prop.isOptional || !!optionalPropIndex;
+        const isOptional: boolean = prop.isOptional && optionalPropIndex !== undefined ;
         let separatorText = this.separatorToProp.get(prop);
         if (!!separatorText && separatorText.length > 0) {
             separatorText = `, "${separatorText}"`;
         }
 
         // second, create the statement for this property
-        if (!isOptional) {
-            if (!prop.isList && prop.isPart) {           // (non-list, part, non-optional)
-                return `const ${propName}: ${propBaseTypeName} = this.transformNode(children[${propIndex}]);`;
-            } else if (!prop.isList && !prop.isPart) {   // (non-list, reference, non-optional)
-                return `const ${propName}: ${Names.PiElementReference}<${propBaseTypeName}> = ` +
-                    `this.piElemRef<${Names.classifier(propType)}>(children[${propIndex}], "${Names.classifier(propType)}");`;
-            } else if (prop.isList && prop.isPart) {     // (list, part, non-optional)
-                return `const ${propName}: ${propBaseTypeName}[] = ` +
-                    `this.transformList<${propBaseTypeName}>(children[${propIndex}]${separatorText});`;
-            } else if (prop.isList && !prop.isPart) {    // (list, reference, non-optional)
-                return `const ${propName}: ${Names.PiElementReference}<${propBaseTypeName}>[] = ` +
-                    `this.transformRefList<${propBaseTypeName}>(children[${propIndex}], "${Names.classifier(propType)}"${separatorText});`;
-            }
-        } else {
+        if (isOptional) {
             let specificPart: string = '';
             let propTypeName: string = '';
             if (!prop.isList && prop.isPart) {              // (non-list, part, optional)
@@ -447,11 +434,29 @@ export class ParserGenerator {
             // ... and the statement to get the right value for the property, which is set in 'specificPart'
             return `let ${propName}: ${propTypeName} = null;
                     if (!children[${propIndex}].isEmptyMatch) {
-                        // take the first element in the [0..1] optional group, and the ${optionalPropIndex}(-st/nd/rd/th) element of that group  
-                        // hack: group has two occurences, therefore twice 'nonSkipChildren.toArray()[0]'
-                        let subNode = children[${propIndex}].nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[0].nonSkipChildren.toArray()[${optionalPropIndex}];
+                        // take the ${optionalPropIndex}(-st/nd/rd/th) element of the group that represents the optional part  
+                        let subNode = this.getGroup(children[${propIndex}], "SOME TEXT TO BE DONE").nonSkipChildren.toArray()[${optionalPropIndex}];
                         ${specificPart}
                     }`;
+        } else {
+            if (!prop.isList && prop.isPart) {
+                if (prop.isOptional) {          // (non-list, part, optional)
+                    // this is the case when 'optionalPropIndex' has no value: a simple "XXX?" call is in the grammar
+                    // we need to take the extra 'multi' group in the parse tree into account
+                    return `const ${propName}: ${propBaseTypeName} = this.transformNode(this.getChildren(children[${propIndex}], "SOME TEXT TO BE DONE"));`;
+                } else {                        // (non-list, part, non-optional)
+                    return `const ${propName}: ${propBaseTypeName} = this.transformNode(children[${propIndex}]);`;
+                }
+            } else if (!prop.isList && !prop.isPart) {   // (non-list, reference, non-optional)
+                return `const ${propName}: ${Names.PiElementReference}<${propBaseTypeName}> = ` +
+                    `this.piElemRef<${Names.classifier(propType)}>(children[${propIndex}], "${Names.classifier(propType)}");`;
+            } else if (prop.isList && prop.isPart) {     // (list, part, non-optional)
+                return `const ${propName}: ${propBaseTypeName}[] = ` +
+                    `this.transformList<${propBaseTypeName}>(children[${propIndex}]${separatorText});`;
+            } else if (prop.isList && !prop.isPart) {    // (list, reference, non-optional)
+                return `const ${propName}: ${Names.PiElementReference}<${propBaseTypeName}>[] = ` +
+                    `this.transformRefList<${propBaseTypeName}>(children[${propIndex}], "${Names.classifier(propType)}"${separatorText});`;
+            }
         }
         return '';
     }
@@ -550,6 +555,7 @@ export class ParserGenerator {
 
         if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
             this.listWithExtras.push(prop);
+            console.log(`group for ${prop.name}: ${optionalIndexToName.get(prop)}`);
             ruleText = `( ${ruleText} )?\n`;
         } else if (!isList) { // there is one element in the ruleText but it is not a list, so we need a '?'
             ruleText = `${ruleText}?`;
@@ -579,9 +585,8 @@ export class ParserGenerator {
                 return propEntry;
             } else {
                 if (myElem.isOptional && !withinOptionalGroup) {
-                    // make an extra group in the parse tree to simplify creation of syntax analysis methods
                     optionalIndexToName.set(myElem, 0);
-                    return `( ${propTypeName} )?`
+                    return `${propTypeName}?`
                 }
                 return `${propTypeName}`;
             }

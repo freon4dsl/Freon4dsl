@@ -17,3 +17,4 @@ PartsTest myName
                             content "stringLiteralYYY"
                             optContent
                             visibility +
+    partsOfParts
