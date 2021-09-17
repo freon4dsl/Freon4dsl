@@ -39,7 +39,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
             result = unparser.writeToString(mult, 0);
-            expect(result).toBe("( 3 * 10 )");
+            expect(result).toBe("3 * 10");
         });
 
         test("multiplication 3 * 'temp'", () => {
@@ -48,10 +48,10 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.writeToString(mult, 0);
-            expect(result).toBe("( 3 * ' \"temp\" ' )");
+            expect(result).toBe("3 * ' \"temp\" '");
         });
 
-        test("multiplication (3 / 4) * 'temp'", () => {
+        test("multiplication 3 / 4 * 'temp'", () => {
             let result: string = "";
             const div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
@@ -60,10 +60,10 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.writeToString(mult, 0);
-            expect(result).toBe("( ( 3 / 4 ) * ' \"temp\" ' )");
+            expect(result).toBe("3 / 4 * ' \"temp\" '");
         });
 
-        test("(1 + 2) * 'Person'", () => {
+        test("1 + 2 * 'Person'", () => {
             let result: string = "";
             const variableExpression = new DemoVariableRef();
             const variable = new DemoVariable();
@@ -71,15 +71,11 @@ describe("Testing Unparser", () => {
             // variable.declaredType = DemoAttributeType.String;
             variableExpression.variable = PiElementReference.create<DemoVariable>(variable.name, "DemoVariable");
 
-            // variableExpression.referredName = "Person";
-            // variableExpression.attribute = new DemoAttribute();
-            // variableExpression.attribute.unitName = "Person";
-            // variableExpression.attribute.declaredType = DemoAttributeType.String;
-
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
-            result = unparser.writeToString(multiplyExpression, 0, true);
-            expect(result).toBe("( ( 1 + 2 ) * DemoVariableRef )");
+            result = unparser.writeToString(multiplyExpression, 0, false);
+            result = result.replace(new RegExp("\\s+","gm"), " ");
+            expect(result).toBe("1 + 2 * DemoVariableRef appliedfeature variable Person");
         });
 
         test('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {

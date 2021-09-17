@@ -19,6 +19,7 @@ import { LangUtil, Names } from "../../../utils";
 import { GrammarTemplate } from "./GrammarTemplate";
 import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
+import { referencePostfix2 } from "./PegjsTemplate";
 
 // export const referencePostfix = "Ref";
 export const optionalRulePrefix = "optional";
@@ -231,11 +232,24 @@ export class ParserGenerator {
                     })
                 });
                 const myName = Names.classifier(piClassifier);
-                // make a rule according to the projection
-                this.generatedParseRules.push(this.makeLimitedReferenceRule(myName, myMap));
-                // syntax analysis method(s) are only needed for special projections,
-                // because there is a generic method for references in the template
-                this.generatedSyntaxAnalyserMethods.push(this.makeLimitedSyntaxMethod(myName, myMap));
+                this.branchNames.push(myName);
+                if (myMap.size > 0) { // found a limited concept with a special projection
+                    // make a rule according to the projection
+                    this.generatedParseRules.push(this.makeLimitedReferenceRule(myName, myMap));
+                    // syntax analysis method(s) are only needed for special projections,
+                    // because there is a generic method for references in the template
+                    this.generatedSyntaxAnalyserMethods.push(this.makeLimitedSyntaxMethod(myName, myMap));
+                } else {
+                    // make a 'normal' reference rule
+                    let rule = `${myName} = identifier`;
+                    this.generatedParseRules.push(rule);
+                    let method = `private transform${myName}(branch: SPPTBranch): string {
+                        let choice = (branch.matchedText).trim();
+                        // TODO finish this one
+                        return choice;
+                    }`;
+                    this.generatedSyntaxAnalyserMethods.push(method);
+                }
             }
         }
     }
@@ -737,7 +751,6 @@ export class ParserGenerator {
         ifStat += `{
                 return null;
             }`;
-        this.branchNames.push(myName);
         return `
         private transform${myName}(branch: SPPTBranch): string {
             let choice = (branch.matchedText).trim();

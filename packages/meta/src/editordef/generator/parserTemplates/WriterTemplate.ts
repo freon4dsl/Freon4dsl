@@ -19,7 +19,7 @@ import {
 
 export class WriterTemplate {
     // TODO unparse limited concepts differently, instead of 'AttributeType Integer' just 'Integer'
-    // TODO make different method 'write' without extra optional pars (I always forget to pu them in)
+    // TODO make different method 'write' without extra optional pars (I always forget to put them in)
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
@@ -351,11 +351,11 @@ export class WriterTemplate {
             if (myConcept instanceof PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
                 return `${comment}
                     private unparse${name}(modelelement: ${name}, short: boolean) {
-                        this.output[this.currentLine] += "( ";
+                        //this.output[this.currentLine] += "( ";
                         this.unparse(modelelement.left, short);
                         this.output[this.currentLine] += "${conceptDef.symbol} ";
                         this.unparse(modelelement.right, short);
-                        this.output[this.currentLine] += ") ";
+                        //this.output[this.currentLine] += ") ";
                 }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
@@ -506,7 +506,7 @@ export class WriterTemplate {
                 }
             } else {
                 let myCall: string = "";
-                if (myElem.isPart || type instanceof PiLimitedConcept) {
+                if (myElem.isPart) {
                     myCall += `this.unparse(${myTypeScript}, short) `;
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
