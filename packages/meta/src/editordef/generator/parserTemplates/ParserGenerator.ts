@@ -243,10 +243,15 @@ export class ParserGenerator {
                     // make a 'normal' reference rule
                     let rule = `${myName} = identifier`;
                     this.generatedParseRules.push(rule);
-                    let method = `private transform${myName}(branch: SPPTBranch): string {
-                        let choice = (branch.matchedText).trim();
-                        // TODO finish this one
-                        return choice;
+                    let method = `
+                    /**
+                     * Method to transform branches that match the following rule:
+                     * ${this.addCommentStars(rule)}
+                     * @param branch
+                     * @private
+                     */
+                     private transform${myName}(branch: SPPTBranch): string {
+                        return (branch.matchedText).trim();
                     }`;
                     this.generatedSyntaxAnalyserMethods.push(method);
                 }
