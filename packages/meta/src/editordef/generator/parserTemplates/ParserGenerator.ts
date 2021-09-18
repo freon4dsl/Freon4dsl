@@ -40,6 +40,7 @@ export class ParserGenerator {
     // the optionality of properties depends on both the optionality declared in the .ast def, and on the optionality of projections in the .edit def
     // therefore we keep track of these in 'optionalProps'
     private optionalProps: PiProperty[] = [];
+    private keywordBooleans: PiPrimitiveProperty[] = [];
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
         // reset all attributes that are global to this class
@@ -440,6 +441,13 @@ export class ParserGenerator {
         }
 
         // second, create the statement for this property
+        if (prop instanceof PiPrimitiveProperty && this.keywordBooleans.includes(prop)) {
+            return `// option 12
+                            let ${propName}: ${propBaseTypeName} = false;
+                            if (!children[${propIndex}].isEmptyMatch) {
+                                ${propName} = true;
+                            }`;
+        }
         if (isOptional) {
             if (optionalPropIndex === undefined) {
                 if (!prop.isList && prop.isPart) {
@@ -460,23 +468,28 @@ export class ParserGenerator {
             }
             let specificPart: string = '';
             let propTypeName: string = '';
+            let optionComment: string = '';
             if (!prop.isList && prop.isPart) {              // (non-list, part, optional)
                 propTypeName = propBaseTypeName;
-                specificPart = `// option 2 \n${propName} = this.transformNode(subNode);`;
+                optionComment = `// option 2 \n`;
+                specificPart = `${propName} = this.transformNode(subNode);`;
             } else if (!prop.isList && !prop.isPart) {      // (non-list, reference, optional)
                 propTypeName = `${Names.PiElementReference}<${propBaseTypeName}>`;
-                specificPart = `// option 3 \n${propName} = this.piElemRef<${Names.classifier(propType)}>(subNode, "${Names.classifier(propType)}");`;
+                optionComment = `// option 3 \n`;
+                specificPart = `${propName} = this.piElemRef<${Names.classifier(propType)}>(subNode, "${Names.classifier(propType)}");`;
             } else if (prop.isList && prop.isPart) {        // (list, part, optional)
                 propTypeName = `${propBaseTypeName}[]`;
-                specificPart = `// option 4 \n${propName} = this.transformList<${propBaseTypeName}>(subNode${separatorText});`;
+                optionComment = `// option 4 \n`;
+                specificPart = `${propName} = this.transformList<${propBaseTypeName}>(subNode${separatorText});`;
             } else if (prop.isList && !prop.isPart) {       // (list, reference, optional)
                 propTypeName = `${Names.PiElementReference}<${propBaseTypeName}>[]`;
-                specificPart = `// option 5 \n${propName} = this.transformRefList<${propBaseTypeName}>(subNode, "${Names.classifier(propType)}"${separatorText});`;
+                optionComment = `// option 5 \n`;
+                specificPart = `${propName} = this.transformRefList<${propBaseTypeName}>(subNode, "${Names.classifier(propType)}"${separatorText});`;
             }
             // this part is common for all optional properties, except for
             // ... the type info in the 1st line, which depends on list/non-list, and on ref/non-ref, therefore this is set in the if-statement above,
             // ... and the statement to get the right value for the property, which is set in 'specificPart'
-            return `let ${propName}: ${propTypeName} = null;
+            return `${optionComment}let ${propName}: ${propTypeName} = null;
                     if (!children[${propIndex}].isEmptyMatch) {
                         // take the ${optionalPropIndex}(-st/nd/rd/th) element of the group that represents the optional part  
                         let subNode = this.getGroup(children[${propIndex}], "SOME TEXT TO BE DONE").nonSkipChildren.toArray()[${optionalPropIndex}];
@@ -699,6 +712,7 @@ export class ParserGenerator {
                     }
                     case "boolean": {
                         if (!!item.keyword) {
+                            this.keywordBooleans.push(myElem);
                             ruleName = `"${item.keyword}"`
                         } else {
                             ruleName = "booleanLiteral";

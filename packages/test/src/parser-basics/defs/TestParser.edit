@@ -23,6 +23,9 @@ PrimExtraOptional {
     ]
 }
 
+PrimWith {
+    @projection normal [ PrimWithKeywordProj [?${self.primBoolean @keyword [<BOOL>]}] ]
+}
 // for limited concepts
 VisibilityKind {
     @projection normal [

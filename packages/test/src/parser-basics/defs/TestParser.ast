@@ -7,6 +7,8 @@ model TestParserModel {
     name: string;
     prim: PrimitivesTest;
     lim: LimitedTest;
+    ref: RefsTest;
+    primWith: WithKeywordProj;
 }
 
 modelunit PrimitivesTest {
@@ -49,6 +51,15 @@ concept PrimExtraOptional {
     primListNumberWithExtra?: number[];
     primListStringWithExtra?: string[];
     primListBooleanWithExtra?: boolean[];
+}
+
+modelunit WithKeywordProj {
+    public name: string;
+    primWith: PrimWith[];
+}
+
+concept PrimWith {
+    primBoolean: boolean;
 }
 
 // TEST PROPERTIES WITH TYPES THTA ARE LIMITED CONCEPTS
@@ -137,4 +148,5 @@ concept WithSubSubRefs {
     partList: WithDirectRefs[];
     optList?: WithDirectRefs[];
 }
+
 
