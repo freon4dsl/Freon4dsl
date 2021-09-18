@@ -1,10 +1,5 @@
 editor XXX for language octopus
 
-UmlPart {
-    @projection normal
-        [${self.packages}]
-}
-
 UmlPackage {
     @projection normal
         [<package> ${self.pathName}
@@ -18,48 +13,57 @@ PathName {
         [${self.names @horizontal @separator [::] }]
 }
 
-Association {
-    @projection normal
-        [<->]
-}
+//Association {
+//    @projection normal
+//        [<->]
+//}
 
-DataType {
-    @projection normal
-        [<datatype> ${self.name}
-        <enddatatype>
-        ]
-}
+//DataType {
+//    @projection normal
+//        [<datatype> ${self.name}
+//        <enddatatype>
+//        ]
+//}
 
-UmlInterface  {
-    @projection normal
-        [<interface> ${self.name}
-        <endinterface>
-        ]
-}
+//UmlInterface  {
+//    @projection normal
+//        [<interface> ${self.name}
+//        <endinterface>
+//        ]
+//}
 
 UmlClass {
     @projection normal
-        [+ <class> ${self.name}
-            <attributes>
-            ${self.attributes @vertical @terminator [;] }
+        [${self.visibility} <class> ${self.name}
+        [?<attributes> ${self.attributes @vertical @terminator [\n]}]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
         <endclass>
         ]
 }
 
-AssociationClass {
-    @projection normal
-        [<associationclass> ${self.name}
-        <endassociationclass>
-        ]
-}
+//AssociationClass {
+//    @projection normal
+//        [<associationclass> ${self.name}
+//        <endassociationclass>
+//        ]
+//}
 
 Attribute {
     @projection normal
-        [+ ${self.name}[?${self.multiplicity}] : ${self.type}]
+        [${self.visibility} ${self.name}[?${self.multiplicity}] : ${self.type} ; ]
 }
 
+Operation {
+    @projection normal
+    [${self.visibility} ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}] ;
+    ]
+}
+Parameter {
+    @projection normal
+        [${self.directionKind} ${self.name} : ${self.type}]
+}
 MultiplicityKind {
-    @projection normal [\[ ${self.lowerBound}..${self.upperBound}]
+    @projection normal [\[ ${self.lowerBound}..${self.upperBound} \]]
 }
 
 VisibilityKind {

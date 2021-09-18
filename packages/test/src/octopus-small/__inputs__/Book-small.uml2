@@ -1,0 +1,9 @@
+<package> Book::TEXT
+ + <class> Prependix
+    <attributes>
+     + kind: PrependixKind;
+    <operations>
+     + isFirstBookpart() : Boolean;
+     + needsEmptyLastPage() : Boolean;
+<endclass>
+<endpackage>

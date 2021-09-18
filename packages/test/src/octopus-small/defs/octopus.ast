@@ -2,19 +2,26 @@ language octopus
 
 model OctopusModel {
     name: string;
-    umlParts: UmlPart[];
-    oclParts: OclPart[];
+    umlParts: UmlPackage[];
+//    oclParts: OclPart[];
 }
 
-modelunit UmlPart {
-    public name: string;
-    packages: UmlPackage[];
+//modelunit OclPart {
+//    public name: string;
+//}
+concept Operation implements IPackagableElement {
+    parameters: Parameter[];
+    reference returnType?: IClassifier;
+//    reference owner: IClassifier;
+//    hasClassScope: boolean;
+//    isOClDef: boolean;
+//    isAbstract: boolean;
+//    isInfix: boolean;
+//    isPrefix: boolean;
+//    pre?: OclPreStatement[];
+//    post?: OclPostStatement[];
 }
-
-modelunit OclPart {
-    public name: string;
-}
-concept UmlPackage implements IModelElement {
+modelunit UmlPackage implements IModelElement {
 //    subpackages: UmlPackage[];
 //    reference parent: UmlPackage;
 //    reference root: UmlPackage;
@@ -23,18 +30,23 @@ concept UmlPackage implements IModelElement {
 //    associations: Association[];
 //    imports: ImportedElement[];
 }
+concept Parameter implements IModelElement {
+    reference type: IClassifier;
+//    reference owner: Operation;
+    directionKind: ParameterDirectionKind;
+}
 concept PathName {
     names: string[];
     // first = names[0];
     // last  = names[names.length-1]
 }
 interface IModelElement {
-    name: string;
+    public name: string;
     pathName: PathName;
 }
 interface IClassifier base IPackagableElement {
     attributes: Attribute[];
-//    operations: Operation[];
+    operations: Operation[];
 //    navigations: AssociationEnd[];
 //    reference generalizations: IClassifier[];
 //    subClasses: IClassifier[];
@@ -48,23 +60,23 @@ interface IClassifier base IPackagableElement {
 //    stereotype: string;
 }
 interface IPackagableElement base IModelElement {
-//    visibility: VisibilityKind;
+    visibility: VisibilityKind;
 }
 interface IClass base IClassifier {
 }
-concept DataType implements IClassifier {
-}
-concept UmlInterface implements IClassifier {
-}
-concept Association implements IClassifier {
-//    end1: AssociationEnd;
-//    end2: AssociationEnd;
-//    isClass: boolean;
-}
+//concept DataType implements IClassifier {
+//}
+//concept UmlInterface implements IClassifier {
+//}
+//concept Association implements IClassifier {
+////    end1: AssociationEnd;
+////    end2: AssociationEnd;
+////    isClass: boolean;
+//}
 concept UmlClass implements IClass {
 }
-concept AssociationClass base Association implements IClass {
-}
+//concept AssociationClass base Association implements IClass {
+//}
 concept Attribute base StructuralFeature {
     isOClDef: boolean;
 }
@@ -83,6 +95,12 @@ concept MultiplicityKind {
 //    isSingleObject: boolean;
     lowerBound: number;
     upperBound: number;
+}
+
+limited ParameterDirectionKind {
+    IN    = { name: "IN" }
+    OUT   = { name: "OUT" }
+    INOUT = { name: "INOUT" }
 }
 
 limited VisibilityKind {
