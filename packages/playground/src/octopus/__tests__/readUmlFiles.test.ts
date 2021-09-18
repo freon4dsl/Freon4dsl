@@ -1,14 +1,12 @@
 import { UmlPart } from "../language/gen";
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
-import * as fs from "fs";
 import { FileHandler } from "./FileHandler";
 
 describe("Testing Parser", () => {
     const writer = OctopusEnvironment.getInstance().writer;
     const reader = OctopusEnvironment.getInstance().reader;
     const fileHandler = new FileHandler();
-    // const piReader = new OctopusFileReader<UmlPart>();
-    // piReader.piReader = umlParser;
+
     // TODO use snapshots
     test("book model unparsed and parsed again", () => {
         const input = fileHandler.stringFromFile("src/octopus/__tests__/Book.uml");

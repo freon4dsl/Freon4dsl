@@ -19,10 +19,6 @@ import { LangUtil, Names } from "../../../utils";
 import { GrammarTemplate } from "./GrammarTemplate";
 import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
-import { referencePostfix2 } from "./PegjsTemplate";
-
-// export const referencePostfix = "Ref";
-export const optionalRulePrefix = "optional";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
@@ -41,6 +37,9 @@ export class ParserGenerator {
     private separatorToProp: Map<PiProperty, string> = new Map<PiProperty, string>();
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
     private listWithExtras: PiProperty[] = [];
+    // the optionality of properties depends on both the optionality declared in the .ast def, and on the optionality of projections in the .edit def
+    // therefore we keep track of these in 'optionalProps'
+    private optionalProps: PiProperty[] = [];
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
         // reset all attributes that are global to this class
@@ -50,6 +49,7 @@ export class ParserGenerator {
         this.editUnit = editUnit;
         // analyse the language unit and store the results in the global attributes
         this.analyseUnit(langUnit, []);
+        // console.log(this.optionalProps.map(opt => `${!!(opt.name) ? `${opt.name}` : `nameless`}`).join(", "));
         // do the concepts
         this.generateConcepts(editUnit);
         // do the interfaces
@@ -137,14 +137,22 @@ export class ParserGenerator {
                 this.analyseUnit(type, typesDone);
             });
             // for any non-abstract concept: include all types of parts
+            // and include all optional properties in 'this.optionalProps'
             if (!piClassifier.isAbstract) {
+                piClassifier.allPrimProperties().forEach(prim => {
+                    if (prim.isOptional || prim.isList) this.addToOptionals(prim);
+                });
                 piClassifier.allParts().forEach(part => {
                     const type = part.type.referred;
+                    // if (!part) console.log("undefined part in " + piClassifier.name);
+                    if (part.isOptional || part.isList) this.addToOptionals(part);
                     this.analyseUnit(type, typesDone);
                 });
                 // and add all types of references to typesReferred
-                piClassifier.allReferences().forEach(part => {
-                    const type = part.type.referred;
+                piClassifier.allReferences().forEach(ref => {
+                    const type = ref.type.referred;
+                    // if (!ref) console.log("undefined ref in " + piClassifier.name);
+                    if (ref.isOptional) this.addToOptionals(ref);
                     if (type instanceof PiLimitedConcept && !this.limitedsReferred.includes(type)) {
                         this.limitedsReferred.push(type);
                     }
@@ -260,7 +268,7 @@ export class ParserGenerator {
     }
 
     private makeLimitedReferenceRule(myName: string, myMap: Map<string, string>) {
-        // knowing that we only have keywords in the parse rule, it can be prefixed with 'leaf'
+        // note that this rule cannot be prefixed with 'leaf'; this would cause the syntax analysis to fail
         let result: string = `${myName} = `;
         let first = true;
         for (const [key, value] of myMap) {
@@ -425,7 +433,7 @@ export class ParserGenerator {
         const optionalPropIndex: number = optionalIndexToProp.get(prop); // index of this property within an optional sub-branch
         // the second part of the following statement is needed because sometimes optional props are not parsed in a separate group
         // TODO example
-        const isOptional: boolean = prop.isOptional && optionalPropIndex !== undefined ;
+        const isOptional: boolean = !!this.optionalProps.find(opt => opt === prop) ;
         let separatorText = this.separatorToProp.get(prop);
         if (!!separatorText && separatorText.length > 0) {
             separatorText = `, "${separatorText}"`;
@@ -433,20 +441,37 @@ export class ParserGenerator {
 
         // second, create the statement for this property
         if (isOptional) {
+            if (optionalPropIndex === undefined) {
+                if (!prop.isList && prop.isPart) {
+                    // this is the case when a simple "XXX?" call is in the grammar
+                    // we need to take the extra 'multi' group in the parse tree into account
+                    // TODO change getChildren into getGroup ?
+                    return `// option 1
+                    const ${propName}: ${propBaseTypeName} = this.transformNode(this.getChildren(children[${propIndex}], "SOME TEXT TO BE DONE"));`;
+                } else if (prop.isList && prop.isPart) {     // (list, part, non-optional)
+                    return `// option 10 equal to option 8 => 'this.transformList' takes care of the optionality  \nconst ${propName}: ${propBaseTypeName}[] = ` +
+                        `this.transformList<${propBaseTypeName}>(children[${propIndex}]${separatorText});`;
+                } else if (prop.isList && !prop.isPart) {    // (list, reference, non-optional)
+                    return `// option 11 equal to option 9 => 'this.transformRefList' takes care of the optionality\nconst ${propName}: ${Names.PiElementReference}<${propBaseTypeName}>[] = ` +
+                        `this.transformRefList<${propBaseTypeName}>(children[${propIndex}], "${Names.classifier(propType)}"${separatorText});`;
+                } else {
+                    console.log(`Error in parser generator: optionalPropIndex not found for ${propName} in ${this.unit.name}`);
+                }
+            }
             let specificPart: string = '';
             let propTypeName: string = '';
             if (!prop.isList && prop.isPart) {              // (non-list, part, optional)
                 propTypeName = propBaseTypeName;
-                specificPart = `${propName} = this.transformNode(subNode);`;
+                specificPart = `// option 2 \n${propName} = this.transformNode(subNode);`;
             } else if (!prop.isList && !prop.isPart) {      // (non-list, reference, optional)
                 propTypeName = `${Names.PiElementReference}<${propBaseTypeName}>`;
-                specificPart = `${propName} = this.piElemRef<${Names.classifier(propType)}>(subNode, "${Names.classifier(propType)}");`;
+                specificPart = `// option 3 \n${propName} = this.piElemRef<${Names.classifier(propType)}>(subNode, "${Names.classifier(propType)}");`;
             } else if (prop.isList && prop.isPart) {        // (list, part, optional)
                 propTypeName = `${propBaseTypeName}[]`;
-                specificPart = `${propName} = this.transformList<${propBaseTypeName}>(subNode${separatorText});`;
+                specificPart = `// option 4 \n${propName} = this.transformList<${propBaseTypeName}>(subNode${separatorText});`;
             } else if (prop.isList && !prop.isPart) {       // (list, reference, optional)
                 propTypeName = `${Names.PiElementReference}<${propBaseTypeName}>[]`;
-                specificPart = `${propName} = this.transformRefList<${propBaseTypeName}>(subNode, "${Names.classifier(propType)}"${separatorText});`;
+                specificPart = `// option 5 \n${propName} = this.transformRefList<${propBaseTypeName}>(subNode, "${Names.classifier(propType)}"${separatorText});`;
             }
             // this part is common for all optional properties, except for
             // ... the type info in the 1st line, which depends on list/non-list, and on ref/non-ref, therefore this is set in the if-statement above,
@@ -458,22 +483,16 @@ export class ParserGenerator {
                         ${specificPart}
                     }`;
         } else {
-            if (!prop.isList && prop.isPart) {
-                if (prop.isOptional) {          // (non-list, part, optional)
-                    // this is the case when 'optionalPropIndex' has no value: a simple "XXX?" call is in the grammar
-                    // we need to take the extra 'multi' group in the parse tree into account
-                    return `const ${propName}: ${propBaseTypeName} = this.transformNode(this.getChildren(children[${propIndex}], "SOME TEXT TO BE DONE"));`;
-                } else {                        // (non-list, part, non-optional)
-                    return `const ${propName}: ${propBaseTypeName} = this.transformNode(children[${propIndex}]);`;
-                }
+            if (!prop.isList && prop.isPart) {           // (non-list, part, non-optional)
+                return `// option 6 \nconst ${propName}: ${propBaseTypeName} = this.transformNode(children[${propIndex}]);`;
             } else if (!prop.isList && !prop.isPart) {   // (non-list, reference, non-optional)
-                return `const ${propName}: ${Names.PiElementReference}<${propBaseTypeName}> = ` +
+                return `// option 7 \nconst ${propName}: ${Names.PiElementReference}<${propBaseTypeName}> = ` +
                     `this.piElemRef<${Names.classifier(propType)}>(children[${propIndex}], "${Names.classifier(propType)}");`;
             } else if (prop.isList && prop.isPart) {     // (list, part, non-optional)
-                return `const ${propName}: ${propBaseTypeName}[] = ` +
+                return `// option 8 \nconst ${propName}: ${propBaseTypeName}[] = ` +
                     `this.transformList<${propBaseTypeName}>(children[${propIndex}]${separatorText});`;
             } else if (prop.isList && !prop.isPart) {    // (list, reference, non-optional)
-                return `const ${propName}: ${Names.PiElementReference}<${propBaseTypeName}>[] = ` +
+                return `// option 9 \nconst ${propName}: ${Names.PiElementReference}<${propBaseTypeName}>[] = ` +
                     `this.transformRefList<${propBaseTypeName}>(children[${propIndex}], "${Names.classifier(propType)}"${separatorText});`;
             }
         }
@@ -535,7 +554,19 @@ export class ParserGenerator {
             // create a group for the optional part, and store the indexes of the group and of the property within the group
             return this.makeOptionalRulePart(item, branchName, indexToProp, optionalIndexToName);
         } else {
+            // TODO check: is this else-branch ever entered???
             return this.addCallForItems(branchName, item.items, indexToProp, optionalIndexToName);
+        }
+    }
+
+    private addToOptionals(prop: PiProperty) {
+        try {
+            if (!prop) throw new Error();
+            if (!this.optionalProps.includes(prop)) {
+                this.optionalProps.push(prop);
+            }
+        } catch (e) {
+            console.log(e.stack);
         }
     }
 
@@ -547,11 +578,13 @@ export class ParserGenerator {
         let isList: boolean = false;
         item.items.forEach((sub) => {
             if (sub instanceof PiEditSubProjection) {
+                // TODO check if this is a valid option
                 ruleText += this.makeSubProjection(branchName, sub, indexToName, optionalIndexToName);
                 propIndex += 1;
                 // console.log(`increase of propIndex for ${ruleText}, ${propIndex}`);
             } else if (sub instanceof PiEditPropertyProjection) {
                 prop = sub.expression.findRefOfLastAppliedFeature();
+                this.addToOptionals(prop); // TODO check: is it important to see if prop is already in optionalProps?
                 propType = Names.classifier(prop.type.referred);
                 if (!prop.isPart) { // it's a reference
                     propType = `${Names.PiElementReference}<${propType}>`;
@@ -602,6 +635,7 @@ export class ParserGenerator {
                 }
                 return propEntry;
             } else {
+                // only add '?' when myElem is not a list
                 if (myElem.isOptional && !withinOptionalGroup) {
                     optionalIndexToName.set(myElem, 0);
                     return `${propTypeName}?`
