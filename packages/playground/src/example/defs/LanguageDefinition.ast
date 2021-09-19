@@ -1,17 +1,17 @@
 language Example
 
 model Demo {
-    name: string;
+    name: identifier;
     models: ExModel[];
 }
 
 public modelunit ExModel {
-    public name: string;
+    public name: identifier;
     public entities: Entity[];
     public methods: Method[];
 }
 interface BaseType {
-    public name: string;
+    public name: identifier;
 }
 interface Type base BaseType {
 }
@@ -23,7 +23,7 @@ public concept Entity implements Type {
 }
 
 public concept Method {
-    public name: string;
+    public name: identifier;
     reference declaredType : Type;
     body: ExExpression;
     parameters: Parameter[];
@@ -31,11 +31,11 @@ public concept Method {
 
 concept Attribute {
     reference declaredType: Type;
-    name: string;
+    name: identifier;
 }
 
 limited AttributeType implements Type {
-    name: string;
+    name: identifier;
     extra: number;
     String = { name: "String", "extra": 199}
     Integer = { "name": "Integer", "extra": 240261}
@@ -44,7 +44,7 @@ limited AttributeType implements Type {
 }
 
 concept Parameter  {
-    name: string;
+    name: identifier;
     reference declaredType: Type;
 }
 
@@ -87,7 +87,7 @@ expression ParameterRef base ExExpression {
 }
 
 concept LoopVariable {
-    name: string;
+    name: identifier;
 }
 
 expression LoopVariableRef base ExExpression {

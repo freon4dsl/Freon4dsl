@@ -2,6 +2,7 @@ import { PiClassifier, PiInterface, PiLangElement, PiPrimitiveProperty, PiProper
 import { PiConcept, PiConceptProperty } from "../languagedef/metalanguage/";
 import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp } from "../languagedef/metalanguage";
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
+import { PiPrimitiveType } from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * This function sorts the list of PiClasses in such a way that
@@ -137,7 +138,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
  * @param con
  */
 export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
-    return con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
+    return con.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
 }
 
 /**
@@ -147,9 +148,30 @@ export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
  */
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
     if (!!piClassifier) {
-        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.primType === "string") ) {
+        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type.referred === PiPrimitiveType.identifier) ) {
             return true;
         }
     }
     return false;
+}
+
+/**
+ *
+ */
+export function typeToString(property: PiProperty): string {
+    const myType = property.type.referred;
+    if (property instanceof PiPrimitiveProperty) {
+        if (myType === PiPrimitiveType.identifier) {
+            return "string";
+        } else if (myType === PiPrimitiveType.string) {
+            return "string";
+        } else if (myType === PiPrimitiveType.boolean) {
+            return "boolean";
+        } else if (myType === PiPrimitiveType.number) {
+            return "number";
+        }
+        return "any";
+    } else {
+        return myType.name;
+    }
 }

@@ -1,7 +1,7 @@
 language octopus
 
 modelunit UmlPart {
-    public name: string;
+    public name: identifier;
     packages: UmlPackage[];
     associations: Association[];
 }
@@ -79,7 +79,7 @@ concept ImportedElement implements IModelElement {
 concept UmlInterface implements IClassifier {
 }
 interface IModelElement {
-    name: string;
+    name: identifier;
     pathName: PathName;
 }
 concept MultiplicityKind {

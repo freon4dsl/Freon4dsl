@@ -1,12 +1,12 @@
 language test3
 
 model ROOT {
-    name: string;
+    name: identifier;
     unit: AA;
 }
 
 modelunit AA {
-    public name: string;
+    public name: identifier;
     prop1: BB;
 }
 
@@ -32,7 +32,7 @@ concept BaseBaseBB {
 }
 
 concept CC base BaseBB {
-    name: string;
+    name: identifier;
 }
 
 concept DD base BaseBaseBB {

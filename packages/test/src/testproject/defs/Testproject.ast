@@ -1,12 +1,12 @@
 language Testproject
 
 model TestStart {
-    name: string;
+    name: identifier;
     bb: BB[];
 }
 
 concept AA  {
-    name: string;
+    name: identifier;
     // the possibilities for primitive properties
     // incorrect
 //    AAprop1a: string = false;
@@ -45,21 +45,21 @@ concept AA  {
 }
 
 modelunit BB {
-    public name: string;
+    public name: identifier;
     supers: AA[];
 }
 
 concept CC implements FF {
-    name: string;
+    name: identifier;
 }
 
 interface DD {}
 interface FF {
-    name: string;
+    name: identifier;
 }
 
 limited ZZ {
-    name: string;
+    name: identifier;
     // the possibilities for primitive properties
     ZZprop1: string;
     ZZprop2: string[];
@@ -73,7 +73,7 @@ limited ZZ {
 limited XX { XXinstance1; XXinstance2; XXinstance3; }
 
 limited TestLimited {
-     name: string;
+     name: identifier;
      something: boolean;
      Object1 = { name: "ONWAAR", something: false }
      Object2 = { name: "WAAR",  something: true }

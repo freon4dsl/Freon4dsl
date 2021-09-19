@@ -14,4 +14,5 @@ export type PiLangConceptType =
     | "PiInstance"
     | "PiPropertyInstance"
     | "PiLangFunction"
-    | "PiLangParameter";
+    | "PiLangParameter"
+    | "PiPrimitiveType";

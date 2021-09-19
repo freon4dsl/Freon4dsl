@@ -2,19 +2,19 @@ language Entity
 
 // tag::model[]
 model EntityModel {
-    name: string;
+    name: identifier;
     units: EntityModelUnit[];
     extraUnit: SomeOtherModelUnit;
 }
 //end::model[]
 
 modelunit SomeOtherModelUnit {
-    public name: string;
+    public name: identifier;
     public somePart: Entity;
 }
 //tag::optionalprop[]
 interface BaseType {
-    name: string;
+    name: identifier;
     baseInterface_attr?: number;
 }
 //end::optionalprop[]
@@ -37,7 +37,7 @@ concept Entity implements Type {
 // tag::limited[]
 limited AttributeType implements BaseType {
     // if the 'name' property was not provided, it would have been generated
-    name: string;
+    name: identifier;
     extra: number;
     String = { name: "String", "extra": 199}
     // notations 'name:' and '"name":' are both correct
@@ -62,7 +62,7 @@ binary expression MultiplyExpression base BinaryExpression {
 // tag::partprop[]
 modelunit EntityModelUnit {
 // end::partprop[]
-    public name: string;
+    public name: identifier;
 // tag::partprop[]
     functions: EntityFunction[];
     entities: Entity[];
@@ -71,7 +71,7 @@ modelunit EntityModelUnit {
 // end::rootconcept[]
 // tag::simpleprop[]
 concept EntityFunction {
-    name: string;
+    name: identifier;
     aliases: string[];
 // end::simpleprop[]
     reference declaredType : Type;
@@ -84,7 +84,7 @@ concept EntityFunction {
 concept AttributeWithLimitedType {
     reference declaredType: AttributeType;
 // end::referenceprop[]
-    name: string;
+    name: identifier;
 // tag::referenceprop[]
 }
 // end::referenceprop[]
@@ -94,11 +94,11 @@ concept Text {} // only defined to show that literal text can be part of a proje
 
 concept AttributeWithEntityType {
     reference declaredType: Entity;
-    name: string;
+    name: identifier;
 }
 
 concept Variable {
-    name: string;
+    name: identifier;
     reference declaredType: Entity;
 }
 

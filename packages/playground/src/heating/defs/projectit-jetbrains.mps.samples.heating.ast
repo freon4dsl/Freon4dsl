@@ -1,12 +1,12 @@
 language heat // long name: jetbrains.mps.samples.heating
 
 model Heating {
-    name: string;
+    name: identifier;
     plans: HeatingPlan[];
 }
 
 modelunit HeatingPlan implements INamedConcept {
-    public name: string;
+    public name: identifier;
 	dailyPlans: DailyPlan[];
 }
 
@@ -48,11 +48,11 @@ concept Slot  {
 }
 
 interface INamedConcept {
-	name: string;
+	name: identifier;
 }
 
 limited DayDataType {
-    name: string;
+    name: identifier;
 	monday = { "name": "monday" }
 	tuesday = { "name": "tuesday" }
 	wednesday = { "name": "wednesday" }

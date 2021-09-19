@@ -18,6 +18,7 @@ import {
     PiEditUnit
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 const LOGGER = new MetaLogger("DefEditorChecker"); // .mute();
 
@@ -138,7 +139,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     this.simpleCheck(!(!!projection.listJoin),
                         `A terminator or separator may not be used in a non-list property '${myprop.name}' ${this.location(projection)}`);
                     if (!!projection.keyword) {
-                        this.simpleCheck(myprop instanceof PiPrimitiveProperty && myprop.primType === "boolean",
+                        this.simpleCheck(myprop instanceof PiPrimitiveProperty && myprop.type.referred === PiPrimitiveType.boolean,
                             `Property '${myprop.name}' may not have a keyword projection, because it is not of boolean type ${this.location(projection)}`);
                         this.simpleCheck(!this.includesWhitespace(projection.keyword), `The text for a keyword projection should not include any whitespace ${this.location(projection)}`);
                     }

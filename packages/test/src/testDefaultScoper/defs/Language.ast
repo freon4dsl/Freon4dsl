@@ -1,20 +1,20 @@
 language ScoperTest
 
 model DSmodel {
-    name: string;
+    name: identifier;
     units: DSunit[];
 }
 
 public modelunit DSunit {
     public reference imports: DSunit[];
-    public name: string;
+    public name: identifier;
     public dsPublics: DSpublic[];
     public reference dsRefs: DSref[];
     dsPrivates: DSprivate[];
 }
 
 public interface DSref {
-    public name: string;
+    public name: identifier;
 }
 
 public concept DSpublic implements DSref {

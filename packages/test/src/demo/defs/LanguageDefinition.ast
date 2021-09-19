@@ -1,20 +1,20 @@
 language Demo
 
 public model Demo {
-    public name: string;
+    public name: identifier;
     public models: DemoModel[];
 }
 
 public modelunit DemoModel {
     public main?: DemoEntity;
     public functions: DemoFunction[];
-    public name: string;
+    public name: identifier;
     entities: DemoEntity[];
     types: Type[];
     type?: Type;
 }
 interface BaseType {
-    name: string;
+    name: identifier;
     baseInterface_attr: number;
 }
 interface X {
@@ -38,7 +38,7 @@ public concept DemoEntity base Nothing implements Type {
 }
 
 limited DemoAttributeType implements BaseType {
-    name: string;
+    name: identifier;
     extra: number;
     String = { name: "String", "extra": 199}
     Integer = { "name": "Integer", "extra": 240261}
@@ -50,23 +50,23 @@ expression DemoAbsExpression base DemoExpression {
 }
 
 public concept DemoFunction {
-    public name: string;
+    public name: identifier;
     reference declaredType : BaseType;
     expression: DemoExpression;
     parameters: DemoVariable[];
 }
 concept DemoAttribute {
     reference declaredType: DemoAttributeType;
-    name: string;
+    name: identifier;
 }
 
 concept DemoAttributeWithEntityType {
     reference declaredType: DemoEntity;
-    name: string;
+    name: identifier;
 }
 
 concept DemoVariable {
-    name: string;
+    name: identifier;
     reference declaredType: DemoEntity;
 }
 
