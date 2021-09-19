@@ -8,7 +8,7 @@ import {
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     PiErrorSeverity,
-    PROJECTITCORE
+    PROJECTITCORE, typeToString
 } from "../../../utils";
 import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
@@ -42,6 +42,7 @@ export class RulesCheckerTemplate {
                                 * Found errors are pushed onto 'errorlist'.
                                 * @param modelelement
                                 */`;
+        // the template starts here
         return `
         import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
@@ -95,7 +96,7 @@ export class RulesCheckerTemplate {
         `;
 
         this.done = [];
-        // the template starts here
+
     }
 
     private createImports(language: PiLanguage): string {
@@ -227,10 +228,7 @@ export class RulesCheckerTemplate {
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = (referredListproperty instanceof PiPrimitiveProperty) ?
-                referredListproperty.primType
-            :
-                referredListproperty.type.referred.name;
+        const listpropertyTypeName = typeToString(referredListproperty);
         const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
         if (message.length === 0) {
             message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;

@@ -1,5 +1,6 @@
-import { Names, PROJECTITCORE } from "../../../utils";
-import { PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
+import { Names, PROJECTITCORE, typeToString } from "../../../utils";
+import { PiClassifier, PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
+import { PiPrimitiveType } from "../../metalanguage/PiLanguage";
 
 export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
     const mobxImports: string[] = ["model"];
@@ -34,31 +35,36 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
     const decorator = "@observable";
     const arrayType = property.isList ? "[]" : "";
     let initializer = "";
+    const myType: PiClassifier = property.type.referred;
     if (!property.isList) {
-        switch (property.primType) {
-            case "string": {
+        switch (myType) {
+            case PiPrimitiveType.identifier: {
                 initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
                 break;
             }
-            case "number": {
+            case PiPrimitiveType.string: {
+                initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
+                break;
+            }
+            case PiPrimitiveType.number: {
                 initializer = `= ${property.initialValue ? property.initialValue : `0`}`;
                 break;
             }
-            case "boolean": {
+            case PiPrimitiveType.boolean: {
                 initializer = `= ${property.initialValue ? property.initialValue : `false`}`;
                 break;
             }
         }
     } else {
         if (!!property.initialValueList) {
-            if (property.primType === "string") {
+            if (myType === PiPrimitiveType.string || myType === PiPrimitiveType.identifier) {
                 initializer = `= [${property.initialValueList.map(elem => `\"${elem}\"`).join(", ")}]`;
             } else {
                 initializer = `= [${property.initialValueList}]`;
             }
         }
     }
-    return `${decorator} ${property.name} : ${property.primType}${arrayType} ${initializer}; \t${comment}`;
+    return `${decorator} ${property.name} : ${typeToString(property)}${arrayType} ${initializer}; \t${comment}`;
 }
 
 export function makePartProperty(property: PiConceptProperty): string {

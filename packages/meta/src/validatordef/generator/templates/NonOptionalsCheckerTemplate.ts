@@ -1,6 +1,7 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
 import { PiLanguage, PiConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 const commentBefore = `/**
                         * Checks 'modelelement' before checking its children.
@@ -71,7 +72,7 @@ export class NonOptionalsCheckerTemplate {
                 // if the property is of type `string`
                 // then add a check on the length of the string
                 let additionalStringCheck: string = null;
-                if (prop.isPrimitive && (prop as PiPrimitiveProperty).primType == "string") {
+                if (prop.isPrimitive && (prop.type.referred == PiPrimitiveType.string || prop.type.referred == PiPrimitiveType.identifier)) {
                     additionalStringCheck = `|| modelelement.${prop.name}?.length == 0`;
                 }
 

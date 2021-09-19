@@ -1,12 +1,12 @@
 language calculator // jetbrains.mps.calculator
 
 model CalculatorModel {
-    name: string;
+    name: identifier;
     calc: Calculator;
 }
 
 modelunit Calculator  implements INamedConcept {
-    public name: string;
+    public name: identifier;
 	inputFields: InputField[];
 	outputFields: OutputField[];
 }
@@ -23,7 +23,7 @@ expression InputFieldReference base CalcExpression {
 }
 
 interface INamedConcept {
-	name: string;
+	name: identifier;
 }
 
 // add Simple Numeric Expression from library

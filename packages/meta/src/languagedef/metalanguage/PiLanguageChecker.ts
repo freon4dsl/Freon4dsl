@@ -4,8 +4,9 @@ import {
     PiBinaryExpressionConcept,
     PiExpressionConcept,
     PiPrimitiveProperty,
-    PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveType,
-    PiElementReference, PiMetaEnvironment } from "./internal";
+    PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveValue,
+    PiElementReference, PiMetaEnvironment, PiPrimitiveType
+} from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
@@ -127,8 +128,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             check: !!nameProperty,
             error: `A modelunit should have a 'name' property ${this.location(con)}.`,
             whenOk: () => {
-                this.simpleCheck(nameProperty.primType === "string",
-                    `A modelunit should have a 'name' property of type 'string' ${this.location(con)}.`);
+                this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+                    `A modelunit should have a 'name' property of type 'identifier' ${this.location(con)}.`);
             }
         });
     }
@@ -139,8 +140,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             check: !!nameProperty,
             error: `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore it should have a 'name' property ${this.location(piLimitedConcept)}.`,
             whenOk: () => {
-                this.simpleCheck(nameProperty.primType === "string",
-                    `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'string' ${this.location(piLimitedConcept)}.`);
+                this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+                    `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${this.location(piLimitedConcept)}.`);
             }
         });
         this.simpleCheck(piLimitedConcept.allParts().length === 0,
@@ -375,14 +376,15 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                                 error: `Predefined property '${piPropertyInstance.name}' should have a primitive type ${this.location(piPropertyInstance)}.`,
                                 whenOk: () => {
                                     piPropertyInstance.property = PiElementReference.create<PiProperty>(myProp, "PiProperty");
+                                    let myPropType: PiPrimitiveType = myProp.type.referred as PiPrimitiveType;
                                     if (!myProp.isList) {
-                                        this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myProp.primType),
-                                            `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myProp.primType}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
+                                        this.simpleCheck(this.checkValueToType(piPropertyInstance.value, myPropType),
+                                            `Type of '${piPropertyInstance.value}' (${typeof piPropertyInstance.value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
                                     } else {
                                         if (!!piPropertyInstance.valueList) {
                                             piPropertyInstance.valueList.forEach(value => {
-                                                this.simpleCheck(this.checkValueToType(value, myProp.primType),
-                                                    `Type of '${value}' (${typeof value}) does not fit type (${myProp.primType}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
+                                                this.simpleCheck(this.checkValueToType(value, myPropType),
+                                                    `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${piPropertyInstance.name}' ${this.location(piPropertyInstance)}.`);
                                             });
                                         }
                                     }
@@ -440,8 +442,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                     check: !!nameProperty,
                     error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${this.location(piProperty.type)}.`,
                     whenOk: () => {
-                        this.simpleCheck(nameProperty.primType === "string",
-                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'string' ${this.location(piProperty.type)}.`);
+                        this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${this.location(piProperty.type)}.`);
                     }
                 });
             }
@@ -454,25 +456,26 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             `Property should have a name ${this.location(element)}.`);
         this.nestedCheck(
             {
-                check: !!element.primType,
+                check: !!element.type,
                 error: `Property '${element.name}' should have a type ${this.location(element)}.`,
                 whenOk: () => {
-                    this.checkPrimitiveType(element.primType, element);
+                    let myType = element.type.referred;
+                    this.checkPrimitiveType(myType, element);
                     // check initial value(s)
                     if (!element.isList) {
                         this.simpleCheck(!element.initialValueList,
                             `Initial value of property '${element.name}' should be a single value ${this.location(element)}.`);
                         if (element.initialValue !== null && element.initialValue !== undefined) { // the property has an initial value, so check it
-                            this.simpleCheck(this.checkValueToType(element.initialValue, element.primType),
-                                `Type of '${element.initialValue}' (${typeof element.initialValue}) does not fit type (${element.primType}) of property '${element.name}' ${this.location(element)}.`);
+                            this.simpleCheck(this.checkValueToType(element.initialValue, myType as PiPrimitiveType),
+                                `Type of '${element.initialValue}' (${typeof element.initialValue}) does not fit type (${element.type.name}) of property '${element.name}' ${this.location(element)}.`);
                         }
                     } else {
                         this.simpleCheck(element.initialValue === null || element.initialValue === undefined,
                             `Initial value of property '${element.name}' should be a list value ${this.location(element)}.`);
                         if (!!element.initialValueList) { // the property has an initial value, so check it
                             element.initialValueList.forEach(value => {
-                                this.simpleCheck(this.checkValueToType(value, element.primType),
-                                    `Type of '${value}' (${typeof element.initialValue}) does not fit type (${element.primType}[]) of property '${element.name}' ${this.location(element)}.`);
+                                this.simpleCheck(this.checkValueToType(value, myType as PiPrimitiveType),
+                                    `Type of '${value}' (${typeof element.initialValue}) does not fit type (${element.type.name}[]) of property '${element.name}' ${this.location(element)}.`);
                             });
                         }
                     }
@@ -498,10 +501,10 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             });
     }
 
-    checkPrimitiveType(type: string, element: PiPrimitiveProperty) {
-        LOGGER.log("Checking primitive type '" + type + "'");
-        this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
-            `Primitive property '${element.name}' should have a primitive type (string, boolean, or number) ${this.location(element)}.`
+    private checkPrimitiveType(type: PiClassifier, element: PiPrimitiveProperty) {
+        LOGGER.log("Checking primitive type '" + type.name + "'");
+        this.simpleCheck((type === PiPrimitiveType.identifier || type === PiPrimitiveType.string || type === PiPrimitiveType.number || type === PiPrimitiveType.boolean),
+            `Primitive property '${element.name}' should have a primitive type (string, identifier, boolean, or number) ${this.location(element)}.`
         );
     }
 
@@ -529,23 +532,25 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
      * @param value
      * @param primType
      */
-    private checkValueToType(value: PiPrimitiveType, primType: string): boolean {
-        LOGGER.log("checkValueToType: " + value + ", " + primType + ", typeof " + typeof value);
-        if (typeof value === primType) {
+    private checkValueToType(value: PiPrimitiveValue, type: PiPrimitiveType): boolean {
+        LOGGER.log("checkValueToType: " + value + ", " + type + ", typeof " + typeof value);
+        if (type === PiPrimitiveType.identifier && typeof value === "string") {
+            return true;
+        } else if (type === PiPrimitiveType.string && typeof value === "string") {
+            return true;
+        } else if (type === PiPrimitiveType.number  && typeof value === "number") {
+            // TODO add the following check
+            //     if (!isNaN(Number(value)) ) {
+            //         return true;
+            //     }
+            return true;
+        } else if (type === PiPrimitiveType.boolean  && typeof value === "boolean") {
+            // TODO add the following check
+            //     if ((value === "false" || value === "true")) {
+            //         return true;
+            //     }
             return true;
         }
-        // TODO add the following check
-        // if (primType === "number") {
-        //     if (!isNaN(Number(value)) ) {
-        //         return true;
-        //     }
-        // } else if (primType === "boolean") {
-        //     if ((value === "false" || value === "true")) {
-        //         return true;
-        //     }
-        // } else if (primType === "string") {
-        //     return true;
-        // }
         return false;
     }
 
@@ -569,4 +574,5 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
            });
         });
     }
+
 }

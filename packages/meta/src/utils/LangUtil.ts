@@ -193,19 +193,9 @@ export class LangUtil {
      * @param secondProp
      */
     public static compareTypes(firstProp: PiProperty, secondProp: PiProperty): boolean {
-        // find the types
-        let myType: string = "";
-        if (firstProp instanceof PiPrimitiveProperty) {
-            myType = firstProp.primType;
-        } else {
-            myType = firstProp.type?.referred?.name;
-        }
-        let otherType: string = "";
-        if (secondProp instanceof PiPrimitiveProperty) {
-            otherType = secondProp.primType;
-        } else {
-            otherType = secondProp.type?.referred?.name;
-        }
-        return myType === otherType;
+        // find the type names
+        let myType: string = firstProp.type?.referred?.name;
+        let secondType: string = secondProp.type?.referred?.name;
+        return myType === secondType;
     }
 }

@@ -1,7 +1,7 @@
 language octopus
 
 modelunit OclPart {
-    public name: string;
+    public name: identifier;
 }
 
 concept OclExpression {

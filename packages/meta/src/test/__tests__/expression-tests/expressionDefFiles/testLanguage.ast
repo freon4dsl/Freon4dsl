@@ -3,12 +3,12 @@ language test1
 // TODO test optional properties
 
 model ROOT {
-    name: string;
+    name: identifier;
     aa: AA[];
 }
 
 modelunit AA  {
-    public name: string;
+    public name: identifier;
     // the possibilities for primitive properties
     AAprop1: string;
     AAprop2: string[];
@@ -55,7 +55,7 @@ concept BB base CC implements DD {
 }
 
 concept CC {
-    name: string; // so that this concept can be used as reference
+    name: identifier; // so that this concept can be used as reference
     bb?: BB; // to test applied feature
     // the possibilities for primitive properties
     CCprop1: string;
@@ -77,7 +77,7 @@ concept CC {
 }
 
 limited ZZ {
-    name: string;
+    name: identifier;
     // the possibilities for primitive properties
     ZZprop1: string;
     ZZprop2: string[];
@@ -132,7 +132,7 @@ interface EE base FF {
 }
 
 interface FF {
-    name: string; // so that this interface can be used as reference
+    name: identifier; // so that this interface can be used as reference
     ee?: EE; // to test applied feature
     // the possibilities for primitive properties
     FFprop1: string;

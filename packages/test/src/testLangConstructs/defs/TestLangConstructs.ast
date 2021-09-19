@@ -5,7 +5,7 @@
 language LangConstructs
 
 model all {
-    name: string;
+    name: identifier;
     myA_units: unitA[];
     myB_units: unitB[];
     myC_unit: unitC;
@@ -14,7 +14,7 @@ model all {
 
 // contains only parts
 modelunit unitA {
-    public name: string;
+    public name: identifier;
     Apart1: conceptWithBasePrim;
     Apart2: conceptWithBaseNonPrim;
     Apart3: conceptWithInheritanceTree1;
@@ -33,7 +33,7 @@ modelunit unitA {
 
 // contains only references
 modelunit unitB {
-    public name: string;
+    public name: identifier;
     reference Bpart1: conceptWithBasePrim;
     reference Bpart2: conceptWithBaseNonPrim;
     reference Bpart3: conceptWithInheritanceTree1;
@@ -52,7 +52,7 @@ modelunit unitB {
 
 // contains only lists
 modelunit unitC {
-    public name: string;
+    public name: identifier;
     Cpart1: conceptWithBasePrim;
     Cpart2: conceptWithBaseNonPrim;
     Cpart3: conceptWithInheritanceTree1;
@@ -71,7 +71,7 @@ modelunit unitC {
 
 // contains only reference lists
 modelunit unitD {
-    public name: string;
+    public name: identifier;
     reference Cref1: conceptWithBasePrim;
     reference Cref2: conceptWithBaseNonPrim;
     reference Cref3: conceptWithInheritanceTree1;
@@ -89,7 +89,7 @@ modelunit unitD {
 }
 
 concept conceptWithPrimProps {
-    name: string;
+    name: identifier;
     // the possibilities for primitive properties
     conceptProp1: string;
     conceptProp2: string[];
@@ -100,7 +100,7 @@ concept conceptWithPrimProps {
 }
 
 concept conceptWithNonPrimProps {
-    name: string;
+    name: identifier;
     // properties with concept as type
     conceptProp7: conceptWithAllProps;
     conceptProp8: conceptWithAllProps[];
@@ -147,7 +147,7 @@ interface interfaceWithBaseInterface base interfaceWithPrimProps {
 }
 
 interface interfaceWithPrimProps {
-    name: string;
+    name: identifier;
     // the possibilities for primitive properties
     conceptProp1: string;
     conceptProp2: string[];
@@ -158,7 +158,7 @@ interface interfaceWithPrimProps {
 }
 
 interface interfaceWithNonPrimProps {
-    name: string;
+    name: identifier;
     // properties with concept as type
     conceptProp7?: conceptWithAllProps;
     conceptProp8?: conceptWithAllProps[];

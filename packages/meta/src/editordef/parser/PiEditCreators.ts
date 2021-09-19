@@ -33,7 +33,7 @@ export function setCurrentFileName(newName: string) {
 export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
     let result: PiElementReference<PiConcept>;
     if (!!data.name) {
-        result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
+        result = PiElementReference.create<PiConcept>(data.name, "PiConcept");
     }
     if (!!data.location) {
         result.location = data.location;
