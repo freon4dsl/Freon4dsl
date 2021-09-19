@@ -169,25 +169,6 @@ export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiE
     return result;
 }
 
-/**
- * Class ParsedProperty is used to parse either a PiPrimitiveProperty or
- * a PiConceptProperty. The difference between the two is being made in the following
- * functions.
- * This enables us to give the user non-fatal parse errors.
- */
-class ParsedProperty extends PiProperty {
-    // typeName: string;
-    initialValue: PiPrimitiveValue;
-    // inherited from PiProperty:
-        // isPublic: boolean;
-        // isOptional: boolean;
-        // isList: boolean;
-        // isPart: boolean; // if false then it is a reference property
-        // type: PiElementReference<PiClassifier>;
-        // owningConcept: PiClassifier;
-        // location: ParseLocation;
-}
-
 function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty) {
     if (!!data.name) {
         result.name = data.name;
@@ -201,14 +182,18 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
     }
 }
 
-export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiProperty {
+// we parse all props as primitive properties because they can have an extra attribute: 'initialValue'
+export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): PiProperty {
     // console.log("createPartOrPrimProperty " + data.name + " "+ data.type + " "+ data.typeName);
     let result: PiProperty;
     // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
     // But we do add an error message to the list of non-fatal parse errors.
     // This list of errors is added to the list of checking errors in the parse functions in PiParser.
     if (!!data.type) {
-        // TODO see if this check can be '.type.referred === PiPrimitiveType.identifier' etc.
+        // NOTE that the following check can NOT be '.type.referred === PiPrimitiveType.identifier' etc.
+        // '.type.referred' is determine by the scoper, which does not function when not all concepts are known AND
+        // the language attribute of the concepts has been set. The latter is done in 'createLanguage', which is called
+        // after this function is called!!
         if (data.type.name === "string" || data.type.name === "boolean" || data.type.name === "number" || data.type.name === "identifier") {
             const primitiveProperty = new PiPrimitiveProperty();
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
@@ -250,16 +235,6 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
     }
     return result;
 }
-
-// export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-//     // console.log("createConceptReference " + data.name);
-//     const result = PiElementReference.create<PiConcept>(data.name, "PiConcept");
-//     if (!!data.location) {
-//         result.location = data.location;
-//         result.location.filename = currentFileName;
-//     }
-//     return result;
-// }
 
 export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
     // console.log("createClassifierReference " + data.name);
