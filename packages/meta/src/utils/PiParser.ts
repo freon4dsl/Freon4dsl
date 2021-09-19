@@ -41,7 +41,6 @@ export class PiParser<DEFINITION> {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parser.parse(langSpec);
         } catch (e) {
-            console.log(e.stack);
             // syntax error
             const errorstr = `${e} 
                 ${e.location && e.location.start ?

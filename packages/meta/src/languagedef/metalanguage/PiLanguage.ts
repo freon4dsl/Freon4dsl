@@ -412,6 +412,7 @@ export class PiPrimitiveType extends PiConcept {
             case "identifier" : return this.identifier;
             case "number" : return this.number;
         }
+        // TODO see whether we need to return null?
         return this.$piANY;
     }
 }
