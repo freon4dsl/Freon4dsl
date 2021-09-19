@@ -122,7 +122,7 @@ partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_sep
     {
         let ref = null;
         let typeName = "";
-        if (type === "string" || type === "boolean" || type === "number") {
+        if (type === "string" || type === "boolean" || type === "number" || type === "identifier") {
             typeName = type;
         } else {
             ref = create.createClassifierReference({"name": type, "location": location()});

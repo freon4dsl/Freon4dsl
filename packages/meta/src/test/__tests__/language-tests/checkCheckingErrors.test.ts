@@ -110,7 +110,7 @@ describe("Checking language parser on checking errors", () => {
         } catch (e) {
             expect(e.message).toBe(`checking errors (13).`);
             expect(checker.errors.includes("Type 'NoName' cannot be used as a reference, because it has no name property [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 4, column: 24].")).toBeTruthy();
-            expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because its name property is not of type 'string' [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 5, column: 25].")).toBeTruthy();
+            expect(checker.errors.includes("Type 'NameNotStringType' cannot be used as a reference, because its name property is not of type 'identifier' [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 5, column: 25].")).toBeTruthy();
             expect(checker.errors.includes("The model should have a 'name' property [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("A modelunit should have a 'name' property [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 8, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Property 's' does not exist on concept RRRR [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 13, column: 19].")).toBeTruthy();
@@ -121,7 +121,7 @@ describe("Checking language parser on checking errors", () => {
             expect(checker.errors.includes("Type of '10' (string) does not fit type (boolean) of property 'prop2' [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 24, column: 19].")).toBeTruthy();
             expect(checker.errors.includes("Instance with name 'instance5' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 25, column: 5].")).toBeTruthy();
             expect(checker.errors.includes("Type of '10' (string) does not fit type (number) of property 'simple' [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 25, column: 19].")).toBeTruthy();
-            expect(checker.errors.includes("A modelunit should have a 'name' property of type 'string' [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 28, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("A modelunit should have a 'name' property of type 'identifier' [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test7.ast, line: 28, column: 1].")).toBeTruthy();
         }
     });
 

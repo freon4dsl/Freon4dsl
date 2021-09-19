@@ -1,8 +1,10 @@
 import { PiElementReference } from "./internal";
 import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
 
+export interface identifier {
+}
 const primitiveTypeName = "PiPrimitiveType";
-export type PiPrimitiveType = string | boolean | number;
+export type PiPrimitiveType = string | boolean | number | identifier;
 
 // root of the inheritance structure of all elements in a language definition
 export abstract class PiLangElement extends PiDefinitionElement {

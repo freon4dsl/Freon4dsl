@@ -1,18 +1,18 @@
 language Demo
 
 public model Demo {
-    public name: string;
+    public name: identifier;
     public models: DemoUnit[];
 }
 
 public modelunit DemoUnit {
-    public name: string;
+    public name: identifier;
     public main: DemoEntity;
     public functions: DemoFunction[];
 }
 
 public concept DemoEntity  {
-    name: string;
+    name: identifier;
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
@@ -20,13 +20,13 @@ public concept DemoEntity  {
 }
 
 concept DemoAttribute {
-    name: string;
+    name: identifier;
     somePrimAttr: string[];
     reference declaredType: DemoAttributeType;
 }
 
 limited DemoAttributeType  {
-    name: string;
+    name: identifier;
     extra: number;
     String = { name: "String", "extra": 199}
     Integer = { "name": "Integer", "extra": 240261}
@@ -39,7 +39,7 @@ expression DemoAbsExpression base DemoExpression {
 }
 
 public concept DemoFunction {
-    public name: string;
+    public name: identifier;
     reference declaredType : DemoAttributeType;
     expression: DemoExpression;
     parameters: DemoVariable[];
@@ -47,11 +47,11 @@ public concept DemoFunction {
 
 concept DemoAttributeWithEntityType {
     reference declaredType: DemoEntity;
-    name: string;
+    name: identifier;
 }
 
 concept DemoVariable {
-    name: string;
+    name: identifier;
     reference declaredType: DemoEntity;
 }
 

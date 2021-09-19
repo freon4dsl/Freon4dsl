@@ -434,7 +434,7 @@ export class WriterTemplate {
         } else {
             let myCall: string = ``;
             // TODO remove this hack: test on "myElem.name !== "name" ", when a difference is made between identifiers and strings
-            if (myElem.primType === "string" && myElem.name !== "name") {
+            if (myElem.primType === "string" ) { //&& myElem.name !== "name") {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else if (myElem.primType === "boolean" && !!item.keyword) {
                 myCall = `if (${elemStr}) { 

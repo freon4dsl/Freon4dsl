@@ -121,8 +121,8 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
         // check if found property is of type 'string'
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
-            this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.primType === "string",
-                `Validname rule expression '${tr.property.toPiString()}' should have type 'string' ${this.location(tr.property)}.`);
+            this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.primType === "identifier",
+                `Validname rule expression '${tr.property.toPiString()}' should have type 'identifier' ${this.location(tr.property)}.`);
         }
     }
 

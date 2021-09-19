@@ -1,19 +1,19 @@
 language TaxRules
 
 model RevenueService {
-    name: string;
+    name: identifier;
     rules: TaxRuleSet; //[]
     payers: TaxPayer[];
 }
 
 modelunit TaxRuleSet {
-    public name: string;
+    public name: identifier;
     year: string; //number
     taxrules: TaxRule[];
 }
 
 modelunit TaxPayer {
-    public name: string;
+    public name: identifier;
     address: string;
     payerType: TaxPayerType;
     taxId: TaxID;
@@ -39,7 +39,7 @@ concept TaxID {
 }
 
 concept TaxRule { 
-    name: string;
+    name: identifier;
 //    parameters: RuleParameter[]
     expression: TaxExpression;
 //    result : Money
@@ -63,14 +63,14 @@ concept TaxRuleCall {//base FunctionCallExpression {
 }
 
 limited IncomeType {
-    name: string;
+    name: identifier;
     Salary  = {"name": "Salary"}
     Royalties  = {"name": "Royalties"}
     Gift  = {"name": "Gift"}
 }
 
 limited TaxPayerType {
-    name: string;
+    name: identifier;
     Company = {"name": "Company"}
     NGO = {"name": "NGO"}
     Goverment = {"name": "Goverment"}

@@ -1,7 +1,7 @@
 language PiLanguage
 
 public model PiLanguage {
-    public name: string;
+    public name: identifier;
     public structure: PiStructureDef;
     public editor: PiEditorDef;
     public scoper: PiScoperDef;
@@ -10,7 +10,7 @@ public model PiLanguage {
 }
 // begin structure definition
 public modelunit PiStructureDef {
-    public name: string;
+    public name: identifier;
 //}
 //model PiLanguageUnit base PiLangElement {
     public concepts: PiConcept[];
@@ -20,7 +20,7 @@ public modelunit PiStructureDef {
 
 abstract concept PiLangElement {
     // location: ParseLocation
-    name: string;
+    name: identifier;
     // piMetaName: string; not yet implemented
 }
 
@@ -134,12 +134,12 @@ concept PiLangFunctionCallExp base PiLangExp {
 
 // begin editor definition
 public modelunit PiEditorDef {
-    public name: string;
+    public name: identifier;
 }
 // end editor definition
 // begin scoper definition
 public modelunit PiScoperDef {
-    public name: string;
+    public name: identifier;
     languageName: string;
     reference namespaces: PiConcept[];
     scopeConceptDefs: ScopeConceptDef[];
@@ -162,11 +162,11 @@ concept PiAlternativeScope {
 // end scoper definition
 // begin typer definition
 public modelunit PiTyperDef {
-    public name: string;
+    public name: identifier;
 //}
 //concept PiTypeDefinition {
 //    location: ParseLocation;
-//    name: string;
+//    name: identifier;
     languageName: string;
     reference language: PiStructureDef;
     typerRules: PiTypeRule[];

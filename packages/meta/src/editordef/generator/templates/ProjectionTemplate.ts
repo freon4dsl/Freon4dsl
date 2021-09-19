@@ -400,6 +400,7 @@ export class ProjectionTemplate {
         const listAddition: string = `${property.isList ? `[index]` : ``}`;
         switch (property.primType) {
             case "string":
+            case "identifier":
                 return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",

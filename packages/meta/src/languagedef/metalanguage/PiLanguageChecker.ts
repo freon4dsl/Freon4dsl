@@ -127,8 +127,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             check: !!nameProperty,
             error: `A modelunit should have a 'name' property ${this.location(con)}.`,
             whenOk: () => {
-                this.simpleCheck(nameProperty.primType === "string",
-                    `A modelunit should have a 'name' property of type 'string' ${this.location(con)}.`);
+                this.simpleCheck(nameProperty.primType === "identifier",
+                    `A modelunit should have a 'name' property of type 'identifier' ${this.location(con)}.`);
             }
         });
     }
@@ -139,8 +139,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             check: !!nameProperty,
             error: `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore it should have a 'name' property ${this.location(piLimitedConcept)}.`,
             whenOk: () => {
-                this.simpleCheck(nameProperty.primType === "string",
-                    `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'string' ${this.location(piLimitedConcept)}.`);
+                this.simpleCheck(nameProperty.primType === "identifier",
+                    `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${this.location(piLimitedConcept)}.`);
             }
         });
         this.simpleCheck(piLimitedConcept.allParts().length === 0,
@@ -440,8 +440,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                     check: !!nameProperty,
                     error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${this.location(piProperty.type)}.`,
                     whenOk: () => {
-                        this.simpleCheck(nameProperty.primType === "string",
-                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'string' ${this.location(piProperty.type)}.`);
+                        this.simpleCheck(nameProperty.primType === "identifier",
+                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${this.location(piProperty.type)}.`);
                     }
                 });
             }
@@ -500,7 +500,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
 
     checkPrimitiveType(type: string, element: PiPrimitiveProperty) {
         LOGGER.log("Checking primitive type '" + type + "'");
-        this.simpleCheck((type === "string" || type === "boolean" || type === "number"),
+        this.simpleCheck((type === "string" || type === "boolean" || type === "number" || type === "identifier"),
             `Primitive property '${element.name}' should have a primitive type (string, boolean, or number) ${this.location(element)}.`
         );
     }
@@ -531,7 +531,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
      */
     private checkValueToType(value: PiPrimitiveType, primType: string): boolean {
         LOGGER.log("checkValueToType: " + value + ", " + primType + ", typeof " + typeof value);
-        if (typeof value === primType) {
+        if (typeof value === primType || (primType === "identifier" && (typeof value) === "string" )) {
             return true;
         }
         // TODO add the following check

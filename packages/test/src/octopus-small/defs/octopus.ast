@@ -1,18 +1,18 @@
 language octopus
 
 model OctopusModel {
-    name: string;
+    name: identifier;
     umlParts: UmlPart[];
     oclParts: OclPart[];
 }
 
 modelunit UmlPart {
-    public name: string;
+    public name: identifier;
     packages: UmlPackage[];
 }
 
 modelunit OclPart {
-    public name: string;
+    public name: identifier;
 }
 concept UmlPackage implements IModelElement {
 //    subpackages: UmlPackage[];
@@ -29,7 +29,7 @@ concept PathName {
     // last  = names[names.length-1]
 }
 interface IModelElement {
-    name: string;
+    name: identifier;
     pathName: PathName;
 }
 interface IClassifier base IPackagableElement {

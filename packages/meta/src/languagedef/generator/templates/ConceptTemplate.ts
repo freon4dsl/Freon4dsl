@@ -518,10 +518,10 @@ export class ConceptTemplate {
             const type: string = refProperty.primType;
             if (refProperty.isList) {
                 return `[ ${property.valueList.map(value =>
-                    `${type === "string" ? `"${value}"` : `${value}` }`
+                    `${(type === "string" || type === "identifier") ? `"${value}"` : `${value}` }`
                 ).join(", ")} ]`;
             } else {
-                return `${type === "string" ? `"${property.value}"` : `${property.value}` }`;
+                return `${(type === "string" || type === "identifier") ? `"${property.value}"` : `${property.value}` }`;
             }
         }
         return ``;

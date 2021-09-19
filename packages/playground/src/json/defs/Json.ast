@@ -1,12 +1,12 @@
 language Json
 
 model Json {
-    name: string;
+    name: identifier;
     files: JsonFile[];
 }
 
 modelunit JsonFile  implements INamedConcept {
-    public name: string;
+    public name: identifier;
 	contents: IJsonValue;
 }
 
@@ -53,7 +53,7 @@ concept JsonBoolean  implements IJsonValue {
 }
 
 interface INamedConcept {
-	name: string;
+	name: identifier;
 
 }
 

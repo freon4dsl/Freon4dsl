@@ -1,12 +1,12 @@
 language test10
 
 model test {
-    public name: string;
+    public name: identifier;
     unit: testUnit;
 }
 
 modelunit testUnit {
-    public name: string;
+    public name: identifier;
 }
 
 concept YY  {
@@ -15,5 +15,5 @@ concept YY  {
 }
 
 concept ZZ {
-    name: string;
+    name: identifier;
 }

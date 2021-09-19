@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE } from "../../../utils";
+import { Names, PROJECTITCORE, typeToString } from "../../../utils";
 import { PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
 
 export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
@@ -36,6 +36,10 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
     let initializer = "";
     if (!property.isList) {
         switch (property.primType) {
+            case "identifier": {
+                initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
+                break;
+            }
             case "string": {
                 initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
                 break;
@@ -51,14 +55,14 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
         }
     } else {
         if (!!property.initialValueList) {
-            if (property.primType === "string") {
+            if (property.primType === "string" || property.primType === "identifier") {
                 initializer = `= [${property.initialValueList.map(elem => `\"${elem}\"`).join(", ")}]`;
             } else {
                 initializer = `= [${property.initialValueList}]`;
             }
         }
     }
-    return `${decorator} ${property.name} : ${property.primType}${arrayType} ${initializer}; \t${comment}`;
+    return `${decorator} ${property.name} : ${typeToString(property)}${arrayType} ${initializer}; \t${comment}`;
 }
 
 export function makePartProperty(property: PiConceptProperty): string {

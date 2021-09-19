@@ -71,7 +71,7 @@ export class PiEditProjectionUtil {
                 text.style = "conceptkeyword";
                 startLine.items.push(text);
                 // find name property if available
-                const nameProp = con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
+                const nameProp = con.allPrimProperties().find(p => p.name === "name" && p.primType === "identifier");
                 if (!!nameProp) {
                     const exp = PiLangSelfExp.create(con);
                     exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, nameProp.name, nameProp);

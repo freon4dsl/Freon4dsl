@@ -10,7 +10,6 @@ import {
     PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType
 } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
-import { ParseLocation } from "../../utils";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
@@ -74,7 +73,7 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
         const nameProperty = new PiPrimitiveProperty();
         nameProperty.name = "name";
-        nameProperty.primType = "string";
+        nameProperty.primType = "identifier";
         nameProperty.isPart = true;
         nameProperty.isList = false;
         nameProperty.isOptional = false;
@@ -171,7 +170,7 @@ export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiE
 }
 
 /**
- * Class ParsedProperty is used to parsed either a PiPrimitiveProperty or
+ * Class ParsedProperty is used to parse either a PiPrimitiveProperty or
  * a PiConceptProperty. The difference between the two is being made in the following
  * functions.
  * This enables us to give the user non-fatal parse errors.
@@ -207,7 +206,7 @@ export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiPrope
     let result1: PiProperty;
     // Note that data.type may not be set!
     // In that case the property is primitive and we have to use data.typeName.
-    // In the following we ignore data.initialValue is ignored for Part Properties (i.e. props where the type is a Concept).
+    // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
     // But we do add an error message to the list of non-fatal parse errors.
     // This list of errors is added to the list of checking errors in the parse functions in PiParser.
     if (!!data.type) {
@@ -221,7 +220,7 @@ export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiPrope
             `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
         }
         result1 = result;
-    } else if (!!data.typeName && (data.typeName === "string" || data.typeName === "boolean" || data.typeName === "number")) {
+    } else if (!!data.typeName && (data.typeName === "string" || data.typeName === "boolean" || data.typeName === "number" || data.typeName === "identifier")) {
         const result = new PiPrimitiveProperty();
         result.primType = data.typeName;
         // in the following statement we cannot use "!!data.initialValue" because it could be a boolean

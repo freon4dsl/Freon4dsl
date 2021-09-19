@@ -137,7 +137,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
  * @param con
  */
 export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
-    return con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
+    return con.allPrimProperties().find(p => p.name === "name" && p.primType === "identifier");
 }
 
 /**
@@ -147,9 +147,24 @@ export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
  */
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
     if (!!piClassifier) {
-        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.primType === "string") ) {
+        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.primType === "identifier") ) {
             return true;
         }
     }
     return false;
+}
+
+/**
+ *
+ */
+export function typeToString(property: PiProperty): string {
+    if (property instanceof PiPrimitiveProperty) {
+        if (property.primType === "identifier") {
+            return "string";
+        } else {
+            return property.primType;
+        }
+    } else {
+        return property.type.referred.name;
+    }
 }
