@@ -1,6 +1,6 @@
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 import {
-    PiBinaryExpressionConcept,
+    PiBinaryExpressionConcept, PiClassifier,
     PiConcept,
     PiLanguage, PiLimitedConcept,
     PiPrimitiveProperty,
@@ -16,6 +16,7 @@ import {
     ListJoinType,
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../metalanguage";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class WriterTemplate {
 
@@ -433,10 +434,11 @@ export class WriterTemplate {
                 );`;
         } else {
             let myCall: string = ``;
+            const myType: PiClassifier = myElem.type.referred;
             // TODO remove this hack: test on "myElem.name !== "name" ", when a difference is made between identifiers and strings
-            if (myElem.primType === "string" ) { //&& myElem.name !== "name") {
+            if (myType === PiPrimitiveType.string ) { //&& myElem.name !== "name") {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
-            } else if (myElem.primType === "boolean" && !!item.keyword) {
+            } else if (myType === PiPrimitiveType.boolean && !!item.keyword) {
                 myCall = `if (${elemStr}) { 
                               this.output[this.currentLine] += \`${item.keyword} \`
                           }`;

@@ -59,7 +59,7 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
 
 export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiClassifier>(data.name, "PiClassifier");
+    const result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

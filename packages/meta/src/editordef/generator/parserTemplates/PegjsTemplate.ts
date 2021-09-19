@@ -17,6 +17,7 @@ import {
     PiEditUnit
 } from "../../metalanguage";
 import { LangUtil, Names } from "../../../utils";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 export const referencePostfix = "PiElemRef";
 
@@ -272,7 +273,7 @@ HEXDIG = [0-9a-f]
         this.listNumber++;
         let listRuleName: string;
         if (myElem instanceof PiPrimitiveProperty) {
-            listRuleName = Names.startWithUpperCase(myElem.primType) + "List" + this.listNumber;
+            listRuleName = Names.startWithUpperCase(myElem.type.referred.name) + "List" + this.listNumber;
             this.makeRuleForList(item, myElem, listRuleName);
         } else {
             if (item.listJoin?.joinType === ListJoinType.Separator) {
@@ -369,21 +370,21 @@ HEXDIG = [0-9a-f]
     }
 
     private makeTypeName(myElem: PiPrimitiveProperty, item: PiEditPropertyProjection): string {
-        // TODO make a difference between variables and stringLiterals in the .ast file
         let typeName: string = "";
-        if (myElem.name === "name") {
+        let myType: PiClassifier = myElem.type.referred;
+        if (myElem.name === "name" && myType === PiPrimitiveType.identifier) {
             typeName = "variable";
         } else {
-            switch (myElem.primType) {
-                case "string": {
+            switch (myType) {
+                case PiPrimitiveType.string: {
                     typeName = "stringLiteral";
                     break;
                 }
-                case "number": {
+                case PiPrimitiveType.number: {
                     typeName = "numberLiteral";
                     break;
                 }
-                case "boolean": {
+                case PiPrimitiveType.boolean: {
                     if (!!item.keyword) {
                         typeName = `"${item.keyword}"`
                     } else {

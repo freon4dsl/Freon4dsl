@@ -7,7 +7,7 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType
+    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveValue, PiPrimitiveType
 } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
 
@@ -73,7 +73,7 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
         const nameProperty = new PiPrimitiveProperty();
         nameProperty.name = "name";
-        nameProperty.primType = "identifier";
+        nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
         nameProperty.isPart = true;
         nameProperty.isList = false;
         nameProperty.isOptional = false;
@@ -176,8 +176,8 @@ export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiE
  * This enables us to give the user non-fatal parse errors.
  */
 class ParsedProperty extends PiProperty {
-    typeName: string;
-    initialValue: PiPrimitiveType;
+    // typeName: string;
+    initialValue: PiPrimitiveValue;
     // inherited from PiProperty:
         // isPublic: boolean;
         // isOptional: boolean;
@@ -203,40 +203,40 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
 
 export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiProperty {
     // console.log("createPartOrPrimProperty " + data.name + " "+ data.type + " "+ data.typeName);
-    let result1: PiProperty;
-    // Note that data.type may not be set!
-    // In that case the property is primitive and we have to use data.typeName.
+    let result: PiProperty;
     // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
     // But we do add an error message to the list of non-fatal parse errors.
     // This list of errors is added to the list of checking errors in the parse functions in PiParser.
     if (!!data.type) {
-        const result = new PiConceptProperty();
+        // TODO see if this check can be '.type.referred === PiPrimitiveType.identifier' etc.
+        if (data.type.name === "string" || data.type.name === "boolean" || data.type.name === "number" || data.type.name === "identifier") {
+            const primitiveProperty = new PiPrimitiveProperty();
+            // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
+            // we are not interested in its value, only whether it is present
+            if (data.initialValue !== null && data.initialValue !== undefined) {
+                if (Array.isArray(data.initialValue)) {
+                    primitiveProperty.initialValueList = data.initialValue;
+                } else {
+                    primitiveProperty.initialValue = data.initialValue;
+                }
+            }
+            result = primitiveProperty;
+        } else {
+            const conceptProperty = new PiConceptProperty();
+            // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
+            // we are not interested in its value, only whether it is present
+            if (data.initialValue !== null && data.initialValue !== undefined) {
+                nonFatalParseErrors.push(`A non-primitive property may not have a initial value ` +
+                    `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
+            }
+            result = conceptProperty;
+        }
         result.type = data.type;
         result.type.owner = result;
-        // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
-        // we are not interested in its value, only whether it is present
-        if (data.initialValue !== null && data.initialValue !== undefined) {
-            nonFatalParseErrors.push(`A non-primitive property may not have a initial value ` +
-            `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
-        }
-        result1 = result;
-    } else if (!!data.typeName && (data.typeName === "string" || data.typeName === "boolean" || data.typeName === "number" || data.typeName === "identifier")) {
-        const result = new PiPrimitiveProperty();
-        result.primType = data.typeName;
-        // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
-        // we are not interested in its value, only whether it is present
-        if (data.initialValue !== null && data.initialValue !== undefined) {
-            if (Array.isArray(data.initialValue)) {
-                result.initialValueList = data.initialValue;
-            } else {
-                result.initialValue = data.initialValue;
-            }
-        }
-        result1 = result;
     }
-    result1.isPart = true;
-    createCommonPropertyAttrs(data, result1);
-    return result1;
+    result.isPart = true;
+    createCommonPropertyAttrs(data, result);
+    return result;
 }
 
 export function createReferenceProperty(data: Partial<PiConceptProperty>): PiConceptProperty {
@@ -251,29 +251,44 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
     return result;
 }
 
-export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-    // console.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
-    return result;
-}
+// export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
+//     // console.log("createConceptReference " + data.name);
+//     const result = PiElementReference.create<PiConcept>(data.name, "PiConcept");
+//     if (!!data.location) {
+//         result.location = data.location;
+//         result.location.filename = currentFileName;
+//     }
+//     return result;
+// }
 
-export function createClassifierReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
+export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
     // console.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiConcept>(data.name, "PiClassifier");
-    if (!!data.location) {
+    let result: PiElementReference<PiClassifier> = null;
+    if (!!data.name) {
+        const type: string = data.name;
+        if (type === "string") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.string, "PiPrimitiveType");
+        } else if (type === "boolean") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.boolean, "PiPrimitiveType");
+        } else if (type === "number") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.number, "PiPrimitiveType");
+        } else if (type === "identifier") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+        } else {
+            result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
+        }
+    }
+    if (!!result && !!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+
     return result;
 }
 
 export function createInterfaceReference(data: Partial<PiElementReference<PiInterface>>): PiElementReference<PiInterface> {
-    // console.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiInterface>(data.name, "PiInterface");
+    // console.log("createInterfaceReference " + data.name);
+    const result = PiElementReference.create<PiInterface>(data.name, "PiInterface");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

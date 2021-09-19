@@ -1,9 +1,11 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
+import { MetaLogger } from "../../../utils";
 
 describe("Checking language parser on checking errors", () => {
     const testdir = "src/test/__tests__/language-tests/faultyDefFiles/checking-errors/";
     const parser = new LanguageParser();
     const checker = parser.checker;
+    MetaLogger.muteAllErrors();
 
     test("language should have a model concept", () => {
         const parseFile = testdir + "test1.ast";

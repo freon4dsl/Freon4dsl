@@ -20,6 +20,7 @@ describe("Checking internal structure of language", () => {
         } catch (e) {
             // this would be a true error
             console.log(e.message);
+            console.log(e.stack);
         }
         expect(piLanguage).not.toBeUndefined();
         // there is a root concept

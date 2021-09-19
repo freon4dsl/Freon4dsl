@@ -120,20 +120,13 @@ property = part:partProperty      { return part; }
 
 partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
     {
-        let ref = null;
-        let typeName = "";
-        if (type === "string" || type === "boolean" || type === "number" || type === "identifier") {
-            typeName = type;
-        } else {
-            ref = create.createClassifierReference({"name": type, "location": location()});
-        }
+        let ref =  create.createClassifierReference({"name": type, "location": location()});
         return create.createPartOrPrimProperty({
             "isPublic": (!!isPublic),
             "name": name,
             "isOptional": (isOptional?true:false),
             "isList": (isList?true:false),
             "initialValue": initialvalue,
-            "typeName": typeName,
             "type": ref,
             "location": location()
         });

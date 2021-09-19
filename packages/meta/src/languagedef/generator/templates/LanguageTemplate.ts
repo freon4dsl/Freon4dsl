@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, PROJECTITCORE, LangUtil } from "../../../utils";
+import { Names, PROJECTITCORE, LangUtil, typeToString } from "../../../utils";
 
 export class LanguageTemplate {
 
@@ -41,7 +41,7 @@ export class LanguageTemplate {
                     ${concept.allPrimProperties().map(prop =>
                         `concept.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${prop.primType}",
+                                type: "${typeToString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "primitive"
@@ -80,7 +80,7 @@ export class LanguageTemplate {
                 ${intface.allPrimProperties().map(prop =>
                 `intface.properties.set("${prop.name}", {
                                 name: "${prop.name}",
-                                type: "${prop.primType}",
+                                type: "${typeToString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
                                 propertyType: "primitive"

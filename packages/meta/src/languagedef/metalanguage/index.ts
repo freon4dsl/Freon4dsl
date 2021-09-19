@@ -26,7 +26,7 @@ export {
     PiLangFunctionCallExp,
     PiLangSelfExp,
     PiLangSimpleExp,
-    PiPrimitiveType,
+    PiPrimitiveValue,
     PiParameter,
     PiProperty,
     PiPropertyInstance,

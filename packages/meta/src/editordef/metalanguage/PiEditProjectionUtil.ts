@@ -19,6 +19,7 @@ import {
     PiEditPropertyProjection,
     PiEditUnit
 } from "./PiEditDefLang";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 export class PiEditProjectionUtil {
 
@@ -71,7 +72,7 @@ export class PiEditProjectionUtil {
                 text.style = "conceptkeyword";
                 startLine.items.push(text);
                 // find name property if available
-                const nameProp = con.allPrimProperties().find(p => p.name === "name" && p.primType === "identifier");
+                const nameProp = con.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
                 if (!!nameProp) {
                     const exp = PiLangSelfExp.create(con);
                     exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, nameProp.name, nameProp);

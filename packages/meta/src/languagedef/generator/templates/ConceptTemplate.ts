@@ -6,7 +6,7 @@ import {
     PiConcept,
     PiLimitedConcept,
     PiProperty,
-    PiPropertyInstance
+    PiPropertyInstance, PiClassifier
 } from "../../metalanguage";
 import {
     findMobxImports,
@@ -18,6 +18,7 @@ import {
     makePrimitiveProperty,
     makeReferenceProperty
 } from "./ConceptUtils";
+import { PiPrimitiveType } from "../../metalanguage/PiLanguage";
 
 export class ConceptTemplate {
 
@@ -515,13 +516,13 @@ export class ConceptTemplate {
     private createInstancePropValue(property: PiPropertyInstance): string {
         const refProperty: PiProperty = property.property?.referred;
         if (!!refProperty && refProperty instanceof PiPrimitiveProperty) { // should always be the case
-            const type: string = refProperty.primType;
+            const type: PiClassifier = refProperty.type.referred;
             if (refProperty.isList) {
                 return `[ ${property.valueList.map(value =>
-                    `${(type === "string" || type === "identifier") ? `"${value}"` : `${value}` }`
+                    `${(type === PiPrimitiveType.string || type === PiPrimitiveType.identifier) ? `"${value}"` : `${value}` }`
                 ).join(", ")} ]`;
             } else {
-                return `${(type === "string" || type === "identifier") ? `"${property.value}"` : `${property.value}` }`;
+                return `${(type === PiPrimitiveType.string || type === PiPrimitiveType.identifier) ? `"${property.value}"` : `${property.value}` }`;
             }
         }
         return ``;

@@ -7,6 +7,7 @@ import { ParseLocation } from "../../utils";
  */
 export class PiElementReference<T extends PiLangElement> {
 
+    // TODO remove this method in favour of the next one
     public static createNamed<T extends PiLangElement>(name: string, typeName: PiLangConceptType): PiElementReference<T> {
         const result = new PiElementReference(null, typeName);
         result.name = name;
@@ -49,14 +50,6 @@ export class PiElementReference<T extends PiLangElement> {
     get name(): string {
         if (!!this._PI_referred) {
             return this.referred.name;
-        } else {
-            // console.log("Trying to find: " + this._PI_name + " (" + this.typeName +") in " + this.owner?.unitName);
-            this._PI_referred = this.scoper.getFromVisibleElements(
-                this.owner,
-                this._PI_name,
-                this.typeName
-            ) as T;
-            // console.log("Found: " + this._PI_referred?.unitName);
         }
         return this._PI_name;
     }
