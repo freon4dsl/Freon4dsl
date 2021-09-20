@@ -3,7 +3,7 @@ import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { PiError } from "@projectit/core";
 
-describe("Testing Parser", () => {
+describe.skip("Testing Parser", () => {
     const writer = OctopusEnvironment.getInstance().writer;
     const reader = OctopusEnvironment.getInstance().reader;
     const validator = OctopusEnvironment.getInstance().validator;
