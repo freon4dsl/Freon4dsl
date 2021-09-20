@@ -123,11 +123,14 @@ export class SyntaxAnalyserTemplate {
              * ...PiElemRef = identifier;
              */
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
-                let refName: string = this.transformNode(branch);
-                if (refName == null || refName == undefined || refName.length == 0) {
+                let referred: string | T = this.transformNode(branch);
+                if (referred == null || referred == undefined ) {
                     throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                } else if (typeof referred === "string" && (referred as string).length == 0) {
+                    throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
+                } else {
+                    return PiElementReference.create<T>(referred, typeName);
                 }
-                return PiElementReference.create<T>(refName, typeName);
             }
         
             /**

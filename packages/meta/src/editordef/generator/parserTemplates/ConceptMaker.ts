@@ -7,10 +7,9 @@ import {
     PiEditSubProjection,
     PiEditUnit
 } from "../../metalanguage";
-import { PiClassifier, PiConcept, PiLimitedConcept, PiPrimitiveProperty, PiProperty } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiLimitedConcept, PiPrimitiveProperty, PiProperty, PiPrimitiveType } from "../../../languagedef/metalanguage";
 import { getBaseTypeAsString, Names } from "../../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ConceptMaker {
     generatedParseRules: string[] = [];
@@ -18,7 +17,7 @@ export class ConceptMaker {
     branchNames: string[] = [];
     imports: PiClassifier[] = [];
 
-    private currentIndex = 0;
+    private indexOfCurrentProp = 0; // the position within the parse rule of the property that is currently handled
     private separatorToProp: Map<PiProperty, string> = new Map<PiProperty, string>();
     private indexOfProp: Map<PiProperty, number> = new Map<PiProperty, number>();
     private optionalIndexOfProp: Map<PiProperty, number> = new Map<PiProperty, number>();
@@ -38,9 +37,6 @@ export class ConceptMaker {
             // note: not all properties need to be present in a projection
             const propsToSet: PiProperty[] = this.findPropsToSet(conceptDef);
 
-            // make the parse rule
-            let rule: string = "";
-
             // TODO test and rethink subconcepts AND concrete projection for one concept
             // see if this concept has subconcepts
             const subs = piConcept.allSubConceptsDirect();
@@ -54,29 +50,26 @@ export class ConceptMaker {
             // now we have enough information to create the parse rule
             // which is a choice between the rules for the direct sub-concepts
             // and a rule where every property mentioned in the editor definition is set.
-            this.currentIndex = 0;
-            rule = `${branchName} = ${conceptDef.projection.lines.map(l =>
+            this.indexOfCurrentProp = 0;
+            let rule: string = `${branchName} = ${conceptDef.projection.lines.map(l =>
                 `${this.addCallForItems(branchName, l.items, false)}`
             ).join("\n\t")} ${choiceBetweenSubconcepts}`;
             this.generatedParseRules.push(rule);
-
-            // to be used as part of the if-statement in transformBranch()
             this.branchNames.push(branchName);
 
             // Syntax analysis
-            this.imports.push(piConcept);
             let propStatements: string[] = [];
             for (const prop of propsToSet) {
                 propStatements.push(this.makeStatementForProp(prop));
             }
             this.generatedSyntaxAnalyserMethods.push(
                 `${ParserGenUtil.makeComment(rule)}
-            private transform${branchName} (branch: SPPTBranch) : ${branchName} {
-                // console.log("transform${branchName} called");
-                const children = this.getChildren(branch, 'transform${branchName}');              
-                ${propStatements.map(stat => `${stat}`).join("\n")}      
-                return ${Names.concept(piConcept)}.create({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
-            }`);
+                private transform${branchName} (branch: SPPTBranch) : ${branchName} {
+                    // console.log("transform${branchName} called");
+                    const children = this.getChildren(branch, 'transform${branchName}');              
+                    ${propStatements.map(stat => `${stat}`).join("\n")}      
+                    return ${Names.concept(piConcept)}.create({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
+                }`);
         }
     }
 
@@ -109,6 +102,11 @@ export class ConceptMaker {
         }
         if (isOptional) {
             if (optionalPropIndex === undefined) {
+                if (this.listWithExtras.includes(prop)) {
+                    console.log(`Prop ${propName} has extra`);
+                } else {
+                    console.log(`Prop ${propName} has NO extra`);
+                }
                 if (!prop.isList && prop.isPart) {
                     // this is the case when a simple "XXX?" call is in the grammar
                     // we need to take the extra 'multi' group in the parse tree into account
@@ -195,7 +193,7 @@ export class ConceptMaker {
         let propIndex: number;
         let indexToUse: Map<PiProperty, number>;
         if (!optional) {
-            propIndex = this.currentIndex; // the index of the property within the main rule
+            propIndex = this.indexOfCurrentProp; // the index of the property within the main rule
             indexToUse = this.indexOfProp;
         } else {
             propIndex = 0; // the index of the property within the new group
@@ -223,11 +221,11 @@ export class ConceptMaker {
                     // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
                     // do not increase currentIndex!!!
                 }
-                this.currentIndex = propIndex;
+                this.indexOfCurrentProp = propIndex;
             });
         }
         if (optional) {
-            this.optionalProps.push(prop); // TODO check: is it important to see if prop is already in optionalProps?
+            this.optionalProps.push(prop);
             if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
                 this.listWithExtras.push(prop);
                 ruleText = `( ${ruleText} )? /* option F */\n`;

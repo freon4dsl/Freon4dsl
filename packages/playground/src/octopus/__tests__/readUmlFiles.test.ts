@@ -8,7 +8,7 @@ describe("Testing Parser", () => {
     const fileHandler = new FileHandler();
 
     // TODO use snapshots
-    test("book model unparsed and parsed again", () => {
+    test("book small unparsed and parsed again", () => {
         const input = fileHandler.stringFromFile("src/octopus/__tests__/Book-small.uml2");
         const unit1 = reader.readFromString(input, "UmlPart");
         console.log(writer.writeToString(unit1, 0, false));
@@ -32,8 +32,8 @@ describe("Testing Parser", () => {
         console.log(writer.writeToString(unit1, 0, false));
     });
 
-    test("book model STRING unparsed and parsed again", () => {
-        const langSpec = fileHandler.stringFromFile("src/octopus/__tests__/orders.uml2");
+    test("book model unparsed and parsed again", () => {
+        const langSpec = fileHandler.stringFromFile("src/octopus/__tests__/book.uml2");
         const unit1 = reader.readFromString(langSpec, "UmlPart");
         console.log(writer.writeToString(unit1, 0, false));
     });

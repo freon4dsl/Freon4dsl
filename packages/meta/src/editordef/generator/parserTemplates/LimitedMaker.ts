@@ -1,6 +1,6 @@
 import { PiEditInstanceProjection, PiEditUnit } from "../../metalanguage";
-import { PiClassifier } from "../../../languagedef/metalanguage";
-import { Names } from "../../../utils";
+import { PiClassifier, PiInstance } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript, Names } from "../../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
 
 /**
@@ -26,7 +26,7 @@ export class LimitedMaker {
                 line.items.forEach(item => {
                     // TODO do we allow other projections for limited concepts????
                     if (item instanceof PiEditInstanceProjection) {
-                        myMap.set(item.expression.instanceName, item.keyword);
+                        myMap.set(langExpToTypeScript(item.expression), item.keyword);
                     }
                 })
             });
@@ -54,7 +54,7 @@ export class LimitedMaker {
         let ifStat: string = '';
         for (const [key, value] of myMap) {
             ifStat += `if (choice == '${value}') {
-                return '${key}';
+                return ${key};
             } else `
         }
         // close the ifStatement
@@ -62,7 +62,7 @@ export class LimitedMaker {
                 return null;
             }`;
         return `
-        private transform${myName}(branch: SPPTBranch): string {
+        private transform${myName}(branch: SPPTBranch): ${myName} {
             let choice = (branch.matchedText).trim();
             ${ifStat}
         }`;
