@@ -48,7 +48,7 @@ interface IClassifier base IPackagableElement {
     attributes: Attribute[];
     operations: Operation[];
 //    navigations: AssociationEnd[];
-//    reference generalizations: IClassifier[];
+    reference generalizations: IClassifier[];
 //    subClasses: IClassifier[];
 //    reference interfaces: UmlInterface[];
 //    states: State[];

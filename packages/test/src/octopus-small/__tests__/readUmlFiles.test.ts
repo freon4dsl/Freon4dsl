@@ -26,20 +26,20 @@ describe("Testing Octopus Parser", () => {
         console.log(writer.writeToString(unit1, 0, false));
     });
 
-    test("catalog model unparsed and parsed again", () => {
+    test.skip("catalog model unparsed and parsed again", () => {
         const input = fileHandler.stringFromFile("src/octopus-small/__inputs__/catalog.uml2");
         const unit1 = reader.readFromString(input, "UmlPackage");
         console.log(writer.writeToString(unit1, 0, false));
     });
 
-    test("trainWagon model unparsed and parsed again", () => {
+    test.skip("trainWagon model unparsed and parsed again", () => {
         const input = fileHandler.stringFromFile("src/octopus-small/__inputs__/trainWagon.uml2");
         const unit1 = reader.readFromString(input, "UmlPackage");
         console.log(writer.writeToString(unit1, 0, false));
     });
 
-    test("book model STRING unparsed and parsed again", () => {
-        const langSpec = fileHandler.stringFromFile("src/octopus-small/__inputs__/orders.uml2");
+    test("book model unparsed and parsed again", () => {
+        const langSpec = fileHandler.stringFromFile("src/octopus-small/__inputs__/book.uml2");
         const unit1 = reader.readFromString(langSpec, "UmlPackage");
         console.log(writer.writeToString(unit1, 0, false));
     });
