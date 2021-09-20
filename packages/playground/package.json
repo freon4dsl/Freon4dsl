@@ -44,6 +44,7 @@
     "@projectit/core-svelte": "0.1.1",
     "@projectit/server": "0.1.1",
     "@types/node": "^14.14.31",
+    "mobx": "6.3.3",
     "click-outside": "1.0.4",
     "lodash": "^4.17.21",
     "net.akehurst.language-agl-processor": "^3.5.0",
