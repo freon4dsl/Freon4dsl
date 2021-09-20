@@ -385,6 +385,7 @@ export class PiParameter extends PiLangElement {
 
 // the basic types in the pi-languages
 export type PiPrimitiveValue = string | boolean | number ;
+
 export class PiPrimitiveType extends PiConcept {
     /**
      * A convenience method that creates an instance of this class

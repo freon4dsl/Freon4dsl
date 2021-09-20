@@ -75,6 +75,8 @@ concept LimitedNonOptional {
     visMulti: VisibilityKind[];
     visWithExtra: VisibilityKind;
     visMultiWithExtra: VisibilityKind[];
+    other: OtherLimited;
+    otherMulti: OtherLimited[];
 }
 
 concept LimitedOptional {
@@ -88,6 +90,10 @@ limited VisibilityKind {
 	PUBLIC = { name: "PUBLIC" }
 	PRIVATE = { name: "PRIVATE" }
 	PROTECTED = { name: "PROTECTED" }
+}
+
+limited OtherLimited {
+    FIRST; SECOND;
 }
 
 // TEST PROPERTIES THAT ARE PARTS WHICH HAVE CONCEPT TYPES

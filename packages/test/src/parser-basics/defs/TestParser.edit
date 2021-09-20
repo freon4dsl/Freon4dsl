@@ -42,6 +42,8 @@ LimitedNonOptional {
     ${self.visMulti @horizontal @separator[, ]} ;
     before ${self.visWithExtra} after ;
     before ${self.visMultiWithExtra  @horizontal @separator[, ]} after ;
+    ${self.other} ;
+    ${self.otherMulti @horizontal @separator[, ]} ;
     ]
 }
 
