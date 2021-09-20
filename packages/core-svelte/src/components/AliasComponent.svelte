@@ -193,12 +193,16 @@
             setOpen("TAB", false);
             return;
         }
+        if (e.key === KEY_ESCAPE) {
+            setOpen("Escape", false);
+            return;
+        }
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
-            const caretPosition = textComponent.getCaretPosition();
-            if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
+            // const caretPosition = textComponent.getCaretPosition();
+            // if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
                 // Handle in ProjectItComponent
                 setOpen("arraow at the edges", false);
-            }
+            // }
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
@@ -249,8 +253,9 @@
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
             return caretPosition <= 0;
         } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
-            const length: number = textComponent?.element?.innerText?.length;
-            return (!!length ? caretPosition >= length : true);
+            return true;
+            // const length: number = textComponent?.element?.innerText?.length;
+            // return (!!length ? caretPosition >= length : true);
         } else {
             return false;
         }
