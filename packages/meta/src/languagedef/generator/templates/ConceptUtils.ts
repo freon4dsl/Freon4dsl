@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, typeToString } from "../../../utils";
+import { Names, PROJECTITCORE, getBaseTypeAsString } from "../../../utils";
 import { PiClassifier, PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
 import { PiPrimitiveType } from "../../metalanguage/PiLanguage";
 
@@ -64,7 +64,7 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
             }
         }
     }
-    return `${decorator} ${property.name} : ${typeToString(property)}${arrayType} ${initializer}; \t${comment}`;
+    return `${decorator} ${property.name} : ${getBaseTypeAsString(property)}${arrayType} ${initializer}; \t${comment}`;
 }
 
 export function makePartProperty(property: PiConceptProperty): string {

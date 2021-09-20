@@ -2,16 +2,16 @@ editor XXX for language octopus
 
 UmlPackage {
     @projection normal
-        [<package> ${self.pathName}
+        [<package> ${self.name}
             ${ self.classifiers @vertical @separator [\n] }
         <endpackage>
         ]
 }
 
-PathName {
-    @projection normal
-        [${self.names @horizontal @separator [::] }]
-}
+//PathName {
+//    @projection normal
+//        [${self.names @horizontal @separator [::] }]
+//}
 
 //Association {
 //    @projection normal

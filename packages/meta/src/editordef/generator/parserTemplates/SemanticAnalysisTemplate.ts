@@ -1,5 +1,6 @@
 import { PiClassifier, PiConcept, PiExpressionConcept, PiLanguage } from "../../../languagedef/metalanguage";
 import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../../utils";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 
@@ -21,7 +22,7 @@ export class SemanticAnalysisTemplate {
                         hasProblems = true;
                     }
                     for (const prim of sub.allPrimProperties()) {
-                        if (prim.primType == "boolean") { // TODO do not depend on string literal
+                        if (prim.type.referred == PiPrimitiveType.boolean) {
                             this.exprWithBooleanProp.push(sub);
                         }
                     }

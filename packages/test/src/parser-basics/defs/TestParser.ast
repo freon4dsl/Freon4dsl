@@ -4,7 +4,7 @@ language TestParser
 
 // TEST PROPERTIES WITH PRIMITVE TYPES
 model TestParserModel {
-    name: string;
+    name: identifier;
     prim: PrimitivesTest;
     lim: LimitedTest;
     ref: RefsTest;
@@ -12,7 +12,7 @@ model TestParserModel {
 }
 
 modelunit PrimitivesTest {
-    public name: string;
+    public name: identifier;
     prim: Prim;
     primExtra: PrimExtra;
     primOpt: PrimOptional;
@@ -54,7 +54,7 @@ concept PrimExtraOptional {
 }
 
 modelunit WithKeywordProj {
-    public name: string;
+    public name: identifier;
     primWith: PrimWith[];
 }
 
@@ -64,7 +64,7 @@ concept PrimWith {
 
 // TEST PROPERTIES WITH TYPES THTA ARE LIMITED CONCEPTS
 modelunit LimitedTest {
-    public name: string;
+    public name: identifier;
     limitedNonOpt: LimitedNonOptional;
     limitedOpt: LimitedOptional;
     limitedOpt2: LimitedOptional;
@@ -92,7 +92,7 @@ limited VisibilityKind {
 
 // TEST PROPERTIES THAT ARE PARTS WHICH HAVE CONCEPT TYPES
 modelunit PartsTest {
-    public name: string;
+    public name: identifier;
     directParts: WithDirectParts;
     partsOfParts?: WithSubSubParts;
 }
@@ -126,7 +126,7 @@ concept SubConcept {
 
 // TEST PROPERTIES THAT ARE REFERENCES TO CONCEPT TYPES
 modelunit RefsTest {
-    public name: string;
+    public name: identifier;
     directRefs: WithDirectRefs;
     indirectRefs?: WithSubSubRefs;
 }
@@ -139,7 +139,7 @@ concept WithDirectRefs {
 }
 
 concept RefConcept {
-    name: string;
+    name: identifier;
 }
 
 concept WithSubSubRefs {

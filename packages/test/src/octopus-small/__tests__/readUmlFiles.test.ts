@@ -1,16 +1,22 @@
 import { UmlPackage } from "../language/gen";
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
+import { PiError } from "@projectit/core";
 
 describe("Testing Parser", () => {
     const writer = OctopusEnvironment.getInstance().writer;
     const reader = OctopusEnvironment.getInstance().reader;
+    const validator = OctopusEnvironment.getInstance().validator;
     const fileHandler = new FileHandler();
 
     // TODO use snapshots
     test("book small", () => {
         const input = fileHandler.stringFromFile("src/octopus-small/__inputs__/Book-small.uml2");
         const unit1 = reader.readFromString(input, "UmlPackage");
+        const errors: PiError[] = validator.validate(unit1, true);
+        for (const err of errors) {
+            console.log(`${err.message} in ${err.locationdescription}`);
+        }
         console.log(writer.writeToString(unit1, 0, false));
     });
 

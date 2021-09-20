@@ -1,4 +1,4 @@
-<package> Book::TEXT
+<package> Book
  + <class> Prependix
     <attributes>
      + kind: PrependixKind;

@@ -1,7 +1,7 @@
 language octopus
 
 model OctopusModel {
-    name: string;
+    name: identifier;
     umlParts: UmlPackage[];
 //    oclParts: OclPart[];
 }
@@ -35,14 +35,14 @@ concept Parameter implements IModelElement {
 //    reference owner: Operation;
     directionKind: ParameterDirectionKind;
 }
-concept PathName {
-    names: string[];
-    // first = names[0];
-    // last  = names[names.length-1]
-}
+//concept PathName {
+//    names: identifier[];
+//    // first = names[0];
+//    // last  = names[names.length-1]
+//}
 interface IModelElement {
-    public name: string;
-    pathName: PathName;
+    public name: identifier;
+//    pathName: PathName;
 }
 interface IClassifier base IPackagableElement {
     attributes: Attribute[];

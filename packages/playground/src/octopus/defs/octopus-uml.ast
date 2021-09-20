@@ -1,7 +1,7 @@
 language octopus
 
 modelunit UmlPart {
-    public name: string;
+    public name: identifier;
     umlPackage: UmlPackage;
 }
 
@@ -81,7 +81,7 @@ concept ImportedElement implements IModelElement {
 concept UmlInterface implements IClassifier {
 }
 interface IModelElement {
-    name: string;
+    name: identifier;
     pathName: PathName;
 }
 concept MultiplicityKind {
@@ -144,18 +144,18 @@ concept StructuralFeature implements IPackagableElement {
 }
 
 concept OclStatement {
-    name: string;
+    name: identifier;
     expr: OclExpression;
 }
 
 // TODO remove the following two concepts when we can cater for a prefix to lists
 concept OclPreStatement {
-    name: string;
+    name: identifier;
     expr: OclExpression;
 }
 
 concept OclPostStatement {
-    name: string;
+    name: identifier;
     expr: OclExpression;
 }
 

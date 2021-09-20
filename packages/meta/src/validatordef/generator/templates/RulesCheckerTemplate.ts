@@ -8,7 +8,7 @@ import {
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     PiErrorSeverity,
-    PROJECTITCORE, typeToString
+    PROJECTITCORE, getBaseTypeAsString
 } from "../../../utils";
 import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
@@ -228,7 +228,7 @@ export class RulesCheckerTemplate {
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = typeToString(referredListproperty);
+        const listpropertyTypeName = getBaseTypeAsString(referredListproperty);
         const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
         if (message.length === 0) {
             message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;

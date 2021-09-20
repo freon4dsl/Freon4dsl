@@ -120,7 +120,7 @@ export class WriterTemplate {
             }
         
             private unparse(modelelement: ${allLangConcepts}, short: boolean) {
-                ${sortClasses(language.concepts).map(concept => `
+                ${sortClasses(language.concepts.filter(conc => !(conc instanceof PiLimitedConcept))).map(concept => `
                 if(modelelement instanceof ${Names.concept(concept)}) {
                     this.unparse${Names.concept(concept)}(modelelement, short);
                     return;
@@ -128,7 +128,26 @@ export class WriterTemplate {
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
-               
+             
+            /**
+             *
+            */
+            private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
+                const type: PiNamedElement = modelelement.referred;
+                if (!!type) {
+                    switch (type) {
+                        ${limitedConcepts.map(lim =>
+                            `${this.makeLimitedCases(lim, editDef)}`
+                        ).join("")}
+                        default: {
+                            this.output[this.currentLine] +=  type.name + " ";
+                        }
+                    }
+                } else {
+                    this.output[this.currentLine] += modelelement.name + " ";
+                }
+            }
+       
             /**
              * Adds a string representation of 'list' to the 'output', using 'sepText' , and 'sepType' to include either a separator string
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
@@ -162,13 +181,7 @@ export class WriterTemplate {
             private unparseReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;                   
-                    // for limited concepts use keyword here!!!
-                    ${limitedConcepts.map(lim => `if (listElem.referred instanceof ${Names.concept(lim)}) {
-                        this.unparse${Names.concept(lim)}(listElem.referred, false);
-                    } else `).join("\n")} 
-                    {
-                        this.output[this.currentLine] += listElem.name;
-                    }                  
+                    this.unparseReference(listElem, short);                 
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
             }
@@ -178,14 +191,16 @@ export class WriterTemplate {
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
              * If 'short' is false, then a multi-line result will be given. Otherwise, only one single-line string is added.
              * @param list
+             * @param isIdentifier : indicates whether or not the value should be surrounded with double quotes
              * @param sepText
              * @param sepType
              * @param vertical
              * @param indent
              * @param short
-             */       
+             */   
             private unparseListOfPrimitiveValues(
                 list: (string | number | boolean)[],
+                isIdentifier: boolean,
                 sepText: string,
                 sepType: SeparatorType,
                 vertical: boolean,
@@ -195,7 +210,7 @@ export class WriterTemplate {
                 if (!!list) {
                     list.forEach((listElem, index) => {
                         const isLastInList: boolean = index === list.length - 1;
-                        if (typeof listElem === "string") {
+                        if (typeof listElem === "string" && !isIdentifier) {
                             this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
                         } else {
                             this.output[this.currentLine] += \`\$\{listElem\}\`;
@@ -272,31 +287,37 @@ export class WriterTemplate {
      */
     private makeConceptMethod (conceptDef: PiEditConcept ): string {
         const myConcept: PiConcept = conceptDef.concept.referred;
+        // TODO clean up
         if (myConcept instanceof PiLimitedConcept){
-            let result = this.makeLimitedConceptMethod(conceptDef, myConcept);
-            // a limited can have a '@keyword' projection or a normal one
-            if (result.length > 0) { // it was a `@keyword` projection
-                return result;
-            } else {
-                return this.makeNormalConceptMethod(conceptDef, myConcept);
-            }
+            // // a limited concept can only be referred to
+            // // when a '@keyword' projection is present, use that as reference
+            // // when not, use the name of the instance of the limited concept
+            // let result = this.makeLimitedReferenceMethod(conceptDef, myConcept);
+            // if (result.length > 0) { // it was a `@keyword` projection
+            //     return result;
+            // } else {
+            //     const name: string = Names.concept(myConcept);
+            //     return `/**
+            //              * A reference to the limited concept 'VisibilityKind' is unparsed as its name.
+            //              */
+            //             private unparse${name}(modelelement: ${name}, short: boolean) {
+            //                 if (!!modelelement) {
+            //                     this.output[this.currentLine] += modelelement.name + " ";
+            //                 }
+            //             }`;
+            // }
+            return '';
         } else {
             return this.makeNormalConceptMethod(conceptDef, myConcept);
         }
     }
 
-    private makeLimitedConceptMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
-        const name: string = Names.concept(myConcept);
-        const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
-        const comment = `/**
-                          * The limited concept '${myConcept.name}' is unparsed according to the keywords
-                          * in the editor definition.
-                          */`;
-
-        // if the special '@keyword' construct is used, we create an extra method with a switch statement
-        // if not, do nothing, the limited concept is being referred to by its name
-        if (!!lines) {
-            let cases: string = "";
+    private makeLimitedCases(lim: PiLimitedConcept, editDef: PiEditUnit): string {
+        const conceptDef: PiEditConcept = editDef.findConceptEditor(lim);
+        if (!!conceptDef) { // there is a projection for this limited concept
+            const name: string = Names.concept(lim);
+            const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
+            let cases: string = ``;
             lines.map(line => line.items.map(item => {
                 // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
                 if (item instanceof PiEditInstanceProjection) {
@@ -308,18 +329,54 @@ export class WriterTemplate {
                 }
             }));
             if (cases.length > 0) {
-                return `
-                    ${comment}
-                        private unparse${name}(modelelement: ${name}, short: boolean): string {
-                            switch (modelelement) {
-                                ${cases}                  
-                            }
-                            return modelelement.name + " ";
-                        }`;
+                cases = `// The limited concept '${lim.name}' is unparsed according to the keywords in the editor definition.
+                        ${cases}`;
             }
+            return cases;
         }
         return "";
     }
+
+    // TODO clean up
+    // private makeLimitedReferenceMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
+    //     const name: string = Names.concept(myConcept);
+    //     const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
+    //     const comment = `/**
+    //                       * A reference to the limited concept '${myConcept.name}' is unparsed according
+    //                       * to the keywords in the editor definition.
+    //                       */`;
+    //
+    //     // if the special '@keyword' construct is used, we create an extra method with a switch statement
+    //     // if not, do nothing, the limited concept is being referred to by its name
+    //     if (!!lines) {
+    //         let cases: string = "";
+    //         lines.map(line => line.items.map(item => {
+    //             // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
+    //             if (item instanceof PiEditInstanceProjection) {
+    //                 cases += `case ${item.expression.sourceName}.${item.expression.instanceName}: {
+    //                             this.output[this.currentLine] += "${item.keyword} ";
+    //                             break;
+    //                             }
+    //                             `
+    //             }
+    //         }));
+    //         if (cases.length > 0) {
+    //             return `
+    //                 ${comment}
+    //                     private unparse${name}(modelelement: ${name}, short: boolean) {
+    //                         if (!!modelelement) {
+    //                             switch (modelelement) {
+    //                                 ${cases}
+    //                                 default: {
+    //                                     this.output[this.currentLine] += modelelement.name + " ";
+    //                                 }
+    //                             }
+    //                         }
+    //                     }`;
+    //         }
+    //     }
+    //     return "";
+    // }
 
     private makeNormalConceptMethod(conceptDef: PiEditConcept, myConcept: PiConcept) {
         const name: string = Names.concept(myConcept);
@@ -436,7 +493,7 @@ export class WriterTemplate {
     }
 
     /**
-     * Creates the statement neede to unparse an element with primitive type. The element may be a list or
+     * Creates the statement needed to unparse an element with primitive type. The element may be a list or
      * a single property.
      * @param myElem
      * @param item
@@ -446,18 +503,21 @@ export class WriterTemplate {
         let result: string = ``;
         const elemStr = langExpToTypeScript(item.expression);
         if (myElem.isList) {
-            let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-            let joinType = this.getJoinType(item);
+            let isIdentifier: string = "false";
+            if (myElem.type.referred === PiPrimitiveType.identifier) {
+                isIdentifier = "true";
+            }
+            const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+            const joinType = this.getJoinType(item);
             result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, "${item.listJoin.joinText}", ${joinType}, ${vertical},
+                    ${elemStr}, ${isIdentifier},"${item.listJoin.joinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
                     short
                 );`;
         } else {
             let myCall: string = ``;
             const myType: PiClassifier = myElem.type.referred;
-            // TODO remove this hack: test on "myElem.name !== "name" ", when a difference is made between identifiers and strings
-            if (myType === PiPrimitiveType.string ) { //&& myElem.name !== "name") {
+            if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else if (myType === PiPrimitiveType.boolean && !!item.keyword) {
                 myCall = `if (${elemStr}) { 
@@ -513,13 +573,18 @@ export class WriterTemplate {
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
                     // remove only the last ".referred"
-                    if (myTypeScript.endsWith("?.referred") ) {
+                    if (myTypeScript.endsWith("?.referred")) {
                         myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
-                    } else if (myTypeScript.endsWith(".referred") ) {
+                    } else if (myTypeScript.endsWith(".referred")) {
                         myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
                     }
                     // end hack
-                    myCall += `this.output[this.currentLine] += \`\$\{${myTypeScript}.name\} \``;
+                    myCall += `this.unparseReference(${myTypeScript}, short);`;
+                    // if (type instanceof PiLimitedConcept) {
+                    //     myCall += `this.unparse${type.name}(${myTypeScript}, short);`;
+                    // } else {
+                    //     myCall += `this.output[this.currentLine] += \`\$\{${myTypeScript}.name\} \``;
+                    // }
                 }
                 if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
                     result += `if (!!${myTypeScript}) { ${myCall} }`;

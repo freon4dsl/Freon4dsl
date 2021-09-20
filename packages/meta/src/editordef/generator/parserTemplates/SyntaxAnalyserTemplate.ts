@@ -55,7 +55,7 @@ export class SyntaxAnalyserTemplate {
             }
             
             private transformLeaf(node: SPPTNode): any {
-                let tmp = (node as SPPTLeaf)?.matchedText;
+                let tmp = ((node as SPPTLeaf)?.matchedText).trim();
                 if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
                     tmp = tmp.slice(1, tmp.length - 1);
                     return tmp;

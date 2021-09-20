@@ -15,10 +15,11 @@ import {
     PiEditSubProjection,
     PiEditUnit
 } from "../../metalanguage";
-import { LangUtil, Names } from "../../../utils";
+import { LangUtil, Names, getBaseTypeAsString } from "../../../utils";
 import { GrammarTemplate } from "./GrammarTemplate";
 import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
@@ -41,6 +42,8 @@ export class ParserGenerator {
     // therefore we keep track of these in 'optionalProps'
     private optionalProps: PiProperty[] = [];
     private keywordBooleans: PiPrimitiveProperty[] = [];
+    private indexOfProp: Map<PiProperty, number> = new Map<PiProperty, number>();
+    private optionalIndexOfProp: Map<PiProperty, number> = new Map<PiProperty, number>();
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
         // reset all attributes that are global to this class
@@ -98,6 +101,7 @@ export class ParserGenerator {
         this.imports = [];
         this.currentIndex = 0;
         this.listWithExtras = [];
+        this.keywordBooleans = [];
     }
 
     private analyseUnit(piClassifier: PiClassifier, typesDone: PiClassifier[]) {
@@ -115,6 +119,8 @@ export class ParserGenerator {
             LangUtil.findImplementorsRecursive(piClassifier).forEach(type => {
                 this.analyseUnit(type, typesDone);
             });
+        } else if (piClassifier instanceof PiPrimitiveType) {
+            // do nothing
         } else if (piClassifier instanceof PiConcept) {
             if (piClassifier instanceof PiLimitedConcept) {
                 this.limitedsReferred.push(piClassifier);
@@ -350,11 +356,11 @@ export class ParserGenerator {
         if (!!extra) {
             if (Array.isArray(extra)) {
                 for (const ext of extra) {
-                    if (!this.imports.includes(ext)) {
+                    if (!this.imports.includes(ext) && !(ext instanceof PiPrimitiveType)) {
                         this.imports.push(ext);
                     }
                 }
-            } else if (!this.imports.includes(extra)) {
+            } else if (!this.imports.includes(extra) && !(extra instanceof PiPrimitiveType)) {
                 this.imports.push(extra);
             }
         }
@@ -368,8 +374,6 @@ export class ParserGenerator {
             // determine which properties of the concept will get a value through this parse rule
             // note: not all properties need to be present in a projection
             const propsToSet: PiProperty[] = this.findPropsToSet(conceptDef);
-            let indexToName: Map<PiProperty, number> = new Map<PiProperty, number>();
-            let optionalIndexToProp: Map<PiProperty, number> = new Map<PiProperty, number>();
 
             // make the parse rule
             let rule: string = "";
@@ -389,7 +393,7 @@ export class ParserGenerator {
             // and a rule where every property mentioned in the editor definition is set.
             this.currentIndex = 0;
             rule = `${branchName} = ${conceptDef.projection.lines.map(l =>
-                `${this.addCallForItems(branchName, l.items, indexToName, optionalIndexToProp)}`
+                `${this.addCallForItems(branchName, l.items)}`
             ).join("\n\t")} ${choiceBetweenSubconcepts}`;
             this.generatedParseRules.push(rule);
 
@@ -400,7 +404,7 @@ export class ParserGenerator {
             this.addToImports(piClassifier);
             let propStatements: string[] = [];
             for (const prop of propsToSet) {
-                propStatements.push(this.makeStatementForProp(prop, indexToName, optionalIndexToProp));
+                propStatements.push(this.makeStatementForProp(prop));
             }
             this.generatedSyntaxAnalyserMethods.push(
             `
@@ -419,19 +423,17 @@ export class ParserGenerator {
         }
     }
 
-    private makeStatementForProp(prop: PiProperty, indexToName: Map<PiProperty, number>, optionalIndexToProp: Map<PiProperty, number>) : string {
+    private makeStatementForProp(prop: PiProperty) : string {
         // different statements needed for (1) optional, (2) list, (3) reference props
         // thus we have 8 possibilities
         // first set a number of overall variables
         const propType = prop.type.referred; // more efficient to determine 'referred' only once
         this.addToImports(propType);
-        let propBaseTypeName = (prop instanceof PiPrimitiveProperty)
-            ? `${prop.primType}`
-            : `${Names.classifier(propType)}`;
+        let propBaseTypeName = getBaseTypeAsString(prop);
 
         const propName: string = prop.name;
-        const propIndex: number = indexToName.get(prop); // index of this property within the main branch
-        const optionalPropIndex: number = optionalIndexToProp.get(prop); // index of this property within an optional sub-branch
+        const propIndex: number = this.indexOfProp.get(prop); // index of this property within the main branch
+        const optionalPropIndex: number = this.optionalIndexOfProp.get(prop); // index of this property within an optional sub-branch
         // the second part of the following statement is needed because sometimes optional props are not parsed in a separate group
         // TODO example
         const isOptional: boolean = !!this.optionalProps.find(opt => opt === prop) ;
@@ -532,107 +534,98 @@ export class ParserGenerator {
         return propsToSet;
     }
 
-    private addCallForItems(branchName: string, list: PiEditProjectionItem[], indexToProp: Map<PiProperty, number>, optionalIndexToName: Map<PiProperty, number>): string {
+    private addCallForItems(branchName: string, list: PiEditProjectionItem[]): string {
         let result = "";
+        let prop: PiProperty = null;
         if (!!list && list.length > 0) {
             list.forEach((item, index) => {
-                if (item instanceof PiEditProjectionText) {
-                    let extraResult: string[] = this.makeTextProjection(item);  // a text projection can result in more than 1 item
-                    result += `${extraResult.map(extr => `${extr}`).join(" ")}`;
-                    this.currentIndex += extraResult.length;
-                    // console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
-                } else if (item instanceof PiEditPropertyProjection) {
-                    let prop: PiProperty = item.expression.findRefOfLastAppliedFeature();
-                    let propName: string = prop.name;
-                    result += `${this.makePropertyProjection(item, optionalIndexToName, false)} `
-                    indexToProp.set(prop, this.currentIndex);
-                    this.currentIndex += 1;
-                    // console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
-                } else if (item instanceof PiEditSubProjection) {
-                    result += `${this.makeSubProjection(branchName, item, indexToProp, optionalIndexToName)} `;
-                    this.currentIndex += 1;
-                    // console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
-                // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
-                // do not increase currentIndex!!!
-                }
-
+                result += this.doItem(item, branchName, prop);
             });
         }
         return result;
     }
 
-    private makeSubProjection(branchName: string, item: PiEditSubProjection, indexToProp: Map<PiProperty, number>, optionalIndexToName: Map<PiProperty, number>): string {
-        // TODO check: I expect exactly one property projection in a sub projection
-        if (item.optional) {
-            // create a group for the optional part, and store the indexes of the group and of the property within the group
-            return this.makeOptionalRulePart(item, branchName, indexToProp, optionalIndexToName);
-        } else {
-            // TODO check: is this else-branch ever entered???
-            return this.addCallForItems(branchName, item.items, indexToProp, optionalIndexToName);
+    private doItem(item: PiEditProjectionItem, branchName: string, prop: PiProperty): string {
+        let result: string = '';
+            if (item instanceof PiEditSubProjection) {
+            result += `${this.makeSubProjection(branchName, item)} `;
+            prop = item.optionalProperty().expression.findRefOfLastAppliedFeature();
+            this.indexOfProp.set(prop, this.currentIndex);
+            this.currentIndex += 1;
+        } else if (item instanceof PiEditPropertyProjection) {
+            prop = item.expression.findRefOfLastAppliedFeature();
+            result += `${this.makePropertyProjection(item, false)} `;
+            this.indexOfProp.set(prop, this.currentIndex);
+            this.currentIndex += 1;
+        } else if (item instanceof PiEditProjectionText) {
+            let extraResult: string[] = this.makeTextProjection(item);  // a text projection can result in more than 1 item
+            result += `${extraResult.map(extr => `${extr}`).join(" ")}`;
+            this.currentIndex += extraResult.length;
+            // console.log(`increase of currentIndex for ${result}, ${this.currentIndex}`);
+            // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
+            // do not increase currentIndex!!!
         }
+        return result;
     }
 
-    private addToOptionals(prop: PiProperty) {
-        try {
-            if (!prop) throw new Error();
-            if (!this.optionalProps.includes(prop)) {
-                this.optionalProps.push(prop);
-            }
-        } catch (e) {
-            console.log(e.stack);
-        }
-    }
-
-    private makeOptionalRulePart(item: PiEditSubProjection, branchName: string, indexToName: Map<PiProperty, number>, optionalIndexToName: Map<PiProperty, number>) {
+    private makeOptionalRulePart(item: PiEditSubProjection, branchName: string) {
         let ruleText: string = "";
         let propIndex: number = -1; // the index of the property within the new group
-        let propType: string = "";
         let prop: PiProperty = null;
-        let isList: boolean = false;
         item.items.forEach((sub) => {
-            if (sub instanceof PiEditSubProjection) {
-                // TODO check if this is a valid option
-                ruleText += this.makeSubProjection(branchName, sub, indexToName, optionalIndexToName);
+            if (sub instanceof PiEditSubProjection) { // TODO check if this is a valid option
+                ruleText += this.makeSubProjection(branchName, sub);
                 propIndex += 1;
-                // console.log(`increase of propIndex for ${ruleText}, ${propIndex}`);
             } else if (sub instanceof PiEditPropertyProjection) {
                 prop = sub.expression.findRefOfLastAppliedFeature();
-                this.addToOptionals(prop); // TODO check: is it important to see if prop is already in optionalProps?
-                propType = Names.classifier(prop.type.referred);
-                if (!prop.isPart) { // it's a reference
-                    propType = `${Names.PiElementReference}<${propType}>`;
-                }
-                if (prop.isList) isList = true;
-                ruleText += `${this.makePropertyProjection(sub, optionalIndexToName, true)}`;
+                ruleText += `${this.makePropertyProjection(sub, true)}`;
+                // indexToName.set(prop, this.currentIndex); // the index of the complete optional group within the main rule
                 propIndex += 1;
-                // console.log(`increase of propIndex for ${ruleText}, ${propIndex}`);
-                indexToName.set(prop, this.currentIndex); // the index of the complete optional group within the main rule
-                optionalIndexToName.set(prop, propIndex); // the index of the property within the optional group
+                this.optionalIndexOfProp.set(prop, propIndex); // the index of the property within the optional group
             } else if (sub instanceof PiEditProjectionText) {
                 let extraResult: string[] = this.makeTextProjection(sub);  // a text projection can result in more than 1 item
                 ruleText += `${extraResult.map(extr => `${extr}`).join(" ")}`;
                 propIndex += extraResult.length;
-                // console.log(`increase of propIndex for ${ruleText}, ${propIndex}`);
-            // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
-            // do not increase propIndex !!
+                // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
+                // do not increase propIndex !!
             }
         });
 
+        this.addToOptionals(prop); // TODO check: is it important to see if prop is already in optionalProps?
         if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
             this.listWithExtras.push(prop);
             ruleText = `( ${ruleText} )?\n`;
-        } else if (!isList) { // there is one element in the ruleText but it is not a list, so we need a '?'
+        } else if (!prop.isList) { // there is one element in the ruleText but it is not a list, so we need a '?'
             ruleText = `${ruleText}?`;
         }
         return `${ruleText}`; // the 'call' to the optional prop in the main rule
     }
 
+    private makeSubProjection(branchName: string, item: PiEditSubProjection): string {
+        // TODO check: I expect exactly one property projection in a sub projection
+        if (item.optional) {
+            // create a group for the optional part, and store the indexes of the group and of the property within the group
+            return this.makeOptionalRulePart(item, branchName);
+        } else {
+            // TODO check: is this else-branch ever entered???
+            return this.addCallForItems(branchName, item.items);
+        }
+    }
+
+    private addToOptionals(prop: PiProperty) {
+        if (!this.optionalProps.includes(prop)) {
+            this.optionalProps.push(prop);
+        }
+    }
+
+
+
     // withInOptionalGroup: if this property projection is within an optional group,
     // the rule should not add an extra '?'
-    private makePropertyProjection(item: PiEditPropertyProjection, optionalIndexToName: Map<PiProperty, number>, withinOptionalGroup: boolean ): string {
+    private makePropertyProjection(item: PiEditPropertyProjection, withinOptionalGroup: boolean ): string {
         const myElem = item.expression.findRefOfLastAppliedFeature();
         if (!!myElem) {
-            let propTypeName = this.makeRuleName(myElem, item);
+            let propTypeName = this.makeRuleCall(myElem, item);
             if (myElem.isList) {
                 let propEntry: string = "";
                 let joinText = this.makeListJoinText(item.listJoin?.joinText);
@@ -650,7 +643,7 @@ export class ParserGenerator {
             } else {
                 // only add '?' when myElem is not a list
                 if (myElem.isOptional && !withinOptionalGroup) {
-                    optionalIndexToName.set(myElem, 0);
+                    this.optionalIndexOfProp.set(myElem, 0);
                     return `${propTypeName}?`
                 }
                 return `${propTypeName}`;
@@ -694,34 +687,33 @@ export class ParserGenerator {
 
     // returns a string that is the name of the parse rule for myElem
     // to be used in the both the 'call' and the 'definition' of the rule
-    private makeRuleName(myElem: PiProperty, item: PiEditPropertyProjection): string {
-        // TODO make a difference between variables and stringLiterals in the .ast file AND adjust here
+    private makeRuleCall(myElem: PiProperty, item: PiEditPropertyProjection): string {
         let ruleName: string = "";
         if (myElem instanceof PiPrimitiveProperty) {
-            if (myElem.name === "name") {
-                ruleName = "identifier";
-            } else {
-                switch (myElem.primType) {
-                    case "string": {
-                        ruleName = "stringLiteral";
-                        break;
-                    }
-                    case "number": {
-                        ruleName = "numberLiteral";
-                        break;
-                    }
-                    case "boolean": {
-                        if (!!item.keyword) {
-                            this.keywordBooleans.push(myElem);
-                            ruleName = `"${item.keyword}"`
-                        } else {
-                            ruleName = "booleanLiteral";
-                        }
-                        break;
-                    }
-                    default:
-                        ruleName = "stringLiteral";
+            switch (myElem.type.referred) {
+                case PiPrimitiveType.string: {
+                    ruleName = "stringLiteral";
+                    break;
                 }
+                case PiPrimitiveType.identifier: {
+                    ruleName = "identifier";
+                    break;
+                }
+                case PiPrimitiveType.number: {
+                    ruleName = "numberLiteral";
+                    break;
+                }
+                case PiPrimitiveType.boolean: {
+                    if (!!item.keyword) {
+                        this.keywordBooleans.push(myElem);
+                        ruleName = `"${item.keyword}"`
+                    } else {
+                        ruleName = "booleanLiteral";
+                    }
+                    break;
+                }
+                default:
+                    ruleName = "stringLiteral";
             }
         } else {
             const myType = myElem.type.referred;
