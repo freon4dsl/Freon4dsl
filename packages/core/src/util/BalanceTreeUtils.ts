@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { PiLogger, PiUtils } from "./internal";
 import { Box, PiEditor } from "../editor";
 import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression, isPiExpression } from "../language";
@@ -28,6 +28,15 @@ export type Selected = {
  * Class with functions to balance binary trees according to their priorities.
  */
 class BTree {
+
+    constructor() {
+        makeObservable(this, {
+           balanceTree: action,
+           setLeftExpression: action,
+           setRightExpression: action,
+           insertBinaryExpression: action
+        });
+    }
     /**
      * Is `exp` the rightmost child in an expression tree?
      * @param exp
@@ -73,7 +82,6 @@ class BTree {
      * @param newExp
      * @param editor
      */
-    @action
     setRightExpression(binaryExp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
         const right = binaryExp.piRight();
         binaryExp.piSetRight(newExp);
@@ -88,7 +96,6 @@ class BTree {
      * @param newExp
      * @param editor
      */
-    @action
     setLeftExpression(binaryExp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
         const left = binaryExp.piLeft();
         binaryExp.piSetLeft(newExp);
@@ -96,7 +103,6 @@ class BTree {
         this.balanceTree(newExp, editor);
     }
 
-    @action
     insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: PiEditor): Selected | null {
         LOGGER.log("insertBinaryExpression for " + box.element);
         let selectedElement: Selected | null = null;

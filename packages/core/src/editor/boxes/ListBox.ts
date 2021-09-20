@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
 import { Box, AliasBox, PiEditor } from "../internal";
@@ -11,10 +11,13 @@ enum Direction {
 
 export abstract class ListBox extends Box {
     protected direction: Direction = Direction.HORIZONTAL;
-    @observable protected _children: Box[] = [];
+    protected _children: Box[] = [];
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
+        makeObservable<ListBox, "_children">(this, {
+           _children: observable
+        });
         PiUtils.initializeObject(this, initializer);
         if (children) {
             children.forEach(b => this.addChild(b));

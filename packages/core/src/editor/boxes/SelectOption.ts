@@ -1,8 +1,6 @@
 /**
  * Describes an option in a dropdown
  */
-import { observable } from "mobx";
-import { PiEditor } from "../PiEditor";
 
 export type SelectOption = {
     id: string;

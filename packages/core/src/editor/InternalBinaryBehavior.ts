@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { PiBinaryExpression } from "../language/PiBinaryExpression";
 import { PiElement } from "../language/PiElement";
 import { BTREE } from "../util/BalanceTreeUtils";
@@ -17,9 +17,11 @@ export class InternalBinaryBehavior extends InternalBehavior implements PiBinary
     constructor(initializer?: Partial<InternalBinaryBehavior>) {
         super();
         PiUtils.initializeObject(this, initializer);
+        makeObservable(this, {
+            execute: action
+        });
     }
 
-    @action
     execute(box: Box, text: string, editor: PiEditor): PiElement | null {
         LOGGER.info(this, "execute binary expression alias ok");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, text, editor), box, editor);

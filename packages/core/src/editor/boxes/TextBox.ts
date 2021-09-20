@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { PiCaretPosition, PiCaret, PiUtils, PiLogger } from "../../util";
 import { PiElement } from "../../language";
 import { Box } from "./internal";
@@ -26,7 +26,7 @@ export class TextBox extends Box {
      */
     deleteWhenEmptyAndErase: boolean = false;
 
-    @observable placeHolder: string = "";
+    placeHolder: string = "";
     caretPosition: number = -1;
     getText: () => string;
     setText: (newValue: string) => void;
@@ -39,6 +39,9 @@ export class TextBox extends Box {
         PiUtils.initializeObject(this, initializer);
         this.getText = getText;
         this.setText = setText;
+        makeObservable(this, {
+           placeHolder: observable
+        });
     }
 
     public deleteWhenEmpty1(): boolean {

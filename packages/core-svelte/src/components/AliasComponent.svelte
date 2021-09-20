@@ -272,7 +272,7 @@
         LOGGER.log("==> EXECUTING ALIAS " + option.label)
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
-        choiceBox.textHelper.setText((!!selected ? selected.label : ""));
+        choiceBox.textHelper.setText(!!selected ? selected.label : "");
         setOpen("selectOption", false);
     });
 

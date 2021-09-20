@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../language";
 import { PiLogger, PiUtils } from "../../util";
@@ -7,26 +7,36 @@ const LOGGER = new PiLogger("Box");
 
 export abstract class Box {
     $id: string;
-    kind: string;
-    @observable role: string;
-    @observable roleNumber: number = undefined;
-    @observable element: PiElement;
-    @observable style: string;
+    kind: string = "";
+    role: string = "";
+    roleNumber: number = undefined;
+    element: PiElement = null;
+    style: string = "";
     selectable: boolean = true;
     parent: Box = null;
 
     // Never set these manually,  these properties are set after rendering to get the
     // actual coordinates as rendered in the browser,
-    @observable actualX: number = -1;
-    @observable actualY: number = -1;
-    @observable actualWidth: number = -1;
-    @observable actualHeight: number = -1;
+    actualX: number = -1;
+    actualY: number = -1;
+    actualWidth: number = -1;
+    actualHeight: number = -1;
 
     constructor(element: PiElement, role: string) {
         // ProUtil.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
         this.$id = PiUtils.ID(); //uuid.v4();
+        makeObservable(this, {
+            role: observable,
+            roleNumber: observable,
+            element: observable,
+            style: observable,
+            actualHeight: observable,
+            actualWidth: observable,
+            actualX: observable,
+            actualY: observable
+        })
     }
 
     get id(): string {

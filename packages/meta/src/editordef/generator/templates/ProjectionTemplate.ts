@@ -43,7 +43,7 @@ export class ProjectionTemplate {
         });
 
         return `
-            import { observable } from "mobx";
+            import { observable, makeObservable } from "mobx";
 
             import * as ${Names.styles} from "${relativePath}${EDITORSTYLES}";
             // TODO import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
@@ -93,13 +93,16 @@ export class ProjectionTemplate {
             export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
                 private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};
                 rootProjection: ${Names.PiProjection};
-                @observable showBrackets: boolean = false;
+                showBrackets: boolean = false;
                 name: string = "${editorDef.name}";
                 
                 constructor(name?: string) {
                     if (!!name) {
                         this.name = name;
                     }
+                    makeObservable(this, {
+                        showBrackets: observable
+                    });
                 }
                 
                 getBox(exp: ${Names.PiElement}): Box {
