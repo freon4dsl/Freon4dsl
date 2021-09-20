@@ -38,7 +38,7 @@
     "@projectit/meta": "0.1.1",
     "@types/history": "^4.7.5",
     "global": "^4.4.0",
-    "mobx": "^5.14.0",
+    "mobx": "6.3.3",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

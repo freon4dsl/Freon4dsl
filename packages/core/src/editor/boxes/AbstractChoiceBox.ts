@@ -1,3 +1,4 @@
+import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../language";
 import { BehaviorExecutionResult, PiCaret, PiKey, PiUtils } from "../../util";
 import { PiEditor } from "../internal";
@@ -50,17 +51,20 @@ export abstract class AbstractChoiceBox extends Box {
         super(exp, role);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
+        makeObservable(this, {
+            textHelper: observable
+        })
         PiUtils.initializeObject(this, initializer);
         this.textBox = new TextBox(
             exp,
             "alias-" + role + "-textbox",
             () => {
                 /* To be overwritten by `SelectComponent` */
-                return this.textHelper.text;
+                return this.textHelper.getText();
             },
             (value: string) => {
                 /* To be overwritten by `SelectComponent` */
-                this.textHelper.text = value;
+                this.textHelper.setText(value);
             },
             {
                 parent: this,

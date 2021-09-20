@@ -193,10 +193,6 @@
             setOpen("TAB", false);
             return;
         }
-        if (e.key === KEY_ESCAPE) {
-            setOpen("Escape", false);
-            return;
-        }
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
             // const caretPosition = textComponent.getCaretPosition();
             // if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
@@ -218,7 +214,7 @@
                 const x = dropdownComponent.handleKeyDown(e);
                 LOGGER.log("      handled result: " + x);
             } else {
-                console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ $openStore + " openInHtml: "+ openInHtml);
+                console.error("AliasComponent.onKeyDown: DROPDOWN UNDEFINED ope "+ $openStore );
             }
 
             e.preventDefault();
@@ -249,9 +245,9 @@
             return true;
         }
         // TODO
-        const caretPosition = textComponent.getCaretPosition();
+        // const caretPosition = textComponent.getCaretPosition();
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
-            return caretPosition <= 0;
+            return true;//caretPosition <= 0;
         } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
             return true;
             // const length: number = textComponent?.element?.innerText?.length;
@@ -276,7 +272,7 @@
         LOGGER.log("==> EXECUTING ALIAS " + option.label)
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
-        choiceBox.textHelper.text = (!!selected ? selected.label : "");
+        choiceBox.textHelper.setText((!!selected ? selected.label : ""));
         setOpen("selectOption", false);
     });
 
