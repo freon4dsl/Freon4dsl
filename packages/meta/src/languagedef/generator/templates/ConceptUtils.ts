@@ -31,8 +31,6 @@ export function makeBasicProperties(metaType: string, conceptName: string, hasSu
 
 export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
     const comment = "// implementation of " + property.name;
-    // const decorator = property.isList ? "@observablelistpart" : "@observable";
-    // const decorator = "@observable";
     const arrayType = property.isList ? "[]" : "";
     let initializer = "";
     const myType: PiClassifier = property.type.referred;
@@ -62,6 +60,8 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
             } else {
                 initializer = `= [${property.initialValueList}]`;
             }
+        } else {
+            initializer = "= []";
         }
     }
     return `${property.name} : ${typeToString(property)}${arrayType} ${initializer}; \t${comment}`;
