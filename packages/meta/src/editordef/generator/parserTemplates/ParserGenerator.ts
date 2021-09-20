@@ -20,15 +20,15 @@ import { GrammarTemplate } from "./GrammarTemplate";
 import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
+import { LanguageAnalyser } from "./LanguageAnalyser";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
     private unit: PiConcept = null;
     private editUnit: PiEditUnit = null;
-    private conceptsUsed: PiConcept[] = [];
-    private binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
-    private interfacesAndAbstractsUsed: PiClassifier[] = [];        // all interfaces and abstract concepts that are mentioned in this unit
-    private limitedsReferred: PiLimitedConcept[] = [];
+    // the optionality of properties depends on both the optionality declared in the .ast def, and on the optionality of projections in the .edit def
+    // therefore we keep track of these in 'optionalProps'
+    private optionalProps: PiProperty[] = [];
     private generatedParseRules: string[] = [];
     private generatedSyntaxAnalyserMethods: string[] = [];
     private branchNames: string[] = [];
@@ -38,9 +38,6 @@ export class ParserGenerator {
     private separatorToProp: Map<PiProperty, string> = new Map<PiProperty, string>();
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
     private listWithExtras: PiProperty[] = [];
-    // the optionality of properties depends on both the optionality declared in the .ast def, and on the optionality of projections in the .edit def
-    // therefore we keep track of these in 'optionalProps'
-    private optionalProps: PiProperty[] = [];
     private keywordBooleans: PiPrimitiveProperty[] = [];
     private indexOfProp: Map<PiProperty, number> = new Map<PiProperty, number>();
     private optionalIndexOfProp: Map<PiProperty, number> = new Map<PiProperty, number>();
@@ -52,20 +49,21 @@ export class ParserGenerator {
         this.unit = langUnit;
         this.editUnit = editUnit;
         // analyse the language unit and store the results in the global attributes
-        this.analyseUnit(langUnit, []);
-        // console.log(this.optionalProps.map(opt => `${!!(opt.name) ? `${opt.name}` : `nameless`}`).join(", "));
+        let myLanguageAnalyser: LanguageAnalyser = new LanguageAnalyser();
+        myLanguageAnalyser.analyseUnit(langUnit);
+        this.optionalProps = myLanguageAnalyser.optionalProps;
         // do the concepts
-        this.generateConcepts(editUnit);
+        this.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed);
         // do the interfaces
-        this.generateChoiceRules();
+        this.generateChoiceRules(myLanguageAnalyser.interfacesAndAbstractsUsed);
         // do the referred types
-        this.generateLimitedRules(editUnit);
+        this.generateLimitedRules(editUnit, myLanguageAnalyser.limitedsReferred);
         // do the binary expressions
-        if (this.binaryConceptsUsed.length > 0) {
-            this.generateBinaryExpressions(language, editUnit);
+        if (myLanguageAnalyser.binaryConceptsUsed.length > 0) {
+            this.generateBinaryExpressions(language, editUnit, myLanguageAnalyser.binaryConceptsUsed);
         }
         // do analysis for semantic phase
-        this.refCorrectorMaker.analyse(this.interfacesAndAbstractsUsed);
+        this.refCorrectorMaker.analyse(myLanguageAnalyser.interfacesAndAbstractsUsed);
     }
 
     getGrammarContent() : string {
@@ -91,10 +89,6 @@ export class ParserGenerator {
         this.language = null;
         this.unit = null;
         this.editUnit = null;
-        this.conceptsUsed = [];
-        this.binaryConceptsUsed = [];
-        this.interfacesAndAbstractsUsed = [];
-        this.limitedsReferred = [];
         this.generatedParseRules = [];
         this.generatedSyntaxAnalyserMethods = [];
         this.branchNames = [];
@@ -102,77 +96,15 @@ export class ParserGenerator {
         this.currentIndex = 0;
         this.listWithExtras = [];
         this.keywordBooleans = [];
+        this.indexOfProp = new Map<PiProperty, number>();
+        this.optionalIndexOfProp = new Map<PiProperty, number>();
     }
 
-    private analyseUnit(piClassifier: PiClassifier, typesDone: PiClassifier[]) {
-        // make sure this classifier is not visited twice
-        if (typesDone.includes(piClassifier)) {
-            return;
-        } else {
-            typesDone.push(piClassifier);
-        }
-
-        // determine in which list the piClassifier belongs
-        if (piClassifier instanceof PiInterface) {
-            this.interfacesAndAbstractsUsed.push(piClassifier);
-            // for interfaces search all implementors
-            LangUtil.findImplementorsRecursive(piClassifier).forEach(type => {
-                this.analyseUnit(type, typesDone);
-            });
-        } else if (piClassifier instanceof PiPrimitiveType) {
-            // do nothing
-        } else if (piClassifier instanceof PiConcept) {
-            if (piClassifier instanceof PiLimitedConcept) {
-                this.limitedsReferred.push(piClassifier);
-            } else if (piClassifier instanceof PiBinaryExpressionConcept) {
-                if (!piClassifier.isAbstract) {
-                    this.binaryConceptsUsed.push(piClassifier);
-                }
-            } else {
-                if (!piClassifier.isModel) {
-                    // A complete model can not be parsed, only its units can be parsed separately
-                    if (piClassifier.isAbstract) {
-                        this.interfacesAndAbstractsUsed.push(piClassifier);
-                    } else {
-                        this.conceptsUsed.push(piClassifier);
-                    }
-                }
-            }
-
-            // for any concept: add all direct subconcepts
-            piClassifier.allSubConceptsDirect().forEach(type => {
-                this.analyseUnit(type, typesDone);
-            });
-            // for any non-abstract concept: include all types of parts
-            // and include all optional properties in 'this.optionalProps'
-            if (!piClassifier.isAbstract) {
-                piClassifier.allPrimProperties().forEach(prim => {
-                    if (prim.isOptional || prim.isList) this.addToOptionals(prim);
-                });
-                piClassifier.allParts().forEach(part => {
-                    const type = part.type.referred;
-                    // if (!part) console.log("undefined part in " + piClassifier.name);
-                    if (part.isOptional || part.isList) this.addToOptionals(part);
-                    this.analyseUnit(type, typesDone);
-                });
-                // and add all types of references to typesReferred
-                piClassifier.allReferences().forEach(ref => {
-                    const type = ref.type.referred;
-                    // if (!ref) console.log("undefined ref in " + piClassifier.name);
-                    if (ref.isOptional) this.addToOptionals(ref);
-                    if (type instanceof PiLimitedConcept && !this.limitedsReferred.includes(type)) {
-                        this.limitedsReferred.push(type);
-                    }
-                });
-            }
-        }
-    }
-
-    private generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit) {
+    private generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit, binaryConceptsUsed: PiBinaryExpressionConcept[]) {
 
         // common information
         const expressionBase: PiExpressionConcept = language.findExpressionBase();
-        const editDefs: PiEditConcept[] = this.findEditDefs(this.binaryConceptsUsed, editUnit);
+        const editDefs: PiEditConcept[] = this.findEditDefs(binaryConceptsUsed, editUnit);
         const branchName = this.specialBinaryRuleName;
 
         // parse rule(s)
@@ -188,7 +120,7 @@ export class ParserGenerator {
         // syntax analysis method(s)
         // TODO get the right type for 'BinaryExpression' in stead of ${Names.concept(expressionBase)}
 
-        this.addToImports(this.binaryConceptsUsed);
+        this.addToImports(binaryConceptsUsed);
         this.generatedSyntaxAnalyserMethods.push(`
         /**
          * Generic method to transform binary expressions.
@@ -227,8 +159,8 @@ export class ParserGenerator {
         }`);
     }
 
-    private generateLimitedRules(editUnit: PiEditUnit) {
-        for (const piClassifier of this.limitedsReferred) {
+    private generateLimitedRules(editUnit: PiEditUnit, limitedConcepts: PiClassifier[]) {
+        for (const piClassifier of limitedConcepts) {
             // parse rule(s)
             // see if there is a projection defined, so that we can take care
             // of the special projection for a limited concept
@@ -261,7 +193,7 @@ export class ParserGenerator {
                     let method = `
                     /**
                      * Method to transform branches that match the following rule:
-                     * ${this.addCommentStars(rule)}
+                     * ${ParserGenerator.addCommentStars(rule)}
                      * @param branch
                      * @private
                      */
@@ -293,8 +225,8 @@ export class ParserGenerator {
     // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
     // that either implement or extend the concept
     // because limited concepts can only be used as reference, these are excluded for this choice
-    private generateChoiceRules() {
-        for (const piClassifier of this.interfacesAndAbstractsUsed) {
+    private generateChoiceRules(interfacesAndAbstractsUsed: PiClassifier[]) {
+        for (const piClassifier of interfacesAndAbstractsUsed) {
             // parse rule(s)
             const branchName = Names.classifier(piClassifier);
             // find the choices for this rule: all concepts that implement or extend the concept
@@ -341,7 +273,7 @@ export class ParserGenerator {
             this.generatedSyntaxAnalyserMethods.push(`
             /**
              * Method to transform branches that match the following rule:
-             * ${this.addCommentStars(rule)}
+             * ${ParserGenerator.addCommentStars(rule)}
              * @param branch
              * @private
              */
@@ -366,11 +298,11 @@ export class ParserGenerator {
         }
     }
 
-    private generateConcepts(editUnit: PiEditUnit) {
-        for (const piClassifier of this.conceptsUsed) {
+    private generateConcepts(editUnit: PiEditUnit, conceptsUsed: PiConcept[]) {
+        for (const piConcept of conceptsUsed) {
             // find editDef for this concept
-            const conceptDef: PiEditConcept = editUnit.findConceptEditor(piClassifier);
-            const branchName = Names.classifier(piClassifier);
+            const conceptDef: PiEditConcept = editUnit.findConceptEditor(piConcept);
+            const branchName = Names.classifier(piConcept);
             // determine which properties of the concept will get a value through this parse rule
             // note: not all properties need to be present in a projection
             const propsToSet: PiProperty[] = this.findPropsToSet(conceptDef);
@@ -380,7 +312,7 @@ export class ParserGenerator {
 
             // TODO test and rethink subconcepts AND concrete projection for one concept
             // see if this concept has subconcepts
-            const subs = piClassifier.allSubConceptsDirect();
+            const subs = piConcept.allSubConceptsDirect();
             let choiceBetweenSubconcepts = "";
             if (subs.length > 0) {
                 // TODO see if there are binary expressions amongst the implementors
@@ -401,7 +333,7 @@ export class ParserGenerator {
             this.branchNames.push(branchName);
 
             // Syntax analysis
-            this.addToImports(piClassifier);
+            this.addToImports(piConcept);
             let propStatements: string[] = [];
             for (const prop of propsToSet) {
                 propStatements.push(this.makeStatementForProp(prop));
@@ -410,7 +342,7 @@ export class ParserGenerator {
             `
             /**
              * Method to transform branches that match the following rule:
-             * ${this.addCommentStars(rule)}
+             * ${ParserGenerator.addCommentStars(rule)}
              * @param branch
              * @private
              */
@@ -418,7 +350,7 @@ export class ParserGenerator {
                 // console.log("transform${branchName} called");
                 const children = this.getChildren(branch, 'transform${branchName}');              
                 ${propStatements.map(stat => `${stat}`).join("\n")}      
-                return ${Names.concept(piClassifier)}.create({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
+                return ${Names.concept(piConcept)}.create({${propsToSet.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
             }`);
         }
     }
@@ -536,7 +468,7 @@ export class ParserGenerator {
 
     private addCallForItems(branchName: string, list: PiEditProjectionItem[], optional: boolean): string {
         let propIndex: number;
-        let indexToUse: Map<PiProperty, number>
+        let indexToUse: Map<PiProperty, number>;
         if (!optional) {
             propIndex = this.currentIndex; // the index of the property within the main rule
             indexToUse = this.indexOfProp;
@@ -548,8 +480,9 @@ export class ParserGenerator {
         let ruleText: string = '';
         if (!!list && list.length > 0) {
             list.forEach((item) => {
-                if (item instanceof PiEditSubProjection) { // TODO check if this is a valid option
-                    ruleText += `${this.makeSubProjection(branchName, item)} `;
+                if (item instanceof PiEditSubProjection) {
+                    // TODO check: I expect exactly one property projection in a sub projection
+                    ruleText += `${this.addCallForItems(branchName, item.items, item.optional)} `;
                     let subProp: PiProperty = item.optionalProperty().expression.findRefOfLastAppliedFeature();
                     indexToUse.set(subProp, propIndex);
                     propIndex += 1;
@@ -569,33 +502,15 @@ export class ParserGenerator {
             });
         }
         if (optional) {
-            this.addToOptionals(prop); // TODO check: is it important to see if prop is already in optionalProps?
+            this.optionalProps.push(prop); // TODO check: is it important to see if prop is already in optionalProps?
             if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
                 this.listWithExtras.push(prop);
-                ruleText = `( ${ruleText} )?\n`;
+                ruleText = `( ${ruleText} )? /* option F */\n`;
             } else if (!prop.isList) { // there is one element in the ruleText but it is not a list, so we need a '?'
-                ruleText = `${ruleText}?`;
+                ruleText = `${ruleText}?  /* option G */`;
             }
         }
         return ruleText;
-    }
-
-    private makeSubProjection(branchName: string, item: PiEditSubProjection): string {
-        // TODO check: I expect exactly one property projection in a sub projection
-        if (item.optional) {
-            // create a group for the optional part, and store the indexes of the group and of the property within the group
-            // return this.makeOptionalRulePart(item.items, branchName, true);
-            return this.addCallForItems(branchName, item.items, true);
-        } else {
-            // TODO check: is this else-branch ever entered???
-            return this.addCallForItems(branchName, item.items, false);
-        }
-    }
-
-    private addToOptionals(prop: PiProperty) {
-        if (!this.optionalProps.includes(prop)) {
-            this.optionalProps.push(prop);
-        }
     }
 
     // withInOptionalGroup: if this property projection is within an optional group,
@@ -611,20 +526,20 @@ export class ParserGenerator {
 
                 // joinText can be (1) empty, (2) separator, or (3) terminator
                 if (joinText.length == 0) {
-                    propEntry = `${propTypeName}*`;
+                    propEntry = `${propTypeName}* /* option A */`;
                 } else if (item.listJoin?.joinType === ListJoinType.Separator) {
-                    propEntry = `[${propTypeName} / '${joinText}' ]*`;
+                    propEntry = `[${propTypeName} / '${joinText}' ]* /* option B */`;
                 } else if (item.listJoin?.joinType === ListJoinType.Terminator) {
-                    propEntry = `(${propTypeName} '${joinText}' )*`
+                    propEntry = `(${propTypeName} '${joinText}' )* /* option C */`
                 }
                 return propEntry;
             } else {
-                // only add '?' when myElem is not a list
+                // only add '?' when myElem is not a list or not in an optional group
                 if (myElem.isOptional && !withinOptionalGroup) {
                     this.optionalIndexOfProp.set(myElem, 0);
-                    return `${propTypeName}?`
+                    return `${propTypeName}? /* option D */`
                 }
-                return `${propTypeName}`;
+                return `${propTypeName} /* option E */`;
             }
         } else {
             return "";
@@ -719,8 +634,10 @@ export class ParserGenerator {
         return result;
     }
 
-    private addCommentStars(input: string): string {
+    private static addCommentStars(input: string): string {
         input = input.replace(new RegExp("\n","gm") , "\n\t*");
+        input = input.replace(new RegExp("/\\*","gm") , "--");
+        input = input.replace(new RegExp("\\*/","gm") , "--");
         return input;
     }
 
