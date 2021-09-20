@@ -17,8 +17,10 @@ export abstract class AbstractChoiceBox extends Box {
         return BehaviorExecutionResult.NULL;
     };
 
-    setCaret: (caret: PiCaret) => void = () => {
-        /* To be overwritten by `TextComponent` */
+    setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
+        if( !!this.textBox) {
+            this.textBox.setCaret(caret);
+        }
     };
 
     /** @internal

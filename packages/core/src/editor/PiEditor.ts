@@ -228,10 +228,10 @@ export class PiEditor {
         if (!!previous) {
             this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
             // previous.setFocus();
-            if (isTextBox(previous) || isSelectBox(previous)) {
-                LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
-                previous.setCaret(PiCaret.RIGHT_MOST);
-            }
+            // if (isTextBox(previous) || isSelectBox(previous)) {
+            //     LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
+            //     previous.setCaret(PiCaret.RIGHT_MOST);
+            // }
         }
     }
 

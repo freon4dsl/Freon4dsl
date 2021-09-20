@@ -12,6 +12,25 @@ export class AliasBox extends AbstractChoiceBox {
      */
     propertyName?: string;
 
+    async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
+        console.log("AliasBox option " + JSON.stringify(option));
+        // Try all statically defined actions
+        let result = await executeBehavior(this, option.id, option.label, editor);
+        if (result === BehaviorExecutionResult.EXECUTED) {
+            return result;
+        }
+        // Wasn't a match, now get all dynamic options, including referenceShortcuts and check these
+        const allOptions = this.getOptions(editor);
+        const selectedOptions = allOptions.filter(o => option.label === o.label);
+        if (selectedOptions.length === 1) {
+            console.log("AliasbBox.selectOption dynamic " + JSON.stringify(selectedOptions))
+            return await executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
+        } else {
+            console.error("AliasBox.selectOption : " + JSON.stringify(selectedOptions));
+            return BehaviorExecutionResult.NO_MATCH;
+        }
+    }
+
     constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AliasBox>) {
         super(exp, role, placeHolder, initializer);
     }
@@ -58,9 +77,9 @@ export class AliasBox extends AbstractChoiceBox {
         return result;
     }
 
-    async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
-        return await executeBehavior(this, option.id, option.label, editor);
-    }
+    // async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
+    //     return await executeBehavior(this, option.id, option.label, editor);
+    // }
 
     triggerKeyPressEvent = (key: string) => {
         console.error("AliasBox " + this.role + " has empty triggerKeyPressEvent");

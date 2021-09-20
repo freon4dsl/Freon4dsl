@@ -25,10 +25,6 @@ export class InternalCustomBehavior extends InternalBehavior implements PiCustom
         LOGGER.info(this, "execute custom alias ok");
         LOGGER.log("    text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
         const selected = this.action(box, text, editor);
-        if (!!this.referenceShortcut && text !== this.trigger) {
-            console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        }
-        // TODO fact or out undo
         if (!!selected) {
             editor.selectElement(selected, this.boxRoleToSelect, this.caretPosition);
         }

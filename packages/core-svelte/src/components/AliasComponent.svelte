@@ -269,7 +269,7 @@
     }
 
     const selectOption = action ( async (option: SelectOption) => {
-        LOGGER.log("==> EXECUTING ALIAS " + option.label)
+        LOGGER.log("==> EXECUTING ALIAS id [" + option.id + "] label [" + option.label + "]")
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
         choiceBox.textHelper.setText(!!selected ? selected.label : "");
