@@ -1,11 +1,11 @@
 import { MobxTestElement } from "./MobxModel";
 import { TestScoper } from "./TestScoper";
 import { MobxModelElementImpl } from "../DecoratedModelElement";
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 
 export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelElementImpl {
-    @observable private _PI_name: string = "UNKNOWN";
-    @observable private _PI_referred: T = null;
+    private _PI_name: string = "UNKNOWN";
+    private _PI_referred: T = null;
 
     // Need for the scoper to work
     private typeName: string;
@@ -13,6 +13,12 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
     public constructor(referredElement: T) {
         super();
         this.referred = referredElement;
+        makeObservable<PiElementReferenceM<T>, "_PI_name" | "_PI_referred">(this, {
+           _PI_referred: observable,
+           _PI_name: observable,
+           referred: computed,
+            name: computed
+        });
     }
 
     set name(value: string) {
@@ -21,7 +27,6 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
         // this._PI_referred = TestScoper.getInstance().getFromVisibleElements(value) as T;
     }
 
-    @computed
     get name(): string {
         if (!!this._PI_referred) {
             this._PI_name = this._PI_referred.name;
@@ -31,7 +36,6 @@ export class PiElementReferenceM<T extends MobxTestElement> extends MobxModelEle
         return this._PI_name;
     }
 
-    @computed
     get referred(): T {
         if (!!this._PI_referred) {
             return this._PI_referred;

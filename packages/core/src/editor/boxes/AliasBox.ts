@@ -39,7 +39,7 @@ export class AliasBox extends AbstractChoiceBox {
                                 .filter( name => !!name && name !== "")
                                 .map(name => ({
                                     id: triggerToString(behavior.trigger),
-                                    label: name + " (" + behavior.referenceShortcut.metatype + ")"
+                                    label: name
                                 })));
                         // UNDO
                         behavior.undo(this, editor);

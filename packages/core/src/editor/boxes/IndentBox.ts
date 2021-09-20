@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../language";
 import { Box } from "./internal";
@@ -9,8 +9,8 @@ import { Box } from "./internal";
 export class IndentBox extends Box {
     readonly kind = "IndentBox";
 
-    @observable child: Box = null;
-    @observable indent: number = 4;
+    child: Box = null;
+    indent: number = 4;
 
     constructor(exp: PiElement, role: string, indent: number, child: Box) {
         super(exp, role);
@@ -18,6 +18,10 @@ export class IndentBox extends Box {
         this.child = child;
         child.parent = this;
         this.selectable = false;
+        makeObservable(this, {
+           child: observable,
+           indent: observable
+        });
     }
 
     /**

@@ -18,7 +18,7 @@
         PiEditor,
         toPiKey,
         isAliasTextBox,
-        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox
+        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -72,7 +72,7 @@
         if (e.key === KEY_ENTER || e.key === KEY_DELETE || e.key === KEY_TAB) {
             return true;
         }
-        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN) {
+        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_ESCAPE) {
             return true;
         }
         const caretPosition = getCaretPosition();

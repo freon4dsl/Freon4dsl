@@ -18,7 +18,7 @@ export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[]
 
 export function makeImportStatements(hasSuper: boolean, needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
     return `
-            ${needsObservable ? `import { observable } from "mobx";` : ""}            
+            ${needsObservable ? `import { observable, makeObservable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
             import { ${modelImports.join(", ")} } from "./internal";
             `;
@@ -31,8 +31,6 @@ export function makeBasicProperties(metaType: string, conceptName: string, hasSu
 
 export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
     const comment = "// implementation of " + property.name;
-    // const decorator = property.isList ? "@observablelistpart" : "@observable";
-    const decorator = "@observable";
     const arrayType = property.isList ? "[]" : "";
     let initializer = "";
     const myType: PiClassifier = property.type.referred;
@@ -62,9 +60,11 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
             } else {
                 initializer = `= [${property.initialValueList}]`;
             }
+        } else {
+            initializer = "= []";
         }
     }
-    return `${decorator} ${property.name} : ${typeToString(property)}${arrayType} ${initializer}; \t${comment}`;
+    return `${property.name} : ${typeToString(property)}${arrayType} ${initializer}; \t${comment}`;
 }
 
 export function makePartProperty(property: PiConceptProperty): string {
@@ -86,6 +86,7 @@ export function makeReferenceProperty(property: PiConceptProperty): string {
 
 export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {
     const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive) as PiConceptProperty[];
+    const allPrimitiveProps: PiPrimitiveProperty[] = allProps.filter(p => p.isPrimitive) as PiPrimitiveProperty[];
     return `constructor(id?: string) {
                     ${!hasSuper ? `
                         super();
@@ -109,6 +110,17 @@ export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): stri
                         ).join("\n")}` 
                     : ``
                     }                    
+
+                    ${allPrimitiveProps.length !== 0 ?
+                        `// Make primitiuve properties observable
+                         makeObservable(this, {
+                            ${allPrimitiveProps.map(p =>
+                                `"${p.name}": observable`
+                            ).join(",\n")}
+                        })`
+                        : ``
+                    }                    
+
             }`;
 }
 

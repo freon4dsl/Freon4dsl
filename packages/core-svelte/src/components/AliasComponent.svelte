@@ -194,11 +194,11 @@
             return;
         }
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
-            const caretPosition = textComponent.getCaretPosition();
-            if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
+            // const caretPosition = textComponent.getCaretPosition();
+            // if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
                 // Handle in ProjectItComponent
                 setOpen("arraow at the edges", false);
-            }
+            // }
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
@@ -214,7 +214,7 @@
                 const x = dropdownComponent.handleKeyDown(e);
                 LOGGER.log("      handled result: " + x);
             } else {
-                console.error("AliasComponent.onKeyDown: DROPDOWN UDEFINED ope "+ $openStore + " openInHtml: "+ openInHtml);
+                console.error("AliasComponent.onKeyDown: DROPDOWN UNDEFINED ope "+ $openStore );
             }
 
             e.preventDefault();
@@ -245,12 +245,13 @@
             return true;
         }
         // TODO
-        const caretPosition = textComponent.getCaretPosition();
+        // const caretPosition = textComponent.getCaretPosition();
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
-            return caretPosition <= 0;
+            return true;//caretPosition <= 0;
         } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
-            const length: number = textComponent?.element?.innerText?.length;
-            return (!!length ? caretPosition >= length : true);
+            return true;
+            // const length: number = textComponent?.element?.innerText?.length;
+            // return (!!length ? caretPosition >= length : true);
         } else {
             return false;
         }
@@ -271,7 +272,7 @@
         LOGGER.log("==> EXECUTING ALIAS " + option.label)
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
-        choiceBox.textHelper.text = (!!selected ? selected.label : "");
+        choiceBox.textHelper.setText(!!selected ? selected.label : "");
         setOpen("selectOption", false);
     });
 

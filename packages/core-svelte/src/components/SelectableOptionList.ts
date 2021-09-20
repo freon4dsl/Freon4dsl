@@ -1,18 +1,22 @@
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { SelectOption, PiEditor, MatchUtil, PiLogger } from "@projectit/core";
 
 const LOGGER = new PiLogger("SelectOptionList");
 
 export class SelectOptionList {
-    editor: PiEditor;
-    @observable options: SelectOption[] = [];
-    @observable text: string = "";
+    editor: PiEditor = null;
+    options: SelectOption[] = [];
+    text: string = "";
 
     constructor(editor: PiEditor) {
         this.editor = editor;
+        makeObservable(this, {
+           options: observable,
+           text: observable,
+           replaceOptions: action
+        });
     }
 
-    @action
     replaceOptions(newOptions: SelectOption[]) {
         LOGGER.log("+++ Replace length "+ this.options.length + "  with " + newOptions.length + " ["+ newOptions.map(o => o.id) + "]");
         // this.options = newOptions;
