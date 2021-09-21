@@ -289,8 +289,9 @@
     };
 
     autorun( () => {
-        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
-        placeholder = textBox.placeHolder
+        console.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
+        placeholder = textBox.placeHolder;
+        text = textBox.getText();
     });
 
     const onFocus = async (e: FocusEvent) => {
@@ -302,7 +303,7 @@
 
 </script>
 
-<div    class={"text"}
+<span    class={"text"}
         tabindex="0"
         data-placeholdertext={placeholder}
         on:keypress={onKeyPress}
@@ -316,7 +317,7 @@
         bind:this={element}
 >
     {text}
-</div>
+</span>
 
 <style>
     .text:empty:before {

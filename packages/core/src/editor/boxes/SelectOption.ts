@@ -3,8 +3,13 @@
  */
 
 export type SelectOption = {
+    /**
+     *
+     */
     id: string;
     label: string;
+    // selectText: string;
+    // parameter?: string;
     description?: string;
 };
 
