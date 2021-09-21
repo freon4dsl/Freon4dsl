@@ -19,6 +19,16 @@
 
     const getOptionsLogged = (): SelectOption[] => {
         const options = getOptions();
+        // check for duplicate keys and give a usefull error
+        const alreadySeen: string[] = [];
+        options.forEach(o => {
+            const key = o.id + o.label;
+            if (alreadySeen.includes(key)) {
+                console.error("Dropdowncomponent duplicate key for option [" + JSON.stringify(o) + "]");
+            } else {
+                alreadySeen.push(key);
+            }
+        });
         return options;//.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
     }
 

@@ -44,10 +44,12 @@
     let textComponent: TextComponent;
     let selectedOption: SelectOption;
     let selectableOptionList = new SelectOptionList(editor);
+    let isEditing: boolean = false;
 
     function setOpen(msg: string, value: boolean) {
         // LOGGER.log("SET OPEN " + choiceBox?.role + " from " + $openStore + " to " + value + " in " + msg );
         $openStore = value;
+        // isEditing = true;
     }
 
     const getAliasOptions = (): SelectOption[] => {
@@ -62,6 +64,16 @@
             LOGGER.log("?ERROR? textComponent is null in setFocus.");
         }
     };
+
+    onMount(() => {
+        MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
+        choiceBox.textBox.setFocus = setFocus;
+        choiceBox.setFocus = setFocus;
+        const selected = choiceBox.getSelectedOption();
+        if (!!selected) {
+            choiceBox.textBox.setText(selected.label);
+        }
+    });
 
     afterUpdate(() => {
         UPDATE_LOGGER.log("AfterUpdate");
@@ -82,28 +94,28 @@
      */
     const triggerKeyPressEvent = async (key: string) => {
         LOGGER.info(this, "triggerKeyPressEvent " + key);
-        const aliasResult = await handleStringInput(key);
-        if (aliasResult !== BehaviorExecutionResult.EXECUTED) {
-            if (!!textComponent && !!textComponent.element && !!textComponent.element.innerText) {
-                textComponent.element.innerText = key;
-            }
+        isEditing = true;
+        if (!!textComponent) {
+            // textComponent.textOnScreen = key;
+            choiceBox.textHelper.setText(key);
         }
+        const aliasResult = await executeBehavior(choiceBox, s, s, editor);
+        await handleStringInput(key, aliasResult);
     };
 
-    const handleStringInput = async (s: string) => {
+    const handleStringInput = async (s: string, aliasResult: BehaviorExecutionResult) => {
         LOGGER.info(this, "handleStringInput for box " + choiceBox.role);
-        const aliasResult = await executeBehavior(choiceBox, s, null, editor);
         switch (aliasResult) {
             case BehaviorExecutionResult.EXECUTED:
-                if (!!textComponent) {
-                    textComponent.element.innerText = "";
-                }
+                // if (!!textComponent) {
+                //     textComponent.textOnScreen = choiceBox.getSelectedOption().label;
+                // }
+                // choiceBox.textHelper.setText(s);
                 setOpen("handleStringInput Alias executed", false);
                 break;
             case BehaviorExecutionResult.PARTIAL_MATCH:
                 LOGGER.info(this, "PARTIAL_MATCH");
                 selectableOptionList.text = s;
-                // from onInput:
                 setOpen("handleStringInput", true);
                 break;
             case BehaviorExecutionResult.NO_MATCH:
@@ -114,24 +126,16 @@
         return aliasResult;
     };
 
-    onMount(() => {
-        MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
-        choiceBox.textBox.setFocus = setFocus;
-        choiceBox.setFocus = setFocus;
-        const selected = choiceBox.getSelectedOption();
-        if (!!selected) {
-            choiceBox.textBox.setText(selected.label);
-        }
-    });
-
     const onKeyPress = async (e: KeyboardEvent) => {
         EVENT_LOG.log("onKeyPress: " + e.key + " for role " + choiceBox.role);
+        isEditing = true;
         if (isPrintable(e) && !e.ctrlKey) {
             EVENT_LOG.log("Press: is printable, text is now [" + textComponent.getText() + "]");
         }
     };
 
     const onInput = async (e: InputEvent) => {
+        isEditing = true;
         const value = (e.target as HTMLElement).innerText;
         LOGGER.log("onInput: [" + value + "] for role " + choiceBox.role + " with text [" + textComponent.getText() + "]");
         let aliasResult = undefined;
@@ -143,10 +147,15 @@
             } else {
                 aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
             }
+            if (aliasResult === BehaviorExecutionResult.EXECUTED) {
+                isEditing = false;
+                choiceBox.textHelper.setText("");
+            }
         } else if (isSelectBox(choiceBox)) {
             const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);
             LOGGER.log("    onInput select box selected " + JSON.stringify(selected));
             if (selected !== null) {
+                isEditing = false;
                 aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
             } else {
                 aliasResult = BehaviorExecutionResult.NO_MATCH;
@@ -156,29 +165,31 @@
             return;
         }
         LOGGER.log("onInput aliasResult: [" + aliasResult + "]");
-        switch (aliasResult) {
-            case BehaviorExecutionResult.EXECUTED:
-                LOGGER.log("ALIAS MATCH");
-                if (!!textComponent) {
-                    textComponent.textOnScreen = value;
-                }
-                setOpen("onInput alias executed", false);
-                break;
-            case BehaviorExecutionResult.PARTIAL_MATCH:
-                LOGGER.log("PARTIAL_MATCH");
-                selectableOptionList.text = value;
-                setOpen("onInput alias partial match", true);
-                break;
-            case BehaviorExecutionResult.NO_MATCH:
-                LOGGER.log("NO MATCH");
-                selectableOptionList.text = value;
-                break;
-        }
+        handleStringInput(value, aliasResult);
+        // switch (aliasResult) {
+        //     case BehaviorExecutionResult.EXECUTED:
+        //         LOGGER.log("ALIAS MATCH");
+        //         if (!!textComponent) {
+        //             textComponent.textOnScreen = "";
+        //         }
+        //         setOpen("onInput alias executed", false);
+        //         break;
+        //     case BehaviorExecutionResult.PARTIAL_MATCH:
+        //         LOGGER.log("PARTIAL_MATCH");
+        //         selectableOptionList.text = value;
+        //         setOpen("onInput alias partial match", true);
+        //         break;
+        //     case BehaviorExecutionResult.NO_MATCH:
+        //         LOGGER.log("NO MATCH");
+        //         selectableOptionList.text = value;
+        //         break;
+        // }
         return aliasResult;
     };
 
     const onKeyDown = async (e: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + e.key + " for role " + choiceBox.role);
+        isEditing = true;
         if (isPrintable(e) && !e.ctrlKey) {
             LOGGER.log("Down: is printable, text is now [" + textComponent.getText() + "]");
             setOpen("onKeyDown", true);
@@ -196,11 +207,7 @@
             return;
         }
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_ARROW_RIGHT) {
-            // const caretPosition = textComponent.getCaretPosition();
-            // if (caretPosition <= 0 || caretPosition >= textComponent.element.innerText.length ) {
-            // Handle in ProjectItComponent
             setOpen("arraow at the edges", false);
-            // }
         }
         if (!shouldPropagate(e)) {
             e.stopPropagation();
@@ -209,7 +216,7 @@
             setOpen("cltr-space or esacape", !$openStore);
             return;
         }
-        if ($openStore) { // && this.dropdownComponent) {
+        if ($openStore) {
             // Propagate key event to dropdown component
             LOGGER.log("Forwarding event to dropdown component");
             if (dropdownComponent !== null && dropdownComponent !== undefined) {
@@ -252,16 +259,18 @@
 
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to " + JSON.stringify(event.detail));
+        isEditing = false;
         const option = event.detail;
         choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
         choiceBox.textHelper.setText(!!selected ? selected.label : "");
+        LOGGER.log("      selected is " + JSON.stringify(selected));
         setOpen("selectedEvent", false);
-        if (isSelectBox(choiceBox)) {
-            if (!!textComponent) {
-                textComponent.textOnScreen = choiceBox.getSelectedOption().label;
-            }
-        }
+        // if (isSelectBox(choiceBox)) {
+        //     if (!!textComponent) {
+        //         textComponent.textOnScreen = choiceBox.getSelectedOption().label;
+        //     }
+        // }
     };
 
     const onClick = (e: MouseEvent) => {
@@ -286,6 +295,7 @@
 
     const handleClickOutside = (event): void => {
         setOpen("clickOutside", false);
+        isEditing = false;
     };
 
     const onFocusHandler = (e: FocusEvent) => {
@@ -296,6 +306,7 @@
 
     const onBlurHandler = (e: FocusEvent) => {
         FOCUS_LOGGER.log("AliasComponent.onBlur for box " + choiceBox.role);
+        isEditing = false;
     };
 </script>
 
@@ -303,15 +314,14 @@
      on:keypress={onKeyPress}
      on:input={onInput}
      on:focus={onFocusHandler}
-     on:blur={onBlurHandler}
      on:focusin={onFocusHandler}
-     on:focusout={onBlurHandler}
      on:click={onClick}
      use:clickOutside on:click_outside={handleClickOutside}
 >
     <SelectableComponent box={choiceBox.textBox} editor={editor}>
         <TextComponent
             editor={editor}
+            isEditing={isEditing}
             textBox={choiceBox.textBox}
             bind:this={textComponent}
         />

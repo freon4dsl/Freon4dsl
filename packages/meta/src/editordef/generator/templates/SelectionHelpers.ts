@@ -37,10 +37,12 @@ export class SelectionHelpers {
                 role,
                 placeholder,
                 () => {
-                    return ${Names.environment(language)}.getInstance().scoper.getVisibleNames(element, metaType).map(name => ({
-                        id: name,
-                        label: name
-                    }));
+                    return ${Names.environment(language)}.getInstance().scoper.getVisibleNames(element, metaType)
+                        .filter(name => !!name && name !== "")
+                        .map(name => ({
+                            id: name,
+                            label: name
+                        }));
                 },
                 () => getAction(),
                 (editor: PiEditor, option: SelectOption) => setAction(option)
