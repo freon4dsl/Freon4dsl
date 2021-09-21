@@ -3,7 +3,9 @@ editor XXX for language octopus
 UmlPackage {
     @projection normal
         [<package> ${self.name}
-            ${ self.classifiers @vertical @separator [\n] }
+        ${ self.classifiers @vertical @separator [\n] }
+        <associations>
+        ${ self.associations @vertical @terminator [;] }
         <endpackage>
         ]
 }
@@ -12,35 +14,71 @@ UmlPackage {
 //    @projection normal
 //        [${self.names @horizontal @separator [::] }]
 //}
+Association {
+    @projection normal
+        [${self.end1} <-> ${self.end2}]
+}
+AssociationClass {
+    @projection normal
+        [${self.visibility} <associationclass> ${self.name}
+        ${self.end1} <-> ${self.end2}
+        [?<attributes> ${self.attributes @vertical @separator [\n]}]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
+//        [?<states> ${self.states @vertical @terminator [;] }]
+//        [?<invariants> ${self.invariants @vertical @terminator [;] }]
+        <endassociationclass>
+        ]
+}
 
-//Association {
-//    @projection normal
-//        [<->]
-//}
+AssociationEnd {
+    @projection normal
+        [${self.visibility} ${self.baseType}.${self.name}${self.multiplicity}]
+}
 
-//DataType {
-//    @projection normal
-//        [<datatype> ${self.name}
-//        <enddatatype>
-//        ]
-//}
-
-//UmlInterface  {
-//    @projection normal
-//        [<interface> ${self.name}
-//        <endinterface>
-//        ]
-//}
+UmlInterface  {
+    @projection normal
+        [${self.visibility} <interface> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
+        [?<attributes> ${self.attributes @vertical @terminator [\n]}]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
+//        [?<invariants> ${self.invariants @vertical @terminator [;] }]
+        <endinterface>
+        ]
+}
 
 UmlClass {
     @projection normal
-        [${self.visibility} <class> ${self.name} [?<specializes> ${self.generalizations @horizontal @separator [, ]} ]
-        [?<attributes> ${self.attributes @vertical @terminator [\n]}]
+        [${self.visibility} [?${self.isAbstract @keyword [<abstract>]}] <class> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
+        [?<implements> ${self.interfaces @horizontal @separator [, ] }]
+        [?<attributes> ${self.attributes @vertical @terminator [\n] }]
         [?<operations> ${self.operations @vertical @terminator [\n] }]
         <endclass>
         ]
 }
+DataType {
+    @projection normal
+        [${self.visibility} <datatype> ${self.name}
+        [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
+        [?<implements> ${self.interfaces @horizontal @separator [, ] }]
+        [?<attributes> ${self.attributes @vertical @terminator [\n] }]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
+//        [?<invariants> ${self.invariants @vertical @terminator [;] }]
+        <enddatatype>
+        ]
+}
 
+EnumerationType {
+    @projection normal
+        [${self.visibility} <enumeration> ${self.name}
+        <values> ${self.literals @vertical @terminator [;] }
+        <endenumeration>
+        ]
+}
+EnumLiteral {
+    @projection normal
+            [${self.name}]
+}
 //AssociationClass {
 //    @projection normal
 //        [<associationclass> ${self.name}
@@ -71,5 +109,13 @@ VisibilityKind {
         ${PUBLIC @keyword [+]}
         ${PRIVATE @keyword [-]}
         ${PROTECTED @keyword [#]}
+    ]
+}
+
+ParameterDirectionKind {
+    @projection normal [
+    ${IN @keyword [<in>]}
+    ${OUT @keyword [<out>]}
+    ${INOUT @keyword [<inout>]}
     ]
 }

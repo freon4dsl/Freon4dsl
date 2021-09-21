@@ -201,6 +201,7 @@ export class ConceptMaker {
         }
         let prop: PiProperty = null;
         let ruleText: string = '';
+        let hasExtras: boolean = false;
         if (!!list && list.length > 0) {
             list.forEach((item) => {
                 if (item instanceof PiEditSubProjection) {
@@ -216,6 +217,7 @@ export class ConceptMaker {
                     propIndex += 1;
                 } else if (item instanceof PiEditProjectionText) {
                     let extraResult: string[] = this.makeTextProjection(item);  // a text projection can ruleText in more than 1 item
+                    hasExtras = true;
                     ruleText += `${extraResult.map(extr => `${extr}`).join(" ")}`;
                     propIndex += extraResult.length;
                     // } else {  // sub is one of PiEditParsedProjectionIndent | PiEditInstanceProjection;
@@ -226,7 +228,7 @@ export class ConceptMaker {
         }
         if (optional) {
             this.optionalProps.push(prop);
-            if (propIndex > 0) { // there are multiple elements in the ruleText, so surround them with brackets
+            if (hasExtras) { // there are multiple elements in the ruleText, so surround them with brackets
                 this.listWithExtras.push(prop);
                 ruleText = `( ${ruleText} )? /* option F */\n`;
             } else if (!prop.isList) { // there is one element in the ruleText but it is not a list, so we need a '?'

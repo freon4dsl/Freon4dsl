@@ -3,7 +3,7 @@ import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { PiError } from "@projectit/core";
 
-describe("Testing Octopus Parser", () => {
+describe.skip("Testing Octopus Parser", () => {
     const writer = OctopusEnvironment.getInstance().writer;
     const reader = OctopusEnvironment.getInstance().reader;
     const validator = OctopusEnvironment.getInstance().validator;
@@ -26,13 +26,13 @@ describe("Testing Octopus Parser", () => {
         console.log(writer.writeToString(unit1, 0, false));
     });
 
-    test.skip("catalog model unparsed and parsed again", () => {
+    test("catalog model unparsed and parsed again", () => {
         const input = fileHandler.stringFromFile("src/octopus-small/__inputs__/catalog.uml2");
         const unit1 = reader.readFromString(input, "UmlPackage");
         console.log(writer.writeToString(unit1, 0, false));
     });
 
-    test.skip("trainWagon model unparsed and parsed again", () => {
+    test("trainWagon model unparsed and parsed again", () => {
         const input = fileHandler.stringFromFile("src/octopus-small/__inputs__/trainWagon.uml2");
         const unit1 = reader.readFromString(input, "UmlPackage");
         console.log(writer.writeToString(unit1, 0, false));

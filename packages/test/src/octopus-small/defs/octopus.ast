@@ -27,8 +27,22 @@ modelunit UmlPackage implements IModelElement {
 //    reference root: UmlPackage;
     classifiers: IClassifier[];
 //    interfaces: UmlInterface[];
-//    associations: Association[];
+    associations: Association[];
 //    imports: ImportedElement[];
+}
+concept Association implements IClassifier {
+    end1: AssociationEnd;
+    end2: AssociationEnd;
+//    isClass: boolean;
+}
+
+concept AssociationClass base Association implements IClass {
+}
+
+concept AssociationEnd base StructuralFeature {
+    reference baseType: IClassifier;
+//    isNavigable: boolean;
+//    reference myAssociation: Association;
 }
 concept Parameter implements IModelElement {
     reference type: IClassifier;
@@ -50,13 +64,13 @@ interface IClassifier base IPackagableElement {
 //    navigations: AssociationEnd[];
     reference generalizations: IClassifier[];
 //    subClasses: IClassifier[];
-//    reference interfaces: UmlInterface[];
+    reference interfaces: UmlInterface[];
 //    states: State[];
 //    classAttributes: Attribute[];
 //    classOperations: Operation[];
 //    isCollectionKind: boolean;
 //    reference owner: UmlPackage;
-//    isAbstract: boolean;
+    isAbstract: boolean;
 //    stereotype: string;
 }
 interface IPackagableElement base IModelElement {
@@ -73,7 +87,17 @@ interface IClass base IClassifier {
 ////    end2: AssociationEnd;
 ////    isClass: boolean;
 //}
+concept UmlInterface implements IClassifier {
+}
 concept UmlClass implements IClass {
+}
+concept DataType implements IClassifier {
+}
+concept EnumerationType base DataType {
+    literals: EnumLiteral[];
+}
+concept EnumLiteral implements IModelElement {
+//    reference enumeration: EnumerationType;
 }
 //concept AssociationClass base Association implements IClass {
 //}

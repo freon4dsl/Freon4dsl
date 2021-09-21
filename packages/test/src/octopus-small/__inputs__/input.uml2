@@ -1,4 +1,4 @@
-<package> "Book"::"Page"::"Paragraph"::"Line"
+<package> Book::Page::Paragraph::Line
      + <class> Prependix // <specializes> Bookpart
         <attributes>
          + kind: PrependixKind;
