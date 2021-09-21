@@ -1,4 +1,4 @@
-import { isRegExp, isString, Box, PiEditor } from "../editor";
+import { isRegExp, isString, Box, PiEditor, InternalBehavior } from "../editor";
 import { Language } from "../storage/Language";
 import { PiLogger } from "./internal";
 
@@ -54,7 +54,7 @@ export async function executeBehavior(box: Box, text: string, label: string, edi
             if (isRegExp(trigger)) {
                 const matchArray = label.match(trigger);
                 LOGGER.log("executeBehavior: MATCH " + label + " against " + trigger +
-                            "  results in " + (!!matchArray ? matchArray.length : "null"));
+                    "  results in " + (!!matchArray ? matchArray.length : "null"));
                 if (matchArray !== null && label === matchArray[0]) {
                     const execresult = behavior.execute(box, label, editor);
                     // if( !!execresult){
@@ -89,4 +89,33 @@ export async function executeBehavior(box: Box, text: string, label: string, edi
     } else {
         return BehaviorExecutionResult.NO_MATCH;
     }
+}
+
+/**
+ * We know the behavior to be executed, so just do it.
+ * @param behavior
+ * @param box
+ * @param text
+ * @param label
+ * @param editor
+ */
+export async function executeSingleBehavior(behavior: InternalBehavior, box: Box, text: string, label: string, editor: PiEditor): Promise<BehaviorExecutionResult> {
+    LOGGER.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "]");
+    let partialMatch: boolean = false;
+
+    const trigger = behavior.trigger;
+    const execresult = behavior.execute(box, label, editor);
+    // if( !!execresult){
+    //     editor.selectElement(execresult);
+    //     editor.selectFirstLeafChildBox();
+    // }
+    // If this is a referenceShortcut, fill in the selected reference, which is in the label
+    if (!!label && !!behavior.referenceShortcut) {
+        execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
+    }
+    // if( !!execresult){
+    //     await editor.selectElement(execresult, LEFT_MOST);
+    //     editor.selectFirstLeafChildBox();
+    // }
+    return BehaviorExecutionResult.EXECUTED;
 }

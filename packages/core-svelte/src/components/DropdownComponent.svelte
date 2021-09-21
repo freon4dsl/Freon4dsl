@@ -11,8 +11,8 @@
 
     export let getOptions: () => SelectOption[];
     export let selectedOptionId: string = "1";
-    export let handleSelectedOption: (option: SelectOption) => void;
-    export let notifier: ChangeNotifier;
+    // Needed to know when the dropdownlist has changed
+    // export let notifier: ChangeNotifier;
 
     const LOGGER = new PiLogger("DropdownComponent");
     const dispatcher = createEventDispatcher();
@@ -64,7 +64,7 @@
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {
         AUTO_LOGGER.log("autorun");
-        const dummy = notifier.dummy;
+        // const dummy = notifier.dummy;
         getOptionsForHtml = getOptionsLogged();
     });
 

@@ -1,4 +1,4 @@
-import { BehaviorExecutionResult, executeBehavior, MatchUtil } from "../../util";
+import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior, MatchUtil } from "../../util";
 import { triggerToString, PiEditor, TextBox } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../language";
@@ -14,20 +14,24 @@ export class AliasBox extends AbstractChoiceBox {
 
     async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
         console.log("AliasBox option " + JSON.stringify(option));
-        // Try all statically defined actions
-        let result = await executeBehavior(this, option.id, option.label, editor);
-        if (result === BehaviorExecutionResult.EXECUTED) {
-            return result;
-        }
-        // Wasn't a match, now get all dynamic options, including referenceShortcuts and check these
-        const allOptions = this.getOptions(editor);
-        const selectedOptions = allOptions.filter(o => option.label === o.label);
-        if (selectedOptions.length === 1) {
-            console.log("AliasbBox.selectOption dynamic " + JSON.stringify(selectedOptions))
-            return await executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
+        if (!!option.behavior) {
+            return await executeSingleBehavior(option.behavior, this, option.id, option.label, editor)
         } else {
-            console.error("AliasBox.selectOption : " + JSON.stringify(selectedOptions));
-            return BehaviorExecutionResult.NO_MATCH;
+            // Try all statically defined actions
+            let result = await executeBehavior(this, option.id, option.label, editor);
+            if (result === BehaviorExecutionResult.EXECUTED) {
+                return result;
+            }
+            // Wasn't a match, now get all dynamic options, including referenceShortcuts and check these
+            const allOptions = this.getOptions(editor);
+            const selectedOptions = allOptions.filter(o => option.label === o.label);
+            if (selectedOptions.length === 1) {
+                console.log("AliasbBox.selectOption dynamic " + JSON.stringify(selectedOptions));
+                return await executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
+            } else {
+                console.error("AliasBox.selectOption : " + JSON.stringify(selectedOptions));
+                return BehaviorExecutionResult.NO_MATCH;
+            }
         }
     }
 
@@ -36,29 +40,30 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     getOptions(editor: PiEditor): SelectOption[] {
-        const referenceShortcuts: SelectOption[] = [];
-        const result: SelectOption[] = editor.behaviors
-            // .filter(a => a.activeInBoxRoles.includes(this.role) && MatchUtil.partialMatch(this.textBox.getText(), a.trigger))
+        const result: SelectOption[] = [];
+        editor.behaviors
             .filter(behavior => behavior.activeInBoxRoles.includes(this.role))
-            .map(behavior => {
+            .forEach(behavior => {
+                const options: SelectOption[] = [];
                 // If the behavior has a referenceShortcut, we need to find all potential referred elements and add them to the options.
                 if (!!(behavior.referenceShortcut)) {
-                    console.log("REFERENCE (" + this.role + "-" + this.element.piId() + ") " + behavior.referenceShortcut.propertyname + " TO " + behavior.referenceShortcut.metatype + " trigger " + triggerToString(behavior.trigger));
-                    // TODO Special example of do/undo to be able to get the visible elements, probably Action should get an undo next to an execute.
-                    // Uses thge mobx transaction to ensure no observers are trioggered during this execute/undo.
+                    // console.log("REFERENCE (" + this.role + "-" + this.element.piId() + ") " + behavior.referenceShortcut.propertyname + " TO " + behavior.referenceShortcut.metatype + " trigger " + triggerToString(behavior.trigger));
+                    // Uses the mobx transaction to ensure no observers are trioggered during this execute/undo.
                     // Ans turns off setting selection in PiEditor.
                     editor.NOSELECT = true;
                     runInAction(() => {
                         console.log("START");
                         const newElement = behavior.execute(this, triggerToString(behavior.trigger), editor);
                         console.log("NEW ELEMENT is " + newElement);
-                        referenceShortcuts.push(...
+                        options.push(...
                             editor.environment
                                 .scoper.getVisibleNames(newElement, behavior.referenceShortcut.metatype)
-                                .filter( name => !!name && name !== "")
+                                .filter(name => !!name && name !== "")
                                 .map(name => ({
-                                    id: triggerToString(behavior.trigger),
-                                    label: name
+                                    id: triggerToString(behavior.trigger) + "-" + name,
+                                    label: name,
+                                    description: behavior.referenceShortcut.metatype,
+                                    behavior: behavior
                                 })));
                         // UNDO
                         behavior.undo(this, editor);
@@ -67,13 +72,17 @@ export class AliasBox extends AbstractChoiceBox {
                     editor.NOSELECT = false;
                     // TODO This leaves the new element which is removed again as the selected element !
                 }
-                return {
-                    id: triggerToString(behavior.trigger),
-                    label: triggerToString(behavior.trigger),
-                    description: "alias " + triggerToString(behavior.trigger)
-                };
+                /// if there are no reference shortcut options, add the alias itself
+                if (options.length === 0) {
+                    options.push({
+                        id: triggerToString(behavior.trigger),
+                        label: triggerToString(behavior.trigger),
+                        behavior: behavior,
+                        description: "alias " + triggerToString(behavior.trigger)
+                    });
+                }
+                result.push(...options);
             });
-        result.push(...referenceShortcuts);
         return result;
     }
 
