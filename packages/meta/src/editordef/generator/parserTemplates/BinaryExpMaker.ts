@@ -18,8 +18,8 @@ export class BinaryExpMaker {
 
         // parse rule(s)
         this.imports.push(expressionBase);
-        const rule1: string = `${branchName} = [${Names.concept(expressionBase)} / __pi_binary_operator]2+`;
-        const rule2: string = `leaf __pi_binary_operator = ${editDefs.map(def => `'${def.symbol}'`).join(" | ")}`
+        const rule1: string = `${branchName} = [${Names.concept(expressionBase)} / __pi_binary_operator]2+ ;`;
+        const rule2: string = `leaf __pi_binary_operator = ${editDefs.map(def => `'${def.symbol}'`).join(" | ")} ;`
         this.generatedParseRules.push(rule1);
         this.generatedParseRules.push(rule2);
 

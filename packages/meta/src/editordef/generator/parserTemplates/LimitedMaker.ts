@@ -38,7 +38,7 @@ export class LimitedMaker {
                     ${ParserGenUtil.makeComment(rule)}
                     ${this.makeLimitedSyntaxMethod(myName, myMap)}`);
             } else { // make a 'normal' reference rule
-                const rule = `${myName} = identifier`;
+                const rule = `${myName} = identifier ;`;
                 this.generatedParseRules.push(rule);
                 this.generatedSyntaxAnalyserMethods.push(`
                     ${ParserGenUtil.makeComment(rule)}
@@ -81,6 +81,6 @@ export class LimitedMaker {
             }
             result += `\'${value}\'`;
         }
-        return result;
+        return result + " ;";
     }
 }

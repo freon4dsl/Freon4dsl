@@ -36,7 +36,7 @@ export class ChoiceRuleMaker {
             if (implementors.length > 0) {
                 // normal choice rule
                 rule = `${branchName} = ${implementors.map(implementor =>
-                    `${Names.classifier(implementor)} `).join("\n    | ")}`;
+                    `${Names.classifier(implementor)} `).join("\n    | ")} ;`;
 
                 // test to see if there is a binary expression concept here
                 let implementorsNoBinaries = implementors.filter(sub => !(sub instanceof PiBinaryExpressionConcept));
@@ -45,7 +45,7 @@ export class ChoiceRuleMaker {
                     rule = `${branchName} = ${implementorsNoBinaries.map(implementor =>
                         `${Names.classifier(implementor)} `).join("\n    | ")}`;
                     // add the special binary concept rule as choice
-                    rule += `\n    | ${BinaryExpMaker.specialBinaryRuleName}`
+                    rule += `\n    | ${BinaryExpMaker.specialBinaryRuleName} ;`
                 }
                 this.generatedParseRules.push(rule);
             } else {

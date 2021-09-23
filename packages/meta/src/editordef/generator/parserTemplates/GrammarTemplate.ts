@@ -12,7 +12,7 @@ export const ${unitName}GrammarStr = \`
 namespace ${languageName}
 grammar ${unitName} {
                 
-${generatedParseRules.map(ruleText => `${ruleText}`).join(" ;\n\n")} ;
+${generatedParseRules.map(ruleText => `${ruleText}`).join("\n\n")}    
         
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;

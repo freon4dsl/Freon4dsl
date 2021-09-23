@@ -98,7 +98,7 @@ export class SyntaxAnalyserTemplate {
             /**
              * Generic method to get the optional group of a branch. Throws an error if no group can be found.
              */            
-            private getGroup(branch: SPPTBranch, methodName: string) {
+            private getGroup(branch: SPPTBranch) {
                 // take the first element in the [0..1] optional group or multi branch
                 let group: any = branch;
                 let stop: boolean = false;

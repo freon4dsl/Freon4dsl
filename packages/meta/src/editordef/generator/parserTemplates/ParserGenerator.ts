@@ -37,7 +37,7 @@ export class ParserGenerator {
         let myLanguageAnalyser: LanguageAnalyser = new LanguageAnalyser();
         myLanguageAnalyser.analyseUnit(langUnit);
         // create parse rules and syntax analysis methods for the concepts
-        this.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed, myLanguageAnalyser.optionalProps);
+        this.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed);
         // create parse rules and syntax analysis methods for the interfaces and abstracts
         this.generateChoiceRules(myLanguageAnalyser.interfacesAndAbstractsUsed);
         // create parse rules and syntax analysis methods for the binary expressions
@@ -50,10 +50,10 @@ export class ParserGenerator {
         this.refCorrectorMaker.analyse(myLanguageAnalyser.interfacesAndAbstractsUsed);
     }
 
-    private generateConcepts(editUnit: PiEditUnit, conceptsUsed: PiConcept[], optionalProps: PiProperty[]) {
+    private generateConcepts(editUnit: PiEditUnit, conceptsUsed: PiConcept[]) {
         this.addToImports(conceptsUsed);
         let conceptMaker: ConceptMaker = new ConceptMaker();
-        conceptMaker.generateConcepts(editUnit, conceptsUsed, optionalProps);
+        conceptMaker.generateConcepts(editUnit, conceptsUsed);
         this.branchNames.push(...conceptMaker.branchNames);
         this.generatedParseRules.push(...conceptMaker.generatedParseRules);
         this.generatedSyntaxAnalyserMethods.push(...conceptMaker.generatedSyntaxAnalyserMethods);

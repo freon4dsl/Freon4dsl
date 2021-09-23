@@ -157,7 +157,7 @@ export function hasNameProperty (piClassifier: PiClassifier): boolean {
 }
 
 /**
- * Returns the type of the property 'prop' without taking into account 'isList'
+ * Returns the type of the property 'prop' without taking into account 'isList' or 'isPart'
  */
 export function getBaseTypeAsString(property: PiProperty): string {
     const myType = property.type.referred;
@@ -175,4 +175,18 @@ export function getBaseTypeAsString(property: PiProperty): string {
     } else {
         return Names.classifier(myType);
     }
+}
+
+/**
+ * Returns the type of the property 'prop' TAKING INTO ACCOUNT 'isList' or 'isPart'
+ */
+export function getTypeAsString(property: PiProperty): string {
+    let type: string = getBaseTypeAsString(property);
+    if (!property.isPart) {
+        type = `${Names.PiElementReference}<${type}>`;
+    }
+    if (property.isList) {
+        type = type + '[]';
+    }
+    return type;
 }
