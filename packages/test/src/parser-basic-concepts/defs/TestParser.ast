@@ -14,7 +14,7 @@ modelunit ExpressionTest {
     binEx: ExBase[];
 }
 
-abstract expression ExBase {
+expression ExBase {
 }
 
 expression StringLiteralEx base ExBase {

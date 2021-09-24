@@ -40,6 +40,8 @@ export class ParserGenerator {
         this.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed);
         // create parse rules and syntax analysis methods for the interfaces and abstracts
         this.generateChoiceRules(myLanguageAnalyser.interfacesAndAbstractsUsed);
+        // create parse rules and syntax analysis methods for the concepts that have sub-concepts
+        this.generateSuperRules(myLanguageAnalyser.conceptsWithSub);
         // create parse rules and syntax analysis methods for the binary expressions
         if (myLanguageAnalyser.binaryConceptsUsed.length > 0) {
             this.generateBinaryExpressions(language, editUnit, myLanguageAnalyser);
@@ -60,9 +62,18 @@ export class ParserGenerator {
         this.addToImports(conceptMaker.imports);
     }
 
-    private generateChoiceRules(interfacesAndAbstractsUsed: PiClassifier[]) {
+    private generateChoiceRules(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]>) {
         let choiceRuleMaker: ChoiceRuleMaker = new ChoiceRuleMaker();
         choiceRuleMaker.generateChoiceRules(interfacesAndAbstractsUsed);
+        this.branchNames.push(...choiceRuleMaker.branchNames);
+        this.generatedParseRules.push(...choiceRuleMaker.generatedParseRules);
+        this.generatedSyntaxAnalyserMethods.push(...choiceRuleMaker.generatedSyntaxAnalyserMethods);
+        this.addToImports(choiceRuleMaker.imports);
+    }
+
+    private generateSuperRules(conceptsWithSub: Map<PiConcept, PiClassifier[]>) {
+        let choiceRuleMaker: ChoiceRuleMaker = new ChoiceRuleMaker();
+        choiceRuleMaker.generateSuperRules(conceptsWithSub);
         this.branchNames.push(...choiceRuleMaker.branchNames);
         this.generatedParseRules.push(...choiceRuleMaker.generatedParseRules);
         this.generatedSyntaxAnalyserMethods.push(...choiceRuleMaker.generatedSyntaxAnalyserMethods);

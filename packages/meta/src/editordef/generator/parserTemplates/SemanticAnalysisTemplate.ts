@@ -10,10 +10,11 @@ export class SemanticAnalysisTemplate {
     supersOfProblems: PiClassifier[] = [];
     exprWithBooleanProp: PiClassifier[] = [];
 
-    analyse(interfacesAndAbstractsUsed: PiClassifier[]) {
+    analyse(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]>) {
         this.reset();
         // find which classifiers have possible problems
-        for (const classifier of interfacesAndAbstractsUsed) {
+        // TODO use subs instead of LangUtil.subConcepts(classifier)
+        for (const [classifier, subs] of interfacesAndAbstractsUsed) {
             if (!((classifier as PiConcept).base)) {
                 let hasProblems: boolean = false;
                 for (const sub of LangUtil.subConcepts(classifier)) {

@@ -1,4 +1,5 @@
 import {
+    PiBinaryExpressionConcept,
     PiClassifier, PiExpressionConcept,
     PiLimitedConcept,
     PiPrimitiveProperty,
@@ -8,22 +9,25 @@ import {
 import { ParserGenUtil } from '../ParserGenUtil';
 import { getBaseTypeAsString, getTypeAsString, Names } from "../../../../utils";
 import { PiEditConcept } from "../../../metalanguage";
+import { BinaryExpMaker } from "../BinaryExpMaker";
 
 export class GrammarModel {
-    name: string = '';
+    unitName: string = '';
+    langName: string = ''
     rules: GrammarRule[] = [];
     toGrammar() : string {
-        return `namespace OctopusLanguage 
-        grammar ${this.name} {
+        return `namespace ${this.langName} 
+        grammar ${this.unitName} {
         ${this.rules.map(rule => `${rule.toGrammar()}`).join('\n')}
         }`;
     }
     names() : string[] {
-        return this.rules.map(r => `${r}`);
+        return this.rules.map(r => `${r.ruleName}`);
         // TODO get name instead of rule
     }
 }
 export abstract class GrammarRule {
+    ruleName: string;
     toGrammar(): string {
         return `GrammarRule.toGrammar() should be implemented by its subclasses.`;
     }
@@ -32,12 +36,48 @@ export abstract class GrammarRule {
     }
 }
 export class ChoiceRule extends GrammarRule {
+    implementors: PiClassifier[];
+    myConcept: PiClassifier;
+    constructor(ruleName: string, myConcept: PiClassifier, implementors: PiClassifier[]) {
+        super();
+        this.ruleName = ruleName;
+        this.implementors = implementors;
+        this.myConcept = myConcept;
+    }
+    toGrammar(): string {
+        let rule: string = "";
+        if (this.implementors.length > 0) {
+            // test to see if there is a binary expression concept here
+            let implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof PiBinaryExpressionConcept));
+            if (this.implementors.length != implementorsNoBinaries.length) { // there are binaries
+                // exclude binary expression concepts
+                rule = `${(this.ruleName)} = ${implementorsNoBinaries.map(implementor =>
+                    `${Names.classifier(implementor)} `).join("\n    | ")}`;
+                // add the special binary concept rule as choice
+                rule += `\n    | ${BinaryExpMaker.specialBinaryRuleName} ;`;
+            } else {
+                // normal choice rule
+                rule = `${(this.ruleName)} = ${this.implementors.map(implementor =>
+                    `${Names.classifier(implementor)} `).join("\n    | ")} ;`;
+            }
+        } else {
+            rule =`${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
+        }
+        return rule;
+    }
+    toMethod(): string {
+        return `
+            ${ParserGenUtil.makeComment(this.toGrammar())}
+            private transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
+                // console.log("transform${this.ruleName} called");
+                return this.transformNode(branch.nonSkipChildren.toArray()[0]);
+            }`;
+    }
 }
 export class LimitedRule extends GrammarRule{ 
     concept: PiLimitedConcept = null;
 }
 export class BinaryExpressionRule extends GrammarRule {
-    ruleName: string;
     expressionBase: PiExpressionConcept
     editDefs: PiEditConcept[] = [];
     constructor(ruleName: string, expressionBase: PiExpressionConcept, editDefs: PiEditConcept[]) {
@@ -47,15 +87,14 @@ export class BinaryExpressionRule extends GrammarRule {
         this.editDefs = editDefs
     }
     toGrammar(): string {
-        return `${this.rule1()}
-                ${this.rule1()}`;
+        return `${this.rule1()}\n${this.rule2()}`;
     }
 
     toMethod(): string {
         return `
         /**
-         * Generic method to transform binary expressions.
-         * Binary expressions are parsed according to these rules:
+         * Generic method to transform binary expressions, which are parsed 
+         * according to these rules:
          * ${this.rule1()}
          * ${this.rule2()}
          *
@@ -103,11 +142,9 @@ export class ConceptRule extends GrammarRule {
     constructor(concept: PiClassifier) {
         super();
         this.concept = concept;
+        this.ruleName = Names.classifier(this.concept);
     }
 
-    get name(): string {
-        return Names.classifier(this.concept);
-    };
     private propsToSet(): PiProperty[] {
         let xx: PiProperty[] = [];
         for (const part of this.ruleParts) {
@@ -127,7 +164,7 @@ export class ConceptRule extends GrammarRule {
             }
         })
         // end check
-        return `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join('')} ;`;
+        return `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(' ')} ;`;
     }
     toMethod(): string {
         const name = Names.classifier(this.concept);

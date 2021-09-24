@@ -67,7 +67,7 @@ export class ConceptMaker {
             };
             // for now - later other Makers will use the GrammarModel as well
             this.generatedParseRules.push(rule.toGrammar());
-            this.branchNames.push(rule.name);
+            this.branchNames.push(rule.ruleName);
             this.generatedSyntaxAnalyserMethods.push(rule.toMethod());
         }
     }

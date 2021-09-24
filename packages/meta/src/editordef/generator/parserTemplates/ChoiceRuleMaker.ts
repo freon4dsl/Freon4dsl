@@ -1,9 +1,9 @@
-import { PiBinaryExpressionConcept, PiClassifier, PiConcept, PiInterface, PiLimitedConcept } from "../../../languagedef/metalanguage";
-import { LangUtil, Names } from "../../../utils";
-import { BinaryExpMaker } from "./BinaryExpMaker";
-import { ParserGenUtil } from "./ParserGenUtil";
+import { PiClassifier, PiConcept} from "../../../languagedef/metalanguage";
+import { Names } from "../../../utils";
+import { ChoiceRule } from "./grammarModel/GrammarModel";
 
 export class ChoiceRuleMaker {
+    static specialSuperName = `__pi_super_`;
     generatedParseRules: string[] = [];
     generatedSyntaxAnalyserMethods: string[] = [];
     branchNames: string[] = [];
@@ -12,58 +12,41 @@ export class ChoiceRuleMaker {
     // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
     // that either implement or extend the concept
     // because limited concepts can only be used as reference, these are excluded for this choice
-    generateChoiceRules(interfacesAndAbstractsUsed: PiClassifier[]) {
-        for (const piClassifier of interfacesAndAbstractsUsed) {
-            // parse rule(s)
+    generateChoiceRules(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> ) {
+        this.reset();
+        for (const [piClassifier, subs] of interfacesAndAbstractsUsed) {
             const branchName = Names.classifier(piClassifier);
-            // find the choices for this rule: all concepts that implement or extend the concept
-            let implementors: PiClassifier[] = [];
-            if (piClassifier instanceof PiInterface) {
-                // do not include sub-interfaces, because then we might have 'multiple inheritance' problems
-                // instead find the direct implementors and add them
-                for (const intf of piClassifier.allSubInterfacesDirect()) {
-                    implementors.push(...LangUtil.findImplementorsDirect(intf))
-                }
-                implementors.push(...LangUtil.findImplementorsDirect(piClassifier));
-            } else if (piClassifier instanceof PiConcept) {
-                implementors = piClassifier.allSubConceptsDirect();
-            }
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
-            implementors = implementors.filter(sub => !(sub instanceof PiLimitedConcept));
-            implementors = this.sortImplementors(implementors);
-
-            let rule: string = "";
-            if (implementors.length > 0) {
-                // normal choice rule
-                rule = `${branchName} = ${implementors.map(implementor =>
-                    `${Names.classifier(implementor)} `).join("\n    | ")} ;`;
-
-                // test to see if there is a binary expression concept here
-                let implementorsNoBinaries = implementors.filter(sub => !(sub instanceof PiBinaryExpressionConcept));
-                if (implementors.length != implementorsNoBinaries.length) {
-                    // override the choice rule to exclude binary expression concepts
-                    rule = `${branchName} = ${implementorsNoBinaries.map(implementor =>
-                        `${Names.classifier(implementor)} `).join("\n    | ")}`;
-                    // add the special binary concept rule as choice
-                    rule += `\n    | ${BinaryExpMaker.specialBinaryRuleName} ;`
-                }
-                this.generatedParseRules.push(rule);
-            } else {
-                this.generatedParseRules.push(`${branchName} = "ERROR: there are no concepts that implement this interface or extends this abstract concept."`);
-            }
-
-            // to be used as part of the if-statement in transformBranch()
-            this.branchNames.push(branchName);
-
-            // syntax analysis methods
-            this.imports.push(piClassifier);
-            this.generatedSyntaxAnalyserMethods.push(`
-            ${ParserGenUtil.makeComment(rule)}
-            private transform${branchName}(branch: SPPTBranch) : ${Names.classifier(piClassifier)} {
-                // console.log("transform${branchName} called");
-                return this.transformNode(branch.nonSkipChildren.toArray()[0]);
-            }`);
+            let implementors = this.sortImplementors(subs);
+            this.makeChoicePrivate(implementors, branchName, piClassifier);
         }
+    }
+
+    generateSuperRules(conceptsWithSubs: Map<PiConcept, PiClassifier[]> ) {
+        for (const [piClassifier, subs] of conceptsWithSubs) {
+            // make a special rule that is a choice between all subs and 'piClassifier' itself
+            const branchName = ChoiceRuleMaker.specialSuperName + Names.classifier(piClassifier);
+            let implementors: PiClassifier[] = [];
+            // make sure the concrete class rule is the first of the implementors because
+            // that rule gets the least priority in the parser
+            implementors.push(piClassifier);
+            // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
+            implementors.push(...this.sortImplementors(subs));
+            this.makeChoicePrivate(implementors, branchName, piClassifier);
+        }
+    }
+
+    private makeChoicePrivate(implementors: PiClassifier[], branchName: string, piClassifier: PiClassifier) {
+        // parse rule(s)
+        let rule: ChoiceRule = new ChoiceRule(branchName, piClassifier, implementors);
+        this.generatedParseRules.push(rule.toGrammar());
+
+        // to be used as part of the if-statement in transformBranch()
+        this.branchNames.push(branchName);
+
+        // syntax analysis methods
+        this.imports.push(piClassifier);
+        this.generatedSyntaxAnalyserMethods.push(rule.toMethod());
     }
 
     /**
@@ -87,5 +70,12 @@ export class ChoiceRuleMaker {
         }
         result.push(...withPrims);
         return result;
+    }
+
+    private reset() {
+        this.generatedParseRules = [];
+        this.generatedSyntaxAnalyserMethods = [];
+        this.branchNames = [];
+        this.imports = [];
     }
 }
