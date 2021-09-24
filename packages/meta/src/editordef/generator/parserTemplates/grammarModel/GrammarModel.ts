@@ -1,12 +1,13 @@
 import {
-    PiClassifier,
+    PiClassifier, PiExpressionConcept,
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiPrimitiveType,
     PiProperty
-} from '../../../../languagedef/metalanguage';
+} from "../../../../languagedef/metalanguage";
 import { ParserGenUtil } from '../ParserGenUtil';
 import { getBaseTypeAsString, getTypeAsString, Names } from "../../../../utils";
+import { PiEditConcept } from "../../../metalanguage";
 
 export class GrammarModel {
     name: string = '';
@@ -23,14 +24,6 @@ export class GrammarModel {
     }
 }
 export abstract class GrammarRule {
-    concept: PiClassifier = null;
-
-    constructor(concept: PiClassifier){
-        this.concept = concept;
-    }
-    get name(): string {
-        return Names.classifier(this.concept);
-    };
     toGrammar(): string {
         return `GrammarRule.toGrammar() should be implemented by its subclasses.`;
     }
@@ -44,15 +37,77 @@ export class LimitedRule extends GrammarRule{
     concept: PiLimitedConcept = null;
 }
 export class BinaryExpressionRule extends GrammarRule {
+    ruleName: string;
+    expressionBase: PiExpressionConcept
+    editDefs: PiEditConcept[] = [];
+    constructor(ruleName: string, expressionBase: PiExpressionConcept, editDefs: PiEditConcept[]) {
+        super();
+        this.ruleName = ruleName;
+        this.expressionBase = expressionBase;
+        this.editDefs = editDefs
+    }
+    toGrammar(): string {
+        return `${this.rule1()}
+                ${this.rule1()}`;
+    }
+
+    toMethod(): string {
+        return `
+        /**
+         * Generic method to transform binary expressions.
+         * Binary expressions are parsed according to these rules:
+         * ${this.rule1()}
+         * ${this.rule2()}
+         *
+         * In this method we build a crooked tree, which in a later phase needs to be balanced
+         * according to the priorities of the operators.
+         * @param branch
+         * @private
+         */
+        private transform${this.ruleName}(branch: SPPTBranch) : ${Names.concept(this.expressionBase)} {
+            // console.log("transform${this.ruleName} called");
+            const children = branch.nonSkipChildren.toArray();
+            const actualList = children[0].nonSkipChildren.toArray();
+            let index = 0;
+            let first = this.transformNode(actualList[index++]);
+            while (index < actualList.length) {
+                let operator = this.transformNode(actualList[index++]);
+                let second = this.transformNode(actualList[index++]);
+                let combined: ${Names.concept(this.expressionBase)} = null;
+                switch (operator) {
+                ${this.editDefs.map(def => `
+                    case '${def.symbol}': {
+                        combined = ${Names.concept(def.concept.referred)}.create({left: first, right: second});
+                        break;
+                    }`).join("")}
+                    default: {
+                        combined = null;
+                    }
+                }
+                first = combined;
+            }
+            return first;
+        }`
+    }
+    private rule1() : string {
+        return `${(this.ruleName)} = [${Names.concept(this.expressionBase)} / __pi_binary_operator]2+ ;` ;
+    }
+    private rule2() : string {
+        return `leaf __pi_binary_operator = ${this.editDefs.map(def => `'${def.symbol}'`).join(" | ")} ;` ;
+    }
 }
 export class ConceptRule extends GrammarRule {
-    ruleParts: RightHandSideEntry[] = [];
     concept: PiClassifier = null;
+    ruleParts: RightHandSideEntry[] = [];
 
-    constructor(concept: PiClassifier){
-        super(concept);
+    constructor(concept: PiClassifier) {
+        super();
         this.concept = concept;
     }
+
+    get name(): string {
+        return Names.classifier(this.concept);
+    };
     private propsToSet(): PiProperty[] {
         let xx: PiProperty[] = [];
         for (const part of this.ruleParts) {

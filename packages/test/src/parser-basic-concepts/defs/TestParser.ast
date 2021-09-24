@@ -1,0 +1,54 @@
+language ParserOnConcepts
+
+// focuses on the different type of concepts and how to parse them
+
+// TEST EXPRESSION CONCEPTS
+model TestConceptsModel {
+    name: identifier;
+    expr: ExpressionTest;
+}
+
+modelunit ExpressionTest {
+    public name: identifier;
+    normalEx: ExBase[];
+    binEx: ExBase[];
+}
+
+abstract expression ExBase {
+}
+
+expression StringLiteralEx base ExBase {
+    value: string;
+}
+
+expression NumberLiteralEx base ExBase   {
+    value: number;
+}
+
+expression BooleanLiteralEx base ExBase {
+    value: boolean;
+}
+
+binary expression MultiplyEx base ExBase {
+    left: ExBase;
+    right: ExBase;
+    priority = 8;
+}
+
+binary expression PlusEx base ExBase {
+    left: ExBase;
+    right: ExBase;
+    priority = 4;
+}
+
+binary expression DivideEx base ExBase {
+    left: ExBase;
+    right: ExBase;
+    priority = 8;
+}
+
+binary expression AndEx base ExBase {
+    left: ExBase;
+    right: ExBase;
+    priority = 1;
+}
