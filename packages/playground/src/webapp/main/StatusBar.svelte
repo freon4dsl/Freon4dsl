@@ -15,7 +15,7 @@
     <Icon class="icon">
         <svelte:component this={arrowRight} />
     </Icon>
-    box: <i>{currentBox?.role} </i>
+    box: <i>{currentBox?.role} {currentBox?.$id}</i>
     kind: <i>{currentBox?.kind} </i>
     elem: <i>{currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()} </i>
     (x, y): <i>{(!!currentBox ? Math.round(currentBox.actualX + editorEnvironment.editor.scrollX)

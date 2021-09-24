@@ -11,14 +11,24 @@
 
     export let getOptions: () => SelectOption[];
     export let selectedOptionId: string = "1";
-    export let handleSelectedOption: (option: SelectOption) => void;
-    export let notifier: ChangeNotifier;
+    // Needed to know when the dropdownlist has changed
+    // export let notifier: ChangeNotifier;
 
     const LOGGER = new PiLogger("DropdownComponent");
     const dispatcher = createEventDispatcher();
 
     const getOptionsLogged = (): SelectOption[] => {
         const options = getOptions();
+        // check for duplicate keys and give a usefull error
+        const alreadySeen: string[] = [];
+        options.forEach(o => {
+            const key = o.id + o.label;
+            if (alreadySeen.includes(key)) {
+                console.error("Dropdowncomponent duplicate key for option [" + JSON.stringify(o) + "]");
+            } else {
+                alreadySeen.push(key);
+            }
+        });
         return options;//.filter((item, pos, self) => self.findIndex(v => v.id === item.id) === pos);
     }
 
@@ -64,7 +74,7 @@
     let getOptionsForHtml : SelectOption[];
     autorun(()=> {
         AUTO_LOGGER.log("autorun");
-        const dummy = notifier.dummy;
+        // const dummy = notifier.dummy;
         getOptionsForHtml = getOptionsLogged();
     });
 

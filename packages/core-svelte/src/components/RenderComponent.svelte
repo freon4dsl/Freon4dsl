@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ChoiceComponent from "./ChoiceComponent.svelte";
     import AliasComponent from "./AliasComponent.svelte";
     import { AUTO_LOGGER } from "./ChangeNotifier";
     import GridComponent from "./GridComponent.svelte";

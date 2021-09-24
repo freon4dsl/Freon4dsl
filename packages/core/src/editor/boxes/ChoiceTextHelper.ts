@@ -1,11 +1,9 @@
 import { makeObservable, observable, action } from "mobx";
-import { MobxModelElementImpl } from "../../language/decorators/DecoratedModelElement";
 
-export class ChoiceTextHelper extends MobxModelElementImpl {
+export class ChoiceTextHelper  {
     $text: string = "";
 
     constructor() {
-        super();
         makeObservable(this, {
             $text: observable,
             setText: action
