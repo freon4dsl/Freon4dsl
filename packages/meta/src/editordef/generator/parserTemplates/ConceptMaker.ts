@@ -17,59 +17,43 @@ import {
 } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
+import { ConceptRule, GrammarRule } from "./grammarModel/GrammarRules";
 import {
     RHSBooleanWithKeyWord,
-    ConceptRule,
-    ListGroup,
-    RHSOptionalGroup,
-    RHSPrimListEntry,
-    RHSPrimEntry,
-    RHSPropEntry,
-    RightHandSideEntry,
     RHSLimitedRefEntry,
     RHSLimitedRefListEntry,
-    RHSPartListEntry,
-    RHSRefEntry,
-    RHSRefListEntry,
-    RHSRefListWithSeparator,
-    RHSText,
+    RHSLimitedRefListWithSeparator,
+    RHSLimitedRefOptionalEntry,
+    RHSListGroup,
+    RHSOptionalGroup, RHSPartEntry, RHSPartListEntry, RHSPartListEntryWithSeparator, RHSPartOptionalEntry,
+    RHSPrimEntry,
+    RHSPrimListEntry,
     RHSPrimListEntryWithSeparator,
-    RHSPartEntry,
-    RHSPartListEntryWithSeparator,
-    RHSLimitedRefListWithSeparator, RHSPrimOptionalEntry, RHSLimitedRefOptionalEntry, RHSPartOptionalEntry, RHSRefOptionalEntry
-} from "./grammarModel/GrammarModel";
+    RHSPrimOptionalEntry,
+    RHSPropEntry, RHSRefEntry, RHSRefListEntry, RHSRefListWithSeparator, RHSRefOptionalEntry, RHSText,
+    RightHandSideEntry
+} from "./grammarModel/RHSEntries";
+
 
 export class ConceptMaker {
-    generatedParseRules: string[] = [];
-    generatedSyntaxAnalyserMethods: string[] = [];
-    branchNames: string[] = [];
+    // generatedParseRules: string[] = [];
+    // generatedSyntaxAnalyserMethods: string[] = [];
+    // branchNames: string[] = [];
     imports: PiClassifier[] = [];
 
-    generateConcepts(editUnit: PiEditUnit, conceptsUsed: PiConcept[]) {
+    generateConcepts(editUnit: PiEditUnit, conceptsUsed: PiConcept[]): GrammarRule[] {
+        let rules: GrammarRule[] = [];
         for (const piConcept of conceptsUsed) {
             // find editDef for this concept
             const conceptDef: PiEditConcept = editUnit.findConceptEditor(piConcept);
 
-            // TODO test and rethink subconcepts AND concrete projection for one concept
-            // see if this concept has subconcepts
-            const subs = piConcept.allSubConceptsDirect();
-            let choiceBetweenSubconcepts = "";
-            if (subs.length > 0) {
-                // TODO see if there are binary expressions amongst the implementors
-                choiceBetweenSubconcepts = `\n\t| ${subs.map((implementor, index) =>
-                    `${Names.classifier(implementor)} `).join("\n\t| ")}`;
-            }
-            // end rethink
-
             let rule: ConceptRule = new ConceptRule(piConcept);
             for(const l of conceptDef.projection.lines) {
                 rule.ruleParts.push(...this.doLine(l, false));
-            };
-            // for now - later other Makers will use the GrammarModel as well
-            this.generatedParseRules.push(rule.toGrammar());
-            this.branchNames.push(rule.ruleName);
-            this.generatedSyntaxAnalyserMethods.push(rule.toMethod());
+            }
+            rules.push(rule);
         }
+        return rules;
     }
 
     private doLine(line: PiEditProjectionLine, inOptionalGroup: boolean): RightHandSideEntry[] {
@@ -127,8 +111,7 @@ export class ConceptMaker {
                         return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
                     } else if (item.listJoin?.joinType === ListJoinType.Terminator) {
                         const sub1 = new RHSPrimEntry(prop);
-                        const sub2 = new RHSText(joinText);
-                        return new ListGroup(prop, [sub1, sub2], 0);  // `(${propTypeName} '${joinText}' )* /* option C */`
+                        return new RHSListGroup(prop, sub1, joinText);  // `(${propTypeName} '${joinText}' )* /* option C */`
                     }
                 }
             } else if (propType instanceof PiLimitedConcept) {
@@ -146,8 +129,7 @@ export class ConceptMaker {
                         return new RHSLimitedRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
                     } else if (item.listJoin?.joinType === ListJoinType.Terminator) {
                         const sub1 = new RHSLimitedRefEntry(prop);
-                        const sub2 = new RHSText(joinText);
-                        return new ListGroup(prop, [sub1, sub2], 0);  // `(${propTypeName} '${joinText}' )* /* option C */`
+                        return new RHSListGroup(prop, sub1, joinText);  // `(${propTypeName} '${joinText}' )* /* option C */`
                     }
                 }
             } else if (propType instanceof PiBinaryExpressionConcept) {
@@ -169,8 +151,7 @@ export class ConceptMaker {
                     return new RHSPartListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
                 } else if (item.listJoin?.joinType === ListJoinType.Terminator) {
                     const sub1 = new RHSPartEntry(prop);
-                    const sub2 = new RHSText(joinText);
-                    return new ListGroup(prop, [sub1, sub2], 0);  // `(${propTypeName} '${joinText}' )* /* option C */`
+                    return new RHSListGroup(prop, sub1, joinText);  // `(${propTypeName} '${joinText}' )* /* option C */`
                 }
             } else if (prop.isList && !prop.isPart) {                               // (list, reference, optionality not relevant)
                 let joinText = this.makeListJoinText(item.listJoin?.joinText);
@@ -180,8 +161,7 @@ export class ConceptMaker {
                     return new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
                 } else if (item.listJoin?.joinType === ListJoinType.Terminator) {
                     const sub1 = new RHSRefEntry(prop);
-                    const sub2 = new RHSText(joinText);
-                    return new ListGroup(prop, [sub1, sub2], 0);   // `(${propTypeName} '${joinText}' )* /* option C */`
+                    return new RHSListGroup(prop, sub1, joinText);   // `(${propTypeName} '${joinText}' )* /* option C */`
                 }
             }
         }

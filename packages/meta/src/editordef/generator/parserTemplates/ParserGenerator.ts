@@ -2,110 +2,91 @@ import {
     PiClassifier,
     PiConcept,
     PiLanguage,
-    PiLimitedConcept,
-    PiPrimitiveType, PiProperty
+    PiPrimitiveType
 } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 import { Names } from "../../../utils";
-import { GrammarTemplate } from "./GrammarTemplate";
-import { SyntaxAnalyserTemplate } from "./SyntaxAnalyserTemplate";
+import { SyntaxAnalyserTemplate } from "./grammarModel/SyntaxAnalyserTemplate";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 import { LanguageAnalyser } from "./LanguageAnalyser";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
+import { GrammarModel } from "./grammarModel/GrammarModel";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
     private unit: PiConcept = null;
     private editUnit: PiEditUnit = null;
-    private generatedParseRules: string[] = [];             // holds all rules that need to be added to the grammar
-    private generatedSyntaxAnalyserMethods: string[] = [];  // holds all methods that needs to be added to the syntax analyser class
-    private branchNames: string[] = [];     // to be used as part of the if-statement in transformBranch()
+    private grammar: GrammarModel = null;
     private imports: PiClassifier[] = [];   // holds all the concepts that need to be imported in the syntax analyser class
 
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
 
     generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
-        // reset all attributes that are global to this class
-        this.reset();
+        // (re)set all attributes that are global to this class to new values
         this.language = language;
         this.unit = langUnit;
         this.editUnit = editUnit;
+        this.grammar = null;
+        this.imports = [];
+        this.refCorrectorMaker = new SemanticAnalysisTemplate();
+
         // analyse the language unit
         let myLanguageAnalyser: LanguageAnalyser = new LanguageAnalyser();
         myLanguageAnalyser.analyseUnit(langUnit);
-        // create parse rules and syntax analysis methods for the concepts
-        this.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed);
-        // create parse rules and syntax analysis methods for the interfaces and abstracts
-        this.generateChoiceRules(myLanguageAnalyser.interfacesAndAbstractsUsed);
-        // create parse rules and syntax analysis methods for the concepts that have sub-concepts
-        this.generateSuperRules(myLanguageAnalyser.conceptsWithSub);
-        // create parse rules and syntax analysis methods for the binary expressions
-        if (myLanguageAnalyser.binaryConceptsUsed.length > 0) {
-            this.generateBinaryExpressions(language, editUnit, myLanguageAnalyser);
-        }
-        // create parse rules and syntax analysis methods for the limited concepts
-        this.generateLimitedConcepts(editUnit, myLanguageAnalyser.limitedsReferred);
+
+        // create the model of the grammar and syntax analysis
+        this.grammar = new GrammarModel();
+        this.grammar.langName = Names.language(this.language);
+        this.grammar.unitName = Names.classifier(this.unit);
+        this.createGrammarRules(editUnit, myLanguageAnalyser, language);
+
         // do analysis for semantic phase
         this.refCorrectorMaker.analyse(myLanguageAnalyser.interfacesAndAbstractsUsed);
     }
 
-    private generateConcepts(editUnit: PiEditUnit, conceptsUsed: PiConcept[]) {
-        this.addToImports(conceptsUsed);
-        let conceptMaker: ConceptMaker = new ConceptMaker();
-        conceptMaker.generateConcepts(editUnit, conceptsUsed);
-        this.branchNames.push(...conceptMaker.branchNames);
-        this.generatedParseRules.push(...conceptMaker.generatedParseRules);
-        this.generatedSyntaxAnalyserMethods.push(...conceptMaker.generatedSyntaxAnalyserMethods);
+    private createGrammarRules(editUnit: PiEditUnit, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
+        // create parse rules and syntax analysis methods for the concepts
+        this.addToImports(myLanguageAnalyser.conceptsUsed);
+        const conceptMaker: ConceptMaker = new ConceptMaker();
+        this.grammar.rules.push(...conceptMaker.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed));
+        // addImports must done after 'generate...'
         this.addToImports(conceptMaker.imports);
-    }
 
-    private generateChoiceRules(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]>) {
+        // create parse rules and syntax analysis methods for the interfaces and abstracts
         let choiceRuleMaker: ChoiceRuleMaker = new ChoiceRuleMaker();
-        choiceRuleMaker.generateChoiceRules(interfacesAndAbstractsUsed);
-        this.branchNames.push(...choiceRuleMaker.branchNames);
-        this.generatedParseRules.push(...choiceRuleMaker.generatedParseRules);
-        this.generatedSyntaxAnalyserMethods.push(...choiceRuleMaker.generatedSyntaxAnalyserMethods);
+        this.grammar.rules.push(...choiceRuleMaker.generateChoiceRules(myLanguageAnalyser.interfacesAndAbstractsUsed));
+        // addImports must done after 'generate...'
         this.addToImports(choiceRuleMaker.imports);
-    }
 
-    private generateSuperRules(conceptsWithSub: Map<PiConcept, PiClassifier[]>) {
-        let choiceRuleMaker: ChoiceRuleMaker = new ChoiceRuleMaker();
-        choiceRuleMaker.generateSuperRules(conceptsWithSub);
-        this.branchNames.push(...choiceRuleMaker.branchNames);
-        this.generatedParseRules.push(...choiceRuleMaker.generatedParseRules);
-        this.generatedSyntaxAnalyserMethods.push(...choiceRuleMaker.generatedSyntaxAnalyserMethods);
+        // create parse rules and syntax analysis methods for the concepts that have sub-concepts
+        this.grammar.rules.push(...choiceRuleMaker.generateSuperRules(myLanguageAnalyser.conceptsWithSub));
+        // addImports must done after 'generate...'
         this.addToImports(choiceRuleMaker.imports);
-    }
 
-    private generateBinaryExpressions(language: PiLanguage, editUnit: PiEditUnit, myLanguageAnalyser: LanguageAnalyser) {
-        let binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
-        binaryExpMaker.generateBinaryExpressions(language, editUnit, myLanguageAnalyser.binaryConceptsUsed);
-        this.branchNames.push(...binaryExpMaker.branchNames);
-        this.generatedParseRules.push(...binaryExpMaker.generatedParseRules);
-        this.generatedSyntaxAnalyserMethods.push(...binaryExpMaker.generatedSyntaxAnalyserMethods);
-        this.addToImports(binaryExpMaker.imports);
-    }
+        // create parse rules and syntax analysis methods for the binary expressions
+        if (myLanguageAnalyser.binaryConceptsUsed.length > 0) {
+            let binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
+            this.grammar.rules.push(binaryExpMaker.generateBinaryExpressions(language, editUnit, myLanguageAnalyser.binaryConceptsUsed));
+            // addImports must done after 'generate...'
+            this.addToImports(binaryExpMaker.imports);
+        }
 
-    private generateLimitedConcepts(editUnit: PiEditUnit, limitedsReferred: PiLimitedConcept[]) {
+        // create parse rules and syntax analysis methods for the limited concepts
         let limitedMaker: LimitedMaker = new LimitedMaker();
-        limitedMaker.generateLimitedRules(editUnit, limitedsReferred);
-        this.branchNames.push(...limitedMaker.branchNames);
-        this.generatedParseRules.push(...limitedMaker.generatedParseRules);
-        this.generatedSyntaxAnalyserMethods.push(...limitedMaker.generatedSyntaxAnalyserMethods);
+        this.grammar.rules.push(...limitedMaker.generateLimitedRules(editUnit, myLanguageAnalyser.limitedsReferred));
     }
 
     getGrammarContent() : string {
-        const grammarTemplate: GrammarTemplate = new GrammarTemplate();
-        return grammarTemplate.generateGrammar(Names.language(this.language), Names.concept(this.unit), this.generatedParseRules);
+        return this.grammar.toGrammar();
     }
 
     getSyntaxAnalyserContent(relativePath: string) : string {
         const analyserTemplate: SyntaxAnalyserTemplate = new SyntaxAnalyserTemplate();
         const imports: string[] = this.imports.map(concept => Names.classifier(concept));
-        return analyserTemplate.generateSyntaxAnalyser(this.unit, this.branchNames, imports, this.generatedSyntaxAnalyserMethods, relativePath);
+        return analyserTemplate.generateSyntaxAnalyser(this.unit, this.grammar.names(), imports, this.grammar.toMethod(), relativePath);
     }
 
     getRefCorrectorContent(relativePath: string): string {
@@ -114,16 +95,6 @@ export class ParserGenerator {
 
     getRefCorrectorWalkerContent(relativePath: string): string {
         return this.refCorrectorMaker.makeWalker(this.language, relativePath);
-    }
-
-    private reset() {
-        this.language = null;
-        this.unit = null;
-        this.editUnit = null;
-        this.generatedParseRules = [];
-        this.generatedSyntaxAnalyserMethods = [];
-        this.branchNames = [];
-        this.imports = [];
     }
 
     private addToImports(extra: PiClassifier | PiClassifier[]) {

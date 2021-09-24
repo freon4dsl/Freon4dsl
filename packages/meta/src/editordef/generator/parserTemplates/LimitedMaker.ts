@@ -1,7 +1,7 @@
 import { PiEditInstanceProjection, PiEditUnit } from "../../metalanguage";
-import { PiClassifier, PiInstance } from "../../../languagedef/metalanguage";
-import { langExpToTypeScript, Names } from "../../../utils";
-import { ParserGenUtil } from "./ParserGenUtil";
+import { PiLimitedConcept } from "../../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../../utils";
+import { GrammarRule, LimitedRule } from "./grammarModel/GrammarRules";
 
 /**
  * Generates the parse rule and syntax analysis method for limited concepts. A
@@ -14,13 +14,13 @@ export class LimitedMaker {
     generatedSyntaxAnalyserMethods: string[] = [];
     branchNames: string[] = [];
 
-    generateLimitedRules(editUnit: PiEditUnit, limitedConcepts: PiClassifier[]) {
+    generateLimitedRules(editUnit: PiEditUnit, limitedConcepts: PiLimitedConcept[]): GrammarRule[] {
+        let rules: GrammarRule[] = [];
         for (const piClassifier of limitedConcepts) {
             // first, see if there is a projection defined
             const conceptEditor = editUnit.findConceptEditor(piClassifier);
-            const myName = Names.classifier(piClassifier);
             // find the mapping of keywords to predef instances
-            // fist is the name of the instance, second is the keyword
+            // first is the name of the instance, second is the keyword
             let myMap: Map<string, string> = new Map<string, string>();
             conceptEditor.projection.lines.forEach(line => {
                 line.items.forEach(item => {
@@ -30,57 +30,8 @@ export class LimitedMaker {
                     }
                 })
             });
-            this.branchNames.push(myName);
-            if (myMap.size > 0) { // found a limited concept with a special projection
-                const rule: string = this.makeLimitedReferenceRule(myName, myMap);
-                this.generatedParseRules.push(rule);
-                this.generatedSyntaxAnalyserMethods.push(`
-                    ${ParserGenUtil.makeComment(rule)}
-                    ${this.makeLimitedSyntaxMethod(myName, myMap)}`);
-            } else { // make a 'normal' reference rule
-                const rule = `${myName} = identifier ;`;
-                this.generatedParseRules.push(rule);
-                this.generatedSyntaxAnalyserMethods.push(`
-                    ${ParserGenUtil.makeComment(rule)}
-                    private transform${myName}(branch: SPPTBranch): string {
-                        return (branch.matchedText).trim();
-                    }`);
-            }
+            rules.push(new LimitedRule(piClassifier, myMap));
         }
-
-    }
-
-    private makeLimitedSyntaxMethod(myName: string, myMap: Map<string, string>) {
-        let ifStat: string = '';
-        for (const [key, value] of myMap) {
-            ifStat += `if (choice == '${value}') {
-                return ${key};
-            } else `
-        }
-        // close the ifStatement
-        ifStat += `{
-                return null;
-            }`;
-        return `
-        private transform${myName}(branch: SPPTBranch): ${myName} {
-            let choice = (branch.matchedText).trim();
-            ${ifStat}
-        }`;
-    }
-
-    private makeLimitedReferenceRule(myName: string, myMap: Map<string, string>) {
-        // note that this rule cannot be prefixed with 'leaf'; this would cause the syntax analysis to fail
-        let result: string = `${myName} = `;
-        let first = true;
-        for (const [key, value] of myMap) {
-            // prefix the second and all other choices with the '|' symbol
-            if (first) {
-                first = false;
-            } else {
-                result += "\n\t| ";
-            }
-            result += `\'${value}\'`;
-        }
-        return result + " ;";
+        return rules;
     }
 }

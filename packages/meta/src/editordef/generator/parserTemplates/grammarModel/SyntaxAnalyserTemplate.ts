@@ -1,12 +1,11 @@
 import {
-    PiConcept,
-    PiLanguage
-} from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
+    PiConcept
+} from "../../../../languagedef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../../utils";
 
 export class SyntaxAnalyserTemplate {
 
-    generateSyntaxAnalyser(langUnit: PiConcept, branchNames: string[], imports: string[], generatedSyntaxAnalyserMethods: string[], relativePath: string): string {
+    generateSyntaxAnalyser(langUnit: PiConcept, branchNames: string[], imports: string[], generatedSyntaxAnalyserMethods: string, relativePath: string): string {
         // Template starts here
         return `
         import {net} from "net.akehurst.language-agl-processor";
@@ -80,7 +79,7 @@ export class SyntaxAnalyserTemplate {
                 }
             }
             
-            ${generatedSyntaxAnalyserMethods.map(method => `${method}`).join("\n\n")}
+            ${generatedSyntaxAnalyserMethods}
 
             /**
              * Generic method to get the children of a branch. Throws an error if no children can be found.

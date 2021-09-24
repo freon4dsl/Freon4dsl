@@ -3,13 +3,10 @@ import {
     PiClassifier,
     PiConcept,
     PiInterface,
-    PiLimitedConcept,
-    PiProperty
+    PiLimitedConcept
 } from "../../../languagedef/metalanguage";
 import { LangUtil } from "../../../utils";
 import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
-import { PiEditorDef } from "@projectit/playground/dist/pi-languages/language/gen";
-import { PiEditSubProjection, PiEditUnit } from "../../metalanguage";
 
 export class LanguageAnalyser {
     // all concepts defined in this unit

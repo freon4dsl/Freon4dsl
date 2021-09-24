@@ -13,10 +13,12 @@ describe.skip("Testing Octopus Parser", () => {
     test("book small", () => {
         const input = fileHandler.stringFromFile("src/octopus-small/__inputs__/Book-small.uml2");
         const unit1 = reader.readFromString(input, "UmlPackage");
+        expect(unit1).not.toBeNull();
         const errors: PiError[] = validator.validate(unit1, true);
-        // for (const err of errors) {
-        //     console.log(`${err.message} in ${err.locationdescription}`);
-        // }
+        for (const err of errors) {
+            console.log(`${err.message} in ${err.locationdescription}`);
+        }
+        expect(errors.length).toBe(0);
         console.log(writer.writeToString(unit1, 0, false));
     });
 

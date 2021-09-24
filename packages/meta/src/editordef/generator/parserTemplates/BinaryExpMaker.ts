@@ -1,6 +1,6 @@
 import { PiBinaryExpressionConcept, PiClassifier, PiExpressionConcept, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiEditConcept, PiEditUnit } from "../../metalanguage";
-import { BinaryExpressionRule } from "./grammarModel/GrammarModel";
+import { BinaryExpressionRule, GrammarRule } from "./grammarModel/GrammarRules";
 
 export class BinaryExpMaker {
     static specialBinaryRuleName = `__pi_binary_expression`;
@@ -9,8 +9,7 @@ export class BinaryExpMaker {
     branchNames: string[] = [];
     imports: PiClassifier[] = [];
 
-    public generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit, binaryConceptsUsed: PiBinaryExpressionConcept[]) {
-
+    public generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit, binaryConceptsUsed: PiBinaryExpressionConcept[]): GrammarRule {
         // common information
         const expressionBase: PiExpressionConcept = language.findExpressionBase();
         const editDefs: PiEditConcept[] = this.findEditDefs(binaryConceptsUsed, editUnit);
@@ -19,19 +18,7 @@ export class BinaryExpMaker {
         this.imports.push(expressionBase);
         this.imports.push(...binaryConceptsUsed);
 
-        // parse rule(s)
-        // BinaryExpressionRule creates two rules in its toGrammar() method
-        // const rule1: string = `${branchName} = [${Names.concept(expressionBase)} / __pi_binary_operator]2+ ;`;
-        // const rule2: string = `leaf __pi_binary_operator = ${editDefs.map(def => `'${def.symbol}'`).join(" | ")} ;`
-        let rule: BinaryExpressionRule = new BinaryExpressionRule(branchName, expressionBase, editDefs);
-        this.generatedParseRules.push(rule.toGrammar());
-
-        // to be used as part of the if-statement in transformBranch()
-        this.branchNames.push(branchName);
-
-        // syntax analysis method(s)
-        // TODO get the right type for 'BinaryExpression' in stead of ${Names.concept(expressionBase)}
-        this.generatedSyntaxAnalyserMethods.push(rule.toMethod());
+        return new BinaryExpressionRule(branchName, expressionBase, editDefs);
     }
 
     private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], editUnit: PiEditUnit): PiEditConcept[] {

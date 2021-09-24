@@ -1,52 +1,45 @@
 import { PiClassifier, PiConcept} from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
-import { ChoiceRule } from "./grammarModel/GrammarModel";
+import { ChoiceRule, GrammarRule } from "./grammarModel/GrammarRules";
 
 export class ChoiceRuleMaker {
     static specialSuperName = `__pi_super_`;
-    generatedParseRules: string[] = [];
-    generatedSyntaxAnalyserMethods: string[] = [];
-    branchNames: string[] = [];
+    static superNames: Map<PiClassifier, string> = new Map<PiClassifier, string>();
     imports: PiClassifier[] = [];
 
     // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
     // that either implement or extend the concept
     // because limited concepts can only be used as reference, these are excluded for this choice
-    generateChoiceRules(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> ) {
+    generateChoiceRules(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> ): GrammarRule[] {
         this.reset();
+        let rules: GrammarRule[] = [];
         for (const [piClassifier, subs] of interfacesAndAbstractsUsed) {
             const branchName = Names.classifier(piClassifier);
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
             let implementors = this.sortImplementors(subs);
-            this.makeChoicePrivate(implementors, branchName, piClassifier);
+            this.imports.push(piClassifier);
+            rules.push(new ChoiceRule(branchName, piClassifier, implementors));
         }
+        return rules;
     }
 
-    generateSuperRules(conceptsWithSubs: Map<PiConcept, PiClassifier[]> ) {
+    generateSuperRules(conceptsWithSubs: Map<PiConcept, PiClassifier[]> ) : GrammarRule[] {
+        this.reset();
+        let rules: GrammarRule[] = [];
         for (const [piClassifier, subs] of conceptsWithSubs) {
             // make a special rule that is a choice between all subs and 'piClassifier' itself
             const branchName = ChoiceRuleMaker.specialSuperName + Names.classifier(piClassifier);
+            ChoiceRuleMaker.superNames.set(piClassifier, branchName);
             let implementors: PiClassifier[] = [];
             // make sure the concrete class rule is the first of the implementors because
             // that rule gets the least priority in the parser
             implementors.push(piClassifier);
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
             implementors.push(...this.sortImplementors(subs));
-            this.makeChoicePrivate(implementors, branchName, piClassifier);
+            this.imports.push(piClassifier);
+            rules.push(new ChoiceRule(branchName, piClassifier, implementors));
         }
-    }
-
-    private makeChoicePrivate(implementors: PiClassifier[], branchName: string, piClassifier: PiClassifier) {
-        // parse rule(s)
-        let rule: ChoiceRule = new ChoiceRule(branchName, piClassifier, implementors);
-        this.generatedParseRules.push(rule.toGrammar());
-
-        // to be used as part of the if-statement in transformBranch()
-        this.branchNames.push(branchName);
-
-        // syntax analysis methods
-        this.imports.push(piClassifier);
-        this.generatedSyntaxAnalyserMethods.push(rule.toMethod());
+        return rules;
     }
 
     /**
@@ -73,9 +66,7 @@ export class ChoiceRuleMaker {
     }
 
     private reset() {
-        this.generatedParseRules = [];
-        this.generatedSyntaxAnalyserMethods = [];
-        this.branchNames = [];
         this.imports = [];
+        ChoiceRuleMaker.superNames = new Map<PiClassifier, string>();
     }
 }
