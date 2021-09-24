@@ -32,7 +32,7 @@
     };
 
     afterUpdate(async () => {
-        LOGGER.log("!!!!! SelectableComponent.afterupdate for box " + box.role);
+        LOGGER.log("!!!!! SelectableComponent.afterupdate for box " + box.role + " element " + box.element.piId());
         if (element === null) {
             return;
         }

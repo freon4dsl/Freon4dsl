@@ -99,7 +99,7 @@
             // textComponent.textOnScreen = key;
             choiceBox.textHelper.setText(key);
         }
-        const aliasResult = await executeBehavior(choiceBox, s, s, editor);
+        const aliasResult = await executeBehavior(choiceBox, key, key, editor);
         await handleStringInput(key, aliasResult);
     };
 
