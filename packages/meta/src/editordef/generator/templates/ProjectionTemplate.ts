@@ -49,6 +49,7 @@ export class ProjectionTemplate {
             // TODO import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
             import {
                 styleToCSS,
+                BoxFactory,
                 AliasBox,
                 Box,
                 GridBox,
@@ -138,9 +139,9 @@ export class ProjectionTemplate {
                         isPiBinaryExpression(exp.piContainer().container)
                     ) {
                         return new HorizontalListBox(exp, "brackets", [
-                            new LabelBox(exp, "open-bracket", "("),
+                            BoxFactory.label(exp, "open-bracket", "("),
                             binBox,
-                            new LabelBox(exp, "close-bracket", ")")
+                            BoxFactory.label(exp, "close-bracket", ")")
                         ]);
                     } else {
                         return binBox;
@@ -228,7 +229,7 @@ export class ProjectionTemplate {
                            language: PiLanguage) {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
-            result += ` new LabelBox(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
+            result += ` BoxFactory.label(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
                             style: styleToCSS(${Names.styles}.${item.style}),
                             selectable: false
                         }) `;
@@ -288,7 +289,7 @@ export class ProjectionTemplate {
                 } else {
                     result += `((!!${element}.${appliedFeature.name}) ?
                                                 this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
-                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
+                                                BoxFactory.alias(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
                 }
             } else { // reference
                 if (appliedFeature.isList) {
@@ -318,7 +319,7 @@ export class ProjectionTemplate {
                 ${element}.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
                 }).concat(
-                    new AliasBox(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
+                    BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
                         style: styleToCSS(${Names.styles}.placeholdertext),
                         propertyName: "${propertyConcept.name}"
                     })
@@ -377,7 +378,7 @@ export class ProjectionTemplate {
                     ${element}.${reference.name}.map((ent, index) => {
                         return ${this.conceptReferenceProjectionInList(reference, element) }
                     }).concat(
-                        new AliasBox(${element}, "${Roles.newConceptReferencePart(reference)}", "<+>" , { //  add ${reference.name}
+                        BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+>" , { //  add ${reference.name}
                             style: styleToCSS(${Names.styles}.placeholdertext),
                             propertyName: "${reference.name}"
                         })
@@ -437,7 +438,7 @@ export class ProjectionTemplate {
                                 ${this.singlePrimitivePropertyProjection(property, element)}
                             ) as Box[]).concat( [
                                 // TODO  Create Action for the role to actually add an element.
-                                new AliasBox(${element}, "new-${Roles.property(property)}-hlist", "<+>")
+                                BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+>")
                             ])
                         )`;
     }
