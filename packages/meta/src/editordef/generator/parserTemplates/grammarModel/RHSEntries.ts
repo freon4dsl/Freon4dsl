@@ -12,9 +12,9 @@ export abstract class RightHandSideEntry {
     addNewLineToGrammar: boolean = false;
     doNewline() : string {
         if (this.addNewLineToGrammar) {
-            return "\n\t";
+            return `\n\t`;
         }
-        return "";
+        return ``;
     }
     toGrammar() : string {
         return `RightHandSideEntry.toGrammar() should be implemented by its subclasses.`;
@@ -64,7 +64,9 @@ export class RHSText extends RightHandSideEntry {
         this.text = str;
     }
     toGrammar() : string {
-        return `${this.text}`+this.doNewline();
+        // TODO apparently the .edit parser does not remove the space char after the end quote (')
+        // therefore we do it here
+        return this.text.trimEnd() + this.doNewline();
     }
     toMethod(index: number, nodeName: string) : string {
         return ``;
@@ -110,11 +112,19 @@ export class RHSOptionalGroup extends RHSPropEntry {
         return '';
     }
     toMethod(propIndex: number, nodeName: string) : string {
-        return `// RHSOptionalGroup
+        if (this.subs.length > 1) {
+            return `// RHSOptionalGroup
             if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                const optGroup = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray();`+ // to avoid an extra newline
-            `${this.subs.map((sub, index) => `${sub.toMethod(index, 'optGroup')}`).join('\n')}
+                const optGroup = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray();` + // to avoid an extra newline
+                `${this.subs.map((sub, index) => `${sub.toMethod(index, 'optGroup')}`).join('\n')}
             }`;
+        } else if (this.subs.length === 1) {
+            return `// RHSOptionalGroup
+            if (!${nodeName}[${propIndex}].isEmptyMatch) {
+                ${this.subs.map((sub, index) => `${sub.toMethod(propIndex, nodeName)}`).join('\n')}
+            }`;
+        }
+        return `// ERROR no elements within optional group`;
     }
     toString(depth: number) : string {
         let indent = makeIndent(depth);

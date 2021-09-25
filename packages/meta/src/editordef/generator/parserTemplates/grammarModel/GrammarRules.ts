@@ -55,7 +55,7 @@ export class ChoiceRule extends GrammarRule {
         return `
             ${ParserGenUtil.makeComment(this.toGrammar())}
             private transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
-                // console.log("transform${this.ruleName} called");
+                // console.log('transform${this.ruleName} called: ' + branch.name);
                 return this.transformNode(branch.nonSkipChildren.toArray()[0]);
             }`;
     }
@@ -147,7 +147,7 @@ export class BinaryExpressionRule extends GrammarRule {
          * @private
          */
         private transform${this.ruleName}(branch: SPPTBranch) : ${Names.concept(this.expressionBase)} {
-            // console.log("transform${this.ruleName} called");
+            // console.log('transform${this.ruleName} called: ' + branch.name);
             const children = branch.nonSkipChildren.toArray();
             const actualList = children[0].nonSkipChildren.toArray();
             let index = 0;
@@ -210,13 +210,12 @@ export class ConceptRule extends GrammarRule {
         return `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(' ')} ;`;
     }
     toMethod(): string {
-        const name = Names.classifier(this.concept);
         const myProperties = this.propsToSet();
         return `${ParserGenUtil.makeComment(this.toGrammar())}
-                private transform${name} (branch: SPPTBranch) : ${name} {
-                    // console.log('transform${name} called');
+                private transform${this.ruleName} (branch: SPPTBranch) : ${this.ruleName} {
+                    // console.log('transform${this.ruleName} called: ' + branch.name);
                     ${myProperties.map(prop => `let ${prop.name}: ${getTypeAsString(prop)}`).join(';\n')}
-                    const children = this.getChildren(branch, 'transform${name}');` +  // to avoid an extra newline in the result
+                    const children = this.getChildren(branch, 'transform${this.ruleName}');` +  // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, 'children')}`).join('')}      
                     return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${prop.name}`).join(', ')}});
                 }`
