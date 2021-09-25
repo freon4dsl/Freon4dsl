@@ -1,6 +1,8 @@
 import { PiElement } from "../../language/PiElement";
+import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
 import { PiUtils } from "../../util/PiUtils";
-import { Box, AliasBox, LabelBox, TextBox } from "./internal";
+import { PiEditor } from "../PiEditor";
+import { Box, AliasBox, LabelBox, TextBox, SelectOption, SelectBox } from "./internal";
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
@@ -8,12 +10,15 @@ type RoleCache<T extends Box> = {
 type BoxCache<T extends Box> = {
     [id: string]: RoleCache<T>;
 }
-// The alias box cache
+// The box caches
 const aliasCache: BoxCache<AliasBox> = {};
 const labelCache: BoxCache<LabelBox> = {};
 const textCache: BoxCache<TextBox> = {};
+const selectCache: BoxCache<SelectBox> = {};
 
-// Caching of boxes, avoid recalculating them all
+/**
+ * Caching of boxes, avoid recalculating them.
+ */
 export class BoxFactory {
 
     /**
@@ -78,6 +83,27 @@ export class BoxFactory {
         // 2. Apply the other arguments in case they have changed
         result.getText = getText;
         result.setText = setText;
+        PiUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static select(element: PiElement,
+                  role: string,
+                  placeHolder: string,
+                  getOptions: (editor: PiEditor) => SelectOption[],
+                  getSelectedOption: () => SelectOption | null,
+                  selectOption: (editor: PiEditor, option: SelectOption) => Promise<BehaviorExecutionResult>,
+                  initializer?: Partial<SelectBox>): SelectBox {
+        // 1. Create the  box, or find the one that already exists for this element and role
+        const creator = () => new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
+        const result: SelectBox = this.find<SelectBox>(element, role, creator, selectCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.placeholder = placeHolder;
+        result.getOptions = getOptions;
+        result.getSelectedOption = getSelectedOption;
+        result.selectOption = selectOption;
         PiUtils.initializeObject(result, initializer);
 
         return result;
