@@ -2,6 +2,7 @@ import {
     PiConcept
 } from "../../../../languagedef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../../utils";
+import { refSeparator } from "./RHSEntries";
 
 export class SyntaxAnalyserTemplate {
 
@@ -117,12 +118,20 @@ export class SyntaxAnalyserTemplate {
                 return group;
             }
               
+            private transform__pi_reference(branch: SPPTBranch){
+                if (branch.name.includes("multi") || branch.name.includes("List")) {
+                    return this.transformList<string>(branch, "${refSeparator}");
+                } else {
+                    return this.transformLeaf(branch);
+                }
+            }
+    
             /**
              * Generic method to transform references
              * ...PiElemRef = identifier;
              */
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
-                let referred: string | T = this.transformNode(branch);
+                let referred: string | string[] | T = this.transformNode(branch);
                 if (referred == null || referred == undefined ) {
                     throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                 } else if (typeof referred === "string" && (referred as string).length == 0) {

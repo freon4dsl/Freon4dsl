@@ -3,6 +3,9 @@ import { PiPrimitiveProperty, PiProperty } from "../../../../languagedef/metalan
 import { getBaseTypeAsString, Names } from "../../../../utils";
 import { getPrimCall, getTypeCall } from "./GrammarUtils";
 
+export const refSeparator: string = '::';
+export const refRuleName: string = '__pi_reference';
+
 export abstract class RightHandSideEntry {
     public isList: boolean = false;
     // addNewLineToGrammar exists solely to be able to manage the layout of the grammar
@@ -104,25 +107,37 @@ export class RHSOptionalGroup extends RHSPropEntry {
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {
-                return `${first.toGrammar()}`+this.doNewline(); // no need for the extra '?'
+                return `${first.toGrammar()}` + this.doNewline(); // no need for the extra '?'
             } else {
-                return `${first.toGrammar()}?`+this.doNewline();
+                return `${first.toGrammar()}?` + this.doNewline();
             }
         }
         return '';
     }
     toMethod(propIndex: number, nodeName: string) : string {
         if (this.subs.length > 1) {
-            return `// RHSOptionalGroup
+            return `
+            // RHSOptionalGroup
             if (!${nodeName}[${propIndex}].isEmptyMatch) {
                 const optGroup = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray();` + // to avoid an extra newline
                 `${this.subs.map((sub, index) => `${sub.toMethod(index, 'optGroup')}`).join('\n')}
             }`;
         } else if (this.subs.length === 1) {
-            return `// RHSOptionalGroup
-            if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                ${this.subs.map((sub, index) => `${sub.toMethod(propIndex, nodeName)}`).join('\n')}
-            }`;
+            const first = this.subs[0];
+            if (first.isList) {
+                return `
+                    // RHSOptionalGroup
+                    if (!${nodeName}[${propIndex}].isEmptyMatch) {
+                        ${this.subs.map((sub, index) => `${sub.toMethod(propIndex, nodeName)}`).join('\n')}
+                    }`;
+            } else {
+                return `
+                    // RHSOptionalGroup
+                    if (!${nodeName}[${propIndex}].isEmptyMatch) {
+                        const optBranch = this.getChildren(${nodeName}[${propIndex}], "TO BE DONE");
+                        ${this.subs.map((sub, index) => `${sub.toMethod(index, 'optBranch')}`).join('\n')}
+                    }`;
+            }
         }
         return `// ERROR no elements within optional group`;
     }
@@ -160,7 +175,7 @@ export class RHSPrimEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        return `${getPrimCall(this.property.type.referred)}`+this.doNewline();
+        return `${getPrimCall(this.property.type.referred)}` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         return `${this.property.name} = this.transformNode(${nodeName}[${propIndex}]); // RHSPrimEntry\n`;
@@ -176,7 +191,7 @@ export class RHSPrimOptionalEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        return `${getPrimCall(this.property.type.referred)}?`+this.doNewline();
+        return `${getPrimCall(this.property.type.referred)}?` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         return `// RHSPrimOptionalEntry
@@ -197,7 +212,7 @@ export class RHSPrimListEntry extends RHSPropEntry {
         this.isList = true;
     }
     toGrammar(): string {
-        return `${getPrimCall(this.property.type.referred)}*`+this.doNewline();
+        return `${getPrimCall(this.property.type.referred)}*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -214,7 +229,7 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
         this.isList = true;
     }
     toGrammar(): string {
-        return `[ ${getPrimCall(this.property.type.referred)} / '${this.separatorText}' ]*`+this.doNewline();
+        return `[ ${getPrimCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -231,7 +246,7 @@ export class RHSPartEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}`+this.doNewline();
+        return `${getTypeCall(this.property.type.referred)}` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         getBaseTypeAsString(this.property);
@@ -248,7 +263,7 @@ export class RHSPartOptionalEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}?`+this.doNewline();
+        return `${getTypeCall(this.property.type.referred)}?` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         getBaseTypeAsString(this.property);
@@ -271,7 +286,7 @@ export class RHSPartListEntry extends RHSPropEntry {
         this.isList = true;
     }
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}*`+this.doNewline();
+        return `${getTypeCall(this.property.type.referred)}*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -288,7 +303,7 @@ export class RHSPartListEntryWithSeparator extends RHSPropPartWithSeparator {
         this.isList = true;
     }
     toGrammar(): string {
-        return `[ ${getTypeCall(this.property.type.referred)} / '${this.separatorText}' ]*`+this.doNewline();
+        return `[ ${getTypeCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -306,7 +321,7 @@ export class RHSRefEntry extends RHSPropEntry {
     }
     toGrammar(): string {
         // TODO make pathname possible
-        return `identifier`+this.doNewline();
+        return refRuleName + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -324,7 +339,7 @@ export class RHSRefOptionalEntry extends RHSPropEntry {
     }
     toGrammar(): string {
         // TODO make pathname possible
-        return `identifier?`+this.doNewline();
+        return `${refRuleName}?` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -346,7 +361,8 @@ export class RHSRefListEntry extends RHSPropEntry {
         this.isList = true;
     }
     toGrammar(): string {
-        return `identifier*`+this.doNewline();
+        // TODO make pathname possible
+        return `( ${refRuleName} )*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
@@ -373,7 +389,8 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toGrammar(): string {
-        return `[ identifier / '${this.separatorText}' ]*`+this.doNewline();
+        // TODO make pathname possible
+        return `[ ${refRuleName} / '${this.separatorText}' ]*` + this.doNewline();
     }
 
     toMethod(propIndex: number, nodeName: string): string {
@@ -401,7 +418,7 @@ export class RHSLimitedRefEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}`+this.doNewline();
+        return `${getTypeCall(this.property.type.referred)}` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -418,7 +435,7 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}?`+this.doNewline();
+        return `${getTypeCall(this.property.type.referred)}?` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
@@ -440,7 +457,7 @@ export class RHSLimitedRefListEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        return `${getTypeCall(this.property.type.referred)}*`+this.doNewline();
+        return `${getTypeCall(this.property.type.referred)}*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
@@ -466,7 +483,7 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
         this.isList = true;
     }
     toGrammar(): string {
-        return `[ ${getTypeCall(this.property.type.referred)} / '${this.separatorText}' ]*`+this.doNewline();
+        return `[ ${getTypeCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
@@ -499,11 +516,11 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
     toMethod(propIndex: number, nodeName: string) : string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        return `// ListGroup 
+        return `// RHSListGroup 
             if (!${nodeName}[${propIndex}].isEmptyMatch) {
                 // take the zeroth element of the group that represents the optional part
                 const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-                ${this.property.name} = this.transformList<${baseType}>(${nodeName}[${propIndex}], '${this.separatorText}');
+                ${this.property.name} = this.transformList<${baseType}>(subNode, '${this.separatorText}');
             }`;
     }
     toString(depth: number) : string {

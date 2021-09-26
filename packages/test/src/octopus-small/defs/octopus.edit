@@ -20,7 +20,7 @@ Association {
 }
 AssociationClass {
     @projection normal
-        [${self.visibility} <associationclass> ${self.name}
+        [[?${self.visibility}] <associationclass> ${self.name}
         ${self.end1} <-> ${self.end2}
         [?<attributes> ${self.attributes @vertical @separator [\n]}]
         [?<operations> ${self.operations @vertical @terminator [\n] }]
@@ -32,12 +32,12 @@ AssociationClass {
 
 AssociationEnd {
     @projection normal
-        [${self.visibility} ${self.baseType}.${self.name}${self.multiplicity}]
+        [[?${self.visibility}] ${self.baseType}.${self.name}${self.multiplicity}]
 }
 
 UmlInterface  {
     @projection normal
-        [${self.visibility} <interface> ${self.name}
+        [[?${self.visibility}] <interface> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         [?<attributes> ${self.attributes @vertical @terminator [\n]}]
         [?<operations> ${self.operations @vertical @terminator [\n] }]
@@ -58,7 +58,7 @@ UmlClass {
 }
 DataType {
     @projection normal
-        [${self.visibility} <datatype> ${self.name}
+        [[?${self.visibility}] <datatype> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         [?<implements> ${self.interfaces @horizontal @separator [, ] }]
         [?<attributes> ${self.attributes @vertical @terminator [\n] }]
@@ -70,7 +70,7 @@ DataType {
 
 EnumerationType {
     @projection normal
-        [${self.visibility} <enumeration> ${self.name}
+        [[?${self.visibility}] <enumeration> ${self.name}
         <values> ${self.literals @vertical @terminator [;] }
         <endenumeration>
         ]
@@ -88,17 +88,17 @@ EnumLiteral {
 
 Attribute {
     @projection normal
-        [${self.visibility} ${self.name}[?${self.multiplicity}] : ${self.type} ; ]
+        [[?${self.visibility}] ${self.name}[?${self.multiplicity}] : ${self.type} ; ]
 }
 
 Operation {
     @projection normal
-    [${self.visibility} ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}] ;
+    [[?${self.visibility}] ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}] ;
     ]
 }
 Parameter {
     @projection normal
-        [${self.directionKind} ${self.name} : ${self.type}]
+        [[?${self.directionKind}] ${self.name} : ${self.type}]
 }
 MultiplicityKind {
     @projection normal [\[ ${self.lowerBound}..${self.upperBound} \]]

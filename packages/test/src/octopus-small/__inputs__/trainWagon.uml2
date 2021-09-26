@@ -17,6 +17,6 @@
 <endclass>
 
 <associations> 
-+ Train.train[1] <-> + Wagon.wagon[0..*];
+//+ Train.train[1] <-> + Wagon.wagon[0..*];
 + Wagon.pred[0..1] <-> + Wagon.succ[0..1];
-<endpackage> 
+<endpackage>

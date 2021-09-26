@@ -1,6 +1,6 @@
 import { PiClassifier, PiConcept} from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
-import { ChoiceRule, GrammarRule } from "./grammarModel/GrammarRules";
+import { ChoiceRule, GrammarRule, SuperChoiceRule } from "./grammarModel/GrammarRules";
 
 export class ChoiceRuleMaker {
     static specialSuperName = `__pi_super_`;
@@ -37,7 +37,7 @@ export class ChoiceRuleMaker {
             // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
             implementors.push(...this.sortImplementors(subs));
             this.imports.push(piClassifier);
-            rules.push(new ChoiceRule(branchName, piClassifier, implementors));
+            rules.push(new SuperChoiceRule(branchName, piClassifier, implementors));
         }
         return rules;
     }

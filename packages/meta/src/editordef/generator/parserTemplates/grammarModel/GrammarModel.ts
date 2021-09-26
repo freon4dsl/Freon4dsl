@@ -1,4 +1,5 @@
 import { GrammarRule } from "./GrammarRules";
+import { refRuleName, refSeparator } from "./RHSEntries";
 
 export class GrammarModel {
     unitName: string = '';
@@ -17,6 +18,8 @@ namespace ${(this.langName)}
 grammar ${(this.unitName)} {
                 
 ${this.rules.map(rule => `${rule.toGrammar()}`).join('\n')}   
+
+__pi_reference = [ identifier / '${refSeparator}' ]+ ;
         
 // white space and comments
 skip WHITE_SPACE = "\\\\s+" ;
@@ -33,8 +36,9 @@ leaf booleanLiteral      = 'false' | 'true';
 }\`; // end of grammar`;
     }
     names() : string[] {
-        return this.rules.map(r => `${r.ruleName}`);
-        // TODO get name instead of rule
+        const result: string[] = this.rules.map(r => `${r.ruleName}`);
+        result.push(refRuleName);
+        return result;
     }
 
     toMethod() : string {
