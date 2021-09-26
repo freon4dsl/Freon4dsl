@@ -150,7 +150,7 @@ export class SyntaxAnalyserTemplate {
                 if (!!children) {
                     for (const child of children) {
                         let element: any = this.transformNode(child);
-                        if (element !== null || element !== undefined) {
+                        if (element !== null && element !== undefined) {
                             if (separator == null || separator == undefined) {
                                 result.push(element);
                             } else {

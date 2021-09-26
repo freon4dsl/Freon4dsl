@@ -19,38 +19,62 @@ modelunit PrimitivesTest {
     primExtraOpt: PrimExtraOptional;
     primOptPresent: PrimOptional;
     primExtraOptPresent: PrimExtraOptional;
+    separator: PrimOptionalSeparator;
+    terminator: PrimOptionalTerminator;
 }
 concept Prim {
+    primIdentifier: identifier;
     primNumber: number;
     primString: string;
     primBoolean: boolean;
+    primListIdentifier: identifier[];
     primListNumber: number[];
     primListString: string[];
     primListBoolean: boolean[];
 }
 concept PrimExtra {
+    primIdentifierWithExtra: identifier;
     primNumberWithExtra: number;
     primStringWithExtra: string;
     primBooleanWithExtra: boolean;
+    primListIdentifierWithExtra: identifier[];
     primListNumberWithExtra: number[];
     primListStringWithExtra: string[];
     primListBooleanWithExtra: boolean[];
 }
 concept PrimOptional {
+    primIdentifier?: identifier;
     primNumber?: number;
     primString?: string;
     primBoolean?: boolean;
+    primListIdentifier?: identifier[];
     primListNumber?: number[];
     primListString?: string[];
     primListBoolean?: boolean[];
 }
 concept PrimExtraOptional {
+    primIdentifierWithExtra?: identifier;
     primNumberWithExtra?: number;
     primStringWithExtra?: string;
     primBooleanWithExtra?: boolean;
+    primListIdentifierWithExtra?: identifier[];
     primListNumberWithExtra?: number[];
     primListStringWithExtra?: string[];
     primListBooleanWithExtra?: boolean[];
+}
+
+concept PrimOptionalSeparator {
+    primListIdentifierSeparator?: identifier[];
+    primListNumberSeparator?: number[];
+    primListStringSeparator?: string[];
+    primListBooleanSeparator?: boolean[];
+}
+
+concept PrimOptionalTerminator {
+    primListIdentifierTerminator?: identifier[];
+    primListNumberTerminator?: number[];
+    primListStringTerminator?: string[];
+    primListBooleanTerminator?: boolean[];
 }
 
 modelunit WithKeywordProj {

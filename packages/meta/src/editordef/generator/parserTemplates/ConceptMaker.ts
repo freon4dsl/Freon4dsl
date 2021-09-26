@@ -28,7 +28,7 @@ import {
     RHSOptionalGroup, RHSPartEntry, RHSPartListEntry, RHSPartListEntryWithSeparator, RHSPartOptionalEntry,
     RHSPrimEntry,
     RHSPrimListEntry,
-    RHSPrimListEntryWithSeparator,
+    RHSPrimListEntryWithSeparator, RHSPrimListGroup,
     RHSPrimOptionalEntry,
     RHSPropEntry, RHSRefEntry, RHSRefListEntry, RHSRefListWithSeparator, RHSRefOptionalEntry, RHSText,
     RightHandSideEntry
@@ -111,7 +111,7 @@ export class ConceptMaker {
                         return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
                     } else if (item.listJoin?.joinType === ListJoinType.Terminator) {
                         const sub1 = new RHSPrimEntry(prop);
-                        return new RHSListGroup(prop, sub1, joinText);  // `(${propTypeName} '${joinText}' )* /* option C */`
+                        return new RHSPrimListGroup(prop, sub1, joinText);  // `(${propTypeName} '${joinText}' )* /* option C */`
                     }
                 }
             } else if (propType instanceof PiLimitedConcept) {

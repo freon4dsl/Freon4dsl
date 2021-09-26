@@ -367,14 +367,6 @@ export class RHSRefListEntry extends RHSPropEntry {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        // if (doOptional && this.property.isOptional) {
-        //     return `// RHSRefListEntry - optional
-        //     if (!${nodeName}[${propIndex}].isEmptyMatch) {
-        //         // take the zeroth element of the group that represents the optional part
-        //         const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-        //         ${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}');
-        //     }`;
-        // } else
         return `${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}'); // RHSRefListEntry\n`;
     }
     toString(depth: number): string {
@@ -396,14 +388,6 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        // if (doOptional && this.property.isOptional) {
-        //     return `// RHSRefListWithSeparator - optional
-        //     if (!${nodeName}[${propIndex}].isEmptyMatch) {
-        //         // take the zeroth element of the group that represents the optional part
-        //         const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-        //         ${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}');
-        //     }`;
-        // } else
         return `${this.property.name} = 
                         this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSRefListWithSeparator\n`;
     }
@@ -462,14 +446,6 @@ export class RHSLimitedRefListEntry extends RHSPropEntry {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        // if (doOptional && this.property.isOptional) {
-        //     return `// RHSLimitedRefListEntry - optional
-        //     if (!${nodeName}[${propIndex}].isEmptyMatch) {
-        //         // take the zeroth element of the group that represents the optional part
-        //         const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-        //         ${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}');
-        //     }`;
-        // } else
         return `${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}'); // RHSLimitedRefListEntry\n`;
     }
     toString(depth: number): string {
@@ -488,14 +464,6 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        // if (doOptional && this.property.isOptional) {
-        //     return `// RHSLimitedRefListWithSeparator - optional
-        //     if (!${nodeName}[${propIndex}].isEmptyMatch) {
-        //         // take the zeroth element of the group that represents the optional part
-        //         const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-        //         ${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}');
-        //     }`;
-        // } else
         return `${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSLimitedRefListEntryWithSeparator\n`;
     }
     toString(depth: number): string {
@@ -514,12 +482,36 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
         return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
     }
     toMethod(propIndex: number, nodeName: string) : string {
-        const propType: string = Names.classifier(this.property.type.referred);
+        return `// RHSListGroup  
+            if (!${nodeName}[${propIndex}].isEmptyMatch) {          
+                ${this.property.name} = [];
+                for (const subNode of children[4].nonSkipChildren.toArray()) {
+                    ${this.property.name}.push(this.transformNode(this.getGroup(subNode).nonSkipChildren.toArray()[0]));
+                }
+            }`
+    }
+    toString(depth: number) : string {
+        let indent = makeIndent(depth+1);
+        return indent + "RHSListGroup: " + indent + this.entry.toString(depth+1) + " " + this.separatorText;
+    }
+}
+export class RHSPrimListGroup extends RHSPropPartWithSeparator {
+    // `(${propTypeName} '${joinText}' )* /* option C */`
+    private entry: RHSPropEntry;
+    constructor(prop: PiProperty, entry: RHSPropEntry, separator: string) {
+        super(prop, separator);
+        this.entry = entry;
+    }
+    toGrammar() : string {
+        return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
+    }
+    toMethod(propIndex: number, nodeName: string) : string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `// RHSListGroup 
+        return `// RHSPrimListGroup 
             if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                // take the zeroth element of the group that represents the optional part
-                const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
+                // get the group that represents the optional primitive
+                // because primitives are leafs in the grammar, there is no need to get the children of this group
+                const subNode = this.getGroup(${nodeName}[${propIndex}]);
                 ${this.property.name} = this.transformList<${baseType}>(subNode, '${this.separatorText}');
             }`;
     }
