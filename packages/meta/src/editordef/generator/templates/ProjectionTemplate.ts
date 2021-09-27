@@ -138,7 +138,7 @@ export class ProjectionTemplate {
                         !!exp.piContainer().container &&
                         isPiBinaryExpression(exp.piContainer().container)
                     ) {
-                        return new HorizontalListBox(exp, "brackets", [
+                        return BoxFactory.horizontalList(exp, "brackets", [
                             BoxFactory.label(exp, "open-bracket", "("),
                             binBox,
                             BoxFactory.label(exp, "close-bracket", ")")
@@ -163,16 +163,16 @@ export class ProjectionTemplate {
         const projection: PiEditProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if (multiLine) {
-            result += `new VerticalListBox(${elementVarName}, "${concept.name}-overall", [
+            result += `BoxFactory.verticalList(${elementVarName}, "${concept.name}-overall", [
             `;
         }
 
         projection.lines.forEach( (line, index) => {
             if (line.indent > 0) {
-                result += `new IndentBox(${elementVarName}, "${concept.name}-indent-line-${index}", ${line.indent}, `;
+                result += `BoxFactory.indent(${elementVarName}, "${concept.name}-indent-line-${index}", ${line.indent}, `;
             }
             if (line.items.length > 1) {
-                result += `new HorizontalListBox(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
+                result += `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
             }
             // Now all projection items in the line
             line.items.forEach((item, itemIndex) => {
@@ -254,7 +254,7 @@ export class ProjectionTemplate {
 
         // If there are more items, surround with horizontal list
         if (item.items.length > 1) {
-            result = `new HorizontalListBox(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
+            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
         }
 
         const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
@@ -433,7 +433,7 @@ export class ProjectionTemplate {
     }
 
     private listPrimitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
-        return `new HorizontalListBox(${element}, "${Roles.property(property)}-hlist",
+        return `BoxFactory.horizontalList(${element}, "${Roles.property(property)}-hlist",
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element)}
                             ) as Box[]).concat( [
