@@ -49,7 +49,7 @@ export class TextBox extends Box {
         this.getText = getText;
         this.$setText = setText;
         makeObservable(this, {
-           placeHolder: observable,
+            placeHolder: observable,
             setText: action
         });
     }
@@ -63,7 +63,7 @@ export class TextBox extends Box {
     /** @internal
      */
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
-        LOGGER.log("setCaret: " + caret.position)
+        LOGGER.log("setCaret: " + caret.position);
         /* To be overwritten by `TextComponent` */
         switch (caret.position) {
             case PiCaretPosition.RIGHT_MOST:
@@ -96,5 +96,5 @@ export class TextBox extends Box {
 }
 
 export function isTextBox(b: Box): b is TextBox {
-    return !!b &&  b.kind === "TextBox"; // b instanceof TextBox;
+    return !!b && b.kind === "TextBox"; // b instanceof TextBox;
 }

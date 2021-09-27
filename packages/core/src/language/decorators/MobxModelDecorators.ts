@@ -179,6 +179,7 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
             (array as any)[MODEL_CONTAINER] = this;
             (array as any)[MODEL_NAME] = propertyKey.toString();
             // array.intercept(change => willChange(change));
+            // Changed for mobx6 as follows:
             intercept(array, change => willChange(change))
             // intercept(array,
             // (change: IArrayWillChange<MobxModelElement> | IArrayWillSplice<MobxModelElement>) => willChange(change) as any);

@@ -2,7 +2,17 @@ import { PiElement } from "../../language/PiElement";
 import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
 import { PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";
-import { Box, AliasBox, LabelBox, TextBox, SelectOption, SelectBox } from "./internal";
+import {
+    Box,
+    AliasBox,
+    LabelBox,
+    TextBox,
+    SelectOption,
+    SelectBox,
+    IndentBox,
+    OptionalBox,
+    HorizontalListBox, VerticalListBox, SvgBox
+} from "./internal";
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
@@ -15,7 +25,22 @@ const aliasCache: BoxCache<AliasBox> = {};
 const labelCache: BoxCache<LabelBox> = {};
 const textCache: BoxCache<TextBox> = {};
 const selectCache: BoxCache<SelectBox> = {};
+const indentCache: BoxCache<IndentBox> = {};
+const optionalCache: BoxCache<OptionalBox> = {};
+const svgCache: BoxCache<SvgBox> = {};
+const horizontalListCache: BoxCache<HorizontalListBox> = {};
+const verticalListCache: BoxCache<VerticalListBox> = {};
 
+const cacheAliasOff: boolean = false;
+// const cacheAliasOff: boolean = true;
+const cacheLabelOff: boolean = false;
+// const cacheLabelOff: boolean = true;
+// const cacheTextOff: boolean = false;
+const cacheTextOff: boolean = true;
+// const cacheSelectOff: boolean = false;
+const cacheSelectOff: boolean = true;
+// const cacheIndentOff: boolean = false;
+const cacheIndentOff: boolean = true;
 /**
  * Caching of boxes, avoid recalculating them.
  */
@@ -53,6 +78,9 @@ export class BoxFactory {
     }
 
     static alias(element: PiElement, role: string, placeHolder: string, initializer?: Partial<AliasBox>): AliasBox {
+        if (cacheAliasOff) {
+            return  new AliasBox(element, role, placeHolder, initializer);
+        }
         // 1. Create the alias box, or find the one that already exists for this element and role
         const creator = () => new AliasBox(element, role, placeHolder, initializer);
         const result: AliasBox = this.find<AliasBox>(element, role, creator, aliasCache);
@@ -65,6 +93,9 @@ export class BoxFactory {
     }
 
     static label(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>): LabelBox {
+        if (cacheLabelOff) {
+            return  new LabelBox(element, role, getLabel, initializer);
+        }
         // 1. Create the alias box, or find the one that already exists for this element and role
         const creator = () => new LabelBox(element, role, getLabel, initializer);
         const result: LabelBox = this.find<LabelBox>(element, role, creator, labelCache);
@@ -76,6 +107,9 @@ export class BoxFactory {
     }
 
     static text(element: PiElement, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>): TextBox {
+        if( cacheTextOff) {
+            return new TextBox(element, role, getText, setText, initializer);
+        }
         // 1. Create the  box, or find the one that already exists for this element and role
         const creator = () => new TextBox(element, role, getText, setText, initializer);
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
@@ -88,6 +122,27 @@ export class BoxFactory {
         return result;
     }
 
+    static indent(element: PiElement, role: string, indent: number, childBox: Box): IndentBox {
+        return new IndentBox(element, role, indent, childBox);
+        // 1. Create the  box, or find the one that already exists for this element and role
+        // const creator = () => new IndentBox(element, role, indent, childBox);
+        // const result: IndentBox = this.find<IndentBox>(element, role, creator, indentCache);
+
+        // 2. Apply the other arguments in case they have changed
+        // result.indent = indent;
+        // result.child= childBox
+        //
+        // return result;
+    }
+
+    static horizontalList(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
+        return new HorizontalListBox(element, role, children, initializer);
+    }
+
+    static verticalList(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
+        return new VerticalListBox(element, role, children, initializer);
+    }
+
     static select(element: PiElement,
                   role: string,
                   placeHolder: string,
@@ -95,6 +150,9 @@ export class BoxFactory {
                   getSelectedOption: () => SelectOption | null,
                   selectOption: (editor: PiEditor, option: SelectOption) => Promise<BehaviorExecutionResult>,
                   initializer?: Partial<SelectBox>): SelectBox {
+        if (cacheSelectOff) {
+            return new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
+        }
         // 1. Create the  box, or find the one that already exists for this element and role
         const creator = () => new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         const result: SelectBox = this.find<SelectBox>(element, role, creator, selectCache);

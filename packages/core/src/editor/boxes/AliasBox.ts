@@ -52,6 +52,7 @@ export class AliasBox extends AbstractChoiceBox {
         editor.behaviors
             .filter(behavior => behavior.activeInBoxRoles.includes(this.role))
             .forEach(behavior => {
+                console.log("Active behavior: " + behavior.trigger)
                 const options: SelectOption[] = [];
                 // If the behavior has a referenceShortcut, we need to find all potential referred elements and add them to the options.
                 if (!!(behavior.referenceShortcut)) {
