@@ -159,6 +159,7 @@ modelunit RefsTest {
     public name: identifier;
     directRefs: WithDirectRefs;
     indirectRefs?: WithSubSubRefs;
+    withSeparator?: RefsWithSeparator;
 }
 
 concept WithDirectRefs {
@@ -175,6 +176,11 @@ concept RefConcept {
 concept WithSubSubRefs {
     part: WithDirectRefs;
     optPart?: WithDirectRefs;
+    partList: WithDirectRefs[];
+    optList?: WithDirectRefs[];
+}
+
+concept RefsWithSeparator {
     partList: WithDirectRefs[];
     optList?: WithDirectRefs[];
 }

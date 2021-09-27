@@ -1,26 +1,26 @@
 RefsTest myName
 	directRefs WithDirectRefs
-                  	ref someName
+                  	ref someName::x34565
                   	optRef nameA
                   	refList
-                        name1
+                        name1::d45fgh
                         name2
                         name3
                         name4
                     optRefList nameZ
-                    nameY
+                    nameY::sdfsgargh::HERA
                     nameX
     indirectRefs WithSubSubRefs 
                  	part WithDirectRefs
                                            	ref someName
                                            	optRef nameA
                                            	refList
-                                                 name1
+                                                 name1::WREQWR::gag
                                                  name2
-                                                 name3
+                                                 name3::fghy
                                                  name4
                                              optRefList nameZ
-                                             nameY
+                                             nameY::h56
                                              nameX
                  	optPart WithDirectRefs
                                               	ref someName
@@ -68,6 +68,30 @@ RefsTest myName
                                             nameY
                                             nameX
                  	optList 
+                        WithDirectRefs
+                                            ref someName
+                                            optRef nameA
+                                            refList
+                                                name1
+                                                name2
+                                                name3
+                                                name4
+                                            optRefList nameZ
+                                            nameY
+                                            nameX
+withSeparator
+                        WithDirectRefs
+                                            ref someName
+                                            optRef nameA
+                                            refList
+                                                name1
+                                                name2
+                                                name3
+                                                name4
+                                            optRefList nameZ
+                                            nameY
+                                            nameX
+                                            !!
                         WithDirectRefs
                                             ref someName
                                             optRef nameA

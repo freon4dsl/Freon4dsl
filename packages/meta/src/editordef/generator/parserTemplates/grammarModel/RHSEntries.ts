@@ -320,7 +320,6 @@ export class RHSRefEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        // TODO make pathname possible
         return refRuleName + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
@@ -338,7 +337,6 @@ export class RHSRefOptionalEntry extends RHSPropEntry {
         this.isList = false;
     }
     toGrammar(): string {
-        // TODO make pathname possible
         return `${refRuleName}?` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
@@ -361,8 +359,7 @@ export class RHSRefListEntry extends RHSPropEntry {
         this.isList = true;
     }
     toGrammar(): string {
-        // TODO make pathname possible
-        return `( ${refRuleName} )*` + this.doNewline();
+        return `${refRuleName}*` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
@@ -381,7 +378,6 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toGrammar(): string {
-        // TODO make pathname possible
         return `[ ${refRuleName} / '${this.separatorText}' ]*` + this.doNewline();
     }
 

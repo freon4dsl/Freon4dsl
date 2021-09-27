@@ -1,11 +1,51 @@
 RefsTest myName
 	directRefs WithDirectRefs
-                  	ref someName
+                  	ref someName::otherName::xxx::yyy
                   	optRef // not present
                   	refList
-                        name1
+                        name1::ff::gg::yuio
                         name2
                         name3
                         name4
                     optRefList // not present
     indirectRefs
+    withSeparator WithDirectRefs
+                                    	ref someName::otherName::xxx::yyy
+                                    	optRef // not present
+                                    	refList
+                                          name1::ff::gg::yuio
+                                          name2
+                                          name3
+                                          name4
+                                      optRefList // not present
+                                      !
+                    WithDirectRefs
+                        ref someName::otherName::xxx::yyy
+                        optRef // not present
+                        refList
+                            name1::ff::gg::yuio
+                            name2
+                        optRefList // not present
+                    WithDirectRefs
+                        ref someName::otherName::xxx::yyy
+                        optRef // not present
+                        refList
+                            name1::ff::gg::yuio
+                            name2
+                        optRefList // not present
+                        !!
+                    WithDirectRefs
+                        ref someName::otherName::xxx::yyy
+                        optRef // not present
+                        refList
+                            name1::ff::gg::yuio
+                            name2
+                        optRefList // not present
+                        !!
+                    WithDirectRefs
+                        ref someName::otherName::xxx::yyy
+                        optRef // not present
+                        refList
+                            name1::ff::gg::yuio
+                            name2
+                        optRefList // not present

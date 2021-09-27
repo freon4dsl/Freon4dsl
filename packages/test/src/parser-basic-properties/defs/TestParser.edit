@@ -88,3 +88,11 @@ WithDirectParts {
 	[?optList ${self.optList} ]
 	]
 }
+
+// for references
+RefsWithSeparator {
+    @projection normal [
+    ${self.partList @separator [!]}
+    [?${self.optList @separator [!!]}]
+    ]
+}
