@@ -11,11 +11,11 @@ describe("Parser concepts of type", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-concepts/__inputs__/test1.exp");
             const unit1: ExpressionTest = reader.readFromString(input, "ExpressionTest") as ExpressionTest;
-            console.log(writer.writeToString(unit1, 0, false));
-            // expect(unit1).toMatchSnapshot();
+            // console.log(writer.writeToString(unit1, 0, false));
+            expect(unit1).toMatchSnapshot();
         } catch (e) {
-            console.log(e.stack);
-            // expect(e).toBeNaN();
+            // console.log(e.stack);
+            expect(e).toBeNaN();
         }
     });
 

@@ -481,7 +481,7 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
         return `// RHSListGroup  
             if (!${nodeName}[${propIndex}].isEmptyMatch) {          
                 ${this.property.name} = [];
-                for (const subNode of children[4].nonSkipChildren.toArray()) {
+                for (const subNode of ${nodeName}[${propIndex}].nonSkipChildren.toArray()) {
                     ${this.property.name}.push(this.transformNode(this.getGroup(subNode).nonSkipChildren.toArray()[0]));
                 }
             }`

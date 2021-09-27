@@ -82,7 +82,6 @@ concept UmlInterface implements IClassifier {
 }
 interface IModelElement {
     name: identifier;
-    pathName: PathName;
 }
 concept MultiplicityKind {
 //    isSingleObject: boolean;

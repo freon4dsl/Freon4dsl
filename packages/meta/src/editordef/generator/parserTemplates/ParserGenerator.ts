@@ -6,7 +6,6 @@ import {
 } from "../../../languagedef/metalanguage";
 import { PiEditUnit } from "../../metalanguage";
 import { Names } from "../../../utils";
-import { SyntaxAnalyserTemplate } from "./grammarModel/SyntaxAnalyserTemplate";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 import { LanguageAnalyser } from "./LanguageAnalyser";
 import { LimitedMaker } from "./LimitedMaker";
@@ -84,9 +83,8 @@ export class ParserGenerator {
     }
 
     getSyntaxAnalyserContent(relativePath: string) : string {
-        const analyserTemplate: SyntaxAnalyserTemplate = new SyntaxAnalyserTemplate();
         const imports: string[] = this.imports.map(concept => Names.classifier(concept));
-        return analyserTemplate.generateSyntaxAnalyser(this.unit, this.grammar.names(), imports, this.grammar.toMethod(), relativePath);
+        return this.grammar.toMethod(this.unit, imports, relativePath);
     }
 
     getRefCorrectorContent(relativePath: string): string {
