@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 
 export interface NamedElement<T> {
     name: string;
@@ -6,8 +6,13 @@ export interface NamedElement<T> {
 }
 
 export class OrderedList<T> implements Iterable<T> {
-    @observable protected elements: NamedElement<T>[] = [];
+    protected elements: NamedElement<T>[] = [];
 
+    constructor() {
+        makeObservable<OrderedList<T>, "elements" >(this, {
+            elements: observable
+        });
+    }
     toArray(): NamedElement<T>[] {
         return this.elements;
     }

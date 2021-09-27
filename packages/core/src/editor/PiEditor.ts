@@ -1,4 +1,4 @@
-import { observable, computed, action, trace } from "mobx";
+import { makeObservable, observable, computed, action, trace } from "mobx";
 import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiContainerDescriptor, PiElement } from "../language";
@@ -20,19 +20,19 @@ import {
 const LOGGER = new PiLogger("PiEditor");
 
 export class PiEditor {
-    @observable private _rootElement: PiElement;
+    private _rootElement: PiElement = null;
     readonly actions?: PiActions;
     readonly projection: PiProjection;
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
 
-    @observable private $rootBox: Box | null;
-    @observable private $selectedBox: Box | null;
+    private $rootBox: Box | null = null;
+    private $selectedBox: Box | null = null;
     private $projectedElement: HTMLDivElement | null;
 
-    @observable private selectedElement: PiElement = null;
+    private selectedElement: PiElement = null;
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
-    @observable private selectedRole: string = null;
+    private selectedRole: string = null;
 
     /**
      * Needed to find reference shortcuts in the Alias box
@@ -54,6 +54,18 @@ export class PiEditor {
         this.actions = actions;
         this.projection = projection;
         this.initializeAliases(actions);
+
+        makeObservable<PiEditor, "$rootBox" | "selectedRole" | "$selectedBox" | "selectedElement" | "_rootElement">(this, {
+            $rootBox: observable,
+            _rootElement: observable,
+            $selectedBox: observable,
+            selectedElement: observable,
+            selectedRole: observable,
+            selectedBox: computed,
+            deleteBox: action,
+            rootBox: computed,
+
+        });
     }
 
     initializeAliases(actions?: PiActions) {
@@ -107,7 +119,7 @@ export class PiEditor {
     }
 
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
-        LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position);
+        LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
         if( this.NOSELECT) { return; }
         this.selectBox(this.rootBox.findBox(box.element.piId(), box.role), caretPosition);
     }
@@ -153,7 +165,7 @@ export class PiEditor {
     }
 
     set selectedBox(box: Box) {
-        LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null"));
+        LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
         if( this.NOSELECT) { return; }
 
         if (isAliasBox(box)) {
@@ -167,7 +179,6 @@ export class PiEditor {
         }
     }
 
-    @computed
     get rootBox(): Box {
         LOGGER.log("RECALCULATING ROOT [" + this.rootElement + "]");
         // trace(true);
@@ -217,14 +228,13 @@ export class PiEditor {
         if (!!previous) {
             this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
             // previous.setFocus();
-            if (isTextBox(previous) || isSelectBox(previous)) {
-                LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
-                previous.setCaret(PiCaret.RIGHT_MOST);
-            }
+            // if (isTextBox(previous) || isSelectBox(previous)) {
+            //     LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
+            //     previous.setCaret(PiCaret.RIGHT_MOST);
+            // }
         }
     }
 
-    @action
     async deleteBox(box: Box) {
         LOGGER.log("deleteBox");
         const exp: PiElement = box.element;

@@ -1,9 +1,9 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { PiElement } from "../language";
 import { Box, LabelBox, OrderedList, PiProjection } from "./internal";
 
 export class PiCompositeProjection implements PiProjection {
-    @observable private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
+    private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
     private _rootProjection: PiProjection | null = null;
     name: string = "";
 
@@ -16,6 +16,9 @@ export class PiCompositeProjection implements PiProjection {
         if (!!name) {
             this.name = name;
         }
+        makeObservable<PiCompositeProjection, "projections">(this, {
+            projections: observable
+        });
     }
 
     getBox(element: PiElement): Box {

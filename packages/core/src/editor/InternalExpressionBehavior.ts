@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { PiElement } from "../language/PiElement";
 import { PiExpression } from "../language/PiExpression";
 import { isPiExpression } from "../language/LanguageUtil";
@@ -17,9 +17,11 @@ export class InternalExpressionBehavior extends InternalBehavior implements PiEx
     constructor(initializer?: Partial<InternalExpressionBehavior>) {
         super();
         PiUtils.initializeObject(this, initializer);
+        makeObservable(this, {
+            execute: action
+        });
     }
 
-    @action
     execute(box: Box, text: string, editor: PiEditor): PiElement | null {
         LOGGER.info(this, "execute expression alias ok");
         const selected = this.expressionBuilder(box, text, editor);

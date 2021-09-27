@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { PiElement } from "../language/PiElement";
 import { PiLogger } from "../util/PiLogging";
 import { PiUtils } from "../util/PiUtils";
@@ -15,24 +15,23 @@ export class InternalCustomBehavior extends InternalBehavior implements PiCustom
     constructor(initializer?: Partial<InternalCustomBehavior>) {
         super();
         PiUtils.initializeObject(this, initializer);
+        makeObservable(this, {
+            execute: action,
+            undo: action
+        });
     }
 
-    @action
     execute(box: Box, text: string, editor: PiEditor): PiElement | null {
         LOGGER.info(this, "execute custom alias ok");
         LOGGER.log("    text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
         const selected = this.action(box, text, editor);
-        if (!!this.referenceShortcut && text !== this.trigger) {
-            console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        }
-        // TODO fact or out undo
         if (!!selected) {
             editor.selectElement(selected, this.boxRoleToSelect, this.caretPosition);
         }
         return selected;
     }
 
-    @action undo(box: Box, ed: PiEditor): void {
+    undo(box: Box, ed: PiEditor): void {
         console.error("InternalCustomBehavior.undo is empty")
     }
 }

@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, action, makeObservable } from "mobx";
 import { PiCaretPosition, PiCaret, PiUtils, PiLogger } from "../../util";
 import { PiElement } from "../../language";
 import { Box } from "./internal";
@@ -26,10 +26,19 @@ export class TextBox extends Box {
      */
     deleteWhenEmptyAndErase: boolean = false;
 
-    @observable placeHolder: string = "";
+    placeHolder: string = "";
     caretPosition: number = -1;
     getText: () => string;
-    setText: (newValue: string) => void;
+    private $setText: (newValue: string) => void;
+
+    /**
+     * Run the setText() as defined by the user of this box inside a mobx action.
+     * @param newValue
+     */
+    setText(newValue: string): void {
+        this.$setText(newValue);
+    }
+
     keyPressAction: (currentText: string, key: string, index: number) => KeyPressAction = () => {
         return KeyPressAction.OK;
     };
@@ -38,7 +47,11 @@ export class TextBox extends Box {
         super(exp, role);
         PiUtils.initializeObject(this, initializer);
         this.getText = getText;
-        this.setText = setText;
+        this.$setText = setText;
+        makeObservable(this, {
+           placeHolder: observable,
+            setText: action
+        });
     }
 
     public deleteWhenEmpty1(): boolean {

@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../language/";
 import { Box, AliasBox } from "./internal";
@@ -10,13 +10,19 @@ type BoolFunctie = () => boolean;
 export class OptionalBox extends Box {
     readonly kind = "OptionalBox";
 
-    @observable box: Box = null;
-    @observable whenNoShowingAlias: AliasBox;
-    @observable mustShow: boolean = false;
+    box: Box = null;
+    whenNoShowingAlias: AliasBox = null;
+    mustShow: boolean = false;
     condition: () => boolean;
 
     constructor(exp: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
         super(exp, role);
+        makeObservable(this, {
+            box: observable,
+            whenNoShowingAlias: observable,
+            mustShow: observable,
+            showByCondition: computed
+        });
         this.box = box;
         box.parent = this;
         this.whenNoShowingAlias = new AliasBox(exp, role, aliasText);
@@ -26,7 +32,6 @@ export class OptionalBox extends Box {
         this.selectable = false;
     }
 
-    @computed
     get showByCondition(): boolean {
         return this.condition();
     }

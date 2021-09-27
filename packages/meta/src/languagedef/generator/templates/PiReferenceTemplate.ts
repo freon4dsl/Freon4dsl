@@ -6,7 +6,7 @@ export class PiReferenceTemplate {
     generatePiReference(language: PiLanguage, relativePath: string): string {
         return `
         import { MobxModelElementImpl } from "${PROJECTITCORE}";
-        import { computed, observable } from "mobx";
+        import { computed, observable, makeObservable } from "mobx";
         import { ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         
@@ -36,11 +36,11 @@ export class PiReferenceTemplate {
                 return result;
             }
             
-            @observable private _PI_pathname: string[] = [];
-            @observable private _PI_referred: T = null;
+            private _PI_pathname: string[] = [];
+            private _PI_referred: T = null;
         
             // Needed for the scoper to work
-            public typeName: string;
+            public typeName: string = "";
  
              /**
              * The constructor is private, use the create() method
@@ -52,6 +52,13 @@ export class PiReferenceTemplate {
                 super();
                 this.referred = referredElement;
                 this.typeName = typeName;
+                makeObservable<PiElementReference<T>, "_PI_pathname" | "_PI_referred">(this, {
+                   _PI_referred: observable,
+                   _PI_pathname: observable,
+                    referred: computed,
+                    name: computed,
+                    pathname: computed
+                });
             }
         
             set name(value: string) {
@@ -64,7 +71,6 @@ export class PiReferenceTemplate {
                 this._PI_referred = null;
             }
         
-            @computed
             get name(): string {
                 if(!!this._PI_referred){
                     return this.referred.name
@@ -72,7 +78,6 @@ export class PiReferenceTemplate {
                 return this._PI_pathname[this._PI_pathname.length - 1];
             }
 
-            @computed
             get pathname(): string[] {
                 let result: string[] = [];
                 for (const elem of this._PI_pathname) {
@@ -94,7 +99,6 @@ export class PiReferenceTemplate {
                 return result;
             }
             
-            // @computed
             get referred(): T {
                 if (!!this._PI_referred) {
                     return this._PI_referred;

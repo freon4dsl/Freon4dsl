@@ -181,6 +181,11 @@ export class DefaultActionsTemplate {
                                                                   propertyname: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
                                                                   metatype: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
                                                              }` : undefined),
+                                    undo: (!!conceptEditor.referenceShortcut ?
+                                                        `(box: Box, editor: PiEditor): void => {
+                                                            const parent = box.element;
+                                                            parent[(box as AliasBox).propertyName] = null;
+                                                         }` : undefined),
                                     boxRoleToSelect: `${this.cursorLocation(editorDef, subClass)}` /* CURSOR 4  ${subClass.name} */
                                 }
                         );
@@ -196,6 +201,7 @@ export class DefaultActionsTemplate {
                         trigger: "${elem.trigger}",  // for single Concept part
                         action: ${elem.action},
                         ${!!elem.referenceShortcut  ? `referenceShortcut: ${elem.referenceShortcut},` : ``}
+                        ${!!elem.undo               ? `undo: ${elem.undo},`                           : ``}
                         boxRoleToSelect: "${elem.boxRoleToSelect}" /* CURSOR 4 */
                     },
                     `;
@@ -226,6 +232,7 @@ class BehaviorDescription {
     trigger: string;
     action: string;
     referenceShortcut?: string;
+    undo?: string;
     boxRoleToSelect: string;
 }
 
