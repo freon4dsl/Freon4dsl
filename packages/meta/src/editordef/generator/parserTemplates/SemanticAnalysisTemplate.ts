@@ -1,4 +1,4 @@
-import { PiClassifier, PiConcept, PiExpressionConcept, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiExpressionConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../../utils";
 import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
@@ -8,7 +8,7 @@ export class SemanticAnalysisTemplate {
     imports: PiClassifier[] = [];
     possibleProblems: PiConcept[] = [];
     supersOfProblems: PiClassifier[] = [];
-    exprWithBooleanProp: PiClassifier[] = [];
+    private exprWithBooleanProp: Map<PiClassifier, PiPrimitiveProperty> = new Map<PiClassifier, PiPrimitiveProperty>();
 
     analyse(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]>) {
         this.reset();
@@ -24,7 +24,7 @@ export class SemanticAnalysisTemplate {
                     }
                     for (const prim of sub.allPrimProperties()) {
                         if (prim.type.referred == PiPrimitiveType.boolean) {
-                            this.exprWithBooleanProp.push(sub);
+                            this.exprWithBooleanProp.set(sub, prim);
                         }
                     }
                 }
@@ -36,15 +36,15 @@ export class SemanticAnalysisTemplate {
         }
     }
 
-    makeCorrector(language: PiLanguage, relativePath: string) : string {
+    makeCorrector(language: PiLanguage, relativePath: string): string {
         this.imports = [];
         const everyConceptName: string = Names.allConcepts(language);
         const className: string = Names.semanticAnalyser(language);
         const refWalkerName: string = Names.semanticWalker(language);
 
         // start Template
-        return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-                import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER }";
+        return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+                import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
                 import { PiElement } from "@projectit/core";
 
@@ -82,20 +82,23 @@ export class SemanticAnalysisTemplate {
 `; // end Template
     }
 
-    makeWalker(language: PiLanguage, relativePath: string) : string {
+    makeWalker(language: PiLanguage, relativePath: string): string {
         this.imports = [];
         const className: string = Names.semanticWalker(language);
         const everyConceptName: string = Names.allConcepts(language);
         this.addToImports(this.possibleProblems);
-        this.addToImports(this.exprWithBooleanProp);
+        for (const [key, value] of this.exprWithBooleanProp) {
+            this.addToImports(key);
+        }
         // call this method before starting the template; it will fill the 'imports'
         const replacementIfStat: string = this.makeReplacementIfStat();
+        const replacementBooleanStat: string = this.makeBooleanStat();
 
         return `
             import {
               ${Names.allConcepts(language)}, PiElementReference, ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
-            } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER }";
+            } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+            import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
             import { PiNamedElement } from "@projectit/core";
             
@@ -122,25 +125,18 @@ export class SemanticAnalysisTemplate {
                         this.changesToBeMade.set(modelelement, replacement);
                     } else {
                         // true error, or boolean "true" or "false"
-                        ${this.exprWithBooleanProp.map(concept =>`
-                            if (referredElem.name === "true") {
-                                this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ value: true }));
-                            } else if (referredElem.name === "false") {
-                                this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ value: false }));
-                            }
-                            `)}
+                        ${replacementBooleanStat}
                     }
-                }
-            
+                }           
             }
             `;
     }
 
-    private makeReplacementIfStat() : string {
+    private makeReplacementIfStat(): string {
         let result: string = '';
         for (const poss of this.possibleProblems) {
             let toBeCreated: string = Names.classifier(poss);
-            for(const ref of poss.allReferences()) {
+            for (const ref of poss.allReferences()) {
                 let type: PiClassifier = ref.type.referred;
                 let metatype: string = Names.classifier(type);
                 this.addToImports(type);
@@ -156,7 +152,7 @@ export class SemanticAnalysisTemplate {
         return result;
     }
 
-    private makeVistorMethod(language: PiLanguage, piClassifier: PiConcept) : string {
+    private makeVistorMethod(language: PiLanguage, piClassifier: PiConcept): string {
         return `
             /**
              * Test whether the references in 'modelelement' are correct.
@@ -165,7 +161,7 @@ export class SemanticAnalysisTemplate {
              */
             public execBefore${Names.concept(piClassifier)}(modelelement: ${Names.concept(piClassifier)}): boolean {
                 let referredElem: PiElementReference<PiNamedElement> = null;
-                ${piClassifier.allReferences().map(prop => 
+                ${piClassifier.allReferences().map(prop =>
                 `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a ${prop.name} with this name
                     this.findReplacement(modelelement, referredElem);
@@ -192,7 +188,18 @@ export class SemanticAnalysisTemplate {
         this.supersOfProblems = [];
         this.possibleProblems = [];
         this.imports = [];
-        this.exprWithBooleanProp = [];
+        this.exprWithBooleanProp = new Map<PiClassifier, PiPrimitiveProperty>();
     }
 
+    private makeBooleanStat(): string {
+        let result: string = '';
+        for (const [concept, primProp] of this.exprWithBooleanProp) {
+            result += `if (referredElem.name === "true") {
+                    this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
+                } else if (referredElem.name === "false") {
+                    this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: false }));
+                }`
+        }
+        return result;
+    }
 }
