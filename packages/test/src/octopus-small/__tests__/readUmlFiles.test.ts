@@ -1,12 +1,11 @@
 import { UmlPackage } from "../language/gen";
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-import { PiError } from "@projectit/core";
 
 describe("Testing Octopus Parser", () => {
-    const writer = OctopusEnvironment.getInstance().writer;
+    // const writer = OctopusEnvironment.getInstance().writer;
     const reader = OctopusEnvironment.getInstance().reader;
-    const validator = OctopusEnvironment.getInstance().validator;
+    // const validator = OctopusEnvironment.getInstance().validator;
     const fileHandler = new FileHandler();
 
     // TODO use snapshots
