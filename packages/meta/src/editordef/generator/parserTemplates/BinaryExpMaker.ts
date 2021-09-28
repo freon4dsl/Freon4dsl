@@ -4,9 +4,6 @@ import { BinaryExpressionRule, GrammarRule } from "./grammarModel/GrammarRules";
 
 export class BinaryExpMaker {
     static specialBinaryRuleName = `__pi_binary_expression`;
-    generatedParseRules: string[] = [];
-    generatedSyntaxAnalyserMethods: string[] = [];
-    branchNames: string[] = [];
     imports: PiClassifier[] = [];
 
     public generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit, binaryConceptsUsed: PiBinaryExpressionConcept[]): GrammarRule {

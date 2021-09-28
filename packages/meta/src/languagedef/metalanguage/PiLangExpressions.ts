@@ -25,6 +25,7 @@ export abstract class PiLangExp extends PiLangElement {
 
     // returns the element to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
     findRefOfLastAppliedFeature(): PiProperty {
+        // TODO should this method return something else then null, when there is no applied feature???
         return this.appliedfeature?.findRefOfLastAppliedFeature();
     }
 

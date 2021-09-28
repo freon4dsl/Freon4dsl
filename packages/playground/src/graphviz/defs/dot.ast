@@ -1,0 +1,92 @@
+language graphviz_dot
+
+model xx {
+    public name: identifier;
+    units: yy[];
+}
+
+modelunit yy {
+    public name: identifier;
+    public graph: AbstractGraph;
+}
+
+abstract concept AbstractGraph {
+    name: identifier;
+    strict: boolean;
+    statements: Statement[];
+}
+
+concept Graph base AbstractGraph {
+}
+
+concept DiGraph base AbstractGraph {
+}
+
+abstract concept Statement {
+}
+
+concept NodeStatement base Statement {
+    nodes: Node[];
+}
+
+expression SubGraphOrNodeRef {
+    reference myRef: SubGraphOrNode;
+}
+
+binary expression EdgeStatement base Statement {
+    left: SubGraphOrNodeRef;
+    right: SubGraphOrNodeRef;
+    priority = 8;
+}
+
+
+interface SubGraphOrNode {
+    name: identifier;
+}
+
+concept AttrStatement base Statement {
+    type: AttrType;
+    attrs: Attr_List[];
+}
+
+concept SingleAttr base Statement {
+    name: identifier;
+    value: AttrValue;
+}
+
+concept SubGraph base Statement implements SubGraphOrNode {
+}
+
+concept Attr_List {
+    content: A_List[];
+}
+
+concept A_List {
+    attrs: SingleAttr[];
+}
+
+concept AttrValue {
+     stringValue?: string;
+     numberValue?: number;
+     booleanValue?: boolean;
+}
+
+concept Node implements SubGraphOrNode {
+    port?: Port;
+}
+
+concept Edge {
+}
+
+concept Port {
+    name?: identifier;
+    compass_point: CompassPoint;
+}
+
+limited AttrType {
+    GRAPH; NODE; EDGE;
+}
+
+limited CompassPoint {
+    north; northeast; east; southeast; south; southwest; west; northwest; central; dash;
+}

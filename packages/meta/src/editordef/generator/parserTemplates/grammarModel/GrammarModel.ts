@@ -20,7 +20,7 @@ export const ${(this.unitName)}GrammarStr = \`
 namespace ${(this.langName)}
 grammar ${(this.unitName)} {
                 
-${this.rules.map(rule => `${rule.toGrammar()}`).join('\n')}   
+${this.rules.map(rule => `${rule.toGrammar()}`).join('\n\n')}   
 
 __pi_reference = [ identifier / '${refSeparator}' ]+ ;
         
@@ -70,18 +70,18 @@ leaf booleanLiteral      = 'false' | 'true';
         
             transform\<T\>(sppt: SharedPackedParseTree): T {
                 if (!!sppt.root) {
-                    return this.transformNode(sppt.root) as unknown as T;
+                    return this.transformSharedPackedParseTreeNode(sppt.root) as unknown as T;
                 } else {
                     return null;
                 }
             }
         
-            private transformNode(node: SPPTNode): any {
+            private transformSharedPackedParseTreeNode(node: SPPTNode): any {
                 try {
                     if (node.isLeaf) {
-                        return this.transformLeaf(node);
+                        return this.transformSharedPackedParseTreeLeaf(node);
                     } else if (node.isBranch) {
-                        return this.transformBranch(node as SPPTBranch);
+                        return this.transformSharedPackedParseTreeBranch(node as SPPTBranch);
                     }
                 } catch (e) {
                     if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${Names.syntaxAnalyser(langUnit)}")) {
@@ -93,7 +93,7 @@ leaf booleanLiteral      = 'false' | 'true';
                 }
             }
             
-            private transformLeaf(node: SPPTNode): any {
+            private transformSharedPackedParseTreeLeaf(node: SPPTNode): any {
                 let tmp = ((node as SPPTLeaf)?.matchedText).trim();
                 if (tmp.length > 0) {
                     if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
@@ -112,7 +112,7 @@ leaf booleanLiteral      = 'false' | 'true';
                 return null;
             }     
           
-            private transformBranch(branch: SPPTBranch): any {
+            private transformSharedPackedParseTreeBranch(branch: SPPTBranch): any {
                 let brName: string = branch.name;
                 ${this.names().map(name => `if ('${name}' == brName) {
                     return this.transform${name}(branch);
@@ -162,9 +162,9 @@ leaf booleanLiteral      = 'false' | 'true';
               
             private transform__pi_reference(branch: SPPTBranch){
                 if (branch.name.includes("multi") || branch.name.includes("List")) {
-                    return this.transformList<string>(branch, "${refSeparator}");
+                    return this.transformSharedPackedParseTreeList<string>(branch, "${refSeparator}");
                 } else {
-                    return this.transformLeaf(branch);
+                    return this.transformSharedPackedParseTreeLeaf(branch);
                 }
             }
     
@@ -173,7 +173,7 @@ leaf booleanLiteral      = 'false' | 'true';
              * ...PiElemRef = identifier;
              */
             private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
-                let referred: string | string[] | T = this.transformNode(branch);
+                let referred: string | string[] | T = this.transformSharedPackedParseTreeNode(branch);
                 if (referred == null || referred == undefined ) {
                     throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
                 } else if (typeof referred === "string" && (referred as string).length == 0) {
@@ -186,12 +186,12 @@ leaf booleanLiteral      = 'false' | 'true';
             /**
              * Generic method to transform lists
              */
-            private transformList\<T\>(branch: SPPTBranch, separator?: string): T[] {
+            private transformSharedPackedParseTreeList\<T\>(branch: SPPTBranch, separator?: string): T[] {
                 let result: T[] = [];
                 const children = this.getChildren(branch, "transformList");
                 if (!!children) {
                     for (const child of children) {
-                        let element: any = this.transformNode(child);
+                        let element: any = this.transformSharedPackedParseTreeNode(child);
                         if (element !== null && element !== undefined ) {
                             if (separator == null || separator == undefined) {
                                 result.push(element);
@@ -209,12 +209,12 @@ leaf booleanLiteral      = 'false' | 'true';
             /**
              * Generic method to transform lists of references
              */            
-            private transformRefList\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string, separator?: string): PiElementReference\<T\>[] {
+            private transformSharedPackedParseTreeRefList\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string, separator?: string): PiElementReference\<T\>[] {
                 let result: PiElementReference\<T\>[] = [];
                 const children = this.getChildren(branch, "transformRefList");
                 if (!!children) {
                     for (const child of children) {
-                        let refName: any = this.transformNode(child);
+                        let refName: any = this.transformSharedPackedParseTreeNode(child);
                         if (refName !== null && refName !== undefined && refName.length > 0) {
                             if (separator === null || separator === undefined) {
                                 result.push(PiElementReference.create<T>(refName, typeName));
@@ -231,7 +231,4 @@ leaf booleanLiteral      = 'false' | 'true';
         }`;
         // end Template
     }
-    // toMethod() : string {
-    //     return ``;
-    // }
 }

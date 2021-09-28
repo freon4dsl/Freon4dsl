@@ -240,14 +240,15 @@ export class ConceptRule extends GrammarRule {
         return xx;
     }
     toGrammar() : string {
-        // check
+        // TODO remove check
         this.ruleParts.forEach((part, index) => {
             if (part == null) {
                 console.log(`part ${index} for concept ${this.concept.name} is null`);
             }
         })
         // end check
-        return `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(' ')} ;`;
+        let rule = `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(' ')}`
+        return rule.trimEnd() + " ;";
     }
     toMethod(): string {
         const myProperties = this.propsToSet();

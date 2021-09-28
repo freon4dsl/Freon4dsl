@@ -178,7 +178,7 @@ export class RHSPrimEntry extends RHSPropEntry {
         return `${getPrimCall(this.property.type.referred)}` + this.doNewline();
     }
     toMethod(propIndex: number, nodeName: string): string {
-        return `${this.property.name} = this.transformNode(${nodeName}[${propIndex}]); // RHSPrimEntry\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeNode(${nodeName}[${propIndex}]); // RHSPrimEntry\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -198,7 +198,7 @@ export class RHSPrimOptionalEntry extends RHSPropEntry {
             if (!${nodeName}[${propIndex}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  
                 const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-                ${this.property.name} = this.transformNode(subNode);
+                ${this.property.name} = this.transformSharedPackedParseTreeNode(subNode);
             }`;
     }
     toString(depth: number): string {
@@ -216,7 +216,7 @@ export class RHSPrimListEntry extends RHSPropEntry {
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformList<${baseType}>(${nodeName}[${propIndex}]); // RHSPrimListEntry\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeList<${baseType}>(${nodeName}[${propIndex}]); // RHSPrimListEntry\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -233,7 +233,7 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformList<${baseType}>(${nodeName}[${propIndex}], '${this.separatorText}'); // RHSPrimListEntryWithSeparator\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeList<${baseType}>(${nodeName}[${propIndex}], '${this.separatorText}'); // RHSPrimListEntryWithSeparator\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -250,7 +250,7 @@ export class RHSPartEntry extends RHSPropEntry {
     }
     toMethod(propIndex: number, nodeName: string): string {
         getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformNode(${nodeName}[${propIndex}]); // RHSPartEntry\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeNode(${nodeName}[${propIndex}]); // RHSPartEntry\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -271,7 +271,7 @@ export class RHSPartOptionalEntry extends RHSPropEntry {
             if (!${nodeName}[${propIndex}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  
                 const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-                ${this.property.name} = this.transformNode(subNode);
+                ${this.property.name} = this.transformSharedPackedParseTreeNode(subNode);
             }`;
     }
     toString(depth: number): string {
@@ -290,7 +290,7 @@ export class RHSPartListEntry extends RHSPropEntry {
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformList<${baseType}>(${nodeName}[${propIndex}]); // RHSPartListEntry\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeList<${baseType}>(${nodeName}[${propIndex}]); // RHSPartListEntry\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -307,7 +307,7 @@ export class RHSPartListEntryWithSeparator extends RHSPropPartWithSeparator {
     }
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformList<${baseType}>(${nodeName}[${propIndex}], '${this.separatorText}'); // RHSPartListEntryWithSeparator\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeList<${baseType}>(${nodeName}[${propIndex}], '${this.separatorText}'); // RHSPartListEntryWithSeparator\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -364,7 +364,7 @@ export class RHSRefListEntry extends RHSPropEntry {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}'); // RHSRefListEntry\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}'); // RHSRefListEntry\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -385,7 +385,7 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
         return `${this.property.name} = 
-                        this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSRefListWithSeparator\n`;
+                        this.transformSharedPackedParseTreeRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSRefListWithSeparator\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -442,7 +442,7 @@ export class RHSLimitedRefListEntry extends RHSPropEntry {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}'); // RHSLimitedRefListEntry\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}'); // RHSLimitedRefListEntry\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -460,7 +460,7 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.transformRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSLimitedRefListEntryWithSeparator\n`;
+        return `${this.property.name} = this.transformSharedPackedParseTreeRefList<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSLimitedRefListEntryWithSeparator\n`;
     }
     toString(depth: number): string {
         let indent = makeIndent(depth);
@@ -473,6 +473,7 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
     constructor(prop: PiProperty, entry: RHSPropEntry, separator: string) {
         super(prop, separator);
         this.entry = entry;
+        this.isList = true;
     }
     toGrammar() : string {
         return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
@@ -482,7 +483,7 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
             if (!${nodeName}[${propIndex}].isEmptyMatch) {          
                 ${this.property.name} = [];
                 for (const subNode of ${nodeName}[${propIndex}].nonSkipChildren.toArray()) {
-                    ${this.property.name}.push(this.transformNode(this.getGroup(subNode).nonSkipChildren.toArray()[0]));
+                    ${this.property.name}.push(this.transformSharedPackedParseTreeNode(this.getGroup(subNode).nonSkipChildren.toArray()[0]));
                 }
             }`
     }
@@ -508,7 +509,7 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
                 // get the group that represents the optional primitive
                 // because primitives are leafs in the grammar, there is no need to get the children of this group
                 const subNode = this.getGroup(${nodeName}[${propIndex}]);
-                ${this.property.name} = this.transformList<${baseType}>(subNode, '${this.separatorText}');
+                ${this.property.name} = this.transformSharedPackedParseTreeList<${baseType}>(subNode, '${this.separatorText}');
             }`;
     }
     toString(depth: number) : string {

@@ -7,7 +7,6 @@ import { WriterTemplate, ReaderTemplate } from "./parserTemplates";
 import { ParserGenerator } from "./parserTemplates/ParserGenerator";
 import { net } from "net.akehurst.language-agl-processor";
 import Agl = net.akehurst.language.agl.processor.Agl;
-import * as console from "console";
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
 
