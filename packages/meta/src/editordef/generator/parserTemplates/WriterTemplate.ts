@@ -19,7 +19,6 @@ import {
 import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class WriterTemplate {
-    // TODO unparse limited concepts differently, instead of 'AttributeType Integer' just 'Integer'
     // TODO make different method 'write' without extra optional pars (I always forget to put them in)
 
     /**
@@ -120,11 +119,10 @@ export class WriterTemplate {
             }
         
             private unparse(modelelement: ${allLangConcepts}, short: boolean) {
-                ${sortClasses(language.concepts.filter(conc => !(conc instanceof PiLimitedConcept))).map(concept => `
-                if(modelelement instanceof ${Names.concept(concept)}) {
-                    this.unparse${Names.concept(concept)}(modelelement, short);
-                    return;
-                }`).join("")}
+                ${sortClasses(language.concepts).map((concept, index) => `
+                ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.concept(concept)}) {
+                    this.unparse${Names.concept(concept)}(modelelement, short);`).join("")}
+                }
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
@@ -135,14 +133,13 @@ export class WriterTemplate {
             private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
                 const type: PiNamedElement = modelelement.referred;
                 if (!!type) {
-                    switch (type) {
-                        ${limitedConcepts.map(lim =>
-                            `${this.makeLimitedCases(lim, editDef)}`
-                        ).join("")}
-                        default: {
+                    ${limitedConcepts.map(lim =>
+                        `if (type instanceof ${Names.concept(lim)}) {
+                            this.unparse${Names.concept(lim)}(type, short)`
+                        ).join("} else ")}
+                        } else {
                             this.output[this.currentLine] +=  type.name + " ";
                         }
-                    }
                 } else {
                     this.output[this.currentLine] += modelelement.name + " ";
                 }
@@ -287,37 +284,39 @@ export class WriterTemplate {
      */
     private makeConceptMethod (conceptDef: PiEditConcept ): string {
         const myConcept: PiConcept = conceptDef.concept.referred;
-        // TODO clean up
         if (myConcept instanceof PiLimitedConcept){
-            // // a limited concept can only be referred to
-            // // when a '@keyword' projection is present, use that as reference
-            // // when not, use the name of the instance of the limited concept
-            // let result = this.makeLimitedReferenceMethod(conceptDef, myConcept);
-            // if (result.length > 0) { // it was a `@keyword` projection
-            //     return result;
-            // } else {
-            //     const name: string = Names.concept(myConcept);
-            //     return `/**
-            //              * A reference to the limited concept 'VisibilityKind' is unparsed as its name.
-            //              */
-            //             private unparse${name}(modelelement: ${name}, short: boolean) {
-            //                 if (!!modelelement) {
-            //                     this.output[this.currentLine] += modelelement.name + " ";
-            //                 }
-            //             }`;
-            // }
-            return '';
+            // when a '@keyword' projection is present, use thatyarn octopus
+            // when not, use the name of the instance of the limited concept
+            let result = this.makeLimitedMethod(conceptDef, myConcept);
+            if (result.length > 0) { // it was a `@keyword` projection
+                return result;
+            } else {
+                const name: string = Names.concept(myConcept);
+                return `/**
+                         * The limited concept '${myConcept.name}' is unparsed as its name.
+                         */
+                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                            if (!!modelelement) {
+                                this.output[this.currentLine] += modelelement.name + " ";
+                            }
+                        }`;
+            }
         } else {
             return this.makeNormalConceptMethod(conceptDef, myConcept);
         }
     }
 
-    private makeLimitedCases(lim: PiLimitedConcept, editDef: PiEditUnit): string {
-        const conceptDef: PiEditConcept = editDef.findConceptEditor(lim);
-        if (!!conceptDef) { // there is a projection for this limited concept
-            const name: string = Names.concept(lim);
-            const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
-            let cases: string = ``;
+    private makeLimitedMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
+        const comment = `/**
+                          * The limited concept '${myConcept.name}' is unparsed according to the keywords in the editor definition.
+                          */`;
+        const name: string = Names.concept(myConcept);
+        const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
+
+        // if the special '@keyword' construct is used, we create an extra method with a switch statement
+        // if not, do nothing, the limited concept is being referred to by its name
+        if (!!lines) {
+            let cases: string = "";
             lines.map(line => line.items.map(item => {
                 // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
                 if (item instanceof PiEditInstanceProjection) {
@@ -329,54 +328,22 @@ export class WriterTemplate {
                 }
             }));
             if (cases.length > 0) {
-                cases = `// The limited concept '${lim.name}' is unparsed according to the keywords in the editor definition.
-                        ${cases}`;
+                return `
+                    ${comment}
+                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                            if (!!modelelement) {
+                                switch (modelelement) {
+                                    ${cases}
+                                    default: {
+                                        this.output[this.currentLine] += modelelement.name + " ";
+                                    }
+                                }
+                            }
+                        }`;
             }
-            return cases;
         }
         return "";
     }
-
-    // TODO clean up
-    // private makeLimitedReferenceMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
-    //     const name: string = Names.concept(myConcept);
-    //     const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
-    //     const comment = `/**
-    //                       * A reference to the limited concept '${myConcept.name}' is unparsed according
-    //                       * to the keywords in the editor definition.
-    //                       */`;
-    //
-    //     // if the special '@keyword' construct is used, we create an extra method with a switch statement
-    //     // if not, do nothing, the limited concept is being referred to by its name
-    //     if (!!lines) {
-    //         let cases: string = "";
-    //         lines.map(line => line.items.map(item => {
-    //             // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
-    //             if (item instanceof PiEditInstanceProjection) {
-    //                 cases += `case ${item.expression.sourceName}.${item.expression.instanceName}: {
-    //                             this.output[this.currentLine] += "${item.keyword} ";
-    //                             break;
-    //                             }
-    //                             `
-    //             }
-    //         }));
-    //         if (cases.length > 0) {
-    //             return `
-    //                 ${comment}
-    //                     private unparse${name}(modelelement: ${name}, short: boolean) {
-    //                         if (!!modelelement) {
-    //                             switch (modelelement) {
-    //                                 ${cases}
-    //                                 default: {
-    //                                     this.output[this.currentLine] += modelelement.name + " ";
-    //                                 }
-    //                             }
-    //                         }
-    //                     }`;
-    //         }
-    //     }
-    //     return "";
-    // }
 
     private makeNormalConceptMethod(conceptDef: PiEditConcept, myConcept: PiConcept) {
         const name: string = Names.concept(myConcept);
