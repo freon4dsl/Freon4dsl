@@ -10,11 +10,12 @@ export interface PiScoper {
      * not visible (private) from the location of 'modelelement', then null is returned.
      * If present, then the search is limited to elements which type is 'metatype'.
      *
-     * @param modelelement
-     * @param pathname
-     * @param metatype
+     * @param modelelement: the containing element, where 'pathname' should be visible
+     * @param doNotSearch: the role or property name of the element that we are searching for
+     * @param pathname: the name or series of names of the element that we are searching for
+     * @param metatype: the metatype of the element that we are searching for
      */
-    resolvePathName(modelelement: PiElement, pathname: string[], metatype?: string): PiNamedElement;
+    resolvePathName(modelelement: PiElement, doNotSearch: string, pathname: string[], metatype?: string): PiNamedElement;
 
     /**
      *   Returns true if 'name' is known in the namespace containing 'modelelement' or one
