@@ -1,4 +1,4 @@
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
+import { hasNameProperty, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
 import {
     PiBinaryExpressionConcept, PiClassifier,
     PiConcept,
@@ -116,6 +116,27 @@ export class WriterTemplate {
                 // do the actual work
                 this.unparse(modelelement, short);
                 return this.output;
+            }
+            
+            /**
+             * Returns the name of 'modelelement' if it has one, else returns
+             * a short unparsing of 'modelelement'
+             * @param modelelement
+             */
+            public writeNameOnly(modelelement: ${allLangConcepts}): string {
+                ${this.findNamedConcepts(language.concepts).map((concept, index) => `
+                ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.concept(concept)}) {
+                    return modelelement.name;`).join("")}
+                } else {
+                    // make sure the global variables are reset
+                    this.output = [];
+                    this.currentLine = 0;
+                    // do not care about indent, we just need a single line
+                    this.output[this.currentLine] = "";
+                    // do the actual work
+                    this.unparse(modelelement, true);
+                    return this.output[0];
+                }
             }
         
             private unparse(modelelement: ${allLangConcepts}, short: boolean) {
@@ -582,5 +603,15 @@ export class WriterTemplate {
             joinType = "SeparatorType.Separator";
         }
         return joinType;
+    }
+
+    private findNamedConcepts(concepts: PiConcept[]): PiConcept[] {
+        let result: PiConcept[] = [];
+        for( const elem of concepts) {
+            if (hasNameProperty(elem)) {
+                result.push(elem);
+            }
+        }
+        return result;
     }
 }

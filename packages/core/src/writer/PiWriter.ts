@@ -25,5 +25,12 @@ export interface PiWriter {
      * @param short
      */
     writeToLines(modelelement: PiElement, startIndent?: number, short?: boolean): string[];
+
+    /**
+     * Returns the name of 'modelelement' if it has one, else returns
+     * a short unparsing of 'modelelement'
+     * @param modelelement
+     */
+    writeNameOnly(modelelement: PiElement): string;
 }
 // end::writer-interface[]
