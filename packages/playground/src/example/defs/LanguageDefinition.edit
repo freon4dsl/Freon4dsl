@@ -149,18 +149,11 @@ AbsExpression {
         | ${self.expr} |
     ]
 }
-/*
 
 //IfExpression {
 //    @projection IfExpression
 //        [
-//        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
+//        ${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse}
 //        ]
 //    @trigger "if"
 //}
-/*
-
-/*
-*/
-/*
-*/
