@@ -38,7 +38,7 @@ describe("Testing Octopus Parser", () => {
     });
 
     test("book model unparsed and parsed again", () => {
-        const langSpec = fileHandler.stringFromFile("./src/octopus-small/__inputs__/book.uml2");
+        const langSpec = fileHandler.stringFromFile("./src/octopus-small/__inputs__/Book.uml2");
         const unit1 = reader.readFromString(langSpec, "UmlPackage");
         expect(unit1).not.toBeNull();
         // console.log(writer.writeToString(unit1, 0, false));
