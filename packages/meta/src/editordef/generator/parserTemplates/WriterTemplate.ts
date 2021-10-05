@@ -133,13 +133,17 @@ export class WriterTemplate {
             private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
                 const type: PiNamedElement = modelelement.referred;
                 if (!!type) {
-                    ${limitedConcepts.map(lim =>
-                        `if (type instanceof ${Names.concept(lim)}) {
-                            this.unparse${Names.concept(lim)}(type, short)`
-                        ).join("} else ")}
+                    ${limitedConcepts.length > 0 
+                    ? 
+                        `${limitedConcepts.map((lim, index) =>
+                        `${index == 0 ? `` : `} else `}if (type instanceof ${Names.concept(lim)}) {
+                            this.unparse${Names.concept(lim)}(type, short);`).join("")}
                         } else {
                             this.output[this.currentLine] +=  type.name + " ";
-                        }
+                        }`
+                    :
+                        `this.output[this.currentLine] +=  type.name + " ";`
+                    }
                 } else {
                     this.output[this.currentLine] += modelelement.name + " ";
                 }
