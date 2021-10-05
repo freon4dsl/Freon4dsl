@@ -17,6 +17,8 @@ PiLogger.mute("LabelComponent");
 PiLogger.mute("ListComponent");
 PiLogger.mute("DropdownComponent");
 PiLogger.mute("DropdownItemComponent");
+PiLogger.mute("X");
+PiLogger.mute("EditorCommunication");
 
 PiLogger.mute("ExampleScoper");
 

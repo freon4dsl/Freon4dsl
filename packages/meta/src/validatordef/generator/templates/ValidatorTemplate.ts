@@ -30,7 +30,7 @@ export class ValidatorTemplate {
  
         /**
          * Interface '${Names.checkerInterface(language)}' represents any object that traverses the model tree and checks
-         * its nodes, where any errors are deposit in 'errorList'.
+         * its nodes, where any errors are deposited in 'errorList'.
          * Every checker that is used by the validator '${generatedClassName}' should implement this interface.
          */     
         export interface ${Names.checkerInterface(language)} extends ${workerClassName} {

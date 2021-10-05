@@ -19,6 +19,7 @@ import {
 import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class WriterTemplate {
+    // TODO make different method 'write' without extra optional pars (I always forget to put them in)
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
@@ -28,6 +29,16 @@ export class WriterTemplate {
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
+        let limitedConcepts: PiLimitedConcept[] = [];
+
+        // find all limited concepts used, the are treated differently in both (1) the creation of unparse method
+        // (2) in the generic method 'unparseReferenceList'
+        for (const conceptDef of editDef.conceptEditors) {
+            const myConcept: PiConcept = conceptDef.concept.referred;
+            if (myConcept instanceof PiLimitedConcept) {
+                limitedConcepts.push(myConcept);
+            }
+        }
 
         // Template starts here
         return `
@@ -108,15 +119,36 @@ export class WriterTemplate {
             }
         
             private unparse(modelelement: ${allLangConcepts}, short: boolean) {
-                ${sortClasses(language.concepts).map(concept => `
-                if(modelelement instanceof ${Names.concept(concept)}) {
-                    this.unparse${Names.concept(concept)}(modelelement, short);
-                    return;
-                }`).join("")}
+                ${sortClasses(language.concepts).map((concept, index) => `
+                ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.concept(concept)}) {
+                    this.unparse${Names.concept(concept)}(modelelement, short);`).join("")}
+                }
             }
 
             ${editDef.conceptEditors.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
-               
+             
+            /**
+             *
+            */
+            private unparseReference(modelelement: PiElementReference<PiNamedElement>, short: boolean) {
+                const type: PiNamedElement = modelelement.referred;
+                if (!!type) {
+                    ${limitedConcepts.length > 0 
+                    ? 
+                        `${limitedConcepts.map((lim, index) =>
+                        `${index == 0 ? `` : `} else `}if (type instanceof ${Names.concept(lim)}) {
+                            this.unparse${Names.concept(lim)}(type, short);`).join("")}
+                        } else {
+                            this.output[this.currentLine] +=  type.name + " ";
+                        }`
+                    :
+                        `this.output[this.currentLine] +=  type.name + " ";`
+                    }
+                } else {
+                    this.output[this.currentLine] += modelelement.name + " ";
+                }
+            }
+       
             /**
              * Adds a string representation of 'list' to the 'output', using 'sepText' , and 'sepType' to include either a separator string
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
@@ -149,8 +181,8 @@ export class WriterTemplate {
              */
             private unparseReferenceList(list: ${Names.PiElementReference}<${Names.PiNamedElement}>[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean) {
                 list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index === list.length - 1;
-                    this.output[this.currentLine] += listElem.name;
+                    const isLastInList: boolean = index === list.length - 1;                   
+                    this.unparseReference(listElem, short);                 
                     this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                 });
             }
@@ -160,29 +192,33 @@ export class WriterTemplate {
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
              * If 'short' is false, then a multi-line result will be given. Otherwise, only one single-line string is added.
              * @param list
+             * @param isIdentifier : indicates whether or not the value should be surrounded with double quotes
              * @param sepText
              * @param sepType
              * @param vertical
              * @param indent
              * @param short
-             */       
+             */   
             private unparseListOfPrimitiveValues(
                 list: (string | number | boolean)[],
+                isIdentifier: boolean,
                 sepText: string,
                 sepType: SeparatorType,
                 vertical: boolean,
                 indent: number,
                 short: boolean
             ) {
-                list.forEach((listElem, index) => {
-                    const isLastInList: boolean = index === list.length - 1;
-                    if (typeof listElem === "string") {
-                        this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
-                    } else {
-                        this.output[this.currentLine] += \`\$\{listElem\}\`;
-                    }
-                    this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
-                });
+                if (!!list) {
+                    list.forEach((listElem, index) => {
+                        const isLastInList: boolean = index === list.length - 1;
+                        if (typeof listElem === "string" && !isIdentifier) {
+                            this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
+                        } else {
+                            this.output[this.currentLine] += \`\$\{listElem\}\`;
+                        }
+                        this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
+                    });
+                }
             }
             
             /**
@@ -221,8 +257,9 @@ export class WriterTemplate {
                     } else { // stop after 1 line
                         // note that the following cannot be parsed
                         this.output[this.currentLine] += \` ...\`;
-                        return;
                     }
+                } else if (!vertical && isLastInList) {
+                    this.output[this.currentLine] += \` \`;
                 }
             }
         
@@ -252,25 +289,33 @@ export class WriterTemplate {
     private makeConceptMethod (conceptDef: PiEditConcept ): string {
         const myConcept: PiConcept = conceptDef.concept.referred;
         if (myConcept instanceof PiLimitedConcept){
-            let result = this.makeLimitedConceptMethod(conceptDef, myConcept);
-            // a limited can have a '@keyword' projection or a normal one
+            // when a '@keyword' projection is present, use thatyarn octopus
+            // when not, use the name of the instance of the limited concept
+            let result = this.makeLimitedMethod(conceptDef, myConcept);
             if (result.length > 0) { // it was a `@keyword` projection
                 return result;
             } else {
-                return this.makeNormalConceptMethod(conceptDef, myConcept);
+                const name: string = Names.concept(myConcept);
+                return `/**
+                         * The limited concept '${myConcept.name}' is unparsed as its name.
+                         */
+                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                            if (!!modelelement) {
+                                this.output[this.currentLine] += modelelement.name + " ";
+                            }
+                        }`;
             }
         } else {
             return this.makeNormalConceptMethod(conceptDef, myConcept);
         }
     }
 
-    private makeLimitedConceptMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
+    private makeLimitedMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
+        const comment = `/**
+                          * The limited concept '${myConcept.name}' is unparsed according to the keywords in the editor definition.
+                          */`;
         const name: string = Names.concept(myConcept);
         const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
-        const comment = `/**
-                          * The limited concept '${myConcept.name}' is unparsed according to the keywords
-                          * in the editor definition.
-                          */`;
 
         // if the special '@keyword' construct is used, we create an extra method with a switch statement
         // if not, do nothing, the limited concept is being referred to by its name
@@ -289,11 +334,15 @@ export class WriterTemplate {
             if (cases.length > 0) {
                 return `
                     ${comment}
-                        private unparse${name}(modelelement: ${name}, short: boolean): string {
-                            switch (modelelement) {
-                                ${cases}                  
+                        private unparse${name}(modelelement: ${name}, short: boolean) {
+                            if (!!modelelement) {
+                                switch (modelelement) {
+                                    ${cases}
+                                    default: {
+                                        this.output[this.currentLine] += modelelement.name + " ";
+                                    }
+                                }
                             }
-                            return modelelement.name + " ";
                         }`;
             }
         }
@@ -331,11 +380,11 @@ export class WriterTemplate {
             if (myConcept instanceof PiBinaryExpressionConcept && !!(conceptDef.symbol)) {
                 return `${comment}
                     private unparse${name}(modelelement: ${name}, short: boolean) {
-                        this.output[this.currentLine] += "( ";
+                        //this.output[this.currentLine] += "( ";
                         this.unparse(modelelement.left, short);
                         this.output[this.currentLine] += "${conceptDef.symbol} ";
                         this.unparse(modelelement.right, short);
-                        this.output[this.currentLine] += ") ";
+                        //this.output[this.currentLine] += ") ";
                 }`;
             }
             if (myConcept instanceof PiConcept && myConcept.isAbstract) {
@@ -381,7 +430,7 @@ export class WriterTemplate {
                 if (sub instanceof PiEditPropertyProjection) {
                     myTypeScript = langExpToTypeScript(sub.expression);
                     if (sub.expression.findRefOfLastAppliedFeature().isList) {
-                        myTypeScript = `${myTypeScript}.length > 0`;
+                        myTypeScript = `!!${myTypeScript} && ${myTypeScript}.length > 0`;
                     } else {
                         myTypeScript = `!!${myTypeScript}`;
                     }
@@ -415,7 +464,7 @@ export class WriterTemplate {
     }
 
     /**
-     * Creates the statement neede to unparse an element with primitive type. The element may be a list or
+     * Creates the statement needed to unparse an element with primitive type. The element may be a list or
      * a single property.
      * @param myElem
      * @param item
@@ -425,18 +474,21 @@ export class WriterTemplate {
         let result: string = ``;
         const elemStr = langExpToTypeScript(item.expression);
         if (myElem.isList) {
-            let vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-            let joinType = this.getJoinType(item);
+            let isIdentifier: string = "false";
+            if (myElem.type.referred === PiPrimitiveType.identifier) {
+                isIdentifier = "true";
+            }
+            const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+            const joinType = this.getJoinType(item);
             result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, "${item.listJoin.joinText}", ${joinType}, ${vertical},
+                    ${elemStr}, ${isIdentifier},"${item.listJoin.joinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
                     short
                 );`;
         } else {
             let myCall: string = ``;
             const myType: PiClassifier = myElem.type.referred;
-            // TODO remove this hack: test on "myElem.name !== "name" ", when a difference is made between identifiers and strings
-            if (myType === PiPrimitiveType.string ) { //&& myElem.name !== "name") {
+            if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else if (myType === PiPrimitiveType.boolean && !!item.keyword) {
                 myCall = `if (${elemStr}) { 
@@ -445,11 +497,20 @@ export class WriterTemplate {
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
-            if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-                result += `if (!!${elemStr}) { ${myCall} }`;
-            } else {
+            // TODO check this solution: there is one if-stat too many in
+            // if (!!modelelement.primNumberWithExtra) {
+            //     this.output[this.currentLine] += `before `;
+            //     if (!!modelelement.primNumberWithExtra) {
+            //         this.output[this.currentLine] += `${modelelement.primNumberWithExtra} `;
+            //     }
+            //     this.output[this.currentLine] += `after `;
+            // }
+            // this seems to be the solution:
+            // if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
+            //     result += `if (!!${elemStr}) { ${myCall} }`;
+            // } else {
                 result += myCall;
-            }
+            // }
         }
         return result + ";\n";
     }
@@ -478,18 +539,23 @@ export class WriterTemplate {
                 }
             } else {
                 let myCall: string = "";
-                if (myElem.isPart || type instanceof PiLimitedConcept) {
+                if (myElem.isPart) {
                     myCall += `this.unparse(${myTypeScript}, short) `;
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
                     // remove only the last ".referred"
-                    if (myTypeScript.endsWith("?.referred") ) {
+                    if (myTypeScript.endsWith("?.referred")) {
                         myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
-                    } else if (myTypeScript.endsWith(".referred") ) {
+                    } else if (myTypeScript.endsWith(".referred")) {
                         myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
                     }
                     // end hack
-                    myCall += `this.output[this.currentLine] += \`\$\{${myTypeScript}.name\} \``;
+                    myCall += `this.unparseReference(${myTypeScript}, short);`;
+                    // if (type instanceof PiLimitedConcept) {
+                    //     myCall += `this.unparse${type.name}(${myTypeScript}, short);`;
+                    // } else {
+                    //     myCall += `this.output[this.currentLine] += \`\$\{${myTypeScript}.name\} \``;
+                    // }
                 }
                 if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
                     result += `if (!!${myTypeScript}) { ${myCall} }`;

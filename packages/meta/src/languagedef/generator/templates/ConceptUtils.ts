@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, typeToString } from "../../../utils";
+import { Names, PROJECTITCORE, getBaseTypeAsString } from "../../../utils";
 import { PiClassifier, PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
 import { PiPrimitiveType } from "../../metalanguage/PiLanguage";
 
@@ -64,7 +64,7 @@ export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
             initializer = "= []";
         }
     }
-    return `${property.name} : ${typeToString(property)}${arrayType} ${initializer}; \t${comment}`;
+    return `${property.name} : ${getBaseTypeAsString(property)}${arrayType} ${initializer}; \t${comment}`;
 }
 
 export function makePartProperty(property: PiConceptProperty): string {
@@ -110,17 +110,6 @@ export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): stri
                         ).join("\n")}` 
                     : ``
                     }                    
-
-                    ${allPrimitiveProps.length !== 0 ?
-                        `// Make primitiuve properties observable
-                         makeObservable(this, {
-                            ${allPrimitiveProps.map(p =>
-                                `"${p.name}": observable`
-                            ).join(",\n")}
-                        })`
-                        : ``
-                    }                    
-
             }`;
 }
 

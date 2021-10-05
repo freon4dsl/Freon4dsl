@@ -125,7 +125,7 @@ export class LangUtil {
 
     /**
      * Takes a PiInterface and returns a list of concepts that implement it,
-     * inclusing the concepts that implement subinterfaces.
+     * including the concepts that implement subinterfaces.
      *
      * @param piInterface
      */

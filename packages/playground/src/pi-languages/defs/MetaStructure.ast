@@ -1,17 +1,21 @@
 language PiLanguage
 
+// begin structure definition
+public modelunit PiStructureDef {
+    public name: string;
+    public concepts: PiConcept[];
+    public interfaces: PiInterface[];
+    public rootconcept: PiConcept;
+}
+
 abstract concept PiLangElement {
     // location: ParseLocation
     name: string;
     // piMetaName: string; not yet implemented
 }
-root concept PiLanguageUnit base PiLangElement {
-    concepts: PiConcept[];
-    interfaces: PiInterface[];
-    rootconcept: PiConcept;
-}
+
 abstract concept PiClassifier base PiLangElement {
-    owningLanguage: PiLanguageUnit;
+    reference owningLanguage: PiStructureDef;
     properties: PiProperty[];
     primProperties: PiPrimitiveProperty[];
 }
@@ -20,7 +24,7 @@ concept PiInterface base PiClassifier {
 }
 concept PiConcept base PiClassifier {
     isAbstract: boolean;
-    isModel:boolean;
+    isRoot:boolean;
     reference base?: PiConcept;
     reference interfaces: PiInterface[];
 }
@@ -39,7 +43,7 @@ abstract concept PiProperty base PiLangElement {
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
     reference type: PiClassifier;
-    owningConcept: PiClassifier; // should this be a reference?
+    reference owningConcept: PiClassifier;
 }
 concept PiConceptProperty base PiProperty {
     hasLimitedType: boolean;
@@ -70,7 +74,7 @@ concept PiPropertyInstance base PiLangElement {
 }
 // the following two classes are only used in the typer and validator definitions
 concept PiFunction base PiLangElement {
-    language: PiLanguageUnit;
+    reference language: PiStructureDef;
     formalparams: PiParameter[];
     reference returnType: PiClassifier;
 }
@@ -78,3 +82,41 @@ concept PiFunction base PiLangElement {
 concept PiParameter base PiLangElement {
     reference type: PiClassifier;
 }
+// end structure definition
+// begin expressions definition
+abstract concept PiLangExp base PiLangElement {
+    sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+//    appliedFeature: PiLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    reference referredElement: PiLangElement;            // refers to the element called 'sourceName'
+//    location: ParseLocation;                            // holds start and end in the parsed file
+    reference language: PiStructureDef;                           // the language for which this expression is defined
+}
+
+concept PiLangSimpleExp base PiLangExp {
+    value: number;
+}
+
+concept PiLangSelfExp base PiLangExp {
+//    reference referredElement: PiConcept;
+}
+
+concept PiInstanceExp base PiLangExp {
+//    reference referredElement: PiInstance;
+}
+
+concept PiLangConceptExp base PiLangExp {
+//    reference referredElement: PiConcept;
+}
+
+concept PiLangAppliedFeatureExp base PiLangExp {
+    reference sourceExp: PiLangExp;
+//    reference referredElement: PiProperty;
+}
+
+concept PiLangFunctionCallExp base PiLangExp {
+    //sourceName: string; 			// in typer: name can only be 'commonSuperType', in validator: only 'conformsTo' and 'equalsType'
+    actualParams: PiLangExp[];
+    returnValue: boolean;
+//    reference referredElement: PiFunction;
+}
+// end expressions definition

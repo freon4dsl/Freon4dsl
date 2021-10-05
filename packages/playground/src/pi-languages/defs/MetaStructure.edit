@@ -1,9 +1,5 @@
 editor First for language PiLanguage
 
-//PiLangElement {
-//    @projection
-//    [name]
-//}
 PiStructureDef {
     @projection
     [language ${self.name}
@@ -18,14 +14,18 @@ PiStructureDef {
     }
     ]
 }
-//PiClassifier {
+//abstract concept PiLangElement {
+//    @projection
+//    [name]
+//}
+//abstract concept PiClassifier {
 //    owningLanguage: PiLanguageUnit;
 //    properties: PiProperty[];
 //    primProperties: PiPrimitiveProperty[];
 //}
 PiInterface {
     @projection
-    [interface ${self.name} base ${self.base @horizontal @separator [, ]}
+    [interface ${self.name} [?base ${self.base @horizontal @separator [, ]}]
         ${self.properties
             @vertical
             @terminator [;\n]
@@ -34,7 +34,7 @@ PiInterface {
 }
 PiConcept {
     @projection
-    [concept ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
+    [[?abstract ${self.isAbstract}] [?root ${self.isRoot}] concept ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
         ${self.properties
             @vertical
             @terminator [;\n]

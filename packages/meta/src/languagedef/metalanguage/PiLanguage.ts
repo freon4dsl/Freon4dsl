@@ -46,6 +46,9 @@ export class PiLanguage extends PiLangElement {
     }
 
     findExpressionBase(): PiExpressionConcept {
+        // TODO why the return inside the find???
+        // TODO rethink the inheritance structure of expressions: should binaries always inherit from expression, and more questions!
+        // TODO the following depends on the order of concepts in the .ast file
         const result = this.concepts.find(c => {
             return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
         });
@@ -385,6 +388,7 @@ export class PiParameter extends PiLangElement {
 
 // the basic types in the pi-languages
 export type PiPrimitiveValue = string | boolean | number ;
+
 export class PiPrimitiveType extends PiConcept {
     /**
      * A convenience method that creates an instance of this class

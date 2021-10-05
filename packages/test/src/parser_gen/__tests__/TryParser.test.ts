@@ -39,7 +39,6 @@ describe("Test the parser", () => {
 
         let output = writer.writeToString(model, 0, false);
         fileHandler.stringToFile("src/parser_gen/__tests__/ParserOutput.txt", output);
-        // TODO use snapshot
-        expect(output.length).toBe(1112);
+        expect(output).toMatchSnapshot();
     });
 });

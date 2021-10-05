@@ -49,7 +49,7 @@ export class CustomExampleProjection implements PiProjection {
 
     public getDemoNumberLiteralExpressionBox(exp: NumberLiteralExpression): Box {
         return createDefaultExpressionBox(exp, "number-literal", [
-            new TextBox(exp, "NumberLiteralExpression-value", () => exp.value, (v: string) => (exp.value = v), {
+            new TextBox(exp, "NumberLiteralExpression-value", () => exp.value.toString(), (v: string) => (exp.value = Number.parseInt(v)), {
                 deleteWhenEmpty: true,
                 // style: projectitStyles.stringLiteral,
                 keyPressAction: (currentText: string, key: string, index: number) => {

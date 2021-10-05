@@ -28,7 +28,7 @@
             },
             {
                "$typename": "Attribute",
-               "name": "",
+               "name": "someText",
                "declaredType": "ANY"
             }
          ],
@@ -40,7 +40,11 @@
                   "$typename": "AbsExpression",
                   "expr": {
                      "$typename": "ParameterRef",
-                     "appliedfeature": null,
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "attr2"
+                     },
                      "parameter": "par2"
                   },
                   "appliedfeature": null
@@ -54,7 +58,7 @@
                   {
                      "$typename": "Parameter",
                      "name": "par2",
-                     "declaredType": "Integer"
+                     "declaredType": "entity1"
                   }
                ],
                "declaredType": "Integer"

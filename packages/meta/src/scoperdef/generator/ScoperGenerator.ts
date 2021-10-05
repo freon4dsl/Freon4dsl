@@ -9,7 +9,7 @@ import { PiElementReference } from "../../languagedef/metalanguage/PiElementRefe
 import { ScoperUtilsTemplate } from "./templates/ScoperUtilsTemplate";
 import { NamesCollectorTemplate } from "./templates/NamesCollectorTemplate";
 
-const LOGGER = new MetaLogger("ScoperGenerator"); // .mute();
+const LOGGER = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;
