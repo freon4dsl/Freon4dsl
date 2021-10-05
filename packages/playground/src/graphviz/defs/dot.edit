@@ -1,30 +1,38 @@
 editor AA for language graphviz_dot
 
-yy {
-@projection [
+yy {@projection [
     ${self.graph}
-]
-}
+]}
 
-Graph {
-@projection [
-    [?${self.strict @keyword[STRICT]}] GRAPH ${self.name} {
+Graph {@projection [
+    [?${self.strict @keyword[STRICT]}] GRAPH [?${self.name}]{
     ${self.statements @vertical @terminator [; ]}
     }
-]
-}
+]}
+DiGraph {@projection [
+    [?${self.strict @keyword[STRICT]}] DIGRAPH [?${self.name}] {
+    ${self.statements @vertical @terminator [; ]}
+    }
+]}
+NodeStatement {@projection [
+    ${self.node} [?${self.attributes}]
+]}
+NodeExp{@projection [
+    ${self.name} [?${self.port}]
+]}
+EdgeStatement{@projection [
+    ${self.edge} [?${self.attributes}]
+]}
+SubgraphExp{@projection [
+    [? SUBGRAPH ${self.name}] { ${self.statements @vertical @terminator [; ]} }
+]}
+AttrStatement{@projection [
+${self.type} ${self.attributes @horizontal}
+]}
 
-AttrStatement{
-@projection [
-${self.type} ${self.attrs @horizontal}
-]
-}
-
-Attr_List {
-    @projection normal [
+Attr_List {    @projection normal [
     \[ ${self.content @horizontal} \]
-    ]
-}
+]}
 
 A_List {
     @projection normal [
@@ -44,22 +52,17 @@ AttrValue {
     [?${self.booleanValue}]
     ]
 }
-
-EdgeStatement {
-    @projection normal [
-        ${self.left} '->' ${self.right} Attr_List
-    ]
-}
-AttrType {
-    @projection normal [
+Port {@projection normal [
+    [?':' ${self.name}] [?':' ${self.compass_point}]
+]}
+DirectedEdgeExp{ @symbol "->" }
+UnDirectedEdgeExp{ @symbol "--" }
+AttrType {@projection normal [
         ${GRAPH @keyword [GRAPH]}
         ${NODE @keyword [NODE]}
         ${EDGE @keyword [EDGE]}
-    ]
-}
-
-CompassPoint {
-    @projection normal [
+    ]}
+CompassPoint {@projection normal [
         ${north @keyword [n]}
         ${northeast @keyword [ne]}
         ${east @keyword [e]}
@@ -70,5 +73,4 @@ CompassPoint {
         ${northwest @keyword [nw]}
         ${central @keyword [c]}
         ${dash @keyword [-]}
-    ]
-}
+    ]}

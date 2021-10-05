@@ -12,6 +12,12 @@ import { PiEditConcept } from "../../../metalanguage";
 import { RHSPropEntry, RightHandSideEntry } from "./RHSEntries";
 import { getTypeCall } from "./GrammarUtils";
 
+export const internalTransformNode = "transformSharedPackedParseTreeNode";
+export const internalTransformList = "transformSharedPackedParseTreeList";
+export const internalTransformRefList = "transformSharedPackedParseTreeRefList";
+export const internalTransformLeaf = "transformSharedPackedParseTreeLeaf";
+export const internalTransformBranch = "transformSharedPackedParseTreeBranch";
+
 export abstract class GrammarRule {
     ruleName: string;
     toGrammar(): string {
@@ -56,7 +62,7 @@ export class ChoiceRule extends GrammarRule {
             ${ParserGenUtil.makeComment(this.toGrammar())}
             private transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
                 // console.log('transform${this.ruleName} called: ' + branch.name);
-                return this.transformNode(branch.nonSkipChildren.toArray()[0]);
+                return this.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
             }`;
     }
 }
@@ -96,7 +102,7 @@ export class SuperChoiceRule extends GrammarRule {
             ${ParserGenUtil.makeComment(this.toGrammar())}
             private transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
                 // console.log('transform${this.ruleName} called: ' + branch.name);
-                return this.transformNode(branch.nonSkipChildren.toArray()[0]);
+                return this.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
             }`;
     }
 }
@@ -191,10 +197,10 @@ export class BinaryExpressionRule extends GrammarRule {
             const children = branch.nonSkipChildren.toArray();
             const actualList = children[0].nonSkipChildren.toArray();
             let index = 0;
-            let first = this.transformNode(actualList[index++]);
+            let first = this.${internalTransformNode}(actualList[index++]);
             while (index < actualList.length) {
-                let operator = this.transformNode(actualList[index++]);
-                let second = this.transformNode(actualList[index++]);
+                let operator = this.${internalTransformNode}(actualList[index++]);
+                let second = this.${internalTransformNode}(actualList[index++]);
                 let combined: ${Names.concept(this.expressionBase)} = null;
                 switch (operator) {
                 ${this.editDefs.map(def => `
