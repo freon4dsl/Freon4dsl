@@ -80,6 +80,7 @@
 
 <style>
     .menu-list {
+        color: var(--theme-colors-color);
         background-color: var(--theme-colors-inverse_color);
     }
 </style>
