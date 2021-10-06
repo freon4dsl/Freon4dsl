@@ -19,7 +19,6 @@ import {
 import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class WriterTemplate {
-    // TODO make different method 'write' without extra optional pars (I always forget to put them in)
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
@@ -64,14 +63,13 @@ export class WriterTemplate {
          * It is, amongst others, used to create error messages in the validator.
          */
         export class ${generatedClassName} implements ${writerInterfaceName} {
-            output: string[] = [];      // stores the result, one line per array element
+            output: string[] = [];     // stores the result, one line per array element
             currentLine: number = 0;   // keeps track of the element in 'output' that we are working on
 
             /**
              * Returns a string representation of 'modelelement'.
-             * If 'short' is present and false, then a multi-line result will be given.
-             * Otherwise, the result is always a single-line string, which is used in
-             * error messages.
+             * If 'short' is present and true, then a single-line result will be given.
+             * Otherwise, the result is always a multi-line string.
              * Note that the single-line-string cannot be parsed into a correct model.
              * 
              * @param modelelement
@@ -86,8 +84,8 @@ export class WriterTemplate {
             /**
              * Returns a string representation of 'modelelement', divided into an array of strings,
              * each of which contain a single line (without newline).
-             * If 'short' is present and false, then a multi-line result will be given.
-             * Otherwise, the result is always a single-line string.
+             * If 'short' is present and true, then a single-line result will be given.
+             * Otherwise, the result is always a multi-line string.
              *
              * @param modelelement
              * @param startIndent
@@ -99,7 +97,7 @@ export class WriterTemplate {
                     startIndent = 0;
                 }
                 if (short === undefined) {
-                    short = true;
+                    short = false;
                 }
         
                 // make sure the global variables are reset
@@ -120,7 +118,9 @@ export class WriterTemplate {
             
             /**
              * Returns the name of 'modelelement' if it has one, else returns
-             * a short unparsing of 'modelelement'
+             * a short unparsing of 'modelelement'.
+             * Used by the validator to produce readable error messages.
+             *
              * @param modelelement
              */
             public writeNameOnly(modelelement: ${allLangConcepts}): string {
