@@ -146,7 +146,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     };
 
     private generateEditorAndParser = () => {
-        LOGGER.info(this, "Generating editor");
+        LOGGER.info(this, "Generating editor, reader and writer");
         let editor: PiEditUnit = null;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
@@ -165,7 +165,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.parserGenerator.generate(editor);
         } catch (e) {
             // LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping editor, reader and writer generation because of errors: " + e.message);
         }
         return editor;
     };
