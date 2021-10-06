@@ -135,7 +135,7 @@ export class WriterTemplate {
                     this.output[this.currentLine] = "";
                     // do the actual work
                     this.unparse(modelelement, true);
-                    return this.output[0];
+                    return this.output[0].trimEnd();
                 }
             }
         
