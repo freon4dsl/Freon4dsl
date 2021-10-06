@@ -1,4 +1,5 @@
 <script lang="ts">
+    import RenderComponent from "./RenderComponent.svelte";
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { OptionalBox, PiLogger } from "@projectit/core";
@@ -14,6 +15,7 @@
         LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ text + "]")
     });
 
+    let mustShow = false;
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
@@ -40,7 +42,11 @@
      tabIndex={0}
      bind:this={element}
 >
-    {text}
+    {#if optionalBox.mustShow || optionalBox.showByCondition}
+        <RenderComponent box={optionalBox.box} editor={editor} />
+    {:else}
+         <RenderComponent box={optionalBox.whenNoShowingAlias} editor={editor} />
+    {/if}
 </div>
 
 <style>

@@ -1,5 +1,6 @@
 import { PiElement } from "../../language/PiElement";
 import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
+import { PiLogger } from "../../util/PiLogging";
 import { PiUtils } from "../../util/PiUtils";
 import { PiEditor } from "../PiEditor";
 import {
@@ -11,7 +12,7 @@ import {
     SelectBox,
     IndentBox,
     OptionalBox,
-    HorizontalListBox, VerticalListBox, SvgBox
+    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -20,6 +21,9 @@ type RoleCache<T extends Box> = {
 type BoxCache<T extends Box> = {
     [id: string]: RoleCache<T>;
 }
+
+const LOGGER: PiLogger = new PiLogger("BoxFactory");
+
 // The box caches
 const aliasCache: BoxCache<AliasBox> = {};
 const labelCache: BoxCache<LabelBox> = {};
@@ -41,6 +45,7 @@ const cacheTextOff: boolean = true;
 const cacheSelectOff: boolean = true;
 // const cacheIndentOff: boolean = false;
 const cacheIndentOff: boolean = true;
+
 /**
  * Caching of boxes, avoid recalculating them.
  */
@@ -60,17 +65,17 @@ export class BoxFactory {
         if (!!cache[elementId]) {
             const box = cache[elementId][role];
             if (!!box) {
-                console.log(":: new " + box.kind + " for entity " + elementId + " role " + role + " already exists");
+                LOGGER.log(":: new " + box.kind + " for entity " + elementId + " role " + role + " already exists");
                 return box;
             } else {
                 const newBox = creator();
-                console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
+                LOGGER.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
                 cache[elementId][role] = newBox;
                 return newBox;
             }
         } else {
             const newBox = creator();
-            console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
+            LOGGER.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
             cache[elementId] = {};
             cache[elementId][role] = newBox;
             return newBox;
@@ -79,7 +84,7 @@ export class BoxFactory {
 
     static alias(element: PiElement, role: string, placeHolder: string, initializer?: Partial<AliasBox>): AliasBox {
         if (cacheAliasOff) {
-            return  new AliasBox(element, role, placeHolder, initializer);
+            return new AliasBox(element, role, placeHolder, initializer);
         }
         // 1. Create the alias box, or find the one that already exists for this element and role
         const creator = () => new AliasBox(element, role, placeHolder, initializer);
@@ -87,6 +92,7 @@ export class BoxFactory {
 
         // 2. Apply the other arguments in case they have changed
         result.placeholder = placeHolder;
+        result.textHelper.setText("");
         PiUtils.initializeObject(result, initializer);
 
         return result;
@@ -94,7 +100,7 @@ export class BoxFactory {
 
     static label(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>): LabelBox {
         if (cacheLabelOff) {
-            return  new LabelBox(element, role, getLabel, initializer);
+            return new LabelBox(element, role, getLabel, initializer);
         }
         // 1. Create the alias box, or find the one that already exists for this element and role
         const creator = () => new LabelBox(element, role, getLabel, initializer);
@@ -107,7 +113,7 @@ export class BoxFactory {
     }
 
     static text(element: PiElement, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>): TextBox {
-        if( cacheTextOff) {
+        if (cacheTextOff) {
             return new TextBox(element, role, getText, setText, initializer);
         }
         // 1. Create the  box, or find the one that already exists for this element and role
@@ -165,5 +171,9 @@ export class BoxFactory {
         PiUtils.initializeObject(result, initializer);
 
         return result;
+    }
+
+    static optional(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string): OptionalBox {
+        return new OptionalBox(element, role, condition, box, mustShow, aliasText);
     }
 }

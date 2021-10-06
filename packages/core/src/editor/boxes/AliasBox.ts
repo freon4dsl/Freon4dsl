@@ -52,7 +52,7 @@ export class AliasBox extends AbstractChoiceBox {
         editor.behaviors
             .filter(behavior => behavior.activeInBoxRoles.includes(this.role))
             .forEach(behavior => {
-                console.log("Active behavior: " + behavior.trigger)
+                // console.log("Active behavior: " + behavior.trigger)
                 const options: SelectOption[] = [];
                 // If the behavior has a referenceShortcut, we need to find all potential referred elements and add them to the options.
                 if (!!(behavior.referenceShortcut)) {
@@ -63,7 +63,7 @@ export class AliasBox extends AbstractChoiceBox {
                     const dummyElement = new DummyElement();
                     const dummyBox = new DummyBox(dummyElement, "dummy-role");
                     runInAction(() => {
-                        console.log("START finding references");
+                        // console.log("START finding references");
                         const newElement = behavior.execute(dummyBox, triggerToString(behavior.trigger), editor);
                         newElement["container"] = this.element;
                         options.push(...
@@ -76,7 +76,7 @@ export class AliasBox extends AbstractChoiceBox {
                                     description: behavior.referenceShortcut.metatype,
                                     behavior: behavior
                                 })));
-                        console.log("END 2");
+                        // console.log("END 2");
                     });
                 }
                 /// if there are no reference shortcut options, add the alias itself

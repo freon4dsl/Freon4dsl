@@ -3,7 +3,7 @@ import { computed, observable, makeObservable } from "mobx";
 import { PiElement } from "../../language/";
 import { Box, AliasBox } from "./internal";
 
-type BoolFunctie = () => boolean;
+export type BoolFunctie = () => boolean;
 /**
  * Box to indent another box with parameter "indent".
  */
@@ -15,8 +15,8 @@ export class OptionalBox extends Box {
     mustShow: boolean = false;
     condition: () => boolean;
 
-    constructor(exp: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
-        super(exp, role);
+    constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
+        super(element, role);
         makeObservable(this, {
             box: observable,
             whenNoShowingAlias: observable,
@@ -25,7 +25,7 @@ export class OptionalBox extends Box {
         });
         this.box = box;
         box.parent = this;
-        this.whenNoShowingAlias = new AliasBox(exp, role, aliasText);
+        this.whenNoShowingAlias = new AliasBox(element, role, aliasText);
         this.whenNoShowingAlias.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;
