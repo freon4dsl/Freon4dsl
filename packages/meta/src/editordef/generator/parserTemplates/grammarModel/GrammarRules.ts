@@ -262,7 +262,7 @@ export class ConceptRule extends GrammarRule {
                 private transform${this.ruleName} (branch: SPPTBranch) : ${this.ruleName} {
                     // console.log('transform${this.ruleName} called: ' + branch.name);
                     ${myProperties.map(prop => `let ${prop.name}: ${getTypeAsString(prop)}`).join(';\n')}
-                    const children = this.getChildren(branch, 'transform${this.ruleName}');` +  // to avoid an extra newline in the result
+                    const children = this.getChildren(branch);` +  // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, 'children')}`).join('')}      
                     return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${prop.name}`).join(', ')}});
                 }`

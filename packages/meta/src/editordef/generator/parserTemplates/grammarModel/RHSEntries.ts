@@ -135,7 +135,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
                 return `
                     // RHSOptionalGroup
                     if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                        const optBranch = this.getChildren(${nodeName}[${propIndex}], "TO BE DONE");
+                        const optBranch = this.getChildren(${nodeName}[${propIndex}]);
                         ${this.subs.map((sub, index) => `${sub.toMethod(index, 'optBranch')}`).join('\n')}
                     }`;
             }

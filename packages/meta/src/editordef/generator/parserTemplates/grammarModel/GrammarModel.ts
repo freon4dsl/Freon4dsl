@@ -133,12 +133,12 @@ leaf booleanLiteral      = 'false' | 'true';
             /**
              * Generic method to get the children of a branch. Throws an error if no children can be found.
              */
-            private getChildren(branch: SPPTBranch, methodName: string): any {
+            private getChildren(branch: SPPTBranch): any {
                 let children: any = null;
                 try {
                     return branch.nonSkipChildren.toArray();
                 } catch (e) {
-                    throw new Error(\`In \${methodName}: cannot find children: \${branch?.matchedText}\`);
+                    throw new Error(\`Cannot follow branch: \${e.message} (\${branch.matchedText})\`);
                 }
                 return children;
             }
@@ -155,7 +155,7 @@ leaf booleanLiteral      = 'false' | 'true';
                     try {
                         nextOne = group.nonSkipChildren.toArray()[0]; 
                     } catch (e) {
-                        throw new Error(\`Cannot find children of \${group.matchedText}: \${e.message}\`);
+                        throw new Error(\`Cannot follow group: \${e.message} (\${group.matchedText})\`);
                     }
                     if (!nextOne.name.includes("multi") && !nextOne.name.includes("group")) {
                         stop = true; // found a branch with actual content, return its parent!
@@ -194,7 +194,7 @@ leaf booleanLiteral      = 'false' | 'true';
              */
             private ${internalTransformList}\<T\>(branch: SPPTBranch, separator?: string): T[] {
                 let result: T[] = [];
-                const children = this.getChildren(branch, "transformList");
+                const children = this.getChildren(branch);
                 if (!!children) {
                     for (const child of children) {
                         let element: any = this.${internalTransformNode}(child);
@@ -217,7 +217,7 @@ leaf booleanLiteral      = 'false' | 'true';
              */            
             private ${internalTransformRefList}\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string, separator?: string): PiElementReference\<T\>[] {
                 let result: PiElementReference\<T\>[] = [];
-                const children = this.getChildren(branch, "transformRefList");
+                const children = this.getChildren(branch);
                 if (!!children) {
                     for (const child of children) {
                         let refName: any = this.${internalTransformNode}(child);
