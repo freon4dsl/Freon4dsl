@@ -6,6 +6,7 @@ import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
 import { MetaLogger } from "../utils/MetaLogger";
+import { ProjectItGenerateParser } from "./ProjectItGenerateParser";
 
 const LOGGER = new MetaLogger("ProjectItParser"); // .mute();
 
@@ -14,6 +15,7 @@ export class ProjectItParser extends CommandLineParser {
     private languageGenerator: ProjectItGenerateLanguage;
     private allGenerator: ProjectItGenerateAllAction;
     private editorGenerator: ProjectItGenerateEditor;
+    private parserGenerator: ProjectItGenerateParser;
     private scoperGenerator: ProjectItGenerateScoper;
     private validatorGenerator: ProjectItGenerateValidator;
     private typerGenerator: ProjectItGenerateTyper;
@@ -29,12 +31,14 @@ export class ProjectItParser extends CommandLineParser {
         this.allGenerator = new ProjectItGenerateAllAction();
         this.languageGenerator = new ProjectItGenerateLanguage();
         this.editorGenerator = new ProjectItGenerateEditor();
+        this.parserGenerator = new ProjectItGenerateParser();
         this.scoperGenerator = new ProjectItGenerateScoper();
         this.validatorGenerator = new ProjectItGenerateValidator();
         this.typerGenerator = new ProjectItGenerateTyper();
         this.addAction(this.allGenerator);
         this.addAction(this.languageGenerator);
         this.addAction(this.editorGenerator);
+        this.addAction(this.parserGenerator);
         this.addAction(this.scoperGenerator);
         this.addAction(this.validatorGenerator);
         this.addAction(this.typerGenerator);

@@ -27,7 +27,7 @@ describe("Testing Parser", () => {
             const fileHandler = new FileHandler();
 
             // unparse the first unit to a string and write it to File
-            fileHandler.stringToFile(path, unparser.writeToString(originalModel.models[0], 0, false));
+            fileHandler.stringToFile(path, unparser.writeToString(originalModel.models[0]));
             // read it back in
             const readModel = parser.readFromString(fileHandler.stringFromFile(path), "DemoModel") as DemoModel;
 

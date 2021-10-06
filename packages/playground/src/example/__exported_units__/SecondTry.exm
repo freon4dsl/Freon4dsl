@@ -1,0 +1,30 @@
+model SomeNameOrOther { 
+    Entity ent1 { 
+        myTextAttribute : String
+
+        otherAtrr : Boolean
+
+        qwerty : String
+        method meth56 ( ): Integer { 
+            ( 23 * 56 )
+        }
+
+        method meth000 ( par1 : String,par2 : ent1): Integer { 
+            | par1 |
+        }
+    }
+
+    Entity ent2 { 
+        name : String
+
+        age : Integer
+        method meth876 ( ): Boolean { 
+            ( true and false )
+        }
+    }
+
+model wide Methods: 
+    method meth21 ( ): Integer { 
+        '"786"'
+    }
+}

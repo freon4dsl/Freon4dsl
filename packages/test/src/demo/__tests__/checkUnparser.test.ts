@@ -8,7 +8,7 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    PiElementReference
+    PiElementReference, DemoAttributeType
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
@@ -78,18 +78,21 @@ describe("Testing Unparser", () => {
             expect(result).toBe("1 + 2 * DemoVariableRef appliedfeature variable Person");
         });
 
-        test('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
+        test('\'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"\'', () => {
             let result: string = "";
             const determine = DemoFunction.create({ name: "determine" });
             const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
-            // AAP.declaredType = DemoAttributeType.Integer;
+            AAP.declaredType = PiElementReference.create<DemoEntity>(DemoEntity.create({name: "TEST1"}), "DemoEntity");
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-            // determine.declaredType = DemoAttributeType.Boolean;
-            // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
-            result = unparser.writeToString(determine, 0);
+            determine.declaredType = PiElementReference.create<DemoEntity>(DemoEntity.create({name: "TEST2"}), "DemoEntity");
+            // determine(AAP: TEST1) : TEST2 = "Hello Demo" + "Goodbye" has been created
+            // unparse using a short notation
+            result = unparser.writeToString(determine, 0, true);
             expect(result).toBe("DemoFunction determine");
-            // expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
+            // unparse using a long notation
+            result = unparser.writeToString(determine);
+            expect(result).toMatchSnapshot();
         });
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {

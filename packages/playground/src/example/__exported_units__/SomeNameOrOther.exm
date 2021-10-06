@@ -1,0 +1,34 @@
+model SomeNameOrOther { 
+    Entity ent1 base ent4 {
+        myTextAttribute : String
+
+        otherAtrr : Boolean
+
+        qwerty : String
+        method meth56 ( ): Integer { 
+            ( ( ( 23 * 56 ) / 45 ) + 458 )
+        }
+
+        method meth56A ( ): Integer {
+            23 * 56 / 45 + 458
+        }
+
+        method meth000 ( par1 : String, par2 : ent1): Integer {
+            | par1.xx | + CALL meth21()
+        }
+    }
+
+    Entity ent2 { 
+        name : String
+
+        age : Integer
+        method meth876 ( ): Boolean { 
+            ( true and false )
+        }
+    }
+
+model wide Methods: 
+    method meth21 ( ): Integer { 
+        if ( 20 ) then 21 else 45 endif
+    }
+}

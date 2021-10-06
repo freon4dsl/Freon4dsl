@@ -357,7 +357,7 @@ export class EditorCommunication {
      * downloadable file.
      */
     unitAsText() : string {
-        return editorEnvironment.writer.writeToString(this.currentUnit, 0, false);
+        return editorEnvironment.writer.writeToString(this.currentUnit);
     }
 
     /**

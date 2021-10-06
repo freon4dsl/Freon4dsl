@@ -8,16 +8,20 @@ Attribute {
 
 Entity {
     @projection [
-        ${self.name} [? base ${self.baseEntity}] {
+        Entity ${self.name} [? base ${self.baseEntity}] {
             ${self.attributes @vertical @separator [\n]}
             ${self.methods @vertical @separator [\n]}
         }
     ]
+    // TODO when property 'name' is projected twice in this rule pegjs has error:
+//        Entity ${self.name} [? base ${self.baseEntity}] {
+//                ${self.attributes @vertical @separator [\n]}
+//                ${self.methods @vertical @separator [\n]}
+//            } ${self.name}
+//        ]
     @trigger "entity"
 }
 
-// TODO when property 'name' is projected twice in this rule pegjs has error:
-// 'Label "name" is already defined at line 12, column 11'
 ExModel {
     @projection Model
         [
@@ -29,15 +33,6 @@ ExModel {
             ${self.methods @vertical @separator [\n] }
 
         ]
-//        [
-//        ${self.name} {
-//            ${self.entities
-//                @vertical
-//                @terminator [\n]
-//            }
-//            ${self.methods @vertical @separator [\n] }
-//        } // end of ${self.name}
-//        ]
 }
 
 Method {

@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"' 1`] = `
+"DemoFunction determine 
+    expression ' \\"Hello Demo\\" ' + ' \\"Goodbye\\" ' 
+    parameters 
+        DemoVariable AAP 
+            declaredType TEST1
+    declaredType TEST2"
+`;
+
 exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 1`] = `
 "Demo ModelWithUnits 
     models 

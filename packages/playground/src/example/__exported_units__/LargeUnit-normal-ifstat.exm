@@ -1,0 +1,67 @@
+model LargeUnit { 
+    Entity entity1 { 
+        attr1 : String
+
+        attr2 : Integer
+
+        attr3 : Boolean
+
+        attr4 : entity1
+
+        attr5 : ANY
+        method meth1 ( par1 : String,par2 : Integer): Integer { 
+            | par2 |
+        }
+    }
+
+    Entity entityNoAttrs { 
+        
+        method meth21 ( parA : entityNoAttrs,parB : entityNoAttrs): Boolean { 
+            ( parA == parB )
+        }
+    }
+
+    Entity entityNoMeths { 
+        attrA : Integer
+
+        attrB : entityNoAttrs
+        
+    }
+
+model wide Methods: 
+    method AA ( ): String { 
+        CALL HH ( ) 
+    }
+
+    method BB ( ): Boolean { 
+        true
+    }
+
+    method CC ( ): ANY { 
+        '"some stuff"'
+    }
+
+    method DD ( ): String { 
+        CALL AA ( ) 
+    }
+
+    method EE ( test : Boolean): Integer { 
+        if ( test ) then
+            10
+        else 
+            666
+        endif 
+    }
+
+    method FF ( par7 : entity1): Integer { 
+        sum from xx = 0 to 999 of par7 . attr2
+    }
+
+    method GG ( myEnt : entity1): entity1 { 
+        myEnt . attr4
+    }
+
+    method HH ( ): String { 
+        '"some text as a string literal"'
+    }
+}
