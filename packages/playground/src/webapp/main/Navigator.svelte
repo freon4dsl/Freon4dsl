@@ -6,7 +6,7 @@
             <li class="type-name">Unit Type <i>{name}</i>
                 <ul class="bullet-list">
                     {#each myUnits[index] as unit}
-                        <Menu style="border-radius: 2px; margin: 0px; background-color: var(--theme-colors-inverse_color)" origin="top left" dy="50px">
+                        <Menu style="border-radius: 2px; margin: 0px; color: var(--theme-colors-color); background-color: var(--theme-colors-inverse_color)" origin="top left" dy="50px">
                             <div class="item-name" slot="activator">
                                 <li>{unit.name}</li>
                             </div>
