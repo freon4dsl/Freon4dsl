@@ -1,6 +1,8 @@
-import { PiClassifier, PiConcept} from "../../../languagedef/metalanguage";
-import { Names } from "../../../utils";
-import { ChoiceRule, GrammarRule, SuperChoiceRule } from "./grammarModel/GrammarRules";
+import { PiClassifier, PiConcept} from "../../languagedef/metalanguage";
+import { Names } from "../../utils";
+import { GrammarRule } from "./grammarModel/GrammarRule";
+import { ChoiceRule } from "./grammarModel/ChoiceRule";
+import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule";
 
 export class ChoiceRuleMaker {
     static specialSuperName = `__pi_super_`;

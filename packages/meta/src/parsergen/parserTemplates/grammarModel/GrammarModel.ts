@@ -1,13 +1,15 @@
+
+import { PiConcept } from "../../../languagedef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import {
-    GrammarRule,
     internalTransformBranch,
-    internalTransformLeaf, internalTransformList,
+    internalTransformLeaf,
+    internalTransformList,
     internalTransformNode,
     internalTransformRefList
-} from "./GrammarRules";
-import { refRuleName, refSeparator } from "./RHSEntries";
-import { PiConcept } from "../../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../../utils";
+} from "../ParserGenUtil";
+import { GrammarRule } from "./GrammarRule";
+import { refRuleName, refSeparator } from "./GrammarUtils";
 
 export class GrammarModel {
     unitName: string = '';

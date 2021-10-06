@@ -1,12 +1,12 @@
-import { hasNameProperty, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../../utils";
+import { hasNameProperty, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE } from "../../utils";
 import {
     PiBinaryExpressionConcept, PiClassifier,
     PiConcept,
     PiLanguage, PiLimitedConcept,
     PiPrimitiveProperty,
     PiProperty
-} from "../../../languagedef/metalanguage";
-import { sortClasses, langExpToTypeScript } from "../../../utils";
+} from "../../languagedef/metalanguage";
+import { sortClasses, langExpToTypeScript } from "../../utils";
 import {
     PiEditConcept,
     PiEditUnit,
@@ -15,8 +15,8 @@ import {
     PiEditProjectionDirection,
     ListJoinType,
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
-} from "../../metalanguage";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
+} from "../../editordef/metalanguage";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 export class WriterTemplate {
 

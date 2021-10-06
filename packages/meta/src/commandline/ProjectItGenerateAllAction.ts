@@ -15,7 +15,7 @@ import { EditorGenerator } from "../editordef/generator/EditorGenerator";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
-import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenerator";
+import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 
 import { MetaLogger } from "../utils/MetaLogger";
 

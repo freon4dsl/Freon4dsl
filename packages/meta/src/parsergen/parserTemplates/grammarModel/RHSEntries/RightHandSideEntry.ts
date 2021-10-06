@@ -1,0 +1,28 @@
+export abstract class RightHandSideEntry {
+    public isList: boolean = false;
+    // addNewLineToGrammar exists solely to be able to manage the layout of the grammar
+    // if true we end the grammar string with a newline
+    // for this purpose, every subclass needs to call 'doNewline' after
+    // the grammar string has been created.
+    addNewLineToGrammar: boolean = false;
+
+    doNewline(): string {
+        if (this.addNewLineToGrammar) {
+            return `\n\t`;
+        }
+        return ``;
+    }
+
+    toGrammar(): string {
+        return `RightHandSideEntry.toGrammar() should be implemented by its subclasses.`;
+    }
+
+    toMethod(index: number, nodeName: string): string {
+        return `RightHandSideEntry.toMethod() should be implemented by its subclasses.`;
+    }
+
+    toString(depth: number): string {
+        return `RightHandSideEntry.toString() should be implemented by its subclasses.`;
+    }
+
+}

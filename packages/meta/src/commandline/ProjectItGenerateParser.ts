@@ -1,7 +1,7 @@
 import { PiEditParser } from "../editordef/parser/PiEditParser";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
-import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenerator";
+import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 
 const LOGGER = new MetaLogger("ProjectItGenerateParser"); // .mute();
 

@@ -1,7 +1,8 @@
-import { PiEditInstanceProjection, PiEditUnit } from "../../metalanguage";
-import { PiLimitedConcept } from "../../../languagedef/metalanguage";
-import { langExpToTypeScript } from "../../../utils";
-import { GrammarRule, LimitedRule } from "./grammarModel/GrammarRules";
+import { PiEditInstanceProjection, PiEditUnit } from "../../editordef/metalanguage";
+import { PiLimitedConcept } from "../../languagedef/metalanguage";
+import { langExpToTypeScript } from "../../utils";
+import { GrammarRule } from "./grammarModel/GrammarRule";
+import { LimitedRule } from "./grammarModel/LimitedRule";
 
 /**
  * Generates the parse rule and syntax analysis method for limited concepts. A

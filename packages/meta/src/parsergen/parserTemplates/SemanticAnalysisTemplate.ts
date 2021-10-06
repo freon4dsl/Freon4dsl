@@ -1,6 +1,6 @@
-import { PiClassifier, PiConcept, PiExpressionConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
-import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../../utils";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiClassifier, PiConcept, PiExpressionConcept, PiLanguage, PiPrimitiveProperty } from "../../languagedef/metalanguage";
+import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../utils";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 

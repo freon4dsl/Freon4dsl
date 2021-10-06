@@ -1,6 +1,6 @@
-import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
-import { PiEditUnit } from "../../metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, READER_GEN_FOLDER } from "../../../utils";
+import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
+import { PiEditUnit } from "../../editordef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, READER_GEN_FOLDER } from "../../utils";
 
 export class ReaderTemplate {
 

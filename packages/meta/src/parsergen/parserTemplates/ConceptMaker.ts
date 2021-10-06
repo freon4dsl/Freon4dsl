@@ -6,7 +6,7 @@ import {
     PiEditPropertyProjection,
     PiEditSubProjection,
     PiEditUnit
-} from "../../metalanguage";
+} from "../../editordef/metalanguage";
 import {
     PiBinaryExpressionConcept,
     PiClassifier,
@@ -14,25 +14,33 @@ import {
     PiLimitedConcept,
     PiPrimitiveProperty,
     PiPrimitiveType, PiProperty
-} from "../../../languagedef/metalanguage";
-import { Names } from "../../../utils";
+} from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
-import { ConceptRule, GrammarRule } from "./grammarModel/GrammarRules";
-import {
-    RHSBooleanWithKeyWord,
-    RHSLimitedRefEntry,
-    RHSLimitedRefListEntry,
-    RHSLimitedRefListWithSeparator,
-    RHSLimitedRefOptionalEntry,
-    RHSListGroup,
-    RHSOptionalGroup, RHSPartEntry, RHSPartListEntry, RHSPartListEntryWithSeparator, RHSPartOptionalEntry,
-    RHSPrimEntry,
-    RHSPrimListEntry,
-    RHSPrimListEntryWithSeparator, RHSPrimListGroup,
-    RHSPrimOptionalEntry,
-    RHSPropEntry, RHSRefEntry, RHSRefListEntry, RHSRefListWithSeparator, RHSRefOptionalEntry, RHSText,
-    RightHandSideEntry
-} from "./grammarModel/RHSEntries";
+import { GrammarRule } from "./grammarModel/GrammarRule";
+import { ConceptRule } from "./grammarModel/ConceptRule";
+import { RightHandSideEntry } from "./grammarModel/RHSEntries/RightHandSideEntry";
+import { RHSText } from "./grammarModel/RHSEntries/RHSText";
+import { RHSPropEntry } from "./grammarModel/RHSEntries/RHSPropEntry";
+import { RHSOptionalGroup } from "./grammarModel/RHSEntries/RHSOptionalGroup";
+import { RHSBooleanWithKeyWord } from "./grammarModel/RHSEntries/RHSBooleanWithKeyWord";
+import { RHSPrimEntry } from "./grammarModel/RHSEntries/RHSPrimEntry";
+import { RHSPrimOptionalEntry } from "./grammarModel/RHSEntries/RHSPrimOptionalEntry";
+import { RHSPrimListEntry } from "./grammarModel/RHSEntries/RHSPrimListEntry";
+import { RHSPrimListEntryWithSeparator } from "./grammarModel/RHSEntries/RHSPrimListEntryWithSeparator";
+import { RHSPartEntry } from "./grammarModel/RHSEntries/RHSPartEntry";
+import { RHSPartOptionalEntry } from "./grammarModel/RHSEntries/RHSPartOptionalEntry";
+import { RHSPartListEntry } from "./grammarModel/RHSEntries/RHSPartListEntry";
+import { RHSPartListEntryWithSeparator } from "./grammarModel/RHSEntries/RHSPartListEntryWithSeparator";
+import { RHSRefEntry } from "./grammarModel/RHSEntries/RHSRefEntry";
+import { RHSRefOptionalEntry } from "./grammarModel/RHSEntries/RHSRefOptionalEntry";
+import { RHSRefListEntry } from "./grammarModel/RHSEntries/RHSRefListEntry";
+import { RHSRefListWithSeparator } from "./grammarModel/RHSEntries/RHSRefListWithSeparator";
+import { RHSLimitedRefEntry } from "./grammarModel/RHSEntries/RHSLimitedRefEntry";
+import { RHSLimitedRefOptionalEntry } from "./grammarModel/RHSEntries/RHSLimitedRefOptionalEntry";
+import { RHSLimitedRefListEntry } from "./grammarModel/RHSEntries/RHSLimitedRefListEntry";
+import { RHSLimitedRefListWithSeparator } from "./grammarModel/RHSEntries/RHSLimitedRefListWithSeparator";
+import { RHSListGroup } from "./grammarModel/RHSEntries/RHSListGroup";
+import { RHSPrimListGroup } from "./grammarModel/RHSEntries/RHSPrimListGroup";
 
 
 export class ConceptMaker {

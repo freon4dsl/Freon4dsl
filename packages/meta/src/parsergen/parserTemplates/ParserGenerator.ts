@@ -3,9 +3,9 @@ import {
     PiConcept,
     PiLanguage,
     PiPrimitiveType
-} from "../../../languagedef/metalanguage";
-import { PiEditUnit } from "../../metalanguage";
-import { Names } from "../../../utils";
+} from "../../languagedef/metalanguage";
+import { PiEditUnit } from "../../editordef/metalanguage";
+import { Names } from "../../utils";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 import { LanguageAnalyser } from "./LanguageAnalyser";
 import { LimitedMaker } from "./LimitedMaker";

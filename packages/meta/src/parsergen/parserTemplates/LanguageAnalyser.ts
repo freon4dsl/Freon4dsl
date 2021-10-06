@@ -4,9 +4,9 @@ import {
     PiConcept,
     PiInterface,
     PiLimitedConcept
-} from "../../../languagedef/metalanguage";
-import { LangUtil } from "../../../utils";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
+} from "../../languagedef/metalanguage";
+import { LangUtil } from "../../utils";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 export class LanguageAnalyser {
     // all concepts defined in this unit

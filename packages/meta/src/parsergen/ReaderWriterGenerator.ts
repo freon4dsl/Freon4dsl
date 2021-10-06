@@ -1,8 +1,8 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
-import { GenerationStatus, Helpers, Names, READER_GEN_FOLDER, WRITER_GEN_FOLDER } from "../../utils";
-import { PiEditUnit } from "../metalanguage";
+import { MetaLogger } from "../utils/MetaLogger";
+import { PiConcept, PiLanguage } from "../languagedef/metalanguage";
+import { GenerationStatus, Helpers, Names, READER_GEN_FOLDER, WRITER_GEN_FOLDER } from "../utils";
+import { PiEditUnit } from "../editordef/metalanguage";
 import { WriterTemplate, ReaderTemplate } from "./parserTemplates";
 import { ParserGenerator } from "./parserTemplates/ParserGenerator";
 import { net } from "net.akehurst.language-agl-processor";

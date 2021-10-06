@@ -26,3 +26,10 @@ export class ParserGenUtil {
         return input;
     }
 }
+
+export const internalTransformNode = "transformSharedPackedParseTreeNode";
+export const internalTransformList = "transformSharedPackedParseTreeList";
+export const internalTransformRefList = "transformSharedPackedParseTreeRefList";
+export const internalTransformLeaf = "transformSharedPackedParseTreeLeaf";
+export const internalTransformBranch = "transformSharedPackedParseTreeBranch";
+
