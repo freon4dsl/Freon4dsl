@@ -310,14 +310,23 @@ export class WriterTemplate {
     private makeConceptMethod (conceptDef: PiEditConcept ): string {
         const myConcept: PiConcept = conceptDef.concept.referred;
         if (myConcept instanceof PiLimitedConcept){
-            // when a '@keyword' projection is present, use thatyarn octopus
-            // when not, use the name of the instance of the limited concept
-            let result = this.makeLimitedMethod(conceptDef, myConcept);
-            if (result.length > 0) { // it was a `@keyword` projection
-                return result;
-            } else {
-                const name: string = Names.concept(myConcept);
-                return `/**
+            return this.makeLimitedMethod(conceptDef, myConcept);
+        } else if (myConcept.isAbstract){
+            return this.makeAbstractMethod(myConcept);
+        } {
+            return this.makeNormalConceptMethod(conceptDef, myConcept);
+        }
+    }
+
+    private makeLimitedMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
+        // when a '@keyword' projection is present, use that
+        // when not, use the name of the instance of the limited concept
+        let result = this.makeLimitedKeywordMethod(conceptDef, myConcept);
+        if (result.length > 0) { // it was a `@keyword` projection
+            return result;
+        } else {
+            const name: string = Names.concept(myConcept);
+            return `/**
                          * The limited concept '${myConcept.name}' is unparsed as its name.
                          */
                         private unparse${name}(modelelement: ${name}, short: boolean) {
@@ -325,13 +334,10 @@ export class WriterTemplate {
                                 this.output[this.currentLine] += modelelement.name + " ";
                             }
                         }`;
-            }
-        } else {
-            return this.makeNormalConceptMethod(conceptDef, myConcept);
         }
     }
 
-    private makeLimitedMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
+    private makeLimitedKeywordMethod(conceptDef: PiEditConcept, myConcept: PiLimitedConcept) {
         const comment = `/**
                           * The limited concept '${myConcept.name}' is unparsed according to the keywords in the editor definition.
                           */`;
@@ -368,6 +374,16 @@ export class WriterTemplate {
             }
         }
         return "";
+    }
+
+    private makeAbstractMethod(myConcept: PiConcept): string {
+        const name: string = Names.concept(myConcept);
+        return `/**
+                 * The abstract concept '${myConcept.name}' is not unparsed.
+                 */
+                private unparse${name}(modelelement: ${name}, short: boolean) {
+                    throw new Error('Method unparse${name} should be implemented by its (concrete) subclasses.');
+                }`;
     }
 
     private makeNormalConceptMethod(conceptDef: PiEditConcept, myConcept: PiConcept) {
@@ -614,4 +630,5 @@ export class WriterTemplate {
         }
         return result;
     }
+
 }
