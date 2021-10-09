@@ -46,9 +46,12 @@ export default {
 		// builtins(),
 		// globals(),
 		typescript({
-			sourceMap: !production,
+			sourceMap: true, //  !production,
 			inlineSources: !production,
-			tsconfig: "./tsconfig.json"
+			tsconfig: "./tsconfig.json",
+			// Override outDir, since Rollup magically adds "dist"itself
+			outDir: ".",
+			declarationDir: "."
 		}),
 
 		// If we're building for production (npm run build

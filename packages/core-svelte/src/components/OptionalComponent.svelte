@@ -1,4 +1,5 @@
 <script lang="ts">
+    import RenderComponent from "./RenderComponent.svelte";
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
     import { OptionalBox, PiLogger } from "@projectit/core";
@@ -14,11 +15,18 @@
         LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ text + "]")
     });
 
+    let mustShow = false;
+    let showByCondition = false;
+
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
         if (!!element) {
-            element.focus();
+            if (mustShow || showByCondition) {
+                optionalBox.box.firstEditableChild.setFocus();
+            } else {
+                optionalBox.whenNoShowingAlias.setFocus();
+            }
         }
     };
 
@@ -31,6 +39,8 @@
 
     let text: string;
     autorun( () => {
+        mustShow = optionalBox.mustShow;
+        showByCondition = optionalBox.showByCondition;
         text = "Dummy OptionalBox";
         AUTO_LOGGER.log("OptionalComponent ["+ text + "]")
     });
@@ -40,7 +50,11 @@
      tabIndex={0}
      bind:this={element}
 >
-    {text}
+    {#if mustShow || showByCondition}
+        <RenderComponent box={optionalBox.box} editor={editor} />
+    {:else}
+         <RenderComponent box={optionalBox.whenNoShowingAlias} editor={editor} />
+    {/if}
 </div>
 
 <style>
@@ -49,7 +63,6 @@
     }
 
     .optional {
-        font-weight: bold;
         padding: 3px;
         white-space: normal;
         display: inline-block;
