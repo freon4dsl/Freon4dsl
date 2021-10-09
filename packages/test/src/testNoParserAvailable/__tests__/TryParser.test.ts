@@ -3,7 +3,8 @@ import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { ExModel } from "../language/gen";
 
 describe("Test the STUB that replaces the parser", () => {
-    test( ": read a unit", () => {
+    // TODO find a way to create an invalid grammar
+    test.skip( ": read a unit", () => {
         const reader = ExampleEnvironment.getInstance().reader;
         const fileHandler = new FileHandler();
 

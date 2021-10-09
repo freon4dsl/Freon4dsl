@@ -8,7 +8,7 @@ import {
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     PiErrorSeverity,
-    PROJECTITCORE, typeToString
+    PROJECTITCORE, getBaseTypeAsString
 } from "../../../utils";
 import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
@@ -44,12 +44,12 @@ export class RulesCheckerTemplate {
                                 */`;
         // the template starts here
         return `
-        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
-        import { reservedWordsInTypescript } from "./ReservedWords";  
+        import { reservedWordsInTypescript } from "./ReservedWords";         
 
         /**
          * Class ${checkerClassName} is the part of validator that is generated from, if present, 
@@ -203,8 +203,8 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
-                         "' does not conform to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type " + this.myWriter.writeNameOnly(this.typer.inferType(${langExpToTypeScript(r.type1)})) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
+                         "] does not conform to " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
         }
         return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
@@ -214,8 +214,8 @@ export class RulesCheckerTemplate {
 
     private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '"+ this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) 
-                        + "' should be equal to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type of ["+ this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) 
+                        + "] should equal " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
         }
         return `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
@@ -228,7 +228,7 @@ export class RulesCheckerTemplate {
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = typeToString(referredListproperty);
+        const listpropertyTypeName = getBaseTypeAsString(referredListproperty);
         const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
         if (message.length === 0) {
             message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;

@@ -9,9 +9,9 @@ ExModel {
 }
 
 Entity {
-    notEmpty self.attributes;
+//    notEmpty self.attributes;
     isunique name in self.attributes;
-    notEmpty self.methods;
+//    notEmpty self.methods;
     isunique name in self.methods;
     validIdentifier
     {

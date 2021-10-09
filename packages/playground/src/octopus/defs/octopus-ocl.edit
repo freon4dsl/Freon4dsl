@@ -4,3 +4,7 @@ OclPart {
     @projection normal
         [${self.name}]
 }
+OclExpression {
+    @projection normal
+        [${self.expr}]
+}

@@ -11,7 +11,7 @@ import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
 
 const LOGGER = new MetaLogger("PiLanguageChecker").mute();
-const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements", "in"];
+const piReservedWords = ["model", "modelunit", "abstract", "limited", "language", "property", "concept", "binary", "expression", "concept", "base", "reference", "priority", "implements", "id", "in"];
 // "in" is reserved word in pegjs
 
 // TODO add check: priority error from parser into checker => only for expression concepts
@@ -398,6 +398,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
 
     checkConceptProperty(piProperty: PiProperty): void {
         LOGGER.log("Checking concept property '" + piProperty.name + "'");
+        this.checkPropertyName(piProperty);
         this.nestedCheck(
             {
                 check: !!piProperty.type,
@@ -452,8 +453,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
 
     checkPrimitiveProperty(element: PiPrimitiveProperty): void {
         LOGGER.log("Checking primitive property '" + element.name + "'");
-        this.simpleCheck(!!element.name,
-            `Property should have a name ${this.location(element)}.`);
+        this.checkPropertyName(element);
         this.nestedCheck(
             {
                 check: !!element.type,
@@ -480,6 +480,21 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                         }
                     }
                     // end check initial value(s)
+                }
+            });
+    }
+
+    private checkPropertyName(element: PiProperty) {
+        this.nestedCheck(
+            {
+                check: !!element.name,
+                error: `Property should have a name ${this.location(element)}.`,
+                whenOk: () => {
+                    this.simpleCheck(!(reservedWordsInTypescript.includes(element.name.toLowerCase())),
+                        `Property may not have a name that is equal to a reserved word in TypeScript ('${element.name}') ${this.location(element)}.`);
+                    // TODO determine whether the following check is important
+                    // this.simpleCheck(!(piReservedWords.includes(element.name.toLowerCase())),
+                    //     `Property may not have a name that is equal to a reserved word ('${element.name}') ${this.location(element)}.`);
                 }
             });
     }

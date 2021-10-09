@@ -12,7 +12,7 @@ import { PiLanguage, PiClassifier, PiProperty, PiLimitedConcept, PiInstance, PiL
 } from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("PiLangExpressionChecker");//.mute();
+const LOGGER = new MetaLogger("PiLangExpressionChecker").mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof"];
 const containerKeyword: string = "container";
 

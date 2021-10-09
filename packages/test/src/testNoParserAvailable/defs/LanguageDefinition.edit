@@ -1,14 +1,17 @@
+// This is an editor definiton that is intentionally wrong
+// it should cause an error in the generation of the grammar
+// for this purpose we have eliminated all keywords
 editor User for language Example
 
 Attribute {
     @projection attribuut [
-        ${self.name} : ${self.declaredType}
+        ${self.name} ${self.declaredType}
     ]
 }
 
 Entity {
     @projection [
-        Entity ${self.name} [? base ${self.baseEntity}] {
+        ${self.name} [? ${self.baseEntity}] {
             ${self.attributes @vertical @separator [\n]}
             ${self.methods @vertical @separator [\n]}
         }
@@ -19,20 +22,18 @@ Entity {
 ExModel {
     @projection Model
         [
-        model ${self.name} {
+        ${self.name}
             ${self.entities
                 @vertical
                 @terminator [\n]
             }
-        model wide Methods:
-            ${self.methods @vertical @separator [\n] }
-        }
+        ${self.methods @vertical @separator [\n] }
         ]
 }
 
 Method {
     @projection [
-        method ${self.name} ( ${self.parameters @separator[,] } ): ${self.declaredType} {
+        ${self.name} ${self.parameters @separator[,] } ${self.declaredType} {
             ${self.body}
         }
     ]
@@ -40,21 +41,21 @@ Method {
 
 Parameter {
     @projection attribuut [
-        ${self.name} : ${self.declaredType}
+        ${self.name} ${self.declaredType}
     ]
 }
 
 MethodCallExpression {
     @projection MethodCallExpression
         [
-        CALL ${self.methodDefinition} ( ${self.args @separator[,] } )
+        ${self.methodDefinition} ${self.args @separator[,] }
         ]
     @trigger "method"
 }
 
 SumExpression {
     @projection [
-        sum from ${self.variable} = ${self.from} to ${self.to} of ${self.body}
+        ${self.variable}  ${self.from}  ${self.to}  ${self.body}
     ]
     @trigger "sum"
 }
@@ -77,7 +78,7 @@ NumberLiteralExpression {
 StringLiteralExpression {
     @projection StringLiteralExpression
         [
-        '${self.value}'
+        ${self.value}
         ]
     @trigger "'"
 }
@@ -123,7 +124,7 @@ AttributeRef {
 }
 
 ParameterRef {
-    @projection [ ${self.parameter} . ${self.appliedfeature} ]
+    @projection [ ${self.parameter}  ${self.appliedfeature} ]
 }
 
 //IfExpression {
@@ -147,7 +148,7 @@ AbsExpression {
 IfExpression {
     @projection IfExpression
         [
-        ${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse}
+        ${ self.condition }  ${ self.whenTrue }  ${self.whenFalse}
         ]
     @trigger "if"
 }

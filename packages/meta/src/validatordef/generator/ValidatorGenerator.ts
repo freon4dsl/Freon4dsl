@@ -9,7 +9,7 @@ import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate";
 
-const LOGGER = new MetaLogger("ValidatorGenerator"); // .mute();
+const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;

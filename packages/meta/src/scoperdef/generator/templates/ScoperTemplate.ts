@@ -6,7 +6,7 @@ import {
     TYPER_GEN_FOLDER,
     ENVIRONMENT_GEN_FOLDER,
     langExpToTypeScript,
-    LangUtil, replaceInterfacesWithImplementors
+    replaceInterfacesWithImplementors
 } from "../../../utils";
 import { PiScopeDef } from "../../metalanguage";
 
@@ -65,7 +65,10 @@ export class ScoperTemplate {
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             ${generateAlternativeScopes ? `myTyper: ${typerClassName};` : ``}
     
-            public resolvePathName(basePosition: ${allLangConcepts}, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
+            public resolvePathName(basePosition: ${allLangConcepts}, doNotSearch: string, pathname: string[], metatype?: ${langConceptType}): ${Names.PiNamedElement} {
+                // basePosition itself may be an additional namespace; 
+                // if so, do not search this namespace, as this will result in a (mobx) cycle
+                ${namespaceClassName}.doNotSearch = doNotSearch;
                 // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
                 let elementsFromBasePosition: ${Names.PiNamedElement}[] = this.getVisibleElements(basePosition);
                 // start the loop over the set of names in the pathname
@@ -88,6 +91,8 @@ export class ScoperTemplate {
                         return null;
                     }
                 }
+                // do not forget to clear 'doNotSearch'; it is a static and might be used again!
+                ${namespaceClassName}.doNotSearch = null;
                 return found;
             }
  

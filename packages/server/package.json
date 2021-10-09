@@ -11,7 +11,8 @@
   "scripts": {
     "cleanup":  "bash ../../scripts/cleanup.sh",
     "start":    "cross-env NODE_ENV=development nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server.ts",
-    "build":    "tsc --build --verbose --listFiles --listEmittedFiles",
+    "build":    "tsc --build",
+    "build-verbose":    "tsc --build --verbose --listFiles --listEmittedFiles",
     "build-release": "yarn build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "release": "npm publish",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "axios": "0.21.1",
+    "@types/koa": "^2.13.4",
     "koa": "2.13.1",
     "koa-bodyparser": "4.3.0",
     "koa-router": "10.0.0",

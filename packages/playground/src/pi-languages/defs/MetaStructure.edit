@@ -1,0 +1,120 @@
+editor First for language PiLanguage
+
+PiStructureDef {
+    @projection
+    [language ${self.name}
+
+    ${self.interfaces
+        @vertical
+        @terminator [\n\n]
+    }
+    ${self.concepts
+        @vertical
+        @terminator [\n\n]
+    }
+    ]
+}
+//abstract concept PiLangElement {
+//    @projection
+//    [name]
+//}
+//abstract concept PiClassifier {
+//    owningLanguage: PiLanguageUnit;
+//    properties: PiProperty[];
+//    primProperties: PiPrimitiveProperty[];
+//}
+PiInterface {
+    @projection
+    [interface ${self.name} [?base ${self.base @horizontal @separator [, ]}]
+        ${self.properties
+            @vertical
+            @terminator [;\n]
+        }
+    ]
+}
+PiConcept {
+    @projection
+    [[?abstract ${self.isAbstract}] [?root ${self.isRoot}] concept ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
+        ${self.properties
+            @vertical
+            @terminator [;\n]
+        }
+    ]
+// TODO project these:
+//    isAbstract: boolean;
+//    isRoot:boolean;
+}
+PiExpressionConcept {
+    @projection
+    [expression ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
+        ${self.properties
+            @vertical
+            @terminator [;\n]
+        }
+    ]
+}
+PiBinaryExpressionConcept {
+    @projection
+    [binary expression ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
+        ${self.properties
+            @vertical
+            @terminator [;\n]
+        }
+        priority ${self.priority}
+    ]
+}
+PiLimitedConcept {
+    @projection
+    [limited ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
+        ${self.properties
+            @vertical
+            @terminator [;\n]
+        }
+        ${self.instances
+            @vertical
+            @separator [\n]
+        }
+    ]
+}
+PiProperty {
+    @projection
+    [${self.name} : ${self.type}
+    ]
+// TODO project these:
+//    isOptional: boolean;
+//    isList: boolean;
+//    isPart: boolean; // if false then it is a reference property
+}
+//PiConceptProperty base PiProperty {
+//    hasLimitedType: boolean;
+//}
+//PiPrimitiveProperty base PiProperty {
+//    isStatic: boolean;
+//	initialValue: string;
+//    primType: string;
+//}
+PiInstance {
+    @projection
+    [${self.name} = {
+        ${self.propertyDefs
+            @vertical
+            @separator [,\n]
+        }
+    }
+    ]
+}
+PiPropertyInstance {
+    @projection
+    [${self.property.name} : ${self.value}]
+//    [${self.property.name} : \"${self.value}\"]
+}
+// the following two classes are only used in the typer and validator definitions
+//PiFunction {
+//    language: PiLanguageUnit;
+//    formalparams: PiParameter[];
+//    reference returnType: PiClassifier;
+//}
+//
+//PiParameter {
+//    reference type: PiClassifier;
+//}

@@ -24,6 +24,8 @@ export class PiTyperTemplate {
         const defaultType: string = this.findDefault();
         const allTypeConcepts: PiConcept[] = this.findAllConceptsThatAreTypes();
 
+        // TODO make if-else-statement instead of lots of if-statements in inferType
+        // TODO should equalsType return true when one of the type is ANY, or is this up to the lang developer?
         // Template starts here
         return `
         import { ${typerInterfaceName} } from "${PROJECTITCORE}";

@@ -18,7 +18,7 @@ export function makeLiteralExp(incoming: any): DemoExpression {
     let mine: DemoExpression;
     if (typeof incoming === "string" && /[0-9]+/.test(incoming)) {
         mine = new DemoNumberLiteralExpression();
-        (mine as DemoNumberLiteralExpression).value = Number.parseInt(incoming);
+        (mine as DemoNumberLiteralExpression).value = Number.parseInt(incoming, 10);
     } else if (typeof incoming === "string" && (incoming === "true" || incoming === "false")) {
         mine = new DemoBooleanLiteralExpression();
         (mine as DemoBooleanLiteralExpression).value = (incoming === "true" ? true : false);

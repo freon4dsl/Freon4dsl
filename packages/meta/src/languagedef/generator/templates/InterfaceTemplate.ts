@@ -3,7 +3,7 @@ import {
     PiPrimitiveProperty,
     PiInterface
 } from "../../metalanguage";
-import { Names, PROJECTITCORE, typeToString } from "../../../utils";
+import { Names, PROJECTITCORE, getBaseTypeAsString } from "../../../utils";
 
 export class InterfaceTemplate {
 
@@ -47,7 +47,7 @@ export class InterfaceTemplate {
 
     generatePrimitiveProperty(property: PiPrimitiveProperty): string {
         const comment = "// implementation of " + property.name ;
-        return `${property.name}: ${typeToString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
+        return `${property.name}: ${getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
     }
 
     generatePartProperty(property: PiConceptProperty): string {

@@ -103,7 +103,12 @@ export class PiReferenceTemplate {
                 if (!!this._PI_referred) {
                     return this._PI_referred;
                 } else {
-                    return ${Names.environment(language)}.getInstance().scoper.resolvePathName(this.piContainer().container, this._PI_pathname, this.typeName) as T;
+                    return ${Names.environment(language)}.getInstance().scoper.resolvePathName(
+                        this.piContainer().container, 
+                        this.piContainer().propertyName, 
+                        this._PI_pathname, 
+                        this.typeName
+                    ) as T;
                 }
             }
         

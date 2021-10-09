@@ -1,6 +1,6 @@
-import * as Koa from "koa";
-import * as bodyParser from "koa-bodyparser";
-import * as cors from "koa2-cors";
+import Koa from "koa";
+import bodyParser from "koa-bodyparser";
+import cors from "koa2-cors";
 
 import { config } from "./config";
 import { logger } from "./logging";

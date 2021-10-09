@@ -8,7 +8,7 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    PiElementReference
+    PiElementReference, DemoAttributeType
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
@@ -39,7 +39,7 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
             result = unparser.writeToString(mult, 0);
-            expect(result).toBe("( 3 * 10 )");
+            expect(result).toBe("3 * 10");
         });
 
         test("multiplication 3 * 'temp'", () => {
@@ -48,10 +48,10 @@ describe("Testing Unparser", () => {
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
             result = unparser.writeToString(mult, 0);
-            expect(result).toBe("( 3 * ' \"temp\" ' )");
+            expect(result).toBe("3 * ' \"temp\" '");
         });
 
-        test("multiplication (3 / 4) * 'temp'", () => {
+        test("multiplication 3 / 4 * 'temp'", () => {
             let result: string = "";
             const div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
@@ -60,10 +60,10 @@ describe("Testing Unparser", () => {
             mult.left = div;
             mult.right = makeLiteralExp("temp");
             result = unparser.writeToString(mult, 0);
-            expect(result).toBe("( ( 3 / 4 ) * ' \"temp\" ' )");
+            expect(result).toBe("3 / 4 * ' \"temp\" '");
         });
 
-        test("(1 + 2) * 'Person'", () => {
+        test("1 + 2 * 'Person'", () => {
             let result: string = "";
             const variableExpression = new DemoVariableRef();
             const variable = new DemoVariable();
@@ -71,29 +71,28 @@ describe("Testing Unparser", () => {
             // variable.declaredType = DemoAttributeType.String;
             variableExpression.variable = PiElementReference.create<DemoVariable>(variable.name, "DemoVariable");
 
-            // variableExpression.referredName = "Person";
-            // variableExpression.attribute = new DemoAttribute();
-            // variableExpression.attribute.unitName = "Person";
-            // variableExpression.attribute.declaredType = DemoAttributeType.String;
-
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
-            result = unparser.writeToString(multiplyExpression, 0, true);
-            expect(result).toBe("( ( 1 + 2 ) * DemoVariableRef )");
+            result = unparser.writeToString(multiplyExpression, 0, false);
+            result = result.replace(new RegExp("\\s+","gm"), " ");
+            expect(result).toBe("1 + 2 * DemoVariableRef appliedfeature variable Person");
         });
 
-        test('\'determine(AAP : Integer) : Boolean = "Hello Demo" + "Goodbye"\'', () => {
+        test('\'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"\'', () => {
             let result: string = "";
             const determine = DemoFunction.create({ name: "determine" });
             const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
-            // AAP.declaredType = DemoAttributeType.Integer;
+            AAP.declaredType = PiElementReference.create<DemoEntity>(DemoEntity.create({name: "TEST1"}), "DemoEntity");
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-            // determine.declaredType = DemoAttributeType.Boolean;
-            // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
-            result = unparser.writeToString(determine, 0);
+            determine.declaredType = PiElementReference.create<DemoEntity>(DemoEntity.create({name: "TEST2"}), "DemoEntity");
+            // determine(AAP: TEST1) : TEST2 = "Hello Demo" + "Goodbye" has been created
+            // unparse using a short notation
+            result = unparser.writeToString(determine, 0, true);
             expect(result).toBe("DemoFunction determine");
-            // expect(result).toBe("determine( AAP : Integer ): Boolean = 'Hello Demo' + 'Goodbye'");
+            // unparse using a long notation
+            result = unparser.writeToString(determine);
+            expect(result).toMatchSnapshot();
         });
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {

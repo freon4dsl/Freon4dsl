@@ -29,7 +29,7 @@
     "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-typer && yarn pegjs-concat-scoper",
     "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc && yarn copy-templates && yarn copy-validtemplates",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "build2": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn type-parser && yarn lang-exp-parser && tsc",
+    "build2": "tsc && yarn copy-templates && yarn copy-validtemplates",
     "copy-templates": "cp src/editordef/generator/templates/styles.ts.template ./dist/editordef/generator/templates/styles.ts.template",
     "copy-validtemplates": "cp src/validatordef/generator/templates/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "release": "npm publish",

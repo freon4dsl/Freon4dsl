@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"' 1`] = `
+"DemoFunction determine 
+    expression ' \\"Hello Demo\\" ' + ' \\"Goodbye\\" ' 
+    parameters 
+        DemoVariable AAP 
+            declaredType TEST1
+    declaredType TEST2"
+`;
+
 exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 1`] = `
 "Demo ModelWithUnits 
     models 
@@ -12,17 +21,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"xxx\\" 
                 attributes 
-                    brand : DemoAttributeType String 
-                                extra 199 
-                                baseInterface_attr 0
-                    type : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
+                    brand : String
+                    type : String
                 entAttributes 
                     
                 functions 
                     DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
+                        expression if ( 4 < 80 ) then 
                                              87 
                                    else 
                                       1345 
@@ -43,17 +48,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"xxx\\" 
                 attributes 
-                    numberplate : DemoAttributeType Integer 
-                                      extra 240261 
-                                      baseInterface_attr 0
-                    make : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
+                    numberplate : Integer
+                    make : String
                 entAttributes 
                     
                 functions 
                     DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
+                        expression if ( 4 < 80 ) then 
                                              87 
                                    else 
                                       1345 
@@ -74,17 +75,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"xxx\\" 
                 attributes 
-                    backseat : DemoAttributeType Boolean 
-                                   extra 5479 
-                                   baseInterface_attr 0
-                    gears : DemoAttributeType Integer 
-                                extra 240261 
-                                baseInterface_attr 0
+                    backseat : Boolean
+                    gears : Integer
                 entAttributes 
                     
                 functions 
                     DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
+                        expression if ( 4 < 80 ) then 
                                              87 
                                    else 
                                       1345 
@@ -105,17 +102,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"xxx\\" 
                 attributes 
-                    color : DemoAttributeType String 
-                                extra 199 
-                                baseInterface_attr 0
-                    wheelsize : DemoAttributeType Integer 
-                                    extra 240261 
-                                    baseInterface_attr 0
+                    color : String
+                    wheelsize : Integer
                 entAttributes 
                     
                 functions 
                     DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
+                        expression if ( 4 < 80 ) then 
                                              87 
                                    else 
                                       1345 
@@ -133,14 +126,14 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 
         model wide functions: 
             DemoFunction SOMETHING 
-                expression if ( ( 4 < 80 ) ) then 
+                expression if ( 4 < 80 ) then 
                                      87 
                            else 
                               1345 
                            endif 
                 parameters 
                     
-                declaredType Integer
+                declaredType Integer 
         }
         model CorrectUnit { 
         main: types: 
@@ -151,17 +144,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"xxx\\" 
                 attributes 
-                    foundedIn : DemoAttributeType Integer 
-                                    extra 240261 
-                                    baseInterface_attr 0
-                    name : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
+                    foundedIn : Integer
+                    name : String
                 entAttributes 
                     
                 functions 
                     DemoFunction requestClean 
-                        expression ( 5 + 24 ) 
+                        expression 5 + 24 
                         parameters 
                             DemoVariable cleaningCompany 
                                 declaredType Company
@@ -179,17 +168,13 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 baseInterface_attr 0 
                 x \\"xxx\\" 
                 attributes 
-                    name : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
-                    VAT_Number : DemoAttributeType Integer 
-                                     extra 240261 
-                                     baseInterface_attr 0
+                    name : String
+                    VAT_Number : Integer
                 entAttributes 
                     
                 functions 
                     DemoFunction doClean 
-                        expression ( 5 + 24 ) 
+                        expression 5 + 24 
                         parameters 
                             DemoVariable at 
                                 declaredType Company
@@ -204,7 +189,7 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
 
         model wide functions: 
             DemoFunction compare 
-                expression if ( ( 2 < 5 ) ) then 
+                expression if ( 2 < 5 ) then 
                                      1 
                            else 
                               5 
@@ -216,6 +201,6 @@ DemoFunction helloString
                                          expression ' \\"Hello Demo\\" ' 
                                          parameters 
                                              
-                                         declaredType String
+                                         declaredType String 
         }"
 `;

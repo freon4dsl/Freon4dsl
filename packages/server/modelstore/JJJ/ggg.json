@@ -8,8 +8,8 @@
          "attributes": [
             {
                "$typename": "Attribute",
-               "name": "aasjksjsjsjsttr000192929292838383",
-               "declaredType": "Integer"
+               "name": "attr1",
+               "declaredType": "String"
             },
             {
                "$typename": "Attribute",
@@ -28,13 +28,8 @@
             },
             {
                "$typename": "Attribute",
-               "name": "naam",
+               "name": "someText",
                "declaredType": "ANY"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "sgssg",
-               "declaredType": "Boolean"
             }
          ],
          "methods": [
@@ -45,7 +40,11 @@
                   "$typename": "AbsExpression",
                   "expr": {
                      "$typename": "ParameterRef",
-                     "appliedfeature": null,
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "attr2"
+                     },
                      "parameter": "par2"
                   },
                   "appliedfeature": null
@@ -59,24 +58,18 @@
                   {
                      "$typename": "Parameter",
                      "name": "par2",
-                     "declaredType": "Integer"
+                     "declaredType": "entity1"
                   }
                ],
                "declaredType": "Integer"
             }
          ],
-         "baseEntity": "entity1"
+         "baseEntity": null
       },
       {
          "$typename": "Entity",
          "name": "entityNoAttrs",
-         "attributes": [
-            {
-               "$typename": "Attribute",
-               "name": "dhdh",
-               "declaredType": "Boolean"
-            }
-         ],
+         "attributes": [],
          "methods": [
             {
                "$typename": "Method",
@@ -127,19 +120,7 @@
                "declaredType": "entityNoAttrs"
             }
          ],
-         "methods": [
-            {
-               "$typename": "Method",
-               "name": "sss",
-               "body": {
-                  "$typename": "StringLiteralExpression",
-                  "value": "sjs",
-                  "appliedfeature": null
-               },
-               "parameters": [],
-               "declaredType": "String"
-            }
-         ],
+         "methods": [],
          "baseEntity": null
       }
    ],
