@@ -258,9 +258,8 @@ export class ProjectionTemplate {
         }
 
         const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
-        // TODO The subString is needed to remove `self.`, this should be more generic and more failsafe.
-        const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.expression.toPiString().substring(5));
-        return `new OptionalBox(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
+        const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
+        return `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
             ${ result},
             false, "<+>"
         ),`;

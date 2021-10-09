@@ -22,7 +22,11 @@
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
         if (!!element) {
-            element.focus();
+            if (mustShow || showByCondition) {
+                optionalBox.box.firstEditableChild.setFocus();
+            } else {
+                optionalBox.whenNoShowingAlias.setFocus();
+            }
         }
     };
 
@@ -59,7 +63,6 @@
     }
 
     .optional {
-        font-weight: bold;
         padding: 3px;
         white-space: normal;
         display: inline-block;

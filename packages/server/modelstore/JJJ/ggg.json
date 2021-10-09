@@ -8,8 +8,8 @@
          "attributes": [
             {
                "$typename": "Attribute",
-               "name": "attr1",
-               "declaredType": "String"
+               "name": "aasjksjsjsjsttr000192929292838383",
+               "declaredType": "Integer"
             },
             {
                "$typename": "Attribute",
@@ -28,8 +28,13 @@
             },
             {
                "$typename": "Attribute",
-               "name": "",
+               "name": "naam",
                "declaredType": "ANY"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "sgssg",
+               "declaredType": "Boolean"
             }
          ],
          "methods": [
@@ -60,12 +65,18 @@
                "declaredType": "Integer"
             }
          ],
-         "baseEntity": null
+         "baseEntity": "entity1"
       },
       {
          "$typename": "Entity",
          "name": "entityNoAttrs",
-         "attributes": [],
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "dhdh",
+               "declaredType": "Boolean"
+            }
+         ],
          "methods": [
             {
                "$typename": "Method",
@@ -116,7 +127,19 @@
                "declaredType": "entityNoAttrs"
             }
          ],
-         "methods": [],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "sss",
+               "body": {
+                  "$typename": "StringLiteralExpression",
+                  "value": "sjs",
+                  "appliedfeature": null
+               },
+               "parameters": [],
+               "declaredType": "String"
+            }
+         ],
          "baseEntity": null
       }
    ],

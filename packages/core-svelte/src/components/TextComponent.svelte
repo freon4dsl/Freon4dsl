@@ -105,10 +105,13 @@
         }
     }
 
+    let originalText: string;
+
     onMount(() => {
         LOGGER.log("onMount for role [" + textBox.role + "]");
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
+        originalText = textBox.getText();
     });
 
     /**
@@ -286,7 +289,7 @@
 
     const onInput = async (e: InputEvent) => {
         isEditing = true;
-        let value = (e.target as HTMLElement).innerText;
+        let value = currentText();
         console.log("onInput data" + e.data + ":  current [" + currentText() + "] box text [" + textBox.getText() + "]");
         textBox.caretPosition = getCaretPosition();
         textBox.setText(value);
@@ -323,13 +326,12 @@
         }
     });
 
-    const onFocus = async (e: FocusEvent) => {
-        FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);
-    };
-    const onBlurHandler = async (e: FocusEvent) => {
-        FOCUS_LOGGER.log("TextComponent.onBlur for box " + textBox.role);
-        isEditing = false;
-    };
+    // const onFocus = async (e: FocusEvent) => {
+    //     FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);
+    // };
+    // const onBlurHandler = async (e: FocusEvent) => {
+    //     FOCUS_LOGGER.log("TextComponent.onBlur for box " + textBox.role);
+    // };
 
 </script>
 

@@ -4,6 +4,7 @@ import { PiElement } from "../../language/";
 import { Box, AliasBox } from "./internal";
 
 export type BoolFunctie = () => boolean;
+
 /**
  * Box to indent another box with parameter "indent".
  */
@@ -40,34 +41,34 @@ export class OptionalBox extends Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box {
-        if( this.condition()) {
-            return this.box.firstLeaf ;
+        if (this.condition() || this.mustShow) {
+            return this.box.firstLeaf;
         } else {
-            return null;
+            return this.whenNoShowingAlias;
         }
     }
 
     get lastLeaf(): Box {
-        if( this.condition()) {
-            return this.box.lastLeaf ;
+        if (this.condition() || this.mustShow) {
+            return this.box.lastLeaf;
         } else {
-            return null;
+            return this.whenNoShowingAlias;
         }
     }
 
     get firstEditableChild(): Box {
-        if( this.condition()) {
-            return this.box.firstEditableChild ;
+        if (this.condition() || this.mustShow) {
+            return this.box.firstEditableChild;
         } else {
-            return null;
+            return this.whenNoShowingAlias;
         }
     }
 
     get children(): ReadonlyArray<Box> {
-        if( this.condition()) {
+        if (this.condition()) {
             return [this.box];
         } else {
-            return [];
+            return [this.whenNoShowingAlias];
         }
     }
 }

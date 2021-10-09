@@ -117,6 +117,11 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
     keyword?: string;
     expression: PiLangExp;
 
+    propertyName(): string {
+        // TODO This is a hack to skip "this." Needs to be done properly.
+        return this.expression.toPiString().substring(5);
+    }
+
     toString(): string {
         return (
             "${" +
@@ -145,6 +150,19 @@ export class PiEditSubProjection extends PiDefinitionElement {
         // return this.items.find((value, index, obj) => {
         //     value instanceof PiEditPropertyProjection
         // }) as PiEditPropertyProjection;
+    }
+
+    /**
+     * Returns the first literal word in the sub projection.
+     * Returns the empty string "" if there is no such literal.
+     */
+    public firstLiteral(): string {
+        for (const item of this.items) {
+            if (item instanceof PiEditProjectionText) {
+                return item.text;
+            }
+        }
+        return "";
     }
 
     // TODO what about sub-sub-sub... projections: will they all have one language element?
