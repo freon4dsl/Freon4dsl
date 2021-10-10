@@ -159,7 +159,7 @@ export class PiEditSubProjection extends PiDefinitionElement {
     public firstLiteral(): string {
         for (const item of this.items) {
             if (item instanceof PiEditProjectionText) {
-                return item.text;
+                return item.text.trim();
             }
         }
         return "";

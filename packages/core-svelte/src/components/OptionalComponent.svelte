@@ -21,12 +21,10 @@
     let element: HTMLDivElement =null;
     const setFocus = async (): Promise<void> => {
         FOCUS_LOGGER.log("OptionalComponent.setFocus on box " + optionalBox.role);
-        if (!!element) {
-            if (mustShow || showByCondition) {
-                optionalBox.box.firstEditableChild.setFocus();
-            } else {
-                optionalBox.whenNoShowingAlias.setFocus();
-            }
+        if (mustShow || showByCondition) {
+            optionalBox.box.firstEditableChild.setFocus();
+        } else {
+            optionalBox.whenNoShowingAlias.setFocus();
         }
     };
 
