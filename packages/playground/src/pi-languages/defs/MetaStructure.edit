@@ -4,13 +4,9 @@ PiStructureDef {
     @projection
     [language ${self.name}
 
-    ${self.interfaces
-        @vertical
-        @terminator [\n\n]
-    }
+    ${self.interfaces @vertical }
     ${self.concepts
         @vertical
-        @terminator [\n\n]
     }
     ]
 }
@@ -28,7 +24,7 @@ PiInterface {
     [interface ${self.name} [?base ${self.base @horizontal @separator [, ]}]
         ${self.properties
             @vertical
-            @terminator [;\n]
+            @terminator [;]
         }
     ]
 }
@@ -37,7 +33,7 @@ PiConcept {
     [[?abstract ${self.isAbstract}] [?root ${self.isRoot}] concept ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
         ${self.properties
             @vertical
-            @terminator [;\n]
+            @terminator [;]
         }
     ]
 // TODO project these:
@@ -49,7 +45,7 @@ PiExpressionConcept {
     [expression ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
         ${self.properties
             @vertical
-            @terminator [;\n]
+            @terminator [;]
         }
     ]
 }
@@ -58,7 +54,7 @@ PiBinaryExpressionConcept {
     [binary expression ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
         ${self.properties
             @vertical
-            @terminator [;\n]
+            @terminator [;]
         }
         priority ${self.priority}
     ]
@@ -68,11 +64,10 @@ PiLimitedConcept {
     [limited ${self.name} base ${self.base} implements ${self.interfaces @horizontal @separator [, ]}
         ${self.properties
             @vertical
-            @terminator [;\n]
+            @terminator [;]
         }
         ${self.instances
             @vertical
-            @separator [\n]
         }
     ]
 }
@@ -98,7 +93,7 @@ PiInstance {
     [${self.name} = {
         ${self.propertyDefs
             @vertical
-            @separator [,\n]
+            @separator [,]
         }
     }
     ]

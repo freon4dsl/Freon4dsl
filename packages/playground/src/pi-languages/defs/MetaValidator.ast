@@ -2,7 +2,7 @@ language PiLanguage
 
 // begin validator definition
 public modelunit PiValidatorDef {
-    public name: string;
+    public name: identifier;
 //}
 //concept PiValidatorDef {
 //    location: ParseLocation;
@@ -52,7 +52,7 @@ concept ValidNameRule base ValidationRule {
 }
 
 limited PiComparator {
-    name: string;
+    name: identifier;
     Equals = { name: "="}
     LargerThen = { name: ">"}
     LargerIncluding = { name: ">="}

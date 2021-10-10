@@ -104,7 +104,7 @@ export enum ListJoinType {
 export class ListJoin extends PiDefinitionElement {
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     joinType?: ListJoinType = ListJoinType.NONE;
-    joinText?: string = ", ";
+    joinText?: string = "";
 
     toString(): string {
         return `direction ${this.direction} joinType: ${this.joinType} text: "${this.joinText}"`;

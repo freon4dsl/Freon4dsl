@@ -203,12 +203,13 @@ export class ConceptMaker {
     private makeListJoinText(joinText: string): string {
         let result: string = "";
         if (!!joinText) {
-            result = joinText.trimRight();
+            result = joinText.trimEnd();
         }
         // TODO should test on all manners of whitespace
-        if (result == "\\n" || result == "\\n\\n" || result == "\\t" || result == "\\r") {
-            result = "";
-        }
+        result = result.replace(new RegExp("\\\\n", 'g'), '');
+        result = result.replace(new RegExp("\\\\t", 'g'), '');
+        result = result.replace(new RegExp("\\\\r", 'g'), '');
+        result = result.trimEnd();
         return result;
     }
 }

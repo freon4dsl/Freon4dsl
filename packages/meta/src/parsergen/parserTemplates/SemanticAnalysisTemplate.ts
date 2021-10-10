@@ -133,10 +133,11 @@ export class SemanticAnalysisTemplate {
     }
 
     private makeReplacementIfStat(): string {
+        // TODO add replacement of properties that are lists
         let result: string = '';
         for (const poss of this.possibleProblems) {
             let toBeCreated: string = Names.classifier(poss);
-            for (const ref of poss.allReferences()) {
+            for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
                 let type: PiClassifier = ref.type.referred;
                 let metatype: string = Names.classifier(type);
                 this.addToImports(type);
@@ -153,6 +154,7 @@ export class SemanticAnalysisTemplate {
     }
 
     private makeVistorMethod(language: PiLanguage, piClassifier: PiConcept): string {
+        // TODO add replacement of properties that are lists
         return `
             /**
              * Test whether the references in 'modelelement' are correct.
@@ -161,9 +163,9 @@ export class SemanticAnalysisTemplate {
              */
             public execBefore${Names.concept(piClassifier)}(modelelement: ${Names.concept(piClassifier)}): boolean {
                 let referredElem: PiElementReference<PiNamedElement> = null;
-                ${piClassifier.allReferences().map(prop =>
+                ${piClassifier.allReferences().filter(prop => !prop.isList).map(prop =>
                 `referredElem = modelelement.${prop.name};
-                if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a ${prop.name} with this name
+                if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
                     this.findReplacement(modelelement, referredElem);
                 }`).join("\n")}                
                 return false;
