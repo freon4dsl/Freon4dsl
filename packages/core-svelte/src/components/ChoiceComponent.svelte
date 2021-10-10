@@ -212,8 +212,8 @@
         await choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
         LOGGER.log("selectOption: setting textHelper to [" + JSON.stringify(selected) + "]")
-        choiceBox.textHelper.setText(!!selected ? selected.label : "????");
-        choiceBox.textBox.setText(!!selected ? selected.label : "????");
+        // choiceBox.textHelper.setText(!!selected ? selected.label : "????");
+        // choiceBox.textBox.setText(!!selected ? selected.label : "????");
         setOpen("selectOption", false);
     });
 

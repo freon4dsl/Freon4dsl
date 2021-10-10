@@ -1,6 +1,15 @@
 {
    "$typename": "ExModel",
    "name": "ght6",
-   "entities": [],
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "Aap"
+      },
+      {
+         "$typename": "Entity",
+         "name": "Mies"
+      }
+   ],
    "methods": []
 }

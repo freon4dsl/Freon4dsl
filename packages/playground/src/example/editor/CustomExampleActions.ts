@@ -5,7 +5,7 @@ import {
     PiCustomBehavior,
     PiExpressionCreator,
     PiActions,
-    Box, PiTriggerType, PiEditor, AliasBox, PiCaret
+    Box, PiTriggerType, PiEditor, AliasBox, PiCaret, PiElement, OptionalBox
 } from "@projectit/core";
 import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
 

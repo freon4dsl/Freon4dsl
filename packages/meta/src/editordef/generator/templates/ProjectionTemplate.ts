@@ -49,6 +49,7 @@ export class ProjectionTemplate {
             // TODO import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
             import {
                 styleToCSS,
+                BoxFactory,
                 AliasBox,
                 Box,
                 GridBox,
@@ -137,10 +138,10 @@ export class ProjectionTemplate {
                         !!exp.piContainer().container &&
                         isPiBinaryExpression(exp.piContainer().container)
                     ) {
-                        return new HorizontalListBox(exp, "brackets", [
-                            new LabelBox(exp, "open-bracket", "("),
+                        return BoxFactory.horizontalList(exp, "brackets", [
+                            BoxFactory.label(exp, "open-bracket", "("),
                             binBox,
-                            new LabelBox(exp, "close-bracket", ")")
+                            BoxFactory.label(exp, "close-bracket", ")")
                         ]);
                     } else {
                         return binBox;
@@ -162,16 +163,16 @@ export class ProjectionTemplate {
         const projection: PiEditProjection = editor.projection;
         const multiLine = projection.lines.length > 1;
         if (multiLine) {
-            result += `new VerticalListBox(${elementVarName}, "${concept.name}-overall", [
+            result += `BoxFactory.verticalList(${elementVarName}, "${concept.name}-overall", [
             `;
         }
 
         projection.lines.forEach( (line, index) => {
             if (line.indent > 0) {
-                result += `new IndentBox(${elementVarName}, "${concept.name}-indent-line-${index}", ${line.indent}, `;
+                result += `BoxFactory.indent(${elementVarName}, "${concept.name}-indent-line-${index}", ${line.indent}, `;
             }
             if (line.items.length > 1) {
-                result += `new HorizontalListBox(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
+                result += `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
             }
             // Now all projection items in the line
             line.items.forEach((item, itemIndex) => {
@@ -228,7 +229,7 @@ export class ProjectionTemplate {
                            language: PiLanguage) {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
-            result += ` new LabelBox(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
+            result += ` BoxFactory.label(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
                             style: styleToCSS(${Names.styles}.${item.style}),
                             selectable: false
                         }) `;
@@ -253,13 +254,12 @@ export class ProjectionTemplate {
 
         // If there are more items, surround with horizontal list
         if (item.items.length > 1) {
-            result = `new HorizontalListBox(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
+            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
         }
 
         const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
-        // TODO The subString is needed to remove `self.`, this should be more generic and more failsafe.
-        const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.expression.toPiString().substring(5));
-        return `new OptionalBox(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
+        const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
+        return `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
             ${ result},
             false, "<+>"
         ),`;
@@ -288,7 +288,7 @@ export class ProjectionTemplate {
                 } else {
                     result += `((!!${element}.${appliedFeature.name}) ?
                                                 this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
-                                                new AliasBox(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
+                                                BoxFactory.alias(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
                 }
             } else { // reference
                 if (appliedFeature.isList) {
@@ -318,7 +318,7 @@ export class ProjectionTemplate {
                 ${element}.${propertyConcept.name}.map(feature => {
                     return this.rootProjection.getBox(feature);
                 }).concat(
-                    new AliasBox(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
+                    BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
                         style: styleToCSS(${Names.styles}.placeholdertext),
                         propertyName: "${propertyConcept.name}"
                     })
@@ -377,7 +377,7 @@ export class ProjectionTemplate {
                     ${element}.${reference.name}.map((ent, index) => {
                         return ${this.conceptReferenceProjectionInList(reference, element) }
                     }).concat(
-                        new AliasBox(${element}, "${Roles.newConceptReferencePart(reference)}", "<+>" , { //  add ${reference.name}
+                        BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+>" , { //  add ${reference.name}
                             style: styleToCSS(${Names.styles}.placeholdertext),
                             propertyName: "${reference.name}"
                         })
@@ -405,25 +405,25 @@ export class ProjectionTemplate {
         switch (property.type.referred) {
             case PiPrimitiveType.string:
             case PiPrimitiveType.identifier:
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
+                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",
                     style: styleToCSS(${Names.styles}.placeholdertext)
                 })`;
             case PiPrimitiveType.number:
-                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
+                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
                 {
                     placeHolder: "text",
                     style: styleToCSS(${Names.styles}.placeholdertext)
                 })`;
             case PiPrimitiveType.boolean:
-                return `new TextBox(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
+                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
                 {
                     placeHolder: "text",
                     style: styleToCSS(${Names.styles}.placeholdertext)
                 })`;
             default:
-                return `new TextBox(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
+                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",
                     style: styleToCSS(${Names.styles}.placeholdertext)
@@ -432,12 +432,12 @@ export class ProjectionTemplate {
     }
 
     private listPrimitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
-        return `new HorizontalListBox(${element}, "${Roles.property(property)}-hlist",
+        return `BoxFactory.horizontalList(${element}, "${Roles.property(property)}-hlist",
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element)}
                             ) as Box[]).concat( [
                                 // TODO  Create Action for the role to actually add an element.
-                                new AliasBox(${element}, "new-${Roles.property(property)}-hlist", "<+>")
+                                BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+>")
                             ])
                         )`;
     }

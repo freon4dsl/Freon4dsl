@@ -9,7 +9,7 @@ export class SelectionHelpers {
         // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
-        import { ${Names.PiElement}, Box, SelectBox, SelectOption, BehaviorExecutionResult, PiEditor, styleToCSS } from "${PROJECTITCORE}";
+        import { ${Names.PiElement}, Box, BoxFactory, SelectBox, SelectOption, BehaviorExecutionResult, PiEditor, styleToCSS } from "${PROJECTITCORE}";
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
         /**
@@ -32,7 +32,7 @@ export class SelectionHelpers {
             getAction: () => SelectOption,
             setAction: (o: SelectOption) => Promise<BehaviorExecutionResult>
         ): Box {
-            return new SelectBox(
+            return BoxFactory.select(
                 element,
                 role,
                 placeholder,

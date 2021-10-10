@@ -83,7 +83,8 @@ export default {
 		commonjs(),
 		typescript({
 			sourceMap: !production,
-			inlineSources: !production
+			inlineSources: !production,
+			tsconfig: "./tsconfig.json"
 		}),
 
 		// If we're building for production (npm run build

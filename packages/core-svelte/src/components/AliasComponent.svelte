@@ -112,6 +112,8 @@
                 // }
                 // choiceBox.textHelper.setText(s);
                 setOpen("handleStringInput Alias executed", false);
+                isEditing = false;
+                choiceBox.textHelper.setText("")
                 break;
             case BehaviorExecutionResult.PARTIAL_MATCH:
                 LOGGER.info(this, "PARTIAL_MATCH");
@@ -157,8 +159,13 @@
             if (selected !== null) {
                 isEditing = false;
                 aliasResult = await choiceBox.selectOption(editor, { id: value, label: value });
+                choiceBox.textHelper.setText("")
             } else {
                 aliasResult = BehaviorExecutionResult.NO_MATCH;
+            }
+            if (aliasResult === BehaviorExecutionResult.EXECUTED) {
+                isEditing = false;
+                choiceBox.textHelper.setText("");
             }
         } else {
             console.error("AliasComponent.onInput: should be an AliasBox or SelectBox");
@@ -260,10 +267,11 @@
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to " + JSON.stringify(event.detail));
         isEditing = false;
+        choiceBox.textHelper.setText("");
         const option = event.detail;
         choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
-        choiceBox.textHelper.setText(!!selected ? selected.label : "");
+        // choiceBox.textHelper.setText(!!selected ? selected.label : "");
         LOGGER.log("      selected is " + JSON.stringify(selected));
         setOpen("selectedEvent", false);
         // if (isSelectBox(choiceBox)) {
