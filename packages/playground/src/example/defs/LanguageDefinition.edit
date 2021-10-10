@@ -9,8 +9,8 @@ Attribute {
 Entity {
     @projection [
         Entity ${self.name} [? base ${self.baseEntity}] {
-            ${self.attributes @vertical @separator [\n]}
-            ${self.methods @vertical @separator [\n]}
+            ${self.attributes @vertical }
+            ${self.methods @vertical }
         }
     ]
     @trigger "entity"
@@ -22,10 +22,9 @@ ExModel {
         model ${self.name} {
             ${self.entities
                 @vertical
-                @terminator [\n]
             }
         model wide Methods:
-            ${self.methods @vertical @separator [\n] }
+            ${self.methods @vertical  }
         }
         ]
 }
@@ -128,7 +127,7 @@ AttributeRef {
 }
 
 ParameterRef {
-    @projection [ ${self.parameter} . ${self.appliedfeature} ]
+    @projection [ ${self.parameter} [? . ${self.appliedfeature}] ]
     @referenceShortcut self.parameter
 }
 

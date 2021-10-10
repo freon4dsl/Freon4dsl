@@ -104,9 +104,7 @@ export class DefaultActionsTemplate {
                 ce.projection.lines.forEach(line => {
                     line.items.forEach(item => {
                         if (item instanceof PiEditSubProjection) {
-                            console.log("item instanceof PiEditSubProjection");
                             if (item.optional) {
-                                console.log("    optional");
                                 const firstLiteral: string = item.firstLiteral();
                                 const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
                                 const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.propertyName());
@@ -117,7 +115,8 @@ export class DefaultActionsTemplate {
                                         action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
                                             return null;
-                                        }
+                                        },
+                                        boxRoleToSelect: "${ce.concept.name}-${optionalPropertyName}"
                                     }`;
                                 result += ","
                             }

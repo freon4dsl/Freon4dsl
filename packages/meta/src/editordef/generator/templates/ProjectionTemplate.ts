@@ -269,33 +269,33 @@ export class ProjectionTemplate {
      * Projection template for a property.
      *
      * @param item      The property projection
-     * @param element
+     * @param elementVarName
      * @param concept
      * @param language
      * @private
      */
-    private propertyProjection(item: PiEditPropertyProjection, element: string, concept: PiConcept, language: PiLanguage) {
+    private propertyProjection(item: PiEditPropertyProjection, elementVarName: string, concept: PiConcept, language: PiLanguage) {
         let result: string = "";
         const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
         if (appliedFeature instanceof PiPrimitiveProperty) {
-            result += this.primitivePropertyProjection(appliedFeature, element);
+            result += this.primitivePropertyProjection(appliedFeature, elementVarName);
         } else if (appliedFeature instanceof PiConceptProperty) {
             if (appliedFeature.isPart) {
                 if (appliedFeature.isList) {
                     const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
-                    result += this.conceptPartListProjection(direction, concept, appliedFeature, element);
+                    result += this.conceptPartListProjection(item, direction, concept, appliedFeature, elementVarName);
 
                 } else {
-                    result += `((!!${element}.${appliedFeature.name}) ?
-                                                this.rootProjection.getBox(${element}.${appliedFeature.name}) : 
-                                                BoxFactory.alias(${element}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
+                    result += `((!!${elementVarName}.${appliedFeature.name}) ?
+                                                this.rootProjection.getBox(${elementVarName}.${appliedFeature.name}) : 
+                                                BoxFactory.alias(${elementVarName}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
                 }
             } else { // reference
                 if (appliedFeature.isList) {
                     const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
-                    result += this.conceptReferenceListProjection(direction, appliedFeature, element);
+                    result += this.conceptReferenceListProjection(direction, appliedFeature, elementVarName);
                 } else {
-                    result += this.conceptReferenceProjection(language, appliedFeature, element);
+                    result += this.conceptReferenceProjection(language, appliedFeature, elementVarName);
                 }
             }
         } else {
@@ -312,13 +312,14 @@ export class ProjectionTemplate {
      * @param propertyConcept   The property for which the projection is generated.
      * @param element           The name of the element parameter of the getBox projection method.
      */
-    conceptPartListProjection(direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
+    conceptPartListProjection(item: PiEditPropertyProjection, direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
         return `
-            new ${direction}ListBox(${element}, "${Roles.property(propertyConcept)}-list", 
+            BoxFactory.${direction.toLowerCase()}List(${element}, "${Roles.property(propertyConcept)}-list", 
                 ${element}.${propertyConcept.name}.map(feature => {
-                    return this.rootProjection.getBox(feature);
+                    let roleName: string =  "${Roles.property(propertyConcept)}-" + feature.piId() + "-separator";
+                    return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${item.listJoin.joinText}")]) as Box;
                 }).concat(
-                    BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+>" , { //  add ${propertyConcept.name}
+                    BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+ ${propertyConcept.name}>" , { //  add ${propertyConcept.name}
                         style: styleToCSS(${Names.styles}.placeholdertext),
                         propertyName: "${propertyConcept.name}"
                     })
@@ -377,7 +378,7 @@ export class ProjectionTemplate {
                     ${element}.${reference.name}.map((ent, index) => {
                         return ${this.conceptReferenceProjectionInList(reference, element) }
                     }).concat(
-                        BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+>" , { //  add ${reference.name}
+                        BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+ ${reference.name}>" , { //  add ${reference.name}
                             style: styleToCSS(${Names.styles}.placeholdertext),
                             propertyName: "${reference.name}"
                         })
@@ -437,7 +438,7 @@ export class ProjectionTemplate {
                                 ${this.singlePrimitivePropertyProjection(property, element)}
                             ) as Box[]).concat( [
                                 // TODO  Create Action for the role to actually add an element.
-                                BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+>")
+                                BoxFactory.alias(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")
                             ])
                         )`;
     }

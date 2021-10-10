@@ -44,6 +44,9 @@ export interface PiStyle {
     content?: string;
 
     display?: string;
+    "align-items"?:  string;
+    "align-content"?:  string;
+    "justify-items"?: string
 }
 
 export function styleToCSS(style: PiStyle): string {

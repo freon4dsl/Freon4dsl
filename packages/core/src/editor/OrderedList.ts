@@ -47,7 +47,7 @@ export class OrderedList<T> implements Iterable<T> {
         for (let i: number = index; i < size - 1; i++) {
             this.elements[i] = this.elements[i + 1];
         }
-        this.elements[0] = tobeMoved;
+        this.elements[size-1] = tobeMoved;
     }
 
     get(index: number): NamedElement<T> {
