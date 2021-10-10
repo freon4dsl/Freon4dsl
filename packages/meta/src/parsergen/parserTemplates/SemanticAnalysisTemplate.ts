@@ -165,7 +165,7 @@ export class SemanticAnalysisTemplate {
                 `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a ${prop.name} with this name
                     this.findReplacement(modelelement, referredElem);
-                }`)}                
+                }`).join("\n")}                
                 return false;
             }`;
     }
