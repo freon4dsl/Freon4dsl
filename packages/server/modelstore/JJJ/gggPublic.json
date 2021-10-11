@@ -1,5 +1,5 @@
 {
-   "$typename": "ExModel",
+   "$typename": "ExampleUnit",
    "name": "ggg",
    "entities": [
       {

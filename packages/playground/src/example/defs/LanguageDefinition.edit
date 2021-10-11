@@ -8,7 +8,7 @@ Attribute {
 
 Entity {
     @projection [
-        Entity ${self.name} [? base ${self.baseEntity}] {
+        entity ${self.name} [? base ${self.baseEntity}] {
             ${self.attributes @vertical }
             ${self.methods @vertical }
         }
@@ -16,14 +16,14 @@ Entity {
     @trigger "entity"
 }
 
-ExModel {
+ExampleUnit {
     @projection Model
         [
-        model ${self.name} {
+        unit ${self.name} {
             ${self.entities
                 @vertical
             }
-        model wide Methods:
+        unit level methods:
             ${self.methods @vertical  }
         }
         ]

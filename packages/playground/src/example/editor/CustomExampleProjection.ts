@@ -27,7 +27,15 @@ import { PiElementReference } from "../language/gen/PiElementReference";
 import { SumExpression } from "../language/gen/SumExpression";
 import { Type } from "../language/gen/Type";
 import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
-import { grid, gridcell, gridcellFirst, gridcellLast, gridCellOr } from "./styles/CustomStyles";
+import {
+    attributeHeader,
+    attributeName, entityBoxStyle, entityNameStyle,
+    grid,
+    gridcell,
+    gridcellFirst,
+    gridcellLast,
+    gridCellOr
+} from "./styles/CustomStyles";
 import { mycell, mygrid } from "./styles/styles";
 
 const LOGGER = new PiLogger("CustumProjection");
@@ -209,20 +217,25 @@ export class CustomExampleProjection implements PiProjection {
         cells.push({
             row: 1,
             column: 1,
+            columnSpan: 2,
             box: new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
                 deleteWhenEmpty: true,
                 placeHolder: "<enter entity name>",
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isName(currentText, key, index);
-                }
-            })
+                },
+                style: styleToCSS(entityNameStyle)
+            }),
+            // style: styleToCSS(entityBoxStyle)
         });
         cells.push({
             row: 2,
             column: 1,
             box: this.createAttributeGrid(entity)
         });
-        return new GridBox(entity, "entity-all", cells);
+        return new GridBox(entity, "entity-all", cells, {
+            style: styleToCSS(entityBoxStyle)
+        });
     }
 
     // TODO Refactor row and column based collections into one generic function.
@@ -233,6 +246,7 @@ export class CustomExampleProjection implements PiProjection {
             "attributes",
             entity.attributes,
             ["name", "type"],
+            [attributeHeader, attributeHeader],
             [
                 (att: Attribute): Box => {
                     return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
@@ -240,7 +254,8 @@ export class CustomExampleProjection implements PiProjection {
                         keyPressAction: (currentText: string, key: string, index: number) => {
                             return isName(currentText, key, index);
                         },
-                        placeHolder: "<name>"
+                        placeHolder: "<name>",
+                        style: styleToCSS(attributeName)
                     });
                 },
                 (attr: Attribute): Box => {
@@ -266,7 +281,8 @@ export class CustomExampleProjection implements PiProjection {
                                 attr.declaredType = null;
                             }
                             return BehaviorExecutionResult.EXECUTED;
-                        }
+                        },
+                        { style: styleToCSS(attributeName)}
                     )
                 }
             ],

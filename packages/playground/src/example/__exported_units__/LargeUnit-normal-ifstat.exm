@@ -1,5 +1,5 @@
-model LargeUnit { 
-    Entity entity1 { 
+unit LargeUnit {
+    entity entity1 {
         attr1 : String
 
         attr2 : Integer
@@ -14,21 +14,21 @@ model LargeUnit {
         }
     }
 
-    Entity entityNoAttrs { 
+    entity entityNoAttrs {
         
         method meth21 ( parA : entityNoAttrs,parB : entityNoAttrs): Boolean { 
             ( parA == parB )
         }
     }
 
-    Entity entityNoMeths { 
+    entity entityNoMeths {
         attrA : Integer
 
         attrB : entityNoAttrs
         
     }
 
-model wide Methods: 
+unit level methods:
     method AA ( ): String { 
         CALL HH ( ) 
     }

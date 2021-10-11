@@ -15,6 +15,7 @@
     "clean-gen": "rm src/*/*/gen/*",
     "graphviz":	    "bash ../../scripts/projectit-dev.sh -v all -d src/graphviz/defs -o src/graphviz",
     "example": 	    "bash ../../scripts/projectit-dev.sh -v all -d src/example/defs -o src/example",
+    "watch-example":"bash ../../scripts/projectit-dev.sh -w -v all -d src/example/defs -o src/example",
     "ex-parser":    "bash ../../scripts/projectit-dev.sh -v parse-it -d src/example/defs -o src/example",
     "calculator":   "bash ../../scripts/projectit-dev.sh all -d src/calculator/defs -o src/calculator",
     "expressions":  "bash ../../scripts/projectit-dev.sh all -d src/mps-expressions/defs -o src/mps-expressions",
