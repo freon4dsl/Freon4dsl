@@ -57,7 +57,19 @@
     $: if ($units) {
         // there are units, so fill the local data structure
         $units.forEach((xx: PiNamedElement[], index) => {
-            myUnits[index] = xx;
+            // apparantly an empty array is represented as null
+            // therefore this test to see if there is not a null value somewhere
+            let empty: boolean = true;
+            for (const x of xx) {
+                if (x !== null) {
+                    empty = false;
+                }
+            }
+            if (empty) {
+                myUnits[index] = [];
+            } else {
+                myUnits[index] = xx;
+            }
         });
     } else {
         // no units, so set the local data structure to empty
