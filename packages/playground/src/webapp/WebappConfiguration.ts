@@ -10,8 +10,8 @@ import { PiEnvironment } from "@projectit/core";
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
 
-import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+// import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
@@ -22,8 +22,8 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
 // import { TaxRulesEnvironment } from "../taxrules/environment/gen/TaxRulesEnvironment";
 // export const editorEnvironment: PiEnvironment = TaxRulesEnvironment.getInstance();
 
-// import { PiLanguageEnvironment } from "../pi-languages/environment/gen/PiLanguageEnvironment";
-// export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
+import { PiLanguageEnvironment } from "../pi-languages/environment/gen/PiLanguageEnvironment";
+export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
 
 // import { PiLanguageEnvironment } from "../pi-language-definition-language/environment/gen/PiLanguageEnvironment";
 // export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();

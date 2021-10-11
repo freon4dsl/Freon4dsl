@@ -1,6 +1,6 @@
 {
-   "$typename": "ExampleUnit",
-   "name": "ggg",
+   "$typename": "ExModel",
+   "name": "LargeUnit",
    "entities": [
       {
          "$typename": "Entity",
@@ -28,7 +28,7 @@
             },
             {
                "$typename": "Attribute",
-               "name": "someText",
+               "name": "attr5",
                "declaredType": "ANY"
             }
          ],
@@ -40,11 +40,7 @@
                   "$typename": "AbsExpression",
                   "expr": {
                      "$typename": "ParameterRef",
-                     "appliedfeature": {
-                        "$typename": "AttributeRef",
-                        "appliedfeature": null,
-                        "attribute": "attr2"
-                     },
+                     "appliedfeature": null,
                      "parameter": "par2"
                   },
                   "appliedfeature": null
@@ -58,7 +54,7 @@
                   {
                      "$typename": "Parameter",
                      "name": "par2",
-                     "declaredType": "entity1"
+                     "declaredType": "Integer"
                   }
                ],
                "declaredType": "Integer"
@@ -75,20 +71,20 @@
                "$typename": "Method",
                "name": "meth21",
                "body": {
-                  "$typename": "EqualsExpression",
-                  "left": {
-                     "$typename": "ParameterRef",
-                     "appliedfeature": null,
-                     "parameter": "parA"
-                  },
-                  "right": {
-                     "$typename": "ParameterRef",
-                     "appliedfeature": {
-                        "$typename": "AttributeRef",
+                  "$typename": "GroupedExpression",
+                  "inner": {
+                     "$typename": "EqualsExpression",
+                     "left": {
+                        "$typename": "ParameterRef",
                         "appliedfeature": null,
-                        "attribute": "attr1"
+                        "parameter": "parA"
                      },
-                     "parameter": "parB"
+                     "right": {
+                        "$typename": "ParameterRef",
+                        "appliedfeature": null,
+                        "parameter": "parB"
+                     },
+                     "appliedfeature": null
                   },
                   "appliedfeature": null
                },
@@ -96,12 +92,12 @@
                   {
                      "$typename": "Parameter",
                      "name": "parA",
-                     "declaredType": "entity1"
+                     "declaredType": "entityNoAttrs"
                   },
                   {
                      "$typename": "Parameter",
                      "name": "parB",
-                     "declaredType": "entity1"
+                     "declaredType": "entityNoAttrs"
                   }
                ],
                "declaredType": "Boolean"
@@ -122,11 +118,6 @@
                "$typename": "Attribute",
                "name": "attrB",
                "declaredType": "entityNoAttrs"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "ASAS",
-               "declaredType": null
             }
          ],
          "methods": [],
@@ -138,15 +129,10 @@
          "$typename": "Method",
          "name": "AA",
          "body": {
-            "$typename": "OrExpression",
-            "left": {
-               "$typename": "MethodCallExpression",
-               "args": [],
-               "appliedfeature": null,
-               "methodDefinition": "HH"
-            },
-            "right": null,
-            "appliedfeature": null
+            "$typename": "MethodCallExpression",
+            "args": [],
+            "appliedfeature": null,
+            "methodDefinition": "HH"
          },
          "parameters": [],
          "declaredType": "String"
@@ -156,7 +142,7 @@
          "name": "BB",
          "body": {
             "$typename": "BooleanLiteralExpression",
-            "value": "true",
+            "value": true,
             "appliedfeature": null
          },
          "parameters": [],
@@ -197,12 +183,12 @@
             },
             "whenTrue": {
                "$typename": "NumberLiteralExpression",
-               "value": "10",
+               "value": 10,
                "appliedfeature": null
             },
             "whenFalse": {
                "$typename": "NumberLiteralExpression",
-               "value": "666",
+               "value": 666,
                "appliedfeature": null
             },
             "appliedfeature": null
@@ -227,12 +213,12 @@
             },
             "from": {
                "$typename": "NumberLiteralExpression",
-               "value": "0",
+               "value": 0,
                "appliedfeature": null
             },
             "to": {
                "$typename": "NumberLiteralExpression",
-               "value": "999",
+               "value": 999,
                "appliedfeature": null
             },
             "body": {

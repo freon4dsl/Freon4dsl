@@ -1,6 +1,6 @@
 {
-   "$typename": "ExampleUnit",
-   "name": "SomeNameOrOther",
+   "$typename": "ExModel",
+   "name": "Simple",
    "entities": [
       {
          "$typename": "Entity",

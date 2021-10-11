@@ -3,9 +3,7 @@ language PiLanguage
 // begin structure definition
 public modelunit PiStructureDef {
     public name: identifier;
-    public concepts: PiConcept[];
-    public interfaces: PiInterface[];
-    public rootconcept: PiConcept;
+    public contents: PiClassifier[];
 }
 
 abstract concept PiLangElement {
@@ -14,8 +12,22 @@ abstract concept PiLangElement {
     // piMetaName: string; not yet implemented
 }
 
-abstract concept PiClassifier base PiLangElement {
-    reference owningLanguage: PiStructureDef;
+concept PiModel base PiClassifier {
+}
+
+concept PiModelUnit base PiClassifier {
+    reference base?: PiConcept;
+    reference interfaces: PiInterface[];
+}
+
+// TODO this is not in our language, but we need it here because of limited concept PiPrimitiveType
+interface Type {
+    name: identifier;
+}
+
+abstract concept PiClassifier base PiLangElement implements Type{
+    reference owningLanguage: PiModel;
+    isPublic: boolean;
     properties: PiProperty[];
     primProperties: PiPrimitiveProperty[];
 }
@@ -24,11 +36,10 @@ concept PiInterface base PiClassifier {
 }
 concept PiConcept base PiClassifier {
     isAbstract: boolean;
-    isRoot:boolean;
     reference base?: PiConcept;
     reference interfaces: PiInterface[];
 }
-abstract concept PiExpressionConcept base PiConcept {
+concept PiExpressionConcept base PiConcept {
 }
 concept PiBinaryExpressionConcept base PiExpressionConcept {
     left: PiExpressionConcept;
@@ -42,26 +53,29 @@ abstract concept PiProperty base PiLangElement {
     isOptional: boolean;
     isList: boolean;
     isPart: boolean; // if false then it is a reference property
-    reference type: PiClassifier;
+    reference type: Type;
+    // TODO see how we address the following
     reference owningConcept: PiClassifier;
 }
 concept PiConceptProperty base PiProperty {
+    // TODO see how we address the following
     hasLimitedType: boolean;
 }
 concept PiPrimitiveProperty base PiProperty {
     isStatic: boolean;
-	initialValue: string;
-    primType: string;
-	// The inherited 'type' cannot be used, because this has a primitive type,
-	// which is not a subtype of PiReference<PiClassifier>
-	// Therefore, here we have:
-    /*
-    get type() : PiReference<PiClassifier> {
-        let value : PiReference<PiClassifier> = new PiReference<PiClassifier>();
-        value.name = this.primType;
-        return value;
-    }
-    */
+	initialValue: PiPrimitiveValue;
+	initialValueList: PiPrimitiveValue[];
+}
+abstract concept PiPrimitiveValue {
+}
+concept PiStringValue base PiPrimitiveValue {
+    value: string;
+}
+concept PiNumberValue base PiPrimitiveValue {
+    value: number;
+}
+concept PiBooleanValue base PiPrimitiveValue {
+    value: boolean;
 }
 concept PiInstance base PiLangElement {
     reference concept: PiLimitedConcept;
@@ -81,6 +95,9 @@ concept PiFunction base PiLangElement {
 
 concept PiParameter base PiLangElement {
     reference type: PiClassifier;
+}
+limited PrimitiveType implements Type {
+    String; Boolean; Number; Identifier;
 }
 // end structure definition
 // begin expressions definition

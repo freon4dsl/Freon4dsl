@@ -350,13 +350,9 @@ export class PiConceptProperty extends PiProperty {
 export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
     // only one of 'initialValue' and 'initialValueList' may have a value
+    // TODO see if we can improve this
     initialValue: PiPrimitiveValue;
     initialValueList: PiPrimitiveValue[];
-    // primType: string;
-    // The inherited 'type' cannot be used, because 'this' has a primitive type,
-    // which is not a subtype of PiElementReference<PiConcept>
-    // Therefore, here we have:
-    // type: PiElementReference<PiConcept> = PiElementReference.createNamed<PiConcept>(primitiveValueName, "PiConcept");
 
     get isPrimitive(): boolean {
         return true;
