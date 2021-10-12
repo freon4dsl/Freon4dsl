@@ -10,7 +10,7 @@ export class CustomValidation extends EntityDefaultWorker implements EntityCheck
         if (modelelement.name == "determine") {
             this.errorList.push(
                 new PiError(
-                    `SOMETHING IS TERRIBLY WRONG WITH THIS ELEMENT`,
+                    `"determine" is a terrible name for a Function`,
                     modelelement,
                     modelelement.name,
                     PiErrorSeverity.Error

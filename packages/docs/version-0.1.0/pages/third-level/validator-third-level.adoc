@@ -30,8 +30,8 @@ This is the interface to be implemented for the language called `Entity`.
 [start=3]
 * Let your class extend the generated default AST worker part of the visitor pattern,
 which is called `<yourLanguageName>DefaultWorker`.
-* Now implement any of the methods of the default worker put in your validation the corresponding model element.
-This method will override the (empty) default implementation.
+* Now implement any of the methods of the default worker by putting in your validation in
+the corresponding model element method. This method will override the (empty) default implementation.
 The  validation error should be pushed onto the `errorList` attribute. Therefore, each error must implement the
 xref:../meta-documentation/tools-interfaces/validator-interface.adoc#PiError[PiError] interface.
 

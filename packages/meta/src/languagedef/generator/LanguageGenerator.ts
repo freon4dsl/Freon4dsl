@@ -2,12 +2,16 @@ import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import {
     CONFIGURATION_FOLDER,
+    ENVIRONMENT_FOLDER,
     ENVIRONMENT_GEN_FOLDER,
     GenerationStatus,
     Helpers,
+    LANGUAGE_FOLDER,
     LANGUAGE_GEN_FOLDER,
+    LANGUAGE_UTILS_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
+    STDLIB_FOLDER,
     STDLIB_GEN_FOLDER
 } from "../../utils";
 import { PiLanguage } from "../metalanguage";
@@ -30,20 +34,20 @@ import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
-    protected languageGenFolder: string;
-    protected environmentGenFolder: string;
-    protected utilsGenFolder: string;
-    protected stdlibGenFolder: string;
-    protected configurationFolder: string;
+    private languageGenFolder: string;
+    private environmentGenFolder: string;
+    private utilsGenFolder: string;
+    private stdlibGenFolder: string;
+    private configurationFolder: string;
+    private languageFolder: string;
+    private utilsFolder: string;
+    private environmentFolder: string;
+    private stdlibFolder: string;
 
     generate(language: PiLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
         const generationStatus = new GenerationStatus();
-        this.languageGenFolder = this.outputfolder + "/" + LANGUAGE_GEN_FOLDER;
-        this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
-        this.environmentGenFolder = this.outputfolder + "/" + ENVIRONMENT_GEN_FOLDER;
-        this.stdlibGenFolder = this.outputfolder + "/" + STDLIB_GEN_FOLDER;
-        this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
+        this.getFolderNames();
 
         const conceptTemplate = new ConceptTemplate();
         const languageTemplate = new LanguageTemplate();
@@ -149,6 +153,37 @@ export class LanguageGenerator {
             LOGGER.info(this, `Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated language '${language.name}'`);
+        }
+    }
+
+    private getFolderNames() {
+        this.languageGenFolder = this.outputfolder + "/" + LANGUAGE_GEN_FOLDER;
+        this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
+        this.environmentGenFolder = this.outputfolder + "/" + ENVIRONMENT_GEN_FOLDER;
+        this.stdlibGenFolder = this.outputfolder + "/" + STDLIB_GEN_FOLDER;
+        this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
+        this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
+        this.environmentFolder = this.outputfolder + "/" + ENVIRONMENT_FOLDER;
+        this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
+        this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.languageGenFolder);
+        Helpers.deleteDirAndContent(this.utilsGenFolder);
+        Helpers.deleteDirAndContent(this.environmentGenFolder);
+        Helpers.deleteDirAndContent(this.stdlibGenFolder);
+        Helpers.deleteDirIfEmpty(this.languageFolder);
+        Helpers.deleteDirIfEmpty(this.utilsFolder);
+        Helpers.deleteDirIfEmpty(this.environmentFolder);
+        Helpers.deleteDirIfEmpty(this.stdlibFolder);
+        if (force) {
+            Helpers.deleteFile(`${this.configurationFolder}/${Names.configuration()}.ts`);
+            Helpers.deleteDirIfEmpty(this.configurationFolder);
+        } else {
+            // do not delete the following files, because these may contain user edits
+            LOGGER.info(this, `Not removed: ${this.configurationFolder}/${Names.configuration()}.ts`);
         }
     }
 }

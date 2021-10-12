@@ -16,12 +16,11 @@ export class ScoperGenerator {
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
-    constructor(language: PiLanguage) {
-        this.language = language;
-    }
-
     generate(scopedef: PiScopeDef): void {
-
+        if (this.language == null) {
+            LOGGER.error(this, "Cannot generate scoper because language is not set.");
+            return;
+        }
         // generate default, if the scoper definition is not present, i.e. was not read from file
         if (isNullOrUndefined(scopedef)) {
             scopedef = new PiScopeDef();
@@ -31,8 +30,7 @@ export class ScoperGenerator {
         }
 
         const generationStatus = new GenerationStatus();
-        this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
-        this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
+        this.getFolderNames();
         const name = scopedef ? scopedef.scoperName + " " : "";
         LOGGER.log("Generating scoper " + name + "in folder " + this.scoperGenFolder);
 
@@ -75,5 +73,16 @@ export class ScoperGenerator {
         } else {
             LOGGER.info(this,`Succesfully generated scoper ${name}`);
         }
+    }
+
+    private getFolderNames() {
+        this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
+        this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.scoperGenFolder);
+        Helpers.deleteDirIfEmpty(this.scoperFolder);
     }
 }

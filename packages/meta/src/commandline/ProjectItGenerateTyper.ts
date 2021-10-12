@@ -19,7 +19,8 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
         LOGGER.log("Starting ProjectIt typer generation ...");
 
         super.generate();
-        this.typerGenerator = new PiTyperGenerator(this.language);
+        this.typerGenerator = new PiTyperGenerator();
+        this.typerGenerator.language = this.language;
         this.typerGenerator.outputfolder = this.outputFolder;
 
         const typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
