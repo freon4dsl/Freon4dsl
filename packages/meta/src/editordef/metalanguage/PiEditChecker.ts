@@ -1,7 +1,8 @@
 import {
     PiConcept,
     PiInstanceExp,
-    PiLangExpressionChecker, PiLangSelfExp,
+    PiLangExpressionChecker,
+    PiLangSelfExp,
     PiLanguage,
     PiLimitedConcept,
     PiPrimitiveProperty
@@ -153,9 +154,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     // create default listJoin if not present
                     if (!(!!projection.listJoin)) {
                         projection.listJoin = new ListJoin();
-                        projection.listJoin.joinType = ListJoinType.Separator;
-                        projection.listJoin.joinText = ", ";
-                    } else {
+                    } else if (projection.listJoin.joinType !== ListJoinType.NONE) {
                         const text = projection.listJoin.joinType === ListJoinType.Separator ? `@separator` : `@terminator`;
                         this.simpleCheck(!!projection.listJoin.joinText, `${text} should be followed by a string between '[' and ']' ${this.location(projection)}`);
                     }

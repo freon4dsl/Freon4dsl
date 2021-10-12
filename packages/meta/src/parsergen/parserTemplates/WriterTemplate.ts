@@ -269,6 +269,9 @@ export class WriterTemplate {
                         this.output[this.currentLine] += sepText;
                         break;
                     }
+                    case SeparatorType.NONE: {
+                        break;
+                    }
                 }
                 
                 // then add newline and indentation
@@ -615,8 +618,7 @@ export class WriterTemplate {
         } else if (item.listJoin.joinType === ListJoinType.Terminator) {
             joinType = "SeparatorType.Terminator";
         } else if (item.listJoin.joinType === ListJoinType.NONE) {
-            // TODO is this the correct default jointype?
-            joinType = "SeparatorType.Separator";
+            joinType = "SeparatorType.NONE";
         }
         return joinType;
     }

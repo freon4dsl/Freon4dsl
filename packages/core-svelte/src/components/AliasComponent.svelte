@@ -288,6 +288,7 @@
     };
 
     let listForDropdown: SelectOption[];
+    let aliasStyle: string = "";
 
     // selectableOptionList.replaceOptions(choiceBox.getOptions(editor))
     autorun(() => {
@@ -299,6 +300,7 @@
         if (!!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
+        aliasStyle = choiceBox.style;
     });
 
     const handleClickOutside = (event): void => {
@@ -324,6 +326,7 @@
      on:focus={onFocusHandler}
      on:focusin={onFocusHandler}
      on:click={onClick}
+     style="{aliasStyle}"
      use:clickOutside on:click_outside={handleClickOutside}
 >
     <SelectableComponent box={choiceBox.textBox} editor={editor}>

@@ -1,16 +1,17 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
-import { PiNamedElement, PiModel, PiLogger, PiCompositeProjection, PiError, PiElement } from "@projectit/core";
+import { PiCompositeProjection, PiError, PiLogger, PiModel, PiNamedElement } from "@projectit/core";
 import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
     currentModelName,
     currentUnitName,
     fileExtensions,
-    noUnitAvailable,
     languageName,
+    noUnitAvailable,
+    projectionNames,
+    severityType,
     units,
-    unitTypes,
-    projectionNames
+    unitTypes
 } from "../webapp-ts-utils/WebappStore";
 import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
 import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
@@ -328,10 +329,12 @@ export class EditorCommunication {
         let elem: PiNamedElement = null;
         elem = editorEnvironment.reader.readFromString(content, metaType) as PiNamedElement;
         if (elem) {
-            // save the old current unit, if there is one
-            this.saveCurrentUnit();
+            if (this.currentModel.getUnits().filter(unit => unit.name === elem.name).length > 0) {
+                setUserMessage(`Unit named '${elem.name}' already exists.`, severityType.error);
+                return;
+            }
 
-            // TODO find way to get interface without use of the server
+            // TODO find way to get interface without use of the server, because of concurrency error
             // swap old unit with its interface in the in-memory model
             // ServerCommunication.getInstance().loadModelUnitInterface(
             //     EditorCommunication.getInstance().currentModel.name,

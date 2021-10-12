@@ -7,10 +7,10 @@ PrimExtra {
         before ${self.primNumberWithExtra} after
         before ${self.primStringWithExtra} after
         before ${self.primBooleanWithExtra} after
-        before ${self.primListIdentifierWithExtra} after
-        before ${self.primListNumberWithExtra} after
-        before ${self.primListStringWithExtra} after
-        before ${self.primListBooleanWithExtra}    after
+        before ${self.primListIdentifierWithExtra @separator [, ]} after
+        before ${self.primListNumberWithExtra @separator [, ]} after
+        before ${self.primListStringWithExtra @separator [, ]} after
+        before ${self.primListBooleanWithExtra @separator [, ]}    after
     ]
 }
 
@@ -20,10 +20,10 @@ PrimExtraOptional {
         [?before ${self.primNumberWithExtra} after]
         [?before ${self.primStringWithExtra} after]
         [?before ${self.primBooleanWithExtra} after]
-        [?before ${self.primListIdentifierWithExtra} after]
-        [?before ${self.primListNumberWithExtra} after]
-        [?before ${self.primListStringWithExtra} after]
-        [?before ${self.primListBooleanWithExtra} after]
+        [?before ${self.primListIdentifierWithExtra @separator [, ]} after]
+        [?before ${self.primListNumberWithExtra @separator [, ]} after]
+        [?before ${self.primListStringWithExtra @separator [, ]} after]
+        [?before ${self.primListBooleanWithExtra @separator [, ]} after]
     ]
 }
 
@@ -84,8 +84,8 @@ WithDirectParts {
     @projection normal [
     WithDirectParts part ${self.part}
 	[?optPart ${self.optPart}]
-	partList ${self.partList}
-	[?optList ${self.optList} ]
+	partList ${self.partList @horizontal @separator[, ]}
+	[?optList ${self.optList @horizontal @separator[, ]} ]
 	]
 }
 

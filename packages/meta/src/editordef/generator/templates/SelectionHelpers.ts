@@ -30,7 +30,8 @@ export class SelectionHelpers {
             placeholder: string,
             metaType: string,
             getAction: () => SelectOption,
-            setAction: (o: SelectOption) => Promise<BehaviorExecutionResult>
+            setAction: (o: SelectOption) => Promise<BehaviorExecutionResult>,
+            initializer?: Partial<SelectBox>
         ): Box {
             return BoxFactory.select(
                 element,
@@ -45,7 +46,8 @@ export class SelectionHelpers {
                         }));
                 },
                 () => getAction(),
-                (editor: PiEditor, option: SelectOption) => setAction(option)
+                (editor: PiEditor, option: SelectOption) => setAction(option),
+                initializer
             );
         }
         `;

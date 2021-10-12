@@ -2,10 +2,10 @@ language Example
 
 model Demo {
     name: identifier;
-    models: ExModel[];
+    units: ExampleUnit[];
 }
 
-public modelunit ExModel {
+public modelunit ExampleUnit {
     public name: identifier;
     public entities: Entity[];
     public methods: Method[];

@@ -2,7 +2,7 @@ language PiLanguage  // from: projectit/meta/.../editordef
 
 // begin editor definition
 public modelunit PiEditorDef {
-    public name: string;
+    public name: identifier;
 //        language: PiLanguage;
     languageName: string;
     public conceptEditors: PiEditConcept[];
@@ -13,7 +13,7 @@ concept PiEditConcept {
     reference concept: PiConcept;
     projection: PiEditProjection;
     trigger?: string;
-    symbol?: string; // only for binary expressions
+    operator?: string; // (used to be 'symbol') only for binary expressions
 }
 
 concept PiEditParsedProjectionIndent implements PiEditProjectionItem {
@@ -52,7 +52,7 @@ concept PiEditProjectionLine {
 }
 
 concept PiEditProjection {
-    name: string;
+    name: identifier;
     conceptEditor?: PiEditConcept;
     lines: PiEditProjectionLine[];
 }
@@ -64,14 +64,14 @@ concept ListJoin {
 }
 
 limited PiEditProjectionDirection {
-    name: string;
+    name: identifier;
     NONE = {name:"NONE"}
     Horizontal = {name:"Horizontal"}
     Vertical = {name:"Vertical"}
 }
 
 limited ListJoinType {
-    name: string;
+    name: identifier;
     NONE = {name:"NONE"}
     Terminator = {name:"Terminator"}
     Separator = {name:"Separator"}

@@ -32,6 +32,10 @@ export interface PiStyle {
     "background-color"?: string;
 
     "padding"?: string;
+    "padding-bottom"?: string;
+    "padding-top"?: string;
+    "padding-left"?: string;
+    "padding-right"?: string;
     "white-space"?: string;
 
     "margin"?: string;
@@ -44,6 +48,9 @@ export interface PiStyle {
     content?: string;
 
     display?: string;
+    "align-items"?:  string;
+    "align-content"?:  string;
+    "justify-items"?: string
 }
 
 export function styleToCSS(style: PiStyle): string {

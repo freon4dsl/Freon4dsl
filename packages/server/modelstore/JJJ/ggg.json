@@ -1,5 +1,5 @@
 {
-   "$typename": "ExModel",
+   "$typename": "ExampleUnit",
    "name": "ggg",
    "entities": [
       {
@@ -83,7 +83,11 @@
                   },
                   "right": {
                      "$typename": "ParameterRef",
-                     "appliedfeature": null,
+                     "appliedfeature": {
+                        "$typename": "AttributeRef",
+                        "appliedfeature": null,
+                        "attribute": "attr1"
+                     },
                      "parameter": "parB"
                   },
                   "appliedfeature": null
@@ -92,12 +96,12 @@
                   {
                      "$typename": "Parameter",
                      "name": "parA",
-                     "declaredType": "entityNoAttrs"
+                     "declaredType": "entity1"
                   },
                   {
                      "$typename": "Parameter",
                      "name": "parB",
-                     "declaredType": "entityNoAttrs"
+                     "declaredType": "entity1"
                   }
                ],
                "declaredType": "Boolean"
@@ -118,6 +122,11 @@
                "$typename": "Attribute",
                "name": "attrB",
                "declaredType": "entityNoAttrs"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "ASAS",
+               "declaredType": null
             }
          ],
          "methods": [],
@@ -129,10 +138,15 @@
          "$typename": "Method",
          "name": "AA",
          "body": {
-            "$typename": "MethodCallExpression",
-            "args": [],
-            "appliedfeature": null,
-            "methodDefinition": "HH"
+            "$typename": "OrExpression",
+            "left": {
+               "$typename": "MethodCallExpression",
+               "args": [],
+               "appliedfeature": null,
+               "methodDefinition": "HH"
+            },
+            "right": null,
+            "appliedfeature": null
          },
          "parameters": [],
          "declaredType": "String"

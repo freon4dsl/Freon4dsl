@@ -3,19 +3,16 @@ editor First for language PiLanguage  // from: projectit/meta/.../editordef
 PiEditorDef {
     @projection
     [editor ${self.name} for language ${self.languageName}
-    ${self.conceptEditors
-            @vertical
-            @terminator [\n\n]
-    }
+    ${self.conceptEditors @vertical}
     ]
 }
 
 PiEditConcept {
     @projection
-    [${self.concept.name} {
+    [${self.concept} {
     ${self.projection}
     [?@trigger ${self.trigger}]
-    [?@symbol ${self.symbol}]
+    [?@symbol ${self.operator}]
     ]
 }
 
@@ -55,7 +52,7 @@ PiEditProjectionLine {
 }
 
 PiEditProjection {
-    name: string;
+    name: identifier;
     conceptEditor?: PiEditConcept;
     lines: PiEditProjectionLine[];
 }
@@ -67,14 +64,14 @@ ListJoin {
 }
 
 limited PiEditProjectionDirection {
-    name: string;
+    name: identifier;
     NONE = {name:"NONE"}
     Horizontal = {name:"Horizontal"}
     Vertical = {name:"Vertical"}
 }
 
 limited ListJoinType {
-    name: string;
+    name: identifier;
     NONE = {name:"NONE"}
     Terminator = {name:"Terminator"}
     Separator = {name:"Separator"}

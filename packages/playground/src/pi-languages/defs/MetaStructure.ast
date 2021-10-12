@@ -2,7 +2,7 @@ language PiLanguage
 
 // begin structure definition
 public modelunit PiStructureDef {
-    public name: string;
+    public name: identifier;
     public concepts: PiConcept[];
     public interfaces: PiInterface[];
     public rootconcept: PiConcept;
@@ -10,7 +10,7 @@ public modelunit PiStructureDef {
 
 abstract concept PiLangElement {
     // location: ParseLocation
-    name: string;
+    name: identifier;
     // piMetaName: string; not yet implemented
 }
 

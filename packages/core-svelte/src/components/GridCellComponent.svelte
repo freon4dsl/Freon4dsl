@@ -26,10 +26,12 @@
 
     let row: string;
     let column: string;
+    let boxStyle: string = "";
     autorun(() => {
         AUTO_LOGGER.log("GridCellComponent["+ notifier.dummy + "] ");
         row = cell.row + (cell.rowSpan ? " / span " + cell.rowSpan : "");
         column = cell.column + (cell.columnSpan ? " / span " + cell.columnSpan : "");
+        boxStyle = (!!cell.style ? cell.style : "") + `grid-row: ${row}; grid-column: ${column};`;
     });
 
 </script>
@@ -37,8 +39,7 @@
 <div
         id={"-c:" + cell.column + "-r:" + cell.row}
         class="gridcellcomponent"
-        style="grid-row: {row};
-               grid-column: {column};"
+        style={boxStyle}
         onClick={this.onCellClick}
 >
     <RenderComponent box={cell.box} editor={editor}/>

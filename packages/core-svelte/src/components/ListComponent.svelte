@@ -12,7 +12,7 @@
 
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent");
-    let svList: HorizontalListBox =list;
+    let svList: HorizontalListBox = list;
     let svNotifier = new ChangeNotifier();
     let element: HTMLDivElement;
 
@@ -29,6 +29,7 @@
     onMount( () => {
         list.setFocus = setFocus;
     });
+
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate for " + list.role);
         list.setFocus = setFocus;
@@ -43,6 +44,7 @@
         // let boxes: ReadonlyArray<Box> = [];
         AUTO_LOGGER.log("ListComponent[" + "] " + list.role + " children " + list.children.length)
         svList = list;
+        list.setFocus = setFocus;
 
         const nrOfBoxes = svList.children.length;
         gridStyle =

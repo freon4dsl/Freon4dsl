@@ -1,5 +1,5 @@
-model SomeNameOrOther { 
-    Entity ent1 { 
+unit SomeNameOrOther {
+    entity ent1 {
         myTextAttribute : String
 
         otherAtrr : Boolean
@@ -14,7 +14,7 @@ model SomeNameOrOther {
         }
     }
 
-    Entity ent2 { 
+    entity ent2 {
         name : String
 
         age : Integer
@@ -23,7 +23,7 @@ model SomeNameOrOther {
         }
     }
 
-model wide Methods: 
+unit level methods:
     method meth21 ( ): Integer { 
         '"786"'
     }
