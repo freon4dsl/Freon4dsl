@@ -16,7 +16,7 @@ export class ValidatorTemplate {
         const nonOptionalsChecker: string = Names.nonOptionalsChecker(language);
         const referenceChecker: string = Names.referenceChecker(language);
         const walkerClassName: string = Names.walker(language);
-        const workerClassName: string = Names.defaultWorker(language);
+        const workerInterfaceName: string = Names.workerInterface(language);
 
         // Template starts here
         return `
@@ -25,7 +25,7 @@ export class ValidatorTemplate {
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";    
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";
-        import { ${walkerClassName}, ${workerClassName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}"; 
+        import { ${walkerClassName}, ${workerInterfaceName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}"; 
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
  
         /**
@@ -33,7 +33,7 @@ export class ValidatorTemplate {
          * its nodes, where any errors are deposited in 'errorList'.
          * Every checker that is used by the validator '${generatedClassName}' should implement this interface.
          */     
-        export interface ${Names.checkerInterface(language)} extends ${workerClassName} {
+        export interface ${Names.checkerInterface(language)} extends ${workerInterfaceName} {
             errorList: ${this.errorClassName}[];
         }
         
