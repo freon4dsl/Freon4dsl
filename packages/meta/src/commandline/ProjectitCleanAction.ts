@@ -83,14 +83,10 @@ export class ProjectItCleanAction extends CommandLineAction {
         // LOGGER.log("Output will be cleaned from: " + this.outputFolder);
 
         // when the force flag is present we need to parse the definition ast files
-        // because the editor generator must removed files with names based on the language
+        // because some generators must remove files with names based on the language
         if (this.force) {
             this.findLanguage();
         }
-
-        // this try-catch is here for debugging purposes, should be removed from release
-        // try {
-
         // clean the workspace
         try {
             this.cleanLanguage();
@@ -101,17 +97,13 @@ export class ProjectItCleanAction extends CommandLineAction {
         } catch (e) {
             LOGGER.error(this, "Stopping cleaning because of errors: " + e.message + "\n");
         }
-        // this try-catch is here for debugging purposes, should be removed from release
-        // } catch (e) {
-        //
-        //     LOGGER.error(this, e.stack);
-        // }
     }
 
     private cleanTyper = () => {
         LOGGER.log("Cleaning typer");
         try {
             this.typerGenerator.outputfolder = this.outputFolder;
+            this.typerGenerator.language = this.language;
             this.typerGenerator.clean(this.force);
         } catch (e) {
             // LOGGER.error(this, "Stopping typer cleansing because of errors: " + e.message + "\n" + e.stack);
@@ -123,6 +115,7 @@ export class ProjectItCleanAction extends CommandLineAction {
         LOGGER.log("Cleaning scoper");
         try {
             this.scoperGenerator.outputfolder = this.outputFolder;
+            this.scoperGenerator.language = this.language;
             this.scoperGenerator.clean(this.force);
         } catch (e) {
             // LOGGER.error(this, "Stopping scoper cleansing because of errors: " + e.message + "\n" + e.stack);
@@ -134,6 +127,7 @@ export class ProjectItCleanAction extends CommandLineAction {
         LOGGER.log("Cleaning validator");
         try {
             this.validatorGenerator.outputfolder = this.outputFolder;
+            this.validatorGenerator.language = this.language;
             this.validatorGenerator.clean(this.force);
         } catch (e) {
             // LOGGER.error(this, "Stopping validator cleansing because of errors: " + e.message + "\n" + e.stack);
@@ -145,10 +139,11 @@ export class ProjectItCleanAction extends CommandLineAction {
         LOGGER.log("Cleaning editor, reader and writer");
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
-            this.parserGenerator.outputfolder = this.outputFolder;
-
             this.editorGenerator.language = this.language;
             this.editorGenerator.clean(this.force);
+
+            this.parserGenerator.outputfolder = this.outputFolder;
+            this.parserGenerator.language = this.language;
             this.parserGenerator.clean(this.force);
         } catch (e) {
             // LOGGER.error(this, "Stopping editor and parser cleansing because of errors: " + e.message + "\n" + e.stack);

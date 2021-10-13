@@ -95,11 +95,32 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateIndex(language: PiLanguage, validdef: PiValidatorDef): string {
+    generateGenIndex(language: PiLanguage, validdef: PiValidatorDef): string {
         return `
         export * from "./${Names.nonOptionalsChecker(language)}";
         export * from "./${Names.validator(language)}";
         ${!!validdef ? `export * from "./${Names.rulesChecker(language)}";` : ``}
+        `;
+    }
+
+    generateCustomValidator(language: PiLanguage, relativePath: string): string {
+        const className: string = Names.customValidator(language);
+        const defaultWorkerName: string = Names.defaultWorker(language);
+        const interfaceName: string = Names.checkerInterface(language);
+        const validatorName: string = Names.validator(language);
+        return `
+        import { ${Names.PiError}, ${Names.PiErrorSeverity} } from "${PROJECTITCORE}";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}"; 
+        import { ${interfaceName} } from "./gen/${validatorName}";
+                
+        export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
+            errorList: ${Names.PiError}[] = [];
+        }`;
+    }
+
+    generateIndex(language: PiLanguage) {
+        return `
+        export * from "./${Names.customValidator(language)}";
         `;
     }
 }

@@ -31,7 +31,6 @@
     "build":        "yarn imports && yarn langconstr && yarn testproject && yarn defaultscoper && yarn definedscoper && yarn demo && yarn parsergen && yarn octopus && yarn noparser && yarn parser-props && yarn parser-conc &&tsc",
     "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
-    "clean-init":   "rm */*/*/*Initialization.ts",
     "clean-parser": "rm -r */*/*parse*",
     "clean":        "yarn clean-config && yarn clean-custom && yarn clean-init",
     "test":         "jest"
