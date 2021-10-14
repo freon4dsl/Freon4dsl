@@ -49,9 +49,9 @@ export class ParserGenerator {
 
     private createGrammarRules(editUnit: PiEditUnit, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
         // create parse rules and syntax analysis methods for the concepts
-        this.addToImports(myLanguageAnalyser.conceptsUsed);
+        this.addToImports(myLanguageAnalyser.classifiersUsed);
         const conceptMaker: ConceptMaker = new ConceptMaker();
-        this.grammar.rules.push(...conceptMaker.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed));
+        this.grammar.rules.push(...conceptMaker.generateClassifiers(editUnit, myLanguageAnalyser.classifiersUsed));
         // addImports must done after 'generate...'
         this.addToImports(conceptMaker.imports);
 

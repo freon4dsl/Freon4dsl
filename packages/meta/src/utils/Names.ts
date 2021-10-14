@@ -215,8 +215,8 @@ export class Names {
         return "";
     }
 
-    public static projectionFunction(c: PiConcept): string {
-        return "get" + Names.concept(c) + "Box";
+    public static projectionFunction(c: PiClassifier): string {
+        return "get" + Names.classifier(c) + "Box";
     }
 
     public static writer(language: PiLanguage): string {

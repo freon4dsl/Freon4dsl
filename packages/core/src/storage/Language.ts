@@ -81,7 +81,11 @@ export class Language {
 
     allConceptProperties(typeName: string): IterableIterator<Property> {
         // console.log("Looking up properties for "+ typeName);
-        return this.concepts.get(typeName)?.properties.values();
+        let myType: Concept | ModelUnit = this.concept(typeName);
+        if (!myType) {
+            myType = this.unit(typeName);
+        }
+        return myType?.properties.values();
     }
 
     createModel(typeName: string): PiElement {
@@ -96,8 +100,12 @@ export class Language {
      * Create a new instance of the class `typeName`.
      * @param typeName
      */
-    createConcept(typeName: string): PiElement {
-        return this.concepts.get(typeName).constructor();
+    createConceptOrUnit(typeName: string): PiElement {
+        let myType: Concept | ModelUnit = this.concept(typeName);
+        if (!myType) {
+            myType = this.unit(typeName);
+        }
+        return myType.constructor();
     }
 
 

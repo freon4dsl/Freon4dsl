@@ -107,8 +107,15 @@ export class ScoperTemplate {
                 const container = found.piContainer();
                 if (container === null || container === undefined) {
                     return false;
-                }                
-                return Language.getInstance().concept(container.container.piLanguageConcept()).properties.get(container.propertyName).isPublic;
+                }
+                const metaType: string = container.container.piLanguageConcept();
+                if (metaType === "${Names.classifier(language.modelConcept)}" ) {
+                    return true; // model only has units as properties, all units are public
+                } else ${language.units.map(u => ` if (metaType === "${Names.classifier(u)}") {
+                    return Language.getInstance().unit(metaType).properties.get(container.propertyName).isPublic;
+                } else`).join("")} {
+                    return Language.getInstance().concept(metaType).properties.get(container.propertyName).isPublic;
+                }
             }   
                     
             /**

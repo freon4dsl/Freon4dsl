@@ -17,7 +17,7 @@ export class PiEditUnit extends PiDefinitionElement {
 export class PiEditConcept extends PiDefinitionElement {
     languageEditor: PiEditUnit;
 
-    concept: PiElementReference<PiConcept>;
+    concept: PiElementReference<PiClassifier>;
     projection: PiEditProjection = null;
     _trigger: string = null;
     // The name of the reference property for which a shortcut can be used

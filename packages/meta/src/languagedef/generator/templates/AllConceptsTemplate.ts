@@ -14,15 +14,14 @@ export class AllConceptsTemplate {
             tmp.push(Names.interface(c))
         );
         tmp.push(...unitNames);
+        tmp.push(Names.classifier(language.modelConcept));
 
         tmp = tmp.sort();
 
         // the template starts here
         return `
         import {
-            ${tmp.map(c =>
-                `${c}`
-            ).join(", ")}
+            ${tmp.map(c =>`${c}`).join(", ")}
         } from "./internal";
 
         /**

@@ -1,4 +1,5 @@
 import {
+    PiClassifier,
     PiConcept,
     PiInstanceExp,
     PiLangExpressionChecker,
@@ -93,7 +94,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         );
     }
 
-    private checkProjection(projection: PiEditProjection, cls: PiConcept) {
+    private checkProjection(projection: PiEditProjection, cls: PiClassifier) {
         if (!!projection) {
             projection.lines.forEach(line => {
                 const toBeReplaced: number[] = [];
@@ -129,7 +130,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkPropertyProjection(projection: PiEditPropertyProjection, cls: PiConcept, optional: boolean) {
+    private checkPropertyProjection(projection: PiEditPropertyProjection, cls: PiClassifier, optional: boolean) {
         if (cls instanceof PiLimitedConcept && projection.expression.sourceName !== "self") {
             this.checkLimitedProjection(projection, cls);
         } else {
@@ -182,7 +183,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkSubProjection(item: PiEditSubProjection, cls: PiConcept) {
+    private checkSubProjection(item: PiEditSubProjection, cls: PiClassifier) {
         // TODO check whether item.optional is being used correctly
         item.items.forEach(sub => {
             if (sub instanceof PiEditPropertyProjection) {

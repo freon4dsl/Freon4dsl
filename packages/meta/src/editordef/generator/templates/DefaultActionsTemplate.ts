@@ -9,6 +9,7 @@ import {
 } from "../../../languagedef/metalanguage";
 import { Roles, LangUtil } from "../../../utils";
 import { PiEditConcept, PiEditPropertyProjection, PiEditSubProjection, PiEditUnit } from "../../metalanguage";
+import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class DefaultActionsTemplate {
 
@@ -131,12 +132,15 @@ export class DefaultActionsTemplate {
 
     customActionForReferences(language: PiLanguage, editorDef: PiEditUnit): string {
         let result = "";
-        language.concepts.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
+        const allClassifiers: PiClassifier[] = [];
+        allClassifiers.push(...language.units);
+        allClassifiers.push(...language.concepts);
+        allClassifiers.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
                 const referredConcept = reference.type.referred;
                 const conceptEditor = editorDef.findConceptEditor(referredConcept);
                 const trigger = (!!conceptEditor && !!conceptEditor.trigger) ? conceptEditor.trigger : reference.name;
                 result += `
-                {   // HELP
+                {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
                     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
@@ -179,11 +183,52 @@ export class DefaultActionsTemplate {
         //     })
         // );
         // All NON listy properties
-        language.concepts.forEach(concept => concept.allParts().forEach(part => {
+
+        // TODO is this needed, look like this is adding an action on a model that is never shown
+        language.modelConcept.allParts().forEach(part => { // all parts are model units
+            const partType = part.type.referred;
+            if (partType instanceof PiUnitDescription) {
+                const conceptEditor: PiEditConcept = editorDef.findConceptEditor(partType);
+                behaviorMap.createOrAdd(partType,
+                    {
+                        activeInBoxRoles: [`${Roles.newConceptPart(language.modelConcept, part)}`],
+                        trigger: `${conceptEditor.trigger}`,  // for single Concept part
+                        action: `(box: Box, trigger: PiTriggerType, ed: PiEditor): PiElement | null => {
+                                                const parent = box.element;
+                                                const newElement = new ${Names.classifier(partType)}();
+                                                const property = parent[(box as AliasBox).propertyName];
+                                                if (Array.isArray(property)) {
+                                                    parent[(box as AliasBox).propertyName].push(newElement);
+                                                } else {
+                                                    parent[(box as AliasBox).propertyName] = newElement;
+                                                } 
+                                                return newElement;
+                                          }`,
+                        referenceShortcut: (!!conceptEditor.referenceShortcut ?
+                            `{
+                                                              propertyname: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
+                                                              metatype: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
+                                                         }` : undefined),
+                        undo: (!!conceptEditor.referenceShortcut ?
+                            `(box: Box, editor: PiEditor): void => {
+                                                        const parent = box.element;
+                                                        parent[(box as AliasBox).propertyName] = null;
+                                                     }` : undefined),
+                        boxRoleToSelect: `${this.cursorLocation(editorDef, partType)}` /* CURSOR 4  ${subClass.name} */
+                    }
+                );
+            }
+        });
+
+        // we do need actions for all units and concepts
+        const allClassifiers: PiClassifier[] = [];
+        allClassifiers.push(...language.units);
+        allClassifiers.push(...language.concepts);
+        allClassifiers.forEach(concept => concept.allParts().forEach(part => {
             // language.concepts.forEach(concept => concept.allParts().filter(ref => !ref.isList).forEach(part => {
-            const childClassifier = part.type.referred;
-            if (childClassifier instanceof PiConcept) {
-                LangUtil.subConceptsIncludingSelf(childClassifier).filter(cls => !cls.isAbstract).forEach(subClass => {
+            const partType = part.type.referred;
+            if (partType instanceof PiConcept) { // exclude all primitive types
+                LangUtil.subConceptsIncludingSelf(partType).filter(cls => !cls.isAbstract).forEach(subClass => {
                     const conceptEditor: PiEditConcept = editorDef.findConceptEditor(subClass);
                     behaviorMap.createOrAdd(subClass,
                         {
@@ -234,7 +279,7 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    cursorLocation(editorDef: PiEditUnit, c: PiConcept) {
+    cursorLocation(editorDef: PiEditUnit, c: PiClassifier) {
         const projection = editorDef.findConceptEditor(c).projection;
         if (!!projection) {
             if (c.name === "DemoEntity") {

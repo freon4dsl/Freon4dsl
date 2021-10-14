@@ -42,7 +42,7 @@ export class GenericModelSerializer {
             return null;
         }
 
-        const result = this.language.createConcept(type);
+        const result = this.language.createConceptOrUnit(type);
         // console.log("Object created with [" + type + "]");
 
         for (const property of this.language.allConceptProperties(type)) {

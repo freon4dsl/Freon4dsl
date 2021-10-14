@@ -29,11 +29,13 @@ export class WriterTemplate {
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
         let limitedConcepts: PiLimitedConcept[] = [];
+        const elementsToUnparse: PiClassifier[] = sortClasses(language.concepts);
+        elementsToUnparse.push(...language.units);
 
         // find all limited concepts used, the are treated differently in both (1) the creation of unparse method
         // (2) in the generic method 'unparseReferenceList'
         for (const conceptDef of editDef.conceptEditors) {
-            const myConcept: PiConcept = conceptDef.concept.referred;
+            const myConcept: PiClassifier = conceptDef.concept.referred;
             if (myConcept instanceof PiLimitedConcept) {
                 limitedConcepts.push(myConcept);
             }
@@ -130,9 +132,9 @@ export class WriterTemplate {
             }
         
             private unparse(modelelement: ${allLangConcepts}, short: boolean) {
-                ${sortClasses(language.concepts).map((concept, index) => `
-                ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.concept(concept)}) {
-                    this.unparse${Names.concept(concept)}(modelelement, short);`).join("")}
+                ${elementsToUnparse.map((concept, index) => `
+                ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.classifier(concept)}) {
+                    this.unparse${Names.classifier(concept)}(modelelement, short);`).join("")}
                 }
             }
 
@@ -300,14 +302,14 @@ export class WriterTemplate {
      * limited concepts can only be used as a reference.
      * @param conceptDef
      */
-    private makeConceptMethod (conceptDef: PiEditConcept ): string {
-        const myConcept: PiConcept = conceptDef.concept.referred;
+    private makeConceptMethod (conceptDef: PiEditConcept): string {
+        const myConcept: PiClassifier = conceptDef.concept.referred;
         if (myConcept instanceof PiLimitedConcept){
             return this.makeLimitedMethod(conceptDef, myConcept);
-        } else if (myConcept.isAbstract){
+        } else if (myConcept instanceof PiConcept && myConcept.isAbstract) {
             return this.makeAbstractMethod(myConcept);
-        } {
-            return this.makeNormalConceptMethod(conceptDef, myConcept);
+        } else {
+            return this.makeNormalMethod(conceptDef, myConcept);
         }
     }
 
@@ -379,8 +381,8 @@ export class WriterTemplate {
                 }`;
     }
 
-    private makeNormalConceptMethod(conceptDef: PiEditConcept, myConcept: PiConcept) {
-        const name: string = Names.concept(myConcept);
+    private makeNormalMethod(conceptDef: PiEditConcept, myConcept: PiClassifier) {
+        const name: string = Names.classifier(myConcept);
         const lines: PiEditProjectionLine[] = conceptDef.projection?.lines;
         const comment = `/**
                           * See the public unparse method.

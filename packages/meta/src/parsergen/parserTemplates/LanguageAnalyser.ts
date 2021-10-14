@@ -6,12 +6,12 @@ import {
     PiLimitedConcept
 } from "../../languagedef/metalanguage";
 import { LangUtil } from "../../utils";
-import { PiModelDescription, PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
+import { PiModelDescription, PiPrimitiveType, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 export class LanguageAnalyser {
     // all concepts defined in this unit
     // TODO make distinction between concepts defined in this unit and concepts used as type of properties
-    conceptsUsed: PiConcept[] = [];
+    classifiersUsed: PiClassifier[] = [];
     // all binary concepts defined in this unit
     binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
     // all interfaces and abstract concepts that are mentioned in this unit
@@ -43,6 +43,9 @@ export class LanguageAnalyser {
             });
         } else if (piClassifier instanceof PiPrimitiveType) {
             // do nothing
+        } else if (piClassifier instanceof PiUnitDescription) {
+            this.classifiersUsed.push(piClassifier);
+            this.analyseProperties(piClassifier, typesDone);
         } else if (piClassifier instanceof PiConcept) {
             // TODO check for which concepts we need to take findChoices into account
             if (piClassifier instanceof PiLimitedConcept) {
@@ -54,17 +57,14 @@ export class LanguageAnalyser {
                     this.checkForSubs(piClassifier);
                 }
             } else {
-                if (!(piClassifier instanceof PiModelDescription)) {
-                    // A complete model can not be parsed, only its units can be parsed separately
-                    if (piClassifier.isAbstract) {
-                        this.interfacesAndAbstractsUsed.set(piClassifier, this.findChoices(piClassifier));
-                    } else {
-                        this.conceptsUsed.push(piClassifier);
-                        this.checkForSubs(piClassifier);
-                    }
+                // A complete model can not be parsed, only its units can be parsed separately
+                if (piClassifier.isAbstract) {
+                    this.interfacesAndAbstractsUsed.set(piClassifier, this.findChoices(piClassifier));
+                } else {
+                    this.classifiersUsed.push(piClassifier);
+                    this.checkForSubs(piClassifier);
                 }
             }
-
             // for any concept: add all direct subconcepts
             piClassifier.allSubConceptsDirect().forEach(type => {
                 this.analyseUnitPriv(type, typesDone);
@@ -84,7 +84,7 @@ export class LanguageAnalyser {
         }
     }
 
-    private analyseProperties(piClassifier: PiConcept, typesDone: PiClassifier[]) {
+    private analyseProperties(piClassifier: PiClassifier, typesDone: PiClassifier[]) {
         piClassifier.allParts().forEach(part => {
             const type = part.type.referred;
             this.analyseUnitPriv(type, typesDone);
@@ -119,7 +119,7 @@ export class LanguageAnalyser {
 
     private reset() {
         // all concepts in this unit
-        this.conceptsUsed = [];
+        this.classifiersUsed = [];
         // all binary concepts in this unit
         this.binaryConceptsUsed = [];
         // all interfaces and abstract concepts that are mentioned in this unit
