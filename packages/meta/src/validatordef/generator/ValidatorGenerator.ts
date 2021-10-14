@@ -16,14 +16,13 @@ export class ValidatorGenerator {
     protected validatorGenFolder: string;
     protected validatorFolder: string;
 
-    constructor(language: PiLanguage) {
-        this.language = language;
-    }
-
     generate(validdef: PiValidatorDef): void {
+        if (this.language == null) {
+            LOGGER.error(this, "Cannot generate validator because language is not set.");
+            return;
+        }
         const generationStatus = new GenerationStatus();
-        this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
-        this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
+        this.getFolderNames();
         const name = validdef ? validdef.validatorName + " " : "default";
         LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
 
@@ -67,9 +66,9 @@ export class ValidatorGenerator {
             fs.writeFileSync(`${this.validatorGenFolder}/${Names.rulesChecker(this.language)}.ts`, checkerFile);
 
             LOGGER.log(`Generating reserved words file: ${this.validatorGenFolder}/ReservedWords.ts`);
-            const reservedWords = reservedWordsTemplate.generateConst();
-            Helpers.generateManualFile(`${this.validatorGenFolder}/ReservedWords.ts`, reservedWords,
-                "Reserved Words constant definition");
+            const reservedWords = Helpers.pretty(reservedWordsTemplate.generateConst(),
+                "Rules Checker Class", generationStatus);
+            fs.writeFileSync(`${this.validatorGenFolder}/ReservedWords.ts`, reservedWords);
         }
 
         LOGGER.log(`Generating validator gen index: ${this.validatorGenFolder}/index.ts`);
@@ -82,5 +81,16 @@ export class ValidatorGenerator {
         } else {
             LOGGER.info(this, `Succesfully generated validator ${name}`);
         }
+    }
+
+    private getFolderNames() {
+        this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
+        this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.validatorGenFolder);
+        Helpers.deleteDirIfEmpty(this.validatorFolder);
     }
 }

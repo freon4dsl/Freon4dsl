@@ -21,7 +21,8 @@ export class ProjectItGenerateValidator extends ProjectItGeneratePartAction {
         LOGGER.log("Starting ProjectIt validator generation ...");
 
         super.generate();
-        this.validatorGenerator = new ValidatorGenerator(this.language);
+        this.validatorGenerator = new ValidatorGenerator();
+        this.validatorGenerator.language = this.language;
         this.validatorGenerator.outputfolder = this.outputFolder;
 
         const validator = new ValidatorParser(this.language).parseMulti(this.validFiles);

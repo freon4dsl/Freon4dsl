@@ -88,6 +88,41 @@ export class Helpers {
         }
     }
 
+    public static deleteDirAndContent(dir: string) {
+        LOGGER.log("Deleting complete folder and content: [" + dir + "]");
+        const folder = "./" + dir;
+        if (fs.existsSync(folder)) {
+            // all files need to be deleted before the folder can be deleted
+            // therefore we use the '..Sync' versions of the 'fs' methods
+            fs.readdirSync(folder).forEach(file => {
+                fs.unlinkSync(path.join(folder, file));
+            });
+            fs.rmdirSync(folder);
+        // } else {
+            // LOGGER.error(this, "Could not find folder: [" + folder + "]");
+        }
+    }
+
+    public static deleteDirIfEmpty(dir: string) {
+        LOGGER.log("Deleting folder only when it is empty: [" + dir + "]");
+        const folder = "./" + dir;
+        if (fs.existsSync(folder)) {
+            if (fs.readdirSync(folder).length == 0) {
+                fs.rmdirSync(folder);
+            } else  {
+                LOGGER.info(this, "Folder has content: [" + folder + "]");
+            }
+        // } else {
+            // LOGGER.error(this, "Could not find folder: [" + folder + "]");
+        }
+    }
+
+    public static deleteFile(path: string) {
+        LOGGER.log("deleting file: [" + path + "]");
+        if (fs.existsSync(path)) {
+            fs.unlinkSync(path);
+        }
+    }
     /**
      * startPath: the folder where the files should be located
      * extension: a regular expression to filter the filenames found
@@ -96,7 +131,6 @@ export class Helpers {
         if (!fs.existsSync(startPath)) {
             LOGGER.error(this, "cannot find folder '" + startPath + "'");
             status.numberOfErrors += 1;
-
             return [];
         }
         if (!fs.lstatSync(startPath).isDirectory()) {

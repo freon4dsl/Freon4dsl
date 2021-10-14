@@ -12,14 +12,13 @@ export class PiTyperGenerator {
     protected typerGenFolder: string;
     protected typerFolder: string;
 
-    constructor(language: PiLanguage) {
-        this.language = language;
-    }
-
     generate(typerdef: PiTypeDefinition): void {
+        if (this.language == null) {
+            LOGGER.error(this, "Cannot generate typer because language is not set.");
+            return;
+        }
         const generationStatus = new GenerationStatus();
-        this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
-        this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
+        this.getFolderNames();
         const name = typerdef ? typerdef.name + " " : "";
         LOGGER.log("Generating typer: " + name + "in folder " + this.typerGenFolder);
 
@@ -47,5 +46,16 @@ export class PiTyperGenerator {
         } else {
             LOGGER.info(this, `Succesfully generated typer ${name}`);
         }
+    }
+
+    private getFolderNames() {
+        this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
+        this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.typerGenFolder);
+        Helpers.deleteDirIfEmpty(this.typerFolder);
     }
 }
