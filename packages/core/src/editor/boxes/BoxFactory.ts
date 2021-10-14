@@ -25,31 +25,51 @@ type BoxCache<T extends Box> = {
 const LOGGER: PiLogger = new PiLogger("BoxFactory");
 
 // The box caches
-const aliasCache: BoxCache<AliasBox> = {};
-const labelCache: BoxCache<LabelBox> = {};
-const textCache: BoxCache<TextBox> = {};
-const selectCache: BoxCache<SelectBox> = {};
-const indentCache: BoxCache<IndentBox> = {};
-const optionalCache: BoxCache<OptionalBox> = {};
-const svgCache: BoxCache<SvgBox> = {};
-const horizontalListCache: BoxCache<HorizontalListBox> = {};
-const verticalListCache: BoxCache<VerticalListBox> = {};
+let aliasCache: BoxCache<AliasBox> = {};
+let labelCache: BoxCache<LabelBox> = {};
+let textCache: BoxCache<TextBox> = {};
+let selectCache: BoxCache<SelectBox> = {};
+let indentCache: BoxCache<IndentBox> = {};
+let optionalCache: BoxCache<OptionalBox> = {};
+let svgCache: BoxCache<SvgBox> = {};
+let horizontalListCache: BoxCache<HorizontalListBox> = {};
+let verticalListCache: BoxCache<VerticalListBox> = {};
 
-const cacheAliasOff: boolean = false;
-// const cacheAliasOff: boolean = true;
-const cacheLabelOff: boolean = false;
-// const cacheLabelOff: boolean = true;
-// const cacheTextOff: boolean = false;
-const cacheTextOff: boolean = true;
-// const cacheSelectOff: boolean = false;
-const cacheSelectOff: boolean = true;
-// const cacheIndentOff: boolean = false;
-const cacheIndentOff: boolean = true;
+let cacheAliasOff: boolean = false;
+let cacheLabelOff: boolean = false;
+let cacheTextOff: boolean = true;
+let cacheSelectOff: boolean = true;
+let cacheIndentOff: boolean = true;
 
 /**
  * Caching of boxes, avoid recalculating them.
  */
 export class BoxFactory {
+    public static clearCaches() {
+        aliasCache = {};
+        labelCache = {};
+        textCache = {};
+        selectCache = {};
+        indentCache = {};
+        optionalCache = {};
+        svgCache = {};
+        horizontalListCache = {};
+        verticalListCache = {};
+    }
+    public static cachesOff() {
+        cacheAliasOff = true;
+        cacheLabelOff = true;
+        cacheTextOff = true;
+        cacheSelectOff = true;
+        cacheIndentOff = true;
+    }
+    public static cachesOn() {
+        cacheAliasOff = false;
+        cacheLabelOff = false;
+        cacheTextOff = false;
+        cacheSelectOff = false;
+        cacheIndentOff = false;
+    }
 
     /**
      * Find the Box for the given element id and role in the cache,
