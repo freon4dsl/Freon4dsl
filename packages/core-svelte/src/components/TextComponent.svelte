@@ -327,6 +327,7 @@
             text = textBox.getText();
         }
         textStyle = textBox.style;
+    textBox.setFocus = setFocus;
     });
 
     // const onFocus = async (e: FocusEvent) => {
