@@ -24,7 +24,7 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
-        import { ${Names.concept(language.modelConcept)}, ${Names.concept(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         import { ${Names.initializeLanguage} } from  "${relativePath}${LANGUAGE_GEN_FOLDER}";
         
@@ -70,8 +70,8 @@ export class EnvironmentTemplate {
              * 
              * @param modelName
              */
-             newModel(modelName: string) : ${Names.concept(language.modelConcept)} {        
-                const model = new ${Names.concept(language.modelConcept)}();
+             newModel(modelName: string) : ${Names.classifier(language.modelConcept)} {        
+                const model = new ${Names.classifier(language.modelConcept)}();
                 model.name = modelName;
                 return model;
              }  

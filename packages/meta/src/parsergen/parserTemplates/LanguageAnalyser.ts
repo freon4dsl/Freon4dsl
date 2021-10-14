@@ -6,7 +6,7 @@ import {
     PiLimitedConcept
 } from "../../languagedef/metalanguage";
 import { LangUtil } from "../../utils";
-import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
+import { PiModelDescription, PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 export class LanguageAnalyser {
     // all concepts defined in this unit
@@ -54,7 +54,7 @@ export class LanguageAnalyser {
                     this.checkForSubs(piClassifier);
                 }
             } else {
-                if (!piClassifier.isModel) {
+                if (!(piClassifier instanceof PiModelDescription)) {
                     // A complete model can not be parsed, only its units can be parsed separately
                     if (piClassifier.isAbstract) {
                         this.interfacesAndAbstractsUsed.set(piClassifier, this.findChoices(piClassifier));

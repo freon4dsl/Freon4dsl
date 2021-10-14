@@ -30,6 +30,8 @@ import {
     StdlibTemplate
 } from "./templates";
 import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
+import { ModelTemplate } from "./templates/ModelTemplate";
+import { UnitTemplate } from "./templates/UnitTemplate";
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
@@ -49,6 +51,8 @@ export class LanguageGenerator {
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
 
+        const modelTemplate = new ModelTemplate();
+        const unitTemplate = new UnitTemplate();
         const conceptTemplate = new ConceptTemplate();
         const languageTemplate = new LanguageTemplate();
         const metaTypeTemplate = new MetaTypeTemplate();
@@ -79,6 +83,16 @@ export class LanguageGenerator {
         let relativePath = "../";
 
         //  Generate it
+        LOGGER.log(`Generating model: ${this.languageGenFolder}/${Names.classifier(language.modelConcept)}.ts`);
+        const generated = Helpers.pretty(modelTemplate.generateModel(language.modelConcept), "concept " + language.modelConcept.name, generationStatus);
+        fs.writeFileSync(`${this.languageGenFolder}/${Names.classifier(language.modelConcept)}.ts`, generated);
+
+        language.units.forEach(unit => {
+            LOGGER.log(`Generating concept: ${this.languageGenFolder}/${Names.classifier(unit)}.ts`);
+            const generated = Helpers.pretty(unitTemplate.generateUnit(unit), "concept " + unit.name, generationStatus);
+            fs.writeFileSync(`${this.languageGenFolder}/${Names.classifier(unit)}.ts`, generated);
+        });
+
         language.concepts.forEach(concept => {
             LOGGER.log(`Generating concept: ${this.languageGenFolder}/${Names.concept(concept)}.ts`);
             const generated = Helpers.pretty(conceptTemplate.generateConcept(concept), "concept " + concept.name, generationStatus);
@@ -121,7 +135,7 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageGenFolder}/${Names.PiElementReference}.ts`, referenceFile);
 
         LOGGER.log(`Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`);
-        const structureFile = Helpers.pretty(languageTemplate.generateLanguage(language, relativePath), "Language Structure", generationStatus);
+        const structureFile = Helpers.pretty(languageTemplate.generateLanguage(language), "Language Structure", generationStatus);
         fs.writeFileSync(`${this.languageGenFolder}/${Names.language(language)}.ts`, structureFile);
 
         LOGGER.log(`Generating language environment: ${this.environmentGenFolder}/${Names.environment(language)}.ts`);

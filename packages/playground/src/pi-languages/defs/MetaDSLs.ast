@@ -1,6 +1,6 @@
 language PiLanguage
 
-public model PiLanguage {
+model PiLanguage {
     public name: identifier;
     public structure: PiStructureDef;
     public editor: PiEditorDef;

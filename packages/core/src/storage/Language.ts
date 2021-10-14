@@ -10,10 +10,18 @@ export type Property = {
     isPublic: boolean;
     propertyType: PropertyType;
 };
-
+export type Model = {
+    typeName: string;
+    properties: Map<string, Property>;
+    constructor: () => PiElement;
+};
+export type ModelUnit = {
+    typeName: string;
+    fileExtension: string;
+    properties: Map<string, Property>;
+    constructor: () => PiElement;
+};
 export type Concept = {
-    isUnit: boolean;
-    isModel: boolean;
     isAbstract: boolean;
     isPublic: boolean;
     typeName: string;
@@ -22,7 +30,6 @@ export type Concept = {
     properties: Map<string, Property>;
     constructor: () => PiElement;
 };
-
 export type Interface = {
     isPublic: boolean;
     typeName: string;
@@ -40,13 +47,22 @@ export class Language {
         return Language.theInstance;
     }
 
+    private models: Map<string, Model> = new Map<string, Model>();
+    private units: Map<string, ModelUnit> = new Map<string, ModelUnit>();
     private concepts: Map<string, Concept> = new Map<string, Concept>();
     private interfaces: Map<string, Interface> = new Map<string, Interface>();
 
-    // private enumerations: Map<string, Enumeration> = new Map<string, Enumeration>();
-
     private constructor() {
     }
+
+    model(typeName): Model {
+        return this.models.get(typeName);
+    }
+
+    unit(typeName): ModelUnit {
+        return this.units.get(typeName);
+    }
+
     concept(typeName): Concept {
         return this.concepts.get(typeName);
     }
@@ -54,10 +70,6 @@ export class Language {
     interface(typeName): Interface {
         return this.interfaces.get(typeName);
     }
-
-    // enumeration(typeName): Enumeration {
-    //     return this.enumerations.get(typeName);
-    // }
 
     conceptProperty(typeName, propertyName): Property {
         return this.concepts.get(typeName).properties.get(propertyName);
@@ -72,12 +84,29 @@ export class Language {
         return this.concepts.get(typeName)?.properties.values();
     }
 
+    createModel(typeName: string): PiElement {
+        return this.models.get(typeName).constructor();
+    }
+
+    createUnit(typeName: string): PiElement {
+        return this.units.get(typeName).constructor();
+    }
+
     /**
      * Create a new instance of the class `typeName`.
      * @param typeName
      */
     createConcept(typeName: string): PiElement {
         return this.concepts.get(typeName).constructor();
+    }
+
+
+    addModel(model: Model) {
+        this.models.set(model.typeName, model);
+    }
+
+    addUnit(unit: ModelUnit) {
+        this.units.set(unit.typeName, unit);
     }
 
     /**
@@ -91,10 +120,6 @@ export class Language {
     addInterface(intface: Interface) {
         this.interfaces.set(intface.typeName, intface);
     }
-
-    // addEnumeration(enumeration: Enumeration) {
-    //     this.enumerations.set(enumeration.typeName, enumeration);
-    // }
 
     subConcepts(typeName: string): string[] {
         const concept = this.concept(typeName);

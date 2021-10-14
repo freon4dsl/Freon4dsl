@@ -1,7 +1,7 @@
 language PiLanguage  // from: projectit/meta/.../editordef
 
 // begin editor definition
-public modelunit PiEditorDef {
+modelunit PiEditorDef {
     public name: identifier;
 //        language: PiLanguage;
     languageName: string;

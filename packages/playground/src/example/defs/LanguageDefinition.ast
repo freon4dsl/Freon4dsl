@@ -5,7 +5,7 @@ model Demo {
     units: ExampleUnit[];
 }
 
-public modelunit ExampleUnit {
+modelunit ExampleUnit {
     public name: identifier;
     public entities: Entity[];
     public methods: Method[];

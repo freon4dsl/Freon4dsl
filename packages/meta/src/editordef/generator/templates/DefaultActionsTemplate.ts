@@ -3,7 +3,6 @@ import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
     PiLanguage,
     PiBinaryExpressionConcept,
-    PiExpressionConcept,
     PiConcept,
     PiClassifier,
     PiLangSelfExp
@@ -15,6 +14,8 @@ export class DefaultActionsTemplate {
 
     // TODO generate the correct class comment for DefaultActions
     generate(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
+        const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
+            .concat(language.units.map(u => `${Names.classifier(u)}`));
         return `
             import * as Keys from "${PROJECTITCORE}";
             import {
@@ -41,7 +42,7 @@ export class DefaultActionsTemplate {
                 RIGHT_MOST
             } from "${PROJECTITCORE}";
             
-            import { PiElementReference, ${language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { PiElementReference, ${modelImports.join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
 
              /**
              * This module implements all default actions for the editor.

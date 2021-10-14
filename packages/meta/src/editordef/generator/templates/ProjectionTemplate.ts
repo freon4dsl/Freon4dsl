@@ -42,6 +42,10 @@ export class ProjectionTemplate {
             return !!editor && !!editor.projection;
         });
 
+        const modelImports: string[] = language.units.map(u => `${Names.classifier(u)}`)
+            .concat(language.concepts.map(c => `${Names.concept(c)}`)
+            .concat(language.interfaces.map(c => `${Names.interface(c)}`)));
+
         return `
             import { observable, makeObservable } from "mobx";
 
@@ -77,8 +81,7 @@ export class ProjectionTemplate {
             } from "${PROJECTITCORE}";
             
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${language.interfaces.map(c => `${Names.interface(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${modelImports.map(c => `${c}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 

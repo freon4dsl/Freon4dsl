@@ -13,17 +13,18 @@ import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel/GrammarModel";
+import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
-    private unit: PiConcept = null;
+    private unit: PiUnitDescription = null;
     private editUnit: PiEditUnit = null;
     private grammar: GrammarModel = null;
     private imports: PiClassifier[] = [];   // holds all the concepts that need to be imported in the syntax analyser class
 
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
 
-    generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
+    generateParserForUnit(language: PiLanguage, langUnit: PiUnitDescription, editUnit: PiEditUnit) {
         // (re)set all attributes that are global to this class to new values
         this.language = language;
         this.unit = langUnit;

@@ -117,7 +117,8 @@ export class GenericModelSerializer {
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
         let result: Object;
         if (publicOnly !== undefined && publicOnly) {
-            if (this.language.concept(typename).isPublic || this.language.concept(typename).isUnit) {
+            // convert all units and all public concepts
+            if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
                 result = this.convertToJSONinternal(tsObject, true, typename);
             }
         } else {

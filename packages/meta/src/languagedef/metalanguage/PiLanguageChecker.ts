@@ -5,7 +5,7 @@ import {
     PiExpressionConcept,
     PiPrimitiveProperty,
     PiInterface, PiConcept, PiProperty, PiClassifier, PiLimitedConcept, PiInstance, PiPropertyInstance, PiPrimitiveValue,
-    PiElementReference, PiMetaEnvironment, PiPrimitiveType
+    PiElementReference, PiMetaEnvironment, PiPrimitiveType, PiModelDescription, PiUnitDescription
 } from "./internal";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { reservedWordsInTypescript } from "../../validatordef/generator/templates/ReservedWords";
@@ -17,11 +17,9 @@ const piReservedWords = ["model", "modelunit", "abstract", "limited", "language"
 // TODO add check: priority error from parser into checker => only for expression concepts
 
 export class PiLanguageChecker extends Checker<PiLanguage> {
-    foundModel = false;
 
     public check(language: PiLanguage): void {
         LOGGER.info(this, "Checking language '" + language.name + "'");
-        this.foundModel = false;
         this.errors = [];
         this.simpleCheck(!!language.name && !piReservedWords.includes(language.name.toLowerCase()) ,
             `Language should have a name ${this.location(language)}.`);
@@ -31,30 +29,10 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         PiMetaEnvironment.metascoper.language = language;
 
         // now check the whole language
+        this.checkModel(language.modelConcept);
+        language.units.forEach(unit => this.checkUnit(unit));
         language.concepts.forEach(concept => this.checkConcept(concept));
-        language.interfaces.forEach(concept => this.checkInterface(concept));
-
-        const myModel = language.concepts.find(c => c.isModel);
-        // language.modelConcept should be  set in 'checkConcept'
-        if (myModel !== language.modelConcept) {
-            LOGGER.error(this, "Internal error: language.modelConcept is not set correctly");
-        }
-        this.nestedCheck({
-            check: !!myModel,
-            error: `There should be a model in your language ${this.location(language)}.`,
-            whenOk: () => {
-                // models may not be modelunits
-                this.simpleCheck(!myModel.isUnit, `A model may not be a modelunit ${this.location(myModel)}.`);
-                this.nestedCheck({
-                    check: myModel.primProperties.some(prop => prop.name === "name"),
-                    error: `The model should have a 'name' property ${this.location(myModel)}.`,
-                    whenOk: () => {
-                        this.simpleCheck(myModel.parts().length > 0,
-                            `The model should have at least one unit type ${this.location(myModel)}.`);
-                    }
-                });
-            }
-        });
+        language.interfaces.forEach(intf => this.checkInterface(intf));
 
         // now everything has been resolved, check that all concepts and interfaces have
         // unique names, that there are no circular inheritance or interface relationships,
@@ -81,11 +59,6 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
             if (!conceptIsCircular) {
                 this.checkPropertyUniqueNames(con, true);
-                // check that modelunits have a name property and that they are not marked as 'model'
-                if ( con.isUnit ) {
-                    this.checkUnitConceptName(con);
-                    this.simpleCheck(!con.isModel, `A modelunit may not be a model ${this.location(con)}.`);
-                }
                 // check that limited concepts have a name property
                 // and that they do not inherit any non-prim properties
                 if (con instanceof PiLimitedConcept) {
@@ -107,8 +80,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             // remember that we found circularity for one of the interfaces
             if (interfaceIsCircular) {
                 foundSomeCircularity = true;
-            }
-            if (!interfaceIsCircular) {
+            } else {
                 // check that all properties have unique names
                 // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
                 this.checkPropertyUniqueNames(intf, false);
@@ -122,16 +94,44 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         }
     }
 
-    private checkUnitConceptName(con: PiConcept) {
-        const nameProperty = con.allPrimProperties().find(p => p.name === "name");
+    private checkModel(myModel: PiModelDescription) {
+        // TODO model may have only parts
         this.nestedCheck({
-            check: !!nameProperty,
-            error: `A modelunit should have a 'name' property ${this.location(con)}.`,
+            check: !!myModel,
+            error: `There should be a model in your language ${this.location(this.language)}.`,
             whenOk: () => {
-                this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                    `A modelunit should have a 'name' property of type 'identifier' ${this.location(con)}.`);
+                myModel.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
+                this.simpleCheck( myModel.primProperties.some(prop => prop.name === "name"),
+                    `The model should have a 'name' property ${this.location(myModel)}.`
+                );
+                myModel.properties.forEach(part => this.checkConceptProperty(part));
+                this.simpleCheck(myModel.parts().length > 0,
+                    `The model should have at least one unit type ${this.location(myModel)}.`);
             }
         });
+    }
+
+    private checkUnit(unit: PiUnitDescription) {
+        // TODO unit may have only parts
+        unit.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
+        unit.properties.forEach(part => this.checkConceptProperty(part));
+        // check that modelunits have a name property
+        const nameProperty = unit.allPrimProperties().find(p => p.name === "name");
+        this.nestedCheck({
+            check: !!nameProperty,
+            error: `A modelunit should have a 'name' property ${this.location(unit)}.`,
+            whenOk: () => {
+                this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+                    `A modelunit should have a 'name' property of type 'identifier' ${this.location(unit)}.`);
+                this.simpleCheck( nameProperty.isPublic,
+                    `The name property of a model unit should be public ${this.location(unit)}.`);
+            }
+        });
+        // set the file extension, if not present
+        if (!!unit.fileExtension){
+            unit.fileExtension = unit.name.substring(0,3).toLowerCase();
+        }
+        // Our parser accepts only variables for fileExtensions, therefore we do not need to check it further here.
     }
 
     private checkLimitedConceptAgain(piLimitedConcept: PiLimitedConcept) {
@@ -226,29 +226,8 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         this.simpleCheck(!(reservedWordsInTypescript.includes(piConcept.name.toLowerCase())),
             `Concept may not have a name that is equal to a reserved word in TypeScript ('${piConcept.name}') ${this.location(piConcept)}.`);
 
-        if ( piConcept.isModel ) {
-            this.nestedCheck({
-                check: !this.foundModel,
-                error: `There may be only one model in the language definition ${this.location(piConcept)}.`,
-                whenOk: () => {
-                    this.foundModel = true;
-                    piConcept.language.modelConcept = piConcept;
-                }
-            });
-        }
-
-        if ( piConcept.isUnit ) {
-            // find its name property and check whether it is public
-            const nameProp: PiPrimitiveProperty = piConcept.allPrimProperties().find(p => p.name === "name");
-            if (!!nameProp) { // the check that units should have a name property is done elsewhere
-                this.simpleCheck(
-                    nameProp.isPublic,
-                    `The name property of a model unit should be public ${this.location(piConcept)}.`);
-            }
-        }
-
         if (!!piConcept.base) {
-            this.checkConceptReference(piConcept.base);
+            this.checkClassifierReference(piConcept.base);
             if (!!piConcept.base.referred) { // error message taken care of by checkClassifierReference
                 this.nestedCheck({
                     check: piConcept.base.referred instanceof PiConcept,
@@ -269,9 +248,10 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             }
         }
 
+        // do the interfaces
         const newInterfaces: PiElementReference<PiInterface>[] = [];
         for (const intf of piConcept.interfaces) {
-            this.checkConceptReference(intf);
+            this.checkClassifierReference(intf);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference
                 this.simpleCheck(intf.referred instanceof PiInterface, `Concept '${intf.name}' is not an interface ${this.location(intf)}.`);
                 // add to the list
@@ -280,6 +260,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
         }
         piConcept.interfaces = newInterfaces;
 
+        // do the properties
         piConcept.primProperties.forEach(prop => this.checkPrimitiveProperty(prop));
         if (!(piConcept instanceof PiLimitedConcept)) {
             piConcept.properties.forEach(part => this.checkConceptProperty(part));
@@ -339,7 +320,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
     }
 
     checkInstance(piInstance: PiInstance) {
-        this.checkConceptReference(piInstance.concept);
+        this.checkClassifierReference(piInstance.concept);
         this.nestedCheck({
             check: piInstance.concept.referred !== null,
             error: `Predefined instance '${piInstance.name}' should belong to a concept ${this.location(piInstance)}.`,
@@ -404,22 +385,22 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
                 check: !!piProperty.type,
                 error: `Element '${piProperty.name}' should have a type ${this.location(piProperty)}.`,
                 whenOk: () => {
-                    this.checkConceptReference(piProperty.type);
+                    this.checkClassifierReference(piProperty.type);
                     const realType = piProperty.type.referred;
-                    if (!!realType) { // error message handled by checkConceptReference
+                    if (!!realType) { // error message handled by checkClassifierReference
                         const owningClassifier = piProperty.owningConcept;
                         this.checkPropertyType(piProperty, realType);
 
-                        const isUnit = (realType instanceof PiConcept) && realType.isUnit;
+                        const isUnit = (realType instanceof PiUnitDescription);
 
                         // check use of unit types in non-model concepts: may be references only
                         if (isUnit && piProperty.isPart) {
                             this.simpleCheck(
-                                owningClassifier instanceof PiConcept && owningClassifier.isModel,
+                                owningClassifier instanceof PiModelDescription,
                                 `Modelunit '${realType.name}' may be used as reference only in a non-model concept ${this.location(piProperty.type)}.`);
                         }
                         // check use of non-unit types in model concept
-                        if (owningClassifier instanceof PiConcept && owningClassifier.isModel) {
+                        if (owningClassifier instanceof PiModelDescription) {
                             this.simpleCheck(
                                 isUnit,
                                 `Type of property '${piProperty.name}' should be a modelunit ${this.location(piProperty.type)}.`);
@@ -499,7 +480,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             });
     }
 
-    checkConceptReference(reference: PiElementReference<PiClassifier>): void {
+    checkClassifierReference(reference: PiElementReference<PiClassifier>): void {
         LOGGER.log("Checking classifier reference '" + reference.name + "'");
         this.nestedCheck(
             {
@@ -530,7 +511,7 @@ export class PiLanguageChecker extends Checker<PiLanguage> {
             `Interface may not have a name that is equal to a reserved word in TypeScript ('${piInterface.name}') ${this.location(piInterface)}.`);
 
         for (const intf of piInterface.base) {
-            this.checkConceptReference(intf);
+            this.checkClassifierReference(intf);
             if (!!intf.referred) { // error message taken care of by checkClassifierReference
                 this.simpleCheck(intf.referred instanceof PiInterface,
                     `Base concept '${intf.name}' must be an interface concept ` +

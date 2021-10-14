@@ -5,7 +5,7 @@ model Demo {
     models: ExModel[];
 }
 
-public modelunit ExModel {
+modelunit ExModel {
     public name: identifier;
     public entities: Entity[];
     public methods: Method[];

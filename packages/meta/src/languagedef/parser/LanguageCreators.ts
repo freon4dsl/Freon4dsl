@@ -7,7 +7,7 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveValue, PiPrimitiveType
+    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveValue, PiPrimitiveType, PiModelDescription, PiUnitDescription
 } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
 
@@ -31,9 +31,19 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
         result.name = data.name;
     }
     if (!!data.concepts) {
+        let hasModel: boolean = false;
         for (const con of data.concepts) {
             if (con instanceof PiInterface) {
                 result.interfaces.push(con);
+            } else if (con instanceof PiModelDescription) {
+                if (hasModel) {
+                    nonFatalParseErrors.push(`There may be only one model in the language definition ${this.location(con)}.`)
+                } else {
+                    hasModel = true;
+                    result.modelConcept = con;
+                }
+            } else if (con instanceof PiUnitDescription) {
+                result.units.push(con);
             } else {
                 result.concepts.push(con);
             }
@@ -48,11 +58,58 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     return result;
 }
 
+export function createModel(data: Partial<PiModelDescription>): PiModelDescription {
+    // console.log("createModel " + data.name);
+    const result = new PiModelDescription();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.properties) {
+        for (const prop of data.properties) {
+            if (prop instanceof PiPrimitiveProperty) {
+                result.primProperties.push(prop);
+            } else {
+                result.properties.push(prop);
+            }
+            prop.owningConcept = result;
+        }
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
+export function createUnit(data: Partial<PiUnitDescription>): PiUnitDescription {
+    // console.log("createUnit " + data.name);
+    const result = new PiUnitDescription();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.properties) {
+        for (const prop of data.properties) {
+            if (prop instanceof PiPrimitiveProperty) {
+                result.primProperties.push(prop);
+            } else {
+                result.properties.push(prop);
+            }
+            prop.owningConcept = result;
+        }
+    }
+    if (!!data.fileExtension) {
+        result.fileExtension = data.fileExtension;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
 export function createConcept(data: Partial<PiConcept>): PiConcept {
     // console.log("createConcept " + data.name);
     const result = new PiConcept();
-    result.isModel = !!data.isModel;
-    result.isUnit = !!data.isUnit;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
@@ -150,7 +207,6 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
     // console.log("createBinaryExpressionConcept " + data.name);
     const result = new PiBinaryExpressionConcept();
     result.isPublic = !!data.isPublic;
-    result.isModel = !!data.isModel;
     result.isAbstract = !!data.isAbstract;
     if ( !!data.priority ) {
         result.priority = data.priority;
@@ -163,7 +219,6 @@ export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiE
     // console.log("createExpressionConcept " + data.name);
     const result = new PiExpressionConcept();
     result.isPublic = !!data.isPublic;
-    result.isModel = !!data.isModel;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;

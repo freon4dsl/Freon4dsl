@@ -1,12 +1,12 @@
 import { LANGUAGE_GEN_FOLDER, Names, LangUtil, replaceInterfacesWithImplementors } from "../../../utils";
-import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
 import { PiScopeDef } from "../../metalanguage";
 
 export class ScoperUtilsTemplate {
 
     generateScoperUtils(language: PiLanguage, scopedef: PiScopeDef, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
-        const concreteNamespaces: PiConcept[] = replaceInterfacesWithImplementors(scopedef.namespaces);
+        const concreteNamespaces: PiClassifier[] = replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
         // also process the units that are not explicitly marked as namespace
         language.units.forEach(unit => {
@@ -19,9 +19,9 @@ export class ScoperUtilsTemplate {
         return `
         import { ${allLangConcepts}, 
                     ${includeRoot ?
-                        `${Names.concept(language.modelConcept)},`
+                        `${Names.classifier(language.modelConcept)},`
                     : ``} 
-                    ${concreteNamespaces.map(ref => `${Names.concept(ref)}`).join(", ")} 
+                    ${concreteNamespaces.map(ref => `${Names.classifier(ref)}`).join(", ")} 
                 } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
               
         /**
@@ -31,8 +31,8 @@ export class ScoperUtilsTemplate {
          * @param modelelement
          */
         export function isNameSpace(modelelement: ${allLangConcepts}): boolean {
-            ${includeRoot ? `if (modelelement instanceof ${Names.concept(language.modelConcept)}) { return true; }` : ``} 
-            ${concreteNamespaces.map(ref => `if (modelelement instanceof ${Names.concept(ref)}) { return true; }`).join("\n")}      
+            ${includeRoot ? `if (modelelement instanceof ${Names.classifier(language.modelConcept)}) { return true; }` : ``} 
+            ${concreteNamespaces.map(ref => `if (modelelement instanceof ${Names.classifier(ref)}) { return true; }`).join("\n")}      
                 return false;
         }`;
     }

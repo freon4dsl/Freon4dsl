@@ -4,7 +4,7 @@ import { PiLanguage } from "../../metalanguage";
 export class AllConceptsTemplate {
 
     generateAllConceptsClass(language: PiLanguage): string {
-        const unitNames = language.units.map(unit => Names.concept(unit));
+        const unitNames = language.units.map(unit => Names.classifier(unit));
         // sort all names alphabetically
         let tmp: string[] = [];
         language.concepts.map(c =>
@@ -13,6 +13,7 @@ export class AllConceptsTemplate {
         language.interfaces.map(c =>
             tmp.push(Names.interface(c))
         );
+        tmp.push(...unitNames);
 
         tmp = tmp.sort();
 

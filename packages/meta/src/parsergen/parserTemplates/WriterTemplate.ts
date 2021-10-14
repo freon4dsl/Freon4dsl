@@ -16,7 +16,7 @@ import {
     ListJoinType,
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../editordef/metalanguage";
-import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
+import { PiPrimitiveType } from "../../languagedef/metalanguage";
 
 export class WriterTemplate {
 
@@ -42,8 +42,10 @@ export class WriterTemplate {
         // Template starts here
         return `
         import { ${Names.PiNamedElement}, ${writerInterfaceName} } from "${PROJECTITCORE}";
-        import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.concepts.map(concept => `
-                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
+        import { ${allLangConcepts}, ${Names.PiElementReference}, ${language.units.map(concept => `
+                ${Names.classifier(concept)}`).join(", ")},
+            ${language.concepts.map(concept => `
+                    ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";     
         
         /**
          * SeparatorType is used to unparse lists.
@@ -124,19 +126,7 @@ export class WriterTemplate {
              * @param modelelement
              */
             public writeNameOnly(modelelement: ${allLangConcepts}): string {
-                ${this.findNamedConcepts(language.concepts).map((concept, index) => `
-                ${index == 0 ? `` : `} else ` }if (modelelement instanceof ${Names.concept(concept)}) {
-                    return modelelement.name;`).join("")}
-                } else {
-                    // make sure the global variables are reset
-                    this.output = [];
-                    this.currentLine = 0;
-                    // do not care about indent, we just need a single line
-                    this.output[this.currentLine] = "";
-                    // do the actual work
-                    this.unparse(modelelement, true);
-                    return this.output[0].trimEnd();
-                }
+                ${this.makeWriteOnly(language)}
             }
         
             private unparse(modelelement: ${allLangConcepts}, short: boolean) {
@@ -623,9 +613,14 @@ export class WriterTemplate {
         return joinType;
     }
 
-    private findNamedConcepts(concepts: PiConcept[]): PiConcept[] {
-        let result: PiConcept[] = [];
-        for( const elem of concepts) {
+    private findNamedClassifiers(language: PiLanguage): PiClassifier[] {
+        let result: PiClassifier[] = [];
+        for( const elem of language.units) {
+            if (hasNameProperty(elem)) {
+                result.push(elem);
+            }
+        }
+        for( const elem of language.concepts) {
             if (hasNameProperty(elem)) {
                 result.push(elem);
             }
@@ -633,4 +628,27 @@ export class WriterTemplate {
         return result;
     }
 
+    private makeWriteOnly(language: PiLanguage): string {
+        const namedClassifiers: PiClassifier[] = this.findNamedClassifiers(language);
+        const shortUnparsing: string = `
+        // make sure the global variables are reset
+                    this.output = [];
+                    this.currentLine = 0;
+                    // do not care about indent, we just need a single line
+                    this.output[this.currentLine] = "";
+                    // do the actual work
+                    this.unparse(modelelement, true);
+                    return this.output[0].trimEnd();`;
+        if (namedClassifiers.length > 0) {
+            return `${namedClassifiers.map((concept, index) => `
+                ${index == 0 ? `` : `} else `}if (modelelement instanceof ${Names.classifier(concept)}) {
+                    return modelelement.name;`).join("")}
+                } else {
+                    ${shortUnparsing}
+                }`;
+        } else {
+            return `${shortUnparsing}`;
+        }
+
+    }
 }

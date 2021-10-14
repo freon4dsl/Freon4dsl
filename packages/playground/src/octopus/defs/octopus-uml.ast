@@ -3,6 +3,7 @@ language octopus
 modelunit UmlPart {
     public name: identifier;
     umlPackage: UmlPackage;
+    file-extension = "uml2";
 }
 
 // the uml concepts

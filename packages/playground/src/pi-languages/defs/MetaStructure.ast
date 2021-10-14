@@ -1,7 +1,7 @@
 language PiLanguage
 
 // begin structure definition
-public modelunit PiStructureDef {
+modelunit PiStructureDef {
     public name: identifier;
     public concepts: PiConcept[];
     public interfaces: PiInterface[];
