@@ -114,6 +114,7 @@
         overflow-x: auto;
         padding: 4px;
 
+        opacity: 1;
         z-index: 99;
         background: var(--theme-colors-bg_dropdown_component);
     }
@@ -125,6 +126,7 @@
         border-radius: 2px;
         top: 10px;
         left: -1px;
+        opacity: 1;
         z-index: 95;
     }
 </style>

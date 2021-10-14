@@ -149,7 +149,7 @@
             event.preventDefault();
         }
         const piKey = toPiKey(event);
-        if (isMetaKey(event)) {
+        if (isMetaKey(event) || event.key === KEY_ENTER) {
             const isKeyboardShortcutForThis = await PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element " + textBox.element);
@@ -317,6 +317,8 @@
         return window.getSelection().getRangeAt(0).startOffset;
     };
 
+    let textStyle: string = "";
+
     autorun(() => {
         AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "]");
         placeholder = textBox.placeHolder;
@@ -324,6 +326,8 @@
         if (!isEditing) {
             text = textBox.getText();
         }
+        textStyle = textBox.style;
+    textBox.setFocus = setFocus;
     });
 
     // const onFocus = async (e: FocusEvent) => {
@@ -336,6 +340,7 @@
 </script>
 
 <span class={"text"}
+      style="{textStyle}"
       tabindex="0"
       data-placeholdertext={placeholder}
       on:keypress={onKeyPress}

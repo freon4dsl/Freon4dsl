@@ -6,7 +6,7 @@ import {
     GridBox,
     GridCell,
     KeyboardShortcutBehavior,
-    PiEditor
+    PiEditor, PiStyle, styleToCSS
 } from "../editor";
 import { PiElement } from "../language";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
@@ -24,6 +24,7 @@ export class GridUtil {
         listPropertyName: string,
         list: ELEMENT_TYPE[],
         columnNames: string[],
+        headerStyles: PiStyle[],
         columnBoxes: ((e: ELEMENT_TYPE) => Box)[],
         builder: (box: Box, editor: PiEditor) => ELEMENT_TYPE,
         editor: PiEditor,
@@ -40,8 +41,7 @@ export class GridUtil {
                     // style: STYLES.headerText,
                     selectable: false
                 }),
-                // TODO Change into Svelte Style
-                // style: STYLES.header
+                style: styleToCSS(headerStyles[index])
             });
         });
         list.forEach((item: ELEMENT_TYPE, rowIndex: number) => {
@@ -57,7 +57,7 @@ export class GridUtil {
             row: list.length + 3,
             column: 1,
             columnSpan: columnBoxes.length,
-            box: new AliasBox(element, "alias-add-row", "<add new row>"),
+            box: new AliasBox(element, "alias-add-row", "<add new row>", {style: `font-weight: normal;`}),
             // TODO Change into Svelte Style
             // style: STYLES.header
         });
@@ -67,7 +67,7 @@ export class GridUtil {
         editor.keyboardActions.splice(
             0,
             0,
-            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(element, listPropertyName, builder, "textbox-name")
+            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(element, listPropertyName, builder)
         );
         return new GridBox(element, role, cells, initializer);
     }
@@ -152,7 +152,7 @@ export class GridUtil {
     ): KeyboardShortcutBehavior {
         const listKeyboardShortcut: KeyboardShortcutBehavior = {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
-            activeInBoxRoles: ["alias-add-row"],
+            activeInBoxRoles: ["alias-add-row", "alias-alias-add-row-textbox"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;
                 const newElement: ELEMENT_TYPE = elementCreator(box, editor);

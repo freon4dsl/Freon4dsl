@@ -3,17 +3,17 @@
 import { PiStyle } from "@projectit/core";
 
 export const placeholdertext: PiStyle = {
-    color: "black",
-    opacity: "0.5",
+//    color: "black",
+//    opacity: "0.5",
     content: "attr(data-placeholdertext)",
     ":empty:before": {
         color: "blue",
-        opacity: "0.5",
+//        opacity: "0.5",
         content: "attr(data-placeholdertext)"
     },
     ":before": {
         color: "blue",
-        opacity: "0.5",
+//        opacity: "0.5",
         content: "attr(data-placeholdertext)"
     }
 };

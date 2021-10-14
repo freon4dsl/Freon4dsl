@@ -1,5 +1,5 @@
-model Simple2 {
-    Entity ent1 base SomeOther {
+unit Simple2 {
+    entity ent1 base SomeOther {
 	/*
         myTextAttribute : String
         method meth56 ( ): Integer { 
@@ -7,8 +7,8 @@ model Simple2 {
         } */
     }
 
-    Entity SomeOther base ent1{}
+    entity SomeOther base ent1{}
 
-model wide Methods: 
+unit level methods:
 
 }

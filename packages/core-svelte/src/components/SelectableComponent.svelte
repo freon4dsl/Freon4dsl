@@ -46,7 +46,7 @@
         }
 
         if (isSelected) {
-            LOGGER.log("     setting focus from autpupdate");
+            // console.log("     setting focus from afterupdate to box " + box.role);
             box.setFocus();
         }
     });
@@ -55,6 +55,10 @@
         AUTO_LOGGER.log("SelectableComponent for box: " + box.role);
         isSelected = editor?.selectedBox === box;
         className = (isSelected ? "selectedComponent" : "unSelectedComponent");
+        if (isSelected) {
+            // console.log("     setting focus from AUTO  to box " + box.role);
+            box.setFocus();
+        }
     });
 </script>
 
@@ -64,7 +68,6 @@
 <div class={className}
      tabIndex={0}
      on:click={onClick}
-
      bind:clientHeight={box.actualHeight}
      bind:this={element}>
     <slot class="slot" editor={editor} />
