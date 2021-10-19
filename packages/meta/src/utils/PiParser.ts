@@ -82,7 +82,7 @@ export class PiParser<DEFINITION> {
                     if (e.location && e.location.start) {
                         location = `[file: ${file}, line ${e.location.start.line}, column ${e.location.start.column}]`;
                     }
-                    const errorstr = `${e.trimEnd()} ${location}`;
+                    const errorstr = `${e.message.trimEnd()} ${location}`;
                     LOGGER.error(this, errorstr);
                     throw new Error("syntax error: " + errorstr);
                 }

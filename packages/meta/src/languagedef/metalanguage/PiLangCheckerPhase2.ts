@@ -1,4 +1,4 @@
-import { LangUtil, Names } from "../../utils";
+import { isNullOrUndefined, LangUtil, Names } from "../../utils";
 import {
     PiClassifier,
     PiConcept,
@@ -8,7 +8,7 @@ import {
     PiLimitedConcept, PiPrimitiveProperty,
     PiPrimitiveType,
     PiProperty,
-    PiPropertyInstance
+    PiPropertyInstance, PiUnitDescription
 } from "./PiLanguage";
 import { PiElementReference } from "./PiElementReference";
 import { PiLangAbstractChecker } from "./PiLangAbstractChecker";
@@ -22,8 +22,13 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         this.errors = [];
         const names: string[] = [];
         let foundSomeCircularity: boolean = false;
+        const extensions: string[] = [];
+        language.units.forEach(unit => {
+            this.checkUniqueNameOfClassifier(names, unit);
+            this.checkUniqueFileExtension(extensions, unit);
+        });
         language.concepts.forEach(con => {
-            if (this.forConcepts(names, con, foundSomeCircularity)) {
+            if (this.checkClassifierOnCircularity(names, con, foundSomeCircularity)) {
                 // we cannot use a simple assignment, because the next concept would set
                 // the value of 'foundSomeCircularity' back to false;
                 foundSomeCircularity = true;
@@ -37,7 +42,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             }
         });
         language.interfaces.forEach(intf => {
-            if (this.forInterfaces(names, intf, foundSomeCircularity)) {
+            if (this.checkClassifierOnCircularity(names, intf, foundSomeCircularity)) {
                 foundSomeCircularity = true;
             }
         });
@@ -49,39 +54,48 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         }
     }
 
-    private forInterfaces(names: string[], intf: PiInterface, foundSomeCircularity: boolean) {
+    private checkUniqueNameOfClassifier(names: string[], classifier: PiClassifier) {
         // check unique names, disregarding upper/lower case of first character
-        if (names.includes(intf.name)) {
+        if (names.includes(classifier.name)) {
             this.simpleCheck(false,
-                `Concept or interface with name '${intf.name}' already exists ${this.location(intf)}.`);
+                `Concept or interface with name '${classifier.name}' already exists ${this.location(classifier)}.`);
         } else {
-            names.push(Names.startWithUpperCase(intf.name));
-            names.push(intf.name);
+            names.push(Names.startWithUpperCase(classifier.name));
+            names.push(classifier.name);
         }
-        // check circularity
-        const circularNames: string[] = [];
-        let interfaceIsCircular: boolean = this.checkCircularInheritance(circularNames, intf);
-        // remember that we found circularity for one of the interfaces
-        if (interfaceIsCircular) {
-            foundSomeCircularity = true;
-        }
-        if (!interfaceIsCircular) {
-            // check that all properties have unique names
-            // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
-            this.checkPropertyUniqueNames(intf, false);
-        }
-        return foundSomeCircularity;
     }
 
-    private forConcepts(names: string[], con: PiConcept | PiLimitedConcept, foundSomeCircularity: boolean) {
-        // check unique names, disregarding upper/lower case of first character
-        if (names.includes(con.name)) {
-            this.simpleCheck(false,
-                `Concept with name '${con.name}' already exists ${this.location(con)}.`);
+    private checkUniqueFileExtension(extensions: string[], unit: PiUnitDescription) {
+        // our parser accepts only variables for fileExtensions, therefore we do not need to check it further here.
+        // set the file extension, if not present
+        if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) {
+            // try to get a unique file extension that is as short as possible starting with a length of 3 chars
+            for (let i = 3; i < unit.name.length; i++) {
+                let potional: string = unit.name.substring(0, i).toLowerCase();
+                if (!extensions.includes(potional)) {
+                    unit.fileExtension = potional;
+                    break;
+                }
+            }
+            if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) { // could not set default
+                this.simpleCheck(false,
+                    `Could not create a file-extension for '${unit.name}', please provide one ${this.location(unit)}.`);
+            } else {
+                extensions.push(unit.fileExtension);
+            }
         } else {
-            names.push(Names.startWithUpperCase(con.name));
-            names.push(con.name);
+            // check uniqueness
+            if (extensions.includes(unit.fileExtension)) {
+                this.simpleCheck(false,
+                    `FileExtension '${unit.fileExtension}' already exists ${this.location(unit)}.`);
+            } else {
+                extensions.push(unit.fileExtension);
+            }
         }
+    }
+
+    private checkClassifierOnCircularity(names: string[], con: PiClassifier, foundSomeCircularity: boolean) {
+        this.checkUniqueNameOfClassifier(names, con);
         // check circularity
         const circularNames: string[] = [];
         const conceptIsCircular = this.checkCircularInheritance(circularNames, con);

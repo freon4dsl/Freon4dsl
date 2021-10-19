@@ -9,6 +9,7 @@ modelunit ExampleUnit {
     public name: identifier;
     public entities: Entity[];
     public methods: Method[];
+    file-extension = "exm";
 }
 interface BaseType {
     public name: identifier;

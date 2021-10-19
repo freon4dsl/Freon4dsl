@@ -24,7 +24,7 @@ describe("Checking language parser on checking errors", () => {
         try {
             parser.parse(parseFile);
         } catch (e) {
-            checker.errors.forEach(err => console.log(err));
+            // checker.errors.forEach(err => console.log(err));
             expect(e.message).toBe(`checking errors (13).`);
             expect(checker.errors.includes("The model should have a 'name' property [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("The model should have at least one unit type [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 3, column: 1].")).toBeTruthy();
@@ -34,11 +34,11 @@ describe("Checking language parser on checking errors", () => {
             expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('number') [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 21, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept may not have a name that is equal to a reserved word in TypeScript ('boolean') [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 23, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Property with name 'simple' already exists in ZZZ [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 8, column: 5] and [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 9, column: 5].")).toBeTruthy();
-            expect(checker.errors.includes("Concept with name 'LowerCase' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 27, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface with name 'LowerCase' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 27, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Concept or interface with name 'AAA' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 16, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("There may be only one model in the language definition [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 5, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept with name 'ZZZ' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 29, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept with name 'YYY' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 31, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface with name 'ZZZ' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 29, column: 1].")).toBeTruthy();
+            expect(checker.errors.includes("Concept or interface with name 'YYY' already exists [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test2.ast, line: 31, column: 1].")).toBeTruthy();
         }
     });
 

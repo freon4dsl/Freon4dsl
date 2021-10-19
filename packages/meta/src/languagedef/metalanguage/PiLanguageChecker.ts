@@ -41,7 +41,6 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
         // and that all their properties have unique names
         const phase2: PiLangCheckerPhase2 = new PiLangCheckerPhase2(language);
         phase2.check(language);
-        console.log(`phase1 errors: ${this.errors.length}, phase2 errors: ${phase2.errors.length}`)
         if (phase2.hasErrors()) {
             this.errors.push(...phase2.errors);
         }
@@ -80,11 +79,6 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                     `The name property of a model unit should be public ${this.location(unit)}.`);
             }
         });
-        // set the file extension, if not present
-        if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0){
-            unit.fileExtension = unit.name.substring(0,3).toLowerCase();
-        }
-        // Our parser accepts only variables for fileExtensions, therefore we do not need to check it further here.
     }
 
     private checkConcept(piConcept: PiConcept): void {
