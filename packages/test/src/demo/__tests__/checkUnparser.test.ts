@@ -15,6 +15,7 @@ import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions"
 import * as fs from "fs";
 import { DemoValidator } from "../validator/gen";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { FileHandler } from "../../utils/FileHandler";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -124,6 +125,7 @@ describe("Testing Unparser", () => {
         test("complete example model with simple attribute types", () => {
             let result: string = "";
             const testmodel = new DemoModelCreator().createModelWithMultipleUnits();
+            const fileHandler = new FileHandler();
 
             const validator = new DemoValidator();
             const errors = validator.validate(testmodel, true);
@@ -133,16 +135,13 @@ describe("Testing Unparser", () => {
             // the custom validation adds error message to an otherwise correct model
             expect(errors.length).toBe(9);
 
-            result = unparser.writeToString(testmodel, 0, false);
-            const path: string = "./unparsedDemoModel.txt";
-            if (!fs.existsSync(path)) {
-                fs.writeFileSync(path, result);
-            } else {
-                console.log("checkUnparser.test: projectit-test-unparser: user file " + path + " already exists, skipping it.");
-            }
+            for (const unit of testmodel.models) {
+                result = unparser.writeToString(unit, 0, false);
+                fileHandler.stringFromFile(`src/demo/__tests__/unparsed${unit.name}.txt`);
 
-            // console.log(result);
-            expect(result).toMatchSnapshot();
+                // console.log(result);
+                expect(result).toMatchSnapshot();
+            }
         });
     });
 });

@@ -1,4 +1,5 @@
 import { PiElement } from "../language/PiElement";
+import { isNullOrUndefined } from "../util";
 
 // TODO see if other types need to be added
 export type PropertyType = "primitive" | "part" | "reference";
@@ -82,7 +83,7 @@ export class Language {
     allConceptProperties(typeName: string): IterableIterator<Property> {
         // console.log("Looking up properties for "+ typeName);
         let myType: Concept | ModelUnit = this.concept(typeName);
-        if (!myType) {
+        if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
         return myType?.properties.values();
@@ -102,10 +103,10 @@ export class Language {
      */
     createConceptOrUnit(typeName: string): PiElement {
         let myType: Concept | ModelUnit = this.concept(typeName);
-        if (!myType) {
+        if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
-        return myType.constructor();
+        return myType?.constructor();
     }
 
 
