@@ -52,13 +52,13 @@ export class UnitTemplate {
             `;
     }
 
-    private findModelImports(modelDescription: PiModelDescription, myName: string): string[] {
-        const hasReferences = modelDescription.references().length > 0;
+    private findModelImports(unitDescription: PiUnitDescription, myName: string): string[] {
+        const hasReferences = unitDescription.references().length > 0;
         return Array.from(
             new Set(
-                modelDescription.parts().map(part => Names.classifier(part.type.referred))
-                    .concat(modelDescription.references().map(part => Names.classifier(part.type.referred)))
-                    .concat(Names.metaType(modelDescription.language))
+                unitDescription.parts().map(part => Names.classifier(part.type.referred))
+                    .concat(unitDescription.references().map(part => Names.classifier(part.type.referred)))
+                    .concat(Names.metaType(unitDescription.language))
                     .concat(hasReferences ? (Names.PiElementReference) : null)
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))

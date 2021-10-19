@@ -8,3 +8,8 @@ model PiLanguage {
     public typer: PiTyperDef;
     public validator: PiValidatorDef;
 }
+
+// TODO validation rule
+//PiLanguage {
+//    isunique fileExtension in { structure, editor, scoper, typer, validator }
+//}

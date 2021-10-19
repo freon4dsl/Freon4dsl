@@ -101,6 +101,14 @@ export abstract class PiClassifier extends PiLangElement {
 }
 
 export class PiModelDescription extends PiClassifier {
+    unitTypes(): PiUnitDescription[] {
+        let result: PiUnitDescription[] = [];
+        // all parts of a model are units
+        for (const intf of this.parts()) {
+            result = result.concat(intf.type.referred as PiUnitDescription);
+        }
+        return result;
+    }
 }
 
 export class PiUnitDescription extends PiClassifier {

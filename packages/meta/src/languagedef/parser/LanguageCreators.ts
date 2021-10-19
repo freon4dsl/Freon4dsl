@@ -20,8 +20,12 @@ export function setCurrentFileName(newName: string) {
 
 let nonFatalParseErrors: string[] = [];
 
-export function getNonFatalParseErrors() : string[] {
+export function getNonFatalParseErrors(): string[] {
     return nonFatalParseErrors;
+}
+
+export function cleanNonFatalParseErrors() {
+    nonFatalParseErrors = [];
 }
 
 export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
@@ -37,7 +41,11 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
                 result.interfaces.push(con);
             } else if (con instanceof PiModelDescription) {
                 if (hasModel) {
-                    nonFatalParseErrors.push(`There may be only one model in the language definition ${this.location(con)}.`)
+                    let location: string = `[no location]`;
+                    if (!!con.location) {
+                        location = `[file: ${currentFileName}, line: ${con.location.start.line}, column: ${con.location.start.column}]`;
+                    }
+                    nonFatalParseErrors.push(`There may be only one model in the language definition ${location}.`)
                 } else {
                     hasModel = true;
                     result.modelConcept = con;

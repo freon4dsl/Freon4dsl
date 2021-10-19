@@ -1,7 +1,7 @@
 import { PiLanguage, PiLanguageChecker } from "../metalanguage/";
 import { PiParser } from "../../utils/PiParser";
 import * as pegjsParser from "./LanguageGrammar";
-import { getNonFatalParseErrors, setCurrentFileName } from "./LanguageCreators";
+import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName } from "./LanguageCreators";
 import { MetaLogger } from "../../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("LanguageParser").mute();
@@ -44,5 +44,9 @@ export class LanguageParser extends PiParser<PiLanguage> {
 
     protected getNonFatalParseErrors() : string[] {
         return getNonFatalParseErrors();
+    }
+
+    protected cleanNonFatalParseErrors() {
+        cleanNonFatalParseErrors();
     }
 }

@@ -3,7 +3,7 @@ import { Checker } from "./Checker";
 import { Parser } from "pegjs";
 import { MetaLogger } from "../utils/MetaLogger";
 
-const LOGGER = new MetaLogger("PiParser").mute();
+const LOGGER = new MetaLogger("PiParser"); //.mute();
 
 // the following two types are used to store the location information from the parser
 export type ParseLocation = {
@@ -33,6 +33,8 @@ export class PiParser<DEFINITION> {
         }
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
 
+        // clean the error list from the creator functions
+        this.cleanNonFatalParseErrors();
         // parse Language file
         let model: DEFINITION = null;
         try {
@@ -46,7 +48,7 @@ export class PiParser<DEFINITION> {
                 :
                     ``}`;
             LOGGER.error(this, errorstr);
-            throw new Error("syntax error.");
+            throw new Error("syntax error: " + errorstr);
         }
 
         // run the checker
@@ -60,6 +62,8 @@ export class PiParser<DEFINITION> {
         let model: DEFINITION;
         let submodels: DEFINITION[] = [];
 
+        // clean the error list from the creator functions used by this.parser
+        this.cleanNonFatalParseErrors();
         // read the files and parse them separately
         for (const file of filePaths) {
             if (!fs.existsSync(file)) {
@@ -73,12 +77,14 @@ export class PiParser<DEFINITION> {
                     submodels.push(this.parser.parse(langSpec));
                 } catch (e) {
                     // throw syntax error, but adjust the location first
-                    const errorstr = `${e} ${e.location && e.location.start ?
-                        `[file: ${file}, line ${e.location.start.line}, column ${e.location.start.column}]`
-                        :
-                        ``}`;
+                    // to avoid a newline in the output, we do not put this if-stat in a smart string
+                    let location: string = "";
+                    if (e.location && e.location.start) {
+                        location = `[file: ${file}, line ${e.location.start.line}, column ${e.location.start.column}]`;
+                    }
+                    const errorstr = `${e.trimEnd()} ${location}`;
                     LOGGER.error(this, errorstr);
-                    throw new Error("syntax error.");
+                    throw new Error("syntax error: " + errorstr);
                 }
             }
         }
@@ -121,5 +127,9 @@ export class PiParser<DEFINITION> {
 
     protected getNonFatalParseErrors(): string[] {
         throw Error("PiParser.getNonFatalParseErrors should be implemented by its subclasses.");
+    }
+
+    protected cleanNonFatalParseErrors() {
+        // throw Error("PiParser.cleanNonFatalParseErrors should be implemented by its subclasses.");
     }
 }
