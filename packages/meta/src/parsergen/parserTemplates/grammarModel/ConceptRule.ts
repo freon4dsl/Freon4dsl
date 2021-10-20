@@ -28,12 +28,12 @@ export class ConceptRule extends GrammarRule {
     }
 
     toGrammar(): string {
-        // TODO remove check
-        this.ruleParts.forEach((part, index) => {
-            if (part == null) {
-                console.log(`part ${index} for concept ${this.concept.name} is null`);
-            }
-        });
+        // check - should be removed
+        // this.ruleParts.forEach((part, index) => {
+        //     if (part == null) {
+        //         console.log(`part ${index} for concept ${this.concept.name} is null`);
+        //     }
+        // });
         // end check
         let rule = `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`;
         return rule.trimEnd() + " ;";

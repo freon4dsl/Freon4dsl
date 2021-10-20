@@ -5,7 +5,7 @@ model DSmodel {
     units: DSunit[];
 }
 
-public modelunit DSunit {
+modelunit DSunit {
     public reference imports: DSunit[];
     public name: identifier;
     public dsPublics: DSpublic[];

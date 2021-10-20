@@ -9,6 +9,7 @@ model TestParserModel {
     lim: LimitedTest;
     ref: RefsTest;
     primWith: WithKeywordProj;
+    parts: PartsTest;
 }
 
 modelunit PrimitivesTest {

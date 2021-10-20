@@ -1,7 +1,7 @@
 language PiLanguage
 
 // begin validator definition
-public modelunit PiValidatorDef {
+modelunit PiValidatorDef {
     public name: identifier;
 //}
 //concept PiValidatorDef {

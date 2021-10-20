@@ -1,7 +1,7 @@
 language PiLanguage
 
 // begin typer definition
-public modelunit PiTyperDef {
+modelunit PiTyperDef {
     public name: identifier;
 //}
 //concept PiTypeDefinition {

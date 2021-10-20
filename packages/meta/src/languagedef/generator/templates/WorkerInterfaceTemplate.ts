@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER, createImports } from "../../../utils";
 
 export class WorkerInterfaceTemplate {
 
@@ -7,7 +7,7 @@ export class WorkerInterfaceTemplate {
 
         // the template starts here
         return `
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
+        import { ${createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
 
         /**
          * Interface ${Names.workerInterface(language)} implements the extended visitor pattern of instances of language ${language.name}.
@@ -17,25 +17,18 @@ export class WorkerInterfaceTemplate {
          */
         export interface ${Names.workerInterface(language)} {
 
+        execBefore${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean;                    
+        execAfter${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean;
+        
+        ${language.units.map(unit =>
+            `execBefore${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean;
+            execAfter${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean ;`
+        ).join("\n\n")}
+        
         ${language.concepts.map(concept =>
             `execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;
             execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;`
         ).join("\n\n") }       
         }`;
-    }
-
-    private createImports(language: PiLanguage): string {
-        // sort all names alphabetically
-        let tmp: string[] = [];
-        language.concepts.map(c =>
-            tmp.push(Names.concept(c))
-        );
-        tmp = tmp.sort();
-
-        // the template starts here
-        return `
-            ${tmp.map(c =>
-                `${c}`
-            ).join(", ")}`;
     }
 }

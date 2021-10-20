@@ -100,12 +100,14 @@ export class RulesCheckerTemplate {
     }
 
     private createImports(language: PiLanguage): string {
-        let result: string = language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts ? `,` : ``);
-        result = result.concat(
-            language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`).join(", "));
+        let result: string =
+            `${language.concepts?.map(concept => `
+                ${Names.concept(concept)}`).concat(
+                    language.interfaces?.map(intf => `
+                ${Names.interface(intf)}`).concat(
+                        language.units?.map(intf => `
+                ${Names.classifier(intf)}`).join(", ")))
+            }`;
         return result;
     }
 

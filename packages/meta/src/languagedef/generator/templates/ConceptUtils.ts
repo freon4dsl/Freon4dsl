@@ -16,7 +16,7 @@ export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[]
     return mobxImports;
 }
 
-export function makeImportStatements(hasSuper: boolean, needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
+export function makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
     return `
             ${needsObservable ? `import { observable, makeObservable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
@@ -159,3 +159,27 @@ export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: b
                     return ${isBinaryExpression};
                 }`;
 }
+export function makeStaticCreateMethod(concept: PiClassifier, myName: string): string {
+    return `/**
+                 * A convenience method that creates an instance of this class
+                 * based on the properties defined in 'data'.
+                 * @param data
+                 */
+                static create(data: Partial<${myName}>): ${myName} {
+                    const result = new ${myName}();
+                    ${concept.allProperties().map(property =>
+        `${(property.isList && !(property instanceof PiPrimitiveProperty)) ?
+            `if (!!data.${property.name}) {
+                                data.${property.name}.forEach(x =>
+                                    result.${property.name}.push(x)
+                                );
+                            }`
+            : `if (!!data.${property.name}) { 
+                                result.${property.name} = data.${property.name};
+                            }`
+        }`).join("\n")
+    }
+                    return result;
+                }`;
+}
+

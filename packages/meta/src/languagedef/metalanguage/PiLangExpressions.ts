@@ -48,9 +48,9 @@ export class PiLangSimpleExp extends PiLangExp {
 
 export class PiLangSelfExp extends PiLangExp {
 
-    static create(referred: PiConcept): PiLangSelfExp {
+    static create(referred: PiClassifier): PiLangSelfExp {
         const result = new PiLangSelfExp();
-        result.referredElement = PiElementReference.create<PiConcept>(referred, "PiConcept");
+        result.referredElement = PiElementReference.create<PiClassifier>(referred, "PiClassifier");
         result.referredElement.owner = result;
         result.sourceName = Names.nameForSelf;
         return result;

@@ -5,6 +5,8 @@ export type PiLangConceptType =
     | "PiClassifier"
     | "PiInterface"
     | "PiConcept"
+    | "PiModelDescription"
+    | "PiUnitDescription"
     | "PiExpressionConcept"
     | "PiBinaryExpressionConcept"
     | "PiLimitedConcept"

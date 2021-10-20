@@ -22,7 +22,9 @@ describe("Checking typer on checking errors", () => {
         try {
             parser.parse(parseFile);
         } catch (e) {
-            expect(e.message).toBe(`syntax error.`);
+            expect(e.message).toBe(`syntax error: SyntaxError: Expected "abstract", "conformsto", "equalsto", "infertype", or "}" but "c" found.`
+                + " \n                "
+                +`[file: src/test/__tests__/typer-tests/faultyDefFiles/syntax-errors/test1.type, line 6, column 5]`);
         }
     });
 

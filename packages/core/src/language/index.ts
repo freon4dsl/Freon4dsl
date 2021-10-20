@@ -5,5 +5,6 @@ export * from "./PiBinaryExpression";
 export * from "./PiContainerDescriptor";
 export * from "./PiExpression";
 export * from "./PiModel";
+export * from "./PiModelUnit";
 export * from "./decorators";
 export * from "./LanguageUtil";

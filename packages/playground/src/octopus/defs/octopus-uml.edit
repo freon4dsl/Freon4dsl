@@ -1,5 +1,7 @@
 editor XXX for language octopus
 
+// reference-separator [.]
+
 UmlPart {
     @projection normal
         [${self.umlPackage}]

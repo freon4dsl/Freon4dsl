@@ -2,6 +2,7 @@
 import { PiNamedElement } from "./PiNamedElement";
 
 export interface PiModel extends PiNamedElement {
+    // TODO return PiModelUnit instead of PiNamedElement
     /**
      * Finds a unit of this model based on its name and 'metatype'.
      * @param name

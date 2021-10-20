@@ -38,7 +38,7 @@ export class ValidatorGenerator {
         Helpers.deleteFilesInDir(this.validatorGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        const relativePath = "../../";
+        let relativePath = "../../";
 
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);
@@ -72,9 +72,22 @@ export class ValidatorGenerator {
         }
 
         LOGGER.log(`Generating validator gen index: ${this.validatorGenFolder}/index.ts`);
-        const indexFile = Helpers.pretty(validatorTemplate.generateIndex(this.language, validdef),
+        const genIndexFile = Helpers.pretty(validatorTemplate.generateGenIndex(this.language, validdef),
             "Index Class", generationStatus);
-        fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
+        fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, genIndexFile);
+
+        // set relative path to get the imports right
+        relativePath = "../";
+
+        LOGGER.log(`Generating validator gen index: ${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
+        const customFile = Helpers.pretty(validatorTemplate.generateCustomValidator(this.language, relativePath),
+            "Custom Validator Class", generationStatus);
+        Helpers.generateManualFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`, customFile, "Custom Validator Class");
+
+        LOGGER.log(`Generating validator gen index: ${this.validatorFolder}/index.ts`);
+        const indexFile = Helpers.pretty(validatorTemplate.generateIndex(this.language),
+            "Index Class", generationStatus);
+        Helpers.generateManualFile(`${this.validatorFolder}/index.ts`, indexFile, "Index Class");
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(this, `Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
@@ -91,6 +104,19 @@ export class ValidatorGenerator {
     clean(force: boolean) {
         this.getFolderNames();
         Helpers.deleteDirAndContent(this.validatorGenFolder);
-        Helpers.deleteDirIfEmpty(this.validatorFolder);
+        if (force) {
+            Helpers.deleteFile(`${this.validatorFolder}/index.ts`);
+            if (this.language == null) {
+                LOGGER.error(this, "Cannot remove all because language is not set.");
+            } else {
+                Helpers.deleteFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
+            }
+            Helpers.deleteDirIfEmpty(this.validatorFolder);
+        } else {
+            // do not delete the following files, because these may contain user edits
+            LOGGER.info(this, `${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
+                '\n\t' + `${this.validatorFolder}/index.ts`);
+        }
+
     }
 }

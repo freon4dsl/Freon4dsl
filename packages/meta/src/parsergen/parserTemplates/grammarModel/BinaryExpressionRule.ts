@@ -1,14 +1,14 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiConcept, PiExpressionConcept } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiExpressionConcept } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { internalTransformNode } from "../ParserGenUtil";
 import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
     expressionBase: PiExpressionConcept;
-    symbolToConcept: Map<PiConcept, string> = new Map<PiConcept, string>();
+    symbolToConcept: Map<PiClassifier, string> = new Map<PiClassifier, string>();
 
-    constructor(ruleName: string, expressionBase: PiExpressionConcept, symbolToConcept: Map<PiConcept, string>) {
+    constructor(ruleName: string, expressionBase: PiExpressionConcept, symbolToConcept: Map<PiClassifier, string>) {
         super();
         this.ruleName = ruleName;
         this.expressionBase = expressionBase;
@@ -25,7 +25,7 @@ export class BinaryExpressionRule extends GrammarRule {
         for (const [key, value] of this.symbolToConcept) {
             cases.push(`
                 case '${value}': {
-                    combined = ${Names.concept(key)}.create({left: first, right: second});
+                    combined = ${Names.classifier(key)}.create({left: first, right: second});
                     break;
                 }`);
         }

@@ -5,7 +5,7 @@ model Json {
     files: JsonFile[];
 }
 
-modelunit JsonFile  implements INamedConcept {
+modelunit JsonFile {
     public name: identifier;
 	contents: IJsonValue;
 }

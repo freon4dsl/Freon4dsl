@@ -10,7 +10,7 @@ export class BinaryExpMaker {
     public generateBinaryExpressions(language:PiLanguage, editUnit: PiEditUnit, binaryConceptsUsed: PiBinaryExpressionConcept[]): GrammarRule {
         // common information
         const expressionBase: PiExpressionConcept = language.findExpressionBase();
-        const editDefs: Map<PiConcept, string> = this.findEditDefs(binaryConceptsUsed, editUnit);
+        const editDefs: Map<PiClassifier, string> = this.findEditDefs(binaryConceptsUsed, editUnit);
         const branchName = BinaryExpMaker.specialBinaryRuleName;
 
         this.imports.push(expressionBase);
@@ -20,8 +20,8 @@ export class BinaryExpMaker {
         return new BinaryExpressionRule(branchName, expressionBase, editDefs);
     }
 
-    private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], editUnit: PiEditUnit): Map<PiConcept, string> {
-        let result: Map<PiConcept, string> = new Map<PiConcept, string>();
+    private findEditDefs(binaryConceptsUsed: PiBinaryExpressionConcept[], editUnit: PiEditUnit): Map<PiClassifier, string> {
+        let result: Map<PiClassifier, string> = new Map<PiClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
             const piEditConcept = editUnit.findConceptEditor(binCon);
             result.set(piEditConcept.concept.referred, piEditConcept.symbol);

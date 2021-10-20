@@ -6,6 +6,7 @@ import { PiEditUnit } from "../editordef/metalanguage";
 import { WriterTemplate, ReaderTemplate, ParserGenerator } from "./parserTemplates";
 import { net } from "net.akehurst.language-agl-processor";
 import Agl = net.akehurst.language.agl.processor.Agl;
+import { PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
 
@@ -29,7 +30,7 @@ export class ReaderWriterGenerator {
         const unparserTemplate = new WriterTemplate();
         const readerTemplate = new ReaderTemplate();
         const parserGenerator = new ParserGenerator();
-        let correctUnits: PiConcept[] = [];
+        let correctUnits: PiUnitDescription[] = [];
 
         // Prepare folders
         Helpers.createDirIfNotExisting(this.writerGenFolder);

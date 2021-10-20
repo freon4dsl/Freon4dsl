@@ -1,13 +1,14 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
+import { MetaLogger } from "../../utils";
+import { PiLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, Helpers, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiElementReference } from "../../languagedef/metalanguage";
 import { ScoperUtilsTemplate } from "./templates/ScoperUtilsTemplate";
 import { NamesCollectorTemplate } from "./templates/NamesCollectorTemplate";
+import { PiModelDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 const LOGGER = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
@@ -26,7 +27,7 @@ export class ScoperGenerator {
             scopedef = new PiScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(PiElementReference.create<PiConcept>(this.language.modelConcept, "PiConcept"));
+            scopedef.namespaces.push(PiElementReference.create<PiModelDescription>(this.language.modelConcept, "PiModelDescription"));
         }
 
         const generationStatus = new GenerationStatus();

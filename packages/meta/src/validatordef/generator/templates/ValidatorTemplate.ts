@@ -16,7 +16,7 @@ export class ValidatorTemplate {
         const nonOptionalsChecker: string = Names.nonOptionalsChecker(language);
         const referenceChecker: string = Names.referenceChecker(language);
         const walkerClassName: string = Names.walker(language);
-        const workerClassName: string = Names.defaultWorker(language);
+        const workerInterfaceName: string = Names.workerInterface(language);
 
         // Template starts here
         return `
@@ -25,7 +25,7 @@ export class ValidatorTemplate {
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";    
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";
-        import { ${walkerClassName}, ${workerClassName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}"; 
+        import { ${walkerClassName}, ${workerInterfaceName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}"; 
         import { projectitConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration()}";
  
         /**
@@ -33,7 +33,7 @@ export class ValidatorTemplate {
          * its nodes, where any errors are deposited in 'errorList'.
          * Every checker that is used by the validator '${generatedClassName}' should implement this interface.
          */     
-        export interface ${Names.checkerInterface(language)} extends ${workerClassName} {
+        export interface ${Names.checkerInterface(language)} extends ${workerInterfaceName} {
             errorList: ${this.errorClassName}[];
         }
         
@@ -95,11 +95,32 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateIndex(language: PiLanguage, validdef: PiValidatorDef): string {
+    generateGenIndex(language: PiLanguage, validdef: PiValidatorDef): string {
         return `
         export * from "./${Names.nonOptionalsChecker(language)}";
         export * from "./${Names.validator(language)}";
         ${!!validdef ? `export * from "./${Names.rulesChecker(language)}";` : ``}
+        `;
+    }
+
+    generateCustomValidator(language: PiLanguage, relativePath: string): string {
+        const className: string = Names.customValidator(language);
+        const defaultWorkerName: string = Names.defaultWorker(language);
+        const interfaceName: string = Names.checkerInterface(language);
+        const validatorName: string = Names.validator(language);
+        return `
+        import { ${Names.PiError}, ${Names.PiErrorSeverity} } from "${PROJECTITCORE}";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}"; 
+        import { ${interfaceName} } from "./gen/${validatorName}";
+                
+        export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
+            errorList: ${Names.PiError}[] = [];
+        }`;
+    }
+
+    generateIndex(language: PiLanguage) {
+        return `
+        export * from "./${Names.customValidator(language)}";
         `;
     }
 }

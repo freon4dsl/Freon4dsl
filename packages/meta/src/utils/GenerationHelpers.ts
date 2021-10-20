@@ -1,5 +1,12 @@
-import { PiClassifier, PiInterface, PiLangElement, PiPrimitiveProperty, PiProperty } from "../languagedef/metalanguage/";
-import { PiConcept, PiConceptProperty } from "../languagedef/metalanguage/";
+import {
+    PiClassifier,
+    PiConcept,
+    PiConceptProperty,
+    PiInterface,
+    PiLanguage,
+    PiPrimitiveProperty,
+    PiProperty
+} from "../languagedef/metalanguage/";
 import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp } from "../languagedef/metalanguage";
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
 import { PiPrimitiveType } from "../languagedef/metalanguage/PiLanguage";
@@ -189,4 +196,21 @@ export function getTypeAsString(property: PiProperty): string {
         type = type + '[]';
     }
     return type;
+}
+
+export function createImports(language: PiLanguage): string {
+    // sort all names alphabetically
+    let tmp: string[] = [];
+    language.concepts.map(c =>
+        tmp.push(Names.concept(c))
+    );
+    language.units.map(c =>
+        tmp.push(Names.classifier(c))
+    );
+    tmp.push(Names.classifier(language.modelConcept));
+    tmp = tmp.sort();
+
+    return `${tmp.map(c =>
+        `${c}`
+    ).join(", ")}`;
 }
