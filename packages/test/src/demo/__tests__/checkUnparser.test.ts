@@ -8,11 +8,10 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    PiElementReference, DemoAttributeType
+    PiElementReference
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
-import * as fs from "fs";
 import { DemoValidator } from "../validator/gen";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
@@ -137,7 +136,7 @@ describe("Testing Unparser", () => {
 
             for (const unit of testmodel.models) {
                 result = unparser.writeToString(unit, 0, false);
-                fileHandler.stringFromFile(`src/demo/__tests__/unparsed${unit.name}.txt`);
+                // fileHandler.stringToFile(`src/demo/__tests__/unparsed${unit.name}.txt`, result);
 
                 // console.log(result);
                 expect(result).toMatchSnapshot();

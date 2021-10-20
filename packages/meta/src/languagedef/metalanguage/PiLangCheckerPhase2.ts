@@ -28,8 +28,8 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             this.checkUniqueFileExtension(extensions, unit);
         });
         language.concepts.forEach(con => {
-            if (this.checkClassifierOnCircularity(names, con, foundSomeCircularity)) {
-                // we cannot use a simple assignment, because the next concept would set
+            if (this.checkClassifier(names, con, true)) {
+                // we cannot use a simple assignment, because checking the next concept would set
                 // the value of 'foundSomeCircularity' back to false;
                 foundSomeCircularity = true;
             } else {
@@ -42,7 +42,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
             }
         });
         language.interfaces.forEach(intf => {
-            if (this.checkClassifierOnCircularity(names, intf, foundSomeCircularity)) {
+            if (this.checkClassifier(names, intf, false)) {
                 foundSomeCircularity = true;
             }
         });
@@ -70,11 +70,23 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         // set the file extension, if not present
         if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) {
             // try to get a unique file extension that is as short as possible starting with a length of 3 chars
-            for (let i = 3; i < unit.name.length; i++) {
-                let potional: string = unit.name.substring(0, i).toLowerCase();
-                if (!extensions.includes(potional)) {
-                    unit.fileExtension = potional;
-                    break;
+            if (unit.name.length < 3) {
+                // for small names extend the name with a number
+                for (let i = 0; i < 9; i++) {
+                    let potional: string = unit.name.toLowerCase() + i;
+                    if (!extensions.includes(potional)) {
+                        unit.fileExtension = potional;
+                        break;
+                    }
+                }
+            } else {
+                // for larger names use a substring that makes the extension unqiue
+                for (let i = 3; i <= unit.name.length; i++) {
+                    let potional: string = unit.name.substring(0, i).toLowerCase();
+                    if (!extensions.includes(potional)) {
+                        unit.fileExtension = potional;
+                        break;
+                    }
                 }
             }
             if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length == 0) { // could not set default
@@ -94,38 +106,41 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
         }
     }
 
-    private checkClassifierOnCircularity(names: string[], con: PiClassifier, foundSomeCircularity: boolean) {
-        this.checkUniqueNameOfClassifier(names, con);
+    /**
+     *
+     * @param names: all names of classifier that are encountered so far
+     * @param classifier: the classifier to check
+     * @param strict: indicates whether properties with the same name and type are allowed
+     * @private
+     */
+    private checkClassifier(names: string[], classifier: PiClassifier, strict: boolean): boolean {
+        this.checkUniqueNameOfClassifier(names, classifier);
         // check circularity
         const circularNames: string[] = [];
-        const conceptIsCircular = this.checkCircularInheritance(circularNames, con);
-        // remember that we found circularity for one of the concepts
-        if (conceptIsCircular) {
-            foundSomeCircularity = true;
-        }
+        const isCircular = this.checkCircularInheritance(circularNames, classifier);
         // check that all properties have unique names
         // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
-        if (!conceptIsCircular) {
-            this.checkPropertyUniqueNames(con, true);
+        if (!isCircular) {
+            this.checkPropertyUniqueNames(classifier, strict);
         }
-        return foundSomeCircularity;
+        return isCircular;
     }
 
-    private checkPropertyUniqueNames(con: PiClassifier, strict: boolean) {
+    private checkPropertyUniqueNames(classifier: PiClassifier, strict: boolean) {
         const propnames: string[] = [];
         const propsDone: PiProperty[] = [];
-        con.allProperties().forEach(prop => {
+        classifier.allProperties().forEach(prop => {
             if (propnames.includes(prop.name)) {
                 if (strict) {
                     const previous = propsDone.find(prevProp => prevProp.name === prop.name);
                     this.simpleCheck(false,
-                        `Property with name '${prop.name}' already exists in ${con.name} ${this.location(previous)} and ${this.location(prop)}.`);
+                        `Property with name '${prop.name}' already exists in ${classifier.name} ${this.location(previous)} and ${this.location(prop)}.`);
                 } else {
                     // in non-strict mode properties with the same name are allowed, but only if they have the same type
                     // find the first property with this name
                     const otherProp = propsDone.find(p => p.name === prop.name);
                     this.simpleCheck(LangUtil.compareTypes(prop, otherProp),
-                        `Property with name '${prop.name}' but different type already exists in ${con.name} ${this.location(prop)} and ${this.location(otherProp)}.`);
+                        `Property with name '${prop.name}' but different type already exists in ${classifier.name} ${this.location(prop)} and ${this.location(otherProp)}.`);
                 }
             } else {
                 propnames.push(prop.name);
