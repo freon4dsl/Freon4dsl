@@ -1,6 +1,6 @@
 import { observable, makeObservable, action } from "mobx";
 import { PiElement } from "../language";
-import { Box, LabelBox, OrderedList, PiProjection } from "./internal";
+import { Box, BoxFactory, LabelBox, OrderedList, PiProjection } from "./internal";
 
 export class PiCompositeProjection implements PiProjection {
     private projections: OrderedList<PiProjection> = new OrderedList<PiProjection>();
@@ -41,10 +41,12 @@ export class PiCompositeProjection implements PiProjection {
     }
 
     projectiontoFront(name: string) {
+        BoxFactory.clearCaches();
         this.projections.toFront(name);
     }
 
     projectionToBack(name: string) {
+        BoxFactory.clearCaches();
         this.projections.toBack(name);
     }
 

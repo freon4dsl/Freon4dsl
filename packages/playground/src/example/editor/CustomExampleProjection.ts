@@ -16,7 +16,7 @@ import {
     GridBox,
     PiStyle,
     GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute } from "../language/gen/Attribute";
@@ -36,6 +36,7 @@ import {
     gridcellLast,
     gridCellOr
 } from "./styles/CustomStyles";
+import * as projectitStyles from "./styles/styles";
 import { mycell, mygrid } from "./styles/styles";
 
 const LOGGER = new PiLogger("CustumProjection");
@@ -212,7 +213,35 @@ export class CustomExampleProjection implements PiProjection {
         );
     }
 
+    private createMethods(entity: Entity): Box {
+        return BoxFactory.verticalList(
+            entity,
+            "Entity-methods-list",
+            entity.methods
+                .map(feature => {
+                    let roleName: string = "Entity-methods-" + feature.piId() + "-separator";
+                    return BoxFactory.horizontalList(entity, roleName, [
+                        this.rootProjection.getBox(feature),
+                        BoxFactory.label(entity, roleName + "label", "")
+                    ]) as Box;
+                })
+                .concat(
+                    BoxFactory.alias(entity, "Entity-methods", "<+ methods>", {
+                        //  add methods
+                        style: styleToCSS(projectitStyles.placeholdertext),
+                        propertyName: "methods"
+                    })
+                )
+        )
+    }
+
     private createEntityBox(entity: Entity): Box {
+        return BoxFactory.verticalList(entity, "entity-custom-all", [
+            this.createEntityTableForAttributes(entity),
+            this.createMethods(entity)
+        ]);
+    }
+    private createEntityTableForAttributes(entity: Entity): Box {
         let cells: GridCell[] = [];
         cells.push({
             row: 1,
