@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://travis-ci.com/projectit-org/ProjectIt)
+[![Build Status](https://app.travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://app.travis-ci.com/github/projectit-org/ProjectIt)
 
 # ProjectIt
 Projectional Editor for the Web.
@@ -32,6 +32,12 @@ You could also try and use NPM instead of yarn.
 To install lerna:
 
     yarn global add lerna
+
+Now clone projectit:
+
+    git clone git@github.com:projectit-org/ProjectIt.git
+
+and ensure you are in the `development`  branch.
 
 To setup the lerna structure:
 
