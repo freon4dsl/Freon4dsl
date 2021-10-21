@@ -37,7 +37,7 @@ To setup the lerna structure:
 
     yarn bootstrap
     
-Now you can build projectit with:
+Now you can build ProjectIt with:
 
     yarn build
 
@@ -53,7 +53,7 @@ Go to directory `packages/server` and start the server:
     cd packages/server
     yarn start
 
-Goto the playground directory `packages/playground` and start projectit:
+Goto the playground directory `packages/playground` and start ProjectIt:
 
     cd packages/playground
     yarn dev
@@ -68,12 +68,12 @@ The overall source code is organised as follows:
 * `.idea`: workspace files for the JetBrains' WebStorm that we use.
 * `.vscode`: workspace files for the Visual Studio Code IDEs that we use (we don't use this much).
 * `docs`: The generated documentation
-* `packages/core`: projectit framework source code.
-* `packages/core-svelte`: svelte implementation of projectit.
+* `packages/core`: ProjectIt framework source code.
+* `packages/core-svelte`: svelte implementation of ProjectIt.
 * `packages/docs`: the documentation source.
 * `packages/playground`: source code using the framework to implement a projectional editor for a number of languages.
-* `packages/meta`: the projectit specification dsl's source code and generators.
-* `packages/server`: server project, a bare bones server for projectit.
+* `packages/meta`: the ProjectIt specification dsl's source code and generators.
+* `packages/server`: server project, a bare bones server for ProjectIt.
 * `packages/test`: test project 
 * `scripts`: some helper scripts 
 
