@@ -25,7 +25,7 @@ provide callbacks for manipulating the state of the model based on actions in th
 
 ## Developing ProjectIt
 
-The main prerequisites are: [Node.js](https://nodejs.org/) and [yarn](https://yarnpkg.com/) and lerna.
+The main prerequisites are: [Node.js](https://nodejs.org/) and [yarn](https://yarnpkg.com/).
 We are typically using the latest versions of both, although older versions likely work just as well.
 You could also try and use NPM instead of yarn.
 
@@ -35,29 +35,45 @@ To install lerna:
 
 To setup the lerna structure:
 
-    lerna bootstrap
+    yarn bootstrap
     
 Now you can build projectit with:
 
-    lerna run build
+    yarn build
 
-To start the demo projectional editor:
+And run the tests with
 
-    lerna run start
+    yarn test
+
+To start the projectional editor for the example language in the playground package,
+do two things in separate terminals:
+
+Go to directory `packages/server` and start the server:
+
+    cd packages/server
+    yarn start
+
+Goto the playground directory `packages/playground` and start projectit:
+
+    cd packages/playground
+    yarn dev
     
-This will open a browser with the demo app on `http://localhost:3000/`.
-The demo app is work in progress.
+This will open a browser with the example app from the playground package on `http://localhost:3000/`.
+The example app is work in progress.
 
 ## Source organisation
 
+The overall source code is organised as follows: 
+
 * `.idea`: workspace files for the JetBrains' WebStorm that we use.
-* `.vscode`: workspace files for the Visual Studio Code IDEs that we use (to be done).
-* `dist`: target directory for WebPack.
-* `docs`: documentation
-* `packages/core`: framework source code.
-* `packages/demo`: source code using the framework to implement a projectional editor for the demo language.
-    The main entry point is `packages/demo/src/run.ts`.
-* `packages/meta`: experimental source code using the framework to implement a projectional editor for a meta language..
-* `packages/model`: source code for decorators that can be used to easily implement a language that can be directly used by ProjectIt.
-* `/*`: the usual suspects.
+* `.vscode`: workspace files for the Visual Studio Code IDEs that we use (we don't use this much).
+* `docs`: The generated documentation
+* `packages/core`: projectit framework source code.
+* `packages/core-svelte`: svelte implementation of projectit.
+* `packages/docs`: the documentation source.
+* `packages/playground`: source code using the framework to implement a projectional editor for a number of languages.
+* `packages/meta`: the projectit specification dsl's source code and generators.
+* `packages/server`: server project, a bare bones server for projectit.
+* `packages/test`: test project 
+* `scripts`: some helper scripts 
 
