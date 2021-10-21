@@ -58,7 +58,7 @@ Goto the playground directory `packages/playground` and start projectit:
     cd packages/playground
     yarn dev
     
-This will open a browser with the example app from the playground package on `http://localhost:3000/`.
+This will open a browser with the example app from the playground package on the URL displayed: `http://localhost:5000/`.
 The example app is work in progress.
 
 ## Source organisation
