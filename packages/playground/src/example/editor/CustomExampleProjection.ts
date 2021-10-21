@@ -71,15 +71,20 @@ export class CustomExampleProjection implements PiProjection {
         if (element instanceof NumberLiteralExpression) {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
-        if (element instanceof SumExpression) {
-            return this.createSumBox(element);
-        }
-        if (element instanceof Entity) {
-            return this.createEntityBox(element);
-        }
-        if (element instanceof OrExpression) {
-            return this.createOrBoxGrid(element);
-        }
+        // Uncomment to see a mathematical Sum symbol
+        // if (element instanceof SumExpression) {
+        //     return this.createSumBox(element);
+        // }
+
+        // Uncomment to see a simple (unfinished) table representation of entity attributes
+        // if (element instanceof Entity) {
+        //     return this.createEntityBox(element);
+        // }
+
+        // Uncomment to see an alternative OR notation (only works up to two nested ors
+        // if (element instanceof OrExpression) {
+        //     return this.createOrBoxGrid(element);
+        // }
         return null;
     }
 
