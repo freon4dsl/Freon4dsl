@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://travis-ci.org/projectit-org/ProjectIt)
+[![Build Status](https://travis-ci.com/projectit-org/ProjectIt.svg?branch=development)](https://travis-ci.com/projectit-org/ProjectIt)
 
 # ProjectIt
 Projectional Editor for the Web.
