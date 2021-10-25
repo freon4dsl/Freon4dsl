@@ -79,19 +79,27 @@ export class GenericModelSerializer {
                     // console.log("    list property of size "+ value.length);
                     // result[property.name] = [];
                     for (const item in value) {
-                        result[property.name].push(this.toTypeScriptInstance(value[item]));
+                        if (!isNullOrUndefined(value[item])) {
+                            result[property.name].push(this.toTypeScriptInstance(value[item]));
+                        }
                     }
                 } else {
-                    result[property.name] = this.toTypeScriptInstance(value);
+                    if (!isNullOrUndefined(value)) {
+                        result[property.name] = this.toTypeScriptInstance(value);
+                    }
                 }
                 break;
             case "reference":
                 if (property.isList) {
                     for (const item in value) {
-                        result[property.name].push(this.language.referenceCreator(value[item], property.type));
+                        if (!isNullOrUndefined(value[item])) {
+                            result[property.name].push(this.language.referenceCreator(value[item], property.type));
+                        }
                     }
                 } else {
-                    result[property.name] = this.language.referenceCreator(value, property.type);
+                    if (!isNullOrUndefined(value)) {
+                        result[property.name] = this.language.referenceCreator(value, property.type);
+                    }
                 }
                 break;
             default:
