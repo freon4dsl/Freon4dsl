@@ -8,6 +8,12 @@ export class ScoperUtilsTemplate {
         const allLangConcepts: string = Names.allConcepts(language);
         const concreteNamespaces: PiClassifier[] = replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
+        // also process the units that are not explicitly marked as namespace
+        language.units.forEach(unit => {
+            if (!concreteNamespaces.includes(unit)) {
+                concreteNamespaces.push(unit);
+            }
+        });
 
         // Template starts here
         return `
