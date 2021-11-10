@@ -79,6 +79,13 @@ OrExpression {
 }
 
 Entity {
+    @projection [
+        [?${self.isCompany @keyword[COMPANY]}]
+        entity ${self.name} [? base ${self.baseEntity}] {
+            ${self.attributes @vertical }
+            ${self.functions @vertical }
+        }
+    ]
     @trigger "entity"
 }
 

@@ -119,7 +119,7 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                   }
             });
         }
-        // check if found property is of type 'string'
+        // check if found property is of type 'identifier'
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
             this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.type.referred === PiPrimitiveType.identifier,

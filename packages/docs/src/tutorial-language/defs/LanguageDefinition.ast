@@ -28,10 +28,11 @@ interface Type base BaseType {
 // end::interface[]
 // tag::concept[]
 concept Entity implements Type {
+    isCompany: boolean;
     attributes: AttributeWithLimitedType[];
     entAttributes: AttributeWithEntityType[];
     functions: EntityFunction[];
-    reference baseEntity: Entity;
+    reference baseEntity?: Entity;
 }
 // end::concept[]
 // tag::limited[]
