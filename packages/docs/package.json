@@ -15,8 +15,8 @@
     "build-site": "jekyll build && bash fix-jekyll-lf.sh && cp .nojekyll ../../docs"
   },
   "dependencies": {
-    "@projectit/core": "0.1.1",
-    "@projectit/meta": "0.1.1",
+    "@projectit/core": "0.2.0",
+    "@projectit/meta": "0.2.0",
     "mobx": "6.3.3",
     "tslib": "^2.3.0"
   }
