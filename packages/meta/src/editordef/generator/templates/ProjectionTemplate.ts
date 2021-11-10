@@ -364,7 +364,7 @@ export class ProjectionTemplate {
 
     conceptReferenceProjectionInList(appliedFeature: PiConceptProperty, element: string) {
         const featureType = appliedFeature.type.name;
-        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}-index", "< select ${appliedFeature.name}>", "${featureType}",
+        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}-" + index, "< select ${appliedFeature.name}>", "${featureType}",
                     () => {
                         if (!!${element}.${appliedFeature.name}) {
                             return { id: ent.name, label: ent.name };
@@ -381,7 +381,7 @@ export class ProjectionTemplate {
     }
 
     conceptReferenceListProjection(direction: string, reference: PiConceptProperty, element: string) {
-        return `new ${direction}ListBox(
+        return `BoxFactory.${direction.toLowerCase()}List(
                     ${element},
                     "${Roles.property(reference)}",
                     ${element}.${reference.name}.map((ent, index) => {
