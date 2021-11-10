@@ -37,7 +37,7 @@ export class GenericModelSerializer {
         }
         const type: string = jsonObject["$typename"];
         if (isNullOrUndefined(type)) {
-            throw new Error(`Cannot read json: not a ProjectIt structure.`);
+            throw new Error(`Cannot read json: not a ProjectIt structure, typename missing: ${JSON.stringify(jsonObject)}`);
         }
         const result: PiElement = this.language.createConceptOrUnit(type);
         if (isNullOrUndefined(result)) {

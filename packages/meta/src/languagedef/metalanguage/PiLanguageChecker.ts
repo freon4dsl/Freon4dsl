@@ -210,6 +210,19 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                                 isUnit,
                                 `Type of property '${piProperty.name}' should be a modelunit ${this.location(piProperty.type)}.`);
                         }
+                        // TODO review the rules around 'public'
+                        // if (piProperty.isPart && piProperty.isPublic) {
+                        //     this.nestedCheck({
+                        //         check: realType.isPublic,
+                        //         error: `Property '${piProperty.name} of type ${realType.name}' is public, the concept ${realType.name} should be public as well ${this.location(piProperty)}.`,
+                        //         whenOk: () => {
+                        //             this.simpleCheck(
+                        //                 !!realType.nameProperty() && realType.nameProperty().isPublic,
+                        //                 `public Concept '${realType.name}' must have a public property 'name'`
+                        //             )
+                        //         }
+                        //     });
+                        // }
                     }
                 }
             });
@@ -224,7 +237,7 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
             }
             if (!piProperty.isPart) {
                 // it is a reference, so check whether the type has a name by which it can be referred
-                const nameProperty = realType.allPrimProperties().find(p => p.name === "name");
+                const nameProperty = realType.nameProperty();
                 this.nestedCheck({
                     check: !!nameProperty,
                     error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${this.location(piProperty.type)}.`,
