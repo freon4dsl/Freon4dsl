@@ -28,7 +28,7 @@ export class CustomExampleActions implements PiActions {
 export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {
-        trigger: /[0-9]/,
+
         activeInBoxRoles: [
             "Method-body",
             "AbsExpression-expr",
@@ -59,6 +59,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
             "EqualsExpression-left",
             "EqualsExpression-right"
         ],
+        trigger: /[0-9]/,
         expressionBuilder: (box: Box, trigger: string, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
