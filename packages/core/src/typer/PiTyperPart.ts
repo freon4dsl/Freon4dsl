@@ -5,7 +5,7 @@ import { PiElement } from "../language";
 // tag::typer-interface[]
 /**
  * This interface is being used to implement the three-tier approach.
- * Bothe the generated and custom type providers should implement this interface.
+ * Both the generated and custom type providers should implement this interface.
  * The generated class that implement the PiTyper interface connects all the classes
  * that implement this interface and returns the correct value to the (external) user.
  *
