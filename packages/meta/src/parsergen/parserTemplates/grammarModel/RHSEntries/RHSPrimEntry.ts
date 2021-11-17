@@ -1,7 +1,7 @@
 import { RHSPropEntry } from "./RHSPropEntry";
 import { PiPrimitiveProperty } from "../../../../languagedef/metalanguage";
 import { getPrimCall, makeIndent } from "../GrammarUtils";
-import { internalTransformNode} from "../../ParserGenUtil";
+import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPrimEntry extends RHSPropEntry {
     constructor(prop: PiPrimitiveProperty) {
@@ -14,7 +14,7 @@ export class RHSPrimEntry extends RHSPropEntry {
     }
 
     toMethod(propIndex: number, nodeName: string): string {
-        return `${this.property.name} = this.${internalTransformNode}(${nodeName}[${propIndex}]); // RHSPrimEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformNode}(${nodeName}[${propIndex}]); // RHSPrimEntry\n`;
     }
 
     toString(depth: number): string {

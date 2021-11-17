@@ -2,6 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { getTypeCall, makeIndent } from "../GrammarUtils";
 import { getBaseTypeAsString } from "../../../../utils";
+import { ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSLimitedRefEntry extends RHSPropEntry {
     constructor(prop: PiProperty) {
@@ -15,7 +16,7 @@ export class RHSLimitedRefEntry extends RHSPropEntry {
 
     toMethod(propIndex: number, nodeName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.piElemRef<${baseType}>(${nodeName}[${propIndex}], '${baseType}'); // RHSLimitedRefEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.piElemRef<${baseType}>(${nodeName}[${propIndex}], '${baseType}'); // RHSLimitedRefEntry\n`;
     }
 
     toString(depth: number): string {

@@ -2,7 +2,7 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { getTypeCall, makeIndent } from "../GrammarUtils";
 import { getBaseTypeAsString, Names } from "../../../../utils";
-import { internalTransformRefList} from "../../ParserGenUtil";
+import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
     constructor(prop: PiProperty, separatorText: string) {
@@ -17,7 +17,7 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
     toMethod(propIndex: number, nodeName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${this.property.name} = this.${internalTransformRefList}<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSLimitedRefListEntryWithSeparator\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformRefList}<${baseType}>(${nodeName}[${propIndex}], '${propType}', '${this.separatorText}'); // RHSLimitedRefListEntryWithSeparator\n`;
     }
 
     toString(depth: number): string {

@@ -1,6 +1,7 @@
 import { RHSPropEntry } from "./RHSPropEntry";
 import { PiPrimitiveProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
+import { ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBooleanWithKeyWord extends RHSPropEntry {
     private keyword: string = "";
@@ -20,7 +21,7 @@ export class RHSBooleanWithKeyWord extends RHSPropEntry {
     toMethod(propIndex: number, nodeName: string): string {
         return `// RHSBooleanWithKeyWord
                 if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                    ${this.property.name} = true;
+                    ${ParserGenUtil.internalName(this.property.name)} = true;
                 }`;
     }
 

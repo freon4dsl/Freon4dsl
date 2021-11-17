@@ -2,7 +2,7 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { getBaseTypeAsString } from "../../../../utils";
-import { internalTransformList} from "../../ParserGenUtil";
+import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 
 export class RHSPrimListGroup extends RHSPropPartWithSeparator {
@@ -25,7 +25,7 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
                 // get the group that represents the optional primitive
                 // because primitives are leafs in the grammar, there is no need to get the children of this group
                 const subNode = this.getGroup(${nodeName}[${propIndex}]);
-                ${this.property.name} = this.${internalTransformList}<${baseType}>(subNode, '${this.separatorText}');
+                ${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformList}<${baseType}>(subNode, '${this.separatorText}');
             }`;
     }
 

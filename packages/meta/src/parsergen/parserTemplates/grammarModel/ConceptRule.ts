@@ -44,10 +44,10 @@ export class ConceptRule extends GrammarRule {
         return `${ParserGenUtil.makeComment(this.toGrammar())}
                 private transform${this.ruleName} (branch: SPPTBranch) : ${this.ruleName} {
                     // console.log('transform${this.ruleName} called: ' + branch.name);
-                    ${myProperties.map(prop => `let ${prop.name}: ${getTypeAsString(prop)}`).join(";\n")}
+                    ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${getTypeAsString(prop)}`).join(";\n")}
                     const children = this.getChildren(branch);` +  // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children")}`).join("")}      
-                    return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
+                    return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}});
                 }`;
     }
 

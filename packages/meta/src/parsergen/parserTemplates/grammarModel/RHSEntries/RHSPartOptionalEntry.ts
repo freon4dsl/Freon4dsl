@@ -2,7 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { getTypeCall, makeIndent } from "../GrammarUtils";
 import { getBaseTypeAsString } from "../../../../utils";
-import { internalTransformNode} from "../../ParserGenUtil";
+import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPartOptionalEntry extends RHSPropEntry {
     constructor(prop: PiProperty) {
@@ -20,7 +20,7 @@ export class RHSPartOptionalEntry extends RHSPropEntry {
             if (!${nodeName}[${propIndex}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  
                 const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-                ${this.property.name} = this.${internalTransformNode}(subNode);
+                ${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformNode}(subNode);
             }`;
     }
 
