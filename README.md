@@ -14,7 +14,7 @@ You should look into the _development_ branch to see the current state of Projec
 ProjectIt is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs). 
 Additional to the core framework, there are generators for many parts of the work environment for your DSL.
 
-For more information see the <a href="www.projectit.org">ProjectIt </a> website.
+For more information see the <a href="https://www.projectit.org">ProjectIt </a> website.
 
 ## Developing ProjectIt
 
