@@ -5,11 +5,8 @@
     "bootstrap": "lerna bootstrap",
     "cleanup": "rm -rf ./node_modules",
     "start": "lerna run start --stream --parallel",
-    "start:docs": "lerna run start:docs --stream",
     "build": "lerna run build --stream",
     "build-release": "lerna run build-release --stream",
-    "build:docs": "lerna run build:docs --stream",
-    "gendoc": "bash ./packages/tools/fix-antora.sh",
     "test": "lerna run test --stream",
     "lint": "lerna run lint --stream",
     "nuke": "lerna exec \"rm -f package-lock.json npm-shrinkwrap.json\" && lerna clean --yes && lerna bootstrap && lerna exec --stream -- \"test -f package-lock.json || npm install --package-lock-only\"",
@@ -67,7 +64,6 @@
     "packages/core-svelte",
     "packages/meta",
     "packages/playground",
-    "packages/docs",
     "packages/test",
     "packages/server"
   ]
