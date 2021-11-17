@@ -1,0 +1,76 @@
+editor RulesEditor for language RulesLanguage
+
+Rules {
+    @projection default [
+        Using data from ${self.imports @separator [||||]}
+
+        ${self.Rules @vertical @separator [\n\n]}
+    ]
+}
+
+CheckingRule {
+    @projection default [
+
+        Validation ${self.name}: ${self.check}
+            description: ${self.description}
+
+    ]
+}
+
+IfThenElseRule {
+    @projection [
+        Rule ${self.name}
+            description: ${self.description}
+        ${self.IfStatement}
+
+    ]
+}
+
+IfStatement {
+    @projection [
+        if
+            ${self.Condition}
+        then
+            ${self.ThenStatements @vertical @separator [and]}
+        else
+            ${self.ElseStatements @vertical}
+    ]
+}
+
+SetValue {
+    @projection [
+        set ${self.attribute} to ${self.value}
+    ]
+}
+
+AttributeRef {
+    @projection [
+        ${self.attr}
+    ]
+    @referenceShortcut self.attr
+}
+
+DateLiteral {
+    @projection [
+        ${self.day} / ${self.month} / ${self.year}
+    ]
+}
+
+HasNoValue {
+    @projection [
+        has no value: ${self.attribute}
+    ]
+}
+
+HasAnyValue {
+    @projection [
+        has any value: ${self.attribute}
+    ]
+}
+
+CheckingRuleCall {
+    @projection [
+        check ${self.rule}
+    ]
+}
+

@@ -1,3 +1,4 @@
+import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 import { Checker } from "../../utils";
 import {
     PiConcept,
@@ -68,7 +69,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
                     const xx: PiProperty = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.nestedCheck({
-                            check: (!!xx.type.referred && xx.type.referred instanceof PiConcept),
+                            check: (!!xx.type.referred && (xx.type.referred instanceof PiConcept || xx.type.referred instanceof PiUnitDescription)),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
                                 this.simpleCheck(this.myNamespaces.includes(xx.type.referred),

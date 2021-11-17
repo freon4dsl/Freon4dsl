@@ -1,0 +1,68 @@
+{
+   "$typename": "Rules",
+   "name": "r1",
+   "Rules": [
+      {
+         "$typename": "CheckingRule",
+         "name": "r1",
+         "description": "a rule",
+         "check": {
+            "$typename": "HasNoValue",
+            "attribute": null
+         }
+      },
+      {
+         "$typename": "IfThenElseRule",
+         "name": "fefewf",
+         "description": "fewfwe",
+         "IfStatement": {
+            "$typename": "IfStatement",
+            "Condition": {
+               "$typename": "And",
+               "left": {
+                  "$typename": "HasAnyValue",
+                  "attribute": "Height"
+               },
+               "right": {
+                  "$typename": "CheckingRuleCall",
+                  "rule": "r1"
+               }
+            },
+            "ThenStatements": [
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "HasNoValue",
+                     "attribute": "Height"
+                  },
+                  "attribute": "Name"
+               }
+            ],
+            "ElseStatements": [
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "HasAnyValue",
+                     "attribute": "Age"
+                  },
+                  "attribute": "Name"
+               },
+               {
+                  "$typename": "SetValue",
+                  "value": {
+                     "$typename": "HasNoValue",
+                     "attribute": "Height"
+                  },
+                  "attribute": null
+               }
+            ]
+         }
+      }
+   ],
+   "imports": [
+      "House",
+      "Entities",
+      "AAA"
+   ],
+   "forEntity": "Building"
+}

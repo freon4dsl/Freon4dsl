@@ -1,0 +1,22 @@
+{
+   "$typename": "Data",
+   "name": "Entities",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "Patient",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "Name",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "Age",
+               "declaredType": "Boolean"
+            }
+         ]
+      }
+   ]
+}

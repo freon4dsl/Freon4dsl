@@ -274,7 +274,7 @@ export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): Pi
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
             if (data.initialValue !== null && data.initialValue !== undefined) {
-                nonFatalParseErrors.push(`A non-primitive property may not have a initial value ` +
+                nonFatalParseErrors.push(`A non-primitive property may not have an initial value ` +
                     `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
             }
             result = conceptProperty;

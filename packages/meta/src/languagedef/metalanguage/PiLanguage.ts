@@ -98,6 +98,14 @@ export abstract class PiClassifier extends PiLangElement {
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
+
+    nameProperty(): PiPrimitiveProperty {
+        return this.allPrimProperties().find(p => p.name === "name");
+    }
+
+    identifierNameProperty(): PiPrimitiveProperty {
+        return this.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+    }
 }
 
 export class PiModelDescription extends PiClassifier {
