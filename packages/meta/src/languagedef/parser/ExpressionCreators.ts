@@ -59,7 +59,7 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
 
 export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiClassifier>(data.name, "PiClassifier");
+    const result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -152,7 +152,7 @@ export function createSimpleExpression(data: Partial<PiLangSimpleExp>): PiLangSi
     const result: PiLangSimpleExp = new PiLangSimpleExp();
     // when the normal check is present, a value of 0 will not be passed to result
     // if (!!data.value) {
-        result.value = data.value;
+    result.value = data.value;
     // }
     return result;
 }

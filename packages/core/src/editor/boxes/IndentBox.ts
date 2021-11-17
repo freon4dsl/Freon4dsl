@@ -1,7 +1,7 @@
-import { observable } from "mobx";
+import { observable, makeObservable, computed } from "mobx";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
 /**
  * Box to indent another box with parameter "indent".
@@ -9,15 +9,28 @@ import { Box } from "./Box";
 export class IndentBox extends Box {
     readonly kind = "IndentBox";
 
-    @observable child: Box = null;
-    @observable indent: number = 4;
+    private $child: Box = null;
+
+    get child() {
+        return this.$child;
+    }
+
+    set child(v: Box) {
+        this.$child = v;
+        this.$child.parent = this;
+    }
+
+    indent: number = 4;
 
     constructor(exp: PiElement, role: string, indent: number, child: Box) {
         super(exp, role);
         this.indent = indent;
         this.child = child;
-        child.parent = this;
         this.selectable = false;
+        makeObservable(this, {
+            child: computed,
+            indent: observable
+        });
     }
 
     /**
@@ -41,5 +54,5 @@ export class IndentBox extends Box {
 }
 
 export function isIndentBox(b: Box): b is IndentBox {
-    return b instanceof IndentBox;
+    return b.kind === "IndentBox"; // " b instanceof IndentBox;
 }

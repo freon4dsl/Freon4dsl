@@ -6,6 +6,10 @@ export class IndexTemplate {
     generateIndex(language: PiLanguage): string {
 
         const tmp: string[] = [];
+        tmp.push(Names.classifier(language.modelConcept));
+        language.units.map(c =>
+            tmp.push(Names.classifier(c))
+        );
         language.concepts.map(c =>
             tmp.push(Names.concept(c))
         );
@@ -17,6 +21,7 @@ export class IndexTemplate {
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
         tmp.push(Names.PiElementReference);
+        tmp.push(Names.initializeLanguage);
 
         // the template starts here
         return `
@@ -34,23 +39,29 @@ export class IndexTemplate {
     }
 
     generateInternal(language: PiLanguage): string {
-        // The exports need to be sorted such that base concepts are exported before the
-        // concepts that are extending them.
-        // Function 'sortClasses' provides a sorting mechanism, but its result needs to be reversed.
+
 
         const tmp: string[] = [];
         tmp.push(Names.PiElementReference);
+        tmp.push(Names.classifier(language.modelConcept));
+        language.units.map(c =>
+            tmp.push(Names.classifier(c))
+        );
         // TODO should be sorting interfaces as well, I think
         language.interfaces.map(c =>
             tmp.push(Names.interface(c))
         );
 
+        // The exports need to be sorted such that base concepts are exported before the
+        // concepts that are extending them.
+        // Function 'sortClasses' provides a sorting mechanism, but its result needs to be reversed.
         sortClasses(language.concepts).reverse().map(c =>
             tmp.push(Names.concept(c))
         );
 
         tmp.push(Names.allConcepts(language));
         tmp.push(Names.metaType(language));
+        tmp.push(Names.language(language));
 
         // the template starts here
         return `

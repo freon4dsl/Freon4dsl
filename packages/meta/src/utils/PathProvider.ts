@@ -6,6 +6,7 @@ export const LANGUAGE_FOLDER = "language";
 export const LANGUAGE_GEN_FOLDER = "language/gen";
 export const ENVIRONMENT_FOLDER = "environment";
 export const ENVIRONMENT_GEN_FOLDER = "environment/gen";
+export const LANGUAGE_UTILS_FOLDER = "utils";
 export const LANGUAGE_UTILS_GEN_FOLDER = "utils/gen";
 export const EDITOR_FOLDER = "editor";
 export const EDITOR_GEN_FOLDER = "editor/gen";
@@ -15,12 +16,12 @@ export const VALIDATOR_FOLDER = "validator";
 export const VALIDATOR_GEN_FOLDER = "validator/gen";
 export const TYPER_FOLDER = "typer";
 export const TYPER_GEN_FOLDER = "typer/gen";
+export const STDLIB_FOLDER = "stdlib";
 export const STDLIB_GEN_FOLDER = "stdlib/gen";
+export const WRITER_FOLDER = "writer";
 export const WRITER_GEN_FOLDER = "writer/gen";
+export const READER_FOLDER = "reader";
 export const READER_GEN_FOLDER = "reader/gen";
-// export const WEBAPP_FOLDER = "../webapp";
-// export const APP_FOLDER = "../webapp/app";
-// export const ASSETS_FOLDER = "../webapp/assets";
 export const RESERVED_WORDS_ORIGIN = "../meta/src/validatordef/generator/templates"; // the folder in which the to-be-copied files can be found
 export const STYLES_ORIGIN = "../meta/src/editordef/generator/templates/styles";     // the folder in which the to-be-copied files can be found
 export const STYLES_FOLDER = EDITOR_FOLDER + "/styles";     // the folder to which the style files should be copied
@@ -66,23 +67,15 @@ export class PathProvider {
 
     // the generated classes that implement the language can be found in ...
     public static concept(concept: PiConcept): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.concept(concept);
+        return LANGUAGE_GEN_FOLDER;
     }
 
-    // public static enumeration(enumeration: PiLangEnumeration): string {
-    //     return LANGUAGE_GEN_FOLDER + "/" + Names.enumeration(enumeration);
-    // }
-    //
-    // public static union(union: PiLangUnion): string {
-    //     return LANGUAGE_GEN_FOLDER + "/" + Names.union(union);
-    // }
-
     public static languageConceptType(language: PiLanguage): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.metaType(language);
+        return LANGUAGE_GEN_FOLDER;
     }
 
     public static allConcepts(language: PiLanguage): string {
-        return LANGUAGE_GEN_FOLDER + "/" + Names.allConcepts(language);
+        return LANGUAGE_GEN_FOLDER;
     }
 
     // the generated classes that implement the editor can be found in ...
@@ -114,8 +107,7 @@ export class PathProvider {
         return EDITOR_GEN_FOLDER + "/" + Names.customProjection(language);
     }
 
-    // TODO see if we can remove this parameter
-    public static mainProjectionalEditor(language: PiLanguage): string {
+    public static mainProjectionalEditor(): string {
         return EDITOR_GEN_FOLDER + "/" + Names.mainProjectionalEditor;
     }
 

@@ -1,8 +1,8 @@
-// TODO note that the following import cannot be from "@projectit/core", because
+// Note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
-import { PiErrorSeverity } from "@projectit/core/dist/validator/PiValidator";
-// import { PiErrorSeverity } from "../../../../core/src/validator/PiValidator";
-import { ParseLocation } from "../../utils";
+// import { PiErrorSeverity } from "@projectit/core";
+import { PiErrorSeverity } from "../../utils/PiErrorSeverity";
+import { PiDefinitionElement } from "../../utils";
 import { PiLangExp, PiConcept } from "../../languagedef/metalanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -10,46 +10,39 @@ import { PiLangExp, PiConcept } from "../../languagedef/metalanguage";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 
-export class PiValidatorDef {
-    location: ParseLocation;
+export class PiValidatorDef extends PiDefinitionElement {
     validatorName: string;
     languageName: string;
     conceptRules: ConceptRuleSet[];
 }
 
-export class ConceptRuleSet {
-    location: ParseLocation;
+export class ConceptRuleSet extends PiDefinitionElement {
     conceptRef: PiElementReference<PiConcept>;
     rules: ValidationRule[];
 }
 
-export class ValidationSeverity {
-    location: ParseLocation;
-    // 'value'is the string that the language engineer has provided in the .valid file
-    // it will disregarded after checking, instead 'severity will be used
+export class ValidationSeverity extends PiDefinitionElement {
+    // 'value' is the string that the language engineer has provided in the .valid file
+    // it will disregarded after checking, instead 'severity' will be used
     value: string;
     severity: PiErrorSeverity; // is set by the checker
 }
 
-export class ValidationMessage {
-    location: ParseLocation;
+export class ValidationMessage extends PiDefinitionElement {
     content: ValidationMessagePart[] = [];
 }
 
 export type ValidationMessagePart = ValidationMessageText | ValidationMessageReference;
 
-export class ValidationMessageText {
-    location: ParseLocation;
+export class ValidationMessageText extends PiDefinitionElement {
     value: string;
 }
 
-export class ValidationMessageReference {
-    location: ParseLocation;
+export class ValidationMessageReference extends PiDefinitionElement {
     expression: PiLangExp;
 }
 
-export abstract class ValidationRule {
-    location: ParseLocation;
+export abstract class ValidationRule extends PiDefinitionElement {
     severity: ValidationSeverity;
     message: ValidationMessage;
     toPiString(): string {

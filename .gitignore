@@ -33,7 +33,7 @@ yarn-debug.log
 yarn-error.log
 
 # generated docs
-# docs/*
+docs/*
 
 # generated files
 **/gen/*
@@ -79,3 +79,28 @@ packages/test/src/*/validator/gen/*
 packages/test/src/*/stdlib/gen/*
 /packages/test/src/testDefinedScoper/defs/Language.ast
 /packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts
+/docs/
+/packages/server/modelstore-example/APEKOOL/
+/packages/server/modelstore-example/EMPTY-MODEL/
+/packages/server/modelstore-example/ExtraModel/
+/packages/server/modelstore-example/JJJ/
+/packages/server/modelstore-example/Model2/
+/packages/server/modelstore-example/Model7/
+/packages/server/modelstore-example/Model8/
+/packages/server/modelstore-example/Model9/
+/packages/server/modelstore-example/myFirstModel/
+/packages/server/modelstore-example/mySecondModel/
+/packages/server/modelstore-example/NEXT/
+/packages/server/modelstore-example/QWER/
+/packages/server/modelstore-example/www/
+/packages/test/src/parser-test/editor/
+/packages/test/src/parser-test/environment/
+/packages/test/src/parser-test/language/
+/packages/test/src/parser-test/projectit/
+/packages/test/src/parser-test/reader/
+/packages/test/src/parser-test/scoper/
+/packages/test/src/parser-test/stdlib/
+/packages/test/src/parser-test/typer/
+/packages/test/src/parser-test/utils/
+/packages/test/src/parser-test/validator/
+/packages/test/src/parser-test/writer/

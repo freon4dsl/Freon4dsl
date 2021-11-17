@@ -3,7 +3,7 @@ import {
     PiPrimitiveProperty,
     PiInterface
 } from "../../metalanguage";
-import { Names, PROJECTITCORE } from "../../../utils";
+import { Names, PROJECTITCORE, getBaseTypeAsString } from "../../../utils";
 
 export class InterfaceTemplate {
 
@@ -31,7 +31,7 @@ export class InterfaceTemplate {
         return `
             ${hasReferences ? `import { ${Names.PiElementReference} } from "./${Names.PiElementReference}";` : ``}
             import { ${Names.PiElement} } from "${PROJECTITCORE}";
-            ${imports.map(imp => `import { ${imp} } from "./${imp}";`).join("")}
+            import { ${imports.join(", ")} } from "./internal";
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
@@ -47,7 +47,7 @@ export class InterfaceTemplate {
 
     generatePrimitiveProperty(property: PiPrimitiveProperty): string {
         const comment = "// implementation of " + property.name ;
-        return `${property.name}: ${property.primType} ${property.isList ? "[]" : ""}; ${comment}`;
+        return `${property.name}: ${getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
     }
 
     generatePartProperty(property: PiConceptProperty): string {

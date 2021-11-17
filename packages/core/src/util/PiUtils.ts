@@ -1,10 +1,9 @@
-import { action } from "mobx";
-import { PiLogger } from "./PiLogging";
-import { Box } from "../editor/boxes/Box";
-import { isPiExpression } from "../language/PiModel";
-import { PiKey } from "../util/Keys";
-import { PiContainerDescriptor, PiElement, PiExpression } from "../language/PiModel";
-import { PiEditor } from "../editor/PiEditor";
+import { action, runInAction } from "mobx";
+import { PiLogger } from "./internal";
+// the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
+import { PiKey } from "./Keys";
+import { Box, PiEditor } from "../editor";
+import { PiContainerDescriptor, PiElement, PiExpression, isPiExpression } from "../language";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;
@@ -12,9 +11,19 @@ export type DynamicBoolean = BooleanCallback | boolean;
 export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
-const LOGGER = new PiLogger("PiUtils"); //.mute();
+let LATEST_ID = 0;
+
+const LOGGER = new PiLogger("PiUtils");
 
 export class PiUtils {
+
+    /**
+     *
+     */
+    static ID() {
+        LATEST_ID++;
+        return "ID-" + LATEST_ID;
+    }
     /** Initialize an object with a JSON object
      */
     static initializeObject<TTarget, TSource>(target: TTarget, source: TSource) {
@@ -34,24 +43,26 @@ export class PiUtils {
         }
     }
 
-    @action
     static setContainer(exp: PiElement, piContainer: PiContainerDescriptor | null, editor: PiEditor): void {
-        if (!!piContainer) {
-            if (piContainer.propertyIndex === undefined) {
-                piContainer.container[piContainer.propertyName] = exp;
+        runInAction(() => {
+            if (!!piContainer) {
+                if (piContainer.propertyIndex === undefined) {
+                    piContainer.container[piContainer.propertyName] = exp;
+                } else {
+                    piContainer.container[piContainer.propertyName][piContainer.propertyIndex] = exp;
+                }
             } else {
-                piContainer.container[piContainer.propertyName][piContainer.propertyIndex] = exp;
+                editor.rootElement = exp;
             }
-        } else {
-            editor.rootElement = exp;
-        }
+        });
     }
 
-    @action
     static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: PiEditor) {
-        PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a ProExpression, but it isn't");
-        PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a ProExpression, but it isn't");
-        PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
+        PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a PiExpression, but it isn't");
+        PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a PiExpression, but it isn't");
+        runInAction( () => {
+            PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
+        });
     }
 
     // TODO refactor this into an InternalBehavior class, like other behaviors.
@@ -83,13 +94,6 @@ export class PiUtils {
     }
 }
 
-export function initializeObject<TTarget, TSource>(target: TTarget, source: TSource) {
-    if (!(target && source)) {
-        return;
-    }
-    Object.keys(source).forEach(key => {
-        if (source.hasOwnProperty(key)) {
-            (target as any)[key] = (source as any)[key];
-        }
-    });
+export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
+    return obj === undefined || obj === null;
 }

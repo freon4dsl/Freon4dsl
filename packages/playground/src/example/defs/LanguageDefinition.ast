@@ -1,17 +1,18 @@
 language Example
 
 model Demo {
-    name: string;
-    models: ExModel[];
+    name: identifier;
+    units: ExampleUnit[];
 }
 
-public modelunit ExModel {
-    public name: string;
+modelunit ExampleUnit {
+    public name: identifier;
     public entities: Entity[];
     public methods: Method[];
+    file-extension = "exm";
 }
 interface BaseType {
-    public name: string;
+    public name: identifier;
 }
 interface Type base BaseType {
 }
@@ -23,7 +24,7 @@ public concept Entity implements Type {
 }
 
 public concept Method {
-    public name: string;
+    public name: identifier;
     reference declaredType : Type;
     body: ExExpression;
     parameters: Parameter[];
@@ -31,20 +32,20 @@ public concept Method {
 
 concept Attribute {
     reference declaredType: Type;
-    name: string;
+    name: identifier;
 }
 
 limited AttributeType implements Type {
-    name: string;
+    name: identifier;
     extra: number;
-    String = { name: "String", "extra": "199"}
-    Integer = { "name": "Integer", "extra": "240261"}
-    Boolean = { "name": "Boolean", "extra": "5479"}
-    ANY = { "name": "ANY", "extra": "456"}
+    String = { name: "String", "extra": 199}
+    Integer = { "name": "Integer", "extra": 240261}
+    Boolean = { "name": "Boolean", "extra": 5479}
+    ANY = { "name": "ANY", "extra": 456}
 }
 
 concept Parameter  {
-    name: string;
+    name: identifier;
     reference declaredType: Type;
 }
 
@@ -63,11 +64,11 @@ expression StringLiteralExpression base LiteralExpression {
 }
 
 expression NumberLiteralExpression base LiteralExpression   {
-    value: string; // TODO should be changed to type number
+    value: number;
 }
 
 expression BooleanLiteralExpression base LiteralExpression {
-    value: string; // TODO should be changed to type boolean
+    value: boolean;
 }
 
 expression AbsExpression base ExExpression {
@@ -87,7 +88,11 @@ expression ParameterRef base ExExpression {
 }
 
 concept LoopVariable {
-    name: string;
+    name: identifier;
+}
+
+expression GroupedExpression base ExExpression {
+    inner: ExExpression;
 }
 
 expression LoopVariableRef base ExExpression {

@@ -1,29 +1,24 @@
 import { PiElementReference } from "./internal";
-import { ParseLocation } from "../../utils";
+import { PiDefinitionElement } from "../../utils/PiDefinitionElement";
 
-const primitiveTypeName = "PiPrimitiveType";
-export type PiPrimitiveType = string | boolean | number;
-
-// root of the inheritance structure of all language elements
-export abstract class PiLangElement {
-    location: ParseLocation;
+// root of the inheritance structure of all elements in a language definition
+export abstract class PiLangElement extends PiDefinitionElement {
     name: string;
 }
 
 export class PiLanguage extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
-    // predefInstances: PiInstance[] = [];
-    modelConcept: PiConcept; // set by the checker
+    modelConcept: PiModelDescription;
+    units: PiUnitDescription[] = [];
 
     constructor() {
         super();
-        // this.addPredefinedElements();
     }
 
-    get units(): PiConcept[] {
-        return this.concepts.filter(con => con.isUnit === true);
-    }
+    // get units(): PiConcept[] {
+    //     return this.concepts.filter(con => con.isUnit === true);
+    // }
 
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
@@ -44,39 +39,32 @@ export class PiLanguage extends PiLangElement {
         if (result === undefined) {
             result = this.findInterface(name);
         }
+        if (result === undefined) {
+            result = this.findUnitDescription(name);
+        }
+        // if (result === undefined) {
+        //     result = this.findBasicType(name);
+        // }
         return result;
     }
 
     findExpressionBase(): PiExpressionConcept {
+        // TODO why the return inside the find???
+        // TODO rethink the inheritance structure of expressions: should binaries always inherit from expression, and more questions!
+        // TODO the following depends on the order of concepts in the .ast file
         const result = this.concepts.find(c => {
             return c instanceof PiExpressionConcept && (!!c.base ? !(c.base.referred instanceof PiExpressionConcept) : true);
         });
         return result as PiExpressionConcept;
     }
 
-    // private addPredefinedElements() {
-    //     // make the primitive types
-    //     const primitiveTypeConcept = new PiLimitedConcept();
-    //     primitiveTypeConcept.name = "PiPrimitiveType";
-    //     primitiveTypeConcept.language = this;
-    //     this.concepts.push(primitiveTypeConcept);
-    //     const STRING = new PiInstance();
-    //     STRING.name = "string";
-    //     STRING.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
-    //     STRING.concept.owner = STRING;
-    //     this.predefInstances.push(STRING);
-    //     const NUMBER = new PiInstance();
-    //     NUMBER.name = "number";
-    //     NUMBER.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
-    //     NUMBER.concept.owner = NUMBER;
-    //     this.predefInstances.push(NUMBER);
-    //     const BOOLEAN = new PiInstance();
-    //     BOOLEAN.name = "boolean";
-    //     BOOLEAN.concept = PiElementReference.create<PiConcept>(primitiveTypeConcept, "PiConcept");
-    //     BOOLEAN.concept.owner = BOOLEAN;
-    //     this.predefInstances.push(BOOLEAN);
-    //     // TODO make the predefined functions
-    // }
+    findBasicType(name:string): PiClassifier {
+        return PiPrimitiveType.find(name);
+    }
+
+    findUnitDescription(name: string): PiUnitDescription {
+        return this.units.find(u => u.name === name);
+    }
 }
 
 export abstract class PiClassifier extends PiLangElement {
@@ -86,24 +74,11 @@ export abstract class PiClassifier extends PiLangElement {
     primProperties: PiPrimitiveProperty[] = [];
 
     parts(): PiConceptProperty[] {
-        // return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart);
-        const result: PiConceptProperty[] = [];
-        for (const prop of this.properties) {
-            if (prop instanceof PiConceptProperty && prop.isPart) {
-                result.push(prop);
-            }
-        }
-        return result;
+        return this.properties.filter(p => p instanceof PiConceptProperty && p.isPart) as PiConceptProperty[];
     }
 
     references(): PiConceptProperty[] {
-        const result: PiConceptProperty[] = [];
-        for (const prop of this.properties) {
-            if (prop instanceof PiConceptProperty && !prop.isPart) {
-                result.push(prop);
-            }
-        }
-        return result;
+        return this.properties.filter(p => p instanceof PiConceptProperty && !p.isPart) as PiConceptProperty[];
     }
 
     allPrimProperties(): PiPrimitiveProperty[] {
@@ -123,6 +98,30 @@ export abstract class PiClassifier extends PiLangElement {
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
+
+    nameProperty(): PiPrimitiveProperty {
+        return this.allPrimProperties().find(p => p.name === "name");
+    }
+
+    identifierNameProperty(): PiPrimitiveProperty {
+        return this.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+    }
+}
+
+export class PiModelDescription extends PiClassifier {
+    unitTypes(): PiUnitDescription[] {
+        let result: PiUnitDescription[] = [];
+        // all parts of a model are units
+        for (const intf of this.parts()) {
+            result = result.concat(intf.type.referred as PiUnitDescription);
+        }
+        return result;
+    }
+}
+
+export class PiUnitDescription extends PiClassifier {
+    fileExtension: string = "";
+    isPublic = true;
 }
 
 export class PiInterface extends PiClassifier {
@@ -190,12 +189,8 @@ export class PiInterface extends PiClassifier {
 
 export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
-    isModel: boolean = false;
-    isUnit: boolean = false;
     base: PiElementReference<PiConcept>;
     interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
-    // TODO the following should be moved to the editor generator
-    triggerIsRegExp: boolean;
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.implementedPrimProperties();
@@ -357,7 +352,7 @@ export class PiBinaryExpressionConcept extends PiExpressionConcept {
 export class PiLimitedConcept extends PiConcept {
     instances: PiInstance[] = [];
 
-    findInstance(name: string) : PiInstance {
+    findInstance(name: string): PiInstance {
         return this.instances.find(inst => inst.name === name);
     }
 }
@@ -381,16 +376,14 @@ export class PiConceptProperty extends PiProperty {
 
 export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
-    initialValue: string;
-	// TODO use PiPrimitiveType instead of 'string'
-    primType: string;
+    // only one of 'initialValue' and 'initialValueList' may have a value
+    initialValue: PiPrimitiveValue;
+    initialValueList: PiPrimitiveValue[];
+    // primType: string;
     // The inherited 'type' cannot be used, because 'this' has a primitive type,
     // which is not a subtype of PiElementReference<PiConcept>
     // Therefore, here we have:
-    // TODO dit moet beter worden!!!
-    get type(): PiElementReference<PiConcept> {
-        return PiElementReference.createNamed<PiConcept>(primitiveTypeName, "PiConcept");
-    }
+    // type: PiElementReference<PiConcept> = PiElementReference.createNamed<PiConcept>(primitiveValueName, "PiConcept");
 
     get isPrimitive(): boolean {
         return true;
@@ -405,8 +398,8 @@ export class PiInstance extends PiLangElement {
 export class PiPropertyInstance extends PiLangElement {
     owningInstance: PiElementReference<PiInstance>;
     property: PiElementReference<PiProperty>;
-    value: PiPrimitiveType;
-    valueList: PiPrimitiveType[];
+    value: PiPrimitiveValue;
+    valueList: PiPrimitiveValue[];
 }
 
 // the following two classes are only used in the typer and validator definitions
@@ -418,6 +411,41 @@ export class PiFunction extends PiLangElement {
 
 export class PiParameter extends PiLangElement {
     type: PiElementReference<PiConcept>;
+}
+
+// the basic types in the pi-languages
+export type PiPrimitiveValue = string | boolean | number ;
+
+export class PiPrimitiveType extends PiConcept {
+    /**
+     * A convenience method that creates an instance of this class
+     * based on the properties defined in 'data'.
+     * @param data
+     */
+    static create(data: Partial<PiPrimitiveType>): PiPrimitiveType {
+        const result = new PiPrimitiveType();
+        if (!!data.name) {
+            result.name = data.name;
+        }
+        return result;
+    }
+
+    static string: PiPrimitiveType = PiPrimitiveType.create({name: "string"});
+    static number: PiPrimitiveType = PiPrimitiveType.create({name: "number"});
+    static boolean: PiPrimitiveType = PiPrimitiveType.create({name: "boolean"});
+    static identifier: PiPrimitiveType = PiPrimitiveType.create({name: "identifier"});
+    static $piANY: PiPrimitiveType; // default predefined instance
+
+    static find(name: string) {
+        switch (name) {
+            case "string" : return this.string;
+            case "boolean" : return this.boolean;
+            case "identifier" : return this.identifier;
+            case "number" : return this.number;
+        }
+        // TODO see whether we need to return null?
+        return this.$piANY;
+    }
 }
 
 export function isBinaryExpression(elem: PiLangElement): elem is PiBinaryExpressionConcept {

@@ -1,4 +1,3 @@
-import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { PiLanguage } from "../languagedef/metalanguage";
 import { PiEditUnit } from "../editordef/metalanguage";
 import { PiEditParser } from "../editordef/parser/PiEditParser";
@@ -13,11 +12,10 @@ import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { GenerationStatus, Helpers } from "../utils/Helpers";
 import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
-import { ReaderWriterGenerator } from "../editordef/generator/ReaderWriterGenerator";
+import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 
 import { MetaLogger } from "../utils/MetaLogger";
 
@@ -29,24 +27,17 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
-    protected scoperGenerator: ScoperGenerator; // constructor needs language
-    protected validatorGenerator: ValidatorGenerator; // constructor needs language
-    protected typerGenerator: PiTyperGenerator; // constructor needs language
+    protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
+    protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
+    protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
     protected language: PiLanguage;
-
-    private defFolder: CommandLineStringParameter;
-    private languageFiles: string[] = [];
-    private editFiles: string[] = [];
-    private validFiles: string[] = [];
-    private scopeFiles: string[] = [];
-    private typerFiles: string[] = [];
 
     public constructor() {
         super({
             actionName: "all",
             summary: "Generates the TypeScript code for all parts of the work environment for your language",
             documentation:
-                "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, and the " +
+                "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
                 "validator for language as defined in files in DEFINITIONS_DIR."
         });
     }
@@ -55,6 +46,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         LOGGER.info(this, "Starting generation of all parts of your language as defined in " + this.defFolder.value);
         // LOGGER.log("Output will be generated in: " + this.outputFolder);
 
+        // this try-catch is here for debugging purposes, should be removed from release
         try {
             this.findDefinitionFiles();
             this.addWatchers();
@@ -72,8 +64,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             if (this.watch) {
                 LOGGER.info(this, "Watching language definition files ...");
             }
+        // this try-catch is here for debugging purposes, should be removed from release
         } catch (e) {
-            // TODO this catch is here for debugging purposes, should be removed
             LOGGER.error(this, e.stack);
         }
     }
@@ -107,7 +99,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } else {
                 LOGGER.log("Generating default typer");
             }
-            this.typerGenerator = new PiTyperGenerator(this.language);
+            this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
@@ -125,7 +117,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } else {
                 LOGGER.log("Generating default scoper");
             }
-            this.scoperGenerator = new ScoperGenerator(this.language);
+            this.scoperGenerator.language = this.language;
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e) {
@@ -143,7 +135,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } else {
                 LOGGER.log("Generating default validator");
             }
-            this.validatorGenerator = new ValidatorGenerator(this.language);
+            this.validatorGenerator.language = this.language;
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {
@@ -153,7 +145,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     };
 
     private generateEditorAndParser = () => {
-        LOGGER.info(this, "Generating editor");
+        LOGGER.info(this, "Generating editor, reader and writer");
         let editor: PiEditUnit = null;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
@@ -172,7 +164,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.parserGenerator.generate(editor);
         } catch (e) {
             // LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping editor, reader and writer generation because of errors: " + e.message);
         }
         return editor;
     };
@@ -185,38 +177,4 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         this.languageGenerator.generate(this.language);
     };
 
-    private findDefinitionFiles() {
-        if (!this.defFolder.value) {
-            throw new Error("No definitions folder, exiting.");
-        }
-        const generationStatus = new GenerationStatus();
-        const myFileSet: string[] = Helpers.findFiles(this.defFolder.value, generationStatus);
-        if (myFileSet.length === 0) {
-            throw new Error("No files found in '" + this.defFolder.value + "', exiting.");
-        }
-        for (const filename of myFileSet) {
-            if (/\.ast$/.test(filename)) {
-                this.languageFiles.push(filename);
-            } else if (/\.edit$/.test(filename)) {
-                this.editFiles.push(filename);
-            } else if (/\.valid$/.test(filename)) {
-                this.validFiles.push(filename);
-            } else if (/\.scope$/.test(filename)) {
-                this.scopeFiles.push(filename);
-            } else if (/\.type$/.test(filename)) {
-                this.typerFiles.push(filename);
-            }
-        }
-    }
-
-    protected onDefineParameters(): void {
-        super.onDefineParameters();
-        this.defFolder = this.defineStringParameter({
-            argumentName: "DEFINITIONS_DIR",
-            defaultValue: "defs",
-            parameterLongName: "--definitions",
-            parameterShortName: "-d",
-            description: "Folder where your language definition files can be found"
-        });
-    }
 }

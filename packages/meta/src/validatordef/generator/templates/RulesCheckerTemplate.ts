@@ -1,13 +1,14 @@
-// TODO note that the following import cannot be from "@projectit/core", because
+// Note that the following import cannot be from "@projectit/core", because
 // this leads to a load error
-import { PiErrorSeverity } from "@projectit/core/dist/validator/PiValidator";
+// import { PiErrorSeverity } from "@projectit/core";
 import {
     ENVIRONMENT_GEN_FOLDER,
     langExpToTypeScript,
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
-    PROJECTITCORE
+    PiErrorSeverity,
+    PROJECTITCORE, getBaseTypeAsString
 } from "../../../utils";
 import { PiConcept, PiLanguage, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
 import {
@@ -41,13 +42,14 @@ export class RulesCheckerTemplate {
                                 * Found errors are pushed onto 'errorlist'.
                                 * @param modelelement
                                 */`;
+        // the template starts here
         return `
-        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName} } from "${PROJECTITCORE}";
+        import { ${errorClassName}, PiErrorSeverity, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.PiNamedElement} } from "${PROJECTITCORE}";
         import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }"; 
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";   
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
-        import { reservedWordsInTypescript } from "./ReservedWords";  
+        import { reservedWordsInTypescript } from "./ReservedWords";         
 
         /**
          * Class ${checkerClassName} is the part of validator that is generated from, if present, 
@@ -94,16 +96,18 @@ export class RulesCheckerTemplate {
         `;
 
         this.done = [];
-        // the template starts here
+
     }
 
     private createImports(language: PiLanguage): string {
-        let result: string = language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts ? `,` : ``);
-        result = result.concat(
-            language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`).join(", "));
+        let result: string =
+            `${language.concepts?.map(concept => `
+                ${Names.concept(concept)}`).concat(
+                    language.interfaces?.map(intf => `
+                ${Names.interface(intf)}`).concat(
+                        language.units?.map(intf => `
+                ${Names.classifier(intf)}`).join(", ")))
+            }`;
         return result;
     }
 
@@ -142,7 +146,7 @@ export class RulesCheckerTemplate {
 
     private makeSeverity(r: ValidationRule): string {
         // this method makes sure that we do not depend on the name of the severity to be the same as its value
-        // i.e. PiErrorSeverity.ToDo = "TODO",
+        // e.g. PiErrorSeverity.NONE = "none",
         let result: string = `PiErrorSeverity.`
         switch (r.severity.severity) {
             case PiErrorSeverity.Error: {
@@ -201,8 +205,8 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '" + this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) + 
-                         "' does not conform to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type " + this.myWriter.writeNameOnly(this.typer.inferType(${langExpToTypeScript(r.type1)})) + " of [" + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) + 
+                         "] does not conform to " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
         }
         return `if (!this.typer.conformsTo(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
@@ -212,8 +216,8 @@ export class RulesCheckerTemplate {
 
     private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, message?: string) {
         if (message.length === 0) {
-            message = `"Type of '"+ this.myWriter.writeToString(${langExpToTypeScript(r.type1)}, 0, true) 
-                        + "' should be equal to (the type of) '" + this.myWriter.writeToString(${langExpToTypeScript(r.type2)}, 0, true) + "'"`;
+            message = `"Type of ["+ this.myWriter.writeNameOnly(${langExpToTypeScript(r.type1)}) 
+                        + "] should equal " + this.myWriter.writeNameOnly(${langExpToTypeScript(r.type2)})`;
         }
         return `if (!this.typer.equalsType(${langExpToTypeScript(r.type1)}, ${langExpToTypeScript(r.type2)})) {
                     this.errorList.push(new PiError(${message}, ${langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
@@ -226,10 +230,7 @@ export class RulesCheckerTemplate {
         const listName = rule.list.appliedfeature.toPiString();
         const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
         const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = (referredListproperty instanceof PiPrimitiveProperty) ?
-                referredListproperty.primType
-            :
-                referredListproperty.type.referred.name;
+        const listpropertyTypeName = getBaseTypeAsString(referredListproperty);
         const listpropertyTypescript = langExpToTypeScript(rule.listproperty.appliedfeature);
         if (message.length === 0) {
             message = `"The value of property '${listpropertyName}' is not unique in list '${listName}'"`;

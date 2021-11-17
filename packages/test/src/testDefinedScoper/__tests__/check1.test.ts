@@ -1,5 +1,5 @@
 import { DSmodel } from "../language/gen";
-import { ModelCreator } from "./ModelCreator";
+import { SimpleModelCreator } from "./ModelCreator";
 import { ScoperTestEnvironment } from "../environment/gen/ScoperTestEnvironment";
 
 function print(prefix: string, visibleNames: string[]) {
@@ -10,7 +10,7 @@ function print(prefix: string, visibleNames: string[]) {
     console.log(prefix + ": " + printable);
 }
 
-function printDifference(creator: ModelCreator, visibleNames: string[]) {
+function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
     const diff: string[] = [];
     for (const yy of creator.allNames) {
         if (!visibleNames.includes(yy)) {
@@ -23,7 +23,7 @@ function printDifference(creator: ModelCreator, visibleNames: string[]) {
 }
 
 describe("Testing Defined Scoper, where unit is namespace", () => {
-    const creator = new ModelCreator();
+    const creator = new SimpleModelCreator();
     const environment = ScoperTestEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
     const scoper = environment.scoper;
 

@@ -5,11 +5,9 @@ import {
     PiCustomBehavior,
     PiExpressionCreator,
     PiActions,
-    EXPRESSION_PLACEHOLDER,
-    Box, PiTriggerType, PiEditor, AliasBox, isAliasBox, isOptionalBox, PiElement
+    Box, PiTriggerType, PiEditor, AliasBox, PiCaret, PiElement, OptionalBox
 } from "@projectit/core";
-import { PiCaret } from "@projectit/core";
-import { AppliedFeature, AttributeRef, NumberLiteralExpression, ParameterRef } from "../language/gen";
+import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
 
 /**
  * Class CustomExampleActions provides an entry point for the language engineer to
@@ -20,24 +18,52 @@ import { AppliedFeature, AttributeRef, NumberLiteralExpression, ParameterRef } f
  * (2) if a creator/behavior based on the editor definition is present, this is used,
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
-
 export class CustomExampleActions implements PiActions {
     binaryExpressionCreators: PiBinaryExpressionCreator[] = MANUAL_BINARY_EXPRESSION_CREATORS;
     customBehaviors: PiCustomBehavior[] = MANUAL_CUSTOM_BEHAVIORS;
     expressionCreators: PiExpressionCreator[] = MANUAL_EXPRESSION_CREATORS;
     keyboardActions: KeyboardShortcutBehavior[] = MANUAL_KEYBOARD;
-
 }
+
 export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
     // Add your own custom expression creators here
     {
+
+        activeInBoxRoles: [
+            "Method-body",
+            "AbsExpression-expr",
+            "SumExpression-from",
+            "SumExpression-to",
+            "SumExpression-body",
+            "IfExpression-condition",
+            "IfExpression-whenTrue",
+            "IfExpression-whenFalse",
+            "PiBinaryExpression-left",
+            "PiBinaryExpression-right",
+            "MultiplyExpression-left",
+            "MultiplyExpression-right",
+            "PlusExpression-left",
+            "PlusExpression-right",
+            "DivideExpression-left",
+            "DivideExpression-right",
+            "AndExpression-left",
+            "AndExpression-right",
+            "OrExpression-left",
+            "OrExpression-right",
+            "ComparisonExpression-left",
+            "ComparisonExpression-right",
+            "LessThenExpression-left",
+            "LessThenExpression-right",
+            "GreaterThenExpression-left",
+            "GreaterThenExpression-right",
+            "EqualsExpression-left",
+            "EqualsExpression-right"
+        ],
         trigger: /[0-9]/,
-        activeInBoxRoles: ["PiBinaryExpression-right", "PiBinaryExpression-left", "Method-body", "OrExpression-left", "OrExpression-right",
-        "IfExpression-condition", "IfExpression-whenTrue", "IfExpression-whenFalse", "SumExpression-from", "SumExpression-to", "SumExpression-body", "AbsExpression-expr"],
-        expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor) => {
+        expressionBuilder: (box: Box, trigger: string, editor: PiEditor) => {
             const parent = box.element;
             const x = new NumberLiteralExpression();
-            x.value = trigger.toString();
+            x.value = Number.parseInt(trigger.toString());
             parent[(box as AliasBox).propertyName] = x;
             return x;
         },
@@ -52,32 +78,6 @@ export const MANUAL_BINARY_EXPRESSION_CREATORS: PiBinaryExpressionCreator[] = [
 
 export const MANUAL_CUSTOM_BEHAVIORS: PiCustomBehavior[] = [
     // Add your own custom behavior here
-    {
-        activeInBoxRoles: ["optional-baseEntity"],
-        action: (box, trigger, editor): PiElement => {
-            if( isAliasBox(box)){
-                const parent = box.parent;
-                if( isOptionalBox(parent)) {
-                    parent.mustShow = true;
-                }
-            }
-            return null;
-        },
-        trigger: "add-base"
-    },
-    {
-        trigger: ".",
-        activeInBoxRoles: ["ExExpression-appliedfeature"],
-        action: (box, trigger, editor): PiElement => {
-            let elem = box.element;
-            if( elem instanceof ParameterRef) {
-                const applied = new AttributeRef();
-                elem.appliedfeature = applied;
-                return applied;
-            }
-            return null;
-        }
-    }
 ];
 
 export const MANUAL_KEYBOARD: KeyboardShortcutBehavior[] = [

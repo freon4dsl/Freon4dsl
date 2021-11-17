@@ -1,0 +1,14 @@
+unit Simple2 {
+    entity ent1 base SomeOther {
+	/*
+        myTextAttribute : String
+        method meth56 ( ): Integer { 
+            sum from xx = 0 to 999 of par7 . attr2
+        } */
+    }
+
+    entity SomeOther base ent1{}
+
+unit level methods:
+
+}

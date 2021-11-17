@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class ReferenceCheckerTemplate {
@@ -19,9 +19,10 @@ export class ReferenceCheckerTemplate {
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template
         // is returned
         this.imports = [];
-        const allMethods = `${language.concepts.map(concept =>
-            `${this.createChecksOnNonOptionalParts(concept, environmentName)}`
-        ).join("\n\n")}`;
+        const allClassifiers: PiClassifier[] = [];
+        allClassifiers.push(...language.units);
+        allClassifiers.push(...language.concepts);
+        const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
 
         // the template starts here
         return `
@@ -47,12 +48,13 @@ export class ReferenceCheckerTemplate {
             ${allMethods}           
             
             private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.PiElementReference}<${Names.PiNamedElement}>, propertyName: string, locationDescription: string) {
+                // TODO adjust this to pathnames in PiElementReference
                 const scoper = ${environmentName}.getInstance().scoper;
                 const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
                         new PiError(                                       
-                            \`Reference '\${referredElem.name}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
+                            \`Reference '\${referredElem.pathnameToString("/")}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.piLanguageConcept()}\`).join(", ")}]\`,
                                 modelelement,
                                 \`\${propertyName} of \${locationDescription}\`,
                             PiErrorSeverity.Error
@@ -60,14 +62,14 @@ export class ReferenceCheckerTemplate {
                     );
                 } else {
                     this.errorList.push(
-                        new PiError(\`Cannot find reference '\${referredElem.name}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, PiErrorSeverity.Error)
+                        new PiError(\`Cannot find reference '\${referredElem.pathnameToString("/")}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, PiErrorSeverity.Error)
                     );
                 }
             }
         }`;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiConcept, environmentName: string): string {
+    private createChecksOnNonOptionalParts(concept: PiClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
         concept.allProperties().forEach(prop => {
@@ -75,13 +77,13 @@ export class ReferenceCheckerTemplate {
                 if (prop.isList) {
                     result += `for (const referredElem of modelelement.${prop.name} ) {
                         if (referredElem.referred === null) {
-                            this.makeErrorMessage(modelelement, referredElem, "${prop.name}", "${locationdescription}");
+                            this.makeErrorMessage(modelelement, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
                             hasFatalError = true;
                         }
                     }`;
                 } else {
                     result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) {
-                            this.makeErrorMessage(modelelement, modelelement.${prop.name}, "${prop.name}", "${locationdescription}");
+                            this.makeErrorMessage(modelelement, modelelement.${prop.name}, "${prop.name}", \`\${${locationdescription}}\`);
                             hasFatalError = true;
                     }`;
                 }
@@ -89,7 +91,7 @@ export class ReferenceCheckerTemplate {
         });
 
         if (result.length > 0) {
-            this.imports.push(Names.concept(concept));
+            this.imports.push(Names.classifier(concept));
             return `
             /**
              * Checks 'modelelement' before checking its children.
@@ -99,7 +101,7 @@ export class ReferenceCheckerTemplate {
              *
              * @param modelelement
              */
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+            public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
                 let hasFatalError: boolean = false;
                 ${result}
                 return hasFatalError;

@@ -5,15 +5,19 @@
 type MessageFunction = () => string;
 type LogMessage = string | MessageFunction;
 
-// TODO Refactor to combine with PiLogger from core
 export class MetaLogger {
     private static muteAll: boolean = false;
+    private static muteErrors: boolean = false;
     private static FgRed = "\x1b[31m";
     private static FgBlack = "\x1b[30m";
     private static FgBlue = "\x1b[34m";
 
     static muteAllLogs() {
         MetaLogger.muteAll = true;
+    }
+
+    static muteAllErrors() {
+        MetaLogger.muteErrors = true;
     }
 
     static unmuteAllLogs() {
@@ -48,7 +52,9 @@ export class MetaLogger {
 
     error(o: any, msg: LogMessage) {
         const type = o ? Object.getPrototypeOf(o).constructor.name : "-";
-        console.log(MetaLogger.FgRed, "ERROR: " + type + ": " + this.message(msg));
+        if (!MetaLogger.muteErrors) {
+            console.log(MetaLogger.FgRed, "ERROR: " + type + ": " + this.message(msg));
+        }
     }
 
     mute(): MetaLogger {

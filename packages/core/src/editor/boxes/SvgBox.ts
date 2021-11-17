@@ -1,19 +1,28 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
-import { PiUtils } from "../../util/PiUtils";
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
+import { PiUtils } from "../../util";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
 export class SvgBox extends Box {
     readonly kind = "SvgBox";
 
-    @observable public svg: JSX.Element;
-    @observable width: number = 20;
-    @observable height: number = 20;
+    svgPath: string = "";
+    width: number = 20;
+    height: number = 20;
 
-    constructor(element: PiElement, role: string, svg: JSX.Element, initializer?: Partial<SvgBox>) {
+    constructor(element: PiElement, role: string, svgPath: string, initializer?: Partial<SvgBox>) {
         super(element, role);
+        makeObservable(this, {
+            svgPath: observable,
+            width: observable,
+            height: observable
+        });
         PiUtils.initializeObject(this, initializer);
-        this.svg = svg;
+        this.svgPath = svgPath;
     }
+}
+
+export function isSvgBox(box: Box): box is SvgBox {
+    return box.kind === "SvgBox";
 }

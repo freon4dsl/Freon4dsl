@@ -1,0 +1,160 @@
+editor User for language Example
+
+Attribute {
+    @projection Attribute [
+        ${self.name} : ${self.declaredType}
+    ]
+}
+
+Entity {
+    @projection [
+        Entity ${self.name} [? base ${self.baseEntity}] {
+            ${self.attributes @vertical @separator [\n]}
+            ${self.methods @vertical @separator [\n]}
+        }
+    ]
+    // TODO when property 'name' is projected twice in this rule pegjs has error:
+//        Entity ${self.name} [? base ${self.baseEntity}] {
+//                ${self.attributes @vertical @separator [\n]}
+//                ${self.methods @vertical @separator [\n]}
+//            } ${self.name}
+//        ]
+    @trigger "entity"
+}
+
+ExModel {
+    @projection Model
+        [
+        ${self.name}
+            ${self.entities
+                @vertical
+                @terminator [\n]
+            }
+            ${self.methods @vertical @separator [\n] }
+
+        ]
+}
+
+Method {
+    @projection [
+        ${self.name} ( ${self.parameters @separator[,] } ): ${self.declaredType} {
+            ${self.body}
+        }
+    ]
+}
+
+Parameter {
+    @projection attribuut [
+        ${self.name} : ${self.declaredType}
+    ]
+}
+
+MethodCallExpression {
+    @projection MethodCallExpression
+        [
+        ${self.methodDefinition} ( ${self.args @separator[,] } )
+        ]
+    @trigger "method"
+}
+
+SumExpression {
+    @projection [
+        sum from ${self.variable} = ${self.from} to ${self.to} of ${self.body}
+    ]
+    @trigger "sum"
+}
+
+LoopVariableRef {
+    @projection [ ${self.variable} ]
+}
+
+LoopVariable {
+    @projection [ ${self.name} ]
+    @trigger    "var"
+}
+
+
+NumberLiteralExpression {
+    @projection normal
+        [${self.value}]
+}
+
+StringLiteralExpression {
+    @projection StringLiteralExpression
+        [
+        '${self.value}'
+        ]
+    @trigger "'"
+}
+
+PlusExpression {
+    @symbol "+"
+}
+
+MultiplyExpression {
+    @symbol "*"
+}
+
+DivideExpression {
+    @symbol "/"
+}
+
+LessThenExpression {
+    @symbol "<"
+}
+
+OrExpression {
+    @symbol "or"
+}
+AndExpression {
+    @symbol "and"
+}
+GreaterThenExpression {
+    @symbol ">"
+}
+EqualsExpression {
+    @symbol "=="
+}
+
+BooleanLiteralExpression {
+    @projection [ ${self.value} ]
+    @trigger "boolean"
+}
+
+
+AttributeRef {
+    @projection [ ${self.attribute} ]
+    @trigger "attribute"
+}
+
+ParameterRef {
+    @projection [ ${self.parameter} [?. ${self.appliedfeature}] ]
+}
+
+//IfExpression {
+//    @projection IfExpression
+//        [
+//        if (${self.condition}) then
+//            ${self.whenTrue}
+//        else
+//            ${self.whenFalse}
+//        endif
+//        ]
+//    @trigger "if"
+//}
+
+AbsExpression {
+    @projection default [
+        | ${self.expr} |
+    ]
+}
+
+// TODO: when the () brackets are removed pegjs cannot proceed:
+// 'Possible infinite loop when parsing (left recursion: ExExpression -> IfExpression -> ExExpression)'
+IfExpression {
+    @projection IfExpression
+        [
+        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse})
+        ]
+    @trigger "if"
+}

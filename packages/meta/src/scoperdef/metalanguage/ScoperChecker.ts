@@ -1,3 +1,4 @@
+import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 import { Checker } from "../../utils";
 import {
     PiConcept,
@@ -7,7 +8,7 @@ import {
     PiClassifier
 } from "../../languagedef/metalanguage";
 import { PiAlternativeScope, PiNamespaceAddition, PiScopeDef } from "./PiScopeDefLang";
-import { findAllImplementorsAndSubs } from "../../utils";
+import { LangUtil } from "../../utils";
 import { MetaLogger } from "../../utils/MetaLogger";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -68,7 +69,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
                     const xx: PiProperty = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.nestedCheck({
-                            check: (!!xx.type.referred && xx.type.referred instanceof PiConcept),
+                            check: (!!xx.type.referred && (xx.type.referred instanceof PiConcept || xx.type.referred instanceof PiUnitDescription)),
                             error: `A namespace addition should refer to a concept [line: ${exp.location?.start.line}, column: ${exp.location?.start.column}].`,
                             whenOk: () => {
                                 this.simpleCheck(this.myNamespaces.includes(xx.type.referred),
@@ -92,7 +93,7 @@ export class ScoperChecker extends Checker<PiScopeDef> {
             this.myExpressionChecker.checkClassifierReference(ref);
             const myClassifier = ref.referred;
             if (!!myClassifier) { // error message handled by checkClassifierReference()
-                result = result.concat(findAllImplementorsAndSubs(myClassifier));
+                result = result.concat(LangUtil.findAllImplementorsAndSubs(myClassifier));
             }
         });
         return result;

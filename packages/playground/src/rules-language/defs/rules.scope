@@ -1,0 +1,10 @@
+scoper RulesScope for language RulesLanguage
+
+isnamespace { Data, Rules }
+
+Rules {
+    namespace_addition = self.imports;
+//    namespace_addition = self.forEntity;
+}
+
+

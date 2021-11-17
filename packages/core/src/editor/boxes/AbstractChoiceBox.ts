@@ -1,16 +1,56 @@
-import { PiKey } from "../../util/Keys";
-import { PiCaret } from "../../util/BehaviorUtils";
-import { Box } from "./Box";
-import { PiElement } from "../../language/PiModel";
-import { initializeObject } from "../../util/PiUtils";
+import { makeObservable, observable } from "mobx";
+import { PiElement } from "../../language";
+import { BehaviorExecutionResult, PiCaret, PiKey, PiUtils } from "../../util";
+import { PiEditor } from "../internal";
+import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
 export abstract class AbstractChoiceBox extends Box {
     kind = "AbstractChoiceBox";
     placeholder: string;
     caretPosition: number = -1;
+    textBox: TextBox;
+    textHelper: ChoiceTextHelper;
+    getSelectedOption(): SelectOption | null { return null; };
+    getOptions(editor: PiEditor): SelectOption[] { return [] };
 
-    setCaret: (caret: PiCaret) => void = () => {
-        /* To be overwritten by `TextComponent` */
+    constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
+        super(exp, role);
+        this.placeholder = placeHolder;
+        this.textHelper = new ChoiceTextHelper();
+        makeObservable(this, {
+            textHelper: observable
+        });
+        PiUtils.initializeObject(this, initializer);
+        this.textBox = new TextBox(
+            exp,
+            "alias-" + role + "-textbox",
+            () => {
+                /* To be overwritten by `SelectComponent` */
+                return this.textHelper.getText();
+            },
+            (value: string) => {
+                /* To be overwritten by `SelectComponent` */
+                this.textHelper.setText(value);
+            },
+            {
+                parent: this,
+                selectable: false,
+                placeHolder: placeHolder
+            }
+        );
+    }
+
+
+
+    async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
+        console.error("AbstractChoiceBox.selectOption")
+        return BehaviorExecutionResult.NULL;
+    };
+
+    setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
+        if( !!this.textBox) {
+            this.textBox.setCaret(caret);
+        }
     };
 
     /** @internal
@@ -37,12 +77,6 @@ export abstract class AbstractChoiceBox extends Box {
 
     public deleteWhenEmpty1(): boolean {
         return false;
-    }
-
-    constructor(exp: PiElement, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
-        super(exp, role);
-        this.placeholder = placeHolder;
-        initializeObject(this, initializer);
     }
 
     isEditable(): boolean {

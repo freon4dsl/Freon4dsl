@@ -1,0 +1,25 @@
+language PiLanguage
+
+// begin scoper definition
+modelunit PiScoperDef {
+    public name: identifier;
+    languageName: string;
+    reference namespaces: PiConcept[];
+    scopeConceptDefs: ScopeConceptDef[];
+}
+
+concept ScopeConceptDef {
+    reference conceptRef: PiConcept;
+    namespaceAdditions: PiNamespaceAddition;
+    alternativeScope: PiAlternativeScope;
+}
+
+concept PiNamespaceAddition {
+    expressions: PiLangExp[];
+}
+
+concept PiAlternativeScope {
+    expression: PiLangExp;
+}
+
+// end scoper definition

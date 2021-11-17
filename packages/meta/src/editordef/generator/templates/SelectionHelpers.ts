@@ -9,8 +9,7 @@ export class SelectionHelpers {
         // console.log("EnumSelectGenerator language "+language.name + " #enums " + language.enumerations.length);
         // console.log("EnumSelectGenerator language " + language.enumerations[0].name);
         return `
-        import { ${Names.PiElement}, Box, SelectBox, SelectOption } from "${PROJECTITCORE}";
-        import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
+        import { ${Names.PiElement}, Box, BoxFactory, SelectBox, SelectOption, BehaviorExecutionResult, PiEditor, styleToCSS } from "${PROJECTITCORE}";
         import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
         /**
@@ -31,20 +30,24 @@ export class SelectionHelpers {
             placeholder: string,
             metaType: string,
             getAction: () => SelectOption,
-            setAction: (o: SelectOption) => void
+            setAction: (o: SelectOption) => Promise<BehaviorExecutionResult>,
+            initializer?: Partial<SelectBox>
         ): Box {
-            return new SelectBox(
+            return BoxFactory.select(
                 element,
                 role,
                 placeholder,
                 () => {
-                    return ${Names.environment(language)}.getInstance().scoper.getVisibleNames(element, metaType).map(name => ({
-                        id: name,
-                        label: name
-                    }));
+                    return ${Names.environment(language)}.getInstance().scoper.getVisibleNames(element, metaType)
+                        .filter(name => !!name && name !== "")
+                        .map(name => ({
+                            id: name,
+                            label: name
+                        }));
                 },
                 () => getAction(),
-                (option: SelectOption) => setAction(option)
+                (editor: PiEditor, option: SelectOption) => setAction(option),
+                initializer
             );
         }
         `;

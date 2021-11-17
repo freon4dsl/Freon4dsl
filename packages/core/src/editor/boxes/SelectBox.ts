@@ -1,32 +1,45 @@
-import { AbstractChoiceBox } from "./AbstractChoiceBox";
-import { SelectOption } from "./SelectOption";
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
+import { BehaviorExecutionResult, MatchUtil } from "../../util";
+import { PiEditor, triggerToString } from "../internal";
+import { AbstractChoiceBox, SelectOption, Box } from "./internal";
+import { PiElement } from "../../language";
 
 export class SelectBox extends AbstractChoiceBox {
     readonly kind = "SelectBox";
-    getOptions: () => SelectOption[];
-    getSelectedOption: () => SelectOption | null;
-    setSelectedOption: (option: SelectOption) => void;
+    // getOptions: () => SelectOption[];
+    // getSelectedOption: () => SelectOption | null;
+    // setSelectedOption: (option: SelectOption) => void;
     /**
      * If true,  the element will be deleted as soon as the text becomes
      * empty because of removing the last character in the text.
      */
     deleteWhenEmpty: boolean = false;
 
+    private getAllOptions(editor: PiEditor): SelectOption[] {
+        return [];
+    };
+
+
     constructor(
         exp: PiElement,
         role: string,
         placeHolder: string,
-        getOptions: () => SelectOption[],
+        getOptions: (editor: PiEditor) => SelectOption[],
         getSelectedOption: () => SelectOption | null,
-        setSelectedOption: (option: SelectOption) => void,
+        selectOption: (editor: PiEditor, option: SelectOption) => Promise<BehaviorExecutionResult>,
         initializer?: Partial<SelectBox>
     ) {
         super(exp, role, placeHolder, initializer);
-        this.getOptions = getOptions;
+        this.getAllOptions = getOptions;
         this.getSelectedOption = getSelectedOption;
-        this.setSelectedOption = setSelectedOption;
+        this.selectOption = selectOption;
+    }
+
+    getOptions(editor: PiEditor):  SelectOption[]  {
+        const matchingOptions: SelectOption[] = this.getAllOptions(editor);
+        // matchung text does noet work correct as you nmeed to know the cursor position.
+        // TODO filter in the component where the cursor position is known.
+            // .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
+        return matchingOptions
     }
 
     public deleteWhenEmpty1(): boolean {
@@ -35,5 +48,5 @@ export class SelectBox extends AbstractChoiceBox {
 }
 
 export function isSelectBox(b: Box): b is SelectBox {
-    return b instanceof SelectBox;
+    return b.kind === "SelectBox"; // b instanceof SelectBox;
 }

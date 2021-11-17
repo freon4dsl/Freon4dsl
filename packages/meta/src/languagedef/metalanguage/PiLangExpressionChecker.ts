@@ -144,7 +144,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         if (this.strictUseOfSelf) {
             this.nestedCheck(
                 {
-                    check: langExp.appliedfeature !== null,
+                    check: !!langExp.appliedfeature,
                     error: `'self' should be followed by '.', followed by a property ${this.location(langExp)}.`,
                     whenOk: () => {
                         langExp.appliedfeature.language = langExp.language;
@@ -173,7 +173,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
     private checkFunctionCallExpression(langExp: PiLangFunctionCallExp, enclosingConcept: PiClassifier) {
         LOGGER.log("checkFunctionCallExpression " + langExp?.toPiString());
         const functionName = validFunctionNames.find(name => name === langExp.sourceName);
-        // TODO ??? set langRef.referredElement to one of the predefined functions
+        // TODO ??? set langExp.referredElement to one of the predefined functions
         this.nestedCheck({
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function ${this.location(langExp)}.`,

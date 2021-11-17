@@ -1,39 +1,37 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
-import { GenerationStatus, Helpers, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
+import { MetaLogger } from "../../utils";
+import { PiLanguage } from "../../languagedef/metalanguage";
+import { GenerationStatus, Helpers, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { PiScopeDef } from "../metalanguage";
 import { NamespaceTemplate } from "./templates/NamespaceTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiElementReference } from "../../languagedef/metalanguage";
 import { ScoperUtilsTemplate } from "./templates/ScoperUtilsTemplate";
 import { NamesCollectorTemplate } from "./templates/NamesCollectorTemplate";
+import { PiModelDescription } from "../../languagedef/metalanguage/PiLanguage";
 
-const LOGGER = new MetaLogger("ScoperGenerator"); // .mute();
+const LOGGER = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;
     protected scoperGenFolder: string;
     protected scoperFolder: string;
 
-    constructor(language: PiLanguage) {
-        this.language = language;
-    }
-
     generate(scopedef: PiScopeDef): void {
-
+        if (this.language == null) {
+            LOGGER.error(this, "Cannot generate scoper because language is not set.");
+            return;
+        }
         // generate default, if the scoper definition is not present, i.e. was not read from file
-        // TODO check the difference between "===" and "=="
-        if (scopedef == null) {
+        if (isNullOrUndefined(scopedef)) {
             scopedef = new PiScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(PiElementReference.create<PiConcept>(this.language.modelConcept, "PiConcept"));
+            scopedef.namespaces.push(PiElementReference.create<PiModelDescription>(this.language.modelConcept, "PiModelDescription"));
         }
 
         const generationStatus = new GenerationStatus();
-        this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
-        this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
+        this.getFolderNames();
         const name = scopedef ? scopedef.scoperName + " " : "";
         LOGGER.log("Generating scoper " + name + "in folder " + this.scoperGenFolder);
 
@@ -72,9 +70,20 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.log(`Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(this, `Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.log(`Succesfully generated scoper ${name}`);
+            LOGGER.info(this,`Succesfully generated scoper ${name}`);
         }
+    }
+
+    private getFolderNames() {
+        this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
+        this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.scoperGenFolder);
+        Helpers.deleteDirIfEmpty(this.scoperFolder);
     }
 }

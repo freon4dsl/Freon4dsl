@@ -1,31 +1,8 @@
-/**
- * You can either directly implement these interfaces, or use `Module Augmentation`,
- * as described in `https://www.typescriptlang.org/docs/handbook/declaration-merging.html`.
- */
-// tag::element-interface[]
-export interface PiElement {
-    piId(): string;
-
-    piLanguageConcept(): string;
-
-    piContainer(): PiContainerDescriptor;
-
-    piIsModel(): boolean;
-
-    piIsExpression(): boolean;
-
-    piIsBinaryExpression(): boolean;
-}
-// end::element-interface[]
-
-// tag::named-element-interface[]
-export interface PiNamedElement extends PiElement {
-    name: string;
-}
-// end::named-element-interface[]
-
 // tag::model-interface[]
+import { PiNamedElement } from "./PiNamedElement";
+
 export interface PiModel extends PiNamedElement {
+    // TODO return PiModelUnit instead of PiNamedElement
     /**
      * Finds a unit of this model based on its name and 'metatype'.
      * @param name
@@ -45,7 +22,6 @@ export interface PiModel extends PiNamedElement {
     /**
      * Adds a model unit. Returns false if anything goes wrong.
      *
-     * @param oldUnit
      * @param newUnit
      */
     addUnit(newUnit: PiNamedElement): boolean;
@@ -58,10 +34,9 @@ export interface PiModel extends PiNamedElement {
     removeUnit(oldUnit: PiNamedElement): boolean;
 
     /**
-     * Returns an empty model unit of type 'unitTypeName' and adds it to this model.
+     * Returns an empty model unit of type 'typename' and adds it to this model.
      *
-     * @param model
-     * @param unitTypeName
+     * @param typename
      */
     newUnit(typename: string): PiNamedElement;
 
@@ -69,43 +44,10 @@ export interface PiModel extends PiNamedElement {
      * Returns a list of model units.
      */
     getUnits(): PiNamedElement[];
+
+    /**
+     * Returns a list of model units of type 'type'.
+     */
+    getUnitsForType(type: string): PiNamedElement[];
 }
 // end::model-interface[]
-
-// TODO PiExpression cannot be distinguished from PiElement anymore,  is this a problem?
-// tag::expression-interface[]
-export interface PiExpression extends PiElement {
-}
-// end::expression-interface[]
-
-// tag::binary-expression-interface[]
-export interface PiBinaryExpression extends PiExpression {
-    piLeft(): PiExpression;
-
-    piSetLeft(left: PiExpression): void;
-
-    piRight(): PiExpression;
-
-    piSetRight(right: PiExpression): void;
-
-    piPriority(): number;
-}
-// end::binary-expression-interface[]
-
-export interface PiContainerDescriptor {
-    container: PiElement;
-    propertyName: string;
-    propertyIndex?: number;
-}
-
-export function isPiModel(element: PiElement): element is PiModel {
-    return (!!element) && element.piIsModel && element.piIsModel();
-}
-
-export function isPiExpression(element: PiElement): element is PiExpression {
-    return (!!element) && element.piIsExpression && element.piIsExpression();
-}
-
-export function isPiBinaryExpression(element: PiElement): element is PiBinaryExpression {
-    return (!!element) && element.piIsExpression && element.piIsExpression() && element.piIsBinaryExpression && element.piIsBinaryExpression();
-}

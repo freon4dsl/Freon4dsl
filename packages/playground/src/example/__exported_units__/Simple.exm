@@ -1,0 +1,11 @@
+unit Simple {
+    entity ent1 {
+        myTextAttribute : String
+        method meth56 ( ): Integer { 
+            sum from xx = 0 to 999 of par7 . attr2
+        }
+    }
+
+unit level methods:
+
+}

@@ -1,0 +1,25 @@
+<package> catalog
+// + <class> Artist
+//<attributes>
+// + name: java::lang::String;
+// + solo: java::lang::Boolean;
+//<endclass>
+// + <class> Clip
+//<attributes>
+// + genre: Genre;
+// + duration: java::lang::Integer;
+// + price: java::lang::Integer;
+// + title: java::lang::String;
+//<operations>
+// + play(<in> i: java::lang::Integer): java::lang::Boolean;
+//<endclass>
+ + <enumeration> Genre
+<values>
+classic;
+folk;
+pop;
+jazz;
+<endenumeration>
+<associations>
+// + Artist.artist [0..*]    <->  + Clip.clips [0..*]   ;
+<endpackage>

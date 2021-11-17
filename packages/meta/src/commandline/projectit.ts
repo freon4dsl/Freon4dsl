@@ -6,16 +6,21 @@ import { ProjectItGenerateScoper } from "./ProjectItGenerateScoper";
 import { ProjectItGenerateValidator } from "./ProjectItGenerateValidator";
 import { ProjectItGenerateTyper } from "./ProjectItGenerateTyper";
 import { MetaLogger } from "../utils/MetaLogger";
+import { ProjectItGenerateParser } from "./ProjectItGenerateParser";
+import { ProjectItCleanAction } from "./ProjectitCleanAction";
 
 const LOGGER = new MetaLogger("ProjectItParser"); // .mute();
 
+// The main entry ppoint for the ProjectIt generator
 export class ProjectItParser extends CommandLineParser {
-    private languageGenerator: ProjectItGenerateLanguage;
-    private allGenerator: ProjectItGenerateAllAction;
-    private editorGenerator: ProjectItGenerateEditor;
-    private scoperGenerator: ProjectItGenerateScoper;
-    private validatorGenerator: ProjectItGenerateValidator;
-    private typerGenerator: ProjectItGenerateTyper;
+    private languageAction: ProjectItGenerateLanguage;
+    private allAction: ProjectItGenerateAllAction;
+    private editorAction: ProjectItGenerateEditor;
+    private parserAction: ProjectItGenerateParser;
+    private scoperAction: ProjectItGenerateScoper;
+    private validatorAction: ProjectItGenerateValidator;
+    private typerAction: ProjectItGenerateTyper;
+    private cleanAction: ProjectItCleanAction;
     private verboseArg: CommandLineFlagParameter;
     private watchArg: CommandLineFlagParameter;
 
@@ -25,19 +30,22 @@ export class ProjectItParser extends CommandLineParser {
             toolDescription: "ProjectIt toolset for generating languages, scopers, editors, etc."
         });
 
-        this.allGenerator = new ProjectItGenerateAllAction();
-        this.languageGenerator = new ProjectItGenerateLanguage();
-        this.editorGenerator = new ProjectItGenerateEditor();
-        this.scoperGenerator = new ProjectItGenerateScoper();
-        this.validatorGenerator = new ProjectItGenerateValidator();
-        this.typerGenerator = new ProjectItGenerateTyper();
-        this.addAction(this.allGenerator);
-        this.addAction(this.languageGenerator);
-        this.addAction(this.editorGenerator);
-        this.addAction(this.scoperGenerator);
-        this.addAction(this.validatorGenerator);
-        this.addAction(this.typerGenerator);
-
+        this.allAction = new ProjectItGenerateAllAction();
+        this.languageAction = new ProjectItGenerateLanguage();
+        this.editorAction = new ProjectItGenerateEditor();
+        this.parserAction = new ProjectItGenerateParser();
+        this.scoperAction = new ProjectItGenerateScoper();
+        this.validatorAction = new ProjectItGenerateValidator();
+        this.typerAction = new ProjectItGenerateTyper();
+        this.cleanAction = new ProjectItCleanAction();
+        this.addAction(this.allAction);
+        this.addAction(this.languageAction);
+        this.addAction(this.editorAction);
+        this.addAction(this.parserAction);
+        this.addAction(this.scoperAction);
+        this.addAction(this.validatorAction);
+        this.addAction(this.typerAction);
+        this.addAction(this.cleanAction);
     }
 
     protected onDefineParameters(): void {
@@ -61,13 +69,12 @@ export class ProjectItParser extends CommandLineParser {
             MetaLogger.unmuteAllLogs();
         }
         if (!!this.watchArg.value) {
-            this.allGenerator.watch = true;
+            this.allAction.watch = true;
         }
         try {
             return super.onExecute();
         } catch (e) {
-            // TODO why do we use e.stack instead of e.message?
-            LOGGER.error(this, e.stack);
+            LOGGER.error(this, e.message + "\n" + e.stack);
         }
         return null;
     }

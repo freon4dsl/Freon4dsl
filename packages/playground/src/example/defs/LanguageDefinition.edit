@@ -8,24 +8,23 @@ Attribute {
 
 Entity {
     @projection [
-        Entity ${self.name} [? base ${self.baseEntity}] {
-            ${self.attributes @vertical @separator [\n]}
-            ${self.methods @vertical @separator [\n]}
+        entity ${self.name} [? base ${self.baseEntity}] {
+            ${self.attributes @vertical }
+            ${self.methods @vertical }
         }
     ]
     @trigger "entity"
 }
 
-ExModel {
+ExampleUnit {
     @projection Model
         [
-        model ${self.name} {
+        unit ${self.name} {
             ${self.entities
                 @vertical
-                @terminator [\n]
             }
-        model wide Methods:
-            ${self.methods @vertical @separator [\n] }
+        unit level methods:
+            ${self.methods @vertical  }
         }
         ]
 }
@@ -50,6 +49,7 @@ MethodCallExpression {
         CALL ${self.methodDefinition} ( ${self.args @separator[,] } )
         ]
     @trigger "method"
+    @referenceShortcut self.methodDefinition
 }
 
 SumExpression {
@@ -57,6 +57,10 @@ SumExpression {
         sum from ${self.variable} = ${self.from} to ${self.to} of ${self.body}
     ]
     @trigger "sum"
+}
+
+GroupedExpression {
+    @projection [( ${self.inner} )]
 }
 
 LoopVariableRef {
@@ -116,16 +120,16 @@ BooleanLiteralExpression {
     @trigger "boolean"
 }
 
-
 AttributeRef {
     @projection [ ${self.attribute} ]
     @trigger "attribute"
+    @referenceShortcut self.attribute
 }
 
 ParameterRef {
-    @projection [ ${self.parameter} . ${self.appliedfeature} ]
+    @projection [ ${self.parameter} [? . ${self.appliedfeature}] ]
+    @referenceShortcut self.parameter
 }
-
 
 IfExpression {
     @projection IfExpression
@@ -141,21 +145,14 @@ IfExpression {
 
 AbsExpression {
     @projection default [
-        abs( ${self.expr} )
+        | ${self.expr} |
     ]
 }
-/*
 
 //IfExpression {
 //    @projection IfExpression
 //        [
-//        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
+//        ${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse}
 //        ]
 //    @trigger "if"
 //}
-/*
-
-/*
-*/
-/*
-*/

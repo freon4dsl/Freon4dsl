@@ -1,4 +1,3 @@
-import * as React from "react";
 
 export enum MetaKey {
     None,
@@ -16,14 +15,14 @@ export type PiKey = {
     keyCode: number;
 };
 
-export function reactToKey(e: React.KeyboardEvent<any>): PiKey {
+export function toPiKey(e: KeyboardEvent): PiKey {
     return {
         meta: meta(e),
         keyCode: e.keyCode
     };
 }
 
-export function meta(e: React.KeyboardEvent<any>): MetaKey {
+export function meta(e: KeyboardEvent): MetaKey {
     if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
         return MetaKey.None;
     }
@@ -70,12 +69,31 @@ export const ARROW_RIGHT = 39;
 export const ARROW_DOWN = 40;
 export const DELETE = 46;
 
-export function isNumeric(event: React.KeyboardEvent<any>): boolean {
+/**
+ *  keyCode is deprecated, should use the key values below.
+ *  TODO Replace the keyCode with key everywhere
+ */
+export const KEY_BACKSPACE = "Backspace";
+export const KEY_TAB = "Tab";
+export const KEY_ENTER = "Enter";
+export const KEY_SHIFT = "Shift";
+export const KEY_CONTROL = "Control";
+export const KEY_ALT = "Alt";
+export const KEY_ESCAPE = "Escape";
+export const KEY_SPACEBAR = " ";
+export const KEY_ARROW_LEFT = "ArrowLeft";
+export const KEY_ARROW_UP = "ArrowUp";
+export const KEY_ARROW_RIGHT = "ArrowRight";
+export const KEY_ARROW_DOWN = "ArrowDown";
+export const KEY_DELETE = "Delete";
+
+export function isNumeric(event: KeyboardEvent): boolean {
     const keyCode = event.keyCode;
     return !event.altKey && !event.shiftKey && !event.ctrlKey && ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105));
 }
 
-export function isPrintable(event: React.KeyboardEvent<any>): boolean {
+export function isPrintable(event: KeyboardEvent): boolean {
+    // TODO Check new way of accessing key codes using event.key (keycode is deprecated), see https://github.com/ndrsn/is-printable-key-event
     const keyCode = event.keyCode;
     return (
         (!event.altKey &&
@@ -88,6 +106,6 @@ export function isPrintable(event: React.KeyboardEvent<any>): boolean {
     );
 }
 
-export function isMetaKey(event: React.KeyboardEvent<any>): boolean {
+export function isMetaKey(event: KeyboardEvent): boolean {
     return event.shiftKey || event.altKey || event.ctrlKey;
 }

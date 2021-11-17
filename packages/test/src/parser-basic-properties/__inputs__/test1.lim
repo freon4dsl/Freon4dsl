@@ -1,0 +1,22 @@
+LimitedTest anyNameWillDo
+    limitedNonOpt LimitedNonOptional
+        +;
+        + , - , #;
+        before # after ;
+        before #,
+        +,
+        -
+        after;
+	    FIRST ;
+	    SECOND, FIRST, FIRST, SECOND, SECOND  ;
+    limitedOpt LimitedOptional
+        +;
+        + , - , #;
+        before # after ;
+        before #, +, - after;
+
+    limitedOpt2 LimitedOptional
+        +;
+        + , - , #;
+        before # after ;
+        before #, +, - after;

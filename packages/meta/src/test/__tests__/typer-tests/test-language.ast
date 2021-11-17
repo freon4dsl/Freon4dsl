@@ -1,12 +1,12 @@
 language test1 // without 'implements'
 
 model ROOT {
-    name: string;
-    aa: AA[];
+    name: identifier;
+    aa: AAAAAA[];
 }
 
-modelunit AA  {
-    public name: string;
+modelunit AAAAAA  {
+    public name: identifier;
     // the possibilities for primitive properties
     AAprop1: string;
     AAprop2: string[];
@@ -52,7 +52,7 @@ concept BB base CC {
 }
 
 concept CC {
-    name: string; // so that this concept can be used as reference
+    name: identifier; // so that this concept can be used as reference
     // the possibilities for primitive properties
     CCprop1: string;
     CCprop2: string[];
@@ -73,7 +73,7 @@ concept CC {
 }
 
 limited ZZ {
-    name: string;
+    name: identifier;
     // the possibilities for primitive properties
     ZZprop1: string;
     ZZprop2: string[];
@@ -136,7 +136,7 @@ interface EE base FF {
 }
 
 interface FF {
-    name: string; // so that this interface can be used as reference
+    name: identifier; // so that this interface can be used as reference
     // the possibilities for primitive properties
     FFprop1: string;
     FFprop2: string[];

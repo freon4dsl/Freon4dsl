@@ -1,8 +1,8 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
-import { Box } from "./Box";
-import { PiElement } from "../../language/PiModel";
-import { PiUtils } from "../../util/PiUtils";
+import { Box } from "./internal";
+import { PiElement } from "../../language";
+import { PiUtils } from "../../util";
 
 export type GridCell = {
     row: number;
@@ -16,7 +16,7 @@ export type GridCell = {
 export class GridBox extends Box {
     readonly kind = "GridBox";
     cells: GridCell[];
-    @observable private $children: Box[] = [];
+    private $children: Box[] = [];
 
     constructor(exp: PiElement, role: string, cells: GridCell[], initializer?: Partial<GridBox>) {
         super(exp, role);
@@ -31,6 +31,9 @@ export class GridBox extends Box {
             }
         });
         this.sortCellsAndAddChildren();
+        makeObservable<GridBox, "$children">(this, {
+            $children: observable
+        });
     }
 
     get children(): ReadonlyArray<Box> {
@@ -76,5 +79,5 @@ function compare(a: GridCell, b: GridCell): number {
 }
 
 export function isGridBox(box: Box): box is GridBox {
-    return box instanceof GridBox;
+    return box.kind === "GridBox"; //  box instanceof GridBox;
 }

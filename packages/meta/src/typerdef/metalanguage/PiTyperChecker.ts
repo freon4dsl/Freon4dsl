@@ -4,9 +4,9 @@ import { PiLanguage,
     PiClassifier,
     PiInterface,
     PiLangExpressionChecker,
-    PiLangUtil } from "../../languagedef/metalanguage";
+     } from "../../languagedef/metalanguage";
 import { PiTypeDefinition, PiTypeRule, PiTypeIsTypeRule, PiTypeAnyTypeRule, PiTypeClassifierRule, PiTypeStatement } from "./PiTyperDefLang";
-import { MetaLogger } from "../../utils/MetaLogger";
+import { MetaLogger, LangUtil } from "../../utils";
 
 const LOGGER = new MetaLogger("PiTyperChecker").mute();
 const infertypeName = "infertype";
@@ -101,7 +101,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
                     // there are two assumptions: (1) the typeroot is the common super concept of all types
                     // or (2) the typeroot is an interface that is implemented by all types
                     if (typeroot instanceof PiConcept) { // check (1)
-                        const base = PiLangUtil.superConcepts(t.referred);
+                        const base = LangUtil.superConcepts(t.referred);
                         this.nestedCheck({
                             check: base.includes(typeroot),
                             error: `The root type concept (${typeroot.name}) should be a base concept of '${t.referred.name}' `
@@ -111,7 +111,7 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
                             }
                         });
                     } else if (typeroot instanceof PiInterface) { // check (2)
-                        const base = PiLangUtil.superInterfaces(t.referred);
+                        const base = LangUtil.superInterfaces(t.referred);
                         this.nestedCheck({
                             check: base.includes(typeroot),
                             error: `The root type interface (${typeroot.name}) should be implemented by '${t.referred.name}' `
@@ -131,8 +131,11 @@ export class PiTyperChecker extends Checker<PiTypeDefinition> {
         LOGGER.log("Checking checkAnyTypeRule '" + rule.toPiString() + "'");
         // const myTypes: PiClassifier[] = [];
         for (const r of this.definition.typerRules) {
-            if ( r instanceof PiTypeAnyTypeRule ) {
-                // TODO see if there is anything to check
+            if (r instanceof PiTypeAnyTypeRule) {
+                r.statements.forEach(stat => {
+                    // check the statement, using the overall model as enclosing concept
+                    this.checkStatement(stat, this.language.modelConcept);
+                });
             }
         }
     }

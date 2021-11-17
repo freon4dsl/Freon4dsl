@@ -1,11 +1,11 @@
 import { PiLangElement, PiLanguage } from "../languagedef/metalanguage";
-import { PiEditElement } from "../editordef/metalanguage";
+import { PiDefinitionElement } from "../utils";
 
-export type CheckB = { check: boolean; error: string; whenOk?: () => void };
+export type NestedCheck = { check: boolean; error: string; whenOk?: () => void };
 
 export abstract class Checker<DEFINITION> {
     errors: string[] = [];
-    language: PiLanguage; // should be set in every checker, except the checker for the language definition langauge (LDL)
+    language: PiLanguage; // should be set in every checker, except the checker for the language definition language (LDL)
 
     constructor(language: PiLanguage) {
         this.language = language;
@@ -25,7 +25,7 @@ export abstract class Checker<DEFINITION> {
         return true;
     }
 
-    public nestedCheck(check: CheckB | CheckB[]): void {
+    public nestedCheck(check: NestedCheck | NestedCheck[]): void {
         if (Array.isArray(check)) {
             check.forEach(chk => this.simpleCheck(chk.check, chk.error));
         } else {
@@ -37,8 +37,7 @@ export abstract class Checker<DEFINITION> {
         }
     }
 
-    // TODO find better way to type this parameter
-    protected location(elem: PiLangElement | PiEditElement): string {
+    protected location(elem: PiDefinitionElement): string {
         if (!!elem.location) {
             return `[file: ${elem.location.filename}, line: ${elem.location.start.line}, column: ${elem.location.start.column}]`;
         }

@@ -1,6 +1,8 @@
 import {
     PiBinaryExpressionConcept,
     PiConcept,
+    PiModelDescription,
+    PiUnitDescription,
     PiConceptProperty,
     PiExpressionConcept,
     PiInstance,
@@ -20,6 +22,8 @@ export type PiLangEveryConcept =
     | PiLangElement
     | PiLanguage
     | PiClassifier
+    | PiModelDescription
+    | PiUnitDescription
     | PiInterface
     | PiConcept
     | PiExpressionConcept

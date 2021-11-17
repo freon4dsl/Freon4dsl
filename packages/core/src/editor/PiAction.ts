@@ -1,8 +1,7 @@
-import { Box } from "./boxes/Box";
-import { PiBinaryExpression, PiElement, PiExpression } from "../language/PiModel";
-import { PiCaret } from "../util/BehaviorUtils";
-import { PiKey } from "../util/Keys";
-import { PiEditor } from "./PiEditor";
+import { Box, ReferenceShortcut } from "./internal";
+import { PiBinaryExpression, PiElement, PiExpression } from "../language";
+import { PiCaret, PiKey } from "../util";
+import { PiEditor } from "./internal";
 
 export type PiTriggerType = string | RegExp | PiKey;
 
@@ -46,6 +45,9 @@ export interface PiBehavior {
     isApplicable?: (box: Box) => boolean;
     boxRoleToSelect?: string;
     caretPosition?: PiCaret;
+
+    referenceShortcut?: ReferenceShortcut;
+
 }
 // end::PiBehavior[]
 
@@ -53,21 +55,24 @@ export interface PiBehavior {
  * Special behavior for creating an expression.
  */
 export interface PiExpressionCreator extends PiBehavior {
-    expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor, propertyName?: string) => PiExpression;
+    expressionBuilder: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiExpression;
 }
 
 /**
  * Special behavior for creating a binary expression.
  */
 export interface PiBinaryExpressionCreator extends PiBehavior {
-    expressionBuilder: (box: Box, trigger: PiTriggerType, editor: PiEditor, propertyName?: string) => PiBinaryExpression;
+    expressionBuilder: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiBinaryExpression;
 }
 
 /**
  * Behavior with custom action, intended to be used to create non expression elements.
  */
 export interface PiCustomBehavior extends PiBehavior {
-    action: (box: Box, trigger: string | RegExp, editor: PiEditor, propertyName?: string) => PiElement | null;
+    action: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiElement | null;
+    undo?: (box: Box, ed: PiEditor) => void;
+
+    referenceShortcut?: ReferenceShortcut; // TODO this is already defined in the parent
 }
 
 // TODO Use this to replace KeyboardShortcutTrigger

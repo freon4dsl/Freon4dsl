@@ -5,7 +5,7 @@ import {
     LANGUAGE_GEN_FOLDER,
     Names,
     PROJECTITCORE,
-    findImplementors,
+    LangUtil,
     LANGUAGE_UTILS_GEN_FOLDER
 } from "../../../utils";
 
@@ -48,6 +48,7 @@ export class NamespaceTemplate {
          */
         export class ${generatedClassName} {
             private static allNamespaces: Map< ${allLangConcepts}, ${generatedClassName}> = new Map();
+            static doNotSearch: string = null;
             
             /**
              * This method ensures that every element in the model has one and only one associated namespace object.
@@ -79,6 +80,10 @@ export class NamespaceTemplate {
                 });
             }
 
+            set doNotSearch(elem: string) {
+                ${generatedClassName}.doNotSearch = elem;
+            }
+    
             private _myElem: ${allLangConcepts};
             private searchList: string[] = [];
                         
@@ -184,7 +189,7 @@ export class NamespaceTemplate {
                 const myWalker = new ${Names.walker(language)}();
                 myWalker.myWorkers.push( myNamesCollector );
                 
-                // collect the elements from the namespace
+                // collect the elements from the namespace, but not from any child namespace
                 myWalker.walk(this._myElem, (elem: ${Names.allConcepts(language)})=> { return !isNameSpace(elem); } );`;
         // for (let piConcept of scopedef.namespaces) {
         //     let myClassifier = piConcept.referred;
@@ -235,7 +240,7 @@ export class NamespaceTemplate {
                 let isDone: boolean = false;
                 const comment = "// based on namespace addition for " + myClassifier.name + "\n";
                 if (myClassifier instanceof PiInterface) {
-                    for (const implementor of findImplementors(myClassifier)) {
+                    for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
                         if ( !generatedConcepts.includes(implementor)) {
                             isDone = true;
                         }
@@ -289,6 +294,7 @@ export class NamespaceTemplate {
         let result: string = "";
         const generatedClassName: string = Names.namespace(language);
         const myRef = expression.findRefOfLastAppliedFeature();
+
         const loopVar: string = "loopVariable";
         let loopVarExtended = loopVar;
         if (myRef.isList) {
@@ -299,19 +305,23 @@ export class NamespaceTemplate {
             }
             result = result.concat(`
             // generated based on '${expression.toPiString()}'
+            if (${generatedClassName}.doNotSearch !== '${myRef.name}') {
             for (let ${loopVar} of this._myElem.${expression.appliedfeature.toPiString()}) {
                 if (!!${loopVarExtended}) {
                     let extraNamespace = ${generatedClassName}.create(${loopVarExtended});
                     ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);
                 }
+            }
             }`);
         } else {
             // TODO check use of toPiString()
             result = result.concat(`
                // generated based on '${expression.toPiString()}' 
+               if (${generatedClassName}.doNotSearch !== '${myRef.name}') {
                if (!!this._myElem.${expression.appliedfeature.toPiString()}) {
                    let extraNamespace = ${generatedClassName}.create(this._myElem.${langExpToTypeScript(expression.appliedfeature)});
                    ${generatedClassName}.joinResultsWithShadowing(extraNamespace.getVisibleElements(metatype), result);               
+               }
                }`);
         }
         return result;

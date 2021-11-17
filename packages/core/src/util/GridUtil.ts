@@ -1,13 +1,18 @@
-import { AliasBox, Box, HorizontalListBox, LabelBox, NBSP } from "../";
-import { GridBox, GridCell } from "../editor/boxes/GridBox";
-import { KeyboardShortcutBehavior } from "../editor/PiAction";
-import { PiEditor } from "../editor/PiEditor";
-import { PiElement } from "../language/PiModel";
-import { PiKey } from "../util/Keys";
-import * as Keys from "../util/Keys";
-import { MetaKey } from "../util/Keys";
-import { PiUtils, wait } from "./PiUtils";
-import { STYLES } from "../editor/components/styles/Styles";
+import {
+    AliasBox,
+    Box,
+    HorizontalListBox,
+    LabelBox,
+    GridBox,
+    GridCell,
+    KeyboardShortcutBehavior,
+    PiEditor, PiStyle, styleToCSS
+} from "../editor";
+import { PiElement } from "../language";
+// the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
+import { MetaKey, PiKey } from "./Keys";
+import * as Keys from "./Keys";
+import { PiUtils, NBSP } from "./internal";
 
 export class GridUtil {
     /**
@@ -19,6 +24,7 @@ export class GridUtil {
         listPropertyName: string,
         list: ELEMENT_TYPE[],
         columnNames: string[],
+        headerStyles: PiStyle[],
         columnBoxes: ((e: ELEMENT_TYPE) => Box)[],
         builder: (box: Box, editor: PiEditor) => ELEMENT_TYPE,
         editor: PiEditor,
@@ -31,10 +37,11 @@ export class GridUtil {
                 row: 1,
                 column: index + 1,
                 box: new LabelBox(element, "header" + index, () => item, {
-                    style: STYLES.headerText,
+                    // TODO Change into Svelte Style
+                    // style: STYLES.headerText,
                     selectable: false
                 }),
-                style: STYLES.header
+                style: styleToCSS(headerStyles[index])
             });
         });
         list.forEach((item: ELEMENT_TYPE, rowIndex: number) => {
@@ -50,8 +57,9 @@ export class GridUtil {
             row: list.length + 3,
             column: 1,
             columnSpan: columnBoxes.length,
-            box: new AliasBox(element, "alias-add-row", "<add new row>"),
-            style: STYLES.header
+            box: new AliasBox(element, "alias-add-row", "<add new row>", {style: `font-weight: normal;`}),
+            // TODO Change into Svelte Style
+            // style: STYLES.header
         });
 
         // Add keyboard actions to grid such that new rows can be added by Return Key
@@ -59,7 +67,7 @@ export class GridUtil {
         editor.keyboardActions.splice(
             0,
             0,
-            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(element, listPropertyName, builder, "textbox-name")
+            this.createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE>(element, listPropertyName, builder)
         );
         return new GridBox(element, role, cells, initializer);
     }
@@ -78,9 +86,11 @@ export class GridUtil {
         columnNames.forEach((item: string, index: number) => {
             cells.push({
                 row: index + 1,
+
                 column: 1,
                 box: new LabelBox(element, "header" + index, () => item, {
-                    style: STYLES.header
+                    // TODO Change into Svelte Style
+                    // style: STYLES.header
                 })
             });
         });
@@ -122,10 +132,10 @@ export class GridUtil {
                 parent[proc.propertyName].splice(proc.propertyIndex + 1, 0, newElement);
 
                 if (!!roleToSelect) {
-                    await editor.selectElement(newElement, roleToSelect);
+                    editor.selectElement(newElement, roleToSelect);
                 } else {
-                    await editor.selectElement(newElement);
-                    await editor.selectFirstEditableChildBox();
+                    editor.selectElement(newElement);
+                    editor.selectFirstEditableChildBox();
                     // await editor.selectFirstLeafChildBox();
                 }
                 return null;
@@ -142,17 +152,17 @@ export class GridUtil {
     ): KeyboardShortcutBehavior {
         const listKeyboardShortcut: KeyboardShortcutBehavior = {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
-            activeInBoxRoles: ["alias-add-row"],
+            activeInBoxRoles: ["alias-add-row", "alias-alias-add-row-textbox"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;
                 const newElement: ELEMENT_TYPE = elementCreator(box, editor);
                 element[propertyRole].push(newElement);
 
                 if (!!roleToSelect) {
-                    await editor.selectElement(newElement, roleToSelect);
+                    editor.selectElement(newElement, roleToSelect);
                 } else {
-                    await editor.selectElement(newElement);
-                    await editor.selectFirstEditableChildBox();
+                    editor.selectElement(newElement);
+                    editor.selectFirstEditableChildBox();
                     // await editor.selectFirstLeafChildBox();
                 }
                 return null;

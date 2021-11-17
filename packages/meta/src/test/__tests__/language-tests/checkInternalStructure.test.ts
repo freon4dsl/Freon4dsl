@@ -1,5 +1,6 @@
 import { LanguageParser } from "../../../languagedef/parser/LanguageParser";
-import { PiExpressionConcept, PiLanguage, PiLangUtil, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { PiExpressionConcept, PiLanguage, PiLimitedConcept, PiPrimitiveProperty } from "../../../languagedef/metalanguage";
+import { LangUtil } from "../../../utils";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
 
@@ -19,6 +20,7 @@ describe("Checking internal structure of language", () => {
         } catch (e) {
             // this would be a true error
             console.log(e.message);
+            console.log(e.stack);
         }
         expect(piLanguage).not.toBeUndefined();
         // there is a root concept
@@ -62,8 +64,7 @@ describe("Checking internal structure of language", () => {
         });
         piConcept.references().forEach(part => {
             expect(part.isPart).toBe(false);
-            // TODO Stoppeed working with es6: fixit
-            // expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
+            expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
         });
         piConcept.primProperties.forEach(part => {
             expect(part.isPart).toBe(true);
@@ -89,10 +90,9 @@ describe("Checking internal structure of language", () => {
         piConcept.allParts().forEach(part => {
             expect(part.isPart).toBe(true);
         });
-        piConcept.allReferences().forEach(part => {
-            expect(part.isPart).toBe(false);
-            // TODO Es6 problem
-            // expect(part).not.toBeInstanceOf(PiPrimitiveProperty);
+        piConcept.allReferences().forEach(ref => {
+            expect(ref.isPart).toBe(false);
+            expect(ref).not.toBeInstanceOf(PiPrimitiveProperty);
         });
         piConcept.allPrimProperties().forEach(part => {
             expect(part.isPart).toBe(true);
@@ -106,7 +106,7 @@ describe("Checking internal structure of language", () => {
         });
 
         // we can find all subconcepts, also recursive
-        let list = PiLangUtil.subConcepts(baseConcept);
+        let list = LangUtil.subConcepts(baseConcept);
         expect(list).toContain(piLanguage.findConcept("BaseBB"));
         expect(list).toContain(piLanguage.findConcept("DD"));
         expect(list).not.toContain(piLanguage.findConcept("Model"));
@@ -116,7 +116,7 @@ describe("Checking internal structure of language", () => {
         expect(list).not.toContain(piLanguage.findConcept("BaseBaseBB"));
 
         // we can find all superconcepts, also recursive
-        list = PiLangUtil.superConcepts(piConcept);
+        list = LangUtil.superConcepts(piConcept);
         expect(list).toContain(piLanguage.findConcept("BaseBB"));
         expect(list).not.toContain(piLanguage.findConcept("DD"));
         expect(list).not.toContain(piLanguage.findConcept("Model"));
@@ -149,8 +149,7 @@ describe("Checking internal structure of language", () => {
         // PiInstance.concept should be a limited property
         // let myLimited = piLanguage.findConcept("BB");
         list.forEach(myLimited => {
-            // TODO Es6 problem
-            // expect(myLimited).toBeInstanceOf(PiLimitedConcept);
+            expect(myLimited).toBeInstanceOf(PiLimitedConcept);
             // test PiInstance against its concept
             (myLimited as PiLimitedConcept).instances.forEach(inst => {
                 expect(inst.concept.referred).toBe(myLimited);

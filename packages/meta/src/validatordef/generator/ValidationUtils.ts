@@ -1,10 +1,11 @@
-import { PiConcept } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept } from "../../languagedef/metalanguage";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 export class ValidationUtils {
-    public static findLocationDescription(concept: PiConcept): string {
+    public static findLocationDescription(concept: PiClassifier): string {
         let nameProp = concept.allPrimProperties().find(prop => prop.name === "name");
         if (!(!!nameProp)) {
-            nameProp = concept.allPrimProperties().find(prop => prop.primType === "string");
+            nameProp = concept.allPrimProperties().find(prop => prop.type.referred === PiPrimitiveType.identifier);
         }
         const locationdescription = !!nameProp ? `modelelement.${nameProp.name}` : `'unnamed'`;
         return locationdescription;

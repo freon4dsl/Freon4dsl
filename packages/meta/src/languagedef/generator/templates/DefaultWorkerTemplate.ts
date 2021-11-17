@@ -1,4 +1,4 @@
-import { Names, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER, createImports } from "../../../utils";
 import { PiLanguage } from "../../metalanguage";
 
 export class DefaultWorkerTemplate {
@@ -17,7 +17,7 @@ export class DefaultWorkerTemplate {
 
         // the template starts here
         return `
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}"; 
+        import { ${createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}"; 
         import { ${workerInterfaceName} } from "./${Names.workerInterface(language)}";     
 
         /**
@@ -28,7 +28,29 @@ export class DefaultWorkerTemplate {
          * the actual visiting of each node in the tree.
          */
         export class ${defaultWorkerClassName} implements ${workerInterfaceName} {
+        
+        ${commentBefore}
+        public execBefore${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean {
+            return false;
+        }
+            
+        ${commentAfter}
+        public execAfter${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean {
+            return false;
+        }
 
+        ${language.units.map(unit =>
+            `${commentBefore}
+            public execBefore${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
+                return false;
+            }
+            
+            ${commentAfter}
+            public execAfter${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
+                return false;
+            }`
+        ).join("\n\n")}
+        
         ${language.concepts.map(concept =>
             `${commentBefore}
             public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
@@ -41,16 +63,6 @@ export class DefaultWorkerTemplate {
             }`
         ).join("\n\n")}
         }`;
-    }
-
-    private createImports(language: PiLanguage): string {
-        let result: string = language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts ? `,` : ``);
-        result = result.concat(
-            language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`).join(", "));
-        return result;
     }
 
 }

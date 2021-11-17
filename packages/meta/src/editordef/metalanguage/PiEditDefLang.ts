@@ -1,35 +1,32 @@
 import { PiClassifier, PiConcept, PiInstanceExp, PiLangExp, PiLanguage } from "../../languagedef/metalanguage";
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
+import { PiDefinitionElement } from "../../utils";
 import { Roles } from "../../utils/Roles";
-import { ParseLocation } from "../../utils";
 
-export class PiEditElement {
-    location: ParseLocation;
-}
-
-export class PiEditUnit extends PiEditElement {
+export class PiEditUnit extends PiDefinitionElement {
     name: string;
     language: PiLanguage;
     languageName: string;
     conceptEditors: PiEditConcept[] = [];
 
     findConceptEditor(cls: PiClassifier): PiEditConcept {
-        const result = this.conceptEditors.find(con => con.concept.referred === cls);
-        return result;
+        return this.conceptEditors.find(con => con.concept.referred === cls);
     }
 }
 
-export class PiEditConcept extends PiEditElement {
+export class PiEditConcept extends PiDefinitionElement {
     languageEditor: PiEditUnit;
 
-    concept: PiElementReference<PiConcept>;
+    concept: PiElementReference<PiClassifier>;
     projection: PiEditProjection = null;
     _trigger: string = null;
+    // The name of the reference property for which a shortcut can be used
+    referenceShortcut: PiLangExp;
 
     symbol: string = null; // only for binary expressions
 
     get trigger(): string {
-        if (!!this._trigger) {
+        if (!!(this._trigger)) {
             return this._trigger;
         } else {
             return this.symbol;
@@ -53,7 +50,7 @@ export class PiEditParsedNewline {
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
-export class PiEditParsedProjectionIndent extends PiEditElement {
+export class PiEditParsedProjectionIndent extends PiDefinitionElement {
     indent: string = "";
     amount: number = 0;
 
@@ -77,15 +74,15 @@ export class PiEditParsedProjectionIndent extends PiEditElement {
     }
 }
 
-export class PiEditProjectionText extends PiEditElement {
-    text: string = "";
-    style: string = "propertykeyword";
-
+export class PiEditProjectionText extends PiDefinitionElement {
     public static create(text: string): PiEditProjectionText {
         const result = new PiEditProjectionText();
         result.text = text;
         return result;
     }
+
+    text: string = "";
+    style: string = "propertykeyword";
 
     toString(): string {
         return this.text;
@@ -104,21 +101,26 @@ export enum ListJoinType {
     Separator = "Separator"
 }
 
-export class ListJoin extends PiEditElement {
+export class ListJoin extends PiDefinitionElement {
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     joinType?: ListJoinType = ListJoinType.NONE;
-    joinText?: string = ", ";
+    joinText?: string = "";
 
     toString(): string {
         return `direction ${this.direction} joinType: ${this.joinType} text: "${this.joinText}"`;
     }
 }
 
-export class PiEditPropertyProjection extends PiEditElement {
-    propertyName: string = "";
+export class PiEditPropertyProjection extends PiDefinitionElement {
+    // propertyName: string = "";
     listJoin: ListJoin;
     keyword?: string;
     expression: PiLangExp;
+
+    propertyName(): string {
+        // TODO This is a hack to skip "this." Needs to be done properly.
+        return this.expression.toPiString().substring(5);
+    }
 
     toString(): string {
         return (
@@ -131,7 +133,7 @@ export class PiEditPropertyProjection extends PiEditElement {
     }
 }
 
-export class PiEditSubProjection extends PiEditElement {
+export class PiEditSubProjection extends PiDefinitionElement {
     optional: boolean;
     items: PiEditProjectionItem[];
 
@@ -140,7 +142,7 @@ export class PiEditSubProjection extends PiEditElement {
      */
     public optionalProperty(): PiEditPropertyProjection {
         for (const item of this.items) {
-            if( item instanceof PiEditPropertyProjection){
+            if (item instanceof PiEditPropertyProjection) {
                 return item;
             }
         }
@@ -148,6 +150,19 @@ export class PiEditSubProjection extends PiEditElement {
         // return this.items.find((value, index, obj) => {
         //     value instanceof PiEditPropertyProjection
         // }) as PiEditPropertyProjection;
+    }
+
+    /**
+     * Returns the first literal word in the sub projection.
+     * Returns the empty string "" if there is no such literal.
+     */
+    public firstLiteral(): string {
+        for (const item of this.items) {
+            if (item instanceof PiEditProjectionText) {
+                return item.text.trim();
+            }
+        }
+        return "";
     }
 
     // TODO what about sub-sub-sub... projections: will they all have one language element?
@@ -163,7 +178,7 @@ export class PiEditInstanceProjection { // instances of this class are created b
 
 export type PiEditProjectionItem = PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection | PiEditInstanceProjection;
 
-export class PiEditProjectionLine extends PiEditElement {
+export class PiEditProjectionLine extends PiDefinitionElement {
     items: PiEditProjectionItem[] = [];
     indent: number = 0;
 
@@ -176,7 +191,7 @@ export class PiEditProjectionLine extends PiEditElement {
     }
 }
 
-export class PiEditProjection extends PiEditElement {
+export class PiEditProjection extends PiDefinitionElement {
     name: string;
     conceptEditor: PiEditConcept;
     lines: PiEditProjectionLine[] = [];

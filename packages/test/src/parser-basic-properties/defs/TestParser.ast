@@ -1,0 +1,189 @@
+language TestParser
+
+// focuses on the different type of properties and how to parse them
+
+// TEST PROPERTIES WITH PRIMITVE TYPES
+model TestParserModel {
+    name: identifier;
+    prim: PrimitivesTest;
+    lim: LimitedTest;
+    ref: RefsTest;
+    primWith: WithKeywordProj;
+    parts: PartsTest;
+}
+
+modelunit PrimitivesTest {
+    public name: identifier;
+    prim: Prim;
+    primExtra: PrimExtra;
+    primOpt: PrimOptional;
+    primExtraOpt: PrimExtraOptional;
+    primOptPresent: PrimOptional;
+    primExtraOptPresent: PrimExtraOptional;
+    separator: PrimOptionalSeparator;
+    terminator: PrimOptionalTerminator;
+}
+concept Prim {
+    primIdentifier: identifier;
+    primNumber: number;
+    primString: string;
+    primBoolean: boolean;
+    primListIdentifier: identifier[];
+    primListNumber: number[];
+    primListString: string[];
+    primListBoolean: boolean[];
+}
+concept PrimExtra {
+    primIdentifierWithExtra: identifier;
+    primNumberWithExtra: number;
+    primStringWithExtra: string;
+    primBooleanWithExtra: boolean;
+    primListIdentifierWithExtra: identifier[];
+    primListNumberWithExtra: number[];
+    primListStringWithExtra: string[];
+    primListBooleanWithExtra: boolean[];
+}
+concept PrimOptional {
+    primIdentifier?: identifier;
+    primNumber?: number;
+    primString?: string;
+    primBoolean?: boolean;
+    primListIdentifier?: identifier[];
+    primListNumber?: number[];
+    primListString?: string[];
+    primListBoolean?: boolean[];
+}
+concept PrimExtraOptional {
+    primIdentifierWithExtra?: identifier;
+    primNumberWithExtra?: number;
+    primStringWithExtra?: string;
+    primBooleanWithExtra?: boolean;
+    primListIdentifierWithExtra?: identifier[];
+    primListNumberWithExtra?: number[];
+    primListStringWithExtra?: string[];
+    primListBooleanWithExtra?: boolean[];
+}
+
+concept PrimOptionalSeparator {
+    primListIdentifierSeparator?: identifier[];
+    primListNumberSeparator?: number[];
+    primListStringSeparator?: string[];
+    primListBooleanSeparator?: boolean[];
+}
+
+concept PrimOptionalTerminator {
+    primListIdentifierTerminator?: identifier[];
+    primListNumberTerminator?: number[];
+    primListStringTerminator?: string[];
+    primListBooleanTerminator?: boolean[];
+}
+
+modelunit WithKeywordProj {
+    public name: identifier;
+    primWith: PrimWith[];
+}
+
+concept PrimWith {
+    primBoolean: boolean;
+}
+
+// TEST PROPERTIES WITH TYPES THTA ARE LIMITED CONCEPTS
+modelunit LimitedTest {
+    public name: identifier;
+    limitedNonOpt: LimitedNonOptional;
+    limitedOpt: LimitedOptional;
+    limitedOpt2: LimitedOptional;
+}
+
+concept LimitedNonOptional {
+    visibility: VisibilityKind;
+    visMulti: VisibilityKind[];
+    visWithExtra: VisibilityKind;
+    visMultiWithExtra: VisibilityKind[];
+    other: OtherLimited;
+    otherMulti: OtherLimited[];
+}
+
+concept LimitedOptional {
+    visibility?: VisibilityKind;
+    visMulti?: VisibilityKind[];
+    visWithExtra?: VisibilityKind;
+    visMultiWithExtra?: VisibilityKind[];
+}
+
+limited VisibilityKind {
+	PUBLIC = { name: "PUBLIC" }
+	PRIVATE = { name: "PRIVATE" }
+	PROTECTED = { name: "PROTECTED" }
+}
+
+limited OtherLimited {
+    FIRST; SECOND;
+}
+
+// TEST PROPERTIES THAT ARE PARTS WHICH HAVE CONCEPT TYPES
+modelunit PartsTest {
+    public name: identifier;
+    directParts: WithDirectParts;
+    partsOfParts?: WithSubSubParts;
+}
+
+concept WithDirectParts {
+    part: PartConcept;
+    optPart?: PartConcept;
+    partList: PartConcept[];
+    optList?: PartConcept[];
+}
+
+concept PartConcept {
+    visibility: VisibilityKind;
+    content: string;
+    optContent?: number;
+}
+
+concept WithSubSubParts {
+    part: SubConcept;
+    optPart?: SubConcept;
+    partList: SubConcept[];
+    optList?: SubConcept[];
+}
+
+concept SubConcept {
+    normalSub: WithDirectParts;
+    optionalSub?: WithDirectParts;
+    listSub: WithDirectParts[];
+    optListSub?: WithDirectParts[];
+}
+
+// TEST PROPERTIES THAT ARE REFERENCES TO CONCEPT TYPES
+modelunit RefsTest {
+    public name: identifier;
+    directRefs: WithDirectRefs;
+    indirectRefs?: WithSubSubRefs;
+    withSeparator?: RefsWithSeparator;
+}
+
+concept WithDirectRefs {
+    reference ref: RefConcept;
+    reference optRef?: RefConcept;
+    reference refList: RefConcept[];
+    reference optRefList?: RefConcept[];
+}
+
+concept RefConcept {
+    name: identifier;
+}
+
+concept WithSubSubRefs {
+    part: WithDirectRefs;
+    optPart?: WithDirectRefs;
+    partList: WithDirectRefs[];
+    optList?: WithDirectRefs[];
+}
+
+concept RefsWithSeparator {
+    partList: WithDirectRefs[];
+    optList?: WithDirectRefs[];
+}
+
+

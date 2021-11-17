@@ -1,13 +1,21 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiLanguage } from "../../languagedef/metalanguage";
-import { EDITOR_FOLDER, EDITOR_GEN_FOLDER, GenerationStatus, Helpers, Names, STYLES_FOLDER } from "../../utils";
+import {
+    EDITOR_FOLDER,
+    EDITOR_GEN_FOLDER,
+    GenerationStatus,
+    Helpers,
+    isNullOrUndefined,
+    Names,
+    STYLES_FOLDER
+} from "../../utils";
 import { PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 
-const LOGGER = new MetaLogger("EditorGenerator"); // .mute();
+const LOGGER = new MetaLogger("EditorGenerator"); //.mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";
@@ -17,17 +25,19 @@ export class EditorGenerator {
     language: PiLanguage;
 
     generate(editDef: PiEditUnit): void {
+        if (this.language == null) {
+            LOGGER.error(this, "Cannot generate editor because language is not set.");
+            return;
+        }
         const generationStatus = new GenerationStatus();
-        this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
-        this.stylesFolder = this.outputfolder + "/" + STYLES_FOLDER;
-        this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
+        this.getFolderNames();
         const name = editDef ? editDef.name : "";
         LOGGER.log("Generating editor '" + name + "' in folder " + this.editorGenFolder + " for language " + this.language?.name);
 
         // TODO the following should already have been set by the edit checker, but it seems to be needed here
         editDef.language = this.language;
 
-        if (editDef === null || editDef === undefined) {
+        if (isNullOrUndefined(editDef)) {
             editDef = this.createDefaultEditorDefinition();
         }
 
@@ -80,13 +90,9 @@ export class EditorGenerator {
         const customProjectionFile = Helpers.pretty(customProjectiontemplate.generate(this.language), "Custom Projection", generationStatus);
         Helpers.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`, customProjectionFile, "Custom Projection");
 
-        LOGGER.log(`Generating editor styles part 1: ${this.stylesFolder}/styles.ts`);
+        LOGGER.log(`Generating editor styles: ${this.stylesFolder}/styles.ts`);
         const editorStylesConst = Helpers.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
         Helpers.generateManualFile(`${this.stylesFolder}/styles.ts`, editorStylesConst, "Editor Styles Constant");
-
-        LOGGER.log(`Generating editor styles part 2: ${this.stylesFolder}/style.scss`);
-        const editorStylesCSS = stylesTemplate.generateSCSS();
-        Helpers.generateManualFile(`${this.stylesFolder}/style.scss`, editorStylesCSS, "Editor Styles scss");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
         const editorIndexGenFile = Helpers.pretty(editorIndexTemplate.generateGenIndex(this.language, editDef), "Editor Gen Index", generationStatus);
@@ -97,10 +103,16 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.info(this, `Generated editor '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(this, `Generated editor '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated editor ${name}`);
         }
+    }
+
+    private getFolderNames() {
+        this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
+        this.stylesFolder = this.outputfolder + "/" + STYLES_FOLDER;
+        this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
     }
 
     public createDefaultEditorDefinition(): PiEditUnit {
@@ -108,5 +120,32 @@ export class EditorGenerator {
         editDef.name = "default";
         editDef.languageName = this.language.name;
         return editDef;
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.editorGenFolder);
+        if (force) {
+            Helpers.deleteFile(`${this.stylesFolder}/styles.ts`);
+            Helpers.deleteFile(`${this.editorGenFolder}/index.ts`);
+            Helpers.deleteFile(`${this.editorFolder}/index.ts`);
+            Helpers.deleteDirIfEmpty(this.editorGenFolder);
+            Helpers.deleteDirIfEmpty(this.stylesFolder);
+            if (this.language == null) {
+                LOGGER.error(this, "Cannot remove all because language is not set.");
+            } else {
+                Helpers.deleteFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`);
+                Helpers.deleteFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`);
+                Helpers.deleteDirIfEmpty(this.editorFolder);
+            }
+        } else {
+            // do not delete the following files, because these may contain user edits
+            LOGGER.info(this, `Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
+                '\n\t' + `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
+                '\n\t' + `${this.editorFolder}/index.ts` +
+                '\n\t' + `${this.stylesFolder}/styles.ts` +
+                '\n\t' + `${this.editorGenFolder}/index.ts`
+            );
+        }
     }
 }

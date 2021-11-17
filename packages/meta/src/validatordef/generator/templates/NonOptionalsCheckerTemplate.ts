@@ -1,6 +1,7 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage";
+import { PiLanguage, PiConcept, PiPrimitiveProperty, PiClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 
 const commentBefore = `/**
                         * Checks 'modelelement' before checking its children.
@@ -12,7 +13,7 @@ const commentBefore = `/**
                         */`;
 
 export class NonOptionalsCheckerTemplate {
-    done: PiConcept[] = [];
+    done: PiClassifier[] = [];
 
     generateChecker(language: PiLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
@@ -21,6 +22,10 @@ export class NonOptionalsCheckerTemplate {
         const checkerClassName: string = Names.nonOptionalsChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const writerInterfaceName: string = Names.PiWriter;
+        const classifiersToDo: PiClassifier[] = [];
+        classifiersToDo.push(language.modelConcept);
+        classifiersToDo.push(...language.units);
+        classifiersToDo.push(...language.concepts);
         this.done = [];
 
         // the template starts here
@@ -44,31 +49,40 @@ export class NonOptionalsCheckerTemplate {
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
-        ${language.concepts.map(concept =>
+        ${classifiersToDo.map(concept =>
             `${this.createChecksOnNonOptionalParts(concept)}`
         ).join("\n\n")}
         }`;
     }
 
     private createImports(language: PiLanguage): string {
-        let result: string = language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).join(", ");
-        result = result.concat(language.concepts ? `,` : ``);
-        result = result.concat(
+        let result: string = language.units?.map(unit => `
+                ${Names.classifier(unit)}`).concat(
+                    language.concepts?.map(concept => `
+                ${Names.concept(concept)}`).concat(
             language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`).join(", "));
+                ${Names.interface(intf)}`))).concat(
+                    Names.classifier(language.modelConcept)
+        ).join(", ");
         return result;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiConcept): string {
+    private createChecksOnNonOptionalParts(concept: PiClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
 
-        // TODO do not produce errors for non-optionals in a model-interface
         concept.allProperties().forEach(prop => {
+            // the following is added only for non-list properties
+            // empty lists should be checked using one of the validation rules
             if (!prop.isOptional && !prop.isList) {
-                // empty lists can be checked using one of the validation rules
-                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ) {
+                // if the property is of type `string`
+                // then add a check on the length of the string
+                let additionalStringCheck: string = null;
+                if (prop.isPrimitive && (prop.type.referred == PiPrimitiveType.string || prop.type.referred == PiPrimitiveType.identifier)) {
+                    additionalStringCheck = `|| modelelement.${prop.name}?.length == 0`;
+                }
+
+                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck? additionalStringCheck : ""}) {
                     hasFatalError = true;
                     this.errorList.push(new PiError("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, PiErrorSeverity.Error));
                 }
@@ -80,7 +94,7 @@ export class NonOptionalsCheckerTemplate {
 
         if (result.length > 0 ) {
             return `${commentBefore}
-                public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+                public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
                     let hasFatalError: boolean = false;
                     ${result}
                     return hasFatalError;

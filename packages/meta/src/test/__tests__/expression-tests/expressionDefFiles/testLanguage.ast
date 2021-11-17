@@ -3,12 +3,12 @@ language test1
 // TODO test optional properties
 
 model ROOT {
-    name: string;
+    name: identifier;
     aa: AA[];
 }
 
 modelunit AA  {
-    public name: string;
+    public name: identifier;
     // the possibilities for primitive properties
     AAprop1: string;
     AAprop2: string[];
@@ -38,12 +38,12 @@ concept BB base CC implements DD {
     BBprop5: boolean;
     BBprop6: boolean[];
     // properties with concept as type
-    BBprop7: BB;
+    BBprop7?: BB;
     BBprop8: BB[];
     reference BBprop9: CC;
     reference BBprop10: CC[];
     // properties with interface as type
-    BBprop11: DD;
+    BBprop11?: DD;
     BBprop12: DD[];
     reference BBprop13: FF;
     reference BBprop14: FF[];
@@ -55,8 +55,8 @@ concept BB base CC implements DD {
 }
 
 concept CC {
-    name: string; // so that this concept can be used as reference
-    bb: BB; // to test applied feature
+    name: identifier; // so that this concept can be used as reference
+    bb?: BB; // to test applied feature
     // the possibilities for primitive properties
     CCprop1: string;
     CCprop2: string[];
@@ -65,7 +65,7 @@ concept CC {
     CCprop5: boolean;
     CCprop6: boolean[];
     // properties with concept as type
-    CCprop7: BB;
+    CCprop7?: BB;
     CCprop8: BB[];
     reference CCprop9: CC;
     reference CCprop10: CC[];
@@ -77,7 +77,7 @@ concept CC {
 }
 
 limited ZZ {
-    name: string;
+    name: identifier;
     // the possibilities for primitive properties
     ZZprop1: string;
     ZZprop2: string[];
@@ -90,7 +90,7 @@ limited ZZ {
 }
 
 interface DD  {
-    cc: CC; // to test applied feature
+    cc?: CC; // to test applied feature
     // the possibilities for primitive properties
     DDprop1: string;
     DDprop2: string[];
@@ -99,12 +99,12 @@ interface DD  {
     DDprop5: boolean;
     DDprop6: boolean[];
     // properties with concept as type
-    DDprop7: BB;
+    DDprop7?: BB;
     DDprop8: BB[];
     reference DDprop9: CC;
     reference DDprop10: CC[];
     // properties with interface as type
-    DDprop11: DD;
+    DDprop11?: DD;
     DDprop12: DD[];
     reference DDprop13: FF;
     reference DDprop14: FF[];
@@ -132,8 +132,8 @@ interface EE base FF {
 }
 
 interface FF {
-    name: string; // so that this interface can be used as reference
-    ee: EE; // to test applied feature
+    name: identifier; // so that this interface can be used as reference
+    ee?: EE; // to test applied feature
     // the possibilities for primitive properties
     FFprop1: string;
     FFprop2: string[];

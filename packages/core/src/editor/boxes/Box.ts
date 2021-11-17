@@ -1,33 +1,42 @@
-import { observable } from "mobx";
-import * as uuid from "uuid";
+import { observable, makeObservable } from "mobx";
 
-import { PiElement } from "../../language/PiModel";
-import { PiLogger } from "../../util/PiLogging";
+import { PiElement } from "../../language";
+import { PiLogger, PiUtils } from "../../util";
 
-const LOGGER = new PiLogger("Box"); // .mute();
+const LOGGER = new PiLogger("Box");
 
 export abstract class Box {
     $id: string;
-    kind: string;
-    @observable role: string;
-    @observable roleNumber: number = undefined;
-    @observable element: PiElement;
-    @observable style: string;
+    kind: string = "";
+    role: string = "";
+    roleNumber: number = undefined;
+    element: PiElement = null;
+    style: string = "";
     selectable: boolean = true;
     parent: Box = null;
 
     // Never set these manually,  these properties are set after rendering to get the
     // actual coordinates as rendered in the browser,
-    @observable actualX: number = -1;
-    @observable actualY: number = -1;
-    @observable actualWidth: number = -1;
-    @observable actualHeight: number = -1;
+    actualX: number = -1;
+    actualY: number = -1;
+    actualWidth: number = -1;
+    actualHeight: number = -1;
 
     constructor(element: PiElement, role: string) {
         // ProUtil.CHECK(!!element, "Element cannot be empty in Box constructor");
         this.element = element;
         this.role = role;
-        this.$id = uuid.v4();
+        this.$id = PiUtils.ID(); //uuid.v4();
+        makeObservable(this, {
+            role: observable,
+            roleNumber: observable,
+            element: observable,
+            style: observable,
+            actualHeight: observable,
+            actualWidth: observable,
+            actualX: observable,
+            actualY: observable
+        })
     }
 
     get id(): string {
@@ -58,7 +67,7 @@ export abstract class Box {
             return this;
         }
 
-        for (let child of this.children) {
+        for (const child of this.children) {
             const leafChild = child.firstLeaf;
             if (!!leafChild) {
                 return leafChild;
@@ -68,7 +77,7 @@ export abstract class Box {
     }
 
     isLeaf(): boolean {
-        return this.children.length == 0;
+        return this.children.length === 0;
     }
 
     /**
@@ -79,7 +88,7 @@ export abstract class Box {
             return this;
         }
         const childrenReversed = this.children.filter(ch => true).reverse();
-        for (let child of childrenReversed) {
+        for (const child of childrenReversed) {
             const leafChild = child.lastLeaf;
             if (!!leafChild) {
                 return leafChild;
@@ -88,13 +97,16 @@ export abstract class Box {
         return null;
     }
 
+    /**
+     * Return the previous selectable leaf in the tree.
+     */
     get nextLeafRight(): Box {
         if (!this.parent) {
             return null;
         }
         const thisIndex = this.parent.children.indexOf(this);
-        let rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
-        for (let sibling of rightSiblings) {
+        const rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
+        for (const sibling of rightSiblings) {
             const siblingChild = sibling.firstLeaf;
             if (!!siblingChild) {
                 return siblingChild;
@@ -106,13 +118,16 @@ export abstract class Box {
         return this.parent.nextLeafRight;
     }
 
+    /**
+     * Return the next selectable leaf in the tree.
+     */
     get nextLeafLeft(): Box {
         if (!this.parent) {
             return null;
         }
         const thisIndex = this.parent.children.indexOf(this);
-        let leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
-        for (let sibling of leftSiblings) {
+        const leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
+        for (const sibling of leftSiblings) {
             const siblingChild = sibling.lastLeaf;
             if (!!siblingChild) {
                 return siblingChild;
@@ -146,7 +161,7 @@ export abstract class Box {
     }
 
     /**
-     * Find first box for element with `proId()` equals elementId and with `role` inside `this`
+     * Find first box for element with `piId()` equals elementId and with `role` inside `this`
      * and all of its children recursively.
      * @param role
      */
@@ -170,16 +185,11 @@ export abstract class Box {
         return null;
     }
 
-    setSetFocus(func: () => void) {
-        // LOGGER.info(this, "setSetFocus set for  "+ this.id+ " id " + this.$id );
-        this.setFocus = func;
-    }
-
     /** @internal
      * This function is called to set the focus on this element.
      */
     setFocus: () => void = async () => {
-        LOGGER.info(this, "setFocus not set for " + this.id + " id " + this.$id);
+        console.error(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id);
         /* To be overwritten by `TextComponent` */
     };
 
@@ -196,7 +206,7 @@ export abstract class Box {
     }
 
     private getEditableChildren(): Box[] {
-        let result: Box[] = [];
+        const result: Box[] = [];
         this.getEditableChildrenRecursive(result);
         return result;
     }

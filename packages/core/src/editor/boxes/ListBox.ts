@@ -1,12 +1,8 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
-import { NBSP } from "../../util/PiUtils";
-import { createKeyboardShortcutForList } from "../../util/ListBoxUtil";
-import { Box } from "./Box";
-import { AliasBox } from "./AliasBox";
-import { PiEditor } from "../PiEditor";
-import { PiElement } from "../../language/PiModel";
-import { PiUtils } from "../../util/PiUtils";
+import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
+import { Box, AliasBox, PiEditor } from "../internal";
+import { PiElement } from "../../language";
 
 enum Direction {
     HORIZONTAL = "Horizontal",
@@ -15,10 +11,13 @@ enum Direction {
 
 export abstract class ListBox extends Box {
     protected direction: Direction = Direction.HORIZONTAL;
-    @observable protected _children: Box[] = [];
+    protected _children: Box[] = [];
 
-    constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
+    protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
+        makeObservable<ListBox, "_children">(this, {
+           _children: observable
+        });
         PiUtils.initializeObject(this, initializer);
         if (children) {
             children.forEach(b => this.addChild(b));
@@ -152,9 +151,9 @@ export class VerticalPiElementListBox extends VerticalListBox {
 }
 
 export function isHorizontalBox(b: Box): b is HorizontalListBox {
-    return b instanceof HorizontalListBox;
+    return b.kind === "HorizontalListBox"; // b instanceof HorizontalListBox;
 }
 
 export function isVerticalBox(b: Box): b is VerticalListBox {
-    return b instanceof VerticalListBox;
+    return b.kind === "VerticalListBox";//b instanceof VerticalListBox || b instanceof VerticalPiElementListBox;
 }

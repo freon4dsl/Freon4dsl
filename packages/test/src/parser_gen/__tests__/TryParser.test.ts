@@ -1,12 +1,16 @@
 import { Demo, DemoUnit } from "../language/gen";
 import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
+import { FileHandler } from "../../utils/FileHandler";
 
 describe("Test the parser", () => {
-    test( "XXX", () => {
+    test( ": read two units and create a model", () => {
         const reader = DemoEnvironment.getInstance().reader;
         const writer = DemoEnvironment.getInstance().writer;
-        const unit1: DemoUnit = reader.readFromFile("src/parser_gen/__tests__/ParserInput1.txt", "DemoUnit") as DemoUnit;
-        //
+        const fileHandler = new FileHandler();
+
+        let input = fileHandler.stringFromFile("src/parser_gen/__tests__/ParserInput1.txt");
+        const unit1: DemoUnit = reader.readFromString(input, "DemoUnit") as DemoUnit;
+
         unit1.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();
             expect(ent).not.toBeNull();
@@ -15,8 +19,9 @@ describe("Test the parser", () => {
             expect(attr.declaredType).not.toBeUndefined();
             expect(attr.declaredType).not.toBeNull();
         });
-        //
-        const unit2 = reader.readFromFile("src/parser_gen/__tests__/ParserInput1.txt", "DemoUnit") as DemoUnit;
+
+        input = fileHandler.stringFromFile("src/parser_gen/__tests__/ParserInput2.txt");
+        const unit2: DemoUnit = reader.readFromString(input, "DemoUnit") as DemoUnit;
         //
         unit2.main?.baseEntity.forEach(ent => {
             expect(ent).not.toBeUndefined();
@@ -32,15 +37,10 @@ describe("Test the parser", () => {
         myModels.push(unit2);
         const model = Demo.create({ name: "SOME_MODEL", models: myModels });
 
-        // resolve all references
-        // const resolver = new DemoChecker();
-        // let errors = resolver.check(unit);
-        // for (let e of errors) {
-        //     console.log(e.message + " in " + e.locationdescription);
-        // }
-        //
-        let text = writer.writeToString(model, 0, false);
-        // TODO use snapshot
-        expect(text.length).toBe(1104);
+        for (const unit of model.models) {
+            let output = writer.writeToString(unit, 0, false);
+            fileHandler.stringToFile(`src/parser_gen/__tests__/Output_${unit.name}.txt`, output);
+            expect(output).toMatchSnapshot();
+        }
     });
 });

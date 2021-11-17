@@ -1,19 +1,19 @@
-import { observable } from "mobx";
-import { PiCaretPosition } from "../../util/BehaviorUtils";
-import { PiCaret } from "../../util/BehaviorUtils";
+import { observable, action, makeObservable } from "mobx";
+import { PiCaretPosition, PiCaret, PiUtils, PiLogger } from "../../util";
+import { PiElement } from "../../language";
+import { Box } from "./internal";
 
-import { PiElement } from "../../language/PiModel";
-import { Box } from "./Box";
-import { PiUtils } from "../../util/PiUtils";
+const LOGGER = new PiLogger("TextBox");
 
 export enum KeyPressAction {
     OK,
     GOTO_NEXT,
+    GOTO_PREVIOUS,
     NOT_OK
 }
 
 export class TextBox extends Box {
-    readonly kind = "TextBox";
+    kind = "TextBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.
@@ -26,10 +26,19 @@ export class TextBox extends Box {
      */
     deleteWhenEmptyAndErase: boolean = false;
 
-    @observable placeHolder: string = "";
+    placeHolder: string = "";
     caretPosition: number = -1;
     getText: () => string;
-    setText: (newValue: string) => void;
+    private $setText: (newValue: string) => void;
+
+    /**
+     * Run the setText() as defined by the user of this box inside a mobx action.
+     * @param newValue
+     */
+    setText(newValue: string): void {
+        this.$setText(newValue);
+    }
+
     keyPressAction: (currentText: string, key: string, index: number) => KeyPressAction = () => {
         return KeyPressAction.OK;
     };
@@ -38,18 +47,23 @@ export class TextBox extends Box {
         super(exp, role);
         PiUtils.initializeObject(this, initializer);
         this.getText = getText;
-        this.setText = setText;
+        this.$setText = setText;
+        makeObservable(this, {
+            placeHolder: observable,
+            setText: action
+        });
     }
 
     public deleteWhenEmpty1(): boolean {
         return this.deleteWhenEmpty;
     }
+
     // INTERNAL FUNCTIONS
 
     /** @internal
      */
     setCaret: (caret: PiCaret) => void = (caret: PiCaret) => {
-        // console.log("TEXTBOX SETCARET EMPTY");
+        LOGGER.log("setCaret: " + caret.position);
         /* To be overwritten by `TextComponent` */
         switch (caret.position) {
             case PiCaretPosition.RIGHT_MOST:
@@ -82,5 +96,5 @@ export class TextBox extends Box {
 }
 
 export function isTextBox(b: Box): b is TextBox {
-    return b instanceof TextBox;
+    return !!b && b.kind === "TextBox"; // b instanceof TextBox;
 }

@@ -1,0 +1,21 @@
+{
+  "extends": "./svelte.tsconfig.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node"],
+
+    "declaration": true,                            /* Generates corresponding '.d.ts' file. */
+    "declarationMap": true,                         /* Generates a sourcemap for each corresponding '.d.ts' file. */
+    "declarationDir": "./dist",
+    "sourceMap": true,                              /* Generates corresponding '.map' file. */
+    "outDir": "./dist",                                  /* Redirect output structure to the directory. NB: this works for rollup.,  for tsc it should be "./dist" !!! */
+    "rootDir": "./src",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+
+  },
+
+
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/*", "dist", "__sapper__/*", "public/*"],
+
+  }

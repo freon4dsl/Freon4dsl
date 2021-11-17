@@ -1,18 +1,18 @@
 language Demo
 
 model ROOT {
-    name: string;
+    name: identifier;
     aa: DemoModel[];
 }
 
 modelunit DemoModel {
     functions: DemoFunction[];
-    public name: string;
+    public name: identifier;
     entities: DemoEntity[];
 }
 
 interface BaseType {
-    name: string;
+    name: identifier;
     baseInterface_attr: number;
 }
 
@@ -32,23 +32,23 @@ concept DemoEntity implements Type {
 
 concept DemoAttribute {
     reference declaredType: DemoAttributeType;
-    name: string;
+    name: identifier;
 }
 
 concept DemoAttributeWithEntityType {
     reference declaredType: DemoEntity;
-    name: string;
+    name: identifier;
 }
 
 concept DemoFunction {
-    name: string;
+    name: identifier;
     reference declaredType : Type;
     expression: DemoExpression;
     parameters: DemoVariable[];
 }
 
 concept DemoVariable {
-    name: string;
+    name: identifier;
     reference declaredType: DemoEntity;
 }
 
@@ -69,12 +69,12 @@ expression DemoVariableRef base DemoExpression {
 }
 
 limited DemoAttributeType implements BaseType {
-    name: string;
+    name: identifier;
     extra: number;
-    String = { name: "String", "extra": "199"}
-    Integer = { "name": "Integer", "extra": "240261"}
-    Boolean = { "name": "Boolean", "extra": "5479"}
-    ANY = { "name": "ANY", "extra": "456"}
+    String = { name: "String", "extra": 199}
+    Integer = { "name": "Integer", "extra": 240261}
+    Boolean = { "name": "Boolean", "extra": 5479}
+    ANY = { "name": "ANY", "extra": 456}
 }
 
 abstract expression DemoLiteralExpression base DemoExpression {}

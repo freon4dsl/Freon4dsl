@@ -1,5 +1,4 @@
 import { PiEditor } from "../editor";
-import { ProjectionalEditor } from "../editor/components";
 import { PiValidator } from "../validator";
 import { PiScoper } from "../scoper";
 import { PiTyper } from "../typer";
@@ -14,7 +13,7 @@ export interface PiEnvironment {
      * Creates a new model, an implementation of the language defined in the .ast file
      * @param name
      */
-    newModel(name: string): PiModel;
+    newModel(modelName: string): PiModel;
 
     scoper: PiScoper;
     typer: PiTyper;
@@ -24,8 +23,9 @@ export interface PiEnvironment {
     writer: PiWriter;
     reader: PiReader;
 
-    projectionalEditorComponent: ProjectionalEditor;
+    // projectionalEditorComponent: ProjectionalEditor;
     languageName: string;
     unitNames: string[];
+    fileExtensions: Map<string, string>;
 }
 // end::environment-interface[]

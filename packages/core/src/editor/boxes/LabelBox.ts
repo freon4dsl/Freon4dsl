@@ -1,13 +1,13 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
-import { Box } from "./Box";
-import { PiUtils } from "../../util/PiUtils";
-import { PiElement } from "../../language/PiModel";
+import { Box } from "./internal";
+import { PiUtils } from "../../util";
+import { PiElement } from "../../language";
 
 export class LabelBox extends Box {
     readonly kind = "LabelBox";
 
-    @observable private $label: string;
+    private readonly $label: string = "";
 
     constructor(element: PiElement, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
         super(element, role);
@@ -19,6 +19,9 @@ export class LabelBox extends Box {
         } else {
             throw new Error("LabelBox: incorrect label type");
         }
+        makeObservable<LabelBox, "$label">(this, {
+            $label: observable
+        });
     }
 
     getLabel(): string {
@@ -27,5 +30,5 @@ export class LabelBox extends Box {
 }
 
 export function isLabelBox(b: Box): b is LabelBox {
-    return b instanceof LabelBox;
+    return b.kind === "LabelBox"; // b instanceof LabelBox;
 }

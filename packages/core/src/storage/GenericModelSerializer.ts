@@ -1,7 +1,6 @@
-import { PiElement } from "../language/PiModel";
+import { PiElement } from "../language";
 import { Language, Property } from "./Language";
-
-// const MODEL_TYPE = "$typename";
+import { isNullOrUndefined } from "../util";
 
 /**
  * Helper class to serialize a model using MobXModelElementImpl.
@@ -24,8 +23,7 @@ export class GenericModelSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     toTypeScriptInstance(jsonObject: Object): any {
-        const result: any = this.toTypeScriptInstanceInternal(jsonObject);
-        return result;
+        return this.toTypeScriptInstanceInternal(jsonObject);
     }
 
     /**
@@ -34,91 +32,89 @@ export class GenericModelSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     private toTypeScriptInstanceInternal(jsonObject: Object): any {
-        if(jsonObject === null){
+        if (jsonObject === null) {
             throw new Error("jsonObject is null, cannot convert to TypeScript");
         }
         const type: string = jsonObject["$typename"];
-        if (!(!!type)) {
-            // console.log("type is not found");
-            return null;
+        if (isNullOrUndefined(type)) {
+            throw new Error(`Cannot read json: not a ProjectIt structure, typename missing: ${JSON.stringify(jsonObject)}`);
         }
-
-        const result = this.language.createConcept(type);
-        // console.log("Object created with [" + type + "]");
-
-        for (let property of this.language.allConceptProperties(type)) {
+        const result: PiElement = this.language.createConceptOrUnit(type);
+        if (isNullOrUndefined(result)) {
+            throw new Error(`Cannot read json: ${type} unknown.`);
+        }
+        for (const property of this.language.allConceptProperties(type)) {
             const value = jsonObject[property.name];
-            if (value === undefined) {
+            if (isNullOrUndefined(value)) {
                 continue;
+                // TODO how to report this to the user..?
             }
-            // console.log(">> creating property "+ property.name + "  of type " + property.propertyType + " isList " + property.isList);
-            switch (property.propertyType) {
-                case "primitive":
-                    if (property.isList) {
-                        result[property.name] = [];
-                        for (var item in value) {
-                            result[property.name].push(value[item]);
-                        }
-                    } else {
-                        // TODO Add other primitive property types
-                        if (typeof value === "string") {
-                            result[property.name] = value;
-                        } else if (typeof value === "number") {
-                            result[property.name] = value;
-                        } else if (typeof value === "boolean") {
-                            result[property.name] = value;
-                        }
-                    }
-                    break;
-                // case "enumeration":
-                //     const enumeration = this.language.enumeration(property.type);
-                //     if (property.isList) {
-                //         for (var item in value) {
-                //             result[property.name].push(enumeration.literal(value[item]));
-                //         }
-                //     } else {
-                //         result[property.name] = enumeration.literal(value);
-                //     }
-                //     break;
-                case "part":
-                    if (property.isList) {
-                        // console.log("    list property of size "+ value.length);
-                        // result[property.name] = [];
-                        for (var item in value) {
-                            result[property.name].push(this.toTypeScriptInstance(value[item]));
-                        }
-                    } else {
-                        // console.log("    no list property  " + value);
-                        if (!!value) {
-                            result[property.name] = this.toTypeScriptInstance(value);
-                        }
-                    }
-                    break;
-                case "reference":
-                    if (property.isList) {
-                        for (var item in value) {
-                            result[property.name].push(this.language.referenceCreator(value[item], property.type));
-                        }
-                    } else {
-                        // console.log("Serializer creating property " + property.name + "  reference [" + value + "] to a [" + property.type+ "]")
-                        result[property.name] = this.language.referenceCreator(value, property.type);
-                    }
-                    break;
-                default:
-            }
+            this.convertProperties(result, property, value);
         }
         return result;
     }
 
+    private convertProperties(result: PiElement, property: Property, value: any) {
+        // console.log(">> creating property "+ property.name + "  of type " + property.propertyType + " isList " + property.isList);
+        switch (property.propertyType) {
+            case "primitive":
+                if (property.isList) {
+                    result[property.name] = [];
+                    for (const item in value) {
+                        result[property.name].push(value[item]);
+                    }
+                } else {
+                    // TODO Add other primitive property types
+                    if (typeof value === "string") {
+                        result[property.name] = value;
+                    } else if (typeof value === "number") {
+                        result[property.name] = value;
+                    } else if (typeof value === "boolean") {
+                        result[property.name] = value;
+                    }
+                }
+                break;
+            case "part":
+                if (property.isList) {
+                    // console.log("    list property of size "+ value.length);
+                    // result[property.name] = [];
+                    for (const item in value) {
+                        if (!isNullOrUndefined(value[item])) {
+                            result[property.name].push(this.toTypeScriptInstance(value[item]));
+                        }
+                    }
+                } else {
+                    if (!isNullOrUndefined(value)) {
+                        result[property.name] = this.toTypeScriptInstance(value);
+                    }
+                }
+                break;
+            case "reference":
+                if (property.isList) {
+                    for (const item in value) {
+                        if (!isNullOrUndefined(value[item])) {
+                            result[property.name].push(this.language.referenceCreator(value[item], property.type));
+                        }
+                    }
+                } else {
+                    if (!isNullOrUndefined(value)) {
+                        result[property.name] = this.language.referenceCreator(value, property.type);
+                    }
+                }
+                break;
+            default:
+        }
+    }
     /**
      * Create JSON Object, storing references as names.
      */
     convertToJSON(tsObject: PiElement, publicOnly?: boolean): Object {
         const typename = tsObject.piLanguageConcept();
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
-        var result: Object;
+        let result: Object;
         if (publicOnly !== undefined && publicOnly) {
-            if (this.language.concept(typename).isPublic || this.language.concept(typename).isUnit) {
+            // convert all units and all public concepts
+            if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
                 result = this.convertToJSONinternal(tsObject, true, typename);
             }
         } else {
@@ -129,9 +125,9 @@ export class GenericModelSerializer {
     }
 
     private convertToJSONinternal(tsObject: PiElement, publicOnly: boolean, typename: string): Object {
-        var result: Object = { $typename: typename };
+        const result: Object = { $typename: typename };
         // console.log("typename: " + typename);
-        for (let p of this.language.allConceptProperties(typename)) {
+        for (const p of this.language.allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyType);
             if (publicOnly) {
                 if (p.isPublic) {
@@ -148,11 +144,11 @@ export class GenericModelSerializer {
     private convertPropertyToJSON(p: Property, tsObject: PiElement, publicOnly: boolean, result: Object) {
         switch (p.propertyType) {
             case "part":
-                var value = tsObject[p.name];
+                const value = tsObject[p.name];
                 if (p.isList) {
                     const parts: Object[] = tsObject[p.name];
                     result[p.name] = [];
-                    for (var i: number = 0; i < parts.length; i++) {
+                    for (let i: number = 0; i < parts.length; i++) {
                         result[p.name][i] = this.convertToJSON(parts[i] as PiElement, publicOnly);
                     }
                 } else {
@@ -164,13 +160,13 @@ export class GenericModelSerializer {
                 if (p.isList) {
                     const references: Object[] = tsObject[p.name];
                     result[p.name] = [];
-                    for (var i: number = 0; i < references.length; i++) {
+                    for (let i: number = 0; i < references.length; i++) {
                         result[p.name][i] = references[i]["name"];
                     }
                 } else {
                     // single reference
-                    const value = tsObject[p.name];
-                    result[p.name] = !!value ? tsObject[p.name]["name"] : null;
+                    const value1 = tsObject[p.name];
+                    result[p.name] = !!value1 ? tsObject[p.name]["name"] : null;
                 }
                 break;
             // case "enumeration": // TODO remove enumeration from Serializer
@@ -187,13 +183,13 @@ export class GenericModelSerializer {
             //     }
             //     break;
             case "primitive":
-                var value = tsObject[p.name];
-                if (typeof value === "string") {
-                    result[p.name] = value;
-                } else if (typeof value === "number") {
-                    result[p.name] = value;
-                } else if (typeof value === "boolean") {
-                    result[p.name] = value;
+                const value2 = tsObject[p.name];
+                if (typeof value2 === "string") {
+                    result[p.name] = value2;
+                } else if (typeof value2 === "number") {
+                    result[p.name] = value2;
+                } else if (typeof value2 === "boolean") {
+                    result[p.name] = value2;
                 }
                 break;
             default:

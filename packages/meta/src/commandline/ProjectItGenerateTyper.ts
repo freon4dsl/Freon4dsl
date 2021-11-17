@@ -1,4 +1,3 @@
-import { CommandLineStringParameter } from "@rushstack/ts-command-line";
 import { ProjectItGeneratePartAction } from "./ProjectItGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { PiTyperGenerator } from "../typerdef/generator/PiTyperGenerator";
@@ -6,7 +5,6 @@ import { PiTyperParser } from "../typerdef/parser/PiTyperParser";
 
 const LOGGER = new MetaLogger("ProjectItGenerateTyper"); // .mute();
 export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
-    private typerdefFile: CommandLineStringParameter;
     protected typerGenerator: PiTyperGenerator;
 
     public constructor() {
@@ -21,29 +19,14 @@ export class ProjectItGenerateTyper extends ProjectItGeneratePartAction {
         LOGGER.log("Starting ProjectIt typer generation ...");
 
         super.generate();
-        this.typerGenerator = new PiTyperGenerator(this.language);
+        this.typerGenerator = new PiTyperGenerator();
+        this.typerGenerator.language = this.language;
         this.typerGenerator.outputfolder = this.outputFolder;
-        try {
-            const typer = new PiTyperParser(this.language).parse(this.typerdefFile.value);
 
-            if (typer === null) {
-                throw new Error("Typer definition could not be parsed, exiting.");
-            }
-            this.typerGenerator.generate(typer);
-        } catch (e) {
-            LOGGER.log(e.stack);
+        const typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
+        if (typer === null) {
+            throw new Error("Typer definition could not be parsed, exiting.");
         }
-        // TODO add check on succesfullness
-    }
-
-    protected onDefineParameters(): void {
-        super.onDefineParameters();
-        this.typerdefFile = this.defineStringParameter({
-            argumentName: "TYPES",
-            defaultValue: "LanguageDefinition.type",
-            parameterLongName: "--typer",
-            parameterShortName: "-t",
-            description: "Typer Definition file"
-        });
+        this.typerGenerator.generate(typer);
     }
 }
