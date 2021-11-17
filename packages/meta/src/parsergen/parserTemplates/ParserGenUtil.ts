@@ -1,4 +1,18 @@
 export class ParserGenUtil {
+
+    /**
+     * Creates a name to be used internally in the parser/unparser, to avoid name classes with user
+     * defined names.
+     * @param nameFromAst
+     */
+    static internalName(nameFromAst: string) {
+        return `__${nameFromAst}`;
+    }
+
+    /**
+     * Creates a comment from the grammar rule 'rule'.
+     * @param rule
+     */
     static makeComment (rule: string) : string {
         rule = rule.replace(new RegExp("\n","gm") , "\n\t*");
         rule = rule.replace(new RegExp("/\\*","gm") , "--");
