@@ -59,6 +59,9 @@
     "typescript": "4.3.5",
     "lerna": "3.20.2"
   },
+  "resolutions": {
+    "electron": "^11.0.1"
+  },
   "workspaces": [
     "packages/core",
     "packages/core-svelte",
