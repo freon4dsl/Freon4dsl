@@ -197,6 +197,6 @@ describe("Testing Validator", () => {
         // errors.forEach(e =>
         //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         // );
-        expect(errors.length).toBe(21);
+        expect(errors.length).toBe(25);
     });
 });

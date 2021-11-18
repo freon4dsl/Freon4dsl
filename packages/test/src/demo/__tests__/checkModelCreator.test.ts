@@ -2,7 +2,7 @@ import { DemoModel, DemoFunction, DemoEntity, DemoEveryConcept } from "../langua
 import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Demo Model", () => {
-    describe("Checking DemoModel instance", () => {
+    describe("Checking DemoModel incorrect instance", () => {
         let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
 
         beforeEach(done => {
@@ -14,18 +14,21 @@ describe("Demo Model", () => {
         });
 
         test("model functions should be set correctly", () => {
-            expect(model.functions.length).toBe(3);
+            expect(model.functions.length).toBe(4);
             checkFunctionDef(model.functions[0], model);
             checkFunctionDef(model.functions[1], model);
             checkFunctionDef(model.functions[2], model);
+            checkFunctionDef(model.functions[3], model);
         });
 
         test("model entities should be set correctly", () => {
-            expect(model.entities.length).toBe(2);
+            expect(model.entities.length).toBe(4);
 
-            const f1: DemoEntity = model.entities[0];
-            expect(f1.container).toBe(model);
-            expect(f1.name).not.toBeNull();
+            for (let i = 0; i < 4; i++) {
+                const f1: DemoEntity = model.entities[i];
+                expect(f1.container).toBe(model);
+                expect(f1.name).not.toBeNull();
+            }
         });
 
         test("entity functions should be set correctly", () => {
