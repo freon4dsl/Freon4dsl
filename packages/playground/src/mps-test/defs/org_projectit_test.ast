@@ -1,0 +1,36 @@
+language ExportedMetaModel
+
+binary expression org_projectit_test_PlusExpression base org_projectit_test_BinaryExpression {
+    priority = 20;
+}
+/* SOME DESCRIPTION HERE */
+concept org_projectit_test__ConceptWithNameProp base jetbrains_mps_lang_core_BaseConcept {
+    public name: identifier; 
+}
+abstract binary expression org_projectit_test_BinaryExpression base org_projectit_test_Expression {
+    left: org_projectit_test_Expression;
+    right: org_projectit_test_Expression;
+    priority = 20;
+}
+/* THIS IS A MOCK CONCEPT FOR A TESt */
+concept org_projectit_test_MockConcept base jetbrains_mps_lang_core_BaseConcept implements org_projectit_test_MockInterface, jetbrains_mps_lang_core_INamedConcept {
+    property20: org_projectit_test_EnumMock; 
+    property40: boolean; 
+    mps_property60: number; 
+    property80: string; 
+    mps_property90: string; 
+    property101: string; 
+}
+abstract expression org_projectit_test_Expression base jetbrains_mps_lang_core_BaseConcept {
+}
+expression org_projectit_test_StringLiteralExpression base org_projectit_test_Expression {
+    value: string; 
+}
+interface org_projectit_test_MockInterface {
+}
+concept org_projectit_test_RootConcept implements jetbrains_mps_lang_core_INamedConcept {
+    reference ref?: org_projectit_test_MockConcept;
+    mock?: org_projectit_test_MockConcept;
+    mock2: org_projectit_test_MockInterface[];
+}
+limited org_projectit_test_EnumMock { Mock_1; Mock_42; NoMockAtAll; }

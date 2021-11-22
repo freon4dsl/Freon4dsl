@@ -20,6 +20,7 @@
     "ex-parser":    "bash ../../scripts/projectit-dev.sh -v parse-it -d src/example/defs -o src/example",
     "calculator":   "bash ../../scripts/projectit-dev.sh all -d src/calculator/defs -o src/calculator",
     "expressions":  "bash ../../scripts/projectit-dev.sh all -d src/mps-expressions/defs -o src/mps-expressions",
+    "mps-test":     "bash ../../scripts/projectit-dev.sh all -d src/mps-test/defs -o src/mps-test",
     "heating":      "bash ../../scripts/projectit-dev.sh all -d src/heating/defs -o src/heating",
     "json": 	    "bash ../../scripts/projectit-dev.sh all -d src/json/defs -o src/json",
     "octopus": 	    "bash ../../scripts/projectit-dev.sh all -d src/octopus/defs -o src/octopus",

@@ -10,8 +10,11 @@ import { PiEnvironment } from "@projectit/core";
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
 
-import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+// import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+
+import { ExportedMetaModelEnvironment } from "../mps-test/environment/gen/ExportedMetaModelEnvironment";
+export const editorEnvironment: PiEnvironment = ExportedMetaModelEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();

@@ -1,0 +1,10 @@
+language ExportedMetaModel
+
+abstract concept jetbrains_mps_lang_core_BaseConcept {
+    smodelAttribute?: jetbrains_mps_lang_core_Attribute[];
+}
+interface jetbrains_mps_lang_core_INamedConcept {
+    public name: identifier; 
+}
+abstract concept jetbrains_mps_lang_core_Attribute base jetbrains_mps_lang_core_BaseConcept {
+}
