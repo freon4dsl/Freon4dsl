@@ -38,7 +38,7 @@ describe("Test the parser", () => {
         const model = Demo.create({ name: "SOME_MODEL", models: myModels });
 
         for (const unit of model.models) {
-            let output = writer.writeToString(unit, 0, false);
+            const output = writer.writeToString(unit, 0, false);
             fileHandler.stringToFile(`src/parser_gen/__tests__/Output_${unit.name}.txt`, output);
             expect(output).toMatchSnapshot();
         }

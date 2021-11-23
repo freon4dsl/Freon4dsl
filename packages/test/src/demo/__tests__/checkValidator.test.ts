@@ -126,7 +126,7 @@ describe("Testing Validator", () => {
         // determine(AAP) : Boolean = "Hello Demo" + "Goodbye"
         errors = validator.validate(determine, true);
         errors.forEach(e => {
-            console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
+            // console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
             expect(e.reportedOn === determine);
         });
         // Type of '( ' "Hello Demo" ' + ' "Goodbye" ' )' does not conform to (the type of) 'DemoEntity Person'
