@@ -1,6 +1,7 @@
 
 // TODO rethink these interfaces
-import { PiElement } from "@projectit/core";
+import { PiElement, PiNamedElement } from "@projectit/core";
+import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
 // export interface IModelUnitData {
 //     // id: number;
@@ -23,22 +24,6 @@ export interface IServerCommunication {
     putModelUnit(modelName: string, unitName: string, piUnit: PiElement);
 
     /**
-     * Reads the model unit according to the data in 'modelInfo' from the server and
-     * calls 'loadCallBack', which takes the model unit as parameter.
-     * @param modelInfo
-     * @param loadCallback
-     */
-    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
-
-    /**
-     * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
-     * calls 'loadCallBack', which takes the model unit as parameter.
-     * @param modelInfo
-     * @param loadCallback
-     */
-    loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
-
-    /**
      * Deletes the unit according to the data in 'modelInfo' from the server
      * @param modelInfo
      */
@@ -57,6 +42,29 @@ export interface IServerCommunication {
      * @param modelListCallback
      */
     loadModelList(modelListCallback: (names: string[]) => void);
+
+    /**
+     * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
+     * @param modelName
+     * @param modelListCallback
+     */
+    loadUnitList(modelName: string, modelListCallback: (names: string[]) => void);
+
+    /**
+     * Reads the model unit according to the data in 'modelInfo' from the server and
+     * calls 'loadCallBack', which takes the model unit as parameter.
+     * @param modelInfo
+     * @param loadCallback
+     */
+    loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
+
+    /**
+     * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
+     * calls 'loadCallBack', which takes the model unit as parameter.
+     * @param modelInfo
+     * @param loadCallback
+     */
+    loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
 
     /**
      * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.

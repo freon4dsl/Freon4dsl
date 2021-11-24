@@ -19,6 +19,14 @@ export class ServerCommunication implements IServerCommunication {
         return ServerCommunication.instance;
     }
 
+    private static findParams(params: string) {
+        if (!!params && params.length > 0) {
+            return "?" + params;
+        } else {
+            return "";
+        }
+    }
+
     /**
      * Takes 'piUnit' and stores it as 'unitName' in the folder 'modelName' on the server at SERVER_URL.
      * 'unitName' must start with a character and contain only characters and/or numbers.
@@ -28,7 +36,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async putModelUnit(modelName: string, unitName: string, piUnit: PiNamedElement) {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitName}`);
-        if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
+        if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piUnit);
             const publicModel = ServerCommunication.serial.convertToJSON(piUnit, true);
             await this.putWithTimeout(`putModelUnit`, model, `folder=${modelName}&name=${unitName}` );
@@ -44,7 +52,8 @@ export class ServerCommunication implements IServerCommunication {
 
     /**
      * Deletes the unit indicated by 'modelInfo' including its interface.
-     * @param modelInfo
+     * @param modelName
+     * @param unitName
      */
     async deleteModelUnit(modelName: string, unitName: string) {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unitName}`);
@@ -77,6 +86,7 @@ export class ServerCommunication implements IServerCommunication {
 
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
+     * @param modelName
      * @param modelListCallback
      */
     async loadUnitList(modelName: string, modelListCallback: (names: string[]) => void) {
@@ -132,7 +142,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     private async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
-        params = this.findParams(params);
+        params = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -146,20 +156,15 @@ export class ServerCommunication implements IServerCommunication {
                 }
             });
             clearTimeout(timeoutId);
-            return promise.json() as Promise<T>;
+            return await promise.json() as Promise<T>;
         } catch (e) {
-            let errorMess: string = e.message;
-            if (e.message.includes("aborted")) {
-                errorMess = `Time out: no response from ${SERVER_URL}.`;
-            }
-            LOGGER.error(this, "fetchWithTimeout, " + errorMess);
-            setUserMessage(errorMess);
+            this.handleError(e);
         }
         return null;
     }
 
     private async putWithTimeout(method: string, data: Object, params?: string) {
-        params = this.findParams(params);
+        params = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -175,20 +180,16 @@ export class ServerCommunication implements IServerCommunication {
                 });
             clearTimeout(timeoutId);
         } catch (e) {
-            let errorMess: string = e.message;
-            if (e.message.includes("aborted")) {
-                errorMess = `Time out: no response from ${SERVER_URL}.`;
-            }
-            LOGGER.error(this, "putWithTimeout, " + errorMess);
-            setUserMessage(errorMess);
+            this.handleError(e);
         }
     }
 
-    private findParams(params: string) {
-        if (!!params && params.length > 0) {
-            return "?" + params;
-        } else {
-            return "";
+    private handleError(e) {
+        let errorMess: string = e.message;
+        if (e.message.includes("aborted")) {
+            errorMess = `Time out: no response from ${SERVER_URL}.`;
         }
+        LOGGER.error(this, errorMess);
+        setUserMessage(errorMess);
     }
 }
