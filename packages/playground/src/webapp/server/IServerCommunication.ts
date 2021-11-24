@@ -1,15 +1,14 @@
 
-
 // TODO rethink these interfaces
 import { PiElement } from "@projectit/core";
 
-export interface IModelUnitData {
-    // id: number;
-    unitName: string;
-    modelName: string;
-    language: string;
-    // url?: string;
-}
+// export interface IModelUnitData {
+//     // id: number;
+//     unitName: string;
+//     modelName: string;
+//     language: string;
+//     // url?: string;
+// }
 
 /**
  *  Takes care of the communication with the server at SERVER_URL from WebappConfiguration.
@@ -21,7 +20,7 @@ export interface IServerCommunication {
      * @param modelInfo
      * @param piUnit
      */
-    putModelUnit(modelInfo: IModelUnitData, piUnit: PiElement);
+    putModelUnit(modelName: string, unitName: string, piUnit: PiElement);
 
     /**
      * Reads the model unit according to the data in 'modelInfo' from the server and
@@ -40,18 +39,17 @@ export interface IServerCommunication {
     loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: PiElement) => void);
 
     /**
-     * Deletes the model according to the data in 'modelInfo' from the server
+     * Deletes the unit according to the data in 'modelInfo' from the server
      * @param modelInfo
      */
-    deleteModelUnit(modelInfo: IModelUnitData);
+    deleteModelUnit(modelName: string, unitName: string);
 
     /**
      * Deletes the complete model with name 'modelName', including all its modelunits
      * @param languageName
      * @param modelName
      */
-    // TODO implement this
-    // deleteModel(languageName: string, modelName: string);
+    deleteModel(modelName: string);
 
     /**
      * Reads the list of model units of language 'languageName' that are available on the server and calls 'modelListCallback'.
