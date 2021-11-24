@@ -104,7 +104,7 @@
             if (names.length > 0) {
                 $modelNames = names;
                 $deleteModelDialogVisible = true;
-                console.log("dialog visible is true")
+                // console.log("dialog visible is true")
             }
         });
     }

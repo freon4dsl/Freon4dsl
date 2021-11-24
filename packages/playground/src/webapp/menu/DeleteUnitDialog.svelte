@@ -35,7 +35,7 @@
 	}
 
 	const handleSubmit = () => {
-		console.log("Submit called, unit to be deleted: " + $toBeDeleted.name + "." + $currentModelName);
+		// console.log("Submit called, unit to be deleted: " + $toBeDeleted.name + "." + $currentModelName);
 		EditorCommunication.getInstance().deleteModelUnit($toBeDeleted);
 		$deleteUnitDialogVisible = false;
 	}

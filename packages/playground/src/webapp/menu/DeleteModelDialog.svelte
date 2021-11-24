@@ -45,7 +45,7 @@
 	}
 
 	const handleSubmit = () => {
-		console.log("Submit called, model to be deleted: " + modelToBeDeleted);
+		// console.log("Submit called, model to be deleted: " + modelToBeDeleted);
 		ServerCommunication.getInstance().deleteModel(modelToBeDeleted);
 		modelToBeDeleted = "";
 		$deleteModelDialogVisible = false;
