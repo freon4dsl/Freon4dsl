@@ -9,7 +9,7 @@ describe("Parser concepts of type", () => {
 
     test( " Expression ", () => {
         try {
-            let input = fileHandler.stringFromFile("src/parser-basic-concepts/__inputs__/test1.exp");
+            const input = fileHandler.stringFromFile("src/parser-basic-concepts/__inputs__/test1.exp");
             const unit1: ExpressionTest = reader.readFromString(input, "ExpressionTest") as ExpressionTest;
             // console.log(writer.writeToString(unit1, 0, false));
             expect(unit1).toMatchSnapshot();

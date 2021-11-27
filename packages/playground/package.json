@@ -62,7 +62,7 @@
     "mobx-utils": "6.0.4",
     "click-outside": "1.0.4",
     "lodash": "^4.17.21",
-    "net.akehurst.language-agl-processor": "4.0.0-rc.2",
+    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "kotlin": "^1.5.21",
     "sirv-cli": "^1.0.0",
     "svelte-mui": "^0.3.3-7",
