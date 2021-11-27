@@ -9,6 +9,7 @@ modelunit PiValidatorDef {
 //    validatorName: string;
     languageName: string;
     conceptRules: ConceptRuleSet[];
+    file-extension = "valid";
 }
 
 concept ConceptRuleSet {
