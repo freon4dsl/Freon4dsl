@@ -1,7 +1,7 @@
 language PiLanguage
 
 // begin validator definition
-public modelunit PiValidatorDef {
+modelunit PiValidatorDef {
     public name: identifier;
 //}
 //concept PiValidatorDef {
@@ -9,6 +9,7 @@ public modelunit PiValidatorDef {
 //    validatorName: string;
     languageName: string;
     conceptRules: ConceptRuleSet[];
+    file-extension = "valid";
 }
 
 concept ConceptRuleSet {

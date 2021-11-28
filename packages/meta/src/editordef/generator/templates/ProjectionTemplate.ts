@@ -4,7 +4,7 @@ import {
     PiExpressionConcept,
     PiPrimitiveProperty,
     PiProperty,
-    PiLanguage, PiLimitedConcept
+    PiLanguage, PiLimitedConcept, PiClassifier
 } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
 import { Roles } from "../../../utils/Roles";
@@ -37,11 +37,21 @@ export class ProjectionTemplate {
         if (nonBinaryConceptsWithDefaultProjection.length > 0) {
             // console.error("Projection generator: there are elements without projections "+ nonBinaryConceptsWithDefaultProjection.map(c => c.name));
         }
-        const nonBinaryConceptsWithProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
+
+        const allClassifiers: PiClassifier[] = [];
+        // allClassifiers.push(language.modelConcept);
+        allClassifiers.push(...language.units);
+        allClassifiers.push(...language.concepts);
+
+        const nonBinaryConceptsWithProjection = allClassifiers.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return !!editor && !!editor.projection;
         });
 
+        const modelImports: string[] = allClassifiers.map(u => `${Names.classifier(u)}`)
+            .concat(language.interfaces.map(c => `${Names.interface(c)}`));
+
+        // TODO sort out unused imports
         return `
             import { observable, makeObservable } from "mobx";
 
@@ -77,8 +87,7 @@ export class ProjectionTemplate {
             } from "${PROJECTITCORE}";
             
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${language.concepts.map(c => `${Names.concept(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${language.interfaces.map(c => `${Names.interface(c)}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${modelImports.map(c => `${c}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
@@ -112,8 +121,8 @@ export class ProjectionTemplate {
                     }
 
                     switch( exp.piLanguageConcept() ) { 
-                        ${language.concepts.map(c => `
-                        case "${c.name}" : return this.${Names.projectionFunction(c)} (exp as ${Names.concept(c)});`
+                        ${allClassifiers.map(c => `
+                        case "${c.name}" : return this.${Names.projectionFunction(c)} (exp as ${Names.classifier(c)});`
                         ).join("  ")}
                     }
                     // nothing fits
@@ -152,7 +161,7 @@ export class ProjectionTemplate {
         `;
     }
 
-    private generateUserProjection(language: PiLanguage, concept: PiConcept, editor: PiEditConcept) {
+    private generateUserProjection(language: PiLanguage, concept: PiClassifier, editor: PiEditConcept) {
         // TODO for now: do not do anything for a limited concept
         if (editor.concept instanceof PiLimitedConcept) {
             return ``;
@@ -215,7 +224,7 @@ export class ProjectionTemplate {
                 // console.log("FOUND NEWLINE");
                 result = result.substr(1);
             }
-            return `public ${Names.projectionFunction(concept)} (${elementVarName}: ${Names.concept(concept)}) : Box {
+            return `public ${Names.projectionFunction(concept)} (${elementVarName}: ${Names.classifier(concept)}) : Box {
                     return ${result};
                 }`;
         }
@@ -225,7 +234,7 @@ export class ProjectionTemplate {
                            elementVarName: string,
                            index: number,
                            itemIndex: number,
-                           concept: PiConcept,
+                           concept: PiClassifier,
                            language: PiLanguage) {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
@@ -241,7 +250,7 @@ export class ProjectionTemplate {
         return result;
     }
 
-    private optionalProjection(item: PiEditSubProjection, elementVarName: string, index: number, itemIndex: number, concept: PiConcept,
+    private optionalProjection(item: PiEditSubProjection, elementVarName: string, index: number, itemIndex: number, concept: PiClassifier,
                                language: PiLanguage): string {
         let result = "";
         item.items.forEach((subitem, subitemIndex) => {
@@ -274,7 +283,7 @@ export class ProjectionTemplate {
      * @param language
      * @private
      */
-    private propertyProjection(item: PiEditPropertyProjection, elementVarName: string, concept: PiConcept, language: PiLanguage) {
+    private propertyProjection(item: PiEditPropertyProjection, elementVarName: string, concept: PiClassifier, language: PiLanguage) {
         let result: string = "";
         const appliedFeature: PiProperty = item.expression.appliedfeature.referredElement.referred;
         if (appliedFeature instanceof PiPrimitiveProperty) {
@@ -312,11 +321,11 @@ export class ProjectionTemplate {
      * @param propertyConcept   The property for which the projection is generated.
      * @param element           The name of the element parameter of the getBox projection method.
      */
-    conceptPartListProjection(item: PiEditPropertyProjection, direction: string, concept: PiConcept, propertyConcept: PiConceptProperty, element: string) {
+    conceptPartListProjection(item: PiEditPropertyProjection, direction: string, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
         return `
             BoxFactory.${direction.toLowerCase()}List(${element}, "${Roles.property(propertyConcept)}-list", 
                 ${element}.${propertyConcept.name}.map(feature => {
-                    let roleName: string =  "${Roles.property(propertyConcept)}-" + feature.piId() + "-separator";
+                    const roleName: string =  "${Roles.property(propertyConcept)}-" + feature.piId() + "-separator";
                     return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${item.listJoin.joinText}")]) as Box;
                 }).concat(
                     BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+ ${propertyConcept.name}>" , { //  add ${propertyConcept.name}
@@ -355,7 +364,7 @@ export class ProjectionTemplate {
 
     conceptReferenceProjectionInList(appliedFeature: PiConceptProperty, element: string) {
         const featureType = appliedFeature.type.name;
-        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}-index", "< select ${appliedFeature.name}>", "${featureType}",
+        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}-" + index, "< select ${appliedFeature.name}>", "${featureType}",
                     () => {
                         if (!!${element}.${appliedFeature.name}) {
                             return { id: ent.name, label: ent.name };
@@ -372,7 +381,7 @@ export class ProjectionTemplate {
     }
 
     conceptReferenceListProjection(direction: string, reference: PiConceptProperty, element: string) {
-        return `new ${direction}ListBox(
+        return `BoxFactory.${direction.toLowerCase()}List(
                     ${element},
                     "${Roles.property(reference)}",
                     ${element}.${reference.name}.map((ent, index) => {

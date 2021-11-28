@@ -5,7 +5,6 @@ import { MetaLogger } from "../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("ProjectItGenerateScoper"); // .mute();
 export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
-    // private scopeFile: CommandLineStringParameter;
     protected scoperGenerator: ScoperGenerator;
 
     public constructor() {
@@ -20,7 +19,8 @@ export class ProjectItGenerateScoper extends ProjectItGeneratePartAction {
     generate(): void {
         LOGGER.log("Starting ProjectIt scoper generation ...");
         super.generate();
-        this.scoperGenerator = new ScoperGenerator(this.language);
+        this.scoperGenerator = new ScoperGenerator();
+        this.scoperGenerator.language = this.language;
         this.scoperGenerator.outputfolder = this.outputFolder;
 
         const scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);

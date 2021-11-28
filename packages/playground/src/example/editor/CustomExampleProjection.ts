@@ -16,7 +16,7 @@ import {
     GridBox,
     PiStyle,
     GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute } from "../language/gen/Attribute";
@@ -36,9 +36,10 @@ import {
     gridcellLast,
     gridCellOr
 } from "./styles/CustomStyles";
+import * as projectitStyles from "./styles/styles";
 import { mycell, mygrid } from "./styles/styles";
 
-const LOGGER = new PiLogger("CustumProjection");
+const LOGGER = new PiLogger("CustomProjection");
 
 const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
 const OPERATOR_COLUMN = 1;
@@ -70,15 +71,20 @@ export class CustomExampleProjection implements PiProjection {
         if (element instanceof NumberLiteralExpression) {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
-        if (element instanceof SumExpression) {
-            return this.createSumBox(element);
-        }
-        if (element instanceof Entity) {
-            return this.createEntityBox(element);
-        }
-        if (element instanceof OrExpression) {
-            return this.createOrBoxGrid(element);
-        }
+        // Uncomment to see a mathematical Sum symbol
+        // if (element instanceof SumExpression) {
+        //     return this.createSumBox(element);
+        // }
+
+        // Uncomment to see a simple (unfinished) table representation of entity attributes
+        // if (element instanceof Entity) {
+        //     return this.createEntityBox(element);
+        // }
+
+        // Uncomment to see an alternative OR notation (only works up to two nested ors
+        // if (element instanceof OrExpression) {
+        //     return this.createOrBoxGrid(element);
+        // }
         return null;
     }
 
@@ -212,7 +218,35 @@ export class CustomExampleProjection implements PiProjection {
         );
     }
 
+    private createMethods(entity: Entity): Box {
+        return BoxFactory.verticalList(
+            entity,
+            "Entity-methods-list",
+            entity.methods
+                .map(feature => {
+                    let roleName: string = "Entity-methods-" + feature.piId() + "-separator";
+                    return BoxFactory.horizontalList(entity, roleName, [
+                        this.rootProjection.getBox(feature),
+                        BoxFactory.label(entity, roleName + "label", "")
+                    ]) as Box;
+                })
+                .concat(
+                    BoxFactory.alias(entity, "Entity-methods", "<+ methods>", {
+                        //  add methods
+                        style: styleToCSS(projectitStyles.placeholdertext),
+                        propertyName: "methods"
+                    })
+                )
+        )
+    }
+
     private createEntityBox(entity: Entity): Box {
+        return BoxFactory.verticalList(entity, "entity-custom-all", [
+            this.createEntityTableForAttributes(entity),
+            this.createMethods(entity)
+        ]);
+    }
+    private createEntityTableForAttributes(entity: Entity): Box {
         let cells: GridCell[] = [];
         cells.push({
             row: 1,

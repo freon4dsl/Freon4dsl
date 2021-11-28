@@ -1,14 +1,14 @@
 import { GrammarRule } from "./GrammarRule";
-import { PiConcept, PiExpressionConcept } from "../../../languagedef/metalanguage";
+import { PiClassifier, PiExpressionConcept } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { internalTransformNode } from "../ParserGenUtil";
 import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
     expressionBase: PiExpressionConcept;
-    symbolToConcept: Map<PiConcept, string> = new Map<PiConcept, string>();
+    symbolToConcept: Map<PiClassifier, string> = new Map<PiClassifier, string>();
 
-    constructor(ruleName: string, expressionBase: PiExpressionConcept, symbolToConcept: Map<PiConcept, string>) {
+    constructor(ruleName: string, expressionBase: PiExpressionConcept, symbolToConcept: Map<PiClassifier, string>) {
         super();
         this.ruleName = ruleName;
         this.expressionBase = expressionBase;
@@ -25,7 +25,7 @@ export class BinaryExpressionRule extends GrammarRule {
         for (const [key, value] of this.symbolToConcept) {
             cases.push(`
                 case '${value}': {
-                    combined = ${Names.concept(key)}.create({left: first, right: second});
+                    combined = ${Names.classifier(key)}.create({left: first, right: second});
                     break;
                 }`);
         }
@@ -44,12 +44,11 @@ export class BinaryExpressionRule extends GrammarRule {
         private transform${this.ruleName}(branch: SPPTBranch) : ${Names.concept(this.expressionBase)} {
             // console.log('transform${this.ruleName} called: ' + branch.name);
             const children = branch.nonSkipChildren.toArray();
-            const actualList = children[0].nonSkipChildren.toArray();
             let index = 0;
-            let first = this.${internalTransformNode}(actualList[index++]);
-            while (index < actualList.length) {
-                let operator = this.${internalTransformNode}(actualList[index++]);
-                let second = this.${internalTransformNode}(actualList[index++]);
+            let first = this.${internalTransformNode}(children[index++]);
+            while (index < children.length) {
+                let operator = this.${internalTransformNode}(children[index++]);
+                let second = this.${internalTransformNode}(children[index++]);
                 let combined: ${Names.concept(this.expressionBase)} = null;
                 switch (operator) {
                 ${cases.map(c => `${c}`).join("")}

@@ -9,15 +9,11 @@ export abstract class PiLangElement extends PiDefinitionElement {
 export class PiLanguage extends PiLangElement {
     concepts: PiConcept[] = [];
     interfaces: PiInterface[] = [];
-    modelConcept: PiConcept; // set by the checker
+    modelConcept: PiModelDescription;
+    units: PiUnitDescription[] = [];
 
     constructor() {
         super();
-        // this.addPredefinedElements();
-    }
-
-    get units(): PiConcept[] {
-        return this.concepts.filter(con => con.isUnit === true);
     }
 
     conceptsAndInterfaces(): PiClassifier[] {
@@ -39,6 +35,9 @@ export class PiLanguage extends PiLangElement {
         if (result === undefined) {
             result = this.findInterface(name);
         }
+        if (result === undefined) {
+            result = this.findUnitDescription(name);
+        }
         // if (result === undefined) {
         //     result = this.findBasicType(name);
         // }
@@ -57,6 +56,10 @@ export class PiLanguage extends PiLangElement {
 
     findBasicType(name:string): PiClassifier {
         return PiPrimitiveType.find(name);
+    }
+
+    findUnitDescription(name: string): PiUnitDescription {
+        return this.units.find(u => u.name === name);
     }
 }
 
@@ -91,6 +94,30 @@ export abstract class PiClassifier extends PiLangElement {
         result = result.concat(this.allPrimProperties()).concat(this.allParts()).concat(this.allReferences());
         return result;
     }
+
+    nameProperty(): PiPrimitiveProperty {
+        return this.allPrimProperties().find(p => p.name === "name");
+    }
+
+    identifierNameProperty(): PiPrimitiveProperty {
+        return this.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
+    }
+}
+
+export class PiModelDescription extends PiClassifier {
+    unitTypes(): PiUnitDescription[] {
+        let result: PiUnitDescription[] = [];
+        // all parts of a model are units
+        for (const intf of this.parts()) {
+            result = result.concat(intf.type.referred as PiUnitDescription);
+        }
+        return result;
+    }
+}
+
+export class PiUnitDescription extends PiClassifier {
+    fileExtension: string = "";
+    isPublic: boolean = true;
 }
 
 export class PiInterface extends PiClassifier {
@@ -158,12 +185,8 @@ export class PiInterface extends PiClassifier {
 
 export class PiConcept extends PiClassifier {
     isAbstract: boolean = false;
-    isModel: boolean = false;
-    isUnit: boolean = false;
     base: PiElementReference<PiConcept>;
     interfaces: PiElementReference<PiInterface>[] = []; // the interfaces that this concept implements
-    // TODO the following should be moved to the editor generator
-    triggerIsRegExp: boolean;
 
     allPrimProperties(): PiPrimitiveProperty[] {
         let result: PiPrimitiveProperty[] = this.implementedPrimProperties();

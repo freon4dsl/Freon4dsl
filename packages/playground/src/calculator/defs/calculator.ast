@@ -5,7 +5,7 @@ model CalculatorModel {
     calc: Calculator;
 }
 
-modelunit Calculator  implements INamedConcept {
+modelunit Calculator {
     public name: identifier;
 	inputFields: InputField[];
 	outputFields: OutputField[];

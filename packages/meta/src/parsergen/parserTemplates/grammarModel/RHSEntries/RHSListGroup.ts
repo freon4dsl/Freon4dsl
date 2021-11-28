@@ -1,7 +1,7 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { RHSPropEntry } from "./RHSPropEntry";
 import { PiProperty } from "../../../../languagedef/metalanguage";
-import { internalTransformNode} from "../../ParserGenUtil";
+import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 import { makeIndent } from "../GrammarUtils";
 
 export class RHSListGroup extends RHSPropPartWithSeparator {
@@ -21,9 +21,9 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
     toMethod(propIndex: number, nodeName: string): string {
         return `// RHSListGroup  
             if (!${nodeName}[${propIndex}].isEmptyMatch) {          
-                ${this.property.name} = [];
+                ${ParserGenUtil.internalName(this.property.name)} = [];
                 for (const subNode of ${nodeName}[${propIndex}].nonSkipChildren.toArray()) {
-                    ${this.property.name}.push(this.${internalTransformNode}(this.getGroup(subNode).nonSkipChildren.toArray()[0]));
+                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${internalTransformNode}(this.getGroup(subNode).nonSkipChildren.toArray()[0]));
                 }
             }`;
     }

@@ -17,6 +17,7 @@ export const entityNameStyle: PiStyle = {
 export const entityBoxStyle: PiStyle = {
     padding: "0px",
     color: "darkred",
+    "padding-bottom": "6px",
     "font-weight": "bold",
     "align-items": "center",
     "border-style": "none",

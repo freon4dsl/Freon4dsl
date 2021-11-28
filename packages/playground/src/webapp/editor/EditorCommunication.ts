@@ -39,6 +39,7 @@ export class EditorCommunication {
         languageName.set(editorEnvironment.languageName);
         // unitTypes are the same for every model in the language
         unitTypes.set(editorEnvironment.unitNames);
+        // TODO set file extensions otherwise
         // file extension are the same for every model in the language
         let tmp: string[] = [];
         for (const val of editorEnvironment.fileExtensions.values()){

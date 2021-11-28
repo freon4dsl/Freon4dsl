@@ -1,11 +1,11 @@
 language Demo
 
-public model Demo {
+model Demo {
     public name: identifier;
     public models: DemoModel[];
 }
 
-public modelunit DemoModel {
+modelunit DemoModel {
     public main?: DemoEntity;
     public functions: DemoFunction[];
     public name: identifier;

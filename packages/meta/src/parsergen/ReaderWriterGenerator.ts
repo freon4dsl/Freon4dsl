@@ -1,31 +1,36 @@
 import * as fs from "fs";
 import { MetaLogger } from "../utils/MetaLogger";
 import { PiConcept, PiLanguage } from "../languagedef/metalanguage";
-import { GenerationStatus, Helpers, Names, READER_GEN_FOLDER, WRITER_GEN_FOLDER } from "../utils";
+import { GenerationStatus, Helpers, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils";
 import { PiEditUnit } from "../editordef/metalanguage";
-import { WriterTemplate, ReaderTemplate } from "./parserTemplates";
-import { ParserGenerator } from "./parserTemplates/ParserGenerator";
+import { WriterTemplate, ReaderTemplate, ParserGenerator } from "./parserTemplates";
 import { net } from "net.akehurst.language-agl-processor";
 import Agl = net.akehurst.language.agl.processor.Agl;
+import { PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
 
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
-    protected writerGenFolder: string;
-    protected readerGenFolder: string;
-    language: PiLanguage;
+    public language: PiLanguage;
+    private writerFolder: string;
+    private writerGenFolder: string;
+    private readerFolder: string;
+    private readerGenFolder: string;
 
     generate(editDef: PiEditUnit): void {
+        if (this.language == null) {
+            LOGGER.error(this, "Cannot generate parser and unparser because language is not set.");
+            return;
+        }
         const generationStatus = new GenerationStatus();
-        this.writerGenFolder = this.outputfolder + "/" + WRITER_GEN_FOLDER;
-        this.readerGenFolder = this.outputfolder + "/" + READER_GEN_FOLDER;
+        this.getFolderNames();
         LOGGER.log("Generating parser and unparser in folder " + this.writerGenFolder + " for language " + this.language?.name);
 
         const unparserTemplate = new WriterTemplate();
         const readerTemplate = new ReaderTemplate();
         const parserGenerator = new ParserGenerator();
-        let correctUnits: PiConcept[] = [];
+        let correctUnits: PiUnitDescription[] = [];
 
         // Prepare folders
         Helpers.createDirIfNotExisting(this.writerGenFolder);
@@ -41,9 +46,8 @@ export class ReaderWriterGenerator {
         let generatedContent  = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
         this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
 
-        let noCorrectGrammar: boolean = false;
         this.language.units.forEach(unit => {
-            // analyse the unit an dgenerate the grammar and analyser together
+            // analyse the unit and generate the grammar and analyser together
             parserGenerator.generateParserForUnit(this.language, unit, editDef);
             // get the grammar and write it to file
             generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
@@ -90,9 +94,24 @@ export class ReaderWriterGenerator {
         }
     }
 
+    private getFolderNames() {
+        this.writerFolder = this.outputfolder + "/" + WRITER_FOLDER;
+        this.readerFolder = this.outputfolder + "/" + READER_FOLDER;
+        this.writerGenFolder = this.outputfolder + "/" + WRITER_GEN_FOLDER;
+        this.readerGenFolder = this.outputfolder + "/" + READER_GEN_FOLDER;
+    }
+
     private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
         LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`);
         generatedContent = Helpers.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
         fs.writeFileSync(`${generatedFilePath}`, generatedContent);
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.writerGenFolder);
+        Helpers.deleteDirAndContent(this.readerGenFolder);
+        Helpers.deleteDirIfEmpty(this.writerFolder);
+        Helpers.deleteDirIfEmpty(this.readerFolder);
     }
 }

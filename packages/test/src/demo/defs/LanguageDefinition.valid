@@ -29,7 +29,7 @@ DemoAttribute {
 }
 
 DemoFunction {
-    typecheck conformsTo (self.expression, self.declaredType) {severity: improvement, message: "${self.name} IS NOT CORRECT!!"};
+    typecheck conformsTo (self.expression, self.declaredType) {severity: improvement, message: "${self.name} EXPRESSION TYPE IS NOT CORRECT!!"};
     isunique name in self.parameters         {severity: improvement};
     validIdentifier;
 }

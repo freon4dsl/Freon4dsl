@@ -13,17 +13,18 @@ import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel/GrammarModel";
+import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
-    private unit: PiConcept = null;
+    private unit: PiUnitDescription = null;
     private editUnit: PiEditUnit = null;
     private grammar: GrammarModel = null;
     private imports: PiClassifier[] = [];   // holds all the concepts that need to be imported in the syntax analyser class
 
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
 
-    generateParserForUnit(language: PiLanguage, langUnit: PiConcept, editUnit: PiEditUnit) {
+    generateParserForUnit(language: PiLanguage, langUnit: PiUnitDescription, editUnit: PiEditUnit) {
         // (re)set all attributes that are global to this class to new values
         this.language = language;
         this.unit = langUnit;
@@ -48,9 +49,9 @@ export class ParserGenerator {
 
     private createGrammarRules(editUnit: PiEditUnit, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
         // create parse rules and syntax analysis methods for the concepts
-        this.addToImports(myLanguageAnalyser.conceptsUsed);
+        this.addToImports(myLanguageAnalyser.classifiersUsed);
         const conceptMaker: ConceptMaker = new ConceptMaker();
-        this.grammar.rules.push(...conceptMaker.generateConcepts(editUnit, myLanguageAnalyser.conceptsUsed));
+        this.grammar.rules.push(...conceptMaker.generateClassifiers(editUnit, myLanguageAnalyser.classifiersUsed));
         // addImports must done after 'generate...'
         this.addToImports(conceptMaker.imports);
 

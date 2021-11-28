@@ -7,7 +7,7 @@ model OpenHabModel {
 //    ruleModels: RuleModel[];
 }
 
-public modelunit ItemModel {
+modelunit ItemModel {
     public name: identifier;
 	public items: ModelItem[];
 }

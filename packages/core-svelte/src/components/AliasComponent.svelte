@@ -97,7 +97,7 @@
         isEditing = true;
         if (!!textComponent) {
             // textComponent.textOnScreen = key;
-            choiceBox.textHelper.setText(key);
+            // choiceBox.textHelper.setText(key);
         }
         const aliasResult = await executeBehavior(choiceBox, key, key, editor);
         await handleStringInput(key, aliasResult);
@@ -113,7 +113,10 @@
                 // choiceBox.textHelper.setText(s);
                 setOpen("handleStringInput Alias executed", false);
                 isEditing = false;
-                choiceBox.textHelper.setText("")
+                const selected = choiceBox.getSelectedOption();
+                if (!!selected) {
+                    choiceBox.textBox.setText(selected.label);
+                }
                 break;
             case BehaviorExecutionResult.PARTIAL_MATCH:
                 LOGGER.info(this, "PARTIAL_MATCH");
@@ -151,7 +154,8 @@
             }
             if (aliasResult === BehaviorExecutionResult.EXECUTED) {
                 isEditing = false;
-                choiceBox.textHelper.setText("");
+                // LOGGER.log("onInput set text to empty");
+                // choiceBox.textHelper.setText("");
             }
         } else if (isSelectBox(choiceBox)) {
             const selected: SelectOption = findOption(choiceBox.getOptions(editor), value);

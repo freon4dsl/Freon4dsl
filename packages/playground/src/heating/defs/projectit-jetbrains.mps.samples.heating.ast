@@ -5,7 +5,7 @@ model Heating {
     plans: HeatingPlan[];
 }
 
-modelunit HeatingPlan implements INamedConcept {
+modelunit HeatingPlan {
     public name: identifier;
 	dailyPlans: DailyPlan[];
 }

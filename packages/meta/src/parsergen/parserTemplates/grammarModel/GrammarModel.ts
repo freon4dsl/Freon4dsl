@@ -10,6 +10,7 @@ import {
 } from "../ParserGenUtil";
 import { GrammarRule } from "./GrammarRule";
 import { refRuleName, refSeparator } from "./GrammarUtils";
+import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
 
 export class GrammarModel {
     unitName: string = '';
@@ -53,7 +54,7 @@ leaf booleanLiteral      = 'false' | 'true';
         return result;
     }
 
-    toMethod(langUnit: PiConcept, imports: string[], relativePath: string): string {
+    toMethod(langUnit: PiUnitDescription, imports: string[], relativePath: string): string {
         // Template starts here
         return `
         import {net} from "net.akehurst.language-agl-processor";

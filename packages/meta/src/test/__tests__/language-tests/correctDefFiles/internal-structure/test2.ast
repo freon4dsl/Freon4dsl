@@ -24,6 +24,7 @@ modelunit AA  {
     AAprop12: DD[];
     reference AAprop13: FF;
     reference AAprop14: FF[];
+    file-extension = "aap";
 }
 
 concept BB base CC {

@@ -5,6 +5,7 @@ import { GenerationStatus, Helpers } from "../utils";
  * Generic generator action. The only option defined here is the -o flag for the output folder.
  * Subclasses need to call super.onDefineParameters()!
  */
+// TODO subclasses do not call super.onDefineParameters(): is comment wrong or something else?
 export abstract class ProjectItGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
     protected outputFolder: string;
@@ -39,7 +40,7 @@ export abstract class ProjectItGenerateAction extends CommandLineAction {
             description: "Folder where your language definition files can be found"
         });
         this.outputFolderArg = this.defineStringParameter({
-            argumentName: "OUTPUTDIR",
+            argumentName: "OUTPUT_DIR",
             defaultValue: ".",
             parameterLongName: "--output",
             parameterShortName: "-o",

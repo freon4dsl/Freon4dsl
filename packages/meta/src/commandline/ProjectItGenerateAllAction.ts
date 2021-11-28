@@ -27,9 +27,9 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
-    protected scoperGenerator: ScoperGenerator; // constructor needs language
-    protected validatorGenerator: ValidatorGenerator; // constructor needs language
-    protected typerGenerator: PiTyperGenerator; // constructor needs language
+    protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
+    protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
+    protected typerGenerator: PiTyperGenerator = new PiTyperGenerator();
     protected language: PiLanguage;
 
     public constructor() {
@@ -37,7 +37,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             actionName: "all",
             summary: "Generates the TypeScript code for all parts of the work environment for your language",
             documentation:
-                "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, and the " +
+                "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
                 "validator for language as defined in files in DEFINITIONS_DIR."
         });
     }
@@ -47,7 +47,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         // LOGGER.log("Output will be generated in: " + this.outputFolder);
 
         // this try-catch is here for debugging purposes, should be removed from release
-        // try {
+        try {
             this.findDefinitionFiles();
             this.addWatchers();
 
@@ -65,10 +65,9 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 LOGGER.info(this, "Watching language definition files ...");
             }
         // this try-catch is here for debugging purposes, should be removed from release
-        // } catch (e) {
-        //
-        //     LOGGER.error(this, e.stack);
-        // }
+        } catch (e) {
+            LOGGER.error(this, e.stack);
+        }
     }
 
     private addWatchers() {
@@ -100,7 +99,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } else {
                 LOGGER.log("Generating default typer");
             }
-            this.typerGenerator = new PiTyperGenerator(this.language);
+            this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
@@ -118,7 +117,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } else {
                 LOGGER.log("Generating default scoper");
             }
-            this.scoperGenerator = new ScoperGenerator(this.language);
+            this.scoperGenerator.language = this.language;
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e) {
@@ -136,7 +135,7 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             } else {
                 LOGGER.log("Generating default validator");
             }
-            this.validatorGenerator = new ValidatorGenerator(this.language);
+            this.validatorGenerator.language = this.language;
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {

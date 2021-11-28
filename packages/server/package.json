@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/server",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,6 +29,8 @@
     "tslib": "2.3.0"
   },
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "access": "public"
   }
+
 }

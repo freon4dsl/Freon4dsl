@@ -1,6 +1,7 @@
 import { PiConcept, PiLanguage } from "../../languagedef/metalanguage";
 import { PiEditUnit } from "../../editordef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, READER_GEN_FOLDER } from "../../utils";
+import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 export class ReaderTemplate {
 
@@ -8,7 +9,7 @@ export class ReaderTemplate {
      * Returns a string representation of a generic parser for 'language'. This parser is able
      * to handle every modelunit in the language.
      */
-    public generateReader(language: PiLanguage, editDef: PiEditUnit, correctUnits: PiConcept[], relativePath: string): string {
+    public generateReader(language: PiLanguage, editDef: PiEditUnit, correctUnits: PiUnitDescription[], relativePath: string): string {
         const className: string = Names.semanticAnalyser(language);
 
         // Template starts here
@@ -46,7 +47,7 @@ export class ReaderTemplate {
                 let parser: LanguageProcessor = null;
                 // choose the correct parser                
                 ${language.units.map(unit =>
-                    `if (metatype === "${Names.concept(unit)}") {
+                    `if (metatype === "${Names.classifier(unit)}") {
                         parser  = this.${Names.parser(unit)};
                     }`).join("\n")}
                     

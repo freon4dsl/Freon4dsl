@@ -8,6 +8,7 @@ model ROOT {
 modelunit AA {
     public name: identifier;
     prop1: BB;
+    file-extension = "aal";
 }
 
 concept BB base BaseBB {

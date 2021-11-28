@@ -49,7 +49,7 @@ export class ConceptMaker {
     // branchNames: string[] = [];
     imports: PiClassifier[] = [];
 
-    generateConcepts(editUnit: PiEditUnit, conceptsUsed: PiConcept[]): GrammarRule[] {
+    generateClassifiers(editUnit: PiEditUnit, conceptsUsed: PiClassifier[]): GrammarRule[] {
         let rules: GrammarRule[] = [];
         for (const piConcept of conceptsUsed) {
             // find editDef for this concept

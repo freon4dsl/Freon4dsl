@@ -2,10 +2,10 @@ language test1 // without 'implements'
 
 model ROOT {
     name: identifier;
-    aa: AA[];
+    aa: AAAAAA[];
 }
 
-modelunit AA  {
+modelunit AAAAAA  {
     public name: identifier;
     // the possibilities for primitive properties
     AAprop1: string;

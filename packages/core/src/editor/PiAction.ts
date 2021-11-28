@@ -72,7 +72,7 @@ export interface PiCustomBehavior extends PiBehavior {
     action: (box: Box, trigger: string, editor: PiEditor, propertyName?: string) => PiElement | null;
     undo?: (box: Box, ed: PiEditor) => void;
 
-    referenceShortcut?: ReferenceShortcut;
+    referenceShortcut?: ReferenceShortcut; // TODO this is already defined in the parent
 }
 
 // TODO Use this to replace KeyboardShortcutTrigger

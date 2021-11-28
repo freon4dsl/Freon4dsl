@@ -22,8 +22,10 @@ export class PiLangScoper {
         let result: PiLangElement;
         if (typeName === "PiPrimitiveType" ) {
             result = PiPrimitiveType.find(name);
-         } else if (typeName === "PiConcept" || typeName === "PiExpressionConcept" || typeName === "PiBinaryExpressionConcept") {
+        } else if (typeName === "PiConcept" || typeName === "PiExpressionConcept" || typeName === "PiBinaryExpressionConcept") {
             result = this.language.findConcept(name);
+        } else if (typeName === "PiUnitDescription" ) {
+            result = this.language.findUnitDescription(name);
         } else if (typeName === "PiInterface" ) {
             result = this.language.findInterface(name);
         } else if (typeName === "PiClassifier" ) {

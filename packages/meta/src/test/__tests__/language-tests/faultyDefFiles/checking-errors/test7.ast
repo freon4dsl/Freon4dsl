@@ -5,7 +5,7 @@ model r {
     reference refProp2: NameNotStringType;
 }
 
-modelunit NoName {
+concept NoName {
 }
 
 limited RRRR {
@@ -25,7 +25,6 @@ limited AA base RRRR {
     instance5 = { simple: "10" }     // cannot have duplicate names for instances
 }
 
-modelunit NameNotStringType {
+concept NameNotStringType {
     public name: boolean;
 }
-

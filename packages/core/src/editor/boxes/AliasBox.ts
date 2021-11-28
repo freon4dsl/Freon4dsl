@@ -9,7 +9,7 @@ export class AliasBox extends AbstractChoiceBox {
     readonly kind = "AliasBox";
     placeholder: string;
     /**
-     * Filled with the name of the property, in case the AliasBox is used to create new elments
+     * Filled with the name of the property, in case the AliasBox is used to create new elements
      */
     propertyName?: string;
 
@@ -38,7 +38,7 @@ export class AliasBox extends AbstractChoiceBox {
             const allOptions = this.getOptions(editor);
             const selectedOptions = allOptions.filter(o => option.label === o.label);
             if (selectedOptions.length === 1) {
-                console.log("AliasbBox.selectOption dynamic " + JSON.stringify(selectedOptions));
+                console.log("AliasBox.selectOption dynamic " + JSON.stringify(selectedOptions));
                 return await executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
             } else {
                 console.error("AliasBox.selectOption : " + JSON.stringify(selectedOptions));

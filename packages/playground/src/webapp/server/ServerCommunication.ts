@@ -132,7 +132,7 @@ export class ServerCommunication implements IServerCommunication {
                 const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
                 loadCallback(model);
             } catch (e) {
-                LOGGER.error(this, "loadModelUnitInterface, " + e.toString());
+                LOGGER.error(this, `loadModelUnitInterface for ${modelName}/${unitName}: ` + e.toString());
                 setUserMessage(e.message);
             }
         }

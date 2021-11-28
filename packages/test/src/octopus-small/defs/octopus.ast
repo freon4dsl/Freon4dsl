@@ -21,7 +21,8 @@ concept Operation implements IPackagableElement {
 //    pre?: OclPreStatement[];
 //    post?: OclPostStatement[];
 }
-modelunit UmlPackage implements IModelElement {
+modelunit UmlPackage {
+    public name: identifier;
 //    subpackages: UmlPackage[];
 //    reference parent: UmlPackage;
 //    reference root: UmlPackage;

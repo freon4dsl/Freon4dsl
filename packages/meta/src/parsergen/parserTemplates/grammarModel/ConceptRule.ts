@@ -28,12 +28,12 @@ export class ConceptRule extends GrammarRule {
     }
 
     toGrammar(): string {
-        // TODO remove check
-        this.ruleParts.forEach((part, index) => {
-            if (part == null) {
-                console.log(`part ${index} for concept ${this.concept.name} is null`);
-            }
-        });
+        // check - should be removed
+        // this.ruleParts.forEach((part, index) => {
+        //     if (part == null) {
+        //         console.log(`part ${index} for concept ${this.concept.name} is null`);
+        //     }
+        // });
         // end check
         let rule = `${Names.classifier(this.concept)} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`;
         return rule.trimEnd() + " ;";
@@ -44,10 +44,10 @@ export class ConceptRule extends GrammarRule {
         return `${ParserGenUtil.makeComment(this.toGrammar())}
                 private transform${this.ruleName} (branch: SPPTBranch) : ${this.ruleName} {
                     // console.log('transform${this.ruleName} called: ' + branch.name);
-                    ${myProperties.map(prop => `let ${prop.name}: ${getTypeAsString(prop)}`).join(";\n")}
+                    ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${getTypeAsString(prop)}`).join(";\n")}
                     const children = this.getChildren(branch);` +  // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children")}`).join("")}      
-                    return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${prop.name}`).join(", ")}});
+                    return ${Names.classifier(this.concept)}.create({${myProperties.map(prop => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}});
                 }`;
     }
 
