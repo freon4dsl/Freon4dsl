@@ -6,24 +6,23 @@ import {
     PiLimitedConcept
 } from "../../languagedef/metalanguage";
 import { LangUtil } from "../../utils";
-import { PiModelDescription, PiPrimitiveType, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { PiPrimitiveType, PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
 
 export class LanguageAnalyser {
-    // all concepts defined in this unit
-    // TODO make distinction between concepts defined in this unit and concepts used as type of properties
+    // all concepts used in this unit
     classifiersUsed: PiClassifier[] = [];
-    // all binary concepts defined in this unit
+    // all binary concepts used in this unit
     binaryConceptsUsed: PiBinaryExpressionConcept[] = [];
     // all interfaces and abstract concepts that are mentioned in this unit
     interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> = new Map<PiClassifier, PiClassifier[]>();
-    // all limted concepts that are referred to (as type of properties)
+    // all limited concepts that are referred to (as type of properties)
     limitedsReferred: PiLimitedConcept[] = [];
-    // all concepts that are not abstract, but do have subconcepts
+    // all concepts that are not abstract, but do have sub concepts
     conceptsWithSub: Map<PiConcept, PiClassifier[]> = new Map<PiConcept, PiClassifier[]>();
 
-    public analyseUnit(piClassifier: PiClassifier) {
+    public analyseUnit(unitDescription: PiUnitDescription) {
         this.reset();
-        this.analyseUnitPriv(piClassifier, []);
+        this.analyseUnitPriv(unitDescription, []);
     }
 
     private analyseUnitPriv(piClassifier: PiClassifier, typesDone: PiClassifier[]) {

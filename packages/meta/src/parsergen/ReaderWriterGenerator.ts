@@ -47,7 +47,7 @@ export class ReaderWriterGenerator {
         this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
 
         this.language.units.forEach(unit => {
-            // analyse the unit an dgenerate the grammar and analyser together
+            // analyse the unit and generate the grammar and analyser together
             parserGenerator.generateParserForUnit(this.language, unit, editDef);
             // get the grammar and write it to file
             generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
