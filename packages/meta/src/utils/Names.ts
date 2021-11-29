@@ -2,7 +2,7 @@ import {
     PiClassifier, PiConcept, PiInterface,
     PiLanguage
 } from "../languagedef/metalanguage";
-import { PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
+import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -223,19 +223,19 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static parser(unit: PiUnitDescription): string {
+    public static parser(unit: PiUnitDescription | PiModelDescription): string {
         return this.startWithUpperCase(unit?.name) + "Parser";
     }
 
-    public static grammar(unit: PiUnitDescription): string {
+    public static grammar(unit: PiUnitDescription | PiModelDescription): string {
         return this.startWithUpperCase(unit?.name) + "Grammar";
     }
 
-    public static grammarStr(unit: PiUnitDescription): string {
+    public static grammarStr(unit: PiUnitDescription | PiModelDescription): string {
         return this.startWithUpperCase(unit?.name) + "GrammarStr";
     }
 
-    public static syntaxAnalyser(unit: PiUnitDescription): string {
+    public static syntaxAnalyser(unit: PiUnitDescription | PiModelDescription): string {
         return this.startWithUpperCase(unit?.name) + "SyntaxAnalyser";
     }
 

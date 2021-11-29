@@ -54,7 +54,7 @@ leaf booleanLiteral      = 'false' | 'true';
         return result;
     }
 
-    toMethod(langUnit: PiUnitDescription, imports: string[], relativePath: string): string {
+    toMethod(className: string, imports: string[], relativePath: string): string {
         // Template starts here
         return `
         import {net} from "net.akehurst.language-agl-processor";
@@ -67,10 +67,10 @@ leaf booleanLiteral      = 'false' | 'true';
         import {${Names.PiNamedElement}} from "@projectit/core";
         
         /**
-        *   Class ${Names.syntaxAnalyser(langUnit)} is ... TODO
+        *   Class ${className} is ... TODO
         *   
         */
-        export class ${Names.syntaxAnalyser(langUnit)} implements SyntaxAnalyser {
+        export class ${className} implements SyntaxAnalyser {
             locationMap: any;
         
             clear(): void {
@@ -93,7 +93,7 @@ leaf booleanLiteral      = 'false' | 'true';
                         return this.${internalTransformBranch}(node as SPPTBranch);
                     }
                 } catch (e) {
-                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${Names.syntaxAnalyser(langUnit)}")) {
+                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
                         throw e;
                     } else {
                         // add more info to the error message 
@@ -127,7 +127,7 @@ leaf booleanLiteral      = 'false' | 'true';
                     return this.transform${name}(branch);
                     } else `).join("\n")}                
                 {
-                    throw new Error(\`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled for node '\${branch?.matchedText}'\`);
+                    throw new Error(\`Error in ${className}: \${brName} not handled for node '\${branch?.matchedText}'\`);
                 }
             }
             

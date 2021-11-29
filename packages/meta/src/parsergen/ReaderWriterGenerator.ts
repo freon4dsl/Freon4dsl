@@ -7,6 +7,7 @@ import { WriterTemplate, ReaderTemplate, ParserGenerator } from "./parserTemplat
 import { net } from "net.akehurst.language-agl-processor";
 import Agl = net.akehurst.language.agl.processor.Agl;
 import { PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
+import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser";
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
 
@@ -46,30 +47,16 @@ export class ReaderWriterGenerator {
         let generatedContent  = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
         this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
 
-        this.language.units.forEach(unit => {
+        const analyser = new LanguageAnalyser();
+        analyser.analyseModel(this.language);
+        parserGenerator.generateCommonParser(this.language, analyser, editDef);
+        this.makeGrammarAndSyntaxAnalyser(parserGenerator, correctUnits, null, generationStatus, generatedFilePath, relativePath);
+
+        analyser.unitAnalysers.forEach(unitAnalyser => {
+            const unit = unitAnalyser.unit;
             // analyse the unit and generate the grammar and analyser together
-            parserGenerator.generateParserForUnit(this.language, unit, editDef);
-            // get the grammar and write it to file
-            generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
-            generatedContent  = parserGenerator.getGrammarContent();
-            this.makeFile(`agl grammar for unit`, generatedFilePath, generatedContent, generationStatus);
-            // test the generated grammar, if not ok error will be thrown, otherwise add this unit to the list of correct units
-            try {
-                // strip generated content of stuff around the grammar
-                generatedContent = generatedContent.replace("export const", "// export const " );
-                generatedContent = generatedContent.replace("}\`; // end of grammar", "}" );
-                generatedContent = generatedContent.replace(new RegExp("\\\\\\\\", "gm"), "\\" );
-                const testParser = Agl.processorFromString(generatedContent, null, null, null);
-                // if all went well, we can conclude that the grammar for this unit is correct
-                correctUnits.push(unit);
-            } catch (e) {
-                generationStatus.numberOfErrors += 1;
-                LOGGER.error(this, `Error in creating parser for ${unit.name}: '${e.message}`);
-            }
-            // get the analyser and write it to file
-            generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(unit)}.ts`;
-            generatedContent  = parserGenerator.getSyntaxAnalyserContent(relativePath);
-            this.makeFile(`syntax analyser for unit`, generatedFilePath, generatedContent, generationStatus);
+            parserGenerator.generateParserForUnit(this.language, unitAnalyser, editDef);
+            this.makeGrammarAndSyntaxAnalyser(parserGenerator, correctUnits, unit, generationStatus, generatedFilePath, relativePath);
         });
 
         // get the semantic analyser and write it to file
@@ -91,6 +78,37 @@ export class ReaderWriterGenerator {
             LOGGER.error(this, `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated reader and writer.`);
+        }
+    }
+
+    private makeGrammarAndSyntaxAnalyser(parserGenerator: ParserGenerator, correctUnits: PiUnitDescription[], unit: PiUnitDescription, generationStatus: GenerationStatus, generatedFilePath: string, relativePath: string) {
+        // get the grammar
+        let generatedContent: string = parserGenerator.getGrammarContent();
+        // test the generated grammar, if not ok error will be thrown, otherwise add this unit to the list of correct units
+        this.testGrammar(generatedContent, correctUnits, unit, generationStatus);
+        // write the grammar to file
+        generatedFilePath = `${this.readerGenFolder}/${Names.grammar(unit)}.ts`;
+        this.makeFile(`agl grammar for unit`, generatedFilePath, generatedContent, generationStatus);
+        // get the analyser and write it to file
+        generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(unit)}.ts`;
+        generatedContent = parserGenerator.getSyntaxAnalyserContent(relativePath);
+        this.makeFile(`syntax analyser for unit`, generatedFilePath, generatedContent, generationStatus);
+    }
+
+    private testGrammar(generatedContent: string, correctUnits: PiUnitDescription[], unit: PiUnitDescription, generationStatus: GenerationStatus) {
+        try {
+            // strip generated content of stuff around the grammar
+            let testContent = generatedContent.replace("export const", "// export const ");
+            testContent = testContent.replace("}\`; // end of grammar", "}");
+            testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
+            Agl.processorFromString(testContent, null, null, null);
+            // if all went well, we can conclude that the grammar for this unit is correct
+            if (unit !== null) {
+                correctUnits.push(unit);
+            }
+        } catch (e) {
+            generationStatus.numberOfErrors += 1;
+            LOGGER.error(this, `Error in creating parser for ${unit?.name}: '${e.message}`);
         }
     }
 

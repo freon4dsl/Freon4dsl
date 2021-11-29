@@ -1,19 +1,19 @@
 import {
     PiClassifier,
-    PiConcept,
     PiLanguage,
     PiPrimitiveType
 } from "../../languagedef/metalanguage";
 import { PiEditUnit } from "../../editordef/metalanguage";
 import { Names } from "../../utils";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
-import { LanguageAnalyser } from "./LanguageAnalyser";
+import { UnitAnalyser } from "./UnitAnalyser";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel/GrammarModel";
 import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { LanguageAnalyser, PiAnalyser } from "./LanguageAnalyser";
 
 export class ParserGenerator {
     private language: PiLanguage = null;
@@ -24,30 +24,53 @@ export class ParserGenerator {
 
     private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
 
-    generateParserForUnit(language: PiLanguage, langUnit: PiUnitDescription, editUnit: PiEditUnit) {
+    generateParserForUnit(language: PiLanguage, unitAnalyser: UnitAnalyser, editUnit: PiEditUnit) {
         // (re)set all attributes that are global to this class to new values
         this.language = language;
-        this.unit = langUnit;
+        this.unit = unitAnalyser.unit;
         this.editUnit = editUnit;
         this.grammar = null;
         this.imports = [];
-        this.refCorrectorMaker = new SemanticAnalysisTemplate();
+        // this.refCorrectorMaker = new SemanticAnalysisTemplate();
 
-        // analyse the language unit
-        let myLanguageAnalyser: LanguageAnalyser = new LanguageAnalyser();
-        myLanguageAnalyser.analyseUnit(langUnit);
+        // // analyse the language unit
+        // let unitAnalyser: UnitAnalyser = new UnitAnalyser();
+        // unitAnalyser.analyseUnit(langUnit);
 
         // create the model of the grammar and syntax analysis
         this.grammar = new GrammarModel();
         this.grammar.langName = Names.language(this.language);
         this.grammar.unitName = Names.classifier(this.unit);
-        this.createGrammarRules(editUnit, myLanguageAnalyser, language);
+        this.createGrammarRules(editUnit, unitAnalyser, language);
 
         // do analysis for semantic phase
-        this.refCorrectorMaker.analyse(myLanguageAnalyser.interfacesAndAbstractsUsed);
+        this.refCorrectorMaker.analyse(unitAnalyser.interfacesAndAbstractsUsed);
     }
 
-    private createGrammarRules(editUnit: PiEditUnit, myLanguageAnalyser: LanguageAnalyser, language: PiLanguage) {
+    generateCommonParser(language: PiLanguage, analyser: LanguageAnalyser, editUnit: PiEditUnit) {
+        // (re)set all attributes that are global to this class to new values
+        this.language = language;
+        this.unit = null;
+        this.editUnit = editUnit;
+        this.grammar = null;
+        this.imports = [];
+        // this.refCorrectorMaker = new SemanticAnalysisTemplate();
+
+        // // analyse the language unit
+        // let unitAnalyser: UnitAnalyser = new UnitAnalyser();
+        // unitAnalyser.analyseUnit(langUnit);
+
+        // create the model of the grammar and syntax analysis
+        this.grammar = new GrammarModel();
+        this.grammar.langName = Names.language(this.language);
+        this.grammar.unitName = Names.language(this.language) + "_Common";
+        this.createGrammarRules(editUnit, analyser, language);
+
+        // do analysis for semantic phase
+        this.refCorrectorMaker.analyse(analyser.interfacesAndAbstractsUsed);
+    }
+
+    private createGrammarRules(editUnit: PiEditUnit, myLanguageAnalyser: PiAnalyser, language: PiLanguage) {
         // create parse rules and syntax analysis methods for the concepts
         this.addToImports(myLanguageAnalyser.classifiersUsed);
         const conceptMaker: ConceptMaker = new ConceptMaker();
@@ -85,7 +108,13 @@ export class ParserGenerator {
 
     getSyntaxAnalyserContent(relativePath: string) : string {
         const imports: string[] = this.imports.map(concept => Names.classifier(concept));
-        return this.grammar.toMethod(this.unit, imports, relativePath);
+        let className = '';
+        if (this.unit !== null) {
+            className = Names.syntaxAnalyser(this.unit);
+        } else {
+            className = Names.language(this.language) + "_Common";
+        }
+        return this.grammar.toMethod(className, imports, relativePath);
     }
 
     getRefCorrectorContent(relativePath: string): string {
