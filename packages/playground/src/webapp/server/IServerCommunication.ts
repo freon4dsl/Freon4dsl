@@ -31,14 +31,12 @@ export interface IServerCommunication {
 
     /**
      * Deletes the complete model with name 'modelName', including all its modelunits
-     * @param languageName
      * @param modelName
      */
     deleteModel(modelName: string);
 
     /**
-     * Reads the list of model units of language 'languageName' that are available on the server and calls 'modelListCallback'.
-     * @param languageName
+     * Reads the list of model units that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
     loadModelList(modelListCallback: (names: string[]) => void);

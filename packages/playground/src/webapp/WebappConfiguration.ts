@@ -1,5 +1,6 @@
 import { PiEnvironment } from "@projectit/core";
-
+import { IServerCommunication } from "./server/IServerCommunication";
+import { ServerCommunication } from "./server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
@@ -40,3 +41,6 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
  * The one and only reference to the server on which the models are stored
  */
 export const SERVER_URL = "http://127.0.0.1:3001/";
+
+export const serverCommunication: IServerCommunication = ServerCommunication.getInstance();
+// export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();
