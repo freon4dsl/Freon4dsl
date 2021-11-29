@@ -1,6 +1,6 @@
 // This file contains all methods to connect the webapp to the projectIt generated language editorEnvironment and to the server that stores the models
 import { PiCompositeProjection, PiError, PiLogger, PiModel, PiNamedElement } from "@projectit/core";
-import { ServerCommunication } from "../server/ServerCommunication";
+// import { ServerCommunication } from "../server/ServerCommunication";
 import { get } from "svelte/store";
 import {
     currentModelName,
@@ -15,7 +15,7 @@ import {
 } from "../webapp-ts-utils/WebappStore";
 import { modelErrors } from "../webapp-ts-utils/ModelErrorsStore";
 import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
-import { editorEnvironment } from "../WebappConfiguration";
+import { editorEnvironment, serverCommunication } from "../WebappConfiguration";
 
 const LOGGER = new PiLogger("EditorCommunication"); // .mute();
 
@@ -107,7 +107,7 @@ export class EditorCommunication {
         const oldName: string = get(currentUnitName);
         if (!!oldName && oldName !== "") {
             // get the interface of the current unit from the server
-            ServerCommunication.getInstance().loadModelUnitInterface(
+            serverCommunication.loadModelUnitInterface(
                 get(currentModelName),
                 get(currentUnitName),
                 (oldUnitInterface: PiNamedElement) => {
@@ -130,7 +130,7 @@ export class EditorCommunication {
      * @private
      */
     private createNewUnit(newName: string, unitType: string) {
-        LOGGER.log("private createNewUnit called, unitType: " + unitType);
+        LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: "+ newName);
         // save the old current unit, if there is one
         this.saveCurrentUnit();
         // create a new unit and add it to the current model
@@ -154,7 +154,7 @@ export class EditorCommunication {
         const unit: PiNamedElement = editorEnvironment.editor.rootElement as PiNamedElement;
         if (!!unit) {
             if (unit.name && unit.name.length > 0) {
-                await ServerCommunication.getInstance().putModelUnit(this.currentModel.name, this.currentUnit.name, unit);
+                await serverCommunication.putModelUnit(this.currentModel.name, this.currentUnit.name, unit);
                 currentUnitName.set(unit.name);
                 EditorCommunication.getInstance().setUnitLists();
                 this.hasChanges = false;
@@ -174,7 +174,7 @@ export class EditorCommunication {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
-        await ServerCommunication.getInstance().deleteModelUnit(get(currentModelName), unit.name);
+        await serverCommunication.deleteModelUnit(get(currentModelName), unit.name);
         // get rid of old model unit from memory
         this.currentModel.removeUnit(unit);
         // if the unit is shown in the editor, get rid of that one, as well
@@ -219,7 +219,7 @@ export class EditorCommunication {
         this.currentModel = model;
         currentModelName.set(modelName);
         // fill the new model with the units loaded from the server
-        ServerCommunication.getInstance().loadUnitList(modelName, (unitNames: string[]) => {
+        serverCommunication.loadUnitList(modelName, (unitNames: string[]) => {
             // console.log(`callback unitNames: ${unitNames}`);
             if (unitNames && unitNames.length > 0) {
                 // load the first unit completely and show it
@@ -227,7 +227,7 @@ export class EditorCommunication {
                 let first: boolean = true;
                 for (const unitName of unitNames) {
                     if (first) {
-                        ServerCommunication.getInstance().loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
+                        serverCommunication.loadModelUnit( modelName, unitName, (unit: PiNamedElement) => {
                             this.currentModel.addUnit(unit);
                             this.currentUnit = unit;
                             currentUnitName.set(this.currentUnit.name);
@@ -235,7 +235,7 @@ export class EditorCommunication {
                         });
                         first = false;
                     } else {
-                        ServerCommunication.getInstance().loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
+                        serverCommunication.loadModelUnitInterface(modelName, unitName, (unit: PiNamedElement) => {
                             this.currentModel.addUnit(unit);
                             this.setUnitLists();
                         });
@@ -271,7 +271,7 @@ export class EditorCommunication {
         this.saveCurrentUnit();
         // newUnit is stored in the in-memory model as an interface only
         // we must get the full unit from the server and make a swap
-        await ServerCommunication.getInstance().loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: PiNamedElement) => {
+        await serverCommunication.loadModelUnit(this.currentModel.name, newUnit.name, (newCompleteUnit: PiNamedElement) => {
             this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
         });
     }
@@ -288,7 +288,7 @@ export class EditorCommunication {
     private swapInterfaceAndUnits(newCompleteUnit: PiNamedElement, newUnitInterface: PiNamedElement) {
         if (!!EditorCommunication.getInstance().currentUnit) {
             // get the interface of the current unit from the server
-            ServerCommunication.getInstance().loadModelUnitInterface(
+            serverCommunication.loadModelUnitInterface(
                 EditorCommunication.getInstance().currentModel.name,
                 EditorCommunication.getInstance().currentUnit.name,
                 (oldUnitInterface: PiNamedElement) => {
@@ -330,7 +330,7 @@ export class EditorCommunication {
 
             // TODO find way to get interface without use of the server, because of concurrency error
             // swap old unit with its interface in the in-memory model
-            // ServerCommunication.getInstance().loadModelUnitInterface(
+            // serverCommunication.loadModelUnitInterface(
             //     EditorCommunication.getInstance().currentModel.name,
             //     EditorCommunication.getInstance().currentUnit.name,
             //     (oldUnitInterface: PiNamedElement) => {

@@ -2,6 +2,7 @@ import { PiLogger } from "@projectit/core";
 import { PiNamedElement } from "@projectit/core";
 import { GenericModelSerializer } from "@projectit/core";
 import { SERVER_URL } from "../WebappConfiguration";
+import { SERVER_URL } from "../WebappConfiguration";
 import { IServerCommunication } from "./IServerCommunication";
 import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
