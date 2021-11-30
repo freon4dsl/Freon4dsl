@@ -8,7 +8,7 @@ import { net } from "net.akehurst.language-agl-processor";
 import Agl = net.akehurst.language.agl.processor.Agl;
 import { PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
-const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
+const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";

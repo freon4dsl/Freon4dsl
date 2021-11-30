@@ -16,7 +16,7 @@ import {
     GridBox,
     PiStyle,
     GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, PiProjectionUtil
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute } from "../language/gen/Attribute";
@@ -284,14 +284,7 @@ export class CustomExampleProjection implements PiProjection {
             [attributeHeader, attributeHeader],
             [
                 (att: Attribute): Box => {
-                    return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
-                        deleteWhenEmpty: true,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
-                            return isName(currentText, key, index);
-                        },
-                        placeHolder: "<name>",
-                        style: styleToCSS(attributeName)
-                    });
+                    return PiProjectionUtil.textBox(att, "name");
                 },
                 (attr: Attribute): Box => {
                     return this.helpers.getReferenceBox(

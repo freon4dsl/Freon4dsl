@@ -16,7 +16,7 @@ import {
     PiEditInstanceProjection,
     PiEditProjection,
     PiEditPropertyProjection,
-    PiEditSubProjection,
+    PiEditSubProjection, PiEditTableProjection,
     PiEditUnit
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
@@ -64,13 +64,15 @@ export class PiEditChecker extends Checker<PiEditUnit> {
     }
 
     private checkConceptEditor(conceptEditor: PiEditConcept) {
-        // TODO maybe use
-        // this.myExpressionChecker.checkClassifierReference(conceptEditor.concept);
+        // TODO maybe use this.myExpressionChecker.checkClassifierReference(conceptEditor.concept);
         this.nestedCheck({
             check: !!conceptEditor.concept.referred,
             error: `Concept ${conceptEditor.concept.name} is unknown ${this.location(conceptEditor)}.`,
             whenOk: () => {
                 this.checkProjection(conceptEditor.projection, conceptEditor.concept.referred);
+                conceptEditor.tableProjections.forEach(proj => {
+                    this.checkTableProjection(proj, conceptEditor.concept.referred);
+                });
                 this.checkReferenceShortcut(conceptEditor);
             }
         });
@@ -92,6 +94,25 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                 this.errors.push(`Editor definition for concept ${ced.concept.name} is already defined earlier ${this.location(ced)}.`);
             }
         );
+    }
+
+    private checkTableProjection(projection: PiEditTableProjection, cls: PiClassifier) {
+        // TODO see which checks are actually useful
+        if (!!projection) {
+            this.nestedCheck( {
+                check: projection.cells.length > 0,
+                error: `Table projection '${projection.name}' should contain one or more properties as cells ${this.location(projection)}`,
+                whenOk: () => {
+                    this.simpleCheck(projection.headers.length > 0 ? projection.cells.length === projection.headers.length : true,
+                        `The number of headers should match the number of cells in table projection '${projection.name}' ${this.location(projection)}`
+                    );
+                    for (const prop of projection.cells) {
+                        this.checkPropertyProjection(prop, cls, false);
+                    }
+                }
+            })
+
+        }
     }
 
     private checkProjection(projection: PiEditProjection, cls: PiClassifier) {

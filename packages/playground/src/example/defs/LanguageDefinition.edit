@@ -4,12 +4,16 @@ Attribute {
     @projection attribuut [
         ${self.name} : ${self.declaredType}
     ]
+    @table xxx [
+        NAME_HEADER | TYPE_HEADER\[\]
+        ${self.name} | ${self.declaredType}
+    ]
 }
 
 Entity {
     @projection [
         entity ${self.name} [? base ${self.baseEntity}] {
-            ${self.attributes @vertical }
+            ${self.attributes @table @colums }
             ${self.methods @vertical }
         }
     ]
