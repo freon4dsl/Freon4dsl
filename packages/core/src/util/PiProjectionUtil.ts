@@ -1,6 +1,9 @@
 import { Box, SelectBox, SelectOption, TextBox, PiEditor } from "../editor";
 import { PiElement } from "../language";
 import { BehaviorExecutionResult, PiUtils } from "./internal";
+import { BoxFactory } from "../editor/boxes";
+import { PiScoper } from "../scoper";
+import { Language } from "../storage";
 
 export class PiProjectionUtil {
     static textBox(element: PiElement, property: string): TextBox {
@@ -52,5 +55,46 @@ export class PiProjectionUtil {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a boolean: " + value);
             return null;
         }
+    }
+
+    static referenceBox(
+        element: PiElement,
+        propertyName: string,
+        setFunc: (selected: string) => Object,
+        scoper: PiScoper,
+        initializer?: Partial<SelectBox>
+    ): Box {
+        let value = element[propertyName];
+        const propType = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type;
+        return BoxFactory.select(
+            element,
+            `${element.piLanguageConcept()}-${propertyName}`,
+            `<select ${propertyName}>`,
+            () => {
+                return scoper.getVisibleNames(element, propType)
+                    .filter(name => !!name && name !== "")
+                    .map(name => ({
+                        id: name,
+                        label: name
+                    }));
+            },
+            () => {
+                if (!!value) {
+                    return { id: value.name, label: value.name };
+                } else {
+                    return null;
+                }
+            },
+            async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                if (!!option) {
+                    value = setFunc(option.label);
+                } else {
+                    value = null;
+                }
+                return BehaviorExecutionResult.EXECUTED;
+            },
+            initializer
+        );
+        return null;
     }
 }

@@ -1,5 +1,5 @@
 import {
-    PiBinaryExpressionConcept, PiConcept,
+    PiBinaryExpressionConcept,
     PiConceptProperty,
     PiExpressionConcept,
     PiPrimitiveProperty,
@@ -7,7 +7,7 @@ import {
     PiLanguage, PiLimitedConcept, PiClassifier
 } from "../../../languagedef/metalanguage";
 import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
-import { Roles } from "../../../utils/Roles";
+import { Roles } from "../../../utils";
 import {
     PiEditConcept,
     PiEditUnit,
@@ -19,7 +19,7 @@ import {
     PiEditSubProjection,
     PiEditInstanceProjection
 } from "../../metalanguage";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage";
 
 export class ProjectionTemplate {
 
@@ -83,29 +83,28 @@ export class ProjectionTemplate {
                 createDefaultExpressionBox,
                 isPiBinaryExpression,
                 ${Names.PiBinaryExpression},
-                BehaviorExecutionResult
+                BehaviorExecutionResult,
+                PiProjectionUtil
             } from "${PROJECTITCORE}";
-            
+
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${modelImports.map(c => `${c}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${Names.selectionHelpers(language)} } from "./${Names.selectionHelpers(language)}";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
              /**
              * Class ${Names.projectionDefault(language)} implements the default projections for elements of
              * language ${language.name}.
-             * These are merged with the custom build additions and definition-based editor parts 
-             * in a three-way manner. For each modelelement, 
+             * These are merged with the custom build additions and definition-based editor parts
+             * in a three-way manner. For each modelelement,
              * (1) if a custom build creator/behavior is present, this is used,
              * (2) if a creator/behavior based on the editor definition is present, this is used,
-             * (3) if neither (1) nor (2) yields a result, the default is used.  
-             */  
+             * (3) if neither (1) nor (2) yields a result, the default is used.
+             */
             export class ${Names.projectionDefault(language)} implements ${Names.PiProjection} {
-                private helpers: ${Names.selectionHelpers(language)} = new ${Names.selectionHelpers(language)};
                 rootProjection: ${Names.PiProjection};
                 showBrackets: boolean = false;
                 name: string = "${editorDef.name}";
-                
+
                 constructor(name?: string) {
                     if (!!name) {
                         this.name = name;
@@ -114,13 +113,13 @@ export class ProjectionTemplate {
                         showBrackets: observable
                     });
                 }
-                
+
                 getBox(exp: ${Names.PiElement}): Box {
                     if (exp === null ) {
                         return null;
                     }
 
-                    switch( exp.piLanguageConcept() ) { 
+                    switch( exp.piLanguageConcept() ) {
                         ${allClassifiers.map(c => `
                         case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (exp as ${Names.classifier(c)});`
                         ).join("  ")}
@@ -132,11 +131,11 @@ export class ProjectionTemplate {
                 ${binaryConceptsWithDefaultProjection.map(c => `
                 private ${Names.projectionFunction(c)} (element: ${Names.concept(c)}) {
                      return this.createBinaryBox(this, element, "${editorDef.findConceptEditor(c).symbol}");
-                }                
-                `).join("\n")}    
-                
+                }
+                `).join("\n")}
+
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
-                
+
                 /**
                  *  Create a standard binary box to ensure binary expressions can be edited easily
                  */
@@ -156,9 +155,7 @@ export class ProjectionTemplate {
                         return binBox;
                     }
                 }
-                
-            }
-        `;
+            }`;
     }
 
     private generateUserProjection(language: PiLanguage, concept: PiClassifier, editor: PiEditConcept) {
@@ -203,7 +200,7 @@ export class ProjectionTemplate {
             }
         });
         if (multiLine) {
-            result += ` 
+            result += `
                 ])
             `;
         }
@@ -230,7 +227,11 @@ export class ProjectionTemplate {
         }
     }
 
-    private itemProjection(item: PiEditParsedProjectionIndent | PiEditProjectionText | PiEditPropertyProjection | PiEditSubProjection | PiEditInstanceProjection,
+    private itemProjection(item: PiEditParsedProjectionIndent
+                                | PiEditProjectionText
+                                | PiEditPropertyProjection
+                                | PiEditSubProjection
+                                | PiEditInstanceProjection,
                            elementVarName: string,
                            index: number,
                            itemIndex: number,
@@ -245,12 +246,12 @@ export class ProjectionTemplate {
         } else if (item instanceof PiEditPropertyProjection) {
             result += this.propertyProjection(item, elementVarName, concept, language);
         } else if (item instanceof PiEditSubProjection) {
-            result += this.optionalProjection(item, elementVarName, index, itemIndex, concept, language);
+            result += this.optionalProjection(item, elementVarName, index, concept, language);
         }
         return result;
     }
 
-    private optionalProjection(item: PiEditSubProjection, elementVarName: string, index: number, itemIndex: number, concept: PiClassifier,
+    private optionalProjection(item: PiEditSubProjection, elementVarName: string, index: number, concept: PiClassifier,
                                language: PiLanguage): string {
         let result = "";
         item.items.forEach((subitem, subitemIndex) => {
@@ -296,13 +297,13 @@ export class ProjectionTemplate {
 
                 } else {
                     result += `((!!${elementVarName}.${appliedFeature.name}) ?
-                                                this.rootProjection.getBox(${elementVarName}.${appliedFeature.name}) : 
+                                                this.rootProjection.getBox(${elementVarName}.${appliedFeature.name}) :
                                                 BoxFactory.alias(${elementVarName}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
                 }
             } else { // reference
                 if (appliedFeature.isList) {
                     const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
-                    result += this.conceptReferenceListProjection(direction, appliedFeature, elementVarName);
+                    result += this.conceptReferenceListProjection(language, direction, appliedFeature, elementVarName);
                 } else {
                     result += this.conceptReferenceProjection(language, appliedFeature, elementVarName);
                 }
@@ -316,6 +317,7 @@ export class ProjectionTemplate {
     /**
      * generate the part list
      *
+     * @param item
      * @param direction         Horizontal or Vertical.
      * @param concept
      * @param propertyConcept   The property for which the projection is generated.
@@ -323,7 +325,7 @@ export class ProjectionTemplate {
      */
     conceptPartListProjection(item: PiEditPropertyProjection, direction: string, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
         return `
-            BoxFactory.${direction.toLowerCase()}List(${element}, "${Roles.property(propertyConcept)}-list", 
+            BoxFactory.${direction.toLowerCase()}List(${element}, "${Roles.property(propertyConcept)}-list",
                 ${element}.${propertyConcept.name}.map(feature => {
                     const roleName: string =  "${Roles.property(propertyConcept)}-" + feature.piId() + "-separator";
                     return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${item.listJoin.joinText}")]) as Box;
@@ -338,54 +340,39 @@ export class ProjectionTemplate {
 
     conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
         const featureType = Names.classifier(appliedFeature.type.referred);
-        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}", "<select ${appliedFeature.name}>", "${featureType}",
-                    () => {
-                        if (!!${element}.${appliedFeature.name}) {
-                            return { id: ${element}.${appliedFeature.name}.name, label: ${element}.${appliedFeature.name}.name };
-                        } else {
-                            return null;
-                        }
-                    },
-                    async (option: SelectOption): Promise<BehaviorExecutionResult> => {
-                        if (!!option) {
-                            ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
+        return `PiProjectionUtil.referenceBox(
                                 ${element},
-                                option.label,
-                                "${featureType}"
-                            ) as ${featureType}, "${featureType}");
-                        } else {
-                            ${element}.${appliedFeature.name} = null;
-                        }
-                        return BehaviorExecutionResult.EXECUTED;
-                    }
-                )
-            `;
+                                "${appliedFeature.name}",
+                                (selected: string) => {
+                                    return PiElementReference.create<${featureType}>(
+                                       ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
+                                            ${element},
+                                            selected,
+                                            "${featureType}"
+                                       ) as ${featureType}, "${featureType}");
+                                },
+                                ${Names.environment(language)}.getInstance().scoper
+               )`;
     }
 
-    conceptReferenceProjectionInList(appliedFeature: PiConceptProperty, element: string) {
-        const featureType = appliedFeature.type.name;
-        return ` this.helpers.getReferenceBox(${element}, "${Roles.property(appliedFeature)}-" + index, "< select ${appliedFeature.name}>", "${featureType}",
-                    () => {
-                        if (!!${element}.${appliedFeature.name}) {
-                            return { id: ent.name, label: ent.name };
-                        } else {
-                            return null;
-                        }
-                    },
-                    async (option: SelectOption): Promise<BehaviorExecutionResult> => {
-                        ent.name = option.label;
-                        return BehaviorExecutionResult.EXECUTED;
-                    }
-                )
-            `;
+    conceptReferenceProjectionInList(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
+        return `PiProjectionUtil.referenceBox(
+                                ${element},
+                                "${appliedFeature.name}-" + index,
+                                (selected: string) => {
+                                    ent.name = selected;
+                                    return BehaviorExecutionResult.EXECUTED;
+                                },
+                                ${Names.environment(language)}.getInstance().scoper
+               )`;
     }
 
-    conceptReferenceListProjection(direction: string, reference: PiConceptProperty, element: string) {
+    conceptReferenceListProjection(language: PiLanguage, direction: string, reference: PiConceptProperty, element: string) {
         return `BoxFactory.${direction.toLowerCase()}List(
                     ${element},
                     "${Roles.property(reference)}",
                     ${element}.${reference.name}.map((ent, index) => {
-                        return ${this.conceptReferenceProjectionInList(reference, element) }
+                        return ${this.conceptReferenceProjectionInList(language, reference, element) }
                     }).concat(
                         BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+ ${reference.name}>" , { //  add ${reference.name}
                             style: styleToCSS(${Names.styles}.placeholdertext),

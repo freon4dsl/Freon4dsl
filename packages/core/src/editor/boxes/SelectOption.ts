@@ -9,7 +9,7 @@ export interface SelectOption {
      */
     id: string;
     /**
-     * The text as shown to the user, ususally also the text that the user needs to type.
+     * The text as shown to the user, usually also the text that the user needs to type.
      */
     label: string;
     /**

@@ -10,11 +10,9 @@ import {
 } from "@projectit/core";
 import * as projectitStyles from "../editor/styles/styles";
 import { DemoNumberLiteralExpression } from "../language/gen";
-import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 
 export class CustomDemoProjection implements PiProjection {
     rootProjection: PiProjection;
-    helpers = new DemoSelectionHelpers();
     name: string = "";
 
     constructor(name: string) {

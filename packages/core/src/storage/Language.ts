@@ -84,6 +84,24 @@ export class Language {
         return this.interfaces.get(typeName).properties.get(propertyName);
     }
 
+    classifierProperty(typeName, propertyName): Property {
+        let concept1 = this.concepts.get(typeName);
+        if (!!concept1) {
+            return concept1.properties.get(propertyName);
+        } else {
+            let intf = this.interfaces.get(typeName);
+            if (!!intf) {
+                return intf.properties.get(propertyName);
+            } else {
+                let unit1 = this.units.get(typeName);
+                if (!!unit1) {
+                    return unit1.properties.get(propertyName);
+                }
+            }
+        }
+        return null;
+    }
+
     allConceptProperties(typeName: string): IterableIterator<Property> {
         // console.log("Looking up properties for "+ typeName);
         let myType: Concept | ModelUnit = this.concept(typeName);

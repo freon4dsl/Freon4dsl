@@ -14,19 +14,11 @@ import {
     AliasBox,
     styleToCSS,
     GridBox,
-    PiStyle,
     GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, PiProjectionUtil
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
-import { Attribute } from "../language/gen/Attribute";
-import { Entity } from "../language/gen/Entity";
-import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
-import { OrExpression } from "../language/gen/OrExpression";
-import { PiElementReference } from "../language/gen/PiElementReference";
-import { SumExpression } from "../language/gen/SumExpression";
-import { Type } from "../language/gen/Type";
-import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
+import { Attribute, Entity, NumberLiteralExpression, OrExpression, PiElementReference, SumExpression, Type } from "../language/gen";
 import {
     attributeHeader,
     attributeName, entityBoxStyle, entityNameStyle,
@@ -56,7 +48,6 @@ const OPERAND_COLUM = 2;
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
 export class CustomExampleProjection implements PiProjection {
-    private helpers: ExampleSelectionHelpers = new ExampleSelectionHelpers();
     rootProjection: PiProjection;
     name: string = "manual";
 
@@ -294,30 +285,14 @@ export class CustomExampleProjection implements PiProjection {
                     });
                 },
                 (attr: Attribute): Box => {
-                    return this.helpers.getReferenceBox(
+                    return PiProjectionUtil.referenceBox(
                         attr,
-                        "Attribute-declaredType",
-                        "<select declaredType>",
-                        "Type",
-                        () => {
-                            if (!!attr.declaredType) {
-                                return { id: attr.declaredType.name, label: attr.declaredType.name };
-                            } else {
-                                return null;
-                            }
+                        "declaredType",
+                        (selected: string) => {
+                            return PiElementReference.create<Type>(
+                                ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
                         },
-                        async (option: SelectOption): Promise<BehaviorExecutionResult> => {
-                            if (!!option) {
-                                attr.declaredType = PiElementReference.create<Type>(
-                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, option.label, "Type") as Type,
-                                    "Type"
-                                );
-                            } else {
-                                attr.declaredType = null;
-                            }
-                            return BehaviorExecutionResult.EXECUTED;
-                        },
-                        { style: styleToCSS(attributeName)}
+                        ExampleEnvironment.getInstance().scoper
                     )
                 }
             ],
@@ -327,8 +302,6 @@ export class CustomExampleProjection implements PiProjection {
             ExampleEnvironment.getInstance().editor
         );
     }
-
-
 }
 
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {
