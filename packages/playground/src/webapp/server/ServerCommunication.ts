@@ -80,7 +80,10 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadModelList(modelListCallback: (names: string[]) => void) {
         LOGGER.log(`ServerCommunication.loadModelList`);
-        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
+        let res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
+        if (res === null || res === undefined) {
+            res = [];
+        }
         modelListCallback(res);
     }
 

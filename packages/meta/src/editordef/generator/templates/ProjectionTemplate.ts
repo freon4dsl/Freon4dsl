@@ -1,25 +1,26 @@
 import {
     PiBinaryExpressionConcept,
+    PiClassifier,
     PiConceptProperty,
     PiExpressionConcept,
+    PiLanguage,
+    PiLimitedConcept,
     PiPrimitiveProperty,
-    PiProperty,
-    PiLanguage, PiLimitedConcept, PiClassifier
+    PiPrimitiveType,
+    PiProperty
 } from "../../../languagedef/metalanguage";
-import { Names, PROJECTITCORE, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, EDITORSTYLES } from "../../../utils";
-import { Roles } from "../../../utils";
+import { EDITORSTYLES, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles } from "../../../utils";
 import {
     PiEditConcept,
-    PiEditUnit,
+    PiEditInstanceProjection,
+    PiEditParsedProjectionIndent,
     PiEditProjection,
+    PiEditProjectionDirection,
     PiEditProjectionText,
     PiEditPropertyProjection,
-    PiEditProjectionDirection,
-    PiEditParsedProjectionIndent,
     PiEditSubProjection,
-    PiEditInstanceProjection
+    PiEditUnit
 } from "../../metalanguage";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage";
 
 export class ProjectionTemplate {
 
@@ -56,7 +57,6 @@ export class ProjectionTemplate {
             import { observable, makeObservable } from "mobx";
 
             import * as ${Names.styles} from "${relativePath}${EDITORSTYLES}";
-            // TODO import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
             import {
                 styleToCSS,
                 BoxFactory,
@@ -84,7 +84,8 @@ export class ProjectionTemplate {
                 isPiBinaryExpression,
                 ${Names.PiBinaryExpression},
                 BehaviorExecutionResult,
-                PiProjectionUtil
+                PiProjectionUtil,
+                PiListDirection
             } from "${PROJECTITCORE}";
 
             import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
@@ -200,9 +201,7 @@ export class ProjectionTemplate {
             }
         });
         if (multiLine) {
-            result += `
-                ])
-            `;
+            result += ` ])`;
         }
         if (result === "") { result = "null"; }
         if (concept instanceof PiExpressionConcept) {
@@ -292,7 +291,7 @@ export class ProjectionTemplate {
         } else if (appliedFeature instanceof PiConceptProperty) {
             if (appliedFeature.isPart) {
                 if (appliedFeature.isList) {
-                    const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
+                    const direction: PiEditProjectionDirection = (!!item.listJoin ? item.listJoin.direction : PiEditProjectionDirection.Horizontal);
                     result += this.conceptPartListProjection(item, direction, concept, appliedFeature, elementVarName);
 
                 } else {
@@ -302,7 +301,7 @@ export class ProjectionTemplate {
                 }
             } else { // reference
                 if (appliedFeature.isList) {
-                    const direction = (!!item.listJoin ? item.listJoin.direction.toString() : PiEditProjectionDirection.Horizontal.toString());
+                    const direction: PiEditProjectionDirection = (!!item.listJoin ? item.listJoin.direction : PiEditProjectionDirection.Horizontal);
                     result += this.conceptReferenceListProjection(language, direction, appliedFeature, elementVarName);
                 } else {
                     result += this.conceptReferenceProjection(language, appliedFeature, elementVarName);
@@ -323,19 +322,12 @@ export class ProjectionTemplate {
      * @param propertyConcept   The property for which the projection is generated.
      * @param element           The name of the element parameter of the getBox projection method.
      */
-    conceptPartListProjection(item: PiEditPropertyProjection, direction: string, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
-        return `
-            BoxFactory.${direction.toLowerCase()}List(${element}, "${Roles.property(propertyConcept)}-list",
-                ${element}.${propertyConcept.name}.map(feature => {
-                    const roleName: string =  "${Roles.property(propertyConcept)}-" + feature.piId() + "-separator";
-                    return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${item.listJoin.joinText}")]) as Box;
-                }).concat(
-                    BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+ ${propertyConcept.name}>" , { //  add ${propertyConcept.name}
-                        style: styleToCSS(${Names.styles}.placeholdertext),
-                        propertyName: "${propertyConcept.name}"
-                    })
-                )
-            )`;
+    conceptPartListProjection(item: PiEditPropertyProjection, direction: PiEditProjectionDirection, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
+        let runtimeDirection: string = "PiListDirection.Horizontal"; // default value
+        if (direction === PiEditProjectionDirection.Vertical) {
+            runtimeDirection = "PiListDirection.Vertical";
+        }
+        return `PiProjectionUtil.listBox(${element}, "${propertyConcept.name}", ${runtimeDirection}, this.rootProjection, ${Names.styles}.placeholdertext)`;
     }
 
     conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
@@ -355,37 +347,45 @@ export class ProjectionTemplate {
                )`;
     }
 
-    conceptReferenceProjectionInList(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
-        return `PiProjectionUtil.referenceBox(
-                                ${element},
-                                "${appliedFeature.name}-" + index,
-                                (selected: string) => {
-                                    ent.name = selected;
-                                    return BehaviorExecutionResult.EXECUTED;
-                                },
-                                ${Names.environment(language)}.getInstance().scoper
-               )`;
-    }
-
-    conceptReferenceListProjection(language: PiLanguage, direction: string, reference: PiConceptProperty, element: string) {
-        return `BoxFactory.${direction.toLowerCase()}List(
-                    ${element},
-                    "${Roles.property(reference)}",
-                    ${element}.${reference.name}.map((ent, index) => {
-                        return ${this.conceptReferenceProjectionInList(language, reference, element) }
-                    }).concat(
-                        BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+ ${reference.name}>" , { //  add ${reference.name}
-                            style: styleToCSS(${Names.styles}.placeholdertext),
-                            propertyName: "${reference.name}"
-                        })
-                    )
-                    , //  this one?
-                    // TODO Change into an IndentComponent
-                    // {
-                    //     style: styleToCSS(${Names.styles}.indent)
-                    // }
-                )
-            `;
+    conceptReferenceListProjection(language: PiLanguage, direction: PiEditProjectionDirection, reference: PiConceptProperty, element: string) {
+        let runtimeDirection: string = "PiListDirection.Horizontal"; // default value
+        if (direction === PiEditProjectionDirection.Vertical) {
+            runtimeDirection = "PiListDirection.Vertical";
+        }
+        return `PiProjectionUtil.listBox(
+            ${element}, 
+            "${reference.name}", 
+            ${runtimeDirection}, 
+            this.rootProjection, 
+            ${Names.styles}.placeholdertext, 
+            ${Names.environment(language)}.getInstance().scoper
+        )`;
+        // return `BoxFactory.${direction.toLowerCase()}List(
+        //             ${element},
+        //             "${Roles.property(reference)}",
+        //             ${element}.${reference.name}.map((ent, index) => {
+        //                 return PiProjectionUtil.referenceBox(
+        //                         ${element},
+        //                         "${reference.name}-" + index,
+        //                         (selected: string) => {
+        //                             ent.name = selected;
+        //                             return BehaviorExecutionResult.EXECUTED;
+        //                         },
+        //                         ${Names.environment(language)}.getInstance().scoper
+        //        )
+        //             }).concat(
+        //                 BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+ ${reference.name}>" , { //  add ${reference.name}
+        //                     style: styleToCSS(${Names.styles}.placeholdertext),
+        //                     propertyName: "${reference.name}"
+        //                 })
+        //             )
+        //             , //  this one?
+        //             // TODO Change into an IndentComponent
+        //             // {
+        //             //     style: styleToCSS(${Names.styles}.indent)
+        //             // }
+        //         )
+        //     `;
     }
 
     primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {

@@ -19,7 +19,6 @@ import {
     PiEditPropertyProjection,
     PiEditUnit
 } from "./PiEditDefLang";
-import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 import { Names } from "../../utils";
 
 export class PiEditProjectionUtil {
