@@ -18,7 +18,7 @@
         PiEditor,
         toPiKey,
         isAliasTextBox,
-        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE
+        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE, styleToCSS, conceptStyle
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -326,8 +326,10 @@
         if (!isEditing) {
             text = textBox.getText();
         }
-        textStyle = textBox.style;
-    textBox.setFocus = setFocus;
+        // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
+        textStyle = styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style));
+
+        textBox.setFocus = setFocus;
     });
 
     // const onFocus = async (e: FocusEvent) => {
@@ -355,14 +357,15 @@
 <style>
     .text:empty:before {
         content: attr(data-placeholdertext);
-        color: var(--theme-colors-color_empty_before_text_box);
-        background-color: var(--theme-colors-bg_empty_before_text_box);
+        color: inherit;
+        background-color: inherit;
         opacity: 70%;
     }
 
     .text {
         background-color: var(--theme-colors-bg_text_box);
-        color: var(--theme-colors-color_text_box);
+        content: attr(data-placeholdertext);
+        color: magenta;
         padding: 3px;
         white-space: normal;
         display: inline-block;

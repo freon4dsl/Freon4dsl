@@ -1,4 +1,79 @@
-import { PiStyle } from "@projectit/core";
+import { PiEditorStyle, PiStyle } from "@projectit/core";
+export const editorStyle: PiEditorStyle = {
+    global: {
+        light: {
+            label: {
+                color: "black",
+                "font-weight": "bold"
+            },
+            // text: {
+            //     color: "darkblue",
+            //     "font-weight": "normal"
+            // },
+            // alias: {
+            //     color: "red"
+            // },
+            list: {
+                color: "yellow"
+            }
+
+        },
+        dark: {
+            label: {
+                color: "black",
+                "font-weight": "bold"
+            },
+            text: {
+                color: "darkblue",
+                "font-weight": "normal"
+            }
+        }
+    },
+    NumberLiteralExpression: {
+        light: {
+            text: {
+                color: "blue"
+            }
+        },
+        dark: {
+
+        }
+    },
+    StringLiteralExpression: {
+        light: {
+            text: {
+                color: "green"
+            }
+        },
+        dark: {
+
+        }
+    },
+    // For concept Attribute
+    Method: {
+        light: {
+            label: {
+                "font-weight": "normal",
+                color: "orange"
+            },
+            text: {
+                color: "green"
+            },
+            alias: {
+                color: "red"
+            },
+            list: {
+                color: "yellow"
+            }
+        },
+        dark: {
+            label: {
+                "font-weight": "normal",
+                color: "orange"
+            }
+        }
+    }
+}
 
 export const entityNameStyle: PiStyle = {
     "margin-top": "10px",

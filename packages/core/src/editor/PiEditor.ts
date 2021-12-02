@@ -14,7 +14,7 @@ import {
     isTextBox,
     Box,
     KeyboardShortcutBehavior,
-    PiActions
+    PiActions, PiEditorStyle
 } from "./internal";
 
 const LOGGER = new PiLogger("PiEditor");
@@ -25,6 +25,7 @@ export class PiEditor {
     readonly projection: PiProjection;
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
+    style: PiEditorStyle = { global: { dark: {}, light: {}}};
 
     private $rootBox: Box | null = null;
     private $selectedBox: Box | null = null;

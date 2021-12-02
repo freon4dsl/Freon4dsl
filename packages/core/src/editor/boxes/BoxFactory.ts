@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import { PiElement } from "../../language/PiElement";
 import { BehaviorExecutionResult } from "../../util/BehaviorUtils";
 import { PiLogger } from "../../util/PiLogging";
@@ -110,11 +111,12 @@ export class BoxFactory {
         const creator = () => new AliasBox(element, role, placeHolder, initializer);
         const result: AliasBox = this.find<AliasBox>(element, role, creator, aliasCache);
 
-        // 2. Apply the other arguments in case they have changed
-        result.placeholder = placeHolder;
-        result.textHelper.setText("");
-        PiUtils.initializeObject(result, initializer);
-
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            result.placeholder = placeHolder;
+            result.textHelper.setText("");
+            PiUtils.initializeObject(result, initializer);
+        });
         return result;
     }
 

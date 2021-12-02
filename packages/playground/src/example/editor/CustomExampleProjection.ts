@@ -145,7 +145,7 @@ export class CustomExampleProjection implements PiProjection {
             }
         ];
         const result = new GridBox(sum, "sum-all", cells, {
-            style: styleToCSS(mygrid)
+            style: mygrid
         });
         return createDefaultExpressionBox(sum, "sum-exp", [result]);
     }
@@ -214,7 +214,7 @@ export class CustomExampleProjection implements PiProjection {
             );
         }
         return new GridBox(exp, "grid-or", gridCells,
-            { style: styleToCSS(grid) }
+            { style: grid }
         );
     }
 
@@ -233,7 +233,7 @@ export class CustomExampleProjection implements PiProjection {
                 .concat(
                     BoxFactory.alias(entity, "Entity-methods", "<+ methods>", {
                         //  add methods
-                        style: styleToCSS(projectitStyles.placeholdertext),
+                        style: projectitStyles.placeholdertext,
                         propertyName: "methods"
                     })
                 )
@@ -258,7 +258,7 @@ export class CustomExampleProjection implements PiProjection {
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isName(currentText, key, index);
                 },
-                style: styleToCSS(entityNameStyle)
+                style: entityNameStyle
             }),
             // style: styleToCSS(entityBoxStyle)
         });
@@ -267,9 +267,7 @@ export class CustomExampleProjection implements PiProjection {
             column: 1,
             box: this.createAttributeGrid(entity)
         });
-        return new GridBox(entity, "entity-all", cells, {
-            style: styleToCSS(entityBoxStyle)
-        });
+        return new GridBox(entity, "entity-all", cells, {style: entityBoxStyle});
     }
 
     // TODO Refactor row and column based collections into one generic function.
@@ -290,7 +288,7 @@ export class CustomExampleProjection implements PiProjection {
                             return isName(currentText, key, index);
                         },
                         placeHolder: "<name>",
-                        style: styleToCSS(attributeName)
+                        style: attributeName
                     });
                 },
                 (attr: Attribute): Box => {
@@ -317,7 +315,7 @@ export class CustomExampleProjection implements PiProjection {
                             }
                             return BehaviorExecutionResult.EXECUTED;
                         },
-                        { style: styleToCSS(attributeName)}
+                        { style: attributeName}
                     )
                 }
             ],

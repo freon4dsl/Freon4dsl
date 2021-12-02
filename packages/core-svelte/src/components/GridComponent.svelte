@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { conceptStyle, styleToCSS } from "@projectit/core";
     import type { GridBox, GridCell, PiEditor } from "@projectit/core";
     import { afterUpdate } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -31,7 +32,8 @@
         });
         templateRows = `repeat(${showgrid.numberOfRows() - 1}, auto)`;
         templateColumns = `repeat(${showgrid.numberOfColumns() - 1}, auto)`;
-        boxStyle = (gridBox.style);
+        boxStyle = styleToCSS(conceptStyle(editor.style, "light", gridBox.element.piLanguageConcept(), "grid", gridBox.style));
+
     });
 </script>
 <div
