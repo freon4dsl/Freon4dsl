@@ -178,8 +178,17 @@
                "parameter": "test"
             },
             "whenTrue": {
-               "$typename": "NumberLiteralExpression",
-               "value": "10",
+               "$typename": "PlusExpression",
+               "left": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": "10",
+                  "appliedfeature": null
+               },
+               "right": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 100,
+                  "appliedfeature": null
+               },
                "appliedfeature": null
             },
             "whenFalse": {

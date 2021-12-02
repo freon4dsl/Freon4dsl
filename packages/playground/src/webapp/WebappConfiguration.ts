@@ -12,8 +12,8 @@ import { ServerCommunication } from "./server/ServerCommunication";
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
 
-// import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
-// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
@@ -35,8 +35,8 @@ import { ServerCommunication } from "./server/ServerCommunication";
 // import { HDMLEnvironment } from "../HDML/environment/gen/HDMLEnvironment";
 // export const editorEnvironment: PiEnvironment = HDMLEnvironment.getInstance();
 
-import { RulesLanguageEnvironment } from "../rules-language/environment/gen/RulesLanguageEnvironment";
-export const editorEnvironment: PiEnvironment = RulesLanguageEnvironment.getInstance();
+// import { RulesLanguageEnvironment } from "../rules-language/environment/gen/RulesLanguageEnvironment";
+// export const editorEnvironment: PiEnvironment = RulesLanguageEnvironment.getInstance();
 
 /**
  * The one and only reference to the server on which the models are stored

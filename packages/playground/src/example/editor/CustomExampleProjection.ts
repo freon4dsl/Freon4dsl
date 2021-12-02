@@ -15,7 +15,7 @@ import {
     styleToCSS,
     GridBox,
     GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, PiProjectionUtil
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, BoxUtils
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute, Entity, NumberLiteralExpression, OrExpression, PiElementReference, SumExpression, Type } from "../language/gen";
@@ -285,7 +285,7 @@ export class CustomExampleProjection implements PiProjection {
                     });
                 },
                 (attr: Attribute): Box => {
-                    return PiProjectionUtil.referenceBox(
+                    return BoxUtils.referenceBox(
                         attr,
                         "declaredType",
                         (selected: string) => {

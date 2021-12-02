@@ -8,6 +8,7 @@
  */
 
 export * from "./boxes";
+export * from "./simplifiedBoxAPI";
 export * from "./OrderedList";
 export * from "./PiAction";
 export * from "./PiCompositeProjection";

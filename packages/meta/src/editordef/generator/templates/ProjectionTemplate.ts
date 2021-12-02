@@ -255,7 +255,7 @@ export class ProjectionTemplate {
         let result = "";
         item.items.forEach((subitem, subitemIndex) => {
             result += this.itemProjection(subitem, elementVarName, index, subitemIndex, concept, language);
-            // Add a comma if there was a projection and its in the middel of the list
+            // Add a comma if there was a projection and its in the middle of the list
             if (! (subitem instanceof PiEditParsedProjectionIndent) && subitemIndex < item.items.length - 1) {
                 result += ", ";
             }
@@ -360,32 +360,6 @@ export class ProjectionTemplate {
             ${Names.styles}.placeholdertext, 
             ${Names.environment(language)}.getInstance().scoper
         )`;
-        // return `BoxFactory.${direction.toLowerCase()}List(
-        //             ${element},
-        //             "${Roles.property(reference)}",
-        //             ${element}.${reference.name}.map((ent, index) => {
-        //                 return PiProjectionUtil.referenceBox(
-        //                         ${element},
-        //                         "${reference.name}-" + index,
-        //                         (selected: string) => {
-        //                             ent.name = selected;
-        //                             return BehaviorExecutionResult.EXECUTED;
-        //                         },
-        //                         ${Names.environment(language)}.getInstance().scoper
-        //        )
-        //             }).concat(
-        //                 BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+ ${reference.name}>" , { //  add ${reference.name}
-        //                     style: styleToCSS(${Names.styles}.placeholdertext),
-        //                     propertyName: "${reference.name}"
-        //                 })
-        //             )
-        //             , //  this one?
-        //             // TODO Change into an IndentComponent
-        //             // {
-        //             //     style: styleToCSS(${Names.styles}.indent)
-        //             // }
-        //         )
-        //     `;
     }
 
     primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
@@ -402,6 +376,7 @@ export class ProjectionTemplate {
         switch (property.type.referred) {
             case PiPrimitiveType.string:
             case PiPrimitiveType.identifier:
+                return `PiProjectionUtil.textBox(${element}, "${property.name}")`;
                 return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
                     placeHolder: "text",

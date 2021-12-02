@@ -15,9 +15,3 @@ export interface PiProjection {
     name: string;
 }
 // end::PiProjection[]
-
-export enum PiListDirection {
-    NONE = "NONE",
-    Horizontal = "Horizontal",
-    Vertical = "Vertical"
-}

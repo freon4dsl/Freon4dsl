@@ -72,6 +72,24 @@ export class Language {
         return this.interfaces.get(typeName);
     }
 
+    classifier(typeName): ModelUnit | Concept | Interface {
+        let concept1 = this.concepts.get(typeName);
+        if (!!concept1) {
+            return concept1;
+        } else {
+            let intf = this.interfaces.get(typeName);
+            if (!!intf) {
+                return intf;
+            } else {
+                let unit1 = this.units.get(typeName);
+                if (!!unit1) {
+                    return unit1;
+                }
+            }
+        }
+        return null;
+    }
+
     conceptProperty(typeName, propertyName): Property {
         return this.concepts.get(typeName).properties.get(propertyName);
     }

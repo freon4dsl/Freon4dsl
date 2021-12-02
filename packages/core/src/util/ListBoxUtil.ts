@@ -14,43 +14,6 @@ import { PiElement } from "../language";
 
 const LOGGER = new PiLogger("ListBoxUtil");
 
-export function firstVerticalBoxParent(box: Box): Box[] {
-    const resultL: Box[] = [];
-    resultL.push(box);
-    let result: Box = box;
-    while (result.parent) {
-        result = result.parent;
-        resultL.push(result);
-        if (result instanceof VerticalListBox) {
-            return resultL;
-        }
-    }
-    return resultL;
-}
-
-export function createVerticalListBox<E extends PiElement>(
-    element: PiElement,
-    role: string,
-    list: E[],
-    placeholderRole: string,
-    elementCreator: (box: Box, editor: PiEditor) => E,
-    editor: PiEditor
-): Box {
-    LOGGER.log("createVerticalListBox");
-    const result = new VerticalListBox(element, role, []);
-
-    for (let index = 0; index < list.length; index++) {
-        const ent = list[index];
-        const line = new HorizontalListBox(element, role + "-hor-" + index, [
-            editor.projection.getBox(ent),
-            new AliasBox(ent, "list-for-" + role, "    ", { roleNumber: index })
-        ]);
-        result.addChild(line);
-    }
-
-    return result;
-}
-
 /**
  * Create a keyboard shortcut for use in an element list
  * @param collectionRole
