@@ -43,8 +43,9 @@
     }
 
     let style: string;
-    $: style = styleToCSS(conceptStyle(editor.style, "light", label.element.piLanguageConcept(), "label", label.style));
-
+    autorun( () => {
+        $: style = styleToCSS(conceptStyle(editor.style, editor.theme, label.element.piLanguageConcept(), "label", label.style));
+    });
 </script>
 
 <div class="label"

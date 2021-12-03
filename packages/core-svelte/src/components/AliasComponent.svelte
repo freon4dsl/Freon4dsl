@@ -304,7 +304,7 @@
         if (!!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        let style = conceptStyle(editor.style, "light", choiceBox.element.piLanguageConcept(), "alias", choiceBox.style);
+        let style = conceptStyle(editor.style, editor.theme, choiceBox.element.piLanguageConcept(), "alias", choiceBox.style);
         aliasStyle = styleToCSS(style);
         choiceBox.textBox.style = style;
 

@@ -327,7 +327,7 @@
             text = textBox.getText();
         }
         // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
-        textStyle = styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style));
+        textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), "text", textBox.style));
 
         textBox.setFocus = setFocus;
     });
@@ -373,7 +373,7 @@
     .text {
         background-color: var(--theme-colors-bg_text_box);
         content: attr(data-placeholdertext);
-        color: magenta;
+        color: var(--theme-colors-color_text_box);
         padding: 3px;
         white-space: normal;
         display: inline-block;

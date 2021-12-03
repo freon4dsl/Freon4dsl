@@ -26,6 +26,7 @@ export class PiEditor {
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
     style: PiEditorStyle = { global: { dark: {}, light: {}}};
+    theme: string = "light";
 
     private $rootBox: Box | null = null;
     private $selectedBox: Box | null = null;
@@ -62,6 +63,7 @@ export class PiEditor {
             $selectedBox: observable,
             selectedElement: observable,
             selectedRole: observable,
+            theme: observable,
             selectedBox: computed,
             deleteBox: action,
             rootBox: computed,

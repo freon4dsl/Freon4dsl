@@ -32,7 +32,7 @@
         });
         templateRows = `repeat(${showgrid.numberOfRows() - 1}, auto)`;
         templateColumns = `repeat(${showgrid.numberOfColumns() - 1}, auto)`;
-        boxStyle = styleToCSS(conceptStyle(editor.style, "light", gridBox.element.piLanguageConcept(), "grid", gridBox.style));
+        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, gridBox.element.piLanguageConcept(), "grid", gridBox.style));
 
     });
 </script>
