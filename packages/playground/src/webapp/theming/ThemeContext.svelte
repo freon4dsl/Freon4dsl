@@ -1,8 +1,8 @@
 <!-- copied from the sandbox belonging to https://josefaidt.dev/blog/2020/03/theming-in-svelte/-->
 <script>
     import { setContext, onMount } from "svelte";
-    import { writable } from "svelte/store";
     import { themePresets } from "../Theme-presets.ts";
+    import {Theme} from "./ThemeStore";
     // expose props for customization and set default values
     export let themes = [...themePresets];
     // set state of current theme's name
@@ -11,13 +11,13 @@
     // utility to get current theme from name
     const getCurrentTheme = name => themes.find(h => h.name === name);
     // set up Theme store, holding current theme object
-    const Theme = writable(getCurrentTheme(_current));
+    // const Theme = writable(getCurrentTheme(_current));
 
     setContext("theme", {
         // providing Theme store through context makes store readonly
         theme: Theme,
         toggle: () => {
-            // update internal state
+           // update internal state
             let _currentIndex = themes.findIndex(h => h.name === _current);
             _current =
                 themes[_currentIndex === themes.length - 1 ? 0 : (_currentIndex += 1)]

@@ -5,10 +5,8 @@ import {
     Box,
     createDefaultExpressionBox,
     KeyPressAction,
-    TextBox,
-    styleToCSS
+    TextBox
 } from "@projectit/core";
-import * as projectitStyles from "../editor/styles/styles";
 import { DemoNumberLiteralExpression } from "../language/gen";
 
 export class CustomDemoProjection implements PiProjection {
@@ -31,7 +29,6 @@ export class CustomDemoProjection implements PiProjection {
         return createDefaultExpressionBox(exp, "number-literal", [
             new TextBox(exp, "num-literal-value", () => exp.value.toString(), (v: string) => (exp.value = Number.parseInt(v)), {
                 deleteWhenEmpty: true,
-                style: styleToCSS(projectitStyles.stringLiteral),
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isNumber(currentText, key, index);
                 }

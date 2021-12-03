@@ -56,6 +56,7 @@ export interface PiStyle {
 export function styleToCSS(style: PiStyle): string {
     let declarations = ''
     for (const property of Object.keys(style)) {
+        // TODO uncomment the : styles
         if (property.startsWith(":")) {
             declarations += `/* ${property} */`
         } else {

@@ -14,13 +14,19 @@ import {
     AliasBox,
     styleToCSS,
     GridBox,
-    TableUtil,
-    PiEditor,
-    BoxFactory,
-    BoxUtils
+    PiStyle,
+    GridUtil,
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
-import { Attribute, Entity, NumberLiteralExpression, OrExpression, PiElementReference, SumExpression, Type } from "../language/gen";
+import { Attribute } from "../language/gen/Attribute";
+import { Entity } from "../language/gen/Entity";
+import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
+import { OrExpression } from "../language/gen/OrExpression";
+import { PiElementReference } from "../language/gen/PiElementReference";
+import { SumExpression } from "../language/gen/SumExpression";
+import { Type } from "../language/gen/Type";
+import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
 import {
     attributeHeader,
     attributeName, entityBoxStyle, entityNameStyle,
@@ -28,10 +34,8 @@ import {
     gridcell,
     gridcellFirst,
     gridcellLast,
-    gridCellOr
+    gridCellOr, mycell, mygrid
 } from "./styles/CustomStyles";
-import * as projectitStyles from "./styles/styles";
-import { mycell, mygrid } from "./styles/styles";
 
 const LOGGER = new PiLogger("CustomProjection");
 
@@ -50,6 +54,7 @@ const OPERAND_COLUM = 2;
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
 export class CustomExampleProjection implements PiProjection {
+    private helpers: ExampleSelectionHelpers = new ExampleSelectionHelpers();
     rootProjection: PiProjection;
     name: string = "manual";
 
@@ -138,7 +143,7 @@ export class CustomExampleProjection implements PiProjection {
             }
         ];
         const result = new GridBox(sum, "sum-all", cells, {
-            style: styleToCSS(mygrid)
+            style: mygrid
         });
         return createDefaultExpressionBox(sum, "sum-exp", [result]);
     }
@@ -207,7 +212,7 @@ export class CustomExampleProjection implements PiProjection {
             );
         }
         return new GridBox(exp, "grid-or", gridCells,
-            { style: styleToCSS(grid) }
+            { style: grid }
         );
     }
 
@@ -225,8 +230,6 @@ export class CustomExampleProjection implements PiProjection {
                 })
                 .concat(
                     BoxFactory.alias(entity, "Entity-methods", "<+ methods>", {
-                        //  add methods
-                        style: styleToCSS(projectitStyles.placeholdertext),
                         propertyName: "methods"
                     })
                 )
@@ -251,7 +254,7 @@ export class CustomExampleProjection implements PiProjection {
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isName(currentText, key, index);
                 },
-                style: styleToCSS(entityNameStyle)
+                style: entityNameStyle
             }),
             // style: styleToCSS(entityBoxStyle)
         });
@@ -260,14 +263,12 @@ export class CustomExampleProjection implements PiProjection {
             column: 1,
             box: this.createAttributeGrid(entity)
         });
-        return new GridBox(entity, "entity-all", cells, {
-            style: styleToCSS(entityBoxStyle)
-        });
+        return new GridBox(entity, "entity-all", cells, {style: entityBoxStyle});
     }
 
     // TODO Refactor row and column based collections into one generic function.
     private createAttributeGrid(entity: Entity): Box {
-        return TableUtil.tableRowOriented<Attribute>(
+        return GridUtil.createCollectionRowGrid<Attribute>(
             entity,
             "attr-grid",
             "attributes",
@@ -277,17 +278,40 @@ export class CustomExampleProjection implements PiProjection {
             [attributeHeader, attributeHeader],
             [
                 (att: Attribute): Box => {
-                    return BoxUtils.textBox(att,"attr-name")
+                    return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
+                        deleteWhenEmpty: true,
+                        keyPressAction: (currentText: string, key: string, index: number) => {
+                            return isName(currentText, key, index);
+                        },
+                        placeHolder: "<name>",
+                        style: attributeName
+                    });
                 },
                 (attr: Attribute): Box => {
-                    return BoxUtils.referenceBox(
+                    return this.helpers.getReferenceBox(
                         attr,
-                        "declaredType",
-                        (selected: string) => {
-                            return PiElementReference.create<Type>(
-                                ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
+                        "Attribute-declaredType",
+                        "<select declaredType>",
+                        "Type",
+                        () => {
+                            if (!!attr.declaredType) {
+                                return { id: attr.declaredType.name, label: attr.declaredType.name };
+                            } else {
+                                return null;
+                            }
                         },
-                        ExampleEnvironment.getInstance().scoper
+                        async (option: SelectOption): Promise<BehaviorExecutionResult> => {
+                            if (!!option) {
+                                attr.declaredType = PiElementReference.create<Type>(
+                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, option.label, "Type") as Type,
+                                    "Type"
+                                );
+                            } else {
+                                attr.declaredType = null;
+                            }
+                            return BehaviorExecutionResult.EXECUTED;
+                        },
+                        { style: attributeName}
                     )
                 }
             ],
@@ -297,6 +321,8 @@ export class CustomExampleProjection implements PiProjection {
             ExampleEnvironment.getInstance().editor
         );
     }
+
+
 }
 
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {
