@@ -7,18 +7,18 @@ import {
     GridCell,
     KeyboardShortcutBehavior,
     PiEditor, PiStyle, styleToCSS
-} from "../editor";
-import { PiElement } from "../language";
+} from "../index";
+import { PiElement } from "../../language";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import { MetaKey, PiKey } from "./Keys";
-import * as Keys from "./Keys";
-import { PiUtils, NBSP } from "./internal";
+import { MetaKey, PiKey } from "../../util/Keys";
+import * as Keys from "../../util/Keys";
+import { PiUtils, NBSP } from "../../util/internal";
 
-export class GridUtil {
+export class TableUtil {
     /**
      * Create grid for collection a la VerticalPiElementListBox
      */
-    public static createCollectionRowGrid<ELEMENT_TYPE extends PiElement>(
+    public static tableRowOriented<ELEMENT_TYPE extends PiElement>(
         element: PiElement,
         role: string,
         listPropertyName: string,
@@ -31,7 +31,7 @@ export class GridUtil {
         editor: PiEditor,
         initializer?: Partial<GridBox>
     ): Box {
-        PiUtils.CHECK(element[listPropertyName] === list, "createCollectionRowGrid: listPropertyname should result in the list");
+        PiUtils.CHECK(element[listPropertyName] === list, "tableRowOriented: listPropertyname should result in the list");
         const cells: GridCell[] = [];
         columnNames.forEach((item: string, index: number) => {
             cells.push({
@@ -116,7 +116,7 @@ export class GridUtil {
      * @param elementCreator
      * @param roleToSelect
      */
-    public static createKeyboardShortcutForCollectionGrid<ELEMENT_TYPE extends PiElement>(
+    private static createKeyboardShortcutForCollectionGrid<ELEMENT_TYPE extends PiElement>(
         container: PiElement,
         collectionRole: string,
         elementCreator: (box: Box, editor: PiEditor) => ELEMENT_TYPE,
@@ -147,7 +147,7 @@ export class GridUtil {
         return listKeyboardShortcut;
     }
 
-    public static createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE extends PiElement>(
+    private static createKeyboardShortcutForEmptyCollectionGrid<ELEMENT_TYPE extends PiElement>(
         container: PiElement,
         propertyRole: string,
         elementCreator: (box: Box, editor: PiEditor) => ELEMENT_TYPE,

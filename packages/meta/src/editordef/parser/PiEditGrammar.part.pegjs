@@ -2,7 +2,7 @@
     let creator = require("./PiEditCreators");
     let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
-
+// TODO add possibility to give different labels to boolean literal, e.g. CORRECT / INCORRECT, or WAAR / ONWAAR
 Editor_Definition
   = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws concepts:(conceptEditor)* ws
     {

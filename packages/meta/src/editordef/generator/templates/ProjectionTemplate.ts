@@ -9,8 +9,18 @@ import {
     PiPrimitiveType,
     PiProperty
 } from "../../../languagedef/metalanguage";
-import { EDITORSTYLES, ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, Names, PROJECTITCORE, Roles } from "../../../utils";
 import {
+    ENVIRONMENT_GEN_FOLDER,
+    LANGUAGE_GEN_FOLDER,
+    Names,
+    PROJECTITCORE,
+    Roles,
+    sortConcepts,
+    sortConceptsWithBase
+} from "../../../utils";
+import {
+    ListJoin,
+    ListJoinType,
     PiEditConcept,
     PiEditInstanceProjection,
     PiEditParsedProjectionIndent,
@@ -25,11 +35,13 @@ import {
 export class ProjectionTemplate {
 
     generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
-        const binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
+        let binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return editor === undefined || editor.projection === null;
         });
+        // sort the concepts such that base concepts come last
+        binaryConceptsWithDefaultProjection = sortConceptsWithBase(binaryConceptsWithDefaultProjection, language.findExpressionBase());
 
         const nonBinaryConceptsWithDefaultProjection = language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
             const editor = editorDef.findConceptEditor(c);
@@ -44,7 +56,10 @@ export class ProjectionTemplate {
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
 
-        const nonBinaryConceptsWithProjection = allClassifiers.filter(c => !(c instanceof PiBinaryExpressionConcept) ).filter(c => {
+        const nonBinaryClassifiers: PiClassifier[] = allClassifiers.filter(c => !(c instanceof PiBinaryExpressionConcept));
+        const binaryClassifiers: PiClassifier[] = allClassifiers.filter(c => c instanceof PiBinaryExpressionConcept);
+
+        const nonBinaryConceptsWithProjection = nonBinaryClassifiers.filter(c => {
             const editor = editorDef.findConceptEditor(c);
             return !!editor && !!editor.projection;
         });
@@ -56,40 +71,20 @@ export class ProjectionTemplate {
         return `
             import { observable, makeObservable } from "mobx";
 
-            import * as ${Names.styles} from "${relativePath}${EDITORSTYLES}";
             import {
-                styleToCSS,
                 BoxFactory,
-                AliasBox,
                 Box,
-                GridBox,
-                IndentBox,
-                GridCell,
-                GridUtil,
-                HorizontalListBox,
-                SelectOption,
-                SvgBox,
-                SelectBox,
-                KeyPressAction,
-                LabelBox,
+                TableUtil,
                 ${Names.PiElement},
                 ${Names.PiProjection},
-                OptionalBox,
-                TextBox,
-                VerticalListBox,
-                VerticalPiElementListBox,
-                PiUtils,
                 createDefaultBinaryBox,
                 createDefaultExpressionBox,
                 isPiBinaryExpression,
                 ${Names.PiBinaryExpression},
-                BehaviorExecutionResult,
-                PiProjectionUtil,
-                PiListDirection
+                BoxUtils
             } from "${PROJECTITCORE}";
 
-            import { ${Names.PiElementReference} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-            import { ${modelImports.map(c => `${c}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${Names.PiElementReference}, ${Names.allConcepts(language)}, ${modelImports.map(c => `${c}`).join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
             import { ${Names.environment(language)} } from "${relativePath}${ENVIRONMENT_GEN_FOLDER}/${Names.environment(language)}";
 
              /**
@@ -111,7 +106,7 @@ export class ProjectionTemplate {
                         this.name = name;
                     }
                     makeObservable(this, {
-                        showBrackets: observable
+                        showBrackets: observable,
                     });
                 }
 
@@ -121,26 +116,31 @@ export class ProjectionTemplate {
                     }
 
                     switch( exp.piLanguageConcept() ) {
-                        ${allClassifiers.map(c => `
+                        ${nonBinaryClassifiers.map(c => `
                         case "${Names.classifier(c)}" : return this.${Names.projectionFunction(c)} (exp as ${Names.classifier(c)});`
+                        ).join("  ")}
+                        ${binaryClassifiers.map(c =>
+                        `case "${Names.classifier(c)}" : return this.${Names.binaryProjectionFunction()} (exp as ${Names.classifier(c)});`
                         ).join("  ")}
                     }
                     // nothing fits
                     throw new Error("No box defined for this expression:" + exp.piId());
                 }
-
-                ${binaryConceptsWithDefaultProjection.map(c => `
-                private ${Names.projectionFunction(c)} (element: ${Names.concept(c)}) {
-                     return this.createBinaryBox(this, element, "${editorDef.findConceptEditor(c).symbol}");
-                }
-                `).join("\n")}
+                
+                private ${Names.binaryProjectionFunction()} (element: ${Names.allConcepts(language)}) {
+                    ${binaryConceptsWithDefaultProjection.map(c => 
+                     `if (element instanceof ${Names.classifier(c)}) {
+                        return this.createBinaryBox(element, "${editorDef.findConceptEditor(c).symbol}");
+                     }`).join(" else ")}
+                     return null;
+                }              
 
                 ${nonBinaryConceptsWithProjection.map(c => this.generateUserProjection(language, c, editorDef.findConceptEditor(c))).join("\n")}
 
                 /**
                  *  Create a standard binary box to ensure binary expressions can be edited easily
                  */
-                private createBinaryBox(projection: ${Names.projectionDefault(language)}, exp: PiBinaryExpression, symbol: string): Box {
+                private createBinaryBox(exp: PiBinaryExpression, symbol: string): Box {
                     const binBox = createDefaultBinaryBox(exp, symbol, ${Names.environment(language)}.getInstance().editor);
                     if (
                         this.showBrackets &&
@@ -148,9 +148,9 @@ export class ProjectionTemplate {
                         isPiBinaryExpression(exp.piContainer().container)
                     ) {
                         return BoxFactory.horizontalList(exp, "brackets", [
-                            BoxFactory.label(exp, "open-bracket", "("),
+                            BoxUtils.labelBox(exp, "(", true),
                             binBox,
-                            BoxFactory.label(exp, "close-bracket", ")")
+                            BoxUtils.labelBox(exp, ")", true)
                         ]);
                     } else {
                         return binBox;
@@ -176,14 +176,14 @@ export class ProjectionTemplate {
 
         projection.lines.forEach( (line, index) => {
             if (line.indent > 0) {
-                result += `BoxFactory.indent(${elementVarName}, "${concept.name}-indent-line-${index}", ${line.indent}, `;
+                result += `BoxUtils.indentBox(${elementVarName}, ${line.indent}, `;
             }
             if (line.items.length > 1) {
                 result += `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
             }
             // Now all projection items in the line
             line.items.forEach((item, itemIndex) => {
-                result += this.itemProjection(item, elementVarName, index, itemIndex, concept, language);
+                result += this.itemProjection(item, elementVarName, index, concept, language);
                 if (! (item instanceof PiEditParsedProjectionIndent) && itemIndex < line.items.length - 1) {
                     result += ",";
                 }
@@ -233,15 +233,11 @@ export class ProjectionTemplate {
                                 | PiEditInstanceProjection,
                            elementVarName: string,
                            index: number,
-                           itemIndex: number,
                            concept: PiClassifier,
                            language: PiLanguage) {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
-            result += ` BoxFactory.label(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
-                            style: styleToCSS(${Names.styles}.${item.style}),
-                            selectable: false
-                        }) `;
+            result += ` BoxUtils.labelBox(${elementVarName}, "${item.text.trim()}") `;
         } else if (item instanceof PiEditPropertyProjection) {
             result += this.propertyProjection(item, elementVarName, concept, language);
         } else if (item instanceof PiEditSubProjection) {
@@ -254,7 +250,7 @@ export class ProjectionTemplate {
                                language: PiLanguage): string {
         let result = "";
         item.items.forEach((subitem, subitemIndex) => {
-            result += this.itemProjection(subitem, elementVarName, index, subitemIndex, concept, language);
+            result += this.itemProjection(subitem, elementVarName, index, concept, language);
             // Add a comma if there was a projection and its in the middle of the list
             if (! (subitem instanceof PiEditParsedProjectionIndent) && subitemIndex < item.items.length - 1) {
                 result += ", ";
@@ -271,7 +267,7 @@ export class ProjectionTemplate {
         return `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", () => (!!${elementVarName}.${optionalPropertyName}),
             ${ result},
             false, "<+>"
-        ),`;
+        )`;
     }
 
     /**
@@ -291,18 +287,18 @@ export class ProjectionTemplate {
         } else if (appliedFeature instanceof PiConceptProperty) {
             if (appliedFeature.isPart) {
                 if (appliedFeature.isList) {
-                    const direction: PiEditProjectionDirection = (!!item.listJoin ? item.listJoin.direction : PiEditProjectionDirection.Horizontal);
-                    result += this.conceptPartListProjection(item, direction, concept, appliedFeature, elementVarName);
+                    result += this.conceptPartListProjection(item, concept, appliedFeature, elementVarName);
 
                 } else {
-                    result += `((!!${elementVarName}.${appliedFeature.name}) ?
-                                                this.rootProjection.getBox(${elementVarName}.${appliedFeature.name}) :
-                                                BoxFactory.alias(${elementVarName}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
+                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${appliedFeature.name}", this.rootProjection) `;
+                    // TODO remove
+                    // result += `((!!${elementVarName}.${appliedFeature.name}) ?
+                    //                             this.rootProjection.getBox(${elementVarName}.${appliedFeature.name}) :
+                    //                             BoxFactory.alias(${elementVarName}, "${Roles.newPart(appliedFeature)}", "[add]", { propertyName: "${appliedFeature.name}" } ))`;
                 }
             } else { // reference
                 if (appliedFeature.isList) {
-                    const direction: PiEditProjectionDirection = (!!item.listJoin ? item.listJoin.direction : PiEditProjectionDirection.Horizontal);
-                    result += this.conceptReferenceListProjection(language, direction, appliedFeature, elementVarName);
+                    result += this.conceptReferenceListProjection(language, item.listJoin, appliedFeature, elementVarName);
                 } else {
                     result += this.conceptReferenceProjection(language, appliedFeature, elementVarName);
                 }
@@ -317,22 +313,21 @@ export class ProjectionTemplate {
      * generate the part list
      *
      * @param item
-     * @param direction         Horizontal or Vertical.
      * @param concept
      * @param propertyConcept   The property for which the projection is generated.
      * @param element           The name of the element parameter of the getBox projection method.
      */
-    conceptPartListProjection(item: PiEditPropertyProjection, direction: PiEditProjectionDirection, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
-        let runtimeDirection: string = "PiListDirection.Horizontal"; // default value
-        if (direction === PiEditProjectionDirection.Vertical) {
-            runtimeDirection = "PiListDirection.Vertical";
-        }
-        return `PiProjectionUtil.listBox(${element}, "${propertyConcept.name}", ${runtimeDirection}, this.rootProjection, ${Names.styles}.placeholdertext)`;
+    conceptPartListProjection(item: PiEditPropertyProjection, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
+        let joinEntry = this.getJoinEntry(item.listJoin);
+        if (item.listJoin.direction === PiEditProjectionDirection.Vertical) {
+            return `BoxUtils.verticalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
+        } // else
+        return `BoxUtils.horizontalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
     }
 
     conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
         const featureType = Names.classifier(appliedFeature.type.referred);
-        return `PiProjectionUtil.referenceBox(
+        return `BoxUtils.referenceBox(
                                 ${element},
                                 "${appliedFeature.name}",
                                 (selected: string) => {
@@ -347,19 +342,20 @@ export class ProjectionTemplate {
                )`;
     }
 
-    conceptReferenceListProjection(language: PiLanguage, direction: PiEditProjectionDirection, reference: PiConceptProperty, element: string) {
-        let runtimeDirection: string = "PiListDirection.Horizontal"; // default value
-        if (direction === PiEditProjectionDirection.Vertical) {
-            runtimeDirection = "PiListDirection.Vertical";
+    conceptReferenceListProjection(language: PiLanguage, listJoin: ListJoin, reference: PiConceptProperty, element: string) {
+        let joinEntry = this.getJoinEntry(listJoin);
+        if (listJoin.direction === PiEditProjectionDirection.Vertical) {
+            return `BoxUtils.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper ${joinEntry})`;
+        } // else
+        return `BoxUtils.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper ${joinEntry})`;
+    }
+
+    private getJoinEntry(listJoin: ListJoin) {
+        let joinEntry: string = `, { text:"${listJoin.joinText}", type:"${listJoin.joinType}" }`;
+        if (listJoin.joinType === ListJoinType.NONE || !(listJoin.joinText?.length > 0)) {
+            joinEntry = "";
         }
-        return `PiProjectionUtil.listBox(
-            ${element}, 
-            "${reference.name}", 
-            ${runtimeDirection}, 
-            this.rootProjection, 
-            ${Names.styles}.placeholdertext, 
-            ${Names.environment(language)}.getInstance().scoper
-        )`;
+        return joinEntry;
     }
 
     primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
@@ -372,34 +368,39 @@ export class ProjectionTemplate {
     }
 
     singlePrimitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
-        const listAddition: string = `${property.isList ? `[index]` : ``}`;
+        const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type.referred) {
             case PiPrimitiveType.string:
             case PiPrimitiveType.identifier:
-                return `PiProjectionUtil.textBox(${element}, "${property.name}")`;
-                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
-                {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
-                })`;
+                return `BoxUtils.textBox(${element}, "${property.name}"${listAddition})`;
+                // TODO remove
+                // return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
+                // {
+                //     placeHolder: "text",
+                //     style: styleToCSS(${Names.styles}.placeholdertext)
+                // })`;
             case PiPrimitiveType.number:
-                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
-                {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
-                })`;
+                return `BoxUtils.numberBox(${element}, "${property.name}"${listAddition})`;
+                // return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
+                // {
+                //     placeHolder: "text",
+                //     style: styleToCSS(${Names.styles}.placeholdertext)
+                // })`;
             case PiPrimitiveType.boolean:
-                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
-                {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
-                })`;
+                // TODO labels
+                return `BoxUtils.booleanBox(${element}, "${property.name}", {yes:"true", no:"false"}${listAddition})`;
+                // return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
+                // {
+                //     placeHolder: "text",
+                //     style: styleToCSS(${Names.styles}.placeholdertext)
+                // })`;
             default:
-                return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
-                {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
-                })`;
+                return `BoxUtils.textBox(${element}, "${property.name}"${listAddition})`;
+                // return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
+                // {
+                //     placeHolder: "text",
+                //     style: styleToCSS(${Names.styles}.placeholdertext)
+                // })`;
         }
     }
 

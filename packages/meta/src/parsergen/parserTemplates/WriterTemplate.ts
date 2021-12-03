@@ -6,7 +6,7 @@ import {
     PiPrimitiveProperty,
     PiProperty
 } from "../../languagedef/metalanguage";
-import { sortClasses, langExpToTypeScript } from "../../utils";
+import { sortConcepts, langExpToTypeScript } from "../../utils";
 import {
     PiEditConcept,
     PiEditUnit,
@@ -29,7 +29,7 @@ export class WriterTemplate {
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
         let limitedConcepts: PiLimitedConcept[] = [];
-        const elementsToUnparse: PiClassifier[] = sortClasses(language.concepts);
+        const elementsToUnparse: PiClassifier[] = sortConcepts(language.concepts);
         elementsToUnparse.push(...language.units);
 
         // find all limited concepts used, the are treated differently in both (1) the creation of unparse method

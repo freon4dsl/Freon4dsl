@@ -3,6 +3,7 @@ import { PiElement } from "../../language";
 
 export class RoleProvider {
     static uniqueLabelNumber: number = 1;
+    static uniqueIndentNumber: number = 1;
 
     public static classifier(concept: ModelUnit | Concept | Interface): string {
         return RoleProvider.startWithUpperCase(concept.typeName);
@@ -28,5 +29,9 @@ export class RoleProvider {
 
     public static label(element: PiElement): string {
         return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + this.uniqueLabelNumber++;
+    }
+
+    static indent(element: PiElement) {
+        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + this.uniqueIndentNumber++;
     }
 }

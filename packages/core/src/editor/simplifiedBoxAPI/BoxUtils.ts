@@ -6,17 +6,17 @@ import { PiEditor } from "../PiEditor";
 import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
-import { LoopVariable, SumExpression } from "@projectit/playground/dist/example/language/gen";
 
 export class PiListJoin {
     text: string;
-    type: PiListJoinType;
+    type: string;
 }
 
-export enum PiListJoinType {
-    Separator = "Separator",
-    Terminator = "Terminator"
-}
+// export enum PiListJoinType {
+//     // both strings should be equal to the strings used in class ListJoin from package meta
+//     Separator = "Separator",
+//     Terminator = "Terminator"
+// }
 
 export class BoxUtils {
 
@@ -108,8 +108,14 @@ export class BoxUtils {
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
         const property = element[propertyName];
-        //
-        if (property !== undefined && property !== null && typeof property === "boolean") {
+
+        if (!(property !== undefined && property !== null )) {
+            PiUtils.CHECK(false, "Property " + propertyName + " does not exist:" + property + "\"");
+        }
+        if (!(typeof property === "boolean" || typeof property === "string")) {
+            PiUtils.CHECK(false, "Property " + propertyName + " is not a boolean:" + property.piLanguageConcept() + "\"");
+        }
+        if (property !== undefined && property !== null && (typeof property === "boolean" || typeof property === "string")) {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "booleanbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
                 return BoxFactory.select(
@@ -239,6 +245,15 @@ export class BoxUtils {
         });
     }
 
+    static indentBox(element: PiElement, indent: number, childBox: Box): Box {
+        return BoxFactory.indent(
+            element,
+            RoleProvider.indent(element),
+            indent,
+            childBox
+        )
+    }
+
     static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListJoin): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
@@ -284,7 +299,7 @@ export class BoxUtils {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
-        if (property !== undefined && propertyName !== null && isList && isPart !== "reference") {
+        if (property !== undefined && property !== null && isList && isPart !== "reference") {
             // find the children to show in this listBox, depending on whether it is a list of parts or of references
             let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin);
             // add a placeholder where a new element can be added
@@ -434,7 +449,8 @@ export class BoxUtils {
         return property.map((listElem, index) => {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
             if (listJoin !== null && listJoin !== undefined) {
-                if (listJoin.type === PiListJoinType.Separator) {
+                // TODO make constant of strings "Separator" and ..
+                if (listJoin.type === "Separator") {
                     if (index < numberOfItems - 1) {
                         return BoxFactory.horizontalList(element, roleName, [
                             rootProjection.getBox(listElem),
@@ -443,7 +459,7 @@ export class BoxUtils {
                     } else {
                         return rootProjection.getBox(listElem);
                     }
-                } else if (listJoin.type === PiListJoinType.Terminator) {
+                } else if (listJoin.type === "Terminator") {
                     return BoxFactory.horizontalList(element, roleName, [
                         rootProjection.getBox(listElem),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
@@ -465,7 +481,8 @@ export class BoxUtils {
                 return BehaviorExecutionResult.EXECUTED;
             }
             if (listJoin !== null && listJoin !== undefined) {
-                if (listJoin.type === PiListJoinType.Separator) {
+                // TODO constants
+                if (listJoin.type === "Separator") {
                     if (index < numberOfItems - 1) {
                         return BoxFactory.horizontalList(element, roleName, [
                             BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
@@ -474,7 +491,7 @@ export class BoxUtils {
                     } else {
                         return BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index);
                     }
-                } else if (listJoin.type === PiListJoinType.Terminator) {
+                } else if (listJoin.type === "Terminator") {
                     return BoxFactory.horizontalList(element, roleName, [
                         BoxUtils.referenceBox(element, propertyName, setFunc, scoper, index),
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)

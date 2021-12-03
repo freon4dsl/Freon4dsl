@@ -23,7 +23,7 @@ export * from "./PiUtils";
 
 // the others
 export * from "./BalanceTreeUtils";
-export * from "./GridUtil";
+export * from "../editor/simplifiedBoxAPI/TableUtil";
 export * from "./ListBoxUtil";
 
 // the following depends on BalanceTreeUtils and BehaviorUtils

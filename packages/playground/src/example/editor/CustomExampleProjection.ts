@@ -14,8 +14,10 @@ import {
     AliasBox,
     styleToCSS,
     GridBox,
-    GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, BoxUtils
+    TableUtil,
+    PiEditor,
+    BoxFactory,
+    BoxUtils
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute, Entity, NumberLiteralExpression, OrExpression, PiElementReference, SumExpression, Type } from "../language/gen";
@@ -265,7 +267,7 @@ export class CustomExampleProjection implements PiProjection {
 
     // TODO Refactor row and column based collections into one generic function.
     private createAttributeGrid(entity: Entity): Box {
-        return GridUtil.createCollectionRowGrid<Attribute>(
+        return TableUtil.tableRowOriented<Attribute>(
             entity,
             "attr-grid",
             "attributes",
@@ -275,14 +277,7 @@ export class CustomExampleProjection implements PiProjection {
             [attributeHeader, attributeHeader],
             [
                 (att: Attribute): Box => {
-                    return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
-                        deleteWhenEmpty: true,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
-                            return isName(currentText, key, index);
-                        },
-                        placeHolder: "<name>",
-                        style: styleToCSS(attributeName)
-                    });
+                    return BoxUtils.textBox(att,"attr-name")
                 },
                 (attr: Attribute): Box => {
                     return BoxUtils.referenceBox(

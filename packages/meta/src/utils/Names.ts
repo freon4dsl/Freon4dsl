@@ -259,4 +259,8 @@ export class Names {
     public static reader(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
+
+    public static binaryProjectionFunction(): string {
+        return "_getBinaryExpressionBox";
+    }
 }
