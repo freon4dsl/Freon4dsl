@@ -59,7 +59,7 @@ export class GridUtil {
             row: list.length + 3,
             column: 1,
             columnSpan: columnBoxes.length,
-            box: new AliasBox(element, "alias-add-row", "<add new row>", {style: `font-weight: normal;`}),
+            box: new AliasBox(element, "alias-add-row", "<add new row>", {style: {"font-weight": "normal"}}),
             style: styleToCSS(rowStyles[0])
             // TODO Change into Svelte Style
             // style: STYLES.header

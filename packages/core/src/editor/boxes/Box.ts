@@ -2,6 +2,7 @@ import { observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../language";
 import { PiLogger, PiUtils } from "../../util";
+import { PiStyle } from "../PiStyle";
 
 const LOGGER = new PiLogger("Box");
 
@@ -11,7 +12,7 @@ export abstract class Box {
     role: string = "";
     roleNumber: number = undefined;
     element: PiElement = null;
-    style: string = "";
+    style: PiStyle = null;
     selectable: boolean = true;
     parent: Box = null;
 

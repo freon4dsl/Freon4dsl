@@ -55,10 +55,7 @@ export class ProjectionTemplate {
         return `
             import { observable, makeObservable } from "mobx";
 
-            import * as ${Names.styles} from "${relativePath}${EDITORSTYLES}";
-            // TODO import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
             import {
-                styleToCSS,
                 BoxFactory,
                 AliasBox,
                 Box,
@@ -239,7 +236,6 @@ export class ProjectionTemplate {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
             result += ` BoxFactory.label(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
-                            style: styleToCSS(${Names.styles}.${item.style}),
                             selectable: false
                         }) `;
         } else if (item instanceof PiEditPropertyProjection) {
@@ -329,7 +325,6 @@ export class ProjectionTemplate {
                     return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${item.listJoin.joinText}")]) as Box;
                 }).concat(
                     BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+ ${propertyConcept.name}>" , { //  add ${propertyConcept.name}
-                        style: styleToCSS(${Names.styles}.placeholdertext),
                         propertyName: "${propertyConcept.name}"
                     })
                 )
@@ -388,15 +383,10 @@ export class ProjectionTemplate {
                         return ${this.conceptReferenceProjectionInList(reference, element) }
                     }).concat(
                         BoxFactory.alias(${element}, "${Roles.newConceptReferencePart(reference)}", "<+ ${reference.name}>" , { //  add ${reference.name}
-                            style: styleToCSS(${Names.styles}.placeholdertext),
                             propertyName: "${reference.name}"
                         })
                     )
                     , //  this one?
-                    // TODO Change into an IndentComponent
-                    // {
-                    //     style: styleToCSS(${Names.styles}.indent)
-                    // }
                 )
             `;
     }
@@ -417,26 +407,22 @@ export class ProjectionTemplate {
             case PiPrimitiveType.identifier:
                 return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
+                    placeHolder: "text"
                 })`;
             case PiPrimitiveType.number:
                 return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = Number.parseInt(c)) ,
                 {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
+                    placeHolder: "text"
                 })`;
             case PiPrimitiveType.boolean:
                 return `BoxFactory.text(${element}, "${Roles.property(property)}", () => "" + ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = (c === "true" ? true : false)),
                 {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
+                    placeHolder: "text"
                 })`;
             default:
                 return `BoxFactory.text(${element}, "${Roles.property(property)}", () => ${element}.${property.name}${listAddition}, (c: string) => (${element}.${property.name}${listAddition} = c as string),
                 {
-                    placeHolder: "text",
-                    style: styleToCSS(${Names.styles}.placeholdertext)
+                    placeHolder: "text"
                 })`;
         }
     }
