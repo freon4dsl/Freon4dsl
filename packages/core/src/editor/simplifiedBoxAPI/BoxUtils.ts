@@ -13,7 +13,7 @@ export class PiListJoin {
 }
 
 // export enum PiListJoinType {
-//     // both strings should be equal to the strings used in class ListJoin from package meta
+//     // both strings should be equal to the strings used in class ListInfo from package meta
 //     Separator = "Separator",
 //     Terminator = "Terminator"
 // }
@@ -349,7 +349,7 @@ export class BoxUtils {
     // private static listBox(
     //     element: PiElement,
     //     propertyName: string,
-    //     listJoin: PiListJoin,
+    //     listInfo: PiListJoin,
     //     rootProjection: PiProjection,
     //     scoper?: PiScoper
     // ): Box {

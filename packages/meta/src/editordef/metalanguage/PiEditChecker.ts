@@ -1,17 +1,16 @@
 import {
     PiClassifier,
-    PiConcept,
     PiInstanceExp,
     PiLangExpressionChecker,
     PiLangSelfExp,
     PiLanguage,
     PiLimitedConcept,
-    PiPrimitiveProperty
+    PiPrimitiveProperty, PiProperty
 } from "../../languagedef/metalanguage";
 import { Checker } from "../../utils";
 import {
-    ListJoin,
-    ListJoinType,
+    ListInfo,
+    ListInfoType,
     PiEditConcept,
     PiEditInstanceProjection,
     PiEditProjection,
@@ -26,6 +25,7 @@ const LOGGER = new MetaLogger("DefEditorChecker"); // .mute();
 
 export class PiEditChecker extends Checker<PiEditUnit> {
     myExpressionChecker: PiLangExpressionChecker;
+    propsWithTableProjection: PiEditPropertyProjection[] = [];
 
     constructor(language: PiLanguage) {
         super(language);
@@ -42,6 +42,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             throw new Error(`Editor definition checker does not known the language.`);
         }
         editor.language = this.language;
+        this.propsWithTableProjection = [];
         this.nestedCheck(
             {
                 check: this.language.name === editor.languageName,
@@ -58,6 +59,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                         this.checkConceptEditor(conceptEditor);
                     }
                     this.checkEditor(editor);
+                    this.checkPropsWithTableProjection(editor);
                     this.errors = this.errors.concat(this.myExpressionChecker.errors);
                 }
             });
@@ -159,7 +161,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             const myprop = projection.expression.findRefOfLastAppliedFeature();
             if (!!myprop) {
                 if (!myprop.isList) {
-                    this.simpleCheck(!(!!projection.listJoin),
+                    this.simpleCheck(!(!!projection.listInfo),
                         `A terminator or separator may not be used in a non-list property '${myprop.name}' ${this.location(projection)}`);
                     if (!!projection.keyword) {
                         this.simpleCheck(myprop instanceof PiPrimitiveProperty && myprop.type.referred === PiPrimitiveType.boolean,
@@ -173,12 +175,20 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     //         `Property '${myprop.name}' is not optional, therefore it should not have an optional projection ${this.location(projection)}`)
                     // }
                 } else {
-                    // create default listJoin if not present
-                    if (!(!!projection.listJoin)) {
-                        projection.listJoin = new ListJoin();
-                    } else if (projection.listJoin.joinType !== ListJoinType.NONE) {
-                        const text = projection.listJoin.joinType === ListJoinType.Separator ? `@separator` : `@terminator`;
-                        this.simpleCheck(!!projection.listJoin.joinText, `${text} should be followed by a string between '[' and ']' ${this.location(projection)}`);
+                    const listInfoPresent = !!projection.listInfo;
+                    const tabelInfoPresent = !!projection.tableInfo;
+                    this.simpleCheck( !(listInfoPresent && tabelInfoPresent),
+                        `Property '${myprop.name}' can be projected either as list or table, not both ${this.location(projection)}`);
+
+                    // create default listInfo if neither listInfo nor tableInfo are present
+                    if (!listInfoPresent && !tabelInfoPresent) {
+                        projection.listInfo = new ListInfo();
+                    } else if (listInfoPresent && projection.listInfo.joinType !== ListInfoType.NONE) {
+                        const text = projection.listInfo.joinType === ListInfoType.Separator ? `@separator` : `@terminator`;
+                        this.simpleCheck(!!projection.listInfo.joinText, `${text} should be followed by a string between '[' and ']' ${this.location(projection)}`);
+                    } else if (tabelInfoPresent) {
+                        // remember this property - there should be a table projection for it - to be checked later
+                        this.propsWithTableProjection.push(projection);
                     }
                 }
             }
@@ -234,4 +244,19 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r");
     }
 
+    private checkPropsWithTableProjection(editor: PiEditUnit) {
+        for (const projection of this.propsWithTableProjection) {
+            const myprop = projection.expression.findRefOfLastAppliedFeature();
+            const propEditor = editor.findConceptEditor(myprop.type.referred);
+            if (!(!!propEditor.tableProjections) || propEditor.tableProjections.length == 0) {
+                // create default listInfo if not present
+                if (!(!!projection.listInfo)) {
+                    projection.listInfo = new ListInfo();
+                }
+                // TODO this should be a warning
+                this.simpleCheck(false,
+                    `No table projection defined for '${myprop.name}', it will be shown as a horizontal list ${this.location(projection)}`);
+            }
+        }
+    }
 }

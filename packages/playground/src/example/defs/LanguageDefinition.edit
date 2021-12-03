@@ -13,8 +13,8 @@ Attribute {
 Entity {
     @projection [
         entity ${self.name} [? base ${self.baseEntity}] {
-            ${self.attributes @table @colums }
-            ${self.methods @vertical }
+            ${self.attributes @table  }
+            ${self.methods @vertical}
         }
     ]
     @trigger "entity"
@@ -28,7 +28,7 @@ ExampleUnit {
                 @vertical
             }
         unit level methods:
-            ${self.methods @vertical  }
+            ${self.methods @vertical }
         }
         ]
 }

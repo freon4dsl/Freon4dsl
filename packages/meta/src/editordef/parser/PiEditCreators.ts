@@ -1,7 +1,7 @@
 import {
     PiEditProjectionDirection,
-    ListJoin,
-    ListJoinType,
+    ListInfo,
+    ListInfoType,
     PiEditConcept,
     PiEditUnit,
     PiEditParsedNewline,
@@ -69,10 +69,6 @@ export function createConceptEditor(data: Partial<PiEditConcept>): PiEditConcept
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // TODO remove this print statement
-    if (result.tableProjections.length > 0) {
-        console.log(`found table projection: ${result.tableProjections[0].toString()}`)
-    }
     return result;
 }
 
@@ -84,9 +80,6 @@ export function createLanguageEditor(data: Partial<PiEditUnit>): PiEditUnit {
     if (!!data.conceptEditors) {
         result.conceptEditors = data.conceptEditors;
     }
-    // if (!!data.enumerations) {
-    //     result.enumerations = data.enumerations;
-    // }
     if (!!data.languageName) {
         result.languageName = data.languageName;
     }
@@ -195,13 +188,13 @@ export function createText(data: string): PiEditProjectionText {
 }
 
 export function createPropertyProjection(data: Partial<PiEditPropertyProjection>): PiEditPropertyProjection {
-    // console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listJoin + "]");
+    // console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listInfo + "]");
     const result = new PiEditPropertyProjection();
     // if (!!data.propertyName) {
     //     result.propertyName = data.propertyName;
     // }
-    if (!!data.listJoin) {
-        result.listJoin = data.listJoin;
+    if (!!data.listInfo) {
+        result.listInfo = data.listInfo;
     }
     if (!!data.tableInfo) {
         result.tableInfo = data.tableInfo;
@@ -235,14 +228,14 @@ export function createTableInfo(data: Object): TableInfo {
     return result;
 }
 
-export function createJoinType(data: Object): ListJoinType {
+export function createJoinType(data: Object): ListInfoType {
     const type = data["type"];
 
-    return type === "@separator" ? ListJoinType.Separator : type === "@terminator" ? ListJoinType.Terminator : ListJoinType.NONE;
+    return type === "@separator" ? ListInfoType.Separator : type === "@terminator" ? ListInfoType.Terminator : ListInfoType.NONE;
 }
 
-export function createListJoin(data: Partial<ListJoin>): ListJoin {
-    const result = new ListJoin();
+export function createListInfo(data: Partial<ListInfo>): ListInfo {
+    const result = new ListInfo();
     if (!!data.direction) {
         result.direction = data.direction;
     }

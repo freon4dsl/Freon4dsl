@@ -13,7 +13,7 @@ import {
     PiEditProjectionText,
     PiEditPropertyProjection,
     PiEditProjectionDirection,
-    ListJoinType,
+    ListInfoType,
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
@@ -510,13 +510,16 @@ export class WriterTemplate {
             if (myElem.type.referred === PiPrimitiveType.identifier) {
                 isIdentifier = "true";
             }
-            const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+            const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
             const joinType = this.getJoinType(item);
-            result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, ${isIdentifier},"${item.listJoin.joinText}", ${joinType}, ${vertical},
+            // TODO adjust to tables
+            if (joinType.length > 0) { // it is a list not table
+                result += `this.unparseListOfPrimitiveValues(
+                    ${elemStr}, ${isIdentifier},"${item.listInfo.joinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
                     short
                 );`;
+            }
         } else {
             let myCall: string = ``;
             const myType: PiClassifier = myElem.type.referred;
@@ -561,13 +564,19 @@ export class WriterTemplate {
         if (!!type) {
             let myTypeScript: string = langExpToTypeScript(item.expression);
             if (myElem.isList) {
-                const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-                const joinType = this.getJoinType(item);
-
-                if (myElem.isPart) {
-                    result += `this.unparseList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
-                } else {
-                    result += `this.unparseReferenceList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                if (!!item.listInfo) {
+                    const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
+                    const joinType = this.getJoinType(item);
+                    // TODO adjust to tables
+                    if (joinType.length > 0) { // it is a list not table
+                        if (myElem.isPart) {
+                            result += `this.unparseList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                        } else {
+                            result += `this.unparseReferenceList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                        }
+                    }
+                } else if (!!item.tableInfo) {
+                    // TODO adjust for tables
                 }
             } else {
                 let myCall: string = "";
@@ -605,12 +614,14 @@ export class WriterTemplate {
      */
     private getJoinType(item: PiEditPropertyProjection): string {
         let joinType: string = "";
-        if (item.listJoin.joinType === ListJoinType.Separator) {
-            joinType = "SeparatorType.Separator";
-        } else if (item.listJoin.joinType === ListJoinType.Terminator) {
-            joinType = "SeparatorType.Terminator";
-        } else if (item.listJoin.joinType === ListJoinType.NONE) {
-            joinType = "SeparatorType.NONE";
+        if (!!item.listInfo) {
+            if (item.listInfo.joinType === ListInfoType.Separator) {
+                joinType = "SeparatorType.Separator";
+            } else if (item.listInfo.joinType === ListInfoType.Terminator) {
+                joinType = "SeparatorType.Terminator";
+            } else if (item.listInfo.joinType === ListInfoType.NONE) {
+                joinType = "SeparatorType.NONE";
+            }
         }
         return joinType;
     }

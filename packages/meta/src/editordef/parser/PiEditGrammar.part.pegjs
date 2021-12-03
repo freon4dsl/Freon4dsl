@@ -63,7 +63,7 @@ property_projection = propProjectionStart ws
                      exp:expression ws join:listJoin? t:tableInfo? keyword:keywordDecl? ws
                  propProjectionEnd
             {
-                return creator.createPropertyProjection( { "expression": exp, "listJoin": join, "tableInfo": t, "keyword":keyword, "location": location() });
+                return creator.createPropertyProjection( { "expression": exp, "listInfo": join, "tableInfo": t, "keyword":keyword, "location": location() });
             }
 
 tableInfo = "@table" ws dir:("@rows" / "@colums")? ws
@@ -79,7 +79,7 @@ listJoin =  l:listJoinSimple+
                     let joinTypeObject  = l.find(j => !!j.joinType);
                     let joinTextObject  = l.find(j => !!j.joinText);
 
-                    return creator.createListJoin( {"direction": (!!directionObject ? directionObject.direction : undefined),
+                    return creator.createListInfo( {"direction": (!!directionObject ? directionObject.direction : undefined),
                                                     "joinType" : (!!joinTypeObject ? joinTypeObject.joinType    : undefined),
                                                     "joinText" : (!!joinTextObject ? joinTextObject.joinText    : undefined),
                                                     "location" : location()} );

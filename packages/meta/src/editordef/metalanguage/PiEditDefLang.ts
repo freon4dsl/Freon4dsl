@@ -96,15 +96,15 @@ export enum PiEditProjectionDirection {
     Vertical = "Vertical"
 }
 
-export enum ListJoinType {
+export enum ListInfoType {
     NONE = "NONE",
     Terminator = "Terminator",
     Separator = "Separator"
 }
 
-export class ListJoin extends PiDefinitionElement {
+export class ListInfo extends PiDefinitionElement {
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
-    joinType?: ListJoinType = ListJoinType.NONE;
+    joinType?: ListInfoType = ListInfoType.NONE;
     joinText?: string = "";
 
     toString(): string {
@@ -121,7 +121,7 @@ export class TableInfo extends PiDefinitionElement {
 
 export class PiEditPropertyProjection extends PiDefinitionElement {
     // propertyName: string = "";
-    listJoin: ListJoin;
+    listInfo: ListInfo;
     tableInfo?: TableInfo;
     keyword?: string;
     expression: PiLangExp;
@@ -135,7 +135,7 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
         return (
             "${" +
             this.expression.toPiString() + " " +
-            (!!this.listJoin ? " " + this.listJoin.toString() : "") +
+            (!!this.listInfo ? " " + this.listInfo.toString() : "") +
             (!!this.tableInfo ? " " + this.tableInfo.toString() : "") +
             (!!this.keyword ? " @keyword [" + this.keyword + "]" : "") +
             "}"
