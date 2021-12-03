@@ -5,10 +5,8 @@ import {
     Box,
     createDefaultExpressionBox,
     KeyPressAction,
-    TextBox,
-    styleToCSS
+    TextBox
 } from "@projectit/core";
-import * as projectitStyles from "../editor/styles/styles";
 import { DemoNumberLiteralExpression } from "../language/gen";
 import { DemoSelectionHelpers } from "./gen/DemoSelectionHelpers";
 
