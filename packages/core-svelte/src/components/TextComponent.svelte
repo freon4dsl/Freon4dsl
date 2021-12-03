@@ -359,6 +359,15 @@
         content: attr(data-placeholdertext);
         color: inherit;
         background-color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        background: inherit;
+        padding: inherit;
+        margin: inherit;
+        display: inherit;
+        white-space: inherit;
+        border: inherit;
         opacity: 50%;
     }
 
