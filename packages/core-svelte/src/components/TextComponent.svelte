@@ -359,7 +359,7 @@
         content: attr(data-placeholdertext);
         color: inherit;
         background-color: inherit;
-        opacity: 70%;
+        opacity: 50%;
     }
 
     .text {

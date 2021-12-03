@@ -34,10 +34,8 @@ import {
     gridcell,
     gridcellFirst,
     gridcellLast,
-    gridCellOr
+    gridCellOr, mycell, mygrid
 } from "./styles/CustomStyles";
-import * as projectitStyles from "./styles/styles";
-import { mycell, mygrid } from "./styles/styles";
 
 const LOGGER = new PiLogger("CustomProjection");
 
@@ -232,8 +230,6 @@ export class CustomExampleProjection implements PiProjection {
                 })
                 .concat(
                     BoxFactory.alias(entity, "Entity-methods", "<+ methods>", {
-                        //  add methods
-                        style: projectitStyles.placeholdertext,
                         propertyName: "methods"
                     })
                 )

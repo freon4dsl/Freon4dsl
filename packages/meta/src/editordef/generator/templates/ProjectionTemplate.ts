@@ -55,10 +55,7 @@ export class ProjectionTemplate {
         return `
             import { observable, makeObservable } from "mobx";
 
-            import * as ${Names.styles} from "${relativePath}${EDITORSTYLES}";
-            // TODO import { ${Names.styles} } from "${relativePath}${EDITORSTYLES}";
             import {
-                styleToCSS,
                 BoxFactory,
                 AliasBox,
                 Box,
@@ -390,10 +387,6 @@ export class ProjectionTemplate {
                         })
                     )
                     , //  this one?
-                    // TODO Change into an IndentComponent
-                    // {
-                    //     style: styleToCSS(${Names.styles}.indent)
-                    // }
                 )
             `;
     }

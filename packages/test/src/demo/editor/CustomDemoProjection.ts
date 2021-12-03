@@ -33,7 +33,6 @@ export class CustomDemoProjection implements PiProjection {
         return createDefaultExpressionBox(exp, "number-literal", [
             new TextBox(exp, "num-literal-value", () => exp.value.toString(), (v: string) => (exp.value = Number.parseInt(v)), {
                 deleteWhenEmpty: true,
-                style: styleToCSS(projectitStyles.stringLiteral),
                 keyPressAction: (currentText: string, key: string, index: number) => {
                     return isNumber(currentText, key, index);
                 }
