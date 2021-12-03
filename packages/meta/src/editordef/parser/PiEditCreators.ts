@@ -19,6 +19,7 @@ import { PiConcept } from "../../languagedef/metalanguage";
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
+import { PiEditTableProjection, TableInfo } from "../metalanguage/PiEditDefLang";
 
 const LOGGER = new MetaLogger("EditorCreators").mute();
 
@@ -58,12 +59,19 @@ export function createConceptEditor(data: Partial<PiEditConcept>): PiEditConcept
     if (!!data.projection) {
         result.projection = data.projection;
     }
+    if (!!data.tableProjections) {
+        result.tableProjections = data.tableProjections;
+    }
     if (!!data.concept) {
         result.concept = data.concept;
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
+    }
+    // TODO remove this print statement
+    if (result.tableProjections.length > 0) {
+        console.log(`found table projection: ${result.tableProjections[0].toString()}`)
     }
     return result;
 }
@@ -106,6 +114,27 @@ export function createProjection(data: Partial<PiEditProjection>): PiEditProject
         result.lines = data.lines;
         // Now cleanup the parsed projection
         PiEditProjectionUtil.normalize(result);
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
+export function createTableProjection(data: Partial<PiEditTableProjection>): PiEditTableProjection {
+    const result = new PiEditTableProjection();
+    if (!!data.name) {
+        result.name = data.name;
+    } else {
+        // create default name
+        result.name = "table";
+    }
+    if (!!data.headers) {
+        result.headers = data.headers;
+    }
+    if (!!data.cells) {
+        result.cells = data.cells;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -174,6 +203,9 @@ export function createPropertyProjection(data: Partial<PiEditPropertyProjection>
     if (!!data.listJoin) {
         result.listJoin = data.listJoin;
     }
+    if (!!data.tableInfo) {
+        result.tableInfo = data.tableInfo;
+    }
     if (!!data.keyword) {
         result.keyword = data.keyword;
     }
@@ -190,6 +222,17 @@ export function createPropertyProjection(data: Partial<PiEditPropertyProjection>
 export function createListDirection(data: Object): PiEditProjectionDirection {
     const dir = data["direction"];
     return dir === "@horizontal" ? PiEditProjectionDirection.Horizontal : dir === "@vertical" ? PiEditProjectionDirection.Vertical : PiEditProjectionDirection.NONE;
+}
+
+export function createTableInfo(data: Object): TableInfo {
+    const result = new TableInfo();
+    const dir = data["direction"];
+    result.direction = dir === "@rows" ? PiEditProjectionDirection.Horizontal : dir === "@colums" ? PiEditProjectionDirection.Vertical : PiEditProjectionDirection.NONE;
+    if (!!data["location"]) {
+        result.location = data["location"];
+        result.location.filename = currentFileName;
+    }
+    return result;
 }
 
 export function createJoinType(data: Object): ListJoinType {

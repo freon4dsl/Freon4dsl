@@ -16,6 +16,7 @@ Editor_Definition
 conceptEditor =
             concept:conceptRef curly_begin ws
                 projection:projection?
+                tables: tableProjection*
                 trigger:trigger?
                 referenceShortcut:referenceShortcut?
                 symbol:symbol?
@@ -27,6 +28,7 @@ conceptEditor =
         "referenceShortcut": referenceShortcut,
         "symbol"           : symbol,
         "projection"       : projection,
+        "tableProjections" : tables,
         "location"         : location()
     });
 }
@@ -38,24 +40,37 @@ projection = "@projection" ws name:var? projection_begin
                     return creator.createProjection({ "lines" : lines, "name": name, "location": location() });
               }
 
+tableProjection = "@table" ws name:var? ws projection_begin ws
+                   headers:( head:headerText
+                            tail:(ws "|" ws v:headerText { return v; })* ws
+                                { return [head].concat(tail); }
+                           )?
+                   cells:( head:property_projection
+                            tail:(ws "|" ws v:property_projection { return v; })*
+                                { return [head].concat(tail); }
+                         ) ws
+              projection_end
+              {
+                    return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
+              }
+
 templateSpace = s:[ ]+
                 {
                     return creator.createIndent( { "indent": s.join(""), "location": location() });
                 }
 
 property_projection = propProjectionStart ws
-                     exp:expression ws join:listJoin? keyword:keywordDecl? ws
+                     exp:expression ws join:listJoin? t:tableInfo? keyword:keywordDecl? ws
                  propProjectionEnd
             {
-                return creator.createPropertyProjection( {  "expression": exp, "listJoin": join, "keyword":keyword, "location": location() });
+                return creator.createPropertyProjection( { "expression": exp, "listJoin": join, "tableInfo": t, "keyword":keyword, "location": location() });
             }
 
-//property_projection = "[[" ws "this" ws "." ws prop:var ws
-//                        join:listJoin?
-//                 "]]"
-//            {
-//                return creator.createSubProjection( { "propertyName": prop, "listJoin": join, "location": location() });
-//            }
+tableInfo = "@table" ws dir:("@rows" / "@colums")? ws
+            {
+                return creator.createTableInfo( {"direction": dir, "location": location()} );
+            }
+
 keywordDecl = "@keyword" ws text:joinText {return text;}
 
 listJoin =  l:listJoinSimple+
@@ -89,11 +104,6 @@ listJoinType = joinType:("@separator" / "@terminator") ws
                     return creator.createJoinType( {"type": joinType, "location": location() } );
                 }
 
-//projectionexpression  = "${" t:var "}"
-//                {
-//                    return creator.createPropertyRef( { "propertyName": t, "location": location() });
-//                }
-
 propProjectionStart = "${"
 propProjectionEnd = "}"
 
@@ -102,12 +112,22 @@ text        = chars:anythingBut+
                 return creator.createText( chars.join("") );
              }
 
-anythingButEndBracket = !("]" ) src:sourceChar
+anythingButEndBracket = !("]") src:sourceChar
             {
                 return src;
             }
 
-anythingBut = !("${" / newline / "]" / "[" ) src:char
+anythingBut = !("${" / newline / "]" / "[") src:char
+            {
+                return src;
+            }
+
+headerText  = chars:anythingButBar+
+            {
+                return chars.join("").trim();
+            }
+
+anythingButBar = !("|") src:anythingBut
             {
                 return src;
             }
@@ -126,7 +146,7 @@ line        = items:(s:templateSpace / t:text / p:property_projection / sub:subP
 
 subProjection = projection_begin
                     optional:"?"?
-                    items:(s:templateSpace / t:text / p:property_projection )+
+                    items:(s:templateSpace / t:text / p:property_projection / w:newline )+
                 projection_end
                 {
                     return creator.createSubProjection( {"optional": optional, "items": items} );
