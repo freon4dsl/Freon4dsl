@@ -52,11 +52,50 @@ export const editorStyle: PiEditorStyle = {
 
         }
     },
+    Entity: {
+        light: {
+            gridcellEven:  { "background-color": "#fff"},
+            gridcellOdd:  { "background-color": "#eee"},
+            label: {
+                color: "black"
+            },
+            text: {
+                color: "black"
+            },
+            list: {
+                "margin": "3px"
+            }
+        },
+        dark: {
+            gridcellEven:  { "background-color": "#fff"},
+            gridcellOdd:  { "background-color": "#eee"},
+            label: {
+                color: "white",
+                "background-color": "black"
+            },
+            text: {
+                color: "white",
+                "background-color": "black"
+            }
+
+        }
+    },
+    Attribute: {
+        light: {
+            gridcellEven:  { "background-color": "#eee", border: "1px lightgrey solid"},
+            gridcellOdd:  { "background-color": "#fff", border: "1px lightgrey solid"},
+            text: { color: "black"}
+        },
+        dark: {
+            // gridcellEven:  { "background-color": "#222", border: "1px lightgrey solid"},
+            // gridcellOdd:  { "background-color": "#000", border: "1px lightgrey solid"}
+        }
+    },
     // For concept Attribute
     Method: {
         light: {
             label: {
-                "font-weight": "normal",
+                "font-weight": "bold",
                 color: "darkmagenta"
             },
             text: {
@@ -103,18 +142,21 @@ export const entityBoxStyle: PiStyle = {
 
 export const attributeHeader: PiStyle = {
     padding: "0px",
-    color: "darkred",
+    // color: "darkred",
     "font-weight": "bold",
     "align-items": "left",
     border: "lightgrey",
     // "border-style": "solid",
     // "border-width": "1px",
-    "background-color": "lightyellow"
+    "background-color": "lightgrey"
+};
+
+export const rowStyle: PiStyle = {
 };
 
 export const attributeName: PiStyle = {
     "padding-left": "4px",
-    color: "darkred",
+    color: "black",
     "font-weight": "normal",
 };
 
@@ -135,15 +177,15 @@ export const gridCellOr: PiStyle = {
     "background-color": "lightblue"
 };
 
-export const gridcellFirst: PiStyle = {
-    padding: "4px",
-    border: "lightgrey",
+export const or_gridcellFirst: PiStyle = {
+    // padding: "4px",
+    border: "red",
     "border-style": "solid",
     "border-width": "1px"
 };
 
 export const gridcell: PiStyle = {
-    padding: "4px",
+    // padding: "4px",
     "border-left": "lightgrey",
     "border-left-style": "solid",
     "border-left-width": "1px",
@@ -178,7 +220,7 @@ export const gridcellLast: PiStyle = {
 
 export const mygrid: PiStyle = {
     padding: "0px",
-    "grid-gap": "0px",
+    "grid-gap": "-1px",
     border: "0px",
     "border-style": "hidden"
 };

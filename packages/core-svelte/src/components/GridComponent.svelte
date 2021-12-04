@@ -52,7 +52,7 @@
 <style>
     .maingridcomponent {
         display: inline-grid;
-        grid-gap: 2px;
+        /*grid-gap: 2px;*/
         align-items: center;
         align-content: center;
         justify-items: stretch;

@@ -1,7 +1,7 @@
 import { PiStyle } from "./PiStyle";
 import { merge } from "lodash";
 
-export type BoxTypeName = "label" | "text" | "alias" | "placeholder" | "list" | "grid";
+export type BoxTypeName = "label" | "text" | "alias" | "placeholder" | "list" | "grid" | "gridcellEven" | "gridcellOdd";
 export type ThemeType = "dark" | "light";
 
 export type PiBoxStyles = {
