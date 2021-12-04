@@ -12,7 +12,6 @@ import {
     SvgBox,
     GridCell,
     AliasBox,
-    styleToCSS,
     GridBox,
     PiStyle,
     GridUtil,
@@ -32,9 +31,8 @@ import {
     attributeName, entityBoxStyle, entityNameStyle,
     grid,
     gridcell,
-    gridcellFirst,
     gridcellLast,
-    gridCellOr, mycell, mygrid
+    gridCellOr, mycell, mygrid, or_gridcellFirst, rowStyle
 } from "./styles/CustomStyles";
 
 const LOGGER = new PiLogger("CustomProjection");
@@ -70,19 +68,19 @@ export class CustomExampleProjection implements PiProjection {
             return this.getDemoNumberLiteralExpressionBox(element);
         }
         // Uncomment to see a mathematical Sum symbol
-        // if (element instanceof SumExpression) {
-        //     return this.createSumBox(element);
-        // }
+        if (element instanceof SumExpression) {
+            return this.createSumBox(element);
+        }
 
         // Uncomment to see a simple (unfinished) table representation of entity attributes
-        // if (element instanceof Entity) {
-        //     return this.createEntityBox(element);
-        // }
+        if (element instanceof Entity) {
+            return this.createEntityBox(element);
+        }
 
         // Uncomment to see an alternative OR notation (only works up to two nested ors
-        // if (element instanceof OrExpression) {
-        //     return this.createOrBoxGrid(element);
-        // }
+        if (element instanceof OrExpression) {
+            return this.createOrBoxGrid(element);
+        }
         return null;
     }
 
@@ -112,7 +110,7 @@ export class CustomExampleProjection implements PiProjection {
                 // !!sum.from
                 // ? this.rootProjection.getBox(sum.from)
                 // : new AliasBox(sum, "sum-from", "[from]", { propertyName: "from" }),
-                style: styleToCSS(mycell)
+                style: mycell
             },
             {
                 row: 2,
@@ -122,14 +120,14 @@ export class CustomExampleProjection implements PiProjection {
                     height: 50,
                     selectable: false
                 }),
-                style: styleToCSS(mycell)
+                style: mycell
             },
             {
                 row: 1,
                 column: 1,
                 columnSpan: 2,
                 box: this.optionalPartBox(sum, "SumExpression-to", "to"),
-                style: styleToCSS(mycell)
+                style: mycell
             },
             {
                 row: 2,
@@ -139,7 +137,7 @@ export class CustomExampleProjection implements PiProjection {
                     this.optionalPartBox(sum, "SumExpression-body", "body"),
                     new LabelBox(sum, "sum-body-close", "]")
                 ]),
-                style: styleToCSS(mycell)
+                style: mycell
             }
         ];
         const result = new GridBox(sum, "sum-all", cells, {
@@ -166,26 +164,26 @@ export class CustomExampleProjection implements PiProjection {
                     row: 1,
                     column: OPERATOR_COLUMN,
                     box: new LabelBox(exp, "or-Box2", () => "or"),
-                    style: styleToCSS(gridCellOr),
+                    style: gridCellOr,
                     rowSpan: 3
                 },
                 {
                     row: 1,
                     column: OPERAND_COLUM,
                     box: this.optionalPartBox(exp.left, "OrExpression-left", "left"),
-                    style: styleToCSS(gridcellFirst)
+                    style: or_gridcellFirst
                 },
                 {
                     row: 2,
                     column: OPERAND_COLUM,
                     box: this.optionalPartBox(exp.left, "OrExpression-right", "right"),
-                    style: styleToCSS(gridcell)
+                    style: gridcell
                 },
                 {
                     row: 3,
                     column: OPERAND_COLUM,
                     box: this.optionalPartBox(exp, "OrExpression-right", "right"),
-                    style: styleToCSS(gridcellLast)
+                    style: gridcellLast
                 }
             );
         } else {
@@ -194,20 +192,20 @@ export class CustomExampleProjection implements PiProjection {
                     row: 1,
                     column: OPERATOR_COLUMN,
                     box: new LabelBox(exp, "or-Box3", () => "or"),
-                    style: styleToCSS(gridCellOr),
+                    style: gridCellOr,
                     rowSpan: 2
                 },
                 {
                     row: 1,
                     column: OPERAND_COLUM,
                     box: this.optionalPartBox(exp, "OrExpression-left", "left"),
-                    style: styleToCSS(gridcellFirst)
+                    style: or_gridcellFirst
                 },
                 {
                     row: 2,
                     column: OPERAND_COLUM,
                     box: this.optionalPartBox(exp, "OrExpression-right", "right"),
-                    style: styleToCSS(gridcellLast)
+                    style: gridcellLast
                 }
             );
         }
@@ -238,11 +236,20 @@ export class CustomExampleProjection implements PiProjection {
 
     private createEntityBox(entity: Entity): Box {
         return BoxFactory.verticalList(entity, "entity-custom-all", [
-            this.createEntityTableForAttributes(entity),
+            new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
+                deleteWhenEmpty: true,
+                placeHolder: "<enter entity name>",
+                keyPressAction: (currentText: string, key: string, index: number) => {
+                    return isName(currentText, key, index);
+                },
+                style: entityNameStyle
+            }),
+            this.createAttributeGrid(entity),
             this.createMethods(entity)
         ]);
     }
     private createEntityTableForAttributes(entity: Entity): Box {
+
         let cells: GridCell[] = [];
         cells.push({
             row: 1,
@@ -275,7 +282,7 @@ export class CustomExampleProjection implements PiProjection {
             entity.attributes,
             ["name", "type"],
             [attributeHeader, attributeHeader],
-            [attributeHeader, attributeHeader],
+            [rowStyle, rowStyle],
             [
                 (att: Attribute): Box => {
                     return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
@@ -283,8 +290,7 @@ export class CustomExampleProjection implements PiProjection {
                         keyPressAction: (currentText: string, key: string, index: number) => {
                             return isName(currentText, key, index);
                         },
-                        placeHolder: "<name>",
-                        style: attributeName
+                        placeHolder: "<name>"
                     });
                 },
                 (attr: Attribute): Box => {
@@ -310,8 +316,7 @@ export class CustomExampleProjection implements PiProjection {
                                 attr.declaredType = null;
                             }
                             return BehaviorExecutionResult.EXECUTED;
-                        },
-                        { style: attributeName}
+                        }
                     )
                 }
             ],

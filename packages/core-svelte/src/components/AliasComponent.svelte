@@ -68,6 +68,7 @@
     onMount(() => {
         MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
+        choiceBox.textBox.style = choiceBox.style;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         if (!!selected) {

@@ -59,9 +59,9 @@
                 };
         cssGrgVars = `--pi-list-grid-template-rows:   ${gridStyle.gridTemplateRows};
                       --pi-list-grid-template-columns:${gridStyle.gridTemplateColumns};
-                     `;
+                     `
         // useless, list has no contents!
-        // + styleToCSS(conceptStyle(editor.style, "light", list.element.piLanguageConcept(), "list", list.style));
+        + styleToCSS(conceptStyle(editor.style, editor.theme, list.element.piLanguageConcept(), "list", list.style));
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
@@ -119,6 +119,7 @@
         grid-template-columns: var(--pi-list-grid-template-columns);
         display: grid;
         background-color: var(--pi-list-background-color);
+        /*margin-top: 10px;*/
     }
 </style>
 
