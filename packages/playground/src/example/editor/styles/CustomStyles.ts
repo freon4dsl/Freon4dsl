@@ -16,6 +16,7 @@ export const editorStyle: PiEditorStyle = {
             list: {
                 color: "magenta"
             }
+            // select: { color: "orange"; }
 
         },
         dark: {
@@ -76,6 +77,13 @@ export const editorStyle: PiEditorStyle = {
             text: {
                 color: "white",
                 "background-color": "black"
+            },
+            alias: {
+                color: "white",
+                "background-color": "black"
+            },
+            grid: {
+                "background-color": "black"
             }
 
         }
@@ -87,8 +95,8 @@ export const editorStyle: PiEditorStyle = {
             text: { color: "black"}
         },
         dark: {
-            // gridcellEven:  { "background-color": "#222", border: "1px lightgrey solid"},
-            // gridcellOdd:  { "background-color": "#000", border: "1px lightgrey solid"}
+            gridcellEven:  { "background-color": "#222", border: "1px lightgrey solid"},
+            gridcellOdd:  { "background-color": "#000", border: "1px lightgrey solid"}
         }
     },
     // For concept Attribute
@@ -101,9 +109,9 @@ export const editorStyle: PiEditorStyle = {
             text: {
                 color: "green"
             },
-            alias: {
-                color: "red"
-            },
+            // alias: {
+            //     color: "red"
+            // },
             list: {
                 color: "yellow"
             }
