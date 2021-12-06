@@ -97,6 +97,16 @@ export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): stri
                         }`
                     : "super(id);"
                     }
+                    ${allPrimitiveProps.length !== 0 ?
+                        `${allPrimitiveProps.map(p =>
+                            (p.isList ?
+                                `makeObservable(this, {"${p.name}": observable})`:
+                                `makeObservable(this, {"${Names.primitivePropertyField(p)}": observable})`
+                            )
+                        ).join("\n")}
+                        `       
+                    : ``
+                    }
                     ${allButPrimitiveProps.length !== 0 ? 
                         `// both 'observablepart' and 'observablelistpart' change the get and set of an attribute 
                         // such that the parent-part relationship is consistently maintained, 

@@ -41,10 +41,12 @@ describe("Testing Typer", () => {
 
         test("all functions should have a return type", () => {
             model.functions.forEach(fun => {
+                expect(fun.declaredType).not.toBeNull();
                 expect(typer.isType(fun.declaredType.referred)).toBe(true);
             });
             model.entities.forEach(ent => {
                 ent.functions.forEach(fun => {
+                    expect(fun.declaredType).not.toBeNull();
                     expect(typer.isType(fun.declaredType.referred)).toBe(true);
                 });
             });
@@ -94,6 +96,13 @@ describe("Testing Typer", () => {
                     }
                 });
             });
+        });
+
+        test("type conformance of function parameters should be using custom implementation", () => {
+            // find function named 'manyParams'
+            const func = model.functions.find(f => f.name === "manyParams");
+            const res = typer.conformList(func.parameters.map(p => p.declaredType.referred), func.parameters.map(p => p.declaredType.referred));
+            expect(res).toBe(false);
         });
     });
 });

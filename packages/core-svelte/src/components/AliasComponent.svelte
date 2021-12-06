@@ -19,7 +19,7 @@
         KEY_TAB,
         KEY_ARROW_DOWN,
         KEY_ARROW_UP,
-        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT
+        KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT, styleToCSS, conceptStyle
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
     import { action, autorun } from "mobx";
@@ -68,6 +68,7 @@
     onMount(() => {
         MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
+        choiceBox.textBox.style = choiceBox.style;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
         if (!!selected) {
@@ -304,7 +305,10 @@
         if (!!selectedOption) {
             choiceBox.textBox.setText(selectedOption.label);
         }
-        aliasStyle = choiceBox.style;
+        let style = conceptStyle(editor.style, editor.theme, choiceBox.element.piLanguageConcept(), "alias", choiceBox.style);
+        aliasStyle = styleToCSS(style);
+        choiceBox.textBox.style = style;
+
     });
 
     const handleClickOutside = (event): void => {

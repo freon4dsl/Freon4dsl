@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Parser concepts of type  Expression  1`] = `
+ExpressionTest {
+  "$id": "ID-10",
+  "$typename": "ExpressionTest",
+  "_PI_binEx": Array [
+    PlusEx {
+      "$id": "ID-4",
+      "$typename": "PlusEx",
+      "_PI_left": StringLiteralEx {
+        "$id": "ID-2",
+        "$typename": "StringLiteralEx",
+        "container": [Circular],
+        "propertyIndex": undefined,
+        "propertyName": "left",
+        "value": "stringLiteral",
+      },
+      "_PI_right": StringLiteralEx {
+        "$id": "ID-3",
+        "$typename": "StringLiteralEx",
+        "container": [Circular],
+        "propertyIndex": undefined,
+        "propertyName": "right",
+        "value": "stringLiteral",
+      },
+      "container": [Circular],
+      "propertyIndex": 0,
+      "propertyName": "binEx",
+    },
+    MultiplyEx {
+      "$id": "ID-9",
+      "$typename": "MultiplyEx",
+      "_PI_left": DivideEx {
+        "$id": "ID-7",
+        "$typename": "DivideEx",
+        "_PI_left": NumberLiteralEx {
+          "$id": "ID-5",
+          "$typename": "NumberLiteralEx",
+          "container": [Circular],
+          "propertyIndex": undefined,
+          "propertyName": "left",
+          "value": 109,
+        },
+        "_PI_right": StringLiteralEx {
+          "$id": "ID-6",
+          "$typename": "StringLiteralEx",
+          "container": [Circular],
+          "propertyIndex": undefined,
+          "propertyName": "right",
+          "value": "stringLiteral",
+        },
+        "container": [Circular],
+        "propertyIndex": undefined,
+        "propertyName": "left",
+      },
+      "_PI_right": BooleanLiteralEx {
+        "$id": "ID-8",
+        "$typename": "BooleanLiteralEx",
+        "container": [Circular],
+        "propertyIndex": undefined,
+        "propertyName": "right",
+        "value": true,
+      },
+      "container": [Circular],
+      "propertyIndex": 1,
+      "propertyName": "binEx",
+    },
+  ],
+  "_PI_normalEx": Array [],
+  "container": null,
+  "name": "simpleExpressions",
+  "propertyIndex": undefined,
+  "propertyName": "",
+}
+`;

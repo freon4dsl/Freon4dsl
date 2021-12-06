@@ -6,7 +6,7 @@ import {
     SelectBox,
     SelectOption,
     PiEditor,
-    PiProjection, triggerToString
+    PiProjection, triggerToString, PiStyle
 } from "../editor";
 import { PiBinaryExpression, PiExpression } from "../language";
 import {
@@ -90,7 +90,7 @@ export function createDefaultBinaryBox(exp: PiBinaryExpression, symbol: string, 
  * @param symbol
  * @param style
  */
-export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: string): Box {
+export function createOperatorBox(editor: PiEditor, exp: PiBinaryExpression, symbol: string, style?: PiStyle): Box {
     const operatorBox = new SelectBox(
         exp,
         EXPRESSION_SYMBOL,

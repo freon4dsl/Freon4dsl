@@ -58,6 +58,7 @@
     "@projectit/core-svelte": "0.2.0",
     "@projectit/server": "0.2.0",
     "@types/node": "^14.14.31",
+    "csstype": "^3.0.10",
     "mobx": "6.3.3",
     "mobx-utils": "6.0.4",
     "click-outside": "1.0.4",

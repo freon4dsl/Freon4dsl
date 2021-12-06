@@ -227,7 +227,7 @@ export class DefaultActionsTemplate {
         allClassifiers.forEach(concept => concept.allParts().forEach(part => {
             // language.concepts.forEach(concept => concept.allParts().filter(ref => !ref.isList).forEach(part => {
             const partType = part.type.referred;
-            if (partType instanceof PiConcept) { // exclude all primitive types
+            if (partType instanceof PiClassifier) { // exclude all primitive types
                 LangUtil.subConceptsIncludingSelf(partType).filter(cls => !cls.isAbstract).forEach(subClass => {
                     const conceptEditor: PiEditConcept = editorDef.findConceptEditor(subClass);
                     behaviorMap.createOrAdd(subClass,
@@ -248,7 +248,7 @@ export class DefaultActionsTemplate {
                                 referenceShortcut: (!!conceptEditor.referenceShortcut ?
                                                         `{
                                                               propertyname: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.sourceName}",
-                                                              metatype: "${((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.name}"
+                                                              metatype: "${Names.classifier(((conceptEditor.referenceShortcut) as PiLangSelfExp).appliedfeature.referredElement.referred.type.referred)}"
                                                          }` : undefined),
                                 undo: (!!conceptEditor.referenceShortcut ?
                                                     `(box: Box, editor: PiEditor): void => {

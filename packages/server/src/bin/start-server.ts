@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../server/server');
+require("../server/server-starter");

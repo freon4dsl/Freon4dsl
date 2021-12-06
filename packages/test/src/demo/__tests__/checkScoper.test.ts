@@ -16,7 +16,8 @@ describe("testing Scoper", () => {
             expect(vi.length).toBe(5);
             for (let unit of model.models) {
                 let vi = scoper.getVisibleNames(unit);
-                expect(vi.length).toBe(10);
+                // console.log(vi);
+                expect(vi.length).toBe(13);
                 for (let e of unit.entities) {
                     expect(vi).toContain(e.name);
                 }
@@ -163,9 +164,10 @@ describe("testing Scoper", () => {
             // test the same on entities and entity functions
             model.models[0].entities.forEach(ent => {
                 let expected: boolean = false;
-                if (ent.name === "Person" || ent.name === "Company") {
+                if (ent.name === "Person" || ent.name === "Company" || ent.name === "Company2" || ent.name === "School") {
                     expected = true;
                 }
+                // console.log(`name: ${ent.name}, expected: ${expected}`);
                 expect(scoper.isInScope(ent, nameTotest, "DemoAttribute")).toBe(expected);
                 ent.functions.forEach(fun => {
                     expect(scoper.isInScope(fun, nameTotest, "DemoAttribute", true)).toBe(false);
@@ -206,9 +208,10 @@ describe("testing Scoper", () => {
             // test the same on entities and entity functions
             model.models[0].entities.forEach(ent => {
                 let expected: boolean = false;
-                if (ent.name === "Company") {
+                if (ent.name === "Company" || ent.name === "Company2") {
                     expected = true;
                 }
+                // console.log(`name: ${ent.name}, expected: ${expected}, found: ${scoper.isInScope(ent, nameTotest)}`);
                 expect(scoper.isInScope(ent, nameTotest)).toBe(expected);
                 ent.functions.forEach(fun => {
                     expect(scoper.isInScope(fun, nameTotest)).toBe(expected);
@@ -266,9 +269,10 @@ describe("testing Scoper", () => {
             // test the same on entities and entity functions
             model.models[0].entities.forEach(ent => {
                 let expected: boolean = false;
-                if (ent.name === "Company") {
+                if (ent.name === "Company2") {
                     expected = true;
                 }
+                // console.log(`name: ${ent.name}, expected: ${expected}, found: ${scoper.isInScope(ent, nameTotest)}`);
                 expect(scoper.isInScope(ent, nameTotest)).toBe(expected);
                 ent.functions.forEach(fun => {
                     expect(scoper.isInScope(fun, nameTotest)).toBe(expected);

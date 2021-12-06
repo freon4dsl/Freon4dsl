@@ -13,6 +13,7 @@ export * from "./PiAction";
 export * from "./PiCompositeProjection";
 export * from "./PiProjection";
 export * from "./PiStyle";
+export * from "./PiEditorStyles";
 
 // load PiEditor last, as it needs one or more of the above definitions
 export * from "./PiEditor";

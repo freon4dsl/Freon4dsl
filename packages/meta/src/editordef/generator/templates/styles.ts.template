@@ -1,61 +1,12 @@
-// TODO Change generator
+import { PiEditorStyle, PiStyle } from "@projectit/core";
 
-import { PiStyle } from "@projectit/core";
-
-export const placeholdertext: PiStyle = {
-//    color: "black",
-//    opacity: "0.5",
-    content: "attr(data-placeholdertext)",
-    ":empty:before": {
-        color: "blue",
-//        opacity: "0.5",
-        content: "attr(data-placeholdertext)"
+export const editorStyle: PiEditorStyle = {
+// Add global style here:
+    global: {
+        light: {
+        },
+        dark: {
+        }
     },
-    ":before": {
-        color: "blue",
-//        opacity: "0.5",
-        content: "attr(data-placeholdertext)"
-    }
-};
-
-export const propertykeyword: PiStyle = {
-    "font-weight": "normal",
-    color: "blue"
-};
-
-// Used by documentation
-export const numeric: PiStyle = {
-    color: "green"
-};
-
-export const reference: PiStyle = {
-    color: "darkorange"
-};
-export const stringLiteral: PiStyle = {
-    color: "green"
-};
-export const keyword: PiStyle = {
-    "font-weight": "bold",
-    color: "blue"
-};
-
-export const conceptkeyword: PiStyle = {
-    "font-weight": "bold",
-    color: "darkblue"
-};
-
-export const mygrid: PiStyle = {
-    padding: "0px",
-    "grid-gap": "0px",
-    border: "0px",
-    "border-style": "hidden"
-};
-
-export const mycell: PiStyle = {
-    display: "flex",
-    // justifySelf: "stretch",
-    padding: "0px",
-    "grid-gap": "-1px",
-    border: "0px",
-    "border-style": "hidden"
-};
+// Add concept styles here:
+}

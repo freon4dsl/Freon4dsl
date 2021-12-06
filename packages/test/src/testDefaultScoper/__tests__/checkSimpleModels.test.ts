@@ -37,9 +37,9 @@ describe("Testing Default Scoper", () => {
         // print("names in model of depth 2: ", visibleNames);
         for (const x of creator.allNames) {
             if (!visibleNames.includes(x)) {
-                console.log(`do not include ${x}`)
+                // console.log(`do not include ${x}`)
             }
-            // expect(visibleNames).toContain(x);
+            expect(visibleNames).toContain(x);
         }
         // // run unparser to inspect model
         // const unparsed: string = unparser.writeToString(model, 0, false);

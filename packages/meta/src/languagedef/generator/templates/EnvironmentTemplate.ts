@@ -26,6 +26,7 @@ export class EnvironmentTemplate {
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
         import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
+        import { editorStyle } from "../../editor/styles/CustomStyles";
         import { ${Names.initializeLanguage} } from  "${relativePath}${LANGUAGE_GEN_FOLDER}";
         
         /**
@@ -60,6 +61,7 @@ export class EnvironmentTemplate {
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");
                 rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(rootProjection, actions);
+                this.editor.style = editorStyle;
                 this.editor.rootElement = null;
                 this.editor.environment = this;
                 initializeLanguage();
@@ -85,9 +87,9 @@ export class EnvironmentTemplate {
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
             languageName: string = "${language.name}";
-            unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${unit.name}"`)}];
+            unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];
             fileExtensions: Map<string, string> = new Map([
-                ${language.modelConcept.unitTypes().map(unit => `["${unit.name}", ".${unit.fileExtension}"]`)}
+                ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", ".${unit.fileExtension}"]`)}
             ]);
         }`;
     }
