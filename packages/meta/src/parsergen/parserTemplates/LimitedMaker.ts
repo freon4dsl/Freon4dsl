@@ -1,5 +1,5 @@
 import { PiEditInstanceProjection, PiEditUnit } from "../../editordef/metalanguage";
-import { PiLimitedConcept } from "../../languagedef/metalanguage";
+import { PiClassifier, PiLimitedConcept } from "../../languagedef/metalanguage";
 import { langExpToTypeScript } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { LimitedRule } from "./grammarModel/LimitedRule";
@@ -12,8 +12,8 @@ import { LimitedRule } from "./grammarModel/LimitedRule";
 
 export class LimitedMaker {
     generatedParseRules: string[] = [];
-    generatedSyntaxAnalyserMethods: string[] = [];
     branchNames: string[] = [];
+    imports: PiClassifier[] = [];
 
     generateLimitedRules(editUnit: PiEditUnit, limitedConcepts: PiLimitedConcept[]): GrammarRule[] {
         let rules: GrammarRule[] = [];
@@ -32,6 +32,7 @@ export class LimitedMaker {
                 })
             });
             rules.push(new LimitedRule(piClassifier, myMap));
+            this.imports.push(piClassifier);
         }
         return rules;
     }

@@ -9,7 +9,7 @@ export class ReaderTemplate {
      * Returns a string representation of a generic parser for 'language'. This parser is able
      * to handle every modelunit in the language.
      */
-    public generateReader(language: PiLanguage, editDef: PiEditUnit, correctUnits: PiUnitDescription[], relativePath: string): string {
+    public generateReader(language: PiLanguage, editDef: PiEditUnit, relativePath: string): string {
         const className: string = Names.semanticAnalyser(language);
 
         // Template starts here
@@ -20,10 +20,8 @@ export class ReaderTemplate {
         import Agl = net.akehurst.language.agl.processor.Agl;
         import AutomatonKind_api = net.akehurst.language.api.processor.AutomatonKind_api;
         import { ${Names.modelunit(language)}, ModelUnitMetaType } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        ${correctUnits.map(unit =>
-        `import { ${Names.grammarStr(unit)} } from "./${Names.grammar(unit)}";
-        import { ${Names.syntaxAnalyser(unit)} } from "./${Names.syntaxAnalyser(unit)}";`).join("\n")
-        }
+        import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}";
+        import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
         import { ${className} } from "./${className}";
         
         /**
@@ -31,10 +29,7 @@ export class ReaderTemplate {
         *   modelunits. 
         */
         export class ${Names.reader(language)} implements ${Names.PiReader} {
-        ${language.units.map(unit => `${correctUnits.includes(unit) 
-            ? `${Names.parser(unit)} = Agl.processorFromString(${Names.grammarStr(unit)}, new ${Names.syntaxAnalyser(unit)}(), null, null);`
-            : `${Names.parser(unit)} = null; // there are errors in the grammar in file '${Names.grammar(unit)}'`}`            
-            ).join("\n")}
+            parser: LanguageProcessor = Agl.processorFromString(${Names.grammarStr(language)}, new ${Names.syntaxAnalyser(language)}(), null, null);
 
             /**
              * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
@@ -44,18 +39,18 @@ export class ReaderTemplate {
              * @param metatype
              */
             readFromString(sentence: string, metatype: ModelUnitMetaType): ${Names.modelunit(language)} {
-                let parser: LanguageProcessor = null;
+                let startRule: string = "";
                 // choose the correct parser                
                 ${language.units.map(unit =>
                     `if (metatype === "${Names.classifier(unit)}") {
-                        parser  = this.${Names.parser(unit)};
-                    }`).join("\n")}
+                        startRule  = "${Names.classifier(unit)}";
+                    }`).join(" else ")}
                     
                 // parse the input
                 let model: ${Names.modelunit(language)} = null;
-                if (parser) {
+                if (this.parser) {
                     try {
-                        let sppt = parser.parse(sentence);
+                        let sppt = this.parser.parseForGoal(startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp 
                         let mess = e.message.replace("Could not match goal,", "Parse error");
@@ -63,16 +58,14 @@ export class ReaderTemplate {
                         throw new Error(mess);
                     }
                     try {
-                        let asm = parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                        let asm = this.parser.processForGoal(null, startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
                         model = asm as ${Names.modelunit(language)};
                         const semAnalyser = new ${className}();
                         semAnalyser.correct(model);
                     } catch (e) {
                         console.log(e.message);
                         throw e;
-                    }  
-                    // reset parser
-                    parser = null;                     
+                    }                  
                 } else {
                     throw new Error(\`No parser for \${metatype} available: grammar incorrect.\`);
                 }

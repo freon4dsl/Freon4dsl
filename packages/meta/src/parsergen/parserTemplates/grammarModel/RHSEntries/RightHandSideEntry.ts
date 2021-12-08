@@ -17,7 +17,7 @@ export abstract class RightHandSideEntry {
         return `RightHandSideEntry.toGrammar() should be implemented by its subclasses.`;
     }
 
-    toMethod(index: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `RightHandSideEntry.toMethod() should be implemented by its subclasses.`;
     }
 

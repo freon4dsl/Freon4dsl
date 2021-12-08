@@ -39,12 +39,12 @@ export class SuperChoiceRule extends GrammarRule {
         return rule;
     }
 
-    toMethod(): string {
+    toMethod(mainAnalyserName: string): string {
         return `
             ${ParserGenUtil.makeComment(this.toGrammar())}
-            private transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
+            public transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
                 // console.log('transform${this.ruleName} called: ' + branch.name);
-                return this.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
+                return this.${mainAnalyserName}.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
             }`;
     }
 

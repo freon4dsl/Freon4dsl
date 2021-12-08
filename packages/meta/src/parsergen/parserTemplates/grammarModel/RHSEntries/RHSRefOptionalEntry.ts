@@ -14,13 +14,13 @@ export class RHSRefOptionalEntry extends RHSPropEntry {
         return `${refRuleName}?` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
         return `// RHSRefOptionalEntry
-            if (!${nodeName}[${propIndex}].isEmptyMatch) {
+            if (!${nodeName}[${index}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  
-                const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-                ${ParserGenUtil.internalName(this.property.name)} = this.piElemRef<${baseType}>(subNode, '${baseType}');
+                const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray()[0];
+                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.piElemRef<${baseType}>(subNode, '${baseType}');
             }`;
     }
 

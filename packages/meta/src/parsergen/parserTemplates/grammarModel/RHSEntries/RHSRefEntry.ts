@@ -14,9 +14,9 @@ export class RHSRefEntry extends RHSPropEntry {
         return refRuleName + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.piElemRef<${baseType}>(${nodeName}[${propIndex}], '${baseType}'); // RHSRefEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.piElemRef<${baseType}>(${nodeName}[${index}], '${baseType}'); // RHSRefEntry\n`;
     }
 
     toString(depth: number): string {

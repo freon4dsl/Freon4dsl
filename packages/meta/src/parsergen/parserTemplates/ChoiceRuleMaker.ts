@@ -13,7 +13,6 @@ export class ChoiceRuleMaker {
     // that either implement or extend the concept
     // because limited concepts can only be used as reference, these are excluded for this choice
     generateChoiceRules(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> ): GrammarRule[] {
-        this.reset();
         let rules: GrammarRule[] = [];
         for (const [piClassifier, subs] of interfacesAndAbstractsUsed) {
             const branchName = Names.classifier(piClassifier);
@@ -26,7 +25,6 @@ export class ChoiceRuleMaker {
     }
 
     generateSuperRules(conceptsWithSubs: Map<PiConcept, PiClassifier[]> ) : GrammarRule[] {
-        this.reset();
         let rules: GrammarRule[] = [];
         for (const [piClassifier, subs] of conceptsWithSubs) {
             // make a special rule that is a choice between all subs and 'piClassifier' itself
@@ -67,8 +65,7 @@ export class ChoiceRuleMaker {
         return result;
     }
 
-    private reset() {
-        this.imports = [];
-        ChoiceRuleMaker.superNames = new Map<PiClassifier, string>();
-    }
+    // private reset() {
+    //     ChoiceRuleMaker.superNames = new Map<PiClassifier, string>();
+    // }
 }

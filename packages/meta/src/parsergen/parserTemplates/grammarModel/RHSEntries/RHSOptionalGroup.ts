@@ -25,28 +25,25 @@ export class RHSOptionalGroup extends RHSPropEntry {
         return "";
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         if (this.subs.length > 1) {
-            return `
-            // RHSOptionalGroup
-            if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                const optGroup = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray();` + // to avoid an extra newline
-                `${this.subs.map((sub, index) => `${sub.toMethod(index, "optGroup")}`).join("\n")}
+            return `            
+            if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
+                const _optGroup = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray();` + // to avoid an extra newline
+                `${this.subs.map((sub, index2) => `${sub.toMethod(index2, "_optGroup", mainAnalyserName)}`).join("\n")}
             }`;
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {
                 return `
-                    // RHSOptionalGroup
-                    if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                        ${this.subs.map((sub, index) => `${sub.toMethod(propIndex, nodeName)}`).join("\n")}
+                    if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
+                        ${first.toMethod(index, nodeName, mainAnalyserName)}
                     }`;
             } else {
                 return `
-                    // RHSOptionalGroup
-                    if (!${nodeName}[${propIndex}].isEmptyMatch) {
-                        const optBranch = this.getChildren(${nodeName}[${propIndex}]);
-                        ${this.subs.map((sub, index) => `${sub.toMethod(index, "optBranch")}`).join("\n")}
+                    if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
+                        const _optBranch = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);
+                        ${first.toMethod(0, "_optBranch", mainAnalyserName)}
                     }`;
             }
         }

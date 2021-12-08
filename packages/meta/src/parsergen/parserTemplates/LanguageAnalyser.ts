@@ -6,22 +6,30 @@ import {
     PiLimitedConcept
 } from "../../languagedef/metalanguage";
 import { UnitAnalyser } from "./UnitAnalyser";
+import { PiUnitDescription } from "../../languagedef/metalanguage/PiLanguage";
+import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 
 export interface PiAnalyser {
-    // all concepts used in multiple units
+    // name of the unit
+    unit: PiUnitDescription;
+    // all concepts used in this unit
     classifiersUsed: PiClassifier[];
-    // all binary concepts used in multiple units
+    // all binary concepts used in this unit
     binaryConceptsUsed: PiBinaryExpressionConcept[];
-    // all interfaces and abstract concepts that are mentioned in multiple units
+    // all interfaces and abstract concepts that are mentioned in this unit
     interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]> ;
-    // all limited concepts that are referred to (as type of properties), from multiple units
+    // all limited concepts that are referred to (as type of properties), from this unit
     limitedsReferred: PiLimitedConcept[];
-    // all concepts that are not abstract, but do have sub concepts, from multiple units
+    // all concepts that are not abstract, but do have sub concepts, from this unit
     conceptsWithSub: Map<PiConcept, PiClassifier[]>;
 }
 
 export class LanguageAnalyser implements PiAnalyser {
+    // TODO remove 'implements PiAnalyser', make extra UnitAnalyser for common parts
     unitAnalysers: UnitAnalyser[] = [];
+    private refCorrectorMaker: SemanticAnalysisTemplate = new SemanticAnalysisTemplate();
+    // name of the unit
+    unit: PiUnitDescription = null;
     // all concepts used in multiple units
     classifiersUsed: PiClassifier[] = [];
     // all binary concepts used in multiple units
@@ -33,11 +41,14 @@ export class LanguageAnalyser implements PiAnalyser {
     // all concepts that are not abstract, but do have sub concepts, from multiple units
     conceptsWithSub: Map<PiConcept, PiClassifier[]> = new Map<PiConcept, PiClassifier[]>();
 
+
     analyseModel(language: PiLanguage) {
         language.units.forEach(unit => {
             const unitAnalyser = new UnitAnalyser();
             this.unitAnalysers.push(unitAnalyser);
             unitAnalyser.analyseUnit(unit);
+            // do analysis for semantic phase
+            this.refCorrectorMaker.analyse(unitAnalyser.interfacesAndAbstractsUsed);
         });
 
         this.getCommonsFromUnits();
@@ -45,6 +56,14 @@ export class LanguageAnalyser implements PiAnalyser {
         // this.unitAnalysers.forEach(analyser => {
         //     this.LOG_UNIT(analyser);
         // });
+    }
+
+    getRefCorrectorContent(language: PiLanguage,relativePath: string): string {
+        return this.refCorrectorMaker.makeCorrector(language, relativePath);
+    }
+
+    getRefCorrectorWalkerContent(language: PiLanguage, relativePath: string): string {
+        return this.refCorrectorMaker.makeWalker(language, relativePath);
     }
 
     private removeCommonsFromUnitAnalysers() {
@@ -119,7 +138,7 @@ export class LanguageAnalyser implements PiAnalyser {
                 });
             }
         });
-        this.LOG();
+        // this.LOG();
     }
 
     private LOG() {
