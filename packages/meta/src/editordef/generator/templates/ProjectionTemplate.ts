@@ -20,6 +20,7 @@ import {
     PiEditInstanceProjection
 } from "../../metalanguage";
 import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
+import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
 export class ProjectionTemplate {
 
@@ -235,7 +236,9 @@ export class ProjectionTemplate {
                            language: PiLanguage) {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
-            result += ` BoxFactory.label(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
+            // add escapes to text
+            const myText = ParserGenUtil.escapeRelevantChars(item.text);
+            result += ` BoxFactory.label(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${myText}", {
                             selectable: false
                         }) `;
         } else if (item instanceof PiEditPropertyProjection) {
@@ -318,11 +321,13 @@ export class ProjectionTemplate {
      * @param element           The name of the element parameter of the getBox projection method.
      */
     conceptPartListProjection(item: PiEditPropertyProjection, direction: string, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
+        // add escapes to joinText
+        const myJoinText = ParserGenUtil.escapeRelevantChars(item.listJoin.joinText);
         return `
             BoxFactory.${direction.toLowerCase()}List(${element}, "${Roles.property(propertyConcept)}-list", 
                 ${element}.${propertyConcept.name}.map(feature => {
                     const roleName: string =  "${Roles.property(propertyConcept)}-" + feature.piId() + "-separator";
-                    return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${item.listJoin.joinText}")]) as Box;
+                    return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${myJoinText}")]) as Box;
                 }).concat(
                     BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+ ${propertyConcept.name}>" , { //  add ${propertyConcept.name}
                         propertyName: "${propertyConcept.name}"

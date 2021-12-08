@@ -3,12 +3,12 @@ editor XXX for language TestParser
 // for testing primitives
 PrimExtra {
     @projection normal [
-        before ${self.primIdentifierWithExtra} after
-        before ${self.primNumberWithExtra} after
-        before ${self.primStringWithExtra} after
-        before ${self.primBooleanWithExtra} after
-        before ${self.primListIdentifierWithExtra @separator [, ]} after
-        before ${self.primListNumberWithExtra @separator [, ]} after
+        bef\"ore ${self.primIdentifierWithExtra} after
+        be\[fore ${self.primNumberWithExtra} after
+        bef\/ore ${self.primStringWithExtra} after
+        bef\${ore ${self.primBooleanWithExtra} after
+        bef(ore ${self.primListIdentifierWithExtra @separator [, ]} after
+        bef\]ore ${self.primListNumberWithExtra @separator [, ]} after
         before ${self.primListStringWithExtra @separator [, ]} after
         before ${self.primListBooleanWithExtra @separator [, ]}    after
     ]
