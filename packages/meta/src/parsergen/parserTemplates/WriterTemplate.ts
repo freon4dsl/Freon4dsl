@@ -17,6 +17,7 @@ import {
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
+import { ParserGenUtil } from "./ParserGenUtil";
 
 export class WriterTemplate {
 
@@ -346,8 +347,10 @@ export class WriterTemplate {
             lines.map(line => line.items.map(item => {
                 // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
                 if (item instanceof PiEditInstanceProjection) {
+                    // add escapes to keyword
+                    const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword);
                     cases += `case ${item.expression.sourceName}.${item.expression.instanceName}: {
-                                this.output[this.currentLine] += "${item.keyword} ";
+                                this.output[this.currentLine] += "${myKeyword} ";
                                 break;
                                 }
                                 `
@@ -445,8 +448,9 @@ export class WriterTemplate {
     private makeItem(item: PiEditProjectionItem, indent: number): string {
         let result: string = ``;
         if (item instanceof PiEditProjectionText) {
-            // TODO escape all quotes in the text string, when we know how they are stored in the projection
-            result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
+            // add escapes to item.text
+            const myText = ParserGenUtil.escapeRelevantChars(item.text).trimRight();
+            result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof PiEditPropertyProjection) {
             const myElem = item.expression.findRefOfLastAppliedFeature();
             if (myElem instanceof PiPrimitiveProperty) {
@@ -512,8 +516,10 @@ export class WriterTemplate {
             }
             const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
             const joinType = this.getJoinType(item);
+            // add escapes to joinText
+            const myJoinText = ParserGenUtil.escapeRelevantChars(item.listJoin.joinText);
             result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, ${isIdentifier},"${item.listJoin.joinText}", ${joinType}, ${vertical},
+                    ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
                     short
                 );`;
@@ -523,8 +529,10 @@ export class WriterTemplate {
             if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else if (myType === PiPrimitiveType.boolean && !!item.keyword) {
+                // add escapes to keyword
+                const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword);
                 myCall = `if (${elemStr}) { 
-                              this.output[this.currentLine] += \`${item.keyword} \`
+                              this.output[this.currentLine] += \`${myKeyword} \`
                           }`;
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
@@ -651,6 +659,5 @@ export class WriterTemplate {
         } else {
             return `${shortUnparsing}`;
         }
-
     }
 }
