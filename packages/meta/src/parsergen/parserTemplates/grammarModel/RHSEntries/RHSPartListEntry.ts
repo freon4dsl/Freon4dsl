@@ -15,9 +15,9 @@ export class RHSPartListEntry extends RHSPropEntry {
         return `${getTypeCall(this.property.type.referred)}*` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformList}<${baseType}>(${nodeName}[${propIndex}]); // RHSPartListEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}]); // RHSPartListEntry\n`;
     }
 
     toString(depth: number): string {

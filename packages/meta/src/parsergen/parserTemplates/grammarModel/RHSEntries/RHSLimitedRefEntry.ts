@@ -14,9 +14,9 @@ export class RHSLimitedRefEntry extends RHSPropEntry {
         return `${getTypeCall(this.property.type.referred)}` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.piElemRef<${baseType}>(${nodeName}[${propIndex}], '${baseType}'); // RHSLimitedRefEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.piElemRef<${baseType}>(${nodeName}[${index}], '${baseType}'); // RHSLimitedRefEntry\n`;
     }
 
     toString(depth: number): string {

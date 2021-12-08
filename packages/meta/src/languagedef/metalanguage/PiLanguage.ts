@@ -16,10 +16,6 @@ export class PiLanguage extends PiLangElement {
         super();
     }
 
-    // get units(): PiConcept[] {
-    //     return this.concepts.filter(con => con.isUnit === true);
-    // }
-
     conceptsAndInterfaces(): PiClassifier[] {
         const result: PiClassifier[] = this.concepts;
         return result.concat(this.interfaces);
@@ -121,7 +117,7 @@ export class PiModelDescription extends PiClassifier {
 
 export class PiUnitDescription extends PiClassifier {
     fileExtension: string = "";
-    isPublic = true;
+    isPublic: boolean = true;
 }
 
 export class PiInterface extends PiClassifier {
@@ -379,11 +375,6 @@ export class PiPrimitiveProperty extends PiProperty {
     // only one of 'initialValue' and 'initialValueList' may have a value
     initialValue: PiPrimitiveValue;
     initialValueList: PiPrimitiveValue[];
-    // primType: string;
-    // The inherited 'type' cannot be used, because 'this' has a primitive type,
-    // which is not a subtype of PiElementReference<PiConcept>
-    // Therefore, here we have:
-    // type: PiElementReference<PiConcept> = PiElementReference.createNamed<PiConcept>(primitiveValueName, "PiConcept");
 
     get isPrimitive(): boolean {
         return true;

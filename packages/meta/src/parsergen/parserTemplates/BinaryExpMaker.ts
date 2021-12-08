@@ -16,7 +16,6 @@ export class BinaryExpMaker {
         this.imports.push(expressionBase);
         this.imports.push(...binaryConceptsUsed);
 
-
         return new BinaryExpressionRule(branchName, expressionBase, editDefs);
     }
 

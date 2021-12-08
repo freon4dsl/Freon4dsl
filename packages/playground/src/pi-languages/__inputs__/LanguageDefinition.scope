@@ -1,0 +1,19 @@
+scoper ExampleScoper for language Example
+
+// isnamespace { Entity,Model }
+
+// isnamespace { Entity, Model }
+
+// 2 isnamespace { Method, Entity }
+
+isnamespace { Method, Entity, ExampleUnit, SumExpression }
+
+Entity {
+    namespace_addition = self.baseEntity;
+}
+
+AppliedFeature {
+	scope = typeof( container );
+}
+
+

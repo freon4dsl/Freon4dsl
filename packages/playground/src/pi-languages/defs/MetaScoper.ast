@@ -4,8 +4,9 @@ language PiLanguage
 modelunit PiScoperDef {
     public name: identifier;
     languageName: string;
-    reference namespaces: PiConcept[];
+    reference namespaces: PiClassifier[];
     scopeConceptDefs: ScopeConceptDef[];
+    file-extension = "scope";
 }
 
 concept ScopeConceptDef {

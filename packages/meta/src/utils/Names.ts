@@ -2,7 +2,7 @@ import {
     PiClassifier, PiConcept, PiInterface,
     PiLanguage, PiPrimitiveProperty
 } from "../languagedef/metalanguage";
-import { PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
+import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -236,20 +236,28 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static parser(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "Parser";
+    public static parser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Parser";
     }
 
-    public static grammar(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "Grammar";
+    public static grammar(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Grammar";
     }
 
-    public static grammarStr(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "GrammarStr";
+    public static grammarStr(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "GrammarStr";
     }
 
-    public static syntaxAnalyser(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "SyntaxAnalyser";
+    public static syntaxAnalyser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
+    }
+
+    public static unitAnalyser(language: PiLanguage, unit: PiUnitDescription | PiModelDescription): string {
+        if (!!unit) {
+            return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
+        } else {
+            return this.startWithUpperCase(language?.name) + "CommonSyntaxAnalyserPart";
+        }
     }
 
     public static semanticAnalyser(language: PiLanguage): string {

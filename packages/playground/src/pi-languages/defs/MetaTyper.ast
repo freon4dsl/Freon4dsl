@@ -13,6 +13,7 @@ modelunit PiTyperDef {
     classifierRules: PiTypeClassifierRule[];
     reference typeroot: PiClassifier;
     reference types: PiClassifier[];
+    file-extension = "type";
 }
 
 abstract concept PiTypeRule base PiLangElement {

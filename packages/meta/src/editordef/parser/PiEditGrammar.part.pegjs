@@ -3,6 +3,8 @@
     let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
 
+// TODO add possibility to determine the separator for a reference
+
 Editor_Definition
   = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws concepts:(conceptEditor)* ws
     {
