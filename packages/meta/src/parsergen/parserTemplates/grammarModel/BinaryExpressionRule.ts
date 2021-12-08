@@ -19,7 +19,7 @@ export class BinaryExpressionRule extends GrammarRule {
         return `${this.rule1()}\n${this.rule2()}`;
     }
 
-    toMethod(): string {
+    toMethod(mainAnalyserName: string): string {
         // TODO get the right type for 'BinaryExpression' in stead of ${Names.concept(expressionBase)}
         let cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {
@@ -41,14 +41,14 @@ export class BinaryExpressionRule extends GrammarRule {
          * @param branch
          * @private
          */
-        private transform${this.ruleName}(branch: SPPTBranch) : ${Names.concept(this.expressionBase)} {
+        public transform${this.ruleName}(branch: SPPTBranch) : ${Names.concept(this.expressionBase)} {
             // console.log('transform${this.ruleName} called: ' + branch.name);
             const children = branch.nonSkipChildren.toArray();
             let index = 0;
-            let first = this.${internalTransformNode}(children[index++]);
+            let first = this.${mainAnalyserName}.${internalTransformNode}(children[index++]);
             while (index < children.length) {
-                let operator = this.${internalTransformNode}(children[index++]);
-                let second = this.${internalTransformNode}(children[index++]);
+                let operator = this.${mainAnalyserName}.${internalTransformNode}(children[index++]);
+                let second = this.${mainAnalyserName}.${internalTransformNode}(children[index++]);
                 let combined: ${Names.concept(this.expressionBase)} = null;
                 switch (operator) {
                 ${cases.map(c => `${c}`).join("")}

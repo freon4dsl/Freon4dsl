@@ -2,7 +2,7 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
 import { PiProperty } from "../../../../languagedef/metalanguage";
 import { getPrimCall, makeIndent } from "../GrammarUtils";
 import { getBaseTypeAsString } from "../../../../utils";
-import { ParserGenUtil } from "../../ParserGenUtil";
+import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
     constructor(prop: PiProperty, separatorText: string) {
@@ -14,9 +14,9 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
         return `[ ${getPrimCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.transformSharedPackedParseTreeList<${baseType}>(${nodeName}[${propIndex}], '${this.separatorText}'); // RHSPrimListEntryWithSeparator\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}], '${this.separatorText}'); // RHSPrimListEntryWithSeparator\n`;
     }
 
     toString(depth: number): string {

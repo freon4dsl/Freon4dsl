@@ -18,9 +18,9 @@ export class RHSBooleanWithKeyWord extends RHSPropEntry {
         return `'${this.keyword}'` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `// RHSBooleanWithKeyWord
-                if (!${nodeName}[${propIndex}].isEmptyMatch) {
+                if (!${nodeName}[${index}].isEmptyMatch) {
                     ${ParserGenUtil.internalName(this.property.name)} = true;
                 }`;
     }

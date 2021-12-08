@@ -13,12 +13,12 @@ export class RHSPrimOptionalEntry extends RHSPropEntry {
         return `${getPrimCall(this.property.type.referred)}?` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `// RHSPrimOptionalEntry
-            if (!${nodeName}[${propIndex}].isEmptyMatch) {
+            if (!${nodeName}[${index}].isEmptyMatch) {
                 // take the first element of the group that represents the optional part  
-                const subNode = this.getGroup(${nodeName}[${propIndex}]).nonSkipChildren.toArray()[0];
-                ${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformNode}(subNode);
+                const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray()[0];
+                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformNode}(subNode);
             }`;
     }
 

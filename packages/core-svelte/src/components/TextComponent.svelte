@@ -18,7 +18,7 @@
         PiEditor,
         toPiKey,
         isAliasTextBox,
-        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE, styleToCSS, conceptStyle
+        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE, styleToCSS, conceptStyle, SelectBox
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -327,7 +327,11 @@
             text = textBox.getText();
         }
         // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
-        textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), "text", textBox.style));
+        const boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+        textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), boxType, textBox.style));
+        // if (textBox.getText() === "appel") {
+        //     textStyle += "--theme-colors-bg_text_box: lightgrey;"
+        // }
 
         textBox.setFocus = setFocus;
     });
@@ -371,7 +375,7 @@
     }
 
     .text {
-        background-color: var(--theme-colors-bg_text_box);
+        /*background-color: var(--theme-colors-bg_text_box);*/
         content: attr(data-placeholdertext);
         color: var(--theme-colors-color_text_box);
         padding: 3px;

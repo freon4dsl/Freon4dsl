@@ -18,12 +18,12 @@ export class RHSListGroup extends RHSPropPartWithSeparator {
         return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `// RHSListGroup  
-            if (!${nodeName}[${propIndex}].isEmptyMatch) {          
+            if (!${nodeName}[${index}].isEmptyMatch) {          
                 ${ParserGenUtil.internalName(this.property.name)} = [];
-                for (const subNode of ${nodeName}[${propIndex}].nonSkipChildren.toArray()) {
-                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${internalTransformNode}(this.getGroup(subNode).nonSkipChildren.toArray()[0]));
+                for (const subNode of ${nodeName}[${index}].nonSkipChildren.toArray()) {
+                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(this.${mainAnalyserName}.getGroup(subNode).nonSkipChildren.toArray()[0]));
                 }
             }`;
     }

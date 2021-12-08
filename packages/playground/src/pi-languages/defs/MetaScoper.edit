@@ -1,0 +1,31 @@
+editor MetaScoper for language PiLanguage
+
+PiScoperDef {
+@projection
+[ scoper ${self.name} for language ${self.languageName}
+
+    [?isnamespace { ${self.namespaces @horizontal @separator[, ]} }]
+
+    ${self.scopeConceptDefs @vertical}
+]
+}
+
+ScopeConceptDef {
+@projection
+[
+${self.conceptRef} {
+    [?${self.namespaceAdditions}]
+    [?${self.alternativeScope}]
+}
+]
+}
+
+PiNamespaceAddition {
+@projection
+[namespace_addition = ${self.expressions@horizontal @separator[ + ]};]
+}
+
+PiAlternativeScope {
+@projection
+[scope = ${self.expression};]
+}

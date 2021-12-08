@@ -14,9 +14,9 @@ export class RHSPartListEntryWithSeparator extends RHSPropPartWithSeparator {
         return `[ ${getTypeCall(this.property.type.referred)} / '${this.separatorText}' ]*` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformList}<${baseType}>(${nodeName}[${propIndex}], '${this.separatorText}'); // RHSPartListEntryWithSeparator\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}], '${this.separatorText}'); // RHSPartListEntryWithSeparator\n`;
     }
 
     toString(depth: number): string {

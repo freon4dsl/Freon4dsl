@@ -15,7 +15,7 @@ import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 
-const LOGGER = new MetaLogger("EditorGenerator"); //.mute();
+const LOGGER = new MetaLogger("EditorGenerator").mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";

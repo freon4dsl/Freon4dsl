@@ -45,7 +45,7 @@ export class RHSText extends RightHandSideEntry {
         return this.text.trimEnd() + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return ``;
     }
 

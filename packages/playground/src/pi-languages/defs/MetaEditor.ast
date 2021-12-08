@@ -6,6 +6,7 @@ modelunit PiEditorDef {
 //        language: PiLanguage;
     languageName: string;
     public conceptEditors: PiEditConcept[];
+    file-extension = "edit";
 }
 
 concept PiEditConcept {

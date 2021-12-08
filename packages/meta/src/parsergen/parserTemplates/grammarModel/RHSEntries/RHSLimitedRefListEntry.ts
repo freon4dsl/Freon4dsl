@@ -14,10 +14,10 @@ export class RHSLimitedRefListEntry extends RHSPropEntry {
         return `${getTypeCall(this.property.type.referred)}*` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const propType: string = Names.classifier(this.property.type.referred);
         const baseType: string = getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformRefList}<${baseType}>(${nodeName}[${propIndex}], '${propType}'); // RHSLimitedRefListEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}[${index}], '${propType}'); // RHSLimitedRefListEntry\n`;
     }
 
     toString(depth: number): string {

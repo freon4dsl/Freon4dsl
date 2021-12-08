@@ -42,7 +42,7 @@ export class TableUtil {
                     // style: STYLES.headerText,
                     selectable: false
                 }),
-                style: styleToCSS(headerStyles[index])
+                style: headerStyles[index]
             });
         });
         list.forEach((item: ELEMENT_TYPE, rowIndex: number) => {
@@ -51,7 +51,7 @@ export class TableUtil {
                     row: rowIndex + 2,
                     column: columnIndex + 1,
                     box: new HorizontalListBox(item, "xx-" + columnIndex, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP)]),
-                    style: styleToCSS(rowStyles[columnIndex])
+                    style: rowStyles[columnIndex]
                 });
             });
         });
@@ -59,11 +59,9 @@ export class TableUtil {
             row: list.length + 3,
             column: 1,
             columnSpan: columnBoxes.length,
-            box: new AliasBox(element, "alias-add-row", "<add new row>", {style: {"font-weight": "normal"}}),
-            style: styleToCSS(rowStyles[0])
-            // TODO Change into Svelte Style
-            // style: STYLES.header
-        });
+            box: new AliasBox(element, "alias-add-row", "<add new row>", ),
+            style: rowStyles[0]
+         });
 
         // Add keyboard actions to grid such that new rows can be added by Return Key
         editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid<ELEMENT_TYPE>(element, role, builder));
