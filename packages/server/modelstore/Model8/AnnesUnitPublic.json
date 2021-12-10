@@ -1,0 +1,11 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "AnnesUnit",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "Robert"
+      }
+   ],
+   "methods": []
+}

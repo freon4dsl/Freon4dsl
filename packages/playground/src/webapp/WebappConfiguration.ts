@@ -4,13 +4,10 @@ import { ServerCommunication } from "./server/ServerCommunication";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-
 // import { TestParserEnvironment } from "../parser-test/environment/gen/TestParserEnvironment";
 // export const editorEnvironment: PiEnvironment = TestParserEnvironment.getInstance();
-
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
-
 import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
 export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
@@ -40,7 +37,5 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
 /**
  * The one and only reference to the server on which the models are stored
  */
-export const SERVER_URL = "http://127.0.0.1:3001/";
-
 export const serverCommunication: IServerCommunication = ServerCommunication.getInstance();
 // export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();

@@ -1,0 +1,28 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "unit9_1",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "",
+         "attributes": [],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "",
+               "body": null,
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "dgDSG",
+                     "declaredType": "Integer"
+                  }
+               ],
+               "declaredType": "Boolean"
+            }
+         ],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}
