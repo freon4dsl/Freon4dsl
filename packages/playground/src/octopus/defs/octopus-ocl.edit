@@ -142,3 +142,7 @@ VariableExp {
 @projection normal
     [${self.referredVariable}]
 }
+OclExpression {
+    @projection normal
+        [${self.expr}]
+}

@@ -3,6 +3,8 @@
     let expCreate = require("../../languagedef/parser/ExpressionCreators");
 }
 
+// TODO add possibility to determine the separator for a reference
+
 Editor_Definition
   = ws "editor" ws name:var ws "for" ws "language" ws languageName:var ws concepts:(conceptEditor)* ws
     {
@@ -10,22 +12,24 @@ Editor_Definition
             "name"          : name,
             "languageName"  : languageName,
             "conceptEditors": concepts,
-            "location": location()
+            "location"      : location()
         });
     } 
 conceptEditor =
             concept:conceptRef curly_begin ws
                 projection:projection?
                 trigger:trigger?
+                referenceShortcut:referenceShortcut?
                 symbol:symbol?
             curly_end
 {
     return creator.createConceptEditor({
-        "concept"   : concept,
-        "trigger"   : trigger,
-        "symbol"    : symbol,
-        "projection": projection,
-        "location": location()
+        "concept"          : concept,
+        "trigger"          : trigger,
+        "referenceShortcut": referenceShortcut,
+        "symbol"           : symbol,
+        "projection"       : projection,
+        "location"         : location()
     });
 }
 
@@ -65,7 +69,7 @@ listJoin =  l:listJoinSimple+
                     return creator.createListJoin( {"direction": (!!directionObject ? directionObject.direction : undefined),
                                                     "joinType" : (!!joinTypeObject ? joinTypeObject.joinType    : undefined),
                                                     "joinText" : (!!joinTextObject ? joinTextObject.joinText    : undefined),
-                                                    "location": location()} );
+                                                    "location" : location()} );
                 }
 
 listJoinSimple =      (direction:direction  { return {"direction" : direction, "location": location() }; } )
@@ -138,10 +142,17 @@ trigger = "@trigger" ws "\"" value:string "\"" ws
     {
         return value
     }
+
+referenceShortcut = "@referenceShortcut" ws exp:expression ws
+    {
+        return exp
+    }
+
 symbol = "@symbol" ws "\"" value:string "\"" ws
     {
         return value
     }
+
 priority = "priority" ws ":" ws "\"" value:string "\"" ws
     {
         return value

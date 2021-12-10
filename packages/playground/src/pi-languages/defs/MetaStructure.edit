@@ -1,0 +1,127 @@
+editor First for language PiLanguage
+
+// TODO because the chars '['and ']' can not yet be escaped in the .edit file,
+// here they are replaced by '(' and ')'
+
+PiStructureDef {
+    @projection
+    [language ${self.name}
+
+    [?${self.modelConcept}]
+
+    [?${self.units @vertical}]
+    ${self.interfaces @vertical}
+    ${self.concepts @vertical}
+    ]
+}
+//abstract concept PiLangElement {
+//    @projection
+//    [name]
+//}
+//abstract concept PiClassifier {
+//    owningLanguage: PiLanguageUnit;
+//    properties: PiProperty[];
+//    primProperties: PiPrimitiveProperty[];
+//}
+PiModelDescription {
+    @projection
+    [model ${self.name} {
+        ${self.properties @vertical @terminator [;]}
+    }
+    ]
+}
+PiUnitDescription {
+    @projection
+    [modelunit ${self.name} {
+        ${self.properties @vertical @terminator [;]}
+        file-extension = ${self.fileExtension};
+    }
+    ]
+}
+PiInterface {
+    @projection
+    [[?${self.isPublic @keyword[public]} ]interface ${self.name} [?base ${self.base @horizontal @separator [, ]}] {
+        ${self.properties @vertical @terminator [;]}
+    }
+    ]
+}
+PiConcept {
+    @projection
+    [[?${self.isPublic @keyword[public]} ][?${self.isAbstract @keyword[abstract]} ]concept ${self.name} [?base ${self.base}] [?implements ${self.interfaces @horizontal @separator [, ]}] {
+        ${self.properties @vertical @terminator [;]}
+    }
+    ]
+}
+PiExpressionConcept {
+    @projection
+    [[?${self.isPublic @keyword[public]} ][?${self.isAbstract @keyword[abstract]} ]expression ${self.name} [?base ${self.base}] [?implements ${self.interfaces @horizontal @separator [, ]}] {
+        ${self.properties @vertical @terminator [;]}
+    }
+    ]
+}
+PiBinaryExpressionConcept {
+    @projection
+    [[?${self.isPublic @keyword[public]} ][?${self.isAbstract @keyword[abstract]} ]binary expression ${self.name} [?base ${self.base}] [?implements ${self.interfaces @horizontal @separator [, ]}] {
+        ${self.properties @vertical @terminator [;]}
+        [?priority = ${self.priority};]
+    }
+    ]
+}
+PiLimitedConcept {
+    @projection
+    [[?${self.isPublic @keyword[public]} ]limited ${self.name} [?base ${self.base}] [?implements ${self.interfaces @horizontal @separator [, ]}] {
+        ${self.properties @vertical @terminator [;]}
+        ${self.instances @vertical }
+    }
+    ]
+}
+PiConceptProperty {
+    @projection
+    [[?${self.isPublic @keyword[public]} ][?${self.isPart @keyword[reference]} ]${self.name} [?${self.isOptional @keyword[?]}]: ${self.type}[?${self.isList @keyword[()]}]]
+}
+PiPrimitiveProperty {
+    @projection
+    [[?${self.isPublic @keyword[public]} ][?${self.isStatic @keyword[static]} ]${self.name} [?${self.isOptional @keyword[?]}]: ${self.type}[?${self.isList @keyword[()]}]]
+}
+//PiConceptProperty base PiProperty {
+//    hasLimitedType: boolean;
+//}
+//PiPrimitiveProperty base PiProperty {
+//    isStatic: boolean;
+//	initialValue: string;
+//    primType: string;
+//}
+PiInstance {
+    @projection
+    [${self.name} = {
+        ${self.propertyDefs
+            @vertical
+            @separator [,]
+        }
+    }
+    ]
+}
+PiPropertyInstance {
+    @projection
+    [${self.property.name} : ${self.value}]
+//    [${self.property.name} : \"${self.value}\"]
+}
+PiStringValue {
+    @projection [${self.value}]
+}
+PiNumberValue {
+    @projection [${self.value}]
+}
+PiBooleanValue {
+    @projection [${self.value}]
+}
+// the following two classes are only used in the typer and validator definitions
+//PiFunction {
+//    language: PiLanguageUnit;
+//    formalparams: PiParameter[];
+//    reference returnType: PiClassifier;
+//}
+//
+//PiParameter {
+//    reference type: PiClassifier;
+//}

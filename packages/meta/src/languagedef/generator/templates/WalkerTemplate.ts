@@ -1,4 +1,4 @@
-import { PiLanguage } from "../../metalanguage";
+import { PiClassifier, PiLanguage } from "../../metalanguage";
 import { Names, LANGUAGE_GEN_FOLDER, sortClasses } from "../../../utils";
 
 export class WalkerTemplate {
@@ -6,12 +6,17 @@ export class WalkerTemplate {
     generateWalker(language: PiLanguage, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: String = Names.walker(language);
+        const classifiersToDo: PiClassifier[] = [];
+        // take care of the order, it is important
+        classifiersToDo.push(...sortClasses(language.concepts));
+        classifiersToDo.push(...language.units);
+        classifiersToDo.push(language.modelConcept);
 
         // Template starts here
         return `
         import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${language.concepts.map(concept => `
-                ${Names.concept(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
+        import { ${classifiersToDo.map(concept => `
+                ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";      
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
         import { PiLogger } from "@projectit/core";
                 
@@ -40,23 +45,23 @@ export class WalkerTemplate {
              */
             public walk(modelelement: ${allLangConcepts}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                 if(this.myWorkers.length > 0) {
-                    ${sortClasses(language.concepts).map(concept => `
-                    if(modelelement instanceof ${Names.concept(concept)}) {
-                        return this.walk${Names.concept(concept)}(modelelement, includeChildren );
+                    ${classifiersToDo.map(concept => `
+                    if(modelelement instanceof ${Names.classifier(concept)}) {
+                        return this.walk${Names.classifier(concept)}(modelelement, includeChildren );
                     }`).join("")}
                 } else {
                     LOGGER.error(this, "No worker found.");
                 }
             }
 
-            ${language.concepts.map(concept => `
-                private walk${Names.concept(concept)}(
-                            modelelement: ${Names.concept(concept)}, 
+            ${classifiersToDo.map(concept => `
+                private walk${Names.classifier(concept)}(
+                            modelelement: ${Names.classifier(concept)}, 
                             includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                     let stopWalkingThisNode: boolean = false;
                     for (const worker of this.myWorkers ) {
                         if (!stopWalkingThisNode ) {
-                            stopWalkingThisNode = worker.execBefore${Names.concept(concept)}(modelelement);
+                            stopWalkingThisNode = worker.execBefore${Names.classifier(concept)}(modelelement);
                         }
                     }
                     ${((concept.allParts().length > 0) ?
@@ -79,7 +84,7 @@ export class WalkerTemplate {
                     )}
                     for (let worker of this.myWorkers ) {                    
                         if (!stopWalkingThisNode ) {
-                            stopWalkingThisNode = worker.execAfter${Names.concept(concept)}(modelelement);
+                            stopWalkingThisNode = worker.execAfter${Names.classifier(concept)}(modelelement);
                         }
                     }
             }`).join("\n")}

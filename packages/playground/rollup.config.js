@@ -6,6 +6,7 @@ import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
+import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -36,7 +37,10 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'public/build/bundle.js',
+		globals: {
+			'kotlin': 'kotlin'
+		}
 	},
 	plugins: [
 		svelte({
@@ -64,6 +68,9 @@ export default {
 		typescript({
 			sourceMap: !production,
 			inlineSources: !production
+		}),
+		injectProcessEnv({
+			NODE_ENV: 'development',
 		}),
 
 		// In dev mode, call `npm run start` once

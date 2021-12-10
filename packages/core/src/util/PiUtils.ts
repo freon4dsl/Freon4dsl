@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
 import { PiLogger } from "./internal";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.PiKey'
 import { PiKey } from "./Keys";
@@ -43,24 +43,26 @@ export class PiUtils {
         }
     }
 
-    @action
     static setContainer(exp: PiElement, piContainer: PiContainerDescriptor | null, editor: PiEditor): void {
-        if (!!piContainer) {
-            if (piContainer.propertyIndex === undefined) {
-                piContainer.container[piContainer.propertyName] = exp;
+        runInAction(() => {
+            if (!!piContainer) {
+                if (piContainer.propertyIndex === undefined) {
+                    piContainer.container[piContainer.propertyName] = exp;
+                } else {
+                    piContainer.container[piContainer.propertyName][piContainer.propertyIndex] = exp;
+                }
             } else {
-                piContainer.container[piContainer.propertyName][piContainer.propertyIndex] = exp;
+                editor.rootElement = exp;
             }
-        } else {
-            editor.rootElement = exp;
-        }
+        });
     }
 
-    @action
     static replaceExpression(oldExpression: PiExpression, newExpression: PiExpression, editor: PiEditor) {
         PiUtils.CHECK(isPiExpression(oldExpression), "replaceExpression: old element should be a PiExpression, but it isn't");
         PiUtils.CHECK(isPiExpression(newExpression), "replaceExpression: new element should be a PiExpression, but it isn't");
-        PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
+        runInAction( () => {
+            PiUtils.setContainer(newExpression, oldExpression.piContainer(), editor);
+        });
     }
 
     // TODO refactor this into an InternalBehavior class, like other behaviors.
@@ -90,17 +92,6 @@ export class PiUtils {
         }
         return false;
     }
-}
-
-export function initializeObject<TTarget, TSource>(target: TTarget, source: TSource) {
-    if (!(target && source)) {
-        return;
-    }
-    Object.keys(source).forEach(key => {
-        if (source.hasOwnProperty(key)) {
-            (target as any)[key] = (source as any)[key];
-        }
-    });
 }
 
 export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {

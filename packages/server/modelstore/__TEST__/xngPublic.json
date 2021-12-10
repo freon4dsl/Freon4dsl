@@ -1,0 +1,15 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "xng",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "hzbzbd"
+      },
+      {
+         "$typename": "Entity",
+         "name": "fbfb"
+      }
+   ],
+   "methods": []
+}

@@ -25,6 +25,7 @@ import {
     ValidationSeverity,
     ValidNameRule
 } from "./ValidatorDefLang";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 const LOGGER = new MetaLogger("ValidatorChecker"); // .mute();
 const equalsTypeName = "equalsType";
@@ -118,11 +119,11 @@ export class ValidatorChecker extends Checker<PiValidatorDef> {
                   }
             });
         }
-        // check if found property is of type 'string'
+        // check if found property is of type 'identifier'
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
-            this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.primType === "string",
-                `Validname rule expression '${tr.property.toPiString()}' should have type 'string' ${this.location(tr.property)}.`);
+            this.simpleCheck((myProp instanceof PiPrimitiveProperty) && myProp.type.referred === PiPrimitiveType.identifier,
+                `Validname rule expression '${tr.property.toPiString()}' should have type 'identifier' ${this.location(tr.property)}.`);
         }
     }
 

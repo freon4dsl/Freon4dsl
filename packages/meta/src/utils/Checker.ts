@@ -1,7 +1,7 @@
 import { PiLangElement, PiLanguage } from "../languagedef/metalanguage";
 import { PiDefinitionElement } from "../utils";
 
-export type CheckB = { check: boolean; error: string; whenOk?: () => void };
+export type NestedCheck = { check: boolean; error: string; whenOk?: () => void };
 
 export abstract class Checker<DEFINITION> {
     errors: string[] = [];
@@ -25,7 +25,7 @@ export abstract class Checker<DEFINITION> {
         return true;
     }
 
-    public nestedCheck(check: CheckB | CheckB[]): void {
+    public nestedCheck(check: NestedCheck | NestedCheck[]): void {
         if (Array.isArray(check)) {
             check.forEach(chk => this.simpleCheck(chk.check, chk.error));
         } else {

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@projectit/test",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,6 +9,7 @@
     "type": "git",
     "url": "https://github.com/joswarmer/ProjectIt.git"
   },
+  "type": "module",
   "scripts": {
     "cleanup":      "bash ../../scripts/cleanup.sh",
     "demo": 	    "bash ../../scripts/projectit-dev.sh all -d src/demo/defs -o src/demo",
@@ -24,21 +25,25 @@
     "defaultscoper":"bash ../../scripts/projectit-dev.sh all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper":"cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/SimpleModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/projectit-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
     "parsergen":    "bash ../../scripts/projectit-dev.sh all -d src/parser_gen/defs -o src/parser_gen",
+    "parser-props": "bash ../../scripts/projectit-dev.sh all -d src/parser-basic-properties/defs -o src/parser-basic-properties",
+    "parser-conc":  "bash ../../scripts/projectit-dev.sh all -d src/parser-basic-concepts/defs -o src/parser-basic-concepts",
     "noparser":     "bash ../../scripts/projectit-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
-    "build":        "yarn imports && yarn langconstr && yarn testproject && yarn defaultscoper && yarn definedscoper && yarn demo && yarn parsergen && yarn octopus && yarn noparser && tsc",
+    "build":        "yarn imports && yarn langconstr && yarn testproject && yarn defaultscoper && yarn definedscoper && yarn demo && yarn parsergen && yarn octopus && yarn noparser && yarn parser-props && yarn parser-conc &&tsc",
     "clean-config": "rm */*/projectit/ProjectItConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
-    "clean-init":   "rm */*/*/*Initialization.ts",
     "clean-parser": "rm -r */*/*parse*",
     "clean":        "yarn clean-config && yarn clean-custom && yarn clean-init",
+    "clean-testproject" : "bash ../../scripts/projectit-dev.sh clean-it -f -d src/testproject/defs -o src/testproject",
     "test":         "jest"
   },
   "dependencies": {
-    "@projectit/core": "0.1.1",
-    "@projectit/meta": "0.1.1",
+    "@projectit/core": "0.2.0",
+    "@projectit/meta": "0.2.0",
     "@types/history": "^4.7.5",
+    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "kotlin": "^1.5.21",
     "global": "^4.4.0",
-    "mobx": "^5.14.0",
+    "mobx": "6.3.3",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

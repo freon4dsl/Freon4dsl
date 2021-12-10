@@ -44,6 +44,7 @@ MultiLineComment
   = "/*" (!"*/" SourceCharacter)* "*/"
 
 // from JSOM example
+// see also ParserGenUtil.escapeRelevantChars()
 char
   = unescaped
   / escape

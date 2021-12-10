@@ -7,7 +7,6 @@
     "moduleResolution": "node",
     "target": "es2017",
     "sourceMap": true,
-    "types": ["svelte"],
 
     "strict": false,
     "esModuleInterop": true,

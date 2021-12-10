@@ -1,0 +1,41 @@
+language PiLanguage
+
+// begin typer definition
+modelunit PiTyperDef {
+    public name: identifier;
+//}
+//concept PiTypeDefinition {
+//    location: ParseLocation;
+//    name: identifier;
+    languageName: string;
+    reference language: PiStructureDef;
+    typerRules: PiTypeRule[];
+    classifierRules: PiTypeClassifierRule[];
+    reference typeroot: PiClassifier;
+    reference types: PiClassifier[];
+    file-extension = "type";
+}
+
+abstract concept PiTypeRule base PiLangElement {
+//    location: ParseLocation;
+}
+concept PiTypeIsTypeRule base PiTypeRule {
+    reference types: PiClassifier[];
+}
+
+concept PiTypeAnyTypeRule base PiTypeRule {
+    statements: PiTypeStatement[];
+}
+
+concept PiTypeClassifierRule base PiTypeRule {
+    reference conceptRef: PiClassifier;
+    statements: PiTypeStatement[];
+}
+
+concept PiTypeStatement {
+//    location: ParseLocation;
+    statementtype: string;
+    exp: PiLangExp;
+    isAbstract: boolean;
+}
+// end typer definition

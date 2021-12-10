@@ -91,7 +91,7 @@ export class DemoModelCreator {
         ifFunction.expression = ifExpression;
         return ifFunction;
     }
-// model.functions[0].expression.appliedfeature.type.referred.unitName).toBe("Company")
+
     public createModelWithAppliedfeature(): Demo {
         let result = this.createIncorrectModel();
         let unit: DemoModel = result.models.find(m => m.name === "DemoModel_1");
@@ -197,27 +197,48 @@ export class DemoModelCreator {
         let unit: DemoModel = DemoModel.create({name: "DemoModel_1"});
         model.models.push(unit);
 
+        const company = this.makeCompanyEntity();
+        const school = this.makeSchoolEntity(company);
+
+        const funcWithManyParams = DemoFunction.create({name: "manyParams"});
+        for (let i = 0; i < 10; i++) {
+            let type: PiElementReference<DemoEntity>;
+            if ( i % 2 === 0) {
+                type = PiElementReference.create<DemoEntity>(company, "DemoEntity");
+            } else {
+                type = PiElementReference.create<DemoEntity>(school, "DemoEntity");
+            }
+            const param = DemoVariable.create({ name: `Var${i}`, declaredType: type });
+            funcWithManyParams.parameters.push(param);
+        }
+        funcWithManyParams.expression = this.addComplexExpression1();
+        funcWithManyParams.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
+
         const length = DemoFunction.create({name: "length"});
         const Variable1 = DemoVariable.create({name: "Variable1"});
         const VariableNumber2 = DemoVariable.create({name: "VariableNumber2"});
         length.parameters.push(Variable1);
         length.parameters.push(VariableNumber2);
         length.expression = this.addComplexExpression1();
+        length.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
         // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
         const determine = DemoFunction.create({name: "determine"});
         const AAP = DemoVariable.create({name: "AAP"});
         determine.parameters.push(AAP);
         determine.expression = MakePlusExp("Hello Demo", "Goodbye");
+        determine.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         // determine(AAP) = "Hello Demo" + "Goodbye"
 
         const last = DemoFunction.create({name: "last"});
         last.expression = MakePlusExp("5", "woord");
+        last.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         // last() = 5 + "woord"
 
         unit.functions.push(length);
         unit.functions.push(determine);
         unit.functions.push(last);
+        unit.functions.push(funcWithManyParams);
 
         const personEnt = DemoEntity.create({name: "Person", x: "xxx", simpleprop: "simple"});
         const age = DemoAttribute.create({name: "age"});
@@ -231,7 +252,7 @@ export class DemoModelCreator {
         personEnt.functions.push(first);
         // Person { age, first(Resultvar) = 5 + 24 }
 
-        const companyEnt = DemoEntity.create({name: "Company", x: "xxx", simpleprop: "simple"});
+        const companyEnt = DemoEntity.create({name: "Company2", x: "xxx", simpleprop: "simple"});
         const companyName = DemoAttribute.create({name: "name"});
         const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
         companyEnt.attributes.push(companyName);
@@ -248,6 +269,8 @@ export class DemoModelCreator {
 
         unit.entities.push(personEnt);
         unit.entities.push(companyEnt);
+        unit.entities.push(company);
+        unit.entities.push(school);
 
         this.addEntityTypes(
             companyEnt,
@@ -335,6 +358,46 @@ export class DemoModelCreator {
         unit.entities.push(schoolEntity);
         unit.entities.push(companyEnt);
         return unit;
+    }
+
+    private makeSchoolEntity(companyEnt: DemoEntity) {
+        const schoolEntity = DemoEntity.create({ name: "School", x: "xxx", simpleprop: "simple" });
+
+        const founded = DemoAttribute.create({ name: "foundedIn" });
+        founded.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        const schoolName = DemoAttribute.create({ name: "name" });
+        schoolName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        schoolEntity.attributes.push(founded);
+        schoolEntity.attributes.push(schoolName);
+        const clean = DemoFunction.create({ name: "requestClean" });
+        const variable = DemoVariable.create({ name: "cleaningCompany" });
+        variable.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        clean.parameters.push(variable);
+        clean.expression = MakePlusExp("5", "24");
+        clean.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        schoolEntity.functions.push(clean);
+        // School { foundedIn: Integer, unitName: String, requestClean(cleaningCompany: Company) = 5 + 24 }
+        return schoolEntity;
+    }
+
+    private makeCompanyEntity() {
+        const companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" });
+        const companyName = DemoAttribute.create({ name: "name" });
+        companyName.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        const VAT_Number = DemoAttribute.create({ name: "VAT_Number" });
+        VAT_Number.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+        companyEnt.attributes.push(companyName);
+        companyEnt.attributes.push(VAT_Number);
+        const work = DemoFunction.create({ name: "doClean" });
+        const param = DemoVariable.create({ name: "at" });
+        param.declaredType = PiElementReference.create<DemoEntity>(companyEnt, "DemoEntity");
+        work.parameters.push(param);
+        work.expression = MakePlusExp("5", "24");
+        work.declaredType = PiElementReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
+
+        companyEnt.functions.push(work);
+        // Company { VAT_Number: Integer, unitName: String, doClean(at: School) = 5 + 24 }
+        return companyEnt;
     }
 
     private addSimpleTypes(

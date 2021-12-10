@@ -1,5 +1,5 @@
-import { IArrayWillChange, IArrayWillSplice, observable } from "mobx";
-import { ObservableValue } from "mobx/lib/types/observablevalue";
+import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, intercept, runInAction } from "mobx";
+// import { ObservableValue } from "mobx";
 import "reflect-metadata";
 
 import { DecoratedModelElement } from "./DecoratedModelElement";
@@ -114,7 +114,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
 
     const getter = function(this: any) {
-        const storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
+        const storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         if (!!storedObserver) {
             return storedObserver.get();
         } else {
@@ -124,7 +124,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     };
 
     const setter = function(this: any, val: DecoratedModelElement) {
-        let storedObserver = this[privatePropertyKey] as ObservableValue<DecoratedModelElement>;
+        let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = storedObserver ? storedObserver.get() : null;
         // Clean container of current part
         if (!!storedValue) {
@@ -133,7 +133,9 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
             storedValue.propertyIndex = undefined;
         }
         if (!!storedObserver) {
-            storedObserver.set(val);
+            runInAction( () => {
+                storedObserver.set(val);
+            });
         } else {
             this[privatePropertyKey] = observable.box(val);
             storedObserver = this[privatePropertyKey];
@@ -176,7 +178,9 @@ export function observablelistpart(target: Object, propertyKey: string | symbol)
             this[privatePropertyKey] = result;
             (array as any)[MODEL_CONTAINER] = this;
             (array as any)[MODEL_NAME] = propertyKey.toString();
-            array.intercept(change => willChange(change));
+            // array.intercept(change => willChange(change));
+            // Changed for mobx6 as follows:
+            intercept(array, change => willChange(change))
             // intercept(array,
             // (change: IArrayWillChange<MobxModelElement> | IArrayWillSplice<MobxModelElement>) => willChange(change) as any);
         }

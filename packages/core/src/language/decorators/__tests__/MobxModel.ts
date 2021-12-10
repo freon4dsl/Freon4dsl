@@ -2,14 +2,17 @@ import "reflect-metadata";
 import { PiElementReferenceM } from "./PiElementReferenceM";
 import { observablelistpart, observablelistreference, observablepart, observablereference } from "../MobxModelDecorators";
 import { DecoratedModelElement, MobxModelElementImpl } from "../DecoratedModelElement";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 
 export class MobxTestElement extends MobxModelElementImpl {
-    @observable public name: string;
+    public name: string;
 
     constructor(name: string) {
         super();
         this.name = name;
+        makeObservable(this, {
+            name: observable
+        })
     }
 
     toString() {
@@ -22,7 +25,14 @@ export class MobxTestElement extends MobxModelElementImpl {
 }
 
 export class ModelContext {
-    @observable root: MobxTestElement;
+    root: MobxTestElement;
+
+    constructor() {
+        this.root = null;
+        makeObservable(this, {
+            root: observable
+        })
+    }
 }
 
 export class MobxTestTreeNode extends MobxTestElement {
@@ -59,12 +69,15 @@ export class MobxTestRoot extends MobxTestElement {
 }
 
 export class MobxTestReferences extends MobxTestElement {
-    @observable name: string;
+    name: string;
 
     @observablelistreference manyReference: MobxTestElement[];
     @observablereference singleReference: MobxTestElement[];
 
     constructor(name: string) {
         super(name);
+        makeObservable(this, {
+            name: observable
+        })
     }
 }

@@ -26,20 +26,25 @@ referenceKey    = "reference" rws
 priorityKey     = "priority" rws
 optionalKey     = ws "?" ws
 implementsKey   = "implements" rws
+fileExtensionKey   = "file-extension" rws
 
-langdef = m:modelOrUnit {return m;} / c:concept { return c;} / t:limited {return t;} / i:interface {return i;} / e:expression {return e;}
+langdef = m:model {return m;} / u:unit {return u;} / c:concept { return c;} / t:limited {return t;} / i:interface {return i;} / e:expression {return e;}
 
-modelOrUnit = isPublic:publicKey? isModel:modelKey? isUnit:unitKey? name:var rws base:conceptbase? ws implementedInterfaces:implementedInterfaces? curly_begin props:property* curly_end
-    {
-        return create.createConcept({
-            "isPublic": (!!isPublic),
-            "isModel": (!!isModel),
-            "isUnit": (!!isUnit),
-            "isAbstract": false,
+model = isModel:modelKey name:var
+    curly_begin props:property* curly_end    {
+        return create.createModel({
             "name": name,
-            "base": base,
-            "interfaces": implementedInterfaces,
             "properties": props,
+            "location": location()
+        });
+    }
+
+unit = isUnit:unitKey name:var
+    curly_begin props:property* fileExtension:(fileExtensionKey equals_separator "\"" fileExt:var "\"" semicolon_separator {return fileExt;})? curly_end    {
+        return create.createUnit({
+            "name": name,
+            "properties": props,
+            "fileExtension": (!!fileExtension ? fileExtension : ""),
             "location": location()
         });
     }
@@ -48,8 +53,6 @@ concept = isPublic:publicKey? abs:abstractKey? conceptKey name:var rws base:conc
     {
         return create.createConcept({
             "isPublic": (!!isPublic),
-            "isModel": false,
-            "isUnit": false,
             "isAbstract": (!!abs),
             "name": name,
             "base": base,
@@ -92,7 +95,6 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
         if (!!binary) {
             return create.createBinaryExpressionConcept({
                 "isPublic": (!!isPublic),
-                "isModel": false,
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,
@@ -104,7 +106,6 @@ expression = isPublic:publicKey? abs:abstractKey? binary:binaryKey? expressionKe
         } else {
             return create.createExpressionConcept({
                 "isPublic": (!!isPublic),
-                "isModel": false,
                 "isAbstract": (!!abs),
                 "name": name,
                 "base": base,
@@ -120,20 +121,13 @@ property = part:partProperty      { return part; }
 
 partProperty = isPublic:publicKey? name:var ws isOptional:optionalKey? colon_separator ws type:var isList:"[]"? ws initialvalue:initialvalue? semicolon_separator
     {
-        let ref = null;
-        let typeName = "";
-        if (type === "string" || type === "boolean" || type === "number") {
-            typeName = type;
-        } else {
-            ref = create.createClassifierReference({"name": type, "location": location()});
-        }
+        let ref =  create.createClassifierReference({"name": type, "location": location()});
         return create.createPartOrPrimProperty({
             "isPublic": (!!isPublic),
             "name": name,
             "isOptional": (isOptional?true:false),
             "isList": (isList?true:false),
             "initialValue": initialvalue,
-            "typeName": typeName,
             "type": ref,
             "location": location()
         });

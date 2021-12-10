@@ -20,6 +20,7 @@ export * from "./OptionalBox";
 export * from "./SvgBox";
 export * from "./TextBox";
 export * from "./SelectBox";
+export * from "./BoxFactory";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption";

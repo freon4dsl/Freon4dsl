@@ -1,7 +1,9 @@
 import {
+    PiClassifier,
     PiConcept,
     PiInstanceExp,
     PiLangExpressionChecker,
+    PiLangSelfExp,
     PiLanguage,
     PiLimitedConcept,
     PiPrimitiveProperty
@@ -18,6 +20,7 @@ import {
     PiEditUnit
 } from "./PiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
 const LOGGER = new MetaLogger("DefEditorChecker"); // .mute();
 
@@ -68,8 +71,19 @@ export class PiEditChecker extends Checker<PiEditUnit> {
             error: `Concept ${conceptEditor.concept.name} is unknown ${this.location(conceptEditor)}.`,
             whenOk: () => {
                 this.checkProjection(conceptEditor.projection, conceptEditor.concept.referred);
+                this.checkReferenceShortcut(conceptEditor);
             }
         });
+    }
+
+    private checkReferenceShortcut(conceptEditor: PiEditConcept) {
+        if (!!(conceptEditor.referenceShortcut)) {
+            this.myExpressionChecker.checkLangExp(conceptEditor.referenceShortcut, conceptEditor.concept.referred);
+            this.nestedCheck( {
+                check: conceptEditor.referenceShortcut instanceof PiLangSelfExp,
+                error: `referenceShortcut for concept ${conceptEditor.concept.name} should start with "self" ${this.location(conceptEditor)}.`,
+            })
+        }
     }
 
     private checkEditor(editor: PiEditUnit) {
@@ -80,7 +94,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         );
     }
 
-    private checkProjection(projection: PiEditProjection, cls: PiConcept) {
+    private checkProjection(projection: PiEditProjection, cls: PiClassifier) {
         if (!!projection) {
             projection.lines.forEach(line => {
                 const toBeReplaced: number[] = [];
@@ -116,7 +130,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         }
     }
 
-    private checkPropertyProjection(projection: PiEditPropertyProjection, cls: PiConcept, optional: boolean) {
+    private checkPropertyProjection(projection: PiEditPropertyProjection, cls: PiClassifier, optional: boolean) {
         if (cls instanceof PiLimitedConcept && projection.expression.sourceName !== "self") {
             this.checkLimitedProjection(projection, cls);
         } else {
@@ -127,7 +141,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     this.simpleCheck(!(!!projection.listJoin),
                         `A terminator or separator may not be used in a non-list property '${myprop.name}' ${this.location(projection)}`);
                     if (!!projection.keyword) {
-                        this.simpleCheck(myprop instanceof PiPrimitiveProperty && myprop.primType === "boolean",
+                        this.simpleCheck(myprop instanceof PiPrimitiveProperty && myprop.type.referred === PiPrimitiveType.boolean,
                             `Property '${myprop.name}' may not have a keyword projection, because it is not of boolean type ${this.location(projection)}`);
                         this.simpleCheck(!this.includesWhitespace(projection.keyword), `The text for a keyword projection should not include any whitespace ${this.location(projection)}`);
                     }
@@ -141,9 +155,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
                     // create default listJoin if not present
                     if (!(!!projection.listJoin)) {
                         projection.listJoin = new ListJoin();
-                        projection.listJoin.joinType = ListJoinType.Separator;
-                        projection.listJoin.joinText = ", ";
-                    } else {
+                    } else if (projection.listJoin.joinType !== ListJoinType.NONE) {
                         const text = projection.listJoin.joinType === ListJoinType.Separator ? `@separator` : `@terminator`;
                         this.simpleCheck(!!projection.listJoin.joinText, `${text} should be followed by a string between '[' and ']' ${this.location(projection)}`);
                     }
@@ -171,7 +183,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         });
     }
 
-    private checkSubProjection(item: PiEditSubProjection, cls: PiConcept) {
+    private checkSubProjection(item: PiEditSubProjection, cls: PiClassifier) {
         // TODO check whether item.optional is being used correctly
         item.items.forEach(sub => {
             if (sub instanceof PiEditPropertyProjection) {

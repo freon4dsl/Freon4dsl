@@ -37,9 +37,10 @@ describe("Test the parser", () => {
         myModels.push(unit2);
         const model = Demo.create({ name: "SOME_MODEL", models: myModels });
 
-        let output = writer.writeToString(model, 0, false);
-        fileHandler.stringToFile("src/parser_gen/__tests__/ParserOutput.txt", output);
-        // TODO use snapshot
-        expect(output.length).toBe(1112);
+        for (const unit of model.models) {
+            const output = writer.writeToString(unit, 0, false);
+            fileHandler.stringToFile(`src/parser_gen/__tests__/Output_${unit.name}.txt`, output);
+            expect(output).toMatchSnapshot();
+        }
     });
 });

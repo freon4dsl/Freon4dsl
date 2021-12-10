@@ -2,18 +2,18 @@
 language openhab
 
 model OpenHabModel {
-    name: string;
+    name: identifier;
     itemModels: ItemModel[];
 //    ruleModels: RuleModel[];
 }
 
-public modelunit ItemModel {
-    public name: string;
+modelunit ItemModel {
+    public name: identifier;
 	public items: ModelItem[];
 }
 
 public abstract concept ModelItem {
-    public name: string;
+    public name: identifier;
     public type: BaseModelItemType;
     public reference groups?: ModelGroup[];
     public label?: string;
@@ -53,7 +53,7 @@ concept ModelGroupFunction {
 }
 
 concept Argument {
-    name: string;
+    name: identifier;
 }
 
 limited ModelGroupFunctionName {

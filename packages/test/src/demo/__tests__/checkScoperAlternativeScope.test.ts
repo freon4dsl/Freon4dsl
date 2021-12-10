@@ -1,8 +1,6 @@
 import { DemoScoper } from "../scoper/gen/DemoScoper";
-import { DemoModel, DemoFunction, AppliedFeature, DemoAttributeRef, Demo } from "../language/gen";
+import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
-import { PiNamedElement } from "@projectit/core";
 
 describe("testing Alternative Scopes", () => {
     describe("testing IsInScope", () => {
@@ -113,7 +111,7 @@ describe("testing Alternative Scopes", () => {
             expect(scoper.isInScope(appliedFeature, "Company")).toBe(false);
         });
 
-        test("isInscope 'VAT_Number' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
+        test("isInscope 'VAT_Number' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company2", () => {
             let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
             expect(scoper.isInScope(appliedFeature, "VAT_Number")).toBe(true);
         });

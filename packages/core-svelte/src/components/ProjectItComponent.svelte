@@ -1,7 +1,5 @@
 <script lang="ts">
     import {
-        boxAbove,
-        boxBelow,
         PiEditor,
         PiLogger,
         Box,
@@ -14,6 +12,7 @@
         KEY_ARROW_RIGHT
     } from "@projectit/core";
     import { autorun } from "mobx";
+    import { AUTO_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
 
     let LOGGER = new PiLogger("ProjectItComponent");
@@ -66,7 +65,7 @@
                     stopEvent(event);
                     break;
                 case KEY_ARROW_DOWN:
-                    const down = boxBelow(editor.selectedBox);
+                    const down = editor.boxBelow(editor.selectedBox);
                     LOGGER.log("!!!!!!! Select down box " + down?.role);
                     if (down !== null && down !== undefined) {
                         editor.selectBoxNew(down);
@@ -75,7 +74,7 @@
                     break;
                 case KEY_ARROW_UP:
                     LOGGER.log("Up: " + editor.selectedBox.role);
-                    const up = boxAbove(editor.selectedBox);
+                    const up = editor.boxAbove(editor.selectedBox);
                     if (up !== null) {
                         editor.selectBoxNew(up);
                     }
@@ -88,17 +87,30 @@
 
     let rootBox: Box;
     autorun(() => {
+        AUTO_LOGGER.log("==================> ProjectItComponent")
         rootBox = editor.rootBox;
     });
 
+    /**
+     * The current main element os this component.
+     */
+    let element: HTMLDivElement;
+
+    /**
+     * Keep track of the scrolling position in the editor, so we know exactly where bozes are
+     * in relationship with each other.
+     */
+    function onScroll() {
+        editor.scrollX = element.scrollLeft;
+        editor.scrollY = element.scrollTop;
+    }
 </script>
 
-<!-- The clientHeight bindiong is here to ensure that the afterUpdate is fired.
-     If it isn't there, afterUpdate will never be fired.
--->
 <div class={"projectit"}
      tabIndex={0}
      on:keydown={onKeyDown}
+     on:scroll={onScroll}
+     bind:this={element}
 >
     <RenderComponent editor={editor}
                      box={rootBox}
@@ -117,27 +129,4 @@
         color: var(--theme-colors-text_editor);
         background-color: var(--theme-colors-bg_editor);
     }
-
-    .grid {
-        display: inline-grid;
-        grid-gap: 10px;
-        align-items: center;
-        align-content: center;
-        justify-items: stretch;
-    }
-
-    .gridcell {
-        padding: 4px;
-        border-left: lightgrey;
-        border-left-style: solid;
-        border-left-width: 1px;
-        border-right: lightgrey;
-        border-right-style: solid;
-        border-right-width: 1px;
-        border-bottom: lightgrey;
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-    }
-
-
 </style>

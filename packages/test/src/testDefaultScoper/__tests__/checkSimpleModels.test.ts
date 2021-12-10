@@ -36,25 +36,28 @@ describe("Testing Default Scoper", () => {
         printDifference(creator, visibleNames);
         // print("names in model of depth 2: ", visibleNames);
         for (const x of creator.allNames) {
+            if (!visibleNames.includes(x)) {
+                // console.log(`do not include ${x}`)
+            }
             expect(visibleNames).toContain(x);
         }
-        // run unparser to inspect model
-        const unparsed: string = unparser.writeToString(model, 0, false);
-        const path: string = "./unparsedGeneratedModel.txt";
-        if (!fs.existsSync(path)) {
-            fs.writeFileSync(path, unparsed);
-        } else {
-            console.log(this, "test-unparser: user file " + path + " already exists, skipping it.");
-        }
-        // run the validator to see if the references are ok
-        const validator = environment.validator;
-        const errors = validator.validate(model);
-        const errorMessages: string[] = [];
-        errors.forEach(mess => {
-            errorMessages.push(mess.message + " in " + mess.locationdescription);
-        });
-        // print("found errors", errorMessages);
-        expect (errors.length).toBe(0);
+        // // run unparser to inspect model
+        // const unparsed: string = unparser.writeToString(model, 0, false);
+        // const path: string = "./unparsedGeneratedModel.txt";
+        // if (!fs.existsSync(path)) {
+        //     fs.writeFileSync(path, unparsed);
+        // } else {
+        //     console.log(this, "test-unparser: user file " + path + " already exists, skipping it.");
+        // }
+        // // run the validator to see if the references are ok
+        // const validator = environment.validator;
+        // const errors = validator.validate(model);
+        // const errorMessages: string[] = [];
+        // errors.forEach(mess => {
+        //     errorMessages.push(mess.message + " in " + mess.locationdescription);
+        // });
+        // // print("found errors", errorMessages);
+        // expect (errors.length).toBe(0);
     });
 
     test("names in model with 3 units of depth 2, without unit interfaces", () => {

@@ -17,14 +17,16 @@ export class PiEditUnit extends PiDefinitionElement {
 export class PiEditConcept extends PiDefinitionElement {
     languageEditor: PiEditUnit;
 
-    concept: PiElementReference<PiConcept>;
+    concept: PiElementReference<PiClassifier>;
     projection: PiEditProjection = null;
     _trigger: string = null;
+    // The name of the reference property for which a shortcut can be used
+    referenceShortcut: PiLangExp;
 
     symbol: string = null; // only for binary expressions
 
     get trigger(): string {
-        if (!!this._trigger) {
+        if (!!(this._trigger)) {
             return this._trigger;
         } else {
             return this.symbol;
@@ -102,7 +104,7 @@ export enum ListJoinType {
 export class ListJoin extends PiDefinitionElement {
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     joinType?: ListJoinType = ListJoinType.NONE;
-    joinText?: string = ", ";
+    joinText?: string = "";
 
     toString(): string {
         return `direction ${this.direction} joinType: ${this.joinType} text: "${this.joinText}"`;
@@ -110,10 +112,15 @@ export class ListJoin extends PiDefinitionElement {
 }
 
 export class PiEditPropertyProjection extends PiDefinitionElement {
-    propertyName: string = "";
+    // propertyName: string = "";
     listJoin: ListJoin;
     keyword?: string;
     expression: PiLangExp;
+
+    propertyName(): string {
+        // TODO This is a hack to skip "this." Needs to be done properly.
+        return this.expression.toPiString().substring(5);
+    }
 
     toString(): string {
         return (
@@ -143,6 +150,19 @@ export class PiEditSubProjection extends PiDefinitionElement {
         // return this.items.find((value, index, obj) => {
         //     value instanceof PiEditPropertyProjection
         // }) as PiEditPropertyProjection;
+    }
+
+    /**
+     * Returns the first literal word in the sub projection.
+     * Returns the empty string "" if there is no such literal.
+     */
+    public firstLiteral(): string {
+        for (const item of this.items) {
+            if (item instanceof PiEditProjectionText) {
+                return item.text.trim();
+            }
+        }
+        return "";
     }
 
     // TODO what about sub-sub-sub... projections: will they all have one language element?

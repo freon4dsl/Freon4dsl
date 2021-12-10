@@ -1,32 +1,38 @@
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../language/";
 import { Box, AliasBox } from "./internal";
 
-type BoolFunctie = () => boolean;
+export type BoolFunctie = () => boolean;
+
 /**
  * Box to indent another box with parameter "indent".
  */
 export class OptionalBox extends Box {
     readonly kind = "OptionalBox";
 
-    @observable box: Box = null;
-    @observable whenNoShowingAlias: AliasBox;
-    @observable mustShow: boolean = false;
+    box: Box = null;
+    whenNoShowingAlias: AliasBox = null;
+    mustShow: boolean = false;
     condition: () => boolean;
 
-    constructor(exp: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
-        super(exp, role);
+    constructor(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string) {
+        super(element, role);
+        makeObservable(this, {
+            box: observable,
+            whenNoShowingAlias: observable,
+            mustShow: observable,
+            showByCondition: computed
+        });
         this.box = box;
         box.parent = this;
-        this.whenNoShowingAlias = new AliasBox(exp, role, aliasText);
+        this.whenNoShowingAlias = new AliasBox(element, role, aliasText);
         this.whenNoShowingAlias.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;
         this.selectable = false;
     }
 
-    @computed
     get showByCondition(): boolean {
         return this.condition();
     }
@@ -35,34 +41,34 @@ export class OptionalBox extends Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box {
-        if( this.condition()) {
-            return this.box.firstLeaf ;
+        if (this.condition() || this.mustShow) {
+            return this.box.firstLeaf;
         } else {
-            return null;
+            return this.whenNoShowingAlias;
         }
     }
 
     get lastLeaf(): Box {
-        if( this.condition()) {
-            return this.box.lastLeaf ;
+        if (this.condition() || this.mustShow) {
+            return this.box.lastLeaf;
         } else {
-            return null;
+            return this.whenNoShowingAlias;
         }
     }
 
     get firstEditableChild(): Box {
-        if( this.condition()) {
-            return this.box.firstEditableChild ;
+        if (this.condition() || this.mustShow) {
+            return this.box.firstEditableChild;
         } else {
-            return null;
+            return this.whenNoShowingAlias;
         }
     }
 
     get children(): ReadonlyArray<Box> {
-        if( this.condition()) {
+        if (this.condition()) {
             return [this.box];
         } else {
-            return [];
+            return [this.whenNoShowingAlias];
         }
     }
 }

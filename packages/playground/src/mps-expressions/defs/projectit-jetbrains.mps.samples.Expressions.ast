@@ -1,12 +1,12 @@
 language MpsExpressions // jetbrains.mps.samples.Expressions
 
 model MpsExpressionModel {
-    name: string;
+    name: identifier;
     expressions: MpsExpression[];
 }
 
 modelunit MpsExpression {
-    public name: string;
+    public name: identifier;
     expression: SimpleMathExpression;
 }
 
@@ -131,7 +131,7 @@ concept SimpleMathTypedVarDeclaration  base SimpleMathVarDeclaration {
 }
 
 interface INamedConcept {
-	name: string;
+	name: identifier;
 
 }
 

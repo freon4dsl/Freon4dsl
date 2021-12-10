@@ -1,8 +1,10 @@
 editor XXX for language octopus
 
+// reference-separator [.]
+
 UmlPart {
     @projection normal
-        [${self.packages}]
+        [${self.umlPackage}]
 }
 
 // the uml concepts
@@ -13,35 +15,38 @@ Association {
 
 AssociationClass {
     @projection normal
-        [${self.visibility} <associationclass> ${self.name}
+        [[?${self.visibility}] <associationclass> ${self.name}
         ${self.end1} <-> ${self.end2}
-        <attributes>
-        ${self.attributes @vertical @terminator [;] }
-        [?<operations> ${self.operations @vertical @terminator [;] }]
+        [?<attributes> ${self.attributes @vertical @separator [\n]}]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
         [?<states> ${self.states @vertical @terminator [;] }]
+        [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <endassociationclass>
         ]
 }
 
 AssociationEnd {
     @projection normal
-        [${self.visibility} ${self.baseType}.${self.name}${self.multiplicity}]
+        [[?${self.visibility}] ${self.baseType}.${self.name}${self.multiplicity}]
 }
 
 Attribute {
     @projection normal
-        [${self.visibility} ${self.name}[?${self.multiplicity}] : ${self.type}]
+        [[?${self.visibility}] ${self.name}[?${self.multiplicity}] : ${self.type} ;
+            [?init ${self.init}]
+            [?derive ${self.derive}]
+        ]
 }
 
 UmlClass {
     @projection normal
-        [${self.visibility} [?${self.isAbstract @keyword [<abstract>]}] <class> ${self.name}
+        [[?${self.visibility}] [?${self.isAbstract @keyword [<abstract>]}] <class> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         [?<implements> ${self.interfaces @horizontal @separator [, ] }]
-        <attributes>
-        ${self.attributes @vertical @terminator [;] }
-        <operations>
-        ${self.operations @vertical @terminator [;] }
+        [?<attributes> ${self.attributes @vertical @terminator [\n] }]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
+        [?<states> ${self.states @vertical @terminator [;] }]
+        [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <endclass>
         ]
 }
@@ -63,19 +68,19 @@ UmlClass {
 //}
 DataType {
     @projection normal
-        [${self.visibility} <datatype> ${self.name}
+        [[?${self.visibility}] <datatype> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         [?<implements> ${self.interfaces @horizontal @separator [, ] }]
-        <attributes>
-        ${self.attributes @vertical @terminator [;] }
-        [?<operations> ${self.operations @vertical @terminator [;] }]
+        [?<attributes> ${self.attributes @vertical @terminator [\n] }]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
+        [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <enddatatype>
         ]
 }
 
 EnumerationType {
     @projection normal
-        [${self.visibility} <enumeration> ${self.name}
+        [[?${self.visibility}] <enumeration> ${self.name}
         <values> ${self.literals @vertical @terminator [;] }
         <endenumeration>
         ]
@@ -92,10 +97,11 @@ ImportedElement { // implements IModelElement {
 
 UmlInterface  {
     @projection normal
-        [${self.visibility} <interface> ${self.name}
+        [[?${self.visibility}] <interface> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
-        <operations>
-        ${self.operations @vertical @terminator [;] }
+        [?<attributes> ${self.attributes @vertical @terminator [\n]}]
+        [?<operations> ${self.operations @vertical @terminator [\n] }]
+        [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <endinterface>
         ]
 }
@@ -106,7 +112,10 @@ MultiplicityKind {
 
 Operation {
     @projection normal
-    [${self.visibility} ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}]]
+    [[?${self.visibility}] ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}] ;
+        [?${self.pre @vertical @terminator [\n]}]
+        [?${self.post @vertical @terminator [\n]}]
+    ]
 }
 
 UmlPackage {
@@ -123,12 +132,25 @@ UmlPackage {
 
 Parameter {
     @projection normal
-        [${self.directionKind} ${self.name} : ${self.type}]
+        [[?${self.directionKind}] ${self.name} : ${self.type}]
 }
 
 PathName {
     @projection normal
         [${self.names @horizontal @separator [::] }]
+}
+
+OclPostStatement {
+    @projection normal
+        [post [?${self.name} :] ${self.expr}]
+}
+OclPreStatement {
+    @projection normal
+    [pre [?${self.name} :] ${self.expr}]
+}
+OclStatement {
+    @projection normal
+    [[?${self.name} :] ${self.expr}]
 }
 
 //concept PrimitiveType base DataType {
@@ -158,7 +180,7 @@ PathName {
 //    isIteratorVar: boolean;
 //}
 //VisibilityKind {
-//    @projection normal [${self.visibility}]
+//    @projection normal [[?${self.visibility}]]
 //}
 // for limited concepts
 VisibilityKind {

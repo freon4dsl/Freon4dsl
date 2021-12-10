@@ -1,7 +1,16 @@
-import { PiClassifier, PiInterface, PiLangElement, PiPrimitiveProperty, PiProperty } from "../languagedef/metalanguage/";
-import { PiConcept, PiConceptProperty } from "../languagedef/metalanguage/";
+import {
+    PiClassifier,
+    PiConcept,
+    PiConceptProperty,
+    PiInterface,
+    PiLanguage,
+    PiPrimitiveProperty,
+    PiProperty
+} from "../languagedef/metalanguage/";
 import { PiInstanceExp, PiLangAppliedFeatureExp, PiLangExp, PiLangFunctionCallExp, PiLangSelfExp } from "../languagedef/metalanguage";
 import { PiElementReference } from "../languagedef/metalanguage/PiElementReference";
+import { PiPrimitiveType } from "../languagedef/metalanguage/PiLanguage";
+import { Names } from "./Names";
 
 /**
  * This function sorts the list of PiClasses in such a way that
@@ -137,7 +146,7 @@ function isReferenceProperty(exp: PiLangAppliedFeatureExp) {
  * @param con
  */
 export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
-    return con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
+    return con.allPrimProperties().find(p => p.name === "name" && p.type.referred === PiPrimitiveType.identifier);
 }
 
 /**
@@ -147,9 +156,61 @@ export function findNameProp(con: PiClassifier): PiPrimitiveProperty {
  */
 export function hasNameProperty (piClassifier: PiClassifier): boolean {
     if (!!piClassifier) {
-        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.primType === "string") ) {
+        if (piClassifier.allPrimProperties().some(prop => prop.name === "name" && prop.type.referred === PiPrimitiveType.identifier) ) {
             return true;
         }
     }
     return false;
+}
+
+/**
+ * Returns the type of the property 'prop' without taking into account 'isList' or 'isPart'
+ */
+export function getBaseTypeAsString(property: PiProperty): string {
+    const myType = property.type.referred;
+    if (property instanceof PiPrimitiveProperty) {
+        if (myType === PiPrimitiveType.identifier) {
+            return "string";
+        } else if (myType === PiPrimitiveType.string) {
+            return "string";
+        } else if (myType === PiPrimitiveType.boolean) {
+            return "boolean";
+        } else if (myType === PiPrimitiveType.number) {
+            return "number";
+        }
+        return "any";
+    } else {
+        return Names.classifier(myType);
+    }
+}
+
+/**
+ * Returns the type of the property 'prop' TAKING INTO ACCOUNT 'isList' or 'isPart'
+ */
+export function getTypeAsString(property: PiProperty): string {
+    let type: string = getBaseTypeAsString(property);
+    if (!property.isPart) {
+        type = `${Names.PiElementReference}<${type}>`;
+    }
+    if (property.isList) {
+        type = type + '[]';
+    }
+    return type;
+}
+
+export function createImports(language: PiLanguage): string {
+    // sort all names alphabetically
+    let tmp: string[] = [];
+    language.concepts.map(c =>
+        tmp.push(Names.concept(c))
+    );
+    language.units.map(c =>
+        tmp.push(Names.classifier(c))
+    );
+    tmp.push(Names.classifier(language.modelConcept));
+    tmp = tmp.sort();
+
+    return `${tmp.map(c =>
+        `${c}`
+    ).join(", ")}`;
 }

@@ -1,4 +1,4 @@
-<svelte:options accessors={true}/>
+<svelte:options accessors={true} />
 
 <script lang="ts">
     import { autorun } from "mobx";
@@ -18,32 +18,36 @@
         PiEditor,
         toPiKey,
         isAliasTextBox,
-        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox
+        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE, styleToCSS, conceptStyle, SelectBox
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
 
     const LOGGER = new PiLogger("TextComponent");
-
-    export let textBox = new TextBox(null, "role:", () => "Editable textbox", (v: string) => {});
+    // Is this component currently being edited by the user?
+    export let isEditing: boolean = false;
+    export let textBox = new TextBox(null, "role:", () => "Editable textbox", (v: string) => {
+    });
     export let editor: PiEditor;
-    export let textOnScreen: string;
 
     export let getText = (): string => {
         // TODO loopt eentje achter tijdens onKeyDown, want we kunnen de key nog negeren.
-        return textOnScreen;
-    }
+        return currentText();
+    };
 
-    export const setFocus =  async () => {
+    export const setFocus = async () => {
         logBox("setFocus in setFocus");
-        if( document.activeElement === element){
+        if (hasFocus()) {
             LOGGER.log("    has focus already");
             return;
         }
         element.focus();
-        setCaretPosition(textBox.caretPosition)
-        // console.log("windows.focus is on " + window.document.activeElement)
+        setCaretPosition(textBox.caretPosition);
     };
+
+    function hasFocus(): boolean {
+        return document.activeElement === element;
+    }
 
     /**
      * Decides whether the default behavior of the event should be ignored
@@ -61,7 +65,7 @@
      * @param e
      */
     const shouldPropagate = (e: KeyboardEvent): boolean => {
-        if(isPrintable(e)){
+        if (isPrintable(e)) {
             return true;
         }
         if (isMetaKey(e)) {
@@ -72,23 +76,42 @@
         if (e.key === KEY_ENTER || e.key === KEY_DELETE || e.key === KEY_TAB) {
             return true;
         }
-        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN) {
+        if (e.key === KEY_ARROW_UP || e.key === KEY_ARROW_DOWN || e.key === KEY_ESCAPE) {
             return true;
         }
         const caretPosition = getCaretPosition();
         if (e.key === KEY_ARROW_LEFT || e.key === KEY_BACKSPACE) {
             return caretPosition <= 0;
         } else if (e.key === KEY_ARROW_RIGHT || e.key === KEY_DELETE) {
-            return caretPosition >= textOnScreen.length;
+            return caretPosition >= currentLength();
         } else {
             return false;
         }
     };
 
-    onMount( () => {
-        LOGGER.log("onMount for role ["+ textBox.role + "]")
+    function currentLength(): number {
+        if (!!element && !!element.innerText) {
+            return element.innerText.length;
+        } else {
+            return 0;
+        }
+    }
+
+    function currentText(): string {
+        if (!!element && !!element.innerText) {
+            return element.innerText;
+        } else {
+            return "";
+        }
+    }
+
+    let originalText: string;
+
+    onMount(() => {
+        LOGGER.log("onMount for role [" + textBox.role + "]");
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
+        originalText = textBox.getText();
     });
 
     /**
@@ -96,9 +119,10 @@
      * @param event
      */
     const onKeyDown = async (event: KeyboardEvent) => {
-        LOGGER.log("onKeyDown: ["+ event.key + "] alt [" + event.ctrlKey+  "] shift [" + event.shiftKey + "] key [" + event.key +"]");
+        LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.ctrlKey + "] shift [" + event.shiftKey + "] key [" + event.key + "]");
+        isEditing = true;
         if (event.key === KEY_DELETE) {
-            if (textOnScreen === "") {
+            if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     await editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
@@ -109,7 +133,7 @@
             return;
         }
         if (event.key === KEY_BACKSPACE) {
-            if (textOnScreen === "") {
+            if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
                     await editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
@@ -118,18 +142,18 @@
             }
         }
         if (!shouldPropagate(event)) {
-            LOGGER.log("StopPropagation")
+            LOGGER.log("StopPropagation");
             event.stopPropagation();
         }
         if (shouldIgnore(event)) {
             event.preventDefault();
         }
         const piKey = toPiKey(event);
-        if (isMetaKey(event)) {
+        if (isMetaKey(event) || event.key === KEY_ENTER) {
             const isKeyboardShortcutForThis = await PiUtils.handleKeyboardShortcut(piKey, textBox, editor);
             if (!isKeyboardShortcutForThis) {
                 LOGGER.log("Key not handled for element " + textBox.element);
-                if(event.key === KEY_ENTER){
+                if (event.key === KEY_ENTER) {
                     LOGGER.log("   ENTER, so propagate");
                     return;
                 }
@@ -161,7 +185,7 @@
                 LOGGER.log("setCaretPosition ERROR");
                 break;
         }
-        logBox("setFocus in setCaret")
+        logBox("setFocus in setCaret");
         // element.focus();
     };
 
@@ -180,11 +204,11 @@
             return;
         }
         try {
-            if (position > textOnScreen.length) {
+            if (position > currentLength()) {
                 // TODO Fix the error below
                 console.error("ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR ERROR; ");
-                console.error("TextComponent.setCaretPosition position: " + position + " length: " + textOnScreen.length);
-                position = element.innerText.length;
+                console.error("TextComponent.setCaretPosition position: " + position + " length: " + currentLength());
+                position = currentLength();
             }
             clearSelection();
             const range = document.createRange();
@@ -195,7 +219,7 @@
             }
             range.collapse(true);
             window.getSelection().addRange(range);
-            LOGGER.log("New position is: "+ position)
+            LOGGER.log("New position is: " + position);
             textBox.caretPosition = position;
         } catch (e) {
             console.error("TextComponent.setCaretPosition ERROR: " + e.toString());
@@ -210,10 +234,10 @@
         logBox("onClick before");
         textBox.caretPosition = getCaretPosition();
         logBox("onClick after");
-    }
+    };
 
     function logBox(message: string) {
-        LOGGER.log(message + ": box[" + textBox.role + ", " + textBox.caretPosition+ "]");
+        LOGGER.log(message + ": box[" + textBox.role + ", " + textBox.caretPosition + "]");
     }
 
     /**
@@ -222,6 +246,7 @@
      */
     const onKeyPress = async (event: KeyboardEvent) => {
         LOGGER.log("onKeyPress: " + event.key);
+        isEditing = true;
         const insertionIndex = getCaretPosition();
         switch (textBox.keyPressAction(textBox.getText(), event.key, insertionIndex)) {
             case KeyPressAction.OK:
@@ -240,7 +265,7 @@
                     LOGGER.log("     is an alias box");
                     (editor.selectedBox.parent as AliasBox).triggerKeyPressEvent(event.key);
                 } else {
-                    LOGGER.log("     is NOT an alis box")
+                    LOGGER.log("     is NOT an alis box");
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -259,13 +284,13 @@
     };
 
     let text: string = textBox.getText();
-    textOnScreen = text;
     let element: HTMLDivElement;
     let placeholder: string;
 
     const onInput = async (e: InputEvent) => {
-        let value = (e.target as HTMLElement).innerText;
-        LOGGER.log("onInput data" + e.data + ":  textOnScreen [" + textOnScreen + "] box text ["+ textBox.getText() + "]");
+        isEditing = true;
+        let value = currentText();
+        console.log("onInput data" + e.data + ":  current [" + currentText() + "] box text [" + textBox.getText() + "]");
         textBox.caretPosition = getCaretPosition();
         textBox.setText(value);
         editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
@@ -273,13 +298,17 @@
             EVENT_LOG.info(this, "delete empty text");
             await editor.deleteBox(textBox);
         }
-        LOGGER.log("END END text ["+ textOnScreen + "]");
+        LOGGER.log("END END text [" + currentText() + "]");
     };
 
-    afterUpdate(  () => {
-        UPDATE_LOGGER.log("TextComponent After update [" + textOnScreen + "] boxtext [" + textBox.getText() + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
+    afterUpdate(() => {
+        UPDATE_LOGGER.log("TextComponent update [" + isEditing + "] [" + currentText() + "] getText [" + textBox.getText() + "] text [" + text + "] box [" + textBox.role + "] caret [" + textBox.caretPosition + "]");
         textBox.setFocus = setFocus;
         textBox.setCaret = setCaret;
+        // If being edited, do not set the value, let the user type whatever (s)he wants
+        if (!isEditing) {
+            text = textBox.getText();
+        }
     });
 
     export const getCaretPosition = (): number => {
@@ -288,46 +317,66 @@
         return window.getSelection().getRangeAt(0).startOffset;
     };
 
-    autorun( () => {
-        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text ["+ text + "] textOnScreen ["+ textOnScreen +"] textBox ["+ textBox.getText() + "]")
-        placeholder = textBox.placeHolder
+    let textStyle: string = "";
+
+    autorun(() => {
+        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "]");
+        placeholder = textBox.placeHolder;
+        // If being edited, do not set the value, let the user type whatever (s)he wants
+        if (!isEditing) {
+            text = textBox.getText();
+        }
+        // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
+        const boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+        textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), boxType, textBox.style));
+        // if (textBox.getText() === "appel") {
+        //     textStyle += "--theme-colors-bg_text_box: lightgrey;"
+        // }
+
+        textBox.setFocus = setFocus;
     });
 
-    const onFocus = async (e: FocusEvent) => {
-        FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);
-    }
-    const onBlurHandler = async (e: FocusEvent) => {
-        FOCUS_LOGGER.log("TextComponent.onBlur for box " + textBox.role);
-    }
+    // const onFocus = async (e: FocusEvent) => {
+    //     FOCUS_LOGGER.log("TextComponent.onFocus for box " + textBox.role);
+    // };
+    // const onBlurHandler = async (e: FocusEvent) => {
+    //     FOCUS_LOGGER.log("TextComponent.onBlur for box " + textBox.role);
+    // };
 
 </script>
 
-<div    class={"text"}
-        tabindex="0"
-        data-placeholdertext={placeholder}
-        on:keypress={onKeyPress}
-        on:keydown={onKeyDown}
-        on:focus={onFocus}
-        on:blur={onBlurHandler}
-        on:click={onClick}
-        on:input={onInput}
-        contenteditable="true"
-        bind:textContent={textOnScreen}
-        bind:this={element}
->
-    {text}
-</div>
+<span class={"text"}
+      style="{textStyle}"
+      tabindex="0"
+      data-placeholdertext={placeholder}
+      on:keypress={onKeyPress}
+      on:keydown={onKeyDown}
+      on:click={onClick}
+      on:input={onInput}
+      contenteditable="true"
+      bind:innerHTML={text}
+      bind:this={element}
+></span>
 
 <style>
     .text:empty:before {
         content: attr(data-placeholdertext);
-        color: var(--theme-colors-color_empty_before_text_box);
-        background-color: var(--theme-colors-bg_empty_before_text_box);
-        opacity: 70%;
+        color: inherit;
+        background-color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        padding: inherit;
+        margin: inherit;
+        display: inherit;
+        white-space: inherit;
+        border: inherit;
+        opacity: 50%;
     }
 
     .text {
-        background-color: var(--theme-colors-bg_text_box);
+        /*background-color: var(--theme-colors-bg_text_box);*/
+        content: attr(data-placeholdertext);
         color: var(--theme-colors-color_text_box);
         padding: 3px;
         white-space: normal;

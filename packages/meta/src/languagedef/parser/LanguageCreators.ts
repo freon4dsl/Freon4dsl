@@ -7,10 +7,9 @@ import {
     PiInstance,
     PiExpressionConcept,
     PiBinaryExpressionConcept,
-    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveType
+    PiLimitedConcept, PiConcept, PiProperty, PiClassifier, PiPrimitiveValue, PiPrimitiveType, PiModelDescription, PiUnitDescription
 } from "../metalanguage/PiLanguage";
 import { PiElementReference } from "../metalanguage/PiElementReference";
-import { ParseLocation } from "../../utils";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
@@ -21,8 +20,12 @@ export function setCurrentFileName(newName: string) {
 
 let nonFatalParseErrors: string[] = [];
 
-export function getNonFatalParseErrors() : string[] {
+export function getNonFatalParseErrors(): string[] {
     return nonFatalParseErrors;
+}
+
+export function cleanNonFatalParseErrors() {
+    nonFatalParseErrors = [];
 }
 
 export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
@@ -32,9 +35,23 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
         result.name = data.name;
     }
     if (!!data.concepts) {
+        let hasModel: boolean = false;
         for (const con of data.concepts) {
             if (con instanceof PiInterface) {
                 result.interfaces.push(con);
+            } else if (con instanceof PiModelDescription) {
+                if (hasModel) {
+                    let location: string = `[no location]`;
+                    if (!!con.location) {
+                        location = `[file: ${currentFileName}, line: ${con.location.start.line}, column: ${con.location.start.column}]`;
+                    }
+                    nonFatalParseErrors.push(`There may be only one model in the language definition ${location}.`)
+                } else {
+                    hasModel = true;
+                    result.modelConcept = con;
+                }
+            } else if (con instanceof PiUnitDescription) {
+                result.units.push(con);
             } else {
                 result.concepts.push(con);
             }
@@ -49,11 +66,58 @@ export function createLanguage(data: Partial<PiLanguage>): PiLanguage {
     return result;
 }
 
+export function createModel(data: Partial<PiModelDescription>): PiModelDescription {
+    // console.log("createModel " + data.name);
+    const result = new PiModelDescription();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.properties) {
+        for (const prop of data.properties) {
+            if (prop instanceof PiPrimitiveProperty) {
+                result.primProperties.push(prop);
+            } else {
+                result.properties.push(prop);
+            }
+            prop.owningConcept = result;
+        }
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
+export function createUnit(data: Partial<PiUnitDescription>): PiUnitDescription {
+    // console.log("createUnit " + data.name);
+    const result = new PiUnitDescription();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.properties) {
+        for (const prop of data.properties) {
+            if (prop instanceof PiPrimitiveProperty) {
+                result.primProperties.push(prop);
+            } else {
+                result.properties.push(prop);
+            }
+            prop.owningConcept = result;
+        }
+    }
+    if (!!data.fileExtension) {
+        result.fileExtension = data.fileExtension;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
 export function createConcept(data: Partial<PiConcept>): PiConcept {
-    // console.log("createConcept " + data.name);
+    // console.log("createConceptOrUnit " + data.name);
     const result = new PiConcept();
-    result.isModel = !!data.isModel;
-    result.isUnit = !!data.isUnit;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
@@ -74,7 +138,7 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
     if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
         const nameProperty = new PiPrimitiveProperty();
         nameProperty.name = "name";
-        nameProperty.primType = "string";
+        nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
         nameProperty.isPart = true;
         nameProperty.isList = false;
         nameProperty.isOptional = false;
@@ -151,7 +215,6 @@ export function createBinaryExpressionConcept(data: Partial<PiBinaryExpressionCo
     // console.log("createBinaryExpressionConcept " + data.name);
     const result = new PiBinaryExpressionConcept();
     result.isPublic = !!data.isPublic;
-    result.isModel = !!data.isModel;
     result.isAbstract = !!data.isAbstract;
     if ( !!data.priority ) {
         result.priority = data.priority;
@@ -164,29 +227,9 @@ export function createExpressionConcept(data: Partial<PiExpressionConcept>): PiE
     // console.log("createExpressionConcept " + data.name);
     const result = new PiExpressionConcept();
     result.isPublic = !!data.isPublic;
-    result.isModel = !!data.isModel;
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
-}
-
-/**
- * Class ParsedProperty is used to parsed either a PiPrimitiveProperty or
- * a PiConceptProperty. The difference between the two is being made in the following
- * functions.
- * This enables us to give the user non-fatal parse errors.
- */
-class ParsedProperty extends PiProperty {
-    typeName: string;
-    initialValue: PiPrimitiveType;
-    // inherited from PiProperty:
-        // isPublic: boolean;
-        // isOptional: boolean;
-        // isList: boolean;
-        // isPart: boolean; // if false then it is a reference property
-        // type: PiElementReference<PiClassifier>;
-        // owningConcept: PiClassifier;
-        // location: ParseLocation;
 }
 
 function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty) {
@@ -202,42 +245,46 @@ function createCommonPropertyAttrs(data: Partial<PiProperty>, result: PiProperty
     }
 }
 
-export function createPartOrPrimProperty(data: Partial<ParsedProperty>): PiProperty {
+// we parse all props as primitive properties because they can have an extra attribute: 'initialValue'
+export function createPartOrPrimProperty(data: Partial<PiPrimitiveProperty>): PiProperty {
     // console.log("createPartOrPrimProperty " + data.name + " "+ data.type + " "+ data.typeName);
-    let result1: PiProperty;
-    // Note that data.type may not be set!
-    // In that case the property is primitive and we have to use data.typeName.
-    // In the following we ignore data.initialValue is ignored for Part Properties (i.e. props where the type is a Concept).
+    let result: PiProperty;
+    // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
     // But we do add an error message to the list of non-fatal parse errors.
     // This list of errors is added to the list of checking errors in the parse functions in PiParser.
     if (!!data.type) {
-        const result = new PiConceptProperty();
+        // NOTE that the following check can NOT be '.type.referred === PiPrimitiveType.identifier' etc.
+        // '.type.referred' is determine by the scoper, which does not function when not all concepts are known AND
+        // the language attribute of the concepts has been set. The latter is done in 'createLanguage', which is called
+        // after this function is called!!
+        if (data.type.name === "string" || data.type.name === "boolean" || data.type.name === "number" || data.type.name === "identifier") {
+            const primitiveProperty = new PiPrimitiveProperty();
+            // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
+            // we are not interested in its value, only whether it is present
+            if (data.initialValue !== null && data.initialValue !== undefined) {
+                if (Array.isArray(data.initialValue)) {
+                    primitiveProperty.initialValueList = data.initialValue;
+                } else {
+                    primitiveProperty.initialValue = data.initialValue;
+                }
+            }
+            result = primitiveProperty;
+        } else {
+            const conceptProperty = new PiConceptProperty();
+            // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
+            // we are not interested in its value, only whether it is present
+            if (data.initialValue !== null && data.initialValue !== undefined) {
+                nonFatalParseErrors.push(`A non-primitive property may not have an initial value ` +
+                    `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
+            }
+            result = conceptProperty;
+        }
         result.type = data.type;
         result.type.owner = result;
-        // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
-        // we are not interested in its value, only whether it is present
-        if (data.initialValue !== null && data.initialValue !== undefined) {
-            nonFatalParseErrors.push(`A non-primitive property may not have a initial value ` +
-            `[file: ${currentFileName}, line: ${data.location.start.line}, column: ${data.location.start.column}].`);
-        }
-        result1 = result;
-    } else if (!!data.typeName && (data.typeName === "string" || data.typeName === "boolean" || data.typeName === "number")) {
-        const result = new PiPrimitiveProperty();
-        result.primType = data.typeName;
-        // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
-        // we are not interested in its value, only whether it is present
-        if (data.initialValue !== null && data.initialValue !== undefined) {
-            if (Array.isArray(data.initialValue)) {
-                result.initialValueList = data.initialValue;
-            } else {
-                result.initialValue = data.initialValue;
-            }
-        }
-        result1 = result;
     }
-    result1.isPart = true;
-    createCommonPropertyAttrs(data, result1);
-    return result1;
+    result.isPart = true;
+    createCommonPropertyAttrs(data, result);
+    return result;
 }
 
 export function createReferenceProperty(data: Partial<PiConceptProperty>): PiConceptProperty {
@@ -252,29 +299,34 @@ export function createReferenceProperty(data: Partial<PiConceptProperty>): PiCon
     return result;
 }
 
-export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
+export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
     // console.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
-    if (!!data.location) {
+    let result: PiElementReference<PiClassifier> = null;
+    if (!!data.name) {
+        const type: string = data.name;
+        if (type === "string") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.string, "PiPrimitiveType");
+        } else if (type === "boolean") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.boolean, "PiPrimitiveType");
+        } else if (type === "number") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.number, "PiPrimitiveType");
+        } else if (type === "identifier") {
+            result = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+        } else {
+            result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
+        }
+    }
+    if (!!result && !!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    return result;
-}
 
-export function createClassifierReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-    // console.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiConcept>(data.name, "PiClassifier");
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
     return result;
 }
 
 export function createInterfaceReference(data: Partial<PiElementReference<PiInterface>>): PiElementReference<PiInterface> {
-    // console.log("createClassifierReference " + data.name);
-    const result = PiElementReference.createNamed<PiInterface>(data.name, "PiInterface");
+    // console.log("createInterfaceReference " + data.name);
+    const result = PiElementReference.create<PiInterface>(data.name, "PiInterface");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

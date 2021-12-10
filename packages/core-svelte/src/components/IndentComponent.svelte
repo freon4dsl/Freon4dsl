@@ -7,7 +7,7 @@
     export let indentBox: IndentBox;
     export let editor: PiEditor;
 
-    // style={{"marginLeft": indentBox.indent * 8 + "px" }}
+    let style=`margin-left: ${indentBox.indent * 8}px;`;
 
     autorun( () => {
        indentBox.indent;
@@ -25,6 +25,7 @@
 <div
     class="indentStyle"
     tabIndex={0}
+    style="{style}"
     on:focus={onFocus}
     on:blur={onBlur}
 >

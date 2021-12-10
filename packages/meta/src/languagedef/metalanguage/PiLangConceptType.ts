@@ -5,6 +5,8 @@ export type PiLangConceptType =
     | "PiClassifier"
     | "PiInterface"
     | "PiConcept"
+    | "PiModelDescription"
+    | "PiUnitDescription"
     | "PiExpressionConcept"
     | "PiBinaryExpressionConcept"
     | "PiLimitedConcept"
@@ -14,4 +16,5 @@ export type PiLangConceptType =
     | "PiInstance"
     | "PiPropertyInstance"
     | "PiLangFunction"
-    | "PiLangParameter";
+    | "PiLangParameter"
+    | "PiPrimitiveType";

@@ -33,7 +33,7 @@ export function setCurrentFileName(newName: string) {
 export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
     let result: PiElementReference<PiConcept>;
     if (!!data.name) {
-        result = PiElementReference.createNamed<PiConcept>(data.name, "PiConcept");
+        result = PiElementReference.create<PiConcept>(data.name, "PiConcept");
     }
     if (!!data.location) {
         result.location = data.location;
@@ -48,6 +48,9 @@ export function createConceptEditor(data: Partial<PiEditConcept>): PiEditConcept
 
     if (!!data.trigger) {
         result.trigger = data.trigger;
+    }
+    if (!!data.referenceShortcut) {
+        result.referenceShortcut = data.referenceShortcut;
     }
     if (!!data.symbol) {
         result.symbol = data.symbol;
@@ -165,9 +168,9 @@ export function createText(data: string): PiEditProjectionText {
 export function createPropertyProjection(data: Partial<PiEditPropertyProjection>): PiEditPropertyProjection {
     // console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listJoin + "]");
     const result = new PiEditPropertyProjection();
-    if (!!data.propertyName) {
-        result.propertyName = data.propertyName;
-    }
+    // if (!!data.propertyName) {
+    //     result.propertyName = data.propertyName;
+    // }
     if (!!data.listJoin) {
         result.listJoin = data.listJoin;
     }

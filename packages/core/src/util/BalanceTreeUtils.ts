@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { PiLogger, PiUtils } from "./internal";
 import { Box, PiEditor } from "../editor";
 import { isPiBinaryExpression, PiBinaryExpression, PiElement, PiExpression, isPiExpression } from "../language";
@@ -10,7 +10,6 @@ export const BEFORE_BINARY_OPERATOR = "binary-pre";
 export const AFTER_BINARY_OPERATOR = "binary-post";
 export const LEFT_MOST = "exp-left";
 export const RIGHT_MOST = "exp-right";
-export const EXPRESSION_PLACEHOLDER = "expression-placeholder";
 export const BINARY_EXPRESSION = "binary-expression";
 export const EXPRESSION = "expression";
 export const EXPRESSION_SYMBOL = "symbol";
@@ -29,6 +28,19 @@ export type Selected = {
  * Class with functions to balance binary trees according to their priorities.
  */
 class BTree {
+
+    constructor() {
+        makeObservable(this, {
+           balanceTree: action,
+           setLeftExpression: action,
+           setRightExpression: action,
+           insertBinaryExpression: action
+        });
+    }
+    /**
+     * Is `exp` the rightmost child in an expression tree?
+     * @param exp
+     */
     isRightMostChild(exp: PiExpression): boolean {
         PiUtils.CHECK(!exp.piIsBinaryExpression(), "isRightMostChild expects a non-binary expression");
         let currentExp = exp;
@@ -44,6 +56,10 @@ class BTree {
         return true;
     }
 
+    /**
+     * Is `exp` the leftmost child in an expression tree?
+     * @param exp
+     */
     isLeftMostChild(exp: PiExpression): boolean {
         PiUtils.CHECK(!exp.piIsBinaryExpression(), "isLeftMostChild expects a non-binary expression");
         let currentExp = exp;
@@ -59,23 +75,34 @@ class BTree {
         return true;
     }
 
-    @action
-    setRightExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
-        const right = exp.piRight();
-        exp.piSetRight(newExp);
+    /**
+     * Set `newExp` as the right child of `exp`.
+     * Take care of the existing right child and rebalance the expression tree according to the priorities.
+     * @param binaryExp
+     * @param newExp
+     * @param editor
+     */
+    setRightExpression(binaryExp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
+        const right = binaryExp.piRight();
+        binaryExp.piSetRight(newExp);
         newExp.piSetRight(right);
         this.balanceTree(newExp, editor);
     }
 
-    @action
-    setLeftExpression(exp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
-        const left = exp.piLeft();
-        exp.piSetLeft(newExp);
+    /**
+     * Set `newExp` as the left child of `exp`.
+     * Take care of the existing right child and rebalance the expression tree according to the priorities.
+     * @param binaryExp
+     * @param newExp
+     * @param editor
+     */
+    setLeftExpression(binaryExp: PiBinaryExpression, newExp: PiBinaryExpression, editor: PiEditor) {
+        const left = binaryExp.piLeft();
+        binaryExp.piSetLeft(newExp);
         newExp.piSetLeft(left);
         this.balanceTree(newExp, editor);
     }
 
-    @action
     insertBinaryExpression(newBinExp: PiBinaryExpression, box: Box, editor: PiEditor): Selected | null {
         LOGGER.log("insertBinaryExpression for " + box.element);
         let selectedElement: Selected | null = null;
@@ -112,11 +139,6 @@ class BTree {
                 newBinExp.piSetRight(right);
                 this.balanceTree(newBinExp, editor);
                 break;
-            case EXPRESSION_PLACEHOLDER:
-                PiUtils.replaceExpression(exp, newBinExp, editor);
-                selectedElement = { element: newBinExp, boxRoleToSelect: PI_BINARY_EXPRESSION_LEFT };
-                this.balanceTree(newBinExp, editor);
-                break;
             default:
                 throw Error("Cannot insert binary expression");
         }
@@ -127,55 +149,55 @@ class BTree {
      * Balances the tree according to operator precedence.
      * Works when `exp` has just been added to the tree.
      */
-    balanceTree(exp: PiBinaryExpression, editor: PiEditor) {
-        const expContainer = exp.piContainer();
-        const left = exp.piLeft();
+    balanceTree(binaryExp: PiBinaryExpression, editor: PiEditor) {
+        const expContainer = binaryExp.piContainer();
+        const left = binaryExp.piLeft();
         if (isPiBinaryExpression(left)) {
             LOGGER.log("Rule 1: prio parent <= prio left");
-            if (exp.piPriority() > left.piPriority()) {
+            if (binaryExp.piPriority() > left.piPriority()) {
                 const leftRight = left.piRight();
-                left.piSetRight(exp);
-                exp.piSetLeft(leftRight);
+                left.piSetRight(binaryExp);
+                binaryExp.piSetLeft(leftRight);
                 PiUtils.setContainer(left, expContainer, editor);
-                this.balanceTree(exp, editor);
+                this.balanceTree(binaryExp, editor);
                 return;
             }
         }
-        const right = exp.piRight();
+        const right = binaryExp.piRight();
         if (isPiBinaryExpression(right)) {
             LOGGER.log("Rule 2: prio parent < prio right");
-            if (exp.piPriority() >= right.piPriority()) {
+            if (binaryExp.piPriority() >= right.piPriority()) {
                 const rightLeft = right.piLeft();
-                right.piSetLeft(exp);
-                exp.piSetRight(rightLeft);
+                right.piSetLeft(binaryExp);
+                binaryExp.piSetRight(rightLeft);
                 PiUtils.setContainer(right, expContainer, editor);
-                this.balanceTree(exp, editor);
+                this.balanceTree(binaryExp, editor);
                 return;
             }
         }
         if (expContainer && isPiBinaryExpression(expContainer.container)) {
             const parent = expContainer.container;
-            if (parent.piLeft() === exp) {
+            if (parent.piLeft() === binaryExp) {
                 LOGGER.log("Rule 3: exp is a left child");
-                if (exp.piPriority() < parent.piPriority()) {
+                if (binaryExp.piPriority() < parent.piPriority()) {
                     const parentProContainer = parent.piContainer();
-                    const expRight = exp.piRight();
-                    exp.piSetRight(parent);
+                    const expRight = binaryExp.piRight();
+                    binaryExp.piSetRight(parent);
                     parent.piSetLeft(expRight);
-                    PiUtils.setContainer(exp, parentProContainer, editor);
-                    this.balanceTree(exp, editor);
+                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
+                    this.balanceTree(binaryExp, editor);
                     return;
                 }
             } else {
-                PiUtils.CHECK(parent.piRight() === exp, "should be the right child");
+                PiUtils.CHECK(parent.piRight() === binaryExp, "should be the right child");
                 LOGGER.log("Rule 4: exp is a right child, parent is " + parent);
-                if (exp.piPriority() <= parent.piPriority()) {
+                if (binaryExp.piPriority() <= parent.piPriority()) {
                     const parentProContainer = parent.piContainer();
-                    const expLeft = exp.piLeft();
-                    exp.piSetLeft(parent);
+                    const expLeft = binaryExp.piLeft();
+                    binaryExp.piSetLeft(parent);
                     parent.piSetRight(expLeft);
-                    PiUtils.setContainer(exp, parentProContainer, editor);
-                    this.balanceTree(exp, editor);
+                    PiUtils.setContainer(binaryExp, parentProContainer, editor);
+                    this.balanceTree(binaryExp, editor);
                     return;
                 }
             }

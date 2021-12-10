@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { conceptStyle, styleToCSS } from "@projectit/core";
     import type { GridBox, GridCell, PiEditor } from "@projectit/core";
     import { afterUpdate } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -21,7 +22,7 @@
     let cells: GridCell[];
     let templateColumns: string;
     let templateRows: string;
-    let broder = "red"
+    let boxStyle = ""
 
     autorun(() => {
         AUTO_LOGGER.log("GridComponent[" + notifier.dummy + "] ");
@@ -31,14 +32,14 @@
         });
         templateRows = `repeat(${showgrid.numberOfRows() - 1}, auto)`;
         templateColumns = `repeat(${showgrid.numberOfColumns() - 1}, auto)`;
+        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, gridBox.element.piLanguageConcept(), "grid", gridBox.style));
+
     });
 </script>
 <div
         style=" grid-template-columns: {templateColumns};
                 grid-template-rows: {templateRows};
-                border: blue;
-
-                border-style: dotted;
+                {boxStyle}
               "
         id={showgrid.id}
         class="maingridcomponent"
@@ -51,7 +52,7 @@
 <style>
     .maingridcomponent {
         display: inline-grid;
-        grid-gap: 0px;
+        /*grid-gap: 2px;*/
         align-items: center;
         align-content: center;
         justify-items: stretch;

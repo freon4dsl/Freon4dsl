@@ -85,9 +85,9 @@
 	import Navigator from "./main/Navigator.svelte";
 	import ErrorList from "./main/ErrorList.svelte";
 	import EditorGrid from "./main/EditorGrid.svelte";
-	import { ServerCommunication } from "./server/ServerCommunication";
 	import DeleteUnitDialog from "./menu/DeleteUnitDialog.svelte";
 	import DeleteModelDialog from "./menu/DeleteModelDialog.svelte";
+	import { serverCommunication } from "./WebappConfiguration";
 
 	const MAX_WIDTH_SMALL_VIEWPORT = 600;
 
@@ -99,7 +99,7 @@
 		onResize();
 
 		// get list of models from server
-		await ServerCommunication.getInstance().loadModelList((names: string[]) => {
+		await serverCommunication.loadModelList((names: string[]) => {
 			if (names.length > 0) {
 				$modelNames = names;
 			}

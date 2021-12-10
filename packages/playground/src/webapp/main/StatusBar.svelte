@@ -15,9 +15,12 @@
     <Icon class="icon">
         <svelte:component this={arrowRight} />
     </Icon>
-    box: <i>{currentBox?.role} </i>
+    box: <i>{currentBox?.role} {currentBox?.$id}</i>
     kind: <i>{currentBox?.kind} </i>
     elem: <i>{currentBox?.element?.piId()} - {currentBox?.element?.piLanguageConcept()} </i>
+    (x, y): <i>{(!!currentBox ? Math.round(currentBox.actualX + editorEnvironment.editor.scrollX)
+                + ", " + Math.round(currentBox?.actualY + editorEnvironment.editor.scrollY): "NAN")}
+    "{(isTextBox(currentBox) ? currentBox.getText() : "NotTextBox" )}"</i>
 </div>
 
 <script lang="ts">
@@ -27,7 +30,7 @@
     import error from "../assets/icons/svg/error.svg";
     import check from "../assets/icons/svg/check_circle.svg";
     import arrowRight from "../assets/icons/svg/keyboard_arrow_right.svg"
-    import { Box } from "@projectit/core";
+    import { Box, isTextBox } from "@projectit/core";
     import { autorun } from "mobx";
     import { editorEnvironment } from "../WebappConfiguration";
 

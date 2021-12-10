@@ -1,7 +1,8 @@
 import {
     PiClassifier, PiConcept, PiInterface,
-    PiLanguage
+    PiLanguage, PiPrimitiveProperty
 } from "../languagedef/metalanguage";
+import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -9,55 +10,68 @@ import {
  */
 export class Names {
     // tslint:disable-next-line:variable-name
-    public static PiNamedElement = "PiNamedElement";
+    public static PiNamedElement:string = "PiNamedElement";
     // tslint:disable-next-line:variable-name
-    public static PiElement = "PiElement";
+    public static PiElement:string = "PiElement";
     // tslint:disable-next-line:variable-name
-    public static PiExpression = "PiExpression";
+    public static PiExpression:string = "PiExpression";
     // tslint:disable-next-line:variable-name
-    public static PiBinaryExpression = "PiBinaryExpression";
+    public static PiBinaryExpression:string = "PiBinaryExpression";
     // tslint:disable-next-line:variable-name
-    public static PiScoper = "PiScoper";
+    public static PiScoper:string = "PiScoper";
     // tslint:disable-next-line:variable-name
-    public static PiTyper = "PiTyper";
+    public static PiTyper:string = "PiTyper";
     // tslint:disable-next-line:variable-name
-    public static PiValidator = "PiValidator";
+    public static PiTyperPart: string = "PiTyperPart";
     // tslint:disable-next-line:variable-name
-    public static PiStdlib = "PiStdlib";
+    public static PiValidator:string = "PiValidator";
     // tslint:disable-next-line:variable-name
-    public static PiWriter = "PiWriter";
+    public static PiStdlib:string = "PiStdlib";
     // tslint:disable-next-line:variable-name
-    public static PiReader = "PiReader";
+    public static PiWriter:string = "PiWriter";
     // tslint:disable-next-line:variable-name
-    public static PiError = "PiError";
+    public static PiReader:string = "PiReader";
     // tslint:disable-next-line:variable-name
-    public static PiErrorSeverity = "PiErrorSeverity";
+    public static PiError:string = "PiError";
     // tslint:disable-next-line:variable-name
-    public static PiActions = "PiActions";
+    public static PiErrorSeverity:string = "PiErrorSeverity";
     // tslint:disable-next-line:variable-name
-    public static PiEditor = "PiEditor";
+    public static PiActions:string = "PiActions";
     // tslint:disable-next-line:variable-name
-    public static PiProjection = "PiProjection";
+    public static PiEditor:string = "PiEditor";
     // tslint:disable-next-line:variable-name
-    public static PiModelInitialization = "PiModelInitialization";
+    public static PiProjection:string = "PiProjection";
     // tslint:disable-next-line:variable-name
-    public static Box = "Box";
+    public static PiModelInitialization:string = "PiModelInitialization";
     // tslint:disable-next-line:variable-name
-    public static PiElementReference = "PiElementReference";
+    public static Box:string = "Box";
     // tslint:disable-next-line:variable-name
-    public static PiEnvironment = "PiEnvironment";
+    public static PiElementReference:string = "PiElementReference";
     // tslint:disable-next-line:variable-name
-    public static CompositeProjection = "PiCompositeProjection";
+    public static PiEnvironment:string = "PiEnvironment";
     // tslint:disable-next-line:variable-name
-    public static ProjectionalEditor = "ProjectionalEditor";
-    public static mainProjectionalEditor = "MainProjectionalEditor";
-    public static styles = "projectitStyles";
-    public static nameForSelf = "self";
-    public static initializeLanguage = "initializeLanguage";
+    public static CompositeProjection:string = "PiCompositeProjection";
+    // tslint:disable-next-line:variable-name
+    public static ProjectionalEditor:string = "ProjectionalEditor";
+    public static mainProjectionalEditor:string = "MainProjectionalEditor";
+    public static styles:string = "projectitStyles";
+    public static nameForSelf:string = "self";
+    public static initializeLanguage:string = "initializeLanguage";
+    // reserved role names for expressions, use with care.
+    // Should remain identical to the definitions in @projectit/core !!
+    public static PI_BINARY_EXPRESSION_LEFT:string = "PiBinaryExpression-left";
+    public static PI_BINARY_EXPRESSION_RIGHT:string = "PiBinaryExpression-right";
+    public static BEFORE_BINARY_OPERATOR:string = "binary-pre";
+    public static AFTER_BINARY_OPERATOR:string = "binary-post";
+    public static LEFT_MOST:string = "exp-left";
+    public static RIGHT_MOST:string = "exp-right";
+    public static BINARY_EXPRESSION:string = "binary-expression";
+    public static EXPRESSION:string = "expression";
+    public static EXPRESSION_SYMBOL:string = "symbol";
+
 
     // because the below names are used to generate TypeScript classes
     // they all have to start with an uppercase character
-
     public static configuration() {
         return "ProjectitConfiguration";
     }
@@ -80,6 +94,14 @@ export class Names {
 
     public static customActions(language: PiLanguage): string {
         return "Custom" + this.actions(language);
+    }
+
+    public static customTyper(language: PiLanguage): string {
+        return "Custom" + this.typerPart(language);
+    }
+
+    public static customValidator(language: PiLanguage): string {
+        return "Custom" + this.validator(language);
     }
 
     public static projectionDefault(language: PiLanguage): string {
@@ -108,6 +130,19 @@ export class Names {
 
     public static classifier(concept: PiClassifier): string {
         return this.startWithUpperCase(concept?.name);
+    }
+
+    public static primitivePropertyField(property: PiPrimitiveProperty): string {
+        // return "$$" + property.name;
+        return property.name;
+    }
+
+    public static primitivePropertyGetter(property: PiPrimitiveProperty): string {
+        return property.name;
+    }
+
+    public static primitivePropertySetter(property: PiPrimitiveProperty): string {
+        return property.name;
     }
 
     public static interface(interf: PiInterface): string {
@@ -162,6 +197,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ReferenceChecker";
     }
 
+    public static typerPart(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "TyperPart";
+    }
+
     public static typer(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "Typer";
     }
@@ -189,24 +228,47 @@ export class Names {
         return "";
     }
 
-    public static projectionFunction(c: PiConcept): string {
-        return "get" + Names.concept(c) + "Box";
+    public static projectionFunction(c: PiClassifier): string {
+        return "get" + Names.classifier(c) + "Box";
     }
 
     public static writer(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static pegjs(unit: PiConcept): string {
-        return this.startWithUpperCase(unit?.name) + "Parser";
+    public static parser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Parser";
+    }
+
+    public static grammar(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Grammar";
+    }
+
+    public static grammarStr(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "GrammarStr";
+    }
+
+    public static syntaxAnalyser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
+    }
+
+    public static unitAnalyser(language: PiLanguage, unit: PiUnitDescription | PiModelDescription): string {
+        if (!!unit) {
+            return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
+        } else {
+            return this.startWithUpperCase(language?.name) + "CommonSyntaxAnalyserPart";
+        }
+    }
+
+    public static semanticAnalyser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "SemanticAnalyser";
+    }
+
+    public static semanticWalker(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "SemanticAnalysisWalker";
     }
 
     public static reader(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
-
-    public static parserCreator(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "CreatorPartOfParser";
-    }
-
 }

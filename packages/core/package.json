@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@projectit/core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -25,11 +25,12 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "mobx": "5.15.4",
+    "mobx": "6.3.3",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.3.0"
   },
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "access": "public"
   }
 }

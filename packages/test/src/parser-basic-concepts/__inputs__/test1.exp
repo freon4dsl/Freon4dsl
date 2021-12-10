@@ -1,0 +1,9 @@
+ExpressionTest simpleExpressions
+	normalEx
+	binEx
+	StringLiteralEx value "stringLiteral" + StringLiteralEx value "stringLiteral"
+	NumberLiteralEx value 109 / StringLiteralEx value "stringLiteral" * BooleanLiteralEx
+                                                                       	value true
+
+
+

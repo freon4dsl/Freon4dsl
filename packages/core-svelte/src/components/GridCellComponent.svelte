@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { PiLogger } from "@projectit/core";
+    import { conceptStyle, PiLogger, styleToCSS } from "@projectit/core";
     import type { GridCell, PiEditor } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
+    import { isOdd } from "./util";
 
     // properties
     export let cell: GridCell;
@@ -26,10 +27,14 @@
 
     let row: string;
     let column: string;
+    let boxStyle: string = "";
     autorun(() => {
         AUTO_LOGGER.log("GridCellComponent["+ notifier.dummy + "] ");
         row = cell.row + (cell.rowSpan ? " / span " + cell.rowSpan : "");
         column = cell.column + (cell.columnSpan ? " / span " + cell.columnSpan : "");
+        const gridStyle = `grid-row: ${row}; grid-column: ${column};`;
+
+        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, cell.box.element.piLanguageConcept(), (isOdd(cell.row) ? "gridcellOdd" : "gridcellEven"), cell.style)) + gridStyle;
     });
 
 </script>
@@ -37,8 +42,7 @@
 <div
         id={"-c:" + cell.column + "-r:" + cell.row}
         class="gridcellcomponent"
-        style="grid-row: {row};
-               grid-column: {column};"
+        style={boxStyle}
         onClick={this.onCellClick}
 >
     <RenderComponent box={cell.box} editor={editor}/>
@@ -46,7 +50,7 @@
 
 <style>
     .gridcellcomponent {
-        box-sizing: border-box;
+        box-sizing: content-box;
         align-self: stretch;
         display: flex;
     }

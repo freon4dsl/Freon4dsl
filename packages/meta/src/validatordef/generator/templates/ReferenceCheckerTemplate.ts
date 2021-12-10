@@ -1,5 +1,5 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, ENVIRONMENT_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { PiLanguage, PiConcept } from "../../../languagedef/metalanguage/PiLanguage";
+import { PiLanguage, PiClassifier } from "../../../languagedef/metalanguage";
 import { ValidationUtils } from "../ValidationUtils";
 
 export class ReferenceCheckerTemplate {
@@ -19,9 +19,10 @@ export class ReferenceCheckerTemplate {
         // and thus fills 'this.imports' list, it needs to be called before the rest of the template
         // is returned
         this.imports = [];
-        const allMethods = `${language.concepts.map(concept =>
-            `${this.createChecksOnNonOptionalParts(concept, environmentName)}`
-        ).join("\n\n")}`;
+        const allClassifiers: PiClassifier[] = [];
+        allClassifiers.push(...language.units);
+        allClassifiers.push(...language.concepts);
+        const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
 
         // the template starts here
         return `
@@ -68,7 +69,7 @@ export class ReferenceCheckerTemplate {
         }`;
     }
 
-    private createChecksOnNonOptionalParts(concept: PiConcept, environmentName: string): string {
+    private createChecksOnNonOptionalParts(concept: PiClassifier): string {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
         concept.allProperties().forEach(prop => {
@@ -90,7 +91,7 @@ export class ReferenceCheckerTemplate {
         });
 
         if (result.length > 0) {
-            this.imports.push(Names.concept(concept));
+            this.imports.push(Names.classifier(concept));
             return `
             /**
              * Checks 'modelelement' before checking its children.
@@ -100,7 +101,7 @@ export class ReferenceCheckerTemplate {
              *
              * @param modelelement
              */
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+            public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
                 let hasFatalError: boolean = false;
                 ${result}
                 return hasFatalError;

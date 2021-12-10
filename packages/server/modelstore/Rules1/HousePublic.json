@@ -1,0 +1,16 @@
+{
+   "$typename": "Data",
+   "name": "House",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "Building",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "Height"
+            }
+         ]
+      }
+   ]
+}

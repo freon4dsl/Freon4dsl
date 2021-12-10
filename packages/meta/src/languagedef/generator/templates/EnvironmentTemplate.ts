@@ -24,8 +24,9 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
-        import { ${Names.concept(language.modelConcept)}, ${Names.concept(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
+        import { editorStyle } from "../../editor/styles/CustomStyles";
         import { ${Names.initializeLanguage} } from  "${relativePath}${LANGUAGE_GEN_FOLDER}";
         
         /**
@@ -60,7 +61,9 @@ export class EnvironmentTemplate {
                 const projectionDefault = new ${Names.projectionDefault(language)}("default");
                 rootProjection.addProjection(projectionDefault);
                 this.editor = new PiEditor(rootProjection, actions);
+                this.editor.style = editorStyle;
                 this.editor.rootElement = null;
+                this.editor.environment = this;
                 initializeLanguage();
             }
             
@@ -69,8 +72,8 @@ export class EnvironmentTemplate {
              * 
              * @param modelName
              */
-             newModel(modelName: string) : ${Names.concept(language.modelConcept)} {        
-                const model = new ${Names.concept(language.modelConcept)}();
+             newModel(modelName: string) : ${Names.classifier(language.modelConcept)} {        
+                const model = new ${Names.classifier(language.modelConcept)}();
                 model.name = modelName;
                 return model;
              }  
@@ -84,9 +87,9 @@ export class EnvironmentTemplate {
             writer: ${Names.PiWriter} = new ${Names.writer(language)}();
             reader: ${Names.PiReader} = new ${Names.reader(language)}();
             languageName: string = "${language.name}";
-            unitNames: string[] = [${language.modelConcept.allParts().map(part => `"${part.type.referred.name}"`)}];
+            unitNames: string[] = [${language.modelConcept.unitTypes().map(unit => `"${Names.classifier(unit)}"`)}];
             fileExtensions: Map<string, string> = new Map([
-                ${language.modelConcept.allParts().map(part => `["${part.type.referred.name}", ".${part.type.referred.name.substring(0,3).toLowerCase()}"]`)}
+                ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", ".${unit.fileExtension}"]`)}
             ]);
         }`;
     }

@@ -1,4 +1,5 @@
-import { observable, computed, action, trace } from "mobx";
+import { makeObservable, observable, computed, action, trace } from "mobx";
+import { PiEnvironment } from "../environment/PiEnvironment";
 
 import { PiContainerDescriptor, PiElement } from "../language";
 import { PiCaret, wait, PiLogger } from "../util";
@@ -13,30 +14,61 @@ import {
     isTextBox,
     Box,
     KeyboardShortcutBehavior,
-    PiActions
+    PiActions, PiEditorStyle
 } from "./internal";
 
 const LOGGER = new PiLogger("PiEditor");
 
 export class PiEditor {
-    @observable private _rootElement: PiElement;
+    private _rootElement: PiElement = null;
     readonly actions?: PiActions;
     readonly projection: PiProjection;
     readonly behaviors: InternalBehavior[] = [];
     keyboardActions: KeyboardShortcutBehavior[] = [];
+    style: PiEditorStyle = { global: { dark: {}, light: {}}};
+    theme: string = "light";
 
-    @observable private $rootBox: Box | null;
-    @observable private $selectedBox: Box | null;
+    private $rootBox: Box | null = null;
+    private $selectedBox: Box | null = null;
     private $projectedElement: HTMLDivElement | null;
 
-    @observable private selectedElement: PiElement = null;
+    private selectedElement: PiElement = null;
     selectedPosition: PiCaret = PiCaret.UNSPECIFIED;
-    @observable private selectedRole: string = null;
+    private selectedRole: string = null;
+
+    /**
+     * Needed to find reference shortcuts in the Alias box
+     */
+    environment: PiEnvironment;
+
+    /**
+     * The amount of scrolling horizontally.
+     * Needed to find the element above and under.
+     */
+    scrollX: number = 0;
+    /**
+     * The amount of scrolling vertically
+     * Needed to find the element above and under.
+     */
+    scrollY: number = 0;
 
     constructor(projection: PiProjection, actions?: PiActions) {
         this.actions = actions;
         this.projection = projection;
         this.initializeAliases(actions);
+
+        makeObservable<PiEditor, "$rootBox" | "selectedRole" | "$selectedBox" | "selectedElement" | "_rootElement">(this, {
+            $rootBox: observable,
+            _rootElement: observable,
+            $selectedBox: observable,
+            selectedElement: observable,
+            selectedRole: observable,
+            theme: observable,
+            selectedBox: computed,
+            deleteBox: action,
+            rootBox: computed,
+
+        });
     }
 
     initializeAliases(actions?: PiActions) {
@@ -57,7 +89,14 @@ export class PiEditor {
         this.$projectedElement = e;
     }
 
+    /**
+     * Do not accept "select" actions, used e.g. when an undo is going to come.
+     */
+    NOSELECT: Boolean = false;
+
     selectElement(element: PiElement, role?: string, caretPosition?: PiCaret) {
+        LOGGER.log("selectElement");
+        if( this.NOSELECT) { return; }
         if (element === null || element === undefined) {
             console.error("PiEditor.selectElement is null !");
             return;
@@ -66,10 +105,10 @@ export class PiEditor {
         this.selectedRole = role;
         this.selectedPosition = caretPosition;
         wait(0);
-        LOGGER.info(this, "==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
+        LOGGER.log("  ==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
         const rootBox = this.rootBox;
         const box = rootBox.findBox(element.piId(), role);
-        LOGGER.info(this, "-==> selectElement found box " + (!!box && box.kind));
+        LOGGER.log("  ==> selectElement found box " + (!!box && box.kind));
         if (box) {
             this.selectBoxNew(box, caretPosition);
         } else {
@@ -83,21 +122,24 @@ export class PiEditor {
     }
 
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
-        LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position);
+        LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
+        if( this.NOSELECT) { return; }
         this.selectBox(this.rootBox.findBox(box.element.piId(), box.role), caretPosition);
     }
 
     selectBoxByRoleAndElementId(elementId: string, role: string, caretPosition?: PiCaret) {
         LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role " + role);
+        if( this.NOSELECT) { return; }
         this.selectBox(this.rootBox.findBox(elementId, role));
     }
 
     private selectBox(box: Box | null, caretPosition?: PiCaret) {
+        if( this.NOSELECT) { return; }
         if (box === null || box === undefined) {
             console.error("PiEditor.selectBox is null !");
             return;
         }
-        LOGGER.info(this, "selectBox " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
+        LOGGER.log("selectBox " + (!!box ? box.role : box) + " caret " + caretPosition?.position);
         if (box === this.selectedBox) {
             LOGGER.info(this, "box already selected");
             return;
@@ -107,17 +149,17 @@ export class PiEditor {
         } else {
             this.selectedBox = box;
         }
-        LOGGER.info(this, "==> select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
+        LOGGER.log("==> select box " + this.selectedBox.role + " caret position: " + (!!caretPosition ? caretPosition.position : "undefined"));
         if (isTextBox(box) || isAliasBox(box) || isSelectBox(box)) {
             if (!!caretPosition) {
-                LOGGER.info(this, "caret position is " + caretPosition.position);
+                LOGGER.log("caret position is " + caretPosition.position);
                 box.setCaret(caretPosition);
             } else {
-                LOGGER.info(this, "caret position is empty");
+                LOGGER.log("caret position is empty");
                 box.setCaret(PiCaret.RIGHT_MOST);
             }
         }
-        LOGGER.info(this, "setting focus on box " + this.selectedBox.role);
+        LOGGER.log("setting focus on box " + this.selectedBox.role);
         // box.setFocus();
     }
 
@@ -126,8 +168,10 @@ export class PiEditor {
     }
 
     set selectedBox(box: Box) {
-        LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null"));
-        if( isAliasBox(box)) {
+        LOGGER.log(" ==> set selected box to: " + (!!box ? box.role : "null") + "  NOSELECT [" + this.NOSELECT + "]");
+        if( this.NOSELECT) { return; }
+
+        if (isAliasBox(box)) {
             this.$selectedBox = box.textBox;
         } else {
             this.$selectedBox = box;
@@ -138,18 +182,17 @@ export class PiEditor {
         }
     }
 
-    @computed
     get rootBox(): Box {
-        LOGGER.info(this, "RECALCULATING ROOT [" + this.rootElement + "]");
+        LOGGER.log("RECALCULATING ROOT [" + this.rootElement + "]");
         // trace(true);
         return this.projection.getBox(this.rootElement);
         // return this.$rootBox;
     }
 
     selectParentBox() {
-        LOGGER.info(this, "==> SelectParent of " + this.selectedBox.role);
+        LOGGER.log("==> SelectParent of " + this.selectedBox.role);
         let parent = this.selectedBox.parent;
-        if( isAliasBox(parent) || isSelectBox(parent)) {
+        if (isAliasBox(parent) || isSelectBox(parent)) {
             // Coming from (hidden) textbox in Select/Alias box
             parent = parent.parent;
         }
@@ -188,16 +231,15 @@ export class PiEditor {
         if (!!previous) {
             this.selectBoxNew(previous, PiCaret.RIGHT_MOST);
             // previous.setFocus();
-            if (isTextBox(previous) || isSelectBox(previous)) {
-                LOGGER.info(this, "!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
-                previous.setCaret(PiCaret.RIGHT_MOST);
-            }
+            // if (isTextBox(previous) || isSelectBox(previous)) {
+            //     LOGGER.log("!!!!!!! selectPreviousLeaf set caret to RIGHTMOST ");
+            //     previous.setCaret(PiCaret.RIGHT_MOST);
+            // }
         }
     }
 
-    @action
     async deleteBox(box: Box) {
-        LOGGER.info(this, "deleteBox");
+        LOGGER.log("deleteBox");
         const exp: PiElement = box.element;
         const container: PiContainerDescriptor = exp.piContainer();
         // if (isPiExpression(exp)) {
@@ -206,7 +248,7 @@ export class PiEditor {
         //     await this.selectElement(newExp);
         // } else {
         if (container !== null) {
-            LOGGER.info(this, "remove from parent splice " + [container.propertyIndex] + ", 1");
+            LOGGER.log("remove from parent splice " + [container.propertyIndex] + ", 1");
             const propertyIndex = container.propertyIndex;
             const parentElement = container.container;
             if (propertyIndex !== undefined) {
@@ -233,12 +275,79 @@ export class PiEditor {
 
     async selectFirstEditableChildBox() {
         const first = this.selectedBox.firstEditableChild;
-        LOGGER.info(this, "selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
+        LOGGER.log("selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
         if (first) {
             LOGGER.info(this, "selectFirstEditableChildBox: first found with role " + first.role);
             this.selectBoxNew(first);
         }
     }
+
+    /**
+     * Return the box that is visually above `box`.
+
+     * @param box
+     */
+    boxAbove(box: Box): Box {
+        wait(0);
+        const x = box.actualX + this.scrollX;
+        const y = box.actualY + this.scrollY;
+        let result: Box = box.nextLeafLeft;
+        let tmpResult = result;
+        LOGGER.log("boxAbove " + box.role + ": " + Math.round(x) + ", " + Math.round(y) + " text: " +
+            (isTextBox(box) ? box.getText() : "NotTextBox"));
+        while (result !== null) {
+            LOGGER.log("previous : " + result.role + "  " + Math.round(result.actualX + this.scrollX) + ", " + Math.round(result.actualY + this.scrollY));
+            if (this.isOnPreviousLine(tmpResult, result) && this.isOnPreviousLine(box, tmpResult)) {
+                return tmpResult;
+            }
+            if (this.isOnPreviousLine(box, result)) {
+                if (result.actualX <= x) {
+                    return result;
+                }
+            }
+            const next = result.nextLeafLeft;
+            tmpResult = result;
+            result = next;
+        }
+        return result;
+    }
+
+    boxBelow(box: Box): Box {
+        const x = box.actualX + this.scrollX;
+        const y = box.actualY + this.scrollX;
+        let result: Box = box.nextLeafRight;
+        let tmpResult = result;
+        LOGGER.log("boxBelow " + box.role + ": " + Math.round(x) + ", " + Math.round(y) + " text: " +
+            (isTextBox(box) ? box.getText() : "NotTextBox"));
+        while (result !== null) {
+            LOGGER.log("next : " + result.role + "  " + Math.round(result.actualX + this.scrollX) + ", " + Math.round(result.actualY + this.scrollY));
+            if (this.isOnNextLine(tmpResult, result) && this.isOnNextLine(box, tmpResult)) {
+                LOGGER.log("Found box below 1 [" + (!!tmpResult ? tmpResult.role : "null") + "]");
+                return tmpResult;
+            }
+            if (this.isOnNextLine(box, result)) {
+                if (result.actualX + this.scrollX + result.actualWidth >= x) {
+                    LOGGER.log("Found box below 2 [" + (!!result ? result.role : "null") + "]");
+                    return result;
+                }
+            }
+            const next = result.nextLeafRight;
+            tmpResult = result;
+            result = next;
+        }
+        LOGGER.log("Found box below 3 [ null ]");
+        return result;
+    }
+
+    private isOnPreviousLine(ref: Box, other: Box): boolean {
+        const margin = 5;
+        return other.actualY + margin < ref.actualY;
+    }
+
+    private isOnNextLine(ref: Box, other: Box): boolean {
+        return this.isOnPreviousLine(other, ref);
+    }
+
 
     set rootElement(exp: PiElement) {
         this._rootElement = exp;

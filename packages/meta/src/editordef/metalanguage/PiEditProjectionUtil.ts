@@ -1,6 +1,6 @@
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
 import {
-    PiBinaryExpressionConcept,
+    PiBinaryExpressionConcept, PiClassifier,
     PiConcept,
     PiConceptProperty,
     PiLangAppliedFeatureExp,
@@ -19,6 +19,8 @@ import {
     PiEditPropertyProjection,
     PiEditUnit
 } from "./PiEditDefLang";
+import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
+import { Names } from "../../utils";
 
 export class PiEditProjectionUtil {
 
@@ -27,6 +29,9 @@ export class PiEditProjectionUtil {
      * @param editor
      */
     public static addDefaults(editor: PiEditUnit): void {
+        const classifiersToDo: PiClassifier[] = editor.language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept));
+        classifiersToDo.push(...editor.language.units);
+
         for (const binConcept of editor.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
             let conceptEditor = editor.findConceptEditor(binConcept);
             if (conceptEditor === null || conceptEditor === undefined) {
@@ -37,25 +42,25 @@ export class PiEditProjectionUtil {
                 editor.conceptEditors.push(conceptEditor);
             }
             if (conceptEditor.trigger === null) {
-                conceptEditor.trigger = binConcept.name;
+                conceptEditor.trigger = Names.concept(binConcept);
             }
             if (conceptEditor.symbol === null) {
-                conceptEditor.symbol = binConcept.name;
+                conceptEditor.symbol = Names.concept(binConcept);
             }
         }
 
-        for (const con of editor.language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept))) {
+        for (const con of classifiersToDo) {
             // Find or create the concept editor, and its properties
             let coneditor: PiEditConcept = editor.conceptEditors.find(ed => ed.concept.referred === con);
             if (!coneditor) {
                 coneditor = new PiEditConcept();
-                coneditor.concept = PiElementReference.create<PiConcept>(con.name, "PiConcept");
+                coneditor.concept = PiElementReference.create<PiClassifier>(con.name, "PiClassifier");
                 coneditor.concept.owner = editor.language;
                 coneditor.languageEditor = editor;
                 editor.conceptEditors.push(coneditor);
             }
             if (!coneditor.trigger) {
-                coneditor.trigger = con.name;
+                coneditor.trigger = Names.classifier(con);
             }
             if (!coneditor.symbol) {
                 coneditor.symbol = con.name;
@@ -71,7 +76,7 @@ export class PiEditProjectionUtil {
                 text.style = "conceptkeyword";
                 startLine.items.push(text);
                 // find name property if available
-                const nameProp = con.allPrimProperties().find(p => p.name === "name" && p.primType === "string");
+                const nameProp = con.nameProperty();
                 if (!!nameProp) {
                     const exp = PiLangSelfExp.create(con);
                     exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, nameProp.name, nameProp);
@@ -115,7 +120,7 @@ export class PiEditProjectionUtil {
         }
     }
 
-    private static defaultSingleConceptProperty(concept: PiConcept, prop: PiConceptProperty, coneditor: PiEditConcept): void {
+    private static defaultSingleConceptProperty(concept: PiClassifier, prop: PiConceptProperty, coneditor: PiEditConcept): void {
         const line = new PiEditProjectionLine();
         line.indent = 4;
         line.items.push(PiEditProjectionText.create(prop.name));
@@ -131,7 +136,7 @@ export class PiEditProjectionUtil {
         coneditor.projection.lines.push(line);
     }
 
-    private static defaultListConceptProperty(concept: PiConcept, prop: PiConceptProperty, coneditor: PiEditConcept): void {
+    private static defaultListConceptProperty(concept: PiClassifier, prop: PiConceptProperty, coneditor: PiEditConcept): void {
         const line1 = new PiEditProjectionLine();
         const line2 = new PiEditProjectionLine();
         line1.indent = 4;

@@ -9,21 +9,20 @@ import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate";
 
-const LOGGER = new MetaLogger("ValidatorGenerator"); // .mute();
+const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: PiLanguage;
     protected validatorGenFolder: string;
     protected validatorFolder: string;
 
-    constructor(language: PiLanguage) {
-        this.language = language;
-    }
-
     generate(validdef: PiValidatorDef): void {
+        if (this.language == null) {
+            LOGGER.error(this, "Cannot generate validator because language is not set.");
+            return;
+        }
         const generationStatus = new GenerationStatus();
-        this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
-        this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
+        this.getFolderNames();
         const name = validdef ? validdef.validatorName + " " : "default";
         LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
 
@@ -39,7 +38,7 @@ export class ValidatorGenerator {
         Helpers.deleteFilesInDir(this.validatorGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        const relativePath = "../../";
+        let relativePath = "../../";
 
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);
@@ -67,20 +66,57 @@ export class ValidatorGenerator {
             fs.writeFileSync(`${this.validatorGenFolder}/${Names.rulesChecker(this.language)}.ts`, checkerFile);
 
             LOGGER.log(`Generating reserved words file: ${this.validatorGenFolder}/ReservedWords.ts`);
-            const reservedWords = reservedWordsTemplate.generateConst();
-            Helpers.generateManualFile(`${this.validatorGenFolder}/ReservedWords.ts`, reservedWords,
-                "Reserved Words constant definition");
+            const reservedWords = Helpers.pretty(reservedWordsTemplate.generateConst(),
+                "Rules Checker Class", generationStatus);
+            fs.writeFileSync(`${this.validatorGenFolder}/ReservedWords.ts`, reservedWords);
         }
 
         LOGGER.log(`Generating validator gen index: ${this.validatorGenFolder}/index.ts`);
-        const indexFile = Helpers.pretty(validatorTemplate.generateIndex(this.language, validdef),
+        const genIndexFile = Helpers.pretty(validatorTemplate.generateGenIndex(this.language, validdef),
             "Index Class", generationStatus);
-        fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, indexFile);
+        fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, genIndexFile);
+
+        // set relative path to get the imports right
+        relativePath = "../";
+
+        LOGGER.log(`Generating validator gen index: ${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
+        const customFile = Helpers.pretty(validatorTemplate.generateCustomValidator(this.language, relativePath),
+            "Custom Validator Class", generationStatus);
+        Helpers.generateManualFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`, customFile, "Custom Validator Class");
+
+        LOGGER.log(`Generating validator gen index: ${this.validatorFolder}/index.ts`);
+        const indexFile = Helpers.pretty(validatorTemplate.generateIndex(this.language),
+            "Index Class", generationStatus);
+        Helpers.generateManualFile(`${this.validatorFolder}/index.ts`, indexFile, "Index Class");
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(this, `Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
             LOGGER.info(this, `Succesfully generated validator ${name}`);
         }
+    }
+
+    private getFolderNames() {
+        this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
+        this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
+    }
+
+    clean(force: boolean) {
+        this.getFolderNames();
+        Helpers.deleteDirAndContent(this.validatorGenFolder);
+        if (force) {
+            Helpers.deleteFile(`${this.validatorFolder}/index.ts`);
+            if (this.language == null) {
+                LOGGER.error(this, "Cannot remove all because language is not set.");
+            } else {
+                Helpers.deleteFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
+            }
+            Helpers.deleteDirIfEmpty(this.validatorFolder);
+        } else {
+            // do not delete the following files, because these may contain user edits
+            LOGGER.info(this, `${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
+                '\n\t' + `${this.validatorFolder}/index.ts`);
+        }
+
     }
 }

@@ -1,0 +1,10 @@
+WithKeywordProj myName
+	primWith
+	    PrimWithKeywordProj <BOOL>
+        PrimWithKeywordProj
+	    PrimWithKeywordProj <BOOL>
+        PrimWithKeywordProj
+	    PrimWithKeywordProj <BOOL>
+        PrimWithKeywordProj
+	    PrimWithKeywordProj
+        PrimWithKeywordProj <BOOL>

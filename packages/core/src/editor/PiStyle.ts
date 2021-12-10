@@ -32,6 +32,10 @@ export interface PiStyle {
     "background-color"?: string;
 
     "padding"?: string;
+    "padding-bottom"?: string;
+    "padding-top"?: string;
+    "padding-left"?: string;
+    "padding-right"?: string;
     "white-space"?: string;
 
     "margin"?: string;
@@ -44,11 +48,15 @@ export interface PiStyle {
     content?: string;
 
     display?: string;
+    "align-items"?:  string;
+    "align-content"?:  string;
+    "justify-items"?: string
 }
 
 export function styleToCSS(style: PiStyle): string {
     let declarations = ''
     for (const property of Object.keys(style)) {
+        // TODO uncomment the : styles
         if (property.startsWith(":")) {
             declarations += `/* ${property} */`
         } else {

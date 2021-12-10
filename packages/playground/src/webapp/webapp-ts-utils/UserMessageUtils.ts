@@ -7,5 +7,6 @@ export function setUserMessage(message: string, sever?: severityType) {
     } else {
         severity.set(severityType.error);
     }
+    console.log("ProjectIt User Message: " + message);
     showError.set(true);
 }

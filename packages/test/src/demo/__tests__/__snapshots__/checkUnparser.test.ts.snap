@@ -1,139 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"' 1`] = `
+"DemoFunction determine 
+    expression ' \\"Hello Demo\\" ' + ' \\"Goodbye\\" ' 
+    parameters 
+        DemoVariable AAP 
+            declaredType TEST1
+    declaredType TEST2"
+`;
+
 exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 1`] = `
-"Demo ModelWithUnits 
-    models 
-        model DemoModel_with_inheritance { 
-        main: types: 
+"model DemoModel_with_inheritance { 
+main: types: 
+    
+entities: 
+    DemoEntity Vehicle 
+        simpleprop \\"simple\\" 
+        baseInterface_attr 0 
+        x \\"xxx\\" 
+        attributes 
+            brand : String
+            type : String
+        entAttributes 
             
-        entities: 
-            DemoEntity Vehicle 
-                simpleprop \\"simple\\" 
-                baseInterface_attr 0 
-                x \\"xxx\\" 
-                attributes 
-                    brand : DemoAttributeType String 
-                                extra 199 
-                                baseInterface_attr 0
-                    type : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
-                entAttributes 
-                    
-                functions 
-                    DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
-                                             87 
-                                   else 
-                                      1345 
-                                   endif 
-                        parameters 
-                            
-                        declaredType Integer
-                int_attrs 
-                    
-                int_functions 
-                    
-                baseEntity 
-                baseInterface
-
-
-            DemoEntity Car 
-                simpleprop \\"simple\\" 
-                baseInterface_attr 0 
-                x \\"xxx\\" 
-                attributes 
-                    numberplate : DemoAttributeType Integer 
-                                      extra 240261 
-                                      baseInterface_attr 0
-                    make : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
-                entAttributes 
-                    
-                functions 
-                    DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
-                                             87 
-                                   else 
-                                      1345 
-                                   endif 
-                        parameters 
-                            
-                        declaredType Integer
-                int_attrs 
-                    
-                int_functions 
-                    
-                baseEntity Vehicle 
-                baseInterface
-
-
-            DemoEntity Bike 
-                simpleprop \\"simple\\" 
-                baseInterface_attr 0 
-                x \\"xxx\\" 
-                attributes 
-                    backseat : DemoAttributeType Boolean 
-                                   extra 5479 
-                                   baseInterface_attr 0
-                    gears : DemoAttributeType Integer 
-                                extra 240261 
-                                baseInterface_attr 0
-                entAttributes 
-                    
-                functions 
-                    DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
-                                             87 
-                                   else 
-                                      1345 
-                                   endif 
-                        parameters 
-                            
-                        declaredType Integer
-                int_attrs 
-                    
-                int_functions 
-                    
-                baseEntity Vehicle 
-                baseInterface
-
-
-            DemoEntity RaceBike 
-                simpleprop \\"simple\\" 
-                baseInterface_attr 0 
-                x \\"xxx\\" 
-                attributes 
-                    color : DemoAttributeType String 
-                                extra 199 
-                                baseInterface_attr 0
-                    wheelsize : DemoAttributeType Integer 
-                                    extra 240261 
-                                    baseInterface_attr 0
-                entAttributes 
-                    
-                functions 
-                    DemoFunction SOMETHING 
-                        expression if ( ( 4 < 80 ) ) then 
-                                             87 
-                                   else 
-                                      1345 
-                                   endif 
-                        parameters 
-                            
-                        declaredType Integer
-                int_attrs 
-                    
-                int_functions 
-                    
-                baseEntity Bike 
-                baseInterface
-
-
-        model wide functions: 
+        functions 
             DemoFunction SOMETHING 
-                expression if ( ( 4 < 80 ) ) then 
+                expression if ( 4 < 80 ) then 
                                      87 
                            else 
                               1345 
@@ -141,81 +33,175 @@ exports[`Testing Unparser Unparse DemoModel Instance complete example model with
                 parameters 
                     
                 declaredType Integer
-        }
-        model CorrectUnit { 
-        main: types: 
+        int_attrs 
             
-        entities: 
-            DemoEntity School 
-                simpleprop \\"simple\\" 
-                baseInterface_attr 0 
-                x \\"xxx\\" 
-                attributes 
-                    foundedIn : DemoAttributeType Integer 
-                                    extra 240261 
-                                    baseInterface_attr 0
-                    name : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
-                entAttributes 
-                    
-                functions 
-                    DemoFunction requestClean 
-                        expression ( 5 + 24 ) 
-                        parameters 
-                            DemoVariable cleaningCompany 
-                                declaredType Company
-                        declaredType Integer
-                int_attrs 
-                    
-                int_functions 
-                    
-                baseEntity 
-                baseInterface
+        int_functions 
+            
+        baseEntity 
+        baseInterface
 
 
-            DemoEntity Company 
-                simpleprop \\"simple\\" 
-                baseInterface_attr 0 
-                x \\"xxx\\" 
-                attributes 
-                    name : DemoAttributeType String 
-                               extra 199 
-                               baseInterface_attr 0
-                    VAT_Number : DemoAttributeType Integer 
-                                     extra 240261 
-                                     baseInterface_attr 0
-                entAttributes 
-                    
-                functions 
-                    DemoFunction doClean 
-                        expression ( 5 + 24 ) 
-                        parameters 
-                            DemoVariable at 
-                                declaredType Company
-                        declaredType Integer
-                int_attrs 
-                    
-                int_functions 
-                    
-                baseEntity 
-                baseInterface
-
-
-        model wide functions: 
-            DemoFunction compare 
-                expression if ( ( 2 < 5 ) ) then 
-                                     1 
+    DemoEntity Car 
+        simpleprop \\"simple\\" 
+        baseInterface_attr 0 
+        x \\"xxx\\" 
+        attributes 
+            numberplate : Integer
+            make : String
+        entAttributes 
+            
+        functions 
+            DemoFunction SOMETHING 
+                expression if ( 4 < 80 ) then 
+                                     87 
                            else 
-                              5 
+                              1345 
                            endif 
                 parameters 
                     
                 declaredType Integer
+        int_attrs 
+            
+        int_functions 
+            
+        baseEntity Vehicle 
+        baseInterface
+
+
+    DemoEntity Bike 
+        simpleprop \\"simple\\" 
+        baseInterface_attr 0 
+        x \\"xxx\\" 
+        attributes 
+            backseat : Boolean
+            gears : Integer
+        entAttributes 
+            
+        functions 
+            DemoFunction SOMETHING 
+                expression if ( 4 < 80 ) then 
+                                     87 
+                           else 
+                              1345 
+                           endif 
+                parameters 
+                    
+                declaredType Integer
+        int_attrs 
+            
+        int_functions 
+            
+        baseEntity Vehicle 
+        baseInterface
+
+
+    DemoEntity RaceBike 
+        simpleprop \\"simple\\" 
+        baseInterface_attr 0 
+        x \\"xxx\\" 
+        attributes 
+            color : String
+            wheelsize : Integer
+        entAttributes 
+            
+        functions 
+            DemoFunction SOMETHING 
+                expression if ( 4 < 80 ) then 
+                                     87 
+                           else 
+                              1345 
+                           endif 
+                parameters 
+                    
+                declaredType Integer
+        int_attrs 
+            
+        int_functions 
+            
+        baseEntity Bike 
+        baseInterface
+
+
+model wide functions: 
+    DemoFunction SOMETHING 
+        expression if ( 4 < 80 ) then 
+                             87 
+                   else 
+                      1345 
+                   endif 
+        parameters 
+            
+        declaredType Integer 
+}"
+`;
+
+exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 2`] = `
+"model CorrectUnit { 
+main: types: 
+    
+entities: 
+    DemoEntity School 
+        simpleprop \\"simple\\" 
+        baseInterface_attr 0 
+        x \\"xxx\\" 
+        attributes 
+            foundedIn : Integer
+            name : String
+        entAttributes 
+            
+        functions 
+            DemoFunction requestClean 
+                expression 5 + 24 
+                parameters 
+                    DemoVariable cleaningCompany 
+                        declaredType Company
+                declaredType Integer
+        int_attrs 
+            
+        int_functions 
+            
+        baseEntity 
+        baseInterface
+
+
+    DemoEntity Company 
+        simpleprop \\"simple\\" 
+        baseInterface_attr 0 
+        x \\"xxx\\" 
+        attributes 
+            name : String
+            VAT_Number : Integer
+        entAttributes 
+            
+        functions 
+            DemoFunction doClean 
+                expression 5 + 24 
+                parameters 
+                    DemoVariable at 
+                        declaredType Company
+                declaredType Integer
+        int_attrs 
+            
+        int_functions 
+            
+        baseEntity 
+        baseInterface
+
+
+model wide functions: 
+    DemoFunction compare 
+        expression if ( 2 < 5 ) then 
+                             1 
+                   else 
+                      5 
+                   endif 
+        parameters 
+            
+        declaredType Integer
 DemoFunction helloString 
-                                         expression ' \\"Hello Demo\\" ' 
-                                         parameters 
-                                             
-                                         declaredType String
-        }"
+                                 expression ' \\"Hello Demo\\" ' 
+                                 parameters 
+                                     
+                                 declaredType String 
+}"
 `;

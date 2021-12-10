@@ -144,7 +144,7 @@ export class PiLangExpressionChecker extends Checker<LanguageExpressionTester> {
         if (this.strictUseOfSelf) {
             this.nestedCheck(
                 {
-                    check: langExp.appliedfeature !== null,
+                    check: !!langExp.appliedfeature,
                     error: `'self' should be followed by '.', followed by a property ${this.location(langExp)}.`,
                     whenOk: () => {
                         langExp.appliedfeature.language = langExp.language;

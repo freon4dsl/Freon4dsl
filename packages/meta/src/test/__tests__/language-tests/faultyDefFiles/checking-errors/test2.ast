@@ -25,3 +25,8 @@ concept boolean { }
 concept lowerCase { }
 
 concept LowerCase { }
+
+concept ZZZ {
+}
+concept YYY {
+}

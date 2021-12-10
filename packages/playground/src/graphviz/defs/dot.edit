@@ -1,0 +1,76 @@
+editor AA for language graphviz_dot
+
+yy {@projection [
+    ${self.graph}
+]}
+
+Graph {@projection [
+    [?${self.strict @keyword[STRICT]}] GRAPH [?${self.name}]{
+    ${self.statements @vertical @terminator [; ]}
+    }
+]}
+DiGraph {@projection [
+    [?${self.strict @keyword[STRICT]}] DIGRAPH [?${self.name}] {
+    ${self.statements @vertical @terminator [; ]}
+    }
+]}
+NodeStatement {@projection [
+    ${self.node} [?${self.attributes}]
+]}
+NodeExp{@projection [
+    ${self.name} [?${self.port}]
+]}
+EdgeStatement{@projection [
+    ${self.edge} [?${self.attributes}]
+]}
+SubgraphExp{@projection [
+    [? SUBGRAPH ${self.name}] { ${self.statements @vertical @terminator [; ]} }
+]}
+AttrStatement{@projection [
+${self.type} ${self.attributes @horizontal}
+]}
+
+Attr_List {    @projection normal [
+    \[ ${self.content @horizontal} \]
+]}
+
+A_List {
+    @projection normal [
+    ${self.attrs @terminator [, ]}
+    ]
+}
+SingleAttr {
+    @projection normal [
+    ${self.name} = ${self.value}
+    ]
+}
+
+AttrValue {
+    @projection normal [
+    [?${self.stringValue}]
+    [?${self.numberValue}]
+    [?${self.booleanValue}]
+    ]
+}
+Port {@projection normal [
+    [?':' ${self.name}] [?':' ${self.compass_point}]
+]}
+DirectedEdgeExp{ @symbol "->" }
+UnDirectedEdgeExp{ @symbol "--" }
+AttrType {@projection normal [
+        ${GRAPH @keyword [GRAPH]}
+        ${NODE @keyword [NODE]}
+        ${EDGE @keyword [EDGE]}
+    ]}
+CompassPoint {@projection normal [
+        ${north @keyword [n]}
+        ${northeast @keyword [ne]}
+        ${east @keyword [e]}
+        ${southeast @keyword [se]}
+        ${south @keyword [s]}
+        ${southwest @keyword [sw]}
+        ${west @keyword [w]}
+        ${northwest @keyword [nw]}
+        ${central @keyword [c]}
+        ${dash @keyword [-]}
+    ]}

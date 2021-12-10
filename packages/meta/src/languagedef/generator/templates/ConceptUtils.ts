@@ -1,5 +1,6 @@
-import { Names, PROJECTITCORE } from "../../../utils";
-import { PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
+import { Names, PROJECTITCORE, getBaseTypeAsString } from "../../../utils";
+import { PiClassifier, PiConcept, PiConceptProperty, PiPrimitiveProperty, PiProperty } from "../../metalanguage";
+import { PiPrimitiveType } from "../../metalanguage/PiLanguage";
 
 export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[] {
     const mobxImports: string[] = ["model"];
@@ -15,9 +16,9 @@ export function findMobxImports(hasSuper: boolean, concept: PiConcept): string[]
     return mobxImports;
 }
 
-export function makeImportStatements(hasSuper: boolean, needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
+export function makeImportStatements(needsObservable: boolean, importsFromCore: string[], modelImports: string[]): string {
     return `
-            ${needsObservable ? `import { observable } from "mobx";` : ""}            
+            ${needsObservable ? `import { observable, makeObservable } from "mobx";` : ""}            
             import { ${importsFromCore.join(",")} } from "${PROJECTITCORE}";
             import { ${modelImports.join(", ")} } from "./internal";
             `;
@@ -30,35 +31,40 @@ export function makeBasicProperties(metaType: string, conceptName: string, hasSu
 
 export function makePrimitiveProperty(property: PiPrimitiveProperty): string {
     const comment = "// implementation of " + property.name;
-    // const decorator = property.isList ? "@observablelistpart" : "@observable";
-    const decorator = "@observable";
     const arrayType = property.isList ? "[]" : "";
     let initializer = "";
+    const myType: PiClassifier = property.type.referred;
     if (!property.isList) {
-        switch (property.primType) {
-            case "string": {
+        switch (myType) {
+            case PiPrimitiveType.identifier: {
                 initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
                 break;
             }
-            case "number": {
+            case PiPrimitiveType.string: {
+                initializer = `= \"${property.initialValue ? property.initialValue : ``}\"`;
+                break;
+            }
+            case PiPrimitiveType.number: {
                 initializer = `= ${property.initialValue ? property.initialValue : `0`}`;
                 break;
             }
-            case "boolean": {
+            case PiPrimitiveType.boolean: {
                 initializer = `= ${property.initialValue ? property.initialValue : `false`}`;
                 break;
             }
         }
     } else {
         if (!!property.initialValueList) {
-            if (property.primType === "string") {
+            if (myType === PiPrimitiveType.string || myType === PiPrimitiveType.identifier) {
                 initializer = `= [${property.initialValueList.map(elem => `\"${elem}\"`).join(", ")}]`;
             } else {
                 initializer = `= [${property.initialValueList}]`;
             }
+        } else {
+            initializer = "= []";
         }
     }
-    return `${decorator} ${property.name} : ${property.primType}${arrayType} ${initializer}; \t${comment}`;
+    return `${property.name} : ${getBaseTypeAsString(property)}${arrayType} ${initializer}; \t${comment}`;
 }
 
 export function makePartProperty(property: PiConceptProperty): string {
@@ -80,6 +86,7 @@ export function makeReferenceProperty(property: PiConceptProperty): string {
 
 export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): string {
     const allButPrimitiveProps: PiConceptProperty[] = allProps.filter(p => !p.isPrimitive) as PiConceptProperty[];
+    const allPrimitiveProps: PiPrimitiveProperty[] = allProps.filter(p => p.isPrimitive) as PiPrimitiveProperty[];
     return `constructor(id?: string) {
                     ${!hasSuper ? `
                         super();
@@ -89,6 +96,16 @@ export function makeConstructor(hasSuper: boolean, allProps: PiProperty[]): stri
                             this.$id = PiUtils.ID(); // uuid.v4();
                         }`
                     : "super(id);"
+                    }
+                    ${allPrimitiveProps.length !== 0 ?
+                        `${allPrimitiveProps.map(p =>
+                            (p.isList ?
+                                `makeObservable(this, {"${p.name}": observable})`:
+                                `makeObservable(this, {"${Names.primitivePropertyField(p)}": observable})`
+                            )
+                        ).join("\n")}
+                        `       
+                    : ``
                     }
                     ${allButPrimitiveProps.length !== 0 ? 
                         `// both 'observablepart' and 'observablelistpart' change the get and set of an attribute 
@@ -152,3 +169,27 @@ export function makeBasicMethods(hasSuper: boolean, metaType: string, isModel: b
                     return ${isBinaryExpression};
                 }`;
 }
+export function makeStaticCreateMethod(concept: PiClassifier, myName: string): string {
+    return `/**
+                 * A convenience method that creates an instance of this class
+                 * based on the properties defined in 'data'.
+                 * @param data
+                 */
+                static create(data: Partial<${myName}>): ${myName} {
+                    const result = new ${myName}();
+                    ${concept.allProperties().map(property =>
+        `${(property.isList && !(property instanceof PiPrimitiveProperty)) ?
+            `if (!!data.${property.name}) {
+                                data.${property.name}.forEach(x =>
+                                    result.${property.name}.push(x)
+                                );
+                            }`
+            : `if (!!data.${property.name}) { 
+                                result.${property.name} = data.${property.name};
+                            }`
+        }`).join("\n")
+    }
+                    return result;
+                }`;
+}
+

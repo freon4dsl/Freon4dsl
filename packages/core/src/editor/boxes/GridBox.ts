@@ -1,4 +1,5 @@
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
+import { PiStyle } from "../PiStyle";
 
 import { Box } from "./internal";
 import { PiElement } from "../../language";
@@ -10,13 +11,13 @@ export type GridCell = {
     box: Box;
     rowSpan?: number;
     columnSpan?: number;
-    style?: string;
+    style?: PiStyle;
 };
 
 export class GridBox extends Box {
     readonly kind = "GridBox";
     cells: GridCell[];
-    @observable private $children: Box[] = [];
+    private $children: Box[] = [];
 
     constructor(exp: PiElement, role: string, cells: GridCell[], initializer?: Partial<GridBox>) {
         super(exp, role);
@@ -31,6 +32,9 @@ export class GridBox extends Box {
             }
         });
         this.sortCellsAndAddChildren();
+        makeObservable<GridBox, "$children">(this, {
+            $children: observable
+        });
     }
 
     get children(): ReadonlyArray<Box> {

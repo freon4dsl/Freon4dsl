@@ -1,9 +1,10 @@
 import { PiLogger } from "@projectit/core";
-import { observable } from "mobx";
+import { makeObservable, observable, action } from "mobx";
 
 export const AUTO_LOGGER: PiLogger = new PiLogger("AUTORUN");
 export const UPDATE_LOGGER: PiLogger = new PiLogger("AFTER_UPDATE");
 export const FOCUS_LOGGER: PiLogger = new PiLogger("FOCUS");
+export const MOUNT_LOGGER: PiLogger = new PiLogger("MOUNT");
 
 
 /**
@@ -13,8 +14,14 @@ export const FOCUS_LOGGER: PiLogger = new PiLogger("FOCUS");
  * NB Only use this when there is no other option!
  */
 export class ChangeNotifier {
-    @observable dummy: number = 0;
+    dummy: number = 0;
 
+    constructor() {
+        makeObservable(this, {
+            dummy: observable,
+            notifyChange: action
+        })
+    }
     notifyChange(): void {
         this.dummy++;
     }
