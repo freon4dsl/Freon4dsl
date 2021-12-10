@@ -1,0 +1,11 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "ght6",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "TaxPayer"
+      }
+   ],
+   "methods": []
+}
