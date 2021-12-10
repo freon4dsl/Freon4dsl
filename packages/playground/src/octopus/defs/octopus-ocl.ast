@@ -14,7 +14,7 @@ expression AttributeCallExp base ModelPropertyCallExp {
 }
 
 expression BooleanLiteralExp base PrimitiveLiteralExp {
-    symbol: boolean;
+    value: boolean;
 }
 
 expression CollectionItem base CollectionLiteralPart {
@@ -44,7 +44,7 @@ expression IfExp base OclExpression {
 }
 
 expression IntegerLiteralExp base LiteralExp {
-    symbol: number;
+    value: number;
 }
 
 expression IterateExp base LoopExp {
@@ -99,7 +99,7 @@ expression OclTypeLiteralExp base LiteralExp {
 }
 
 expression OclUndefinedLiteralExp base PrimitiveLiteralExp {
-    symbol: string;
+    value: string;
 }
 
 expression OperationCallExp base ModelPropertyCallExp {
@@ -116,11 +116,11 @@ abstract expression PropertyCallExp base OclExpression {
 }
 
 expression RealLiteralExp base LiteralExp {
-    symbol: number; // TODO replace number by real
+    value: number; // TODO replace number by real
 }
 
 expression StringLiteralExp base LiteralExp {
-    symbol: string;
+    value: string;
 }
 
 expression TupleLiteralExp base LiteralExp {

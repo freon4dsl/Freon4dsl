@@ -1,7 +1,7 @@
 language octopus
 
 model OctopusModel {
-    name: string;
+    name: identifier;
     umlParts: UmlPart[];
     oclParts: OclPart[];
 }

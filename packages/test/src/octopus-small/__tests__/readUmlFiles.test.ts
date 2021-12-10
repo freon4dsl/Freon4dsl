@@ -1,8 +1,6 @@
 import { ModelUnitMetaType, OctopusModelUnitType, UmlPart } from "../language/gen";
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
 import * as fs from "fs";
-import { OctopusModelUnitReader } from "../reader/gen/OctopusModelUnitReader";
-import { PiReader } from "@projectit/core";
 
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;
@@ -36,34 +34,19 @@ function readFromFile(filepath: string, metatype: ModelUnitMetaType): OctopusMod
 
 describe("Testing Parser", () => {
     // TODO use snapshots
-    test("input model unparsed and parsed again", () => {
-        let path: string = "src/octopus-small/__tests__/input.uml2";
-        compareReadAndWrittenUmlParts(path);
+    test("book unparsed and parsed again", () => {
+        compareReadAndWrittenUmlParts("src/octopus-small/__inputs__/Book.uml2");
     });
 
-    test("book model unparsed and parsed again", () => {
-        let path: string = "src/octopus-small/__tests__/Book.uml2";
-        compareReadAndWrittenUmlParts(path);
-    });
-
-    test.skip("orders model unparsed and parsed again", () => {
-        let path: string = "src/octopus-small/__tests__/orders.uml2";
-        compareReadAndWrittenUmlParts(path);
+    test("orders model unparsed and parsed again", () => {
+        compareReadAndWrittenUmlParts("src/octopus-small/__inputs__/orders.uml2");
     });
 
     test("catalog model unparsed and parsed again", () => {
-        const unit1 = readFromFile("src/octopus-small/__tests__/catalog.uml2", "UmlPart");
-        console.log(writer.writeToString(unit1, 0, false));
+        compareReadAndWrittenUmlParts("src/octopus-small/__inputs__/catalog.uml2");
     });
 
     test("trainWagon model unparsed and parsed again", () => {
-        const unit1 = readFromFile("src/octopus-small/__tests__/trainWagon.uml2", "UmlPart");
-        console.log(writer.writeToString(unit1, 0, false));
-    });
-
-    test("book model STRING unparsed and parsed again", () => {
-        const langSpec: string = fs.readFileSync("src/octopus-small/__tests__/orders.uml2", { encoding: "utf8" });
-        const unit1 = reader.readFromString(langSpec, "UmlPart");
-        console.log(writer.writeToString(unit1, 0, false));
+        compareReadAndWrittenUmlParts("src/octopus-small/__inputs__/trainWagon.uml2");
     });
 });

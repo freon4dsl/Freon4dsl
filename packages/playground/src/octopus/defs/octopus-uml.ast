@@ -1,14 +1,37 @@
-// this part contains all metamodel elements from the Unified Modeling Language
 language octopus
 
 modelunit UmlPart {
-    public name: string;
-    packages: UmlPackage[];
-    associations: Association[];
+    public name: identifier;
+    umlPackage: UmlPackage;
+    file-extension = "uml2";
 }
 
-// first, the interfaces
+// the uml concepts
+concept Association implements IClassifier {
+    end1: AssociationEnd;
+    end2: AssociationEnd;
+//    isClass: boolean;
+}
+
+concept AssociationClass base Association implements IClass {
+}
+
+concept AssociationEnd base StructuralFeature {
+    reference baseType: IClassifier;
+//    isNavigable: boolean;
+//    reference myAssociation: Association;
+}
+
+concept Attribute base StructuralFeature {
+    isOClDef: boolean;
+    init?: OclStatement;
+    derive?: OclStatement;
+}
+
 interface IClass base IClassifier {
+}
+
+concept UmlClass implements IClass {
 }
 
 interface IClassifier base IPackagableElement {
@@ -21,162 +44,141 @@ interface IClassifier base IPackagableElement {
     states: State[];
     classAttributes: Attribute[];
     classOperations: Operation[];
-    isCollectionKind: boolean;
-    reference owner: UmlPackage;
+//    isCollectionKind: boolean;
+//    reference owner: UmlPackage;
     isAbstract: boolean;
-    stereotype: string;
+//    stereotype: string;
+    invariants: OclExpression[];
 }
 
-interface IModelElement {
-    name: string;
-    pathName: PathName;
-}
-
-interface IPackagableElement base IModelElement {
-    visibility: VisibilityKind;
-}
-
-// second, the metaconcepts
-concept Association implements IClassifier {
-    end1: AssociationEnd;
-    end2: AssociationEnd;
-    isClass: boolean;
-}
-
-concept AssociationClass base Association implements IClass {
-}
-
-concept AssociationEnd base StructuralFeature {
-    reference baseType: IClassifier;
-    isNavigable: boolean;
-    reference myAssociation: Association;
-}
-
-concept Attribute base StructuralFeature {
-    isOClDef: boolean;
-}
-
-concept CollectionType {
-    reference elementType: IClassifier;
-    metatype: CollectionMetaType;
-    isSet: boolean;
-    isOrderedSet: boolean;
-    isBag: boolean;
-    isSequence: boolean;
-}
-
+//concept CollectionType {
+//    reference elementType: IClassifier;
+//    metatype: CollectionMetaType;
+//    isSet: boolean;
+//    isOrderedSet: boolean;
+//    isBag: boolean;
+//    isSequence: boolean;
+//}
+//limited CollectionMetaType {
+//    COLLECTION 		= { name: "Collection" }
+//    SET 			= { name: "Set" }
+//    ORDEREDSET 		= { name: "OrderedSet" }
+//    BAG 			= { name: "Bag" }
+//    SEQUENCE 		= { name: "Sequence" }
+//}
 concept DataType implements IClassifier {
 }
-
 concept EnumerationType base DataType {
     literals: EnumLiteral[];
 }
-
 concept EnumLiteral implements IModelElement {
-    reference enumeration: EnumerationType;
+//    reference enumeration: EnumerationType;
 }
-
 concept ImportedElement implements IModelElement {
-    pathName: PathName;
     element: IModelElement;
-    isReference: boolean;
+//    isReference: boolean;
 }
-
+concept UmlInterface implements IClassifier {
+}
+interface IModelElement {
+    name: identifier;
+}
 concept MultiplicityKind {
-    isSingleObject: boolean;
+//    isSingleObject: boolean;
     lowerBound: number;
-    upperBound: number;
+    upperBound?: UpperBound;
 }
-
-concept OclMessageType implements IClassifier {
-    reference referredOperation: Operation;
+abstract concept UpperBound {
 }
-
+concept NumberUpperBound base UpperBound {
+    value: number;
+}
+concept StarUpperBound base UpperBound {
+    value: boolean;
+}
 concept Operation implements IPackagableElement {
     parameters: Parameter[];
     reference returnType?: IClassifier;
-    reference owner: IClassifier;
-    hasClassScope: boolean;
-    isOClDef: boolean;
-    isAbstract: boolean;
-    isInfix: boolean;
-    isPrefix: boolean;
+//    reference owner: IClassifier;
+//    hasClassScope: boolean;
+//    isOClDef: boolean;
+//    isAbstract: boolean;
+//    isInfix: boolean;
+//    isPrefix: boolean;
+    pre?: OclPreStatement[];
+    post?: OclPostStatement[];
 }
-
-concept Parameter implements IModelElement {
-    reference type: IClassifier;
-    reference owner: Operation;
-    directionKind: ParameterDirectionKind;
-}
-
-concept PrimitiveType base DataType {
-}
-
-concept State implements IPackagableElement {
-    reference owner: Operation;
-    subStates: State[];
-    reference enclosingState: State;
-}
-
-concept StructuralFeature implements IPackagableElement {
-    reference type: IClassifier;
-    reference owner: IClassifier;
-    multiplicity: MultiplicityKind;
-    isOrdered: boolean;
-    isDerived: boolean;
-    isUnique: boolean;
-    isComposite: boolean;
-    isAggregate: boolean;
-    hasClassScope: boolean;
-}
-
-concept TupleType base DataType {
-    parts: VariableDeclaration[];
-}
-
-// third, implementations of the interfaces, as far as needed
 concept UmlPackage implements IModelElement {
-    subpackages: UmlPackage[];
-    reference parent: UmlPackage;
-    reference root: UmlPackage;
+//    subpackages: UmlPackage[];
+//    reference parent: UmlPackage;
+//    reference root: UmlPackage;
     classifiers: IClassifier[];
     interfaces: UmlInterface[];
     associations: Association[];
     imports: ImportedElement[];
 }
 
-concept UmlInterface implements IClassifier {
+interface IPackagableElement base IModelElement {
+    visibility: VisibilityKind;
+}
+concept Parameter implements IModelElement {
+    reference type: IClassifier;
+//    reference owner: Operation;
+    directionKind: ParameterDirectionKind;
+}
+//concept PathName {
+//    names: string[];
+//    // first = names[0];
+//    // last  = names[names.length-1]
+//}
+concept PrimitiveType base DataType {
+}
+concept State implements IPackagableElement {
+//    reference owner: Operation;
+    subStates: State[];
+//    reference enclosingState: State;
+}
+concept StructuralFeature implements IPackagableElement {
+    reference type: IClassifier;
+//    reference owner: IClassifier;
+    multiplicity: MultiplicityKind;
+//    isOrdered?: boolean;
+//    isDerived?: boolean;
+//    isUnique?: boolean;
+//    isComposite?: boolean;
+//    isAggregate?: boolean;
+//    hasClassScope?: boolean;
 }
 
-concept UmlClass implements IClass {
+concept OclStatement {
+    name: identifier;
+    expr: OclExpression;
 }
 
-// fourth, the limited types
-limited CollectionMetaType {
-    COLLECTION 		= { name: "Collection" }
-    SET 			= { name: "Set" }
-    ORDEREDSET 		= { name: "OrderedSet" }
-    BAG 			= { name: "Bag" }
-    SEQUENCE 		= { name: "Sequence" }
+// TODO remove the following two concepts when we can cater for a prefix to lists
+concept OclPreStatement {
+    name: identifier;
+    expr: OclExpression;
 }
 
-limited OclUsageType {
-    WRONGTYPE;
-    INV;
-    DEF;
-    PRE;
-    POST;
-    INIT;
-    DERIVE;
-    BODY;
+concept OclPostStatement {
+    name: identifier;
+    expr: OclExpression;
 }
 
+//concept TupleType base DataType {
+//    parts: VariableDeclaration[];
+//}
 limited ParameterDirectionKind {
     IN    = { name: "IN" }
     OUT   = { name: "OUT" }
     INOUT = { name: "INOUT" }
 }
-
+//concept VariableDeclaration implements IModelElement {
+//    reference type: IClassifier;
+//    // initExpression: OclExpression;
+//    isIteratorVar: boolean;
+//}
 limited VisibilityKind {
 	PUBLIC = { name: "PUBLIC" }
 	PRIVATE = { name: "PRIVATE" }

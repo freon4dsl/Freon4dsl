@@ -91,10 +91,6 @@ EnumLiteral {
             [${self.name}]
 }
 
-ImportedElement { // implements IModelElement {
-    @projection normal [<import> ${self.pathName};]
-}
-
 UmlInterface  {
     @projection normal
         [[?${self.visibility}] <interface> ${self.name}
@@ -107,7 +103,13 @@ UmlInterface  {
 }
 
 MultiplicityKind {
-    @projection normal [\[ ${self.lowerBound}..${self.upperBound}\]]
+    @projection normal [\[ ${self.lowerBound}[?..${self.upperBound}]\]]
+}
+NumberUpperBound {
+    @projection normal [${self.value}]
+}
+StarUpperBound {
+    @projection normal [${self.value @keyword[*]}]
 }
 
 Operation {
@@ -133,11 +135,6 @@ UmlPackage {
 Parameter {
     @projection normal
         [[?${self.directionKind}] ${self.name} : ${self.type}]
-}
-
-PathName {
-    @projection normal
-        [${self.names @horizontal @separator [::] }]
 }
 
 OclPostStatement {

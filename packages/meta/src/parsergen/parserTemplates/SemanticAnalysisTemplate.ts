@@ -1,6 +1,7 @@
-import { PiClassifier, PiConcept, PiExpressionConcept, PiLanguage, PiPrimitiveProperty } from "../../languagedef/metalanguage";
+import { PiClassifier, PiConcept, PiLanguage, PiPrimitiveProperty } from "../../languagedef/metalanguage";
 import { ENVIRONMENT_GEN_FOLDER, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, LangUtil, Names } from "../../utils";
 import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
+import { UnitAnalyser } from "./UnitAnalyser";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 
@@ -10,17 +11,22 @@ export class SemanticAnalysisTemplate {
     supersOfProblems: PiClassifier[] = [];
     private exprWithBooleanProp: Map<PiClassifier, PiPrimitiveProperty> = new Map<PiClassifier, PiPrimitiveProperty>();
 
-    analyse(interfacesAndAbstractsUsed: Map<PiClassifier, PiClassifier[]>) {
+    analyse(analyser: UnitAnalyser) {
         this.reset();
         // find which classifiers have possible problems
         // TODO use subs instead of LangUtil.subConcepts(classifier)
-        for (const [classifier, subs] of interfacesAndAbstractsUsed) {
+        for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
             if (!((classifier as PiConcept).base)) {
                 let hasProblems: boolean = false;
-                for (const sub of LangUtil.subConcepts(classifier)) {
-                    if (sub.allReferences().length > 0) {
-                        this.possibleProblems.push(sub);
-                        hasProblems = true;
+                for (const sub of subs) {
+                    if (sub instanceof PiConcept) {
+                        for (const ref of sub.allReferences()) {
+                            if (analyser.classifiersUsed.includes(ref.type.referred)){
+                                console.log("references of " + sub.name + ": " + sub.allReferences().map(ref => ref.name).join(", "))
+                                this.possibleProblems.push(sub);
+                                hasProblems = true;
+                            }
+                        }
                     }
                     for (const prim of sub.allPrimProperties()) {
                         if (prim.type.referred == PiPrimitiveType.boolean) {
@@ -31,7 +37,7 @@ export class SemanticAnalysisTemplate {
                 if (hasProblems) {
                     this.supersOfProblems.push(classifier);
                 }
-                // console.log(`found possible problems for ${classifier.name}: ${this.possibleProblems.map(pos => `${pos.name}`).join(", ")}`);
+                console.log(`found possible problems for ${classifier.name}: ${this.possibleProblems.map(pos => `${pos.name}`).join(", ")}`);
             }
         }
     }
@@ -110,7 +116,7 @@ export class SemanticAnalysisTemplate {
                     this.changesToBeMade = changesToBeMade;
                 }
                 
-                ${this.possibleProblems.map(poss => `${this.makeVistorMethod(language, poss)}`).join("\n")}
+                ${this.possibleProblems.map(poss => `${this.makeVistorMethod(poss)}`).join("\n")}
                 
                 private findReplacement(modelelement: ${Names.allConcepts(language)}, referredElem: PiElementReference<PiNamedElement>) {
                     const scoper = ${Names.environment(language)}.getInstance().scoper;
@@ -136,15 +142,17 @@ export class SemanticAnalysisTemplate {
         // TODO add replacement of properties that are lists
         let result: string = '';
         for (const poss of this.possibleProblems) {
-            let toBeCreated: string = Names.classifier(poss);
-            for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
-                let type: PiClassifier = ref.type.referred;
-                let metatype: string = Names.classifier(type);
-                this.addToImports(type);
-                let propName: string = ref.name;
-                result += `if (metatype === "${metatype}") {
+            if (!poss.isAbstract) {
+                let toBeCreated: string = Names.classifier(poss);
+                for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
+                    let type: PiClassifier = ref.type.referred;
+                    let metatype: string = Names.classifier(type);
+                    this.addToImports(type);
+                    let propName: string = ref.name;
+                    result += `if (metatype === "${metatype}") {
                         replacement = ${toBeCreated}.create({ ${propName}: PiElementReference.create<${metatype}>(referredElem.name, metatype) });
                     } else `;
+                }
             }
         }
         if (result.length > 0) {
@@ -153,7 +161,7 @@ export class SemanticAnalysisTemplate {
         return result;
     }
 
-    private makeVistorMethod(language: PiLanguage, piClassifier: PiConcept): string {
+    private makeVistorMethod(piClassifier: PiConcept): string {
         // TODO add replacement of properties that are lists
         return `
             /**
@@ -162,7 +170,7 @@ export class SemanticAnalysisTemplate {
              * @param modelelement
              */
             public execBefore${Names.concept(piClassifier)}(modelelement: ${Names.concept(piClassifier)}): boolean {
-                let referredElem: PiElementReference<PiNamedElement> = null;
+                let referredElem: PiElementReference<PiNamedElement>;
                 ${piClassifier.allReferences().filter(prop => !prop.isList).map(prop =>
                 `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
@@ -194,13 +202,16 @@ export class SemanticAnalysisTemplate {
     }
 
     private makeBooleanStat(): string {
+        // TODO create should take all other props into account!!!
         let result: string = '';
         for (const [concept, primProp] of this.exprWithBooleanProp) {
-            result += `if (referredElem.name === "true") {
+            if (concept instanceof PiConcept && !concept.isAbstract) {
+                result += `if (referredElem.name === "true") {
                     this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
                 } else if (referredElem.name === "false") {
                     this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: false }));
                 }`
+            }
         }
         return result;
     }

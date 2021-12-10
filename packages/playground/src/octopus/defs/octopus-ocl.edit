@@ -17,7 +17,7 @@ AttributeCallExp {
 
 BooleanLiteralExp {
 @projection normal
-    [${self.symbol}]
+    [${self.value}]
 }
 
 CollectionItem {
@@ -51,7 +51,7 @@ IfExp {
 
 IntegerLiteralExp {
 @projection normal
-    [${self.symbol}]
+    [${self.value}]
 }
 
 //IterateExp {
@@ -102,12 +102,12 @@ OclTypeLiteralExp {
 
 OclUndefinedLiteralExp {
 @projection normal
-    [${self.symbol}]
+    [${self.value}]
 }
 
 OperationCallExp {
 @projection normal
-    [${self.referredOperation.name} ( ${self.args @horizontal @separator[, ]} )]
+    [${self.referredOperation} ( ${self.args @horizontal @separator[, ]} )]
 }
 
 //PrimitiveLiteralExp {
@@ -115,12 +115,12 @@ OperationCallExp {
 
 RealLiteralExp {
 @projection normal
-    [${self.symbol}]
+    [${self.value}]
 }
 
 StringLiteralExp {
 @projection normal
-    [${self.symbol}]
+    [${self.value}]
 }
 
 TupleLiteralExp {
@@ -144,5 +144,5 @@ VariableExp {
 }
 OclExpression {
     @projection normal
-        [${self.expr}]
+        [${self.appliedProperty}]
 }
