@@ -1,18 +1,18 @@
+--Example Model File
 <package> Book
 
 <class> Bookpart
 <attributes> + title: String;
              + nrOfPages: Integer;
-             - startPageNr: Integer;
-//             - /startPageNr: Integer;
+             - /startPageNr: Integer;
 <operations> + determineStartPageNumber(): Integer;
 			 + getLastPageNumber(): Integer;
 			 + getNext(): Bookpart;
 <endclass>
 
 <class> Prependix  <specializes> Bookpart
-<attributes> + kind: PrependixKind;
-<operations> + needsEmptyLastPage(): Boolean;
+<attributes> + kind: PrependixKind; 
+<operations> + needsEmptyLastPage(): Boolean; 
              + isFirstBookpart(): Boolean;
 <endclass>
 
@@ -20,10 +20,10 @@
 <attributes> + author: String;
 			 + subject: String;
 <operations> + determineDurationTillFinished(from: Date): Period;
-//<states> ready;
-//         inwriting;
-//         inwriting::draft;
-//         inwriting::finaldraft;
+<states> ready;
+         inwriting;
+         inwriting::draft;
+         inwriting::finaldraft;
 <endclass>
 
 <class> Appendix  <specializes> Bookpart <implements> TwoColumnPart
@@ -62,17 +62,17 @@
          glossary;
 <endenumeration>
 
-<associationclass> ChapterDependency
+<associationclass> ChapterDependency 
                    + Chapter.sourceChapter[0..1]  <-> + Chapter.dependantChapters[0..*]
 <attributes> sameAuthor: Boolean;
              sameSubject: Boolean;
-<endassociationclass>
-
+<endassociationclass> 
+                  
 <associations>
     + Chapter.prevChap[0..1]   <-> + Chapter.nextChap[0..1];
     + Chapter.prevChap[0..1]   <-> + Appendix.nextApp[0..1];
     + Appendix.prevApp[0..1]  <-> + Appendix.nextApp[0..1];
     + Prependix.prevPrep[0..1] <-> + Chapter.nextChap[0..1];
     + Prependix.prevPrep[0..1] <-> + Prependix.nextPrep[0..1];
-
+  
 <endpackage>
