@@ -22,7 +22,6 @@ export class SemanticAnalysisTemplate {
                     if (sub instanceof PiConcept) {
                         for (const ref of sub.allReferences()) {
                             if (analyser.classifiersUsed.includes(ref.type.referred)){
-                                console.log("references of " + sub.name + ": " + sub.allReferences().map(ref => ref.name).join(", "))
                                 this.possibleProblems.push(sub);
                                 hasProblems = true;
                             }
@@ -37,7 +36,6 @@ export class SemanticAnalysisTemplate {
                 if (hasProblems) {
                     this.supersOfProblems.push(classifier);
                 }
-                console.log(`found possible problems for ${classifier.name}: ${this.possibleProblems.map(pos => `${pos.name}`).join(", ")}`);
             }
         }
     }

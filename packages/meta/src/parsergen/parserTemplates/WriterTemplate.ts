@@ -468,6 +468,10 @@ export class WriterTemplate {
                     if (sub.expression.findRefOfLastAppliedFeature().isList) {
                         myTypeScript = `!!${myTypeScript} && ${myTypeScript}.length > 0`;
                     } else {
+                        // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
+                        // remove only the last ".referred"
+                        myTypeScript = this.removeLastReferred(myTypeScript);
+                        // end hack
                         myTypeScript = `!!${myTypeScript}`;
                     }
                 }
@@ -537,20 +541,7 @@ export class WriterTemplate {
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
-            // TODO check this solution: there is one if-stat too many in
-            // if (!!modelelement.primNumberWithExtra) {
-            //     this.output[this.currentLine] += `before `;
-            //     if (!!modelelement.primNumberWithExtra) {
-            //         this.output[this.currentLine] += `${modelelement.primNumberWithExtra} `;
-            //     }
-            //     this.output[this.currentLine] += `after `;
-            // }
-            // this seems to be the solution:
-            // if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-            //     result += `if (!!${elemStr}) { ${myCall} }`;
-            // } else {
-                result += myCall;
-            // }
+            result += myCall;
         }
         return result + ";\n";
     }
@@ -584,11 +575,7 @@ export class WriterTemplate {
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
                     // remove only the last ".referred"
-                    if (myTypeScript.endsWith("?.referred")) {
-                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
-                    } else if (myTypeScript.endsWith(".referred")) {
-                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
-                    }
+                    myTypeScript = this.removeLastReferred(myTypeScript);
                     // end hack
                     myCall += `this.unparseReference(${myTypeScript}, short);`;
                     // if (type instanceof PiLimitedConcept) {
@@ -605,6 +592,15 @@ export class WriterTemplate {
             }
         }
         return result + ";\n";
+    }
+
+    private removeLastReferred(myTypeScript: string) {
+        if (myTypeScript.endsWith("?.referred")) {
+            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
+        } else if (myTypeScript.endsWith(".referred")) {
+            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
+        }
+        return myTypeScript;
     }
 
     /**
