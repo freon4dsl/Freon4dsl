@@ -1,0 +1,21 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "ght6",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "Aap",
+         "attributes": [],
+         "methods": [],
+         "baseEntity": "Mies"
+      },
+      {
+         "$typename": "Entity",
+         "name": "Mies",
+         "attributes": [],
+         "methods": [],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}

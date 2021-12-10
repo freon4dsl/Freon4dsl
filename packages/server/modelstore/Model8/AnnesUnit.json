@@ -1,0 +1,28 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "AnnesUnit",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "Robert",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "leeftijd",
+               "declaredType": "Integer"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "",
+               "body": null,
+               "parameters": [],
+               "declaredType": null
+            }
+         ],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}
