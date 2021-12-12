@@ -3,15 +3,16 @@ language octopus
 
 modelunit OclPart {
     public name: identifier;
+    reference pack: UmlPackage;
     constraints: OclContext[];
 }
 /**
- * IModelElementReference : because OCL expressions may express initial values etc. of
+ * ModelElementReference : because OCL expressions may express initial values etc. of
  * inherited elements, we must record not only the element itself, but also the subclass
- * in which the expression was encountered. Objects implementing this interface do exactly
+ * in which the expression was encountered. Instances of the Concept do exactly
  * that.
  */
-interface IModelElementReference {
+concept ModelElementReference {
 	/**
 	 * The value of surroundingClassifier is determined as follows:
 	 *  If the model element is a classifier, then the value is the model element.
@@ -26,12 +27,14 @@ interface IModelElementReference {
 }
 
 concept OclContext implements IModelElement {
-    owningModelelement: IModelElementReference; // the element to which the OCL expression is attached.
+    owningModelelement: ModelElementReference; // the element to which the OCL expression is attached.
     isDefinition: boolean; // true if the OCL expression defines an attribute or operation.
-    reference definedOperation?: Operation; // the operation that is defined in the OCL expression using the
+    definedOperation?: Operation; // the operation that is defined in the OCL expression using the
                                             // def construct.
-    reference definedAttribute?: Attribute; // the attribute that is defined in the OCL expression using the
+    definedAttribute?: Attribute; // the attribute that is defined in the OCL expression using the
                                             // def construct.
     expression: OclExpression; // The OCL expression itself.
-//    usageType: OclUsageType; // The role that the OCL plays. E.g. invariant, precondition, init expression, derivation rule, etc.
+    usageType: OclUsageType; // The role that the OCL plays. E.g. invariant, precondition, init expression, derivation rule, etc.
 }
+
+limited OclUsageType { inv; pre; post; init; derive; body; def; }

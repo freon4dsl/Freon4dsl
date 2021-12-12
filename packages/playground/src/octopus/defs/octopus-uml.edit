@@ -17,8 +17,8 @@ AssociationClass {
     @projection normal
         [[?${self.visibility}] <associationclass> ${self.name}
         ${self.end1} <-> ${self.end2}
-        [?<attributes> ${self.attributes @vertical @separator [\n]}]
-        [?<operations> ${self.operations @vertical @terminator [\n] }]
+        [?<attributes> ${self.attributes @vertical @terminator [;]}]
+        [?<operations> ${self.operations @vertical @terminator [;] }]
         [?<states> ${self.states @vertical @terminator [;] }]
         [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <endassociationclass>
@@ -32,7 +32,7 @@ AssociationEnd {
 
 Attribute {
     @projection normal
-        [[?${self.visibility}] ${self.name}[?${self.multiplicity}] : ${self.type} ;
+        [[?${self.visibility}] ${self.name}[?${self.multiplicity}] : ${self.type}
             [?init ${self.init}]
             [?derive ${self.derive}]
         ]
@@ -43,8 +43,8 @@ UmlClass {
         [[?${self.visibility}] [?${self.isAbstract @keyword [<abstract>]}] <class> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         [?<implements> ${self.interfaces @horizontal @separator [, ] }]
-        [?<attributes> ${self.attributes @vertical @terminator [\n] }]
-        [?<operations> ${self.operations @vertical @terminator [\n] }]
+        [?<attributes> ${self.attributes @vertical @terminator [;] }]
+        [?<operations> ${self.operations @vertical @terminator [;] }]
         [?<states> ${self.states @vertical @terminator [;] }]
         [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <endclass>
@@ -71,8 +71,8 @@ DataType {
         [[?${self.visibility}] <datatype> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
         [?<implements> ${self.interfaces @horizontal @separator [, ] }]
-        [?<attributes> ${self.attributes @vertical @terminator [\n] }]
-        [?<operations> ${self.operations @vertical @terminator [\n] }]
+        [?<attributes> ${self.attributes @vertical @terminator [;] }]
+        [?<operations> ${self.operations @vertical @terminator [;] }]
         [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <enddatatype>
         ]
@@ -95,8 +95,8 @@ UmlInterface  {
     @projection normal
         [[?${self.visibility}] <interface> ${self.name}
         [?<specializes> ${self.generalizations @horizontal @separator [, ] }]
-        [?<attributes> ${self.attributes @vertical @terminator [\n]}]
-        [?<operations> ${self.operations @vertical @terminator [\n] }]
+        [?<attributes> ${self.attributes @vertical @terminator [;]}]
+        [?<operations> ${self.operations @vertical @terminator [;] }]
         [?<invariants> ${self.invariants @vertical @terminator [;] }]
         <endinterface>
         ]
@@ -114,9 +114,9 @@ StarUpperBound {
 
 Operation {
     @projection normal
-    [[?${self.visibility}] ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}] ;
-        [?${self.pre @vertical @terminator [\n]}]
-        [?${self.post @vertical @terminator [\n]}]
+    [[?${self.visibility}] ${self.name} ( [?${self.parameters @horizontal @separator [, ]}] ) [?: ${self.returnType}]
+        [?${self.pre @vertical}]
+        [?${self.post @vertical}]
     ]
 }
 
@@ -124,8 +124,8 @@ UmlPackage {
 // TODO subprojection self.imports removes newline between self.name and self.classifiers
     @projection normal
         [<package> ${self.name}
-        [?${ self.imports @vertical @separator [\n] }]
-        ${ self.classifiers @vertical @separator [\n] }
+        [?${ self.imports @vertical}]
+        ${ self.classifiers @vertical}
         <associations>
         ${ self.associations @vertical @terminator [;] }
         <endpackage>

@@ -148,13 +148,13 @@ export class ConceptMaker {
                 console.log("asking for a binary: " + propType.name)
                 // TODO
             } else if (!prop.isList && prop.isPart && (!prop.isOptional || inOptionalGroup)) {           // (non-list, part, non-optional)
-                return new RHSPartEntry(prop); //`${propTypeName} /* option E */`;
+                return new RHSPartEntry(prop);
             } else if (!prop.isList && prop.isPart && (prop.isOptional && !inOptionalGroup)) {     // (non-list, part, optional)
-                return new RHSPartOptionalEntry(prop); //`${propTypeName} /* option E */`;
+                return new RHSPartOptionalEntry(prop);
             } else if (!prop.isList && !prop.isPart && (!prop.isOptional || inOptionalGroup)) {    // (non-list, reference, non-optional)
-                return new RHSRefEntry(prop); //`${propTypeName} /* option E */`;
+                return new RHSRefEntry(prop);
             } else if (!prop.isList && !prop.isPart && (prop.isOptional && !inOptionalGroup)) {    // (non-list, reference, optional)
-                return new RHSRefOptionalEntry(prop); //`${propTypeName} /* option E */`;
+                return new RHSRefOptionalEntry(prop);
             } else if (prop.isList && prop.isPart) {                                // (list, part, optionality not relevant)
                 let joinText = this.makeListJoinText(item.listJoin?.joinText);
                 if (joinText.length == 0 || item.listJoin?.joinType === ListJoinType.NONE) {
