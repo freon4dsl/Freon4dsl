@@ -71,20 +71,16 @@
                "$typename": "Method",
                "name": "meth21",
                "body": {
-                  "$typename": "GroupedExpression",
-                  "inner": {
-                     "$typename": "EqualsExpression",
-                     "left": {
-                        "$typename": "ParameterRef",
-                        "appliedfeature": null,
-                        "parameter": "parA"
-                     },
-                     "right": {
-                        "$typename": "ParameterRef",
-                        "appliedfeature": null,
-                        "parameter": "parB"
-                     },
-                     "appliedfeature": null
+                  "$typename": "EqualsExpression",
+                  "left": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": null,
+                     "parameter": "parA"
+                  },
+                  "right": {
+                     "$typename": "ParameterRef",
+                     "appliedfeature": null,
+                     "parameter": "parB"
                   },
                   "appliedfeature": null
                },
