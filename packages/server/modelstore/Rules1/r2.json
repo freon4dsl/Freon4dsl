@@ -1,0 +1,19 @@
+{
+   "$typename": "Rules",
+   "name": "r2",
+   "Rules": [
+      {
+         "$typename": "CheckingRule",
+         "name": "",
+         "description": "",
+         "check": {
+            "$typename": "AttributeRef",
+            "attr": "Name"
+         }
+      }
+   ],
+   "imports": [
+      "Entities"
+   ],
+   "forEntity": "Patient"
+}

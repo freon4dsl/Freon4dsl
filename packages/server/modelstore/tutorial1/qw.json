@@ -1,0 +1,21 @@
+{
+   "$typename": "EntityModelUnit",
+   "name": "qw",
+   "functions": [],
+   "entities": [
+      {
+         "$typename": "Entity",
+         "isCompany": true,
+         "simpleprop": "",
+         "name": "DemoModel",
+         "baseInterface_attr": 0,
+         "attributes": [],
+         "entAttributes": [],
+         "functions": [],
+         "int_attrs": [],
+         "int_functions": [],
+         "baseEntity": null,
+         "baseInterface": null
+      }
+   ]
+}

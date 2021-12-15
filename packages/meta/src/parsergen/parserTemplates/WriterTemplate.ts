@@ -17,6 +17,7 @@ import {
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
+import { ParserGenUtil } from "./ParserGenUtil";
 
 export class WriterTemplate {
 
@@ -346,8 +347,10 @@ export class WriterTemplate {
             lines.map(line => line.items.map(item => {
                 // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
                 if (item instanceof PiEditInstanceProjection) {
+                    // add escapes to keyword
+                    const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword);
                     cases += `case ${item.expression.sourceName}.${item.expression.instanceName}: {
-                                this.output[this.currentLine] += "${item.keyword} ";
+                                this.output[this.currentLine] += "${myKeyword} ";
                                 break;
                                 }
                                 `
@@ -445,8 +448,9 @@ export class WriterTemplate {
     private makeItem(item: PiEditProjectionItem, indent: number): string {
         let result: string = ``;
         if (item instanceof PiEditProjectionText) {
-            // TODO escape all quotes in the text string, when we know how they are stored in the projection
-            result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
+            // add escapes to item.text
+            const myText = ParserGenUtil.escapeRelevantChars(item.text).trimRight();
+            result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof PiEditPropertyProjection) {
             const myElem = item.expression.findRefOfLastAppliedFeature();
             if (myElem instanceof PiPrimitiveProperty) {
@@ -464,6 +468,10 @@ export class WriterTemplate {
                     if (sub.expression.findRefOfLastAppliedFeature().isList) {
                         myTypeScript = `!!${myTypeScript} && ${myTypeScript}.length > 0`;
                     } else {
+                        // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
+                        // remove only the last ".referred"
+                        myTypeScript = this.removeLastReferred(myTypeScript);
+                        // end hack
                         myTypeScript = `!!${myTypeScript}`;
                     }
                 }
@@ -514,11 +522,10 @@ export class WriterTemplate {
             const joinType = this.getJoinType(item);
             // TODO adjust to tables
             if (joinType.length > 0) { // it is a list not table
+                // add escapes to joinText
+                const myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
                 result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, ${isIdentifier},"${item.listInfo.joinText}", ${joinType}, ${vertical},
-                    this.output[this.currentLine].length,
-                    short
-                );`;
+                    ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},`;
             }
         } else {
             let myCall: string = ``;
@@ -526,26 +533,15 @@ export class WriterTemplate {
             if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else if (myType === PiPrimitiveType.boolean && !!item.keyword) {
+                // add escapes to keyword
+                const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword);
                 myCall = `if (${elemStr}) { 
-                              this.output[this.currentLine] += \`${item.keyword} \`
+                              this.output[this.currentLine] += \`${myKeyword} \`
                           }`;
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
-            // TODO check this solution: there is one if-stat too many in
-            // if (!!modelelement.primNumberWithExtra) {
-            //     this.output[this.currentLine] += `before `;
-            //     if (!!modelelement.primNumberWithExtra) {
-            //         this.output[this.currentLine] += `${modelelement.primNumberWithExtra} `;
-            //     }
-            //     this.output[this.currentLine] += `after `;
-            // }
-            // this seems to be the solution:
-            // if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-            //     result += `if (!!${elemStr}) { ${myCall} }`;
-            // } else {
-                result += myCall;
-            // }
+            result += myCall;
         }
         return result + ";\n";
     }
@@ -585,11 +581,7 @@ export class WriterTemplate {
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
                     // remove only the last ".referred"
-                    if (myTypeScript.endsWith("?.referred")) {
-                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
-                    } else if (myTypeScript.endsWith(".referred")) {
-                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
-                    }
+                    myTypeScript = this.removeLastReferred(myTypeScript);
                     // end hack
                     myCall += `this.unparseReference(${myTypeScript}, short);`;
                     // if (type instanceof PiLimitedConcept) {
@@ -606,6 +598,15 @@ export class WriterTemplate {
             }
         }
         return result + ";\n";
+    }
+
+    private removeLastReferred(myTypeScript: string) {
+        if (myTypeScript.endsWith("?.referred")) {
+            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
+        } else if (myTypeScript.endsWith(".referred")) {
+            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
+        }
+        return myTypeScript;
     }
 
     /**
@@ -662,6 +663,5 @@ export class WriterTemplate {
         } else {
             return `${shortUnparsing}`;
         }
-
     }
 }

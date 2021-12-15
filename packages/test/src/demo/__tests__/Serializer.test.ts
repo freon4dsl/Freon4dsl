@@ -2,7 +2,6 @@ import { DemoEnvironment } from "../environment/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
 import { GenericModelSerializer } from "@projectit/core";
 import { JsonModelCreator } from "./JsonModelCreator";
-import { DemoModelCreator } from "./DemoModelCreator";
 
 describe("Checking Serializer on Demo", () => {
     DemoEnvironment.getInstance();

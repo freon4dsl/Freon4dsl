@@ -48,7 +48,7 @@ export class LanguageAnalyser implements PiAnalyser {
             this.unitAnalysers.push(unitAnalyser);
             unitAnalyser.analyseUnit(unit);
             // do analysis for semantic phase
-            this.refCorrectorMaker.analyse(unitAnalyser.interfacesAndAbstractsUsed);
+            this.refCorrectorMaker.analyse(unitAnalyser);
         });
 
         this.getCommonsFromUnits();

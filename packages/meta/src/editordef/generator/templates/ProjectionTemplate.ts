@@ -36,6 +36,8 @@ import { Attribute, PiElementReference, Type } from "@projectit/playground/dist/
 import { attributeHeader } from "@projectit/playground/dist/example/editor/styles/CustomStyles";
 import { ExampleEnvironment } from "@projectit/playground/dist/example/environment/gen/ExampleEnvironment";
 import { PiEditTableProjection } from "../../metalanguage/PiEditDefLang";
+import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
+import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
 export class ProjectionTemplate {
 
@@ -242,7 +244,9 @@ export class ProjectionTemplate {
                            language: PiLanguage) {
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
-            result += ` BoxUtils.labelBox(${elementVarName}, "${item.text.trim()}") `;
+            result += ` BoxFactory.label(${elementVarName}, "${elementVarName}-label-line-${index}-item-${itemIndex}", "${item.text}", {
+                            selectable: false
+                        }) `;
         } else if (item instanceof PiEditPropertyProjection) {
             result += this.propertyProjection(item, elementVarName, concept, language);
         } else if (item instanceof PiEditSubProjection) {
@@ -360,12 +364,18 @@ export class ProjectionTemplate {
      * @param propertyConcept   The property for which the projection is generated.
      * @param element           The name of the element parameter of the getBox projection method.
      */
-    private conceptPartListProjection(item: PiEditPropertyProjection, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
-        let joinEntry = this.getJoinEntry(item.listInfo);
-        if (item.listInfo.direction === PiEditProjectionDirection.Vertical) {
-            return `BoxUtils.verticalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
-        } // else
-        return `BoxUtils.horizontalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
+    conceptPartListProjection(item: PiEditPropertyProjection, direction: string, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
+        return `
+            BoxFactory.${direction.toLowerCase()}List(${element}, "${Roles.property(propertyConcept)}-list", 
+                ${element}.${propertyConcept.name}.map(feature => {
+                    const roleName: string =  "${Roles.property(propertyConcept)}-" + feature.piId() + "-separator";
+                    return BoxFactory.horizontalList(${element}, roleName, [this.rootProjection.getBox(feature), BoxFactory.label(${element}, roleName + "label", "${item.listJoin.joinText}")]) as Box;
+                }).concat(
+                    BoxFactory.alias(${element}, "${Roles.newConceptPart(concept, propertyConcept)}", "<+ ${propertyConcept.name}>" , { //  add ${propertyConcept.name}
+                        propertyName: "${propertyConcept.name}"
+                    })
+                )
+            )`;
     }
 
     private conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {

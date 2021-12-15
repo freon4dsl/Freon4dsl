@@ -8,6 +8,9 @@ import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 const LOGGER = new PiLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
 
+// the address of our server
+const SERVER_URL = "http://127.0.0.1:3001/";
+
 export class ServerCommunication implements IServerCommunication {
     static serial: GenericModelSerializer = new GenericModelSerializer();
     static instance: ServerCommunication;
@@ -36,7 +39,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async putModelUnit(modelName: string, unitName: string, piUnit: PiNamedElement) {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitName}`);
-        if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
+        if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_\-]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piUnit);
             const publicModel = ServerCommunication.serial.convertToJSON(piUnit, true);
             await this.putWithTimeout(`putModelUnit`, model, `folder=${modelName}&name=${unitName}` );
@@ -46,7 +49,7 @@ export class ServerCommunication implements IServerCommunication {
                 `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`
             );
         } else {
-            LOGGER.error(this, "Name of Unit '" + unitName + "' may contain only characters and numbers, and must start with a character.");
+            LOGGER.error(this, "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
         }
     }
 
@@ -80,11 +83,12 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadModelList(modelListCallback: (names: string[]) => void) {
         LOGGER.log(`ServerCommunication.loadModelList`);
-        let res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
-        if (res === null || res === undefined) {
-            res = [];
+        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
+        if (!!res) {
+            modelListCallback(res);
+        } else {
+            modelListCallback([]);
         }
-        modelListCallback(res);
     }
 
     /**
@@ -98,8 +102,10 @@ export class ServerCommunication implements IServerCommunication {
         // filter out the modelUnitInterfaces
         if (!!modelUnits) {
             modelUnits = modelUnits.filter( (name: string) => name.indexOf(modelUnitInterfacePostfix) === -1 );
+            modelListCallback(modelUnits);
+        } else {
+            modelListCallback([]);
         }
-        modelListCallback(modelUnits);
     }
 
     /**
@@ -112,13 +118,15 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiNamedElement) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
-            const res: string = await this.fetchWithTimeout<string>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
-            try {
-                const unit = ServerCommunication.serial.toTypeScriptInstance(res);
-                loadCallback(unit);
-            } catch (e) {
-                LOGGER.error(this, "loadModelUnit, " + e.message);
-                setUserMessage(e.message);
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
+            if (!!res) {
+                try {
+                    const unit = ServerCommunication.serial.toTypeScriptInstance(res);
+                    loadCallback(unit);
+                } catch (e) {
+                    LOGGER.error(this, "loadModelUnit, " + e.message);
+                    setUserMessage(e.message);
+                }
             }
         }
     }
@@ -133,13 +141,15 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: PiNamedElement) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         if (!!unitName && unitName.length > 0) {
-            const res: string = await this.fetchWithTimeout<string>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
-            try {
-                const model = ServerCommunication.serial.toTypeScriptInstance(res);
-                loadCallback(model);
-            } catch (e) {
-                LOGGER.error(this, "loadModelUnitInterface, " + e.message);
-                setUserMessage(e.message);
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
+            if (!!res) {
+                try {
+                    const model = ServerCommunication.serial.toTypeScriptInstance(res);
+                    loadCallback(model);
+                } catch (e) {
+                    LOGGER.error(this, "loadModelUnitInterface, " + e.message);
+                    setUserMessage(e.message);
+                }
             }
         }
     }
@@ -159,7 +169,7 @@ export class ServerCommunication implements IServerCommunication {
                 }
             });
             clearTimeout(timeoutId);
-            return await promise.json() as Promise<T>;
+            return await promise.json() ;
         } catch (e) {
             this.handleError(e);
         }

@@ -44,6 +44,7 @@ MultiLineComment
   = "/*" (!"*/" SourceCharacter)* "*/"
 
 // from JSON example
+// see also ParserGenUtil.escapeRelevantChars()
 char
   = unescaped
   / escape

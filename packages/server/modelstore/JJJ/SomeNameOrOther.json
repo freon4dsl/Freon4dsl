@@ -1,0 +1,228 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "SomeNameOrOther",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "ent1",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "myTextAttribute",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "otherAtrr",
+               "declaredType": "Boolean"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "qwerty",
+               "declaredType": "String"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "meth56",
+               "body": {
+                  "$typename": "GroupedExpression",
+                  "inner": {
+                     "$typename": "PlusExpression",
+                     "left": {
+                        "$typename": "GroupedExpression",
+                        "inner": {
+                           "$typename": "DivideExpression",
+                           "left": {
+                              "$typename": "GroupedExpression",
+                              "inner": {
+                                 "$typename": "MultiplyExpression",
+                                 "left": {
+                                    "$typename": "NumberLiteralExpression",
+                                    "value": 23,
+                                    "appliedfeature": null
+                                 },
+                                 "right": {
+                                    "$typename": "NumberLiteralExpression",
+                                    "value": 56,
+                                    "appliedfeature": null
+                                 },
+                                 "appliedfeature": null
+                              },
+                              "appliedfeature": null
+                           },
+                           "right": {
+                              "$typename": "NumberLiteralExpression",
+                              "value": 45,
+                              "appliedfeature": null
+                           },
+                           "appliedfeature": null
+                        },
+                        "appliedfeature": null
+                     },
+                     "right": {
+                        "$typename": "NumberLiteralExpression",
+                        "value": 458,
+                        "appliedfeature": null
+                     },
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [],
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Method",
+               "name": "meth56A",
+               "body": {
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "DivideExpression",
+                     "left": {
+                        "$typename": "MultiplyExpression",
+                        "left": {
+                           "$typename": "NumberLiteralExpression",
+                           "value": 23,
+                           "appliedfeature": null
+                        },
+                        "right": {
+                           "$typename": "NumberLiteralExpression",
+                           "value": 56,
+                           "appliedfeature": null
+                        },
+                        "appliedfeature": null
+                     },
+                     "right": {
+                        "$typename": "NumberLiteralExpression",
+                        "value": 45,
+                        "appliedfeature": null
+                     },
+                     "appliedfeature": null
+                  },
+                  "right": {
+                     "$typename": "NumberLiteralExpression",
+                     "value": 458,
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [],
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Method",
+               "name": "meth000",
+               "body": {
+                  "$typename": "PlusExpression",
+                  "left": {
+                     "$typename": "AbsExpression",
+                     "expr": {
+                        "$typename": "ParameterRef",
+                        "appliedfeature": {
+                           "$typename": "AttributeRef",
+                           "appliedfeature": null,
+                           "attribute": "xx"
+                        },
+                        "parameter": "par1"
+                     },
+                     "appliedfeature": null
+                  },
+                  "right": {
+                     "$typename": "MethodCallExpression",
+                     "args": [],
+                     "appliedfeature": null,
+                     "methodDefinition": "meth21"
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [
+                  {
+                     "$typename": "Parameter",
+                     "name": "par1",
+                     "declaredType": "String"
+                  },
+                  {
+                     "$typename": "Parameter",
+                     "name": "par2",
+                     "declaredType": "ent1"
+                  }
+               ],
+               "declaredType": "Integer"
+            }
+         ],
+         "baseEntity": "ent4"
+      },
+      {
+         "$typename": "Entity",
+         "name": "ent2",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "name",
+               "declaredType": "String"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "age",
+               "declaredType": "Integer"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "meth876",
+               "body": {
+                  "$typename": "GroupedExpression",
+                  "inner": {
+                     "$typename": "AndExpression",
+                     "left": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": true,
+                        "appliedfeature": null
+                     },
+                     "right": {
+                        "$typename": "BooleanLiteralExpression",
+                        "value": false,
+                        "appliedfeature": null
+                     },
+                     "appliedfeature": null
+                  },
+                  "appliedfeature": null
+               },
+               "parameters": [],
+               "declaredType": "Boolean"
+            }
+         ],
+         "baseEntity": null
+      }
+   ],
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "meth21",
+         "body": {
+            "$typename": "IfExpression",
+            "condition": {
+               "$typename": "NumberLiteralExpression",
+               "value": 20,
+               "appliedfeature": null
+            },
+            "whenTrue": {
+               "$typename": "NumberLiteralExpression",
+               "value": 21,
+               "appliedfeature": null
+            },
+            "whenFalse": {
+               "$typename": "NumberLiteralExpression",
+               "value": 45,
+               "appliedfeature": null
+            },
+            "appliedfeature": null
+         },
+         "parameters": [],
+         "declaredType": "Integer"
+      }
+   ]
+}

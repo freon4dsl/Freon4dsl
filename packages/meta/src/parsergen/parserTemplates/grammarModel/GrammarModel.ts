@@ -55,7 +55,7 @@ leaf booleanLiteral      = 'false' | 'true';
             if (!!part.unit) {
                 result += `// rules for "${part.unit.name}"\n`;
             } else {
-                result += `// common rules"\n`;
+                result += `// common rules\n`;
             }
             part.rules.map(rule => {
                 result += rule.toGrammar() + "\n\n";
