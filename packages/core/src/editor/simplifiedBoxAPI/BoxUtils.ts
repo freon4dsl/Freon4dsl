@@ -1,5 +1,5 @@
 import { PiElement, PiNamedElement } from "../../language";
-import { Box, BoxFactory, SelectOption, TextBox } from "../boxes";
+import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
 import { BehaviorExecutionResult, PiUtils } from "../../util";
 import { Language, PropertyType } from "../../storage";
 import { PiEditor } from "../PiEditor";
@@ -7,16 +7,10 @@ import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
 
-export class PiListJoin {
+export class PiListInfo {
     text: string;
     type: string;
 }
-
-// export enum PiListJoinType {
-//     // both strings should be equal to the strings used in class ListInfo from package meta
-//     Separator = "Separator",
-//     Terminator = "Terminator"
-// }
 
 export class BoxUtils {
 
@@ -75,8 +69,12 @@ export class BoxUtils {
                     roleName,
                     () => element[propertyName][index],
                     (v: string) => (element[propertyName][index] = Number.parseInt(v)),
+
                     {
-                        placeHolder: `<${propertyName}>`
+                        placeHolder: `<${propertyName}>`,
+                        keyPressAction: (currentText: string, key: string, index: number) => {
+                            return isNumber(currentText, key, index);
+                        }
                     });
             } else {
                 result = BoxFactory.text(
@@ -254,7 +252,7 @@ export class BoxUtils {
         )
     }
 
-    static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListJoin): Box {
+    static verticalPartListBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
@@ -275,13 +273,13 @@ export class BoxUtils {
         }
     }
 
-    static verticalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListJoin): Box {
+    static verticalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listInfo?: PiListInfo): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
-            let children = this.makeRefItems(property, element, propertyName, scoper, listJoin);
+            let children = this.makeRefItems(property, element, propertyName, scoper, listInfo);
             // add a placeholder where a new element can be added
             children = this.addPlaceholder(children, element, propertyName);
             return BoxFactory.verticalList(
@@ -295,7 +293,7 @@ export class BoxUtils {
         }
     }
 
-    static horizontalPartListBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListJoin): Box {
+    static horizontalPartListBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
@@ -316,7 +314,7 @@ export class BoxUtils {
         }
     }
 
-    static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListJoin): Box {
+    static horizontalReferenceListBox(element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo): Box {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list
@@ -337,6 +335,10 @@ export class BoxUtils {
         }
     }
 
+    static horizontalPartTableBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo) {
+
+    }
+
     static getBoxOrAlias(element: PiElement, propertyName: string, rootProjection: PiProjection) {
         // find the information on the property to be shown
         const property = element[propertyName];
@@ -349,7 +351,7 @@ export class BoxUtils {
     // private static listBox(
     //     element: PiElement,
     //     propertyName: string,
-    //     listInfo: PiListJoin,
+    //     listInfo: PiListInfo,
     //     rootProjection: PiProjection,
     //     scoper?: PiScoper
     // ): Box {
@@ -444,7 +446,7 @@ export class BoxUtils {
         );
     }
 
-    private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListJoin) {
+    private static findPartItems(property: PiElement[], element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
@@ -472,7 +474,7 @@ export class BoxUtils {
         });
     }
 
-    private static makeRefItems(property: PiNamedElement[], element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListJoin) {
+    private static makeRefItems(property: PiNamedElement[], element: PiElement, propertyName: string, scoper: PiScoper, listJoin?: PiListInfo) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", index);
@@ -510,5 +512,20 @@ export class BoxUtils {
         const isList: boolean = propInfo.isList;
         const isPart: PropertyType = propInfo.propertyType;
         return { property, isList, isPart };
+    }
+}
+
+function isNumber(currentText: string, key: string, index: number): KeyPressAction {
+    // LOGGER.log("isNumber text [" + currentText + "] key [" + key + "] index [" + index + "]");
+    if (isNaN(Number(key))) {
+        if (index === currentText.length) {
+            return KeyPressAction.GOTO_NEXT;
+        } else if (index === 0) {
+            return KeyPressAction.GOTO_PREVIOUS;
+        } else {
+            return KeyPressAction.NOT_OK;
+        }
+    } else {
+        return KeyPressAction.OK;
     }
 }

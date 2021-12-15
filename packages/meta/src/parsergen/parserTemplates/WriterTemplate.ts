@@ -525,7 +525,10 @@ export class WriterTemplate {
                 // add escapes to joinText
                 const myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
                 result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},`;
+                    ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},
+                    this.output[this.currentLine].length,
+                    short
+                );`;
             }
         } else {
             let myCall: string = ``;

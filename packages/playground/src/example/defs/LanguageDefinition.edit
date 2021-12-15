@@ -11,9 +11,10 @@ Attribute {
 }
 
 Entity {
+//            ${self.attributes @table  }
     @projection [
         entity ${self.name} [? base ${self.baseEntity}] {
-            ${self.attributes @table  }
+            ${self.attributes @vertical  }
             ${self.methods @vertical}
         }
     ]

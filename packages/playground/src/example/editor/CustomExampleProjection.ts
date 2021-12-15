@@ -14,8 +14,8 @@ import {
     AliasBox,
     GridBox,
     PiStyle,
-    GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory
+    TableUtil,
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, BoxUtils
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute } from "../language/gen/Attribute";
@@ -25,7 +25,6 @@ import { OrExpression } from "../language/gen/OrExpression";
 import { PiElementReference } from "../language/gen/PiElementReference";
 import { SumExpression } from "../language/gen/SumExpression";
 import { Type } from "../language/gen/Type";
-import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
 import {
     attributeHeader,
     attributeName, entityBoxStyle, entityNameStyle,
@@ -52,7 +51,6 @@ const OPERAND_COLUM = 2;
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
 export class CustomExampleProjection implements PiProjection {
-    private helpers: ExampleSelectionHelpers = new ExampleSelectionHelpers();
     rootProjection: PiProjection;
     name: string = "manual";
 
@@ -64,23 +62,23 @@ export class CustomExampleProjection implements PiProjection {
 
     getBox(element: PiElement): Box {
         // Add any handmade projections of your own before next statement
-        if (element instanceof NumberLiteralExpression) {
-            return this.getDemoNumberLiteralExpressionBox(element);
-        }
+        // if (element instanceof NumberLiteralExpression) {
+        //     return this.getDemoNumberLiteralExpressionBox(element);
+        // }
         // Uncomment to see a mathematical Sum symbol
-        if (element instanceof SumExpression) {
-            return this.createSumBox(element);
-        }
+        // if (element instanceof SumExpression) {
+        //     return this.createSumBox(element);
+        // }
 
         // Uncomment to see a simple (unfinished) table representation of entity attributes
-        if (element instanceof Entity) {
-            return this.createEntityBox(element);
-        }
+        // if (element instanceof Entity) {
+        //     return this.createEntityBox(element);
+        // }
 
         // Uncomment to see an alternative OR notation (only works up to two nested ors
-        if (element instanceof OrExpression) {
-            return this.createOrBoxGrid(element);
-        }
+        // if (element instanceof OrExpression) {
+        //     return this.createOrBoxGrid(element);
+        // }
         return null;
     }
 
@@ -249,7 +247,6 @@ export class CustomExampleProjection implements PiProjection {
         ]);
     }
     private createEntityTableForAttributes(entity: Entity): Box {
-
         let cells: GridCell[] = [];
         cells.push({
             row: 1,
@@ -275,7 +272,7 @@ export class CustomExampleProjection implements PiProjection {
 
     // TODO Refactor row and column based collections into one generic function.
     private createAttributeGrid(entity: Entity): Box {
-        return GridUtil.createCollectionRowGrid<Attribute>(
+        return TableUtil.tableRowOriented<Attribute>(
             entity,
             "attr-grid",
             "attributes",
@@ -294,29 +291,16 @@ export class CustomExampleProjection implements PiProjection {
                     });
                 },
                 (attr: Attribute): Box => {
-                    return this.helpers.getReferenceBox(
+                    return BoxUtils.referenceBox(
                         attr,
                         "Attribute-declaredType",
-                        "<select declaredType>",
-                        "Type",
-                        () => {
-                            if (!!attr.declaredType) {
-                                return { id: attr.declaredType.name, label: attr.declaredType.name };
-                            } else {
-                                return null;
-                            }
+                        async (selected: string) => {
+                            attr.declaredType = PiElementReference.create<Type>(
+                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
+
                         },
-                        async (option: SelectOption): Promise<BehaviorExecutionResult> => {
-                            if (!!option) {
-                                attr.declaredType = PiElementReference.create<Type>(
-                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, option.label, "Type") as Type,
-                                    "Type"
-                                );
-                            } else {
-                                attr.declaredType = null;
-                            }
-                            return BehaviorExecutionResult.EXECUTED;
-                        }
+                        ExampleEnvironment.getInstance().scoper
+                        // , style: attributeName TODO add style
                     )
                 }
             ],
