@@ -115,8 +115,8 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiNamedElement) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
-            const res: string = await this.fetchWithTimeout<string>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
-            if (!!res && res.length > 0) {
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
+            if (!!res) {
                 try {
                     const unit = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(unit);
@@ -138,8 +138,8 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: PiNamedElement) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         if (!!unitName && unitName.length > 0) {
-            const res: string = await this.fetchWithTimeout<string>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
-            if (!!res && res.length > 0) {
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
+            if (!!res) {
                 try {
                     const model = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(model);
@@ -166,7 +166,7 @@ export class ServerCommunication implements IServerCommunication {
                 }
             });
             clearTimeout(timeoutId);
-            return await promise.json() as Promise<T>;
+            return await promise.json() ;
         } catch (e) {
             this.handleError(e);
         }
