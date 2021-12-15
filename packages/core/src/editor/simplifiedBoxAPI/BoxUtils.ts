@@ -32,11 +32,11 @@ export class BoxUtils {
         if (property !== undefined && property !== null && typeof property === "string") {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "textbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
-                result = BoxFactory.text(element, roleName, () => property[index], (v: string) => (property[index] = v),{
+                result = BoxFactory.text(element, roleName, () => element[propertyName][index], (v: string) => (element[propertyName][index] = v),{
                         placeHolder: `<${propertyName}>`
                     });
             } else {
-                result = BoxFactory.text(element, roleName, () => property, (v: string) => (property = v), {
+                result = BoxFactory.text(element, roleName, () => element[propertyName], (v: string) => (element[propertyName] = v), {
                     placeHolder: `<${propertyName}>`
                 });
             }
@@ -67,9 +67,8 @@ export class BoxUtils {
                 result = BoxFactory.text(
                     element,
                     roleName,
-                    () => element[propertyName][index],
+                    () => element[propertyName][index].toString(),
                     (v: string) => (element[propertyName][index] = Number.parseInt(v)),
-
                     {
                         placeHolder: `<${propertyName}>`,
                         keyPressAction: (currentText: string, key: string, index: number) => {
@@ -80,10 +79,13 @@ export class BoxUtils {
                 result = BoxFactory.text(
                     element,
                     roleName,
-                    () => element[propertyName],
+                    () => element[propertyName].toString(),
                     (v: string) => (element[propertyName] = Number.parseInt(v)),
                     {
-                        placeHolder: `<${propertyName}>`
+                        placeHolder: `<${propertyName}>`,
+                        keyPressAction: (currentText: string, key: string, index: number) => {
+                            return isNumber(currentText, key, index);
+                        }
                     });
             }
         } else {
@@ -187,7 +189,10 @@ export class BoxUtils {
         scoper: PiScoper,
         index?: number
     ): Box {
-        const propType = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type;
+        const propType = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
+        if (!propType) {
+            throw new Error("Cannot find property type '" + propertyName +"'");
+        }
         let property = element[propertyName];
         const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "referencebox", index);
         // set the value for use in lists
@@ -348,74 +353,6 @@ export class BoxUtils {
             : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName });
     }
 
-    // private static listBox(
-    //     element: PiElement,
-    //     propertyName: string,
-    //     listInfo: PiListInfo,
-    //     rootProjection: PiProjection,
-    //     scoper?: PiScoper
-    // ): Box {
-    //     // find the information on the property to be shown
-    //     let property = element[propertyName];
-    //     const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
-    //     const isList: boolean = propInfo.isList;
-    //     const isPart: PropertyType = propInfo.propertyType;
-    //
-    //     if (property !== undefined && propertyName !== null && isList) {
-    //         // find the children to show in this listBox, depending on whether it is a list of parts or of references
-    //         let children = null;
-    //         if (isPart !== "reference") {
-    //             children = property.map(listElem => {
-    //                     const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "list-item", listElem.piId());
-    //                     // TODO check this!!
-    //                     return BoxFactory.horizontalList(element, roleName, [
-    //                         rootProjection.getBox(listElem),
-    //                         BoxFactory.label(element, roleName + "label", "")
-    //                     ]);
-    //                 });
-    //         } else {
-    //             if (!!scoper) {
-    //                 children = property.map((listElem, index) => {
-    //                     return BoxUtils.referenceBox(element, propertyName,
-    //                         (selected: string) => {
-    //                             listElem.name = selected;
-    //                             return BehaviorExecutionResult.EXECUTED;
-    //                         },
-    //                         scoper, index)
-    //                     });
-    //             } else {
-    //                 PiUtils.CHECK(false, "Box for reference " + propertyName + " needs a scoper instance.");
-    //                 return null;
-    //             }
-    //         }
-    //         // add a placeholder where a new element can be added
-    //         children = children.concat(
-    //                 BoxFactory.alias(
-    //                     element,
-    //                     RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"),
-    //                     `<+ ${propertyName}>`,
-    //                     { propertyName: `${propertyName}` })
-    //             );
-    //         // determine the box to be returned based on the direction
-    //         if (direction === ListDirection.VERTICAL) {
-    //             return BoxFactory.verticalList(
-    //                 element,
-    //                 RoleProvider.property(element.piLanguageConcept(), propertyName, "vlist"),
-    //                 children
-    //             );
-    //         } else {
-    //             return BoxFactory.horizontalList(
-    //                 element,
-    //                 RoleProvider.property(element.piLanguageConcept(), propertyName, "hlist"),
-    //                 children
-    //             );
-    //         }
-    //     } else {
-    //         PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list: " + property + "\"");
-    //         return null;
-    //     }
-    // }
-
     /**
      *
      * @param isList
@@ -516,7 +453,7 @@ export class BoxUtils {
 }
 
 function isNumber(currentText: string, key: string, index: number): KeyPressAction {
-    // LOGGER.log("isNumber text [" + currentText + "] key [" + key + "] index [" + index + "]");
+    console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
             return KeyPressAction.GOTO_NEXT;
