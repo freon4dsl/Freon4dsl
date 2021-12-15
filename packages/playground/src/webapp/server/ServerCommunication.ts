@@ -1,4 +1,6 @@
-import { GenericModelSerializer, PiLogger, PiNamedElement } from "@projectit/core";
+import { PiLogger } from "@projectit/core";
+import { PiNamedElement } from "@projectit/core";
+import { GenericModelSerializer } from "@projectit/core";
 import { IServerCommunication } from "./IServerCommunication";
 import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 

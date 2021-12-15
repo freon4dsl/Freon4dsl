@@ -4,13 +4,13 @@ import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
 import { Box, AliasBox, PiEditor } from "../internal";
 import { PiElement } from "../../language";
 
-enum Direction {
+export enum ListDirection {
     HORIZONTAL = "Horizontal",
     VERTICAL = "Vertical"
 }
 
 export abstract class ListBox extends Box {
-    protected direction: Direction = Direction.HORIZONTAL;
+    protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
 
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
@@ -84,7 +84,7 @@ export class HorizontalListBox extends ListBox {
 
     constructor(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
         super(element, role, children, initializer);
-        this.direction = Direction.HORIZONTAL;
+        this.direction = ListDirection.HORIZONTAL;
     }
 }
 
@@ -93,7 +93,7 @@ export class VerticalListBox extends ListBox {
 
     constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role, children, initializer);
-        this.direction = Direction.VERTICAL;
+        this.direction = ListDirection.VERTICAL;
     }
 }
 

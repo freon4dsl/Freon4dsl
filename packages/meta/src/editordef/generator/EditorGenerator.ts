@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger";
+import { MetaLogger } from "../../utils";
 import { PiLanguage } from "../../languagedef/metalanguage";
 import {
     EDITOR_FOLDER,
@@ -12,7 +12,7 @@ import {
 } from "../../utils";
 import { PiEditUnit } from "../metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
-import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate, SelectionHelpers } from "./templates";
+import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate, StylesTemplate } from "./templates";
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
@@ -49,7 +49,6 @@ export class EditorGenerator {
         const actions = new ActionsTemplate();
         const projection = new ProjectionTemplate();
         const customProjectiontemplate = new CustomProjectionTemplate();
-        const enumProjection = new SelectionHelpers();
         const editorIndexTemplate = new EditorIndexTemplate();
         const stylesTemplate = new StylesTemplate();
 
@@ -67,11 +66,6 @@ export class EditorGenerator {
         const projectionfileDefault = Helpers.pretty(projection.generateProjectionDefault(this.language, editDef, relativePath),
             "Projection Default", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/${Names.projectionDefault(this.language)}.ts`, projectionfileDefault);
-
-        LOGGER.log(`Generating enumeration projections: ${this.editorGenFolder}/${Names.selectionHelpers(this.language)}.ts`);
-        const enumProjectionFile = Helpers.pretty(enumProjection.generateEnumProjection(this.language, editDef, relativePath),
-            "Enumeration Projections", generationStatus);
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.selectionHelpers(this.language)}.ts`, enumProjectionFile);
 
         LOGGER.log(`Generating default actions: ${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`);
         const defaultActionsFile = Helpers.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions", generationStatus);

@@ -4,13 +4,18 @@ Attribute {
     @projection attribuut [
         ${self.name} : ${self.declaredType}
     ]
+    @table xxx [
+        NAME_HEADER | TYPE_HEADER\[\]
+        ${self.name} | ${self.declaredType}
+    ]
 }
 
 Entity {
+//            ${self.attributes @table  }
     @projection [
         entity ${self.name} [? base ${self.baseEntity}] {
-            ${self.attributes @vertical }
-            ${self.methods @vertical }
+            ${self.attributes @vertical  }
+            ${self.methods @vertical}
         }
     ]
     @trigger "entity"
@@ -24,7 +29,7 @@ ExampleUnit {
                 @vertical
             }
         unit level methods:
-            ${self.methods @vertical  }
+            ${self.methods @vertical }
         }
         ]
 }
