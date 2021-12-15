@@ -290,7 +290,7 @@
     const onInput = async (e: InputEvent) => {
         isEditing = true;
         let value = currentText();
-        console.log("onInput data" + e.data + ":  current [" + currentText() + "] box text [" + textBox.getText() + "]");
+        LOGGER.log("onInput data" + e.data + ":  current [" + currentText() + "] box text [" + textBox.getText() + "]");
         textBox.caretPosition = getCaretPosition();
         textBox.setText(value);
         editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);

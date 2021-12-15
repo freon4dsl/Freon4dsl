@@ -62,36 +62,22 @@ export class CustomExampleProjection implements PiProjection {
 
     getBox(element: PiElement): Box {
         // Add any handmade projections of your own before next statement
-        // if (element instanceof NumberLiteralExpression) {
-        //     return this.getDemoNumberLiteralExpressionBox(element);
-        // }
+
         // Uncomment to see a mathematical Sum symbol
         // if (element instanceof SumExpression) {
         //     return this.createSumBox(element);
         // }
 
         // Uncomment to see a simple (unfinished) table representation of entity attributes
-        // if (element instanceof Entity) {
-        //     return this.createEntityBox(element);
-        // }
+        if (element instanceof Entity) {
+            return this.createEntityBox(element);
+        }
 
         // Uncomment to see an alternative OR notation (only works up to two nested ors
         // if (element instanceof OrExpression) {
         //     return this.createOrBoxGrid(element);
         // }
         return null;
-    }
-
-    public getDemoNumberLiteralExpressionBox(exp: NumberLiteralExpression): Box {
-        return createDefaultExpressionBox(exp, "number-literal", [
-            new TextBox(exp, "NumberLiteralExpression-value", () => exp.value.toString(), (v: string) => (exp.value = Number.parseInt(v)), {
-                deleteWhenEmpty: true,
-                // style: projectitStyles.stringLiteral,
-                keyPressAction: (currentText: string, key: string, index: number) => {
-                    return isNumber(currentText, key, index);
-                }
-            })
-        ]);
     }
 
     public createSumBox(sum: SumExpression): Box {
@@ -234,14 +220,7 @@ export class CustomExampleProjection implements PiProjection {
 
     private createEntityBox(entity: Entity): Box {
         return BoxFactory.verticalList(entity, "entity-custom-all", [
-            new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
-                deleteWhenEmpty: true,
-                placeHolder: "<enter entity name>",
-                keyPressAction: (currentText: string, key: string, index: number) => {
-                    return isName(currentText, key, index);
-                },
-                style: entityNameStyle
-            }),
+            BoxUtils.textBox(entity, "name"),
             this.createAttributeGrid(entity),
             this.createMethods(entity)
         ]);
@@ -252,15 +231,7 @@ export class CustomExampleProjection implements PiProjection {
             row: 1,
             column: 1,
             columnSpan: 2,
-            box: new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
-                deleteWhenEmpty: true,
-                placeHolder: "<enter entity name>",
-                keyPressAction: (currentText: string, key: string, index: number) => {
-                    return isName(currentText, key, index);
-                },
-                style: entityNameStyle
-            }),
-            // style: styleToCSS(entityBoxStyle)
+            box: BoxUtils.textBox(entity, "name")
         });
         cells.push({
             row: 2,
@@ -281,26 +252,17 @@ export class CustomExampleProjection implements PiProjection {
             [attributeHeader, attributeHeader],
             [rowStyle, rowStyle],
             [
-                (att: Attribute): Box => {
-                    return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
-                        deleteWhenEmpty: true,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
-                            return isName(currentText, key, index);
-                        },
-                        placeHolder: "<name>"
-                    });
-                },
+                (att: Attribute): Box => {return BoxUtils.textBox(att, "name");},
                 (attr: Attribute): Box => {
                     return BoxUtils.referenceBox(
                         attr,
-                        "Attribute-declaredType",
+                        "declaredType",
                         async (selected: string) => {
                             attr.declaredType = PiElementReference.create<Type>(
                                     ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
 
                         },
                         ExampleEnvironment.getInstance().scoper
-                        // , style: attributeName TODO add style
                     )
                 }
             ],
@@ -314,32 +276,17 @@ export class CustomExampleProjection implements PiProjection {
 
 }
 
-function isNumber(currentText: string, key: string, index: number): KeyPressAction {
-    LOGGER.log("isNumber text [" + currentText + "] key [" + key + "] index [" + index + "]");
-    if (isNaN(Number(key))) {
-        if (index === currentText.length) {
-            return KeyPressAction.GOTO_NEXT;
-        } else if (index === 0) {
-            return KeyPressAction.GOTO_PREVIOUS;
-        } else {
-            return KeyPressAction.NOT_OK;
-        }
-    } else {
-        return KeyPressAction.OK;
-    }
-}
-
-function isName(currentText: string, key: string, index: number): KeyPressAction {
-    // LOGGER.log("IsName key[" + key + "]");
-    if (key === "Enter") {
-        if (index === currentText.length) {
-            return KeyPressAction.GOTO_NEXT;
-        } else {
-            return KeyPressAction.NOT_OK;
-        }
-    } else {
-        return KeyPressAction.OK;
-    }
-}
+// function isName(currentText: string, key: string, index: number): KeyPressAction {
+//     // LOGGER.log("IsName key[" + key + "]");
+//     if (key === "Enter") {
+//         if (index === currentText.length) {
+//             return KeyPressAction.GOTO_NEXT;
+//         } else {
+//             return KeyPressAction.NOT_OK;
+//         }
+//     } else {
+//         return KeyPressAction.OK;
+//     }
+// }
 
 
