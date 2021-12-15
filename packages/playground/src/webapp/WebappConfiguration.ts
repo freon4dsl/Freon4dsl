@@ -1,6 +1,7 @@
 import { PiEnvironment } from "@projectit/core";
 import { IServerCommunication } from "./server/IServerCommunication";
 import { ServerCommunication } from "./server/ServerCommunication";
+
 /**
  * The one and only reference to the actual language for which this editor runs
  */
@@ -8,8 +9,11 @@ import { ServerCommunication } from "./server/ServerCommunication";
 // export const editorEnvironment: PiEnvironment = TestParserEnvironment.getInstance();
 // import { OctopusEnvironment } from "../octopus/environment/gen/OctopusEnvironment";
 // export const editorEnvironment: PiEnvironment = OctopusEnvironment.getInstance();
-import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
-export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+// import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
+// export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
+
+import { ExpressionLibraryEnvironment } from "../libraries-test/environment/gen/ExpressionLibraryEnvironment";
+export const editorEnvironment: PiEnvironment = ExpressionLibraryEnvironment.getInstance();
 
 // import { CalculatorEnvironment } from "../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();

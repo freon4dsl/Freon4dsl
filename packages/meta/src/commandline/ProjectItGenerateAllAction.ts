@@ -103,8 +103,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
-            // LOGGER.error(this, "Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+            // LOGGER.error(this, "Stopping typer generation because of errors: " + e.message);
         }
     };
 

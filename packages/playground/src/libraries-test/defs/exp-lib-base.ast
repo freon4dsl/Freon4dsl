@@ -1,0 +1,23 @@
+////////////////////////////////////
+//       Expressions
+////////////////////////////////////
+language ExpressionLibrary
+
+abstract expression ExpressionBase {
+}
+
+abstract binary expression BinaryExpressionBase base ExpressionBase {
+    left: ExpressionBase;
+    right: ExpressionBase;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpressionBase {
+}
+
+expression GroupedExpression base ExpressionBase {
+    inner: ExpressionBase;
+}
+
+// the ones above should be useable from other libs
+
+limited BASIC_TYPE { Boolean; Integer; String; }

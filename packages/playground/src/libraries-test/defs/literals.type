@@ -1,0 +1,11 @@
+typer XXX for language ExpressionLibrary
+
+StringLiteral {
+    infertype BASIC_TYPE:String;
+}
+NumberLiteral {
+    infertype BASIC_TYPE:Integer;
+}
+BooleanLiteral {
+    infertype BASIC_TYPE:Boolean;
+}

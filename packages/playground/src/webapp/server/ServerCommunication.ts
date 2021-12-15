@@ -116,7 +116,8 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
             const res: string = await this.fetchWithTimeout<string>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
-            if (!!res && res.length > 0) {
+            // if (!!res && res.length > 0) { TODO find out why this is too strict
+            if (!!res) {
                 try {
                     const unit = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(unit);
@@ -139,7 +140,8 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
         if (!!unitName && unitName.length > 0) {
             const res: string = await this.fetchWithTimeout<string>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
-            if (!!res && res.length > 0) {
+            // if (!!res && res.length > 0) { TODO find out why this is too strict
+            if (!!res) {
                 try {
                     const model = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(model);

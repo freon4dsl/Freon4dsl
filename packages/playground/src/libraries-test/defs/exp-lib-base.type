@@ -1,0 +1,16 @@
+typer XX for language ExpressionLibrary
+
+istype { BASIC_TYPE }
+
+ExpressionBase {
+    abstract infertype  ;
+}
+ComparisonExpression {
+    infertype BASIC_TYPE:Boolean;
+}
+GroupedExpression {
+    infertype self.inner;
+}
+BinaryExpressionBase {
+    infertype self.left;
+}
