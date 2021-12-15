@@ -65,13 +65,14 @@ export class GenericModelSerializer {
                     }
                 } else {
                     // TODO Add other primitive property types
-                    if (typeof value === "string") {
-                        result[property.name] = value;
-                    } else if (typeof value === "number") {
-                        result[property.name] = value;
-                    } else if (typeof value === "boolean") {
-                        result[property.name] = value;
+                    if (property.type === "string" || property.type === "identifier") {
+                        this.checkValueToType(value, "string", property);
+                    } else if (property.type === "number") {
+                        this.checkValueToType(value, "number", property);
+                    } else if (property.type === "boolean") {
+                        this.checkValueToType(value, "boolean", property);
                     }
+                    result[property.name] = value;
                 }
                 break;
             case "part":
@@ -105,10 +106,18 @@ export class GenericModelSerializer {
             default:
         }
     }
+
+    private checkValueToType(value: any, shouldBeType: string, property: Property) {
+        // TODO improve message to user
+        if (typeof value !== shouldBeType) {
+            throw new Error(`Value of property '${property.name}' is not of type '${shouldBeType}'.`);
+        }
+    }
+
     /**
      * Create JSON Object, storing references as names.
      */
-    convertToJSON(tsObject: PiElement, publicOnly?: boolean): Object {
+    public convertToJSON(tsObject: PiElement, publicOnly?: boolean): Object {
         const typename = tsObject.piLanguageConcept();
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
         let result: Object;
@@ -169,28 +178,9 @@ export class GenericModelSerializer {
                     result[p.name] = !!value1 ? tsObject[p.name]["name"] : null;
                 }
                 break;
-            // case "enumeration": // TODO remove enumeration from Serializer
-            //     var value = tsObject[p.name];
-            //     if (p.isList) {
-            //         const literals: Object[] = tsObject[p.name];
-            //         result[p.name] = [];
-            //         for (var i: number = 0; i < literals.length; i++) {
-            //             result[p.name][i] = literals[i]["name"];
-            //         }
-            //     } else {
-            //         // single value
-            //         result[p.name] = value["name"];
-            //     }
-            //     break;
             case "primitive":
                 const value2 = tsObject[p.name];
-                if (typeof value2 === "string") {
-                    result[p.name] = value2;
-                } else if (typeof value2 === "number") {
-                    result[p.name] = value2;
-                } else if (typeof value2 === "boolean") {
-                    result[p.name] = value2;
-                }
+                result[p.name] = value2;
                 break;
             default:
                 break;
