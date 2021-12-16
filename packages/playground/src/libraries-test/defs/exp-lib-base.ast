@@ -1,0 +1,23 @@
+////////////////////////////////////
+//       Expressions
+////////////////////////////////////
+language ExpressionLibrary
+
+abstract expression ExpressionBase {
+}
+
+abstract binary expression BinaryExpressionBase base ExpressionBase {
+    left: ExpressionBase;
+    right: ExpressionBase;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpressionBase {
+}
+
+expression GroupedExpression base ExpressionBase {
+    inner: ExpressionBase;
+}
+
+interface ROOT_TYPE {
+}
+limited BASIC_TYPE implements ROOT_TYPE { Boolean; Integer; String; }
