@@ -25,7 +25,7 @@
 <endclass>
 <associations>
  + Creditcard.creditcard [1..1]    <->  + Customer.customer [1..1]   ;
-// + Customer.customer [1..1]    <->  + Order.orders [0..*]   ;
-// + Order.order [1..1]    <->  + Dvd.disks [1..*]   ;
-// + Dvd.dvd [0..*]    <->  + catalog::Clip.clips [1..*]   ;
+ + Customer.customer [1..1]    <->  + Order.orders [0..*]   ;
+ + Order.order [1..1]    <->  + Dvd.disks [1..*]   ;
+ + Dvd.dvd [0..*]    <->  + catalog::Clip.clips [1..*]   ;
 <endpackage>

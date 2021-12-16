@@ -72,12 +72,52 @@ export class Language {
         return this.interfaces.get(typeName);
     }
 
+    classifier(typeName): ModelUnit | Concept | Interface {
+        let concept1 = this.concepts.get(typeName);
+        if (!!concept1) {
+            return concept1;
+        } else {
+            let intf = this.interfaces.get(typeName);
+            if (!!intf) {
+                return intf;
+            } else {
+                let unit1 = this.units.get(typeName);
+                if (!!unit1) {
+                    return unit1;
+                }
+            }
+        }
+        return null;
+    }
+
     conceptProperty(typeName, propertyName): Property {
         return this.concepts.get(typeName).properties.get(propertyName);
     }
 
+    unitProperty(typeName, propertyName): Property {
+        return this.units.get(typeName).properties.get(propertyName);
+    }
+
     interfaceProperty(typeName, propertyName): Property {
         return this.interfaces.get(typeName).properties.get(propertyName);
+    }
+
+    classifierProperty(typeName, propertyName): Property {
+        let concept1 = this.concepts.get(typeName);
+        if (!!concept1) {
+            return concept1.properties.get(propertyName);
+        } else {
+            let intf = this.interfaces.get(typeName);
+            if (!!intf) {
+                return intf.properties.get(propertyName);
+            } else {
+                let unit1 = this.units.get(typeName);
+                if (!!unit1) {
+                    return unit1.properties.get(propertyName);
+                }
+            }
+        }
+        return null;
     }
 
     allConceptProperties(typeName: string): IterableIterator<Property> {

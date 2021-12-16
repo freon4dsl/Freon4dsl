@@ -26,17 +26,18 @@ export class ParserGenUtil {
     }
 
     static escapeRelevantChars(input: string): string {
+        // See also BasicGrammar.part.pegjs
+        // Note that the order of these chars is relevant! Always put "\\" first.
         const regexSpecialCharacters = [
-            "\"", "\'"
+            "\"", "\'", "/", "{",
             // "\\", ".", "+", "*", "?",
-            // "[", "^", "]", "$", "(",
-            // ")", "{", "}", "=", "!",
+            // "[", "]", "$", "(", "^",
+            // ")",  "}", "=", "!",
             // "<", ">", "|", ":", "-"
         ];
 
         regexSpecialCharacters.forEach(rgxSpecChar =>
-            input = input.replace(new RegExp("\\" + rgxSpecChar,"gm"), "\\\\" +
-                rgxSpecChar));
+            input = input.replace(new RegExp("\\" + rgxSpecChar,"gm"), "\\" + rgxSpecChar));
         return input;
     }
 }

@@ -37,7 +37,7 @@ export class LimitedRule extends GrammarRule {
         return result + " ;";
     }
 
-    toMethod(): string {
+    toMethod(mainAnalyserName: string): string {
         if (!!this.myMap && this.myMap.size > 0) { // found a limited concept with a special projection
             let ifStat: string = "";
             for (const [key, value] of this.myMap) {
@@ -51,14 +51,14 @@ export class LimitedRule extends GrammarRule {
             }`;
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
-                private transform${this.ruleName}(branch: SPPTBranch): ${Names.classifier(this.concept)} {
+                public transform${this.ruleName}(branch: SPPTBranch): ${Names.classifier(this.concept)} {
                     let choice = (branch.matchedText).trim();
                     ${ifStat}
                 }`;
         } else { // make a 'normal' reference method
             return `
                     ${ParserGenUtil.makeComment(this.toGrammar())}
-                    private transform${this.ruleName}(branch: SPPTBranch): string {
+                    public transform${this.ruleName}(branch: SPPTBranch): string {
                         return branch.matchedText;
                     }`;
         }

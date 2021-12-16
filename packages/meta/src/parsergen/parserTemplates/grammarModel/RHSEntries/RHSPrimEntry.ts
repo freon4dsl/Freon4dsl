@@ -13,8 +13,8 @@ export class RHSPrimEntry extends RHSPropEntry {
         return `${getPrimCall(this.property.type.referred)}` + this.doNewline();
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformNode}(${nodeName}[${propIndex}]); // RHSPrimEntry\n`;
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformNode}(${nodeName}[${index}]); // RHSPrimEntry\n`;
     }
 
     toString(depth: number): string {

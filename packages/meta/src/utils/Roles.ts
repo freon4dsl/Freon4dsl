@@ -13,12 +13,12 @@ export class Roles {
         return Names.classifier(concept).toLowerCase();
     }
 
-    public static elementName(concept: PiClassifier): string {
-        return Names.classifier(concept);//.toLowerCase();
-    }
+    // public static elementName(concept: PiClassifier): string {
+    //     return Names.classifier(concept);//.toLowerCase();
+    // }
 
     public static property(property: PiProperty): string {
-        return Roles.elementName(property.owningConcept) + "-" + property.name;
+        return Names.classifier(property.owningConcept) + "-" + property.name;
     }
 
     public static newPart(property: PiProperty): string {

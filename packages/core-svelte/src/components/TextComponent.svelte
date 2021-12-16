@@ -18,7 +18,7 @@
         PiEditor,
         toPiKey,
         isAliasTextBox,
-        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE
+        PiCaret, PiCaretPosition, PiLogger, isPrintable, AliasBox, KEY_ESCAPE, styleToCSS, conceptStyle, SelectBox
     } from "@projectit/core";
     import { afterUpdate, onMount } from "svelte";
     import { AUTO_LOGGER, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
@@ -290,7 +290,7 @@
     const onInput = async (e: InputEvent) => {
         isEditing = true;
         let value = currentText();
-        console.log("onInput data" + e.data + ":  current [" + currentText() + "] box text [" + textBox.getText() + "]");
+        LOGGER.log("onInput data" + e.data + ":  current [" + currentText() + "] box text [" + textBox.getText() + "]");
         textBox.caretPosition = getCaretPosition();
         textBox.setText(value);
         editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
@@ -326,8 +326,14 @@
         if (!isEditing) {
             text = textBox.getText();
         }
-        textStyle = textBox.style;
-    textBox.setFocus = setFocus;
+        // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
+        const boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
+        textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), boxType, textBox.style));
+        // if (textBox.getText() === "appel") {
+        //     textStyle += "--theme-colors-bg_text_box: lightgrey;"
+        // }
+
+        textBox.setFocus = setFocus;
     });
 
     // const onFocus = async (e: FocusEvent) => {
@@ -355,13 +361,22 @@
 <style>
     .text:empty:before {
         content: attr(data-placeholdertext);
-        color: var(--theme-colors-color_empty_before_text_box);
-        background-color: var(--theme-colors-bg_empty_before_text_box);
-        opacity: 70%;
+        color: inherit;
+        background-color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        padding: inherit;
+        margin: inherit;
+        display: inherit;
+        white-space: inherit;
+        border: inherit;
+        opacity: 50%;
     }
 
     .text {
-        background-color: var(--theme-colors-bg_text_box);
+        /*background-color: var(--theme-colors-bg_text_box);*/
+        content: attr(data-placeholdertext);
         color: var(--theme-colors-color_text_box);
         padding: 3px;
         white-space: normal;

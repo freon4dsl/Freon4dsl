@@ -18,14 +18,14 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
         return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
     }
 
-    toMethod(propIndex: number, nodeName: string): string {
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = getBaseTypeAsString(this.property);
         return `// RHSPrimListGroup 
-            if (!${nodeName}[${propIndex}].isEmptyMatch) {
+            if (!${nodeName}[${index}].isEmptyMatch) {
                 // get the group that represents the optional primitive
                 // because primitives are leafs in the grammar, there is no need to get the children of this group
-                const subNode = this.getGroup(${nodeName}[${propIndex}]);
-                ${ParserGenUtil.internalName(this.property.name)} = this.${internalTransformList}<${baseType}>(subNode, '${this.separatorText}');
+                const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
+                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(subNode, '${this.separatorText}');
             }`;
     }
 

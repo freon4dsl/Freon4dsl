@@ -1,6 +1,6 @@
 export {
-    ListJoin,
-    ListJoinType,
+    ListInfo,
+    ListInfoType,
     PiEditUnit,
     PiEditConcept,
     PiEditChecker,

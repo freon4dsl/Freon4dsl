@@ -23,7 +23,7 @@ describe("Testing Parser", () => {
         // }
         // do not unparse if there are more errors than the four custom ones
         if (errors.length == 4) { // the custom validator adds 4 unneccessary errors
-            const path: string = "./unparsedDemoModel1.txt";
+            const path: string = "./unparsedDemoModel2.txt";
             const fileHandler = new FileHandler();
 
             // unparse the first unit to a string and write it to File

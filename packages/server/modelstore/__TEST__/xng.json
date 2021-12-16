@@ -1,0 +1,21 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "xng",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "hzbzbd",
+         "attributes": [],
+         "methods": [],
+         "baseEntity": null
+      },
+      {
+         "$typename": "Entity",
+         "name": "fbfb",
+         "attributes": [],
+         "methods": [],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}

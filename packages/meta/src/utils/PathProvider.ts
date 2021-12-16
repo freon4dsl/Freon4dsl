@@ -99,10 +99,6 @@ export class PathProvider {
         return EDITOR_GEN_FOLDER + "/" + Names.projectionDefault(language);
     }
 
-    public static selectionHelpers(language: PiLanguage): string {
-        return EDITOR_GEN_FOLDER + "/" + Names.selectionHelpers(language);
-    }
-
     public static projection(language: PiLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.customProjection(language);
     }

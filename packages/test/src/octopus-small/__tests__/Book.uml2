@@ -1,0 +1,75 @@
+<package> "Book"
+ + <class> Prependix <specializes> Bookpart
+    <attributes>
+     + kind: PrependixKind;
+    <operations>
+     + isFirstBookpart() : Boolean;
+     + needsEmptyLastPage() : Boolean;
+<endclass>
+ + <class> Chapter <specializes> Bookpart
+    <attributes>
+     + author: String;
+     + subject: String;
+    <operations>
+     + determineDurationTillFinished(<inout> from: Date) : Period;
+<endclass>
+ + <class> Appendix <specializes> Bookpart <implements> TwoColumnPart
+    <attributes>
+     + kind: AppendixKind;
+     + twoColumn: Boolean;
+    <operations>
+     + needsEmptyLastPage(): Boolean;
+<endclass>
+ + <abstract> <class> Bookpart
+    <attributes>
+     # startPageNr: Integer;
+     + nrOfPages: Integer;
+     + title: String;
+    <operations>
+     + determineStartPageNumber(): Integer;
+     + getLastPageNumber(): Integer;
+     + getNext(): Bookpart;
+<endclass>
+ + <enumeration> AppendixKind
+    <values>
+    bibliography;
+    glossary;
+    index;
+<endenumeration>
+ + <enumeration> PrependixKind
+    <values>
+    contents;
+    figures;
+    preface;
+    tables;
+<endenumeration>
+ + <interface> TwoColumnPart
+    <operations>
+     + transformToOneColumn();
+     + transformToTwoColumn();
+<endinterface>
+ + <associationclass> ChapterDependency
+ // The number 100 should be '*'
+     + Chapter.sourceChapter [0..1]    <->  + Chapter.dependantChapters [0..100]
+    <attributes>
+     + sameAuthor: Boolean;
+     + sameSubject: Boolean;
+<endassociationclass>
+ + <datatype> Date
+    <attributes>
+     + day: Integer;
+     + month: Integer;
+     + year: Integer;
+<enddatatype>
+ + <datatype> Period
+    <attributes>
+     + nrOfDays: Integer;
+     + nrOfWorkingDays: Integer;
+<enddatatype>
+<associations>
+ + Appendix.nextApp [0..1]    <->  + Appendix.prevApp [0..1]   ;
+ + Chapter.prevChap [0..1]    <->  + Appendix.nextApp [0..1]   ;
+ + Prependix.prevPrep [0..1]    <->  + Chapter.nextChap [0..1]   ;
+ + Prependix.nextPrep [0..1]    <->  + Prependix.prevPrep [0..1]   ;
+ + Chapter.nextChap [0..1]    <->  + Chapter.prevChap [0..1]   ;
+<endpackage>

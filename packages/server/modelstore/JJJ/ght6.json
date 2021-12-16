@@ -1,0 +1,37 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "ght6",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "TaxPayer",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "age",
+               "declaredType": "Integer"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "hasDeduction",
+               "declaredType": "Boolean"
+            }
+         ],
+         "methods": [
+            {
+               "$typename": "Method",
+               "name": "",
+               "body": {
+                  "$typename": "NumberLiteralExpression",
+                  "value": 11111,
+                  "appliedfeature": null
+               },
+               "parameters": [],
+               "declaredType": null
+            }
+         ],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}

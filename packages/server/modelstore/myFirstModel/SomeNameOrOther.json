@@ -1,0 +1,20 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "SomeNameOrOther",
+   "entities": [
+      {
+         "$typename": "Entity",
+         "name": "ent1",
+         "attributes": [
+            {
+               "$typename": "Attribute",
+               "name": "myTextAttribute",
+               "declaredType": "String"
+            }
+         ],
+         "methods": [],
+         "baseEntity": null
+      }
+   ],
+   "methods": []
+}

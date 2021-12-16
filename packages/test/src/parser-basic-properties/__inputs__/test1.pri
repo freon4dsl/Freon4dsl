@@ -10,12 +10,12 @@ prim
         primListString "TEKST" , "TEKST"
         primListBoolean true, false, true, false
 primExtra
-    before EenNaam after
-    before 45 after
-    before "TEKST" after
-    before false  after
-    before EenNaam , NogEenNaam, EnNogEen after
-    before 67 , 98  after
+    bef"ore EenNaam after
+    be[fore 45 after
+    bef/ore "TEKST" after
+    bef${ore false  after
+    bef(ore EenNaam , NogEenNaam, EnNogEen after
+    bef]ore 67 , 98  after
     before "TEKST", "TEXT"  after
     before false, true, false  after
 primOpt PrimOptional

@@ -3,7 +3,7 @@
     import { afterUpdate, onDestroy, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    import { Box, HorizontalListBox, PiEditor, PiLogger } from "@projectit/core";
+    import { Box, conceptStyle, HorizontalListBox, PiEditor, PiLogger, styleToCSS } from "@projectit/core";
     import { isHorizontalBox } from "@projectit/core";
 
     // Parameters
@@ -55,13 +55,13 @@
                 : {
                     gridTemplateRows: "repeat(" + nrOfBoxes + ", auto)",
                     gridTemplateColumns: "repeat(1, auto)",
-                    color: "red",
                     backgroundColor: "green"
                 };
         cssGrgVars = `--pi-list-grid-template-rows:   ${gridStyle.gridTemplateRows};
                       --pi-list-grid-template-columns:${gridStyle.gridTemplateColumns};
-                      --color:                   ${gridStyle.color};
-                                         `
+                     `
+        // useless, list has no contents!
+        + styleToCSS(conceptStyle(editor.style, editor.theme, list.element.piLanguageConcept(), "list", list.style));
     });
 
     // TODO Empty vertical list gives empty line, try to add entities in the example.
@@ -119,6 +119,7 @@
         grid-template-columns: var(--pi-list-grid-template-columns);
         display: grid;
         background-color: var(--pi-list-background-color);
+        /*margin-top: 10px;*/
     }
 </style>
 

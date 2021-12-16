@@ -1,0 +1,14 @@
+{
+   "$typename": "ExampleUnit",
+   "name": "hg",
+   "entities": [],
+   "methods": [
+      {
+         "$typename": "Method",
+         "name": "gfah ",
+         "body": null,
+         "parameters": [],
+         "declaredType": null
+      }
+   ]
+}

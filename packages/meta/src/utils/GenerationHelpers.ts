@@ -13,18 +13,41 @@ import { PiPrimitiveType } from "../languagedef/metalanguage/PiLanguage";
 import { Names } from "./Names";
 
 /**
- * This function sorts the list of PiClasses in such a way that
- * when a class has a base class, this base class comes after the class.
+ * This function sorts the list of PiConcepts in such a way that
+ * when a concept has a base concept, this base concept comes after the concept.
  * This is needed in cases where an if-statement is generated where the
  * condition is the type of the object, for instance in the unparser.
- * An entry for a subclass must precede an entry for its base class,
- * otherwise the unparse${concept.name} for the base class will be called.
+ * An entry for a subconcept must precede an entry for its base concept,
+ * otherwise the unparse${concept.name} for the base concept will be called.
  *
- * @param piclasses: the list of classes to be sorted
+ * Note that all concepts that exist must be in 'piconcepts', other deadlock will occur!!
+ *
+ * @param piconcepts: the list of concepts to be sorted
  */
-export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcept>[]): PiConcept[] {
+export function sortConcepts(piconcepts: PiConcept[] | PiElementReference<PiConcept>[]): PiConcept[] {
     const newList: PiConcept[] = [];
-    for (const c of piclasses) {
+    return _internalSort(piconcepts, newList);
+}
+
+/**
+ * This function sorts the list of PiConcepts in such a way that
+ * when a concept has a base concept, this base concept comes after the concept.
+ * This is similar to 'sortConcepts', but here not all concepts that exist must
+ * be in 'piconcepts'. Deadlock will not occur, when all concepts in 'piconcepts'
+ * inherit from 'baseConcept'.
+ *
+ * Note that baseConcept will not appear in the result.
+ *
+ * @param piconcepts
+ * @param baseConcept
+ */
+export function sortConceptsWithBase(piconcepts: PiConcept[] | PiElementReference<PiConcept>[], baseConcept: PiConcept): PiConcept[] {
+    const newList: PiConcept[] = [baseConcept];
+    return _internalSort(piconcepts, newList).filter(c => c !== baseConcept);
+}
+
+function _internalSort(piconcepts: PiConcept[] | PiElementReference<PiConcept>[], newList): PiConcept[] {
+    for (const c of piconcepts) {
         // without base must be last
         const concept = (c instanceof PiElementReference ? c.referred : c);
         if (!concept.base) {
@@ -32,8 +55,8 @@ export function sortClasses(piclasses: PiConcept[] | PiElementReference<PiConcep
         }
     }
 
-    while (newList.length < piclasses.length) {
-        for (const c of piclasses) {
+    while (newList.length < piconcepts.length) {
+        for (const c of piconcepts) {
             const concept = (c instanceof PiElementReference ? c.referred : c);
             if (!newList.includes(concept)) { // concept is already in the list
                 const base = concept.base?.referred;

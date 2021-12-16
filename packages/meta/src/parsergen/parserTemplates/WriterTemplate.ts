@@ -6,17 +6,18 @@ import {
     PiPrimitiveProperty,
     PiProperty
 } from "../../languagedef/metalanguage";
-import { sortClasses, langExpToTypeScript } from "../../utils";
+import { sortConcepts, langExpToTypeScript } from "../../utils";
 import {
     PiEditConcept,
     PiEditUnit,
     PiEditProjectionText,
     PiEditPropertyProjection,
     PiEditProjectionDirection,
-    ListJoinType,
+    ListInfoType,
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
+import { ParserGenUtil } from "./ParserGenUtil";
 
 export class WriterTemplate {
 
@@ -29,7 +30,7 @@ export class WriterTemplate {
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
         let limitedConcepts: PiLimitedConcept[] = [];
-        const elementsToUnparse: PiClassifier[] = sortClasses(language.concepts);
+        const elementsToUnparse: PiClassifier[] = sortConcepts(language.concepts);
         elementsToUnparse.push(...language.units);
 
         // find all limited concepts used, the are treated differently in both (1) the creation of unparse method
@@ -346,8 +347,10 @@ export class WriterTemplate {
             lines.map(line => line.items.map(item => {
                 // if the special '@keyword' construct is used, there will be instances of PiEditInstanceProjection
                 if (item instanceof PiEditInstanceProjection) {
+                    // add escapes to keyword
+                    const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword);
                     cases += `case ${item.expression.sourceName}.${item.expression.instanceName}: {
-                                this.output[this.currentLine] += "${item.keyword} ";
+                                this.output[this.currentLine] += "${myKeyword} ";
                                 break;
                                 }
                                 `
@@ -445,8 +448,9 @@ export class WriterTemplate {
     private makeItem(item: PiEditProjectionItem, indent: number): string {
         let result: string = ``;
         if (item instanceof PiEditProjectionText) {
-            // TODO escape all quotes in the text string, when we know how they are stored in the projection
-            result += `this.output[this.currentLine] += \`${item.text.trimRight()} \`;\n`;
+            // add escapes to item.text
+            const myText = ParserGenUtil.escapeRelevantChars(item.text).trimRight();
+            result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof PiEditPropertyProjection) {
             const myElem = item.expression.findRefOfLastAppliedFeature();
             if (myElem instanceof PiPrimitiveProperty) {
@@ -464,6 +468,10 @@ export class WriterTemplate {
                     if (sub.expression.findRefOfLastAppliedFeature().isList) {
                         myTypeScript = `!!${myTypeScript} && ${myTypeScript}.length > 0`;
                     } else {
+                        // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
+                        // remove only the last ".referred"
+                        myTypeScript = this.removeLastReferred(myTypeScript);
+                        // end hack
                         myTypeScript = `!!${myTypeScript}`;
                     }
                 }
@@ -510,39 +518,33 @@ export class WriterTemplate {
             if (myElem.type.referred === PiPrimitiveType.identifier) {
                 isIdentifier = "true";
             }
-            const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+            const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
             const joinType = this.getJoinType(item);
-            result += `this.unparseListOfPrimitiveValues(
-                    ${elemStr}, ${isIdentifier},"${item.listJoin.joinText}", ${joinType}, ${vertical},
+            // TODO adjust to tables
+            if (joinType.length > 0) { // it is a list not table
+                // add escapes to joinText
+                const myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
+                result += `this.unparseListOfPrimitiveValues(
+                    ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
                     short
                 );`;
+            }
         } else {
             let myCall: string = ``;
             const myType: PiClassifier = myElem.type.referred;
             if (myType === PiPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
             } else if (myType === PiPrimitiveType.boolean && !!item.keyword) {
+                // add escapes to keyword
+                const myKeyword = ParserGenUtil.escapeRelevantChars(item.keyword);
                 myCall = `if (${elemStr}) { 
-                              this.output[this.currentLine] += \`${item.keyword} \`
+                              this.output[this.currentLine] += \`${myKeyword} \`
                           }`;
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
-            // TODO check this solution: there is one if-stat too many in
-            // if (!!modelelement.primNumberWithExtra) {
-            //     this.output[this.currentLine] += `before `;
-            //     if (!!modelelement.primNumberWithExtra) {
-            //         this.output[this.currentLine] += `${modelelement.primNumberWithExtra} `;
-            //     }
-            //     this.output[this.currentLine] += `after `;
-            // }
-            // this seems to be the solution:
-            // if (myElem.isOptional) { // surround the unparse call with an if-statement, because the element may not be present
-            //     result += `if (!!${elemStr}) { ${myCall} }`;
-            // } else {
-                result += myCall;
-            // }
+            result += myCall;
         }
         return result + ";\n";
     }
@@ -561,13 +563,19 @@ export class WriterTemplate {
         if (!!type) {
             let myTypeScript: string = langExpToTypeScript(item.expression);
             if (myElem.isList) {
-                const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-                const joinType = this.getJoinType(item);
-
-                if (myElem.isPart) {
-                    result += `this.unparseList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
-                } else {
-                    result += `this.unparseReferenceList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                if (!!item.listInfo) {
+                    const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
+                    const joinType = this.getJoinType(item);
+                    // TODO adjust to tables
+                    if (joinType.length > 0) { // it is a list not table
+                        if (myElem.isPart) {
+                            result += `this.unparseList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                        } else {
+                            result += `this.unparseReferenceList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                        }
+                    }
+                } else if (!!item.tableInfo) {
+                    // TODO adjust for tables
                 }
             } else {
                 let myCall: string = "";
@@ -576,11 +584,7 @@ export class WriterTemplate {
                 } else {
                     // TODO remove this hack as soon as TODO in ModelHelpers.langExpToTypeScript is resolved.
                     // remove only the last ".referred"
-                    if (myTypeScript.endsWith("?.referred")) {
-                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
-                    } else if (myTypeScript.endsWith(".referred")) {
-                        myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
-                    }
+                    myTypeScript = this.removeLastReferred(myTypeScript);
                     // end hack
                     myCall += `this.unparseReference(${myTypeScript}, short);`;
                     // if (type instanceof PiLimitedConcept) {
@@ -599,18 +603,29 @@ export class WriterTemplate {
         return result + ";\n";
     }
 
+    private removeLastReferred(myTypeScript: string) {
+        if (myTypeScript.endsWith("?.referred")) {
+            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 10);
+        } else if (myTypeScript.endsWith(".referred")) {
+            myTypeScript = myTypeScript.substring(0, myTypeScript.length - 9);
+        }
+        return myTypeScript;
+    }
+
     /**
      * Changes the jointype in 'item' into the text needed in the unparser.
      * @param item
      */
     private getJoinType(item: PiEditPropertyProjection): string {
         let joinType: string = "";
-        if (item.listJoin.joinType === ListJoinType.Separator) {
-            joinType = "SeparatorType.Separator";
-        } else if (item.listJoin.joinType === ListJoinType.Terminator) {
-            joinType = "SeparatorType.Terminator";
-        } else if (item.listJoin.joinType === ListJoinType.NONE) {
-            joinType = "SeparatorType.NONE";
+        if (!!item.listInfo) {
+            if (item.listInfo.joinType === ListInfoType.Separator) {
+                joinType = "SeparatorType.Separator";
+            } else if (item.listInfo.joinType === ListInfoType.Terminator) {
+                joinType = "SeparatorType.Terminator";
+            } else if (item.listInfo.joinType === ListInfoType.NONE) {
+                joinType = "SeparatorType.NONE";
+            }
         }
         return joinType;
     }
@@ -651,6 +666,5 @@ export class WriterTemplate {
         } else {
             return `${shortUnparsing}`;
         }
-
     }
 }

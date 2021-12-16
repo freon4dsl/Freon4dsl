@@ -1,6 +1,6 @@
 
-import { PiConcept } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
+import { PiConcept, PiLanguage } from "../../../languagedef/metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names, READER_GEN_FOLDER } from "../../../utils";
 import {
     internalTransformBranch,
     internalTransformLeaf,
@@ -11,11 +11,12 @@ import {
 import { GrammarRule } from "./GrammarRule";
 import { refRuleName, refSeparator } from "./GrammarUtils";
 import { PiUnitDescription } from "../../../languagedef/metalanguage/PiLanguage";
+import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
-    unitName: string = '';
-    langName: string = ''
-    rules: GrammarRule[] = [];
+    language: PiLanguage = null;
+    parts: GrammarPart[] = [];
+    // private allRuleNames: string[] = [];
 
     toGrammar() : string {
         // there is no prettier for the grammar string, therefore we take indentation and
@@ -23,13 +24,13 @@ export class GrammarModel {
         // unfortunately, this makes things a little less legible :-(
         return `// This file contains the input to the AGL parser generator 
 // (see https://https://github.com/dhakehurst/net.akehurst.language). 
-// The grammar in this file is read by ....
+// The grammar in this file is read by ${Names.reader(this.language)}
         
-export const ${(this.unitName)}GrammarStr = \`
-namespace ${(this.langName)}
-grammar ${(this.unitName)} {
+export const ${Names.grammarStr(this.language)} = \`
+namespace ${Names.language(this.language)}
+grammar ${Names.grammar(this.language)} {
                 
-${this.rules.map(rule => `${rule.toGrammar()}`).join('\n\n')}   
+${this.grammarContent()}   
 
 __pi_reference = [ identifier / '${refSeparator}' ]+ ;
         
@@ -48,13 +49,35 @@ leaf booleanLiteral      = 'false' | 'true';
 }\`; // end of grammar`;
     }
 
-    private names() : string[] {
-        const result: string[] = this.rules.map(r => `${r.ruleName}`);
-        result.push(refRuleName);
-        return result;
+    private grammarContent(): string {
+        let result : string = '';
+        this.parts.forEach(part => {
+            if (!!part.unit) {
+                result += `// rules for "${part.unit.name}"\n`;
+            } else {
+                result += `// common rules\n`;
+            }
+            part.rules.map(rule => {
+                result += rule.toGrammar() + "\n\n";
+            })
+        });
+        return result.trimEnd();
     }
 
-    toMethod(langUnit: PiUnitDescription, imports: string[], relativePath: string): string {
+    toMethod(relativePath: string): string {
+        const className: string = Names.syntaxAnalyser(this.language);
+        let switchContent: string = '';
+        this.parts.forEach(part => part.rules.map(rule => {
+            const name = rule.ruleName;
+            switchContent += `if ('${name}' == brName) {
+                        return this.${this.getPartAnalyserName(part)}.transform${name}(branch);
+                    } else `;
+        }));
+
+        switchContent += `if ('${refRuleName}' == brName) {
+                        return this.transform${refRuleName}(branch);
+                    } else `;
+
         // Template starts here
         return `
         import {net} from "net.akehurst.language-agl-processor";
@@ -63,15 +86,19 @@ leaf booleanLiteral      = 'false' | 'true';
         import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { PiElementReference, ${imports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";    
-        import {${Names.PiNamedElement}} from "@projectit/core";
+        import { ${Names.PiNamedElement} } from "@projectit/core";
+        import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
+        import { PiElementReference } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
         
         /**
-        *   Class ${Names.syntaxAnalyser(langUnit)} is ... TODO
+        *   Class ${className} is the main syntax analyser.
+        *   The actual work is being done by its parts, one for each model unit,
+        *   and one common part that contains the methods used in multiple units.
         *   
         */
-        export class ${Names.syntaxAnalyser(langUnit)} implements SyntaxAnalyser {
+        export class ${className} implements SyntaxAnalyser {
             locationMap: any;
+            ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
         
             clear(): void {
                 throw new Error("Method not implemented.");
@@ -85,7 +112,7 @@ leaf booleanLiteral      = 'false' | 'true';
                 }
             }
         
-            private ${internalTransformNode}(node: SPPTNode): any {
+            public ${internalTransformNode}(node: SPPTNode): any {
                 try {
                     if (node.isLeaf) {
                         return this.${internalTransformLeaf}(node);
@@ -93,7 +120,7 @@ leaf booleanLiteral      = 'false' | 'true';
                         return this.${internalTransformBranch}(node as SPPTBranch);
                     }
                 } catch (e) {
-                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${Names.syntaxAnalyser(langUnit)}")) {
+                    if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
                         throw e;
                     } else {
                         // add more info to the error message 
@@ -123,20 +150,16 @@ leaf booleanLiteral      = 'false' | 'true';
           
             private ${internalTransformBranch}(branch: SPPTBranch): any {
                 let brName: string = branch.name;
-                ${this.names().map(name => `if ('${name}' == brName) {
-                    return this.transform${name}(branch);
-                    } else `).join("\n")}                
+                ${switchContent}                
                 {
-                    throw new Error(\`Error in ${Names.syntaxAnalyser(langUnit)}: \${brName} not handled for node '\${branch?.matchedText}'\`);
+                    throw new Error(\`Error in ${className}: \${brName} not handled for node '\${branch?.matchedText}'\`);
                 }
             }
-            
-            ${this.rules.map(rule => `${rule.toMethod()}`).join('\n')}
 
             /**
              * Generic method to get the children of a branch. Throws an error if no children can be found.
              */
-            private getChildren(branch: SPPTBranch): any {
+            public getChildren(branch: SPPTBranch): any {
                 let children: any = null;
                 try {
                     return branch.nonSkipChildren.toArray();
@@ -149,7 +172,7 @@ leaf booleanLiteral      = 'false' | 'true';
             /**
              * Generic method to get the optional group of a branch. Throws an error if no group can be found.
              */            
-            private getGroup(branch: SPPTBranch) {
+            public getGroup(branch: SPPTBranch) {
                 // take the first element in the [0..1] optional group or multi branch
                 let group: any = branch;
                 let stop: boolean = false;
@@ -169,7 +192,7 @@ leaf booleanLiteral      = 'false' | 'true';
                 return group;
             }
               
-            private transform__pi_reference(branch: SPPTBranch){
+            public transform__pi_reference(branch: SPPTBranch){
                 if (branch.name.includes("multi") || branch.name.includes("List")) {
                     return this.${internalTransformList}<string>(branch, "${refSeparator}");
                 } else {
@@ -181,7 +204,7 @@ leaf booleanLiteral      = 'false' | 'true';
              * Generic method to transform references
              * ...PiElemRef = identifier;
              */
-            private piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
+            public piElemRef\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string) : PiElementReference\<T\> {
                 let referred: string | string[] | T = this.${internalTransformNode}(branch);
                 if (referred == null || referred == undefined ) {
                     throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
@@ -195,7 +218,7 @@ leaf booleanLiteral      = 'false' | 'true';
             /**
              * Generic method to transform lists
              */
-            private ${internalTransformList}\<T\>(branch: SPPTBranch, separator?: string): T[] {
+            public ${internalTransformList}\<T\>(branch: SPPTBranch, separator?: string): T[] {
                 let result: T[] = [];
                 const children = this.getChildren(branch);
                 if (!!children) {
@@ -218,7 +241,7 @@ leaf booleanLiteral      = 'false' | 'true';
             /**
              * Generic method to transform lists of references
              */            
-            private ${internalTransformRefList}\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string, separator?: string): PiElementReference\<T\>[] {
+            public ${internalTransformRefList}\<T extends PiNamedElement\>(branch: SPPTBranch, typeName: string, separator?: string): PiElementReference\<T\>[] {
                 let result: PiElementReference\<T\>[] = [];
                 const children = this.getChildren(branch);
                 if (!!children) {
@@ -239,5 +262,13 @@ leaf booleanLiteral      = 'false' | 'true';
             }
         }`;
         // end Template
+    }
+
+    private getPartAnalyserName(part: GrammarPart) {
+        if (!!part.unit) {
+            return `_unit_${part.unit.name}_analyser`;
+        } else {
+            return `_unit_common_analyser`;
+        }
     }
 }

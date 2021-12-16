@@ -17,11 +17,11 @@ rws "required whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComme
 var "variable"
   = first:varLetter rest:identifierChar* { return first + rest.join(""); }
 
-string           = chars:anyChar* { return chars.join(""); }
+string           = chars:(char)* { return chars.join(""); }
 
 varLetter           = [a-zA-Z]
 identifierChar      = [a-zA-Z0-9_$] // any char but not /.,!?@~%^&*-=+(){}"':;<>?[]\/
-anyChar             = [*a-zA-Z0-9' /\-[\]+<>=#$_.,!?@~%^&*-=+(){}:;<>?]
+// anyChar             = [*a-zA-Z0-9' /\-[\]+<>=#$_.,!?@~%^&*-=+(){}:;<>?]
 number              = [0-9]
 
 numberliteral     = nums:number+ { return nums.join(""); }
@@ -43,7 +43,8 @@ Comment "comment"
 MultiLineComment
   = "/*" (!"*/" SourceCharacter)* "*/"
 
-// from JSOM example
+// from JSON example
+// see also ParserGenUtil.escapeRelevantChars()
 char
   = unescaped
   / escape
@@ -51,8 +52,11 @@ char
         '"'
       / "\\"
       / "/"
-      / "\["
-      / "\]"
+      / "|"
+      / "["
+      / "]"
+      / "{"
+      / "}"
       / "$"
       / "b" { return "\b"; }
       / "f" { return "\f"; }

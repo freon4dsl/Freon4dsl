@@ -1,8 +1,8 @@
 import {
     PiClassifier, PiConcept, PiInterface,
-    PiLanguage
+    PiLanguage, PiPrimitiveProperty
 } from "../languagedef/metalanguage";
-import { PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
+import { PiModelDescription, PiUnitDescription } from "../languagedef/metalanguage/PiLanguage";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -108,10 +108,6 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ProjectionDefault";
     }
 
-    public static selectionHelpers(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "SelectionHelpers";
-    }
-
     public static customProjection(language: PiLanguage): string {
         return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
     }
@@ -130,6 +126,19 @@ export class Names {
 
     public static classifier(concept: PiClassifier): string {
         return this.startWithUpperCase(concept?.name);
+    }
+
+    public static primitivePropertyField(property: PiPrimitiveProperty): string {
+        // return "$$" + property.name;
+        return property.name;
+    }
+
+    public static primitivePropertyGetter(property: PiPrimitiveProperty): string {
+        return property.name;
+    }
+
+    public static primitivePropertySetter(property: PiPrimitiveProperty): string {
+        return property.name;
     }
 
     public static interface(interf: PiInterface): string {
@@ -223,20 +232,28 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
     }
 
-    public static parser(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "Parser";
+    public static parser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Parser";
     }
 
-    public static grammar(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "Grammar";
+    public static grammar(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "Grammar";
     }
 
-    public static grammarStr(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "GrammarStr";
+    public static grammarStr(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "GrammarStr";
     }
 
-    public static syntaxAnalyser(unit: PiUnitDescription): string {
-        return this.startWithUpperCase(unit?.name) + "SyntaxAnalyser";
+    public static syntaxAnalyser(language: PiLanguage): string {
+        return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
+    }
+
+    public static unitAnalyser(language: PiLanguage, unit: PiUnitDescription | PiModelDescription): string {
+        if (!!unit) {
+            return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
+        } else {
+            return this.startWithUpperCase(language?.name) + "CommonSyntaxAnalyserPart";
+        }
     }
 
     public static semanticAnalyser(language: PiLanguage): string {
@@ -249,5 +266,9 @@ export class Names {
 
     public static reader(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
+    }
+
+    public static binaryProjectionFunction(): string {
+        return "_getBinaryExpressionBox";
     }
 }

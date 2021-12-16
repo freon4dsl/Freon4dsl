@@ -1,71 +1,78 @@
 import { PiLogger } from "@projectit/core";
 import { PiNamedElement } from "@projectit/core";
 import { GenericModelSerializer } from "@projectit/core";
-import axios from "axios";
-import { SERVER_URL } from "../WebappConfiguration";
-// TODO remove interface IModelUnitData
-import { IModelUnitData, IServerCommunication } from "./IServerCommunication";
+import { IServerCommunication } from "./IServerCommunication";
 import { setUserMessage } from "../webapp-ts-utils/UserMessageUtils";
 
-const LOGGER = new PiLogger("ServerCommunication"); //.mute();
-const ModelUnitInterfacePostfix: string = "Public";
+const LOGGER = new PiLogger("ServerCommunication"); // .mute();
+const modelUnitInterfacePostfix: string = "Public";
+
+// the address of our server
+const SERVER_URL = "http://127.0.0.1:3001/";
 
 export class ServerCommunication implements IServerCommunication {
     static serial: GenericModelSerializer = new GenericModelSerializer();
     static instance: ServerCommunication;
 
-    static getInstance() : ServerCommunication {
+    static getInstance(): ServerCommunication {
         if (!(!!ServerCommunication.instance)) {
             ServerCommunication.instance = new ServerCommunication();
         }
         return ServerCommunication.instance;
     }
 
+    private static findParams(params: string) {
+        if (!!params && params.length > 0) {
+            return "?" + params;
+        } else {
+            return "";
+        }
+    }
+
     /**
-     * Takes 'piUnit' and stores it under 'modelName' on the server at SERVER_URL.
-     * 'modelInfo.unitName' must start with a character and contain only characters and/or numbers.
-     * @param modelInfo
+     * Takes 'piUnit' and stores it as 'unitName' in the folder 'modelName' on the server at SERVER_URL.
+     * 'unitName' must start with a character and contain only characters and/or numbers.
+     * @param modelName
+     * @param unitName
      * @param piUnit
      */
-    async putModelUnit(modelInfo: IModelUnitData, piUnit: PiNamedElement) {
-        LOGGER.log(`ServerCommunication.putModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
-        if (!!modelInfo.unitName && modelInfo.unitName !== "" && modelInfo.unitName.match(/^[a-z,A-Z][a-z,A-Z,0-9,_]*$/)) {
+    async putModelUnit(modelName: string, unitName: string, piUnit: PiNamedElement) {
+        LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitName}`);
+        if (!!unitName && unitName.length > 0 && unitName.match(/^[a-z,A-Z][a-z,A-Z0-9_\-]*$/)) {
             const model = ServerCommunication.serial.convertToJSON(piUnit);
             const publicModel = ServerCommunication.serial.convertToJSON(piUnit, true);
-            try {
-                const res1 = await axios.put(`${SERVER_URL}putModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}`, model);
-                const res2 = await axios.put(`${SERVER_URL}putModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}${ModelUnitInterfacePostfix}`, publicModel);
-            } catch (e) {
-                LOGGER.error(this, "putModelUnit, " + e.toString());
-                setUserMessage(e.message);
-            }
+            await this.putWithTimeout(`putModelUnit`, model, `folder=${modelName}&name=${unitName}` );
+            await this.putWithTimeout(
+                `putModelUnit`,
+                publicModel,
+                `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`
+            );
         } else {
-            LOGGER.error(this, "Name of Unit '" + modelInfo.unitName + "' may contain only characters and numbers, and must start with a character.");
+            LOGGER.error(this, "Name of Unit '" + unitName + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
         }
     }
 
-    async deleteModelUnit(modelInfo: IModelUnitData ) {
-        console.log(`ServerCommunication.deleteModelUnit ${modelInfo.modelName}/${modelInfo.unitName}`);
-        if (!!modelInfo.unitName && modelInfo.unitName !== "") {
-            try {
-                const res1 = await axios.get(`${SERVER_URL}deleteModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}`);
-                const res2 = await axios.get(`${SERVER_URL}deleteModelUnit?folder=${modelInfo.modelName}&name=${modelInfo.unitName}${ModelUnitInterfacePostfix}`);
-            } catch (e) {
-                LOGGER.error(this, "deleteModelUnit, " + e.toString());
-                setUserMessage(e.message);
-            }
+    /**
+     * Deletes the unit indicated by 'modelInfo' including its interface.
+     * @param modelName
+     * @param unitName
+     */
+    async deleteModelUnit(modelName: string, unitName: string) {
+        LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unitName}`);
+        if (!!unitName && unitName.length > 0) {
+            await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unitName}`);
+            await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
         }
     }
 
+    /**
+     * Deletes the complete model named 'modelName'.
+     * @param modelName
+     */
     async deleteModel(modelName: string ) {
-        console.log(`ServerCommunication.deleteModel ${modelName}`);
-        if (!!modelName && modelName !== "") {
-            try {
-                const res1 = await axios.get(`${SERVER_URL}deleteModel?folder=${modelName}`);
-            } catch (e) {
-                LOGGER.error(this, "deleteModel, " + e.toString());
-                setUserMessage(e.message);
-            }
+        LOGGER.log(`ServerCommunication.deleteModel ${modelName}`);
+        if (!!modelName && modelName.length > 0) {
+            await this.fetchWithTimeout<any>(`deleteModel`, `folder=${modelName}`);
         }
     }
 
@@ -75,66 +82,126 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadModelList(modelListCallback: (names: string[]) => void) {
         LOGGER.log(`ServerCommunication.loadModelList`);
-        try {
-            const models = await axios.get(`${SERVER_URL}getModelList`);
-            modelListCallback(models.data);
-        } catch (e) {
-            LOGGER.error(this, "loadModelList, " + e.message);
-            setUserMessage(e.message);
+        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
+        if (!!res) {
+            modelListCallback(res);
+        } else {
+            modelListCallback([]);
         }
     }
 
     /**
-     * Reads the list of units in a model available on the server and calls 'modelListCallback'.
+     * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
+     * @param modelName
      * @param modelListCallback
      */
     async loadUnitList(modelName: string, modelListCallback: (names: string[]) => void) {
         LOGGER.log(`ServerCommunication.loadUnitList`);
-        let result: string[] = [];
-        try {
-            const modelUnits = await axios.get(`${SERVER_URL}getUnitList?folder=${modelName}`);
-            // filter out the modelUnitInterfaces
-            if (!!modelUnits&& Array.isArray(modelUnits.data)) {
-                result = modelUnits.data.filter( (name: string) => name.indexOf(ModelUnitInterfacePostfix) === -1)
-            }
-        } catch (e) {
-            LOGGER.error(this, "loadUnitList, " + e.message);
-            setUserMessage(e.message);
+        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
+        // filter out the modelUnitInterfaces
+        if (!!modelUnits) {
+            modelUnits = modelUnits.filter( (name: string) => name.indexOf(modelUnitInterfacePostfix) === -1 );
+            modelListCallback(modelUnits);
+        } else {
+            modelListCallback([]);
         }
-        modelListCallback(result);
     }
 
     /**
-     * Reads the model with unitName 'modelName' from the server and calls 'loadCallBack',
-     * which takes the model as parameter.
+     * Loads the unit named 'unitName' of model 'modelName' from the server and calls 'loadCallBack',
+     * which takes the unit as parameter.
      * @param modelName
+     * @param unitName
      * @param loadCallback
      */
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: PiNamedElement) => void) {
-        // LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
-        if (!!unitName && unitName !== "") {
-            try {
-                const res = await axios.get(`${SERVER_URL}getModelUnit?folder=${modelName}&name=${unitName}`);
-                const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
-                loadCallback(model);
-            } catch (e) {
-                LOGGER.error(this, "loadModelUnit, " + e.toString());
-                setUserMessage(e.message);
+        LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
+        if (!!unitName && unitName.length > 0) {
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}`);
+            if (!!res) {
+                try {
+                    const unit = ServerCommunication.serial.toTypeScriptInstance(res);
+                    loadCallback(unit);
+                } catch (e) {
+                    LOGGER.error(this, "loadModelUnit, " + e.message);
+                    setUserMessage(e.message);
+                }
             }
         }
     }
 
+    /**
+     * Loads the interface of the unit named 'unitName' of model 'modelName' from the server and calls 'loadCallBack',
+     * which takes the unit as parameter.
+     * @param modelName
+     * @param unitName
+     * @param loadCallback
+     */
     async loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnitInterface: PiNamedElement) => void) {
-        console.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
-        if (!!unitName && unitName !== "") {
-            try {
-                const res = await axios.get(`${SERVER_URL}getModelUnit?folder=${modelName}&name=${unitName}${ModelUnitInterfacePostfix}`);
-                const model = ServerCommunication.serial.toTypeScriptInstance(res.data);
-                loadCallback(model);
-            } catch (e) {
-                LOGGER.error(this, `loadModelUnitInterface for ${modelName}/${unitName}: ` + e.toString());
-                setUserMessage(e.message);
+        LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
+        if (!!unitName && unitName.length > 0) {
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
+            if (!!res) {
+                try {
+                    const model = ServerCommunication.serial.toTypeScriptInstance(res);
+                    loadCallback(model);
+                } catch (e) {
+                    LOGGER.error(this, "loadModelUnitInterface, " + e.message);
+                    setUserMessage(e.message);
+                }
             }
         }
+    }
+
+    private async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
+        params = ServerCommunication.findParams(params);
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            const promise = await fetch(
+                `${SERVER_URL}${method}${params}`,
+                {
+                    signal: controller.signal,
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json"
+                }
+            });
+            clearTimeout(timeoutId);
+            return await promise.json() ;
+        } catch (e) {
+            this.handleError(e);
+        }
+        return null;
+    }
+
+    private async putWithTimeout(method: string, data: Object, params?: string) {
+        params = ServerCommunication.findParams(params);
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            await fetch(
+                `${SERVER_URL}${method}${params}`,
+                {
+                    signal: controller.signal,
+                    method: "put",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+            clearTimeout(timeoutId);
+        } catch (e) {
+            this.handleError(e);
+        }
+    }
+
+    private handleError(e) {
+        let errorMess: string = e.message;
+        if (e.message.includes("aborted")) {
+            errorMess = `Time out: no response from ${SERVER_URL}.`;
+        }
+        LOGGER.error(this, errorMess);
+        setUserMessage(errorMess);
     }
 }
