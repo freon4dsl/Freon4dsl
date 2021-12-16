@@ -13,7 +13,7 @@ expression PrefixMinusExpression base ExpressionBase {
     expr: ExpressionBase;
 }
 
-// <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> |
+// <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE>
 
 binary expression MultiplyExpression base BinaryExpressionBase {
     priority = 8;

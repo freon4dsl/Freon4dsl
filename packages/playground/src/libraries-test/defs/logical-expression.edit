@@ -6,6 +6,9 @@ OrExpression {
 AndExpression {
     @symbol "and"
 }
+XorExpression {
+    @symbol "xor"
+}
 LessThenExpression {
     @symbol "<"
 }

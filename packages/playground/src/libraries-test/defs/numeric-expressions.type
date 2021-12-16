@@ -13,4 +13,4 @@ PrefixMinusExpression {
     infertype self.expr;
 }
 
-// <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> | inherit from BinaryExpressionBase
+// <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> inherit from BinaryExpressionBase

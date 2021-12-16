@@ -13,6 +13,10 @@ binary expression OrExpression base BinaryExpressionBase {
     priority = 1;
 }
 
+binary expression XorExpression base BinaryExpressionBase {
+    priority = 1;
+}
+
 // <EQUALS> | <LESS> | <GT> | <GTEQ> | <LESSEQ> | <NOTEQUALS> |
 
 binary expression EqualsExpression base ComparisonExpression {

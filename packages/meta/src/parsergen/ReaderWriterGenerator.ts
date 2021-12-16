@@ -9,7 +9,7 @@ import Agl = net.akehurst.language.agl.processor.Agl;
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser";
 import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel";
 
-const LOGGER = new MetaLogger("ReaderWriterGenerator"); // .mute();
+const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 
 /**
  * Generates the grammar for all units into one file, because the parser is able to learn how to process

@@ -1,6 +1,6 @@
 typer XX for language ExpressionLibrary
 
-istype { BASIC_TYPE }
+istype { ROOT_TYPE, BASIC_TYPE }
 
 ExpressionBase {
     abstract infertype  ;
