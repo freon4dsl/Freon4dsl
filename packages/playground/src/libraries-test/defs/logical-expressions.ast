@@ -1,0 +1,57 @@
+////////////////////////////////////
+//       Logical Expressions
+////////////////////////////////////
+language ExpressionLibrary
+
+// <AND> | <OR> | <XOR> |
+
+binary expression AndExpression base BinaryExpressionBase {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpressionBase {
+    priority = 1;
+}
+
+binary expression XorExpression base BinaryExpressionBase {
+    priority = 1;
+}
+
+// <EQUALS> | <LESS> | <GT> | <GTEQ> | <LESSEQ> | <NOTEQUALS> |
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression NotEqualsExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression LessEqExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression GreaterEqExpression base ComparisonExpression {
+    priority = 10;
+}
+
+// <IMPLIES>
+
+binary expression ImpliesExpression base ComparisonExpression {
+    priority = 10;
+}
+
+// <NOT>
+
+expression NotExpression base ExpressionBase {
+    inner: ExpressionBase;
+    priority = 20;
+}

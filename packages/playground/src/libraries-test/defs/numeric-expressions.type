@@ -1,0 +1,16 @@
+////////////////////////////////////
+//       Numeric Expressions
+////////////////////////////////////
+typer XX for language ExpressionLibrary
+
+// <ABS> | <MINUS_PREFIX>
+
+AbsExpression {
+    infertype self.expr;
+}
+
+PrefixMinusExpression {
+    infertype self.expr;
+}
+
+// <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> inherit from BinaryExpressionBase

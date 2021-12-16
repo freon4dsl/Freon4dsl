@@ -1,0 +1,14 @@
+editor XXX for language ExpressionLibrary
+
+BooleanLiteral {
+    @projection [${self.value}]
+}
+
+NumberLiteral {
+    @projection [${self.value}]
+}
+
+StringLiteral {
+    @projection [${self.value}]
+}
+

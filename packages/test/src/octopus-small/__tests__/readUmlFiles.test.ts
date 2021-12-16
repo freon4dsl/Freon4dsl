@@ -1,11 +1,12 @@
 import { ModelUnitMetaType, OctopusModelUnitType, UmlPart } from "../language/gen";
 import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
-import * as fs from "fs";
 import { GenericModelSerializer } from "@projectit/core";
+import { FileHandler } from "../../utils/FileHandler";
 
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;
 const serial: GenericModelSerializer = new GenericModelSerializer();
+const handler = new FileHandler();
 
 function compareReadAndWrittenUmlParts(path: string) {
     try {
@@ -26,12 +27,7 @@ function compareReadAndWrittenUmlParts(path: string) {
 }
 
 function readFromFile(filepath: string, metatype: ModelUnitMetaType): OctopusModelUnitType {
-    // read language file
-    if (!fs.existsSync(filepath)) {
-        console.error(this, "File '" + filepath + "' does not exist, exiting.");
-        throw new Error(`File '${filepath}' not found.`);
-    }
-    const langSpec: string = fs.readFileSync(filepath, { encoding: "utf8" });
+    const langSpec: string = handler.stringFromFile(filepath);
     return reader.readFromString(langSpec, metatype) as OctopusModelUnitType;
 }
 

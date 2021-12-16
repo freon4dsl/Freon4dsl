@@ -1,6 +1,7 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortConcepts, langExpToTypeScript } from "../../../utils";
 import { PiConcept, PiInterface, PiLanguage, PiLangExp, PiLangSelfExp } from "../../../languagedef/metalanguage";
 import { PiTypeDefinition, PiTypeClassifierRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage";
+import { TyperGenUtils } from "./TyperGenUtils";
 
 export class PiTyperPartTemplate {
     typerdef: PiTypeDefinition;
@@ -17,7 +18,7 @@ export class PiTyperPartTemplate {
     private generateFromDefinition(typerdef: PiTypeDefinition, language: PiLanguage, relativePath: string) {
         this.typerdef = typerdef;
         this.language = language;
-        const rootType: string = this.typerdef.typeroot.name;
+        const rootType = TyperGenUtils.getTypeRoot(language, typerdef);
         const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyperPart;
@@ -135,7 +136,7 @@ export class PiTyperPartTemplate {
     }
 
     private findDefaultType(): string {
-        const result: string = "";
+        const result: string = "null";
         for (const tr of this.typerdef.typerRules) {
             if (tr instanceof PiTypeAnyTypeRule) {
                 for (const stat of tr.statements) {

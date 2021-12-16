@@ -1,0 +1,6 @@
+editor XXX for language ExpressionLibrary
+
+GroupedExpression {
+    @projection [( ${self.inner} )]
+    @symbol "()"
+}
