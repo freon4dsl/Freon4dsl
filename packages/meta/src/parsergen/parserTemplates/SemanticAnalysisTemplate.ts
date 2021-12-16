@@ -22,7 +22,7 @@ export class SemanticAnalysisTemplate {
                     if (sub instanceof PiConcept) {
                         for (const ref of sub.allReferences()) {
                             if (analyser.classifiersUsed.includes(ref.type.referred)){
-                                this.possibleProblems.push(sub);
+                                this.addProblem(sub);
                                 hasProblems = true;
                             }
                         }
@@ -34,9 +34,21 @@ export class SemanticAnalysisTemplate {
                     }
                 }
                 if (hasProblems) {
-                    this.supersOfProblems.push(classifier);
+                    this.addSuper(classifier);
                 }
             }
+        }
+    }
+
+    private addSuper(classifier: PiClassifier) {
+        if( !this.supersOfProblems.includes(classifier)) {
+            this.supersOfProblems.push(classifier);
+        }
+    }
+
+    private addProblem(sub: PiConcept) {
+        if( !this.possibleProblems.includes(sub)) {
+            this.possibleProblems.push(sub);
         }
     }
 
