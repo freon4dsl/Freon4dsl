@@ -69,9 +69,9 @@ export class CustomExampleProjection implements PiProjection {
         // }
 
         // Uncomment to see a simple (unfinished) table representation of entity attributes
-        if (element instanceof Entity) {
-            return this.createEntityBox(element);
-        }
+        // if (element instanceof Entity) {
+        //     return this.createEntityBox(element);
+        // }
 
         // Uncomment to see an alternative OR notation (only works up to two nested ors
         // if (element instanceof OrExpression) {
@@ -241,52 +241,26 @@ export class CustomExampleProjection implements PiProjection {
         return new GridBox(entity, "entity-all", cells, {style: entityBoxStyle});
     }
 
-    // TODO Refactor row and column based collections into one generic function.
     private createAttributeGrid(entity: Entity): Box {
-        return TableUtil.tableRowOriented<Attribute>(
-            entity,
-            "attr-grid",
-            "attributes",
-            entity.attributes,
-            ["name", "type"],
-            [attributeHeader, attributeHeader],
-            [rowStyle, rowStyle],
-            [
-                (att: Attribute): Box => {return BoxUtils.textBox(att, "name");},
-                (attr: Attribute): Box => {
-                    return BoxUtils.referenceBox(
-                        attr,
-                        "declaredType",
-                        async (selected: string) => {
-                            attr.declaredType = PiElementReference.create<Type>(
-                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
+        return TableUtil.tableBoxRowOriented(
+                entity,
+                "attributes",
+                ["name", "type"],
+                [
+                    (att: Attribute): Box => {return BoxUtils.textBox(att, "name");},
+                    (attr: Attribute): Box => {
+                        return BoxUtils.referenceBox(
+                            attr,
+                            "declaredType",
+                            async (selected: string) => {
+                                attr.declaredType = PiElementReference.create<Type>(
+                                        ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
 
-                        },
-                        ExampleEnvironment.getInstance().scoper
-                    )
-                }
-            ],
-            (box: Box, editor: PiEditor) => {
-                return new Attribute();
-            },
-            ExampleEnvironment.getInstance().editor
-        );
+                            },
+                            ExampleEnvironment.getInstance().scoper
+                        )
+                    }
+                ],
+                ExampleEnvironment.getInstance().editor);
     }
-
-
 }
-
-// function isName(currentText: string, key: string, index: number): KeyPressAction {
-//     // LOGGER.log("IsName key[" + key + "]");
-//     if (key === "Enter") {
-//         if (index === currentText.length) {
-//             return KeyPressAction.GOTO_NEXT;
-//         } else {
-//             return KeyPressAction.NOT_OK;
-//         }
-//     } else {
-//         return KeyPressAction.OK;
-//     }
-// }
-
-

@@ -34,8 +34,12 @@ import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
 export class ProjectionTemplate {
+    private tableProjections: PiEditConcept[] = [];
 
     generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
+        // remember all concepts that have a table projection
+        this.tableProjections.push(...editorDef.conceptEditors.filter(conceptDef => conceptDef.tableProjections.length > 0));
+
         let binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
             const editor = editorDef.findConceptEditor(c);
@@ -158,6 +162,9 @@ export class ProjectionTemplate {
                     }
                 }
             }`;
+
+        // do not forget to reset the table projections
+        this.tableProjections = [];
     }
 
     private generateUserProjection(language: PiLanguage, concept: PiClassifier, editor: PiEditConcept) {
@@ -292,8 +299,7 @@ export class ProjectionTemplate {
                     if (!!item.listInfo) {
                         result += this.conceptPartListProjection(item, concept, appliedFeature, elementVarName);
                     } else if (!!item.tableInfo) {
-                        // TODO tables
-                        // result += this.conceptPartTableProjection(item, concept, appliedFeature, elementVarName);
+                        result += this.conceptPartTableProjection(item.tableInfo.direction, appliedFeature, elementVarName, language);
                     }
                 } else {
                     result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${appliedFeature.name}", this.rootProjection) `;
@@ -316,38 +322,33 @@ export class ProjectionTemplate {
     }
 
 
-    private conceptPartTableProjection(item: PiEditTableProjection, concept: PiClassifier, appliedFeature: PiConceptProperty, elementVarName: string) {
-        // TODO
-        // const headers: string[] = item.headers;
-        // return `TableUtil.tableRowOriented<Attribute>(
-        //     ${elementVarName},
-        //     "attr-grid",
-        //     "${appliedFeature.name}",
-        //     ${elementVarName}.${appliedFeature.name},
-        //     ["${item.tableInfo?.}", "type"],
-        //     [attributeHeader, attributeHeader],
-        //     [attributeHeader, attributeHeader],
-        //     [
-        //         (att: Attribute): Box => {
-        //             return BoxUtils.textBox(att,"attr-name")
-        //         },
-        //         (attr: Attribute): Box => {
-        //             return BoxUtils.referenceBox(
-        //                 attr,
-        //                 "declaredType",
-        //                 (selected: string) => {
-        //                     return PiElementReference.create<Type>(
-        //                         ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
-        //                 },
-        //                 ExampleEnvironment.getInstance().scoper
-        //             )
-        //         }
-        //     ],
-        //     (box: Box, editor: PiEditor) => {
-        //         return new Attribute();
-        //     },
-        //     ExampleEnvironment.getInstance().editor
-        // );`
+    private conceptPartTableProjection(orientation: PiEditProjectionDirection, appliedFeature: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
+        // find the projection to use for the type of the given appliedFeature
+        // TODO handle multiple tableProjections, now the first is choosen
+        const featureType: PiClassifier = appliedFeature.type.referred;
+        const propTypeProjection: PiEditConcept = this.tableProjections.find(proj => proj.concept.referred === featureType);
+        const myTableProjection: PiEditTableProjection = propTypeProjection.tableProjections[0];
+        let cellGetters: string = '';
+        myTableProjection.cells.forEach((cell, index) =>
+            cellGetters += `(attr: ${Names.classifier(featureType)}): Box => {
+                return ${this.itemProjection(cell, "attr", index, appliedFeature.type.referred, language)}
+            },\n`
+        );
+        if (orientation === PiEditProjectionDirection.Vertical) {
+            return `TableUtil.tableBoxColumnOriented(
+                ${elementVarName},
+                "${appliedFeature.name}",
+                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
+                [ ${cellGetters} ],
+                ExampleEnvironment.getInstance().editor)`;
+        } else {
+            return `TableUtil.tableBoxRowOriented(
+                ${elementVarName},
+                "${appliedFeature.name}",
+                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
+                [ ${cellGetters} ],
+                ExampleEnvironment.getInstance().editor)`;
+        }
     }
     /**
      * generate the part list
@@ -355,14 +356,14 @@ export class ProjectionTemplate {
      * @param item
      * @param concept
      * @param propertyConcept   The property for which the projection is generated.
-     * @param element           The name of the element parameter of the getBox projection method.
+     * @param elementVarName    The name of the element parameter of the getBox projection method.
      */
-    private conceptPartListProjection(item: PiEditPropertyProjection, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
+    private conceptPartListProjection(item: PiEditPropertyProjection, concept: PiClassifier, propertyConcept: PiConceptProperty, elementVarName: string) {
         let joinEntry = this.getJoinEntry(item.listInfo);
         if (item.listInfo.direction === PiEditProjectionDirection.Vertical) {
-            return `BoxUtils.verticalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
+            return `BoxUtils.verticalPartListBox(${elementVarName}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
         } // else
-        return `BoxUtils.horizontalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
+        return `BoxUtils.horizontalPartListBox(${elementVarName}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
     }
 
     private conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {

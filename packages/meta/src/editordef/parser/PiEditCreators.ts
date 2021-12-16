@@ -220,7 +220,7 @@ export function createListDirection(data: Object): PiEditProjectionDirection {
 export function createTableInfo(data: Object): TableInfo {
     const result = new TableInfo();
     const dir = data["direction"];
-    result.direction = dir === "@rows" ? PiEditProjectionDirection.Horizontal : dir === "@colums" ? PiEditProjectionDirection.Vertical : PiEditProjectionDirection.NONE;
+    result.direction = dir === "@rows" ? PiEditProjectionDirection.Horizontal : dir === "@columns" ? PiEditProjectionDirection.Vertical : PiEditProjectionDirection.NONE;
     if (!!data["location"]) {
         result.location = data["location"];
         result.location.filename = currentFileName;
