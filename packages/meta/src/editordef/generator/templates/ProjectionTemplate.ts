@@ -5,7 +5,7 @@ import {
     PiExpressionConcept,
     PiLanguage,
     PiLimitedConcept,
-    PiPrimitiveProperty,
+    PiPrimitiveProperty, PiPrimitiveType,
     PiProperty
 } from "../../../languagedef/metalanguage";
 import {
@@ -17,8 +17,7 @@ import {
     sortConceptsWithBase
 } from "../../../utils";
 import {
-    ListInfo,
-    ListInfoType,
+    ListInfo, ListInfoType,
     PiEditConcept,
     PiEditInstanceProjection,
     PiEditParsedProjectionIndent,
@@ -30,14 +29,14 @@ import {
     PiEditUnit
 } from "../../metalanguage";
 import { PiEditTableProjection } from "../../metalanguage/PiEditDefLang";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
 export class ProjectionTemplate {
-    private tableProjections: PiEditConcept[] = [];
+    private tableProjections: PiEditConcept[] = []; // holds all concepts that have a table projection during the generation
 
     generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
-        // remember all concepts that have a table projection
+        // reset the table projections, then remember all concepts that have a table projection
+        this.tableProjections = [];
         this.tableProjections.push(...editorDef.conceptEditors.filter(conceptDef => conceptDef.tableProjections.length > 0));
 
         let binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
@@ -162,9 +161,6 @@ export class ProjectionTemplate {
                     }
                 }
             }`;
-
-        // do not forget to reset the table projections
-        this.tableProjections = [];
     }
 
     private generateUserProjection(language: PiLanguage, concept: PiClassifier, editor: PiEditConcept) {
@@ -296,12 +292,12 @@ export class ProjectionTemplate {
         } else if (appliedFeature instanceof PiConceptProperty) {
             if (appliedFeature.isPart) {
                 if (appliedFeature.isList) {
-                    if (!!item.listInfo) {
+                    if (!!item.listInfo) { // if there is information on how to project the appliedFeature as a list, make it a list
                         result += this.conceptPartListProjection(item, concept, appliedFeature, elementVarName);
-                    } else if (!!item.tableInfo) {
+                    } else if (!!item.tableInfo) {  // if there is information on how to project the appliedFeature as a table, make it a table
                         result += this.conceptPartTableProjection(item.tableInfo.direction, appliedFeature, elementVarName, language);
                     }
-                } else {
+                } else { // single element
                     result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${appliedFeature.name}", this.rootProjection) `;
                 }
             } else { // reference
@@ -311,7 +307,7 @@ export class ProjectionTemplate {
                     } else if (!!item.tableInfo) {
                         // TODO adjust for tables
                     }
-                } else {
+                } else { // single element
                     result += this.conceptReferenceProjection(language, appliedFeature, elementVarName);
                 }
             }
@@ -321,35 +317,49 @@ export class ProjectionTemplate {
         return result;
     }
 
-
-    private conceptPartTableProjection(orientation: PiEditProjectionDirection, appliedFeature: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
-        // find the projection to use for the type of the given appliedFeature
-        // TODO handle multiple tableProjections, now the first is choosen
-        const featureType: PiClassifier = appliedFeature.type.referred;
+    /**
+     * Returns the text string that projects 'property' as a table.
+     * @param orientation       Either row or column based
+     * @param property          The property to be projected
+     * @param elementVarName    The name of the variable that holds the property at runtime
+     * @param language          The language for which this projection is made
+     * @private
+     */
+    private conceptPartTableProjection(orientation: PiEditProjectionDirection, property: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
+        // find the projection to use for the type of the given property
+        const featureType: PiClassifier = property.type.referred;
         const propTypeProjection: PiEditConcept = this.tableProjections.find(proj => proj.concept.referred === featureType);
-        const myTableProjection: PiEditTableProjection = propTypeProjection.tableProjections[0];
+        // TODO handle multiple tableProjections, now the first is chosen
+        const myTableProjection: PiEditTableProjection = propTypeProjection?.tableProjections[0];
+        if (!myTableProjection) {
+            console.error(`Cannot find a table projection for property ${property.name}.`);
+            return `BoxUtils.labelBox(${elementVarName}, "Cannot find a table projection for this property.")`;
+        }
+        // create the cell getters
         let cellGetters: string = '';
         myTableProjection.cells.forEach((cell, index) =>
-            cellGetters += `(attr: ${Names.classifier(featureType)}): Box => {
-                return ${this.itemProjection(cell, "attr", index, appliedFeature.type.referred, language)}
+            cellGetters += `(cell${index}: ${Names.classifier(featureType)}): Box => {
+                return ${this.itemProjection(cell, `cell${index}`, index, property.type.referred, language)}
             },\n`
         );
+        // return the projection based on the orientation of the table
         if (orientation === PiEditProjectionDirection.Vertical) {
             return `TableUtil.tableBoxColumnOriented(
                 ${elementVarName},
-                "${appliedFeature.name}",
+                "${property.name}",
                 [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
                 [ ${cellGetters} ],
                 ExampleEnvironment.getInstance().editor)`;
         } else {
             return `TableUtil.tableBoxRowOriented(
                 ${elementVarName},
-                "${appliedFeature.name}",
+                "${property.name}",
                 [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
                 [ ${cellGetters} ],
                 ExampleEnvironment.getInstance().editor)`;
         }
     }
+
     /**
      * generate the part list
      *

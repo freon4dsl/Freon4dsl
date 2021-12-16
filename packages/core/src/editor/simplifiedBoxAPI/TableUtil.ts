@@ -33,7 +33,20 @@ export const cellStyle: PiStyle = {
 };
 
 export class TableUtil {
+    // Note that both tableBoxRowOriented and tableBoxColumnOriented look very similar.
+    // They differ in the indexes etc. and can therefore not (easily) be combined.
 
+    /**
+     * Returns a GridBox that is a table representation of property with name 'propertyName'
+     * within 'element'. The property must be a list. Each element of the list is shown in a row of the table.
+     * A series of getters that each return a Box object must be present: one per column.
+     *
+     * @param element       The element that holds the list property.
+     * @param propertyName  The name of the list property to be shown.
+     * @param columnHeaders The titles that are to be shown above each column.
+     * @param cellGetters   A series of functions that return the Box to be shown in a cell.
+     * @param editor        The editor that should know about KeyboardShortCuts.
+     */
     public static tableBoxRowOriented(element: PiElement, propertyName: string, columnHeaders: string[],
                            cellGetters: ((e: PiElement) => Box)[],
                            editor: PiEditor): Box {
@@ -75,20 +88,23 @@ export class TableUtil {
                 box: new AliasBox(element, "alias-add-row", "<add new row>"),
                 style: cellStyle
             });
-
             // Add keyboard actions to grid such that new rows can be added by Return Key
-            const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
-            editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(roleName, elementBuilder));
-            editor.keyboardActions.splice(
-                0,
-                0,
-                this.createKeyboardShortcutForEmptyCollectionGrid(propertyName, elementBuilder)
-            );
-            return new GridBox(element, roleName, cells);
+            return this.addKeyBoardShortCuts(element, propertyName, editor, elementBuilder, cells);
         }
         return null;
     }
 
+    /**
+     * Returns a GridBox that is a table representation of property with name 'propertyName'
+     * within 'element'. The property must be a list. Each element of the list is shown in a column of the table.
+     * A series of getters that each return a Box object must be present: one per row.
+     *
+     * @param element       The element that holds the list property.
+     * @param propertyName  The name of the list property to be shown.
+     * @param rowHeaders    The titles that are to be shown before each row.
+     * @param cellGetters   A series of functions that return the Box to be shown in a cell.
+     * @param editor        The editor that should know about KeyboardShortCuts.
+     */
     public static tableBoxColumnOriented(element: PiElement, propertyName: string, rowHeaders: string[],
                                       cellGetters: ((e: PiElement) => Box)[],
                                       editor: PiEditor): Box {
@@ -129,20 +145,34 @@ export class TableUtil {
                 box: new AliasBox(element, "alias-add-column", "<add new column>"),
                 style: cellStyle
             });
-
             // Add keyboard actions to grid such that new rows can be added by Return Key
-            const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
-            editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(roleName, elementBuilder));
-            editor.keyboardActions.splice(
-                0,
-                0,
-                this.createKeyboardShortcutForEmptyCollectionGrid(propertyName, elementBuilder)
-            );
-            return new GridBox(element, roleName, cells);
+            return this.addKeyBoardShortCuts(element, propertyName, editor, elementBuilder, cells);
         }
         return null;
     }
-    
+
+    /**
+     * Adds two keyboard shortcuts to the editor: one to be able to insert a row/column, and one
+     * to be able to insert a row/column in an empty grid.
+     *
+     * @param element
+     * @param propertyName
+     * @param editor
+     * @param elementBuilder
+     * @param cells
+     * @private
+     */
+    private static addKeyBoardShortCuts(element: PiElement, propertyName: string, editor: PiEditor, elementBuilder: () => PiElement, cells: GridCell[]) {
+        const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
+        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(roleName, elementBuilder));
+        editor.keyboardActions.splice(
+            0,
+            0,
+            this.createKeyboardShortcutForEmptyCollectionGrid(propertyName, elementBuilder)
+        );
+        return new GridBox(element, roleName, cells);
+    }
+
     /**
      * Create a keyboard shortcut for use in an element table
      * @param collectionRole
@@ -179,6 +209,13 @@ export class TableUtil {
         return listKeyboardShortcut;
     }
 
+    /**
+     * Create a keyboard shortcut for use in an empty table
+     * @param propertyRole
+     * @param elementCreator
+     * @param roleToSelect
+     * @private
+     */
     private static createKeyboardShortcutForEmptyCollectionGrid(
         propertyRole: string,
         elementCreator: () => PiElement,

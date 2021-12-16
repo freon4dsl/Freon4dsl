@@ -5,13 +5,11 @@ Attribute {
         ${self.name} : ${self.declaredType}
     ]
     @table xxx [
-        NAME_HEADER | TYPE_HEADER\[\]
         ${self.name} | ${self.declaredType}
     ]
 }
 
 Entity {
-//            ${self.attributes @table  }
     @projection [
         entity ${self.name} [? base ${self.baseEntity}] {
             ${self.attributes @table @columns  }
@@ -51,8 +49,8 @@ Parameter {
         ${self.name} : ${self.declaredType}
     ]
     @table xxx [
-        Name         | Type
-        ${self.name} | ${self.declaredType}
+        Type                 | Name
+        ${self.declaredType} | ${self.name}
     ]
 }
 
