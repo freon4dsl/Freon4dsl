@@ -163,8 +163,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);
         } catch (e) {
-            // LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping editor, reader and writer generation because of errors: " + e.message);
+            LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
+            // LOGGER.error(this, "Stopping editor, reader and writer generation because of errors: " + e.message);
         }
         return editor;
     };

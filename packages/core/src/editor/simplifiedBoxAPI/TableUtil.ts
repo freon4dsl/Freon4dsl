@@ -1,21 +1,21 @@
 import {
     AliasBox,
     Box,
-    HorizontalListBox,
-    LabelBox,
+    BoxUtils,
     GridBox,
     GridCell,
+    HorizontalListBox,
     KeyboardShortcutBehavior,
-    PiEditor, PiStyle, styleToCSS, TextBox, BoxUtils
+    PiEditor,
+    PiStyle
 } from "../index";
 import { PiElement } from "../../language";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import { MetaKey, PiKey } from "../../util/Keys";
 import * as Keys from "../../util/Keys";
-import { PiUtils, NBSP } from "../../util";
+import { MetaKey, PiKey } from "../../util/Keys";
+import { NBSP, PiUtils } from "../../util";
 import { Language } from "../../storage";
 import { RoleProvider } from "./RoleProvider";
-import { Attribute } from "@projectit/playground/dist/example/language/gen";
 
 // headerStyle and rowStyle are the default styles for a table
 export const headerStyle: PiStyle = {
@@ -184,7 +184,7 @@ export class TableUtil {
         elementCreator: () => PiElement,
         roleToSelect?: string
     ): KeyboardShortcutBehavior {
-        const listKeyboardShortcut: KeyboardShortcutBehavior = {
+        return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             // TODO The new-0... should become more generic.
             activeInBoxRoles: ["new-0", "new-1", "new-2", "new-3", "new-4", "new-5", "new-6", "new-7", "new-8", "new-9", "new-10"],
@@ -200,13 +200,12 @@ export class TableUtil {
                     editor.selectElement(newElement, roleToSelect);
                 } else {
                     editor.selectElement(newElement);
-                    editor.selectFirstEditableChildBox();
+                    await editor.selectFirstEditableChildBox();
                     // await editor.selectFirstLeafChildBox();
                 }
                 return null;
             }
         };
-        return listKeyboardShortcut;
     }
 
     /**
@@ -221,7 +220,7 @@ export class TableUtil {
         elementCreator: () => PiElement,
         roleToSelect?: string
     ): KeyboardShortcutBehavior {
-        const listKeyboardShortcut: KeyboardShortcutBehavior = {
+        return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: ["alias-add-row", "alias-alias-add-row-textbox"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
@@ -233,12 +232,11 @@ export class TableUtil {
                     editor.selectElement(newElement, roleToSelect);
                 } else {
                     editor.selectElement(newElement);
-                    editor.selectFirstEditableChildBox();
+                    await editor.selectFirstEditableChildBox();
                     // await editor.selectFirstLeafChildBox();
                 }
                 return null;
             }
         };
-        return listKeyboardShortcut;
     }
 }

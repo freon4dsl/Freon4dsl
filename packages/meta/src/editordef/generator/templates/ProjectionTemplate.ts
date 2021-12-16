@@ -411,7 +411,6 @@ export class ProjectionTemplate {
 
     private primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
         if (property.isList) {
-            // TODO remove this hack
             return this.listPrimitivePropertyProjection(property, element);
         } else {
             return this.singlePrimitivePropertyProjection(property, element);

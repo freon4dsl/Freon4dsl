@@ -2,7 +2,7 @@ editor RulesEditor for language RulesLanguage
 
 Rules {
     @projection default [
-        Using data from ${self.imports @separator [||||]}
+        Using data from ${self.imports @table }
 
         ${self.Rules @vertical @separator [\n\n]}
     ]
