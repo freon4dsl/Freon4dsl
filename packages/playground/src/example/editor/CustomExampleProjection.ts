@@ -14,8 +14,8 @@ import {
     AliasBox,
     GridBox,
     PiStyle,
-    GridUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory
+    TableUtil,
+    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, BoxUtils
 } from "@projectit/core";
 import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
 import { Attribute } from "../language/gen/Attribute";
@@ -25,7 +25,6 @@ import { OrExpression } from "../language/gen/OrExpression";
 import { PiElementReference } from "../language/gen/PiElementReference";
 import { SumExpression } from "../language/gen/SumExpression";
 import { Type } from "../language/gen/Type";
-import { ExampleSelectionHelpers } from "./gen/ExampleSelectionHelpers";
 import {
     attributeHeader,
     attributeName, entityBoxStyle, entityNameStyle,
@@ -52,7 +51,6 @@ const OPERAND_COLUM = 2;
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
 export class CustomExampleProjection implements PiProjection {
-    private helpers: ExampleSelectionHelpers = new ExampleSelectionHelpers();
     rootProjection: PiProjection;
     name: string = "manual";
 
@@ -64,13 +62,11 @@ export class CustomExampleProjection implements PiProjection {
 
     getBox(element: PiElement): Box {
         // Add any handmade projections of your own before next statement
-        if (element instanceof NumberLiteralExpression) {
-            return this.getDemoNumberLiteralExpressionBox(element);
-        }
+
         // Uncomment to see a mathematical Sum symbol
-        if (element instanceof SumExpression) {
-            return this.createSumBox(element);
-        }
+        // if (element instanceof SumExpression) {
+        //     return this.createSumBox(element);
+        // }
 
         // Uncomment to see a simple (unfinished) table representation of entity attributes
         if (element instanceof Entity) {
@@ -78,22 +74,10 @@ export class CustomExampleProjection implements PiProjection {
         }
 
         // Uncomment to see an alternative OR notation (only works up to two nested ors
-        if (element instanceof OrExpression) {
-            return this.createOrBoxGrid(element);
-        }
+        // if (element instanceof OrExpression) {
+        //     return this.createOrBoxGrid(element);
+        // }
         return null;
-    }
-
-    public getDemoNumberLiteralExpressionBox(exp: NumberLiteralExpression): Box {
-        return createDefaultExpressionBox(exp, "number-literal", [
-            new TextBox(exp, "NumberLiteralExpression-value", () => exp.value.toString(), (v: string) => (exp.value = Number.parseInt(v)), {
-                deleteWhenEmpty: true,
-                // style: projectitStyles.stringLiteral,
-                keyPressAction: (currentText: string, key: string, index: number) => {
-                    return isNumber(currentText, key, index);
-                }
-            })
-        ]);
     }
 
     public createSumBox(sum: SumExpression): Box {
@@ -236,34 +220,18 @@ export class CustomExampleProjection implements PiProjection {
 
     private createEntityBox(entity: Entity): Box {
         return BoxFactory.verticalList(entity, "entity-custom-all", [
-            new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
-                deleteWhenEmpty: true,
-                placeHolder: "<enter entity name>",
-                keyPressAction: (currentText: string, key: string, index: number) => {
-                    return isName(currentText, key, index);
-                },
-                style: entityNameStyle
-            }),
+            BoxUtils.textBox(entity, "name"),
             this.createAttributeGrid(entity),
             this.createMethods(entity)
         ]);
     }
     private createEntityTableForAttributes(entity: Entity): Box {
-
         let cells: GridCell[] = [];
         cells.push({
             row: 1,
             column: 1,
             columnSpan: 2,
-            box: new TextBox(entity, "entity-name", () => entity.name, (s: string) => (entity.name = s), {
-                deleteWhenEmpty: true,
-                placeHolder: "<enter entity name>",
-                keyPressAction: (currentText: string, key: string, index: number) => {
-                    return isName(currentText, key, index);
-                },
-                style: entityNameStyle
-            }),
-            // style: styleToCSS(entityBoxStyle)
+            box: BoxUtils.textBox(entity, "name")
         });
         cells.push({
             row: 2,
@@ -275,7 +243,7 @@ export class CustomExampleProjection implements PiProjection {
 
     // TODO Refactor row and column based collections into one generic function.
     private createAttributeGrid(entity: Entity): Box {
-        return GridUtil.createCollectionRowGrid<Attribute>(
+        return TableUtil.tableRowOriented<Attribute>(
             entity,
             "attr-grid",
             "attributes",
@@ -284,39 +252,17 @@ export class CustomExampleProjection implements PiProjection {
             [attributeHeader, attributeHeader],
             [rowStyle, rowStyle],
             [
-                (att: Attribute): Box => {
-                    return new TextBox(att, "attr-name", () => att.name, (s: string) => (att.name = s), {
-                        deleteWhenEmpty: true,
-                        keyPressAction: (currentText: string, key: string, index: number) => {
-                            return isName(currentText, key, index);
-                        },
-                        placeHolder: "<name>"
-                    });
-                },
+                (att: Attribute): Box => {return BoxUtils.textBox(att, "name");},
                 (attr: Attribute): Box => {
-                    return this.helpers.getReferenceBox(
+                    return BoxUtils.referenceBox(
                         attr,
-                        "Attribute-declaredType",
-                        "<select declaredType>",
-                        "Type",
-                        () => {
-                            if (!!attr.declaredType) {
-                                return { id: attr.declaredType.name, label: attr.declaredType.name };
-                            } else {
-                                return null;
-                            }
+                        "declaredType",
+                        async (selected: string) => {
+                            attr.declaredType = PiElementReference.create<Type>(
+                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
+
                         },
-                        async (option: SelectOption): Promise<BehaviorExecutionResult> => {
-                            if (!!option) {
-                                attr.declaredType = PiElementReference.create<Type>(
-                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, option.label, "Type") as Type,
-                                    "Type"
-                                );
-                            } else {
-                                attr.declaredType = null;
-                            }
-                            return BehaviorExecutionResult.EXECUTED;
-                        }
+                        ExampleEnvironment.getInstance().scoper
                     )
                 }
             ],
@@ -330,32 +276,17 @@ export class CustomExampleProjection implements PiProjection {
 
 }
 
-function isNumber(currentText: string, key: string, index: number): KeyPressAction {
-    LOGGER.log("isNumber text [" + currentText + "] key [" + key + "] index [" + index + "]");
-    if (isNaN(Number(key))) {
-        if (index === currentText.length) {
-            return KeyPressAction.GOTO_NEXT;
-        } else if (index === 0) {
-            return KeyPressAction.GOTO_PREVIOUS;
-        } else {
-            return KeyPressAction.NOT_OK;
-        }
-    } else {
-        return KeyPressAction.OK;
-    }
-}
-
-function isName(currentText: string, key: string, index: number): KeyPressAction {
-    // LOGGER.log("IsName key[" + key + "]");
-    if (key === "Enter") {
-        if (index === currentText.length) {
-            return KeyPressAction.GOTO_NEXT;
-        } else {
-            return KeyPressAction.NOT_OK;
-        }
-    } else {
-        return KeyPressAction.OK;
-    }
-}
+// function isName(currentText: string, key: string, index: number): KeyPressAction {
+//     // LOGGER.log("IsName key[" + key + "]");
+//     if (key === "Enter") {
+//         if (index === currentText.length) {
+//             return KeyPressAction.GOTO_NEXT;
+//         } else {
+//             return KeyPressAction.NOT_OK;
+//         }
+//     } else {
+//         return KeyPressAction.OK;
+//     }
+// }
 
 

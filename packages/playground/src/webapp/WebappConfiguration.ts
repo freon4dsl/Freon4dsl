@@ -27,9 +27,6 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
 // import { PiLanguageEnvironment } from "../pi-languages/environment/gen/PiLanguageEnvironment";
 // export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
 
-// import { PiLanguageEnvironment } from "../pi-language-definition-language/environment/gen/PiLanguageEnvironment";
-// export const editorEnvironment: PiEnvironment = PiLanguageEnvironment.getInstance();
-
 // export const editorEnvironment: PiEnvironment = JsonEnvironment.getInstance();
 
 // import { OpenhabEnvironment } from "../openhab/environment/gen/OpenhabEnvironment";
@@ -37,6 +34,9 @@ export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance()
 
 // import { HDMLEnvironment } from "../HDML/environment/gen/HDMLEnvironment";
 // export const editorEnvironment: PiEnvironment = HDMLEnvironment.getInstance();
+
+// import { RulesLanguageEnvironment } from "../rules-language/environment/gen/RulesLanguageEnvironment";
+// export const editorEnvironment: PiEnvironment = RulesLanguageEnvironment.getInstance();
 
 /**
  * The one and only reference to the server on which the models are stored

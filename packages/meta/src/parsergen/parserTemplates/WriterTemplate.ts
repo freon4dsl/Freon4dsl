@@ -6,14 +6,14 @@ import {
     PiPrimitiveProperty,
     PiProperty
 } from "../../languagedef/metalanguage";
-import { sortClasses, langExpToTypeScript } from "../../utils";
+import { sortConcepts, langExpToTypeScript } from "../../utils";
 import {
     PiEditConcept,
     PiEditUnit,
     PiEditProjectionText,
     PiEditPropertyProjection,
     PiEditProjectionDirection,
-    ListJoinType,
+    ListInfoType,
     PiEditProjectionLine, PiEditInstanceProjection, PiEditSubProjection, PiEditProjectionItem
 } from "../../editordef/metalanguage";
 import { PiPrimitiveType } from "../../languagedef/metalanguage";
@@ -30,7 +30,7 @@ export class WriterTemplate {
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.PiWriter;
         let limitedConcepts: PiLimitedConcept[] = [];
-        const elementsToUnparse: PiClassifier[] = sortClasses(language.concepts);
+        const elementsToUnparse: PiClassifier[] = sortConcepts(language.concepts);
         elementsToUnparse.push(...language.units);
 
         // find all limited concepts used, the are treated differently in both (1) the creation of unparse method
@@ -518,15 +518,18 @@ export class WriterTemplate {
             if (myElem.type.referred === PiPrimitiveType.identifier) {
                 isIdentifier = "true";
             }
-            const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
+            const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
             const joinType = this.getJoinType(item);
-            // add escapes to joinText
-            const myJoinText = ParserGenUtil.escapeRelevantChars(item.listJoin.joinText);
-            result += `this.unparseListOfPrimitiveValues(
+            // TODO adjust to tables
+            if (joinType.length > 0) { // it is a list not table
+                // add escapes to joinText
+                const myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
+                result += `this.unparseListOfPrimitiveValues(
                     ${elemStr}, ${isIdentifier},"${myJoinText}", ${joinType}, ${vertical},
                     this.output[this.currentLine].length,
                     short
                 );`;
+            }
         } else {
             let myCall: string = ``;
             const myType: PiClassifier = myElem.type.referred;
@@ -560,13 +563,19 @@ export class WriterTemplate {
         if (!!type) {
             let myTypeScript: string = langExpToTypeScript(item.expression);
             if (myElem.isList) {
-                const vertical = (item.listJoin.direction === PiEditProjectionDirection.Vertical);
-                const joinType = this.getJoinType(item);
-
-                if (myElem.isPart) {
-                    result += `this.unparseList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
-                } else {
-                    result += `this.unparseReferenceList(${myTypeScript}, "${item.listJoin.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                if (!!item.listInfo) {
+                    const vertical = (item.listInfo.direction === PiEditProjectionDirection.Vertical);
+                    const joinType = this.getJoinType(item);
+                    // TODO adjust to tables
+                    if (joinType.length > 0) { // it is a list not table
+                        if (myElem.isPart) {
+                            result += `this.unparseList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                        } else {
+                            result += `this.unparseReferenceList(${myTypeScript}, "${item.listInfo.joinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
+                        }
+                    }
+                } else if (!!item.tableInfo) {
+                    // TODO adjust for tables
                 }
             } else {
                 let myCall: string = "";
@@ -609,12 +618,14 @@ export class WriterTemplate {
      */
     private getJoinType(item: PiEditPropertyProjection): string {
         let joinType: string = "";
-        if (item.listJoin.joinType === ListJoinType.Separator) {
-            joinType = "SeparatorType.Separator";
-        } else if (item.listJoin.joinType === ListJoinType.Terminator) {
-            joinType = "SeparatorType.Terminator";
-        } else if (item.listJoin.joinType === ListJoinType.NONE) {
-            joinType = "SeparatorType.NONE";
+        if (!!item.listInfo) {
+            if (item.listInfo.joinType === ListInfoType.Separator) {
+                joinType = "SeparatorType.Separator";
+            } else if (item.listInfo.joinType === ListInfoType.Terminator) {
+                joinType = "SeparatorType.Terminator";
+            } else if (item.listInfo.joinType === ListInfoType.NONE) {
+                joinType = "SeparatorType.NONE";
+            }
         }
         return joinType;
     }

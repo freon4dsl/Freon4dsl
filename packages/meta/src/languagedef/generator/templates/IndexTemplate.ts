@@ -1,5 +1,5 @@
 import { PiLanguage } from "../../metalanguage";
-import { Names, sortClasses } from "../../../utils";
+import { Names, sortConcepts } from "../../../utils";
 
 export class IndexTemplate {
 
@@ -54,8 +54,8 @@ export class IndexTemplate {
 
         // The exports need to be sorted such that base concepts are exported before the
         // concepts that are extending them.
-        // Function 'sortClasses' provides a sorting mechanism, but its result needs to be reversed.
-        sortClasses(language.concepts).reverse().map(c =>
+        // Function 'sortConcepts' provides a sorting mechanism, but its result needs to be reversed.
+        sortConcepts(language.concepts).reverse().map(c =>
             tmp.push(Names.concept(c))
         );
 

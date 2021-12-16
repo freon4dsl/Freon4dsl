@@ -156,7 +156,7 @@
          "name": "BB",
          "body": {
             "$typename": "BooleanLiteralExpression",
-            "value": "true",
+            "value": true,
             "appliedfeature": null
          },
          "parameters": [],
@@ -197,12 +197,12 @@
             },
             "whenTrue": {
                "$typename": "NumberLiteralExpression",
-               "value": "10",
+               "value": 10,
                "appliedfeature": null
             },
             "whenFalse": {
                "$typename": "NumberLiteralExpression",
-               "value": "666",
+               "value": 666,
                "appliedfeature": null
             },
             "appliedfeature": null
@@ -227,12 +227,12 @@
             },
             "from": {
                "$typename": "NumberLiteralExpression",
-               "value": "0",
+               "value": 0,
                "appliedfeature": null
             },
             "to": {
                "$typename": "NumberLiteralExpression",
-               "value": "999",
+               "value": 999,
                "appliedfeature": null
             },
             "body": {

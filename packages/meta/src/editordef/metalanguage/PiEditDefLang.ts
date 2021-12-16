@@ -19,6 +19,7 @@ export class PiEditConcept extends PiDefinitionElement {
 
     concept: PiElementReference<PiClassifier>;
     projection: PiEditProjection = null;
+    tableProjections: PiEditTableProjection[] = [];
     _trigger: string = null;
     // The name of the reference property for which a shortcut can be used
     referenceShortcut: PiLangExp;
@@ -95,15 +96,15 @@ export enum PiEditProjectionDirection {
     Vertical = "Vertical"
 }
 
-export enum ListJoinType {
+export enum ListInfoType {
     NONE = "NONE",
     Terminator = "Terminator",
     Separator = "Separator"
 }
 
-export class ListJoin extends PiDefinitionElement {
+export class ListInfo extends PiDefinitionElement {
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
-    joinType?: ListJoinType = ListJoinType.NONE;
+    joinType?: ListInfoType = ListInfoType.NONE;
     joinText?: string = "";
 
     toString(): string {
@@ -111,9 +112,17 @@ export class ListJoin extends PiDefinitionElement {
     }
 }
 
+export class TableInfo extends PiDefinitionElement {
+    direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
+    toString(): string {
+        return `@table direction ${this.direction}`;
+    }
+}
+
 export class PiEditPropertyProjection extends PiDefinitionElement {
     // propertyName: string = "";
-    listJoin: ListJoin;
+    listInfo: ListInfo;
+    tableInfo?: TableInfo;
     keyword?: string;
     expression: PiLangExp;
 
@@ -126,7 +135,8 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
         return (
             "${" +
             this.expression.toPiString() + " " +
-            (!!this.listJoin ? " " + this.listJoin.toString() : "") +
+            (!!this.listInfo ? " " + this.listInfo.toString() : "") +
+            (!!this.tableInfo ? " " + this.tableInfo.toString() : "") +
             (!!this.keyword ? " @keyword [" + this.keyword + "]" : "") +
             "}"
         );
@@ -215,5 +225,17 @@ export class PiEditProjection extends PiDefinitionElement {
     toString() {
         return `projection ${this.name} lines: ${this.lines.length}
 ${this.lines.map(line => line.toString()).join("\n")}`;
+    }
+}
+
+export class PiEditTableProjection extends PiDefinitionElement {
+    name: string;
+    conceptEditor: PiEditConcept;
+    headers: string[] = [];
+    cells: PiEditPropertyProjection[] = [];
+
+    toString() {
+        return `table "${this.name}" headers: ${this.headers.map(head => `"${head}"`).join(" | ")}
+        items: ${this.cells.map(it => it.toString()). join(" | ")}`;
     }
 }

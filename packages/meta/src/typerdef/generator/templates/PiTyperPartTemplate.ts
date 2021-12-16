@@ -1,4 +1,4 @@
-import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortClasses, langExpToTypeScript } from "../../../utils";
+import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, sortConcepts, langExpToTypeScript } from "../../../utils";
 import { PiConcept, PiInterface, PiLanguage, PiLangExp, PiLangSelfExp } from "../../../languagedef/metalanguage";
 import { PiTypeDefinition, PiTypeClassifierRule, PiTypeIsTypeRule, PiTypeAnyTypeRule } from "../../metalanguage";
 import { TyperGenUtils } from "./TyperGenUtils";
@@ -207,7 +207,7 @@ export class PiTyperPartTemplate {
 
     private sortConceptRules(conceptRules: PiTypeClassifierRule[]): PiTypeClassifierRule[] {
         const sortedConceptRules: PiTypeClassifierRule[] = [];
-        const sortedClasses = sortClasses(this.language.concepts);
+        const sortedClasses = sortConcepts(this.language.concepts);
         for (const piclass of sortedClasses) {
             // find conceptRule for this piclass
             let myRule: PiTypeClassifierRule = null;

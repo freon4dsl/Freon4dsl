@@ -108,10 +108,6 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ProjectionDefault";
     }
 
-    public static selectionHelpers(language: PiLanguage): string {
-        return this.startWithUpperCase(language?.name) + "SelectionHelpers";
-    }
-
     public static customProjection(language: PiLanguage): string {
         return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
     }
@@ -270,5 +266,9 @@ export class Names {
 
     public static reader(language: PiLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
+    }
+
+    public static binaryProjectionFunction(): string {
+        return "_getBinaryExpressionBox";
     }
 }

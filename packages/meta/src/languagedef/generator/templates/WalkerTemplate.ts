@@ -1,5 +1,5 @@
 import { PiClassifier, PiLanguage } from "../../metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER, sortClasses } from "../../../utils";
+import { Names, LANGUAGE_GEN_FOLDER, sortConcepts } from "../../../utils";
 
 export class WalkerTemplate {
 
@@ -8,7 +8,7 @@ export class WalkerTemplate {
         const generatedClassName: String = Names.walker(language);
         const classifiersToDo: PiClassifier[] = [];
         // take care of the order, it is important
-        classifiersToDo.push(...sortClasses(language.concepts));
+        classifiersToDo.push(...sortConcepts(language.concepts));
         classifiersToDo.push(...language.units);
         classifiersToDo.push(language.modelConcept);
 

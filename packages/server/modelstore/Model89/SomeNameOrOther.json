@@ -34,26 +34,26 @@
                         "$typename": "MultiplyExpression",
                         "left": {
                            "$typename": "NumberLiteralExpression",
-                           "value": "23",
+                           "value": 23,
                            "appliedfeature": null
                         },
                         "right": {
                            "$typename": "NumberLiteralExpression",
-                           "value": "56",
+                           "value": 56,
                            "appliedfeature": null
                         },
                         "appliedfeature": null
                      },
                      "right": {
                         "$typename": "NumberLiteralExpression",
-                        "value": "45",
+                        "value": 45,
                         "appliedfeature": null
                      },
                      "appliedfeature": null
                   },
                   "right": {
                      "$typename": "NumberLiteralExpression",
-                     "value": "458",
+                     "value": 458,
                      "appliedfeature": null
                   },
                   "appliedfeature": null
@@ -114,7 +114,7 @@
                   "left": null,
                   "right": {
                      "$typename": "BooleanLiteralExpression",
-                     "value": "false",
+                     "value": false,
                      "appliedfeature": null
                   },
                   "appliedfeature": null
@@ -132,7 +132,7 @@
          "name": "meth21",
          "body": {
             "$typename": "NumberLiteralExpression",
-            "value": "786",
+            "value": 786,
             "appliedfeature": null
          },
          "parameters": [],

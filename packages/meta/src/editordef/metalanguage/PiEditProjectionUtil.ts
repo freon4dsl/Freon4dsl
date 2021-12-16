@@ -7,8 +7,8 @@ import {
     PiLangSelfExp
 } from "../../languagedef/metalanguage";
 import {
-    ListJoin,
-    ListJoinType,
+    ListInfo,
+    ListInfoType,
     PiEditConcept,
     PiEditParsedNewline,
     PiEditParsedProjectionIndent,
@@ -19,7 +19,6 @@ import {
     PiEditPropertyProjection,
     PiEditUnit
 } from "./PiEditDefLang";
-import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 import { Names } from "../../utils";
 
 export class PiEditProjectionUtil {
@@ -94,9 +93,9 @@ export class PiEditProjectionUtil {
                     const sub = new PiEditPropertyProjection();
                     sub.expression = exp;
                     if (prop.isList) {
-                        sub.listJoin = new ListJoin();
-                        sub.listJoin.joinType = ListJoinType.Separator;
-                        sub.listJoin.joinText = ", ";
+                        sub.listInfo = new ListInfo();
+                        sub.listInfo.joinType = ListInfoType.Separator;
+                        sub.listInfo.joinText = ", ";
                     }
                     line.items.push(sub);
                     coneditor.projection.lines.push(line);
@@ -128,10 +127,10 @@ export class PiEditProjectionUtil {
         exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
         const sub = new PiEditPropertyProjection();
         sub.expression = exp;
-        sub.listJoin = new ListJoin();
-        sub.listJoin.direction = PiEditProjectionDirection.Vertical;
-        sub.listJoin.joinType = ListJoinType.Separator;
-        sub.listJoin.joinText = "";
+        sub.listInfo = new ListInfo();
+        sub.listInfo.direction = PiEditProjectionDirection.Vertical;
+        sub.listInfo.joinType = ListInfoType.Separator;
+        sub.listInfo.joinText = "";
         line.items.push(sub);
         coneditor.projection.lines.push(line);
     }
@@ -146,10 +145,10 @@ export class PiEditProjectionUtil {
         exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
         const sub = new PiEditPropertyProjection();
         sub.expression = exp;
-        sub.listJoin = new ListJoin();
-        sub.listJoin.direction = PiEditProjectionDirection.Vertical;
-        sub.listJoin.joinType = ListJoinType.Separator;
-        sub.listJoin.joinText = "";
+        sub.listInfo = new ListInfo();
+        sub.listInfo.direction = PiEditProjectionDirection.Vertical;
+        sub.listInfo.joinType = ListInfoType.Separator;
+        sub.listInfo.joinText = "";
         line2.items.push(sub);
         coneditor.projection.lines.push(line1);
         coneditor.projection.lines.push(line2);

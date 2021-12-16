@@ -52,14 +52,4 @@
         border-bottom: var(--theme-colors-list_divider) solid 1px;
         box-sizing: border-box;
     }
-    /*.vl {*/
-    /*    border-left: 1px solid var(--theme-colors-color);*/
-    /*    height: var(--pi-header-height);*/
-    /*    display:inline;*/
-    /*    margin: 6px;*/
-    /*    position: relative;*/
-    /*}*/
-    .icon {
-        vertical-align: top;
-    }
 </style>
