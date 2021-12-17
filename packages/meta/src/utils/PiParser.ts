@@ -1,9 +1,7 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
 import { Parser } from "pegjs";
-import { MetaLogger } from "../utils/MetaLogger";
-
-const LOGGER = new MetaLogger("PiParser"); //.mute();
+import { LOG2USER } from "./UserLogger";
 
 // the following two types are used to store the location information from the parser
 export type ParseLocation = {
@@ -28,7 +26,7 @@ export class PiParser<DEFINITION> {
     parse(definitionFile: string): DEFINITION {
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
-            LOGGER.error(this, "definition file '" + definitionFile + "' does not exist, exiting.");
+            LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
             throw new Error("file not found.");
         }
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
@@ -47,7 +45,7 @@ export class PiParser<DEFINITION> {
                     `[file: ${definitionFile}, line ${e.location.start.line}, column ${e.location.start.column}]`
                 :
                     ``}`;
-            LOGGER.error(this, errorstr);
+            LOG2USER.error(errorstr);
             throw new Error("syntax error: " + errorstr);
         }
 
@@ -67,7 +65,7 @@ export class PiParser<DEFINITION> {
         // read the files and parse them separately
         for (const file of filePaths) {
             if (!fs.existsSync(file)) {
-                LOGGER.error(this, "definition file '" + file + "' does not exist, exiting.");
+                LOG2USER.error("definition file '" + file + "' does not exist, exiting.");
                 throw new Error("definition file '" + file + "' does not exist, exiting.");
             } else {
                 let langSpec: string = "";
@@ -83,7 +81,7 @@ export class PiParser<DEFINITION> {
                         location = `[file: ${file}, line ${e.location.start.line}, column ${e.location.start.column}]`;
                     }
                     const errorstr = `${e.message.trimEnd()} ${location}`;
-                    LOGGER.error(this, errorstr);
+                    LOG2USER.error(errorstr);
                     throw new Error("syntax error: " + errorstr);
                 }
             }
@@ -106,8 +104,11 @@ export class PiParser<DEFINITION> {
             // add the non fatal parse errors after the call
             this.checker.errors.push(...this.getNonFatalParseErrors());
             if (this.checker.hasErrors()) {
-                this.checker.errors.forEach(error => LOGGER.error(this, `${error}`));
+                this.checker.errors.forEach(error => LOG2USER.error(`${error}`));
                 throw new Error("checking errors (" + this.checker.errors.length + ").");
+            }
+            if (this.checker.hasWarnings()) {
+                this.checker.warnings.forEach(warn => LOG2USER.warning(`Warning: ${warn}`));
             }
         } else {
             throw new Error("parser does not return a language definition.");
