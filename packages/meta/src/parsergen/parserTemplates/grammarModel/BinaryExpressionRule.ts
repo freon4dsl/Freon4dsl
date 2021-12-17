@@ -6,7 +6,7 @@ import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
     expressionBase: PiExpressionConcept;
-    symbolToConcept: Map<PiClassifier, string> = new Map<PiClassifier, string>();
+    private symbolToConcept: Map<PiClassifier, string> = new Map<PiClassifier, string>();
 
     constructor(ruleName: string, expressionBase: PiExpressionConcept, symbolToConcept: Map<PiClassifier, string>) {
         super();
@@ -71,6 +71,18 @@ export class BinaryExpressionRule extends GrammarRule {
         for (const value of this.symbolToConcept.values()) {
             cases.push(`'${value}'`);
         }
+        // We need to sort the operands, because longer operands may start with a shorter one.
+        // The longer ones must be given precedence by putting them first in the parse rule.
+        // E.g. "==>" needs to come before "==".
+        cases = this.sortOnLength(cases);
         return `leaf __pi_binary_operator = ${cases.map(c => `${c}`).join(" | ")} ;`;
+    }
+
+    private sortOnLength(cases: string[]) {
+        let result: string[] = [];
+        result = cases.sort((a, b): number => {
+            return a.length > b.length ? -1 : (a.length === b.length ? 0 : 1);
+        });
+        return result;
     }
 }

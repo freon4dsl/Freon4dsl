@@ -93,8 +93,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         try {
             if (this.typerFiles.length > 0) {
                 typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
-            } else {
-                LOG2USER.log("Generating default typer");
             }
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
@@ -127,8 +125,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
         try {
             if (this.validFiles.length > 0) {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
-            } else {
-                LOG2USER.log("Generating default validator");
             }
             this.validatorGenerator.language = this.language;
             this.validatorGenerator.outputfolder = this.outputFolder;
@@ -151,7 +147,6 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             if (this.editFiles.length > 0) {
                 editor = new PiEditParser(this.language).parseMulti(this.editFiles);
             } else {
-                LOG2USER.log("Generating default editor");
                 editor = this.editorGenerator.createDefaultEditorDefinition();
             }
 
