@@ -109,6 +109,9 @@ export class PiParser<DEFINITION> {
                 this.checker.errors.forEach(error => LOGGER.error(this, `${error}`));
                 throw new Error("checking errors (" + this.checker.errors.length + ").");
             }
+            if (this.checker.hasWarnings()) {
+                this.checker.warnings.forEach(warn => LOGGER.info(this, `Warning: ${warn}`));
+            }
         } else {
             throw new Error("parser does not return a language definition.");
         }

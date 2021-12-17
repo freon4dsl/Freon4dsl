@@ -23,6 +23,7 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
     public check(language: PiLanguage): void {
         LOGGER.info(this, "Checking language '" + language.name + "'");
         this.errors = [];
+        this.warnings = [];
         this.simpleCheck(!!language.name && !piReservedWords.includes(language.name.toLowerCase()) ,
             `Language should have a name ${this.location(language)}.`);
 
@@ -43,6 +44,9 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
         phase2.check(language);
         if (phase2.hasErrors()) {
             this.errors.push(...phase2.errors);
+        }
+        if (phase2.hasWarnings()) {
+            this.warnings.push(...phase2.warnings);
         }
     }
 
@@ -97,7 +101,8 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
                         `${this.location(piConcept.base)}.`,
                     whenOk: () => {
                         if (piConcept instanceof PiLimitedConcept) {
-                            this.simpleCheck(piConcept.base.referred instanceof PiLimitedConcept, `Base '${piConcept.base.name}' of limited concept must be a limited concept ` +
+                            this.simpleWarning(piConcept.base.referred instanceof PiLimitedConcept, `Base '${piConcept.base.name}' of limited concept is not a limited concept.
+    Only properties that have primitive type may be inherited ` +
                                 `${this.location(piConcept.base)}.`
                             );
                         } else {
@@ -231,21 +236,23 @@ export class PiLanguageChecker extends PiLangAbstractChecker {
     private checkPropertyType(piProperty: PiProperty, realType: PiClassifier) {
         if (!!realType) { // error message taken care of by checkClassifierReference
             if (realType instanceof PiLimitedConcept) {
-                // this situation is OK, but property with limited concept as type should always be a reference property
-                // the property should refer to one of the predefined instances of the limited concept
+                // this situation is OK, but property with limited concept as type should always be a reference property.
+                // the property should refer to one of the predefined instances of the limited concept.
+                // in phase2 of the checker it is ensured that limited concepts always have a 'name' property of type 'identifier'.
                 piProperty.isPart = false;
-            }
-            if (!piProperty.isPart) {
-                // it is a reference, so check whether the type has a name by which it can be referred
-                const nameProperty = realType.nameProperty();
-                this.nestedCheck({
-                    check: !!nameProperty,
-                    error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${this.location(piProperty.type)}.`,
-                    whenOk: () => {
-                        this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                            `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${this.location(piProperty.type)}.`);
-                    }
-                });
+            } else {
+                if (!piProperty.isPart) {
+                    // it is a reference, so check whether the type has a name by which it can be referred
+                    const nameProperty = realType.nameProperty();
+                    this.nestedCheck({
+                        check: !!nameProperty,
+                        error: `Type '${realType.name}' cannot be used as a reference, because it has no name property ${this.location(piProperty.type)}.`,
+                        whenOk: () => {
+                            this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+                                `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${this.location(piProperty.type)}.`);
+                        }
+                    });
+                }
             }
         }
     }
