@@ -22,7 +22,7 @@ function compareReadAndWrittenOclParts(path: string) {
         expect(unit1_json).toEqual(unit2_json);
     } catch (e) {
         console.log(e.message);
-        // expect(e).toBeNaN();
+        expect(e).toBeNaN();
     }
 }
 
@@ -32,10 +32,10 @@ function readFromFile(filepath: string, metatype: ModelUnitMetaType): Expression
     return reader.readFromString(langSpec, metatype) as ExpressionLibraryModelUnitType;
 }
 
-describe("Testing Parser for OCl part", () => {
+describe("Testing Parser for expression library", () => {
 
     // TODO use snapshots
-    test("Period unparsed and parsed again", () => {
+    test("Numeric expressions unparsed and parsed again", () => {
         compareReadAndWrittenOclParts("src/libraries-test/__inputs__/numerics.lts");
     });
 
