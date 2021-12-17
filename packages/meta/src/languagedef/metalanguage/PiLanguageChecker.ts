@@ -21,7 +21,7 @@ const piReservedWords = ["model", "modelunit", "abstract", "limited", "language"
 export class PiLanguageChecker extends PiLangAbstractChecker {
 
     public check(language: PiLanguage): void {
-        LOGGER.info(this, "Checking language '" + language.name + "'");
+        LOGGER.info("Checking language '" + language.name + "'");
         this.errors = [];
         this.warnings = [];
         this.simpleCheck(!!language.name && !piReservedWords.includes(language.name.toLowerCase()) ,

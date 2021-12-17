@@ -26,7 +26,7 @@ export class LanguageParser extends PiParser<PiLanguage> {
                     result.concepts.push(...sub.concepts);
                     result.interfaces.push(...sub.interfaces);
                 } else {
-                    LOGGER.error(this, "All sublanguages should be of the same language, found sublanguage: '" + sub.name + "' in '" + result.name + "'.")
+                    LOGGER.error("All sublanguages should be of the same language, found sublanguage: '" + sub.name + "' in '" + result.name + "'.")
                 }
             }
             result.conceptsAndInterfaces().forEach(classifier => {
