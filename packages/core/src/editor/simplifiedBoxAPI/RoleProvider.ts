@@ -27,11 +27,11 @@ export class RoleProvider {
         return "";
     }
 
-    public static label(element: PiElement): string {
-        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + this.uniqueLabelNumber++;
+    public static label(element: PiElement, content:string, uid: string): string {
+        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + uid;
     }
 
-    static indent(element: PiElement) {
-        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + this.uniqueIndentNumber++;
+    static indent(element: PiElement, uid: string) {
+        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-indent-" + uid;
     }
 }
