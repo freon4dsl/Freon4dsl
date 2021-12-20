@@ -237,21 +237,21 @@ export class BoxUtils {
      * @param content
      * @param selectable when true this box can be selected, default is 'false'
      */
-    static labelBox(element: PiElement, content: string, selectable?: boolean): Box {
+    static labelBox(element: PiElement, content: string, uid: string, selectable?: boolean): Box {
         let _selectable: boolean = false;
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
-        const roleName: string = RoleProvider.label(element);
+        const roleName: string = RoleProvider.label(element, content, uid);
         return BoxFactory.label(element, roleName, content, {
             selectable: _selectable
         });
     }
 
-    static indentBox(element: PiElement, indent: number, childBox: Box): Box {
+    static indentBox(element: PiElement, indent: number, uid: string, childBox: Box): Box {
         return BoxFactory.indent(
             element,
-            RoleProvider.indent(element),
+            RoleProvider.indent(element, uid),
             indent,
             childBox
         )
@@ -261,7 +261,7 @@ export class BoxUtils {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
-        if (property !== undefined && propertyName !== null && isList && isPart !== "reference") {
+        if (property !== undefined && propertyName !== null && isList && isPart === "part") {
             // find the children to show in this listBox
             let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin);
             // add a placeholder where a new element can be added
