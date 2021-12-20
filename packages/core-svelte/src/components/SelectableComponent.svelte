@@ -87,10 +87,10 @@
 
     .selectedComponent {
         background-color: var(--theme-colors-bg_selected);
-        border: 1px solid var(--theme-colors-border_selected);
+        outline: 1px solid var(--theme-colors-border_selected);
         box-sizing: border-box;
         display: inline-block;
         vertical-align: middle;
-        border-radius: 3px;
+        /*border-radius: 3px;*/
     }
 </style>
