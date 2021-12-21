@@ -278,6 +278,7 @@
             const option = event.detail;
             choiceBox.selectOption(editor, option);
             let selected = choiceBox.getSelectedOption();
+            selectableOptionList.text = "";
             // choiceBox.textHelper.setText(!!selected ? selected.label : "");
             LOGGER.log("      selected is " + JSON.stringify(selected));
             setOpen("selectedEvent", false);
