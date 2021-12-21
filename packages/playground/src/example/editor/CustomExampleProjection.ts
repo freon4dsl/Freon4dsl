@@ -258,6 +258,7 @@ export class CustomExampleProjection implements PiProjection {
                         attr,
                         "declaredType",
                         async (selected: string) => {
+                            console.log("==> SET SET selected option for property declaredType of " + attr.name +  " to " + selected)
                             attr.declaredType = PiElementReference.create<Type>(
                                     ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
 

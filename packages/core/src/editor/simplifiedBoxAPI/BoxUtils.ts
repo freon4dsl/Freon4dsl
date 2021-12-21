@@ -33,8 +33,8 @@ export class BoxUtils {
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "textbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
                 result = BoxFactory.text(element, roleName, () => element[propertyName][index], (v: string) => (element[propertyName][index] = v),{
-                        placeHolder: `<${propertyName}>`
-                    });
+                    placeHolder: `<${propertyName}>`
+                });
             } else {
                 result = BoxFactory.text(element, roleName, () => element[propertyName], (v: string) => (element[propertyName] = v), {
                     placeHolder: `<${propertyName}>`
@@ -89,7 +89,7 @@ export class BoxUtils {
                     });
             }
         } else {
-                PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a number: " + property + "\"");
+            PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a number: " + property + "\"");
         }
         return result;
     }
@@ -189,7 +189,7 @@ export class BoxUtils {
         scoper: PiScoper,
         index?: number
     ): Box {
-        const propType = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
+        const propType: string = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName)?.type;
         if (!propType) {
             throw new Error("Cannot find property type '" + propertyName +"'");
         }
@@ -213,16 +213,20 @@ export class BoxUtils {
                     }));
             },
             () => {
+                // console.log("==> get selected option for property " + propertyName + " of " + element["name"] + " is " + property.name + " or " + element[propertyName].name)
                 if (!!property) {
-                    return { id: property.name, label: property.name };
+                    return { id: element[propertyName].name, label: element[propertyName].name };
                 } else {
                     return null;
                 }
             },
             async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                console.log("==> SET selected option for property " + propertyName + " of " + element["name"] +  " to " + option?.label)
                 if (!!option) {
-                    property = setFunc(option.label);
+                    // element[propertyName] = Language.getInstance().referenceCreator(option.label, propType);
+                    setFunc(option.label);
                 } else {
+                    // element[propertyName] = Language.getInstance().referenceCreator("unknown", propType);
                     property = null;
                 }
                 return BehaviorExecutionResult.EXECUTED;
@@ -237,21 +241,21 @@ export class BoxUtils {
      * @param content
      * @param selectable when true this box can be selected, default is 'false'
      */
-    static labelBox(element: PiElement, content: string, selectable?: boolean): Box {
+    static labelBox(element: PiElement, content: string, uid: string, selectable?: boolean): Box {
         let _selectable: boolean = false;
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
-        const roleName: string = RoleProvider.label(element);
+        const roleName: string = RoleProvider.label(element, uid);
         return BoxFactory.label(element, roleName, content, {
             selectable: _selectable
         });
     }
 
-    static indentBox(element: PiElement, indent: number, childBox: Box): Box {
+    static indentBox(element: PiElement, indent: number, uid: string, childBox: Box): Box {
         return BoxFactory.indent(
             element,
-            RoleProvider.indent(element),
+            RoleProvider.indent(element, uid),
             indent,
             childBox
         )

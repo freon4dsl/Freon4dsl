@@ -149,9 +149,9 @@ export class ProjectionTemplate {
                         isPiBinaryExpression(exp.piContainer().container)
                     ) {
                         return BoxFactory.horizontalList(exp, "brackets", [
-                            BoxUtils.labelBox(exp, "(", true),
+                            BoxUtils.labelBox(exp, "(", "bracket-open", true),
                             binBox,
-                            BoxUtils.labelBox(exp, ")", true)
+                            BoxUtils.labelBox(exp, ")", "bracket-close", true)
                         ]);
                     } else {
                         return binBox;
@@ -177,14 +177,14 @@ export class ProjectionTemplate {
 
         projection.lines.forEach( (line, index) => {
             if (line.indent > 0) {
-                result += `BoxUtils.indentBox(${elementVarName}, ${line.indent}, `;
+                result += `BoxUtils.indentBox(${elementVarName}, ${line.indent}, "${index}", `;
             }
             if (line.items.length > 1) {
                 result += `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
             }
             // Now all projection items in the line
             line.items.forEach((item, itemIndex) => {
-                result += this.itemProjection(item, elementVarName, index, concept, language);
+                result += this.itemProjection(item, elementVarName, index, itemIndex, concept, language);
                 if (! (item instanceof PiEditParsedProjectionIndent) && itemIndex < line.items.length - 1) {
                     result += ",";
                 }
@@ -233,26 +233,27 @@ export class ProjectionTemplate {
                                 | PiEditSubProjection
                                 | PiEditInstanceProjection,
                            elementVarName: string,
-                           index: number,
+                           lineIndex: number,
+                           itemIndex: number,
                            concept: PiClassifier,
                            language: PiLanguage) {
         // TODO add table projection for lists
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
-            result += ` BoxUtils.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}") `;
+            result += ` BoxUtils.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${lineIndex}-item-${itemIndex}") `;
         } else if (item instanceof PiEditPropertyProjection) {
             result += this.propertyProjection(item, elementVarName, concept, language);
         } else if (item instanceof PiEditSubProjection) {
-            result += this.optionalProjection(item, elementVarName, index, concept, language);
+            result += this.optionalProjection(item, elementVarName, lineIndex, concept, language);
         }
         return result;
     }
 
-    private optionalProjection(item: PiEditSubProjection, elementVarName: string, index: number, concept: PiClassifier,
+    private optionalProjection(item: PiEditSubProjection, elementVarName: string, lineIndex: number, concept: PiClassifier,
                                language: PiLanguage): string {
         let result = "";
         item.items.forEach((subitem, subitemIndex) => {
-            result += this.itemProjection(subitem, elementVarName, index, concept, language);
+            result += this.itemProjection(subitem, elementVarName, lineIndex, subitemIndex, concept, language);
             // Add a comma if there was a projection and its in the middle of the list
             if (! (subitem instanceof PiEditParsedProjectionIndent) && subitemIndex < item.items.length - 1) {
                 result += ", ";
@@ -261,7 +262,7 @@ export class ProjectionTemplate {
 
         // If there are more items, surround with horizontal list
         if (item.items.length > 1) {
-            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
+            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${lineIndex}", [${result}])`;
         }
 
         const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
