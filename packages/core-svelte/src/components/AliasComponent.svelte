@@ -68,12 +68,14 @@
     onMount(() => {
         MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
-        choiceBox.textBox.style = choiceBox.style;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
-        if (!!selected) {
-            choiceBox.textBox.setText(selected.label);
-        }
+        runInAction( () => {
+            choiceBox.textBox.style = choiceBox.style;
+            if (!!selected) {
+                choiceBox.textBox.setText(selected.label);
+            }
+        });
     });
 
     afterUpdate(() => {
@@ -283,11 +285,6 @@
             LOGGER.log("      selected is " + JSON.stringify(selected));
             setOpen("selectedEvent", false);
         });
-        // if (isSelectBox(choiceBox)) {
-        //     if (!!textComponent) {
-        //         textComponent.textOnScreen = choiceBox.getSelectedOption().label;
-        //     }
-        // }
     };
 
     const onClick = (e: MouseEvent) => {
@@ -311,7 +308,9 @@
         }
         let style = conceptStyle(editor.style, editor.theme, choiceBox.element.piLanguageConcept(), "alias", choiceBox.style);
         aliasStyle = styleToCSS(style);
-        choiceBox.textBox.style = style;
+        runInAction( () => {
+            choiceBox.textBox.style = style;
+        });
 
     });
 
