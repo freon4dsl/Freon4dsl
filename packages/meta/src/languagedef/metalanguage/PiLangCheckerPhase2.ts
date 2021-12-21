@@ -20,6 +20,7 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
     // and that all their properties have unique names
     public check(language: PiLanguage): void {
         this.errors = [];
+        this.warnings = [];
         const names: string[] = [];
         let foundSomeCircularity: boolean = false;
         const extensions: string[] = [];
@@ -150,15 +151,23 @@ export class PiLangCheckerPhase2 extends PiLangAbstractChecker {
     }
 
     private checkLimitedConceptAgain(piLimitedConcept: PiLimitedConcept) {
-        const nameProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
-        this.nestedCheck({
-            check: !!nameProperty,
-            error: `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore it should have a 'name' property ${this.location(piLimitedConcept)}.`,
-            whenOk: () => {
-                this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
-                    `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${this.location(piLimitedConcept)}.`);
-            }
-        });
+        let nameProperty: PiPrimitiveProperty = piLimitedConcept.allPrimProperties().find(p => p.name === "name");
+        // if 'name' property is not present, create it.
+        if ( !nameProperty ) {
+            nameProperty = new PiPrimitiveProperty();
+            nameProperty.name = "name";
+            nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+            nameProperty.isPart = true;
+            nameProperty.isList = false;
+            nameProperty.isOptional = false;
+            nameProperty.isPublic = false;
+            nameProperty.isStatic = false;
+            nameProperty.owningConcept = piLimitedConcept;
+            piLimitedConcept.primProperties.push(nameProperty);
+        } else {
+            this.simpleCheck(nameProperty.type.referred === PiPrimitiveType.identifier,
+                `A limited concept ('${piLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${this.location(piLimitedConcept)}.`);
+        }
         this.simpleCheck(piLimitedConcept.allParts().length === 0,
             `A limited concept may not inherit or implement non-primitive parts ${this.location(piLimitedConcept)}.`);
         this.simpleCheck(piLimitedConcept.allReferences().length === 0,

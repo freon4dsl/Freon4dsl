@@ -16,10 +16,7 @@ import { PiTypeDefinition } from "../typerdef/metalanguage";
 import { PiScopeDef } from "../scoperdef/metalanguage";
 import { PiValidatorDef } from "../validatordef/metalanguage";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
-
-import { MetaLogger } from "../utils/MetaLogger";
-
-const LOGGER = new MetaLogger("ProjectItGenerateAllAction"); //.mute();
+import { LOG2USER } from "../utils/UserLogger";
 
 export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     public watch: boolean = false;
@@ -43,8 +40,8 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     }
 
     generate(): void {
-        LOGGER.info(this, "Starting generation of all parts of your language as defined in " + this.defFolder.value);
-        // LOGGER.log("Output will be generated in: " + this.outputFolder);
+        LOG2USER.info("Starting generation of all parts of your language as defined in " + this.defFolder.value);
+        // LOG2USER.log("Output will be generated in: " + this.outputFolder);
 
         // this try-catch is here for debugging purposes, should be removed from release
         try {
@@ -59,14 +56,14 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
                 this.generateScoper();
                 this.generateTyper();
             } catch (e) {
-                LOGGER.error(this, "Stopping generation because of errors in the language definition: " + e.message + "\n");
+                LOG2USER.error("Stopping generation because of errors in the language definition: " + e.message + "\n");
             }
             if (this.watch) {
-                LOGGER.info(this, "Watching language definition files ...");
+                LOG2USER.info("Watching language definition files ...");
             }
         // this try-catch is here for debugging purposes, should be removed from release
         } catch (e) {
-            LOGGER.error(this, e.stack);
+            LOG2USER.error(e.stack);
         }
     }
 
@@ -91,61 +88,55 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
     }
 
     private generateTyper = () => {
-        LOGGER.info(this, "Generating typer");
+        LOG2USER.info("Generating typer");
         let typer: PiTypeDefinition;
         try {
             if (this.typerFiles.length > 0) {
                 typer = new PiTyperParser(this.language).parseMulti(this.typerFiles);
-            } else {
-                LOGGER.log("Generating default typer");
             }
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
             this.typerGenerator.generate(typer);
         } catch (e) {
-            // LOGGER.error(this, "Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping typer generation because of errors: " + e.message);
+            // LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
+            LOG2USER.error("Stopping typer generation because of errors: " + e.message);
         }
     };
 
     private generateScoper = () => {
-        LOGGER.info(this, "Generating scoper");
+        LOG2USER.info("Generating scoper");
         let scoper: PiScopeDef;
         try {
             if (this.scopeFiles.length > 0) {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
-            } else {
-                LOGGER.log("Generating default scoper");
             }
             this.scoperGenerator.language = this.language;
             this.scoperGenerator.outputfolder = this.outputFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e) {
-            // LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping scoper generation because of errors: " + e.message);
+            // LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
+            LOG2USER.error("Stopping scoper generation because of errors: " + e.message);
         }
     };
 
     private generateValidator = () => {
-        LOGGER.info(this, "Generating validator");
+        LOG2USER.info("Generating validator");
         let validator: PiValidatorDef;
         try {
             if (this.validFiles.length > 0) {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
-            } else {
-                LOGGER.log("Generating default validator");
             }
             this.validatorGenerator.language = this.language;
             this.validatorGenerator.outputfolder = this.outputFolder;
             this.validatorGenerator.generate(validator);
         } catch (e) {
-            // LOGGER.error(this, "Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping validator generation because of errors: " + e.message);
+            // LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+            LOG2USER.error("Stopping validator generation because of errors: " + e.message);
         }
     };
 
     private generateEditorAndParser = () => {
-        LOGGER.info(this, "Generating editor, reader and writer");
+        LOG2USER.info("Generating editor, reader and writer");
         let editor: PiEditUnit = null;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
@@ -156,22 +147,21 @@ export class ProjectItGenerateAllAction extends ProjectItGenerateAction {
             if (this.editFiles.length > 0) {
                 editor = new PiEditParser(this.language).parseMulti(this.editFiles);
             } else {
-                LOGGER.log("Generating default editor");
                 editor = this.editorGenerator.createDefaultEditorDefinition();
             }
 
             this.editorGenerator.generate(editor);
             this.parserGenerator.generate(editor);
         } catch (e) {
-            LOGGER.error(this, "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
-            // LOGGER.error(this, "Stopping editor, reader and writer generation because of errors: " + e.message);
+            // LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
+            LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
         }
         return editor;
     };
 
     private generateLanguage = () => {
         // generate the language
-        LOGGER.info(this, "Generating language structure");
+        LOG2USER.info("Generating language structure");
         this.language = new LanguageParser().parseMulti(this.languageFiles);
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language);

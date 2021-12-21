@@ -50,7 +50,11 @@ export class ReaderTemplate {
                 let model: ${Names.modelunit(language)} = null;
                 if (this.parser) {
                     try {
-                        let sppt = this.parser.parseForGoal(startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                        if (startRule.length > 0) {
+                            let sppt = this.parser.parseForGoal(startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                        } else {
+                            let sppt = this.parser.parse(sentence);
+                        }
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp 
                         let mess = e.message.replace("Could not match goal,", "Parse error");

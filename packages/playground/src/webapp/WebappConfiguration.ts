@@ -12,6 +12,9 @@ import { ServerCommunication } from "./server/ServerCommunication";
 import { ExampleEnvironment } from "../example/environment/gen/ExampleEnvironment";
 export const editorEnvironment: PiEnvironment = ExampleEnvironment.getInstance();
 
+// import { ExpressionLibraryEnvironment } from "../libraries-test/environment/gen/ExpressionLibraryEnvironment";
+// export const editorEnvironment: PiEnvironment = ExpressionLibraryEnvironment.getInstance();
+
 // import { CalculatorEnvironment } from "../calculator/environment/gen/CalculatorEnvironment";
 // export const editorEnvironment: PiEnvironment = CalculatorEnvironment.getInstance();
 

@@ -1,0 +1,11 @@
+language ExpressionLibrary
+
+model LIB_USAGE {
+    public name: identifier;
+    units: LibUnit[];
+}
+
+modelunit LibUnit {
+    public name: identifier;
+    exps: ExpressionBase[];
+}

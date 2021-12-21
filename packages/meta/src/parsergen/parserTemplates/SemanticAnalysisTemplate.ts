@@ -22,7 +22,7 @@ export class SemanticAnalysisTemplate {
                     if (sub instanceof PiConcept) {
                         for (const ref of sub.allReferences()) {
                             if (analyser.classifiersUsed.includes(ref.type.referred)){
-                                this.possibleProblems.push(sub);
+                                this.addProblem(sub);
                                 hasProblems = true;
                             }
                         }
@@ -34,9 +34,21 @@ export class SemanticAnalysisTemplate {
                     }
                 }
                 if (hasProblems) {
-                    this.supersOfProblems.push(classifier);
+                    this.addSuper(classifier);
                 }
             }
+        }
+    }
+
+    private addSuper(classifier: PiClassifier) {
+        if( !this.supersOfProblems.includes(classifier)) {
+            this.supersOfProblems.push(classifier);
+        }
+    }
+
+    private addProblem(sub: PiConcept) {
+        if( !this.possibleProblems.includes(sub)) {
+            this.possibleProblems.push(sub);
         }
     }
 
@@ -50,7 +62,7 @@ export class SemanticAnalysisTemplate {
         return `import { ${everyConceptName}, ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
-                import { PiElement } from "@projectit/core";
+                import { Concept, Language, PiElement } from "@projectit/core";
 
                 export class ${className} {
 
@@ -72,6 +84,13 @@ export class SemanticAnalysisTemplate {
 
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
+                            // TODO test the replacement of all properties
+                            const myType: Concept = Language.getInstance().concept(toBeReplaced.piLanguageConcept);
+                            myType.properties.forEach(prop => {
+                                if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
+                                    newObject[prop.name] = toBeReplaced[prop.name];
+                                }
+                            });
                             let parent: PiElement = toBeReplaced.piContainer().container;
                             const propName: string = toBeReplaced.piContainer().propertyName;
                             const propIndex: number = toBeReplaced.piContainer().propertyIndex;
@@ -200,7 +219,6 @@ export class SemanticAnalysisTemplate {
     }
 
     private makeBooleanStat(): string {
-        // TODO create should take all other props into account!!!
         let result: string = '';
         for (const [concept, primProp] of this.exprWithBooleanProp) {
             if (concept instanceof PiConcept && !concept.isAbstract) {

@@ -2,7 +2,7 @@ editor YYY for language octopus
 
 OclPart {
     @projection normal
-        [OCL expressions for ${self.name}
+        [package ${self.pack}
             ${self.constraints @vertical @separator[\n]}
         ]
 }
@@ -11,14 +11,12 @@ OclContext {
     @projection normal
     [
     context ${self.owningModelelement}
-    inv: ${self.expression}
+    ${self.usageType}: [? ${self.definedOperation} =][? ${self.definedAttribute} =]${self.expression}
     ]
 
 }
 
-// TODO: do we allow projections of interfaces????
-//IModelElementReference {
-//    @projection normal
-//    [ ${self.surroundingClassifier.name}[?::${self.feature.name}]]
-//
-//}
+ModelElementReference {
+    @projection normal
+    [ ${self.surroundingClassifier}[?::${self.feature}]]
+}

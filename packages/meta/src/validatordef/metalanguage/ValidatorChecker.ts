@@ -27,7 +27,7 @@ import {
 } from "./ValidatorDefLang";
 import { PiPrimitiveType } from "../../languagedef/metalanguage/PiLanguage";
 
-const LOGGER = new MetaLogger("ValidatorChecker"); // .mute();
+const LOGGER = new MetaLogger("ValidatorChecker").mute();
 const equalsTypeName = "equalsType";
 const conformsToName = "conformsTo";
 

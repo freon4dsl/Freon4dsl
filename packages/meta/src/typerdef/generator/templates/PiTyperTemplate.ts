@@ -1,6 +1,7 @@
 import { Names, PROJECTITCORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER } from "../../../utils";
 import { PiLanguage } from "../../../languagedef/metalanguage";
 import { PiTypeDefinition } from "../../metalanguage";
+import { TyperGenUtils } from "./TyperGenUtils";
 
 export class PiTyperTemplate {
     language: PiLanguage;
@@ -8,15 +9,13 @@ export class PiTyperTemplate {
     generateTyper(language: PiLanguage, typerdef: PiTypeDefinition, relativePath: string): string {
         this.language = language;
         const allLangConcepts: string = Names.allConcepts(language);
-        let rootType: string = allLangConcepts;
-        if (typerdef) {
-            rootType = typerdef.typeroot.name;
-        }
+        const rootType = TyperGenUtils.getTypeRoot(language, typerdef);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.PiTyper;
 
         // Template starts here
+
         return `
         import { ${typerInterfaceName} } from "${PROJECTITCORE}";
         ${ rootType !== allLangConcepts ?

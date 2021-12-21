@@ -164,9 +164,9 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.utilsGenFolder}/index.ts`, utilIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.info(this, `Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.info(`Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(this, `Succesfully generated language '${language.name}'`);
+            LOGGER.info(`Succesfully generated language '${language.name}'`);
         }
     }
 
@@ -197,7 +197,7 @@ export class LanguageGenerator {
             Helpers.deleteDirIfEmpty(this.configurationFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(this, `Not removed: ${this.configurationFolder}/${Names.configuration()}.ts`);
+            LOGGER.info(`Not removed: ${this.configurationFolder}/${Names.configuration()}.ts`);
         }
     }
 }

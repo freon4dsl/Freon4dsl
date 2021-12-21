@@ -26,7 +26,7 @@ export class EditorGenerator {
 
     generate(editDef: PiEditUnit): void {
         if (this.language == null) {
-            LOGGER.error(this, "Cannot generate editor because language is not set.");
+            LOGGER.error("Cannot generate editor because language is not set.");
             return;
         }
         const generationStatus = new GenerationStatus();
@@ -97,9 +97,9 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(this, `Generated editor '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated editor '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(this, `Succesfully generated editor ${name}`);
+            LOGGER.info(`Succesfully generated editor ${name}`);
         }
     }
 
@@ -126,7 +126,7 @@ export class EditorGenerator {
             Helpers.deleteDirIfEmpty(this.editorGenFolder);
             Helpers.deleteDirIfEmpty(this.stylesFolder);
             if (this.language == null) {
-                LOGGER.error(this, "Cannot remove all because language is not set.");
+                LOGGER.error("Cannot remove all because language is not set.");
             } else {
                 Helpers.deleteFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`);
                 Helpers.deleteFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`);
@@ -134,7 +134,7 @@ export class EditorGenerator {
             }
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(this, `Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
+            LOGGER.info(`Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
                 '\n\t' + `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
                 '\n\t' + `${this.editorFolder}/index.ts` +
                 '\n\t' + `${this.stylesFolder}/styles.ts` +

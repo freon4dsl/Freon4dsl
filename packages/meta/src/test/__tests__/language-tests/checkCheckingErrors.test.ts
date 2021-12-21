@@ -47,17 +47,22 @@ describe("Checking language parser on checking errors", () => {
         try {
             parser.parse(parseFile);
         } catch (e) {
-            checker.errors.forEach(err => console.log(err));
+            // checker.errors.forEach(err => console.log(err));
             // expect(e.message).toBe(`checking errors (9).`);
             expect(checker.errors.includes("The model should have a 'name' property [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("The model should have at least one unit type [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 3, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Base 'AAA' must be a concept [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 9, column: 18].")).toBeTruthy();
-            expect(checker.errors.includes("Base 'ZZ' of limited concept must be a limited concept [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 11, column: 17].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 18, column: 1].")).toBeTruthy();
             expect(checker.errors.includes("Limited concept 'AA' cannot be base of an unlimited concept [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 13, column: 16].")).toBeTruthy();
             expect(checker.errors.includes("Concept 'ZZ' is not an interface [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 18, column: 23].")).toBeTruthy();
             expect(checker.errors.includes("A non-abstract limited concept must have instances [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 11, column: 1].")).toBeTruthy();
-            expect(checker.errors.includes("A limited concept ('BB') can only be used as a reference, therefore it should have a 'name' property [file: src/test/__tests__/language-tests/faultyDefFiles/checking-errors/test3.ast, line: 11, column: 1].")).toBeTruthy();
+            let thereIsWarning: boolean = false;
+            checker.warnings.forEach(warn => {
+                if (warn.startsWith("Base 'ZZ' of limited concept")) {
+                    thereIsWarning = true;
+                }
+            });
+            expect(thereIsWarning).toBeTruthy();
         }
     });
 

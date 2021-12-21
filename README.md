@@ -59,7 +59,7 @@ Goto the playground directory `packages/playground` (or stay there if you are al
     yarn dev
 ```   
 This will open a browser with the example from the playground package on 
-the URL displayed: `http://localhost:5000/`. The example and all opther projects in playground are
+the URL displayed: `http://localhost:5000/`. The example and all other projects in playground are
 work in progress.
 
 ## Source organisation
