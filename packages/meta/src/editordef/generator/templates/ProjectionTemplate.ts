@@ -340,7 +340,7 @@ export class ProjectionTemplate {
         let cellGetters: string = '';
         myTableProjection.cells.forEach((cell, index) =>
             cellGetters += `(cell${index}: ${Names.classifier(featureType)}): Box => {
-                return ${this.itemProjection(cell, `cell${index}`, index, property.type.referred, language)}
+                return ${this.itemProjection(cell, `cell${index}`, index, index, property.type.referred, language)}
             },\n`
         );
         // return the projection based on the orientation of the table

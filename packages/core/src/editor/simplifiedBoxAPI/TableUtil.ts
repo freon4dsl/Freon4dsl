@@ -64,7 +64,7 @@ export class TableUtil {
                 cells.push({
                     row: 1,
                     column: index + 1,
-                    box: BoxUtils.labelBox(element, item),
+                    box: BoxUtils.labelBox(element, item, "" + index),
                     style: headerStyle
                 });
             });
@@ -85,7 +85,8 @@ export class TableUtil {
                 row: property.length + 3,
                 column: 1,
                 columnSpan: cellGetters.length,
-                box: new AliasBox(element, "alias-add-row", "<add new row>"),
+                box: new AliasBox(element, "alias-add-row", "<add new row>",
+                    { propertyName: propertyName, conceptName: propInfo.type }),
                 style: cellStyle
             });
             // Add keyboard actions to grid such that new rows can be added by Return Key
@@ -121,7 +122,7 @@ export class TableUtil {
                 cells.push({
                     row: index + 1,
                     column: 1,
-                    box: BoxUtils.labelBox(element, item),
+                    box: BoxUtils.labelBox(element, item, "" + index),
                     style: headerStyle
                 });
             });
@@ -142,7 +143,8 @@ export class TableUtil {
                 row: 1,
                 column: property.length + 3,
                 rowSpan: cellGetters.length,
-                box: new AliasBox(element, "alias-add-column", "<add new column>"),
+                box: new AliasBox(element, "alias-add-column", "<add new column>",
+                    { propertyName: propertyName, conceptName: propInfo.type }),
                 style: cellStyle
             });
             // Add keyboard actions to grid such that new rows can be added by Return Key
@@ -222,11 +224,13 @@ export class TableUtil {
     ): KeyboardShortcutBehavior {
         return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
-            activeInBoxRoles: ["alias-add-row", "alias-alias-add-row-textbox"],
+            activeInBoxRoles: ["alias-add-row", "alias-alias-add-row-textbox", "alias-alias-add-column-textbox"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;
-                const newElement: PiElement = elementCreator();
-                element[propertyRole].push(newElement);
+                const aliasBox = box.parent as AliasBox;
+                console.log("New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
+                const newElement: PiElement = Language.getInstance().concept(aliasBox.conceptName).constructor();
+                element[aliasBox.propertyName].push(newElement);
 
                 if (!!roleToSelect) {
                     editor.selectElement(newElement, roleToSelect);

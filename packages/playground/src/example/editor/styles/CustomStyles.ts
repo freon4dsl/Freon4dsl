@@ -55,8 +55,6 @@ export const editorStyle: PiEditorStyle = {
     },
     Entity: {
         light: {
-            gridcellEven:  { "background-color": "#fff"},
-            gridcellOdd:  { "background-color": "#eee"},
             label: {
                 color: "black"
             },
@@ -68,8 +66,6 @@ export const editorStyle: PiEditorStyle = {
             }
         },
         dark: {
-            gridcellEven:  { "background-color": "#fff"},
-            gridcellOdd:  { "background-color": "#eee"},
             label: {
                 color: "white",
                 "background-color": "black"
@@ -99,6 +95,17 @@ export const editorStyle: PiEditorStyle = {
             gridcellOdd:  { "background-color": "#000", border: "1px lightgrey solid"}
         }
     },
+    Parameter: {
+        light: {
+            gridcellEven:  { "background-color": "#eee", border: "1px lightgrey solid"},
+            gridcellOdd:  { "background-color": "#fff", border: "1px lightgrey solid"},
+            text: { color: "black"}
+        },
+        dark: {
+            gridcellEven:  { "background-color": "#222", border: "1px lightgrey solid"},
+            gridcellOdd:  { "background-color": "#000", border: "1px lightgrey solid"}
+        }
+    },
     // For concept Attribute
     Method: {
         light: {
@@ -109,10 +116,7 @@ export const editorStyle: PiEditorStyle = {
             text: {
                 color: "green"
             },
-            // alias: {
-            //     color: "red"
-            // },
-            list: {
+           list: {
                 color: "yellow"
             }
         },
