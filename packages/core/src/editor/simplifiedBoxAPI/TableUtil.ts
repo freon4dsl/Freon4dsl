@@ -16,6 +16,7 @@ import { MetaKey, PiKey } from "../../util/Keys";
 import { NBSP, PiUtils } from "../../util";
 import { Language } from "../../storage";
 import { RoleProvider } from "./RoleProvider";
+import { merge } from "lodash";
 
 // headerStyle and rowStyle are the default styles for a table
 export const headerStyle: PiStyle = {
@@ -31,6 +32,9 @@ export const headerStyle: PiStyle = {
 
 export const cellStyle: PiStyle = {
 };
+
+type Orientation = "row" | "column" | "none";
+type Location = { row: number, column: number};
 
 export class TableUtil {
     // Note that both tableBoxRowOriented and tableBoxColumnOriented look very similar.
@@ -50,49 +54,7 @@ export class TableUtil {
     public static tableBoxRowOriented(element: PiElement, propertyName: string, columnHeaders: string[],
                            cellGetters: ((e: PiElement) => Box)[],
                            editor: PiEditor): Box {
-        // find the information on the property to be shown
-        const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
-        const property = element[propertyName];
-        // const isList: boolean = propInfo.isList;
-        PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
-        const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
-        // create the box
-        if (property !== undefined && property !== null) {
-            const cells: GridCell[] = [];
-            // add the headers - all in row 1
-            columnHeaders.forEach((item: string, index: number) => {
-                cells.push({
-                    row: 1,
-                    column: index + 1,
-                    box: BoxUtils.labelBox(element, item, "" + index),
-                    style: headerStyle
-                });
-            });
-            // add the cells for each element of the list
-            property.forEach((item: PiElement, rowIndex: number) => {
-                cellGetters.forEach((projector, columnIndex) => {
-                    const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, rowIndex + 2, columnIndex + 1);
-                    cells.push({
-                        row: rowIndex + 2,
-                        column: columnIndex + 1,
-                        box: new HorizontalListBox(item, cellRoleName, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP)]),
-                        style: cellStyle
-                    });
-                });
-            });
-            // add an extra row where a new element to the list can be added
-            cells.push({
-                row: property.length + 3,
-                column: 1,
-                columnSpan: cellGetters.length,
-                box: new AliasBox(element, "alias-add-row", "<add new row>",
-                    { propertyName: propertyName, conceptName: propInfo.type }),
-                style: cellStyle
-            });
-            // Add keyboard actions to grid such that new rows can be added by Return Key
-            return this.addKeyBoardShortCuts(element, propertyName, editor, elementBuilder, cells);
-        }
-        return null;
+        return this.tableBox("row", element, propertyName, columnHeaders, cellGetters, editor);
     }
 
     /**
@@ -107,43 +69,54 @@ export class TableUtil {
      * @param editor        The editor that should know about KeyboardShortCuts.
      */
     public static tableBoxColumnOriented(element: PiElement, propertyName: string, rowHeaders: string[],
+                                         cellGetters: ((e: PiElement) => Box)[],
+                                         editor: PiEditor): Box {
+        return this.tableBox("column", element, propertyName, rowHeaders, cellGetters, editor);
+    }
+
+    private static tableBox(orientation: Orientation, element: PiElement, propertyName: string, columnHeaders: string[],
                                       cellGetters: ((e: PiElement) => Box)[],
                                       editor: PiEditor): Box {
         // find the information on the property to be shown
         const propInfo = Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName);
         const property = element[propertyName];
+        // const isList: boolean = propInfo.isList;
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
         const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
         // create the box
         if (property !== undefined && property !== null) {
             const cells: GridCell[] = [];
-            // add the headers - all in column 1
-            rowHeaders.forEach((item: string, index: number) => {
-                cells.push({
-                    row: index + 1,
-                    column: 1,
+            // add the headers - all in row 1
+            columnHeaders.forEach((item: string, index: number) => {
+                const location = this.tilt({row: 1, column: index + 1}, orientation);
+                cells.push( {
+                    row: location.row,
+                    column: location.column,
                     box: BoxUtils.labelBox(element, item, "" + index),
                     style: headerStyle
                 });
             });
             // add the cells for each element of the list
-            property.forEach((item: PiElement, columnIndex: number) => {
-                cellGetters.forEach((projector, rowIndex) => {
-                    const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, rowIndex + 1, columnIndex + 2);
+            property.forEach((item: PiElement, rowIndex: number) => {
+                cellGetters.forEach((projector, columnIndex) => {
+                    const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, rowIndex + 2, columnIndex + 1);
+                    const location = this.tilt({row: rowIndex + 2, column: columnIndex + 1}, orientation);
                     cells.push({
-                        row: rowIndex + 1,
-                        column: columnIndex + 2,
-                        box: new HorizontalListBox(item, cellRoleName, [projector(item), new AliasBox(item, "new-" + rowIndex, NBSP)]),
+                        row: location.row,
+                        column: location.column,
+                        box: new HorizontalListBox(item, cellRoleName, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP)]),
                         style: cellStyle
                     });
                 });
             });
-            // add an extra column where a new element to the list can be added
+            // add an extra row where a new element to the list can be added
+            const location = this.tilt({row: property.length + 3, column:1}, orientation);
             cells.push({
-                row: 1,
-                column: property.length + 3,
-                rowSpan: cellGetters.length,
-                box: new AliasBox(element, "alias-add-column", "<add new column>",
+                row: location.row,
+                column: location.column,
+                columnSpan: (orientation === "row" ? cellGetters.length : 1),
+                rowSpan: (orientation === "row" ? 1 : cellGetters.length),
+                box: new AliasBox(element, "alias-add-row-or-column", `<add new ${orientation}>`,
                     { propertyName: propertyName, conceptName: propInfo.type }),
                 style: cellStyle
             });
@@ -151,6 +124,14 @@ export class TableUtil {
             return this.addKeyBoardShortCuts(element, propertyName, editor, elementBuilder, cells);
         }
         return null;
+    }
+
+    private static tilt(location: Location, orientation: string): Location {
+        if (orientation === "column") {
+            return { row: location.column, column: location.row}
+        } else {
+            return location;
+        }
     }
 
     /**
@@ -224,7 +205,7 @@ export class TableUtil {
     ): KeyboardShortcutBehavior {
         return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
-            activeInBoxRoles: ["alias-add-row", "alias-alias-add-row-textbox", "alias-alias-add-column-textbox"],
+            activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;
                 const aliasBox = box.parent as AliasBox;
