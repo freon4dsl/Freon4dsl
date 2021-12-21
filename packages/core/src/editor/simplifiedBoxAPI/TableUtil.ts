@@ -37,20 +37,18 @@ export class TableUtil {
             cells.push({
                 row: 1,
                 column: index + 1,
-                box: new LabelBox(element, "header" + index, () => item, {
-                    // TODO Change into Svelte Style
-                    // style: STYLES.headerText,
+                box: new LabelBox(element, "header-" + index, item, {
                     selectable: false
                 }),
                 style: headerStyles[index]
             });
         });
         list.forEach((item: ELEMENT_TYPE, rowIndex: number) => {
-            columnBoxes.forEach((projector, columnIndex) => {
+            columnBoxes.forEach((projector: (e: ELEMENT_TYPE) => Box, columnIndex: number) => {
                 cells.push({
                     row: rowIndex + 2,
                     column: columnIndex + 1,
-                    box: new HorizontalListBox(item, "xx-" + columnIndex, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP)]),
+                    box: new HorizontalListBox(item, "xx-" + columnIndex + "-" + rowIndex, [projector(item), new AliasBox(item, "new-" + columnIndex + "-" + rowIndex, NBSP)]),
                     style: rowStyles[columnIndex]
                 });
             });
