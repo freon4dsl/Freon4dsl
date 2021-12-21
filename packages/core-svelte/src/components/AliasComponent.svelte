@@ -22,7 +22,7 @@
         KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT, styleToCSS, conceptStyle
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
-    import { action, autorun } from "mobx";
+    import { action, autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
     import { afterUpdate, onMount } from "svelte";
     import { writable } from "svelte/store";
@@ -271,14 +271,17 @@
 
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to " + JSON.stringify(event.detail));
-        isEditing = false;
-        choiceBox.textHelper.setText("");
-        const option = event.detail;
-        choiceBox.selectOption(editor, option);
-        let selected = choiceBox.getSelectedOption();
-        // choiceBox.textHelper.setText(!!selected ? selected.label : "");
-        LOGGER.log("      selected is " + JSON.stringify(selected));
-        setOpen("selectedEvent", false);
+        runInAction( () => {
+
+            isEditing = false;
+            choiceBox.textHelper.setText("");
+            const option = event.detail;
+            choiceBox.selectOption(editor, option);
+            let selected = choiceBox.getSelectedOption();
+            // choiceBox.textHelper.setText(!!selected ? selected.label : "");
+            LOGGER.log("      selected is " + JSON.stringify(selected));
+            setOpen("selectedEvent", false);
+        });
         // if (isSelectBox(choiceBox)) {
         //     if (!!textComponent) {
         //         textComponent.textOnScreen = choiceBox.getSelectedOption().label;

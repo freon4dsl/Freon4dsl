@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import { PiElement, PiNamedElement } from "../../language";
 import { Box, BoxFactory, KeyPressAction, SelectOption, TextBox } from "../boxes";
 import { BehaviorExecutionResult, PiUtils } from "../../util";
@@ -185,7 +186,7 @@ export class BoxUtils {
     static referenceBox(
         element: PiElement,
         propertyName: string,
-        setFunc: (selected: string) => Object,
+        setFunc: (selected: string) => void,
         scoper: PiScoper,
         index?: number
     ): Box {
@@ -214,7 +215,7 @@ export class BoxUtils {
             },
             () => {
                 // console.log("==> get selected option for property " + propertyName + " of " + element["name"] + " is " + property.name + " or " + element[propertyName].name)
-                if (!!property) {
+                if (!!element[propertyName]) {
                     return { id: element[propertyName].name, label: element[propertyName].name };
                 } else {
                     return null;
@@ -223,8 +224,10 @@ export class BoxUtils {
             async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
                 console.log("==> SET selected option for property " + propertyName + " of " + element["name"] +  " to " + option?.label)
                 if (!!option) {
-                    // element[propertyName] = Language.getInstance().referenceCreator(option.label, propType);
-                    setFunc(option.label);
+                    runInAction( () => {
+                        // element[propertyName] = Language.getInstance().referenceCreator(option.label, propType);
+                        setFunc(option.label);
+                    });
                 } else {
                     // element[propertyName] = Language.getInstance().referenceCreator("unknown", propType);
                     property = null;
