@@ -22,7 +22,7 @@
         KEY_SPACEBAR, KEY_ESCAPE, KEY_DELETE, KEY_ARROW_LEFT, KEY_BACKSPACE, KEY_ARROW_RIGHT, styleToCSS, conceptStyle
     } from "@projectit/core";
     import type { SelectOption } from "@projectit/core";
-    import { action, autorun } from "mobx";
+    import { action, autorun, runInAction } from "mobx";
     import { clickOutside } from "./clickOutside";
     import { afterUpdate, onMount } from "svelte";
     import { writable } from "svelte/store";
@@ -68,12 +68,14 @@
     onMount(() => {
         MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
-        choiceBox.textBox.style = choiceBox.style;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
-        if (!!selected) {
-            choiceBox.textBox.setText(selected.label);
-        }
+        runInAction( () => {
+            choiceBox.textBox.style = choiceBox.style;
+            if (!!selected) {
+                choiceBox.textBox.setText(selected.label);
+            }
+        });
     });
 
     afterUpdate(() => {
@@ -271,19 +273,18 @@
 
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to " + JSON.stringify(event.detail));
-        isEditing = false;
-        choiceBox.textHelper.setText("");
-        const option = event.detail;
-        choiceBox.selectOption(editor, option);
-        let selected = choiceBox.getSelectedOption();
-        // choiceBox.textHelper.setText(!!selected ? selected.label : "");
-        LOGGER.log("      selected is " + JSON.stringify(selected));
-        setOpen("selectedEvent", false);
-        // if (isSelectBox(choiceBox)) {
-        //     if (!!textComponent) {
-        //         textComponent.textOnScreen = choiceBox.getSelectedOption().label;
-        //     }
-        // }
+        runInAction( () => {
+
+            isEditing = false;
+            choiceBox.textHelper.setText("");
+            const option = event.detail;
+            choiceBox.selectOption(editor, option);
+            let selected = choiceBox.getSelectedOption();
+            selectableOptionList.text = "";
+            // choiceBox.textHelper.setText(!!selected ? selected.label : "");
+            LOGGER.log("      selected is " + JSON.stringify(selected));
+            setOpen("selectedEvent", false);
+        });
     };
 
     const onClick = (e: MouseEvent) => {
@@ -307,7 +308,9 @@
         }
         let style = conceptStyle(editor.style, editor.theme, choiceBox.element.piLanguageConcept(), "alias", choiceBox.style);
         aliasStyle = styleToCSS(style);
-        choiceBox.textBox.style = style;
+        runInAction( () => {
+            choiceBox.textBox.style = style;
+        });
 
     });
 
