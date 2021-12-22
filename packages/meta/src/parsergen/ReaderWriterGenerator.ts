@@ -28,7 +28,7 @@ export class ReaderWriterGenerator {
 
     generate(editDef: PiEditUnit): void {
         if (this.language == null) {
-            LOGGER.error(this, "Cannot generate parser and unparser because language is not set.");
+            LOGGER.error("Cannot generate parser and unparser because language is not set.");
             return;
         }
         const generationStatus = new GenerationStatus();
@@ -118,9 +118,9 @@ export class ReaderWriterGenerator {
         this.makeFile(`reader index`, generatedFilePath, indexContent, generationStatus);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(this, `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(this, `Succesfully generated reader and writer.`);
+            LOGGER.info(`Succesfully generated reader and writer.`);
         }
     }
 
@@ -133,7 +133,7 @@ export class ReaderWriterGenerator {
             Agl.processorFromString(testContent, null, null, null);
         } catch (e) {
             generationStatus.numberOfErrors += 1;
-            LOGGER.error(this, `Error in creating grammar for ${this.language?.name}: '${e.message}`);
+            LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
         }
     }
 

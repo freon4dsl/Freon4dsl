@@ -79,7 +79,7 @@ export class ProjectItCleanAction extends CommandLineAction {
     // name of this mehtod needs to be generate, even though it does not generate, but removes files
     // because the superclass expects a method with this name
     doClean(): void {
-        LOGGER.info(this, "Removing of all parts of your language");
+        LOGGER.info("Removing of all parts of your language");
         // LOGGER.log("Output will be cleaned from: " + this.outputFolder);
 
         // when the force flag is present we need to parse the definition ast files
@@ -95,7 +95,7 @@ export class ProjectItCleanAction extends CommandLineAction {
             this.cleanScoper();
             this.cleanTyper();
         } catch (e) {
-            LOGGER.error(this, "Stopping cleaning because of errors: " + e.message + "\n");
+            LOGGER.error("Stopping cleaning because of errors: " + e.message + "\n");
         }
     }
 
@@ -106,8 +106,8 @@ export class ProjectItCleanAction extends CommandLineAction {
             this.typerGenerator.language = this.language;
             this.typerGenerator.clean(this.force);
         } catch (e) {
-            // LOGGER.error(this, "Stopping typer cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping typer cleansing because of errors: " + e.message);
+            // LOGGER.error("Stopping typer cleansing because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error("Stopping typer cleansing because of errors: " + e.message);
         }
     };
 
@@ -118,8 +118,8 @@ export class ProjectItCleanAction extends CommandLineAction {
             this.scoperGenerator.language = this.language;
             this.scoperGenerator.clean(this.force);
         } catch (e) {
-            // LOGGER.error(this, "Stopping scoper cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping scoper cleansing because of errors: " + e.message);
+            // LOGGER.error("Stopping scoper cleansing because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error("Stopping scoper cleansing because of errors: " + e.message);
         }
     };
 
@@ -130,8 +130,8 @@ export class ProjectItCleanAction extends CommandLineAction {
             this.validatorGenerator.language = this.language;
             this.validatorGenerator.clean(this.force);
         } catch (e) {
-            // LOGGER.error(this, "Stopping validator cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping validator cleansing because of errors: " + e.message);
+            // LOGGER.error("Stopping validator cleansing because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error("Stopping validator cleansing because of errors: " + e.message);
         }
     };
 
@@ -146,8 +146,8 @@ export class ProjectItCleanAction extends CommandLineAction {
             this.parserGenerator.language = this.language;
             this.parserGenerator.clean(this.force);
         } catch (e) {
-            // LOGGER.error(this, "Stopping editor and parser cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error(this, "Stopping editor, reader and writer cleansing because of errors: " + e.message);
+            // LOGGER.error("Stopping editor and parser cleansing because of errors: " + e.message + "\n" + e.stack);
+            LOGGER.error("Stopping editor, reader and writer cleansing because of errors: " + e.message);
         }
     };
 

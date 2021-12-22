@@ -16,7 +16,7 @@ export class PiTyperGenerator {
 
     generate(typerdef: PiTypeDefinition): void {
         if (this.language == null) {
-            LOGGER.error(this, "Cannot generate typer because language is not set.");
+            LOGGER.error("Cannot generate typer because language is not set.");
             return;
         }
         const generationStatus = new GenerationStatus();
@@ -62,9 +62,9 @@ export class PiTyperGenerator {
         Helpers.generateManualFile(`${this.typerFolder}/index.ts`, typerIndexFile, "Typer Index");
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(this, `Generated typer '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated typer '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(this, `Succesfully generated typer ${name}`);
+            LOGGER.info(`Succesfully generated typer ${name}`);
         }
     }
 
@@ -79,14 +79,14 @@ export class PiTyperGenerator {
         if (force) {
             Helpers.deleteFile(`${this.typerFolder}/index.ts`);
             if (this.language == null) {
-                LOGGER.error(this, "Cannot remove all because language is not set.");
+                LOGGER.error("Cannot remove all because language is not set.");
             } else {
                 Helpers.deleteFile(`${this.typerFolder}/${Names.customTyper(this.language)}.ts`);
             }
             Helpers.deleteDirIfEmpty(this.typerFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(this, `Not removed: ${this.typerFolder}/${Names.customTyper(this.language)}.ts` +
+            LOGGER.info(`Not removed: ${this.typerFolder}/${Names.customTyper(this.language)}.ts` +
             '\n\t' + `${this.typerFolder}/index.ts`);
         }
     }

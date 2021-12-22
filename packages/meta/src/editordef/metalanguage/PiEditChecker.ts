@@ -248,7 +248,7 @@ export class PiEditChecker extends Checker<PiEditUnit> {
         for (const projection of this.propsWithTableProjection) {
             const myprop = projection.expression.findRefOfLastAppliedFeature();
             const propEditor = editor.findConceptEditor(myprop.type.referred);
-            if (!(!!propEditor.tableProjections) || propEditor.tableProjections.length == 0) {
+            if (!(!!propEditor.tableProjections || propEditor.tableProjections.length == 0)) {
                 // create default listInfo if not present
                 if (!(!!projection.listInfo)) {
                     projection.listInfo = new ListInfo();

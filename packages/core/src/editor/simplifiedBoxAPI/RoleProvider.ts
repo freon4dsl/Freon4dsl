@@ -27,11 +27,17 @@ export class RoleProvider {
         return "";
     }
 
-    public static label(element: PiElement): string {
-        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + this.uniqueLabelNumber++;
+    public static label(element: PiElement, uid: string): string {
+        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + uid;
     }
 
-    static indent(element: PiElement) {
-        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-label-" + this.uniqueIndentNumber++;
+    static indent(element: PiElement, uid: string) {
+        return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-indent-" + uid;
+    }
+
+    static cell(owningConceptName: string, propertyName: string, rowIndex: number, columnIndex: number) {
+        let roleName: string = RoleProvider.startWithUpperCase(owningConceptName) + "-" + propertyName;
+        roleName += "-row-" + rowIndex + "-column-" + columnIndex;
+        return roleName;
     }
 }

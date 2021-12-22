@@ -134,19 +134,19 @@ export function createLimitedConcept(data: Partial<PiLimitedConcept>): PiLimited
         }
     }
     createCommonConceptProps(data, result);
-    // if 'name' property is not present, create it.
-    if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
-        const nameProperty = new PiPrimitiveProperty();
-        nameProperty.name = "name";
-        nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
-        nameProperty.isPart = true;
-        nameProperty.isList = false;
-        nameProperty.isOptional = false;
-        nameProperty.isPublic = false;
-        nameProperty.isStatic = false;
-        nameProperty.owningConcept = result;
-        result.primProperties.push(nameProperty);
-    }
+    // // if 'name' property is not present, create it.
+    // if ( !(!!result.base) && !result.primProperties.some(prop => prop.name === "name") ) {
+    //     const nameProperty = new PiPrimitiveProperty();
+    //     nameProperty.name = "name";
+    //     nameProperty.type = PiElementReference.create<PiPrimitiveType>(PiPrimitiveType.identifier, "PiPrimitiveType");
+    //     nameProperty.isPart = true;
+    //     nameProperty.isList = false;
+    //     nameProperty.isOptional = false;
+    //     nameProperty.isPublic = false;
+    //     nameProperty.isStatic = false;
+    //     nameProperty.owningConcept = result;
+    //     result.primProperties.push(nameProperty);
+    // }
     return result;
 }
 

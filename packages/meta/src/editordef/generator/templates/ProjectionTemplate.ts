@@ -5,7 +5,7 @@ import {
     PiExpressionConcept,
     PiLanguage,
     PiLimitedConcept,
-    PiPrimitiveProperty,
+    PiPrimitiveProperty, PiPrimitiveType,
     PiProperty
 } from "../../../languagedef/metalanguage";
 import {
@@ -17,8 +17,7 @@ import {
     sortConceptsWithBase
 } from "../../../utils";
 import {
-    ListInfo,
-    ListInfoType,
+    ListInfo, ListInfoType,
     PiEditConcept,
     PiEditInstanceProjection,
     PiEditParsedProjectionIndent,
@@ -30,12 +29,16 @@ import {
     PiEditUnit
 } from "../../metalanguage";
 import { PiEditTableProjection } from "../../metalanguage/PiEditDefLang";
-import { PiPrimitiveType } from "../../../languagedef/metalanguage/PiLanguage";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
 export class ProjectionTemplate {
+    private tableProjections: PiEditConcept[] = []; // holds all concepts that have a table projection during the generation
 
     generateProjectionDefault(language: PiLanguage, editorDef: PiEditUnit, relativePath: string): string {
+        // reset the table projections, then remember all concepts that have a table projection
+        this.tableProjections = [];
+        this.tableProjections.push(...editorDef.conceptEditors.filter(conceptDef => conceptDef.tableProjections.length > 0));
+
         let binaryConceptsWithDefaultProjection = language.concepts.filter(c => (c instanceof PiBinaryExpressionConcept))
             .filter(c => {
             const editor = editorDef.findConceptEditor(c);
@@ -149,9 +152,9 @@ export class ProjectionTemplate {
                         isPiBinaryExpression(exp.piContainer().container)
                     ) {
                         return BoxFactory.horizontalList(exp, "brackets", [
-                            BoxUtils.labelBox(exp, "(", true),
+                            BoxUtils.labelBox(exp, "(", "bracket-open", true),
                             binBox,
-                            BoxUtils.labelBox(exp, ")", true)
+                            BoxUtils.labelBox(exp, ")", "bracket-close", true)
                         ]);
                     } else {
                         return binBox;
@@ -177,14 +180,14 @@ export class ProjectionTemplate {
 
         projection.lines.forEach( (line, index) => {
             if (line.indent > 0) {
-                result += `BoxUtils.indentBox(${elementVarName}, ${line.indent}, `;
+                result += `BoxUtils.indentBox(${elementVarName}, ${line.indent}, "${index}", `;
             }
             if (line.items.length > 1) {
                 result += `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [ `;
             }
             // Now all projection items in the line
             line.items.forEach((item, itemIndex) => {
-                result += this.itemProjection(item, elementVarName, index, concept, language);
+                result += this.itemProjection(item, elementVarName, index, itemIndex, concept, language);
                 if (! (item instanceof PiEditParsedProjectionIndent) && itemIndex < line.items.length - 1) {
                     result += ",";
                 }
@@ -233,26 +236,27 @@ export class ProjectionTemplate {
                                 | PiEditSubProjection
                                 | PiEditInstanceProjection,
                            elementVarName: string,
-                           index: number,
+                           lineIndex: number,
+                           itemIndex: number,
                            concept: PiClassifier,
                            language: PiLanguage) {
         // TODO add table projection for lists
         let result: string = "";
         if (item instanceof PiEditProjectionText) {
-            result += ` BoxUtils.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}") `;
+            result += ` BoxUtils.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${lineIndex}-item-${itemIndex}") `;
         } else if (item instanceof PiEditPropertyProjection) {
             result += this.propertyProjection(item, elementVarName, concept, language);
         } else if (item instanceof PiEditSubProjection) {
-            result += this.optionalProjection(item, elementVarName, index, concept, language);
+            result += this.optionalProjection(item, elementVarName, lineIndex, concept, language);
         }
         return result;
     }
 
-    private optionalProjection(item: PiEditSubProjection, elementVarName: string, index: number, concept: PiClassifier,
+    private optionalProjection(item: PiEditSubProjection, elementVarName: string, lineIndex: number, concept: PiClassifier,
                                language: PiLanguage): string {
         let result = "";
         item.items.forEach((subitem, subitemIndex) => {
-            result += this.itemProjection(subitem, elementVarName, index, concept, language);
+            result += this.itemProjection(subitem, elementVarName, lineIndex, subitemIndex, concept, language);
             // Add a comma if there was a projection and its in the middle of the list
             if (! (subitem instanceof PiEditParsedProjectionIndent) && subitemIndex < item.items.length - 1) {
                 result += ", ";
@@ -261,7 +265,7 @@ export class ProjectionTemplate {
 
         // If there are more items, surround with horizontal list
         if (item.items.length > 1) {
-            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${index}", [${result}])`;
+            result = `BoxFactory.horizontalList(${elementVarName}, "${concept.name}-hlist-line-${lineIndex}", [${result}])`;
         }
 
         const propertyProjection: PiEditPropertyProjection = item.optionalProperty();
@@ -289,13 +293,12 @@ export class ProjectionTemplate {
         } else if (appliedFeature instanceof PiConceptProperty) {
             if (appliedFeature.isPart) {
                 if (appliedFeature.isList) {
-                    if (!!item.listInfo) {
+                    if (!!item.listInfo) { // if there is information on how to project the appliedFeature as a list, make it a list
                         result += this.conceptPartListProjection(item, concept, appliedFeature, elementVarName);
-                    } else if (!!item.tableInfo) {
-                        // TODO tables
-                        // result += this.conceptPartTableProjection(item, concept, appliedFeature, elementVarName);
+                    } else if (!!item.tableInfo) {  // if there is information on how to project the appliedFeature as a table, make it a table
+                        result += this.conceptPartTableProjection(item.tableInfo.direction, appliedFeature, elementVarName, language);
                     }
-                } else {
+                } else { // single element
                     result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${appliedFeature.name}", this.rootProjection) `;
                 }
             } else { // reference
@@ -305,7 +308,7 @@ export class ProjectionTemplate {
                     } else if (!!item.tableInfo) {
                         // TODO adjust for tables
                     }
-                } else {
+                } else { // single element
                     result += this.conceptReferenceProjection(language, appliedFeature, elementVarName);
                 }
             }
@@ -315,54 +318,63 @@ export class ProjectionTemplate {
         return result;
     }
 
-
-    private conceptPartTableProjection(item: PiEditTableProjection, concept: PiClassifier, appliedFeature: PiConceptProperty, elementVarName: string) {
-        // TODO
-        // const headers: string[] = item.headers;
-        // return `TableUtil.tableRowOriented<Attribute>(
-        //     ${elementVarName},
-        //     "attr-grid",
-        //     "${appliedFeature.name}",
-        //     ${elementVarName}.${appliedFeature.name},
-        //     ["${item.tableInfo?.}", "type"],
-        //     [attributeHeader, attributeHeader],
-        //     [attributeHeader, attributeHeader],
-        //     [
-        //         (att: Attribute): Box => {
-        //             return BoxUtils.textBox(att,"attr-name")
-        //         },
-        //         (attr: Attribute): Box => {
-        //             return BoxUtils.referenceBox(
-        //                 attr,
-        //                 "declaredType",
-        //                 (selected: string) => {
-        //                     return PiElementReference.create<Type>(
-        //                         ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
-        //                 },
-        //                 ExampleEnvironment.getInstance().scoper
-        //             )
-        //         }
-        //     ],
-        //     (box: Box, editor: PiEditor) => {
-        //         return new Attribute();
-        //     },
-        //     ExampleEnvironment.getInstance().editor
-        // );`
+    /**
+     * Returns the text string that projects 'property' as a table.
+     * @param orientation       Either row or column based
+     * @param property          The property to be projected
+     * @param elementVarName    The name of the variable that holds the property at runtime
+     * @param language          The language for which this projection is made
+     * @private
+     */
+    private conceptPartTableProjection(orientation: PiEditProjectionDirection, property: PiConceptProperty, elementVarName: string, language: PiLanguage): string {
+        // find the projection to use for the type of the given property
+        const featureType: PiClassifier = property.type.referred;
+        const propTypeProjection: PiEditConcept = this.tableProjections.find(proj => proj.concept.referred === featureType);
+        // TODO handle multiple tableProjections, now the first is chosen
+        const myTableProjection: PiEditTableProjection = propTypeProjection?.tableProjections[0];
+        if (!myTableProjection) {
+            console.error(`Cannot find a table projection for property ${property.name}.`);
+            return `BoxUtils.labelBox(${elementVarName}, "Cannot find a table projection for this property.")`;
+        }
+        // create the cell getters
+        let cellGetters: string = '';
+        myTableProjection.cells.forEach((cell, index) =>
+            cellGetters += `(cell${index}: ${Names.classifier(featureType)}): Box => {
+                return ${this.itemProjection(cell, `cell${index}`, index, index, property.type.referred, language)}
+            },\n`
+        );
+        // return the projection based on the orientation of the table
+        if (orientation === PiEditProjectionDirection.Vertical) {
+            return `TableUtil.tableBoxColumnOriented(
+                ${elementVarName},
+                "${property.name}",
+                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
+                [ ${cellGetters} ],
+                ExampleEnvironment.getInstance().editor)`;
+        } else {
+            return `TableUtil.tableBoxRowOriented(
+                ${elementVarName},
+                "${property.name}",
+                [ ${myTableProjection.headers.map(head => `"${head}"`).join(", ")}] ,
+                [ ${cellGetters} ],
+                ExampleEnvironment.getInstance().editor)`;
+        }
     }
+
     /**
      * generate the part list
      *
      * @param item
      * @param concept
      * @param propertyConcept   The property for which the projection is generated.
-     * @param element           The name of the element parameter of the getBox projection method.
+     * @param elementVarName    The name of the element parameter of the getBox projection method.
      */
-    private conceptPartListProjection(item: PiEditPropertyProjection, concept: PiClassifier, propertyConcept: PiConceptProperty, element: string) {
+    private conceptPartListProjection(item: PiEditPropertyProjection, concept: PiClassifier, propertyConcept: PiConceptProperty, elementVarName: string) {
         let joinEntry = this.getJoinEntry(item.listInfo);
         if (item.listInfo.direction === PiEditProjectionDirection.Vertical) {
-            return `BoxUtils.verticalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
+            return `BoxUtils.verticalPartListBox(${elementVarName}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
         } // else
-        return `BoxUtils.horizontalPartListBox(${element}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
+        return `BoxUtils.horizontalPartListBox(${elementVarName}, "${propertyConcept.name}", this.rootProjection${joinEntry})`;
     }
 
     private conceptReferenceProjection(language: PiLanguage, appliedFeature: PiConceptProperty, element: string) {
@@ -371,7 +383,7 @@ export class ProjectionTemplate {
                                 ${element},
                                 "${appliedFeature.name}",
                                 (selected: string) => {
-                                    return PiElementReference.create<${featureType}>(
+                                    ${element}.${appliedFeature.name} = PiElementReference.create<${featureType}>(
                                        ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
                                             ${element},
                                             selected,
@@ -400,7 +412,6 @@ export class ProjectionTemplate {
 
     private primitivePropertyProjection(property: PiPrimitiveProperty, element: string): string {
         if (property.isList) {
-            // TODO remove this hack
             return this.listPrimitivePropertyProjection(property, element);
         } else {
             return this.singlePrimitivePropertyProjection(property, element);

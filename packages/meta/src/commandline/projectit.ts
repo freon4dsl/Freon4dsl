@@ -9,10 +9,10 @@ import { MetaLogger } from "../utils/MetaLogger";
 import { ProjectItGenerateParser } from "./ProjectItGenerateParser";
 import { ProjectItCleanAction } from "./ProjectitCleanAction";
 
-const LOGGER = new MetaLogger("ProjectItParser"); // .mute();
+const LOGGER = new MetaLogger("ProjectIt"); // .mute();
 
-// The main entry ppoint for the ProjectIt generator
-export class ProjectItParser extends CommandLineParser {
+// The main entry point for the ProjectIt generator
+export class ProjectIt extends CommandLineParser {
     private languageAction: ProjectItGenerateLanguage;
     private allAction: ProjectItGenerateAllAction;
     private editorAction: ProjectItGenerateEditor;
@@ -74,12 +74,12 @@ export class ProjectItParser extends CommandLineParser {
         try {
             return super.onExecute();
         } catch (e) {
-            LOGGER.error(this, e.message + "\n" + e.stack);
+            LOGGER.error(e.message + "\n" + e.stack);
         }
         return null;
     }
 }
 
 // Run this as the main program.
-const projectit: ProjectItParser = new ProjectItParser();
+const projectit: ProjectIt = new ProjectIt();
 projectit.execute();

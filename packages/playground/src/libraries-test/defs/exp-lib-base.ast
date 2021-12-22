@@ -18,6 +18,6 @@ expression GroupedExpression base ExpressionBase {
     inner: ExpressionBase;
 }
 
-interface ROOT_TYPE {
+concept ROOT_TYPE {
 }
-limited BASIC_TYPE implements ROOT_TYPE { Boolean; Integer; String; }
+limited BASIC_TYPE base ROOT_TYPE { Boolean; Integer; String; }

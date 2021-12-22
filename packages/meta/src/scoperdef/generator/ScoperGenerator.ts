@@ -19,7 +19,7 @@ export class ScoperGenerator {
 
     generate(scopedef: PiScopeDef): void {
         if (this.language == null) {
-            LOGGER.error(this, "Cannot generate scoper because language is not set.");
+            LOGGER.error("Cannot generate scoper because language is not set.");
             return;
         }
         // generate default, if the scoper definition is not present, i.e. was not read from file
@@ -70,9 +70,9 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(this, `Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(this,`Succesfully generated scoper ${name}`);
+            LOGGER.info(`Succesfully generated scoper ${name}`);
         }
     }
 

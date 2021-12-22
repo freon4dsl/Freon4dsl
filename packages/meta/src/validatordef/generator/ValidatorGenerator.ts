@@ -18,7 +18,7 @@ export class ValidatorGenerator {
 
     generate(validdef: PiValidatorDef): void {
         if (this.language == null) {
-            LOGGER.error(this, "Cannot generate validator because language is not set.");
+            LOGGER.error("Cannot generate validator because language is not set.");
             return;
         }
         const generationStatus = new GenerationStatus();
@@ -90,9 +90,9 @@ export class ValidatorGenerator {
         Helpers.generateManualFile(`${this.validatorFolder}/index.ts`, indexFile, "Index Class");
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(this, `Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(this, `Succesfully generated validator ${name}`);
+            LOGGER.info(`Succesfully generated validator ${name}`);
         }
     }
 
@@ -107,14 +107,14 @@ export class ValidatorGenerator {
         if (force) {
             Helpers.deleteFile(`${this.validatorFolder}/index.ts`);
             if (this.language == null) {
-                LOGGER.error(this, "Cannot remove all because language is not set.");
+                LOGGER.error("Cannot remove all because language is not set.");
             } else {
                 Helpers.deleteFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
             }
             Helpers.deleteDirIfEmpty(this.validatorFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOGGER.info(this, `${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
+            LOGGER.info(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
                 '\n\t' + `${this.validatorFolder}/index.ts`);
         }
 
