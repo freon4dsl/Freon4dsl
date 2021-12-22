@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { conceptStyle, PiLogger, styleToCSS } from "@projectit/core";
+    import { conceptStyle, GridBox, PiLogger, styleToCSS } from "@projectit/core";
     import type { GridCell, PiEditor } from "@projectit/core";
     import { autorun } from "mobx";
     import { afterUpdate } from "svelte";
@@ -8,6 +8,7 @@
     import { isOdd } from "./util";
 
     // properties
+    export let grid: GridBox;
     export let cell: GridCell;
     export let editor: PiEditor;
 
@@ -33,8 +34,8 @@
         row = cell.row + (cell.rowSpan ? " / span " + cell.rowSpan : "");
         column = cell.column + (cell.columnSpan ? " / span " + cell.columnSpan : "");
         const gridStyle = `grid-row: ${row}; grid-column: ${column};`;
-
-        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, cell.box.element.piLanguageConcept(), (isOdd(cell.row) ? "gridcellOdd" : "gridcellEven"), cell.style)) + gridStyle;
+        const orientation = (grid.orientation === "neutral" ? "gridcellNeutral" : (grid.orientation === "row" ? (isOdd(cell.row) ? "gridcellOdd" : "gridcellEven") : (isOdd(cell.column) ?"gridcellOdd" : "gridcellEven" )));
+        boxStyle = styleToCSS(conceptStyle(editor.style, editor.theme, cell.box.element.piLanguageConcept(), orientation, cell.style)) + gridStyle;
     });
 
 </script>

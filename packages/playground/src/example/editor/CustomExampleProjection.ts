@@ -4,48 +4,35 @@ import {
     PiElement,
     Box,
     createDefaultExpressionBox,
-    TextBox,
-    KeyPressAction,
     PiLogger,
     HorizontalListBox,
     LabelBox,
     SvgBox,
     GridCell,
     AliasBox,
-    GridBox,
-    PiStyle,
-    TableUtil,
-    SelectOption, BehaviorExecutionResult, PiEditor, BoxFactory, BoxUtils
+    GridBox
 } from "@projectit/core";
-import { ExampleEnvironment } from "../environment/gen/ExampleEnvironment";
-import { Attribute } from "../language/gen/Attribute";
-import { Entity } from "../language/gen/Entity";
-import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
-import { OrExpression } from "../language/gen/OrExpression";
-import { PiElementReference } from "../language/gen/PiElementReference";
-import { SumExpression } from "../language/gen/SumExpression";
-import { Type } from "../language/gen/Type";
+import { OrExpression } from "../language/gen";
+import { SumExpression } from "../language/gen";
 import {
-    attributeHeader,
-    attributeName, entityBoxStyle, entityNameStyle,
     grid,
     gridcell,
     gridcellLast,
-    gridCellOr, mycell, mygrid, or_gridcellFirst, rowStyle
+    gridCellOr, mycell, mygrid, or_gridcellFirst
 } from "./styles/CustomStyles";
 
 const LOGGER = new PiLogger("CustomProjection");
 
 const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
 const OPERATOR_COLUMN = 1;
-const OPERAND_COLUM = 2;
+const OPERAND_COLUMN = 2;
 
 
 /**
  * Class CustomExampleProjection provides an entry point for the language engineer to
  * define custom build additions to the editor.
  * These custom build additions are merged with the default and definition-based editor parts
- * in a three-way manner. For each modelelement,
+ * in a three-way manner. For each model element,
  * (1) if a custom build creator/behavior is present, this is used,
  * (2) if a creator/behavior based on the editor definition is present, this is used,
  * (3) if neither (1) nor (2) yields a result, the default is used.
@@ -64,19 +51,14 @@ export class CustomExampleProjection implements PiProjection {
         // Add any handmade projections of your own before next statement
 
         // Uncomment to see a mathematical Sum symbol
-        // if (element instanceof SumExpression) {
-        //     return this.createSumBox(element);
-        // }
-
-        // Uncomment to see a simple (unfinished) table representation of entity attributes
-        if (element instanceof Entity) {
-            return this.createEntityBox(element);
+        if (element instanceof SumExpression) {
+            return this.createSumBox(element);
         }
 
         // Uncomment to see an alternative OR notation (only works up to two nested ors
-        // if (element instanceof OrExpression) {
-        //     return this.createOrBoxGrid(element);
-        // }
+        if (element instanceof OrExpression) {
+            return this.createOrBoxGrid(element);
+        }
         return null;
     }
 
@@ -153,19 +135,19 @@ export class CustomExampleProjection implements PiProjection {
                 },
                 {
                     row: 1,
-                    column: OPERAND_COLUM,
+                    column: OPERAND_COLUMN,
                     box: this.optionalPartBox(exp.left, "OrExpression-left", "left"),
                     style: or_gridcellFirst
                 },
                 {
                     row: 2,
-                    column: OPERAND_COLUM,
+                    column: OPERAND_COLUMN,
                     box: this.optionalPartBox(exp.left, "OrExpression-right", "right"),
                     style: gridcell
                 },
                 {
                     row: 3,
-                    column: OPERAND_COLUM,
+                    column: OPERAND_COLUMN,
                     box: this.optionalPartBox(exp, "OrExpression-right", "right"),
                     style: gridcellLast
                 }
@@ -181,13 +163,13 @@ export class CustomExampleProjection implements PiProjection {
                 },
                 {
                     row: 1,
-                    column: OPERAND_COLUM,
+                    column: OPERAND_COLUMN,
                     box: this.optionalPartBox(exp, "OrExpression-left", "left"),
                     style: or_gridcellFirst
                 },
                 {
                     row: 2,
-                    column: OPERAND_COLUM,
+                    column: OPERAND_COLUMN,
                     box: this.optionalPartBox(exp, "OrExpression-right", "right"),
                     style: gridcellLast
                 }
@@ -197,97 +179,4 @@ export class CustomExampleProjection implements PiProjection {
             { style: grid }
         );
     }
-
-    private createMethods(entity: Entity): Box {
-        return BoxFactory.verticalList(
-            entity,
-            "Entity-methods-list",
-            entity.methods
-                .map(feature => {
-                    let roleName: string = "Entity-methods-" + feature.piId() + "-separator";
-                    return BoxFactory.horizontalList(entity, roleName, [
-                        this.rootProjection.getBox(feature),
-                        BoxFactory.label(entity, roleName + "label", "")
-                    ]) as Box;
-                })
-                .concat(
-                    BoxFactory.alias(entity, "Entity-methods", "<+ methods>", {
-                        propertyName: "methods"
-                    })
-                )
-        )
-    }
-
-    private createEntityBox(entity: Entity): Box {
-        return BoxFactory.verticalList(entity, "entity-custom-all", [
-            BoxUtils.textBox(entity, "name"),
-            this.createAttributeGrid(entity),
-            this.createMethods(entity)
-        ]);
-    }
-    private createEntityTableForAttributes(entity: Entity): Box {
-        let cells: GridCell[] = [];
-        cells.push({
-            row: 1,
-            column: 1,
-            columnSpan: 2,
-            box: BoxUtils.textBox(entity, "name")
-        });
-        cells.push({
-            row: 2,
-            column: 1,
-            box: this.createAttributeGrid(entity)
-        });
-        return new GridBox(entity, "entity-all", cells, {style: entityBoxStyle});
-    }
-
-    // TODO Refactor row and column based collections into one generic function.
-    private createAttributeGrid(entity: Entity): Box {
-        return TableUtil.tableRowOriented<Attribute>(
-            entity,
-            "attr-grid",
-            "attributes",
-            entity.attributes,
-            ["name", "type"],
-            [attributeHeader, attributeHeader],
-            [rowStyle, rowStyle],
-            [
-                (att: Attribute): Box => {return BoxUtils.textBox(att, "name");},
-                (attr: Attribute): Box => {
-                    return BoxUtils.referenceBox(
-                        attr,
-                        "declaredType",
-                        async (selected: string) => {
-                            console.log("==> SET SET selected option for property declaredType of " + attr.name +  " to " + selected)
-                            attr.declaredType = PiElementReference.create<Type>(
-                                    ExampleEnvironment.getInstance().scoper.getFromVisibleElements(attr, selected, "Type") as Type,"Type");
-
-                        },
-                        ExampleEnvironment.getInstance().scoper
-                    )
-                }
-            ],
-            (box: Box, editor: PiEditor) => {
-                return new Attribute();
-            },
-            ExampleEnvironment.getInstance().editor
-        );
-    }
-
-
 }
-
-// function isName(currentText: string, key: string, index: number): KeyPressAction {
-//     // LOGGER.log("IsName key[" + key + "]");
-//     if (key === "Enter") {
-//         if (index === currentText.length) {
-//             return KeyPressAction.GOTO_NEXT;
-//         } else {
-//             return KeyPressAction.NOT_OK;
-//         }
-//     } else {
-//         return KeyPressAction.OK;
-//     }
-// }
-
-

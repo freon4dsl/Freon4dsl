@@ -110,62 +110,60 @@ export class BoxUtils {
         const isList: boolean = propInfo.isList;
         const property = element[propertyName];
 
+        // check the found information
         if (!(property !== undefined && property !== null )) {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist:" + property + "\"");
         }
         if (!(typeof property === "boolean" || typeof property === "string")) {
             PiUtils.CHECK(false, "Property " + propertyName + " is not a boolean:" + property.piLanguageConcept() + "\"");
         }
-        if (property !== undefined && property !== null && (typeof property === "boolean" || typeof property === "string")) {
-            const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "booleanbox", index);
-            if (isList && this.checkList(isList, index, propertyName)) {
-                return BoxFactory.select(
-                    element,
-                    roleName,
-                    "<optional>",
-                    () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
-                    () => {
-                        if (element[propertyName][index]) {
-                            return { id: labels.yes, label: labels.yes };
-                        } else {
-                            return { id: labels.no, label: labels.no };
-                        }
-                    },
-                    async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
-                        if (option.id === labels.yes) {
-                            element[propertyName][index] = true;
-                        } else if (option.id === labels.no) {
-                            element[propertyName][index] = false;
-                        }
-                        return BehaviorExecutionResult.NULL
+
+        // all's well, create the box
+        const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "booleanbox", index);
+        if (isList && this.checkList(isList, index, propertyName)) {
+            return BoxFactory.select(
+                element,
+                roleName,
+                "<optional>",
+                () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
+                () => {
+                    if (element[propertyName][index]) {
+                        return { id: labels.yes, label: labels.yes };
+                    } else {
+                        return { id: labels.no, label: labels.no };
                     }
-                );
-            } else {
-                return BoxFactory.select(
-                    element,
-                    roleName,
-                    "<optional>",
-                    () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
-                    () => {
-                        if (element[propertyName]) {
-                            return { id: labels.yes, label: labels.yes };
-                        } else {
-                            return { id: labels.no, label: labels.no };
-                        }
-                    },
-                    async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
-                        if (option.id === labels.yes) {
-                            element[propertyName] = true;
-                        } else if (option.id === labels.no) {
-                            element[propertyName] = false;
-                        }
-                        return BehaviorExecutionResult.NULL
+                },
+                async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                    if (option.id === labels.yes) {
+                        element[propertyName][index] = true;
+                    } else if (option.id === labels.no) {
+                        element[propertyName][index] = false;
                     }
-                );
-            }
+                    return BehaviorExecutionResult.NULL
+                }
+            );
         } else {
-            PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a boolean: " + property + "\"");
-            return null;
+            return BoxFactory.select(
+                element,
+                roleName,
+                "<optional>",
+                () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
+                () => {
+                    if (element[propertyName]) {
+                        return { id: labels.yes, label: labels.yes };
+                    } else {
+                        return { id: labels.no, label: labels.no };
+                    }
+                },
+                async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                    if (option.id === labels.yes) {
+                        element[propertyName] = true;
+                    } else if (option.id === labels.no) {
+                        element[propertyName] = false;
+                    }
+                    return BehaviorExecutionResult.NULL
+                }
+            );
         }
     }
 
@@ -345,10 +343,6 @@ export class BoxUtils {
             PiUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a reference: " + property + "\"");
             return null;
         }
-    }
-
-    static horizontalPartTableBox(element: PiElement, propertyName: string, rootProjection: PiProjection, listJoin?: PiListInfo) {
-
     }
 
     static getBoxOrAlias(element: PiElement, propertyName: string, rootProjection: PiProjection) {

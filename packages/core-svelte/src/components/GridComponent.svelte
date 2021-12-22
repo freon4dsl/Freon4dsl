@@ -9,9 +9,7 @@
     export let gridBox: GridBox;
     export let editor: PiEditor;
 
-    // const className = classNames(this.props.box.style, styles.maingrid);
-
-    let showgrid = gridBox;
+     let showgrid = gridBox;
     let notifier = new ChangeNotifier();
     afterUpdate(() => {
         UPDATE_LOGGER.log("ListComponent.afterUpdate")
@@ -45,7 +43,7 @@
         class="maingridcomponent"
 >
     {#each cells as cell (cell.box.id)}
-        <GridCellComponent cell={cell} editor={editor}/>
+        <GridCellComponent grid={gridBox} cell={cell} editor={editor}/>
     {/each}
 </div>
 

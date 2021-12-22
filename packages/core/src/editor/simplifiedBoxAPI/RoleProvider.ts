@@ -34,4 +34,10 @@ export class RoleProvider {
     static indent(element: PiElement, uid: string) {
         return RoleProvider.startWithUpperCase(element.piLanguageConcept()) + element.piId() + "-indent-" + uid;
     }
+
+    static cell(owningConceptName: string, propertyName: string, rowIndex: number, columnIndex: number) {
+        let roleName: string = RoleProvider.startWithUpperCase(owningConceptName) + "-" + propertyName;
+        roleName += "-row-" + rowIndex + "-column-" + columnIndex;
+        return roleName;
+    }
 }

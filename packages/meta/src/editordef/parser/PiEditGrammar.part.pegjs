@@ -69,7 +69,7 @@ property_projection = propProjectionStart ws
                 return creator.createPropertyProjection( { "expression": exp, "listInfo": join, "tableInfo": t, "keyword":keyword, "location": location() });
             }
 
-tableInfo = "@table" ws dir:("@rows" / "@colums")? ws
+tableInfo = "@table" ws dir:("@rows" / "@columns")? ws
             {
                 return creator.createTableInfo( {"direction": dir, "location": location()} );
             }

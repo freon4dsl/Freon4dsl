@@ -5,6 +5,8 @@ import { Box } from "./internal";
 import { PiElement } from "../../language";
 import { PiUtils } from "../../util";
 
+export type GridOrientation = "neutral" | "row" | "column";
+
 export type GridCell = {
     row: number;
     column: number;
@@ -18,6 +20,7 @@ export class GridBox extends Box {
     readonly kind = "GridBox";
     cells: GridCell[];
     private $children: Box[] = [];
+    orientation: GridOrientation = "neutral";
 
     constructor(exp: PiElement, role: string, cells: GridCell[], initializer?: Partial<GridBox>) {
         super(exp, role);
