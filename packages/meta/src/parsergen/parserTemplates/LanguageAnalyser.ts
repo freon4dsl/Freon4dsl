@@ -70,7 +70,9 @@ export class LanguageAnalyser implements PiAnalyser {
         this.unitAnalysers.forEach(analyser => {
             this.classifiersUsed.forEach(classifier => {
                 const index = analyser.classifiersUsed.indexOf(classifier);
-                analyser.classifiersUsed.splice(index, 1);
+                if (index !== -1) {
+                    analyser.classifiersUsed.splice(index, 1);
+                }
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             });
             this.binaryConceptsUsed.forEach(classifier => {
