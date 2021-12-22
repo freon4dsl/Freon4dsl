@@ -43,7 +43,7 @@
         class="maingridcomponent"
 >
     {#each cells as cell (cell.box.id)}
-        <GridCellComponent cell={cell} editor={editor}/>
+        <GridCellComponent grid={gridBox} cell={cell} editor={editor}/>
     {/each}
 </div>
 

@@ -1,9 +1,10 @@
+import { runInAction } from "mobx";
 import {
     AliasBox,
     Box,
     BoxUtils,
     GridBox,
-    GridCell,
+    GridCell, GridOrientation,
     HorizontalListBox,
     KeyboardShortcutBehavior,
     PiEditor,
@@ -13,7 +14,7 @@ import { PiElement } from "../../language";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "../../util/Keys";
 import { MetaKey, PiKey } from "../../util/Keys";
-import { NBSP, PiUtils } from "../../util";
+import { NBSP, PiLogger, PiUtils } from "../../util";
 import { Language } from "../../storage";
 import { RoleProvider } from "./RoleProvider";
 import { merge } from "lodash";
@@ -33,8 +34,8 @@ export const headerStyle: PiStyle = {
 export const cellStyle: PiStyle = {
 };
 
-type Orientation = "row" | "column" | "none";
 type Location = { row: number, column: number};
+const LOGGER = new PiLogger("TableUtil");
 
 export class TableUtil {
     // Note that both tableBoxRowOriented and tableBoxColumnOriented look very similar.
@@ -74,7 +75,7 @@ export class TableUtil {
         return this.tableBox("column", element, propertyName, rowHeaders, cellGetters, editor);
     }
 
-    private static tableBox(orientation: Orientation, element: PiElement, propertyName: string, columnHeaders: string[],
+    private static tableBox(orientation: GridOrientation, element: PiElement, propertyName: string, columnHeaders: string[],
                                       cellGetters: ((e: PiElement) => Box)[],
                                       editor: PiEditor): Box {
         // find the information on the property to be shown
@@ -104,7 +105,9 @@ export class TableUtil {
                     cells.push({
                         row: location.row,
                         column: location.column,
-                        box: new HorizontalListBox(item, cellRoleName, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP)]),
+                        box: new HorizontalListBox(item, cellRoleName, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP,
+                            { propertyName: propertyName, conceptName: propInfo.type }
+                             )]),
                         style: cellStyle
                     });
                 });
@@ -121,7 +124,9 @@ export class TableUtil {
                 style: cellStyle
             });
             // Add keyboard actions to grid such that new rows can be added by Return Key
-            return this.addKeyBoardShortCuts(element, propertyName, editor, elementBuilder, cells);
+            const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
+            this.addKeyBoardShortCuts(roleName, propertyName, editor, elementBuilder);
+            return new GridBox(element, roleName, cells, { orientation: orientation } );
         }
         return null;
     }
@@ -145,82 +150,78 @@ export class TableUtil {
      * @param cells
      * @private
      */
-    private static addKeyBoardShortCuts(element: PiElement, propertyName: string, editor: PiEditor, elementBuilder: () => PiElement, cells: GridCell[]) {
-        const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
-        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(roleName, elementBuilder));
+    private static addKeyBoardShortCuts(roleName: string, propertyName: string, editor: PiEditor, elementBuilder: () => PiElement) {
+        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid());
         editor.keyboardActions.splice(
             0,
             0,
-            this.createKeyboardShortcutForEmptyCollectionGrid(propertyName, elementBuilder)
+            this.createKeyboardShortcutForEmptyCollectionGrid()
         );
-        return new GridBox(element, roleName, cells);
     }
 
     /**
      * Create a keyboard shortcut for use in an element table
-     * @param collectionRole
-     * @param elementCreator
      * @param roleToSelect
      */
-    private static createKeyboardShortcutForCollectionGrid(
-        collectionRole: string,
-        elementCreator: () => PiElement,
-        roleToSelect?: string
-    ): KeyboardShortcutBehavior {
+    private static createKeyboardShortcutForCollectionGrid(): KeyboardShortcutBehavior {
         return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             // TODO The new-0... should become more generic.
-            activeInBoxRoles: ["new-0", "new-1", "new-2", "new-3", "new-4", "new-5", "new-6", "new-7", "new-8", "new-9", "new-10"],
+            activeInBoxRoles: ["new-0", "new-1", "new-2", "new-3", "new-4", "new-5", "new-6", "new-7", "new-8", "new-9", "new-10",
+                "alias-new-0-textbox", "alias-new-1-textbox", "alias-new-2-textbox", "alias-new-3-textbox", "alias-new-4-textbox",
+                "alias-new-5-textbox", "alias-new-6-textbox", "alias-new-7-textbox", "alias-new-8-textbox", "alias-new-9-textbox"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;
                 const proc = element.piContainer();
                 const parent: PiElement = proc.container;
                 PiUtils.CHECK(parent[proc.propertyName][proc.propertyIndex] === element);
-                const newElement: PiElement = elementCreator();
-                parent[proc.propertyName].splice(proc.propertyIndex + 1, 0, newElement);
-
-                if (!!roleToSelect) {
-                    editor.selectElement(newElement, roleToSelect);
-                } else {
-                    editor.selectElement(newElement);
-                    await editor.selectFirstEditableChildBox();
-                    // await editor.selectFirstLeafChildBox();
+                const aliasBox = box.parent as AliasBox;
+                LOGGER.log("New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
+                const newElement: PiElement = Language.getInstance().concept(aliasBox?.conceptName)?.constructor()
+                if( newElement === undefined) {
+                    // TODO Find out why this happens sometimes
+                    LOGGER.log("Unexpected new element undefined");
+                    return null;
                 }
-                return null;
+                runInAction( () => {
+                    parent[proc.propertyName].splice(proc.propertyIndex + 1, 0, newElement);
+                });
+
+                editor.selectElement(newElement);
+                await editor.selectFirstEditableChildBox();
+                // await editor.selectFirstLeafChildBox();
+                return newElement;
             }
         };
     }
 
     /**
      * Create a keyboard shortcut for use in an empty table
-     * @param propertyRole
-     * @param elementCreator
      * @param roleToSelect
      * @private
      */
-    private static createKeyboardShortcutForEmptyCollectionGrid(
-        propertyRole: string,
-        elementCreator: () => PiElement,
-        roleToSelect?: string
-    ): KeyboardShortcutBehavior {
+    private static createKeyboardShortcutForEmptyCollectionGrid(): KeyboardShortcutBehavior {
         return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
                 const element = box.element;
                 const aliasBox = box.parent as AliasBox;
-                console.log("New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
-                const newElement: PiElement = Language.getInstance().concept(aliasBox.conceptName).constructor();
-                element[aliasBox.propertyName].push(newElement);
-
-                if (!!roleToSelect) {
-                    editor.selectElement(newElement, roleToSelect);
-                } else {
-                    editor.selectElement(newElement);
-                    await editor.selectFirstEditableChildBox();
-                    // await editor.selectFirstLeafChildBox();
+                LOGGER.log("New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
+                const newElement: PiElement = Language.getInstance().concept(aliasBox?.conceptName)?.constructor();
+                if( newElement === undefined) {
+                    // TODO Find out why this happenss sometimes
+                    LOGGER.log("Unexpected new element undefined");
+                    return null;
                 }
-                return null;
+                runInAction( () => {
+                    element[aliasBox.propertyName].push(newElement);
+                });
+
+                editor.selectElement(newElement);
+                await editor.selectFirstEditableChildBox();
+                // await editor.selectFirstLeafChildBox();
+                return newElement;
             }
         };
     }
