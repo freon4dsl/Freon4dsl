@@ -36,9 +36,9 @@ let svgCache: BoxCache<SvgBox> = {};
 let horizontalListCache: BoxCache<HorizontalListBox> = {};
 let verticalListCache: BoxCache<VerticalListBox> = {};
 
-let cacheAliasOff: boolean = false;
-let cacheLabelOff: boolean = false;
-let cacheTextOff: boolean = false;
+let cacheAliasOff: boolean = true;
+let cacheLabelOff: boolean = true;
+let cacheTextOff: boolean = true
 let cacheSelectOff: boolean = true;
 let cacheIndentOff: boolean = true;
 

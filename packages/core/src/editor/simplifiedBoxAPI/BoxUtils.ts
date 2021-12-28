@@ -7,6 +7,7 @@ import { PiEditor } from "../PiEditor";
 import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
+import { runInAction } from "mobx";
 
 export class PiListInfo {
     text: string;
@@ -222,13 +223,12 @@ export class BoxUtils {
             async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
                 console.log("==> SET selected option for property " + propertyName + " of " + element["name"] +  " to " + option?.label)
                 if (!!option) {
+                    console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
                     runInAction( () => {
-                        // element[propertyName] = Language.getInstance().referenceCreator(option.label, propType);
-                        setFunc(option.label);
+                        element[propertyName] = setFunc(option.label);
                     });
                 } else {
-                    // element[propertyName] = Language.getInstance().referenceCreator("unknown", propType);
-                    property = null;
+                    element[propertyName] = null;
                 }
                 return BehaviorExecutionResult.EXECUTED;
             },

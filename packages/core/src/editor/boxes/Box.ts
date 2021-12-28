@@ -32,11 +32,11 @@ export abstract class Box {
             role: observable,
             roleNumber: observable,
             element: observable,
-            style: observable
-            // actualHeight: observable,
-            // actualWidth: observable,
-            // actualX: observable,
-            // actualY: observable
+            style: observable,
+            actualHeight: observable,
+            actualWidth: observable,
+            actualX: observable,
+            actualY: observable
         })
     }
 

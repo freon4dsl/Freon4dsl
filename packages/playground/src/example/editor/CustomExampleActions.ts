@@ -67,7 +67,7 @@ export const MANUAL_EXPRESSION_CREATORS: PiExpressionCreator[] = [
             parent[(box as AliasBox).propertyName] = x;
             return x;
         },
-        boxRoleToSelect: "NumberLiteralExpression-value",
+        boxRoleToSelect: "NumberLiteralExpression-value-numberbox",
         caretPosition: PiCaret.RIGHT_MOST
     }
 ];

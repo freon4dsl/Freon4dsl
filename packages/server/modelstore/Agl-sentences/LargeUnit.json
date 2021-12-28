@@ -8,8 +8,7 @@
          "attributes": [
             {
                "$typename": "Attribute",
-               "name": "attr1",
-               "declaredType": "String"
+               "name": "attr1"
             },
             {
                "$typename": "Attribute",
@@ -30,6 +29,10 @@
                "$typename": "Attribute",
                "name": "attr5",
                "declaredType": "ANY"
+            },
+            {
+               "$typename": "Attribute",
+               "name": "zZ"
             }
          ],
          "methods": [
@@ -88,7 +91,7 @@
                   {
                      "$typename": "Parameter",
                      "name": "parA",
-                     "declaredType": "entityNoAttrs"
+                     "declaredType": "Integer"
                   },
                   {
                      "$typename": "Parameter",
