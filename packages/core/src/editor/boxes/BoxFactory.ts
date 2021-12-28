@@ -36,9 +36,9 @@ let svgCache: BoxCache<SvgBox> = {};
 let horizontalListCache: BoxCache<HorizontalListBox> = {};
 let verticalListCache: BoxCache<VerticalListBox> = {};
 
-let cacheAliasOff: boolean = false;
-let cacheLabelOff: boolean = false;
-let cacheTextOff: boolean = true;
+let cacheAliasOff: boolean = true;
+let cacheLabelOff: boolean = true;
+let cacheTextOff: boolean = true
 let cacheSelectOff: boolean = true;
 let cacheIndentOff: boolean = true;
 
@@ -134,6 +134,7 @@ export class BoxFactory {
         return result;
     }
 
+
     static text(element: PiElement, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>): TextBox {
         if (cacheTextOff) {
             return new TextBox(element, role, getText, setText, initializer);
@@ -143,10 +144,11 @@ export class BoxFactory {
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
         // 2. Apply the other arguments in case they have changed
-        result.getText = getText;
-        result.setText = setText;
-        PiUtils.initializeObject(result, initializer);
-
+        runInAction( () =>{
+            result.getText = getText;
+            result.setText = setText;
+            PiUtils.initializeObject(result, initializer);
+        });
         return result;
     }
 

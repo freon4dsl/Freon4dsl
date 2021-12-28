@@ -4,8 +4,8 @@ import App from './App.svelte';
 // Mute or unmute logs here (in addition to elsewhere).
 
 // PiLogger.mute("PiEditor");
-PiLogger.mute("TextComponent");
-PiLogger.mute("AliasComponent");
+// PiLogger.mute("TextComponent");
+// PiLogger.mute("AliasComponent");
 PiLogger.mute("AUTORUN");
 PiLogger.mute("FOCUS")
 PiLogger.mute("AFTER_UPDATE");

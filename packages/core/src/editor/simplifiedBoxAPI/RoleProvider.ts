@@ -2,9 +2,7 @@ import { Concept, Interface, ModelUnit } from "../../storage";
 import { PiElement } from "../../language";
 
 export class RoleProvider {
-    static uniqueLabelNumber: number = 1;
-    static uniqueIndentNumber: number = 1;
-
+ß
     public static classifier(concept: ModelUnit | Concept | Interface): string {
         return RoleProvider.startWithUpperCase(concept.typeName);
     }
