@@ -7,7 +7,6 @@ import { PiEditor } from "../PiEditor";
 import { PiProjection } from "../PiProjection";
 import { PiScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
-import { runInAction } from "mobx";
 
 export class PiListInfo {
     text: string;
