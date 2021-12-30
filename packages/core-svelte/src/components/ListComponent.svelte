@@ -3,11 +3,11 @@
     import { afterUpdate, onDestroy, onMount } from "svelte";
     import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
-    import { Box, conceptStyle, HorizontalListBox, PiEditor, PiLogger, styleToCSS } from "@projectit/core";
+    import { Box, conceptStyle, HorizontalListBox, ListBox, PiEditor, PiLogger, styleToCSS } from "@projectit/core";
     import { isHorizontalBox } from "@projectit/core";
 
     // Parameters
-    export let list ; //= new HorizontalListBox(null, "l1");
+    export let list: ListBox ; //= new HorizontalListBox(null, "l1");
     export let editor: PiEditor;
 
     // console.log("LIST COMPONET READ " + list?.role)
@@ -16,6 +16,8 @@
     let svList: HorizontalListBox = list;
     let svNotifier = new ChangeNotifier();
     let element: HTMLDivElement;
+    let children: Box[];
+    $: children = [...list.children];
 
     onDestroy(() => {
         LOGGER.log("DESTROY LIST  COMPONENT")
@@ -45,6 +47,7 @@
         LOGGER.log("AUtorun list")
         svNotifier.dummy
         svList = list;
+        children = [...list.children];
         list.setFocus = setFocus;
 
         const nrOfBoxes = svList.children.length;
@@ -93,13 +96,13 @@
 >
     {#if isHorizontalBox(svList) }
         <div class="horizontalList"  on:click>
-            {#each svList.children as box (box.$id)}
+            {#each children as box (box.id)}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>
     {:else}
         <div class="verticalList"  on:click>
-            {#each svList.children as box (box.$id)}
+            {#each children as box (box.id)}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>

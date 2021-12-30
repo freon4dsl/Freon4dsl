@@ -57,11 +57,13 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                 LOGGER.log("executeBehavior: MATCH " + label + " against " + trigger +
                     "  results in " + (!!matchArray ? matchArray.length : "null"));
                 if (matchArray !== null && label === matchArray[0]) {
-                    const execresult = behavior.execute(box, label, editor);
-                    // if( !!execresult){
-                    //     editor.selectElement(execresult);
-                    //     editor.selectFirstLeafChildBox();
-                    // }
+                    runInAction( () => {
+                        const execresult = behavior.execute(box, label, editor);
+                        // if( !!execresult){
+                        //     editor.selectElement(execresult);
+                        //     editor.selectFirstLeafChildBox();
+                        // }
+                    });
                     return BehaviorExecutionResult.EXECUTED;
                 }
             } else if (isString(trigger)) {

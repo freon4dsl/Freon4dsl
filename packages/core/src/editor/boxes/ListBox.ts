@@ -1,4 +1,4 @@
-import { observable, makeObservable } from "mobx";
+import { observable, makeObservable, action } from "mobx";
 
 import { NBSP, createKeyboardShortcutForList, PiUtils } from "../../util";
 import { Box, AliasBox, PiEditor, BoxFactory } from "../internal";
@@ -16,7 +16,11 @@ export abstract class ListBox extends Box {
     protected constructor(element: PiElement, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(element, role);
         makeObservable<ListBox, "_children">(this, {
-           _children: observable
+           _children: observable,
+            insertChild: action,
+            addChild: action,
+            clearChildren: action,
+            addChildren: action,
         });
         PiUtils.initializeObject(this, initializer);
         if (children) {

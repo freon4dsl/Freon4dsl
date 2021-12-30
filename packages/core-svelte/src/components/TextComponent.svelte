@@ -117,13 +117,13 @@
      * Used to handle non-printing characters
      * @param event
      */
-    const onKeyDown = async (event: KeyboardEvent) => {
+    const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.ctrlKey + "] shift [" + event.shiftKey + "] key [" + event.key + "]");
         isEditing = true;
         if (event.key === KEY_DELETE) {
             if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
-                    await editor.deleteBox(editor.selectedBox);
+                    editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
                     return;
                 }
@@ -134,7 +134,7 @@
         if (event.key === KEY_BACKSPACE) {
             if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
-                    await editor.deleteBox(editor.selectedBox);
+                    editor.deleteBox(editor.selectedBox);
                     event.stopPropagation();
                     return;
                 }
@@ -229,7 +229,7 @@
         window.getSelection().removeAllRanges();
     };
 
-    const onClick = async (event: MouseEvent) => {
+    const onClick = (event: MouseEvent) => {
         logBox("onClick before");
         textBox.caretPosition = getCaretPosition();
         logBox("onClick after");
@@ -243,7 +243,7 @@
      * IS triggered for printable keys only,
      * @param event
      */
-    const onKeyPress = async (event: KeyboardEvent) => {
+    const onKeyPress = (event: KeyboardEvent) => {
         LOGGER.log("onKeyPress: " + event.key);
         isEditing = true;
         const insertionIndex = getCaretPosition();
@@ -290,7 +290,7 @@
      * Would like to use onChange event, but that is only defined for <inout>, not for contenteditable.
      * @param e
      */
-    const onBlur = async (e: FocusEvent) => {
+    const onBlur = (e: FocusEvent) => {
         isEditing = true;
         let value = currentText();
         LOGGER.log("onBlur current [" + currentText() + "] box text [" + textBox.getText() + "]");
@@ -299,7 +299,7 @@
         editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
-            await editor.deleteBox(textBox);
+            editor.deleteBox(textBox);
         }
         LOGGER.log("END onBlur text [" + currentText() + "]");
     };
@@ -323,12 +323,13 @@
     let textStyle: string = "";
 
     autorun(() => {
-        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "]");
+        AUTO_LOGGER.log("TextComponent role " + textBox.role + " text [" + text + "] current [" + currentText() + "] textBox [" + textBox.getText() + "] innertText [" + element?.innerText + "] isEditing [" + isEditing + "]");
         placeholder = textBox.placeHolder;
+        const tmp = textBox.getText();
         // If being edited, do not set the value, let the user type whatever (s)he wants
-        if (!isEditing) {
+        // if (!isEditing) {
             text = textBox.getText();
-        }
+        // }
         // textStyle = ":before {" +  styleToCSS(conceptStyle(editor.style, "light", textBox.element.piLanguageConcept(), "text", textBox.style)) + "}";
         const boxType = (textBox.parent instanceof AliasBox ? "alias" : (textBox.parent instanceof SelectBox ? "select" : "text"));
         textStyle = styleToCSS(conceptStyle(editor.style, editor.theme, textBox.element.piLanguageConcept(), boxType, textBox.style));

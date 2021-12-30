@@ -17,10 +17,10 @@ export class ChangeNotifier {
     dummy: number = 0;
 
     constructor() {
-        // makeObservable(this, {
-        //     dummy: observable,
-        //     notifyChange: action
-        // })
+        makeObservable(this, {
+            dummy: observable,
+            notifyChange: action
+        })
     }
     notifyChange(): void {
         this.dummy++;

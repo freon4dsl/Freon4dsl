@@ -241,7 +241,7 @@ export class PiEditor {
         }
     }
 
-    async deleteBox(box: Box) {
+    deleteBox(box: Box) {
         LOGGER.log("deleteBox");
         const exp: PiElement = box.element;
         const container: PiContainerDescriptor = exp.piContainer();

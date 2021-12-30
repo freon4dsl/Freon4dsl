@@ -28,7 +28,7 @@
     import { writable } from 'svelte/store';
     import type  { Writable } from 'svelte/store';
     import { SelectOptionList } from "./SelectableOptionList";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import SelectableComponent from "./SelectableComponent.svelte";
     import TextComponent from "./TextComponent.svelte";
 
@@ -207,9 +207,9 @@
         return false;
     };
 
-    const selectOption = action ( async (option: SelectOption) => {
+    const selectOption = action ( (option: SelectOption) => {
         LOGGER.log("selectOption ==> EXECUTING ALIAS " + option.label)
-        await choiceBox.selectOption(editor, option);
+        choiceBox.selectOption(editor, option);
         let selected = choiceBox.getSelectedOption();
         LOGGER.log("selectOption: setting textHelper to [" + JSON.stringify(selected) + "]")
         // choiceBox.textHelper.setText(!!selected ? selected.label : "????");
