@@ -28,7 +28,8 @@ export class EnvironmentTemplate {
 
         import { editorStyle } from "../../editor/styles/CustomStyles";
         import { ${Names.initializeLanguage} } from  "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        
+        import { initializeEditorDef } from  "${relativePath}${EDITOR_GEN_FOLDER}";
+
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
          * It holds the currently used editor, scoper, typer, etc, thus providing an entry point for
@@ -65,6 +66,7 @@ export class EnvironmentTemplate {
                 this.editor.rootElement = null;
                 this.editor.environment = this;
                 initializeLanguage();
+                initializeEditorDef();
             }
             
             /**

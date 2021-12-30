@@ -177,7 +177,7 @@
                 case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
-                        await PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
+                        PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
                         e.stopPropagation();
                     }
                     break;

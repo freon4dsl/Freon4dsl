@@ -22,7 +22,7 @@ export class PiEditConcept extends PiDefinitionElement {
     tableProjections: PiEditTableProjection[] = [];
     _trigger: string = null;
     // The name of the reference property for which a shortcut can be used
-    referenceShortcut: PiLangExp;
+    referenceShortcut: PiLangExp = null;
 
     symbol: string = null; // only for binary expressions
 

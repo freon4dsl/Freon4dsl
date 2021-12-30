@@ -1,15 +1,16 @@
 <script lang="ts">
     import { autorun } from "mobx";
     import { afterUpdate, onDestroy, onMount } from "svelte";
-    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, ChangeNotifier, FOCUS_LOGGER, MOUNT_LOGGER, UPDATE_LOGGER } from "./ChangeNotifier";
     import RenderComponent from "./RenderComponent.svelte";
     import { Box, conceptStyle, HorizontalListBox, PiEditor, PiLogger, styleToCSS } from "@projectit/core";
     import { isHorizontalBox } from "@projectit/core";
 
     // Parameters
-    export let list = new HorizontalListBox(null, "l1");
+    export let list ; //= new HorizontalListBox(null, "l1");
     export let editor: PiEditor;
 
+    // console.log("LIST COMPONET READ " + list?.role)
     // Local state variables
     let LOGGER: PiLogger = new PiLogger("ListComponent");
     let svList: HorizontalListBox = list;
@@ -27,6 +28,7 @@
         }
     }
     onMount( () => {
+        MOUNT_LOGGER.log("ListComponent onMount --------------------------------")
         list.setFocus = setFocus;
     });
 
@@ -40,9 +42,8 @@
     let gridStyle;
     let cssGrgVars: string;
     autorun(() => {
+        LOGGER.log("AUtorun list")
         svNotifier.dummy
-        // let boxes: ReadonlyArray<Box> = [];
-        AUTO_LOGGER.log("ListComponent[" + "] " + list.role + " children " + list.children.length)
         svList = list;
         list.setFocus = setFocus;
 
@@ -75,6 +76,11 @@
         // e.preventDefault();
         // e.stopPropagation();
     }
+
+    function box(box: Box): Box {
+        console.log("render box " + box.role);
+        return box;
+    }
 </script>
 
 <span class="list-component"
@@ -87,13 +93,13 @@
 >
     {#if isHorizontalBox(svList) }
         <div class="horizontalList"  on:click>
-            {#each svList.children as box (box.id)}
+            {#each svList.children as box (box.$id)}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>
     {:else}
         <div class="verticalList"  on:click>
-            {#each svList.children as box (box.id)}
+            {#each svList.children as box (box.$id)}
                 <RenderComponent box={box} editor={editor}/>
             {/each}
         </div>

@@ -1,5 +1,8 @@
+import { ReferenceShortcut } from "../editor/index";
 import { PiElement } from "../language/PiElement";
-import { isNullOrUndefined } from "../util";
+import { isNullOrUndefined, PiLogger } from "../util";
+
+const LOGGER = new PiLogger("Language");
 
 // TODO see if other types need to be added
 export type PropertyType = "primitive" | "part" | "reference";
@@ -28,9 +31,12 @@ export type Concept = {
     typeName: string;
     baseName: string;
     subConceptNames: string[];
+    trigger: string;
+    referenceShortcut?: ReferenceShortcut;
     properties: Map<string, Property>;
     constructor: () => PiElement;
 };
+
 export type Interface = {
     isPublic: boolean;
     typeName: string;
@@ -65,6 +71,7 @@ export class Language {
     }
 
     concept(typeName): Concept {
+        // console.log("Language find concept " + typeName + " ==> " + this.concepts.get(typeName));
         return this.concepts.get(typeName);
     }
 
@@ -91,6 +98,7 @@ export class Language {
     }
 
     conceptProperty(typeName, propertyName): Property {
+        LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
         return this.concepts.get(typeName).properties.get(propertyName);
     }
 

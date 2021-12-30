@@ -1,7 +1,7 @@
 import { makeObservable, observable } from "mobx";
 import { PiElement } from "../../language";
 import { BehaviorExecutionResult, PiCaret, PiKey, PiUtils } from "../../util";
-import { PiEditor } from "../internal";
+import { BoxFactory, PiEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
 export abstract class AbstractChoiceBox extends Box {
@@ -21,7 +21,7 @@ export abstract class AbstractChoiceBox extends Box {
             textHelper: observable
         });
         PiUtils.initializeObject(this, initializer);
-        this.textBox = new TextBox(
+        this.textBox = BoxFactory.text(
             exp,
             "alias-" + role + "-textbox",
             () => {
@@ -42,7 +42,7 @@ export abstract class AbstractChoiceBox extends Box {
 
 
 
-    async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
+    selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
         console.error("AbstractChoiceBox.selectOption")
         return BehaviorExecutionResult.NULL;
     };

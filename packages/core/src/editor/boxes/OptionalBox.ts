@@ -1,7 +1,7 @@
 import { computed, observable, makeObservable } from "mobx";
 
 import { PiElement } from "../../language/";
-import { Box, AliasBox } from "./internal";
+import { Box, AliasBox, BoxFactory } from "./internal";
 
 export type BoolFunctie = () => boolean;
 
@@ -26,7 +26,7 @@ export class OptionalBox extends Box {
         });
         this.box = box;
         box.parent = this;
-        this.whenNoShowingAlias = new AliasBox(element, role, aliasText);
+        this.whenNoShowingAlias = BoxFactory.alias(element, role, aliasText);
         this.whenNoShowingAlias.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;

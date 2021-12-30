@@ -124,8 +124,8 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     };
 
     const setter = function(this: any, val: DecoratedModelElement) {
-        let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
-        const storedValue = storedObserver ? storedObserver.get() : null;
+         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
+        const storedValue = !!storedObserver ? storedObserver.get() : null;
         // Clean container of current part
         if (!!storedValue) {
             storedValue.container = null;

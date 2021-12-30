@@ -299,7 +299,7 @@ export class ProjectionTemplate {
                         result += this.conceptPartTableProjection(item.tableInfo.direction, appliedFeature, elementVarName, language);
                     }
                 } else { // single element
-                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${appliedFeature.name}", this.rootProjection) `;
+                    result += `BoxUtils.getBoxOrAlias(${elementVarName}, "${appliedFeature.name}", "${appliedFeature.type.name}", this.rootProjection) `;
                 }
             } else { // reference
                 if (appliedFeature.isList) {

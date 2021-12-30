@@ -22,7 +22,7 @@ export class InternalCustomBehavior extends InternalBehavior implements PiCustom
     }
 
     execute(box: Box, text: string, editor: PiEditor): PiElement | null {
-        LOGGER.info(this, "execute custom alias ok");
+        LOGGER.log("execute custom alias ok");
         LOGGER.log("    text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
         const selected = this.action(box, text, editor);
         if (!!selected) {

@@ -66,7 +66,7 @@
     };
 
     onMount(() => {
-        MOUNT_LOGGER.log("onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
+        MOUNT_LOGGER.log("AliasComponent.onMount for role [" + choiceBox.role + "] with textComponent " + textComponent);
         choiceBox.textBox.setFocus = setFocus;
         choiceBox.setFocus = setFocus;
         const selected = choiceBox.getSelectedOption();
@@ -247,7 +247,7 @@
                 case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
-                        await PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
+                        PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
                         e.stopPropagation();
                     }
                     break;

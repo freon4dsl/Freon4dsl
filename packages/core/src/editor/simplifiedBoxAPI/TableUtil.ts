@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import {
     AliasBox,
-    Box,
+    Box, BoxFactory,
     BoxUtils,
     GridBox,
     GridCell, GridOrientation,
@@ -105,7 +105,7 @@ export class TableUtil {
                     cells.push({
                         row: location.row,
                         column: location.column,
-                        box: new HorizontalListBox(item, cellRoleName, [projector(item), new AliasBox(item, "new-" + columnIndex, NBSP,
+                        box: BoxFactory.horizontalList(item, cellRoleName, [projector(item), BoxFactory.alias(item, "new-" + columnIndex, NBSP,
                             { propertyName: propertyName, conceptName: propInfo.type }
                              )]),
                         style: cellStyle
@@ -119,7 +119,7 @@ export class TableUtil {
                 column: location.column,
                 columnSpan: (orientation === "row" ? cellGetters.length : 1),
                 rowSpan: (orientation === "row" ? 1 : cellGetters.length),
-                box: new AliasBox(element, "alias-add-row-or-column", `<add new ${orientation}>`,
+                box: BoxFactory.alias(element, "alias-add-row-or-column", `<add new ${orientation}>`,
                     { propertyName: propertyName, conceptName: propInfo.type }),
                 style: cellStyle
             });
@@ -170,7 +170,7 @@ export class TableUtil {
             activeInBoxRoles: ["new-0", "new-1", "new-2", "new-3", "new-4", "new-5", "new-6", "new-7", "new-8", "new-9", "new-10",
                 "alias-new-0-textbox", "alias-new-1-textbox", "alias-new-2-textbox", "alias-new-3-textbox", "alias-new-4-textbox",
                 "alias-new-5-textbox", "alias-new-6-textbox", "alias-new-7-textbox", "alias-new-8-textbox", "alias-new-9-textbox"],
-            action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
+            action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
                 const element = box.element;
                 const proc = element.piContainer();
                 const parent: PiElement = proc.container;
@@ -188,7 +188,7 @@ export class TableUtil {
                 });
 
                 editor.selectElement(newElement);
-                await editor.selectFirstEditableChildBox();
+                editor.selectFirstEditableChildBox();
                 // await editor.selectFirstLeafChildBox();
                 return newElement;
             }
@@ -204,7 +204,7 @@ export class TableUtil {
         return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
-            action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
+            action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
                 const element = box.element;
                 const aliasBox = box.parent as AliasBox;
                 LOGGER.log("New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
@@ -219,7 +219,7 @@ export class TableUtil {
                 });
 
                 editor.selectElement(newElement);
-                await editor.selectFirstEditableChildBox();
+                editor.selectFirstEditableChildBox();
                 // await editor.selectFirstLeafChildBox();
                 return newElement;
             }

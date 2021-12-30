@@ -38,9 +38,12 @@ let verticalListCache: BoxCache<VerticalListBox> = {};
 
 let cacheAliasOff: boolean = false;
 let cacheLabelOff: boolean = false;
-let cacheTextOff: boolean = true;
-let cacheSelectOff: boolean = true;
-let cacheIndentOff: boolean = true;
+let cacheTextOff: boolean = false;
+let cacheSelectOff: boolean = false;
+let cacheIndentOff: boolean = false;
+let cacheOptionalOff: boolean = false;
+let cacheHorizontalOff: boolean = false;
+let cacheVerticalOff: boolean = false;
 
 /**
  * Caching of boxes, avoid recalculating them.
@@ -63,6 +66,9 @@ export class BoxFactory {
         cacheTextOff = true;
         cacheSelectOff = true;
         cacheIndentOff = true;
+        cacheOptionalOff = true;
+        cacheHorizontalOff = true;
+        cacheVerticalOff = true;
     }
     public static cachesOn() {
         cacheAliasOff = false;
@@ -70,6 +76,9 @@ export class BoxFactory {
         cacheTextOff = false;
         cacheSelectOff = false;
         cacheIndentOff = false;
+        cacheOptionalOff = false;
+        cacheHorizontalOff = false;
+        cacheVerticalOff = false;
     }
 
     /**
@@ -86,7 +95,7 @@ export class BoxFactory {
         if (!!cache[elementId]) {
             const box = cache[elementId][role];
             if (!!box) {
-                LOGGER.log(":: new " + box.kind + " for entity " + elementId + " role " + role + " already exists");
+                LOGGER.log(":: EXISTS " + box.kind + " for entity " + elementId + " role " + role + " already exists");
                 return box;
             } else {
                 const newBox = creator();
@@ -128,8 +137,10 @@ export class BoxFactory {
         const creator = () => new LabelBox(element, role, getLabel, initializer);
         const result: LabelBox = this.find<LabelBox>(element, role, creator, labelCache);
 
-        // 2. Apply the other arguments in case they have changed
-        PiUtils.initializeObject(result, initializer);
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            PiUtils.initializeObject(result, initializer);
+        });
 
         return result;
     }
@@ -142,10 +153,12 @@ export class BoxFactory {
         const creator = () => new TextBox(element, role, getText, setText, initializer);
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
-        // 2. Apply the other arguments in case they have changed
-        result.getText = getText;
-        result.setText = setText;
-        PiUtils.initializeObject(result, initializer);
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            result.getText = getText;
+            result.setText = setText;
+            PiUtils.initializeObject(result, initializer);
+        });
 
         return result;
     }
@@ -164,11 +177,39 @@ export class BoxFactory {
     }
 
     static horizontalList(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>): HorizontalListBox {
-        return new HorizontalListBox(element, role, children, initializer);
+        if (cacheHorizontalOff) {
+            return new HorizontalListBox(element, role, children, initializer);
+        }
+        const creator = () => new HorizontalListBox(element, role, children, initializer);
+        const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            if( !equals(result.children, children)) {
+                result.clearChildren();
+                result.addChildren(children);
+            }
+            PiUtils.initializeObject(result, initializer);
+        });
+
+        return result;
     }
 
     static verticalList(element: PiElement, role: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>): VerticalListBox {
-        return new VerticalListBox(element, role, children, initializer);
+        if (cacheVerticalOff) {
+            return new VerticalListBox(element, role, children, initializer);
+        }
+        const creator = () => new VerticalListBox(element, role, children, initializer);
+        const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            if( !equals(result.children, children)) {
+                result.clearChildren();
+                result.addChildren(children);
+            }
+            PiUtils.initializeObject(result, initializer);
+        });
+
+        return result;
     }
 
     static select(element: PiElement,
@@ -176,7 +217,7 @@ export class BoxFactory {
                   placeHolder: string,
                   getOptions: (editor: PiEditor) => SelectOption[],
                   getSelectedOption: () => SelectOption | null,
-                  selectOption: (editor: PiEditor, option: SelectOption) => Promise<BehaviorExecutionResult>,
+                  selectOption: (editor: PiEditor, option: SelectOption) => BehaviorExecutionResult,
                   initializer?: Partial<SelectBox>): SelectBox {
         if (cacheSelectOff) {
             return new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
@@ -185,17 +226,40 @@ export class BoxFactory {
         const creator = () => new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         const result: SelectBox = this.find<SelectBox>(element, role, creator, selectCache);
 
-        // 2. Apply the other arguments in case they have changed
-        result.placeholder = placeHolder;
-        result.getOptions = getOptions;
-        result.getSelectedOption = getSelectedOption;
-        result.selectOption = selectOption;
-        PiUtils.initializeObject(result, initializer);
+        runInAction( () => {
+            // 2. Apply the other arguments in case they have changed
+            result.placeholder = placeHolder;
+            result.getOptions = getOptions;
+            result.getSelectedOption = getSelectedOption;
+            result.selectOption = selectOption;
+            PiUtils.initializeObject(result, initializer);
+        });
 
         return result;
     }
 
     static optional(element: PiElement, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, aliasText: string): OptionalBox {
-        return new OptionalBox(element, role, condition, box, mustShow, aliasText);
+        if (cacheOptionalOff) {
+            return new OptionalBox(element, role, condition, box, mustShow, aliasText);
+        }
+        // 1. Create the alias box, or find the one that already exists for this element and role
+        const creator = () => new OptionalBox(element, role, condition ,box, mustShow, aliasText);
+        const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
+
+        // 2. Apply the other arguments in case they have changed
+        // PiUtils.initializeObject(result, initializer);
+
+        return result;
+
     }
 }
+
+const equals = (a, b) => {
+    if( a === undefined && b !== undefined || a !== undefined && b === undefined ) {
+        return false;
+    }
+    if( a=== undefined && b === undefined) {
+        return true;
+    }
+    return a.length === b.length && a.every((v, i) => v === b[i])
+};
