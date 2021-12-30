@@ -42,7 +42,7 @@ export abstract class AbstractChoiceBox extends Box {
 
 
 
-    async selectOption(editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> {
+    selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
         console.error("AbstractChoiceBox.selectOption")
         return BehaviorExecutionResult.NULL;
     };

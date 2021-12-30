@@ -78,23 +78,6 @@ export class DefaultActionsTemplate {
             ];
             
             export const KEYBOARD: KeyboardShortcutBehavior[] = [
-                ${flatten(language.concepts.map(c => c.allParts())).filter(p => p.isList).map(part => {
-                    const parentConcept = part.owningConcept;
-                    const partConcept = part.type.referred;
-                    // TODO add keyboard shortcut
-                    return `
-                    // {
-                    //     activeInBoxRoles: ["new-${part.name}"],
-                    //     trigger: { meta: MetaKey.None, keyCode: Keys.ENTER},
-                    //     action: (box: Box, trigger: PiTriggerType, ed: PiEditor): Promise< PiElement> => {
-                    //         var parent: ${Names.classifier(parentConcept)} = box.element as ${Names.classifier(parentConcept)};
-                    //         const new${part.name}: ${Names.classifier(partConcept)} = new ${Names.classifier(partConcept)}();
-                    //         parent.${part.name}.push(new${part.name});
-                    //         return Promise.resolve(new${part.name});
-                    //     },
-                    //     boxRoleToSelect: "${part.name}-name"
-                    // }`;
-                 }).join(",")}
             ];
             `;
         }
@@ -214,7 +197,8 @@ export class DefaultActionsTemplate {
                                                         const parent = box.element;
                                                         parent[(box as AliasBox).propertyName] = null;
                                                      }` : undefined),
-                        boxRoleToSelect: `${this.cursorLocation(editorDef, partType)}` /* CURSOR 4  ${subClass.name} */
+                        // TODO "-textbox" added to match role naames in new BoxUtil.
+                        boxRoleToSelect: `${this.cursorLocation(editorDef, partType)}-textbox` /* CURSOR 4  ${subClass.name} */
                     }
                 );
             }
@@ -261,20 +245,20 @@ export class DefaultActionsTemplate {
                 });
             }
         }));
-        for (const elem of behaviorMap.map.values()) {
-            // console.log("FOUND "+ elem.trigger + " roles: " + elem.activeInBoxRoles.length + " ==> " + elem.activeInBoxRoles);
-            result += `
-                    {
-                        // ProjectIt Generator: custom Action for creating a PiElement
-                        activeInBoxRoles: [${elem.activeInBoxRoles.map(role => `"${role}"`).join(",")}],
-                        trigger: "${elem.trigger}",  // for single Concept part
-                        action: ${elem.action},
-                        ${!!elem.referenceShortcut  ? `referenceShortcut: ${elem.referenceShortcut},` : ``}
-                        ${!!elem.undo               ? `undo: ${elem.undo},`                           : ``}
-                        boxRoleToSelect: "${elem.boxRoleToSelect}" /* CURSOR 4 */
-                    },
-                    `;
-        }
+        // for (const elem of behaviorMap.map.values()) {
+        //     // console.log("FOUND "+ elem.trigger + " roles: " + elem.activeInBoxRoles.length + " ==> " + elem.activeInBoxRoles);
+        //     result += `
+        //             {
+        //                 // ProjectIt Generator: custom Action for creating a PiElement
+        //                 activeInBoxRoles: [${elem.activeInBoxRoles.map(role => `"${role}"`).join(",")}],
+        //                 trigger: "${elem.trigger}",  // for single Concept part
+        //                 action: ${elem.action},
+        //                 ${!!elem.referenceShortcut  ? `referenceShortcut: ${elem.referenceShortcut},` : ``}
+        //                 ${!!elem.undo               ? `undo: ${elem.undo},`                           : ``}
+        //                 boxRoleToSelect: "${elem.boxRoleToSelect}-textbox" /* CURSOR 4 */
+        //             },
+        //             `;
+        // }
 
         return result;
     }
@@ -282,10 +266,6 @@ export class DefaultActionsTemplate {
     cursorLocation(editorDef: PiEditUnit, c: PiClassifier) {
         const projection = editorDef.findConceptEditor(c).projection;
         if (!!projection) {
-            if (c.name === "DemoEntity") {
-                // console.log("DemoEntity cursorLocation: " + projection.cursorLocation());
-                // console.log(projection.toString());
-            }
             return projection.cursorLocation();
         } else {
             if (c instanceof PiBinaryExpressionConcept) {

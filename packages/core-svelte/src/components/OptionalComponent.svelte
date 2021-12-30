@@ -2,17 +2,17 @@
     import RenderComponent from "./RenderComponent.svelte";
     import { onDestroy, onMount, afterUpdate } from "svelte";
     import { autorun } from "mobx";
-    import { OptionalBox, PiLogger } from "@projectit/core";
+    import { getRoot, OptionalBox, PiLogger } from "@projectit/core";
     import type { PiEditor } from "@projectit/core";
-    import { AUTO_LOGGER, FOCUS_LOGGER } from "./ChangeNotifier";
+    import { AUTO_LOGGER, FOCUS_LOGGER, MOUNT_LOGGER } from "./ChangeNotifier";
 
-    export let optionalBox = new OptionalBox(null, "boxRole", null, null, null, "This is a box");
+    export let optionalBox;//= new OptionalBox(null, "boxRole", null, null, null, "This is a box");
     export let editor: PiEditor;
 
     const LOGGER = new PiLogger("OptionalComponent");
 
     onDestroy(() => {
-        LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ text + "]")
+        LOGGER.log("DESTROY OPTIONAL COMPONENT ["+ optionalBox.id + "]")
     });
 
     let mustShow = false;
@@ -29,18 +29,34 @@
     };
 
     onMount( () => {
+        MOUNT_LOGGER.log("OptionalComponent onMount --------------------------------")
         optionalBox.setFocus = setFocus;
     });
     afterUpdate( () => {
+        LOGGER.log("AfterUpdate " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
+        LOGGER.log("   root " + getRoot(optionalBox).$id);
+        if(optionalBox.box.kind === "HorizontalListBox") {
+            optionalBox.box.children.forEach( child => {
+                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
+            })
+        }
+
         optionalBox.setFocus = setFocus;
     });
 
-    let text: string;
+    let childBox ;
+
     autorun( () => {
+        LOGGER.log("AUTO " + optionalBox.$id + " :" + optionalBox.role + " mustshow: " + optionalBox.mustShow + " condition " + optionalBox.showByCondition + "  child " + optionalBox.box.element.piLanguageConcept() + ":" + optionalBox.box.kind + " : " + optionalBox.box.$id);
+        LOGGER.log("   root " + getRoot(optionalBox).$id);
+        if(optionalBox.box.kind === "HorizontalListBox") {
+            optionalBox.box.children.forEach( child => {
+                LOGGER.log("    child " + child.$id + " role " + child.role + " : " + child.kind);
+            })
+        }
         mustShow = optionalBox.mustShow;
+        childBox = optionalBox.box;
         showByCondition = optionalBox.showByCondition;
-        text = "Dummy OptionalBox";
-        AUTO_LOGGER.log("OptionalComponent ["+ text + "]")
     });
 </script>
 

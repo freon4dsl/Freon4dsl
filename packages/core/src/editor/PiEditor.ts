@@ -106,7 +106,7 @@ export class PiEditor {
         this.selectedPosition = caretPosition;
         wait(0);
         LOGGER.log("  ==> selectElement " + (!!element && element) + " Role: " + role + " caret: " + caretPosition?.position);
-        const rootBox = this.rootBox;
+        const rootBox = this.$rootBox;
         const box = rootBox.findBox(element.piId(), role);
         LOGGER.log("  ==> selectElement found box " + (!!box && box.kind));
         if (box) {
@@ -124,13 +124,13 @@ export class PiEditor {
     selectBoxNew(box: Box, caretPosition?: PiCaret) {
         LOGGER.log("SelectBoxNEW " + (box ? box.role : box) + "  caret " + caretPosition?.position + " NOSELECT[" + this.NOSELECT + "]");
         if( this.NOSELECT) { return; }
-        this.selectBox(this.rootBox.findBox(box.element.piId(), box.role), caretPosition);
+        this.selectBox(this.$rootBox.findBox(box.element.piId(), box.role), caretPosition);
     }
 
     selectBoxByRoleAndElementId(elementId: string, role: string, caretPosition?: PiCaret) {
         LOGGER.log("selectBoxByRoleAndElementId " + elementId + "  role " + role);
         if( this.NOSELECT) { return; }
-        this.selectBox(this.rootBox.findBox(elementId, role));
+        this.selectBox(this.$rootBox.findBox(elementId, role));
     }
 
     private selectBox(box: Box | null, caretPosition?: PiCaret) {
@@ -185,8 +185,11 @@ export class PiEditor {
     get rootBox(): Box {
         LOGGER.log("RECALCULATING ROOT [" + this.rootElement + "]");
         // trace(true);
-        return this.projection.getBox(this.rootElement);
-        // return this.$rootBox;
+        const result =  this.projection.getBox(this.rootElement);
+        LOGGER.log("Root box id is " + result.$id);
+        this.$rootBox = result;
+        LOGGER.log("Root box id is set now");
+        return result
     }
 
     selectParentBox() {
@@ -238,7 +241,7 @@ export class PiEditor {
         }
     }
 
-    async deleteBox(box: Box) {
+    deleteBox(box: Box) {
         LOGGER.log("deleteBox");
         const exp: PiElement = box.element;
         const container: PiContainerDescriptor = exp.piContainer();
@@ -273,7 +276,7 @@ export class PiEditor {
         // }
     }
 
-    async selectFirstEditableChildBox() {
+    selectFirstEditableChildBox() {
         const first = this.selectedBox.firstEditableChild;
         LOGGER.log("selectFirstEditableChildBox: " + first.kind + " elem: " + first.element + "  role " + first.role);
         if (first) {

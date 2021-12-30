@@ -78,7 +78,7 @@ export interface PiCustomBehavior extends PiBehavior {
 // TODO Use this to replace KeyboardShortcutTrigger
 export interface KeyboardShortcutBehavior extends PiBehavior {
     trigger: PiKey;
-    action: (box: Box, trigger: PiKey, editor: PiEditor, propertyName?: string) => Promise<PiElement>;
+    action: (box: Box, trigger: PiKey, editor: PiEditor, propertyName?: string) => PiElement;
 }
 
 export function isRegExp(a: PiTriggerType): a is RegExp {

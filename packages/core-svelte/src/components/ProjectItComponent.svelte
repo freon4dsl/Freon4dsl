@@ -24,7 +24,7 @@
 
     }
 
-    const onKeyDown = async (event: KeyboardEvent) => {
+    const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey);
         // event.persist();
         if (event.ctrlKey || event.altKey) {

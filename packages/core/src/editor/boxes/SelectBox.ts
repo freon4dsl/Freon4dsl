@@ -25,7 +25,7 @@ export class SelectBox extends AbstractChoiceBox {
         placeHolder: string,
         getOptions: (editor: PiEditor) => SelectOption[],
         getSelectedOption: () => SelectOption | null,
-        selectOption: (editor: PiEditor, option: SelectOption) => Promise<BehaviorExecutionResult>,
+        selectOption: (editor: PiEditor, option: SelectOption) => BehaviorExecutionResult,
         initializer?: Partial<SelectBox>
     ) {
         super(exp, role, placeHolder, initializer);

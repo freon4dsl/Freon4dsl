@@ -133,7 +133,7 @@ export class BoxUtils {
                         return { id: labels.no, label: labels.no };
                     }
                 },
-                async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                 (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
                     if (option.id === labels.yes) {
                         element[propertyName][index] = true;
                     } else if (option.id === labels.no) {
@@ -155,7 +155,7 @@ export class BoxUtils {
                         return { id: labels.no, label: labels.no };
                     }
                 },
-                async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+                (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
                     if (option.id === labels.yes) {
                         element[propertyName] = true;
                     } else if (option.id === labels.no) {
@@ -219,7 +219,7 @@ export class BoxUtils {
                     return null;
                 }
             },
-            async (editor: PiEditor, option: SelectOption): Promise<BehaviorExecutionResult> => {
+             (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
                 console.log("==> SET selected option for property " + propertyName + " of " + element["name"] +  " to " + option?.label)
                 if (!!option) {
                     console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
@@ -344,13 +344,15 @@ export class BoxUtils {
         }
     }
 
-    static getBoxOrAlias(element: PiElement, propertyName: string, rootProjection: PiProjection) {
+    static getBoxOrAlias(element: PiElement, propertyName: string, conceptName: string, rootProjection: PiProjection): Box {
         // find the information on the property to be shown
         const property = element[propertyName];
         const roleName = RoleProvider.property(element.piLanguageConcept(), propertyName);
-        return !!property
+        const result =  !!property
             ? rootProjection.getBox(property)
-            : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName });
+            : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
+        console.log("ALIAS OR BOX: " + propertyName + " => " + property + " result: " + result.kind);
+        return result;
     }
 
     /**
@@ -373,13 +375,13 @@ export class BoxUtils {
         return res;
     }
 
-    private static addPlaceholder(children, element: PiElement, propertyName: string) {
+    private static addPlaceholder(children: Box[], element: PiElement, propertyName: string) {
         return children.concat(
             BoxFactory.alias(
                 element,
                 RoleProvider.property(element.piLanguageConcept(), propertyName, "new-list-item"),
                 `<+ ${propertyName}>`,
-                { propertyName: `${propertyName}` })
+                { propertyName: `${propertyName}`, conceptName: Language.getInstance().classifierProperty(element.piLanguageConcept(), propertyName).type })
         );
     }
 

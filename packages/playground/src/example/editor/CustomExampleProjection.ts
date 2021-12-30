@@ -10,7 +10,7 @@ import {
     SvgBox,
     GridCell,
     AliasBox,
-    GridBox
+    GridBox, Language, PI_BINARY_EXPRESSION_LEFT, PI_BINARY_EXPRESSION_RIGHT
 } from "@projectit/core";
 import { OrExpression } from "../language/gen";
 import { SumExpression } from "../language/gen";
@@ -113,11 +113,11 @@ export class CustomExampleProjection implements PiProjection {
     }
 
 
-    optionalPartBox(element: PiElement, roleName: string, property: string): Box {
+    private optionalPartBox(element: PiElement, roleName: string, property: string): Box {
         const projectionToUse = !!this.rootProjection ? this.rootProjection : this;
         return !!element[property]
             ? projectionToUse.getBox(element[property])
-            : new AliasBox(element, roleName, "[" + property + "]", { propertyName: property });
+            : new AliasBox(element, roleName, "[" + property + "]", { propertyName: property, conceptName: Language.getInstance().classifier(element.piLanguageConcept()).properties.get(property).type });
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -136,19 +136,19 @@ export class CustomExampleProjection implements PiProjection {
                 {
                     row: 1,
                     column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp.left, "OrExpression-left", "left"),
+                    box: this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_LEFT, "left"),
                     style: or_gridcellFirst
                 },
                 {
                     row: 2,
                     column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp.left, "OrExpression-right", "right"),
+                    box: this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_RIGHT, "right"),
                     style: gridcell
                 },
                 {
                     row: 3,
                     column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp, "OrExpression-right", "right"),
+                    box: this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
                     style: gridcellLast
                 }
             );
@@ -164,13 +164,13 @@ export class CustomExampleProjection implements PiProjection {
                 {
                     row: 1,
                     column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp, "OrExpression-left", "left"),
+                    box: this.optionalPartBox(exp, PI_BINARY_EXPRESSION_LEFT, "left"),
                     style: or_gridcellFirst
                 },
                 {
                     row: 2,
                     column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp, "OrExpression-right", "right"),
+                    box: this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
                     style: gridcellLast
                 }
             );

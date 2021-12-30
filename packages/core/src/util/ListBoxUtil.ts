@@ -28,7 +28,7 @@ export function createKeyboardShortcutForList<ELEMENT_TYPE extends PiElement>(
     const listKeyboardShortcut: KeyboardShortcutBehavior = {
         trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
         activeInBoxRoles: ["list-for-" + collectionRole],
-        action: async (box: Box, key: PiKey, editor: PiEditor): Promise<PiElement> => {
+        action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
             LOGGER.log("createKeyboardShortcutForList: Action: list-for-" + collectionRole);
             const element = box.element;
             const proc = element.piContainer();
