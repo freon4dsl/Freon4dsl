@@ -222,13 +222,12 @@ export class BoxUtils {
              (editor: PiEditor, option: SelectOption): BehaviorExecutionResult => {
                 console.log("==> SET selected option for property " + propertyName + " of " + element["name"] +  " to " + option?.label)
                 if (!!option) {
+                    console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
                     runInAction( () => {
-                        // element[propertyName] = Language.getInstance().referenceCreator(option.label, propType);
-                        setFunc(option.label);
+                        element[propertyName] = setFunc(option.label);
                     });
                 } else {
-                    // element[propertyName] = Language.getInstance().referenceCreator("unknown", propType);
-                    property = null;
+                    element[propertyName] = null;
                 }
                 return BehaviorExecutionResult.EXECUTED;
             },
@@ -266,7 +265,7 @@ export class BoxUtils {
         // find the information on the property to be shown
         let { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a part list
-        if (property !== undefined && propertyName !== null && isList && isPart !== "reference") {
+        if (property !== undefined && propertyName !== null && isList && isPart === "part") {
             // find the children to show in this listBox
             let children = this.findPartItems(property, element, propertyName, rootProjection, listJoin);
             // add a placeholder where a new element can be added

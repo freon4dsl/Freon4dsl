@@ -373,6 +373,7 @@ export class PiConceptProperty extends PiProperty {
 export class PiPrimitiveProperty extends PiProperty {
     isStatic: boolean;
     // only one of 'initialValue' and 'initialValueList' may have a value
+    // TODO see if we can improve this
     initialValue: PiPrimitiveValue;
     initialValueList: PiPrimitiveValue[];
 
