@@ -224,7 +224,7 @@ export class BoxUtils {
                 if (!!option) {
                     console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
                     runInAction( () => {
-                        element[propertyName] = setFunc(option.label);
+                        setFunc(option.label);
                     });
                 } else {
                     element[propertyName] = null;
