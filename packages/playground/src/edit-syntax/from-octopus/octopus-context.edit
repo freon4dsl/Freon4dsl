@@ -1,0 +1,19 @@
+editor YYY
+
+OclPart {
+        [package ${pack}
+            ${constraints vertical separator[\n]}
+        ]
+}
+
+OclContext {
+    [
+    context ${owningModelelement}
+    ${usageType}: [? ${definedOperation} =][? ${definedAttribute} =]${expression}
+    ]
+
+}
+
+ModelElementReference {
+    [ ${surroundingClassifier}[?::${feature}]]
+}

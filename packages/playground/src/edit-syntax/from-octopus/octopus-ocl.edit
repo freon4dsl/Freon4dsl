@@ -1,0 +1,75 @@
+editor default
+
+AssociationClassCallExp {
+    [${referredAssociationClass}]
+}
+AssociationEndCallExp {
+    [${referredAssociationEnd}]
+}
+AttributeCallExp {
+    [${referredAttribute}]
+}
+BooleanLiteralExp {
+    [${value}]
+}
+CollectionItem {
+    [${item}]
+}
+CollectionLiteralExp {
+    [Collection ${parts horizontal separator[, ]} ]
+}
+CollectionRange {
+    [${first} .. ${last}]
+}
+EnumLiteralExp {
+    [${referredEnumLiteral}]
+}
+IfExp {
+    [if ${condition} then ${ifExpression} [?else ${elseExpression}] endif]
+}
+IntegerLiteralExp {
+    [${value}]
+}
+LetExp {
+    [let ${variables horizontal separator[, ]}
+    in ${inExpression}
+    ]
+}
+NavigationCallExp {
+    [${navigationSource:someOtherProjection}]
+}
+OclMessageExp {
+    [<${target}>^^${calledOperation}( ${args horizontal separator[, ]} )]
+}
+OclStateLiteralExp {
+    [${referredState}]
+}
+OclTypeLiteralExp {
+    [${referredClassifier}]
+}
+OclUndefinedLiteralExp {
+    [${value}]
+    trigger = "xxx"
+}
+OperationCallExp {
+    [${referredOperation} ( ${args horizontal separator[, ]} )]
+}
+RealLiteralExp {
+    [${value}]
+}
+StringLiteralExp {
+    [${value}]
+}
+TupleLiteralExp {
+    [Tuple ${tupleParts table rows  }]
+}
+VariableDeclaration {
+    [${name} : ${type} [?= ${initExpression}]]
+}
+
+VariableExp {
+    [${referredVariable} [=> OclExpression]]
+}
+OclExpression {
+    [[?. ${appliedProperty}]]
+}

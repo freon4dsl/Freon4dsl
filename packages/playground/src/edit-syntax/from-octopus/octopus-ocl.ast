@@ -1,0 +1,142 @@
+// this part contains all metamodel elements from the Object Constraint Language
+language octopus
+
+expression AssociationClassCallExp base NavigationCallExp {
+    reference referredAssociationClass: AssociationClass;
+}
+
+expression AssociationEndCallExp base NavigationCallExp {
+    reference referredAssociationEnd: AssociationEnd;
+}
+
+expression AttributeCallExp base ModelPropertyCallExp {
+    reference referredAttribute: Attribute;
+}
+
+expression BooleanLiteralExp base PrimitiveLiteralExp {
+    value: boolean;
+}
+
+expression CollectionItem base CollectionLiteralPart {
+    item: OclExpression;
+}
+
+expression CollectionLiteralExp base LiteralExp {
+    parts: CollectionLiteralPart[];
+}
+
+concept CollectionLiteralPart {
+}
+
+concept CollectionRange base CollectionLiteralPart {
+    first: OclExpression;
+    last: OclExpression;
+}
+
+expression EnumLiteralExp base LiteralExp {
+    reference referredEnumLiteral: EnumLiteral;
+}
+
+expression IfExp base OclExpression {
+    condition: OclExpression;
+    ifExpression: OclExpression;
+    elseExpression?: OclExpression;
+}
+
+expression IntegerLiteralExp base LiteralExp {
+    value: number;
+}
+
+expression IterateExp base LoopExp {
+    result: VariableDeclaration;
+}
+
+expression IteratorExp base LoopExp {
+    reference referredIterator: OclIterator;
+}
+
+expression LetExp base OclExpression {
+    variables: VariableDeclaration[];
+    inExpression: OclExpression;
+}
+
+expression LiteralExp base OclExpression {
+}
+
+abstract expression LoopExp base PropertyCallExp {
+    body: OclExpression;
+    iterators: VariableDeclaration[];
+}
+
+expression ModelPropertyCallExp base PropertyCallExp {
+}
+
+expression NavigationCallExp base ModelPropertyCallExp {
+    reference navigationSource: AssociationEnd;
+}
+
+expression NumericLiteralExp base PrimitiveLiteralExp {
+}
+
+abstract expression OclExpression {
+    isImplicit: boolean;
+    appliedProperty?: PropertyCallExp;
+    reference type: IClassifier;
+}
+
+expression OclMessageExp base OclExpression {
+    target: OclExpression;
+    args: OclExpression[];
+    reference calledOperation: Operation;
+}
+
+expression OclStateLiteralExp base LiteralExp {
+    reference referredState: State;
+}
+
+expression OclTypeLiteralExp base LiteralExp {
+    reference referredClassifier: IClassifier;
+}
+
+expression OclUndefinedLiteralExp base PrimitiveLiteralExp {
+    value: string;
+}
+
+expression OperationCallExp base ModelPropertyCallExp {
+    reference referredOperation: Operation;
+    args: OclExpression[];
+}
+
+expression PrimitiveLiteralExp base LiteralExp {
+}
+
+abstract expression PropertyCallExp base OclExpression {
+    source: OclExpression;
+    isMarkedPre: boolean;
+}
+
+expression RealLiteralExp base LiteralExp {
+    value: number; // TODO replace number by real
+}
+
+expression StringLiteralExp base LiteralExp {
+    value: string;
+}
+
+expression TupleLiteralExp base LiteralExp {
+    tupleParts: VariableDeclaration[];
+}
+
+expression UnspecifiedValueExp base OclExpression {
+}
+
+concept VariableDeclaration implements IModelElement {
+    reference type: IClassifier;
+    initExpression: OclExpression;
+    isIteratorVar: boolean;
+}
+
+expression VariableExp base OclExpression {
+    reference referredVariable: VariableDeclaration;
+}
+

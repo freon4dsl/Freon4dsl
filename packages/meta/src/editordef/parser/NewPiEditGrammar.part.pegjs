@@ -1,7 +1,7 @@
-{
+//{
 //    let creator = require("./NewPiEditCreators");
-    let expCreate = require("../../languagedef/parser/ExpressionCreators");
-}
+//    let expCreate = require("../../languagedef/parser/ExpressionCreators");
+//}
 
 Editor_Definition = ws "editor" ws name:var ws
         x:standardBooleanProjection? ws
@@ -20,12 +20,6 @@ Editor_Definition = ws "editor" ws name:var ws
 //        "location"                      : location()
 //    });
 //}
-
-propProjectionStart     = "${"
-propProjectionEnd       = "}"
-projection_begin        = ws "["
-projection_end          = "]" ws
-projection_separator    = "|"
 
 standardBooleanProjection = "boolean" projection_begin t1:text projection_separator t2:text projection_end
 //{
@@ -76,7 +70,7 @@ extraClassifierInfo =
 //    });
 //}
 
-projection = projection_begin lines:lineWithOptional* projection_end
+projection = projection_begin lines:line*  projection_end
 //{
 //    return creator.createProjection({
 //        "lines" : lines,
@@ -85,59 +79,37 @@ projection = projection_begin lines:lineWithOptional* projection_end
 //}
 
 tableProjection = "table" ws projection_begin ws
-                       headers:( head:textBut
-                                tail:(ws projection_separator ws v:textBut { return v; })* ws
-                                    { return [head].concat(tail); }
-                               )?
-                       cells:( head:property_projection
-                                tail:(ws projection_separator ws v:property_projection { return v; })*
-                                    { return [head].concat(tail); }
-                             ) ws
-                   projection_end
+                   headers:( head:headerText
+                            tail:(ws "|" ws v:headerText { return v; })* ws
+                                { return [head].concat(tail); }
+                           )?
+                   cells:( head:property_projection
+                            tail:(ws "|" ws v:property_projection { return v; })*
+                                { return [head].concat(tail); }
+                         ) ws
+              projection_end
 //              {
 //                    return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 //              }
 
-lineWithOptional = items:(templateSpace / text / property_projection / optionalProjection / superProjection / newline )+
-//                {
-//                    return creator.createlineWithOptional( {"items": items} );
-//                }
-
-lineWithOutOptional = items:(templateSpace / text / property_projection / superProjection / newline )+
-//                {
-//                    return creator.createlineWithOutOptional( {"items": items} );
-//                }
-
-templateSpace = s:[ \t]+
+templateSpace = s:[ ]+
 //                {
 //                    return creator.createIndent( { "indent": s.join(""), "location": location() });
 //                }
 
-text        = chars:anythingBut+
-//            {
-//                return creator.createText( chars.join("") );
-//             }
-
 property_projection = propProjectionStart ws
-                     exp:var (colon_separator editorName:var)? ws join:listJoin? t:tableInfo? keyword:keywordDecl? ws
+                     exp:expression ws join:listJoin? t:tableInfo? keyword:keywordDecl? ws
                  propProjectionEnd
 //            {
 //                return creator.createPropertyProjection( { "expression": exp, "listInfo": join, "tableInfo": t, "keyword":keyword, "location": location() });
 //            }
 
-optionalProjection = projection_begin "?" lines:lineWithOutOptional* projection_end
-//                {
-//                    return creator.createOptionalProjection( {"optional": optional, "items": items} );
-//                }
-
-superProjection = projection_begin "=>" ws exp:var (colon_separator editorName:var)? ws projection_end
-
-tableInfo = "table" ws dir:("rows" / "columns")? ws
+tableInfo = "@table" ws dir:("@rows" / "@columns")? ws
 //            {
 //                return creator.createTableInfo( {"direction": dir, "location": location()} );
 //            }
 
-keywordDecl = projection_begin t1:text (projection_separator t2:text)? projection_end //{return text;}
+keywordDecl = "@keyword" ws text:joinText //{return text;}
 
 listJoin =  l:listJoinSimple+
 //                {
@@ -155,38 +127,85 @@ listJoinSimple =      (direction:direction  { return {"direction" : direction, "
                     / (type:listJoinType    { return {"joinType"  : type, "location": location()      }; } )
                     / (t:joinText           { return {"joinText"  : t, "location": location()         }; } )
 
-joinText = "[" t:text "]" ws
+joinText = "[" t:anythingButEndBracket* "]" ws
 //            {
 //                return t.join("");
 //            }
 
-direction = dir:("horizontal" / "vertical") ws
+direction = dir:("@horizontal" / "@vertical") ws
 //                {
 //                    return creator.createListDirection( {"direction": dir, "location": location() } );
 //                }
 
-listJoinType = joinType:("separator" / "terminator" / "initiator") ws
+listJoinType = joinType:("@separator" / "@terminator") ws
 //                {
 //                    return creator.createJoinType( {"type": joinType, "location": location() } );
 //                }
 
+propProjectionStart = "${"
+propProjectionEnd = "}"
+
+text        = chars:anythingBut+
+//            {
+//                return creator.createText( chars.join("") );
+//             }
+
+anythingButEndBracket = !("]") src:sourceChar
+            {
+                return src;
+            }
+
+anythingBut = !("${" / newline / "]" / "[") src:char
+            {
+                return src;
+            }
+
+headerText  = chars:anythingButBar+
+            {
+                return chars.join("").trim();
+            }
+
+anythingButBar = !("|") src:anythingBut
+            {
+                return src;
+            }
+
+sourceChar = .
+
+newline     = "\r"? "\n"
+//                {
+//                    return creator.createNewline();
+//                }
+
+line        = items:(s:templateSpace / t:text / p:property_projection / sub:subProjection /  w:newline )+
+//                {
+//                    return creator.createLine( {"items": items} );
+//                }
+
+subProjection = projection_begin
+                    optional:"?"?
+                    items:(s:templateSpace / t:text / p:property_projection / w:newline )+
+                projection_end
+//                {
+//                    return creator.createSubProjection( {"optional": optional, "items": items} );
+//                }
 
 conceptReference = referredName:var
 //{
 //    return expCreator.createConceptReference({"name": referredName, "location": location()})
 //}
 
-trigger = "trigger" ws equals_separator ws "\"" value:string "\"" ws
+trigger = "@trigger" ws "\"" value:string "\"" ws
     {
         return value
     }
 
-referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionStart ws exp:var propProjectionEnd ws
+referenceShortcut = "@referenceShortcut" ws exp:expression ws
     {
         return exp
     }
 
-symbol = "symbol" ws equals_separator ws "\"" value:string "\"" ws
+symbol = "@symbol" ws "\"" value:string "\"" ws
     {
         return value
     }
@@ -196,34 +215,7 @@ priority = "priority" ws ":" ws "\"" value:string "\"" ws
         return value
     }
 
-// This rule parses text until one of the special starter chars or string is encountered.
-textBut  = chars:anythingBut+
-            {
-                return chars.join("").trim();
-            }
+projection_begin    = ws "["
+projection_end      = "]" ws
+projection_separator = "|"
 
-// The 'anythingBut' rule parses text until one of the special starter chars or string is encountered.
-// Note that these chars can still be escaped, through the 'char' rule in the basic grammar
-// The following are excluded:
-// propProjectionStart     = "${"
-// projection_begin        = ws "["
-// projection_separator    = "|"
-anythingBut = !("${" / newline / "[" / "|" / "]") src:char
-            {
-                return src;
-            }
-
-//anythingButEndBracket = !("]") src:char
-//            {
-//                return src;
-//            }
-//            
-//anythingButBar = !("|") src:anythingBut
-//            {
-//                return src;
-//            }
-
-newline     = "\r"? "\n"
-//                {
-//                    return creator.createNewline();
-//                }

@@ -1,0 +1,113 @@
+editor default
+
+// concept PiLanguage {
+//    name: identifier;
+//    model: PiModelDescription;
+//    unitDefs: PiUnitDescription[];
+//}
+PiLanguage {
+    [language ${name}
+         ${model}
+         ${unitDefs table rows}
+    ]
+}
+
+// concept PiModelDescription {
+//    name: identifier;
+//    units: PiUnitDescription[];
+//}
+PiModelDescription {
+    [model ${name} {
+        ${units vertical terminator [;]}
+    }
+    ]
+}
+
+PiUnitDescription {
+    [modelunit ${name} {
+        ${properties vertical terminator [;]}
+        file-extension = ${fileExtension};
+    }
+    ]
+}
+
+PiStructureDef {
+    [
+    ${interfaces vertical}
+    ${concepts vertical}
+    ]
+}
+//================================ other file ??? ===============
+//abstract concept PiClassifier {
+//    name: identifier;
+//    isAbstract: boolean;
+//    isPublic: boolean;
+//    properties: PiProperty[];
+//}
+
+PiClassifier {
+    [ ${isPublic [public]} ${isAbstract [abstract | concrete]} ]
+}
+// concept PiInterface base PiClassifier {...}
+PiInterface {
+    [[=> PiClassifier] interface [?base ${base horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+    }
+    ]
+}
+// concept PiConcept base PiClassifier {...}
+PiConcept {
+    [[=> PiClassifier] concept ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+    }
+    ]
+}
+// concept PiExpressionConcept base PiConcept {...}
+PiExpressionConcept {
+    [[=> PiClassifier] expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+    }
+    ]
+}
+// concept PiBinaryExpressionConcept base PiExpressionConcept {...}
+PiBinaryExpressionConcept {
+    [[=> PiClassifier] binary expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+        [?priority = ${priority};]
+    }
+    ]
+}
+// concept PiLimitedConcept base PiConcept {...}
+PiLimitedConcept {
+    [[=> PiClassifier] limited ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+        ${instances vertical }
+    }
+    ]
+}
+// the following two could be using the abstract box definition of PiProperty, but they are not
+PiConceptProperty {
+    [${isPublic [public]} ${isPart [part, reference]} ${name} ${isOptional [?]} : ${type} ${isList [\[\]]}]
+}
+PiPrimitiveProperty {
+    [${isPublic [public]} ${isStatic [static]} ${name} ${isOptional [?]} : ${type} ${isList [\[\]]}]
+}
+
+PiInstance {
+    [${name} = {
+        ${propertyDefs vertical separator [,]}
+    }
+    ]
+}
+PiPropertyInstance {
+    [${property} : ${value}]
+}
+PiStringValue {
+ [${value}]
+}
+PiNumberValue {
+ [${value}]
+}
+PiBooleanValue {
+ [${value}]
+}

@@ -188,6 +188,7 @@ export class ProjectionTemplate {
             // Now all projection items in the line
             line.items.forEach((item, itemIndex) => {
                 result += this.itemProjection(item, elementVarName, index, itemIndex, concept, language);
+                // TODO remove ref to PiEditParsedProjectionIndent => should not be in line after normalisation
                 if (! (item instanceof PiEditParsedProjectionIndent) && itemIndex < line.items.length - 1) {
                     result += ",";
                 }

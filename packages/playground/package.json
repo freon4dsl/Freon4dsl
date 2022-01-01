@@ -12,6 +12,7 @@
     "errors-only": "svelte-check --threshold error",
     "install-local": "yarn install --registry http://localhost:4873",
     "clean": "rm src/example/*/*/*.js && rm src/example/*/*/*.js.map",
+    "edit-syntax": "bash ../../scripts/projectit-dev.sh -v edit-it -d src/edit-syntax/from-pi-languages -o src/edit-syntax",
     "graphviz":	    "bash ../../scripts/projectit-dev.sh -v all -d src/graphviz/defs -o src/graphviz",
     "example": 	    "bash ../../scripts/projectit-dev.sh -v all -d src/example/defs -o src/example",
     "rules":        "bash ../../scripts/projectit-dev.sh -v all -d src/rules-language/defs -o src/rules-language",
