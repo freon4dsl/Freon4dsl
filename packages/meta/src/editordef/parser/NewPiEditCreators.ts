@@ -8,18 +8,24 @@ import {
     PiEditProjectionLine,
     PiEditProjectionText,
     PiEditPropertyProjection,
-    PiEditTableProjection, PiEditProjectionGroup,
-    BoolKeywords, PiEditClassifierProjection, ExtraClassifierInfo
+    PiEditTableProjection,
+    PiEditProjectionGroup,
+    BoolKeywords,
+    PiEditClassifierProjection,
+    ExtraClassifierInfo,
+    PiListPropertyProjection,
+    PiBooleanPropertyProjection,
+    ListJoinType,
+    PiOptionalPropertyProjection
 } from "../metalanguage/NewPiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
-import { PiConcept } from "../../languagedef/metalanguage";
+import { PiClassifier } from "../../languagedef/metalanguage";
 import { PiEditProjectionUtil } from "../metalanguage/PiEditProjectionUtil";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { PiElementReference } from "../../languagedef/metalanguage/PiElementReference";
-import { ParseLocation } from "../../utils";
 
 const LOGGER = new MetaLogger("NewEditorCreators").mute();
 
@@ -49,6 +55,7 @@ export function createEditUnit(data: Partial<PiEditUnit>): PiEditUnit {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("createEditUnit\n\t" + result.toString());
     return result;
 }
 
@@ -82,10 +89,10 @@ export function createStdBool(data: Partial<BoolKeywords>) : BoolKeywords {
     return result;
 }
 
-export function createConceptReference(data: Partial<PiElementReference<PiConcept>>): PiElementReference<PiConcept> {
-    let result: PiElementReference<PiConcept>;
+export function createClassifierReference(data: Partial<PiElementReference<PiClassifier>>): PiElementReference<PiClassifier> {
+    let result: PiElementReference<PiClassifier>;
     if (!!data.name) {
-        result = PiElementReference.create<PiConcept>(data.name, "PiConcept");
+        result = PiElementReference.create<PiClassifier>(data.name, "PiClassifier");
     }
     if (!!data.location) {
         result.location = data.location;
@@ -95,7 +102,18 @@ export function createConceptReference(data: Partial<PiElementReference<PiConcep
 }
 
 export function createClassifierProjection(data: Partial<PiEditClassifierProjection>): PiEditClassifierProjection {
-    const result = new PiEditProjection();
+    let result: PiEditClassifierProjection;
+    if (!!data.tableProjection) {
+        result = new PiEditTableProjection();
+        (result as PiEditTableProjection).headers = data.tableProjection.headers;
+        (result as PiEditTableProjection).cells = data.tableProjection.cells;
+    } else {
+        result = new PiEditProjection();
+        if (!!data.projection) {
+            (result as PiEditProjection).lines = data.projection.lines;
+        }
+        console.log("createClassifierProjection\n\t" + result.toString());
+    }
     if (!!data.classifier) {
         result.classifier = data.classifier;
     }
@@ -106,6 +124,7 @@ export function createClassifierProjection(data: Partial<PiEditClassifierProject
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("createClassifierProjection\n\t" + result.toString());
     return result;
 }
 
@@ -127,29 +146,6 @@ export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraC
     return result;
 }
 
-// export function createLanguageEditor(data: {name, conceptEditors, languageName, location}): PiEditUnit {
-//     const result = new PiEditUnit();
-//     if (!!data.name) {
-//         result.name = data.name;
-//     }
-//     if (!!data.conceptEditors) {
-//         result.conceptEditors = data.conceptEditors;
-//     }
-//     if (!!data.languageName) {
-//         result.languageName = data.languageName;
-//     }
-//
-//     // Ensure all internal editor references to the editorlanguage are set.
-//     result.conceptEditors.forEach(concept => {
-//         concept.languageEditor = result;
-//     });
-//     if (!!data.location) {
-//         result.location = data.location;
-//         result.location.filename = currentFileName;
-//     }
-//     return result;
-// }
-
 export function createProjection(data: Partial<PiEditProjection>): PiEditProjection {
     const result = new PiEditProjection();
     if (!!data.name) {
@@ -168,6 +164,7 @@ export function createProjection(data: Partial<PiEditProjection>): PiEditProject
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    console.log("createProjection \n\t" + result.toString());
     return result;
 }
 
@@ -189,6 +186,7 @@ export function createTableProjection(data: Partial<PiEditTableProjection>): PiE
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("createTabelProjection " + result.toString());
     return result;
 }
 
@@ -202,24 +200,22 @@ export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectio
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("createLine \n\t" + result.toString());
     return result;
 }
 
-// export function createSubProjection(data: Partial<PiEditSubProjection>): PiEditSubProjection {
-//     // console.log("Create SUBPROJECTION ");// + JSON.stringify(data));
-//     const result = new PiEditSubProjection();
-//     if (!!data.optional) {
-//         result.optional = data.optional;
-//     }
-//     if (!!data.items) {
-//         result.items = data.items;
-//     }
-//     if (!!data.location) {
-//         result.location = data.location;
-//         result.location.filename = currentFileName;
-//     }
-//     return result;
-// }
+export function createOptionalProjection(data: Partial<PiOptionalPropertyProjection>): PiOptionalPropertyProjection {
+    const result = new PiOptionalPropertyProjection();
+    if (!!data.lines) {
+        result.lines = data.lines;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    // console.log("createOptionalProjection: \n\t" + result.toString());
+    return result;
+}
 
 export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEditParsedProjectionIndent {
     // console.log("createIndent <<" + data.indent + ">>");
@@ -234,79 +230,95 @@ export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEdi
     return result;
 }
 
-export function createText(data: string): PiEditProjectionText {
+export function createTextItem(data: string): PiEditProjectionText {
     const result = new PiEditProjectionText();
     if (!!data) {
         result.text = data;
     }
-    // if (!!data.location) { result.location = data.location;         result.location.filename = currentFileName;}
     return result;
 }
 
-// export function createPropertyProjection(data: Partial<PiEditPropertyProjection>): PiEditPropertyProjection {
-//     // console.log("create SubProjection <<" + data.propertyName + ">> join [" + data.listInfo + "]");
-//     const result = new PiEditPropertyProjection();
-//     // if (!!data.propertyName) {
-//     //     result.propertyName = data.propertyName;
-//     // }
-//     if (!!data.listInfo) {
-//         result.listInfo = data.listInfo;
-//     }
-//     if (!!data.tableInfo) {
-//         result.tableInfo = data.tableInfo;
-//     }
-//     if (!!data.keyword) {
-//         result.keyword = data.keyword;
-//     }
-//     if (!!data.expression) {
-//         result.expression = data.expression;
-//     }
-//     if (!!data.location) {
-//         result.location = data.location;
-//         result.location.filename = currentFileName;
-//     }
-//     return result;
-// }
+export function createPropertyProjection(data: { expression, listInfo, tableDirection, keyword, location }): PiEditPropertyProjection {
+    let result; //: PiEditPropertyProjection ;
+    if (!!data.listInfo) {
+        result = new PiListPropertyProjection();
+        result.isTable = false;
+        result.listInfo = data.listInfo;
+    } else if (!!data.tableDirection) {
+        result = new PiListPropertyProjection();
+        result.isTable = true;
+        result.direction = data.tableDirection;
+    } else if (!!data.keyword) {
+        result = new PiBooleanPropertyProjection();
+        result.info = data.keyword;
+    } else {
+        result = new PiEditPropertyProjection();
+    }
+    if (!!data.expression) {
+        result.expression = data.expression;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
+export function createBoolKeywords(data: Partial<BoolKeywords>): BoolKeywords {
+    const result = new BoolKeywords();
+    if (!!data.trueKeyword) {
+        result.trueKeyword = data.trueKeyword;
+    }
+    if (!!data.falseKeyword) {
+        result.falseKeyword = data.falseKeyword;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
 
 export function createListDirection(data: Object): PiEditProjectionDirection {
     const dir = data["direction"];
-    return dir === "@horizontal" ? PiEditProjectionDirection.Horizontal : dir === "@vertical" ? PiEditProjectionDirection.Vertical : PiEditProjectionDirection.NONE;
+    if ( dir === "horizontal" || dir === "rows" ) {
+        return PiEditProjectionDirection.Horizontal;
+    }
+    return PiEditProjectionDirection.Vertical;
 }
 
-// export function createTableInfo(data: Object): TableInfo {
-//     const result = new TableInfo();
-//     const dir = data["direction"];
-//     result.direction = dir === "@rows" ? PiEditProjectionDirection.Horizontal : dir === "@columns" ? PiEditProjectionDirection.Vertical : PiEditProjectionDirection.NONE;
-//     if (!!data["location"]) {
-//         result.location = data["location"];
-//         result.location.filename = currentFileName;
-//     }
-//     return result;
-// }
+export function createJoinType(data: Object): ListJoinType {
+    const type = data["type"];
+    if ( type === "separator" ) {
+        return ListJoinType.Separator;
+    } else if ( type === "terminator" ) {
+        return ListJoinType.Terminator;
+    } else if ( type === "initiator" ) {
+        return ListJoinType.Initiator;
+    }
+    return ListJoinType.NONE;
+}
 
-// export function createJoinType(data: Object): ListInfoType {
-//     const type = data["type"];
-//
-//     return type === "@separator" ? ListInfoType.Separator : type === "@terminator" ? ListInfoType.Terminator : ListInfoType.NONE;
-// }
-//
-// export function createListInfo(data: Partial<ListInfo>): ListInfo {
-//     const result = new ListInfo();
-//     if (!!data.direction) {
-//         result.direction = data.direction;
-//     }
-//     if (!!data.joinType) {
-//         result.joinType = data.joinType;
-//     }
-//     if (!!data.joinText) {
-//         result.joinText = data.joinText;
-//     }
-//     if (!!data.location) {
-//         result.location = data.location;
-//         result.location.filename = currentFileName;
-//     }
-//     return result;
-// }
+export function createListInfo(data: Partial<ListInfo>): ListInfo {
+    const result = new ListInfo();
+    if (!!data.direction) {
+        result.direction = data.direction;
+    }
+    if (!!data.isTable) {
+        result.isTable = data.isTable;
+    }
+    if (!!data.joinType) {
+        result.joinType = data.joinType;
+    }
+    if (!!data.joinText) {
+        result.joinText = data.joinText;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
 
 export function createNewline(): PiEditParsedNewline {
     return new PiEditParsedNewline();

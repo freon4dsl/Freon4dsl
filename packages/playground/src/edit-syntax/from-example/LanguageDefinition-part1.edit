@@ -20,9 +20,9 @@ Entity {
 ExampleUnit {
         [
         unit ${name} {
-            ${entities:verticalList terminator[;]}
+            ${entities vertical terminator[;]}
         unit level methods:
-            ${methods:horizontalTable}
+            ${methods table columns}
         }
         ]
 }

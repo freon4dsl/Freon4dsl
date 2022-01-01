@@ -35,6 +35,10 @@ export enum ListJoinType {
 export class BoolKeywords extends PiDefinitionElement {
     trueKeyword: string = "true";
     falseKeyword?: string;
+
+    toString(): string {
+        return `BoolKeywords [ ${this.trueKeyword} | ${this.falseKeyword} ]`;
+    }
 }
 
 /**
@@ -45,8 +49,14 @@ export class PiEditUnit extends PiDefinitionElement {
     language: PiLanguage;
     standardBooleanProjection: BoolKeywords;
     standardReferenceSeparator: string;
-    // classifierInfo: ExtraClassifierInfo[] = [];
     projectiongroups: PiEditProjectionGroup[] = [];
+    toString(): string {
+        return `editor ${this.name}
+        ${this.standardBooleanProjection ? `boolean ${this.standardBooleanProjection}` : ``}
+        ${this.standardReferenceSeparator ? `referenceSeparator [ ${this.standardReferenceSeparator} ]` : ``}
+        
+        ${this.projectiongroups.map(gr => gr.toString()).join("\n")}`;
+    }
 }
 
 /**
@@ -70,6 +80,12 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
     set trigger(value: string) {
         this._trigger = value;
     }
+
+    toString(): string {
+        return `trigger = ${this._trigger}
+                symbol = ${this.symbol}
+                referenceShortcut = ${this.referenceShortcut}`;
+    }
 }
 
 /**
@@ -78,6 +94,9 @@ export class ExtraClassifierInfo extends PiDefinitionElement {
 export class PiEditProjectionGroup extends PiDefinitionElement {
     name: string = null;
     projections: PiEditClassifierProjection[] = [];
+    toString(): string {
+        return `${this.projections.map(pr => pr.toString()). join("\n")}`;
+    }
 }
 
 /**
@@ -87,6 +106,16 @@ export abstract class PiEditClassifierProjection extends PiDefinitionElement {
     name: string;
     classifier: PiElementReference<PiClassifier>;
     classifierInfo: ExtraClassifierInfo = null;
+    projection: PiEditProjection;
+    tableProjection: PiEditTableProjection;
+    toString(): string {
+        return `
+        ${this.classifier?.referred.name} { 
+            ${this.projection ? this.projection.toString() : `no projection`}
+            ${this.tableProjection? this.tableProjection.toString() : `no table projection`}
+            ${this.classifierInfo ?this.classifierInfo.toString() : `no trigger, symbol, or ref shortcut`}
+        }`;
+    }
 }
 
 /**
@@ -112,7 +141,7 @@ export class PiEditProjection extends PiEditClassifierProjection {
     }
 
     toString() {
-        return `projection ${this.name} lines: ${this.lines.length}
+        return `projection ${super.toString()} lines: ${this.lines.length}
 ${this.lines.map(line => line.toString()).join("\n")}`;
     }
 }
@@ -172,15 +201,21 @@ export class PiEditProjectionText extends PiDefinitionElement {
 export class PiEditPropertyProjection extends PiDefinitionElement {
     property: PiElementReference<PiProperty> = null;
     expression: PiLangExp = null;
+
+    toString(): string {
+        return `PiEditPropertyProjection property: ${this.property?.referred} expression: ${this.expression}`;
+    }
 }
 
 /**
  * An element of a line in a projection definition that represents the projection of a property that is a list.
  */
 export class PiListPropertyProjection extends PiEditPropertyProjection {
-    isTable: boolean = false;
-    direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     listInfo: ListInfo;
+    toString(): string {
+        return `PiListPropertyProjection property: ${this.property?.referred} expression: ${this.expression} 
+        listInfo ${this.listInfo.toString()}`;
+    }
 }
 
 /**
@@ -188,25 +223,37 @@ export class PiListPropertyProjection extends PiEditPropertyProjection {
  */
 export class PiBooleanPropertyProjection extends PiEditPropertyProjection {
     info: BoolKeywords;
+    toString(): string {
+        return `PiListPropertyProjection property: ${this.property?.referred} expression: ${this.expression} 
+        info ${this.info.toString()}`;
+    }
 }
 
 /**
  * An element of a line in a projection definition that represents the projection of a property that is optional.
  */
 export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
-    myProjection: PiEditProjectionLine[] = [];
+    lines: PiEditProjectionLine[] = [];
+    toString(): string {
+        return `PiOptionalPropertyProjection property: ${this.property?.referred} 
+        lines ${this.lines.length}
+            ${this.lines.map(line => line.toString()).join("\n")}`;
+    }
 }
 
 /**
- * Information on how a list property should be projected, with a terminator, separator, initiator, or
+ * Information on how a list property should be projected: as list or table;
+ * horizontal or vertical, row or columns based; with a terminator, separator, initiator, or
  * without any of these.
  */
 export class ListInfo extends PiDefinitionElement {
+    isTable: boolean = false;
+    direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     joinType: ListJoinType = ListJoinType.NONE;
     joinText: string = "";
 
     toString(): string {
-        return `joinType: ${this.joinType} text: "${this.joinText}"`;
+        return `isTable: ${this.isTable} direction: ${this.direction} joinType: ${this.joinType} text: "${this.joinText}"`;
     }
 }
 

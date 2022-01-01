@@ -1,25 +1,26 @@
 {
-//    let creator = require("./NewPiEditCreators");
-    let expCreate = require("../../languagedef/parser/ExpressionCreators");
+    let creator = require("./NewPiEditCreators");
+    let expCreator = require("../../languagedef/parser/ExpressionCreators");
 }
 
+// TODO make order of things more flexible
 Editor_Definition = ws "editor" ws name:var ws
         x:standardBooleanProjection? ws
         y:standardReferenceSeparator? ws
         projGroup:projectionGroup ws
-//{
-//    let projectionGroups = [];
-//    if (!!projGroup) {
-//        projectionGroups.push(projGroup);
-//    }
-//    return creator.createEditUnit({
-//        "name"                          : name,
-//        "standardBooleanProjection"     : x,
-//        "standardReferenceSeparator"    : y,
-//        "projectiongroups"              : projectionGroups,
-//        "location"                      : location()
-//    });
-//}
+{
+    let projectionGroups = [];
+    if (!!projGroup) {
+        projectionGroups.push(projGroup);
+    }
+    return creator.createEditUnit({
+        "name"                          : name,
+        "standardBooleanProjection"     : x,
+        "standardReferenceSeparator"    : y,
+        "projectiongroups"              : projectionGroups,
+        "location"                      : location()
+    });
+}
 
 propProjectionStart     = "${"
 propProjectionEnd       = "}"
@@ -27,62 +28,71 @@ projection_begin        = ws "["
 projection_end          = "]" ws
 projection_separator    = "|"
 
-standardBooleanProjection = "boolean" projection_begin t1:text projection_separator t2:text projection_end
-//{
-//    return creator.createStdBool({
-//        "trueKeyword"   : t1,
-//        "falseKeyword"  : t2,
-//        "location"      : location()
-//    });
-//}
+standardBooleanProjection = "boolean" projection_begin t1:textBut projection_separator t2:textBut projection_end
+{
+    return creator.createStdBool({
+        "trueKeyword"   : t1,
+        "falseKeyword"  : t2,
+        "location"      : location()
+    });
+}
 
-standardReferenceSeparator = "referenceSeparator" projection_begin t:text projection_end
-//{ return t; }
+standardReferenceSeparator = "referenceSeparator" projection_begin t:textBut projection_end
+{ return t; }
 
 projectionGroup = projections:classifierProjection*
-//{
-//    return creator.createProjectionGroup({
-//        "projections"   : projections,
-//        "location"      : location()
-//    });
-//}
+{
+    return creator.createProjectionGroup({
+        "projections"   : projections,
+        "location"      : location()
+    });
+}
 
 classifierProjection =
-            concept:conceptRef curly_begin ws
-                projection:projection?
-                table: tableProjection?
+            classifier:classifierReference curly_begin ws
+                projections:projectionChoice?
                 extras: extraClassifierInfo
             curly_end
-//{
-//    return creator.createClassifierProjection({
-//        "classifier"       : concept,
-//        "projection"       : projection,
-//        "tableProjection"  : table,
-//        "classifierInfo"   : extras,
-//        "location"         : location()
-//    });
-//}
+{
+//    console.log("PROJECTION222: "+ projections["normal"]?.toString());
+//    console.log("TABLE222: " + projections["table"]?.toString());
+    return creator.createClassifierProjection({
+        "classifier"       : classifier,
+        "projection"       : !!projections ? projections["normal"] : undefined,
+        "tableProjection"  : !!projections ? projections["table"] : undefined,
+        "classifierInfo"   : extras,
+        "location"         : location()
+    });
+}
+
+projectionChoice = p:projection t:tableProjection? / t:tableProjection p:projection?
+{
+    return {
+        "table"   : t,
+        "normal"  : p
+    };
+}
 
 extraClassifierInfo =
                 trigger:trigger?
                 referenceShortcut:referenceShortcut?
                 symbol:symbol?
-//{
-//    return creator.createClassifierInfo({
-//        "trigger"          : trigger,
-//        "referenceShortcut": referenceShortcut,
-//        "symbol"           : symbol,
-//        "location"         : location()
-//    });
-//}
+{
+    return creator.createClassifierInfo({
+        "trigger"          : trigger,
+        "referenceShortcut": referenceShortcut,
+        "symbol"           : symbol,
+        "location"         : location()
+    });
+}
 
 projection = projection_begin lines:lineWithOptional* projection_end
-//{
-//    return creator.createProjection({
-//        "lines" : lines,
-//        "location": location()
-//    });
-//}
+{
+    return creator.createProjection({
+        "lines" : lines,
+        "location": location()
+    });
+}
 
 tableProjection = "table" ws projection_begin ws
                        headers:( head:textBut
@@ -94,113 +104,120 @@ tableProjection = "table" ws projection_begin ws
                                     { return [head].concat(tail); }
                              ) ws
                    projection_end
-//              {
-//                    return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
-//              }
+{
+    return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
+}
 
-lineWithOptional = items:(templateSpace / text / property_projection / optionalProjection / superProjection / newline )+
-//                {
-//                    return creator.createlineWithOptional( {"items": items} );
-//                }
+lineWithOptional = items:(templateSpace / textItem / property_projection / optionalProjection / superProjection / newline )+
+{
+    return creator.createLine( {"items": items} );
+}
 
-lineWithOutOptional = items:(templateSpace / text / property_projection / superProjection / newline )+
-//                {
-//                    return creator.createlineWithOutOptional( {"items": items} );
-//                }
+lineWithOutOptional = items:(templateSpace / textItem / property_projection / superProjection / newline )+
+{
+    return creator.createLine( {"items": items} );
+}
 
 templateSpace = s:[ \t]+
-//                {
-//                    return creator.createIndent( { "indent": s.join(""), "location": location() });
-//                }
+{
+    return creator.createIndent( { "indent": s.join(""), "location": location() });
+}
 
-text        = chars:anythingBut+
-//            {
-//                return creator.createText( chars.join("") );
-//             }
+textItem = chars:anythingBut+
+{
+    return creator.createTextItem( chars.join("") );
+}
 
 property_projection = propProjectionStart ws
-                     exp:var (colon_separator editorName:var)? ws join:listJoin? t:tableInfo? keyword:keywordDecl? ws
-                 propProjectionEnd
-//            {
-//                return creator.createPropertyProjection( { "expression": exp, "listInfo": join, "tableInfo": t, "keyword":keyword, "location": location() });
-//            }
+                         exp:var (colon_separator editorName:var)? ws l:listInfo? t:tableInfo? k:keywordDecl? ws
+                      propProjectionEnd
+{
+    return creator.createPropertyProjection( { "expression": exp, "listInfo": l, "tableInfo": t, "keyword":k, "location": location() });
+}
 
 optionalProjection = projection_begin "?" lines:lineWithOutOptional* projection_end
-//                {
-//                    return creator.createOptionalProjection( {"optional": optional, "items": items} );
-//                }
+{
+    return creator.createOptionalProjection( {"lines": lines} );
+}
 
-superProjection = projection_begin "=>" ws exp:var (colon_separator editorName:var)? ws projection_end
-
-tableInfo = "table" ws dir:("rows" / "columns")? ws
-//            {
-//                return creator.createTableInfo( {"direction": dir, "location": location()} );
-//            }
-
-keywordDecl = projection_begin t1:text (projection_separator t2:text)? projection_end //{return text;}
-
-listJoin =  l:listJoinSimple+
-//                {
-//                    let directionObject = l.find(j => !!j.direction);
-//                    let joinTypeObject  = l.find(j => !!j.joinType);
-//                    let joinTextObject  = l.find(j => !!j.joinText);
-//
-//                    return creator.createListInfo( {"direction": (!!directionObject ? directionObject.direction : undefined),
-//                                                    "joinType" : (!!joinTypeObject ? joinTypeObject.joinType    : undefined),
-//                                                    "joinText" : (!!joinTextObject ? joinTextObject.joinText    : undefined),
-//                                                    "location" : location()} );
-//                }
-
-listJoinSimple =      (direction:direction  { return {"direction" : direction, "location": location() }; } )
-                    / (type:listJoinType    { return {"joinType"  : type, "location": location()      }; } )
-                    / (t:joinText           { return {"joinText"  : t, "location": location()         }; } )
-
-joinText = "[" t:text "]" ws
-//            {
-//                return t.join("");
-//            }
-
-direction = dir:("horizontal" / "vertical") ws
-//                {
-//                    return creator.createListDirection( {"direction": dir, "location": location() } );
-//                }
-
-listJoinType = joinType:("separator" / "terminator" / "initiator") ws
-//                {
-//                    return creator.createJoinType( {"type": joinType, "location": location() } );
-//                }
-
-
-conceptReference = referredName:var
+superProjection = projection_begin "=>" ws exp:var (colon_separator projName:var)? ws projection_end
 //{
-//    return expCreator.createConceptReference({"name": referredName, "location": location()})
+//    return creator.createSuperProjection({
+//        "classifier"        : exp,
+//        "projectionName"    : projName,
+//        "location"          : location()
+//    });
 //}
 
+tableInfo = "table" ws dir:("rows" / "columns")? ws
+{
+    return creator.createListInfo({
+        "isTable"       : true,
+        "listDirection" : creator.createListDirection( {"listDirection": dir, "location": location() } ),
+        "location"      : location()
+    });
+}
+
+keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:textBut {return t2;})? projection_end
+{
+    return creator.createBoolKeywords({
+        "trueKeyword"   : text1,
+        "falseKeyword"  : text2,
+        "location"      : location()
+    });
+}
+
+listInfo =  dir:listDirection? type:listInfoType? text:("[" t:textBut "]" ws {return t;})?
+{
+    return creator.createListInfo({
+        "isTable"       : false,
+        "listDirection" : dir,
+        "joinType"      : type,
+        "joinText"      : text,
+        "location"      : location()
+    });
+}
+
+listDirection = dir:("horizontal" / "vertical") ws
+{
+    return creator.createListDirection( {"listDirection": dir, "location": location() } );
+}
+
+listInfoType = joinType:("separator" / "terminator" / "initiator") ws
+{
+    return creator.createJoinType( {"type": joinType, "location": location() } );
+}
+
+classifierReference = referredName:var
+{
+    return expCreator.createClassifierReference({"name": referredName, "location": location()})
+}
+
 trigger = "trigger" ws equals_separator ws "\"" value:string "\"" ws
-    {
-        return value
-    }
+{
+    return value;
+}
 
 referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionStart ws exp:var propProjectionEnd ws
-    {
-        return exp
-    }
+{
+    return exp;
+}
 
 symbol = "symbol" ws equals_separator ws "\"" value:string "\"" ws
-    {
-        return value
-    }
+{
+    return value;
+}
 
 priority = "priority" ws ":" ws "\"" value:string "\"" ws
-    {
-        return value
-    }
+{
+    return value;
+}
 
 // This rule parses text until one of the special starter chars or string is encountered.
 textBut  = chars:anythingBut+
-            {
-                return chars.join("").trim();
-            }
+{
+    return chars.join("").trim();
+}
 
 // The 'anythingBut' rule parses text until one of the special starter chars or string is encountered.
 // Note that these chars can still be escaped, through the 'char' rule in the basic grammar
@@ -209,21 +226,11 @@ textBut  = chars:anythingBut+
 // projection_begin        = ws "["
 // projection_separator    = "|"
 anythingBut = !("${" / newline / "[" / "|" / "]") src:char
-            {
-                return src;
-            }
-
-//anythingButEndBracket = !("]") src:char
-//            {
-//                return src;
-//            }
-//            
-//anythingButBar = !("|") src:anythingBut
-//            {
-//                return src;
-//            }
+{
+    return src;
+}
 
 newline     = "\r"? "\n"
-//                {
-//                    return creator.createNewline();
-//                }
+{
+    return creator.createNewline();
+}
