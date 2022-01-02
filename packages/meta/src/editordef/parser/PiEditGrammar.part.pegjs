@@ -4,20 +4,21 @@
 }
 
 // TODO make order of things more flexible
-Editor_Definition = ws "editor" ws name:var ws
+Editor_Definition = group:projectionGroup
+{
+    return creator.createEditUnit(group);
+}
+
+projectionGroup = ws "editor" ws name:var ws
         x:standardBooleanProjection? ws
         y:standardReferenceSeparator? ws
-        projGroup:projectionGroup ws
+        projections:classifierProjection* ws
 {
-    let projectionGroups = [];
-    if (!!projGroup) {
-        projectionGroups.push(projGroup);
-    }
-    return creator.createEditUnit({
+    return creator.createProjectionGroup({
         "name"                          : name,
         "standardBooleanProjection"     : x,
         "standardReferenceSeparator"    : y,
-        "projectiongroups"              : projectionGroups,
+        "projections"                   : projections,
         "location"                      : location()
     });
 }
@@ -40,32 +41,30 @@ standardBooleanProjection = "boolean" projection_begin t1:textBut projection_sep
 standardReferenceSeparator = "referenceSeparator" projection_begin t:textBut projection_end
 { return t; }
 
-projectionGroup = projections:classifierProjection*
-{
-    return creator.createProjectionGroup({
-        "projections"   : projections,
-        "location"      : location()
-    });
-}
-
 classifierProjection =
             classifier:classifierReference curly_begin ws
                 projections:projectionChoice?
                 extras: extraClassifierInfo
             curly_end
 {
-//    console.log("PROJECTION222: "+ projections["normal"]?.toString());
-//    console.log("TABLE222: " + projections["table"]?.toString());
-    return creator.createClassifierProjection({
+    return creator.createParsedClassifier({
         "classifier"       : classifier,
-        "projection"       : !!projections ? projections["normal"] : undefined,
-        "tableProjection"  : !!projections ? projections["table"] : undefined,
+        "projection"       : !!projections ? projections["normal"] : null,
+        "tableProjection"  : !!projections ? projections["table"] : null,
         "classifierInfo"   : extras,
         "location"         : location()
     });
 }
 
-projectionChoice = p:projection t:tableProjection? / t:tableProjection p:projection?
+/* rule that makes order of projections flexible */
+projectionChoice = p:projection t:tableProjection?
+{
+    return {
+        "table"   : t,
+        "normal"  : p
+    };
+}
+    / t:tableProjection p:projection?
 {
     return {
         "table"   : t,
@@ -128,11 +127,37 @@ textItem = chars:anythingBut+
     return creator.createTextItem( chars.join("") );
 }
 
-property_projection = propProjectionStart ws
-                         exp:var (colon_separator editorName:var)? ws l:listInfo? t:tableInfo? k:keywordDecl? ws
+property_projection = s:singleProperty {return s;}
+    / l:listProperty {return l;}
+    / t:tableProperty {return t;}
+    / b:booleanProperty {return b;}
+
+singleProperty = propProjectionStart ws
+                         exp:var (colon_separator editorName:var)? ws
                       propProjectionEnd
 {
-    return creator.createPropertyProjection( { "expression": exp, "listInfo": l, "tableInfo": t, "keyword":k, "location": location() });
+    return creator.createSinglePropertyProjection( { "expression": exp, "location": location() });
+}
+
+listProperty = propProjectionStart ws
+                         exp:var (colon_separator editorName:var)? ws l:listInfo? ws
+                      propProjectionEnd
+{
+    return creator.createListPropertyProjection( { "expression": exp, "listInfo": l, "location": location() });
+}
+
+tableProperty = propProjectionStart ws
+                         exp:var (colon_separator editorName:var)? ws t:tableInfo? ws
+                      propProjectionEnd
+{
+    return creator.createTablePropertyProjection( { "expression": exp, "tableInfo": t, "location": location() });
+}
+
+booleanProperty = propProjectionStart ws
+                         exp:var (colon_separator editorName:var)? ws k:keywordDecl? ws
+                      propProjectionEnd
+{
+    return creator.createBooleanPropertyProjection( { "expression": exp, "keyword":k, "location": location() });
 }
 
 optionalProjection = projection_begin "?" lines:lineWithOutOptional* projection_end
@@ -141,6 +166,7 @@ optionalProjection = projection_begin "?" lines:lineWithOutOptional* projection_
 }
 
 superProjection = projection_begin "=>" ws exp:var (colon_separator projName:var)? ws projection_end
+// TODO super projection creation
 //{
 //    return creator.createSuperProjection({
 //        "classifier"        : exp,

@@ -11,7 +11,7 @@ Entity {
     [
         entity ${name} [? base ${baseEntity}] {
             ${attributes table columns }
-            ${methods:name2 vertical initiator[,]}
+            ${methods:name2 vertical initiator[\],]}
         }
     ]
     trigger = "entity"

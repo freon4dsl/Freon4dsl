@@ -11,12 +11,11 @@ import {
     PiEditTableProjection,
     PiEditProjectionGroup,
     BoolKeywords,
-    PiEditClassifierProjection,
     ExtraClassifierInfo,
     PiListPropertyProjection,
     PiBooleanPropertyProjection,
     ListJoinType,
-    PiOptionalPropertyProjection
+    PiOptionalPropertyProjection, PiEditParsedClassifier
 } from "../metalanguage/NewPiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiClassifier } from "../../languagedef/metalanguage";
@@ -37,8 +36,59 @@ export function setCurrentFileName(newName: string) {
 // Functions used to create instances of the language classes from the parsed data objects.
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
-export function createEditUnit(data: Partial<PiEditUnit>): PiEditUnit {
+export function createEditUnit(group: PiEditProjectionGroup): PiEditUnit {
     let result: PiEditUnit = new PiEditUnit();
+    if (!!group) {
+        result.projectiongroups.push(group);
+    }
+    console.log("createEditUnit\n\t" + result.toString());
+    return result;
+}
+
+function extractProjections(data: Partial<PiEditProjectionGroup>, result: PiEditProjectionGroup) {
+    data.projections.forEach(proj => {
+        if (proj instanceof PiEditParsedClassifier) {
+            if (!!proj.tableProjection) {
+                const myProj: PiEditTableProjection = new PiEditTableProjection();
+                if (!!proj.classifier) {
+                    myProj.classifier = PiElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
+                }
+                if (!!proj.tableProjection.cells) {
+                    myProj.cells = proj.tableProjection.cells;
+                }
+                if (!!proj.tableProjection.headers) {
+                    myProj.headers = proj.tableProjection.headers;
+                }
+                if (!!proj.tableProjection.location) {
+                    myProj.location = proj.tableProjection.location;
+                }
+                result.projections.push(myProj);
+            }
+            if (!!proj.projection) {
+                const myProj: PiEditProjection = new PiEditProjection();
+                if (!!proj.classifier) {
+                    myProj.classifier = PiElementReference.create<PiClassifier>(proj.classifier.name, "PiClassifier");
+                }
+                if (!!proj.projection.lines) {
+                    myProj.lines = proj.projection.lines;
+                }
+                if (!!proj.projection.location) {
+                    myProj.location = proj.projection.location;
+                }
+                result.projections.push(myProj);
+            }
+            if (!!proj.classifierInfo) {
+                if (!!proj.classifier) {
+                    proj.classifierInfo.classifier = proj.classifier;
+                }
+                result.extras.push(proj.classifierInfo);
+            }
+        }
+    });
+}
+
+export function createProjectionGroup(data: Partial<PiEditProjectionGroup>): PiEditProjectionGroup {
+    let result: PiEditProjectionGroup = new PiEditProjectionGroup();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -48,24 +98,31 @@ export function createEditUnit(data: Partial<PiEditUnit>): PiEditUnit {
     if (!!data.standardReferenceSeparator) {
         result.standardReferenceSeparator = data.standardReferenceSeparator;
     }
-    if (!!data.projectiongroups) {
-        result.projectiongroups = data.projectiongroups;
+    if (!!data.projections) {
+        // data.projections is a list of PiEditParsedClassifier
+        // each list-element must be split into 1-3 components
+        extractProjections(data, result);
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // console.log("createEditUnit\n\t" + result.toString());
     return result;
 }
 
-export function createProjectionGroup(data: Partial<PiEditProjectionGroup>): PiEditProjectionGroup {
-    let result: PiEditProjectionGroup = new PiEditProjectionGroup();
-    if (!!data.name) {
-        result.name = data.name;
+export function createParsedClassifier(data: Partial<PiEditParsedClassifier>): PiEditParsedClassifier {
+    let result: PiEditParsedClassifier = new PiEditParsedClassifier();
+    if (!!data.projection) {
+        result.projection = data.projection;
     }
-    if (!!data.projections) {
-        result.projections = data.projections;
+    if (!!data.tableProjection) {
+        result.tableProjection = data.tableProjection;
+    }
+    if (!!data.classifierInfo) {
+        result.classifierInfo = data.classifierInfo;
+    }
+    if (!!data.classifier) {
+        result.classifier = data.classifier;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -101,70 +158,47 @@ export function createClassifierReference(data: Partial<PiElementReference<PiCla
     return result;
 }
 
-export function createClassifierProjection(data: Partial<PiEditClassifierProjection>): PiEditClassifierProjection {
-    let result: PiEditClassifierProjection;
-    if (!!data.tableProjection) {
-        result = new PiEditTableProjection();
-        (result as PiEditTableProjection).headers = data.tableProjection.headers;
-        (result as PiEditTableProjection).cells = data.tableProjection.cells;
-    } else {
-        result = new PiEditProjection();
-        if (!!data.projection) {
-            (result as PiEditProjection).lines = data.projection.lines;
-        }
-        console.log("createClassifierProjection\n\t" + result.toString());
-    }
-    if (!!data.classifier) {
-        result.classifier = data.classifier;
-    }
-    if (!!data.classifierInfo) {
-        result.classifierInfo = data.classifierInfo;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
-    // console.log("createClassifierProjection\n\t" + result.toString());
-    return result;
-}
-
 export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraClassifierInfo {
-    let result: ExtraClassifierInfo = new ExtraClassifierInfo();
+    const result: ExtraClassifierInfo = new ExtraClassifierInfo();
+    let hasContent: boolean = false;
     if (!!data.trigger) {
         result.trigger = data.trigger;
+        hasContent = true;
     }
     if (!!data.referenceShortcut) {
         result.referenceShortcut = data.referenceShortcut;
+        hasContent = true;
     }
     if (!!data.symbol) {
         result.symbol = data.symbol;
+        hasContent = true;
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    return result;
+    if (hasContent) {
+        return result;
+    } else {
+        return null;
+    }
 }
 
 export function createProjection(data: Partial<PiEditProjection>): PiEditProjection {
     const result = new PiEditProjection();
-    if (!!data.name) {
-        result.name = data.name;
-    } else {
-        // create default
-        result.name = "normal";
+    if (!!data.classifier) {
+        result.classifier = data.classifier;
     }
     if (!!data.lines) {
         result.lines = data.lines;
         // Now cleanup the parsed projection
-        // TODO
         // PiEditProjectionUtil.normalize(result);
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    console.log("createProjection \n\t" + result.toString());
+    // console.log("createProjection \n\t" + result.toString());
     return result;
 }
 
@@ -191,7 +225,6 @@ export function createTableProjection(data: Partial<PiEditTableProjection>): PiE
 }
 
 export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectionLine {
-    // console.log("Create LINE " + JSON.stringify(data));
     const result = new PiEditProjectionLine();
     if (!!data.items) {
         result.items = data.items;
@@ -200,7 +233,6 @@ export function createLine(data: Partial<PiEditProjectionLine>): PiEditProjectio
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // console.log("createLine \n\t" + result.toString());
     return result;
 }
 
@@ -218,7 +250,6 @@ export function createOptionalProjection(data: Partial<PiOptionalPropertyProject
 }
 
 export function createIndent(data: Partial<PiEditParsedProjectionIndent>): PiEditParsedProjectionIndent {
-    // console.log("createIndent <<" + data.indent + ">>");
     const result = new PiEditParsedProjectionIndent();
     if (!!data.indent) {
         result.indent = data.indent;
@@ -238,27 +269,56 @@ export function createTextItem(data: string): PiEditProjectionText {
     return result;
 }
 
-export function createPropertyProjection(data: { expression, listInfo, tableDirection, keyword, location }): PiEditPropertyProjection {
-    let result; //: PiEditPropertyProjection ;
-    if (!!data.listInfo) {
-        result = new PiListPropertyProjection();
-        result.isTable = false;
-        result.listInfo = data.listInfo;
-    } else if (!!data.tableDirection) {
-        result = new PiListPropertyProjection();
-        result.isTable = true;
-        result.direction = data.tableDirection;
-    } else if (!!data.keyword) {
-        result = new PiBooleanPropertyProjection();
-        result.info = data.keyword;
-    } else {
-        result = new PiEditPropertyProjection();
+export function createSinglePropertyProjection(data: { expression, location }): PiEditPropertyProjection {
+    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
+    if (!!data["expression"]) {
+        result.expression = data["expression"];
     }
-    if (!!data.expression) {
-        result.expression = data.expression;
+    if (!!data["location"]) {
+        result.location = data["location"];
+        result.location.filename = currentFileName;
     }
-    if (!!data.location) {
-        result.location = data.location;
+    return result;
+}
+
+export function createListPropertyProjection(data: { expression, listInfo, location }): PiEditPropertyProjection {
+    let result: PiListPropertyProjection = new PiListPropertyProjection();
+    result.listInfo = data["listInfo"];
+    if (!!data["expression"]) {
+        result.expression = data["expression"];
+    }
+    if (!!data["location"]) {
+        result.location = data["location"];
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
+export function createTablePropertyProjection(data: { expression, tableInfo, location }): PiListPropertyProjection {
+    let result: PiListPropertyProjection = new PiListPropertyProjection();
+    if (!!data["tableInfo"]) {
+        result.listInfo = data["tableInfo"];
+    }
+    if (!!data["expression"]) {
+        result.expression = data["expression"];
+    }
+    if (!!data["location"]) {
+        result.location = data["location"];
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
+export function createBooleanPropertyProjection(data: { expression, keyword, location }): PiBooleanPropertyProjection {
+    let result: PiBooleanPropertyProjection = new PiBooleanPropertyProjection();
+    if (!!data["keyword"]) {
+        result.info = data["keyword"];
+    }
+    if (!!data["expression"]) {
+        result.expression = data["expression"];
+    }
+    if (!!data["location"]) {
+        result.location = data["location"];
         result.location.filename = currentFileName;
     }
     return result;

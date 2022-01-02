@@ -32,6 +32,17 @@ export enum ListJoinType {
     Initiator = "Initiator"     // the accompanying string is placed before each list element
 }
 
+/**
+ * The root of the complete editor definition
+ */
+export class PiEditUnit extends PiDefinitionElement {
+    language: PiLanguage;
+    projectiongroups: PiEditProjectionGroup[] = [];
+    toString(): string {
+        return `${this.projectiongroups.map(pr => pr.toString()). join("\n")}`;
+    }
+}
+
 export class BoolKeywords extends PiDefinitionElement {
     trueKeyword: string = "true";
     falseKeyword?: string;
@@ -42,60 +53,23 @@ export class BoolKeywords extends PiDefinitionElement {
 }
 
 /**
- * The root of the complete editor definition
+ * A group of projection definitions that share the same name
  */
-export class PiEditUnit extends PiDefinitionElement {
-    name: string;
-    language: PiLanguage;
+export class PiEditProjectionGroup extends PiDefinitionElement {
+    name: string = null;
     standardBooleanProjection: BoolKeywords;
     standardReferenceSeparator: string;
-    projectiongroups: PiEditProjectionGroup[] = [];
+    projections: PiEditClassifierProjection[] = [];
+    extras: ExtraClassifierInfo[] = [];
+
     toString(): string {
         return `editor ${this.name}
         ${this.standardBooleanProjection ? `boolean ${this.standardBooleanProjection}` : ``}
         ${this.standardReferenceSeparator ? `referenceSeparator [ ${this.standardReferenceSeparator} ]` : ``}
         
-        ${this.projectiongroups.map(gr => gr.toString()).join("\n")}`;
-    }
-}
+        ${this.projections.map(gr => gr.toString()).join("\n")}
 
-/**
- * Holds extra information, defined in the default editor, per classifier
- */
-export class ExtraClassifierInfo extends PiDefinitionElement {
-    classifier: PiElementReference<PiClassifier>;
-    private _trigger: string = null;
-    // The name of the reference property for which a shortcut can be used
-    referenceShortcut: PiLangExp = null;
-    symbol: string = null; // only for binary expressions
-
-    get trigger(): string {
-        if (!!(this._trigger)) {
-            return this._trigger;
-        } else {
-            return this.symbol;
-        }
-    }
-
-    set trigger(value: string) {
-        this._trigger = value;
-    }
-
-    toString(): string {
-        return `trigger = ${this._trigger}
-                symbol = ${this.symbol}
-                referenceShortcut = ${this.referenceShortcut}`;
-    }
-}
-
-/**
- * A group of projection definitions that share the same name
- */
-export class PiEditProjectionGroup extends PiDefinitionElement {
-    name: string = null;
-    projections: PiEditClassifierProjection[] = [];
-    toString(): string {
-        return `${this.projections.map(pr => pr.toString()). join("\n")}`;
+        ${this.extras.map(gr => gr.toString()).join("\n")}`;
     }
 }
 
@@ -105,16 +79,8 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
 export abstract class PiEditClassifierProjection extends PiDefinitionElement {
     name: string;
     classifier: PiElementReference<PiClassifier>;
-    classifierInfo: ExtraClassifierInfo = null;
-    projection: PiEditProjection;
-    tableProjection: PiEditTableProjection;
     toString(): string {
-        return `
-        ${this.classifier?.referred.name} { 
-            ${this.projection ? this.projection.toString() : `no projection`}
-            ${this.tableProjection? this.tableProjection.toString() : `no table projection`}
-            ${this.classifierInfo ?this.classifierInfo.toString() : `no trigger, symbol, or ref shortcut`}
-        }`;
+        return `TO BE IMPLEMENTED BY SUBCLASSES`;
     }
 }
 
@@ -141,8 +107,10 @@ export class PiEditProjection extends PiEditClassifierProjection {
     }
 
     toString() {
-        return `projection ${super.toString()} lines: ${this.lines.length}
-${this.lines.map(line => line.toString()).join("\n")}`;
+        return `${this.classifier?.name} {
+        [ // #lines: ${this.lines.length}
+        ${this.lines.map(line => line.toString()).join("\n")}
+        ]}`;
     }
 }
 
@@ -154,8 +122,44 @@ export class PiEditTableProjection extends PiEditClassifierProjection {
     cells: PiEditPropertyProjection[] = [];
 
     toString() {
-        return `table "${this.name}" headers: ${this.headers.map(head => `"${head}"`).join(" | ")}
-        items: ${this.cells.map(it => it.toString()). join(" | ")}`;
+        return `${this.classifier?.name} {
+        table [ 
+        ${this.headers.map(head => `"${head}"`).join(" | ")}
+        ${this.cells.map(it => it.toString()). join(" | ")}
+        ]}`;
+    }
+}
+
+/**
+ * Holds extra information, defined in the default editor, per classifier
+ */
+export class ExtraClassifierInfo extends PiDefinitionElement {
+    classifier: PiElementReference<PiClassifier>;
+    // The string that in the editor triggers the creation of an object of this class.
+    private _trigger: string = null;
+    // The name of the reference property for which a shortcut can be used.
+    referenceShortcut: PiLangExp = null;
+    // Only for binary expressions: the operator between left and right parts.
+    symbol: string = null;
+
+    get trigger(): string {
+        if (!!(this._trigger)) {
+            return this._trigger;
+        } else {
+            return this.symbol;
+        }
+    }
+
+    set trigger(value: string) {
+        this._trigger = value;
+    }
+
+    toString(): string {
+        return `${this.classifier?.name} {
+            trigger = ${this._trigger}
+            symbol = ${this.symbol}
+            referenceShortcut = ${this.referenceShortcut}
+        }`;
     }
 }
 
@@ -186,6 +190,7 @@ export class PiEditProjectionText extends PiDefinitionElement {
     }
 
     text: string = "";
+    // TODO should style be here?
     style: string = "propertykeyword";
 
     toString(): string {
@@ -203,7 +208,7 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
     expression: PiLangExp = null;
 
     toString(): string {
-        return `PiEditPropertyProjection property: ${this.property?.referred} expression: ${this.expression}`;
+        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ }`;
     }
 }
 
@@ -213,8 +218,9 @@ export class PiEditPropertyProjection extends PiDefinitionElement {
 export class PiListPropertyProjection extends PiEditPropertyProjection {
     listInfo: ListInfo;
     toString(): string {
-        return `PiListPropertyProjection property: ${this.property?.referred} expression: ${this.expression} 
-        listInfo ${this.listInfo.toString()}`;
+        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ 
+            /* list */ ${this.listInfo}
+        }`;
     }
 }
 
@@ -224,8 +230,9 @@ export class PiListPropertyProjection extends PiEditPropertyProjection {
 export class PiBooleanPropertyProjection extends PiEditPropertyProjection {
     info: BoolKeywords;
     toString(): string {
-        return `PiListPropertyProjection property: ${this.property?.referred} expression: ${this.expression} 
-        info ${this.info.toString()}`;
+        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ 
+            /* boolean */ ${this.info}
+        }`;
     }
 }
 
@@ -235,9 +242,10 @@ export class PiBooleanPropertyProjection extends PiEditPropertyProjection {
 export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
     lines: PiEditProjectionLine[] = [];
     toString(): string {
-        return `PiOptionalPropertyProjection property: ${this.property?.referred} 
-        lines ${this.lines.length}
-            ${this.lines.map(line => line.toString()).join("\n")}`;
+        return `[? /* found ${this.property?.referred?.name} */ 
+        // #lines ${this.lines.length}
+            ${this.lines.map(line => line.toString()).join("\n")}\`;
+        ]`;
     }
 }
 
@@ -253,7 +261,11 @@ export class ListInfo extends PiDefinitionElement {
     joinText: string = "";
 
     toString(): string {
-        return `isTable: ${this.isTable} direction: ${this.direction} joinType: ${this.joinType} text: "${this.joinText}"`;
+        if (this.isTable) {
+            return `table ${this.direction}`
+        } else {
+            return `direction: ${this.direction} joinType: ${this.joinType} [${this.joinText}]`;
+        }
     }
 }
 
@@ -261,11 +273,25 @@ export class ListInfo extends PiDefinitionElement {
  * An element of a line in a projection definition that represents the projection of a superconcept or interface.
  */
 export class PiEditSuperProjection extends PiDefinitionElement {
-    super: PiClassifier = null;
+    super: PiElementReference<PiClassifier> = null;
+    toString(): string {
+        return `[=> ${this.super?.name} /* found ${this.super?.referred?.name} */]`;
+    }
 }
 
 ////////////////////////////////////
 
+/**
+ * This class is only used during parsing. It is removed from the model in the creation phase.
+ */
+export class PiEditParsedClassifier extends PiEditClassifierProjection {
+    projection: PiEditProjection = null;
+    tableProjection: PiEditTableProjection = null;
+    classifierInfo: ExtraClassifierInfo = null;
+    toString(): string {
+        return `ParsedClassifier ${this.classifier?.name}`
+    }
+}
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
