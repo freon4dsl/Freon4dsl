@@ -15,7 +15,7 @@ import {
     PiListPropertyProjection,
     PiBooleanPropertyProjection,
     ListJoinType,
-    PiOptionalPropertyProjection, PiEditParsedClassifier
+    PiOptionalPropertyProjection, PiEditParsedClassifier, PiEditSuperProjection
 } from "../metalanguage/NewPiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiClassifier } from "../../languagedef/metalanguage";
@@ -265,6 +265,21 @@ export function createTextItem(data: string): PiEditProjectionText {
     const result = new PiEditProjectionText();
     if (!!data) {
         result.text = data;
+    }
+    return result;
+}
+
+export function createSuperProjection(data: Partial<PiEditSuperProjection>) : PiEditSuperProjection {
+    const result = new PiEditSuperProjection();
+    if (!!data.superRef) {
+        result.superRef = data.superRef;
+    }
+    if (!!data.projectionName) {
+        result.projectionName = data.projectionName;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }

@@ -273,9 +273,10 @@ export class ListInfo extends PiDefinitionElement {
  * An element of a line in a projection definition that represents the projection of a superconcept or interface.
  */
 export class PiEditSuperProjection extends PiDefinitionElement {
-    super: PiElementReference<PiClassifier> = null;
+    superRef: PiElementReference<PiClassifier> = null;
+    projectionName: string = "";
     toString(): string {
-        return `[=> ${this.super?.name} /* found ${this.super?.referred?.name} */]`;
+        return `[=> ${this.superRef?.name} /* found ${this.superRef?.referred?.name} */ ${this.projectionName.length > 0 ? `:${this.projectionName}` : ``}]`;
     }
 }
 

@@ -46,7 +46,6 @@ export class PiParser<DEFINITION> {
                 :
                     ``}`;
             LOG2USER.error(errorstr);
-            console.log(e.stack);
             throw new Error("syntax error: " + errorstr);
         }
 
@@ -83,7 +82,6 @@ export class PiParser<DEFINITION> {
                     }
                     const errorstr = `${e.message.trimEnd()} ${location}`;
                     LOG2USER.error(errorstr);
-                    console.log(e.stack);
                     throw new Error("syntax error: " + errorstr);
                 }
             }

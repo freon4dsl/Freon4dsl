@@ -165,15 +165,14 @@ optionalProjection = projection_begin "?" lines:lineWithOutOptional* projection_
     return creator.createOptionalProjection( {"lines": lines} );
 }
 
-superProjection = projection_begin "=>" ws exp:var (colon_separator projName:var)? ws projection_end
-// TODO super projection creation
-//{
-//    return creator.createSuperProjection({
-//        "classifier"        : exp,
-//        "projectionName"    : projName,
-//        "location"          : location()
-//    });
-//}
+superProjection = projection_begin "=>" ws superRef:classifierReference projName:(colon_separator v:var {return v;})? ws projection_end
+{
+    return creator.createSuperProjection({
+        "superRef"          : superRef,
+        "projectionName"    : projName,
+        "location"          : location()
+    });
+}
 
 tableInfo = "table" ws dir:("rows" / "columns")? ws
 {
