@@ -175,7 +175,7 @@ export class PiEditProjectionLine extends PiDefinitionElement {
     }
 
     toString(): string {
-        return this.items.map(item => item.toString()).join("");
+        return "#indents: [" + this.indent + "] " + this.items.map(item => item.toString()).join("");
     }
 }
 

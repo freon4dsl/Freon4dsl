@@ -8,8 +8,6 @@ import {
 } from "../../languagedef/metalanguage";
 import {
     ListInfo,
-    ListInfoType,
-    PiEditConcept,
     PiEditParsedNewline,
     PiEditParsedProjectionIndent,
     PiEditProjection,
@@ -18,141 +16,10 @@ import {
     PiEditProjectionText,
     PiEditPropertyProjection,
     PiEditUnit
-} from "./PiEditDefLang";
+} from "./NewPiEditDefLang";
 import { Names } from "../../utils";
 
-export class PiEditProjectionUtil {
-
-    /**
-     * Add default projections for all concepts that do not have one yet.
-     * @param editor
-     */
-    public static addDefaults(editor: PiEditUnit): void {
-        const classifiersToDo: PiClassifier[] = editor.language.concepts.filter(c => !(c instanceof PiBinaryExpressionConcept));
-        classifiersToDo.push(...editor.language.units);
-
-        for (const binConcept of editor.language.concepts.filter(c => c instanceof PiBinaryExpressionConcept)) {
-            let conceptEditor = editor.findConceptEditor(binConcept);
-            if (conceptEditor === null || conceptEditor === undefined) {
-                // console.log("Adding brand editor for " + binConcept.unitName);
-                conceptEditor = new PiEditConcept();
-                conceptEditor.concept = PiElementReference.create<PiConcept>(binConcept, "PiConcept");
-                conceptEditor.concept.owner = editor.language;
-                editor.conceptEditors.push(conceptEditor);
-            }
-            if (conceptEditor.trigger === null) {
-                conceptEditor.trigger = Names.concept(binConcept);
-            }
-            if (conceptEditor.symbol === null) {
-                conceptEditor.symbol = Names.concept(binConcept);
-            }
-        }
-
-        for (const con of classifiersToDo) {
-            // Find or create the concept editor, and its properties
-            let coneditor: PiEditConcept = editor.conceptEditors.find(ed => ed.concept.referred === con);
-            if (!coneditor) {
-                coneditor = new PiEditConcept();
-                coneditor.concept = PiElementReference.create<PiClassifier>(con.name, "PiClassifier");
-                coneditor.concept.owner = editor.language;
-                coneditor.languageEditor = editor;
-                editor.conceptEditors.push(coneditor);
-            }
-            if (!coneditor.trigger) {
-                coneditor.trigger = Names.classifier(con);
-            }
-            if (!coneditor.symbol) {
-                coneditor.symbol = con.name;
-            }
-            if (!coneditor.projection) {
-                // create a new projection
-                // console.log("Adding default projection for " + con.unitName);
-                coneditor.projection = new PiEditProjection();
-                coneditor.projection.name = "default";
-                coneditor.projection.conceptEditor = coneditor;
-                const startLine = new PiEditProjectionLine();
-                const text = PiEditProjectionText.create(con.name);
-                text.style = "conceptkeyword";
-                startLine.items.push(text);
-                // find name property if available
-                const nameProp = con.nameProperty();
-                if (!!nameProp) {
-                    const exp = PiLangSelfExp.create(con);
-                    exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, nameProp.name, nameProp);
-                    const sub = new PiEditPropertyProjection();
-                    sub.expression = exp;
-                    startLine.items.push(sub);
-                }
-                coneditor.projection.lines.push(startLine);
-                for (const prop of con.allPrimProperties().filter((p => p !== nameProp))) {
-                    const line = new PiEditProjectionLine();
-                    line.indent = 4;
-                    line.items.push(PiEditProjectionText.create(prop.name));
-                    const exp = PiLangSelfExp.create(con);
-                    exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
-                    const sub = new PiEditPropertyProjection();
-                    sub.expression = exp;
-                    if (prop.isList) {
-                        sub.listInfo = new ListInfo();
-                        sub.listInfo.joinType = ListInfoType.Separator;
-                        sub.listInfo.joinText = ", ";
-                    }
-                    line.items.push(sub);
-                    coneditor.projection.lines.push(line);
-                }
-                for (const prop of con.allParts()) {
-                    if (prop.isList) {
-                        this.defaultListConceptProperty(con, prop, coneditor);
-                    } else {
-                        this.defaultSingleConceptProperty(con, prop, coneditor);
-                    }
-                }
-                for (const prop of con.allReferences()) {
-                    if (prop.isList) {
-                        this.defaultListConceptProperty(con, prop, coneditor);
-                    } else {
-                        this.defaultSingleConceptProperty(con, prop, coneditor);
-                    }
-                }
-            }
-
-        }
-    }
-
-    private static defaultSingleConceptProperty(concept: PiClassifier, prop: PiConceptProperty, coneditor: PiEditConcept): void {
-        const line = new PiEditProjectionLine();
-        line.indent = 4;
-        line.items.push(PiEditProjectionText.create(prop.name));
-        const exp = PiLangSelfExp.create(concept);
-        exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
-        const sub = new PiEditPropertyProjection();
-        sub.expression = exp;
-        sub.listInfo = new ListInfo();
-        sub.listInfo.direction = PiEditProjectionDirection.Vertical;
-        sub.listInfo.joinType = ListInfoType.Separator;
-        sub.listInfo.joinText = "";
-        line.items.push(sub);
-        coneditor.projection.lines.push(line);
-    }
-
-    private static defaultListConceptProperty(concept: PiClassifier, prop: PiConceptProperty, coneditor: PiEditConcept): void {
-        const line1 = new PiEditProjectionLine();
-        const line2 = new PiEditProjectionLine();
-        line1.indent = 4;
-        line1.items.push(PiEditProjectionText.create(prop.name));
-        line2.indent = 8;
-        const exp = PiLangSelfExp.create(concept);
-        exp.appliedfeature = PiLangAppliedFeatureExp.create(exp, prop.name, prop);
-        const sub = new PiEditPropertyProjection();
-        sub.expression = exp;
-        sub.listInfo = new ListInfo();
-        sub.listInfo.direction = PiEditProjectionDirection.Vertical;
-        sub.listInfo.joinType = ListInfoType.Separator;
-        sub.listInfo.joinText = "";
-        line2.items.push(sub);
-        coneditor.projection.lines.push(line1);
-        coneditor.projection.lines.push(line2);
-    }
+export class NewPiEditProjectionUtil {
 
     /** Normalizing means:
      * - break lines at newline,
