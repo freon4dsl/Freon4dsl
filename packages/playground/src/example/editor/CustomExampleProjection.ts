@@ -8,7 +8,7 @@ import {
     HorizontalListBox,
     LabelBox,
     SvgBox,
-    GridCell,
+    GridCellBox,
     AliasBox,
     GridBox, Language, PI_BINARY_EXPRESSION_LEFT, PI_BINARY_EXPRESSION_RIGHT
 } from "@projectit/core";
@@ -63,48 +63,36 @@ export class CustomExampleProjection implements PiProjection {
     }
 
     public createSumBox(sum: SumExpression): Box {
-        const cells: GridCell[] = [
-            {
-                row: 3,
-                column: 1,
-                columnSpan: 2,
-                box: new HorizontalListBox(sum, "Sum-from-part", [
+        const cells: GridCellBox[] = [
+            new GridCellBox(sum, "Sum-from-cell",  3, 1,
+                new HorizontalListBox(sum, "Sum-from-part", [
                     this.optionalPartBox(sum, "SumExpression-variable", "variable"),
                     new LabelBox(sum, "sum-from-equals", "="),
                     this.optionalPartBox(sum, "SumExpression-from", "from")
                 ]),
-                // !!sum.from
-                // ? this.rootProjection.getBox(sum.from)
-                // : new AliasBox(sum, "sum-from", "[from]", { propertyName: "from" }),
-                style: mycell
-            },
-            {
-                row: 2,
-                column: 1,
-                box: new SvgBox(sum, "sum-icon", sumIcon, {
+                { columnSpan: 2,
+                    style: mycell
+            }),
+            new GridCellBox(sum, "sum-icon-cell",2, 1,
+                new SvgBox(sum, "sum-icon", sumIcon, {
                     width: 50,
                     height: 50,
                     selectable: false
                 }),
-                style: mycell
-            },
-            {
-                row: 1,
-                column: 1,
-                columnSpan: 2,
-                box: this.optionalPartBox(sum, "SumExpression-to", "to"),
-                style: mycell
-            },
-            {
-                row: 2,
-                column: 2,
-                box: new HorizontalListBox(sum, "sum-body", [
+                { style: mycell }
+            ),
+            new GridCellBox(sum, "sum-to-cell", 1, 1,
+                this.optionalPartBox(sum, "SumExpression-to", "to"),
+                { columnSpan: 2, style: mycell }
+            ),
+            new GridCellBox(sum, "sum-body-cell", 2, 2,
+                 new HorizontalListBox(sum, "sum-body", [
                     new LabelBox(sum, "sum-body-open", "["),
                     this.optionalPartBox(sum, "SumExpression-body", "body"),
                     new LabelBox(sum, "sum-body-close", "]")
                 ]),
-                style: mycell
-            }
+                { style: mycell }
+            )
         ];
         const result = new GridBox(sum, "sum-all", cells, {
             style: mygrid
@@ -123,56 +111,40 @@ export class CustomExampleProjection implements PiProjection {
     ////////////////////////////////////////////////////////////////////
 
     public createOrBoxGrid(exp: OrExpression): Box {
-        const gridCells: GridCell[] = [];
+        const gridCells: GridCellBox[] = [];
         if (exp.left instanceof OrExpression) {
             gridCells.push(
-                {
-                    row: 1,
-                    column: OPERATOR_COLUMN,
-                    box: new LabelBox(exp, "or-Box2", () => "or"),
-                    style: gridCellOr,
-                    rowSpan: 3
-                },
-                {
-                    row: 1,
-                    column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_LEFT, "left"),
-                    style: or_gridcellFirst
-                },
-                {
-                    row: 2,
-                    column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_RIGHT, "right"),
-                    style: gridcell
-                },
-                {
-                    row: 3,
-                    column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
-                    style: gridcellLast
-                }
+                new GridCellBox(exp, "or-Box2-cell", 1, OPERATOR_COLUMN,
+                    new LabelBox(exp, "or-Box2", () => "or"),
+                    { style: gridCellOr, rowSpan: 3 }
+                ),
+                new GridCellBox(exp, "orBox3-cell", 1, OPERAND_COLUMN,
+                    this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_LEFT, "left"),
+                    { style: or_gridcellFirst }
+                ),
+                new GridCellBox(exp, "or-Box4-cell", 2, OPERAND_COLUMN,
+                    this.optionalPartBox(exp.left, PI_BINARY_EXPRESSION_RIGHT, "right"),
+                    { style: gridcell }
+                ),
+                new GridCellBox(exp, "or-Box5-cell", 3, OPERAND_COLUMN,
+                    this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
+                    { style: gridcellLast }
+                )
             );
         } else {
             gridCells.push(
-                {
-                    row: 1,
-                    column: OPERATOR_COLUMN,
-                    box: new LabelBox(exp, "or-Box3", () => "or"),
-                    style: gridCellOr,
-                    rowSpan: 2
-                },
-                {
-                    row: 1,
-                    column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp, PI_BINARY_EXPRESSION_LEFT, "left"),
-                    style: or_gridcellFirst
-                },
-                {
-                    row: 2,
-                    column: OPERAND_COLUMN,
-                    box: this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
-                    style: gridcellLast
-                }
+                new GridCellBox(exp, "or-Box6-cell", 1, OPERATOR_COLUMN,
+                    new LabelBox(exp, "or-Box3", () => "or"),
+                    { style: gridCellOr, rowSpan: 2 }
+                ),
+                new GridCellBox(exp, "or-Box7-cell", 1, OPERAND_COLUMN,
+                    this.optionalPartBox(exp, PI_BINARY_EXPRESSION_LEFT, "left"),
+                    { style: or_gridcellFirst }
+                ),
+                new GridCellBox(exp, "or-Box8-cell", 2, OPERAND_COLUMN,
+                    this.optionalPartBox(exp, PI_BINARY_EXPRESSION_RIGHT, "right"),
+                    { style: gridcellLast }
+                )
             );
         }
         return new GridBox(exp, "grid-or", gridCells,

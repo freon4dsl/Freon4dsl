@@ -6,7 +6,7 @@
   "scripts": {
     "build": "yarn example && tsc",
     "build-app": "rollup -c",
-    "dev": "rollup -c -w",
+    "dev": "cross-env NODE_PORT=3002 rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
     "errors-only": "svelte-check --threshold error",

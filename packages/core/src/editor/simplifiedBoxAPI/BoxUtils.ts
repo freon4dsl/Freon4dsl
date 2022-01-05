@@ -351,7 +351,6 @@ export class BoxUtils {
         const result =  !!property
             ? rootProjection.getBox(property)
             : BoxFactory.alias(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
-        console.log("ALIAS OR BOX: " + propertyName + " => " + property + " result: " + result.kind);
         return result;
     }
 

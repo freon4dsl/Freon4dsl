@@ -57,11 +57,11 @@
     };
 
     const setFocus = async (): Promise<void> => {
-        LOGGER.log("AliasComponent set focus " + choiceBox.role);
+        FOCUS_LOGGER.log("AliasComponent set focus " + choiceBox.role);
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
-            LOGGER.log("?ERROR? textComponent is null in setFocus.");
+            FOCUS_LOGGER.log("?ERROR? textComponent is null in setFocus.");
         }
     };
 
@@ -247,6 +247,7 @@
                 case KEY_ENTER:
                     e.preventDefault();
                     if (isAliasBox(choiceBox)) {
+                        console.log("Keyboard shortcut in AliasComponentg ===============")
                         PiUtils.handleKeyboardShortcut(toPiKey(e), choiceBox, editor);
                         e.stopPropagation();
                     }
@@ -274,7 +275,7 @@
     const onSelectOption = (event: CustomEvent<SelectOption>): void => {
         LOGGER.log("set selected SVELTE option to " + JSON.stringify(event.detail));
         isEditing = false;
-        runInAction( () => {
+        // runInAction( () => {
             choiceBox.textHelper.setText("");
             const option = event.detail;
             choiceBox.selectOption(editor, option);
@@ -283,7 +284,7 @@
             // choiceBox.textBox.setText(!!selected ? selected.label : "");
             LOGGER.log("      selected is " + JSON.stringify(selected));
             setOpen("selectedEvent", false);
-        });
+        // });
     };
 
     const onClick = (e: MouseEvent) => {

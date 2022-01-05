@@ -1,7 +1,8 @@
 import { runInAction } from "mobx";
 import { isRegExp, isString, Box, PiEditor, InternalBehavior } from "../editor";
+import { PiElement } from "../language/index";
 import { Language } from "../storage/Language";
-import { PiLogger } from "./internal";
+import { LEFT_MOST, PiLogger } from "./internal";
 
 const LOGGER = new PiLogger("BehaviorUtils");
 
@@ -56,14 +57,23 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                 const matchArray = label.match(trigger);
                 LOGGER.log("executeBehavior: MATCH " + label + " against " + trigger +
                     "  results in " + (!!matchArray ? matchArray.length : "null"));
+                let execresult: PiElement = null;
                 if (matchArray !== null && label === matchArray[0]) {
                     runInAction( () => {
-                        const execresult = behavior.execute(box, label, editor);
+                        execresult = behavior.execute(box, label, editor);
                         // if( !!execresult){
                         //     editor.selectElement(execresult);
                         //     editor.selectFirstLeafChildBox();
                         // }
                     });
+                    if(!!execresult) {
+                        if (!!behavior.boxRoleToSelect) {
+                            editor.selectBoxByRoleAndElementId(execresult.piId(), behavior.boxRoleToSelect, behavior.caretPosition);
+                        } else {
+                            editor.selectElement(execresult);
+                            editor.selectFirstEditableChildBox();
+                        }
+                    }
                     return BehaviorExecutionResult.EXECUTED;
                 }
             } else if (isString(trigger)) {
@@ -107,23 +117,32 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
  * @param editor
  */
 export function executeSingleBehavior(behavior: InternalBehavior, box: Box, text: string, label: string, editor: PiEditor): BehaviorExecutionResult {
-    LOGGER.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + behavior.referenceShortcut + "]");
+    console.log("Enter @@@@@@@@@ executeSingleBehavior text [" + text + "] label [" + label + "] refshortcut [" + behavior.referenceShortcut + "]");
     let partialMatch: boolean = false;
+    let execresult: PiElement;
 
     const trigger = behavior.trigger;
     runInAction( () => {
         console.log("========================== START");
-        const execresult = behavior.execute(box, label, editor);
-        // if( !!execresult){
-        //     editor.selectElement(execresult);
-        //     editor.selectFirstLeafChildBox();
-        // }
+        execresult = behavior.execute(box, label, editor);
         // If this is a referenceShortcut, fill in the selected reference, which is in the label
         if (!!label && !!behavior.referenceShortcut) {
             execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
         }
         console.log("===============================")
     });
+    if( !!execresult){
+        if (!!behavior.boxRoleToSelect) {
+            editor.selectBoxByRoleAndElementId(execresult.piId(),behavior.boxRoleToSelect,behavior.caretPosition);
+        }else {
+            editor.selectElement(execresult);
+            editor.selectFirstLeafChildBox();
+            if (editor.selectedBox.role.includes(LEFT_MOST)){
+                // Special expression prefix box, don't select it
+                editor.selectNextLeaf()
+            }
+        }
+    }
     // if( !!execresult){
     //     await editor.selectElement(execresult, LEFT_MOST);
     //     editor.selectFirstLeafChildBox();

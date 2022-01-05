@@ -1,11 +1,12 @@
 import { runInAction } from "mobx";
+import { GridCellBox } from "../boxes/GridCellBox";
 import {
     AliasBox,
     Box, BoxFactory,
     BoxUtils,
     GridBox,
-    GridCell, GridOrientation,
-    HorizontalListBox,
+    GridOrientation,
+    HorizontalListBox, isAliasBox,
     KeyboardShortcutBehavior,
     PiEditor,
     PiStyle
@@ -84,59 +85,74 @@ export class TableUtil {
         // const isList: boolean = propInfo.isList;
         PiUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.piLanguageConcept()}.${propertyName}' because it is not a list.`);
         const elementBuilder = Language.getInstance().concept(propInfo.type).constructor;
+        const hasHeaders = columnHeaders !== null && columnHeaders !== undefined && columnHeaders.length > 0;
         // create the box
         if (property !== undefined && property !== null) {
-            const cells: GridCell[] = [];
+            const cells: GridCellBox[] = [];
             // add the headers - all in row 1
             columnHeaders.forEach((item: string, index: number) => {
-                const location = this.tilt({row: 1, column: index + 1}, orientation);
-                cells.push( {
-                    row: location.row,
-                    column: location.column,
-                    box: BoxUtils.labelBox(element, item, "" + index),
-                    style: headerStyle
-                });
+                const location = this.calcHeaderLocation({row: 1, column: index + 1}, orientation, hasHeaders);
+                LOGGER.log("TableUtil header " + location.row + " - " + location.column + " with headers " + hasHeaders );
+                cells.push( BoxFactory.gridcell(element, "cell-" + location.row + "-" + location.column, location.row, location.column,
+                    BoxUtils.labelBox(element, item, "" + index),
+                    { style : headerStyle })
+                );
             });
             // add the cells for each element of the list
             property.forEach((item: PiElement, rowIndex: number) => {
                 cellGetters.forEach((projector, columnIndex) => {
-                    const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, rowIndex + 2, columnIndex + 1);
-                    const location = this.tilt({row: rowIndex + 2, column: columnIndex + 1}, orientation);
-                    cells.push({
-                        row: location.row,
-                        column: location.column,
-                        box: BoxFactory.horizontalList(item, cellRoleName, [projector(item), BoxFactory.alias(item, "new-" + columnIndex, NBSP,
-                            { propertyName: propertyName, conceptName: propInfo.type }
-                             )]),
-                        style: cellStyle
-                    });
+                    const location = this.calcLocation({row: rowIndex + 1, column: columnIndex + 1}, orientation, hasHeaders);
+
+                    const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
+                    LOGGER.log("TableUtil add " + cellRoleName + " with headers " + hasHeaders );
+                    cells.push(BoxFactory.gridcell(item, cellRoleName, location.row, location.column,
+                            projector(item),
+                        { style: cellStyle }
+                    ));
                 });
             });
             // add an extra row where a new element to the list can be added
-            const location = this.tilt({row: property.length + 3, column:1}, orientation);
-            cells.push({
-                row: location.row,
-                column: location.column,
-                columnSpan: (orientation === "row" ? cellGetters.length : 1),
-                rowSpan: (orientation === "row" ? 1 : cellGetters.length),
-                box: BoxFactory.alias(element, "alias-add-row-or-column", `<add new ${orientation}>`,
-                    { propertyName: propertyName, conceptName: propInfo.type }),
-                style: cellStyle
-            });
+            const location = this.calcLocation({row: property.length +1, column:1}, orientation, hasHeaders);
+            const cellRoleName: string = RoleProvider.cell(element.piLanguageConcept(), propertyName, location.row, location.column);
+            LOGGER.log("TableUtil footer " + location.row + " - " + location.column + " with headers " + hasHeaders );
+            cells.push( BoxFactory.gridcell(element, cellRoleName,  location.row, location.column,
+                BoxFactory.alias(element, "alias-add-row-or-column", `<add new ${orientation}>`,
+                { propertyName: propertyName, conceptName: propInfo.type }),
+                {
+                    columnSpan: (orientation === "row" ? cellGetters.length : 1),
+                    rowSpan: (orientation === "row" ? 1 : cellGetters.length),
+                    style: cellStyle
+            }));
             // Add keyboard actions to grid such that new rows can be added by Return Key
             const roleName: string = RoleProvider.property(element.piLanguageConcept(), propertyName, "tablebox");
-            this.addKeyBoardShortCuts(roleName, propertyName, editor, elementBuilder);
+            const nrOfRowsAndColumns = this.calcLocation( {row: property.length, column: cellGetters.length}, orientation, hasHeaders);
+            this.addKeyBoardShortCuts(element, propertyName, nrOfRowsAndColumns.row, nrOfRowsAndColumns.column,editor, elementBuilder);
             return new GridBox(element, roleName, cells, { orientation: orientation } );
         }
         return null;
     }
 
-    private static tilt(location: Location, orientation: string): Location {
+    private static tilt(location: Location, orientation: GridOrientation): Location {
         if (orientation === "column") {
-            return { row: location.column, column: location.row}
+            return { row: location.column, column: location.row};
         } else {
             return location;
         }
+    }
+    private static calcHeaderLocation(location: Location, orientation: GridOrientation, hasHeaders: boolean): Location {
+        return this.tilt(location, orientation);
+    }
+
+    private static calcLocation(location: Location, orientation: GridOrientation, hasHeaders: boolean): Location {
+        const result = this.tilt(location, orientation);
+        if (hasHeaders) {
+            if (orientation === "column" ) {
+                result.column = result.column + 1;
+            } else {
+                result.row = result.row + 1;
+            }
+        }
+        return result;
     }
 
     /**
@@ -150,8 +166,8 @@ export class TableUtil {
      * @param cells
      * @private
      */
-    private static addKeyBoardShortCuts(roleName: string, propertyName: string, editor: PiEditor, elementBuilder: () => PiElement) {
-        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid());
+    private static addKeyBoardShortCuts(element: PiElement,propertyName: string, nrOfRows: number, nrOfColumns: number, editor: PiEditor, elementBuilder: () => PiElement) {
+        editor.keyboardActions.splice(0, 0, this.createKeyboardShortcutForCollectionGrid(element, propertyName, nrOfRows, nrOfColumns, elementBuilder));
         editor.keyboardActions.splice(
             0,
             0,
@@ -163,34 +179,42 @@ export class TableUtil {
      * Create a keyboard shortcut for use in an element table
      * @param roleToSelect
      */
-    private static createKeyboardShortcutForCollectionGrid(): KeyboardShortcutBehavior {
+    private static createKeyboardShortcutForCollectionGrid(element: PiElement, propertyName: string, nrOfRows: number, nrOfColumns: number, elementBuilder: () => PiElement): KeyboardShortcutBehavior {
+        const rolenames: string[] = [];
+        for(let row = 1; row <= nrOfRows; row++) {
+            for(let column = 1; column <= nrOfColumns; column++) {
+                const rolename = RoleProvider.cell(element.piLanguageConcept(), propertyName, row, column);
+                rolenames.push(rolename);
+                LOGGER.log("Add keyboard [" + rolename + "] for r/c " + row + "." + column);
+            }
+        }
+        LOGGER.log("Adding Keybord for " + nrOfRows + " rows and " + nrOfColumns + " columns: " + rolenames);
         return {
             trigger: { meta: MetaKey.None, keyCode: Keys.ENTER },
-            // TODO The new-0... should become more generic.
-            activeInBoxRoles: ["new-0", "new-1", "new-2", "new-3", "new-4", "new-5", "new-6", "new-7", "new-8", "new-9", "new-10",
-                "alias-new-0-textbox", "alias-new-1-textbox", "alias-new-2-textbox", "alias-new-3-textbox", "alias-new-4-textbox",
-                "alias-new-5-textbox", "alias-new-6-textbox", "alias-new-7-textbox", "alias-new-8-textbox", "alias-new-9-textbox"],
+            activeInBoxRoles: rolenames,
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
+                LOGGER.log("=================================== 1 New table row/column for " + box.role + " in " + box.element.piLanguageConcept() + "." + propertyName );
                 const element = box.element;
                 const proc = element.piContainer();
                 const parent: PiElement = proc.container;
+                LOGGER.log("parent is of type " + parent?.piLanguageConcept() + "  box is " + box.kind + " role " + box.role);
                 PiUtils.CHECK(parent[proc.propertyName][proc.propertyIndex] === element);
-                const aliasBox = box.parent as AliasBox;
-                LOGGER.log("New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
-                const newElement: PiElement = Language.getInstance().concept(aliasBox?.conceptName)?.constructor()
+                const newElement: PiElement = elementBuilder();
+                LOGGER.log("newElement is of type " + newElement?.piLanguageConcept());
                 if( newElement === undefined) {
                     // TODO Find out why this happens sometimes
-                    LOGGER.log("Unexpected new element undefined");
+                    LOGGER.log("IN BETWEEN GRID: Unexpected new element undefined");
                     return null;
                 }
+                LOGGER.log("KEYBOARD START")
                 runInAction( () => {
-                    parent[proc.propertyName].splice(proc.propertyIndex + 1, 0, newElement);
+                    parent[propertyName].splice(proc.propertyIndex + 1, 0, newElement);
                 });
-
+                LOGGER.log("KEYBOARD END")
                 editor.selectElement(newElement);
                 editor.selectFirstEditableChildBox();
-                // await editor.selectFirstLeafChildBox();
                 return newElement;
+                // return null;
             }
         };
     }
@@ -206,12 +230,12 @@ export class TableUtil {
             activeInBoxRoles: ["alias-add-row-or-column", "alias-alias-add-row-or-column-textbox"],
             action: (box: Box, key: PiKey, editor: PiEditor): PiElement => {
                 const element = box.element;
-                const aliasBox = box.parent as AliasBox;
-                LOGGER.log("New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
+                const aliasBox = (isAliasBox(box) ? box : box.parent as AliasBox);
+                LOGGER.log("2 New table row/column for " + aliasBox.propertyName + " concept " + aliasBox.conceptName);
                 const newElement: PiElement = Language.getInstance().concept(aliasBox?.conceptName)?.constructor();
                 if( newElement === undefined) {
                     // TODO Find out why this happenss sometimes
-                    LOGGER.log("Unexpected new element undefined");
+                    LOGGER.log("EMPTY grid: Unexpected new element undefined");
                     return null;
                 }
                 runInAction( () => {

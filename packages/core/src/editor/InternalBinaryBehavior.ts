@@ -25,7 +25,7 @@ export class InternalBinaryBehavior extends InternalBehavior implements PiBinary
     execute(box: Box, text: string, editor: PiEditor): PiElement | null {
         LOGGER.info(this, "execute binary expression alias ok");
         const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, text, editor), box, editor);
-        editor.selectElement(selected.element, selected.boxRoleToSelect, this.caretPosition);
+        // editor.selectElement(selected.element, selected.boxRoleToSelect, this.caretPosition);
         return selected.element;
     }
 

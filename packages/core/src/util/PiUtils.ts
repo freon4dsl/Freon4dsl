@@ -76,13 +76,14 @@ export class PiUtils {
      */
     static handleKeyboardShortcut(piKey: PiKey, box: Box, editor: PiEditor): boolean {
         for (const act of editor.keyboardActions) {
-            // LOGGER.log("handleKeyboardShortcut activeroles: " + act.activeInBoxRoles);
+            LOGGER.log("handleKeyboardShortcut for box " + box.role + " kind " + box.kind + " with activeroles: " + act.activeInBoxRoles);
             if (act.trigger.meta === piKey.meta && act.trigger.keyCode === piKey.keyCode) {
                 if (act.activeInBoxRoles.includes(box.role)) {
                     LOGGER.log("handleKeyboardShortcut: executing keyboard action");
                     const selected = act.action(box, piKey, editor);
                     if (selected) {
                         editor.selectElement(selected, act.boxRoleToSelect);
+                        editor.selectFirstEditableChildBox();
                     }
                     return true;
                 } else {
