@@ -1,19 +1,21 @@
 import {
-    PiEditProjectionDirection,
+    BoolKeywords,
+    ExtraClassifierInfo,
     ListInfo,
-    PiEditUnit,
+    ListJoinType,
+    PiEditParsedClassifier,
     PiEditParsedNewline,
-    PiEditProjection,
     PiEditParsedProjectionIndent,
+    PiEditProjection,
+    PiEditProjectionDirection,
+    PiEditProjectionGroup,
     PiEditProjectionLine,
     PiEditProjectionText,
     PiEditPropertyProjection,
+    PiEditSuperProjection,
     PiEditTableProjection,
-    PiEditProjectionGroup,
-    BoolKeywords,
-    ExtraClassifierInfo,
-    ListJoinType,
-    PiOptionalPropertyProjection, PiEditParsedClassifier, PiEditSuperProjection
+    PiEditUnit,
+    PiOptionalPropertyProjection
 } from "../metalanguage/NewPiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { PiClassifier, PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
@@ -318,6 +320,7 @@ export function createTablePropertyProjection(data: { expression, tableInfo, loc
         result.location = data["location"];
         result.location.filename = currentFileName;
     }
+    result.listInfo.joinType = ListJoinType.NONE;
     return result;
 }
 
@@ -396,7 +399,7 @@ export function createNewline(): PiEditParsedNewline {
     return new PiEditParsedNewline();
 }
 
-export function makeSelfExp(data: string): PiLangSelfExp {
+export function createSelfExp(data: string): PiLangSelfExp {
     const result = new PiLangSelfExp();
     // we cannot set the sourceName of result, this should be done during checking
     result.appliedfeature = new PiLangAppliedFeatureExp();

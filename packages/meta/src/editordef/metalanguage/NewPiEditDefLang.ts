@@ -284,6 +284,8 @@ export class PiOptionalPropertyProjection extends PiEditPropertyProjection {
  * without any of these.
  */
 export class ListInfo extends PiDefinitionElement {
+    // isTable === true                 => joinType === ListJoinType.NONE && joinText === ""
+    // joinType !== ListJoinType.NONE   => isTable === false;
     isTable: boolean = false;
     direction: PiEditProjectionDirection = PiEditProjectionDirection.Horizontal;
     joinType: ListJoinType = ListJoinType.NONE;

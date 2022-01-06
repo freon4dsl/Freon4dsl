@@ -137,7 +137,7 @@ singleProperty = propProjectionStart ws
                       propProjectionEnd
 {
     return creator.createPropertyProjection( {
-        "expression": creator.makeSelfExp(propName),
+        "expression": creator.createSelfExp(propName),
         "location": location()
     });
 }
@@ -147,7 +147,7 @@ listProperty = propProjectionStart ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {
-        "expression": creator.makeSelfExp(propName),
+        "expression": creator.createSelfExp(propName),
         "listInfo": l,
         "location": location()
     });
@@ -158,7 +158,7 @@ tableProperty = propProjectionStart ws
                       propProjectionEnd
 {
     return creator.createTablePropertyProjection( {
-        "expression": creator.makeSelfExp(propName),
+        "expression": creator.createSelfExp(propName),
         "tableInfo": t,
         "location": location()
     });
@@ -169,7 +169,7 @@ booleanProperty = propProjectionStart ws
                       propProjectionEnd
 {
     return creator.createBooleanPropertyProjection( {
-        "expression": creator.makeSelfExp(propName),
+        "expression": creator.createSelfExp(propName),
         "keyword":k,
         "location": location()
     });
@@ -207,13 +207,13 @@ keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:text
     });
 }
 
-listInfo =  dir:listDirection? type:listInfoType? text:("[" t:textBut "]" ws {return t;})?
+listInfo =  dir:listDirection? l:(type:listInfoType "[" t:textBut "]" {return { "type": type, "text": t }})? ws
 {
     return creator.createListInfo({
         "isTable"       : false,
         "listDirection" : dir,
-        "joinType"      : type,
-        "joinText"      : text,
+        "joinType"      : !!l ? l["type"] : undefined,
+        "joinText"      : !!l ? l["text"]: undefined,
         "location"      : location()
     });
 }

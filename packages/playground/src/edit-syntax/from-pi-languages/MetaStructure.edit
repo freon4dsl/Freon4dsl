@@ -74,7 +74,7 @@ PiLimitedConcept {
 }
 // the following two could be using the abstract box definition of PiProperty, but they are not
 PiConceptProperty {
-    [${isPublic [public]} ${isPart [part, reference]} ${name} ${isOptional [?]} : ${type} ${isList [\[\]]}]
+    [${isPublic [public]} ${isPart [part | reference]} ${name} ${isOptional [?]} : ${type} ${isList [\[\]]}]
 }
 PiPrimitiveProperty {
     [${isPublic [public]} ${isStatic [static]} ${name} ${isOptional [?]} : ${type} ${isList [\[\]]}]
