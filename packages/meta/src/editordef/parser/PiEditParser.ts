@@ -1,10 +1,11 @@
 import { PiLanguage } from "../../languagedef/metalanguage";
 import { PiParser } from "../../utils";
-import { PiEditChecker, PiEditUnit } from "../metalanguage";
 
 const editorParser = require("./PiEditGrammar");
-import { setCurrentFileName as editFileName } from "./PiEditCreators";
+import { setCurrentFileName as editFileName } from "./NewPiEditCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
+import { PiEditUnit } from "../metalanguage/NewPiEditDefLang";
+import { NewPiEditChecker } from "../metalanguage/NewPiEditChecker";
 
 export class PiEditParser extends PiParser<PiEditUnit> {
     language: PiLanguage;
@@ -13,16 +14,15 @@ export class PiEditParser extends PiParser<PiEditUnit> {
         super();
         this.language = language;
         this.parser = editorParser;
-        this.checker = new PiEditChecker(language);
+        this.checker = new NewPiEditChecker(language);
     }
 
     protected merge(submodels: PiEditUnit[]): PiEditUnit {
-        console.log("AT MERGE");
         if (submodels.length > 0) {
             const result: PiEditUnit = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
-                    result.conceptEditors.push(...sub.conceptEditors);
+                    result.projectiongroups.push(...sub.projectiongroups);
                 }
             });
             return result;

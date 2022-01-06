@@ -1,17 +1,5 @@
 editor default
 
-// concept PiLanguage {
-//    name: identifier;
-//    model: PiModelDescription;
-//    unitDefs: PiUnitDescription[];
-//}
-PiLanguage {
-    [language ${name}
-         ${model}
-         ${unitDefs table rows}
-    ]
-}
-
 // concept PiModelDescription {
 //    name: identifier;
 //    units: PiUnitDescription[];
@@ -40,13 +28,12 @@ PiStructureDef {
 //================================ other file ??? ===============
 //abstract concept PiClassifier {
 //    name: identifier;
-//    isAbstract: boolean;
 //    isPublic: boolean;
 //    properties: PiProperty[];
 //}
 
 PiClassifier {
-    [ ${isPublic [public]} ${isAbstract [abstract | concrete]} ]
+    [ ${isPublic [public]} ]
 }
 // concept PiInterface base PiClassifier {...}
 PiInterface {
@@ -57,21 +44,21 @@ PiInterface {
 }
 // concept PiConcept base PiClassifier {...}
 PiConcept {
-    [[=> PiClassifier] concept ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+    [[=> PiClassifier] ${isAbstract [abstract | concrete]} concept ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
         ${properties vertical terminator [;]}
     }
     ]
 }
 // concept PiExpressionConcept base PiConcept {...}
 PiExpressionConcept {
-    [[=> PiClassifier] expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+    [[=> PiClassifier] ${isAbstract [abstract | concrete]} expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
         ${properties vertical terminator [;]}
     }
     ]
 }
 // concept PiBinaryExpressionConcept base PiExpressionConcept {...}
 PiBinaryExpressionConcept {
-    [[=> PiClassifier] binary expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+    [[=> PiClassifier] ${isAbstract [abstract | concrete]} binary expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
         ${properties vertical terminator [;]}
         [?priority = ${priority};]
     }
@@ -79,7 +66,7 @@ PiBinaryExpressionConcept {
 }
 // concept PiLimitedConcept base PiConcept {...}
 PiLimitedConcept {
-    [[=> PiClassifier] limited ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+    [[=> PiClassifier] ${isAbstract [abstract | concrete]} limited ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
         ${properties vertical terminator [;]}
         ${instances vertical }
     }

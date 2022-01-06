@@ -12,13 +12,11 @@ import {
     PiEditProjectionGroup,
     BoolKeywords,
     ExtraClassifierInfo,
-    PiListPropertyProjection,
-    PiBooleanPropertyProjection,
     ListJoinType,
     PiOptionalPropertyProjection, PiEditParsedClassifier, PiEditSuperProjection
 } from "../metalanguage/NewPiEditDefLang";
 import { MetaLogger } from "../../utils/MetaLogger";
-import { PiClassifier } from "../../languagedef/metalanguage";
+import { PiClassifier, PiLangAppliedFeatureExp, PiLangSelfExp } from "../../languagedef/metalanguage";
 import { NewPiEditProjectionUtil } from "../metalanguage/NewPiEditProjectionUtil";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -41,7 +39,6 @@ export function createEditUnit(group: PiEditProjectionGroup): PiEditUnit {
     if (!!group) {
         result.projectiongroups.push(group);
     }
-    console.log("createEditUnit\n\t" + result.toString());
     return result;
 }
 
@@ -284,7 +281,7 @@ export function createSuperProjection(data: Partial<PiEditSuperProjection>) : Pi
     return result;
 }
 
-export function createSinglePropertyProjection(data: { expression, location }): PiEditPropertyProjection {
+export function createPropertyProjection(data: { expression, location }): PiEditPropertyProjection {
     let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     if (!!data["expression"]) {
         result.expression = data["expression"];
@@ -297,7 +294,7 @@ export function createSinglePropertyProjection(data: { expression, location }): 
 }
 
 export function createListPropertyProjection(data: { expression, listInfo, location }): PiEditPropertyProjection {
-    let result: PiListPropertyProjection = new PiListPropertyProjection();
+    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     result.listInfo = data["listInfo"];
     if (!!data["expression"]) {
         result.expression = data["expression"];
@@ -309,8 +306,8 @@ export function createListPropertyProjection(data: { expression, listInfo, locat
     return result;
 }
 
-export function createTablePropertyProjection(data: { expression, tableInfo, location }): PiListPropertyProjection {
-    let result: PiListPropertyProjection = new PiListPropertyProjection();
+export function createTablePropertyProjection(data: { expression, tableInfo, location }): PiEditPropertyProjection {
+    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     if (!!data["tableInfo"]) {
         result.listInfo = data["tableInfo"];
     }
@@ -324,10 +321,10 @@ export function createTablePropertyProjection(data: { expression, tableInfo, loc
     return result;
 }
 
-export function createBooleanPropertyProjection(data: { expression, keyword, location }): PiBooleanPropertyProjection {
-    let result: PiBooleanPropertyProjection = new PiBooleanPropertyProjection();
+export function createBooleanPropertyProjection(data: { expression, keyword, location }): PiEditPropertyProjection {
+    let result: PiEditPropertyProjection = new PiEditPropertyProjection();
     if (!!data["keyword"]) {
-        result.info = data["keyword"];
+        result.boolInfo = data["keyword"];
     }
     if (!!data["expression"]) {
         result.expression = data["expression"];
@@ -397,4 +394,13 @@ export function createListInfo(data: Partial<ListInfo>): ListInfo {
 
 export function createNewline(): PiEditParsedNewline {
     return new PiEditParsedNewline();
+}
+
+export function makeSelfExp(data: string): PiLangSelfExp {
+    const result = new PiLangSelfExp();
+    // we cannot set the sourceName of result, this should be done during checking
+    result.appliedfeature = new PiLangAppliedFeatureExp();
+    result.appliedfeature.sourceName = data;
+    result.appliedfeature.sourceExp = result;
+    return result;
 }

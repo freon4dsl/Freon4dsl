@@ -30,6 +30,7 @@ export class ProjectItGenerateEditor extends ProjectItGeneratePartAction {
         if (editor === null) {
             throw new Error("Editor definition could not be parsed, exiting.");
         }
-        this.editorGenerator.generate(editor);
+        // TODO
+        // this.editorGenerator.generate(editor);
     }
 }

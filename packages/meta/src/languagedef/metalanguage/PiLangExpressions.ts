@@ -100,21 +100,15 @@ export class PiLangAppliedFeatureExp extends PiLangExp {
     referredElement: PiElementReference<PiProperty>;
 
     toPiString(): string {
-        let isRef: boolean = false;
-        if (!!this.referredElement) {
-            const ref = this.referredElement.referred;
-            isRef = (ref instanceof PiConceptProperty) && ref.owningConcept.references().some(r => r === ref);
-        }
-        // return this.sourceName + (isRef ? ".referred" : "") + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toPiString()) : "");
     }
 
     findRefOfLastAppliedFeature(): PiProperty {
         if (this.appliedfeature !== undefined) {
-            // console.log(" last of: " + this.appliedfeature.sourceName);
+            console.log(" last of: " + this.appliedfeature.sourceName);
             return this.appliedfeature.findRefOfLastAppliedFeature();
         } else {
-            // console.log("found reference: " + this.referredElement?.referred?.name);
+            console.log("found reference: " + this.referredElement?.referred?.name);
             return this.referredElement?.referred;
         }
     }

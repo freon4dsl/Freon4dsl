@@ -133,36 +133,51 @@ property_projection = s:singleProperty {return s;}
     / b:booleanProperty {return b;}
 
 singleProperty = propProjectionStart ws
-                         exp:var (colon_separator editorName:var)? ws
+                         propName:var (colon_separator editorName:var)? ws
                       propProjectionEnd
 {
-    return creator.createSinglePropertyProjection( { "expression": exp, "location": location() });
+    return creator.createPropertyProjection( {
+        "expression": creator.makeSelfExp(propName),
+        "location": location()
+    });
 }
 
 listProperty = propProjectionStart ws
-                         exp:var (colon_separator editorName:var)? ws l:listInfo? ws
+                         propName:var (colon_separator editorName:var)? ws l:listInfo? ws
                       propProjectionEnd
 {
-    return creator.createListPropertyProjection( { "expression": exp, "listInfo": l, "location": location() });
+    return creator.createListPropertyProjection( {
+        "expression": creator.makeSelfExp(propName),
+        "listInfo": l,
+        "location": location()
+    });
 }
 
 tableProperty = propProjectionStart ws
-                         exp:var (colon_separator editorName:var)? ws t:tableInfo? ws
+                         propName:var (colon_separator editorName:var)? ws t:tableInfo? ws
                       propProjectionEnd
 {
-    return creator.createTablePropertyProjection( { "expression": exp, "tableInfo": t, "location": location() });
+    return creator.createTablePropertyProjection( {
+        "expression": creator.makeSelfExp(propName),
+        "tableInfo": t,
+        "location": location()
+    });
 }
 
 booleanProperty = propProjectionStart ws
-                         exp:var (colon_separator editorName:var)? ws k:keywordDecl? ws
+                         propName:var (colon_separator editorName:var)? ws k:keywordDecl? ws
                       propProjectionEnd
 {
-    return creator.createBooleanPropertyProjection( { "expression": exp, "keyword":k, "location": location() });
+    return creator.createBooleanPropertyProjection( {
+        "expression": creator.makeSelfExp(propName),
+        "keyword":k,
+        "location": location()
+    });
 }
 
 optionalProjection = projection_begin "?" lines:lineWithOutOptional* projection_end
 {
-    return creator.createOptionalProjection( {"lines": lines} );
+    return creator.createOptionalProjection( {"lines": lines, "location": location()} );
 }
 
 superProjection = projection_begin "=>" ws superRef:classifierReference projName:(colon_separator v:var {return v;})? ws projection_end
@@ -225,7 +240,7 @@ trigger = "trigger" ws equals_separator ws "\"" value:string "\"" ws
 
 referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionStart ws exp:var propProjectionEnd ws
 {
-    return exp;
+    return creator.createSelfExp(exp);
 }
 
 symbol = "symbol" ws equals_separator ws "\"" value:string "\"" ws

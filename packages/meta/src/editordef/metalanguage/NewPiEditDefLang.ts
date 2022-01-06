@@ -38,6 +38,35 @@ export enum ListJoinType {
 export class PiEditUnit extends PiDefinitionElement {
     language: PiLanguage;
     projectiongroups: PiEditProjectionGroup[] = [];
+
+    findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
+        for (const group of this.projectiongroups) {
+            const found = group.findProjectionForType(cls);
+            if (!!found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    allTableProjections(): PiEditTableProjection[] {
+        let result: PiEditTableProjection[] = [];
+        for (const group of this.projectiongroups) {
+            result.push(...group.allTableProjections());
+        }
+        return result;
+    }
+
+    findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
+        for (const group of this.projectiongroups) {
+            const found = group.findTableProjectionForType(cls);
+            if (!!found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
     toString(): string {
         return `${this.projectiongroups.map(pr => pr.toString()). join("\n")}`;
     }
@@ -61,6 +90,18 @@ export class PiEditProjectionGroup extends PiDefinitionElement {
     standardReferenceSeparator: string;
     projections: PiEditClassifierProjection[] = [];
     extras: ExtraClassifierInfo[] = [];
+
+    findProjectionForType(cls: PiClassifier): PiEditClassifierProjection {
+        return this.projections.find(con => con.classifier.referred === cls);
+    }
+
+    allTableProjections(): PiEditTableProjection[] {
+        return this.projections.filter(con => con instanceof PiEditTableProjection) as PiEditTableProjection[];
+    }
+
+    findTableProjectionForType(cls: PiClassifier): PiEditTableProjection {
+        return this.allTableProjections().find(con => con.classifier.referred === cls);
+    }
 
     toString(): string {
         return `editor ${this.name}
@@ -205,34 +246,22 @@ export class PiEditProjectionText extends PiDefinitionElement {
  */
 export class PiEditPropertyProjection extends PiDefinitionElement {
     property: PiElementReference<PiProperty> = null;
+    // expression used during parsing, should not be used after that phase
     expression: PiLangExp = null;
+    // projection info if the referred property is a list
+    listInfo: ListInfo = null;
+    // projection info if the referred property is a primitive of boolean type
+    boolInfo: BoolKeywords = null;
 
     toString(): string {
-        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ }`;
-    }
-}
-
-/**
- * An element of a line in a projection definition that represents the projection of a property that is a list.
- */
-export class PiListPropertyProjection extends PiEditPropertyProjection {
-    listInfo: ListInfo;
-    toString(): string {
-        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ 
-            /* list */ ${this.listInfo}
-        }`;
-    }
-}
-
-/**
- * An element of a line in a projection definition that represents the projection of a property that has boolean type.
- */
-export class PiBooleanPropertyProjection extends PiEditPropertyProjection {
-    info: BoolKeywords;
-    toString(): string {
-        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ 
-            /* boolean */ ${this.info}
-        }`;
+        let extraText: string;
+        if (!!this.listInfo) {
+            extraText = `\n/* list */ ${this.listInfo}`;
+        }
+        if (!!this.boolInfo) {
+            extraText = `\n/* boolean */ ${this.boolInfo}`;
+        }
+        return `\${ ${this.expression} /* found ${this.property?.referred?.name} */ }${extraText}`;
     }
 }
 
