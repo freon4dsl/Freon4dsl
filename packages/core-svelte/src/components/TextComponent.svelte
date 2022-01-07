@@ -120,10 +120,10 @@
     const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.ctrlKey + "] shift [" + event.shiftKey + "] key [" + event.key + "]");
         isEditing = true;
-        if( isAliasTextBox(editor.selectedBox) ) {
-            // let alias handle this
-            return;
-        }
+        // if( isAliasTextBox(editor.selectedBox) ) {
+        //     // let alias handle this
+        //     return;
+        // }
         if (event.key === KEY_DELETE) {
             if (currentText() === "") {
                 if (textBox.deleteWhenEmptyAndErase) {
@@ -149,6 +149,7 @@
             event.stopPropagation();
         }
         if (shouldIgnore(event)) {
+            LOGGER.log("preventDefault");
             event.preventDefault();
         }
         const piKey = toPiKey(event);
@@ -297,12 +298,14 @@
      * @param e
      */
     const onBlur = (e: FocusEvent) => {
-        isEditing = true;
+        isEditing = false;
         let value = currentText();
-        LOGGER.log("onBlur current [" + currentText() + "] box text [" + textBox.getText() + "]");
-        textBox.caretPosition = getCaretPosition();
-        textBox.setText(value);
-        editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+        LOGGER.log("onBlur current [" + value + "] box text [" + textBox.getText() + "]");
+        if (!isAliasTextBox(textBox)) {
+            textBox.caretPosition = getCaretPosition();
+            textBox.setText(value);
+            editor.selectedPosition = PiCaret.IndexPosition(textBox.caretPosition);
+        }
         if (textBox.deleteWhenEmpty && value.length === 0) {
             EVENT_LOG.info(this, "delete empty text");
             editor.deleteBox(textBox);

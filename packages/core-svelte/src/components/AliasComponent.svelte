@@ -95,7 +95,7 @@
      * @param {string} key
      * @returns {Promise<void>}
      */
-    const triggerKeyPressEvent = async (key: string) => {
+    const triggerKeyPressEvent = (key: string) => {
         LOGGER.info(this, "triggerKeyPressEvent " + key);
         isEditing = true;
         if (!!textComponent) {
