@@ -83,6 +83,8 @@ export function executeBehavior(box: Box, text: string, label: string, editor: P
                         console.log("============== START")
                         const execresult = behavior.execute(box, label, editor);
                         // If this is a referenceShortcut, fill in the selected reference, which is in the label
+                        // TODO CHECK: The assumption is that 'newElement' has a property with the name and type
+                        //  of the reference shortcut with the
                         if (!!label && !!behavior.referenceShortcut) {
                             execresult[behavior.referenceShortcut.propertyname] = Language.getInstance().referenceCreator(label, behavior.referenceShortcut.metatype);
                         }

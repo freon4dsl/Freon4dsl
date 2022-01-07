@@ -1,10 +1,12 @@
-import { Language } from "../../storage/index";
-import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../../util";
+import { Concept, Language } from "../../storage/index";
+import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior, PiLogger } from "../../util";
 import { triggerToString, PiEditor, TextBox, InternalCustomBehavior } from "../internal";
 import { DummyBox, DummyElement } from "./DummyBox";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
 import { PiElement } from "../../language";
 import { runInAction } from "mobx";
+
+const LOGGER = new PiLogger("AliasBox");
 
 export class AliasBox extends AbstractChoiceBox {
     readonly kind = "AliasBox";
@@ -30,7 +32,7 @@ export class AliasBox extends AbstractChoiceBox {
     }
 
     selectOption(editor: PiEditor, option: SelectOption): BehaviorExecutionResult {
-        console.log("AliasBox option " + JSON.stringify(option));
+        LOGGER.log("AliasBox option " + JSON.stringify(option));
         if (!!option.behavior) {
             return executeSingleBehavior(option.behavior, this, option.id, option.label, editor);
         } else {
@@ -43,10 +45,10 @@ export class AliasBox extends AbstractChoiceBox {
             const allOptions = this.getOptions(editor);
             const selectedOptions = allOptions.filter(o => option.label === o.label);
             if (selectedOptions.length === 1) {
-                console.log("AliasBox.selectOption dynamic " + JSON.stringify(selectedOptions));
+                LOGGER.log("AliasBox.selectOption dynamic " + JSON.stringify(selectedOptions));
                 return executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
             } else {
-                console.error("AliasBox.selectOption : " + JSON.stringify(selectedOptions));
+                LOGGER.log("AliasBox.selectOption : " + JSON.stringify(selectedOptions));
                 return BehaviorExecutionResult.NO_MATCH;
             }
         }
@@ -55,70 +57,28 @@ export class AliasBox extends AbstractChoiceBox {
     getOptions(editor: PiEditor): SelectOption[] {
         const result: SelectOption[] = [];
         if( !!this.propertyName && !!this.conceptName) {
+            // If the alais has a property and concept name, then this alias can be used to create element of the
+            // concept type and its subtypes.
             const clsOtIntf = Language.getInstance().concept(this.conceptName) ?? Language.getInstance().interface(this.conceptName);
-             clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (subName: string) => {
-                const concept = Language.getInstance().concept(subName);
+             clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (conceptName: string) => {
+                const concept = Language.getInstance().concept(conceptName);
                 if (!!concept && !concept.isAbstract) {
                     if (!!(concept.referenceShortcut)) {
-                        // Create the new element for this behavior inside a dummy and then point the container to the
-                        // current element.  This way the new element is not part of the model and will not trigger mobx
-                        // reactions. But the scoper can be used to find available references, because the scoper only
-                        // needs the container.
-                        const dummyElement = new DummyElement();
-                        const dummyBox = new DummyBox(dummyElement, "dummy-role");
-                        runInAction(() => {
-                            // console.log("START finding references");
-                            const newElement = Language.getInstance().concept(subName)?.constructor();
-                            newElement["container"] = this.element;
-                            result.push(...
-                                editor.environment
-                                    .scoper.getVisibleNames(newElement, concept.referenceShortcut.metatype)
-                                    .filter(name => !!name && name !== "")
-                                    .map(name => ({
-                                        id: triggerToString(concept.trigger) + "-" + name,
-                                        label: name,
-                                        description: "create " + concept.referenceShortcut.metatype,
-                                        behavior: new InternalCustomBehavior({
-                                            referenceShortcut: { propertyname: concept.referenceShortcut.propertyname, metatype: concept.referenceShortcut.metatype },
-                                            action:  (box: Box, text: string, editor: PiEditor): PiElement | null => {
-                                                console.log("Alias auto REFSHORTCUT action: " + this.propertyName + " concept " + subName);
-                                                const newElement: PiElement = Language.getInstance().concept(subName)?.constructor()
-                                                if( newElement === undefined) {
-                                                    // TODO Find out why this happens sometimes
-                                                    console.error("AliasBox action: Unexpected new element undefined");
-                                                    return null;
-                                                }
-                                                runInAction( () => {
-                                                    if (Language.getInstance().conceptProperty(this.element.piLanguageConcept(), this.propertyName).isList) {
-                                                        this.element[this.propertyName].push(newElement);
-                                                    } else {
-                                                        this.element[this.propertyName] = newElement;
-                                                    }
-                                                });
-
-                                                editor.selectElement(newElement);
-                                                editor.selectFirstEditableChildBox();
-                                                // await editor.selectFirstLeafChildBox();
-                                                return newElement;
-                                            }
-                                        })
-                                    })));
-                            // console.log("END 2");
-                        });
+                        this.addReferenceShortcuts(concept, result, editor);
                     }
-
                     result.push({
-                        id: subName,
+                        id: conceptName,
                         label: concept.trigger,
                         behavior: new InternalCustomBehavior({
                                         action:  (box: Box, text: string, editor: PiEditor): PiElement | null => {
-                                            console.log("Alias auto action: " + this.propertyName + " concept " + subName);
-                                            const newElement: PiElement = Language.getInstance().concept(subName)?.constructor()
+                                            LOGGER.log("Alias auto action: " + this.propertyName + " concept " + conceptName);
+                                            const newElement: PiElement = Language.getInstance().concept(conceptName)?.constructor()
                                             if( newElement === undefined) {
                                                 // TODO Find out why this happens sometimes
                                                 console.error("AliasBox action: Unexpected new element undefined");
                                                 return null;
                                             }
+                                            // TODO Refactor actions
                                             runInAction( () => {
                                                 if (Language.getInstance().classifierProperty(this.element.piLanguageConcept(), this.propertyName).isList) {
                                                     this.element[this.propertyName].push(newElement);
@@ -129,7 +89,6 @@ export class AliasBox extends AbstractChoiceBox {
 
                                             editor.selectElement(newElement);
                                             editor.selectFirstEditableChildBox();
-                                            // await editor.selectFirstLeafChildBox();
                                             return newElement;
                                         }
                                     }),
@@ -138,12 +97,12 @@ export class AliasBox extends AbstractChoiceBox {
                 }
             });
         } else {
-            console.log("No property and concept defined for alias box " + this.role);
+            LOGGER.log("No property and concept defined for alias box " + this.role);
         }
+        // Now look in all actions defined in the ediotr whether they fit this alias
         editor.behaviors
             .filter(behavior => behavior.activeInBoxRoles.includes(this.role))
             .forEach(behavior => {
-                // console.log("Active behavior: " + behavior.trigger)
                 const options: SelectOption[] = [];
                 // If the behavior has a referenceShortcut, we need to find all potential referred elements and add them to the options.
                 if (!!(behavior.referenceShortcut)) {
@@ -154,7 +113,6 @@ export class AliasBox extends AbstractChoiceBox {
                     const dummyElement = new DummyElement();
                     const dummyBox = new DummyBox(dummyElement, "dummy-role");
                     runInAction(() => {
-                        // console.log("START finding references");
                         const newElement = behavior.execute(dummyBox, triggerToString(behavior.trigger), editor);
                         newElement["container"] = this.element;
                         options.push(...
@@ -167,7 +125,6 @@ export class AliasBox extends AbstractChoiceBox {
                                     description: behavior.referenceShortcut.metatype,
                                     behavior: behavior
                                 })));
-                        // console.log("END 2");
                     });
                 }
                 /// if there are no reference shortcut options, add the alias itself
@@ -182,6 +139,59 @@ export class AliasBox extends AbstractChoiceBox {
                 result.push(...options);
             });
         return result;
+    }
+
+    /**
+     * Get all referrable element for the reference shortcut of concept
+     * @param concept The concept with the referenceShortcut
+     * @param result  The array where the resutling actions should be addedd to
+     * @param editor  The editor context
+     * @private
+     */
+    private addReferenceShortcuts(concept: Concept, result: SelectOption[], editor: PiEditor) {
+        // Create the new element for this behavior inside a dummy and then point the container to the
+        // current element.  This way the new element is not part of the model and will not trigger mobx
+        // reactions. But the scoper can be used to find available references, because the scoper only
+        // needs the container.
+        runInAction(() => {
+            const newElement = concept.constructor();
+            newElement["container"] = this.element;
+            result.push(...
+                editor.environment
+                    .scoper.getVisibleNames(newElement, concept.referenceShortcut.metatype)
+                    .filter(name => !!name && name !== "")
+                    .map(name => ({
+                        id: triggerToString(concept.trigger) + "-" + name,
+                        label: name,
+                        description: "create " + concept.referenceShortcut.metatype,
+                        behavior: new InternalCustomBehavior({
+                            referenceShortcut: {
+                                propertyname: concept.referenceShortcut.propertyname,
+                                metatype: concept.referenceShortcut.metatype
+                            },
+                            action: (box: Box, text: string, editor: PiEditor): PiElement | null => {
+                                LOGGER.log("Alias auto REFSHORTCUT action: " + this.propertyName + " concept " + concept.typeName);
+                                const newElement: PiElement = concept.constructor()
+                                if (newElement === undefined) {
+                                    // TODO Find out why this happens sometimes
+                                    console.error("AliasBox action: Unexpected new element undefined");
+                                    return null;
+                                }
+                                // runInAction(() => {
+                                    if (Language.getInstance().conceptProperty(this.element.piLanguageConcept(), this.propertyName).isList) {
+                                        this.element[this.propertyName].push(newElement);
+                                    } else {
+                                        this.element[this.propertyName] = newElement;
+                                    }
+                                // });
+
+                                editor.selectElement(newElement);
+                                editor.selectFirstEditableChildBox();
+                                return newElement;
+                            }
+                        })
+                    })));
+        });
     }
 
     triggerKeyPressEvent = (key: string) => {
